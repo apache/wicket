@@ -78,7 +78,7 @@ public class MockAjaxFormPage extends WebPage
 		form.add(submit);
 		final TextField<String> text = new TextField<String>("text");
 		text.setRequired(true);
-		text.add(StringValidator.minimumLength(4));
+		text.add(new StringValidator(4, null));
 		text.add(new AjaxFormValidatingBehavior(form, "onkeyup")
 		{
 			private static final long serialVersionUID = 1L;

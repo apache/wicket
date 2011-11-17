@@ -37,22 +37,36 @@ public class ValidationErrorTest
 		e.addKey(new TestValidator());
 		assertEquals("TestValidator", e.getKeys().get(0));
 
+		e = new ValidationError(new TestValidator());
+		assertEquals("TestValidator", e.getKeys().get(0));
+
 		e = new ValidationError();
 		e.addKey(new TestValidator(), "foo");
+		assertEquals("TestValidator.foo", e.getKeys().get(0));
+
+		e = new ValidationError(new TestValidator(), "foo");
 		assertEquals("TestValidator.foo", e.getKeys().get(0));
 
 		e = new ValidationError();
 		e.addKey(new TestValidator(), null);
 		assertEquals("TestValidator", e.getKeys().get(0));
 
+		e = new ValidationError(new TestValidator(), null);
+		assertEquals("TestValidator", e.getKeys().get(0));
+
 		e = new ValidationError();
 		e.addKey(new TestValidator(), " ");
+		assertEquals("TestValidator", e.getKeys().get(0));
+
+		e = new ValidationError(new TestValidator(), " ");
 		assertEquals("TestValidator", e.getKeys().get(0));
 
 		e = new ValidationError();
 		e.addKey(new TestValidator(), " foo ");
 		assertEquals("TestValidator.foo", e.getKeys().get(0));
 
+		e = new ValidationError(new TestValidator(), " foo ");
+		assertEquals("TestValidator.foo", e.getKeys().get(0));
 
 	}
 

@@ -71,7 +71,7 @@ public class FileUploadError extends WebPage
 			}
 		});
 
-		inputField.add(StringValidator.lengthBetween(3, 10));
+		inputField.add(new StringValidator(3, 10));
 		inputField.setRequired(true);
 		form.add(inputField);
 

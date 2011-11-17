@@ -51,7 +51,7 @@ public class FormPage extends BasePage
 		add(feedback);
 
 		// add form with markup id setter so it can be updated via ajax
-		Bean bean=new Bean();
+		Bean bean = new Bean();
 		Form<Bean> form = new Form<Bean>("form", new CompoundPropertyModel<Bean>(bean));
 		add(form);
 		form.setOutputMarkupId(true);
@@ -61,7 +61,7 @@ public class FormPage extends BasePage
 		// add form components to the form as usual
 
 		fc = new RequiredTextField<String>("name");
-		fc.add(StringValidator.minimumLength(4));
+		fc.add(new StringValidator(4, null));
 		fc.setLabel(new ResourceModel("label.name"));
 
 		form.add(fc);

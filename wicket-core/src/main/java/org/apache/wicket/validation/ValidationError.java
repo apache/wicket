@@ -44,7 +44,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Igor Vaynberg (ivaynberg)
  * @since 1.2.6
  */
-public class ValidationError implements IValidationError
+public final class ValidationError implements IValidationError
 {
 	private static final long serialVersionUID = 1L;
 
@@ -60,11 +60,51 @@ public class ValidationError implements IValidationError
 	private String message;
 
 	/**
-	 * Constructor.
+	 * Constructs an empty error
 	 */
 	public ValidationError()
 	{
 
+	}
+
+	/**
+	 * Constructs a validation error with the validator's standard key. Equivalent to calling
+	 * {@link #addKey(IValidator)}
+	 * 
+	 * @param validator
+	 *            validator
+	 */
+	public ValidationError(IValidator<?> validator)
+	{
+		addKey(validator);
+	}
+
+	/**
+	 * Constructs a validation error with a variation of validator's standard key. Equivalent to
+	 * calling {@link #addKey(IValidator, String)}
+	 * 
+	 * @param validator
+	 *            validator
+	 * @param variation
+	 *            key variation
+	 * 
+	 * 
+	 */
+	public ValidationError(IValidator<?> validator, String variation)
+	{
+		addKey(validator, variation);
+	}
+
+	/**
+	 * Constructs a validation error with the specified message. Equivalent to calling
+	 * {@link #setMessage(String)}
+	 * 
+	 * @param message
+	 *            message
+	 */
+	public ValidationError(String message)
+	{
+		setMessage(message);
 	}
 
 	/**
@@ -154,7 +194,6 @@ public class ValidationError implements IValidationError
 	public ValidationError setVariable(String name, Object value)
 	{
 		Args.notEmpty(name, "name");
-		Args.notNull(value, "value");
 
 		getVariables().put(name, value);
 

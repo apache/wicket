@@ -60,7 +60,7 @@ public class HomePage extends WebPage
 
 			TextField<String> name = new TextField<String>("partyDetails.name");
 			name.setRequired(Boolean.TRUE);
-			name.add(new StringValidator.LengthBetweenValidator(1, 30));
+			name.add(new StringValidator(1, 30));
 
 			FormComponentFeedbackBorder nameBorder = new FormComponentFeedbackBorder("nameBorder");
 			add(nameBorder);

@@ -38,27 +38,27 @@ public class CreditCardValidatorTest extends Assert
 		// null value
 		CreditCardValidator test = new CreditCardValidator();
 		IValidatable<String> validatable = new Validatable<String>(null);
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(false, validatable.isValid());
 
 		// too short
 		validatable = new Validatable<String>("9845");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(false, validatable.isValid());
 
 		// too long
 		validatable = new Validatable<String>("1234678910111213141516");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(false, validatable.isValid());
 
 		// contains a char
 		validatable = new Validatable<String>("3782822X6310005");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(false, validatable.isValid());
 
 		// invalid number
 		validatable = new Validatable<String>("840898920205250");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(false, validatable.isValid());
 	}
 
@@ -72,78 +72,78 @@ public class CreditCardValidatorTest extends Assert
 		// American Express
 		CreditCardValidator test = new CreditCardValidator();
 		IValidatable<String> validatable = new Validatable<String>("378282246310005");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// American Express
 		validatable = new Validatable<String>("371449635398431");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// American Express Corporate
 		validatable = new Validatable<String>("378734493671000");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// American Express Corporate with dashes and spaces (should be filtered
 		// and are therefor legal)
 		validatable = new Validatable<String>("378 - 7344-9367 1000");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Diners Club
 		validatable = new Validatable<String>("30569309025904");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Discover
 		validatable = new Validatable<String>("6011111111111117");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Discover
 		validatable = new Validatable<String>("6011000990139424");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// JCB
 		validatable = new Validatable<String>("3530111333300000");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// JCB
 		validatable = new Validatable<String>("3566002020360505");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Mastercard
 		validatable = new Validatable<String>("5555555555554444");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Mastercard
 		validatable = new Validatable<String>("5105105105105100");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Visa
 		validatable = new Validatable<String>("4111111111111111");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Visa
 		validatable = new Validatable<String>("4012888888881881");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Visa
 		validatable = new Validatable<String>("4222222222222");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 
 		// Switch / Solo
 		validatable = new Validatable<String>("6331101999990016");
-		test.onValidate(validatable);
+		test.validate(validatable);
 		assertEquals(true, validatable.isValid());
 	}
 

@@ -100,7 +100,7 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 		ft.setValue("name", "22");
 		ft.submit();
 		assertEquals(1, tester.getSession().getFeedbackMessages().size());
-		assertEquals("MIN", tester.getSession()
+		assertEquals("MINIMUM", tester.getSession()
 			.getFeedbackMessages()
 			.iterator()
 			.next()
@@ -199,7 +199,7 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 			String value = field.getConvertedInput();
 			if (value.length() < len)
 			{
-				form.error("MIN");
+				form.error("MINIMUM");
 			}
 		}
 	}

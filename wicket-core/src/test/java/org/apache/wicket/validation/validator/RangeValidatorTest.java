@@ -16,27 +16,30 @@
  */
 package org.apache.wicket.validation.validator;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.Validatable;
+import org.apache.wicket.validation.ValidationError;
+import org.junit.Test;
 
 /**
  * Tests range validator
  * 
  * @author igor.vaynberg
  */
-public class RangeValidatorTest extends TestCase
+public class RangeValidatorTest
 {
 
 	/**
 	 * @throws Exception
 	 */
-	public void testDoubleRange() throws Exception
+	@Test
+	public void doubleRange() throws Exception
 	{
 		IValidator<Double> validator = new RangeValidator<Double>(1.1, 1.8);
 
-		Validatable<Double> validatable = new Validatable<Double>((double) 1);
+		Validatable<Double> validatable = new Validatable<Double>((double)1);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 
@@ -52,7 +55,7 @@ public class RangeValidatorTest extends TestCase
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Double>((double) 2);
+		validatable = new Validatable<Double>((double)2);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 	}
@@ -61,7 +64,8 @@ public class RangeValidatorTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testIntegerRange() throws Exception
+	@Test
+	public void integerRange() throws Exception
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(1, 8);
 
@@ -84,5 +88,37 @@ public class RangeValidatorTest extends TestCase
 		validatable = new Validatable<Integer>(9);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
+
+	}
+
+	@Test
+	public void resourceKeys()
+	{
+		Validatable<Integer> validatable = new Validatable<Integer>(10);
+
+		IValidator<Integer> validator = new RangeValidator<Integer>(15, null);
+		validator.validate(validatable);
+		assertEquals("RangeValidator.minimum", getError(validatable).getKeys().get(0));
+
+		validatable = new Validatable<Integer>(10);
+		validator = new RangeValidator<Integer>(null, 5);
+		validator.validate(validatable);
+		assertEquals("RangeValidator.maximum", getError(validatable).getKeys().get(0));
+
+		validatable = new Validatable<Integer>(10);
+		validator = new RangeValidator<Integer>(1, 2);
+		validator.validate(validatable);
+		assertEquals("RangeValidator.range", getError(validatable).getKeys().get(0));
+
+		validatable = new Validatable<Integer>(10);
+		validator = new RangeValidator<Integer>(1, 1);
+		validator.validate(validatable);
+		assertEquals("RangeValidator.exact", getError(validatable).getKeys().get(0));
+
+	}
+
+	private ValidationError getError(Validatable validatable)
+	{
+		return (ValidationError)validatable.getErrors().get(0);
 	}
 }

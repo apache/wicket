@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.validation.validator;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 
 // FIXME 2.0: ivaynberg: look over javadoc
 /**
@@ -59,7 +60,7 @@ import org.apache.wicket.validation.IValidatable;
  * 
  * @since 1.2.6
  */
-public class PatternValidator extends StringValidator
+public class PatternValidator implements IValidator<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -139,20 +140,6 @@ public class PatternValidator extends StringValidator
 	}
 
 	/**
-	 * Checks a value against this <code>PatternValidator</code>'s {@link Pattern}.
-	 * 
-	 * @param validatable
-	 *            the <code>IValidatable</code> to check
-	 */
-	@Override
-	protected Map<String, Object> variablesMap(IValidatable<String> validatable)
-	{
-		final Map<String, Object> map = super.variablesMap(validatable);
-		map.put("pattern", pattern.pattern());
-		return map;
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -168,12 +155,27 @@ public class PatternValidator extends StringValidator
 	 *            the <code>IValidatable</code> to check
 	 */
 	@Override
-	protected void onValidate(IValidatable<String> validatable)
+	public void validate(IValidatable<String> validatable)
 	{
 		// Check value against pattern
 		if (pattern.matcher(validatable.getValue()).matches() == reverse)
 		{
-			error(validatable);
+			ValidationError error = new ValidationError(this);
+			error.setVariable("pattern", pattern.pattern());
+			validatable.error(decorate(error, validatable));
 		}
 	}
+
+	/**
+	 * Allows subclasses to decorate reported errors
+	 * 
+	 * @param error
+	 * @param validatable
+	 * @return decorated error
+	 */
+	protected ValidationError decorate(ValidationError error, IValidatable<String> validatable)
+	{
+		return error;
+	}
+
 }

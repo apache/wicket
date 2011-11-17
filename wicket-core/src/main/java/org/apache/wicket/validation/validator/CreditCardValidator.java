@@ -17,6 +17,8 @@
 package org.apache.wicket.validation.validator;
 
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 
 /**
  * Checks if a credit card number is valid. The number will be checked for "American Express",
@@ -33,7 +35,7 @@ import org.apache.wicket.validation.IValidatable;
  * @author Joachim F. Rohde
  * @since 1.2.6
  */
-public class CreditCardValidator extends AbstractValidator<String>
+public class CreditCardValidator implements IValidator<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -119,11 +121,8 @@ public class CreditCardValidator extends AbstractValidator<String>
 		this.cardId = cardId;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	protected void onValidate(final IValidatable<String> validatable)
+	public void validate(final IValidatable<String> validatable)
 	{
 		final String value = validatable.getValue();
 
@@ -131,13 +130,25 @@ public class CreditCardValidator extends AbstractValidator<String>
 		{
 			if (!isLengthAndPrefixCorrect(value))
 			{
-				error(validatable);
+				validatable.error(decorate(new ValidationError(this), validatable));
 			}
 		}
 		catch (final NumberFormatException ex)
 		{
-			error(validatable);
+			validatable.error(decorate(new ValidationError(this), validatable));
 		}
+	}
+
+	/**
+	 * Allows subclasses to decorate reported errors
+	 * 
+	 * @param error
+	 * @param validatable
+	 * @return decorated error
+	 */
+	protected ValidationError decorate(ValidationError error, IValidatable<String> validatable)
+	{
+		return error;
 	}
 
 	/**

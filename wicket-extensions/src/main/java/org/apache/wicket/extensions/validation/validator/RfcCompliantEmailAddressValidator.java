@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.extensions.validation.validator;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
-import org.apache.wicket.validation.validator.StringValidator;
 
 
 /**
@@ -36,7 +36,7 @@ import org.apache.wicket.validation.validator.StringValidator;
  * @see <a href="http://www.ietf.org/rfc/rfc0822.txt?number=822">RFC 822</a>
  * @author Frank Bille
  */
-public class RfcCompliantEmailAddressValidator extends StringValidator
+public class RfcCompliantEmailAddressValidator implements IValidator<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -140,31 +140,29 @@ public class RfcCompliantEmailAddressValidator extends StringValidator
 	{
 	}
 
-	/**
-	 * Checks a value against this <code>PatternValidator</code>'s {@link Pattern}.
-	 * 
-	 * @param validatable
-	 *            the <code>IValidatable</code> to check
-	 */
 	@Override
-	protected Map<String, Object> variablesMap(final IValidatable<String> validatable)
-	{
-		final Map<String, Object> map = super.variablesMap(validatable);
-		map.put("pattern", EMAIL_PATTERN);
-		return map;
-	}
-
-	@Override
-	protected void onValidate(final IValidatable<String> validatable)
+	public void validate(IValidatable<String> validatable)
 	{
 		String email = validatable.getValue().toString();
 		if (email.length() != email.trim().length())
 		{
-			error(validatable);
+			validatable.error(decorate(new ValidationError(this), validatable));
 		}
 		else if (!PATTERN.matcher(validatable.getValue()).matches())
 		{
-			error(validatable);
+			validatable.error(decorate(new ValidationError(this), validatable));
 		}
+	}
+
+	/**
+	 * Allows subclasses to decorate reported errors
+	 * 
+	 * @param error
+	 * @param validatable
+	 * @return decorated error
+	 */
+	protected ValidationError decorate(ValidationError error, IValidatable<String> validatable)
+	{
+		return error;
 	}
 }

@@ -98,7 +98,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		ft.setValue("name", "22");
 		ft.submit();
 		assertEquals(1, tester.getSession().getFeedbackMessages().size());
-		assertEquals("MIN", tester.getSession()
+		assertEquals("MINIMUM", tester.getSession()
 			.getFeedbackMessages()
 			.iterator()
 			.next()
@@ -165,7 +165,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 			if (value.length() < len)
 			{
 				ValidationError error = new ValidationError();
-				error.setMessage("MIN");
+				error.setMessage("MINIMUM");
 				validatable.error(error);
 			}
 

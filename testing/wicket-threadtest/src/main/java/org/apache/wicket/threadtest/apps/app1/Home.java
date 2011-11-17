@@ -56,7 +56,6 @@ import org.apache.wicket.threadtest.apps.app1.FormInputModel.Line;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.MaskConverter;
-import org.apache.wicket.validation.validator.MinimumValidator;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
@@ -124,7 +123,7 @@ public class Home extends WebPage
 			add(stringTextField);
 			TextField<Integer> integerTextField = new TextField<Integer>("integerProperty",
 				Integer.class);
-			add(integerTextField.add(new MinimumValidator<Integer>(0)));
+			add(integerTextField.add(new RangeValidator<Integer>(0, null)));
 			add(new TextField<Double>("doubleProperty", Double.class));
 			WebMarkupContainer dateLabel = new WebMarkupContainer("dateLabel");
 			add(dateLabel);

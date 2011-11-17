@@ -19,7 +19,7 @@ package org.apache.wicket.resource.loader;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.validation.IValidatable;
-import org.apache.wicket.validation.validator.AbstractValidator;
+import org.apache.wicket.validation.IValidator;
 import org.junit.Test;
 
 /**
@@ -44,18 +44,14 @@ public class ClassStringResourceLoaderTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public static class MyValidator extends AbstractValidator<String>
+	public static class MyValidator implements IValidator<String>
 	{
 		private static final long serialVersionUID = 1L;
 
-		/**
-		 * 
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#onValidate(org.apache.wicket.validation.IValidatable)
-		 */
 		@Override
-		protected void onValidate(IValidatable<String> v)
+		public void validate(IValidatable<String> v)
 		{
-			error(v);
+
 		}
 	}
 }
