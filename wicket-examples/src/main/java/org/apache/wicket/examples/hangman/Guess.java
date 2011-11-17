@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.hangman;
 
-import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
@@ -104,7 +104,7 @@ public class Guess extends HangmanPage
 				listItem.add(link);
 
 				// append id attribute to link for unit tests
-				link.add(new SimpleAttributeModifier("id", "letter_" + letter.asString()));
+				link.add(AttributeModifier.replace("id", "letter_" + letter.asString()));
 
 
 			}

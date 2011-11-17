@@ -17,8 +17,8 @@
 package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
@@ -45,7 +45,7 @@ public class VersionDebugContributor implements IDebugBarContributor
 			}
 		});
 
-		label.add(new SimpleAttributeModifier("class", "wicketversioncontrib"));
+		label.add(AttributeModifier.replace("class", "wicketversioncontrib"));
 		return label;
 	}
 }

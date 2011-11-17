@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.extensions.rating;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -145,7 +145,7 @@ public abstract class RatingPanel extends Panel
 
 			// add the star image, which is either active (highlighted) or
 			// inactive (no star)
-			link.add(new WebMarkupContainer("star").add(new SimpleAttributeModifier("src",
+			link.add(new WebMarkupContainer("star").add(AttributeModifier.replace("src",
 				(onIsStarActive(iteration) ? getActiveStarUrl(iteration)
 					: getInactiveStarUrl(iteration)))));
 			item.add(link);
