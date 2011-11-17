@@ -80,6 +80,7 @@ import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
+import org.apache.wicket.settings.IAjaxSettings;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IExceptionSettings;
@@ -92,6 +93,7 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
 import org.apache.wicket.settings.IStoreSettings;
+import org.apache.wicket.settings.def.AjaxSettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
@@ -1006,6 +1008,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** Application settings */
 	private IApplicationSettings applicationSettings;
 
+	/** Ajax settings */
+	private IAjaxSettings ajaxSettings;
+
 	/** Debug Settings */
 	private IDebugSettings debugSettings;
 
@@ -1063,6 +1068,29 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final void setApplicationSettings(final IApplicationSettings applicationSettings)
 	{
 		this.applicationSettings = applicationSettings;
+	}
+
+	/**
+	 * @return Application's Ajax settings
+	 * @since 6.0
+	 */
+	public final IAjaxSettings getAjaxSettings()
+	{
+		checkSettingsAvailable();
+		if (ajaxSettings == null)
+		{
+			ajaxSettings = new AjaxSettings();
+		}
+		return ajaxSettings;
+	}
+
+	/**
+	 * 
+	 * @param ajaxSettings
+	 */
+	public final void setAjaxSettings(final IAjaxSettings ajaxSettings)
+	{
+		this.ajaxSettings = ajaxSettings;
 	}
 
 	/**

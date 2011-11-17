@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
@@ -25,10 +24,8 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -50,10 +47,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	public static final ResourceReference INDICATOR = new PackageResourceReference(
 		AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
-	/** reference to the default ajax debug support javascript file. */
-	private static final ResourceReference JAVASCRIPT_DEBUG = new JavaScriptResourceReference(
-		AbstractDefaultAjaxBehavior.class, "res/js/wicket-ajax-jquery-debug.js");
-
 	/**
 	 * Subclasses should call super.onBind()
 	 * 
@@ -73,17 +66,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		super.renderHead(component, response);
 
-		response.renderJavaScriptReference(WicketJQueryReference.INSTANCE);
-		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
-		response.renderJavaScriptReference(WicketAjaxReference.INSTANCE);
-
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.isAjaxDebugModeEnabled())
-		{
-			response.renderJavaScriptReference(JAVASCRIPT_DEBUG);
-			response.renderJavaScript("Wicket.Ajax.DebugWindow.enabled=true;",
-				"wicket-ajax-debug-enable");
-		}
+		AjaxLibrariesContributor.contribute(component.getApplication(), response);
 
 		Url baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());

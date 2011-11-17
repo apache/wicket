@@ -34,7 +34,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.WicketAjaxReference;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -979,7 +978,9 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void startResourceReference()
 	{
-		tester.startResourceReference(WicketAjaxReference.INSTANCE);
+		tester.startResourceReference(tester.getApplication()
+			.getAjaxSettings()
+			.getWicketAjaxReference());
 		// verify that a random string from that resource is in the response
 		tester.assertContains("getAjaxBaseUrl");
 	}
@@ -990,7 +991,10 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void startResource()
 	{
-		tester.startResource(WicketAjaxReference.INSTANCE.getResource());
+		tester.startResource(tester.getApplication()
+			.getAjaxSettings()
+			.getWicketAjaxReference()
+			.getResource());
 		// verify that a random string from that resource is in the response
 		tester.assertContains("getAjaxBaseUrl");
 	}

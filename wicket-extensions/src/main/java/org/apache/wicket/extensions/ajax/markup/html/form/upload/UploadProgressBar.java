@@ -21,11 +21,10 @@ import java.util.Formatter;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
-import org.apache.wicket.ajax.WicketAjaxReference;
+import org.apache.wicket.ajax.AjaxLibrariesContributor;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -202,8 +201,8 @@ public class UploadProgressBar extends Panel
 	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
-		response.renderJavaScriptReference(WicketAjaxReference.INSTANCE);
+
+		AjaxLibrariesContributor.contribute(getApplication(), response);
 		response.renderJavaScriptReference(JS);
 		ResourceReference css = getCss();
 		if (css != null)
