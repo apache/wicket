@@ -52,7 +52,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * Keeps track of the number of items we show per page. The default is Integer.MAX_VALUE which
 	 * effectively disables paging.
 	 */
-	private int itemsPerPage = Integer.MAX_VALUE;
+	private long itemsPerPage = Long.MAX_VALUE;
 
 	/**
 	 * Keeps track of the current page number.
@@ -172,7 +172,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * 
 	 * @param items
 	 */
-	public final void setItemsPerPage(int items)
+	public final void setItemsPerPage(long items)
 	{
 		if (items < 1)
 		{
