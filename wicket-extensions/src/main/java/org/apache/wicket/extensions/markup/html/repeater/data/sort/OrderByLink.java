@@ -21,6 +21,7 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -77,19 +78,12 @@ public class OrderByLink extends Link<Void>
 	 * 
 	 */
 	public OrderByLink(final String id, final String property,
-		final ISortStateLocator stateLocator, final ICssProvider cssProvider)
+		final ISortStateLocator stateLocator, final ICssProvider<String> cssProvider)
 	{
 		super(id);
 
-		if (cssProvider == null)
-		{
-			throw new IllegalArgumentException("argument [cssProvider] cannot be null");
-		}
-
-		if (property == null)
-		{
-			throw new IllegalArgumentException("argument [sortProperty] cannot be null");
-		}
+		Args.notNull(cssProvider, "cssProvider");
+		Args.notNull(property, "property");
 
 		this.property = property;
 		this.stateLocator = stateLocator;
@@ -127,7 +121,7 @@ public class OrderByLink extends Link<Void>
 			addStateChange();
 		}
 
-		ISortState state = stateLocator.getSortState();
+		ISortState<String> state = stateLocator.getSortState();
 
 		// get current sort order
 		SortOrder order = state.getPropertySortOrder(property);
@@ -168,7 +162,7 @@ public class OrderByLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 		private final OrderByLink link;
-		private final ICssProvider provider;
+		private final ICssProvider<String> provider;
 
 		/**
 		 * @param link
@@ -176,7 +170,7 @@ public class OrderByLink extends Link<Void>
 		 * @param provider
 		 *            implementation of ICssProvider
 		 */
-		public CssModifier(final OrderByLink link, final ICssProvider provider)
+		public CssModifier(final OrderByLink link, final ICssProvider<String> provider)
 		{
 			this.link = link;
 			this.provider = provider;
@@ -187,7 +181,7 @@ public class OrderByLink extends Link<Void>
 		{
 			super.onComponentTag(component, tag);
 
-			final ISortState sortState = link.stateLocator.getSortState();
+			final ISortState<String> sortState = link.stateLocator.getSortState();
 			String cssClass = provider.getClassAttributeValue(sortState, link.property);
 			if (!Strings.isEmpty(cssClass))
 			{
@@ -203,8 +197,10 @@ public class OrderByLink extends Link<Void>
 	 * value is null class attribute will not be added
 	 * 
 	 * @author igor
+	 * @param <T>
+	 *            the type of the sort property
 	 */
-	public static interface ICssProvider extends IClusterable
+	public static interface ICssProvider<T> extends IClusterable
 	{
 		/**
 		 * @param state
@@ -214,7 +210,7 @@ public class OrderByLink extends Link<Void>
 		 * @return the value of the "class" attribute for the given sort state/sort property
 		 *         combination
 		 */
-		public String getClassAttributeValue(ISortState state, String property);
+		public String getClassAttributeValue(ISortState<T> state, String property);
 	}
 
 
@@ -224,7 +220,7 @@ public class OrderByLink extends Link<Void>
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static class CssProvider implements ICssProvider
+	public static class CssProvider implements ICssProvider<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -253,7 +249,7 @@ public class OrderByLink extends Link<Void>
 		 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider#getClassAttributeValue(org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState,
 		 *      java.lang.String)
 		 */
-		public String getClassAttributeValue(final ISortState state, final String property)
+		public String getClassAttributeValue(final ISortState<String> state, final String property)
 		{
 			SortOrder dir = state.getPropertySortOrder(property);
 
@@ -282,12 +278,12 @@ public class OrderByLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private static ICssProvider instance = new VoidCssProvider();
+		private static ICssProvider<String> instance = new VoidCssProvider();
 
 		/**
 		 * @return singleton instance
 		 */
-		public static ICssProvider getInstance()
+		public static ICssProvider<String> getInstance()
 		{
 			return instance;
 		}

@@ -23,12 +23,14 @@ import org.apache.wicket.util.lang.Args;
  * Represents sorting information of a property
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
+ *            the type of the sort property
  */
-public class SortParam implements IClusterable
+public class SortParam<T> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final String property;
+	private final T property;
 	private final boolean ascending;
 
 	/**
@@ -38,7 +40,7 @@ public class SortParam implements IClusterable
 	 *            <code>true<code> if sort order is ascending, <code>false</code> if sort order is
 	 *            descending
 	 */
-	public SortParam(final String property, final boolean ascending)
+	public SortParam(final T property, final boolean ascending)
 	{
 		Args.notNull(property, "property");
 		this.property = property;
@@ -48,7 +50,7 @@ public class SortParam implements IClusterable
 	/**
 	 * @return sort property
 	 */
-	public String getProperty()
+	public T getProperty()
 	{
 		return property;
 	}
@@ -76,7 +78,8 @@ public class SortParam implements IClusterable
 			return false;
 		}
 
-		SortParam sortParam = (SortParam)o;
+		@SuppressWarnings("unchecked")
+		SortParam<T> sortParam = (SortParam<T>)o;
 
 		return (ascending == sortParam.ascending) && property.equals(sortParam.property);
 	}

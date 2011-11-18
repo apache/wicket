@@ -44,7 +44,8 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 */
 	public Iterator<Contact> iterator(long first, long count)
 	{
-		return getContactsDB().find(first, count, new SortParam("firstName", true)).iterator();
+		return getContactsDB().find(first, count, new SortParam<String>("firstName", true))
+			.iterator();
 	}
 
 	/**

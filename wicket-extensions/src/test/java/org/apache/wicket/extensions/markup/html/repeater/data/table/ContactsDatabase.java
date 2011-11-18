@@ -87,12 +87,12 @@ public class ContactsDatabase
 	 * @param sort
 	 * @return list of contacts
 	 */
-	public List<Contact> find(final long first, final long count, final SortParam sort)
+	public List<Contact> find(final long first, final long count, final SortParam<String> sort)
 	{
 		return getIndex(sort).subList((int)first, (int)(first + count));
 	}
 
-	protected List<Contact> getIndex(final SortParam sort)
+	protected List<Contact> getIndex(final SortParam<String> sort)
 	{
 		if (sort == null)
 		{

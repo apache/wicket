@@ -57,8 +57,10 @@ public class FormPage extends BasePage
 			protected Iterator<IModel<Contact>> getItemModels()
 			{
 				// for simplicity we only show the first 10 contacts
-				SortParam sort = new SortParam("firstName", true);
-				Iterator<Contact> contacts = DatabaseLocator.getDatabase().find(0, 10, sort).iterator();
+				SortParam<String> sort = new SortParam<String>("firstName", true);
+				Iterator<Contact> contacts = DatabaseLocator.getDatabase()
+					.find(0, 10, sort)
+					.iterator();
 
 				// the iterator returns contact objects, but we need it to
 				// return models, we use this handy adapter class to perform

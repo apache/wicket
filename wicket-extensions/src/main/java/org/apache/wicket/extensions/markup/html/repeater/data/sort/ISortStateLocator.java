@@ -31,5 +31,5 @@ public interface ISortStateLocator extends IClusterable
 	/**
 	 * @return ISortState object
 	 */
-	ISortState getSortState();
+	<T> ISortState<T> getSortState();
 }

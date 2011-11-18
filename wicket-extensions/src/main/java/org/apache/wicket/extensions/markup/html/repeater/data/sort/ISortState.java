@@ -22,9 +22,11 @@ import org.apache.wicket.IClusterable;
  * Interface used by OrderByLink to interact with any object that keeps track of sorting state
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            the type of the sort property
  * 
  */
-public interface ISortState extends IClusterable
+public interface ISortState<T> extends IClusterable
 {
 	/**
 	 * Sets sort order of the property
@@ -34,7 +36,7 @@ public interface ISortState extends IClusterable
 	 * @param order
 	 *            sort order
 	 */
-	public void setPropertySortOrder(String property, SortOrder order);
+	public void setPropertySortOrder(T property, SortOrder order);
 
 	/**
 	 * Gets the sort order of a property
@@ -43,6 +45,6 @@ public interface ISortState extends IClusterable
 	 *            sort property to be checked
 	 * @return sort order
 	 */
-	public SortOrder getPropertySortOrder(String property);
+	public SortOrder getPropertySortOrder(T property);
 
 }
