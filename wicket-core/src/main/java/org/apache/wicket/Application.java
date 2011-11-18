@@ -1565,7 +1565,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @return RequestCycleProvider
 	 */
-	public IRequestCycleProvider getRequestCycleProvider()
+	public final IRequestCycleProvider getRequestCycleProvider()
 	{
 		return requestCycleProvider;
 	}
@@ -1574,7 +1574,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param requestCycleProvider
 	 */
-	public void setRequestCycleProvider(final IRequestCycleProvider requestCycleProvider)
+	public final void setRequestCycleProvider(final IRequestCycleProvider requestCycleProvider)
 	{
 		this.requestCycleProvider = requestCycleProvider;
 	}
@@ -1644,7 +1644,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param headerResponseDecorator
 	 *            your custom decorator
 	 */
-	public void setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
+	public final void setHeaderResponseDecorator(
+		final IHeaderResponseDecorator headerResponseDecorator)
 	{
 		this.headerResponseDecorator = headerResponseDecorator;
 	}
