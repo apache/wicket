@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
-import java.lang.reflect.Method;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,21 +73,6 @@ import org.joda.time.DateTime;
  */
 public class DatePicker extends Behavior
 {
-	private static Method GETINSTANCEMETHOD = null;
-
-	static
-	{
-		try
-		{
-			// try to use JDK 6 DateFormatSymbols.getInstance(Locale)
-			GETINSTANCEMETHOD = DateFormatSymbols.class.getMethod("getInstance",
-				new Class[] { Locale.class });
-		}
-		catch (Exception e)
-		{
-			// ignore
-		}
-	}
 
 	/**
 	 * Exception thrown when the bound component does not produce a format this date picker can work
@@ -586,19 +570,7 @@ public class DatePicker extends Behavior
 			return;
 		}
 
-		DateFormatSymbols dfSymbols = null;
-		if (GETINSTANCEMETHOD != null)
-		{
-			// try to use JDK 6 DateFormatSymbols.getInstance(Locale)
-			try
-			{
-				dfSymbols = (DateFormatSymbols)GETINSTANCEMETHOD.invoke(null, locale);
-			}
-			catch (Exception e)
-			{
-				// ignore
-			}
-		}
+		DateFormatSymbols dfSymbols = DateFormatSymbols.getInstance(locale);
 		if (dfSymbols == null)
 		{
 			dfSymbols = new DateFormatSymbols(locale);
