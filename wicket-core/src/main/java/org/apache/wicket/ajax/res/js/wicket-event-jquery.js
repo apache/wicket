@@ -33,15 +33,6 @@
 		return;
 	}
 
-	if (Function.prototype.bind === null) {
-		Function.prototype.bind = function (object) {
-			var self = this;
-			return function () {
-				return self.apply(object, arguments);
-			};
-		};
-	}
-
 	window.Wicket = {};
 
 	$.extend(true, Wicket, {

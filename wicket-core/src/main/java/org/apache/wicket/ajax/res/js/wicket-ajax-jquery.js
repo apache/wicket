@@ -36,15 +36,6 @@ jQuery.noConflict();
 		return;
 	}
 
-	if (typeof(Function.prototype.bind) === 'undefined') {
-		Function.prototype.bind = function (object) {
-			var self = this;
-			return function () {
-				return self.apply(object, arguments);
-			};
-		};
-	}
-
 	/**
 	 * Add a check for old Safari. It should not be our responsibility to check the
 	 * browser's version, but it's a minor version that makes a difference here,
@@ -128,13 +119,14 @@ jQuery.noConflict();
 				f = this.functions[this.current];
 				run = function () {
 					try {
-						f(this.notify.bind(this));
+						f(jQuery.proxy(this.notify, this));
 					}
 					catch (e) {
 						Wicket.Log.error("FunctionsExecuter.processNext: " + e);
-						this.notify.bind(this);
+						jQuery.proxy(this.notify, this);
 					}
-				}.bind(this);
+				};
+				run = jQuery.proxy(run, this);
 				this.current++;
 
 				if (this.depth > 50 || Wicket.Browser.isKHTML() || Wicket.Browser.isSafari()) {
@@ -353,7 +345,7 @@ jQuery.noConflict();
 		// Executes a get request
 		get: function () {
 			if (this.channel !== null) {
-				var res = Wicket.channelManager.schedule(this.channel, this.doGet.bind(this));
+				var res = Wicket.channelManager.schedule(this.channel, jQuery.proxy(this.doGet, this));
 				return res !== null ? res : true;
 			} else {
 				return this.doGet();
@@ -375,7 +367,7 @@ jQuery.noConflict();
 				t = this.transport;
 				if (t !== null) {
 					t.open("GET", url, this.async);
-					t.onreadystatechange = this.stateChangeCallback.bind(this);
+					t.onreadystatechange = jQuery.proxy(this.stateChangeCallback, this);
 					// set a special flag to allow server distinguish between ajax and non-ajax requests
 					t.setRequestHeader("Wicket-Ajax", "true");
 					t.setRequestHeader("Wicket-Ajax-BaseURL", getAjaxBaseUrl());
@@ -399,9 +391,9 @@ jQuery.noConflict();
 		// Posts the given string
 		post: function (body) {
 			if (this.channel !== null) {
-				var res = Wicket.channelManager.schedule(this.channel, function () {
+				var res = Wicket.channelManager.schedule(this.channel, jQuery.proxy(function () {
 					this.doPost(body);
-				}.bind(this));
+				}, this));
 				return res !== null ? res: true;
 			} else {
 				return this.doPost(body);
@@ -429,7 +421,7 @@ jQuery.noConflict();
 						body = body();
 					}
 					t.open("POST", url, this.async);
-					t.onreadystatechange = this.stateChangeCallback.bind(this);
+					t.onreadystatechange = jQuery.proxy(this.stateChangeCallback, this);
 					t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 					// set a special flag to allow server distinguish between ajax and non-ajax requests
 					t.setRequestHeader("Wicket-Ajax", "true");
@@ -577,7 +569,7 @@ jQuery.noConflict();
 			 // set the default channel if not specified
 			var c = channel || "0|s";
 			// initialize the internal Ajax request
-			this.request = new Wicket.Ajax.Request(url, this.loadedCallback.bind(this), true, true, failureHandler, c, successHandler);
+			this.request = new Wicket.Ajax.Request(url, jQuery.proxy(this.loadedCallback, this), true, true, failureHandler, c, successHandler);
 			this.request.suppressDone = true;
 		},
 
@@ -774,9 +766,9 @@ jQuery.noConflict();
 				// start it a bit later so that the browser does handle the next event
 				// before the component is or can be replaced. We could do (if (!posponed))
 				// because if there is already something in the queue then we could execute that immedietly
-				steps.push(function (notify) {
+				steps.push(jQuery.proxy(function (notify) {
 					window.setTimeout(notify, 2);
-				}.bind(this));
+				}, this));
 
 			    if (Wicket.Browser.isKHTML()) {
 					// there's a nasty bug in KHTML that makes the browser crash
@@ -836,12 +828,12 @@ jQuery.noConflict();
 
 		// Adds a closure to steps that should be invoked after all other steps have been successfully executed
 		success: function (steps) {
-			steps.push(function (notify) {
+			steps.push(jQuery.proxy(function (notify) {
 				Wicket.Log.info("Response processed successfully.");
 				Wicket.Ajax.invokePostCallHandlers();
 				// retach the events to the new components (a bit blunt method...)
 				// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
-				// IE this will cause double events for everything.. (mostly because of the Function.prototype.bind(element))
+				// IE this will cause double events for everything.. (mostly because of the jQuery.proxy(element))
 				Wicket.Focus.attachFocusEvent();
 
 				this.request.done();
@@ -852,7 +844,7 @@ jQuery.noConflict();
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
 				notify();
-			}.bind(this));
+			}, this));
 		},
 
 		// Adds a closure that replaces a component
