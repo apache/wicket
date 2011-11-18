@@ -49,9 +49,9 @@ public abstract class Loop extends AbstractRepeater
 	 *            max index of the loop
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Loop(final String id, final int iterations)
+	public Loop(final String id, final long iterations)
 	{
-		super(id, new Model<Integer>(iterations));
+		super(id, new Model<Long>(iterations));
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class Loop extends AbstractRepeater
 	 *            Must contain a Integer model object
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Loop(final String id, final IModel<Integer> model)
+	public Loop(final String id, final IModel<Long> model)
 	{
 		super(id, model);
 	}

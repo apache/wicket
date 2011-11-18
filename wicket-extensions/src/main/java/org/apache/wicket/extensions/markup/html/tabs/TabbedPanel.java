@@ -94,14 +94,14 @@ public class TabbedPanel extends Panel
 
 		this.tabs = Args.notNull(tabs, "tabs");
 
-		final IModel<Integer> tabCount = new AbstractReadOnlyModel<Integer>()
+		final IModel<Long> tabCount = new AbstractReadOnlyModel<Long>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Integer getObject()
+			public Long getObject()
 			{
-				return TabbedPanel.this.tabs.size();
+				return (long)TabbedPanel.this.tabs.size();
 			}
 		};
 
