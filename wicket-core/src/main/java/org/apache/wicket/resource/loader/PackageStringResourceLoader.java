@@ -49,7 +49,7 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 	private static final Logger log = LoggerFactory.getLogger(PackageStringResourceLoader.class);
 
 	/** The name (without extension) of the properties file */
-	private String filename = "package";
+	private String filename = "wicket-package";
 
 	/**
 	 * Create and initialize the resource loader.
