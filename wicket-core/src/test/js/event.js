@@ -187,15 +187,18 @@ jQuery(document).ready(function() {
 
 	
 	test('all topics', function() {
-		expect(2);
+		expect(8);
 
 		var subscriber = function() {
 			ok(true, 'Should be notified for any topic name');
+			equal(arguments.length, 3, "1 jQuery.Event + our two args");
+			equal(arguments[1], "arg1", "'arg1' must be at position 1");
+			equal(arguments[2], "arg2", "'arg2' must be at position 2");
 		};
 
 		Wicket.Event.subscribe('*', subscriber);
 
-		Wicket.Event.publish('topicName1');
-		Wicket.Event.publish('topicName2');
+		Wicket.Event.publish('topicName1', "arg1", "arg2");
+		Wicket.Event.publish('topicName2', "arg1", "arg2");
 	});
 });

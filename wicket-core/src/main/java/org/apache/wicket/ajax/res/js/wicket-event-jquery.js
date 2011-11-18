@@ -153,11 +153,9 @@
 			*/
 			subscribe: function (topic, subscriber) {
 				
-				if (typeof(topic) === 'undefined' || topic === null) {
-					return;
+				if (topic) {
+					jQuery(document).on(topic, subscriber);
 				}
-
-				jQuery(document).on(topic, subscriber);
 			},
 
 			/**
@@ -169,11 +167,13 @@
 			* @param String topic - the channel name for which all subscribers will be notified.
 			*/
 			publish: function (topic) {
-				if (typeof(topic) === 'undefined' || topic === null) {
-					return;
+				if (topic) {
+					// cut the topic argument
+					var args = Array.prototype.slice.call(arguments).slice(1);
+			
+					jQuery(document).triggerHandler(topic, args);
+					jQuery(document).triggerHandler('*', args);
 				}
-				jQuery(document).triggerHandler(topic);
-				jQuery(document).triggerHandler('*');
 			}
 		}
 	});
