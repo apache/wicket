@@ -371,4 +371,11 @@ public class AsynchronousDataStore implements IDataStore
 			}
 		}
 	}
+
+	@Override
+	public final boolean canBeAsynchronous()
+	{
+		// should not wrap in abother AsynchronousDataStore
+		return false;
+	}
 }

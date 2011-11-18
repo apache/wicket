@@ -55,9 +55,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 		IStoreSettings storeSettings = getStoreSettings();
 
-		// TODO Wicket.next: add IDataStore#canWorkAsynchronous() and replace the instanceof check
-		// below
-		if (storeSettings.isAsynchronous() && dataStore instanceof DiskDataStore)
+		if (dataStore.canBeAsynchronous())
 		{
 			int capacity = storeSettings.getAsynchronousQueueCapacity();
 			dataStore = new AsynchronousDataStore(dataStore, capacity);

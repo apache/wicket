@@ -113,4 +113,10 @@ public class InMemoryPageStore implements IDataStore
 		return false;
 	}
 
+	@Override
+	public boolean canBeAsynchronous()
+	{
+		return false;
+	}
+
 }

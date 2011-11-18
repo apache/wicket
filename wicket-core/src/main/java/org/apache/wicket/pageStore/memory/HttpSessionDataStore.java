@@ -153,4 +153,12 @@ public class HttpSessionDataStore implements IDataStore
 		return pageTable;
 	}
 
+	@Override
+	public final boolean canBeAsynchronous()
+	{
+		// HttpSessionDataStore needs access to the current http session
+		// and this is not possible in AsychronousDataStore
+		return false;
+	}
+
 }

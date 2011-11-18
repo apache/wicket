@@ -508,4 +508,9 @@ public class DiskDataStore implements IDataStore
 		return sessionFolder;
 	}
 
+	@Override
+	public boolean canBeAsynchronous()
+	{
+		return true;
+	}
 }

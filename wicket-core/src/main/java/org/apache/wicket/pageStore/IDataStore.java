@@ -75,4 +75,9 @@ public interface IDataStore
 	 * @return whether the data store is replicated
 	 */
 	boolean isReplicated();
+
+	/**
+	 * @return whether the implementation can be wrapped in {@link AsynchronousDataStore}
+	 */
+	boolean canBeAsynchronous();
 }
