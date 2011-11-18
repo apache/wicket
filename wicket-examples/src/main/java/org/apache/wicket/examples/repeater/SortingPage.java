@@ -68,7 +68,7 @@ public class SortingPage extends BasePage
 			}
 		};
 
-		dataView.setItemsPerPage(8);
+		dataView.setItemsPerPage(8L);
 
 		add(new OrderByBorder("orderByFirstName", "firstName", dp)
 		{

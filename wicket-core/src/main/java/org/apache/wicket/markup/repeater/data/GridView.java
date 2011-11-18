@@ -147,7 +147,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 
 	private void updateItemsPerPage()
 	{
-		int items = Integer.MAX_VALUE;
+		long items = Long.MAX_VALUE;
 
 		long result = (long)rows * (long)columns;
 

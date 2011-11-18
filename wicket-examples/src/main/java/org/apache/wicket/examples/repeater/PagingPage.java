@@ -67,7 +67,7 @@ public class PagingPage extends BasePage
 			}
 		};
 
-		dataView.setItemsPerPage(8);
+		dataView.setItemsPerPage(8L);
 		add(dataView);
 
 		add(new PagingNavigator("navigator", dataView));

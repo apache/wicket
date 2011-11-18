@@ -132,7 +132,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 *            number of rows per page
 	 */
 	public DataTable(final String id, final List<IColumn<T>> columns,
-		final IDataProvider<T> dataProvider, final int rowsPerPage)
+		final IDataProvider<T> dataProvider, final long rowsPerPage)
 	{
 		super(id);
 
@@ -324,7 +324,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 *            number of items to display per page
 	 * 
 	 */
-	public void setItemsPerPage(final int items)
+	public void setItemsPerPage(final long items)
 	{
 		datagrid.setItemsPerPage(items);
 	}

@@ -89,7 +89,7 @@ public abstract class DataView<T> extends DataViewBase<T>
 	 * @param itemsPerPage
 	 *            items per page
 	 */
-	protected DataView(String id, IDataProvider<T> dataProvider, int itemsPerPage)
+	protected DataView(String id, IDataProvider<T> dataProvider, long itemsPerPage)
 	{
 		super(id, dataProvider);
 		setItemsPerPage(itemsPerPage);

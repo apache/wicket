@@ -126,7 +126,7 @@ public class OIRPage extends BasePage
 			}
 		};
 
-		dataView.setItemsPerPage(8);
+		dataView.setItemsPerPage(8L);
 		dataView.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
 
 		add(new OrderByBorder("orderByFirstName", "firstName", dp)
