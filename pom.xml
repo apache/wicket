@@ -554,6 +554,8 @@
 					<comparisonVersion>1.5.2</comparisonVersion>
 					<failOnError>false</failOnError>
 					<logResults>true</logResults>
+					<!-- disabled until we start the release candidates -->
+					<skip>true</skip>
 				</configuration>
 			</plugin>
 			<plugin>
