@@ -17,6 +17,7 @@
 package org.apache.wicket.authroles.authorization.strategies.role;
 
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Base strategy that uses an instance of
@@ -37,10 +38,7 @@ public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizatio
 	 */
 	public AbstractRoleAuthorizationStrategy(IRoleCheckingStrategy roleCheckingStrategy)
 	{
-		if (roleCheckingStrategy == null)
-		{
-			throw new IllegalArgumentException("roleCheckingStrategy must be not null");
-		}
+		Args.notNull(roleCheckingStrategy, "roleCheckingStrategy");
 		this.roleCheckingStrategy = roleCheckingStrategy;
 	}
 
@@ -77,11 +75,6 @@ public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizatio
 		if (roles.isEmpty())
 		{
 			return true;
-		}
-
-		if (roles.size() == 1)
-		{
-			return "".equals(roles.iterator().next());
 		}
 
 		return false;
