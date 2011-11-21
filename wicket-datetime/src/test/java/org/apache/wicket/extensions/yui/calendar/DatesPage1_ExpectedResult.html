@@ -13,7 +13,15 @@ th {
 /*]]>*/
 </style>
 <script type="text/javascript" src="../resource/org.apache.wicket.extensions.yui.YuiLib/yuiloader/yuiloader.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
+<script type="text/javascript" id="wicket-ajax-debug-enable">
+/*<![CDATA[*/
+Wicket.Ajax.DebugWindow.enabled=true;
+/*]]>*/
+</script>
 <script type="text/javascript" >
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { /*
@@ -32,46 +40,53 @@ Wicket.Event.add(window, "domready", function(event) { /*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-wicketCalendarInits = [];
-wicketCalendarInitFinished = false;
-wicketCalendarI18n = {};
-wicketCalendarAdd = function(initFn) {
-	if (wicketCalendarInitFinished) {
+if (typeof(Wicket) === 'undefined') {
+	window.Wicket = {};
+}
+if (typeof(Wicket.DateTimeInit) === 'undefined') {
+	Wicket.DateTimeInit = {};
+}
+
+Wicket.DateTimeInit.CalendarInits = [];
+Wicket.DateTimeInit.CalendarInitFinished = false;
+Wicket.DateTimeInit.CalendarI18n = {};
+Wicket.DateTimeInit.CalendarAdd = function(initFn) {
+	if (Wicket.DateTimeInit.CalendarInitFinished) {
 		// when a DatePicker is added via ajax, the loader is already finished, so
 		// we call the init function directly.
 		initFn();
 	} else {
 		// when page is rendered, all calendar components will be initialized after
 		// the required js libraries have been loaded.
-		wicketCalendarInits.push(initFn);
+		Wicket.DateTimeInit.CalendarInits.push(initFn);
 	}
 };
 
-var wicketYuiLoader = new YAHOO.util.YUILoader({
+Wicket.DateTimeInit.YuiLoader = new YAHOO.util.YUILoader({
 	base: "../resource/org.apache.wicket.extensions.yui.YuiLib/",
 	filter: "RAW",
 	allowRollup: false,
 	require: ["wicket-date"],
 	onSuccess: function() {
-		wicketCalendarInitFinished = true;
-		while (wicketCalendarInits.length > 0) {
-			wicketCalendarInits.pop()();
+		Wicket.DateTimeInit.CalendarInitFinished = true;
+		while (Wicket.DateTimeInit.CalendarInits.length > 0) {
+			Wicket.DateTimeInit.CalendarInits.pop()();
 		}
 	}
 });
-wicketYuiLoader.addModule({
+Wicket.DateTimeInit.YuiLoader.addModule({
 	name: "wicket-date",
 	type: "js",
 	requires: ["calendar"],
 	fullpath: "../resource/org.apache.wicket.extensions.yui.calendar.DatePicker/wicket-date.js"
 });
-wicketYuiLoader.insert();
+Wicket.DateTimeInit.YuiLoader.insert();
 ;});
 /*]]>*/
 </script>
 <script type="text/javascript" >
 /*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { wicketCalendarI18n["de"]={MONTHS_SHORT:["Jan","Feb","Mrz","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],MONTHS_LONG:["Januar","Februar","M\u00E4rz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],WEEKDAYS_MEDIUM:["So","Mo","Di","Mi","Do","Fr","Sa"],WEEKDAYS_LONG:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],START_WEEKDAY:1,WEEKDAYS_1CHAR:["S","M","D","M","D","F","S"],WEEKDAYS_SHORT:["So","Mo","Di","Mi","Do","Fr","Sa"]};;});
+Wicket.Event.add(window, "domready", function(event) { Wicket.DateTimeInit.CalendarI18n["de"]={MONTHS_SHORT:["Jan","Feb","Mrz","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],MONTHS_LONG:["Januar","Februar","M\u00E4rz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],WEEKDAYS_MEDIUM:["So","Mo","Di","Mi","Do","Fr","Sa"],WEEKDAYS_LONG:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],START_WEEKDAY:1,WEEKDAYS_1CHAR:["S","M","D","M","D","F","S"],WEEKDAYS_SHORT:["So","Mo","Di","Mi","Do","Fr","Sa"]};;});
 /*]]>*/
 </script>
 <script type="text/javascript" >
@@ -92,9 +107,9 @@ Wicket.Event.add(window, "domready", function(event) { /*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-wicketCalendarAdd(function() {
+Wicket.DateTimeInit.CalendarAdd(function() {
 	Wicket.DateTime.init2("dateTextField1", "dateTextField1", {close:true,selected:"xx.xx.xxxx",pagedate:"xx.xxxx"}, "dd.MM.yy",
-			true, true, true, false, wicketCalendarI18n["de"], false);
+			true, true, true, false, Wicket.DateTimeInit.CalendarI18n["de"], false);
 	
 });
 ;});

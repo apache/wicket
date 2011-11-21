@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.ajax.AjaxLibrariesContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -368,9 +369,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 			List<String> token = Arrays.asList("javascript-event", target, event, javascript);
 			if (wasRendered(token) == false)
 			{
-				renderJavaScriptReference(Application.get()
-					.getAjaxSettings()
-					.getWicketEventReference());
+				AjaxLibrariesContributor.contribute(Application.get(), this);
 				JavaScriptUtils.writeJavaScript(getResponse(), "Wicket.Event.add(" + target +
 					", \"" + event + "\", function(event) { " + javascript + ";});");
 				markRendered(token);

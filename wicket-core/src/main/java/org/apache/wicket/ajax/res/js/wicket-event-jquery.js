@@ -35,7 +35,7 @@
 
 	window.Wicket = {};
 
-	$.extend(true, Wicket, {
+	jQuery.extend(true, Wicket, {
 
 		Browser: {
 			isKHTML: function () {
