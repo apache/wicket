@@ -898,7 +898,7 @@ Wicket.Window.prototype = {
 	 * Called when dragging has started. 
 	 */
 	onBegin: function(object) {
-		if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIE())) {
+		if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIE() || Wicket.Browser.isSafari())) {
 			this.revertList = new Array();				
 			Wicket.Iframe.documentFix(document, this.revertList);
 		}			 			 			
