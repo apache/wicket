@@ -213,6 +213,8 @@ public class DatePicker extends Behavior
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
+		super.renderHead(component, response);
+
 		if (includeYUILibraries())
 		{
 			YuiLib.load(response);
@@ -298,7 +300,7 @@ public class DatePicker extends Behavior
 		Map<String, Object> variables = new HashMap<String, Object>();
 		variables.put("basePath",
 			Strings.stripJSessionId(RequestCycle.get().urlFor(YUI, null).toString()) + "/");
-		variables.put("wicketDatePath", RequestCycle.get().urlFor(WICKET_DATE, null));
+		variables.put("Wicket.DateTimeInit.DatePath", RequestCycle.get().urlFor(WICKET_DATE, null));
 
 		if (Application.get().usesDevelopmentConfig())
 		{
@@ -562,7 +564,7 @@ public class DatePicker extends Behavior
 		Map<String, Object> initVariables)
 	{
 		Locale locale = getLocale();
-		String key = "wicketCalendarI18n[\"" + locale.toString() + "\"]";
+		String key = "Wicket.DateTimeInit.CalendarI18n[\"" + locale.toString() + "\"]";
 		initVariables.put("i18n", key);
 
 		if (response.wasRendered(key))

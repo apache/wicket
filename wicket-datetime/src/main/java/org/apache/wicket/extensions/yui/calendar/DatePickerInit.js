@@ -14,37 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-wicketCalendarInits = [];
-wicketCalendarInitFinished = false;
-wicketCalendarI18n = {};
-wicketCalendarAdd = function(initFn) {
-	if (wicketCalendarInitFinished) {
+if (typeof(Wicket) === 'undefined') {
+	window.Wicket = {};
+}
+if (typeof(Wicket.DateTimeInit) === 'undefined') {
+	Wicket.DateTimeInit = {};
+}
+
+Wicket.DateTimeInit.CalendarInits = [];
+Wicket.DateTimeInit.CalendarInitFinished = false;
+Wicket.DateTimeInit.CalendarI18n = {};
+Wicket.DateTimeInit.CalendarAdd = function(initFn) {
+	if (Wicket.DateTimeInit.CalendarInitFinished) {
 		// when a DatePicker is added via ajax, the loader is already finished, so
 		// we call the init function directly.
 		initFn();
 	} else {
 		// when page is rendered, all calendar components will be initialized after
 		// the required js libraries have been loaded.
-		wicketCalendarInits.push(initFn);
+		Wicket.DateTimeInit.CalendarInits.push(initFn);
 	}
 };
 
-var wicketYuiLoader = new YAHOO.util.YUILoader({
+Wicket.DateTimeInit.YuiLoader = new YAHOO.util.YUILoader({
 	base: "${basePath}",
 	${filter}
 	allowRollup: ${allowRollup},
 	require: ["wicket-date"],
 	onSuccess: function() {
-		wicketCalendarInitFinished = true;
-		while (wicketCalendarInits.length > 0) {
-			wicketCalendarInits.pop()();
+		Wicket.DateTimeInit.CalendarInitFinished = true;
+		while (Wicket.DateTimeInit.CalendarInits.length > 0) {
+			Wicket.DateTimeInit.CalendarInits.pop()();
 		}
 	}
 });
-wicketYuiLoader.addModule({
+Wicket.DateTimeInit.YuiLoader.addModule({
 	name: "wicket-date",
 	type: "js",
 	requires: ["calendar"],
-	fullpath: "${wicketDatePath}"
+	fullpath: "${Wicket.DateTimeInit.DatePath}"
 });
-wicketYuiLoader.insert();
+Wicket.DateTimeInit.YuiLoader.insert();

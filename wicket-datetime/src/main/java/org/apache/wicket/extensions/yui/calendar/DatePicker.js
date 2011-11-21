@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-wicketCalendarAdd(function() {
+Wicket.DateTimeInit.CalendarAdd(function() {
 	Wicket.DateTime.init2("${widgetId}", "${componentId}", ${calendarInit}, "${datePattern}",
 			${alignWithIcon}, ${fireChangeEvent}, ${hideOnSelect}, ${showOnFieldClick}, ${i18n}, ${autoHide});
 	${additionalJavascript}
