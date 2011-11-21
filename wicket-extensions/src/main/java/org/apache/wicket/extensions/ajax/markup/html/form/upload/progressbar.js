@@ -31,7 +31,7 @@ Wicket.WUPB.prototype = {
 	bind : function(formid) {
 		formElement = Wicket.$(formid);
 		this.originalCallback = formElement.onsubmit;
-		formElement.onsubmit = this.submitCallback.bind(this);
+		formElement.onsubmit = Wicket.inCtx(this.submitCallback, this);
 	},
 
 	submitCallback : function() {
@@ -73,7 +73,7 @@ Wicket.WUPB.prototype = {
 	},
 	
 	scheduleUpdate : function(){
-		window.setTimeout(this.load.bind(this), 1000);
+		window.setTimeout(Wicket.inCtx(this.load, this), 1000);
 	},
 
 	load : function() {
@@ -83,7 +83,7 @@ Wicket.WUPB.prototype = {
 		
     	document.body.appendChild(this.iframe);
 		
-		Wicket.Event.add(this.iframe, "load", this.update.bind(this));
+		Wicket.Event.add(this.iframe, "load", Wicket.inCtx(this.update, this));
 		this.iframe.src = URL; 
 	},
 

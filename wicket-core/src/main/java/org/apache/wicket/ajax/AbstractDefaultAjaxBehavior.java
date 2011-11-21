@@ -177,14 +177,14 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		buff.append("var ").append(IAjaxCallDecorator.WICKET_CALL_RESULT_VAR).append("=");
 		buff.append(partialCall);
 
-		buff.append(",function() { ").append(success).append("}.bind(this)");
-		buff.append(",function() { ").append(failure).append("}.bind(this)");
+		buff.append(", Wicket.inCtx(function() { ").append(success).append("}, this)");
+		buff.append(", Wicket.inCtx(function() { ").append(failure).append("}, this)");
 
 		if (precondition != null)
 		{
-			buff.append(", function() {");
+			buff.append(", Wicket.inCtx(function() {");
 			buff.append(precondition);
-			buff.append("}.bind(this)");
+			buff.append("}, this)");
 		}
 
 		AjaxChannel channel = getChannel();
@@ -209,9 +209,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				"if (");
 			if (precondition != null)
 			{
-				indicatorWithPrecondition.append("function(){")
+				indicatorWithPrecondition.append("Wicket.inCtx(function(){")
 					.append(precondition)
-					.append("}.bind(this)()");
+					.append("}, this)()");
 			}
 			else
 			{
@@ -327,8 +327,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return new AppendingStringBuffer("Wicket.throttler.throttle( '").append(throttleId)
 			.append("', ")
 			.append(throttleDelay.getMilliseconds())
-			.append(", function() { ")
+			.append(", Wicket.inCtx(function() { ")
 			.append(script)
-			.append("}.bind(this));");
+			.append("}, this));");
 	}
 }

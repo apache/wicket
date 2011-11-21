@@ -1052,6 +1052,17 @@ jQuery.noConflict();
 		$$: function (element) {
 			return Wicket.DOM.inDoc(element);
 		},
+		
+		/**
+		 * Takes a function and returns a new one that will always have a particular context, i.e. 'this' will be the passed context.
+		 * 
+		 * @param {Function} fn - the function which context will be set
+		 * @param {Object} context - the new context for the function
+		 * @return {Function} the original function with the changed context
+		 */
+		inCtx: function(fn, context) {
+			return jQuery.proxy(fn, context);
+		},
 
 		Xml: {
 			parse: function (text) {
