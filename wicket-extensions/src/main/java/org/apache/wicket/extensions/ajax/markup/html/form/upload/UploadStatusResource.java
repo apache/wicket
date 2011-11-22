@@ -101,11 +101,7 @@ class UploadStatusResource extends AbstractResource
 		{
 			status = info.getPercentageComplete() +
 				"|" +
-				new StringResourceModel(
-					RESOURCE_STATUS,
-					(Component)null,
-					Model.of(info),
-					"${percentageComplete}% finished, ${bytesUploadedString} of ${totalBytesString} at ${transferRateString}; ${remainingTimeString}").getString();
+				new StringResourceModel(RESOURCE_STATUS, (Component)null, Model.of(info)).getString();
 		}
 		return status;
 	}

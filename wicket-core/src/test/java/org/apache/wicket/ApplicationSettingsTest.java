@@ -28,7 +28,7 @@ import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.apache.wicket.resource.loader.JarStringResourceLoader;
+import org.apache.wicket.resource.loader.InitializerStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.IFrameworkSettings;
@@ -128,8 +128,8 @@ public class ApplicationSettingsTest
 			loaders.get(2) instanceof ClassStringResourceLoader);
 		Assert.assertTrue("Fourth loader should be the validator one",
 			loaders.get(3) instanceof ValidatorStringResourceLoader);
-		Assert.assertTrue("Fifth should be the classpath one",
-			loaders.get(4) instanceof JarStringResourceLoader);
+		Assert.assertTrue("Fifth should be the initializer one",
+			loaders.get(4) instanceof InitializerStringResourceLoader);
 	}
 
 	/**
