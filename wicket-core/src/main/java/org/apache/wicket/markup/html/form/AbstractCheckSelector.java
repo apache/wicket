@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.ajax.AjaxLibrariesContributor;
+import org.apache.wicket.ajax.CoreLibrariesContributor;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -69,7 +69,7 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 	public void renderHead(IHeaderResponse response)
 	{
 		// make sure we have all the javascript we need
-		AjaxLibrariesContributor.contribute(getApplication(), response);
+		CoreLibrariesContributor.contributeAjax(getApplication(), response);
 		response.renderJavaScriptReference(JS);
 		String findCheckboxes = getFindCheckboxesFunction().toString();
 

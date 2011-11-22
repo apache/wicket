@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.ajax.AjaxLibrariesContributor;
+import org.apache.wicket.ajax.CoreLibrariesContributor;
 import org.apache.wicket.examples.resourcedecoration.GroupedAndOrderedResourceReference.ResourceGroup;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -152,7 +152,7 @@ public class GroupingHeaderResponse
 	@Override
 	public void renderOnDomReadyJavaScript(final String javascript)
 	{
-		AjaxLibrariesContributor.contribute(Application.get(), this);
+		CoreLibrariesContributor.contribute(Application.get(), this);
 		toJsResponse(new Runnable()
 		{
 			public void run()
@@ -166,7 +166,7 @@ public class GroupingHeaderResponse
 	public void renderOnEventJavaScript(final String target, final String event,
 		final String javascript)
 	{
-		AjaxLibrariesContributor.contribute(Application.get(), this);
+		CoreLibrariesContributor.contribute(Application.get(), this);
 		toJsResponse(new Runnable()
 		{
 			public void run()

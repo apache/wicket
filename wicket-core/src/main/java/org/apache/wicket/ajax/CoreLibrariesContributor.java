@@ -28,12 +28,11 @@ import org.apache.wicket.settings.IDebugSettings;
  * 
  * @since 6.0
  */
-public class AjaxLibrariesContributor
+public class CoreLibrariesContributor
 {
 
 	/**
-	 * Contributes the Ajax backing library plus wicket-event.js and wicket-ajax.js implementations.
-	 * Additionally if Ajax debug is enabled then wicket-ajax-debug.js implementation is also added.
+	 * Contributes the backing library plus the implementation of Wicket.Event.
 	 * 
 	 * @param application
 	 *            the application instance
@@ -44,14 +43,30 @@ public class AjaxLibrariesContributor
 	{
 		IAjaxSettings ajaxSettings = application.getAjaxSettings();
 		ResourceReference backingLibraryReference = ajaxSettings.getBackingLibraryReference();
-
 		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
-		ResourceReference wicketAjaxReference = ajaxSettings.getWicketAjaxReference();
 
 		response.renderJavaScriptReference(backingLibraryReference);
 		response.renderJavaScriptReference(wicketEventReference);
-		response.renderJavaScriptReference(wicketAjaxReference);
 
+	}
+
+	/**
+	 * Contributes the Ajax backing library plus wicket-event.js and wicket-ajax.js implementations.
+	 * Additionally if Ajax debug is enabled then wicket-ajax-debug.js implementation is also added.
+	 * 
+	 * @param application
+	 *            the application instance
+	 * @param response
+	 *            the current header response
+	 */
+	public static void contributeAjax(final Application application, final IHeaderResponse response)
+	{
+		CoreLibrariesContributor.contribute(application, response);
+
+		IAjaxSettings ajaxSettings = application.getAjaxSettings();
+		ResourceReference wicketAjaxReference = ajaxSettings.getWicketAjaxReference();
+
+		response.renderJavaScriptReference(wicketAjaxReference);
 
 		final IDebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isAjaxDebugModeEnabled())

@@ -66,7 +66,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		super.renderHead(component, response);
 
-		AjaxLibrariesContributor.contribute(component.getApplication(), response);
+		CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
 
 		Url baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
