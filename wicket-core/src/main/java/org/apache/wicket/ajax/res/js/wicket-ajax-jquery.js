@@ -1060,7 +1060,7 @@ jQuery.noConflict();
 		 * @param {Object} context - the new context for the function
 		 * @return {Function} the original function with the changed context
 		 */
-		inCtx: function(fn, context) {
+		bind: function(fn, context) {
 			return jQuery.proxy(fn, context);
 		},
 

@@ -177,12 +177,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		buff.append("var ").append(IAjaxCallDecorator.WICKET_CALL_RESULT_VAR).append("=");
 		buff.append(partialCall);
 
-		buff.append(", Wicket.inCtx(function() { ").append(success).append("}, this)");
-		buff.append(", Wicket.inCtx(function() { ").append(failure).append("}, this)");
+		buff.append(", Wicket.bind(function() { ").append(success).append("}, this)");
+		buff.append(", Wicket.bind(function() { ").append(failure).append("}, this)");
 
 		if (precondition != null)
 		{
-			buff.append(", Wicket.inCtx(function() {");
+			buff.append(", Wicket.bind(function() {");
 			buff.append(precondition);
 			buff.append("}, this)");
 		}
@@ -209,7 +209,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				"if (");
 			if (precondition != null)
 			{
-				indicatorWithPrecondition.append("Wicket.inCtx(function(){")
+				indicatorWithPrecondition.append("Wicket.bind(function(){")
 					.append(precondition)
 					.append("}, this)()");
 			}
@@ -327,7 +327,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return new AppendingStringBuffer("Wicket.throttler.throttle( '").append(throttleId)
 			.append("', ")
 			.append(throttleDelay.getMilliseconds())
-			.append(", Wicket.inCtx(function() { ")
+			.append(", Wicket.bind(function() { ")
 			.append(script)
 			.append("}, this));");
 	}

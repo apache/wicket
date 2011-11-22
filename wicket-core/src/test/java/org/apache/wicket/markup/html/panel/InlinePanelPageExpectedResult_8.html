@@ -19,7 +19,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.panel.Inl
   <span wicket:id="number">0</span><br/>
   <div id="nextContainer1" style="display:none"></div>
 </div>
-<a wicket:id="add" id="add2" href="#" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-add&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;add2&#039;) != null;}.bind(this));return !wcall;">Add</a>
+<a wicket:id="add" id="add2" href="#" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-add&#039;, Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;add2&#039;) != null;}, this));return !wcall;">Add</a>
 
 
 

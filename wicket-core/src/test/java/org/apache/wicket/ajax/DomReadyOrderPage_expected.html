@@ -24,6 +24,6 @@ Wicket.Event.add(window, "domready", function(event) { test2();;});
 /*]]>*/
 </script>
 </head><body>
-<a href="../page?0-1.ILinkListener-test" wicket:id="test" id="test1" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-test&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;test1&#039;) != null;}.bind(this));return !wcall;">Test</a>
+<a href="../page?0-1.ILinkListener-test" wicket:id="test" id="test1" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-test&#039;, Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;test1&#039;) != null;}, this));return !wcall;">Test</a>
 </body>
 </html>

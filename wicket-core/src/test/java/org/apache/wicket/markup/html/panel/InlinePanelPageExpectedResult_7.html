@@ -27,7 +27,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.panel.Inl
 
 
 
-<a wicket:id="ajaxRefresh" id="ajaxRefresh2" href="#" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-provider-ajaxRefresh&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;ajaxRefresh2&#039;) != null;}.bind(this));return !wcall;">AJAX refresh</a>
+<a wicket:id="ajaxRefresh" id="ajaxRefresh2" href="#" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-provider-ajaxRefresh&#039;, Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;ajaxRefresh2&#039;) != null;}, this));return !wcall;">AJAX refresh</a>
 
 </wicket:panel></div>
 

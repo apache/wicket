@@ -12,4 +12,4 @@ Wicket.Ajax.DebugWindow.enabled=true;
 Wicket.Ajax.baseUrl="wicket/page?0-1.IBehaviorListener.0-test";
 /*]^]^>*/
 </script>
-</head>]]></header-contribution><component id="test1" ><![CDATA[<a href="page?0-1.ILinkListener-test" wicket:id="test" id="test1" onclick="var wcall=Wicket.Ajax.get(&#039;page?0-1.IBehaviorListener.0-test&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;test1&#039;) != null;}.bind(this));return !wcall;">Test</a>]]></component><evaluate><![CDATA[test1();]]></evaluate><evaluate><![CDATA[test2();]]></evaluate></ajax-response>
+</head>]]></header-contribution><component id="test1" ><![CDATA[<a href="page?0-1.ILinkListener-test" wicket:id="test" id="test1" onclick="var wcall=Wicket.Ajax.get(&#039;page?0-1.IBehaviorListener.0-test&#039;, Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;test1&#039;) != null;}, this));return !wcall;">Test</a>]]></component><evaluate><![CDATA[test1();]]></evaluate><evaluate><![CDATA[test2();]]></evaluate></ajax-response>

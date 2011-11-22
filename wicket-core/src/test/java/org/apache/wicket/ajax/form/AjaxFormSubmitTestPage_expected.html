@@ -17,7 +17,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.AjaxFormSub
 		<form wicket:id="form" id="form1" method="post" action="../page?0-1.IFormSubmitListener-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form1_hf_0" id="form1_hf_0" /></div>
 			<input type="text" wicket:id="txt1" value="foo" name="txt1"/>
 			<input type="text" wicket:id="txt2" value="bar" name="txt2"/>
-			<input type="submit" value="Submit" wicket:id="submit" name=":submit" id="submit2" onclick="var wcall=Wicket.Ajax.submitForm(&#039;form1&#039;, &#039;../page?0-1.IBehaviorListener.0-form-submit&#039;, &#039;:submit&#039; ,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$$(this) &amp;&amp; Wicket.$$(&#039;form1&#039;)}.bind(this));;; return false;"/>
+			<input type="submit" value="Submit" wicket:id="submit" name=":submit" id="submit2" onclick="var wcall=Wicket.Ajax.submitForm(&#039;form1&#039;, &#039;../page?0-1.IBehaviorListener.0-form-submit&#039;, &#039;:submit&#039; , Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$$(this) &amp;&amp; Wicket.$$(&#039;form1&#039;)}, this));;; return false;"/>
 		</form>	
 	</body>
 </html>

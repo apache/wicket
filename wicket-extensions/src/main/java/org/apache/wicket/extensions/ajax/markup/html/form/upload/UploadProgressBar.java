@@ -223,7 +223,7 @@ public class UploadProgressBar extends Panel
 		Formatter formatter = new Formatter(builder);
 
 		formatter.format(
-			"Wicket.inCtx(new Wicket.WUPB('%s', '%s', '%s', '%s', '%s', '%s'), Wicket.$('%s'))",
+			"Wicket.bind(new Wicket.WUPB('%s', '%s', '%s', '%s', '%s', '%s'), Wicket.$('%s'))",
 			getMarkupId(), statusDiv.getMarkupId(), barDiv.getMarkupId(), url, uploadFieldId,
 			status, getCallbackForm().getMarkupId());
 		response.renderOnDomReadyJavaScript(builder.toString());

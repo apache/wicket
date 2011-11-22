@@ -18,7 +18,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.markup.html.ajax
     Border
     <wicket:body>
     <span wicket:id="ajaxLabel" id="ajaxLabel1">UpdateMe</span>
-    <a href="#" wicket:id="ajaxLink" id="ajaxLink2" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-border-border_body-ajaxLink&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;ajaxLink2&#039;) != null;}.bind(this));return !wcall;">Update</a>
+    <a href="#" wicket:id="ajaxLink" id="ajaxLink2" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-border-border_body-ajaxLink&#039;, Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;ajaxLink2&#039;) != null;}, this));return !wcall;">Update</a>
   </wicket:body>
     Border
   </wicket:border></span>
