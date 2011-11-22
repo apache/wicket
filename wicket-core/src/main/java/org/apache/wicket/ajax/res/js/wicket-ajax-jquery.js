@@ -1098,20 +1098,18 @@ jQuery.noConflict();
 			    }
 			},
 
+			/**
+			 * Serializes HTMLFormSelectElement to URL encoded key=value string.
+			 *
+			 * @param {HTMLFormSelectElement} select - the form element to serialize 
+			 * @return the URL encoded key=value pair (pairs, if the select is .multiple) or empty string if the form element is disabled.
+			 */
 			serializeSelect: function (select){
-				// if it is a non-multiple select, iterating on each element is not required (WICKET-389)
-				if (select.multiple === false){
-					return Wicket.Form.encode(select.name) + "=" + Wicket.Form.encode(select.value) + "&";
+				var result = '';
+				if (select) {
+					result = jQuery(select).serialize();
 				}
-
-			    //else
-			    var result = "";
-			    for (var i = 0; i < select.options.length; ++i) {
-			        var option = select.options[i];
-			        if (option.selected) {
-			            result += Wicket.Form.encode(select.name) + "=" + Wicket.Form.encode(option.value) + "&";
-			        }
-			    }
+				if (result) result += "&";
 			    return result;
 			},
 
