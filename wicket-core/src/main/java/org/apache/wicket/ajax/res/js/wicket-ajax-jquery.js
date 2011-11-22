@@ -1115,19 +1115,20 @@ jQuery.noConflict();
 			    return result;
 			},
 
-			// this function intentionally ignores image and submit inputs
+			/**
+			 * Serializes a form element to a key=value string in URL encoded notation.
+			 * Note: this function intentionally ignores image and submit inputs.
+			 *
+			 * @param {HtmlFormElement} input - the form element to serialize
+			 * @return the URL encoded key=value pair or empty string if the form element is disabled.
+			 */
 			serializeInput: function (input) {
-			    var type = input.type.toLowerCase();
-			    if ((type === "checkbox" || type === "radio") && input.checked) {
-			        return Wicket.Form.encode(input.name) + "=" + Wicket.Form.encode(input.value) + "&";
-			    } else if (type === "text" || type === "password" || type === "hidden" || type === "textarea" || type === "search" ||
-					type === "email" || type === "url" || type === "range" || type === "tel" ||
-					type === "date" || type === "datetime" || type === "month" || type === "week" ||	type === "week" ||
-					type === "datetime-local" || type === "number" || type === "color") {
-					return Wicket.Form.encode(input.name) + "=" + Wicket.Form.encode(input.value) + "&";
-				} else {
-					return "";
+				var result = "";
+				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) { 
+			    	result = jQuery(input).serialize();
 			    }
+			    if (result) result += "&";
+			    return result;
 			},
 
 			//list of item to exclude from serialization
