@@ -40,7 +40,7 @@ import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.apache.wicket.resource.loader.JarStringResourceLoader;
+import org.apache.wicket.resource.loader.InitializerStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
@@ -159,11 +159,10 @@ public class ResourceSettings implements IResourceSettings
 	 * </ul>
 	 * </dd>
 	 * <dt>validator specific</dt>
-	 * <dt>jar specific</dt>
+	 * <dt>Initializer specific</dt>
 	 * <dd>
 	 * <ul>
-	 * <li>wicket-jar.properties (in jar containing Foo)</li>
-	 * <li>wicket-jar.properties (in jar containing Component)</li>
+	 * <li>bar.Foo.properties (Foo implementing IInitializer)</li>
 	 * </ul>
 	 * </dd>
 	 * </dl>
@@ -177,7 +176,7 @@ public class ResourceSettings implements IResourceSettings
 		stringResourceLoaders.add(new PackageStringResourceLoader());
 		stringResourceLoaders.add(new ClassStringResourceLoader(application.getClass()));
 		stringResourceLoaders.add(new ValidatorStringResourceLoader());
-		stringResourceLoaders.add(new JarStringResourceLoader());
+		stringResourceLoaders.add(new InitializerStringResourceLoader(application.getInitializers()));
 	}
 
 	/**

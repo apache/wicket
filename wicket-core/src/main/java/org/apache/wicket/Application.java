@@ -918,6 +918,14 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
+	 * @return collection of initializers
+	 */
+	public final List<IInitializer> getInitializers()
+	{
+		return Collections.unmodifiableList(initializers);
+	}
+
+	/**
 	 * @return collection of application listeners
 	 */
 	public final ApplicationListenerCollection getApplicationListeners()
