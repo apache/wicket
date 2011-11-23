@@ -170,6 +170,10 @@ public class CryptoMapper implements IRequestMapper
 			}
 
 			String decryptedUrl = getCrypt().decryptUrlSafe(encryptedUrlString);
+			if (decryptedUrl == null)
+			{
+				return null;
+			}
 			Url originalUrl = Url.parse(decryptedUrl, request.getCharset());
 
 			int originalNumberOfSegments = originalUrl.getSegments().size();

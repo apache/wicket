@@ -67,9 +67,9 @@ public abstract class AbstractCrypt implements ICrypt
 		}
 		catch (Exception ex)
 		{
-			log.error("Error decoding text: " + text, ex);
+			log.debug("Error decoding text: " + text, ex);
+			return null;
 		}
-		return null;
 	}
 
 	/**
