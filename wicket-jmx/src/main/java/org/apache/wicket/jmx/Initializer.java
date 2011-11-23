@@ -63,7 +63,7 @@ public class Initializer implements IInitializer
 	private final List<ObjectName> registered = new ArrayList<ObjectName>();
 
 	/**
-	 * @see org.apache.wicket.IDestroyer#destroy(org.apache.wicket.Application)
+	 * @see org.apache.wicket.IInitializer#destroy(org.apache.wicket.Application)
 	 */
 	public void destroy(final org.apache.wicket.Application application)
 	{
