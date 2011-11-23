@@ -971,9 +971,6 @@ public abstract class Component
 	{
 		configure();
 
-		// check authorization
-		setRenderAllowed();
-
 		if ((determineVisibility()) && !getFlag(FLAG_RENDERING) &&
 			!getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
@@ -1090,6 +1087,10 @@ public abstract class Component
 					behavior.onConfigure(this);
 				}
 			}
+
+			// check authorization
+			setRenderAllowed();
+
 			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
 	}
