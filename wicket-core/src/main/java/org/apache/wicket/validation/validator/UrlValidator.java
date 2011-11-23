@@ -427,7 +427,7 @@ public class UrlValidator implements IValidator<String>
 			if (segmentCount > 1)
 			{
 				String topLevel = domainSegment[segmentCount - 1];
-				if (topLevel.length() < 2 || topLevel.length() > 4)
+				if (topLevel.length() < 2)
 				{
 					return false;
 				}

@@ -300,7 +300,8 @@ public class UrlValidatorTest extends TestCase
 			new ResultPair("1.2.3", false), new ResultPair(".1.2.3.4", false),
 			new ResultPair("go.a", false), new ResultPair("go.a1a", true),
 			new ResultPair("go.1aa", false), new ResultPair("aaa.", false),
-			new ResultPair(".aaa", false), new ResultPair("aaa", true)
+			new ResultPair(".aaa", false), new ResultPair("aaa", true),
+			new ResultPair("go.local", true)
 	/*
 	 * , new ResultPair("", false) In combination with "http:/" + "/test1" the expected result is
 	 * true
