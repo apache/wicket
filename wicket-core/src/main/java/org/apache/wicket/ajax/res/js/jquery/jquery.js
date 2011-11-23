@@ -1,5 +1,5 @@
 /*!
- * jQuery JavaScript Library v1.7.1rc1
+ * jQuery JavaScript Library v1.7.1
  * http://jquery.com/
  *
  * Copyright 2011, John Resig
@@ -11,7 +11,7 @@
  * Copyright 2011, The Dojo Foundation
  * Released under the MIT, BSD, and GPL Licenses.
  *
- * Date: Thu Nov 17 19:06:35 2011 -0500
+ * Date: Mon Nov 21 21:11:03 2011 -0500
  */
 (function( window, undefined ) {
 
@@ -46,9 +46,6 @@ var jQuery = function( selector, context ) {
 	// Used for trimming whitespace
 	trimLeft = /^\s+/,
 	trimRight = /\s+$/,
-
-	// Check for digits
-	rdigit = /\d/,
 
 	// Match a standalone tag
 	rsingleTag = /^<(\w+)\s*\/?>(?:<\/\1>)?$/,
@@ -213,7 +210,7 @@ jQuery.fn = jQuery.prototype = {
 	selector: "",
 
 	// The current version of jQuery being used
-	jquery: "1.7.1rc1",
+	jquery: "1.7.1",
 
 	// The default length of a jQuery object is 0
 	length: 0,
@@ -1515,27 +1512,26 @@ jQuery.support = (function() {
 	fragment.removeChild( div );
 
 	// Null elements to avoid leaks in IE
-	fragment = select = opt = body = marginDiv = div = input = null;
+	fragment = select = opt = marginDiv = div = input = null;
 
-	// Run fixed position tests at doc ready to avoid a crash
-	// related to the invisible body in IE8
+	// Run tests that need a body at doc ready
 	jQuery(function() {
 		var container, outer, inner, table, td, offsetSupport,
-			conMarginTop = 1,
-			ptlm = "position:absolute;top:0;left:0;width:1px;height:1px;margin:0;",
-			vb = "visibility:hidden;border:0;",
-			style = "style='" + ptlm + "border:5px solid #000;padding:0;'",
-			html = "<div " + style + "><div></div></div>" +
-				"<table " + style + " cellpadding='0' cellspacing='0'>" +
-				"<tr><td></td></tr></table>";
+			conMarginTop, ptlm, vb, style, html,
+			body = document.getElementsByTagName("body")[0];
 
-		// Reconstruct a container
-		body = document.getElementsByTagName("body")[0];
 		if ( !body ) {
 			// Return for frameset docs that don't have a body
-			// These tests cannot be done
 			return;
 		}
+
+		conMarginTop = 1;
+		ptlm = "position:absolute;top:0;left:0;width:1px;height:1px;margin:0;";
+		vb = "visibility:hidden;border:0;";
+		style = "style='" + ptlm + "border:5px solid #000;padding:0;'";
+		html = "<div " + style + "><div></div></div>" +
+			"<table " + style + " cellpadding='0' cellspacing='0'>" +
+			"<tr><td></td></tr></table>";
 
 		container = document.createElement("div");
 		container.style.cssText = vb + "width:0;height:0;position:static;top:0;margin-top:" + conMarginTop + "px";
@@ -2826,10 +2822,11 @@ var rformElems = /^(?:textarea|input|select)$/i,
 		return quick;
 	},
 	quickIs = function( elem, m ) {
+		var attrs = elem.attributes || {};
 		return (
 			(!m[1] || elem.nodeName.toLowerCase() === m[1]) &&
-			(!m[2] || elem.id === m[2]) &&
-			(!m[3] || m[3].test( ((elem.attributes || {})[ "class" ] || {}).value ))
+			(!m[2] || (attrs.id || {}).value === m[2]) &&
+			(!m[3] || m[3].test( (attrs[ "class" ] || {}).value ))
 		);
 	},
 	hoverHack = function( events ) {
