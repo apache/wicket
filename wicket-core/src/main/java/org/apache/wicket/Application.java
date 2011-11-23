@@ -516,7 +516,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		}
 
 		// now call any initializers we read
-		callInitializers();
+		initInitializers();
 	}
 
 	/**
@@ -586,10 +586,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Iterate initializers list, calling any {@link org.apache.wicket.IDestroyer} instances found
-	 * in it.
+	 * Iterate initializers list, calling {@link IInitializer#destroy(Application)} on any instances
+	 * found in it.
 	 */
-	private void callDestroyers()
+	private void destroyInitializers()
 	{
 		for (IInitializer initializer : initializers)
 		{
@@ -599,9 +599,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Iterate initializers list, calling any instances found in it.
+	 * Iterate initializers list, calling {@link IInitializer#init(Application)} on any instances
+	 * found in it.
 	 */
-	private void callInitializers()
+	private void initInitializers()
 	{
 		for (IInitializer initializer : initializers)
 		{
@@ -661,7 +662,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		onDestroy();
 
-		callDestroyers();
+		destroyInitializers();
 
 		internalGetPageManager().destroy();
 		getSessionStore().destroy();
