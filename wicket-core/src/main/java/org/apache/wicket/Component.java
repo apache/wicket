@@ -971,6 +971,9 @@ public abstract class Component
 	{
 		configure();
 
+		// check authorization
+		setRenderAllowed();
+
 		if ((determineVisibility()) && !getFlag(FLAG_RENDERING) &&
 			!getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
@@ -2203,11 +2206,6 @@ public abstract class Component
 		}
 
 		markRendering(setRenderingFlag);
-
-		// check authorization
-		// first the component itself
-		// (after attach as otherwise list views etc wont work)
-		setRenderAllowed();
 	}
 
 	/**
