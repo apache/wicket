@@ -16,20 +16,17 @@
  */
 package org.apache.wicket.authorization;
 
-import static org.junit.Assert.assertFalse;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -37,23 +34,12 @@ import org.junit.Test;
  * 
  * @author igor
  */
-public class ComponentIsRenderedAllowedTest
+public class ComponentIsRenderedAllowedTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	/** */
-	@Before
-	public void setupTester()
+	@Override
+	protected WebApplication newApplication()
 	{
-		tester = new WicketTester(new SecuredApplication());
-	}
-
-	/** */
-	@After
-	public void destroyTester()
-	{
-		tester.destroy();
-		tester = null;
+		return new SecuredApplication();
 	}
 
 	/** */
