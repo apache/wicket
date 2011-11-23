@@ -1163,6 +1163,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!getFlag(FLAG_CONFIGURED))
 		{
 			onConfigure();
+			setRenderAllowed();
+
 			List<IComponentConfigurationBehavior> behaviors = getBehaviors(IComponentConfigurationBehavior.class);
 			for (IComponentConfigurationBehavior behavior : behaviors)
 			{
@@ -2314,11 +2316,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 
 		markRendering(setRenderingFlag);
-
-		// check authorization
-		// first the component itself
-		// (after attach as otherwise list views etc wont work)
-		setRenderAllowed();
 	}
 
 	/**
