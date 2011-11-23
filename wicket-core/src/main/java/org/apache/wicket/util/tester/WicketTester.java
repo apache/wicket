@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.util.tester;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -356,7 +360,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param messages
 	 *            messages expected to be rendered
 	 */
-	public void assertFeedback(String path, String[] messages)
+	public void assertFeedback(String path, String... messages)
 	{
 		final FeedbackPanel fbp = (FeedbackPanel)getComponentFromLastRenderedPage(path);
 		final IModel<List<FeedbackMessage>> model = fbp.getFeedbackMessagesModel();
@@ -373,8 +377,19 @@ public class WicketTester extends BaseWicketTester
 		for (int i = 0; i < messages.length && i < renderedMessages.size(); i++)
 		{
 			final String expected = messages[i];
-			final String actual = renderedMessages.get(i).getMessage().toString();
-			assertResult(isEqual(expected, actual));
+			boolean found = false;
+			for (FeedbackMessage actual : renderedMessages)
+			{
+				if (Objects.equal(expected, actual.toString()))
+				{
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+			{
+				assertResult(Result.fail("Missing expected feedback message: " + expected));
+			}
 		}
 	}
 
