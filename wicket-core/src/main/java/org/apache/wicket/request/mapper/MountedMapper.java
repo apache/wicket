@@ -368,8 +368,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		{
 			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
 			IRequestablePage page = handler.getPage();
-			Class<? extends IRequestablePage> pageClass = page.getClass();
-			if (checkPageClass(pageClass))
+			if (checkPageInstance(page))
 			{
 				String componentPath = handler.getComponentPath();
 				RequestListenerInterface listenerInterface = handler.getListenerInterface();

@@ -291,6 +291,11 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		return null;
 	}
 
+	protected boolean checkPageInstance(IRequestablePage page)
+	{
+		return page != null && checkPageClass(page.getClass());
+	}
+
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
 		return true;
@@ -348,7 +353,8 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 			IRequestablePage page = handler.getPage();
 
-			if (!pageMustHaveBeenCreatedBookmarkable() || page.wasCreatedBookmarkable())
+			if (checkPageInstance(page) &&
+				(!pageMustHaveBeenCreatedBookmarkable() || page.wasCreatedBookmarkable()))
 			{
 				PageInfo info = null;
 				if (!page.isPageStateless())
