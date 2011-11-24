@@ -336,6 +336,71 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	}
 
 	@Override
+	public void renderJavaScriptReference(final ResourceReference reference,
+		final PageParameters pageParameters, final String id, final boolean defer)
+	{
+		forJavaScript(new Runnable()
+		{
+			public void run()
+			{
+				getRealResponse().renderJavaScriptReference(reference, pageParameters, id, defer);
+			}
+		});
+	}
+
+	@Override
+	public void renderJavaScriptReference(final ResourceReference reference,
+		final PageParameters pageParameters, final String id, final boolean defer,
+		final String charset)
+	{
+		forJavaScript(new Runnable()
+		{
+			public void run()
+			{
+				getRealResponse().renderJavaScriptReference(reference, pageParameters, id, defer,
+					charset);
+			}
+		});
+	}
+
+	@Override
+	public void renderCSS(final CharSequence css, final String id)
+	{
+		forCss(new Runnable()
+		{
+			public void run()
+			{
+				getRealResponse().renderCSS(css, id);
+			}
+		});
+	}
+
+	@Override
+	public void renderCSSReference(final ResourceReference reference,
+		final PageParameters pageParameters, final String media, final String condition)
+	{
+		forCss(new Runnable()
+		{
+			public void run()
+			{
+				getRealResponse().renderCSSReference(reference, pageParameters, media, condition);
+			}
+		});
+	}
+
+	@Override
+	public void renderCSSReference(final String url, final String media, final String condition)
+	{
+		forCss(new Runnable()
+		{
+			public void run()
+			{
+				getRealResponse().renderCSSReference(url, media, condition);
+			}
+		});
+	}
+
+	@Override
 	public void close()
 	{
 		// write the stuff that was actually supposed to be in the header to the
