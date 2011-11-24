@@ -278,7 +278,7 @@ public class DatePicker extends Behavior
 				escapedComponentMarkupId + "DpJs.destroy(); delete YAHOO.wicket." +
 				escapedComponentMarkupId + "DpJs;}";
 
-			response.renderJavaScript(javascript, null);
+			AjaxRequestTarget.get().prependJavaScript(javascript);
 		}
 	}
 
