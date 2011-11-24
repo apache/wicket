@@ -163,7 +163,7 @@ final class MiddleColumnsView extends AbstractColumnsView
 
 		NumberFormat nf = NumberFormat.getNumberInstance(Locale.ENGLISH);
 		nf.setMaximumFractionDigits(0);
-		nf.setMaximumIntegerDigits(2);
+		nf.setMaximumIntegerDigits(3);
 
 		for (int i = 0; i < columns.size(); ++i)
 		{
