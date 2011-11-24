@@ -323,7 +323,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	@Override
 	public void renderJavaScriptReference(String url, String id, boolean defer)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null,
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, id,
 			ResourceType.JS, defer, null, null));
 	}
 
@@ -358,8 +358,8 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
 		String media, String condition)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, media,
-			ResourceType.CSS, false, null, condition));
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, pageParameters, null,
+			media, ResourceType.CSS, false, null, condition));
 	}
 
 	@Override
