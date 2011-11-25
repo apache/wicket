@@ -208,9 +208,11 @@ jQuery.noConflict();
 		initialize: function (name) {
 			var res = name.match(/^([^|]+)\|(d|s)$/);
 			if (isUndef(res)) {
+				this.name = '';
 				this.type = 's'; // default to stack
 			}
 			else {
+				this.name = res[1];
 				this.type = res[2];
 			}
 			this.callbacks = [];
@@ -232,6 +234,7 @@ jQuery.noConflict();
 					this.callbacks.push(callback);
 				}
 				else { /* drop */
+					this.callbacks = [];
 					this.callbacks[0] = callback;
 				}
 				return null;
@@ -263,15 +266,18 @@ jQuery.noConflict();
 
 	Wicket.ChannelManager.prototype = {
 		initialize: function () {
-			this.channels = [];
+			this.channels = {};
 		},
 
 		// Schedules the callback to channel with given name.
 		schedule: function (channel, callback) {
-			var c = this.channels[channel];
-			if (typeof(c) === 'undefined') {
-				c = new Wicket.Channel(channel);
-				this.channels[channel] = c;
+			var parsed = new Wicket.Channel(channel);
+			var c = this.channels[parsed.name];
+			if (isUndef(c)) {
+				c = parsed;
+				this.channels[c.name] = c;
+			} else {
+				c.type = parsed.type;
 			}
 			return c.schedule(callback);
 		},
@@ -279,7 +285,8 @@ jQuery.noConflict();
 		// Tells the ChannelManager that the current callback in channel with given name
 		// has finished processing and another scheduled callback can be executed (if any).
 		done: function (channel) {
-			var c = this.channels[channel];
+		 	var parsed = new Wicket.Channel(channel);
+			var c = this.channels[parsed.name];
 			if (!isUndef(c)) {
 				c.done();
 			}
