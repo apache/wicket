@@ -640,7 +640,23 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 
         if(elementCount>0){
             if(cfg.preselect==true){
-                setSelected(0);
+                var selectedIndex = 0;
+                for(var i = 0;i < elementCount; i++) {
+               	 	var node = selectableElements[i];
+               	 	var attr= node.attributes['textvalue'];
+        			var value;
+       				if (attr==undefined) {
+            			value=node.innerHTML;
+            		} else {
+            			value=attr.value;
+        			}
+        			if (stripHTML(value) == input.value)
+        			{
+        				selectedIndex = i;
+        				break;
+        			}
+            	}
+            	setSelected(selectedIndex);
             }            
             showAutoComplete();
         } else {
