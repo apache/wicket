@@ -648,10 +648,14 @@ Wicket.Channel = Wicket.Class.create();
 Wicket.Channel.prototype = {
 	initialize: function(name) {
 		var res = name.match(/^([^|]+)\|(d|s)$/)
-		if (res == null)
-			this.type ='s'; // default to stack 
-		else
+		if (res == null) {
+			this.name = '';
+			this.type ='s'; // default to stack
+		} 
+		else {
+			this.name = res[1];
 			this.type = res[2];
+		}
 		this.callbacks = new Array();
 		this.busy = false;
 	},	
@@ -667,10 +671,13 @@ Wicket.Channel.prototype = {
 			}
 		} else {
 			Wicket.Log.info("Channel busy - postponing...");
-			if (this.type == 's') // stack 
+			if (this.type == 's') { // stack 
 				this.callbacks.push(callback);
-			else /* drop */
+			}
+			else { // drop
+				this.callbacks = [];
 				this.callbacks[0] = callback;
+			}
 			return null;				
 		}
 	},
@@ -699,15 +706,18 @@ Wicket.Channel.prototype = {
 Wicket.ChannelManager = Wicket.Class.create();
 Wicket.ChannelManager.prototype = {
 	initialize: function() {
-		this.channels = new Array();
+		this.channels = {};
 	},
   
 	// Schedules the callback to channel with given name.
 	schedule: function(channel, callback) {
-		var c = this.channels[channel];
+		var parsed = new Wicket.Channel(channel); 
+		var c = this.channels[parsed.name];
 		if (c == null) {
-			c = new Wicket.Channel(channel);
-			this.channels[channel] = c;
+			c = parsed;
+			this.channels[c.name] = c;
+		} else {
+			c.type = parsed.type;
 		}
 		return c.schedule(callback);
 	},
@@ -715,9 +725,11 @@ Wicket.ChannelManager.prototype = {
 	// Tells the ChannelManager that the current callback in channel with given name 
 	// has finished processing and another scheduled callback can be executed (if any).
 	done: function(channel) {
-		var c = this.channels[channel];
-		if (c != null)
+		var parsed = new Wicket.Channel(channel);
+		var c = this.channels[parsed.name];
+		if (c != null) {
 			c.done();
+		}
 	}
 };
 
