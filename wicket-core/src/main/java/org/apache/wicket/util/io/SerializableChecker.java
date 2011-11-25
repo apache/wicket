@@ -64,7 +64,9 @@ import org.slf4j.LoggerFactory;
  */
 public final class SerializableChecker extends ObjectOutputStream
 {
-	private static final Logger logger = LoggerFactory.getLogger(SerializableChecker.class);
+
+	/** log. */
+	private static final Logger log = LoggerFactory.getLogger(SerializableChecker.class);
 
 	/**
 	 * Exception that is thrown when a non-serializable object was found.
@@ -217,9 +219,6 @@ public final class SerializableChecker extends ObjectOutputStream
 
 	private static final NoopOutputStream DUMMY_OUTPUT_STREAM = new NoopOutputStream();
 
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(SerializableChecker.class);
-
 	/** Whether we can execute the tests. If false, check will just return. */
 	private static boolean available = true;
 
@@ -278,7 +277,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		}
 		catch (Exception e)
 		{
-			logger.warn("SerializableChecker not available", e);
+			log.warn("SerializableChecker not available", e);
 			available = false;
 		}
 	}
