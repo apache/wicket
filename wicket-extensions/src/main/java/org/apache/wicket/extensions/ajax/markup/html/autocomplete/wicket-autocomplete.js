@@ -53,6 +53,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 	var objonchange;
 	var objonchangeoriginal;
 	var objonfocus;
+	var initialElement; 
 	
 	// holds the eventual margins, padding, etc. of the menu container.
 	// it is computed when the menu is first rendered, and then reused.
@@ -77,17 +78,20 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 	var throttleDelay = cfg.throttleDelay;
 
     function initialize(){
+    	var isShowing = false;
 		// Remove the autocompletion menu if still present from
 		// a previous call. This is required to properly register
 		// the mouse event handler again (using the new stateful 'mouseactive'
 		// variable which just gets created)
         var choiceDiv=document.getElementById(getMenuId());
         if (choiceDiv != null) {
+        	isShowing = choiceDiv.showingAutocomplete;
             choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
         } 
         	
         var obj=wicketGet(elementId);
-
+		initialElement = obj;
+		
         objonkeydown=obj.onkeydown;
         objonblur=obj.onblur;
         objonkeyup=obj.onkeyup;
@@ -118,6 +122,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 return killEvent(event);
             }
             if (!ignoreOneFocusGain && cfg.showListOnFocusGain && visible==0) {
+            	getAutocompleteMenu().showingAutocomplete = true;
                 if (cfg.showCompleteListOnFocusGain) {
                     updateChoices(true);
                 } else {
@@ -209,6 +214,29 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             }
 			if(typeof objonkeypress=="function") return objonkeypress.apply(this,[event]);
         }
+        if (Wicket.Focus.getFocusedElement() === obj && isShowing == true)
+        {
+        	// element already has focus, we should show list
+        	if (cfg.showListOnFocusGain) {
+                if (cfg.showCompleteListOnFocusGain) {
+                    updateChoices(true);
+                } else {
+                    updateChoices();
+                }
+            }
+        }
+    }
+    
+    function clearMenu()
+    {
+    	// Remove the autocompletion menu if still present from
+		// a previous call. This is required to properly register
+		// the mouse event handler again (using the new stateful 'mouseactive'
+		// variable which just gets created)
+        var choiceDiv=document.getElementById(getMenuId());
+        if (choiceDiv != null) {
+            choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
+        } 
     }
     
     function setSelected(newSelected) {
@@ -555,13 +583,19 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     }
     
     function doUpdateChoices(resp){
-    
-    	// check if the input hasn't been cleared in the meanwhile
+    	
+    	getAutocompleteMenu().showingAutocomplete = false;
+    	
+    	// check if the input hasn't been cleared in the meanwhile or has been replaced by ajax
     	var input=wicketGet(elementId);
-   		if ((Wicket.Focus.getFocusedElement() != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
+   		if ((input != initialElement) || ((Wicket.Focus.getFocusedElement() != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value==""))) {
    			hideAutoComplete();
    			Wicket.Ajax.invokePostCallHandlers();
    			hideIndicator();
+   			if (input != initialElement)
+   			{
+   				clearMenu();
+   			}
    			return;
    		}
 
