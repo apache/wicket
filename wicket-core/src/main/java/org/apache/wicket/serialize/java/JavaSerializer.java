@@ -235,17 +235,19 @@ public class JavaSerializer implements ISerializer
 	 */
 	private static class CheckerObjectOutputStream extends ObjectOutputStream
 	{
+		private final ObjectOutputStream oos;
+
 		public CheckerObjectOutputStream(OutputStream out) throws IOException
 		{
-			super(out);
+			oos = new ObjectOutputStream(out);
 		}
 
 		@Override
-		protected final void writeObjectOverride(final Object obj) throws IOException
+		protected final void writeObjectOverride(Object obj) throws IOException
 		{
 			try
 			{
-				super.writeObject(obj);
+				oos.writeObject(obj);
 			}
 			catch (NotSerializableException nsx)
 			{
@@ -270,13 +272,13 @@ public class JavaSerializer implements ISerializer
 		@Override
 		public void flush() throws IOException
 		{
-			super.flush();
+			oos.flush();
 		}
 
 		@Override
 		public void close() throws IOException
 		{
-			super.close();
+			oos.close();
 		}
 	}
 }
