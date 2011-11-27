@@ -33,7 +33,7 @@ jQuery(document).ready(function() {
 
 		var newHeadElementsNumber = jQuery('head').children().length;
 
-		equals(newHeadElementsNumber, initialHeadElementsNumber + 1);
+		equal(newHeadElementsNumber, initialHeadElementsNumber + 1);
 	});
 
 
@@ -50,7 +50,7 @@ jQuery(document).ready(function() {
 
 		var newHeadElementsNumber = jQuery('head').children().length;
 
-		equals(newHeadElementsNumber, initialHeadElementsNumber + 1);
+		equal(newHeadElementsNumber, initialHeadElementsNumber + 1);
 	});
 
 	test("Wicket.Head.addElement - add style element", function() {
@@ -72,15 +72,15 @@ jQuery(document).ready(function() {
 	test('Wicket.Head.createElement', function() {
 		var span = Wicket.Head.createElement('span');
 
-		equals(span.nodeType, 1, 'Wicket.Head.createElement should create a DOM element');
-		equals(span.tagName.toLowerCase(), 'span', 'Wicket.Head.createElement should create a DOM element');
+		equal(span.nodeType, 1, 'Wicket.Head.createElement should create a DOM element');
+		equal(span.tagName.toLowerCase(), 'span', 'Wicket.Head.createElement should create a DOM element');
 	});
 
 	module('containsElement');
 
 	test('Wicket.Head.containsElement - unknown attribute', function() {
 		var scriptElement = Wicket.Head.createElement('script');
-		equals(false, Wicket.Head.containsElement(scriptElement, 'unknown'), 'There shouldn\'t be an element with such attribute name');
+		equal(false, Wicket.Head.containsElement(scriptElement, 'unknown'), 'There shouldn\'t be an element with such attribute name');
 	});
 
 	test('Wicket.Head.containsElement - check existence of wicket-ajax-debug.js with "src"', function() {
@@ -128,7 +128,7 @@ jQuery(document).ready(function() {
 		
 		Wicket.Head.addJavascripts($element[0]);
 
-		equals(initialHeadElementsNumber, jQuery('head').children().length, 'No script elements in the added element, so nothing is added');
+		equal(initialHeadElementsNumber, jQuery('head').children().length, 'No script elements in the added element, so nothing is added');
 	});
 
 
@@ -140,7 +140,7 @@ jQuery(document).ready(function() {
 		
 		Wicket.Head.addJavascripts($element[0]);
 
-		equals(jQuery('head').children().length, initialHeadElementsNumber + 1, 'A script element must be added');
+		equal(jQuery('head').children().length, initialHeadElementsNumber + 1, 'A script element must be added');
 	});
 
 	test('Wicket.Head.addJavascripts - child with script tags inside', function() {
@@ -159,7 +159,7 @@ jQuery(document).ready(function() {
 		Wicket.Head.addJavascripts($element[0]);
 
 		var newNumber = jQuery('head').children().length;
-		equals(newNumber, initialHeadElementsNumber + 1, 'A script element in the added element should be added and executed'); // 2
+		equal(newNumber, initialHeadElementsNumber + 1, 'A script element in the added element should be added and executed'); // 2
 	});
 
 
@@ -171,7 +171,7 @@ jQuery(document).ready(function() {
 			encoding = 'wicket1',
 			actual = Wicket.Head.Contributor.decode(encoding, input);
 			
-		equals(actual, expected);
+		equal(actual, expected);
 	});
 
 	test('Wicket.Head.Contributor.decode - no decoding because of wrong encoding', function() {
@@ -179,7 +179,7 @@ jQuery(document).ready(function() {
 			encoding = 'somethingWrong',
 			actual = Wicket.Head.Contributor.decode(encoding, expected);
 			
-		equals(actual, expected);
+		equal(actual, expected);
 	});
 
 	module('Contributor.parse');
@@ -192,10 +192,10 @@ jQuery(document).ready(function() {
 		var isXml = jQuery.isXMLDoc(xmlElement);
 
 		ok(isXml, 'The result must be XML document');
-		equals(3, xmlElement.documentElement.childNodes.length);
+		equal(3, xmlElement.documentElement.childNodes.length);
 		var baseUrlElement = xmlElement.documentElement.childNodes.item(2);
 		var baseUrlText = baseUrlElement.text || baseUrlElement.textContent;
-		equals(baseUrlText, '/**/Wicket.Ajax.baseUrl=\"clock\";/**/');
+		equal(baseUrlText, '/**/Wicket.Ajax.baseUrl=\"clock\";/**/');
 	});
 
 	/**

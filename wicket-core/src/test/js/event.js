@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
 		var element = jQuery('.getIdClass1')[0];
 		var id = Wicket.Event.getId(element);
 
-		equals(id, 'specifiedId', 'The specified element id is properly read');
+		equal(id, 'specifiedId', 'The specified element id is properly read');
 	});
 
 	test('getId - of an element without specified id', function() {
@@ -32,10 +32,10 @@ jQuery(document).ready(function() {
 		var element = jQuery('.getIdClass2')[0];
 		var id = Wicket.Event.getId(element);
 
-		equals(id, 'wicket-generated-id-0', 'The element without specified id will have an auto generated one');
+		equal(id, 'wicket-generated-id-0', 'The element without specified id will have an auto generated one');
 
 		var element2 = jQuery('.getIdClass2');
-		equals(element2.prop('id'), 'wicket-generated-id-0', 'The generated id is assigned');
+		equal(element2.prop('id'), 'wicket-generated-id-0', 'The generated id is assigned');
 	});
 
 	module('Wicket.Event.keyCode');
@@ -44,14 +44,14 @@ jQuery(document).ready(function() {
 
 		var evt = jQuery.Event("keydown", { keyCode: 123 });
 
-		equals(Wicket.Event.keyCode(evt), 123, 'event.keyCode should be used if available');
+		equal(Wicket.Event.keyCode(evt), 123, 'event.keyCode should be used if available');
 	});
 
 	test('which', function () {
 
 		var evt = jQuery.Event("which", { keyCode: 123 });
 
-		equals(Wicket.Event.keyCode(evt), 123, 'event.which should be used if event.keyCode is not available');
+		equal(Wicket.Event.keyCode(evt), 123, 'event.which should be used if event.keyCode is not available');
 	});
 
 	module('Wicket.Event.stop');
@@ -60,11 +60,11 @@ jQuery(document).ready(function() {
 
 		var evt = jQuery.Event("keydown", { keyCode: 123 });
 
-		equals(evt.isPropagationStopped(), false);
+		equal(evt.isPropagationStopped(), false);
 
 		Wicket.Event.stop(evt);
 
-		equals(evt.isPropagationStopped(), true);
+		equal(evt.isPropagationStopped(), true);
 	});
 
 
