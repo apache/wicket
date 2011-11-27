@@ -58,7 +58,7 @@ jQuery(document).ready(function() {
 		};
 		var opts = jQuery.extend({}, defaults, options);
 		var call = new Wicket.Ajax.Call(opts.url, opts.successHandler, opts.failureHandler, opts.channel);
-		var request = new Wicket.Ajax.Request(opts.url, call.loadedCallback.bind(call), opts.parseResponse, opts.randomUrl, opts.channel, opts.successHandler);
+		var request = new Wicket.Ajax.Request(opts.url, call.loadedCallback.bind(call), opts.parseResponse, opts.randomUrl, opts.failureHandler, opts.channel, opts.successHandler);
 
 		request.transport = opts.transport;
 
@@ -114,7 +114,7 @@ jQuery(document).ready(function() {
 		
 		Wicket.Log.error = function(msg) {
 			start();
-			equals(msg, 'Wicket.Ajax.Call.processComponent: Component with id [[componentToReplaceDoesNotExist]] was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.');
+			equal(msg, 'Wicket.Ajax.Call.processComponent: Component with id [[componentToReplaceDoesNotExist]] was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.');
 
 			// restore the original method
 			Wicket.Log.error = oldWicketLogError;
@@ -122,7 +122,7 @@ jQuery(document).ready(function() {
 
 		var options = {
 			successHandler: function() {
-				equals(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
+				equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
 			}
 		};
 
@@ -136,7 +136,7 @@ jQuery(document).ready(function() {
 		var options = {
 			successHandler: function() {
 				start();
-				equals(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
+				equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
 			}
 		};
 
