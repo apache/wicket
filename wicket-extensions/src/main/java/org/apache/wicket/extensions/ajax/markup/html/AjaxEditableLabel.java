@@ -97,14 +97,18 @@ public class AjaxEditableLabel<T> extends Panel
 		protected void onComponentTag(final ComponentTag tag)
 		{
 			super.onComponentTag(tag);
+
+			String callbackUrl = getCallbackUrl().toString();
+			char separator = (callbackUrl != null && callbackUrl.indexOf('?') > -1) ? '&' : '?';
+
 			final String saveCall = "{" +
-				generateCallbackScript("Wicket.Ajax.get('" + getCallbackUrl() +
-					"&save=true&'+this.name+'='+Wicket.Form.encode(this.value)") +
-				"; return false;}";
+				generateCallbackScript("Wicket.Ajax.get('" + callbackUrl + separator +
+					"save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
+
 
 			final String cancelCall = "{" +
-				generateCallbackScript("Wicket.Ajax.get('" + getCallbackUrl() + "&save=false'") +
-				"; return false;}";
+				generateCallbackScript("Wicket.Ajax.get('" + callbackUrl + separator +
+					"save=false'") + "; return false;}";
 
 
 			final String keypress = "var kc=Wicket.Event.keyCode(event); if (kc==27) " +
