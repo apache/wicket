@@ -85,7 +85,7 @@ jQuery(document).ready(function() {
 
 	test('Wicket.Head.containsElement - check existence of wicket-ajax-debug.js with "src"', function() {
 		var scriptElement = Wicket.Head.createElement('script');
-		scriptElement.src = "../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-debug.js";
+		scriptElement.src = "../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
 		ok(Wicket.Head.containsElement(scriptElement, 'src'), 'There should be an element for wicket-ajax-debug.js');
 	});
 	
