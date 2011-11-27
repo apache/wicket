@@ -97,12 +97,16 @@ public class AjaxEditableLabel<T> extends Panel
 		protected void onComponentTag(final ComponentTag tag)
 		{
 			super.onComponentTag(tag);
+
+			String callbackUrl = getCallbackUrl().toString();
+			char separator = (callbackUrl != null && callbackUrl.indexOf('?') > -1) ? '&' : '?';
+
 			final String saveCall = "{" +
-				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() +
-					"&save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
+				generateCallbackScript("wicketAjaxGet('" + callbackUrl + separator +
+					"save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
 
 			final String cancelCall = "{" +
-				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "&save=false'") +
+				generateCallbackScript("wicketAjaxGet('" + callbackUrl + separator + "save=false'") +
 				"; return false;}";
 
 
