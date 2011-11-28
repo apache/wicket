@@ -16,11 +16,18 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import java.util.Arrays;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IObjectClassAwareModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.IWritableRequestParameters;
+import org.apache.wicket.util.string.StringValue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -136,5 +143,36 @@ public class AjaxEditableTest extends WicketTestCase
 		tester.assertInvisible("ajaxLabel:editor");
 		tester.assertVisible("ajaxLabel:label");
 		tester.assertLabel("ajaxLabel:label", "something");
+	}
+
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-4259">WICKET-4259</a>
+	 */
+	@Test
+	public void testModelObjectClassInference()
+	{
+		class IntegerModel extends Model<Integer> implements IObjectClassAwareModel<Integer>
+		{
+
+			public Class<Integer> getObjectClass()
+			{
+				return Integer.class;
+			}
+		}
+		IModel<Integer> integerModel = new IntegerModel();
+		AjaxEditableLabel<Integer> editableLabel = new AjaxEditableLabel<Integer>("test",
+			integerModel);
+		editableLabel.getEditor().setVisible(true);
+
+		IWritableRequestParameters postParameters = (IWritableRequestParameters)tester.getRequestCycle()
+			.getRequest()
+			.getPostParameters();
+		postParameters.setParameterValues(editableLabel.getEditor().getInputName(),
+			Arrays.asList(new StringValue[] { StringValue.valueOf("5") }));
+		editableLabel.getEditor().processInput();
+
+		assertNotNull(integerModel.getObject());
+		assertTrue(integerModel.getObject() instanceof Integer);
 	}
 }
