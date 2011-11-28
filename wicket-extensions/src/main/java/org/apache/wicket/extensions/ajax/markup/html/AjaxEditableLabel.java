@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.JavaScriptUtils;
@@ -390,7 +391,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		if (editor == null)
 		{
-			initLabelAndEditor(getDelegatingParentModel());
+			initLabelAndEditor(new WrapperModel());
 		}
 		return editor;
 	}
@@ -404,7 +405,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		if (label == null)
 		{
-			initLabelAndEditor(getDelegatingParentModel());
+			initLabelAndEditor(new WrapperModel());
 		}
 		return label;
 	}
@@ -419,7 +420,7 @@ public class AjaxEditableLabel<T> extends Panel
 		// lazily add label and editor
 		if (editor == null)
 		{
-			initLabelAndEditor(getDelegatingParentModel());
+			initLabelAndEditor(new WrapperModel());
 		}
 		// obsolete with WICKET-1919
 		// label.setEnabled(isEnabledInHierarchy());
@@ -509,34 +510,40 @@ public class AjaxEditableLabel<T> extends Panel
 	}
 
 	/**
-	 * get a model that accesses the parent model lazily. this is required since we eventually
-	 * request the parents model before the component is added to the parent.
-	 * 
-	 * @return model
+	 * Model that accesses the parent model lazily. this is required since we eventually request the
+	 * parents model before the component is added to the parent.
 	 */
-	private IModel<T> getDelegatingParentModel()
+	private class WrapperModel implements IModel<T>, IObjectClassAwareModel<T>
 	{
-		return new IModel<T>()
+
+		public T getObject()
 		{
-			private static final long serialVersionUID = 1L;
+			return getParentModel().getObject();
+		}
 
-			public T getObject()
-			{
-				return getParentModel().getObject();
-			}
+		public void setObject(final T object)
+		{
+			getParentModel().setObject(object);
+		}
 
-			public void setObject(final T object)
-			{
-				getParentModel().setObject(object);
-			}
+		public void detach()
+		{
+			getParentModel().detach();
 
-			public void detach()
+		}
+
+		public Class<T> getObjectClass()
+		{
+			if (getParentModel() instanceof IObjectClassAwareModel)
 			{
-				getParentModel().detach();
+				return ((IObjectClassAwareModel)getParentModel()).getObjectClass();
 			}
-		};
+			else
+			{
+				return null;
+			}
+		}
 	}
-
 
 	/**
 	 * @return Gets the parent model in case no explicit model was specified.
