@@ -130,12 +130,10 @@ public class SignInPanel extends Panel
 					password = data[1];
 
 					// logon successful. Continue to the original destination
-					if (!continueToOriginalDestination())
-					{
-						// Ups, no original destination. Go to the home page
-						throw new RestartResponseException(getSession().getPageFactory().newPage(
-							getApplication().getHomePage()));
-					}
+					continueToOriginalDestination();
+					// Ups, no original destination. Go to the home page
+					throw new RestartResponseException(getSession().getPageFactory().newPage(
+						getApplication().getHomePage()));
 				}
 				else
 				{
@@ -248,10 +246,8 @@ public class SignInPanel extends Panel
 	{
 		// If login has been called because the user was not yet logged in, than continue to the
 		// original destination, otherwise to the Home page
-		if (!continueToOriginalDestination())
-		{
-			setResponsePage(getApplication().getHomePage());
-		}
+		continueToOriginalDestination();
+		setResponsePage(getApplication().getHomePage());
 	}
 
 	/**

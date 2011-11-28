@@ -1097,13 +1097,30 @@ public abstract class Component
 
 	/**
 	 * Redirects to any intercept page previously specified by a call to redirectToInterceptPage.
+	 * The redirect is done by throwing an exception. If there is no intercept page no exception
+	 * will be thrown and the program flow will continue uninterrupted.
 	 * 
-	 * @return True if an original destination was redirected to
+	 * Example:
+	 * 
+	 * <pre>
+	 * add(new Link(&quot;login&quot;)
+	 * {
+	 * 	protected void onClick()
+	 * 	{
+	 * 		if (authenticate())
+	 * 		{
+	 * 			continueToOriginalDestination();
+	 * 			// if we reach this line there was no intercept page, so go to home page
+	 * 			setResponsePage(WelcomePage.class);
+	 * 		}
+	 * 	}
+	 * });
+	 * 
 	 * @see Component#redirectToInterceptPage(Page)
 	 */
-	public final boolean continueToOriginalDestination()
+	public final void continueToOriginalDestination()
 	{
-		return RestartResponseAtInterceptPageException.continueToOriginalDestination();
+		RestartResponseAtInterceptPageException.continueToOriginalDestination();
 	}
 
 	/**

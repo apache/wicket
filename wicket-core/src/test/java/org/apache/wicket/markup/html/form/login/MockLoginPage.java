@@ -71,10 +71,8 @@ public class MockLoginPage extends WebPage
 	public boolean login(String username)
 	{
 		((MySession)Session.get()).setUsername(username);
-		if (!continueToOriginalDestination())
-		{
-			setResponsePage(Application.get().getHomePage());
-		}
+		continueToOriginalDestination();
+		setResponsePage(Application.get().getHomePage());
 		return true;
 	}
 

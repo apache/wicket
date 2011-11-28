@@ -44,12 +44,9 @@ public class InterceptPage extends WebPage
 			@Override
 			public void onClick()
 			{
-				if (!continueToOriginalDestination())
-				{
-					setResponsePage(Application.get().getHomePage());
-				}
+				continueToOriginalDestination();
+				setResponsePage(Application.get().getHomePage());
 			}
 		});
 	}
-
 }

@@ -43,10 +43,8 @@ public class LoginPage extends WebPage
 			{
 				((MySession)getSession()).setAnonymous(false);
 
-				if (!continueToOriginalDestination())
-				{
-					setResponsePage(SuccessPage.class);
-				}
+				continueToOriginalDestination();
+				setResponsePage(SuccessPage.class);
 			}
 		});
 	}

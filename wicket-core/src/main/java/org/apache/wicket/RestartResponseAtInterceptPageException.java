@@ -146,7 +146,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		};
 	}
 
-	static boolean continueToOriginalDestination()
+	static void continueToOriginalDestination()
 	{
 		InterceptData data = InterceptData.get();
 		if (data != null)
@@ -154,9 +154,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 			data.continueOk = true;
 			String url = RequestCycle.get().getUrlRenderer().renderUrl(data.originalUrl);
 			RequestCycle.get().replaceAllRequestHandlers(new RedirectRequestHandler(url));
-			return true;
 		}
-		return false;
 	}
 
 	static IRequestMapper MAPPER = new IRequestMapper()

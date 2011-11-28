@@ -84,10 +84,8 @@ public final class SignIn extends WicketExamplePage
 			// Sign the user in
 			if (session.signIn(getUsername(), getPassword()))
 			{
-				if (!continueToOriginalDestination())
-				{
-					setResponsePage(getApplication().getHomePage());
-				}
+				continueToOriginalDestination();
+				setResponsePage(getApplication().getHomePage());
 			}
 			else
 			{
