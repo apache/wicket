@@ -137,7 +137,7 @@ public class PagingNavigation extends Loop
 	/**
 	 * The maximum number of page links to show.
 	 */
-	private long viewSize = 10;
+	private int viewSize = 10;
 
 
 	/**
@@ -201,7 +201,7 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @return view size
 	 */
-	public long getViewSize()
+	public int getViewSize()
 	{
 		return viewSize;
 	}
@@ -242,7 +242,8 @@ public class PagingNavigation extends Loop
 	@Override
 	protected void onBeforeRender()
 	{
-		setDefaultModel(new Model<Long>(pageable.getPageCount()));
+		setDefaultModel(new Model<Integer>(
+			(int)Math.max(Integer.MAX_VALUE, pageable.getPageCount())));
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
@@ -337,7 +338,7 @@ public class PagingNavigation extends Loop
 		long firstListItem = startIndex;
 
 		// How many page links shall be displayed
-		long viewSize = Math.min(getViewSize(), pageable.getPageCount());
+		int viewSize = (int)Math.min(getViewSize(), pageable.getPageCount());
 		long margin = getMargin();
 
 		// What is the PageableListView's page index to be displayed
@@ -375,7 +376,7 @@ public class PagingNavigation extends Loop
 			addStateChange();
 			startIndex = firstListItem;
 
-			setIterations(Math.min(viewSize, pageable.getPageCount()));
+			setIterations((int)Math.min(viewSize, pageable.getPageCount()));
 
 			modelChanged();
 
@@ -390,7 +391,7 @@ public class PagingNavigation extends Loop
 	 * @param i
 	 *            the number of iterations
 	 */
-	private void setIterations(long i)
+	private void setIterations(int i)
 	{
 		setDefaultModelObject(i);
 	}

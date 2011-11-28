@@ -94,14 +94,14 @@ public class TabbedPanel extends Panel
 
 		this.tabs = Args.notNull(tabs, "tabs");
 
-		final IModel<Long> tabCount = new AbstractReadOnlyModel<Long>()
+		final IModel<Integer> tabCount = new AbstractReadOnlyModel<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Long getObject()
+			public Integer getObject()
 			{
-				return (long)TabbedPanel.this.tabs.size();
+				return TabbedPanel.this.tabs.size();
 			}
 		};
 
@@ -116,7 +116,7 @@ public class TabbedPanel extends Panel
 			@Override
 			protected void populateItem(final LoopItem item)
 			{
-				final int index = (int)item.getIndex();
+				final int index = item.getIndex();
 				final ITab tab = TabbedPanel.this.tabs.get(index);
 
 				final WebMarkupContainer titleLink = newLink("link", index);
@@ -126,7 +126,7 @@ public class TabbedPanel extends Panel
 			}
 
 			@Override
-			protected LoopItem newItem(final long iteration)
+			protected LoopItem newItem(final int iteration)
 			{
 				return newTabContainer(iteration);
 			}
@@ -162,7 +162,7 @@ public class TabbedPanel extends Panel
 	 * @param tabIndex
 	 * @return new loop item
 	 */
-	protected LoopItem newTabContainer(final long tabIndex)
+	protected LoopItem newTabContainer(final int tabIndex)
 	{
 		return new LoopItem(tabIndex)
 		{
@@ -193,7 +193,7 @@ public class TabbedPanel extends Panel
 			@Override
 			public boolean isVisible()
 			{
-				return getTabs().get((int)tabIndex).isVisible();
+				return getTabs().get(tabIndex).isVisible();
 			}
 		};
 	}

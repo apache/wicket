@@ -49,9 +49,9 @@ public abstract class Loop extends AbstractRepeater
 	 *            max index of the loop
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Loop(final String id, final long iterations)
+	public Loop(final String id, final int iterations)
 	{
-		super(id, new Model<Long>(iterations));
+		super(id, new Model<Integer>(iterations));
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class Loop extends AbstractRepeater
 	 *            Must contain a Integer model object
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Loop(final String id, final IModel<Long> model)
+	public Loop(final String id, final IModel<Integer> model)
 	{
 		super(id, model);
 	}
@@ -71,9 +71,9 @@ public abstract class Loop extends AbstractRepeater
 	/**
 	 * @return The number of loop iterations
 	 */
-	public final long getIterations()
+	public final int getIterations()
 	{
-		return (Long)getDefaultModelObject();
+		return (Integer)getDefaultModelObject();
 	}
 
 	/**
@@ -86,11 +86,11 @@ public abstract class Loop extends AbstractRepeater
 		removeAll();
 
 		// Get number of iterations
-		final long iterations = getIterations();
+		final int iterations = getIterations();
 		if (iterations > 0)
 		{
 			// Create LoopItems for each iteration
-			for (long iteration = 0; iteration < iterations; iteration++)
+			for (int iteration = 0; iteration < iterations; iteration++)
 			{
 				// Create item for loop iteration
 				LoopItem item = newItem(iteration);
@@ -109,7 +109,7 @@ public abstract class Loop extends AbstractRepeater
 	 *            iteration in the loop
 	 * @return LoopItem
 	 */
-	protected LoopItem newItem(long iteration)
+	protected LoopItem newItem(int iteration)
 	{
 		return new LoopItem(iteration);
 	}

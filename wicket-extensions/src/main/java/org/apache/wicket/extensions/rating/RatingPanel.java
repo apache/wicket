@@ -104,7 +104,7 @@ public abstract class RatingPanel extends Panel
 
 		private RatingStarBar(final String id, final IModel<Integer> model)
 		{
-			super(id, new IntToLongModel(model));
+			super(id, model);
 		}
 
 		@Override
@@ -125,7 +125,7 @@ public abstract class RatingPanel extends Panel
 					// of our rating component, so other components can also get
 					// updated in case of an AJAX event.
 
-					onRated((int)(item.getIndex() + 1), target);
+					onRated(item.getIndex() + 1, target);
 
 					// if we process an AJAX event, update this panel
 					if (target != null)
@@ -141,7 +141,7 @@ public abstract class RatingPanel extends Panel
 				}
 			};
 
-			int iteration = (int)item.getIndex();
+			int iteration = item.getIndex();
 
 			// add the star image, which is either active (highlighted) or
 			// inactive (no star)
@@ -432,39 +432,4 @@ public abstract class RatingPanel extends Panel
 	 *            the request target, null if the request is a regular, non-AJAX request.
 	 */
 	protected abstract void onRated(int rating, AjaxRequestTarget target);
-
-	/**
-	 * Adapts an int model to a long model
-	 * 
-	 * @author igor
-	 */
-	private static class IntToLongModel implements IModel<Long>
-	{
-		private final IModel<Integer> integer;
-
-		public IntToLongModel(IModel<Integer> integer)
-		{
-			this.integer = integer;
-		}
-
-		@Override
-		public void detach()
-		{
-			integer.detach();
-		}
-
-		@Override
-		public Long getObject()
-		{
-			return (long)integer.getObject();
-		}
-
-		@Override
-		public void setObject(Long object)
-		{
-			integer.setObject((object == null) ? null : object.intValue());
-		}
-
-
-	}
 }
