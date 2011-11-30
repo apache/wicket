@@ -141,6 +141,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 				: ContentDisposition.ATTACHMENT);
 		}
 
+		final Duration cacheDuration = getCacheDuration();
 		if (cacheDuration != null)
 		{
 			resource.setCacheDuration(cacheDuration);
