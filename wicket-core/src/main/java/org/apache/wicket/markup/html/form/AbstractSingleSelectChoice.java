@@ -22,6 +22,8 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -37,6 +39,7 @@ import org.apache.wicket.util.string.Strings;
 public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(AbstractSingleSelectChoice.class);
 
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
@@ -191,6 +194,20 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		if (object != null)
 		{
 			int index = getChoices().indexOf(object);
+
+			if (index < 0)
+			{
+				// the model is returning a choice that is not in the available choices collection
+
+				logger.warn(
+					"Detected inconsistency in choice component: {}/{}. Model returned object: {}, but this object is not available in the list of selected objects.",
+					new Object[] { getPage().getClass(), getPageRelativePath(), object });
+
+				// pretend like nothing is selected
+
+				return "";
+			}
+
 			return getChoiceRenderer().getIdValue(object, index);
 		}
 		else
