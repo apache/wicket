@@ -166,9 +166,8 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
-		// see if request handler addresses the resource we serve
-		if (resourceReference.equals(handler.getResourceReference()) == false &&
-			resourceReference.getResource().equals(handler.getResource()) == false)
+		// see if request handler addresses the resource reference we serve
+		if (resourceReference.equals(handler.getResourceReference()) == false)
 		{
 			return null;
 		}
