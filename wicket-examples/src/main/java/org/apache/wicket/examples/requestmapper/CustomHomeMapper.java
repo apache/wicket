@@ -24,6 +24,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.AbstractComponentMapper;
@@ -58,9 +59,9 @@ public class CustomHomeMapper extends AbstractComponentMapper
 	{
 		Url homeUrl = null;
 
-		if (requestHandler instanceof RenderPageRequestHandler)
+		if (requestHandler instanceof IPageRequestHandler)
 		{
-			RenderPageRequestHandler pageRequestHandler = (RenderPageRequestHandler)requestHandler;
+			IPageRequestHandler pageRequestHandler = (IPageRequestHandler)requestHandler;
 
 			if (pageRequestHandler.getPageClass().equals(Application.get().getHomePage()))
 			{
