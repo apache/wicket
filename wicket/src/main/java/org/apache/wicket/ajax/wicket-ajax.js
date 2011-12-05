@@ -1620,11 +1620,16 @@ Wicket.Head.Contributor.prototype = {
 			// this makes a second GET request to the css but it gets it either from the cache or
 			// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
 			var img = document.createElement('img');
-			img.onerror = function() {
-				notify();
-			}
 			img.src = css.href;
-        });
+			if (img.complete) {
+        	 notify();
+			}
+			else {
+		   	  img.onerror = function() {
+         		notify();
+       		  }
+      		}
+       });
 	},
 	
 	// Process an inline style element
