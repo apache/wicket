@@ -67,6 +67,22 @@ public class RedirectRequestHandler implements IRequestHandler
 		this.status = status;
 	}
 
+	/**
+	 * @return redirect url
+	 */
+	public String getRedirectUrl()
+	{
+		return redirectUrl;
+	}
+
+	/**
+	 * @return http redirect status code
+	 */
+	public int getStatus()
+	{
+		return status;
+	}
+
 	/** {@inheritDoc} */
 	public void detach(final IRequestCycle requestCycle)
 	{
