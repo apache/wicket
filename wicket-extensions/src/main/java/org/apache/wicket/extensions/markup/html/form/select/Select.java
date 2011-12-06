@@ -206,20 +206,20 @@ public class Select<T> extends FormComponent<T>
 	 * Checks if the specified option is selected
 	 * 
 	 * @param option
-	 * @return true if the option is selected, false otherwise
+	 * @return {@code true} if the option is selected, {@code false} otherwise
 	 */
 	boolean isSelected(SelectOption<?> option)
 	{
 		// if the raw input is specified use that, otherwise use model
 		if (hasRawInput())
 		{
-			String[] paths = getInputAsArray();
-			if (paths != null && paths.length > 0)
+			String[] values = getInputAsArray();
+			if (values != null && values.length > 0)
 			{
-				for (int i = 0; i < paths.length; i++)
+				for (int i = 0; i < values.length; i++)
 				{
-					String path = paths[i];
-					if (path.equals(option.getPath()))
+					String value = values[i];
+					if (value.equals(option.getValue()))
 					{
 						return true;
 					}
