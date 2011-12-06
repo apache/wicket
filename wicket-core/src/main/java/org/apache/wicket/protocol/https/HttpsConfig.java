@@ -101,8 +101,8 @@ public class HttpsConfig
 	}
 
 	/**
-	 * Sets whether or not a new session is created before redirecting from {@code http} to {@code
-	 * https}
+	 * Sets whether or not a new session is created before redirecting from {@code http} to
+	 * {@code https}
 	 * <p>
 	 * BE VERY CAREFUL WHEN SETTING THIS VALUE TO {@code false}.
 	 * 

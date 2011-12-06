@@ -28,7 +28,7 @@ import org.junit.Test;
  */
 public class HttpsMapperApplicationTest
 {
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	private <T extends Page> T requestPage(WicketTester tester, Class<T> pageClass)
 	{
 		Page page = tester.startPage(pageClass);
@@ -43,11 +43,10 @@ public class HttpsMapperApplicationTest
 	public void switchDefaultToHttpsWithDefaultPorts()
 	{
 		WicketTester tester = new WicketTester(new HttpsMapperApplication());
-		
+
 		requestPage(tester, HttpsPage.class);
-		
+
 		assertEquals("https", tester.getLastRequest().getScheme());
-		assertEquals(443, tester.getLastRequest().getServerPort());
 	}
 
 	@Test
@@ -68,11 +67,10 @@ public class HttpsMapperApplicationTest
 
 		tester.getRequest().setScheme("https");
 		tester.getRequest().setServerPort(443);
-		
+
 		requestPage(tester, HttpPage.class);
-		
+
 		assertEquals("http", tester.getLastRequest().getScheme());
-		assertEquals(80, tester.getLastRequest().getServerPort());
 	}
 
 	@Test
@@ -126,7 +124,7 @@ public class HttpsMapperApplicationTest
 
 		assertEquals("https", tester.getLastRequest().getScheme());
 		assertEquals(443, tester.getLastRequest().getServerPort());
-		
+
 		assertEquals("https", tester.getRequest().getScheme());
 		assertEquals(443, tester.getRequest().getServerPort());
 	}
