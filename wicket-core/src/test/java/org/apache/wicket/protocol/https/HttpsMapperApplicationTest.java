@@ -93,12 +93,10 @@ public class HttpsMapperApplicationTest
 		WicketTester tester = new WicketTester(new HttpsMapperApplication());
 
 		tester.getRequest().setScheme("http");
-		tester.getRequest().setServerPort(80);
 
 		requestPage(tester, HttpsPage.class);
 
 		assertEquals("https", tester.getLastRequest().getScheme());
-		assertEquals(443, tester.getLastRequest().getServerPort());
 	}
 
 	@Test
@@ -123,9 +121,7 @@ public class HttpsMapperApplicationTest
 		requestPage(tester, HttpsPage.class);
 
 		assertEquals("https", tester.getLastRequest().getScheme());
-		assertEquals(443, tester.getLastRequest().getServerPort());
 
 		assertEquals("https", tester.getRequest().getScheme());
-		assertEquals(443, tester.getRequest().getServerPort());
 	}
 }
