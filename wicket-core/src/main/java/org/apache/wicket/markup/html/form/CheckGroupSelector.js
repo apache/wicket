@@ -32,9 +32,13 @@ if (typeof (Wicket.CheckboxSelector.Group) == "undefined") {
 			var result = new Array();
 			var parentForm = wicketGet(formId);
 			var parentGroup = parentForm[groupName];
-			for ( var i = 0; i < parentGroup.length; i++) {
-				var checkbox = parentGroup[i];
-				result.push(checkbox);
+			if (parentGroup.length) {
+				for ( var i = 0; i < parentGroup.length; i++) {
+					var checkbox = parentGroup[i];
+					result.push(checkbox);
+				}
+			} else if (parentGroup) {
+				result.push(parentGroup);
 			}
 			return result;
 		}
