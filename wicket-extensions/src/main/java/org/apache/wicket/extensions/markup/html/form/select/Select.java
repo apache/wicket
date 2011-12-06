@@ -180,7 +180,7 @@ public class Select<T> extends FormComponent<T>
 	/**
 	 * @see FormComponent#updateModel()
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings( { "unchecked", "rawtypes" })
 	@Override
 	public void updateModel()
 	{
@@ -214,7 +214,7 @@ public class Select<T> extends FormComponent<T>
 	 * Checks if the specified option is selected based on raw input
 	 * 
 	 * @param option
-	 * @return true} iff the option is selected
+	 * @return {@code true} if the option is selected, {@code false} otherwise
 	 */
 	boolean isSelected(final SelectOption<?> option)
 	{
@@ -223,12 +223,13 @@ public class Select<T> extends FormComponent<T>
 		// if the raw input is specified use that, otherwise use model
 		if (hasRawInput())
 		{
-			String[] paths = getInputAsArray();
-			if ((paths != null) && (paths.length > 0))
+			String[] values = getInputAsArray();
+			if (values != null && values.length > 0)
 			{
-				for (String path : paths)
+				for (int i = 0; i < values.length; i++)
 				{
-					if (path.equals(option.getPath()))
+					String value = values[i];
+					if (value.equals(option.getValue()))
 					{
 						return true;
 					}
