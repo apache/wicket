@@ -193,18 +193,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		final T object = getModelObject();
 		if (object != null)
 		{
-			int index = -1;
-
-			List<? extends T> choices = getChoices();
-			for (int i = 0; i < choices.size(); i++)
-			{
-				String otherId = getChoiceRenderer().getIdValue(choices.get(i), i);
-				if (isSelected(object, i, otherId))
-				{
-					index = i;
-					break;
-				}
-			}
+			int index = getChoices().indexOf(object);
 
 			if (index < 0)
 			{
