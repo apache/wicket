@@ -110,6 +110,12 @@ public class DatesPage1 extends WebPage
 			setDefaultModel(new PropertyModel<Locale>(DatesPage1.this, "selectedLocale"));
 		}
 
+		@Override
+		public String getModelValue()
+		{
+			return super.getModelValue();
+		}
+
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
