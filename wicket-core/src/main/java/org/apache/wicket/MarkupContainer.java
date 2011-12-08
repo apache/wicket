@@ -1846,26 +1846,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#setRenderAllowed()
-	 */
-	@Override
-	void setRenderAllowed()
-	{
-		super.setRenderAllowed();
-
-		visitChildren(new IVisitor<Component, Void>()
-		{
-			public void component(final Component component, final IVisit<Void> visit)
-			{
-				// Find out if this component can be rendered
-				final boolean renderAllowed = component.isActionAuthorized(RENDER);
-				// Authorize rendering
-				component.setRenderAllowed(renderAllowed);
-			}
-		});
-	}
-
-	/**
 	 * 
 	 */
 	private static class ChildList extends AbstractList<Object> implements IClusterable
