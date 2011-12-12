@@ -1046,4 +1046,79 @@ public class WicketTesterTest extends WicketTestCase
 		tester.startComponentInPage(new Label("testLabel"));
 		tester.startPage(tester.getLastRenderedPage());
 	}
+
+	/**
+	 * Tests that setting a cookie with age > 0 before creating the page will survive after the
+	 * rendering of the page and it will be used for the next request cycle.
+	 */
+	@Test
+	public void transferCookies()
+	{
+		String cookieName = "wicket4289Name";
+		String cookieValue = "wicket4289Value";
+		int cookieAge = 1; // age > 0 => the cookie will be preserved for the the next request cycle
+
+		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setMaxAge(cookieAge);
+		tester.getRequest().addCookie(cookie);
+
+		CookiePage page = new CookiePage(cookieName, cookieValue);
+
+		tester.startPage(page);
+
+		// assert that the cookie was in the response
+		List<Cookie> cookies = tester.getLastResponse().getCookies();
+		assertEquals(1, cookies.size());
+		Cookie cookie2 = cookies.get(0);
+		assertEquals(cookieName, cookie2.getName());
+		assertEquals(cookieValue, cookie2.getValue());
+		assertEquals(cookieAge, cookie2.getMaxAge());
+
+		// assert that the cookie will be preserved for the next request
+		assertEquals(cookieValue, tester.getRequest().getCookie(cookieName).getValue());
+	}
+
+	/**
+	 * Tests that setting a cookie with age < 0 will not be stored after the request cycle.
+	 */
+	@Test
+	public void dontTransferCookiesWithNegativeAge()
+	{
+		String cookieName = "wicket4289Name";
+		String cookieValue = "wicket4289Value";
+		int cookieAge = -1; // age < 0 => do not store it
+
+		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setMaxAge(cookieAge);
+		tester.getRequest().addCookie(cookie);
+
+		CookiePage page = new CookiePage(cookieName, cookieValue);
+
+		tester.startPage(page);
+
+		// assert that the cookie is not preserved for the next request cycle
+		assertNull(tester.getRequest().getCookies());
+	}
+
+	/**
+	 * Tests that setting a cookie with age < 0 will not be stored after the request cycle.
+	 */
+	@Test
+	public void dontTransferCookiesWithZeroAge()
+	{
+		String cookieName = "wicket4289Name";
+		String cookieValue = "wicket4289Value";
+		int cookieAge = 0; // age == 0 => delete the cookie
+
+		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setMaxAge(cookieAge);
+		tester.getRequest().addCookie(cookie);
+
+		CookiePage page = new CookiePage(cookieName, cookieValue);
+
+		tester.startPage(page);
+
+		// assert that the cookie is not preserved for the next request cycle
+		assertNull(tester.getRequest().getCookies());
+	}
 }

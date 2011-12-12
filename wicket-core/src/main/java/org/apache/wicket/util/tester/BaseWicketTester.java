@@ -350,8 +350,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private void setupNextRequestCycle()
 	{
 		request = new MockHttpServletRequest(application, httpSession, servletContext);
@@ -370,6 +370,8 @@ public class BaseWicketTester
 			request.setServerPort(lastRequest.getServerPort());
 		}
 
+		transferCookies();
+
 		response = new MockHttpServletResponse(request);
 
 		ServletWebRequest servletWebRequest = newServletWebRequest();
@@ -381,6 +383,28 @@ public class BaseWicketTester
 		if (session == null)
 		{
 			newSession();
+		}
+	}
+
+	/**
+	 * Copies all cookies with a positive age from the last response to the request that is going to
+	 * be used for the next cycle.
+	 */
+	private void transferCookies()
+	{
+		if (lastResponse != null)
+		{
+			List<Cookie> cookies = lastResponse.getCookies();
+			if (cookies != null)
+			{
+				for (Cookie cookie : cookies)
+				{
+					if (cookie.getMaxAge() > 0)
+					{
+						request.addCookie(cookie);
+					}
+				}
+			}
 		}
 	}
 
@@ -403,8 +427,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private void newSession()
 	{
 		ThreadContext.setSession(null);
@@ -679,8 +703,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private void recordRequestResponse()
 	{
 		lastRequest = request;
@@ -717,7 +741,6 @@ public class BaseWicketTester
 		componentInPage = null;
 
 		// prepare request
-		request = new MockHttpServletRequest(application, httpSession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		IRequestHandler handler = new RenderPageRequestHandler(pageProvider);
 
@@ -787,7 +810,6 @@ public class BaseWicketTester
 		final PageParameters pageParameters)
 	{
 		// prepare request
-		request = new MockHttpServletRequest(application, httpSession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
 
@@ -2531,8 +2553,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
 	{
 		private final IPageRendererProvider delegate;
@@ -2560,8 +2582,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private class TestExceptionMapper implements IExceptionMapper
 	{
 		private final IExceptionMapper delegate;
@@ -2593,8 +2615,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private class TestRequestCycleProvider implements IRequestCycleProvider
 	{
 		private final IRequestCycleProvider delegate;
@@ -2615,8 +2637,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private class TestRequestMapper implements IRequestMapper
 	{
 		private final IRequestMapper delegate;
@@ -2655,12 +2677,12 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 
 	/**
-	 *
-	 */
+     *
+     */
 	private static class TestPageManagerProvider implements IPageManagerProvider
 	{
 		@Override
@@ -2671,8 +2693,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private class TestFilterConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<String, String>();
@@ -2708,8 +2730,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 *
-	 */
+     *
+     */
 	private static class WicketTesterServletWebResponse extends ServletWebResponse
 		implements
 			IMetaDataBufferingWebResponse
