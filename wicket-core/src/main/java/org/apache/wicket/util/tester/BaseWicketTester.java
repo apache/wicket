@@ -379,6 +379,8 @@ public class BaseWicketTester
 			request.setServerPort(lastRequest.getServerPort());
 		}
 
+		transferCookies();
+
 		response = new MockHttpServletResponse(request);
 
 		ServletWebRequest servletWebRequest = newServletWebRequest();
@@ -390,6 +392,28 @@ public class BaseWicketTester
 		if (session == null)
 		{
 			newSession();
+		}
+	}
+
+	/**
+	 * Copies all cookies with a positive age from the last response to the request that is going to
+	 * be used for the next cycle.
+	 */
+	private void transferCookies()
+	{
+		if (lastResponse != null)
+		{
+			List<Cookie> cookies = lastResponse.getCookies();
+			if (cookies != null)
+			{
+				for (Cookie cookie : cookies)
+				{
+					if (cookie.getMaxAge() > 0)
+					{
+						request.addCookie(cookie);
+					}
+				}
+			}
 		}
 	}
 
@@ -749,7 +773,6 @@ public class BaseWicketTester
 		componentInPage = null;
 
 		// prepare request
-		request = new MockHttpServletRequest(application, httpSession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		IRequestHandler handler = new RenderPageRequestHandler(pageProvider);
 
@@ -819,7 +842,6 @@ public class BaseWicketTester
 		final PageParameters pageParameters)
 	{
 		// prepare request
-		request = new MockHttpServletRequest(application, httpSession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
 
