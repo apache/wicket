@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -101,7 +102,18 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	public void addCookie(final Cookie cookie)
 	{
 		// remove any potential duplicates
-		cookies.remove(cookie);
+		// see http://www.ietf.org/rfc/rfc2109.txt, p.4.3.3
+		Iterator<Cookie> iterator = cookies.iterator();
+		while (iterator.hasNext())
+		{
+			Cookie old = iterator.next();
+			if (cookie.getName().equals(old.getName()) &&
+				((cookie.getPath() == null && old.getPath() == null) || (cookie.getPath().equals(old.getPath()))) &&
+				((cookie.getDomain() == null && old.getDomain() == null) || (cookie.getDomain().equals(old.getDomain()))))
+			{
+				iterator.remove();
+			}
+		}
 		cookies.add(cookie);
 	}
 
