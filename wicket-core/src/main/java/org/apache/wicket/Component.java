@@ -94,12 +94,10 @@ import org.slf4j.LoggerFactory;
  * place in the hierarchy of components contained on a given page.
  * 
  * <li><b>Component Paths </b>- The path from the Page at the root of the component hierarchy to a
- * given Component is simply the concatenation with dot separators of each id along the way. For
- * example, the path "a.b.c" would refer to the component named "c" inside the MarkupContainer named
+ * given Component is simply the concatenation with colon separators of each id along the way. For
+ * example, the path "a:b:c" would refer to the component named "c" inside the MarkupContainer named
  * "b" inside the container named "a". The path to a component can be retrieved by calling
- * getPath(). This path is an absolute path beginning with the id of the Page at the root. Pages
- * bear a PageMap/Session-relative identifier as their id, so each absolute path will begin with a
- * number, such as "0.a.b.c". To get a Component path relative to the page that contains it, you can
+ * getPath(). To get a Component path relative to the page that contains it, you can
  * call getPageRelativePath().
  * 
  * <li><b>LifeCycle </b>- Components participate in the following lifecycle phases:
@@ -1296,7 +1294,7 @@ public abstract class Component
 	}
 
 	/**
-	 * @return A path of the form [page-class-name].[page-relative-path]
+	 * @return A path of the form [page-class-name]:[page-relative-path]
 	 * @see Component#getPageRelativePath()
 	 */
 	public final String getClassRelativePath()
@@ -1920,7 +1918,7 @@ public abstract class Component
 		Session session = getSession();
 		if (session == null)
 		{
-			throw new WicketRuntimeException("Wicket Session object not avaiable");
+			throw new WicketRuntimeException("Wicket Session object not available");
 		}
 		return session.getStyle();
 	}
