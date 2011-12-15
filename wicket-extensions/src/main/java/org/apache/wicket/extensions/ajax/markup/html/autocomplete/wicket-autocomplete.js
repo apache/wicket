@@ -47,7 +47,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 
 	// pointers of the browser events
    	var objonkeydown;
-	var objonblur;
 	var objonkeyup;
 	var objonkeypress;
 	var objonchange;
@@ -93,7 +92,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 		initialElement = obj;
 		
         objonkeydown=obj.onkeydown;
-        objonblur=obj.onblur;
         objonkeyup=obj.onkeyup;
         objonkeypress=obj.onkeypress;
         objonfocus=obj.onfocus;
@@ -105,17 +103,16 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
       		if(typeof objonchangeoriginal=="function") return objonchangeoriginal.apply(this,[event]);
       	}
         objonchange=obj.onchange;
-                
-      	obj.onblur=function(event){      		
+        
+        Wicket.Event.add(obj,'blur',function(event){      		
     		if(mouseactive==1){
                 ignoreOneFocusGain = true;
 			Wicket.$(elementId).focus();
     			return killEvent(event);
     		}
-          	hideAutoComplete();
-          	if(typeof objonblur=="function") return objonblur.apply(this,[event]);
-        }
-      	
+          	window.setTimeout( hideAutoComplete, 500);
+        });	 
+                
       	obj.onfocus=function(event){
             if (mouseactive==1) {
                 ignoreOneFocusGain = false;
