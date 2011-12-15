@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
 
 
 /**
@@ -167,7 +168,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	public void addDefaultCssStyle(final IHeaderResponse response)
 	{
-		response.renderCSSReference(new PackageResourceReference(Wizard.class, "Wizard.css"));
+		response.render(CssHeaderItem.forReference(new PackageResourceReference(Wizard.class,
+			"Wizard.css")));
 	}
 
 	@Override

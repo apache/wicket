@@ -38,6 +38,8 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 
 
 /**
@@ -625,11 +627,11 @@ public class Palette<T> extends Panel
 	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
-		response.renderJavaScriptReference(JAVASCRIPT);
+		response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT));
 		ResourceReference css = getCSS();
 		if (css != null)
 		{
-			response.renderCSSReference(css);
+			response.render(CssHeaderItem.forReference(css));
 		}
 	}
 }

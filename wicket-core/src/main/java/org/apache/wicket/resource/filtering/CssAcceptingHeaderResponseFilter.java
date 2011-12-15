@@ -16,10 +16,8 @@
  */
 package org.apache.wicket.resource.filtering;
 
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.dependencies.AbstractResourceDependentResourceReference;
-import org.apache.wicket.resource.dependencies.AbstractResourceDependentResourceReference.ResourceType;
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.resource.header.HeaderItem;
 
 /**
  * This filter accepts anything that appears to be CSS. All CSS that is not a resource reference (
@@ -48,23 +46,8 @@ public class CssAcceptingHeaderResponseFilter extends AbstractHeaderResponseFilt
 	}
 
 	@Override
-	public boolean acceptReference(ResourceReference ref)
+	public boolean accepts(HeaderItem item)
 	{
-		if (ref instanceof AbstractResourceDependentResourceReference)
-		{
-			return ResourceType.CSS.equals(((AbstractResourceDependentResourceReference)ref).getResourceType());
-		}
-		if (!Strings.isEmpty(ref.getName()) && ref.getName().endsWith(".css"))
-		{
-			return true;
-		}
-		return false;
+		return item instanceof CssHeaderItem;
 	}
-
-	@Override
-	public boolean acceptOtherJavaScript()
-	{
-		return false;
-	}
-
 }

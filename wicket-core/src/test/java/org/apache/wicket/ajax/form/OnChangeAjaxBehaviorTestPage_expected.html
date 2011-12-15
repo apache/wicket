@@ -1,5 +1,5 @@
 <html>
-	<head><script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/jquery/jquery.min.js"></script>
+	<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
@@ -15,7 +15,9 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.OnChangeAja
 </script>
 <script type="text/javascript" >
 /*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { new Wicket.ChangeHandler('field1');;});
+Wicket.Event.add(window, "domready", function(event) { 
+new Wicket.ChangeHandler('field1');;
+;});
 /*]]>*/
 </script>
 </head><body>

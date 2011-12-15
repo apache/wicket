@@ -45,6 +45,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.DateConverter;
 import org.apache.wicket.util.lang.Objects;
@@ -264,7 +265,7 @@ public class DatePicker extends Behavior
 		// render initialization script with the variables interpolated
 		TextTemplate datePickerJs = new PackageTextTemplate(DatePicker.class, "DatePicker.js");
 		datePickerJs.interpolate(variables);
-		response.renderOnDomReadyJavaScript(datePickerJs.asString());
+		response.render(OnDomReadyHeaderItem.forScript(datePickerJs.asString()));
 
 		// remove previously generated markup (see onRendered) via javascript in
 		// ajax requests to not render the yui calendar multiple times
@@ -314,7 +315,7 @@ public class DatePicker extends Behavior
 		}
 
 		TextTemplate template = new PackageTextTemplate(DatePicker.class, key);
-		response.renderOnDomReadyJavaScript(template.asString(variables));
+		response.render(OnDomReadyHeaderItem.forScript(template.asString(variables)));
 
 		response.markRendered(key);
 	}
@@ -607,7 +608,7 @@ public class DatePicker extends Behavior
 		appendMapping(i18nVariables, i18n);
 		i18n.append(';');
 
-		response.renderOnDomReadyJavaScript(i18n.toString());
+		response.render(OnDomReadyHeaderItem.forScript(i18n.toString()));
 
 		response.wasRendered(key);
 	}

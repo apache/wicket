@@ -22,6 +22,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.resource.header.CssHeaderItem;
 
 
 /**
@@ -63,7 +64,7 @@ public class SimplePage1 extends WebPage
 			@Override
 			public void renderHead(Component component, IHeaderResponse response)
 			{
-				response.renderCSSReference(id + ".css");
+				response.render(CssHeaderItem.forUrl(id + ".css"));
 			}
 		});
 		return container;
@@ -73,6 +74,6 @@ public class SimplePage1 extends WebPage
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.renderCSSReference(getClass().getSimpleName() + ".css");
+		response.render(CssHeaderItem.forUrl(getClass().getSimpleName() + ".css"));
 	}
 }

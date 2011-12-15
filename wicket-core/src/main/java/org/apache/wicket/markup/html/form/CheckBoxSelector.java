@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 
 
 /**
@@ -70,7 +71,7 @@ public class CheckBoxSelector extends AbstractCheckSelector
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.renderJavaScriptReference(JS);
+		response.render(JavaScriptHeaderItem.forReference(JS));
 	}
 
 

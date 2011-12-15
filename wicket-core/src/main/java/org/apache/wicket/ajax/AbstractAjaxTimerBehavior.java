@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.resource.header.OnLoadHeaderItem;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -103,7 +104,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		if (!stopped && (!headRendered || !request.isAjax()))
 		{
 			headRendered = true;
-			response.renderOnLoadJavaScript(getJsTimeoutCall(updateInterval));
+			response.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 		}
 	}
 
@@ -152,7 +153,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 		if (!stopped && isEnabled(getComponent()))
 		{
-			target.getHeaderResponse().renderOnLoadJavaScript(getJsTimeoutCall(updateInterval));
+			target.getHeaderResponse().render(
+				OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 		}
 	}
 

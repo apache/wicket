@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.resource.filtering;
 
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.filtering.HeaderResponseContainerFilteringHeaderResponse.IHeaderResponseFilter;
+import org.apache.wicket.resource.header.HeaderItem;
 
 /**
  * A default implementation of IHeaderResponseFilter that returns true for everything. It is defined
@@ -49,19 +49,7 @@ public abstract class AbstractHeaderResponseFilter implements IHeaderResponseFil
 	}
 
 	@Override
-	public boolean acceptReference(ResourceReference object)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean acceptOtherJavaScript()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean acceptOtherCss()
+	public boolean accepts(HeaderItem item)
 	{
 		return true;
 	}

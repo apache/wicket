@@ -34,6 +34,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -467,7 +468,7 @@ public abstract class BaseTree extends AbstractTree
 		ResourceReference css = getCSS();
 		if (css != null)
 		{
-			response.renderCSSReference(css);
+			response.render(CssHeaderItem.forReference(css));
 		}
 
 	}

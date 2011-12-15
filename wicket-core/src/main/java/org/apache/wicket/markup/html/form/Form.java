@@ -50,6 +50,7 @@ import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -1983,8 +1984,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// register some metadata so we can later properly handle multipart ajax posts for
 			// embedded forms
 			registerJavaScriptNamespaces(response);
-			response.renderJavaScript("Wicket.Forms[\"" + getMarkupId() + "\"]={multipart:true};",
-				Form.class.getName() + '.' + getMarkupId() + ".metadata");
+			response.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId() +
+				"\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId() + ".metadata"));
 		}
 	}
 
@@ -1995,9 +1996,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void registerJavaScriptNamespaces(IHeaderResponse response)
 	{
-		response.renderJavaScript(
+		response.render(JavaScriptHeaderItem.forScript(
 			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
-			Form.class.getName());
+			Form.class.getName()));
 	}
 
 	/**

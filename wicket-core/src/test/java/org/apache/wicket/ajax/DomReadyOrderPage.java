@@ -19,6 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 
 /**
  * @author jcompagner
@@ -54,8 +55,8 @@ public class DomReadyOrderPage extends WebPage
 		{
 			super.renderHead(container);
 
-			container.getHeaderResponse().renderOnDomReadyJavaScript("test1();");
-			container.getHeaderResponse().renderOnDomReadyJavaScript("test2();");
+			container.getHeaderResponse().render(OnDomReadyHeaderItem.forScript("test1();"));
+			container.getHeaderResponse().render(OnDomReadyHeaderItem.forScript("test2();"));
 		}
 
 		@Override

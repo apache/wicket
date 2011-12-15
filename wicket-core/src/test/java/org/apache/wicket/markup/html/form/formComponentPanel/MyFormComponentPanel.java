@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form.formComponentPanel;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
+import org.apache.wicket.resource.header.CssHeaderItem;
 
 /**
  * 
@@ -48,6 +49,6 @@ public class MyFormComponentPanel extends FormComponentPanel<Void>
 	{
 		super.renderHead(response);
 
-		response.renderCSSReference("some.css");
+		response.render(CssHeaderItem.forUrl("some.css"));
 	}
 }

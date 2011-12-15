@@ -22,7 +22,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.CoreLibrariesContributor;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import org.apache.wicket.markup.ComponentTag;
@@ -39,6 +38,9 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -262,12 +264,12 @@ public class ModalWindow extends Panel
 		super.renderHead(response);
 
 		CoreLibrariesContributor.contributeAjax(getApplication(), response);
-		response.renderJavaScriptReference(JAVASCRIPT);
+		response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT));
 
 		ResourceReference cssResource = newCssResource();
 		if (cssResource != null)
 		{
-			response.renderCSSReference(cssResource);
+			response.render(CssHeaderItem.forReference(cssResource));
 		}
 	}
 

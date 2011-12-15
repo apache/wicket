@@ -33,6 +33,8 @@ import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.response.StringResponse;
 import org.junit.After;
 import org.junit.Before;
@@ -106,7 +108,7 @@ public class HeaderResponseTest
 	@Test
 	public void conditionalRenderCSSReference()
 	{
-		headerResponse.renderCSSReference(reference, null, "screen", "lt IE 8");
+		headerResponse.render(CssHeaderItem.forReference(reference, null, "screen", "lt IE 8"));
 		String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\"" +
 			RESOURCE_NAME + "\" media=\"screen\" /><![endif]-->\n";
 		String actual = headerResponse.getResponse().toString();
@@ -119,7 +121,7 @@ public class HeaderResponseTest
 	@Test
 	public void conditionalRenderCSSReferenceWithUrl()
 	{
-		headerResponse.renderCSSReference("resource.css", "screen", "lt IE 8");
+		headerResponse.render(CssHeaderItem.forUrl("resource.css", "screen", "lt IE 8"));
 		String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\"" +
 			RESOURCE_NAME + "\" media=\"screen\" /><![endif]-->\n";
 		String actual = headerResponse.getResponse().toString();
@@ -135,7 +137,7 @@ public class HeaderResponseTest
 	public void deferJavaScriptReference()
 	{
 		boolean defer = true;
-		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", defer);
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", defer));
 		String expected = "<script type=\"text/javascript\" id=\"some-id\" defer=\"defer\" src=\"" +
 			RESOURCE_NAME + "\"></script>\n";
 		String actual = headerResponse.getResponse().toString();
@@ -151,7 +153,7 @@ public class HeaderResponseTest
 	public void deferFalseJavaScriptReference()
 	{
 		boolean defer = false;
-		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", defer);
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", defer));
 		String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
 			"\"></script>\n";
 		String actual = headerResponse.getResponse().toString();
@@ -167,7 +169,8 @@ public class HeaderResponseTest
 	public void charsetSetJavaScriptReference()
 	{
 		String charset = "foo";
-		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", false, charset);
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", false,
+			charset));
 		String expected = "<script type=\"text/javascript\" id=\"some-id\" charset=\"" + charset +
 			"\" src=\"" + RESOURCE_NAME + "\"></script>\n";
 		String actual = headerResponse.getResponse().toString();
@@ -182,7 +185,7 @@ public class HeaderResponseTest
 	@Test
 	public void charsetNotSetJavaScriptReference()
 	{
-		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", false, null);
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", false, null));
 		String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
 			"\"></script>\n";
 		String actual = headerResponse.getResponse().toString();

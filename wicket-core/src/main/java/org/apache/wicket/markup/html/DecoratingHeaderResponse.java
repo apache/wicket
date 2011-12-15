@@ -17,8 +17,7 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.HeaderItem;
 
 /**
  * This is simply a helper implementation of IHeaderResponse that really delegates all of its method
@@ -58,122 +57,9 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 	}
 
 	@Override
-	public void renderJavaScriptReference(ResourceReference reference)
+	public void render(HeaderItem item)
 	{
-		realResponse.renderJavaScriptReference(reference);
-	}
-
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference, String id)
-	{
-		realResponse.renderJavaScriptReference(reference, id);
-	}
-
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference,
-		PageParameters pageParameters, String id)
-	{
-		realResponse.renderJavaScriptReference(reference, pageParameters, id);
-	}
-
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer)
-	{
-		realResponse.renderJavaScriptReference(reference, pageParameters, id, defer);
-	}
-
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer, String charset)
-	{
-		realResponse.renderJavaScriptReference(reference, pageParameters, id, defer, charset);
-	}
-
-	@Override
-	public void renderJavaScriptReference(String url)
-	{
-		realResponse.renderJavaScriptReference(url);
-	}
-
-	@Override
-	public void renderJavaScriptReference(String url, String id)
-	{
-		realResponse.renderJavaScriptReference(url, id);
-	}
-
-	@Override
-	public void renderJavaScriptReference(String url, String id, boolean defer)
-	{
-		realResponse.renderJavaScriptReference(url, id, defer);
-	}
-
-	@Override
-	public void renderJavaScriptReference(String url, String id, boolean defer, String charset)
-	{
-		realResponse.renderJavaScriptReference(url, id, defer, charset);
-	}
-
-	@Override
-	public void renderJavaScript(CharSequence javascript, String id)
-	{
-		realResponse.renderJavaScript(javascript, id);
-	}
-
-	@Override
-	public void renderCSSReference(ResourceReference reference)
-	{
-		realResponse.renderCSSReference(reference);
-	}
-
-	@Override
-	public void renderCSS(CharSequence css, String id)
-	{
-		realResponse.renderCSS(css, id);
-	}
-
-	@Override
-	public void renderCSSReference(String url)
-	{
-		realResponse.renderCSSReference(url);
-	}
-
-	@Override
-	public void renderCSSReference(ResourceReference reference, String media)
-	{
-		realResponse.renderCSSReference(reference, media);
-	}
-
-	@Override
-	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
-		String media)
-	{
-		realResponse.renderCSSReference(reference, pageParameters, media);
-	}
-
-	@Override
-	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
-		String media, String condition)
-	{
-		realResponse.renderCSSReference(reference, pageParameters, media, condition);
-	}
-
-	@Override
-	public void renderCSSReference(String url, String media)
-	{
-		realResponse.renderCSSReference(url, media);
-	}
-
-	@Override
-	public void renderCSSReference(String url, String media, String condition)
-	{
-		realResponse.renderCSSReference(url, media, condition);
-	}
-
-	@Override
-	public void renderString(CharSequence string)
-	{
-		realResponse.renderString(string);
+		realResponse.render(item);
 	}
 
 	@Override
@@ -192,24 +78,6 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 	public Response getResponse()
 	{
 		return realResponse.getResponse();
-	}
-
-	@Override
-	public void renderOnDomReadyJavaScript(String javascript)
-	{
-		realResponse.renderOnDomReadyJavaScript(javascript);
-	}
-
-	@Override
-	public void renderOnLoadJavaScript(String javascript)
-	{
-		realResponse.renderOnLoadJavaScript(javascript);
-	}
-
-	@Override
-	public void renderOnEventJavaScript(String target, String event, String javascript)
-	{
-		realResponse.renderOnEventJavaScript(target, event, javascript);
 	}
 
 	@Override

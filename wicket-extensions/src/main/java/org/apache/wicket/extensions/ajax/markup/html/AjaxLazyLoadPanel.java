@@ -27,6 +27,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 
 /**
  * A panel where you can lazy load another panel. This can be used if you have a panel/component
@@ -123,7 +124,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 */
 	protected void handleCallbackScript(final IHeaderResponse response, final String callbackScript)
 	{
-		response.renderOnDomReadyJavaScript(callbackScript);
+		response.render(OnDomReadyHeaderItem.forScript(callbackScript));
 	}
 
 	/**

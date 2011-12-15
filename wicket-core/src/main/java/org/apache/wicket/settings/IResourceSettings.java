@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.settings;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.wicket.IResourceFactory;
@@ -28,6 +29,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IPropertiesFactoryContext;
+import org.apache.wicket.resource.ResourceAggregator;
+import org.apache.wicket.resource.ResourceAggregator.RecordedHeaderItem;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -345,4 +348,53 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 *         CssPackageResource}. Null is a valid value.
 	 */
 	ICssCompressor getCssCompressor();
+
+	/**
+	 * Allows to disable the default {@linkplain ResourceAggregator resource aggregation}. If this
+	 * setting is disabled, you will have to take care of implementing resource dependencies and
+	 * bundles yourself.
+	 * 
+	 * @param useDefaultResourceAggregator
+	 *            The new value for the setting
+	 */
+	void setUseDefaultResourceAggregator(boolean useDefaultResourceAggregator);
+
+	/**
+	 * @return Whether to use the default {@linkplain ResourceAggregator resource aggregator}.
+	 */
+	boolean getUseDefaultResourceAggregator();
+
+	/**
+	 * Sets whether to use pre-minified resources when available. Minified resources are detected by
+	 * name. The minified version of {@code x.js} is expected to be called {@code x.min.js}. For css
+	 * files, the same convention is used: {@code x.min.css} is the minified version of
+	 * {@code x.css}. When this is null, minified resources will only be used in deployment
+	 * configuration.
+	 * 
+	 * @param useMinifiedResources
+	 *            The new value for the setting
+	 */
+	void setUseMinifiedResources(Boolean useMinifiedResources);
+
+	/**
+	 * @return Whether pre-minified resources will be used.
+	 */
+	boolean getUseMinifiedResources();
+
+	/**
+	 * Sets the comparator used by the {@linkplain ResourceAggregator resource aggregator} for
+	 * sorting header items. It should be noted that sorting header items may break resource
+	 * dependencies. This comparator should therefore at least respect dependencies declared by
+	 * resource references.
+	 * 
+	 * @param comparator
+	 *            The comparator used to sort header items, when null, header items will not be
+	 *            sorted.
+	 */
+	void setHeaderItemComparator(Comparator<? super RecordedHeaderItem> comparator);
+
+	/**
+	 * @return The comparator used to sort header items.
+	 */
+	Comparator<? super RecordedHeaderItem> getHeaderItemComparator();
 }

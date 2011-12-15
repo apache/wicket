@@ -13,11 +13,12 @@ th {
 /*]]>*/
 </style>
 <script type="text/javascript" src="../resource/org.apache.wicket.extensions.yui.YuiLib/yuiloader/yuiloader.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
 <script type="text/javascript" >
 /*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { /*
+Wicket.Event.add(window, "domready", function(event) { 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -74,17 +75,9 @@ Wicket.DateTimeInit.YuiLoader.addModule({
 	fullpath: "../resource/org.apache.wicket.extensions.yui.calendar.DatePicker/wicket-date.js"
 });
 Wicket.DateTimeInit.YuiLoader.insert();
-;});
-/*]]>*/
-</script>
-<script type="text/javascript" >
-/*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { Wicket.DateTimeInit.CalendarI18n["de"]={MONTHS_SHORT:["Jan","Feb","Mrz","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],MONTHS_LONG:["Januar","Februar","M\u00E4rz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],WEEKDAYS_MEDIUM:["So","Mo","Di","Mi","Do","Fr","Sa"],WEEKDAYS_LONG:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],START_WEEKDAY:1,WEEKDAYS_1CHAR:["S","M","D","M","D","F","S"],WEEKDAYS_SHORT:["So","Mo","Di","Mi","Do","Fr","Sa"]};;});
-/*]]>*/
-</script>
-<script type="text/javascript" >
-/*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { /*
+;
+Wicket.DateTimeInit.CalendarI18n["de"]={MONTHS_SHORT:["Jan","Feb","Mrz","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],MONTHS_LONG:["Januar","Februar","M\u00E4rz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],WEEKDAYS_MEDIUM:["So","Mo","Di","Mi","Do","Fr","Sa"],WEEKDAYS_LONG:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],START_WEEKDAY:1,WEEKDAYS_1CHAR:["S","M","D","M","D","F","S"],WEEKDAYS_SHORT:["So","Mo","Di","Mi","Do","Fr","Sa"]};;
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -105,6 +98,7 @@ Wicket.DateTimeInit.CalendarAdd(function() {
 			true, true, true, false, Wicket.DateTimeInit.CalendarI18n["de"], false);
 	
 });
+;
 ;});
 /*]]>*/
 </script>

@@ -21,12 +21,16 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.examples.resourcedecoration.GroupedAndOrderedResourceReference.ResourceGroup;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.resource.JQueryPluginResourceReference;
 import org.apache.wicket.resource.filtering.HeaderResponseFilteredResponseContainer;
+import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -55,9 +59,9 @@ public class HomePage extends WicketExamplePage
 			@Override
 			public void renderHead(Component component, IHeaderResponse response)
 			{
-				jsPlaceholder.setOutputMarkupId(true);
-				response.renderOnDomReadyJavaScript("$('#" + jsPlaceholder.getMarkupId() +
-					"').html('the ondomready script ran').css('border-color', 'green');");
+				response.render(OnDomReadyHeaderItem.forScript("$('#" +
+					jsPlaceholder.getMarkupId() +
+					"').html('the ondomready script ran').css('border-color', 'green');"));
 			}
 		});
 		add(jsPlaceholder);
@@ -90,23 +94,20 @@ public class HomePage extends WicketExamplePage
 
 		// two CSS resources in the same group. header.css is rendered first because has lower
 		// "order" number
-		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.GLOBAL, 0,
-			HomePage.class, "footer.css"));
-		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.GLOBAL, 0,
-			HomePage.class, "header.css"));
-
-		response.renderJavaScriptReference(new GroupedAndOrderedResourceReference(
-			ResourceGroup.GLOBAL, 0, HomePage.class, "jquery-1.4.3.min.js"));
+		response.render(CssHeaderItem.forReference(new CssResourceReference(HomePage.class,
+			"footer.css")));
+		response.render(CssHeaderItem.forReference(new CssResourceReference(HomePage.class,
+			"header.css")));
 
 		// example of something that may be in this single application:
-		response.renderCSSReference(new GroupedAndOrderedResourceReference(
-			ResourceGroup.APPLICATION, 0, HomePage.class, "app.css"));
+		response.render(CssHeaderItem.forReference(new CssResourceReference(HomePage.class,
+			"app.css")));
 
 		// example of something that may be limited to certain pages:
-		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.PAGE, 0,
-			HomePage.class, "HomePage.css"));
-		response.renderJavaScriptReference(new GroupedAndOrderedResourceReference(
-			ResourceGroup.PAGE, 0, HomePage.class, "HomePage.js"));
+		response.render(CssHeaderItem.forReference(new CssResourceReference(HomePage.class,
+			"HomePage.css")));
+		response.render(JavaScriptHeaderItem.forReference(new JQueryPluginResourceReference(
+			HomePage.class, "HomePage.js")));
 	}
 
 	private static class AjaxProofContainer extends WebMarkupContainer
@@ -124,10 +125,11 @@ public class HomePage extends WicketExamplePage
 		{
 			if (AjaxRequestTarget.get() != null)
 			{
-				response.renderCSSReference(new PackageResourceReference(HomePage.class, "ajax.css"));
-				response.renderJavaScriptReference(new PackageResourceReference(HomePage.class,
-					"ajax.js"));
-				response.renderOnDomReadyJavaScript("updatePending();");
+				response.render(CssHeaderItem.forReference(new PackageResourceReference(
+					HomePage.class, "ajax.css")));
+				response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(
+					HomePage.class, "ajax.js")));
+				response.render(OnDomReadyHeaderItem.forScript("updatePending();"));
 			}
 		}
 	}

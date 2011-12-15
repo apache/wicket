@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.string;
 
+import org.apache.wicket.request.Response;
+
 /**
  * Utility methods for CSS.
  * 
@@ -34,5 +36,46 @@ public final class CssUtils
 	 */
 	private CssUtils()
 	{
+	}
+
+	/**
+	 * Write the simple text to the response object surrounded by a style tag.
+	 * 
+	 * @param response
+	 *            The HTTP: response
+	 * @param text
+	 *            The text to added in between the style tags
+	 * @param id
+	 *            Unique identifier of element
+	 */
+	public static void writeCss(final Response response, final CharSequence text, String id)
+	{
+		writeOpenTag(response, id);
+		response.write(text);
+		writeCloseTag(response);
+	}
+
+	/**
+	 * 
+	 * @param response
+	 * @param id
+	 */
+	public static void writeOpenTag(final Response response, String id)
+	{
+		response.write("<style type=\"text/css\" ");
+		if (id != null)
+		{
+			response.write("id=\"" + id + "\"");
+		}
+		response.write("><!--\n");
+	}
+
+	/**
+	 * 
+	 * @param response
+	 */
+	public static void writeCloseTag(final Response response)
+	{
+		response.write(INLINE_CLOSE_TAG);
 	}
 }

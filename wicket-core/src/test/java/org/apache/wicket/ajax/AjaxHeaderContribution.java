@@ -18,6 +18,9 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
+import org.apache.wicket.resource.header.OnLoadHeaderItem;
 
 class AjaxHeaderContribution extends Panel
 {
@@ -38,8 +41,8 @@ class AjaxHeaderContribution extends Panel
 	{
 		super.renderHead(container);
 
-		container.getHeaderResponse().renderJavaScriptReference("javascripturl");
-		container.getHeaderResponse().renderOnDomReadyJavaScript("domReady();");
-		container.getHeaderResponse().renderOnLoadJavaScript("onLoad();");
+		container.getHeaderResponse().render(JavaScriptHeaderItem.forUrl("javascripturl"));
+		container.getHeaderResponse().render(OnDomReadyHeaderItem.forScript("domReady();"));
+		container.getHeaderResponse().render(OnLoadHeaderItem.forScript("onLoad();"));
 	}
 }

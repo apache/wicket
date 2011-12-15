@@ -26,8 +26,6 @@
  * @author Matej Knopp
  */
 
-jQuery.noConflict();
-
 ;(function (undefined) {
 
 	'use strict';

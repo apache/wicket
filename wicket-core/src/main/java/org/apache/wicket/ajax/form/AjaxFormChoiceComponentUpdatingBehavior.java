@@ -26,6 +26,8 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnLoadHeaderItem;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -76,10 +78,10 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append(" }\n");
 		asb.append("}\n");
 
-		response.renderJavaScript(asb, "attachChoice");
+		response.render(JavaScriptHeaderItem.forScript(asb, "attachChoice"));
 
-		response.renderOnLoadJavaScript("attachChoiceHandlers('" + getComponent().getMarkupId() +
-			"', function() {" + getEventHandler() + "});");
+		response.render(OnLoadHeaderItem.forScript("attachChoiceHandlers('" +
+			getComponent().getMarkupId() + "', function() {" + getEventHandler() + "});"));
 
 	}
 

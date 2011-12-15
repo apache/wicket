@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.ajax.CoreLibrariesContributor;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnLoadHeaderItem;
 
 /**
  * Base class for all Javascript-based "select-all" checkboxes. Provides a simple "select all"
@@ -70,17 +72,17 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 	{
 		// make sure we have all the javascript we need
 		CoreLibrariesContributor.contributeAjax(getApplication(), response);
-		response.renderJavaScriptReference(JS);
+		response.render(JavaScriptHeaderItem.forReference(JS));
 		String findCheckboxes = getFindCheckboxesFunction().toString();
 
 		// initialize the selector
-		response.renderOnLoadJavaScript("Wicket.CheckboxSelector.initializeSelector('" +
-			this.getMarkupId() + "', " + findCheckboxes + ");");
+		response.render(OnLoadHeaderItem.forScript("Wicket.CheckboxSelector.initializeSelector('" +
+			this.getMarkupId() + "', " + findCheckboxes + ");"));
 		if (wantAutomaticUpdate())
 		{
 			// initialize the handlers for automatic updating of the selector state
-			response.renderOnLoadJavaScript("Wicket.CheckboxSelector.attachUpdateHandlers('" +
-				this.getMarkupId() + "', " + findCheckboxes + ");");
+			response.render(OnLoadHeaderItem.forScript("Wicket.CheckboxSelector.attachUpdateHandlers('" +
+				this.getMarkupId() + "', " + findCheckboxes + ");"));
 		}
 	}
 

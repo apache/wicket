@@ -36,6 +36,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 
 
 /**
@@ -205,8 +206,8 @@ public class TreeTable extends DefaultAbstractTree
 			@Override
 			public void renderHead(final Component component, final IHeaderResponse response)
 			{
-				response.renderOnDomReadyJavaScript("Wicket.TreeTable.attachUpdate(\"" +
-					getMarkupId() + "\")");
+				response.render(OnDomReadyHeaderItem.forScript("Wicket.TreeTable.attachUpdate(\"" +
+					getMarkupId() + "\")"));
 			}
 		});
 	}

@@ -16,25 +16,13 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.ajax.CoreLibrariesContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.HeaderItem;
 import org.apache.wicket.response.NullResponse;
-import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.CssUtils;
-import org.apache.wicket.util.string.JavaScriptUtils;
-import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -59,259 +47,30 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	@Override
-	public void renderCSS(CharSequence css, String id)
+	public void render(HeaderItem item)
 	{
-		Args.notNull(css, "css");
-
-		if (!closed)
+		if (!closed && !wasItemRendered(item))
 		{
-			List<String> token = Arrays.asList(css.toString(), id);
-			if (wasRendered(token) == false)
-			{
-				renderString(CssUtils.INLINE_OPEN_TAG + css + CssUtils.INLINE_CLOSE_TAG);
-				markRendered(token);
-			}
+			item.render(getResponse());
+			markItemRendered(item);
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.request.resource.ResourceReference)
-	 */
-	@Override
-	public void renderCSSReference(ResourceReference reference)
+	protected boolean wasItemRendered(HeaderItem item)
 	{
-		renderCSSReference(reference, null, null);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.request.resource.ResourceReference,
-	 *      String)
-	 */
-	@Override
-	public void renderCSSReference(ResourceReference reference, String media)
-	{
-		renderCSSReference(reference, null, media);
-	}
-
-	@Override
-	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
-		String media)
-	{
-		renderCSSReference(reference, pageParameters, media, null);
-	}
-
-	@Override
-	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
-		String media, String condition)
-	{
-		Args.notNull(reference, "reference");
-
-		if (!closed)
+		for (Object curToken : item.getRenderTokens())
 		{
-			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
-			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderCSSReference(url.toString(), media, condition);
+			if (wasRendered(curToken))
+				return true;
 		}
+		return false;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(java.lang.String)
-	 */
-	@Override
-	public void renderCSSReference(String url)
+	protected void markItemRendered(HeaderItem item)
 	{
-		renderCSSReference(url, null);
-	}
-
-	@Override
-	public void renderCSSReference(String url, String media)
-	{
-		renderCSSReference(url, media, null);
-	}
-
-	@Override
-	public void renderCSSReference(String url, String media, String condition)
-	{
-		internalRenderCSSReference(relative(url), media, condition);
-	}
-
-	private void internalRenderCSSReference(final String url, final String media,
-		final String condition)
-	{
-		if (Strings.isEmpty(url))
+		for (Object curToken : item.getRenderTokens())
 		{
-			throw new IllegalArgumentException("url cannot be empty or null");
-		}
-		if (!closed)
-		{
-			String urlWoSessionId = Strings.stripJSessionId(url);
-			List<String> token = Arrays.asList("css", urlWoSessionId, media);
-			if (wasRendered(token) == false)
-			{
-				if (Strings.isEmpty(condition) == false)
-				{
-					getResponse().write("<!--[if ");
-					getResponse().write(condition);
-					getResponse().write("]>");
-				}
-				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-				getResponse().write(urlWoSessionId);
-				getResponse().write("\"");
-				if (media != null)
-				{
-					getResponse().write(" media=\"");
-					getResponse().write(media);
-					getResponse().write("\"");
-				}
-				getResponse().write(" />");
-				if (Strings.isEmpty(condition) == false)
-				{
-					getResponse().write("<![endif]-->");
-				}
-				getResponse().write("\n");
-				markRendered(token);
-			}
-		}
-	}
-
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(org.apache.wicket.request.resource.ResourceReference)
-	 */
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference)
-	{
-		renderJavaScriptReference(reference, null);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(org.apache.wicket.request.resource.ResourceReference,
-	 *      String)
-	 */
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference, String id)
-	{
-		renderJavaScriptReference(reference, null, id);
-	}
-
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference,
-		PageParameters pageParameters, String id)
-	{
-		renderJavaScriptReference(reference, pageParameters, id, false);
-	}
-
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer)
-	{
-		renderJavaScriptReference(reference, pageParameters, id, defer, null);
-	}
-
-	@Override
-	public void renderJavaScriptReference(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer, String charset)
-	{
-		Args.notNull(reference, "reference");
-
-		if (!closed)
-		{
-			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
-			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderJavaScriptReference(url.toString(), id, defer, charset);
-		}
-	}
-
-	@Override
-	public void renderJavaScriptReference(String url)
-	{
-		renderJavaScriptReference(url, null);
-	}
-
-	@Override
-	public void renderJavaScriptReference(String url, String id)
-	{
-		renderJavaScriptReference(url, id, false);
-	}
-
-	@Override
-	public void renderJavaScriptReference(String url, String id, boolean defer)
-	{
-		renderJavaScriptReference(url, id, defer, null);
-	}
-
-	@Override
-	public void renderJavaScriptReference(String url, String id, boolean defer, String charset)
-	{
-		internalRenderJavaScriptReference(relative(url), id, defer, charset);
-	}
-
-	private void internalRenderJavaScriptReference(String url, String id, boolean defer,
-		String charset)
-	{
-		if (Strings.isEmpty(url))
-		{
-			throw new IllegalArgumentException("url cannot be empty or null");
-		}
-		if (!closed)
-		{
-			String urlWoSessionId = Strings.stripJSessionId(url);
-
-			List<String> token1 = Arrays.asList("javascript", urlWoSessionId);
-			List<String> token2 = (id != null) ? Arrays.asList("javascript", id) : null;
-
-			final boolean token1Unused = wasRendered(token1) == false;
-			final boolean token2Unused = (token2 == null) || wasRendered(token2) == false;
-
-			if (token1Unused && token2Unused)
-			{
-				JavaScriptUtils.writeJavaScriptUrl(getResponse(), urlWoSessionId, id, defer,
-					charset);
-				markRendered(token1);
-				if (token2 != null)
-				{
-					markRendered(token2);
-				}
-			}
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScript(java.lang.CharSequence,
-	 *      java.lang.String)
-	 */
-	@Override
-	public void renderJavaScript(CharSequence javascript, String id)
-	{
-		Args.notNull(javascript, "javascript");
-
-		if (!closed)
-		{
-			List<String> token = Arrays.asList(javascript.toString(), id);
-			if (wasRendered(token) == false)
-			{
-				JavaScriptUtils.writeJavaScript(getResponse(), javascript, id);
-				markRendered(token);
-			}
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderString(java.lang.CharSequence)
-	 */
-	@Override
-	public void renderString(CharSequence string)
-	{
-		Args.notNull(string, "string");
-
-		if (!closed)
-		{
-			String token = string.toString();
-			if (wasRendered(token) == false)
-			{
-				getResponse().write(string);
-				markRendered(token);
-			}
+			markRendered(curToken);
 		}
 	}
 
@@ -322,59 +81,6 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public final boolean wasRendered(Object object)
 	{
 		return rendered.contains(object);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnDomReadyJavaScript(java.lang.String)
-	 */
-	@Override
-	public void renderOnDomReadyJavaScript(String javascript)
-	{
-		if (javascript == null)
-		{
-			throw new IllegalArgumentException("javascript cannot be null");
-		}
-		if (!closed)
-		{
-			renderOnEventJavaScript("window", "domready", javascript);
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnLoadJavaScript(java.lang.String)
-	 */
-	@Override
-	public void renderOnLoadJavaScript(String javascript)
-	{
-		if (javascript == null)
-		{
-			throw new IllegalArgumentException("javascript cannot be null");
-		}
-		if (!closed)
-		{
-			renderOnEventJavaScript("window", "load", javascript);
-		}
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnEventJavaScript(java.lang.String,
-	 *      java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void renderOnEventJavaScript(String target, String event, String javascript)
-	{
-		if (!closed)
-		{
-			List<String> token = Arrays.asList("javascript-event", target, event, javascript);
-			if (wasRendered(token) == false)
-			{
-				CoreLibrariesContributor.contribute(Application.get(), this);
-				JavaScriptUtils.writeJavaScript(getResponse(), "Wicket.Event.add(" + target +
-					", \"" + event + "\", function(event) { " + javascript + ";});");
-				markRendered(token);
-			}
-		}
 	}
 
 	/**
@@ -402,25 +108,6 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public boolean isClosed()
 	{
 		return closed;
-	}
-
-	/**
-	 * Rewrites a relative url into a context-relative one, leaves absolute urls alone
-	 * 
-	 * @param url
-	 * @return relative path
-	 */
-	private String relative(final String url)
-	{
-		Args.notEmpty(url, "location");
-
-		if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/"))
-		{
-			return url;
-		}
-
-		RequestCycle rc = RequestCycle.get();
-		return rc.getUrlRenderer().renderContextRelativeUrl(url);
 	}
 
 	/**

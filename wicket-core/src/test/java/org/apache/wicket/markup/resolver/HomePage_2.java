@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
 
 /**
  * Homepage
@@ -47,6 +48,7 @@ public class HomePage_2 extends WebPage
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.renderCSSReference(new PackageResourceReference(HomePage_2.class, "main.css"));
+		response.render(CssHeaderItem.forReference(new PackageResourceReference(HomePage_2.class,
+			"main.css")));
 	}
 }

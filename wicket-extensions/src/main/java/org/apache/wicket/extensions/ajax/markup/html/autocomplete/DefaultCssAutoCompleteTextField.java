@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
 
 /**
  * An {@link AutoCompleteTextField} which automatically includes the default CSS for the
@@ -49,7 +50,7 @@ public abstract class DefaultCssAutoCompleteTextField<T> extends AutoCompleteTex
 	{
 		super.renderHead(response);
 
-		response.renderCSSReference(new PackageResourceReference(
-			DefaultCssAutoCompleteTextField.class, "DefaultCssAutoCompleteTextField.css"));
+		response.render(CssHeaderItem.forReference(new PackageResourceReference(
+			DefaultCssAutoCompleteTextField.class, "DefaultCssAutoCompleteTextField.css")));
 	}
 }

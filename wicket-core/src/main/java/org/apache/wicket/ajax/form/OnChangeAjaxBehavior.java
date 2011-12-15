@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 
 /**
  * A behavior that updates the hosting {@link FormComponent} via ajax when value of the component is
@@ -55,7 +56,8 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 		if (component instanceof AbstractTextComponent)
 		{
 			final String id = getComponent().getMarkupId();
-			response.renderOnDomReadyJavaScript("new Wicket.ChangeHandler('" + id + "');");
+			response.render(OnDomReadyHeaderItem.forScript("new Wicket.ChangeHandler('" + id +
+				"');"));
 		}
 	}
 }

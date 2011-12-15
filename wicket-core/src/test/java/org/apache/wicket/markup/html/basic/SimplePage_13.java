@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.resource.header.CssHeaderItem;
 
 
 /**
@@ -56,6 +57,6 @@ public class SimplePage_13 extends WebPage
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.renderCSSReference("BasePage.css");
+		response.render(CssHeaderItem.forUrl("BasePage.css"));
 	}
 }

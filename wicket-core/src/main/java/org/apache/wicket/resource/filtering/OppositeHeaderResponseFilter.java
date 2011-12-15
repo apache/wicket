@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.resource.filtering;
 
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.filtering.HeaderResponseContainerFilteringHeaderResponse.IHeaderResponseFilter;
+import org.apache.wicket.resource.header.HeaderItem;
 
 /**
  * A filter that takes another filter and always returns the opposite of another filter. This is
@@ -53,21 +53,8 @@ public class OppositeHeaderResponseFilter implements IHeaderResponseFilter
 	}
 
 	@Override
-	public boolean acceptReference(ResourceReference ref)
+	public boolean accepts(HeaderItem item)
 	{
-		return !other.acceptReference(ref);
+		return !other.accepts(item);
 	}
-
-	@Override
-	public boolean acceptOtherJavaScript()
-	{
-		return !other.acceptOtherJavaScript();
-	}
-
-	@Override
-	public boolean acceptOtherCss()
-	{
-		return !other.acceptOtherCss();
-	}
-
 }

@@ -26,7 +26,7 @@ import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
@@ -479,8 +479,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			}
 		};
 
-		final PackageResourceReference reference = new PackageResourceReference(getClass(),
-			"versioned", Locale.ENGLISH, "style", null)
+		final ResourceReference reference = new ResourceReference(getClass(), "versioned",
+			Locale.ENGLISH, "style", null)
 		{
 			private static final long serialVersionUID = 1L;
 

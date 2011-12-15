@@ -25,7 +25,8 @@ import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 
 
 /**
@@ -124,12 +125,12 @@ public abstract class AbstractCalendar extends WebComponent
 	 */
 	private void contributeDependencies(IHeaderResponse response)
 	{
-		response.renderJavaScriptReference(new PackageResourceReference(YuiLib.class,
-			"yahoodomevent/yahoo-dom-event.js"));
-		response.renderJavaScriptReference(new PackageResourceReference(AbstractCalendar.class,
-			"calendar-min.js"));
-		response.renderCSSReference(new PackageResourceReference(AbstractCalendar.class,
-			"assets/skins/sam/calendar.css"));
+		response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(
+			YuiLib.class, "yahoodomevent/yahoo-dom-event.js")));
+		response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(
+			AbstractCalendar.class, "calendar-min.js")));
+		response.render(CssHeaderItem.forReference(new PackageResourceReference(
+			AbstractCalendar.class, "assets/skins/sam/calendar.css")));
 	}
 
 	/**
@@ -179,7 +180,6 @@ public abstract class AbstractCalendar extends WebComponent
 		String javascriptId = getJavaScriptId();
 		String javascriptWidgetId = getJavaScriptWidgetId();
 		StringBuilder b = new StringBuilder();
-		b.append(JavaScriptUtils.SCRIPT_OPEN_TAG);
 		// initialize wicket namespace and register the init function
 		// for the YUI widget
 		b.append("YAHOO.namespace(\"wicket\");\nfunction init");
@@ -254,8 +254,7 @@ public abstract class AbstractCalendar extends WebComponent
 		b.append("YAHOO.util.Event.addListener(window, \"load\", init");
 		b.append(javascriptId);
 		b.append(");");
-		b.append(JavaScriptUtils.SCRIPT_CLOSE_TAG);
 
-		response.renderString(b);
+		response.render(JavaScriptHeaderItem.forScript(b, null));
 	}
 }

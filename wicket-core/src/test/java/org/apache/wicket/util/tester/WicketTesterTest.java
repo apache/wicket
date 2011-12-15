@@ -979,7 +979,7 @@ public class WicketTesterTest extends WicketTestCase
 	public void startResourceReference()
 	{
 		tester.startResourceReference(tester.getApplication()
-			.getAjaxSettings()
+			.getJavaScriptLibrarySettings()
 			.getWicketAjaxReference());
 		// verify that a random string from that resource is in the response
 		tester.assertContains("getAjaxBaseUrl");
@@ -992,7 +992,7 @@ public class WicketTesterTest extends WicketTestCase
 	public void startResource()
 	{
 		tester.startResource(tester.getApplication()
-			.getAjaxSettings()
+			.getJavaScriptLibrarySettings()
 			.getWicketAjaxReference()
 			.getResource());
 		// verify that a random string from that resource is in the response

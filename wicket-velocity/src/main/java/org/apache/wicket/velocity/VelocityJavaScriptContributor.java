@@ -22,6 +22,7 @@ import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.util.lang.Packages;
 
 /**
@@ -74,7 +75,7 @@ public class VelocityJavaScriptContributor extends VelocityContributor
 		CharSequence s = evaluate();
 		if (s != null)
 		{
-			response.renderJavaScript(s, id);
+			response.render(JavaScriptHeaderItem.forScript(s, id));
 		}
 	}
 }

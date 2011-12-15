@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.settings.def;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ import org.apache.wicket.request.resource.caching.version.LastModifiedResourceVe
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.request.resource.caching.version.RequestCycleCachedResourceVersion;
 import org.apache.wicket.resource.PropertiesFactory;
+import org.apache.wicket.resource.ResourceAggregator.RecordedHeaderItem;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
@@ -127,6 +129,12 @@ public class ResourceSettings implements IResourceSettings
 
 	// application these settings are bound to
 	private final Application application;
+
+	private boolean useDefaultResourceAggregator = true;
+
+	private Boolean useMinifiedResources;
+
+	private Comparator<? super RecordedHeaderItem> headerItemComparator;
 
 	/**
 	 * Configures Wicket's default ResourceLoaders.<br>
@@ -549,5 +557,45 @@ public class ResourceSettings implements IResourceSettings
 					"Please use " + NoOpResourceCachingStrategy.class.getName() + " instead.");
 		}
 		resourceCachingStrategy = strategy;
+	}
+
+	@Override
+	public void setUseDefaultResourceAggregator(boolean useDefaultResourceAggregator)
+	{
+		this.useDefaultResourceAggregator = useDefaultResourceAggregator;
+	}
+
+	@Override
+	public boolean getUseDefaultResourceAggregator()
+	{
+		return useDefaultResourceAggregator;
+	}
+
+	@Override
+	public void setUseMinifiedResources(Boolean useMinifiedResources)
+	{
+		this.useMinifiedResources = useMinifiedResources;
+	}
+
+	@Override
+	public boolean getUseMinifiedResources()
+	{
+		if (useMinifiedResources == null)
+		{
+			return !application.usesDevelopmentConfig();
+		}
+		return useMinifiedResources;
+	}
+
+	@Override
+	public Comparator<? super RecordedHeaderItem> getHeaderItemComparator()
+	{
+		return headerItemComparator;
+	}
+
+	@Override
+	public void setHeaderItemComparator(Comparator<? super RecordedHeaderItem> headerItemComparator)
+	{
+		this.headerItemComparator = headerItemComparator;
 	}
 }

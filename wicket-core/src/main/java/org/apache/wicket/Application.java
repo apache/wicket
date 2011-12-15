@@ -76,15 +76,16 @@ import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.ICompoundRequestMapper;
 import org.apache.wicket.request.mapper.IMapperContext;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
+import org.apache.wicket.resource.ResourceAggregator;
 import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.apache.wicket.settings.IAjaxSettings;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IFrameworkSettings;
+import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -93,11 +94,11 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
 import org.apache.wicket.settings.IStoreSettings;
-import org.apache.wicket.settings.def.AjaxSettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
 import org.apache.wicket.settings.def.FrameworkSettings;
+import org.apache.wicket.settings.def.JavaScriptLibrarySettings;
 import org.apache.wicket.settings.def.MarkupSettings;
 import org.apache.wicket.settings.def.PageSettings;
 import org.apache.wicket.settings.def.RequestCycleSettings;
@@ -704,6 +705,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		setPageManagerProvider(new DefaultPageManagerProvider(this));
 		resourceReferenceRegistry = newResourceReferenceRegistry();
 		sharedResources = newSharedResources(resourceReferenceRegistry);
+		resourceBundles = newResourceBundles(resourceReferenceRegistry);
 
 		// set up default request mapper
 		setRootRequestMapper(new SystemMapper(this));
@@ -1017,8 +1019,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** Application settings */
 	private IApplicationSettings applicationSettings;
 
-	/** Ajax settings */
-	private IAjaxSettings ajaxSettings;
+	/** JavaScriptLibrary settings */
+	private IJavaScriptLibrarySettings javaScriptLibrarySettings;
 
 	/** Debug Settings */
 	private IDebugSettings debugSettings;
@@ -1080,26 +1082,27 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * @return Application's Ajax settings
+	 * @return Application's JavaScriptLibrary settings
 	 * @since 6.0
 	 */
-	public final IAjaxSettings getAjaxSettings()
+	public final IJavaScriptLibrarySettings getJavaScriptLibrarySettings()
 	{
 		checkSettingsAvailable();
-		if (ajaxSettings == null)
+		if (javaScriptLibrarySettings == null)
 		{
-			ajaxSettings = new AjaxSettings();
+			javaScriptLibrarySettings = new JavaScriptLibrarySettings();
 		}
-		return ajaxSettings;
+		return javaScriptLibrarySettings;
 	}
 
 	/**
 	 * 
-	 * @param ajaxSettings
+	 * @param javaScriptLibrarySettings
 	 */
-	public final void setAjaxSettings(final IAjaxSettings ajaxSettings)
+	public final void setJavaScriptLibrarySettings(
+		final IJavaScriptLibrarySettings javaScriptLibrarySettings)
 	{
-		this.ajaxSettings = ajaxSettings;
+		this.javaScriptLibrarySettings = javaScriptLibrarySettings;
 	}
 
 	/**
@@ -1459,6 +1462,8 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	private SharedResources sharedResources;
 
+	private ResourceBundles resourceBundles;
+
 	private IPageFactory pageFactory;
 
 	private IMapperContext encoderContext;
@@ -1500,6 +1505,19 @@ public abstract class Application implements UnboundListener, IEventSink
 	public SharedResources getSharedResources()
 	{
 		return sharedResources;
+	}
+
+	protected ResourceBundles newResourceBundles(final ResourceReferenceRegistry registry)
+	{
+		return new ResourceBundles(registry);
+	}
+
+	/**
+	 * @return The registry for resource bundles
+	 */
+	public ResourceBundles getResourceBundles()
+	{
+		return resourceBundles;
 	}
 
 	/**
@@ -1672,8 +1690,13 @@ public abstract class Application implements UnboundListener, IEventSink
 	 *            the response Wicket created
 	 * @return the response Wicket should use in IHeaderContributor traversal
 	 */
-	public final IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
+	public final IHeaderResponse decorateHeaderResponse(IHeaderResponse response)
 	{
+		if (getResourceSettings().getUseDefaultResourceAggregator())
+		{
+			response = new ResourceAggregator(response);
+		}
+
 		if (headerResponseDecorator == null)
 		{
 			return response;

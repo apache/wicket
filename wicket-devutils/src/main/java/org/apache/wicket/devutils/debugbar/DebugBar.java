@@ -31,6 +31,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 
 /**
  * The debug bar is for use during development. It allows contributors to add useful functions or
@@ -120,10 +122,10 @@ public class DebugBar extends DevUtilsPanel
 	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
-		response.renderCSSReference(new PackageResourceReference(DebugBar.class,
-			"wicket-debugbar.css"));
-		response.renderJavaScriptReference(new JavaScriptResourceReference(DebugBar.class,
-			"wicket-debugbar.js"));
+		response.render(CssHeaderItem.forReference(new PackageResourceReference(DebugBar.class,
+			"wicket-debugbar.css")));
+		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
+			DebugBar.class, "wicket-debugbar.js")));
 	}
 
 	/**

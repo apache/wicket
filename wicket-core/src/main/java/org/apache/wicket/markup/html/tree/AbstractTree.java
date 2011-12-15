@@ -49,6 +49,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.visit.IVisit;
@@ -1760,6 +1761,6 @@ public abstract class AbstractTree extends Panel
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.renderJavaScriptReference(JAVASCRIPT);
+		response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT));
 	}
 }

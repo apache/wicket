@@ -24,6 +24,8 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -77,7 +79,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 */
 	private void renderAutocompleteHead(final IHeaderResponse response)
 	{
-		response.renderJavaScriptReference(AUTOCOMPLETE_JS);
+		response.render(JavaScriptHeaderItem.forReference(AUTOCOMPLETE_JS));
 		final String id = getComponent().getMarkupId();
 
 		String indicatorId = findIndicatorId();
@@ -92,7 +94,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s,%s);", id,
 			getCallbackUrl(), constructSettingsJS(), indicatorId);
-		response.renderOnDomReadyJavaScript(initJS);
+		response.render(OnDomReadyHeaderItem.forScript(initJS));
 	}
 
 	/**

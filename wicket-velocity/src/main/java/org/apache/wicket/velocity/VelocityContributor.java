@@ -26,6 +26,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.resource.header.StringHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -89,7 +90,7 @@ public class VelocityContributor extends Behavior
 		CharSequence s = evaluate();
 		if (null != s)
 		{
-			response.renderString(s);
+			response.render(StringHeaderItem.forString(s));
 		}
 	}
 

@@ -16,17 +16,21 @@
  */
 package org.apache.wicket.resource.filtering;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.ResourceAggregator;
+import org.apache.wicket.resource.header.HeaderItem;
 import org.apache.wicket.response.StringResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,36 +66,14 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		String getName();
 
 		/**
-		 * Determines whether a given ResourceReference should be rendered in the bucket represented
-		 * by this filter.
+		 * Determines whether a given HeaderItem should be rendered in the bucket represented by
+		 * this filter.
 		 * 
-		 * @param ref
-		 *            the reference to be rendered
+		 * @param item
+		 *            the item to be rendered
 		 * @return true if it should be bucketed with other things in this filter
 		 */
-		boolean acceptReference(ResourceReference ref);
-
-		/**
-		 * Whenever a render*JavaScript method on IHeaderResponse is called that is not a
-		 * ResourceReference (i.e. {@link IHeaderResponse#renderOnDomReadyJavaScript(String)}), this
-		 * method determines if the script should be bucketed with other things in this filter.
-		 * 
-		 * Note that calls to IHeaderResponse.renderJavaScriptReference(String url) are also
-		 * filtered with this method since there is no actual ResourceReference to pass
-		 * 
-		 * @return true if javascript should be bucketed with other things in this filter
-		 */
-		boolean acceptOtherJavaScript();
-
-		/**
-		 * Whenever a renderCSS* method on IHeaderResponse is called that is not a ResourceReference
-		 * (i.e. {@link IHeaderResponse#renderCSSReference(String)}, or
-		 * {@link IHeaderResponse#renderCSSReference(String, String)}), this method determines if
-		 * the CSS reference should be bucketed with other things in this filter.
-		 * 
-		 * @return true if css should be bucketed with other things in this filter
-		 */
-		boolean acceptOtherCss();
+		boolean accepts(HeaderItem item);
 	}
 
 	/**
@@ -103,7 +85,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		private static final long serialVersionUID = 1L;
 	};
 
-	private final Map<String, StringResponse> responseFilterMap = new HashMap<String, StringResponse>();
+	private final Map<String, List<HeaderItem>> responseFilterMap = new HashMap<String, List<HeaderItem>>();
 	private IHeaderResponseFilter[] filters;
 	private final String headerFilterName;
 
@@ -140,7 +122,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		}
 		for (IHeaderResponseFilter filter : filters)
 		{
-			responseFilterMap.put(filter.getName(), new StringResponse());
+			responseFilterMap.put(filter.getName(), new ArrayList<HeaderItem>());
 		}
 	}
 
@@ -165,239 +147,19 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	}
 
 	@Override
-	public void renderJavaScriptReference(final ResourceReference reference)
+	public void render(HeaderItem item)
 	{
-		forReference(reference, new Runnable()
+		for (IHeaderResponseFilter filter : filters)
 		{
-			@Override
-			public void run()
+			if (filter.accepts(item))
 			{
-				getRealResponse().renderJavaScriptReference(reference);
+				render(item, filter);
+				return;
 			}
-		});
-	}
-
-	@Override
-	public void renderJavaScriptReference(final ResourceReference reference, final String id)
-	{
-		renderJavaScriptReference(reference, null, id);
-	}
-
-	@Override
-	public void renderJavaScriptReference(final ResourceReference reference,
-		final PageParameters pageParameters, final String id)
-	{
-		forReference(reference, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderJavaScriptReference(reference, pageParameters, id);
-			}
-		});
-	}
-
-	@Override
-	public void renderJavaScriptReference(final String url)
-	{
-		forJavaScript(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderJavaScriptReference(url);
-			}
-		});
-	}
-
-	@Override
-	public void renderJavaScriptReference(final String url, final String id)
-	{
-		forJavaScript(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderJavaScriptReference(url, id);
-			}
-		});
-	}
-
-	@Override
-	public void renderJavaScript(final CharSequence javascript, final String id)
-	{
-		forJavaScript(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderJavaScript(javascript, id);
-			}
-		});
-	}
-
-	@Override
-	public void renderCSSReference(final ResourceReference reference)
-	{
-		forReference(reference, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderCSSReference(reference);
-			}
-		});
-	}
-
-	@Override
-	public void renderCSSReference(final String url)
-	{
-		forCss(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderCSSReference(url);
-			}
-		});
-	}
-
-	@Override
-	public void renderCSSReference(final ResourceReference reference, final String media)
-	{
-		renderCSSReference(reference, null, media);
-	}
-
-	@Override
-	public void renderCSSReference(final ResourceReference reference,
-		final PageParameters pageParameters, final String media)
-	{
-		forReference(reference, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderCSSReference(reference, pageParameters, media);
-			}
-		});
-	}
-
-	@Override
-	public void renderCSSReference(final String url, final String media)
-	{
-		forCss(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderCSSReference(url, media);
-			}
-		});
-	}
-
-	@Override
-	public void renderOnDomReadyJavaScript(final String javascript)
-	{
-		forJavaScript(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderOnDomReadyJavaScript(javascript);
-			}
-		});
-	}
-
-	@Override
-	public void renderOnLoadJavaScript(final String javascript)
-	{
-		forJavaScript(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderOnLoadJavaScript(javascript);
-			}
-		});
-	}
-
-	@Override
-	public void renderOnEventJavaScript(final String target, final String event,
-		final String javascript)
-	{
-		forJavaScript(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getRealResponse().renderOnEventJavaScript(target, event, javascript);
-			}
-		});
-	}
-
-	@Override
-	public void renderJavaScriptReference(final ResourceReference reference,
-		final PageParameters pageParameters, final String id, final boolean defer)
-	{
-		forJavaScript(new Runnable()
-		{
-			public void run()
-			{
-				getRealResponse().renderJavaScriptReference(reference, pageParameters, id, defer);
-			}
-		});
-	}
-
-	@Override
-	public void renderJavaScriptReference(final ResourceReference reference,
-		final PageParameters pageParameters, final String id, final boolean defer,
-		final String charset)
-	{
-		forJavaScript(new Runnable()
-		{
-			public void run()
-			{
-				getRealResponse().renderJavaScriptReference(reference, pageParameters, id, defer,
-					charset);
-			}
-		});
-	}
-
-	@Override
-	public void renderCSS(final CharSequence css, final String id)
-	{
-		forCss(new Runnable()
-		{
-			public void run()
-			{
-				getRealResponse().renderCSS(css, id);
-			}
-		});
-	}
-
-	@Override
-	public void renderCSSReference(final ResourceReference reference,
-		final PageParameters pageParameters, final String media, final String condition)
-	{
-		forCss(new Runnable()
-		{
-			public void run()
-			{
-				getRealResponse().renderCSSReference(reference, pageParameters, media, condition);
-			}
-		});
-	}
-
-	@Override
-	public void renderCSSReference(final String url, final String media, final String condition)
-	{
-		forCss(new Runnable()
-		{
-			public void run()
-			{
-				getRealResponse().renderCSSReference(url, media, condition);
-			}
-		});
+		}
+		log.warn(
+			"A HeaderItem '{}' was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests",
+			item);
 	}
 
 	@Override
@@ -422,104 +184,45 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	 */
 	public final CharSequence getContent(String filterName)
 	{
-		if (filterName == null)
+		if (filterName == null || !responseFilterMap.containsKey(filterName))
 		{
 			return "";
 		}
-		StringResponse resp = responseFilterMap.get(filterName);
-		return resp == null ? "" : resp.getBuffer();
-	}
-
-	private void forReference(ResourceReference reference, Runnable runnable)
-	{
-		for (IHeaderResponseFilter filter : filters)
+		List<HeaderItem> resp = responseFilterMap.get(filterName);
+		final StringResponse strResponse = new StringResponse();
+		IHeaderResponse headerRenderer = new HeaderResponse()
 		{
-			if (filter.acceptReference(reference))
+			@Override
+			protected Response getRealResponse()
 			{
-				run(runnable, filter);
-				return;
+				return strResponse;
 			}
-		}
-		log.warn(
-			"A ResourceReference '{}' was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests",
-			reference);
-	}
+		};
 
-	private void forJavaScript(Runnable runnable)
-	{
-		for (IHeaderResponseFilter filter : filters)
+		if (Application.get().getResourceSettings().getUseDefaultResourceAggregator())
+			headerRenderer = new ResourceAggregator(headerRenderer);
+
+		for (HeaderItem curItem : resp)
 		{
-			if (filter.acceptOtherJavaScript())
-			{
-				run(runnable, filter);
-				return;
-			}
+			headerRenderer.render(curItem);
 		}
-		log.warn("JavaScript was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
+		headerRenderer.close();
+		return strResponse.getBuffer();
 	}
 
-	private void forCss(Runnable runnable)
+	private void render(HeaderItem item, IHeaderResponseFilter filter)
 	{
-		for (IHeaderResponseFilter filter : filters)
-		{
-			if (filter.acceptOtherCss())
-			{
-				run(runnable, filter);
-				return;
-			}
-		}
-		log.warn("CSS was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
+		render(item, responseFilterMap.get(filter.getName()));
 	}
 
-	/**
-	 * If subclasses of this class have special cases where they force something into a particular
-	 * bucket, regardless of the filters, they can create a Runnable that renders to the real
-	 * response, and pass it to this method with the name of the filter (bucket) that they want it
-	 * to appear in.
-	 * 
-	 * Example: <code>
-	               public void renderJavascriptIntoHead(final String js, final String id) {
-	                       runWithFilter(new Runnable() {
-	                               public void run()
-	                               {
-	                                       getRealResponse().renderJavascript(js, id);
-	                               }
-	                       }, "headerBucket");
-	               }
-	        * </code>
-	 * 
-	 * @param runnable
-	 *            the runnable that renders to the real response.
-	 * @param filterName
-	 *            the name of the filter bucket that you want the runnable to render into
-	 */
-	protected final void runWithFilter(Runnable runnable, String filterName)
-	{
-		run(runnable, responseFilterMap.get(filterName));
-	}
-
-	private void run(Runnable runnable, IHeaderResponseFilter filter)
-	{
-		run(runnable, responseFilterMap.get(filter.getName()));
-	}
-
-	private void run(Runnable runnable, Response response)
+	protected void render(HeaderItem item, List<HeaderItem> filteredItems)
 	{
 		if (AjaxRequestTarget.get() != null)
 		{
 			// we're in an ajax request, so we don't filter and separate stuff....
-			runnable.run();
+			getRealResponse().render(item);
 			return;
 		}
-		Response original = RequestCycle.get().setResponse(response);
-		try
-		{
-			runnable.run();
-		}
-		finally
-		{
-			RequestCycle.get().setResponse(original);
-		}
+		filteredItems.add(item);
 	}
-
 }

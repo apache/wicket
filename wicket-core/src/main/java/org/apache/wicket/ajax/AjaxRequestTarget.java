@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ajax;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -50,7 +49,9 @@ import org.apache.wicket.request.handler.logger.PageLogData;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.HeaderItem;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
+import org.apache.wicket.resource.header.OnLoadHeaderItem;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
@@ -1030,104 +1031,29 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 	 */
 	private class AjaxHeaderResponse extends HeaderResponse
 	{
-		private boolean checkHeaderRendering()
+		@Override
+		public void render(HeaderItem item)
 		{
-			if (headerRendering == false)
+			if (item instanceof OnLoadHeaderItem)
 			{
+				if (!wasItemRendered(item))
+				{
+					appendJavaScripts.add(((OnLoadHeaderItem)item).getJavaScript());
+					markItemRendered(item);
+				}
+			}
+			else if (item instanceof OnDomReadyHeaderItem)
+			{
+				if (!wasItemRendered(item))
+				{
+					domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
+					markItemRendered(item);
+				}
+			}
+			else if (headerRendering)
+				super.render(item);
+			else
 				log.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavaScript and renderOnDomReadyJavaScript");
-			}
-
-			return headerRendering;
-		}
-
-		@Override
-		public void renderCSSReference(ResourceReference reference, String media)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderCSSReference(reference, media);
-			}
-		}
-
-		@Override
-		public void renderCSSReference(String url)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderCSSReference(url);
-			}
-		}
-
-		@Override
-		public void renderCSSReference(String url, String media)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderCSSReference(url, media);
-			}
-		}
-
-		@Override
-		public void renderJavaScript(CharSequence javascript, String id)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderJavaScript(javascript, id);
-			}
-		}
-
-		@Override
-		public void renderCSSReference(ResourceReference reference)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderCSSReference(reference);
-			}
-		}
-
-		@Override
-		public void renderJavaScriptReference(ResourceReference reference)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderJavaScriptReference(reference);
-			}
-		}
-
-		@Override
-		public void renderJavaScriptReference(ResourceReference reference, String id)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderJavaScriptReference(reference, id);
-			}
-		}
-
-		@Override
-		public void renderJavaScriptReference(String url)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderJavaScriptReference(url);
-			}
-		}
-
-		@Override
-		public void renderJavaScriptReference(String url, String id)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderJavaScriptReference(url, id);
-			}
-		}
-
-		@Override
-		public void renderString(CharSequence string)
-		{
-			if (checkHeaderRendering())
-			{
-				super.renderString(string);
-			}
 		}
 
 		/**
@@ -1135,37 +1061,6 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 		 */
 		public AjaxHeaderResponse()
 		{
-		}
-
-		/**
-		 * 
-		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#renderOnDomReadyJavaScript(java.lang.String)
-		 */
-		@Override
-		public void renderOnDomReadyJavaScript(String javascript)
-		{
-			List<String> token = Arrays.asList("javascript-event", "window", "domready", javascript);
-			if (wasRendered(token) == false)
-			{
-				domReadyJavaScripts.add(javascript);
-				markRendered(token);
-			}
-		}
-
-		/**
-		 * 
-		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#renderOnLoadJavaScript(java.lang.String)
-		 */
-		@Override
-		public void renderOnLoadJavaScript(String javascript)
-		{
-			List<String> token = Arrays.asList("javascript-event", "window", "load", javascript);
-			if (wasRendered(token) == false)
-			{
-				// execute the javascript after all other scripts are executed
-				appendJavaScripts.add(javascript);
-				markRendered(token);
-			}
 		}
 
 		/**

@@ -23,8 +23,6 @@
  * Wicket Ajax Debug Window
  */
 
-jQuery.noConflict();
-
 ;(function (undefined) {
 
 	'use strict';

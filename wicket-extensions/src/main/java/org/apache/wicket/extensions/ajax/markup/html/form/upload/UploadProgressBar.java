@@ -21,7 +21,6 @@ import java.util.Formatter;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
-import org.apache.wicket.ajax.CoreLibrariesContributor;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -33,6 +32,10 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
+import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -203,11 +206,11 @@ public class UploadProgressBar extends Panel
 		super.renderHead(response);
 
 		CoreLibrariesContributor.contributeAjax(getApplication(), response);
-		response.renderJavaScriptReference(JS);
+		response.render(JavaScriptHeaderItem.forReference(JS));
 		ResourceReference css = getCss();
 		if (css != null)
 		{
-			response.renderCSSReference(css);
+			response.render(CssHeaderItem.forReference(css));
 		}
 
 		ResourceReference ref = new SharedResourceReference(RESOURCE_NAME);
@@ -225,7 +228,7 @@ public class UploadProgressBar extends Panel
 			"Wicket.bind(new Wicket.WUPB('%s', '%s', '%s', '%s', '%s', '%s'), Wicket.$('%s'))",
 			getMarkupId(), statusDiv.getMarkupId(), barDiv.getMarkupId(), url, uploadFieldId,
 			status, getCallbackForm().getMarkupId());
-		response.renderOnDomReadyJavaScript(builder.toString());
+		response.render(OnDomReadyHeaderItem.forScript(builder.toString()));
 	}
 
 	/**

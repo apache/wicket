@@ -88,7 +88,7 @@ public class PackageResourceReference extends ResourceReference
 	 * @see org.apache.wicket.request.resource.ResourceReference#getResource()
 	 */
 	@Override
-	public IResource getResource()
+	public PackageResource getResource()
 	{
 		final String extension = getExtension();
 
@@ -135,7 +135,7 @@ public class PackageResourceReference extends ResourceReference
 	{
 		return getStyle() != null ? getStyle() : Session.get().getStyle();
 	}
-	
+
 	@Override
 	public UrlAttributes getUrlAttributes()
 	{

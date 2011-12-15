@@ -23,6 +23,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.resource.header.OnLoadHeaderItem;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -54,8 +55,8 @@ public class FilterForm<T> extends Form<T>
 	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.renderOnLoadJavaScript("_filter_focus_restore('" + getFocusTrackerFieldCssId() +
-			"');");
+		response.render(OnLoadHeaderItem.forScript("_filter_focus_restore('" +
+			getFocusTrackerFieldCssId() + "');"));
 	}
 
 	/**

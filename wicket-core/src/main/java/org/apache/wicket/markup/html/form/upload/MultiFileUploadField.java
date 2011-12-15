@@ -38,6 +38,8 @@ import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileItem;
@@ -203,11 +205,11 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	public void renderHead(IHeaderResponse response)
 	{
 		// initialize the javascript library
-		response.renderJavaScriptReference(JS);
-		response.renderOnDomReadyJavaScript("new MultiSelector('" + getInputName() +
+		response.render(JavaScriptHeaderItem.forReference(JS));
+		response.render(OnDomReadyHeaderItem.forScript("new MultiSelector('" + getInputName() +
 			"', document.getElementById('" + container.getMarkupId() + "'), " + max + ",'" +
 			getString("org.apache.wicket.mfu.delete") + "').addElement(document.getElementById('" +
-			upload.getMarkupId() + "'));");
+			upload.getMarkupId() + "'));"));
 	}
 
 	/**

@@ -17,9 +17,11 @@
 package org.apache.wicket.request.resource;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.resource.header.HeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
@@ -123,8 +125,8 @@ public abstract class ResourceReference implements Serializable
 	/**
 	 * returns extension of the resource reference
 	 * 
-	 * @return extension of the resource's name in lower-case 
-	 * or <code>null</code> if there is no extension
+	 * @return extension of the resource's name in lower-case or <code>null</code> if there is no
+	 *         extension
 	 */
 	public final String getExtension()
 	{
@@ -485,5 +487,13 @@ public abstract class ResourceReference implements Serializable
 	public String toString()
 	{
 		return data.toString();
+	}
+
+	/**
+	 * @return the resoureces this ResourceReference depends on.
+	 */
+	public Iterable<? extends HeaderItem> getDependencies()
+	{
+		return Collections.emptyList();
 	}
 }

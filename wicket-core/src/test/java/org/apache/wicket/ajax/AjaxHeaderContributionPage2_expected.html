@@ -2,31 +2,8 @@
 <head>
 <link href="../../test"/>
 <script type="text/javascript" src="../../javascripturl"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
-<script type="text/javascript" >
-/*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { domReady();;});
-/*]]>*/
-</script>
-<script type="text/javascript" >
-/*<![CDATA[*/
-Wicket.Event.add(window, "load", function(event) { onLoad();;});
-/*]]>*/
-</script>
-
-<link href="../../test2"/>
-<script type="text/javascript" src="../../javascripturlB"></script>
-<script type="text/javascript" >
-/*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { domReadyB();;});
-/*]]>*/
-</script>
-<script type="text/javascript" >
-/*<![CDATA[*/
-Wicket.Event.add(window, "load", function(event) { onLoadB();;});
-/*]]>*/
-</script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
 <script type="text/javascript" id="wicket-ajax-debug-enable">
@@ -39,6 +16,25 @@ Wicket.Ajax.DebugWindow.enabled=true;
 Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.AjaxHeaderContributionPage2?0";
 /*]]>*/
 </script>
+<script type="text/javascript" >
+/*<![CDATA[*/
+Wicket.Event.add(window, "domready", function(event) { 
+domReady();;
+domReadyB();;
+;});
+/*]]>*/
+</script>
+<script type="text/javascript" >
+/*<![CDATA[*/
+Wicket.Event.add(window, "load", function(event) { 
+onLoad();;
+onLoadB();;
+;});
+/*]]>*/
+</script>
+
+<link href="../../test2"/>
+<script type="text/javascript" src="../../javascripturlB"></script>
 </head><body>
 <span wicket:id="test1" id="test11"><wicket:panel>
 test

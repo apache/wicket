@@ -19,6 +19,7 @@ package org.apache.wicket.markup.parser.filter;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.resource.header.StringHeaderItem;
 
 /**
  * 
@@ -58,7 +59,7 @@ public class HeaderSectionPage_20 extends WebPage
 		@Override
 		public void renderHead(IHeaderResponse response)
 		{
-			response.renderString("should be rendered only once");
+			response.render(StringHeaderItem.forString("should be rendered only once"));
 			super.renderHead(response);
 		}
 	}

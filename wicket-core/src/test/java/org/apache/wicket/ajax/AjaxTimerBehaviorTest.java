@@ -127,8 +127,8 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		if (inBodyOnLoad)
 		{
-			String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function(event) { " +
-				updateScript + ";});";
+			String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function(event) { \n" +
+				updateScript + ";\n;});";
 			validateTimerScript(document, bodyOnLoadUpdateScript);
 		}
 		else

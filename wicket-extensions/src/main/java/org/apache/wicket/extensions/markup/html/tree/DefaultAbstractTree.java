@@ -41,6 +41,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
 
 /**
  * Tree class that contains convenient functions related to presentation of the tree, which includes
@@ -581,7 +582,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		ResourceReference css = getCSS();
 		if (css != null)
 		{
-			response.renderCSSReference(css);
+			response.render(CssHeaderItem.forReference(css));
 		}
 	}
 }

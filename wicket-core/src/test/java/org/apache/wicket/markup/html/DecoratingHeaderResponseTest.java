@@ -18,8 +18,6 @@ package org.apache.wicket.markup.html;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
@@ -27,10 +25,9 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.aggregation.AbstractResourceAggregatingHeaderResponse;
-import org.apache.wicket.resource.aggregation.ResourceReferenceAndStringData;
-import org.apache.wicket.resource.aggregation.ResourceReferenceCollection;
+import org.apache.wicket.resource.header.HeaderItem;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -61,10 +58,15 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 				return new DecoratingHeaderResponse(response)
 				{
 					@Override
-					public void renderJavaScriptReference(ResourceReference reference, String id)
+					public void render(HeaderItem item)
 					{
-						super.renderJavaScriptReference(new PackageResourceReference("DECORATED-" +
-							reference.getName()), id);
+						if (item instanceof JavaScriptReferenceHeaderItem)
+						{
+							JavaScriptReferenceHeaderItem original = (JavaScriptReferenceHeaderItem)item;
+							item = JavaScriptHeaderItem.forReference(new PackageResourceReference(
+								"DECORATED-" + original.getReference().getName()), original.getId());
+						}
+						super.render(item);
 					}
 				};
 			}
@@ -91,59 +93,6 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 	}
 
 	/**
-	 * Test even and odd resources id rendered grouped.
-	 * 
-	 * @throws ResourceStreamNotFoundException
-	 * @throws IOException
-	 * @throws ParseException
-	 * 
-	 */
-	@Test
-	public void evenOddResourceIdGroup() throws IOException, ResourceStreamNotFoundException,
-		ParseException
-	{
-		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
-		{
-
-			@Override
-			public IHeaderResponse decorate(IHeaderResponse response)
-			{
-				return new AbstractResourceAggregatingHeaderResponse<ResourceReferenceCollection, Integer>(
-					response)
-				{
-					@Override
-					protected Integer newGroupingKey(ResourceReferenceAndStringData ref)
-					{
-						return Integer.parseInt(ref.getIdOrMedia()) % 2;
-					}
-				};
-			}
-		});
-		tester.startPage(TestPage.class);
-		XmlPullParser parser = new XmlPullParser();
-		parser.parse(tester.getLastResponseAsString());
-		XmlTag tag = parser.nextTag();
-		List<Integer> resourcesId = new ArrayList<Integer>();
-		do
-		{
-			if (tag.isOpen() && "script".equals(tag.getName()))
-			{
-				resourcesId.add(Integer.parseInt(tag.getAttribute("id").toString()));
-			}
-		}
-		while ((tag = parser.nextTag()) != null);
-		int oddEvenCanges = 0;
-		for (int i = 1; i < resourcesId.size(); i++)
-		{
-			if (resourcesId.get(i) % 2 != resourcesId.get(i - 1) % 2)
-			{
-				oddEvenCanges++;
-			}
-		}
-		assertEquals(1, oddEvenCanges);
-	}
-
-	/**
 	 * 
 	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -155,8 +104,8 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 		{
 			for (int i = 0; i < 10; i++)
 			{
-				response.renderJavaScriptReference(new PackageResourceReference("res" + i),
-					Integer.toString(i));
+				response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(
+					"res" + i), Integer.toString(i)));
 			}
 		}
 

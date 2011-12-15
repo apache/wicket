@@ -64,7 +64,7 @@ public class CssResourceReference extends PackageResourceReference
 	}
 
 	@Override
-	public IResource getResource()
+	public CssPackageResource getResource()
 	{
 		return new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
 			getVariation());

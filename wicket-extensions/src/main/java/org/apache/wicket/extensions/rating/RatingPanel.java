@@ -33,6 +33,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.CssHeaderItem;
 
 /**
  * Rating component that generates a number of stars where a user can click on to rate something.
@@ -322,8 +323,8 @@ public abstract class RatingPanel extends Panel
 		super.renderHead(response);
 		if (addDefaultCssStyle)
 		{
-			response.renderCSSReference(new PackageResourceReference(RatingPanel.class,
-				"RatingPanel.css"));
+			response.render(CssHeaderItem.forReference(new PackageResourceReference(
+				RatingPanel.class, "RatingPanel.css")));
 		}
 
 	}

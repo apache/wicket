@@ -1502,7 +1502,8 @@ public abstract class Component
 	 * <p>
 	 * If no id is set and <code>createIfDoesNotExist</code> is false, this method will return null.
 	 * Otherwise it will generate an id value which by default will be unique in the page. This is
-	 * the preferred way as there is no chance of id collision.
+	 * the preferred way as there is no chance of id collision. This will also enable
+	 * {@link #setOutputMarkupId(boolean)}.
 	 * <p>
 	 * 
 	 * <p>
@@ -1570,7 +1571,8 @@ public abstract class Component
 	 * the markup, or an automatically generated id - in that order.
 	 * <p>
 	 * If no explicit id is set this function will generate an id value that will be unique in the
-	 * page. This is the preferred way as there is no chance of id collision.
+	 * page. This is the preferred way as there is no chance of id collision. This will also enable
+	 * {@link #setOutputMarkupId(boolean)}.
 	 * <p>
 	 * Note: This method should only be called after the component or its parent have been added to
 	 * the page.
@@ -2829,6 +2831,7 @@ public abstract class Component
 			throw new IllegalArgumentException("markupId must be String or Integer");
 		}
 
+		setOutputMarkupId(true);
 		if (markupId instanceof Integer)
 		{
 			generatedMarkupId = (Integer)markupId;
@@ -2839,7 +2842,6 @@ public abstract class Component
 		generatedMarkupId = -1;
 		setMetaData(MARKUP_ID_KEY, (String)markupId);
 
-		setOutputMarkupId(true);
 	}
 
 	/**

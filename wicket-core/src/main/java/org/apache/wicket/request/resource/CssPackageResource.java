@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.css.ICssCompressor;
+import org.apache.wicket.settings.IResourceSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,8 @@ public class CssPackageResource extends PackageResource
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(CssPackageResource.class);
+
+	private boolean compress = true;
 
 	/**
 	 * Construct.
@@ -54,7 +57,7 @@ public class CssPackageResource extends PackageResource
 
 		ICssCompressor compressor = getCompressor();
 
-		if (compressor != null)
+		if (compressor != null && getCompress())
 		{
 			try
 			{
@@ -89,5 +92,23 @@ public class CssPackageResource extends PackageResource
 			compressor = Application.get().getResourceSettings().getCssCompressor();
 		}
 		return compressor;
+	}
+
+	/**
+	 * @return whether {@link IResourceSettings#getCssCompressor()} will be used to compress the
+	 *         resource. defaults to true.
+	 */
+	public boolean getCompress()
+	{
+		return compress;
+	}
+
+	/**
+	 * @param compress
+	 *            Allows to disable compression of the resource.
+	 */
+	public void setCompress(boolean compress)
+	{
+		this.compress = compress;
 	}
 }
