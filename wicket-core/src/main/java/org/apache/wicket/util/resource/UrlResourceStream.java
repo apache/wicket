@@ -23,6 +23,7 @@ import java.net.URLConnection;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.util.io.Connections;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Objects;
@@ -65,6 +66,9 @@ public class UrlResourceStream extends AbstractResourceStream
 	private static class StreamData
 	{
 		private URLConnection connection;
+
+		/** The stream read from this connection */
+		private InputStream inputStream;
 
 		/** Length of stream. */
 		private long contentLength;
@@ -139,6 +143,10 @@ public class UrlResourceStream extends AbstractResourceStream
 		if (data != null)
 		{
 			Connections.closeQuietly(data.connection);
+			if (data.inputStream != null)
+			{
+				IOUtils.closeQuietly(data.inputStream);
+			}
 			streamData = null;
 		}
 	}
@@ -151,7 +159,9 @@ public class UrlResourceStream extends AbstractResourceStream
 	{
 		try
 		{
-			return getData(true).connection.getInputStream();
+			StreamData data = getData(true);
+			data.inputStream = data.connection.getInputStream();
+			return data.inputStream;
 		}
 		catch (IOException e)
 		{
