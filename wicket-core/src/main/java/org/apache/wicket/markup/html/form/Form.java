@@ -755,14 +755,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				}
 				else
 				{
-					// this is the root form
-					Form<?> formToProcess = this;
-
-					// find out whether it was a nested form that was submitted
-					if (submitter != null)
-					{
-						formToProcess = submitter.getForm();
-					}
+					// the submit request might be for one of the nested forms, so let's
+					// find the right one:
+					final Form<?> formToProcess = findFormToProcess(submitter);
 
 					// process the form for this request
 					formToProcess.process(submitter);
@@ -775,6 +770,88 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			callOnError(submitter);
 		}
+	}
+
+	/**
+	 * This method finds the correct form that should be processed based on the submitting component
+	 * (if there is one) and correctly handles nested forms by also looking at
+	 * {@link #wantSubmitOnNestedFormSubmit()} throughout the form hierarchy. The form that needs to
+	 * be processed is:
+	 * <ul>
+	 * <li>if there is no submitting component (i.e. a "default submit"): this form.</li>
+	 * <li>if only one form exists (this): this form.</li>
+	 * <li>if nested forms exist:
+	 * <ul>
+	 * <li>if the submitting component points at the root form: the root form</li>
+	 * <li>if the submitting component points at a nested form:
+	 * <ul>
+	 * <li>starting at that nested form, the outermost form that returns true for
+	 * {@link #wantSubmitOnNestedFormSubmit()}</li>
+	 * <li>if no outer form returns true for that, the nested form is returned.</li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 * 
+	 * @param submitter
+	 *            The submitting component, if any. May be null.
+	 * @return The form that needs to be processed.
+	 */
+	private Form<?> findFormToProcess(IFormSubmitter submitter)
+	{
+		if (submitter == null)
+		{
+			// no submitting component => default form submit => so *this* is the
+			// form to process
+			return this;
+		}
+		else
+		{
+			// some button submitted this request, this is the form it belongs to:
+			final Form<?> targetedForm = submitter.getForm();
+			if (targetedForm == null)
+			{
+				throw new IllegalStateException(
+					"submitting component must not return 'null' on getForm()");
+			}
+
+			final Form<?> rootForm = getRootForm();
+			if (targetedForm == rootForm)
+			{
+				// the submitting component points at the root form => so let's just go with
+				// root, everything else will be submitted with it anyway.
+				return rootForm;
+			}
+			else
+			{
+				// a different form was targeted. let's find the outermost form that wants to be
+				// submitted.
+				Form<?> formThatWantsToBeSubmitted = targetedForm;
+				Form<?> current = targetedForm.findParent(Form.class);
+				while (current != null)
+				{
+					if (current.wantSubmitOnNestedFormSubmit())
+					{
+						formThatWantsToBeSubmitted = current;
+					}
+					current = current.findParent(Form.class);
+				}
+				return formThatWantsToBeSubmitted;
+			}
+		}
+	}
+
+	/**
+	 * Whether this form wants to be submitted too if a nested form is submitted. By default, this
+	 * is false, so when a nested form is submitted, this form will <em>not</em> be submitted. If
+	 * this method is overridden to return true, this form <em>will</em> be submitted.
+	 * 
+	 * @return Whether this form wants to be submitted too if a nested form is submitted.
+	 */
+	public boolean wantSubmitOnNestedFormSubmit()
+	{
+		return false;
 	}
 
 
@@ -1144,26 +1221,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void delegateSubmit(IFormSubmitter submittingComponent)
 	{
-		final Form<?> processingForm;
+		final Form<?> processingForm = findFormToProcess(submittingComponent);
+
 
 		// process submitting component (if specified)
 		if (submittingComponent != null)
 		{
-			// use form of submitting component for processing
-			processingForm = submittingComponent.getForm();
-
-			if (processingForm == null)
-			{
-				throw new IllegalStateException(
-					"submitting component must not return 'null' on getForm()");
-			}
-
 			// invoke submit on component
 			submittingComponent.onSubmit();
-		}
-		else
-		{
-			processingForm = this;
 		}
 
 		// invoke Form#onSubmit(..) going from innermost to outermost
