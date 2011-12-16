@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +28,13 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
@@ -110,9 +113,27 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 			InterceptData data = new InterceptData();
 			Request request = RequestCycle.get().getRequest();
 			data.originalUrl = request.getOriginalUrl();
+			Iterator<QueryParameter> itor = data.originalUrl.getQueryParameters().iterator();
+			while (itor.hasNext())
+			{
+				QueryParameter parameter = itor.next();
+				String parameterName = parameter.getName();
+				if (WebRequest.PARAM_AJAX.equals(parameterName) ||
+					WebRequest.PARAM_AJAX_BASE_URL.equals(parameterName) ||
+					WebRequest.PARAM_AJAX_REQUEST_ANTI_CACHE.equals(parameterName))
+				{
+					itor.remove();
+				}
+			}
+
 			data.postParameters = new HashMap<String, List<StringValue>>();
 			for (String s : request.getPostParameters().getParameterNames())
 			{
+				if (WebRequest.PARAM_AJAX.equals(s) || WebRequest.PARAM_AJAX_BASE_URL.equals(s) ||
+					WebRequest.PARAM_AJAX_REQUEST_ANTI_CACHE.equals(s))
+				{
+					continue;
+				}
 				data.postParameters.put(s, new ArrayList<StringValue>(request.getPostParameters()
 					.getParameterValues(s)));
 			}
