@@ -27,6 +27,8 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.junit.Test;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Unit tests for {@link ByteArrayResource}
  */
@@ -130,5 +132,19 @@ public class ByteArrayResourceTest extends WicketTestCase
 
 		tester.startResource(finalResortOctetStream);
 		assertEquals("application/octet-stream", tester.getLastResponse().getContentType());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4301
+	 *
+	 * Verify that HttpServletResponse#SC_NOT_FOUND is returned if there is no data.
+	 */
+	@Test
+	public void noData() {
+		ByteArrayResource resource = new ByteArrayResource("text/plain");
+		tester.startResource(resource);
+
+		assertEquals(HttpServletResponse.SC_NOT_FOUND, tester.getLastResponse().getStatus());
+		assertEquals(0, tester.getLastResponse().getBinaryContent().length);
 	}
 }
