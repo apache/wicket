@@ -69,7 +69,14 @@ public class UrlResourceStream extends AbstractResourceStream
 	{
 		private URLConnection connection;
 
-		/** The streams read from this connection */
+		/**
+		 * The streams read from this connection.
+		 * Some URLConnection implementations return the same instance of InputStream
+		 * every time URLConnection#getInputStream() is called. Other return a new instance
+		 * of InputStream.
+		 * Here we keep a list of all returned ones and close them in UrlResourceStream#close().
+		 * Even it is the same instance several times we will try to close it quietly several times.
+		 */
 		private List<InputStream> inputStreams;
 
 		/** Length of stream. */
