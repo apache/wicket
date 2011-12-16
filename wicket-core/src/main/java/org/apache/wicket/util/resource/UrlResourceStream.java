@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.util.io.Connections;
@@ -67,8 +69,8 @@ public class UrlResourceStream extends AbstractResourceStream
 	{
 		private URLConnection connection;
 
-		/** The stream read from this connection */
-		private InputStream inputStream;
+		/** The streams read from this connection */
+		private List<InputStream> inputStreams;
 
 		/** Length of stream. */
 		private long contentLength;
@@ -126,7 +128,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			{
 				throw new IllegalArgumentException("Invalid URL parameter " + url, ex);
 			}
-		}
+ 		}
 
 		return streamData;
 	}
@@ -143,9 +145,11 @@ public class UrlResourceStream extends AbstractResourceStream
 		if (data != null)
 		{
 			Connections.closeQuietly(data.connection);
-			if (data.inputStream != null)
+			if (data.inputStreams != null)
 			{
-				IOUtils.closeQuietly(data.inputStream);
+				for (InputStream is : data.inputStreams) {
+					IOUtils.closeQuietly(is);
+				}
 			}
 			streamData = null;
 		}
@@ -160,8 +164,12 @@ public class UrlResourceStream extends AbstractResourceStream
 		try
 		{
 			StreamData data = getData(true);
-			data.inputStream = data.connection.getInputStream();
-			return data.inputStream;
+			InputStream is = data.connection.getInputStream();
+			if (data.inputStreams == null) {
+				data.inputStreams = new ArrayList<InputStream>();
+			}
+			data.inputStreams.add(is);
+			return is;
 		}
 		catch (IOException e)
 		{
