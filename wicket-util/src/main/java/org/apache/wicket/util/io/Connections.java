@@ -128,9 +128,5 @@ public class Connections
 		{
 			((HttpURLConnection)connection).disconnect();
 		}
-		else
-		{
-			connection.getInputStream().close();
-		}
 	}
 }
