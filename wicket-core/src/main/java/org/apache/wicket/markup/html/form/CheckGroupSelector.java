@@ -130,6 +130,6 @@ public class CheckGroupSelector extends AbstractCheckSelector
 					"] cannot find its parent CheckGroup. All CheckGroupSelector components must be a child of or below in the hierarchy of a CheckGroup component.");
 		}
 		return "Wicket.CheckboxSelector.Group.findCheckboxesFunction('" +
-			group.getForm().getMarkupId() + "','" + group.getInputName() + "')";
+			group.getForm().getRootForm().getMarkupId() + "','" + group.getInputName() + "')";
 	}
 }
