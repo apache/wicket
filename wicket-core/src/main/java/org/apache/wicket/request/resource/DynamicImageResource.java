@@ -167,8 +167,9 @@ public abstract class DynamicImageResource extends AbstractResource
 						attributes.getResponse().write(imageData);
 					}
 				});
+
+				configureResponse(response, attributes);
 			}
-			configureResponse(response, attributes);
 		}
 
 		return response;
