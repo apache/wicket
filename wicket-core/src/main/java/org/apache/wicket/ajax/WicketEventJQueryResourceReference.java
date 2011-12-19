@@ -18,6 +18,8 @@ package org.apache.wicket.ajax;
 
 import java.util.Arrays;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 import org.apache.wicket.resource.header.HeaderItem;
@@ -49,6 +51,13 @@ public class WicketEventJQueryResourceReference extends
 	@Override
 	public Iterable<? extends HeaderItem> getDependencies()
 	{
-		return Arrays.asList(JavaScriptHeaderItem.forReference(JQueryResourceReference.get()));
+		final ResourceReference backingLibraryReference;
+		if (Application.exists()) {
+			backingLibraryReference = Application.get().getJavaScriptLibrarySettings().getBackingLibraryReference();
+		}
+		else {
+			backingLibraryReference = JQueryResourceReference.get();
+		}
+		return Arrays.asList(JavaScriptHeaderItem.forReference(backingLibraryReference));
 	}
 }

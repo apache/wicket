@@ -34,6 +34,18 @@ import org.apache.wicket.resource.JQueryResourceReference;
  */
 public interface IJavaScriptLibrarySettings
 {
+
+	/**
+	 * @return the reference to the JavaScript library used as backing library
+	 */
+	ResourceReference getBackingLibraryReference();
+
+	/**
+	 * @param reference
+	 *            a reference to the JavaScript library used as backing library
+	 */
+	void setBackingLibraryReference(ResourceReference reference);
+
 	/**
 	 * @return the reference to the implementation of wicket-event.js
 	 */

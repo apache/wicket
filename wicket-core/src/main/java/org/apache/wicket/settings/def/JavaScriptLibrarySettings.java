@@ -20,6 +20,7 @@ import org.apache.wicket.ajax.WicketAjaxDebugJQueryResourceReference;
 import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
 import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
 
@@ -28,11 +29,25 @@ import org.apache.wicket.util.lang.Args;
  */
 public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
 {
+	private ResourceReference backingLibraryReference = JQueryResourceReference.get();
+
 	private ResourceReference wicketEventReference = WicketEventJQueryResourceReference.get();
 
 	private ResourceReference wicketAjaxReference = WicketAjaxJQueryResourceReference.get();
 
 	private ResourceReference wicketAjaxDebugReference = WicketAjaxDebugJQueryResourceReference.get();
+
+	@Override
+	public ResourceReference getBackingLibraryReference()
+	{
+		return backingLibraryReference;
+	}
+
+	@Override
+	public void setBackingLibraryReference(ResourceReference backingLibraryReference)
+	{
+		this.backingLibraryReference = Args.notNull(backingLibraryReference, "backingLibraryReference");
+	}
 
 	@Override
 	public ResourceReference getWicketEventReference()
