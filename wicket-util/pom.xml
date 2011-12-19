@@ -25,4 +25,11 @@
 	</parent>
 	<artifactId>wicket-util</artifactId>
 	<name>Wicket Util</name>
+  <dependencies>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<scope>provided</scope>
+	</dependency>
+  </dependencies>
 </project>

@@ -32,51 +32,40 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty.version>7.4.2.v20110526</jetty.version>
 		<spring.version>3.0.6.RELEASE</spring.version>
+		<maven.javadoc.version>2.8</maven.javadoc.version>
+		<maven.surefire.version>2.11</maven.surefire.version>
 	</properties>
+
+	<modules>
+		<module>wicket</module>
+		<module>wicket-core</module>
+		<module>wicket-util</module>
+		<module>wicket-datetime</module>
+		<module>wicket-request</module>
+		<module>wicket-devutils</module>
+		<module>wicket-extensions</module>
+		<module>wicket-ioc</module>
+		<module>wicket-spring</module>
+		<module>wicket-velocity</module>
+		<module>wicket-auth-roles</module>
+		<module>wicket-guice</module>
+		<module>wicket-jmx</module>
+		<module>wicket-objectssizeof-agent</module>
+		<module>wicket-examples</module>
+		<module>archetypes/quickstart</module>
+	</modules>
+
 	<profiles>
 		<profile>
 			<id>release</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-			<!-- 
-				modules parent and parent are defined not to process their
-				submodules: their release profile is empty. This way we can
-				define which projects to release with a Wicket release from
-				the parent. 
-			-->
-			<modules>
-				<module>wicket</module>
-				<module>wicket-core</module>
-				<module>wicket-util</module>
-				<module>wicket-datetime</module>
-				<module>wicket-request</module>
-				<module>wicket-devutils</module>
-				<module>wicket-extensions</module>
-				<module>wicket-ioc</module>
-				<module>wicket-spring</module>
-				<module>wicket-velocity</module>
-				<module>wicket-auth-roles</module>
-				<module>wicket-guice</module>
-				<module>wicket-jmx</module>
-				<module>wicket-objectssizeof-agent</module>
-				<module>wicket-examples</module>
-				<module>archetypes/quickstart</module>
-			</modules>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<artifactId>maven-remote-resources-plugin</artifactId>
 						<inherited>true</inherited>
 					</plugin>
 					<plugin>
@@ -86,21 +75,6 @@
 						<configuration>
 							<aggregate>true</aggregate>
 						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.felix</groupId>
-						<artifactId>maven-bundle-plugin</artifactId>
-						<inherited>true</inherited>
 					</plugin>
 				</plugins>
 			</build>
@@ -116,53 +90,11 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-			<modules>
-				<module>wicket</module>
-				<module>wicket-core</module>
-				<module>wicket-util</module>
-				<module>wicket-datetime</module>
-				<module>wicket-request</module>
-				<module>wicket-devutils</module>
-				<module>wicket-extensions</module>
-				<module>wicket-ioc</module>
-				<module>wicket-spring</module>
-				<module>wicket-velocity</module>
-				<module>wicket-auth-roles</module>
-				<module>wicket-guice</module>
-				<module>wicket-jmx</module>
-				<module>wicket-objectssizeof-agent</module>
-				<module>wicket-examples</module>
-				<module>archetypes/quickstart</module>
-			</modules>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<artifactId>maven-remote-resources-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<inherited>true</inherited>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.felix</groupId>
-						<artifactId>maven-bundle-plugin</artifactId>
 						<inherited>true</inherited>
 					</plugin>
 				</plugins>
@@ -174,26 +106,34 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			<modules>
-				<module>wicket</module>
-				<module>wicket-core</module>
-				<module>wicket-util</module>
-				<module>wicket-datetime</module>
-				<module>wicket-request</module>
-				<module>wicket-devutils</module>
-				<module>wicket-extensions</module>
-				<module>wicket-ioc</module>
-				<module>wicket-spring</module>
-				<module>wicket-velocity</module>
-				<module>wicket-auth-roles</module>
-				<module>wicket-guice</module>
-				<module>wicket-jmx</module>
-				<module>wicket-objectssizeof-agent</module>
-				<module>wicket-examples</module>
-				<module>archetypes/quickstart</module>
-				<module>testing/wicket-threadtest</module>
-			</modules>
-			<!-- distribution management is inherited from the parent pom -->
+		</profile>
+		<profile>
+			<id>fast</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+ 						<inherited>true</inherited>
+						<configuration>
+							<excludedGroups>org.apache.wicket.util.SlowTests</excludedGroups>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<inherited>false</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+ 						<inherited>true</inherited>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 	<url>http://wicket.apache.org/${project.artifactId}</url>
@@ -547,11 +487,25 @@
 		</testResources>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<inherited>true</inherited>
+			</plugin>
+			<plugin>
+				<artifactId>maven-remote-resources-plugin</artifactId>
+				<inherited>true</inherited>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<inherited>true</inherited>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>clirr-maven-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-					<comparisonVersion>1.5.2</comparisonVersion>
+					<comparisonVersion>1.5.3</comparisonVersion>
 					<failOnError>false</failOnError>
 					<logResults>true</logResults>
 					<!-- disabled until we start the release candidates -->
@@ -566,11 +520,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<inherited>true</inherited>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
 			<plugin>
@@ -591,6 +540,12 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
+				<inherited>true</inherited>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven.javadoc.version}</version>
 				<inherited>true</inherited>
 			</plugin>
 		</plugins>
@@ -681,21 +636,11 @@
 							</manifestEntries>
 						</archive>
 					</configuration>
-					<executions>
-						<execution>
-							<goals>
-								<goal>test-jar</goal>
-							</goals>
-							<configuration>
-								<useDefaultManifestFile>false</useDefaultManifestFile>
-							</configuration>
-						</execution>
-					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.8</version>
+					<version>${maven.javadoc.version}</version>
 					<configuration>
 						<minmemory>128m</minmemory>
 						<maxmemory>256m</maxmemory>
@@ -736,17 +681,24 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.10</version>
+					<version>${maven.surefire.version}</version>
 					<configuration>
 						<includes>
 							<include>**/*Test.java</include>
 						</includes>
 					</configuration>
+					<dependencies>
+						<dependency> <!-- force 4.7 runner to enable excludedGroups on Categories (& parallel) -->
+							<groupId>org.apache.maven.surefire</groupId>
+							<artifactId>surefire-junit47</artifactId>
+							<version>${maven.surefire.version}</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-report-plugin</artifactId>
-					<version>2.10</version>
+					<version>${maven.surefire.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.mortbay.jetty</groupId>
@@ -828,7 +780,7 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.8</version>
+				<version>${maven.javadoc.version}</version>
 			</plugin>
 		</plugins>
 	</reporting>

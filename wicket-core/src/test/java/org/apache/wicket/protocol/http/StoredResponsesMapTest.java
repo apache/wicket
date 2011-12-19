@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.time.Duration;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -31,6 +32,7 @@ import org.junit.experimental.categories.Category;
 /**
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-3209">WICKET-3209</a>
  */
+@Category(SlowTests.class)
 public class StoredResponsesMapTest extends Assert
 {
 	/**
@@ -92,7 +94,6 @@ public class StoredResponsesMapTest extends Assert
 	 * @throws InterruptedException
 	 */
 	@Test
-	@Ignore
 	public void heavyLoad() throws InterruptedException
 	{
 		final int numberOfThreads = 100;
