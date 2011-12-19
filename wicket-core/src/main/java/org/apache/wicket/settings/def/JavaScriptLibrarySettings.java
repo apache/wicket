@@ -21,6 +21,7 @@ import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
 import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * @since 6.0
@@ -42,7 +43,7 @@ public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
 	@Override
 	public void setWicketEventReference(ResourceReference wicketEventReference)
 	{
-		this.wicketEventReference = wicketEventReference;
+		this.wicketEventReference = Args.notNull(wicketEventReference, "wicketEventReference");
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
 	@Override
 	public void setWicketAjaxReference(ResourceReference wicketAjaxReference)
 	{
-		this.wicketAjaxReference = wicketAjaxReference;
+		this.wicketAjaxReference = Args.notNull(wicketAjaxReference, "wicketAjaxReference");
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
 	@Override
 	public void setWicketAjaxDebugReference(ResourceReference wicketAjaxDebugReference)
 	{
-		this.wicketAjaxDebugReference = wicketAjaxDebugReference;
+		this.wicketAjaxDebugReference = Args.notNull(wicketAjaxDebugReference, "wicketAjaxDebugReference");
 	}
 
 }
