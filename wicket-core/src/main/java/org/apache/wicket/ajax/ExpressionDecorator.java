@@ -29,5 +29,5 @@ public interface ExpressionDecorator
 	 * @param expression
 	 * @return decorated expression
 	 */
-	public CharSequence decoreateExpression(CharSequence expression);
+	public CharSequence decorateExpression(CharSequence expression);
 }
