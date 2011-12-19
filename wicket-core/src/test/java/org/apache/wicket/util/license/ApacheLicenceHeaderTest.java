@@ -80,6 +80,8 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		javaIgnore.add("src/main/java/org/apache/wicket/util/concurrent/ConcurrentHashMap.java");
 		javaIgnore.add("src/main/java/org/apache/wicket/util/concurrent/CopyOnWriteArrayList.java");
 
+		javaIgnore.add("src/main/java/org/apache/wicket/ajax/json");
+
 		javaScriptIgnore.add("src/site/xdoc/onestat.js");
 
 		/*

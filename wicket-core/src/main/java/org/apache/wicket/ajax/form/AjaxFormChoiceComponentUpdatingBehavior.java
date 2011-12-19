@@ -51,14 +51,6 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Default constructor
-	 */
-	public AjaxFormChoiceComponentUpdatingBehavior()
-	{
-		super();
-	}
-
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
@@ -148,8 +140,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	{
 		return generateCallbackScript(new AppendingStringBuffer("Wicket.Ajax.post('").append(
 			getCallbackUrl()).append(
-			"', Wicket.Form.serialize(document.getElementById('" + getComponent().getMarkupId() +
-				"',false))"));
+			"', Wicket.Form.serialize('" + getComponent().getMarkupId() + "',false)"));
 	}
 
 	/**

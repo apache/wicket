@@ -87,7 +87,7 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 			startScript.append("';]]></evaluate>");
 			responseBuffer.insert(ajaxEnd, startScript.toString());
 			responseBuffer.insert(ajaxStart + 15,
-				"<evaluate><![CDATA[clientTimeVariable = new Date().getTime();]]></evaluate>");
+				"<priority-evaluate><![CDATA[clientTimeVariable = new Date().getTime();]]></priority-evaluate>");
 		}
 		log.info(timeTaken + "ms server time taken for request " +
 			RequestCycle.get().getRequest().getUrl() + " response size: " + responseBuffer.length());

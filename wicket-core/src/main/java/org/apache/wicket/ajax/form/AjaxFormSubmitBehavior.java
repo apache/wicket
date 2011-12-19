@@ -18,6 +18,8 @@ package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestAttributes;
+import org.apache.wicket.ajax.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -119,6 +121,26 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		}
 	}
 
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+		super.updateAjaxAttributes(attributes);
+
+		Form<?> form = getForm();
+		attributes.setFormId(form.getMarkupId());
+		if (form.isMultiPart())
+		{
+			attributes.setMultipart(true);
+			attributes.setMethod(Method.POST);
+		}
+
+		if (getComponent() instanceof IFormSubmittingComponent)
+		{
+			String submittingComponentName = ((IFormSubmittingComponent)getComponent()).getInputName();
+			attributes.setSubmittingComponentName(submittingComponentName);
+		}
+	}
+
 	/**
 	 * 
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#getEventHandler()
@@ -202,9 +224,10 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
 	 */
 	@Override
+	@Deprecated
 	protected CharSequence getPreconditionScript()
 	{
-		return "return Wicket.$$(this) && Wicket.$$('" + getForm().getMarkupId() + "')";
+		return null;
 	}
 
 	/**

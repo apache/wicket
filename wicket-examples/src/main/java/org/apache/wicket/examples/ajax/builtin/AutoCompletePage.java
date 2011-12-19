@@ -88,7 +88,7 @@ public class AutoCompletePage extends BasePage
 		label.setOutputMarkupId(true);
 		form.add(label);
 
-		field.add(new AjaxFormSubmitBehavior(form, "onchange")
+		field.add(new AjaxFormSubmitBehavior(form, "change")
 		{
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)

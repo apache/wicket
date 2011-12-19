@@ -13,7 +13,14 @@ Wicket.Ajax.DebugWindow.enabled=true;
 Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.TestDetachPage?0";
 /*]]>*/
 </script>
+<script type="text/javascript" >
+/*<![CDATA[*/
+Wicket.Event.add(window, "domready", function(event) { 
+Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-comp","e":"click","c":"comp1"});;
+;});
+/*]]>*/
+</script>
 </head><body>
-  <span wicket:id="comp" id="comp1" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-comp&#039;, Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;comp1&#039;) != null;}, this));">body</span>
+  <span wicket:id="comp" id="comp1">body</span>
 </body>
 </html>

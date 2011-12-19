@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.ajax.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -57,7 +58,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	{
 		super(id, form);
 
-		add(new AjaxFormSubmitBehavior(form, "onclick")
+		add(new AjaxFormSubmitBehavior(form, "click")
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -107,8 +108,19 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			{
 				return AjaxSubmitLink.this.getDefaultFormProcessing();
 			}
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+				AjaxSubmitLink.this.updateAjaxAttributes(attributes);
+			}
 		});
 
+	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**
@@ -117,6 +129,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * 
 	 * @return call decorator used to modify the generated javascript or null for none
 	 */
+	@Deprecated
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return null;

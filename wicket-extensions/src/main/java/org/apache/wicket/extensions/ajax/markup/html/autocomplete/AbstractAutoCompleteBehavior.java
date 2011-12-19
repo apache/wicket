@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 import org.apache.wicket.util.string.Strings;
@@ -69,6 +70,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		super.renderHead(component, response);
+		CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
 		renderAutocompleteHead(response);
 	}
 
@@ -120,23 +122,6 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		}
 		sb.append('}');
 		return sb.toString();
-	}
-
-	@Override
-	protected void onBind()
-	{
-		// add empty AbstractDefaultAjaxBehavior to the component, to force
-		// rendering wicket-ajax.js reference if no other ajax behavior is on
-		// page
-		getComponent().add(new AbstractDefaultAjaxBehavior()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void respond(final AjaxRequestTarget target)
-			{
-			}
-		});
 	}
 
 	/**

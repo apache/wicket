@@ -17,14 +17,20 @@
 package org.apache.wicket.extensions.ajax.markup.html;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestAttributes;
+import org.apache.wicket.ajax.AjaxRequestAttributes.Method;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 
 /**
  * An inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
@@ -112,7 +118,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	@Override
 	protected String getLabelAjaxEvent()
 	{
-		return "onclick";
+		return "click";
 	}
 
 	/**
@@ -170,26 +176,46 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
-			protected void onComponentTag(final ComponentTag tag)
+			public void renderHead(final Component component, final IHeaderResponse response)
 			{
-				super.onComponentTag(tag);
-				final String saveCall = "{Wicket.Ajax.post('" + getCallbackUrl() + "&save=true', " +
-					"Wicket.Form.serialize(this)); return true;}";
+				super.renderHead(component, response);
 
-				final String cancelCall = "{Wicket.Ajax.get('" + getCallbackUrl() +
-					"&save=false');this.onblur='';return false;}";
+				AjaxRequestAttributes saveAttributes = getAttributes();
+				saveAttributes.getExtraParameters().put("save", "true");
+				saveAttributes.setMethod(Method.POST);
+				saveAttributes.getDynamicExtraParameters().add(
+					"this.name+'='+Wicket.Form.encode(this.value)");
+				saveAttributes.setEventName("blur");
 
-				final String keypress = "var kc=Wicket.Event.keyCode(event); if (kc===27) " +
-					cancelCall + "; ";
+				AjaxRequestAttributes cancelAttributes = getAttributes();
+				cancelAttributes.getExtraParameters().put("save", "false");
+				cancelAttributes.setEventName("keydown");
 
-				tag.put("onblur", saveCall);
-				tag.put("onkeypress", "if (Wicket.Browser.isSafari()) { return; }; " + keypress);
-				tag.put("onkeydown", "if (!Wicket.Browser.isSafari()) { return; }; " + keypress);
+				CharSequence saveAttributesJson = renderAjaxAttributes(component, saveAttributes);
+				String saveCall = "Wicket.Ajax.ajax(" + saveAttributesJson + ")";
+
+				CharSequence cancelAttributesJson = renderAjaxAttributes(component,
+					cancelAttributes);
+				String cancelCall = "Wicket.Ajax.ajax(" + cancelAttributesJson + ")";
+
+				final String keydown = "var kc=Wicket.Event.keyCode(attrs.event); if (kc===27) " +
+					cancelCall + " else if (kc===13) " + saveCall;
+
+				AjaxRequestTarget target = AjaxRequestTarget.get();
+				if (target != null)
+				{
+					target.appendJavaScript(saveCall);
+					target.appendJavaScript(keydown);
+				}
+				else
+				{
+					response.render(JavaScriptHeaderItem.forScript(saveCall, "editable-blur-" + component.getMarkupId()));
+					response.render(JavaScriptHeaderItem.forScript(keydown,
+						"editable-keydown-" + component.getMarkupId()));
+				}
 			}
+
 		});
 		return editor;
 	}

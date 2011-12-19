@@ -35,25 +35,30 @@ onLoadB();;
 
 <link href="../../test2"/>
 <script type="text/javascript" src="../../javascripturlB"></script>
+<script type="text/javascript" id="event-click-link1">
+/*<![CDATA[*/
+Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-link","e":"click","c":"link1"});
+/*]]>*/
+</script>
 </head><body>
-<span wicket:id="test1" id="test11"><wicket:panel>
+<span wicket:id="test1" id="test12"><wicket:panel>
 test
 </wicket:panel></span>
-<span wicket:id="test2" id="test22"><wicket:panel>
+<span wicket:id="test2" id="test23"><wicket:panel>
 test
 </wicket:panel></span>
-<span wicket:id="test3" id="test33"><wicket:panel>
+<span wicket:id="test3" id="test34"><wicket:panel>
 test
 </wicket:panel></span>
-<span wicket:id="btest1" id="btest14"><wicket:panel>
+<span wicket:id="btest1" id="btest15"><wicket:panel>
 test
 </wicket:panel></span>
-<span wicket:id="btest2" id="btest25"><wicket:panel>
+<span wicket:id="btest2" id="btest26"><wicket:panel>
 test
 </wicket:panel></span>
-<span wicket:id="btest3" id="btest36"><wicket:panel>
+<span wicket:id="btest3" id="btest37"><wicket:panel>
 test
 </wicket:panel></span>
-<a href="../page?0-1.ILinkListener-link" wicket:id="link" id="link7" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-link&#039;, Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;link7&#039;) != null;}, this));return !wcall;">Test</a>
+<a href="../page?0-1.ILinkListener-link" wicket:id="link" id="link1">Test</a>
 </body>
 </html>

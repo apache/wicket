@@ -16,15 +16,16 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.OnChangeAja
 <script type="text/javascript" >
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-new Wicket.ChangeHandler('field1');;
+Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-form-field","e":"inputchange","c":"field1","m":"POST","dep":["return Wicket.Form.serializeElement('field1')"]});;
+Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-form-dropDown","e":"inputchange","c":"dropDown2","m":"POST","dep":["return Wicket.Form.serializeElement('dropDown2')"]});;
 ;});
 /*]]>*/
 </script>
 </head><body>
-		<form wicket:id="form" id="form2" method="post" action="../page?0-1.IFormSubmitListener-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form2_hf_0" id="form2_hf_0" /></div>
-			<input type="text" wicket:id="field" value="" name="field" id="field1" onchange="var wcall=Wicket.Ajax.post(&#039;../page?0-1.IBehaviorListener.0-form-field&#039;, Wicket.Form.serialize(Wicket.$(&#039;field1&#039;)), Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;field1&#039;) != null;}, this));"/>
+		<form wicket:id="form" id="form3" method="post" action="../page?0-1.IFormSubmitListener-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form3_hf_0" id="form3_hf_0" /></div>
+			<input type="text" wicket:id="field" value="" name="field" id="field1"/>
 	
-			<select wicket:id="dropDown" name="dropDown" id="dropDown3" onchange="var wcall=Wicket.Ajax.post(&#039;../page?0-1.IBehaviorListener.0-form-dropDown&#039;, Wicket.Form.serialize(Wicket.$(&#039;dropDown3&#039;)), Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;dropDown3&#039;) != null;}, this));">
+			<select wicket:id="dropDown" name="dropDown" id="dropDown2">
 <option selected="selected" value="">Choose One</option>
 </select>
 		</form>			

@@ -16,8 +16,15 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestAttributes.Method;
+import org.apache.wicket.ajax.json.JSONException;
+import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -84,9 +91,253 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
+	 * @return the Ajax settings for this behavior
+	 * @since 6.0
+	 */
+	protected final AjaxRequestAttributes getAttributes()
+	{
+		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
+		updateAjaxAttributesBackwardCompatibility(attributes);
+		updateAjaxAttributes(attributes);
+		return attributes;
+	}
+
+	/**
+	 * Gives a chance to the specializations to modify the attributes.
+	 * 
+	 * @param attributes
+	 * @since 6.0
+	 */
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+	}
+
+	/**
+	 * The code below handles backward compatibility.
+	 * 
+	 * @param attributes
+	 */
+	private void updateAjaxAttributesBackwardCompatibility(AjaxRequestAttributes attributes)
+	{
+		IAjaxCallDecorator callDecorator = getAjaxCallDecorator();
+		if (callDecorator != null)
+		{
+			CharSequence onSuccessScript = callDecorator.decorateOnSuccessScript(getComponent(),
+				getSuccessScript());
+
+			if (onSuccessScript != null)
+			{
+				attributes.getSuccessHandlers().add(onSuccessScript);
+			}
+
+			CharSequence onFailureScript = callDecorator.decorateOnFailureScript(getComponent(),
+				getFailureScript());
+
+			if (onFailureScript != null)
+			{
+				attributes.getErrorHandlers().add(onFailureScript);
+			}
+		}
+
+		CharSequence preconditionScript = getPreconditionScript();
+		if (preconditionScript != null)
+		{
+			attributes.getPreconditions().add(preconditionScript);
+		}
+
+		AjaxChannel channel = getChannel();
+		if (channel != null)
+		{
+			attributes.setChannel(channel);
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 				{
+	 * 					u: 'editable-label?6-1.IBehaviorListener.0-text1-label',  // url
+	 * 					m: 'POST',		// method name. Default: 'GET'
+	 * 					c: 'label7',	// component id (String) or window for page
+	 * 					e: 'click',		// event name
+	 * 					sh: [],			// list of success handlers
+	 * 					fh: [],			// list of failure handlers
+	 * 					pre: [],		// list of preconditions. If empty set default : Wicket.$(settings{c}) !== null
+	 * 					ep: {},			// extra parameters
+	 * 					async: true|false,	// asynchronous XHR or not
+	 * 					ch: 'someName|d',	// AjaxChannel
+	 * 					i: 'indicatorId',	// indicator component id
+	 * 					ad: true,			// allow default
+	 * 					
+	 * 				}
+	 * </pre>
+	 * 
+	 * @param component
+	 *            the component with that behavior
+	 * @return the attributes as string in JSON format
+	 */
+	protected final CharSequence renderAjaxAttributes(final Component component)
+	{
+		AjaxRequestAttributes attributes = getAttributes();
+		return renderAjaxAttributes(component, attributes);
+	}
+
+	/**
+	 * 
+	 * @param component
+	 * @param attributes
+	 * @return the attributes as string in JSON format
+	 */
+	protected final CharSequence renderAjaxAttributes(final Component component,
+		AjaxRequestAttributes attributes)
+	{
+		JSONObject attributesJson = new JSONObject();
+
+		try
+		{
+			attributesJson.put("u", getCallbackUrl());
+			Method method = attributes.getMethod();
+			if (Method.POST == method)
+			{
+				attributesJson.put("m", method);
+			}
+
+			if (component instanceof Page == false)
+			{
+				String componentId = component.getMarkupId();
+				attributesJson.put("c", componentId);
+			}
+
+			String formId = attributes.getFormId();
+			if (Strings.isEmpty(formId) == false)
+			{
+				attributesJson.put("f", formId);
+			}
+
+			if (attributes.isMultipart())
+			{
+				attributesJson.put("mp", true);
+			}
+
+			String submittingComponentId = attributes.getSubmittingComponentName();
+			if (Strings.isEmpty(submittingComponentId) == false)
+			{
+				attributesJson.put("sc", submittingComponentId);
+			}
+
+			String indicatorId = findIndicatorId();
+			if (Strings.isEmpty(indicatorId) == false)
+			{
+				attributesJson.put("i", indicatorId);
+			}
+
+			for (CharSequence bh : attributes.getBeforeHandlers())
+			{
+				attributesJson.append("bh", bh);
+			}
+
+			for (CharSequence sh : attributes.getSuccessHandlers())
+			{
+				attributesJson.append("sh", sh);
+			}
+
+			for (CharSequence fh : attributes.getErrorHandlers())
+			{
+				attributesJson.append("fh", fh);
+			}
+
+			for (CharSequence pre : attributes.getPreconditions())
+			{
+				attributesJson.append("pre", pre);
+			}
+
+			JSONObject extraParameters = new JSONObject();
+			Iterator<Entry<String, Object>> itor = attributes.getExtraParameters()
+				.entrySet()
+				.iterator();
+			while (itor.hasNext())
+			{
+				Entry<String, Object> entry = itor.next();
+				String name = entry.getKey();
+				Object value = entry.getValue();
+				extraParameters.accumulate(name, value);
+			}
+			if (extraParameters.length() > 0)
+			{
+				attributesJson.put("ep", extraParameters);
+			}
+
+			List<CharSequence> urlArgumentMethods = attributes.getDynamicExtraParameters();
+			if (urlArgumentMethods != null)
+			{
+				for (CharSequence urlArgument : urlArgumentMethods)
+				{
+					attributesJson.append("dep", urlArgument);
+				}
+			}
+
+			if (attributes.isAsynchronous() == false)
+			{
+				attributesJson.put("async", false);
+			}
+
+			String eventName = attributes.getEventName();
+			if (Strings.isEmpty(eventName) == false)
+			{
+				attributesJson.put("e", eventName);
+			}
+
+			AjaxChannel channel = attributes.getChannel();
+			if (channel != null)
+			{
+				attributesJson.put("ch", channel);
+			}
+
+			if (attributes.isAllowDefault())
+			{
+				attributesJson.put("ad", true);
+			}
+
+			Integer requestTimeout = attributes.getRequestTimeout();
+			if (requestTimeout != null)
+			{
+				attributesJson.put("rt", requestTimeout);
+			}
+
+			boolean wicketAjaxResponse = attributes.isWicketAjaxResponse();
+			if (wicketAjaxResponse == false)
+			{
+				attributesJson.put("wr", false);
+			}
+
+			String dataType = attributes.getDataType();
+			if (AjaxRequestAttributes.XML_DATA_TYPE.equals(dataType) == false)
+			{
+				attributesJson.put("dt", dataType);
+			}
+
+			postprocessConfiguration(attributesJson, component);
+		}
+		catch (JSONException e)
+		{
+			throw new RuntimeException(e);
+		}
+
+		String attributesAsJson = attributesJson.toString();
+
+		return attributesAsJson;
+	}
+
+	protected void postprocessConfiguration(JSONObject object, Component component)
+		throws JSONException
+	{
+	}
+
+	/**
 	 * @return ajax call decorator used to decorate the call generated by this behavior or null for
 	 *         none
+	 * @deprecated Use {@link AjaxRequestAttributes} instead
 	 */
+	@Deprecated
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return null;
@@ -103,22 +354,18 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * @return an optional javascript expression that determines whether the request will actually
 	 *         execute (in form of return XXX;);
+	 * @deprecated Use {@link AjaxRequestAttributes}
 	 */
+	@Deprecated
 	protected CharSequence getPreconditionScript()
 	{
-		if (getComponent() instanceof Page)
-		{
-			return "return true;";
-		}
-		else
-		{
-			return "return Wicket.$('" + getComponent().getMarkupId() + "') != null;";
-		}
+		return null;
 	}
 
 	/**
 	 * @return javascript that will run when the ajax call finishes with an error status
 	 */
+	@Deprecated
 	protected CharSequence getFailureScript()
 	{
 		return null;
@@ -127,6 +374,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * @return javascript that will run when the ajax call finishes successfully
 	 */
+	@Deprecated
 	protected CharSequence getSuccessScript()
 	{
 		return null;
@@ -145,6 +393,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @return script that performs ajax callback to this behavior
 	 */
+	@Deprecated
 	protected CharSequence generateCallbackScript(final CharSequence partialCall)
 	{
 		final CharSequence onSuccessScript = getSuccessScript();
@@ -239,7 +488,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * Provides an AjaxChannel for this Behavior.
 	 * 
 	 * @return an AjaxChannel - Defaults to null.
-	 * */
+	 * @deprecated Use {@link AjaxRequestAttributes}
+	 */
+	@Deprecated
 	protected AjaxChannel getChannel()
 	{
 		return null;

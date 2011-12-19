@@ -19,19 +19,22 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
- * onClick, onChange, onKeyDown, etc.
+ * click, change, keydown, etc.
  * <p>
  * Example:
  * 
  * <pre>
  *         WebMarkupContainer div=new WebMarkupContainer(...);
  *         div.setOutputMarkupId(true);
- *         div.add(new AjaxEventBehavior(&quot;onclick&quot;) {
+ *         div.add(new AjaxEventBehavior(&quot;click&quot;) {
  *             protected void onEvent(AjaxRequestTarget target) {
  *                 System.out.println(&quot;ajax here!&quot;);
  *             }
@@ -48,12 +51,11 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
-	private static long sequence = 0;
-
 	private static final long serialVersionUID = 1L;
 
-	private final String event;
+	private static long sequence = 0;
 
+	private final String event;
 
 	private ThrottlingSettings throttlingSettings;
 
@@ -63,14 +65,17 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * @param event
 	 *            event this behavior will be attached to
 	 */
-	public AjaxEventBehavior(final String event)
+	public AjaxEventBehavior(String event)
 	{
-		if (Strings.isEmpty(event))
-		{
-			throw new IllegalArgumentException("argument [event] cannot be null or empty");
-		}
+		Args.notEmpty(event, "event");
 
 		onCheckEvent(event);
+
+		event = event.toLowerCase();
+		if (event.startsWith("on"))
+		{
+			event = event.substring(2);
+		}
 
 		this.event = event;
 	}
@@ -95,6 +100,14 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return this;
 	}
 
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+		super.updateAjaxAttributes(attributes);
+
+		attributes.setEventName(event);
+	}
+
 	/**
 	 * 
 	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
@@ -104,11 +117,40 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		super.onComponentTag(tag);
 
-		// only add the event handler when the component is enabled.
-		Component myComponent = getComponent();
-		if (myComponent.isEnabledInHierarchy())
+		if ("href".equalsIgnoreCase(event))
 		{
-			tag.put(event, getEventHandler());
+			// only add the event handler when the component is enabled.
+			if (getComponent().isEnabledInHierarchy())
+			{
+				String value = "javascript:" + getEventHandler();
+				tag.put(event, value);
+			}
+		}
+	}
+
+	@Override
+	public void renderHead(Component component, IHeaderResponse response)
+	{
+		super.renderHead(component, response);
+
+		if ("href".equalsIgnoreCase(event) == false && component.isEnabledInHierarchy())
+		{
+			StringBuilder js = new StringBuilder();
+			js.append("Wicket.Ajax.ajax(");
+
+			js.append(renderAjaxAttributes(component));
+
+			js.append(");");
+
+			AjaxRequestTarget target = AjaxRequestTarget.get();
+			if (target == null)
+			{
+				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			}
+			else
+			{
+				target.appendJavaScript(js);
+			}
 		}
 	}
 
@@ -118,12 +160,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	protected CharSequence getEventHandler()
 	{
-		CharSequence handler = getCallbackScript();
-		if (event.equalsIgnoreCase("href"))
-		{
-			handler = "javascript:" + handler;
-		}
-		return handler;
+		return getCallbackScript();
 	}
 
 	@Override
@@ -216,7 +253,5 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		{
 			return id;
 		}
-
-
 	}
 }

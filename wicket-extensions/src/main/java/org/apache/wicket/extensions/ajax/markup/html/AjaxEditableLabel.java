@@ -22,9 +22,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
@@ -32,6 +34,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.validation.IValidator;
@@ -85,39 +88,43 @@ public class AjaxEditableLabel<T> extends Panel
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Constructor.
-		 */
-		public EditorAjaxBehavior()
-		{
-		}
-
-		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected void onComponentTag(final ComponentTag tag)
+		public void renderHead(final Component component, final IHeaderResponse response)
 		{
-			super.onComponentTag(tag);
+			super.renderHead(component, response);
 
-			String callbackUrl = getCallbackUrl().toString();
-			char separator = (callbackUrl != null && callbackUrl.indexOf('?') > -1) ? '&' : '?';
+			AjaxRequestAttributes saveAttributes = getAttributes();
+			saveAttributes.getExtraParameters().put("save", "true");
+			saveAttributes.getDynamicExtraParameters().add(
+				"this.name+'='+Wicket.Form.encode(this.value)");
+			saveAttributes.setEventName("blur");
 
-			final String saveCall = "{" +
-				generateCallbackScript("Wicket.Ajax.get('" + callbackUrl + separator +
-					"save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
+			AjaxRequestAttributes cancelAttributes = getAttributes();
+			cancelAttributes.getExtraParameters().put("save", "false");
+			cancelAttributes.setEventName("keyup");
 
+			CharSequence saveAttributesJson = renderAjaxAttributes(component, saveAttributes);
+			String saveCall = "Wicket.Ajax.ajax(" + saveAttributesJson + ");";
 
-			final String cancelCall = "{" +
-				generateCallbackScript("Wicket.Ajax.get('" + callbackUrl + separator +
-					"save=false'") + "; return false;}";
+			CharSequence cancelAttributesJson = renderAjaxAttributes(component, cancelAttributes);
+			String cancelCall = "Wicket.Ajax.ajax(" + cancelAttributesJson + ");";
 
+			final String keyup = "var kc=Wicket.Event.keyCode(attrs.event); if (kc===27) " +
+				cancelCall + " else if (kc===13) " + saveCall;
 
-			final String keypress = "var kc=Wicket.Event.keyCode(event); if (kc==27) " +
-				cancelCall + " else if (kc!=13) { return true; } else " + saveCall;
-
-			tag.put("onblur", saveCall);
-			tag.put("onkeypress", "if (Wicket.Browser.isSafari()) { return; }; " + keypress);
-			tag.put("onkeydown", "if (!Wicket.Browser.isSafari()) { return; }; " + keypress);
+			AjaxRequestTarget target = AjaxRequestTarget.get();
+			if (target != null)
+			{
+				target.appendJavaScript(saveCall);
+				target.appendJavaScript(keyup);
+			}
+			else
+			{
+				response.render(JavaScriptHeaderItem.forScript(saveCall, "editable-blur-" + component.getMarkupId()));
+				response.render(JavaScriptHeaderItem.forScript(keyup, "editable-keydown-" + component.getMarkupId()));
+			}
 		}
 
 		/**

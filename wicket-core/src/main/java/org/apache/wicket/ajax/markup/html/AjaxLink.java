@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.markup.html;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
@@ -103,17 +104,23 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 			}
 
 			@Override
-			protected AjaxChannel getChannel()
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
-				return AjaxLink.this.getChannel();
+				super.updateAjaxAttributes(attributes);
+				AjaxLink.this.updateAjaxAttributes(attributes);
 			}
 		};
+	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**
 	 * @return the channel that manages how Ajax calls are executed
 	 * @see AbstractDefaultAjaxBehavior#getChannel()
 	 */
+	@Deprecated
 	protected AjaxChannel getChannel()
 	{
 		return null;
@@ -145,6 +152,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 	 * 
 	 * @return ajax call decorator
 	 */
+	@Deprecated
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return null;

@@ -138,8 +138,18 @@
 				if (type === 'domready') {
 					jQuery(fn);
 				} else {
-					type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;	
-					jQuery(element).on(type, fn);
+					type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
+					
+					var el = element;
+					if (typeof(element) === 'string') {
+						el = Wicket.$(element); // Wicket.$() is wicket-ajax.js. Is this too bad ?
+					}
+					
+					if (!el) {
+						console.log('Cannot find element with id: ' + element);
+					}
+					
+					jQuery(el).on(type, fn);
 				}
 				return element;
 			},

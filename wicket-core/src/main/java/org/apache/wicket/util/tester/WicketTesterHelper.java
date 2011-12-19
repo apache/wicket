@@ -171,11 +171,21 @@ public class WicketTesterHelper
 	 */
 	public static AjaxEventBehavior findAjaxEventBehavior(Component component, String event)
 	{
+		if (event.startsWith("on"))
+		{
+			event = event.substring(2);
+		}
+
 		for (Behavior behavior : component.getBehaviors())
 		{
 			if (behavior instanceof AjaxEventBehavior)
 			{
-				if (event.equalsIgnoreCase(((AjaxEventBehavior)behavior).getEvent()))
+				String behaviorEvent = ((AjaxEventBehavior)behavior).getEvent();
+				if (behaviorEvent.startsWith("on"))
+				{
+					behaviorEvent = behaviorEvent.substring(2);
+				}
+				if (event.equalsIgnoreCase(behaviorEvent))
 				{
 					return (AjaxEventBehavior)behavior;
 				}

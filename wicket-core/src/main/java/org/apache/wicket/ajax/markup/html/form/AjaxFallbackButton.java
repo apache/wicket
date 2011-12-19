@@ -18,6 +18,7 @@ package org.apache.wicket.ajax.markup.html.form;
 
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
+import org.apache.wicket.ajax.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -66,7 +67,7 @@ public abstract class AjaxFallbackButton extends Button
 		super(id, model);
 		mForm = form;
 
-		add(new AjaxFormSubmitBehavior(form, "onclick")
+		add(new AjaxFormSubmitBehavior(form, "click")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -105,7 +106,19 @@ public abstract class AjaxFallbackButton extends Button
 			{
 				return AjaxFallbackButton.this.getDefaultFormProcessing();
 			}
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+				AjaxFallbackButton.this.updateAjaxAttributes(attributes);
+			}
+
 		});
+	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**
@@ -152,6 +165,7 @@ public abstract class AjaxFallbackButton extends Button
 	 * 
 	 * @return call decorator to use or null if none
 	 */
+	@Deprecated
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return null;
@@ -161,6 +175,7 @@ public abstract class AjaxFallbackButton extends Button
 	 * @return the channel that manages how Ajax calls are executed
 	 * @see AbstractDefaultAjaxBehavior#getChannel()
 	 */
+	@Deprecated
 	protected AjaxChannel getChannel()
 	{
 		return null;

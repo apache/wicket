@@ -17,7 +17,8 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
+import org.apache.wicket.ajax.json.JSONException;
+import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
@@ -108,6 +109,16 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		}
 	}
 
+	@Override
+	protected void postprocessConfiguration(JSONObject attributes, Component component)
+		throws JSONException
+	{
+		super.postprocessConfiguration(attributes, component);
+
+		attributes.remove("c"); // window will be used
+		attributes.put("e", "domready");
+	}
+
 	/**
 	 * @param updateInterval
 	 *            Duration between AJAX callbacks
@@ -115,31 +126,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
+		CharSequence ajaxAttributes = renderAjaxAttributes(getComponent());
+
 		// this might look strange, but it is necessary for IE not to leak :(
-		return "setTimeout(\"" + getCallbackScript() + "\", " + updateInterval.getMilliseconds() +
-			");";
-	}
-
-	@Override
-	protected CharSequence getCallbackScript()
-	{
-		return generateCallbackScript("Wicket.Ajax.get('" + getCallbackUrl() + "'");
-	}
-
-	/**
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
-	 */
-	@Override
-	protected CharSequence getPreconditionScript()
-	{
-		String precondition = null;
-		if (!(getComponent() instanceof Page))
-		{
-			String componentId = getComponent().getMarkupId();
-			precondition = "var c = Wicket.$('" + componentId +
-				"'); return typeof(c) != 'undefined' && c != null";
-		}
-		return precondition;
+		return "setTimeout('Wicket.Ajax.ajax(" + ajaxAttributes + ");', " +
+			updateInterval.getMilliseconds() + ")";
 	}
 
 	/**

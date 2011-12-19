@@ -65,24 +65,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	}
 
 	/**
-	 * @param id
-	 * @param model
-	 * @param type
-	 * @param preselect
-	 *            the first item
-	 * @deprecated use the constructor {@link AutoCompleteTextField}
-	 *             {@link #AutoCompleteTextField(String, IModel, Class, AutoCompleteSettings)}
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public AutoCompleteTextField(final String id, final IModel<T> model, final Class<T> type,
-		final boolean preselect)
-	{
-		this(id, model, type, StringAutoCompleteRenderer.INSTANCE,
-			new AutoCompleteSettings().setPreselect(preselect));
-	}
-
-	/**
 	 * Construct.
 	 * 
 	 * @param id
@@ -95,19 +77,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		final AutoCompleteSettings settings)
 	{
 		this(id, model, type, StringAutoCompleteRenderer.INSTANCE, settings);
-	}
-
-	/**
-	 * @param id
-	 * @param object
-	 * @param preselect
-	 * @deprecated use the constructor {@link AutoCompleteTextField}
-	 *             {@link #AutoCompleteTextField(String, IModel, AutoCompleteSettings)}
-	 */
-	@Deprecated
-	public AutoCompleteTextField(final String id, final IModel<T> object, final boolean preselect)
-	{
-		this(id, object, null, new AutoCompleteSettings().setPreselect(preselect));
 	}
 
 	/**
@@ -130,18 +99,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	public AutoCompleteTextField(final String id, final IModel<T> object)
 	{
 		this(id, object, null, new AutoCompleteSettings());
-	}
-
-	/**
-	 * @param id
-	 * @param preselect
-	 * @deprecated use the constructor {@link AutoCompleteTextField}
-	 *             {@link #AutoCompleteTextField(String, AutoCompleteSettings)}
-	 */
-	@Deprecated
-	public AutoCompleteTextField(final String id, final boolean preselect)
-	{
-		this(id, null, new AutoCompleteSettings().setPreselect(preselect));
 	}
 
 	/**
@@ -192,22 +149,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		final IAutoCompleteRenderer<T> renderer)
 	{
 		this(id, model, null, renderer, new AutoCompleteSettings());
-	}
-
-	/**
-	 * @param id
-	 * @param model
-	 * @param type
-	 * @param renderer
-	 * @param preselect
-	 * @deprecated use the constructor {@link AutoCompleteTextField}
-	 *             {@link #AutoCompleteTextField(String, IModel, Class, IAutoCompleteRenderer, AutoCompleteSettings)}
-	 */
-	@Deprecated
-	public AutoCompleteTextField(final String id, final IModel<T> model, final Class<T> type,
-		final IAutoCompleteRenderer<T> renderer, final boolean preselect)
-	{
-		this(id, model, type, renderer, new AutoCompleteSettings().setPreselect(preselect));
 	}
 
 	/**

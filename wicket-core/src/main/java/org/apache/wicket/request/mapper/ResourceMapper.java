@@ -27,10 +27,10 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
@@ -196,7 +196,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 		// add caching information
 		addCachingDecoration(url, parameters);
-		
+
 		// create url
 		return encodePageParameters(url, parameters, parametersEncoder);
 	}
@@ -226,7 +226,8 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 				if (Strings.isEmpty(cacheUrl.getFileName()))
 				{
-					throw new IllegalStateException("caching strategy returned empty name for " + resource);
+					throw new IllegalStateException("caching strategy returned empty name for " +
+						resource);
 				}
 				segments.set(lastSegmentAt, cacheUrl.getFileName());
 			}
@@ -242,23 +243,24 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 			// get filename (the last segment)
 			final int lastSegmentAt = segments.size() - 1;
 			String filename = segments.get(lastSegmentAt);
-			
+
 			// ignore requests with empty filename
-			if(Strings.isEmpty(filename))
+			if (Strings.isEmpty(filename))
 			{
 				return;
 			}
-			
+
 			// create resource url from filename and query parameters
 			final ResourceUrl resourceUrl = new ResourceUrl(filename, parameters);
 
 			// remove caching information from request
 			getCachingStrategy().undecorateUrl(resourceUrl);
-			
+
 			// check for broken caching strategy (this must never happen)
 			if (Strings.isEmpty(resourceUrl.getFileName()))
 			{
-				throw new IllegalStateException("caching strategy returned empty name for " + resourceUrl);
+				throw new IllegalStateException("caching strategy returned empty name for " +
+					resourceUrl);
 			}
 
 			segments.set(lastSegmentAt, resourceUrl.getFileName());

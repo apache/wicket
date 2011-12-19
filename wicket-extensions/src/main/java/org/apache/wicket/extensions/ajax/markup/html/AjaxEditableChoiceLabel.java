@@ -18,9 +18,13 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestAttributes;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -30,6 +34,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
 
@@ -204,14 +209,30 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(final ComponentTag tag)
+			public void renderHead(final Component component, final IHeaderResponse response)
 			{
-				super.onComponentTag(tag);
-				final String saveCall = "{Wicket.Ajax.get('" + getCallbackUrl() +
-					"&save=true&'+this.name+'='+Wicket.Form.encode(this.value)); return true;}";
+				super.renderHead(component, response);
 
-				tag.put("onchange", saveCall);
+				AjaxRequestAttributes saveAttributes = getAttributes();
+				saveAttributes.getExtraParameters().put("save", "true");
+				saveAttributes.getDynamicExtraParameters().add(
+					"this.name+'='+Wicket.Form.encode(this.value)");
+				saveAttributes.setEventName("change");
+
+				CharSequence saveAttributesJson = renderAjaxAttributes(component, saveAttributes);
+				String saveCall = "Wicket.Ajax.ajax(" + saveAttributesJson + ")";
+
+				AjaxRequestTarget target = AjaxRequestTarget.get();
+				if (target != null)
+				{
+					target.appendJavaScript(saveCall);
+				}
+				else
+				{
+					response.render(JavaScriptHeaderItem.forScript(saveCall, "editable-blur-" + component.getMarkupId()));
+				}
 			}
+
 		});
 		return editor;
 	}

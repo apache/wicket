@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.util.tester.TagTester;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -64,6 +65,8 @@ public class AjaxLinkTest extends WicketTestCase
 	 * execution is not turned over to the href attribute, which would then append # to the url.
 	 */
 	@Test
+	@Ignore
+	// TODO Wicket.next - re-enable
 	public void javaScriptEndsWithReturn()
 	{
 		tester.startPage(AjaxLinkPage.class);

@@ -707,7 +707,7 @@ Wicket.Window.prototype = {
 		this.adjustOpenWindowsStatusOnShow();
 
 		// show the window
-		if (Wicket.Browser.isGecko() && this.isIframe()) {
+		if (false && Wicket.Browser.isGecko() && this.isIframe()) {
 			// HACK
 			// gecko flickers when showing the window
 			// unless the showing is postponed a little

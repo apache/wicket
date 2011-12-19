@@ -96,24 +96,19 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         objonkeypress=obj.onkeypress;
         objonfocus=obj.onfocus;
         
-        // WICKET-1280
-        objonchangeoriginal=obj.onchange; 
-        obj.onchange=function(event){
-      		if(mouseactive==1)return false;
-      		if(typeof objonchangeoriginal=="function") return objonchangeoriginal.apply(this,[event]);
-      	}
         objonchange=obj.onchange;
-        
-        Wicket.Event.add(obj,'blur',function(event){      		
-    		if(mouseactive==1){
-                ignoreOneFocusGain = true;
-			Wicket.$(elementId).focus();
-    			return killEvent(event);
-    		}
-          	window.setTimeout( hideAutoComplete, 500);
-        });	 
                 
-      	obj.onfocus=function(event){
+		Wicket.Event.add(obj, 'blur', function (event) {
+			if(mouseactive==1){
+				ignoreOneFocusGain = true;
+				Wicket.$(elementId).focus();
+				return killEvent(event);
+			}
+
+			window.setTimeout( hideAutoComplete, 500);
+		});
+
+      	Wicket.Event.add(obj, 'focus', function (event) {
             if (mouseactive==1) {
                 ignoreOneFocusGain = false;
                 return killEvent(event);
@@ -128,10 +123,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             }
             ignoreOneFocusGain = false;
           	if(typeof objonfocus=="function") return objonfocus.apply(this,[event]);
-        }
+        });
 
-        obj.onkeydown=function(event){
-            switch(Wicket.Event.keyCode(Wicket.Event.fix(event))){
+        Wicket.Event.add(obj, 'keydown', function(event) {
+            switch(Wicket.Event.keyCode(event)){
                 case KEY_UP:
         	        if(selected>-1) setSelected(selected-1);
             	    if(selected==-1){
@@ -139,7 +134,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                    	} else {
 	                    render(true, false);
         	        }
-		    if(Wicket.Browser.isSafari())return killEvent(event);
+		    		if(Wicket.Browser.isSafari())return killEvent(event);
                 	break;
                 case KEY_DOWN:
                		if(selected<elementCount-1){
@@ -151,7 +146,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 	    render(true, false);
                     	showAutoComplete();
 	                }
-	            if(Wicket.Browser.isSafari())return killEvent(event);
+	            	if(Wicket.Browser.isSafari())return killEvent(event);
         	        break;
                 case KEY_ESC:
                     if (visible==1) {
@@ -180,10 +175,11 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 break;
                 default:
             }
-        }
+        });
 
-        obj.onkeyup=function(event){
-            switch(Wicket.Event.keyCode(Wicket.Event.fix(event))){
+        Wicket.Event.add(obj, 'inputchange', function (event) {
+        	var kc = Wicket.Event.keyCode(event);
+            switch(kc) {
                 case KEY_TAB:
                 case KEY_ENTER:
 	                return killEvent(event);
@@ -195,22 +191,23 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 case KEY_SHIFT:
                 case KEY_ALT:
                 case KEY_CTRL:
-                break;
+                	break;
                 default:
     	            updateChoices();
             }
 			if(typeof objonkeyup=="function") return objonkeyup.apply(this,[event]);
-        }
+        });
 
-        obj.onkeypress=function(event){
-            if(Wicket.Event.keyCode(Wicket.Event.fix(event))==KEY_ENTER){
+        Wicket.Event.add(obj, 'keypress', function (event) {
+            if(Wicket.Event.keyCode(event)==KEY_ENTER){
                 if(selected>-1 || hidingAutocomplete==1){
 			        hidingAutocomplete=0;
 			        return killEvent(event);
                 }
             }
 			if(typeof objonkeypress=="function") return objonkeypress.apply(this,[event]);
-        }
+        });
+        
         if (Wicket.Focus.getFocusedElement() === obj && isShowing == true)
         {
         	// element already has focus, we should show list
@@ -357,32 +354,43 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     function actualUpdateChoicesShowAll()
     {
     	showIndicator();
-	var request = new Wicket.Ajax.Request(callbackUrl+"&q=", doUpdateChoices, false, true, false, "wicket-autocomplete|d");
-       	request.get();
+    		
+       	Wicket.Ajax.ajax({
+			u: callbackUrl,
+			ep: {
+				'q': ''
+			},
+			dt: 'html',
+			wr: false,
+			sh: [ doUpdateChoices ]
+       	});
     }
 
     function actualUpdateChoices()
     {
     	showIndicator();
-        var value = Wicket.$(elementId).value;
-	var request = new Wicket.Ajax.Request(callbackUrl+(callbackUrl.indexOf("?")>-1 ? "&" : "?") + "q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
-       	request.get();
+    	var value = Wicket.$(elementId).value;
+       	Wicket.Ajax.ajax({
+			u: callbackUrl,
+			ep: {
+				'q': processValue(value)
+			},
+			wr: false,
+			dt: 'html',
+			sh: [ doUpdateChoices ]
+       	});
     }
     
     function showIndicator() {
-    	if (indicatorId!=null) {
-		Wicket.$(indicatorId).style.display='';
-    	}
+		Wicket.DOM.show(indicatorId);
     }
     
     function hideIndicator() {
-    	if (indicatorId!=null) {
-		Wicket.$(indicatorId).style.display='none';
-    	}
+		Wicket.DOM.hide(indicatorId);
     }
     
     function processValue(param) {
-        return (encodeURIComponent)?encodeURIComponent(param):escape(param);
+        return Wicket.Form.encode(param);
     }
 
     function showAutoComplete(){
@@ -584,7 +592,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     	getAutocompleteMenu().showingAutocomplete = false;
     	
     	// check if the input hasn't been cleared in the meanwhile or has been replaced by ajax
-	var input=Wicket.$(elementId);
+		var input=Wicket.$(elementId);
    		if ((input != initialElement) || (document.activeElement != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
 			Wicket.Ajax.invokePostCallHandlers();
@@ -610,9 +618,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 mouseactive = 0;
                 var value = getSelectedValue();
                 var input = Wicket.$(elementId);
-                if(value = handleSelection(value)) {
-                  input.value = value;
-                  if(typeof objonchange=="function") objonchange.apply(input,[event]);
+                value = handleSelection(value);
+                if(value) {
+					input.value = value;
+					jQuery(input).trigger('change');
                 }
                 hideAutoComplete();
                 if (document.activeElement != input) {

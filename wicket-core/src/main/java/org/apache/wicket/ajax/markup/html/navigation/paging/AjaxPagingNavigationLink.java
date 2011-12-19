@@ -54,7 +54,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink<Void> impleme
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		add(newAjaxPagingNavigationBehavior(pageable, "onclick"));
+		add(newAjaxPagingNavigationBehavior(pageable, "click"));
 	}
 
 	/**

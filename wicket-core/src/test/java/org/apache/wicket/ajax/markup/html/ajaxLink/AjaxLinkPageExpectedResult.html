@@ -13,8 +13,15 @@ Wicket.Ajax.DebugWindow.enabled=true;
 Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.markup.html.ajaxLink.AjaxLinkPage";
 /*]]>*/
 </script>
+<script type="text/javascript" >
+/*<![CDATA[*/
+Wicket.Event.add(window, "domready", function(event) { 
+Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-ajaxLink","e":"click","c":"ajaxLink1"});;
+;});
+/*]]>*/
+</script>
 </head><body>
-  <span wicket:id="ajaxLabel" id="ajaxLabel1">UpdateMe</span>
-  <a href="#" wicket:id="ajaxLink" id="ajaxLink2" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-ajaxLink&#039;, Wicket.bind(function() { }, this), Wicket.bind(function() { }, this), Wicket.bind(function() {return Wicket.$(&#039;ajaxLink2&#039;) != null;}, this));return !wcall;">Update</a>
+  <span wicket:id="ajaxLabel" id="ajaxLabel2">UpdateMe</span>
+  <a href="#" wicket:id="ajaxLink" id="ajaxLink1">Update</a>
 </body>
 </html>

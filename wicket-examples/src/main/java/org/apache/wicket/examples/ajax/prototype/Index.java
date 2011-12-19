@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.ajax.prototype;
 
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
@@ -27,6 +28,8 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.ComponentRenderingRequestHandler;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 

@@ -54,7 +54,7 @@ public abstract class AjaxCheckBox extends CheckBox
 
 		setOutputMarkupId(true);
 
-		add(new AjaxFormComponentUpdatingBehavior("onclick")
+		add(new AjaxFormComponentUpdatingBehavior("click")
 		{
 			private static final long serialVersionUID = 1L;
 

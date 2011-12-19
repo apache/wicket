@@ -117,7 +117,8 @@
 				f = this.functions[this.current];
 				run = function () {
 					try {
-						f(jQuery.proxy(this.notify, this));
+						var n = jQuery.proxy(this.notify, this);
+						f(n);
 					}
 					catch (e) {
 						Wicket.Log.error("FunctionsExecuter.processNext: " + e);
@@ -204,6 +205,7 @@
 
 	Wicket.Channel.prototype = {
 		initialize: function (name) {
+			name = name || '0|s';
 			var res = name.match(/^([^|]+)\|(d|s)$/);
 			if (isUndef(res)) {
 				this.name = '';
@@ -283,7 +285,7 @@
 		// Tells the ChannelManager that the current callback in channel with given name
 		// has finished processing and another scheduled callback can be executed (if any).
 		done: function (channel) {
-		 	var parsed = new Wicket.Channel(channel);
+			var parsed = new Wicket.Channel(channel);
 			var c = this.channels[parsed.name];
 			if (!isUndef(c)) {
 				c.done();
@@ -291,269 +293,10 @@
 		}
 	};
 
-	// Default channel manager instance
-	Wicket.channelManager = new Wicket.ChannelManager();
-
 	/**
 	 * The Ajax.Request class encapsulates a XmlHttpRequest.
 	 */
 	Wicket.Ajax = {};
-	Wicket.Ajax.Request = Wicket.Class.create();
-
-	Wicket.Ajax.Request.prototype = {
-	    // Creates a new request object.
-		initialize: function (url, loadedCallback, parseResponse, randomURL, failureHandler, channel, successHandler) {
-			this.url = url;
-			this.loadedCallback = loadedCallback;
-			// whether we should give the loadedCallback parsed response (DOM tree) or the raw string
-			this.parseResponse = isUndef(parseResponse) ? true : parseResponse;
-			this.randomURL = isUndef(randomURL) ? true : randomURL;
-			this.failureHandler = failureHandler || jQuery.noop;
-			this.successHandler = successHandler || jQuery.noop;
-			this.async = true;
-			this.channel = channel;
-			this.precondition = function () {
-				 // allow a condition to block request
-				return true;
-			};
-
-			// when suppressDone is set, the loadedCallback is responsible for calling
-			// Ajax.Request.done() to process possibly pendings requests in the channel.
-			this.suppressDone = false;
-			this.instance = Math.random();
-			this.debugContent = true;
-		},
-
-		done: function () {
-			Wicket.channelManager.done(this.channel);
-		},
-
-		createUrl: function () {
-			if (this.randomURL === false) {
-				return this.url;
-			}
-			else {
-				return this.url + (this.url.indexOf("?") > -1 ? "&" : "?") + "random=" + Math.random();
-			}
-		},
-
-		log: function (method, url) {
-			Wicket.Log.info("Initiating Ajax " + method + " request on " + url);
-		},
-
-		failure: function () {
-			this.failureHandler();
-			Wicket.Ajax.invokePostCallHandlers();
-			Wicket.Ajax.invokeFailureHandlers();
-		},
-
-		// Executes a get request
-		get: function () {
-			if (this.channel !== null) {
-				var res = Wicket.channelManager.schedule(this.channel, jQuery.proxy(this.doGet, this));
-				return res !== null ? res : true;
-			} else {
-				return this.doGet();
-			}
-		},
-
-		// The actual get request implementation
-		doGet: function () {
-			if (this.precondition()) {
-				var url, t;
-
-				this.transport = Wicket.Ajax.getTransport();
-
-				url = this.createUrl();
-				this.log("GET", url);
-
-				Wicket.Ajax.invokePreCallHandlers();
-
-				t = this.transport;
-				if (t !== null) {
-					t.open("GET", url, this.async);
-					t.onreadystatechange = jQuery.proxy(this.stateChangeCallback, this);
-					// set a special flag to allow server distinguish between ajax and non-ajax requests
-					t.setRequestHeader("Wicket-Ajax", "true");
-					t.setRequestHeader("Wicket-Ajax-BaseURL", getAjaxBaseUrl());
-					if (Wicket.Focus.lastFocusId) {
-					    t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);
-					}
-					t.setRequestHeader("Accept", "text/xml");
-					t.send(null);
-					return true;
-				} else {
-					this.failure();
-					return false;
-				}
-			} else {
-				Wicket.Log.info("Ajax GET stopped because of precondition check, url:" + this.url);
-				this.done();
-				return true;
-			}
-		},
-
-		// Posts the given string
-		post: function (body) {
-			if (this.channel !== null) {
-				var res = Wicket.channelManager.schedule(this.channel, jQuery.proxy(function () {
-					this.doPost(body);
-				}, this));
-				return res !== null ? res: true;
-			} else {
-				return this.doPost(body);
-			}
-		},
-
-		// The actual post implementation
-		doPost: function (body) {
-
-			if (this.precondition()) {
-				var url, t;
-
-				this.transport = Wicket.Ajax.getTransport();
-
-				url = this.createUrl();
-
-				this.log("POST", url);
-
-				Wicket.Ajax.invokePreCallHandlers();
-
-				t = this.transport;
-				if (t !== null) {
-					// we allow body to be a method - to lazily evaluate itself
-					if (typeof(body) === "function") {
-						body = body();
-					}
-					t.open("POST", url, this.async);
-					t.onreadystatechange = jQuery.proxy(this.stateChangeCallback, this);
-					t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-					// set a special flag to allow server distinguish between ajax and non-ajax requests
-					t.setRequestHeader("Wicket-Ajax", "true");
-					t.setRequestHeader("Wicket-Ajax-BaseURL", getAjaxBaseUrl());
-					if (Wicket.Focus.lastFocusId) {
-					    t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);
-					}
-					t.setRequestHeader("Accept", "text/xml");
-					t.send(body);
-					return true;
-				} else {
-					this.failure();
-					return false;
-				}
-			} else {
-				Wicket.Log.info("Ajax POST stopped because of precondition check, url:" + this.url);
-				this.done();
-				return true;
-			}
-		},
-
-		// Method that processes the request states
-		stateChangeCallback: function () {
-			var status,
-				responseAsText,
-				redirectUrl,
-				urlDepth,
-				calculatedRedirect,
-				t = this.transport;
-
-			if (t !== null && t.readyState === 4) {
-				try {
-					status = t.status;
-				}
-				catch (e) {
-					Wicket.Log.error("Wicket.Ajax.Request.stateChangeCallback: Exception evaluating AJAX status: " + e);
-					status = "unavailable";
-				}
-				if (status === 200 || status === "") { // as stupid as it seems, IE7 sets status to "" on ok
-					// response came without error
-					responseAsText = t.responseText;
-
-					// first try to get the redirect header
-					try {
-						redirectUrl = t.getResponseHeader('Ajax-Location');
-					} catch (ignore) { // might happen in older mozilla
-					}
-
-					// the redirect header was set, go to new url
-					if (typeof(redirectUrl) !== "undefined" && redirectUrl !== null && redirectUrl !== "") {
-						t.onreadystatechange = jQuery.noop;
-
-						// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
-						// A file download popup will appear but the page in the browser won't change.
-						this.done();
-						this.successHandler();
-
-	                    // support/check for non-relative redirectUrl like as provided and needed in a portlet context
-						if (redirectUrl.charAt(0) === ('/') || redirectUrl.match("^http://") === "http://" || redirectUrl.match("^https://") === "https://") {
-						    window.location = redirectUrl;
-						}
-						else {
-						    urlDepth = 0;
-						    while (redirectUrl.substring(0, 3) === "../") {
-							    urlDepth++;
-							    redirectUrl = redirectUrl.substring(3);
-						    }
-						    // Make this a string.
-						    calculatedRedirect = window.location.pathname;
-						    while (urlDepth > -1) {
-							    urlDepth--;
-							    var i = calculatedRedirect.lastIndexOf("/");
-							    if (i > -1) {
-									calculatedRedirect = calculatedRedirect.substring(0, i);
-							    }
-						    }
-							calculatedRedirect += "/" + redirectUrl;
-
-						    if (Wicket.Browser.isGecko()) {
-								// firefox 3 has problem with window.location setting relative url
-								calculatedRedirect = window.location.protocol + "//" + window.location.host + calculatedRedirect;
-						    }
-
-						    window.location = calculatedRedirect;
-						}
-					}
-					else {
-						// no redirect, just regular response
-						Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
-						if (this.debugContent !== false) {
-							Wicket.Log.info("\n" + responseAsText);
-						}
-
-						// parse the response if the callback needs a DOM tree
-						if (this.parseResponse === true) {
-							var xmldoc;
-							if (typeof(window.XMLHttpRequest) !== "undefined" && typeof(DOMParser) !== "undefined") {
-								var parser = new DOMParser();
-								xmldoc = parser.parseFromString(responseAsText, "text/xml");
-							} else if (window.ActiveXObject) {
-								xmldoc = t.responseXML;
-							}
-							// invoke the loaded callback with an xml document
-							this.loadedCallback(xmldoc);
-						} else {
-							// invoke the loaded callback with raw string
-							this.loadedCallback(responseAsText);
-						}
-						if (this.suppressDone === false) {
-							this.done();
-						}
-					}
-				} else {
-					// when an error happened
-					Wicket.Log.info("Received Ajax response with code: " + status);
-					if (status === 500) {
-						Wicket.Log.info("500 error had text: " + t.responseText);
-					}
-					this.done();
-					this.failure();
-				}
-				t.onreadystatechange = jQuery.noop;
-				t.abort();
-				this.transport = null;
-	        }
-		}
-	};
 
 	/**
 	 * Ajax call fires a Wicket Ajax request and processes the response.
@@ -566,52 +309,315 @@
 	Wicket.Ajax.Call = Wicket.Class.create();
 
 	Wicket.Ajax.Call.prototype = {
-		// Initializes the Call
-		initialize: function (url, successHandler, failureHandler, channel) {
-			this.successHandler = successHandler || jQuery.noop;
-			this.failureHandler = failureHandler || jQuery.noop;
 
-			 // set the default channel if not specified
-			var c = channel || "0|s";
-			// initialize the internal Ajax request
-			this.request = new Wicket.Ajax.Request(url, jQuery.proxy(this.loadedCallback, this), true, true, failureHandler, c, successHandler);
-			this.request.suppressDone = true;
-		},
+		initialize: jQuery.noop,
 
 		// On ajax request failure
 		failure: function (message) {
 			if (message !== null) {
 				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
 			}
-			this.request.done();
 			this.failureHandler();
 			Wicket.Ajax.invokePostCallHandlers();
 			Wicket.Ajax.invokeFailureHandlers();
 		},
-
-		// Fires a get request
-		call: function () {
-			return this.request.get();
+		
+		done: function (channel) {
+			Wicket.channelManager.done(channel);
 		},
 
-		// Fires a post request
-		post: function (body) {
-			return this.request.post(body);
+		_normalizeAttributes: function (attrs) {
+
+			// (ajax channel)
+			if (typeof(attrs.ch) !== 'string') {
+				attrs.ch = '0|s';
+			}
+
+			// (wicketAjaxResponse) be default the Ajax result should be processed for <ajax-response>
+			if (typeof(attrs.wr) !== 'boolean') {
+				attrs.wr = true;
+			}
+			
+			// (dataType) by default we expect XML responses from the Ajax behaviors
+			if (typeof(attrs.dt) !== 'string') {
+				attrs.dt = 'xml';
+			}	
 		},
-
-		// Submits a form using ajax.
-		// This method serializes a form and sends it as POST body.
-		submitForm: function (form, submitButton) {
-			var submittingAttribute = 'data-wicket-submitting';
-
-			if (typeof(form) === 'string') {
-				form = Wicket.$(form);
-				if (isUndef(form)) {
-					Wicket.Log.error("Wicket.Ajax.Call.submitForm: Trying to submit form with id '" + form + "' that is not in document.");
-					return;
+		
+		/**
+		 * Executes or schedules for execution #doAjax()
+		 *
+		 * @param {Object} attrs - the Ajax request attributes configured at the server side
+		 */
+		ajax: function (attrs) {
+			this._normalizeAttributes(attrs);
+			
+			var res = Wicket.channelManager.schedule(attrs.ch, Wicket.bind(function () {
+				this.doAjax(attrs);
+			}, this));
+			return res !== null ? res: true;
+		},
+		
+		/**
+		 * Handles execution of Ajax calls.
+		 *
+		 * @param {Object} attrs - the Ajax request attributes configured at the server side
+		 */
+		doAjax: function (attrs) {
+		
+			var 
+				// the headers to use for each Ajax request
+				headers = {
+					'Wicket-Ajax': 'true',
+					'Wicket-Ajax-BaseURL': getAjaxBaseUrl()
+				},
+				
+				// the request (extra) parameters
+				data = attrs.ep || {},
+				
+				// keep a reference to the current context
+				self = this,
+				
+				/**
+				 * A helper function that executes an array of handlers (before, success, failure)
+				 * @param {Array} handlers - the handlers to execute
+				 * @param {Object} context - the context to use while executing a handler
+				 */
+				executeHandlers = function (handlers, context) {
+					if (jQuery.isArray(handlers)) {
+				
+						// cut the handlers argument
+			   			var args = Array.prototype.slice.call(arguments).slice(1);
+				
+						for (var i = 0; i < handlers.length; i++) {
+							var handler = handlers[i];
+							if (jQuery.isFunction(handler)) {
+								handler.apply(this, args);
+							} else {
+								new Function(handler).apply(this, args);
+							}
+						}
+					}
+				},
+				
+				// the precondition to use if there are no explicit ones
+				defaultPrecondition = [ function () {
+					if (attrs.c) {
+						if (attrs.f) {
+							return Wicket.$$(attrs.c) && Wicket.$$(attrs.f);
+						} else {
+							return Wicket.$$(attrs.c);
+						}
+					}
+				}];
+			
+			if (Wicket.Focus.lastFocusId) {
+			    headers["Wicket-FocusedElementId"] = Wicket.Focus.lastFocusId;
+			}
+	
+			// collect the dynamic extra parameters
+			if (jQuery.isArray(attrs.dep)) {
+				var deps = attrs.dep;
+				for (var i = 0; i < deps.length; i++) {
+					var dep = deps[i],
+						extraParam = {};
+					if (jQuery.isFunction(dep)) {
+						extraParam = dep();
+					} else {
+						extraParam = new Function(dep)();
+					}
+					data = jQuery.extend({}, data, extraParam);
 				}
 			}
 
+			if (attrs.mp) { // multipart form. jQuery doesn't help here ...
+				// TODO Wicket.next - should we execute all handlers ?! 
+				// Wicket 1.5 didn't support success/failure handlers for this, but we can do it
+				return this.submitMultipartForm(attrs);
+			}
+
+			if (attrs.f) {
+				// serialize the form with id == attrs.f
+				var form = Wicket.$(attrs.f);
+				data = jQuery.extend({}, data, Wicket.Form.serializeForm(form));
+				
+				// set the submitting component input name
+				if (attrs.sc) {
+					var scName = attrs.sc;
+					data = jQuery.extend({}, data, {scName: 1});
+				}
+				
+			} else if (attrs.c) {
+				// serialize just the form component with id == attrs.c
+				var el = Wicket.$(attrs.c);
+				data = jQuery.extend({}, data, Wicket.Form.serializeElement(el));
+			}
+	
+			// convert to URL encoded string
+			data = jQuery.param(data, true);
+		
+			// execute the request 
+			jQuery.ajax({
+				url: attrs.u,
+				type: attrs.m || 'GET',
+				context: self,
+				beforeSend: function () {
+					
+					var preconditions = attrs.pre || defaultPrecondition;
+					if (jQuery.isArray(preconditions)) {
+						for (var p = 0; p < preconditions.length; p++) {
+							
+							var precondition = preconditions[p];
+							var result;
+							if (jQuery.isFunction(precondition)) {
+								result = precondition();
+							} else {
+								result = new Function(precondition)();
+							}
+							if (result === false) {
+								Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
+								self.done();
+								return false;
+							}
+						}
+					}
+
+					executeHandlers(attrs.bh);
+						
+					if (attrs.i) {
+						// show the indicator
+						Wicket.DOM.show(attrs.i);
+					}
+				},
+				data: data,
+				dataType: attrs.dt,
+				async: attrs.async || true,
+				timeout: attrs.rt || 0,
+				headers: headers,
+				success: function(data, textStatus, jqXHR) {
+
+					if (attrs.wr) {
+						self.stateChangeCallback(data, textStatus, jqXHR, attrs);
+					}
+					
+					executeHandlers(attrs.sh, data, textStatus, jqXHR);
+								  
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+
+					executeHandlers(attrs.fh, jqXHR, textStatus, errorThrown);
+
+				},
+				complete: function (jqXHR, textStatus) {
+					if (attrs.i) {
+						Wicket.DOM.hide(attrs.i);
+					}
+
+					this.done(attrs.ch);
+				}				
+			});
+			
+			var allowDefault = attrs.ad || false; 
+			
+			if (!allowDefault && attrs.event) {
+				Wicket.Event.fix(attrs.event).preventDefault();
+			}
+			
+			return allowDefault;
+		},
+
+		// Method that processes the request states
+		stateChangeCallback: function (data, textStatus, jqXHR, attrs) {
+			var status,
+				responseAsText,
+				redirectUrl,
+				urlDepth,
+				calculatedRedirect;
+
+			if (jqXHR.readyState === 4) {
+			
+				// response came without error
+				responseAsText = jqXHR.responseText;
+
+				// first try to get the redirect header
+				try {
+					redirectUrl = jqXHR.getResponseHeader('Ajax-Location');
+				} catch (ignore) { // might happen in older mozilla
+				}
+
+				// the redirect header was set, go to new url
+				if (typeof(redirectUrl) !== "undefined" && redirectUrl !== null && redirectUrl !== "") {
+
+					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
+					// A file download popup will appear but the page in the browser won't change.
+					this.done(attrs.ch);
+
+                    // support/check for non-relative redirectUrl like as provided and needed in a portlet context
+					if (redirectUrl.charAt(0) === ('/') || redirectUrl.match("^http://") === "http://" || redirectUrl.match("^https://") === "https://") {
+					    window.location = redirectUrl;
+					}
+					else {
+					    urlDepth = 0;
+					    while (redirectUrl.substring(0, 3) === "../") {
+						    urlDepth++;
+						    redirectUrl = redirectUrl.substring(3);
+					    }
+					    // Make this a string.
+					    calculatedRedirect = window.location.pathname;
+					    while (urlDepth > -1) {
+						    urlDepth--;
+						    var i = calculatedRedirect.lastIndexOf("/");
+						    if (i > -1) {
+								calculatedRedirect = calculatedRedirect.substring(0, i);
+						    }
+					    }
+						calculatedRedirect += "/" + redirectUrl;
+
+					    if (Wicket.Browser.isGecko()) {
+							// firefox 3 has problem with window.location setting relative url
+							calculatedRedirect = window.location.protocol + "//" + window.location.host + calculatedRedirect;
+					    }
+
+					    window.location = calculatedRedirect;
+					}
+				}
+				else {
+					// no redirect, just regular response
+					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
+					if (this.debugContent !== false) {
+						Wicket.Log.info("\n" + responseAsText);
+					}
+
+					var xmldoc;
+					if (typeof(window.XMLHttpRequest) !== "undefined" && typeof(DOMParser) !== "undefined") {
+						var parser = new DOMParser();
+						xmldoc = parser.parseFromString(responseAsText, "text/xml");
+					} else if (window.ActiveXObject) {
+						xmldoc = jqXHR.responseXML;
+					}
+					// invoke the loaded callback with an xml document
+					this.loadedCallback(xmldoc, attrs);
+				}
+			}
+		},
+
+		/**
+		 * This method serializes a form and sends it as POST body. If the form contains multipart content
+		 * this function will post the form using an iframe instead of the regular ajax call
+		 * and bridge the output - transparently making this work  as if it was an ajax call.
+		 *
+		 * @param {Object} attrs - the ajax request attributes
+		 */
+		submitMultipartForm: function (attrs) {
+
+			var form = Wicket.$(attrs.f);
+			if (!form) {
+				Wicket.Log.error("Wicket.Ajax.Call.submitForm: Trying to submit form with id '" + attrs.f + "' that is not in document.");
+				return;
+			}
+
+			var submittingAttribute = 'data-wicket-submitting';
+			
 			if (form.onsubmit && !form.getAttribute(submittingAttribute)) {
 				form.setAttribute(submittingAttribute, submittingAttribute);
 				var retValue = form.onsubmit();
@@ -624,55 +630,7 @@
 				}
 			}
 
-		    if (this.handleMultipart(form, submitButton)) {
-				return true;
-		    }
-		    var body = function () {
-				var s = Wicket.Form.serialize(form);
-				if (submitButton !== null) {
-			        s += Wicket.Form.encode(submitButton) + "=1";
-			    }
-			    return s;
-		    };
-		    return this.request.post(body);
-		},
-
-
-		// If the form contains multipart content this function will post
-		// the form using an iframe instead of the regular ajax call
-		// and bridge the output - transparently making this work  as if it was an ajax call
-		handleMultipart: function (form, submitButton) {
-
-			var multipart = false;
-
-			// find root form
-			if (form.tagName.toLowerCase() !== "form") {
-				do {
-					// check if any inner forms are multipart
-					if (multipart === false && Wicket.Forms !== undefined) {
-						var meta = Wicket.Forms[form.id];
-						if (meta !== undefined) {
-							if (meta.multipart !== undefined) {
-								multipart = meta.multipart;
-							}
-						}
-					}
-					form = form.parentNode;
-				} while (form.tagName.toLowerCase() !== "form" && form !== document.body);
-			}
-
-
-			if (form.tagName.toLowerCase() !== "form") {
-				// no form in the hierarchy, cant handle multipart
-				return false;
-			}
-
-			multipart = multipart || form.enctype === "multipart/form-data";
-
-			if (multipart === false) {
-				// nothing to handle
-				return false;
-			}
+			var multipart = true;
 
 			var originalFormAction = form.action;
 			var originalFormTarget = form.target;
@@ -688,14 +646,15 @@
 
 			// reconfigure the form
 			form.target = iframe.name;
-			form.action = this.request.url + "&wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(getAjaxBaseUrl());
+			var separator = (attrs.u.indexOf("?")>-1 ? "&" : "?");
+			form.action = attrs.u + separator + "wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(getAjaxBaseUrl());
 			form.method = "post";
 			form.enctype = "multipart/form-data";
 			form.encoding = "multipart/form-data";
 
 			// create submitting button element
-			if (submitButton !== null) {
-				var $btn = jQuery("<input type='hidden' name='" + submitButton + "' id='" + iframe.id + "-btn' value='1'/>");
+			if (attrs.sc) {
+				var $btn = jQuery("<input type='hidden' name='" + attrs.sc + "' id='" + iframe.id + "-btn' value='1'/>");
 				form.appendChild($btn[0]);
 			}
 
@@ -749,7 +708,7 @@
 		},
 
 		// Processes the response
-		loadedCallback: function (envelope) {
+		loadedCallback: function (envelope, attrs) {
 			// To process the response, we go through the xml document and add a function for every action (step).
 			// After this is done, a FunctionExecuter object asynchronously executes these functions.
 			// The asynchronous execution is necessary, because some steps might involve loading external javascript,
@@ -775,16 +734,6 @@
 					window.setTimeout(notify, 2);
 				}, this));
 
-			    if (Wicket.Browser.isKHTML()) {
-					// there's a nasty bug in KHTML that makes the browser crash
-					// when the methods are delayed. Therefore we have to fire it
-					// ASAP. The javascripts that would cause dependency problems are
-					// loaded synchronously in konqueror.
-				    steps.push = function (method) {
-						method(function () { });
-				    };
-				}
-
 				// go through the ajax response and execute all priority-invocations first
 				for (var i = 0; i < root.childNodes.length; ++i) {
 					var node = root.childNodes[i];
@@ -806,7 +755,7 @@
 						stepIndexOfLastReplacedComponent = steps.length;
 						this.processComponent(steps, node);
 			        } else if (node.tagName === "evaluate") {
-						this.processEvaluation(steps, node);
+						this.processEvaluation(steps, node, attrs);
 			        } else if (node.tagName === "header-contribution") {
 						this.processHeaderContribution(steps, node);
 			        } else if (node.tagName === "redirect") {
@@ -821,11 +770,9 @@
 				// add the last step, which should trigger the success call the done method on request
 				this.success(steps);
 
-			    if (Wicket.Browser.isKHTML() === false) {
-					Wicket.Log.info("Response parsed. Now invoking steps...");
-				    var executer = new FunctionsExecuter(steps);
-				    executer.start();
-			    }
+				Wicket.Log.info("Response parsed. Now invoking steps...");
+			    var executer = new FunctionsExecuter(steps);
+			    executer.start();
 			} catch (e) {
 				this.failure(e.message);
 			}
@@ -841,11 +788,10 @@
 				// IE this will cause double events for everything.. (mostly because of the jQuery.proxy(element))
 				Wicket.Focus.attachFocusEvent();
 
-				this.request.done();
-				this.successHandler();
-
 				// set the focus to the last component
 				window.setTimeout("Wicket.Focus.requestFocus();", 0);
+
+				Wicket.channelManager.done(this.channel);
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
 				notify();
@@ -883,7 +829,7 @@
 		},
 
 		// Adds a closure that evaluates javascript code
-		processEvaluation: function (steps, node) {
+		processEvaluation: function (steps, node, attrs) {
 			steps.push(function (notify) {
 				// get the javascript body
 			    var text = jQuery(node).text();
@@ -908,7 +854,7 @@
 						eval(text);
 						f(notify);
 				    } catch (exception) {
-						Wicket.Log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception);
+						Wicket.Log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 				    }
 
 				} else {
@@ -917,7 +863,7 @@
 						// do the evaluation
 						eval(text);
 					} catch (exception) {
-						Wicket.Log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception);
+						Wicket.Log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 				    }
 				    // continue to next step
 					notify();
@@ -1107,14 +1053,18 @@
 			 * Serializes HTMLFormSelectElement to URL encoded key=value string.
 			 *
 			 * @param {HTMLFormSelectElement} select - the form element to serialize 
-			 * @return the URL encoded key=value pair (pairs, if the select is .multiple) or empty string if the form element is disabled.
+			 * @return an object of key -> value pair where 'value' can be an array of Strings if the select is .multiple,
+			 *		or empty object if the form element is disabled.
 			 */
 			serializeSelect: function (select){
-				var result = '';
+				var result = {};
 				if (select) {
-					result = jQuery(select).serialize();
+					var $select = jQuery(select);
+					if ($select.length > 0 && $select.prop('disabled') === false) {
+						var name = $select.attr('name');
+						result[name] = $select.val();
+					}
 				}
-				if (result) result += "&";
 			    return result;
 			},
 
@@ -1126,11 +1076,14 @@
 			 * @return the URL encoded key=value pair or empty string if the form element is disabled.
 			 */
 			serializeInput: function (input) {
-				var result = "";
+				var result = {};
 				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) { 
-			    	result = jQuery(input).serialize();
+			    	var $input = jQuery(input);
+			    	if ($input.length > 0 && $input.prop('disabled') === false) {
+			    		var name = $input.attr('name');
+			    		result[name] = $input.val();
+			    	} 
 			    }
-			    if (result) result += "&";
 			    return result;
 			},
 
@@ -1139,34 +1092,43 @@
 			},
 
 			// Returns url/post-body fragment representing element (e)
-			serializeElement: function(e) {
+			serializeElement: function(element) {
 
-				if (Wicket.Form.excludeFromAjaxSerialization && e.id && Wicket.Form.excludeFromAjaxSerialization[e.id] === "true") {
-					return "";
+				if (typeof(element) === 'string') {
+					element = Wicket.$(element);
 				}
 
-			    var tag = e.tagName.toLowerCase();
+				if (Wicket.Form.excludeFromAjaxSerialization && element.id && Wicket.Form.excludeFromAjaxSerialization[element.id] === "true") {
+					return {};
+				}
+
+			    var tag = element.tagName.toLowerCase();
 			    if (tag === "select") {
-			        return Wicket.Form.serializeSelect(e);
+			        return Wicket.Form.serializeSelect(element);
 			    } else if (tag === "input" || tag === "textarea") {
-			        return Wicket.Form.serializeInput(e);
+			        return Wicket.Form.serializeInput(element);
 			    } else {
-					return "";
+					return {};
 			    }
 			},
 
 			serializeForm: function (form) {
-			    var result = "";
-			    for (var i = 0; i < form.elements.length; ++i) {
-			        var e = form.elements[i];
-			        if (e.name && e.name !== "" && !e.disabled) {
-			            result += Wicket.Form.serializeElement(e);
+			    var result = {},
+			    	elements = form.elements;
+			    for (var i = 0; i < elements.length; ++i) {
+			        var el = elements[i];
+			        if (el.name && el.name !== "") {
+			            result = jQuery.extend({}, result, Wicket.Form.serializeElement(el));
 			        }
 			    }
 			    return result;
 			},
 
 			serialize: function (element, dontTryToFindRootForm) {
+				if (typeof(element) === 'string') {
+					element = Wicket.$(element);
+				} 
+			
 				if (element.tagName.toLowerCase() === "form") {
 					return Wicket.Form.serializeForm(element);
 				} else {
@@ -1180,7 +1142,6 @@
 					}
 
 					if (element.tagName.toLowerCase() === "form"){
-						// We found a form : serialize it
 						return Wicket.Form.serializeForm(element);
 					} else {
 						// there is not form in dom hierarchy
@@ -1400,41 +1361,7 @@
 		 */
 		 Ajax: {
 
-			Request: Wicket.Ajax.Request,
-
 			Call: Wicket.Ajax.Call,
-
-			// Creates a new instance of a XmlHttpRequest
-			createTransport: function () {
-			    var transport = null;
-			    if (window.XMLHttpRequest) {
-			        transport = new window.XMLHttpRequest();
-			        Wicket.Log.info("Using XMLHttpRequest transport");
-			    } else if (window.ActiveXObject) {
-			        transport = new window.ActiveXObject("Microsoft.XMLHTTP");
-			        Wicket.Log.info("Using ActiveX transport");
-			    }
-
-			    if (transport === null) {
-			        Wicket.Log.error("Wicket.Ajax.createTransport: Could not locate ajax transport. " +
-			        "Your browser does not support the required XMLHttpRequest object or wicket could not gain access to it.");
-			    }
-			    return transport;
-			},
-
-			transports: [],
-
-			// Returns a transport from pool if any of them is not being used, or creates new instance
-			getTransport: function () {
-				var t = Wicket.Ajax.transports;
-				for (var i = 0; i < t.length; ++i) {
-					if (t[i].readyState === 0) {
-						return t[i];
-					}
-				}
-				t.push(Wicket.Ajax.createTransport());
-				return t[t.length-1];
-			},
 
 			preCallHandlers: [],
 			postCallHandlers: [],
@@ -1485,46 +1412,31 @@
 				}
 			},
 
-			get: function (url, successHandler, failureHandler, precondition, channel) {
+			get: function (attrs) {
 
-				var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
+				attrs.m = 'GET';
 
-				if (precondition) {
-					call.request.precondition = precondition;
-				}
-
-				return call.call();
+				return Wicket.Ajax.ajax(attrs);
 			},
 
-			post: function (url, body, successHandler, failureHandler, precondition, channel) {
+			post: function (attrs) {
 
-				var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
+				attrs.m = 'POST';
 
-				if (precondition) {
-					call.request.precondition = precondition;
-				}
-
-				return call.post(body);
+				return Wicket.Ajax.ajax(attrs);
 			},
 
-			/**
-			 * Serializes form's elements and submits it with Ajax.
-			 *
-			 * @param {String|HTMLFormElement} form - the form or its id to submit
-			 * @param {String} url - the url to use as form action
-			 * @param {Function} successHandler - the function to execute after successful submit of the form
-			 * @param {Function} failureHandler - the function to execute after unsuccessful submit of the form
-			 * @param {Function} precondition  - the function to use when deciding whether to submit the form
-			 * @param {String} channel - the AjaxChannel to use when queueing the ajax call
-			 */
-			submitForm: function (form, url, submitButton, successHandler, failureHandler, precondition, channel) {
-				var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
+			ajax: function(attrs) {
 
-				if (precondition) {
-					call.request.precondition = precondition;
-				}
+				var target	= attrs.c || window;
+				var evt		= attrs.e || 'domready';
 
-				return call.submitForm(form, submitButton);
+				Wicket.Event.add(target, evt, function (event) {
+					var call = new Wicket.Ajax.Call();
+					attrs.event = event;
+
+					return call.ajax(attrs);
+				});
 			}
 		},
 
@@ -2112,77 +2024,6 @@
 			}
 		},
 
-		ChangeHandler: function (elementId) {
-		    var KEY_BACKSPACE=8;
-		    var KEY_TAB=9;
-		    var KEY_ENTER=13;
-		    var KEY_ESC=27;
-		    var KEY_LEFT=37;
-		    var KEY_UP=38;
-		    var KEY_RIGHT=39;
-		    var KEY_DOWN=40;
-		    var KEY_SHIFT=16;
-		    var KEY_CTRL=17;
-		    var KEY_ALT=18;
-		    var KEY_END=35;
-		    var KEY_HOME=36;
-
-			var obj = Wicket.$(elementId);
-			obj.setAttribute("autocomplete", "off");
-			obj.onchangeoriginal = obj.onchange;
-			if (Wicket.Browser.isIE() || Wicket.Browser.isKHTML() || Wicket.Browser.isSafari()) {
-
-				var objonchange = obj.onchange;
-
-				obj.onkeyup = function (event) {
-					switch (jQuery(event).keyCode) {
-						case KEY_ENTER:
-						case KEY_UP:
-						case KEY_DOWN:
-						case KEY_ESC:
-						case KEY_TAB:
-						case KEY_RIGHT:
-						case KEY_LEFT:
-						case KEY_SHIFT:
-						case KEY_ALT:
-						case KEY_CTRL:
-						case KEY_HOME:
-						case KEY_END:
-							return Wicket.Event.stop(event);
-						default:
-							if (typeof objonchange === "function") {
-								objonchange();
-							}
-					}
-					return null;
-				};
-
-				obj.onpaste = function (event) {
-					if (typeof objonchange === "function"){
-						window.setTimeout(function() {
-							objonchange();
-						}, 10);
-					}
-					return null;
-				};
-
-				obj.oncut = function (event) {
-					if (typeof objonchange === "function") {
-						window.setTimeout(function () {
-							objonchange();
-						}, 10);
-					}
-					return null;
-				};
-			} else {
-				obj.addEventListener('input', obj.onchange, true);
-			}
-
-			obj.onchange = function (event) {
-				Wicket.Event.stop(event);
-			};
-		},
-
 		// FOCUS FUNCTIONS
 
 		Focus: {
@@ -2344,9 +2185,93 @@
 		}
 	});
 
+	/**
+	 * A special event that is used to listen for immediate changes in input fields.
+	 */
+	jQuery.event.special.inputchange = {
+		
+		keys : {
+			BACKSPACE	: 8,
+		    TAB			: 9,
+		    ENTER		: 13,
+		    ESC			: 27,
+		    LEFT		: 37,
+		    UP			: 38,
+		    RIGHT		: 39,
+		    DOWN		: 40,
+		    SHIFT		: 16,
+		    CTRL		: 17,
+		    ALT			: 18,
+		    END			: 35,
+		    HOME		: 36
+		},
+		
+		keyDownPressed : false,
+		
+	    setup: function () {
+
+	        if (Wicket.Browser.isIE()) {
+	            
+	            jQuery(this).on('keydown', function (event) {
+	            	jQuery.event.special.inputchange.keyDownPressed = true;
+	            });
+	            
+	            jQuery(this).on("cut paste", function (event) {
+
+					var self = this;
+
+	            	if (false === jQuery.event.special.inputchange.keyDownPressed) {
+	            		setTimeout(function() {
+	            			jQuery.event.special.inputchange.handler.apply(self, arguments)
+	            		}, 10);
+	            	}
+	            });
+	            
+	            jQuery(this).on("keyup", function (event) {
+	            	jQuery.event.special.inputchange.keyDownPressed = false; // reset
+            		jQuery.event.special.inputchange.handler.apply(this, arguments);
+	            });
+
+	        } else {
+
+	            jQuery(this).on("input", jQuery.event.special.inputchange.handler);
+	        }
+	    },
+	    
+	    teardown: function() {
+	        jQuery(this).off("input keyup cut paste", jQuery.event.special.inputchange.handler);
+	    },
+	    
+	    handler: function( event ) {
+	    	var WE = Wicket.Event; 
+			var k = jQuery.event.special.inputchange.keys;
+			var kc = WE.keyCode(WE.fix(event));
+			switch (kc) {
+				case k.ENTER:
+				case k.UP:
+				case k.DOWN:
+				case k.ESC:
+				case k.TAB:
+				case k.RIGHT:
+				case k.LEFT:
+				case k.SHIFT:
+				case k.ALT:
+				case k.CTRL:
+				case k.HOME:
+				case k.END:
+					return WE.stop(event);
+				default:
+			        event.type = "inputchange"; 
+			        var args = Array.prototype.slice.call( arguments, 0 );
+console.log('4', event.type, jQuery.event.special.inputchange.keyDownPressed);
+	        		return jQuery.event.handle.apply( event.target, args );
+	        }
+	    } 
+	};
+
 	// MISC FUNCTIONS
 
-	Wicket.Event.add('domready', Wicket.Focus.attachFocusEvent);
+	Wicket.Event.add(window, 'domready', Wicket.Focus.attachFocusEvent);
 
 	Wicket.Ajax.registerPreCallHandler(function () {
 		if (typeof(window.wicketGlobalPreCallHandler) !== "undefined") {

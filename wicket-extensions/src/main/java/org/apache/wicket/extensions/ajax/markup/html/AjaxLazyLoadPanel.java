@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxChannel;
+import org.apache.wicket.ajax.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
@@ -27,6 +27,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 
 /**
@@ -93,27 +94,29 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			}
 
 			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+				AjaxLazyLoadPanel.this.updateAjaxAttributes(attributes);
+			}
+
+			@Override
 			public void renderHead(final Component component, final IHeaderResponse response)
 			{
 				super.renderHead(component, response);
 				if (state < 2)
 				{
-					handleCallbackScript(response, getCallbackScript().toString());
+					CharSequence attributesJson = renderAjaxAttributes(component);
+					String js = "Wicket.Ajax.ajax(" + attributesJson + ")";
+					handleCallbackScript(response, js, component);
 				}
 			}
-
-			@Override
-			protected AjaxChannel getChannel()
-			{
-				return AjaxLazyLoadPanel.this.getChannel();
-			}
-
 		});
 	}
 
-	protected AjaxChannel getChannel()
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
-		return null;
+		attributes.setEventName("domready");
 	}
 
 	/**
@@ -121,10 +124,12 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 * 
 	 * @param response
 	 * @param callbackScript
+	 * @param component
 	 */
-	protected void handleCallbackScript(final IHeaderResponse response, final String callbackScript)
+	protected void handleCallbackScript(final IHeaderResponse response,
+		final String callbackScript, final Component component)
 	{
-		response.render(OnDomReadyHeaderItem.forScript(callbackScript));
+		response.render(JavaScriptHeaderItem.forScript(callbackScript, "lazy-load-" + component.getMarkupId()));
 	}
 
 	/**

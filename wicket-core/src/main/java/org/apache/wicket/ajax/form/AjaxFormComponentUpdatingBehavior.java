@@ -19,6 +19,8 @@ package org.apache.wicket.ajax.form;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestAttributes;
+import org.apache.wicket.ajax.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
@@ -106,7 +108,17 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		return generateCallbackScript(new AppendingStringBuffer("Wicket.Ajax.post('").append(
 			getCallbackUrl()).append(
-			"', Wicket.Form.serialize(Wicket.$('" + getComponent().getMarkupId() + "'))"));
+			"', Wicket.Form.serialize('" + getComponent().getMarkupId() + "')"));
+	}
+
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+		super.updateAjaxAttributes(attributes);
+
+		attributes.setMethod(Method.POST);
+		attributes.getDynamicExtraParameters().add(
+			"return Wicket.Form.serializeElement('" + getComponent().getMarkupId() + "')");
 	}
 
 	/**
@@ -131,7 +143,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		final FormComponent<?> formComponent = getFormComponent();
 
-		if (getEvent().toLowerCase().equals("onblur") && disableFocusOnBlur())
+		if ("blur".equals(getEvent().toLowerCase()) && disableFocusOnBlur())
 		{
 			target.focusComponent(null);
 		}
