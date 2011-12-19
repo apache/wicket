@@ -23,12 +23,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer.PageLock;
+import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.MethodRule;
 import org.junit.rules.Timeout;
 import org.slf4j.Logger;
@@ -36,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  */
+@Category(SlowTests.class)
 public class PageAccessSynchronizerTest extends Assert
 {
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizerTest.class);
