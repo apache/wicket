@@ -28,4 +28,11 @@
   <version>1.5-SNAPSHOT</version>
   <name>Wicket Util</name>
   <url>http://maven.apache.org</url>
+  <dependencies>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<scope>provided</scope>
+	</dependency>
+  </dependencies>
 </project>
