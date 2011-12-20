@@ -1060,27 +1060,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * If the given object is a {@link ComponentSourceEntry} instance and <code>reconstruct</code>
-	 * is true, it reconstructs the component and returns it. Otherwise it just returns the object
-	 * passed as parameter
-	 * 
-	 * @param object
-	 * @param reconstruct
-	 * @param parent
-	 * @param index
-	 * @return The object directly or the reconstructed component
-	 */
-	private final Object postprocess(Object object, boolean reconstruct, MarkupContainer parent,
-		int index)
-	{
-		if (reconstruct && object instanceof ComponentSourceEntry)
-		{
-			object = ((ComponentSourceEntry)object).reconstruct(parent, index);
-		}
-		return object;
-	}
-
-	/**
 	 * 
 	 * @param index
 	 * @param reconstruct
@@ -1098,7 +1077,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					throw new ArrayIndexOutOfBoundsException("index " + index +
 						" is greater then 0");
 				}
-				component = postprocess(children, reconstruct, this, 0);
+				component = children;
 				if (children != component)
 				{
 					children = component;
@@ -1117,32 +1096,23 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					// we have a object array
 					children = (Object[])this.children;
 				}
-				component = postprocess(children[index], reconstruct, this, index);
-				if (children[index] != component)
-				{
-					children[index] = component;
-				}
+				component = children[index];
 			}
 		}
 		return component;
 	}
 
 	/**
-	 * Returns the wicket:id of the given object, that can be either a {@link Component} or a
-	 * {@link ComponentSourceEntry}
+	 * Returns the wicket:id of the given object if it is a {@link Component}
 	 * 
 	 * @param object
-	 * @return The id of the object (object can be component or componentsourcentry)
+	 * @return The id of the object (object can be component)
 	 */
 	private final String getId(Object object)
 	{
 		if (object instanceof Component)
 		{
 			return ((Component)object).getId();
-		}
-		else if (object instanceof ComponentSourceEntry)
-		{
-			return ((ComponentSourceEntry)object).id;
 		}
 		else
 		{
@@ -1166,11 +1136,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			if (getId(children).equals(id))
 			{
-				component = (Component)postprocess(children, true, this, 0);
-				if (children != component)
-				{
-					children = component;
-				}
+				component = (Component)children;
 			}
 		}
 		else
@@ -1191,11 +1157,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				if (getId(children[i]).equals(id))
 				{
-					component = (Component)postprocess(children[i], true, this, i);
-					if (children[i] != component)
-					{
-						children[i] = component;
-					}
+					component = (Component)children[i];
 					break;
 				}
 			}
@@ -1274,11 +1236,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			return null;
 		}
 
-		if (children instanceof Component || children instanceof ComponentSourceEntry)
+		if (children instanceof Component)
 		{
 			if (index == 0)
 			{
-				final Component removed = (Component)postprocess(children, true, null, -1);
+				final Component removed = (Component)children;
 				children = null;
 				return removed;
 			}
@@ -1307,7 +1269,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					{
 						throw new IndexOutOfBoundsException();
 					}
-					return (Component)postprocess(removed, true, null, -1);
+					return (Component)removed;
 				}
 				children = new ChildList(children);
 			}
@@ -1318,7 +1280,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				children = lst.get(0);
 			}
-			return (Component)postprocess(removed, true, null, -1);
+			return (Component)removed;
 		}
 	}
 
@@ -1334,7 +1296,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		Object replaced;
 		if (index >= 0 && index < children_size())
 		{
-			if (children instanceof Component || children instanceof ComponentSourceEntry)
+			if (children instanceof Component)
 			{
 				replaced = children;
 				children = child;
@@ -1357,7 +1319,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			throw new IndexOutOfBoundsException();
 		}
-		return postprocess(replaced, reconstruct, null, -1);
+		return replaced;
 	}
 
 	/**
@@ -1383,7 +1345,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		else
 		{
-			if (children instanceof Component || children instanceof ComponentSourceEntry)
+			if (children instanceof Component)
 			{
 				return 1;
 			}
@@ -1666,26 +1628,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
-	 */
-	private static class ComponentSourceEntry extends org.apache.wicket.ComponentSourceEntry
-	{
-		private ComponentSourceEntry(MarkupContainer container, Component component,
-			IComponentSource componentSource)
-		{
-			super(container, component, componentSource);
-		}
-
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		protected void setChild(MarkupContainer parent, int index, Component child)
-		{
-			parent.children_set(index, child, false);
-		}
-	}
-
-	/**
 	 * @see org.apache.wicket.Component#removeChildren()
 	 */
 	@Override
@@ -1738,7 +1680,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * 
-	 * @see org.apache.wicket.Component#internalMarkRendering()
+	 * @see org.apache.wicket.Component#internalMarkRendering(boolean)
 	 */
 	@Override
 	void internalMarkRendering(boolean setRenderingFlag)
