@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A {@link DataStore} which stores the pages in the {@link HttpSession}. Uses
- * {@link DataStoreEvictionStrategy} to keep the memory footprint reasonable.
+ * {@link IDataStoreEvictionStrategy} to keep the memory footprint reasonable.
  * 
  * <p>
  * Usage:
@@ -56,7 +56,7 @@ public class HttpSessionDataStore implements IDataStore
 
 	private final IPageManagerContext pageManagerContext;
 
-	private final DataStoreEvictionStrategy evictionStrategy;
+	private final IDataStoreEvictionStrategy evictionStrategy;
 
 	/**
 	 * Construct.
@@ -65,7 +65,7 @@ public class HttpSessionDataStore implements IDataStore
 	 * @param evictionStrategy
 	 */
 	public HttpSessionDataStore(IPageManagerContext pageManagerContext,
-		DataStoreEvictionStrategy evictionStrategy)
+		IDataStoreEvictionStrategy evictionStrategy)
 	{
 		this.pageManagerContext = pageManagerContext;
 		this.evictionStrategy = evictionStrategy;

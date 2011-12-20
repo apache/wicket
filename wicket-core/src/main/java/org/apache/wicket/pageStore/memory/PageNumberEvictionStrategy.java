@@ -21,7 +21,7 @@ package org.apache.wicket.pageStore.memory;
  * An eviction strategy which decides whether to evict entries from the in-memory data store
  * depending on the number of stored paged per session
  */
-public class PageNumberEvictionStrategy implements DataStoreEvictionStrategy
+public class PageNumberEvictionStrategy implements IDataStoreEvictionStrategy
 {
 
 	private final int pagesNumber;
@@ -44,7 +44,7 @@ public class PageNumberEvictionStrategy implements DataStoreEvictionStrategy
 
 	/**
 	 * 
-	 * @see org.apache.wicket.pageStore.memory.DataStoreEvictionStrategy#evict(org.apache.wicket.pageStore.memory.PageTable)
+	 * @see IDataStoreEvictionStrategy#evict(org.apache.wicket.pageStore.memory.PageTable)
 	 */
 	@Override
 	public void evict(PageTable pageTable)
