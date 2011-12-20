@@ -109,7 +109,7 @@ public abstract class ResourceReference implements Serializable
 	 *         ResourceReferenceRegistry to make up the key under which the resource reference gets
 	 *         stored.
 	 */
-	Key getKey()
+	public Key getKey()
 	{
 		return data;
 	}
@@ -338,11 +338,11 @@ public abstract class ResourceReference implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
-		final String scope;
-		final String name;
-		final Locale locale;
-		final String style;
-		final String variation;
+		private final String scope;
+		private final String name;
+		private final Locale locale;
+		private final String style;
+		private final String variation;
 
 		/**
 		 * Construct.
