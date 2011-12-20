@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.ajax.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -59,11 +60,27 @@ public abstract class AjaxCheckBox extends CheckBox
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+				AjaxCheckBox.this.updateAjaxAttributes(attributes);
+			}
+
+			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				AjaxCheckBox.this.onUpdate(target);
 			}
 		});
+	}
+
+	/**
+	 * @param attributes
+	 *      the attributes to use for the Ajax request
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#updateAjaxAttributes(org.apache.wicket.ajax.AjaxRequestAttributes)
+	 */
+	protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**
