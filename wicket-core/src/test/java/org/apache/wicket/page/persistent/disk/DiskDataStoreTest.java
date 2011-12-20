@@ -313,7 +313,7 @@ public class DiskDataStoreTest extends Assert
 
 	private void doTestDataStore()
 	{
-		log.error("Starting...");
+		log.info("Starting...");
 		long start = System.currentTimeMillis();
 
 		for (int i = 0; i < THREAD_COUNT; ++i)
@@ -350,12 +350,12 @@ public class DiskDataStoreTest extends Assert
 
 		long duration = System.currentTimeMillis() - start;
 
-		log.error("Took: " + duration + " ms");
-		log.error("Save: " + saveCount.intValue() + " files, " + bytesWritten.get() + " bytes");
-		log.error("Read: " + (read1Count.get() + read2Count.get()) + " files, " + bytesRead.get() +
+		log.info("Took: " + duration + " ms");
+		log.info("Save: " + saveCount.intValue() + " files, " + bytesWritten.get() + " bytes");
+		log.info("Read: " + (read1Count.get() + read2Count.get()) + " files, " + bytesRead.get() +
 			" bytes");
 
-		log.error("Average save time (ns): " + (double)saveTime.get() / (double)saveCount.get());
+		log.info("Average save time (ns): " + (double)saveTime.get() / (double)saveCount.get());
 
 		assertEquals(0, failures.get());
 
