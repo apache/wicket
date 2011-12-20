@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 
@@ -28,8 +29,6 @@ import org.apache.wicket.markup.html.link.Link;
 public class DummyHomePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-
-	private transient ITestPageSource testPageSource;
 
 	private final Link<?> testPageLink;
 
@@ -44,17 +43,6 @@ public class DummyHomePage extends WebPage
 	}
 
 	/**
-	 * Sets the <code>TestPageSource</code> for this <code>DummyHomePage</code>.
-	 * 
-	 * @param testPageSource
-	 *            an <code>ITestPageSource</code> instance
-	 */
-	public void setTestPageSource(ITestPageSource testPageSource)
-	{
-		this.testPageSource = testPageSource;
-	}
-
-	/**
 	 * Retrieves the test page <code>Link</code>.
 	 * 
 	 * @return the test page <code>Link</code>
@@ -64,6 +52,10 @@ public class DummyHomePage extends WebPage
 		return testPageLink;
 	}
 
+	protected Page getTestPage() {
+		throw new UnsupportedOperationException("To use DummyHomePage.TestLink you need to implement DummyHomePage#getTestPage() method.");
+	}
+	
 	/**
 	 * <code>TestLink</code> class.
 	 */
@@ -85,7 +77,7 @@ public class DummyHomePage extends WebPage
 		@Override
 		public void onClick()
 		{
-			setResponsePage(testPageSource.getTestPage());
+			setResponsePage(getTestPage());
 		}
 	}
 }

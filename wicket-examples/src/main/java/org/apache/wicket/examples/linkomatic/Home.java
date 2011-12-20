@@ -97,8 +97,10 @@ public class Home extends WicketExamplePage
 
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
-		add(new BookmarkablePageLink<Void>("page3Link", Page3.class).setParameter(
-			"bookmarkparameter", "3++2 & 5 � >< space + �"));
+		BookmarkablePageLink<Void> page3Link = new BookmarkablePageLink<Void>("page3Link", Page3.class);
+		page3Link.getPageParameters()
+				.add("bookmarkparameter", "3++2 & 5 � >< space + �");
+		add(page3Link);
 
 		// Link to BookDetails page
 		add(new Link<Void>("bookDetailsLink")

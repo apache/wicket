@@ -952,35 +952,6 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Renders a <code>Page</code> defined in <code>TestPageSource</code>. This is usually used when
-	 * a page does not have default constructor. For example, a <code>ViewBook</code> page requires
-	 * a <code>Book</code> instance:
-	 * 
-	 * <pre>
-	 * tester.startPage(new TestPageSource()
-	 * {
-	 * 	public Page getTestPage()
-	 * 	{
-	 * 		Book mockBook = new Book(&quot;myBookName&quot;);
-	 * 		return new ViewBook(mockBook);
-	 * 	}
-	 * });
-	 * </pre>
-	 * 
-	 * @param testPageSource
-	 *            a <code>Page</code> factory that creates a test page instance
-	 * @return the rendered Page
-	 * @deprecated since 1.5 use {@link #startPage(Page)} instead
-	 */
-	@Deprecated
-	public final Page startPage(final ITestPageSource testPageSource)
-	{
-		Args.notNull(testPageSource, "testPageResource");
-
-		return startPage(testPageSource.getTestPage());
-	}
-
-	/**
 	 * Simulates processing URL that invokes specified {@link RequestListenerInterface} on
 	 * component.
 	 * 
@@ -1178,39 +1149,6 @@ public class BaseWicketTester
 	{
 		return new FormTester(path, (Form<?>)getComponentFromLastRenderedPage(path), this,
 			fillBlankString);
-	}
-
-	/**
-	 * Renders a <code>Panel</code> defined in <code>TestPanelSource</code>. The usage is similar to
-	 * {@link #startPage(ITestPageSource)}. Please note that testing <code>Panel</code> must use the
-	 * supplied <code>panelId<code> as a <code>Component</code> id.
-	 * 
-	 * <pre>
-	 * tester.startPanel(new TestPanelSource()
-	 * {
-	 * 	public Panel getTestPanel(String panelId)
-	 * 	{
-	 * 		MyData mockMyData = new MyData();
-	 * 		return new MyPanel(panelId, mockMyData);
-	 * 	}
-	 * });
-	 * </pre>
-	 * 
-	 * Note that when try to access a component, e.g. via accessLabel(), the 'path' parameter must
-	 * be relative to the panel. Not relative to the Page which will automatically be added for you.
-	 * 
-	 * @param testPanelSource
-	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
-	 * @return a rendered <code>Panel</code>
-	 * @deprecated since 1.5 use {@link #startComponentInPage(Class, IMarkupFragment)} instead
-	 */
-	@Deprecated
-	public final Panel startPanel(final ITestPanelSource testPanelSource)
-	{
-		Args.notNull(testPanelSource, "testPanelSource");
-
-		return startComponentInPage(testPanelSource.getTestPanel(DummyPanelPage.TEST_PANEL_ID),
-			null);
 	}
 
 	/**

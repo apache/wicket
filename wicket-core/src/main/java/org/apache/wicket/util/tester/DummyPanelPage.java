@@ -17,6 +17,7 @@
 package org.apache.wicket.util.tester;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * A dummy <code>Panel</code> Component.
@@ -31,14 +32,23 @@ public class DummyPanelPage extends WebPage
 	/** The dummy <code>Panel</code> <code>Component</code> id */
 	public static final String TEST_PANEL_ID = "panel";
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param testPanelSource
-	 *            a <code>ITestPanelSource</code>
-	 */
-	public DummyPanelPage(final ITestPanelSource testPanelSource)
+	@Override
+	protected void onInitialize()
 	{
-		add(testPanelSource.getTestPanel(TEST_PANEL_ID));
+		super.onInitialize();
+
+		add(getTestPanel(TEST_PANEL_ID));
+	}
+
+	/**
+	 * Creates the panel under test
+	 *
+	 * @param id
+	 *      the component id to use
+	 * @return an instance of the Panel to test
+	 */
+	protected Panel getTestPanel(String id)
+	{
+		throw new UnsupportedOperationException("To use DummyPanelPage you need to implement DummyPanelPage#getTestPanel() method.");
 	}
 }

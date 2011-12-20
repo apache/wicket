@@ -117,7 +117,7 @@ public final class BookDetails extends AuthenticatedWebPage
 
 		if (book != null)
 		{
-			link.setParameter("id", book.getId());
+			link.getPageParameters().add("id", book.getId());
 			link.add(new Label("title", new Model<Book>(book)));
 		}
 		else
