@@ -31,14 +31,17 @@ import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.settings.def.StoreSettings;
+import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.lang.Bytes;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  */
+@Category(SlowTests.class)
 public class DiskDataStoreTest extends Assert
 {
 	/** Log for reporting. */
