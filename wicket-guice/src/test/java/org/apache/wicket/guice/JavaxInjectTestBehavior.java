@@ -16,37 +16,32 @@
  */
 package org.apache.wicket.guice;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.injection.Injector;
+import javax.inject.Inject;
 
-import com.google.inject.Inject;
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
+import org.junit.Assert;
 
 /**
- * Tests injection of services in classes which do not extend {@link Component}
+ * A behavior that will be use injected services
+ * 
+ * https://issues.apache.org/jira/browse/WICKET-4149
  */
-@SuppressWarnings("serial")
-public class TestNoComponent implements IClusterable, TestNoComponentInterface
+public class JavaxInjectTestBehavior extends Behavior
 {
+	private static final long serialVersionUID = 1L;
 
 	@Inject
-	@Red
-	private ITestService testService;
+	@Blue
+	private ITestService injectedFieldBlue;
 
-	/**
-	 * 
-	 * Construct.
-	 */
-	public TestNoComponent()
+	@Override
+	public void bind(Component component)
 	{
-		Injector.get().inject(this);
+		super.bind(component);
+
+		Assert.assertNotNull(injectedFieldBlue);
+		Assert.assertEquals("blue", injectedFieldBlue.getString());
 	}
 
-	/**
-	 * @return if injection works should return {@link ITestService#RESULT_RED}
-	 */
-	public String getString()
-	{
-		return testService.getString();
-	}
 }

@@ -14,39 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.guice;
+package org.apache.wicket.spring.injection.util;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.injection.Injector;
-
-import com.google.inject.Inject;
-
-/**
- * Tests injection of services in classes which do not extend {@link Component}
- */
-@SuppressWarnings("serial")
-public class TestNoComponent implements IClusterable, TestNoComponentInterface
+public interface InjectableInterface
 {
-
-	@Inject
-	@Red
-	private ITestService testService;
+	/**
+	 * @return test bean
+	 */
+	Bean getNobean();
 
 	/**
-	 * 
-	 * Construct.
+	 * @return test bean
 	 */
-	public TestNoComponent()
-	{
-		Injector.get().inject(this);
-	}
+	Bean2 getBeanByName();
 
 	/**
-	 * @return if injection works should return {@link ITestService#RESULT_RED}
+	 * @return test bean
 	 */
-	public String getString()
-	{
-		return testService.getString();
-	}
+	Bean getBeanByClass();
 }

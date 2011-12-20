@@ -24,7 +24,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class Injectable
+public class Injectable implements InjectableInterface
 {
 	private Bean nobean;
 

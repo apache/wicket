@@ -90,15 +90,15 @@ public class GuiceInjectorTest extends Assert
 
 			// Create a new component, which should be automatically injected,
 			// and test to make sure the injection has worked.
-			TestComponent testComponent = new TestComponent("id");
+			TestComponentInterface testComponent = newTestComponent("id");
 			doChecksForComponent(testComponent);
 
 			// Serialize and deserialize the object, and check it still works.
-			TestComponent clonedComponent = (TestComponent)WicketObjects.cloneObject(testComponent);
+			TestComponentInterface clonedComponent = (TestComponentInterface)WicketObjects.cloneObject(testComponent);
 			doChecksForComponent(clonedComponent);
 
 			// Test injection of a class that does not extend Component
-			TestNoComponent noncomponent = new TestNoComponent();
+			TestNoComponentInterface noncomponent = newTestNoComponent();
 			doChecksForNoComponent(noncomponent);
 
 		}
@@ -109,12 +109,12 @@ public class GuiceInjectorTest extends Assert
 		}
 	}
 
-	private void doChecksForNoComponent(final TestNoComponent component)
+	private void doChecksForNoComponent(final TestNoComponentInterface noncomponent)
 	{
-		assertEquals(ITestService.RESULT_RED, component.getString());
+		assertEquals(ITestService.RESULT_RED, noncomponent.getString());
 	}
 
-	private void doChecksForComponent(final TestComponent component)
+	private void doChecksForComponent(final TestComponentInterface component)
 	{
 		assertEquals(ITestService.RESULT, component.getInjectedField().getString());
 		assertEquals(null, component.getInjectedOptionalField());
@@ -125,5 +125,15 @@ public class GuiceInjectorTest extends Assert
 
 		assertEquals(ITestService.RESULT,
 			component.getInjectedTypeLiteralField().get(ITestService.RESULT));
+	}
+
+	protected TestNoComponentInterface newTestNoComponent()
+	{
+		return new TestNoComponent();
+	}
+
+	protected TestComponentInterface newTestComponent(String id)
+	{
+		return new TestComponent(id);
 	}
 }

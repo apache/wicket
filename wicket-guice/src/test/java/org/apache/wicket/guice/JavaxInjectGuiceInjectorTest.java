@@ -16,37 +16,20 @@
  */
 package org.apache.wicket.guice;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.injection.Injector;
-
-import com.google.inject.Inject;
 
 /**
- * Tests injection of services in classes which do not extend {@link Component}
  */
-@SuppressWarnings("serial")
-public class TestNoComponent implements IClusterable, TestNoComponentInterface
+public class JavaxInjectGuiceInjectorTest extends GuiceInjectorTest
 {
-
-	@Inject
-	@Red
-	private ITestService testService;
-
-	/**
-	 * 
-	 * Construct.
-	 */
-	public TestNoComponent()
+	@Override
+	protected TestComponentInterface newTestComponent(String id)
 	{
-		Injector.get().inject(this);
+		return new JavaxInjectTestComponent(id);
 	}
 
-	/**
-	 * @return if injection works should return {@link ITestService#RESULT_RED}
-	 */
-	public String getString()
+	@Override
+	protected TestNoComponentInterface newTestNoComponent()
 	{
-		return testService.getString();
+		return new JavaxInjectTestNoComponent();
 	}
 }

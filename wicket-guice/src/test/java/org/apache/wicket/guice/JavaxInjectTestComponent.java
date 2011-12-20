@@ -18,24 +18,20 @@ package org.apache.wicket.guice;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.Component;
 
-import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.name.Named;
 
 /**
  */
-public class TestComponent extends Component implements TestComponentInterface
+public class JavaxInjectTestComponent extends Component implements TestComponentInterface
 {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	private ITestService injectedField;
-
-	@Inject(optional = true)
-	@Named("optional")
-	private String injectedOptionalField;
 
 	@Inject
 	@Red
@@ -51,18 +47,18 @@ public class TestComponent extends Component implements TestComponentInterface
 	@Inject
 	private Map<String, String> injectedTypeLiteralField;
 
-	private final TestNoComponent noComponent;
+	private final JavaxInjectTestNoComponent noComponent;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param id
 	 */
-	public TestComponent(final String id)
+	public JavaxInjectTestComponent(final String id)
 	{
 		super(id);
-		noComponent = new TestNoComponent();
-		add(new TestBehavior());
+		noComponent = new JavaxInjectTestNoComponent();
+		add(new JavaxInjectTestBehavior());
 	}
 
 	/**
@@ -104,7 +100,7 @@ public class TestComponent extends Component implements TestComponentInterface
 	 */
 	public String getInjectedOptionalField()
 	{
-		return injectedOptionalField;
+		return null;
 	}
 
 	/**

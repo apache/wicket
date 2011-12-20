@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.guice;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.injection.Injector;
-
-import com.google.inject.Inject;
 
 /**
  * Tests injection of services in classes which do not extend {@link Component}
  */
 @SuppressWarnings("serial")
-public class TestNoComponent implements IClusterable, TestNoComponentInterface
+public class JavaxInjectTestNoComponent implements IClusterable, TestNoComponentInterface
 {
 
 	@Inject
@@ -37,7 +37,7 @@ public class TestNoComponent implements IClusterable, TestNoComponentInterface
 	 * 
 	 * Construct.
 	 */
-	public TestNoComponent()
+	public JavaxInjectTestNoComponent()
 	{
 		Injector.get().inject(this);
 	}

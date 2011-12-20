@@ -14,39 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.guice;
+package org.apache.wicket.spring.injection.annot;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.util.JavaxInjectable;
 
-import com.google.inject.Inject;
 
 /**
- * Tests injection of services in classes which do not extend {@link Component}
+ * Tests for javax.inject.Inject when used with spring
  */
-@SuppressWarnings("serial")
-public class TestNoComponent implements IClusterable, TestNoComponentInterface
+public class JavaxInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFieldValueFactoryTest
 {
-
-	@Inject
-	@Red
-	private ITestService testService;
-
 	/**
-	 * 
 	 * Construct.
 	 */
-	public TestNoComponent()
+	public JavaxInjectAnnotProxyFieldValueFactoryTest()
 	{
-		Injector.get().inject(this);
-	}
-
-	/**
-	 * @return if injection works should return {@link ITestService#RESULT_RED}
-	 */
-	public String getString()
-	{
-		return testService.getString();
+		super(new JavaxInjectable());
 	}
 }

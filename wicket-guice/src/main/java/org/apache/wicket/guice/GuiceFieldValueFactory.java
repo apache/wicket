@@ -55,13 +55,14 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		if (supportsField(field))
 		{
 			Inject injectAnnotation = field.getAnnotation(Inject.class);
-			if (!Modifier.isStatic(field.getModifiers()) && (injectAnnotation != null))
+			javax.inject.Inject javaxInjectAnnotation = field.getAnnotation(javax.inject.Inject.class);
+			if (!Modifier.isStatic(field.getModifiers()) && (injectAnnotation != null || javaxInjectAnnotation != null))
 			{
 				try
 				{
 					Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
 					final IProxyTargetLocator locator = new GuiceProxyTargetLocator(field,
-						bindingAnnotation, injectAnnotation.optional());
+						bindingAnnotation, injectAnnotation != null ? injectAnnotation.optional() : false);
 
 					if (wrapInProxies)
 					{
@@ -101,7 +102,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	 */
 	public boolean supportsField(final Field field)
 	{
-		return field.isAnnotationPresent(Inject.class);
+		return field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(javax.inject.Inject.class);
 	}
 
 	/**

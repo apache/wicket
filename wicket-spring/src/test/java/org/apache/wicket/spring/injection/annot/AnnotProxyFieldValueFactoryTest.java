@@ -24,6 +24,7 @@ import org.apache.wicket.spring.SpringBeanLocator;
 import org.apache.wicket.spring.injection.util.Bean;
 import org.apache.wicket.spring.injection.util.Bean2;
 import org.apache.wicket.spring.injection.util.Injectable;
+import org.apache.wicket.spring.injection.util.InjectableInterface;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,7 +51,20 @@ public class AnnotProxyFieldValueFactoryTest extends Assert
 		}
 	};
 
-	Injectable obj = new Injectable();
+	final InjectableInterface obj;
+
+	/**
+	 * Construct.
+	 */
+	public AnnotProxyFieldValueFactoryTest()
+	{
+		this(new Injectable());
+	}
+
+	protected AnnotProxyFieldValueFactoryTest(InjectableInterface injectable)
+	{
+		obj = injectable;
+	}
 
 	AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(mockCtxLocator);
 

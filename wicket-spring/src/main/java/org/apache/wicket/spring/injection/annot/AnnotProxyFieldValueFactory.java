@@ -23,6 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 import org.apache.wicket.spring.ISpringContextLocator;
@@ -154,14 +157,24 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	private String getBeanName(final Field field)
 	{
 		SpringBean annot = field.getAnnotation(SpringBean.class);
+		
+		String name;
+		boolean required;
+		if (annot != null) {
+			name = annot.name();
+			required = annot.required();
+		} else {
+			Named named = field.getAnnotation(Named.class);
+			name = named != null ? named.value() : "";
+			required = false;
+		}
 
-		String name = annot.name();
 		if (Strings.isEmpty(name))
 		{
 			name = beanNameCache.get(field.getType());
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), field.getType(), annot);
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), field.getType(), required);
 
 				if (name != null)
 				{
@@ -180,13 +193,13 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 *            spring application context
 	 * @param clazz
 	 *            bean class
-	 * @param annot
-	 *            the SpringBean annotation
+	 * @param required
+	 *            true if the value is required
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
 	private final String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
-		final SpringBean annot)
+		final boolean required)
 	{
 		// get the list of all possible matching beans
 		List<String> names = new ArrayList<String>(
@@ -212,7 +225,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 		if (names.isEmpty())
 		{
-			if (annot.required())
+			if (required)
 			{
 				throw new IllegalStateException("bean of type [" + clazz.getName() + "] not found");
 			}
@@ -244,7 +257,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			msg.append("More than one bean of type [");
 			msg.append(clazz.getName());
 			msg.append("] found, you have to specify the name of the bean ");
-			msg.append("(@SpringBean(name=\"foo\")) in order to resolve this conflict. ");
+			msg.append("(@SpringBean(name=\"foo\")) or (@Named(\"foo\") if using @javax.inject classes) in order to resolve this conflict. ");
 			msg.append("Matched beans: ");
 			msg.append(Strings.join(",", names.toArray(new String[names.size()])));
 			throw new IllegalStateException(msg.toString());
@@ -281,6 +294,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 */
 	public boolean supportsField(final Field field)
 	{
-		return field.isAnnotationPresent(SpringBean.class);
+		return field.isAnnotationPresent(SpringBean.class) || field.isAnnotationPresent(Inject.class);
 	}
 }
