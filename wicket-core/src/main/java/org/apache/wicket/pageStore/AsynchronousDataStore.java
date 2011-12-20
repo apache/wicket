@@ -22,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
@@ -58,9 +57,9 @@ public class AsynchronousDataStore implements IDataStore
 	private static final long POLL_WAIT = 1000L;
 
 	/**
-	 * A flag indicating that this {@link IDataStore} should stop
+	 * The page saving thread.
 	 */
-	private final AtomicBoolean destroy;
+	private final Thread pageSavingThread;
 
 	/**
 	 * The wrapped {@link IDataStore} that actually stores that pages
@@ -89,15 +88,13 @@ public class AsynchronousDataStore implements IDataStore
 	public AsynchronousDataStore(final IDataStore dataStore, final int capacity)
 	{
 		this.dataStore = dataStore;
-		destroy = new AtomicBoolean(false);
 		entries = new LinkedBlockingQueue<Entry>(capacity);
 		entryMap = new ConcurrentHashMap<String, Entry>();
 
-		PageSavingRunnable savingRunnable = new PageSavingRunnable(dataStore, entries, entryMap,
-			destroy);
-		Thread thread = new Thread(savingRunnable, "Wicket-PageSavingThread");
-		thread.setDaemon(true);
-		thread.start();
+		PageSavingRunnable savingRunnable = new PageSavingRunnable(dataStore, entries, entryMap);
+		pageSavingThread = new Thread(savingRunnable, "Wicket-PageSavingThread");
+		pageSavingThread.setDaemon(true);
+		pageSavingThread.start();
 	}
 
 	/**
@@ -105,18 +102,16 @@ public class AsynchronousDataStore implements IDataStore
 	 */
 	public void destroy()
 	{
-		destroy.set(true);
-
-		try
+		if (pageSavingThread.isAlive())
 		{
-			synchronized (destroy)
+			pageSavingThread.interrupt();
+			try
 			{
-				destroy.wait();
+				pageSavingThread.join();
+			} catch (InterruptedException e)
+			{
+				log.error(e.getMessage(), e);
 			}
-		}
-		catch (InterruptedException e)
-		{
-			log.error(e.getMessage(), e);
 		}
 
 		dataStore.destroy();
@@ -319,8 +314,6 @@ public class AsynchronousDataStore implements IDataStore
 	{
 		private static final Logger log = LoggerFactory.getLogger(PageSavingRunnable.class);
 
-		private final AtomicBoolean destroy;
-
 		private final BlockingQueue<Entry> entries;
 
 		private final ConcurrentMap<String, Entry> entryMap;
@@ -328,17 +321,16 @@ public class AsynchronousDataStore implements IDataStore
 		private final IDataStore dataStore;
 
 		private PageSavingRunnable(IDataStore dataStore, BlockingQueue<Entry> entries,
-			ConcurrentMap<String, Entry> entryMap, AtomicBoolean destroy)
+			ConcurrentMap<String, Entry> entryMap)
 		{
 			this.dataStore = dataStore;
 			this.entries = entries;
 			this.entryMap = entryMap;
-			this.destroy = destroy;
 		}
 
 		public void run()
 		{
-			while (destroy.get() == false)
+			while (!Thread.interrupted())
 			{
 				Entry entry = null;
 				try
@@ -347,7 +339,7 @@ public class AsynchronousDataStore implements IDataStore
 				}
 				catch (InterruptedException e)
 				{
-					log.error(e.getMessage(), e);
+					Thread.currentThread().interrupt();
 				}
 
 				if (entry != null)
@@ -356,11 +348,6 @@ public class AsynchronousDataStore implements IDataStore
 					dataStore.storeData(entry.sessionId, entry.pageId, entry.data);
 					entryMap.remove(getKey(entry));
 				}
-			}
-
-			synchronized (destroy)
-			{
-				destroy.notify();
 			}
 		}
 	}
