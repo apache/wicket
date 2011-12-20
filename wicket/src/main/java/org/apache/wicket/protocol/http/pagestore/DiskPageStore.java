@@ -966,47 +966,49 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		public void run()
 		{
-			while (stop == Boolean.FALSE)
-			{
-				// TODO: At some point change to wait/notify
-				// wait until we have something to save
-				while (pagesToSaveActive.isEmpty() && stop == false)
+			try {
+				while (stop == Boolean.FALSE)
 				{
-					try
-					{
-						Thread.sleep(getSavingThreadSleepTime());
-					}
-					catch (InterruptedException ignore)
-					{
-					}
-				}
-
-				// iterate through lists of pages to be saved
-				for (Iterator<Entry<String, List<SerializedPage>>> i = pagesToSaveActive.entrySet()
-					.iterator(); i.hasNext();)
-				{
-					Entry<String, List<SerializedPage>> entry = i.next();
-					String sessionId = entry.getKey();
-					List<SerializedPage> pages = entry.getValue();
-
-					synchronized (pages)
+					// TODO: At some point change to wait/notify
+					// wait until we have something to save
+					while (pagesToSaveActive.isEmpty() && stop == false)
 					{
 						try
 						{
-							flushPagesToSaveList(sessionId, pages);
+							Thread.sleep(getSavingThreadSleepTime());
 						}
-						catch (Exception e)
+						catch (InterruptedException ignore)
 						{
-							log.error(
-								"Error flushing serialized pages from worker thread for session " +
-									sessionId, e);
 						}
-						i.remove();
+					}
+
+					// iterate through lists of pages to be saved
+					for (Iterator<Entry<String, List<SerializedPage>>> i = pagesToSaveActive.entrySet()
+						.iterator(); i.hasNext();)
+					{
+						Entry<String, List<SerializedPage>> entry = i.next();
+						String sessionId = entry.getKey();
+						List<SerializedPage> pages = entry.getValue();
+
+						synchronized (pages)
+						{
+							try
+							{
+								flushPagesToSaveList(sessionId, pages);
+							}
+							catch (Exception e)
+							{
+								log.error(
+									"Error flushing serialized pages from worker thread for session " +
+										sessionId, e);
+							}
+							i.remove();
+						}
 					}
 				}
+			} finally {
+				stop = null;
 			}
-
-			stop = null;
 		}
 
 		/**
