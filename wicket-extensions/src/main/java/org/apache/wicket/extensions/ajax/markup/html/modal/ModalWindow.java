@@ -278,6 +278,7 @@ public class ModalWindow extends Panel
 	 * other sources, e.g. a global CSS resource.
 	 * 
 	 * @return The CSS resource reference or null if CSS is contributed via other means.
+	 * @see #setCssClassName(String)
 	 */
 	protected ResourceReference newCssResource()
 	{
@@ -493,6 +494,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @param cssClassName
 	 * @return this
+	 * @see #newCssResource()
 	 */
 	public ModalWindow setCssClassName(final String cssClassName)
 	{
