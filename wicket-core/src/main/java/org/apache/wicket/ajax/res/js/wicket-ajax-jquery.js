@@ -2266,7 +2266,6 @@
 				default:
 			        event.type = "inputchange"; 
 			        var args = Array.prototype.slice.call( arguments, 0 );
-console.log('4', event.type, jQuery.event.special.inputchange.keyDownPressed);
 	        		return jQuery.event.handle.apply( event.target, args );
 	        }
 	    } 
