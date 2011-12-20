@@ -30,7 +30,10 @@ import org.slf4j.LoggerFactory;
  * the component and all it's children. Those are wicket internal variables and it's up to wicket
  * (not {@link IComponentSource} implementation to reconstruct that transparently for the user.
  * These information are encoded as one string to minimize object overhead.
+ *
+ * @deprecated Will be removed in Wicket 6.0
  */
+@Deprecated
 abstract class ComponentSourceEntry implements IClusterable
 {
 	private static final long serialVersionUID = 1L;

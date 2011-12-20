@@ -30,7 +30,9 @@ package org.apache.wicket;
  * TODO figure out what to do with this
  * 
  * @author Matej Knopp
+ * @deprecated Will be removed in Wicket 6.0
  */
+@Deprecated
 public interface IComponentSource extends IClusterable
 {
 	/**
