@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.time.Duration;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -111,6 +112,89 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		validate(timer, true);
 
+	}
+
+	/**
+	 * Validates the response, then makes sure the timer injects itself again when called.
+	 * Tests {@link AbstractAjaxTimerBehavior#restart(AjaxRequestTarget)} method
+
+	 * WICKET-1525, WICKET-2152
+	 */
+	public void testRestartMethod()
+	{
+		final Integer labelInitialValue = Integer.valueOf(0);
+
+		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID,
+			new Model<Integer>(labelInitialValue));
+
+		// the duration doesn't matter because we manually trigger the behavior
+		final AbstractAjaxTimerBehavior timerBehavior = new AbstractAjaxTimerBehavior(
+			Duration.seconds(2))
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onTimer(AjaxRequestTarget target)
+			{
+				// increment the label's model object
+				label.setDefaultModelObject(((Integer)label.getDefaultModelObject()) + 1);
+				target.add(label);
+			}
+		};
+
+		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+		page.add(label);
+		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				if (timerBehavior.isStopped())
+				{
+					timerBehavior.restart(target);
+				}
+				else
+				{
+					timerBehavior.stop(target);
+				}
+			}
+		});
+
+		label.setOutputMarkupId(true);
+		label.add(timerBehavior);
+
+		tester.startPage(page);
+
+		final String labelPath = MockPageWithLinkAndComponent.COMPONENT_ID;
+
+		// assert label == initial value (i.e. 0)
+		tester.assertLabel(labelPath, String.valueOf(labelInitialValue));
+
+		// increment to 1
+		tester.executeBehavior(timerBehavior);
+
+		// assert label == 1
+		tester.assertLabel(labelPath, String.valueOf(labelInitialValue + 1));
+
+		// stop the timer
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
+
+		// trigger it, but it is stopped
+		tester.executeBehavior(timerBehavior);
+
+		// assert label is still 1
+		tester.assertLabel(labelPath, String.valueOf(labelInitialValue + 1));
+
+		// restart the timer
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
+
+		// increment to 2
+		tester.executeBehavior(timerBehavior);
+
+		// assert label is now 2
+		tester.assertLabel(labelPath, String.valueOf(labelInitialValue + 2));
 	}
 
 	/**

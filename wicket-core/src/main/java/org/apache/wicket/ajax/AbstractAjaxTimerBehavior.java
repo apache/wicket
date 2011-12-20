@@ -35,9 +35,6 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehavior
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** The update interval */
@@ -60,14 +57,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 			throw new IllegalArgumentException("Invalid update interval");
 		}
 		this.updateInterval = updateInterval;
-	}
-
-	/**
-	 * Stops the timer
-	 */
-	public final void stop()
-	{
-		stopped = true;
 	}
 
 	/**
@@ -102,7 +91,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 		WebRequest request = (WebRequest)RequestCycle.get().getRequest();
 
-		if (!stopped && (!headRendered || !request.isAjax()))
+		if (!isStopped() && (!headRendered || !request.isAjax()))
 		{
 			headRendered = true;
 			response.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
@@ -128,11 +117,19 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		CharSequence ajaxAttributes = renderAjaxAttributes(getComponent());
 
+		String timeoutHandle = getTimeoutHandle();
 		// this might look strange, but it is necessary for IE not to leak :(
-		return "setTimeout('Wicket.Ajax.ajax(" + ajaxAttributes + ");', " +
+		return timeoutHandle+" = setTimeout('Wicket.Ajax.ajax(" + ajaxAttributes + ");', " +
 			updateInterval.getMilliseconds() + ")";
 	}
 
+	/**
+	 * @return the name of the handle that is used to stop any scheduled timer
+	 */
+	private String getTimeoutHandle() {
+		return "Wicket.timeoutHandle_"+getComponent().getMarkupId();
+	}
+	
 	/**
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
@@ -140,12 +137,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		onTimer(target);
-
-		if (!stopped && isEnabled(getComponent()))
+		if (!isStopped() && isEnabled(getComponent()))
 		{
+			onTimer(target);
+
 			target.getHeaderResponse().render(
-				OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+			OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 		}
 	}
 
@@ -158,12 +155,35 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected abstract void onTimer(final AjaxRequestTarget target);
 
 	/**
-	 * @return {@code true} if has been stopped via {@link #stop()}
+	 * @return {@code true} if has been stopped via {@link #stop(AjaxRequestTarget)}
 	 */
 	public final boolean isStopped()
 	{
 		return stopped;
 	}
 
+	/**
+	 * Re-enables the timer if already stopped
+	 *
+	 * @param target
+	 */
+	public final void restart(final AjaxRequestTarget target)
+	{
+		if (isStopped())
+		{
+			stopped = false;
+			headRendered = false;
+			target.add(getComponent());
+		}
+	}
 
+	/**
+	 * Stops the timer
+	 */
+	public final void stop(final AjaxRequestTarget target)
+	{
+		stopped = true;
+		String timeoutHandle = getTimeoutHandle();
+		target.prependJavaScript("clearTimeout("+timeoutHandle+"); delete "+timeoutHandle+";");
+	}
 }
