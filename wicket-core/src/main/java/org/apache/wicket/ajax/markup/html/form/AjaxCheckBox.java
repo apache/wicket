@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
@@ -59,11 +61,33 @@ public abstract class AjaxCheckBox extends CheckBox
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			protected IAjaxCallDecorator getAjaxCallDecorator()
+			{
+				return AjaxCheckBox.this.getAjaxCallDecorator();
+			}
+
+			@Override
+			protected AjaxChannel getChannel()
+			{
+				return AjaxCheckBox.this.getChannel();
+			}
+
+			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				AjaxCheckBox.this.onUpdate(target);
 			}
 		});
+	}
+
+	protected AjaxChannel getChannel()
+	{
+		return null;
+	}
+
+	protected IAjaxCallDecorator getAjaxCallDecorator()
+	{
+		return null;
 	}
 
 	/**
