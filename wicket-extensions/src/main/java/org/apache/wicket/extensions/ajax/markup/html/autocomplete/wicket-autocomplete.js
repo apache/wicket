@@ -353,32 +353,34 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 
     function actualUpdateChoicesShowAll()
     {
-    	showIndicator();
-    		
-       	Wicket.Ajax.ajax({
+		showIndicator();
+
+		var paramName = cfg.parameterName;
+		var attrs = {
 			u: callbackUrl,
-			ep: {
-				'q': ''
-			},
 			dt: 'html',
+			ep: {},
 			wr: false,
 			sh: [ doUpdateChoices ]
-       	});
+		};
+		attrs.ep[paramName] = '';
+		Wicket.Ajax.ajax(attrs);
     }
 
     function actualUpdateChoices()
     {
-    	showIndicator();
-    	var value = Wicket.$(elementId).value;
-       	Wicket.Ajax.ajax({
+		showIndicator();
+		var paramName = cfg.parameterName;
+		var value = Wicket.$(elementId).value;
+       	var attrs = {
 			u: callbackUrl,
-			ep: {
-				'q': processValue(value)
-			},
 			wr: false,
+			ep: {},
 			dt: 'html',
 			sh: [ doUpdateChoices ]
-       	});
+		};
+	    attrs.ep[paramName] = processValue(value);
+	    Wicket.Ajax.ajax(attrs);
     }
     
     function showIndicator() {

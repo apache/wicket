@@ -114,6 +114,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
 		sb.append(",showListOnFocusGain: ").append(settings.getShowListOnFocusGain());
 		sb.append(",throttleDelay: ").append(settings.getThrottleDelay());
+		sb.append(",parameterName: '").append(settings.getParameterName()).append('\'');
 		sb.append(",showCompleteListOnFocusGain: ").append(
 			settings.getShowCompleteListOnFocusGain());
 		if (settings.getCssClassName() != null)
@@ -141,9 +142,10 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		final RequestCycle requestCycle = RequestCycle.get();
 		final String val = requestCycle.getRequest()
 			.getRequestParameters()
-			.getParameterValue("q")
+			.getParameterValue(settings.getParameterName())
 			.toOptionalString();
 
 		onRequest(val, requestCycle);
 	}
+
 }
