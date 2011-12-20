@@ -31,8 +31,10 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebSession;
 
 
 /**
@@ -63,10 +65,36 @@ public class FeedbackPanel extends Panel implements IFeedback
 		}
 
 		@Override
+		protected IModel<FeedbackMessage> getListItemModel(
+			final IModel<? extends List<FeedbackMessage>> listViewModel, final int index)
+		{
+			return new AbstractReadOnlyModel<FeedbackMessage>()
+			{
+				private static final long serialVersionUID = 1L;
+
+				/**
+				 * WICKET-4258 Feedback messages might be cleared already.
+				 * 
+				 * @see WebSession#cleanupFeedbackMessages()
+				 */
+				@Override
+				public FeedbackMessage getObject()
+				{
+					if (index >= listViewModel.getObject().size())
+					{
+						return null;
+					}
+					else
+					{
+						return listViewModel.getObject().get(index);
+					}
+				}
+			};
+		}
+
+		@Override
 		protected void populateItem(final ListItem<FeedbackMessage> listItem)
 		{
-			final FeedbackMessage message = listItem.getModelObject();
-			message.markRendered();
 			final IModel<String> replacementModel = new Model<String>()
 			{
 				private static final long serialVersionUID = 1L;
@@ -80,10 +108,12 @@ public class FeedbackPanel extends Panel implements IFeedback
 				@Override
 				public String getObject()
 				{
-					return getCSSClass(message);
+					return getCSSClass(listItem.getModelObject());
 				}
 			};
 
+			final FeedbackMessage message = listItem.getModelObject();
+			message.markRendered();
 			final Component label = newMessageDisplayComponent("message", message);
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
