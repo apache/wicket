@@ -80,7 +80,10 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 				@Override
 				public void component(final Component component, final IVisit<Void> visit)
 				{
-					component.renderHead(headerContainer);
+					if (component != rootComponent)
+					{
+						component.renderHead(headerContainer);
+					}
 				}
 
 				@Override
