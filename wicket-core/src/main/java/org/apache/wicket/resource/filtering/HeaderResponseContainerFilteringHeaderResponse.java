@@ -220,6 +220,31 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	}
 
 	@Override
+	public void renderJavaScriptReference(final String url, final String id, final boolean defer)
+	{
+		forJavaScript(new Runnable()
+		{
+			public void run()
+			{
+				getRealResponse().renderJavaScriptReference(url, id, defer);
+			}
+		});
+	}
+
+	@Override
+	public void renderJavaScriptReference(final String url, final String id, final boolean defer,
+		final String charset)
+	{
+		forJavaScript(new Runnable()
+		{
+			public void run()
+			{
+				getRealResponse().renderJavaScriptReference(url, id, defer, charset);
+			}
+		});
+	}
+
+	@Override
 	public void renderJavaScript(final CharSequence javascript, final String id)
 	{
 		forJavaScript(new Runnable()
