@@ -76,7 +76,7 @@ public class HomePage extends WicketExamplePage
 			{
 				HomePage.this.replace(new AjaxProofContainer("ajaxProofPlaceholder"));
 				target.add(HomePage.this.get("ajaxProofPlaceholder"));
-				stop();
+				stop(target);
 			}
 		});
 

@@ -17,13 +17,11 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.WicketTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author jcompagner
  */
-@Ignore("wicket:head needs to be rendered by IHeaderResponse to fix these, see WICKET-4000")
 public class AjaxHeaderContributionTest extends WicketTestCase
 {
 	/**

@@ -18,13 +18,14 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer.HeaderStreamState;
 
 /**
  * Allows for different header render strategies. The difference per strategy will be order in which
  * components are asked to add to the markup header section. Before 1.5 it was
- * page->container->child. Since 1.5 it has been changed to child->container->parent (see
- * <a href="http://issues.apache.org/jira/browse/WICKET-2693 ">WICKET-2693</a>)
- *
+ * page->container->child. Since 1.5 it has been changed to child->container->parent (see <a
+ * href="http://issues.apache.org/jira/browse/WICKET-2693 ">WICKET-2693</a>)
+ * 
  * @author Juergen Donnerstag
  */
 public interface IHeaderRenderStrategy
@@ -34,8 +35,11 @@ public interface IHeaderRenderStrategy
 	 * 
 	 * @param headerContainer
 	 *            The HeaderContainer associated to the response
+	 * @param headerStreamState
+	 *            the header section of the page, when null, this section will not be rendered
 	 * @param component
 	 *            The root component (e.g. Page) to start the render process
 	 */
-	void renderHeader(HtmlHeaderContainer headerContainer, Component component);
+	void renderHeader(HtmlHeaderContainer headerContainer, HeaderStreamState headerStreamState,
+		Component component);
 }

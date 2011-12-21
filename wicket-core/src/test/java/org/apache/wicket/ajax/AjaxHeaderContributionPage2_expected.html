@@ -4,6 +4,9 @@
 <script type="text/javascript" src="../../javascripturl"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
+
+<link href="../../test2"/>
+<script type="text/javascript" src="../../javascripturlB"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
 <script type="text/javascript" id="wicket-ajax-debug-enable">
@@ -21,6 +24,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.AjaxHeaderContri
 Wicket.Event.add(window, "domready", function(event) { 
 domReady();;
 domReadyB();;
+Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-link","e":"click","c":"link1"});;
 ;});
 /*]]>*/
 </script>
@@ -30,14 +34,6 @@ Wicket.Event.add(window, "load", function(event) {
 onLoad();;
 onLoadB();;
 ;});
-/*]]>*/
-</script>
-
-<link href="../../test2"/>
-<script type="text/javascript" src="../../javascripturlB"></script>
-<script type="text/javascript" id="event-click-link1">
-/*<![CDATA[*/
-Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-link","e":"click","c":"link1"});
 /*]]>*/
 </script>
 </head><body>

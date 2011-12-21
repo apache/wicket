@@ -64,6 +64,8 @@ import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.header.StringHeaderItem;
+import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
@@ -2671,10 +2673,20 @@ public abstract class Component
 			// Allow component to contribute
 			if (response.wasRendered(this) == false)
 			{
-				// Make sure the markup source strategy contributes to the header first
-				// to be backward compatible. WICKET-3761
-				getMarkupSourcingStrategy().renderHead(this, container);
-
+				StringResponse markupHeaderResponse = new StringResponse();
+				Response oldResponse = getResponse();
+				RequestCycle.get().setResponse(markupHeaderResponse);
+				try
+				{
+					// Make sure the markup source strategy contributes to the header first
+					// to be backward compatible. WICKET-3761
+					getMarkupSourcingStrategy().renderHead(this, container);
+					response.render(StringHeaderItem.forString(markupHeaderResponse.getBuffer()));
+				} 
+				finally
+				{
+					RequestCycle.get().setResponse(oldResponse);
+				}
 				// Then let the component itself to contribute to the header
 				renderHead(this, response);
 

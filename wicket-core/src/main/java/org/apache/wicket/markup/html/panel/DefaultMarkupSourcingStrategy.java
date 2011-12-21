@@ -21,7 +21,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,13 +140,5 @@ public final class DefaultMarkupSourcingStrategy extends AbstractMarkupSourcingS
 		}
 
 		return markup;
-	}
-
-	/**
-	 * Empty: nothing will be added to the header by default
-	 */
-	@Override
-	public void renderHead(final Component component, HtmlHeaderContainer container)
-	{
 	}
 }

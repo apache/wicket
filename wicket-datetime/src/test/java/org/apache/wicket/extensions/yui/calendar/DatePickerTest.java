@@ -36,6 +36,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +66,7 @@ public class DatePickerTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test1() throws Exception
 	{
 		log.debug("=========== test1() =================");
@@ -76,6 +78,7 @@ public class DatePickerTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDateFieldInput() throws Exception
 	{
 		log.debug("=========== testDateFieldInput() =================");
@@ -105,6 +108,7 @@ public class DatePickerTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDateFieldInputTimezone() throws Exception
 	{
 		log.debug("=========== testDateFieldInputTimezone() =================");
@@ -144,6 +148,7 @@ public class DatePickerTest extends WicketTestCase
 	/**
 	 * Tests joda & jvm default time zone handling
 	 */
+	@Test
 	public void testJodaTimeDefaultTimeZone()
 	{
 		TimeZone origJvmDef = TimeZone.getDefault();
@@ -184,6 +189,7 @@ public class DatePickerTest extends WicketTestCase
 	 * 
 	 * @throws ParseException
 	 */
+	@Test
 	public void testDifferentDateTimeZoneConversion() throws ParseException
 	{
 		log.debug("=========== testDifferentDateTimeZoneConversion() =================");
@@ -229,6 +235,7 @@ public class DatePickerTest extends WicketTestCase
 	 * Test date conversion with the server's time zone having a different current date than the
 	 * client time zone using a Locale with am/pm style time.
 	 */
+	@Test
 	public void testDifferentDateTimeZoneConversionAMPM()
 	{
 		TimeZone origJvmDef = TimeZone.getDefault();
@@ -272,6 +279,7 @@ public class DatePickerTest extends WicketTestCase
 	 * changed. The hours and minutes should be converted to the server's time zone based on the
 	 * day, month and year of the Date model.
 	 */
+	@Test
 	public void testTimeFieldDST()
 	{
 		TimeZone origJvmDef = TimeZone.getDefault();
@@ -321,6 +329,7 @@ public class DatePickerTest extends WicketTestCase
 	 * 
 	 * @throws ParseException
 	 */
+	@Test
 	public void testStyleDateConverterTimeZoneDifference() throws ParseException
 	{
 		TimeZone origJvmDef = TimeZone.getDefault();
@@ -355,6 +364,7 @@ public class DatePickerTest extends WicketTestCase
 	 * Validates the "value" tags of the &ltinput&gt fields for DateTimeField, DateField and
 	 * TimeField when they are given Date models containing Date instances.
 	 */
+	@Test
 	public void testDateFieldsWithDateModels()
 	{
 		TimeZone origJvmDef = TimeZone.getDefault();
@@ -420,6 +430,7 @@ public class DatePickerTest extends WicketTestCase
 	 * 
 	 * @throws ParseException
 	 */
+	@Test
 	public void testDates1() throws ParseException
 	{
 		log.debug("=========== testDates1() =================");
@@ -451,6 +462,7 @@ public class DatePickerTest extends WicketTestCase
 	 * 
 	 * @throws ParseException
 	 */
+	@Test
 	public void testDates2() throws ParseException
 	{
 		log.debug("=========== testDates2() =================");
@@ -482,6 +494,7 @@ public class DatePickerTest extends WicketTestCase
 	 * 
 	 * @throws ParseException
 	 */
+	@Test
 	public void testDates3() throws ParseException
 	{
 		log.debug("=========== testDates3() =================");
@@ -600,7 +613,7 @@ public class DatePickerTest extends WicketTestCase
 	 * @return Date
 	 * @throws ParseException
 	 */
-	public Date convertDateNew(final String dateStr, final Integer hours, final Integer minutes,
+	private Date convertDateNew(final String dateStr, final Integer hours, final Integer minutes,
 		final AM_PM amOrPm, final boolean use12HourFormat, final TimeZone tzClient)
 		throws ParseException
 	{
@@ -660,7 +673,7 @@ public class DatePickerTest extends WicketTestCase
 	 * @return Date
 	 * @throws ParseException
 	 */
-	public Date convertDateJoda(final String dateStr, final Integer hours, final Integer minutes,
+	private Date convertDateJoda(final String dateStr, final Integer hours, final Integer minutes,
 		final AM_PM amOrPm, final boolean use12HourFormat, final TimeZone tzClient)
 		throws ParseException
 	{

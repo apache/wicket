@@ -1400,7 +1400,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE OR OVERWRITE IT.
 	 * 
 	 * Renders the next element of markup in the given markup stream.
 	 * 
@@ -1408,7 +1408,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            The markup stream
 	 * @return true, if element was rendered as RawMarkup
 	 */
-	protected final boolean renderNext(final MarkupStream markupStream)
+	protected boolean renderNext(final MarkupStream markupStream)
 	{
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();

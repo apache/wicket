@@ -19,14 +19,15 @@ package org.apache.wicket.markup.renderStrategy;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer.HeaderStreamState;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 
 /**
  * This a header render strategy implements a child->parent->root sequence, which is inverse to how
  * it was until Wicket 1.5. It now allows parent containers to replace child contributions, since
- * their contribution is added to the markup after the child ones (see
- * <a href="https://issues.apache.org/jira/browse/WICKET-2693">WICKET-2693</a>).
+ * their contribution is added to the markup after the child ones (see <a
+ * href="https://issues.apache.org/jira/browse/WICKET-2693">WICKET-2693</a>).
  * 
  * Please note that irrespective of the render strategy, if the same header content (e.g. CSS file)
  * gets added twice to the header, only the first will be rendered and the 2nd will be skipped.
@@ -44,7 +45,7 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 
 	@Override
 	public void renderHeader(final HtmlHeaderContainer headerContainer,
-		final Component rootComponent)
+		HeaderStreamState headerStreamState, final Component rootComponent)
 	{
 		Args.notNull(headerContainer, "headerContainer");
 		Args.notNull(rootComponent, "rootComponent");
@@ -52,11 +53,11 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 		// First the application level headers
 		renderApplicationLevelHeaders(headerContainer);
 
-		// Than its child hierarchy
+		// Then its child hierarchy
 		renderChildHeaders(headerContainer, rootComponent);
 
-		// Than the root component's headers
-		renderRootComponent(headerContainer, rootComponent);
+		// Then the root component's headers
+		renderRootComponent(headerContainer, headerStreamState, rootComponent);
 	}
 
 	/**

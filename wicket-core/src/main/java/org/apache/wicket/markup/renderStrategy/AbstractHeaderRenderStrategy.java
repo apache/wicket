@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer.HeaderStreamState;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -95,7 +96,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 
 	@Override
 	public void renderHeader(final HtmlHeaderContainer headerContainer,
-		final Component rootComponent)
+		HeaderStreamState headerStreamState, final Component rootComponent)
 	{
 		Args.notNull(headerContainer, "headerContainer");
 		Args.notNull(rootComponent, "rootComponent");
@@ -103,10 +104,10 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 		// First the application level headers
 		renderApplicationLevelHeaders(headerContainer);
 
-		// Than the root component's headers
-		renderRootComponent(headerContainer, rootComponent);
+		// Then the root component's headers
+		renderRootComponent(headerContainer, headerStreamState, rootComponent);
 
-		// Than its child hierarchy
+		// Then its child hierarchy
 		renderChildHeaders(headerContainer, rootComponent);
 	}
 
@@ -114,11 +115,13 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	 * Render the root component (e.g. Page).
 	 * 
 	 * @param headerContainer
+	 * @param headerStreamState
 	 * @param rootComponent
 	 */
 	protected void renderRootComponent(final HtmlHeaderContainer headerContainer,
-		final Component rootComponent)
+		final HeaderStreamState headerStreamState, final Component rootComponent)
 	{
+		headerContainer.renderHeaderTagBody(headerStreamState);
 		rootComponent.renderHead(headerContainer);
 	}
 

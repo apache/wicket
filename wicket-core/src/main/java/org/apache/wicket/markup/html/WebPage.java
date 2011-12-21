@@ -269,7 +269,7 @@ public class WebPage extends Page
 				getRequestCycle().setResponse(response);
 
 				// Render all header sections of all components on the page
-				AbstractHeaderRenderStrategy.get().renderHeader(header, getPage());
+				AbstractHeaderRenderStrategy.get().renderHeader(header, null, getPage());
 				response.close();
 
 				if (response.getBuffer().length() > 0)

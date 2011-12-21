@@ -32,6 +32,8 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.resource.header.StringHeaderItem;
 import org.apache.wicket.response.StringResponse;
 
 
@@ -84,6 +86,40 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	private transient IHeaderResponse headerResponse = null;
 
 	/**
+	 * Combines the {@link MarkupStream} with the open tag, together representing the header section
+	 * in the markup.
+	 * 
+	 * @author papegaaij
+	 */
+	public static class HeaderStreamState
+	{
+		private MarkupStream markupStream;
+		private ComponentTag openTag;
+
+		private HeaderStreamState(MarkupStream markupStream, ComponentTag openTag)
+		{
+			this.markupStream = markupStream;
+			this.openTag = openTag;
+		}
+
+		/**
+		 * @return the {@link MarkupStream}
+		 */
+		public MarkupStream getMarkupStream()
+		{
+			return markupStream;
+		}
+
+		/**
+		 * @return the {@link ComponentTag} that represents the open tag
+		 */
+		public ComponentTag getOpenTag()
+		{
+			return openTag;
+		}
+	}
+
+	/**
 	 * Construct
 	 * 
 	 * @see Component#Component(String)
@@ -103,7 +139,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 
 	/**
 	 * First render the body of the component. And if it is the header component of a Page (compared
-	 * to a Panel or Border), than get the header sections from all component in the hierarchy and
+	 * to a Panel or Border), then get the header sections from all component in the hierarchy and
 	 * render them as well.
 	 */
 	@Override
@@ -131,32 +167,24 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			}
 
 			// Render the header sections of all components on the page
-			AbstractHeaderRenderStrategy.get().renderHeader(this, getPage());
+			AbstractHeaderRenderStrategy.get().renderHeader(this,
+				new HeaderStreamState(markupStream, openTag), getPage());
 
 			// Close the header response before rendering the header container itself
 			// See https://issues.apache.org/jira/browse/WICKET-3728
 			headerResponse.close();
 
-			// Create a separate (string) response for the header container itself
-			final StringResponse bodyResponse = new StringResponse();
-			getRequestCycle().setResponse(bodyResponse);
-
-			// render the header section directly associated with the markup
-			super.onComponentTagBody(markupStream, openTag);
-
 			// Cleanup extraneous CR and LF from the response
 			CharSequence output = getCleanResponse(response);
-			CharSequence bodyOutput = getCleanResponse(bodyResponse);
 
 			// Automatically add <head> if necessary
-			if ((output.length() > 0) || (bodyOutput.length() > 0))
+			if (output.length() > 0)
 			{
 				if (renderOpenAndCloseTags())
 				{
 					webResponse.write("<head>");
 				}
 
-				webResponse.write(bodyOutput);
 				webResponse.write(output);
 
 				if (renderOpenAndCloseTags())
@@ -169,6 +197,40 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 		{
 			// Restore the original response
 			getRequestCycle().setResponse(webResponse);
+		}
+	}
+
+	/**
+	 * Renders the content of the &lt;head&gt; section of the page, including &lt;wicket:head&gt;
+	 * sections in subclasses of the page. For every child-component, the content is rendered to a
+	 * string and passed to {@link IHeaderResponse}.
+	 * 
+	 * @param headerStreamState
+	 */
+	public void renderHeaderTagBody(HeaderStreamState headerStreamState)
+	{
+		if (headerStreamState == null)
+			return;
+
+		final Response oldResponse = getRequestCycle().getResponse();
+		try
+		{
+			// Create a separate (string) response for the header container itself
+			final StringResponse bodyResponse = new StringResponse();
+			getRequestCycle().setResponse(bodyResponse);
+
+			// render the header section directly associated with the markup
+			super.onComponentTagBody(headerStreamState.getMarkupStream(),
+				headerStreamState.getOpenTag());
+			CharSequence bodyOutput = getCleanResponse(bodyResponse);
+			if (bodyOutput.length() > 0)
+			{
+				getHeaderResponse().render(StringHeaderItem.forString(bodyOutput));
+			}
+		}
+		finally
+		{
+			getRequestCycle().setResponse(oldResponse);
 		}
 	}
 
@@ -288,6 +350,32 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			headerResponse = getApplication().decorateHeaderResponse(newHeaderResponse());
 		}
 		return headerResponse;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * Temporarily replaces the response with a StringResponse to capture the header output for this
+	 * part of the stream and pass it to {@link IHeaderResponse}.
+	 * 
+	 * @see org.apache.wicket.MarkupContainer#renderNext(org.apache.wicket.markup.MarkupStream)
+	 */
+	@Override
+	protected final boolean renderNext(MarkupStream markupStream)
+	{
+		StringResponse markupHeaderResponse = new StringResponse();
+		Response oldResponse = getResponse();
+		RequestCycle.get().setResponse(markupHeaderResponse);
+		try
+		{
+			boolean ret = super.renderNext(markupStream);
+			getHeaderResponse().render(StringHeaderItem.forString(markupHeaderResponse.getBuffer()));
+			return ret;
+		}
+		finally
+		{
+			RequestCycle.get().setResponse(oldResponse);
+		}
 	}
 
 	@Override
