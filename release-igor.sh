@@ -33,7 +33,7 @@ stty -echo
 read passphrase
 stty $stty_orig
 
-# test the GPGP passphrase to fail-fast:
+# test the GPG passphrase to fail-fast:
 echo "$passphrase" | gpg --passphrase-fd 0 --armor --output pom.xml.asc --detach-sig pom.xml
 gpg --verify pom.xml.asc
 if [ $? -ne 0 ]; then
