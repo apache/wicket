@@ -50,7 +50,7 @@ public class StringHeaderItem extends HeaderItem
 	 */
 	public StringHeaderItem(CharSequence string)
 	{
-		this.string = Args.notEmpty(string, "string");
+		this.string = Args.notNull(string, "string");
 	}
 
 	/**
