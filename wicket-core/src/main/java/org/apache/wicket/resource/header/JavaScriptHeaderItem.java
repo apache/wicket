@@ -207,7 +207,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		{
 			throw new IllegalArgumentException("url cannot be empty or null");
 		}
-		String urlWoSessionId = Strings.stripJSessionId(url);
-		JavaScriptUtils.writeJavaScriptUrl(response, urlWoSessionId, id, defer, charset);
+
+		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset);
 	}
 }

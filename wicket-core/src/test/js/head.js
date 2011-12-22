@@ -88,7 +88,7 @@ jQuery(document).ready(function() {
 		scriptElement.src = "../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
 		ok(Wicket.Head.containsElement(scriptElement, 'src'), 'There should be an element for wicket-ajax-debug.js');
 	});
-	
+
 	test('Wicket.Head.containsElement - check existence of data/test.js with "src_"', function() {
 		var $script = jQuery('<script>', {
 			type: 'text/javascript',
@@ -101,6 +101,23 @@ jQuery(document).ready(function() {
 		script.src = script['src_'];
 		// check for existence by 'src' attribute
 		ok(Wicket.Head.containsElement(script, 'src'), 'There should be an element for wicket-ajax-debug.js');
+	});
+
+	test('Wicket.Head.containsElement - check existence of data/test.js with jsessionid in the url', function() {
+		var
+			script1 = jQuery('<script>', {
+				type: 'text/javascript',
+				src: 'data/test.js;jsessionid=1'
+			})[0],
+			script2 = jQuery('<script>', {
+				type: 'text/javascript',
+				src: 'data/test.js;jsessionid=2' // different jsessionid
+			})[0];
+
+		// add just jsessionid=1
+		Wicket.Head.addElement(script1);
+
+		ok(Wicket.Head.containsElement(script2, 'src'), 'The jsessionid part of the URL must be ignored.');
 	});
 
 	module('addJavascript');

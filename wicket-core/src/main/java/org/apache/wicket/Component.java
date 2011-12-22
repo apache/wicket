@@ -2681,7 +2681,10 @@ public abstract class Component
 					// Make sure the markup source strategy contributes to the header first
 					// to be backward compatible. WICKET-3761
 					getMarkupSourcingStrategy().renderHead(this, container);
-					response.render(StringHeaderItem.forString(markupHeaderResponse.getBuffer()));
+					CharSequence headerContribution = markupHeaderResponse.getBuffer();
+					if (Strings.isEmpty(headerContribution) == false) {
+						response.render(StringHeaderItem.forString(headerContribution));
+					}
 				} 
 				finally
 				{
