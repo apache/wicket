@@ -49,6 +49,8 @@ find . -name "pom.xml" | xargs sed -i -e "s/1.5-SNAPSHOT/$version/g"
 find . -name "pom.xml" | xargs sed -i -e "s/wicket\/trunk/wicket\/releases\/$version/g"
 
 echo "committing changes"
+echo "Failed: need to convert to git"
+exit
 svn commit -m "modified poms for release $version"
 
 # Clear the current NOTICE.txt file
