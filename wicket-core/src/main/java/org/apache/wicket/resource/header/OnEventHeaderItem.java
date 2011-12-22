@@ -22,6 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.JavaScriptUtils;
 
 /**
@@ -48,9 +49,9 @@ public class OnEventHeaderItem extends HeaderItem
 		return new OnEventHeaderItem(target, event, javaScript);
 	}
 
-	private String target;
-	private String event;
-	private CharSequence javaScript;
+	private final String target;
+	private final String event;
+	private final CharSequence javaScript;
 
 	/**
 	 * Construct.
@@ -61,9 +62,9 @@ public class OnEventHeaderItem extends HeaderItem
 	 */
 	public OnEventHeaderItem(String target, String event, CharSequence javaScript)
 	{
-		this.target = target;
-		this.event = event;
-		this.javaScript = javaScript;
+		this.target = Args.notEmpty(target, "target");
+		this.event = Args.notEmpty(event, "event");
+		this.javaScript = Args.notEmpty(javaScript, "javaScript");
 	}
 
 	/**

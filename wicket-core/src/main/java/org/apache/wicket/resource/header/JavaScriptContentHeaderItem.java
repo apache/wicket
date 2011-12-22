@@ -30,8 +30,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 {
-	private CharSequence javaScript;
-	private String id;
+	private final CharSequence javaScript;
+	private final String id;
 
 	/**
 	 * Creates a new {@code JavaScriptContentHeaderItem}.

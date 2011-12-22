@@ -32,10 +32,10 @@ import org.apache.wicket.util.string.UrlUtils;
  */
 public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 {
-	private String url;
-	private String id;
-	private boolean defer;
-	private String charset;
+	private final String url;
+	private final String id;
+	private final boolean defer;
+	private final String charset;
 
 	/**
 	 * Creates a new {@code JavaScriptUrlReferenceHeaderItem}.

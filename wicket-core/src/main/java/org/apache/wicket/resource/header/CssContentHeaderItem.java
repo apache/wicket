@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.resource.header;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.CssUtils;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * {@link HeaderItem} for internal (embedded in the header) css content.
@@ -30,8 +30,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class CssContentHeaderItem extends CssHeaderItem
 {
-	private CharSequence css;
-	private String id;
+	private final CharSequence css;
+	private final String id;
 
 	/**
 	 * Creates a new {@code CSSContentHeaderItem}.

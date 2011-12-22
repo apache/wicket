@@ -34,10 +34,10 @@ import org.apache.wicket.util.string.Strings;
  */
 public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceHeaderItem
 {
-	private ResourceReference reference;
-	private String media;
-	private PageParameters pageParameters;
-	private String condition;
+	private final ResourceReference reference;
+	private final String media;
+	private final PageParameters pageParameters;
+	private final String condition;
 
 	/**
 	 * Creates a new {@code CSSReferenceHeaderItem}.

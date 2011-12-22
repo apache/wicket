@@ -37,11 +37,11 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	implements
 		IReferenceHeaderItem
 {
-	private ResourceReference reference;
-	private String id;
-	private PageParameters pageParameters;
-	private boolean defer;
-	private String charset;
+	private final ResourceReference reference;
+	private final String id;
+	private final PageParameters pageParameters;
+	private final boolean defer;
+	private final String charset;
 
 	/**
 	 * Creates a new {@code JavaScriptReferenceHeaderItem}.

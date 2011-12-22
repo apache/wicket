@@ -19,6 +19,7 @@ package org.apache.wicket.resource.header;
 import java.util.Collections;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Free form {@code HeaderItem}. No checks are performed on what is added to the header.
@@ -40,7 +41,7 @@ public class StringHeaderItem extends HeaderItem
 		return new StringHeaderItem(string);
 	}
 
-	private CharSequence string;
+	private final CharSequence string;
 
 	/**
 	 * Construct.
@@ -49,7 +50,7 @@ public class StringHeaderItem extends HeaderItem
 	 */
 	public StringHeaderItem(CharSequence string)
 	{
-		this.string = string;
+		this.string = Args.notEmpty(string, "string");
 	}
 
 	/**

@@ -30,9 +30,9 @@ import org.apache.wicket.util.string.UrlUtils;
  */
 public class CssUrlReferenceHeaderItem extends CssHeaderItem
 {
-	private String url;
-	private String media;
-	private String condition;
+	private final String url;
+	private final String media;
+	private final String condition;
 
 	/**
 	 * Creates a new {@code CSSUrlReferenceHeaderItem}.
