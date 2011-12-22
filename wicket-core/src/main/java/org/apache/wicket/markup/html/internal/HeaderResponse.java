@@ -145,7 +145,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 					getResponse().write("]>");
 				}
 				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-				getResponse().write(urlWoSessionId);
+				getResponse().write(url);
 				getResponse().write("\"");
 				if (media != null)
 				{
@@ -246,7 +246,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 			if (token1Unused && token2Unused)
 			{
-				JavaScriptUtils.writeJavaScriptUrl(getResponse(), urlWoSessionId, id, defer,
+				JavaScriptUtils.writeJavaScriptUrl(getResponse(), url, id, defer,
 					charset);
 				markRendered(token1);
 				if (token2 != null)

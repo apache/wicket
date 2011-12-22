@@ -34,6 +34,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
+import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -189,4 +190,19 @@ public class HeaderResponseTest
 		Assert.assertEquals(expected, actual);
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4312
+	 */
+	@Test
+	public void preserveJSessionId() {
+		WicketTester tester = new WicketTester();
+		try {
+			headerResponse.renderJavaScriptReference("js-resource.js;jsessionid=1h402r54r4xuep32znicouftm", "some-id", false, null);
+			String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"js-resource.js;jsessionid=1h402r54r4xuep32znicouftm\"></script>\n";
+			String actual = headerResponse.getResponse().toString();
+			Assert.assertEquals(expected, actual);
+		} finally {
+			tester.destroy();
+		}
+	}
 }
