@@ -811,8 +811,8 @@ public abstract class Application implements UnboundListener, IEventSink
 			throw new IllegalStateException("setName must be called before initApplication");
 		}
 		internalInit();
-		init();
 		initializeComponents();
+		init();
 		applicationListeners.onAfterInitialized(this);
 
 		validateInit();
