@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.resource.filtering;
 
-import org.apache.wicket.resource.header.CssHeaderItem;
-import org.apache.wicket.resource.header.HeaderItem;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
 
 /**
  * This filter accepts anything that appears to be CSS. All CSS that is not a resource reference (

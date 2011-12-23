@@ -25,12 +25,13 @@ import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
+import org.apache.wicket.markup.head.PriorityFirstComparator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IPropertiesFactoryContext;
-import org.apache.wicket.resource.ResourceAggregator;
-import org.apache.wicket.resource.ResourceAggregator.RecordedHeaderItem;
+import org.apache.wicket.markup.head.ResourceAggregator;
+import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItem;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -360,7 +361,7 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	void setUseDefaultResourceAggregator(boolean useDefaultResourceAggregator);
 
 	/**
-	 * @return Whether to use the default {@linkplain ResourceAggregator resource aggregator}.
+	 * @return Whether to use the default {@linkplain org.apache.wicket.markup.head.ResourceAggregator resource aggregator}.
 	 */
 	boolean getUseDefaultResourceAggregator();
 
@@ -385,7 +386,7 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 * Sets the comparator used by the {@linkplain ResourceAggregator resource aggregator} for
 	 * sorting header items. It should be noted that sorting header items may break resource
 	 * dependencies. This comparator should therefore at least respect dependencies declared by
-	 * resource references.
+	 * resource references. By default, items are sorted using the {@link PriorityFirstComparator}.
 	 * 
 	 * @param comparator
 	 *            The comparator used to sort header items, when null, header items will not be

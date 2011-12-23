@@ -14,18 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.header;
+package org.apache.wicket.markup.head;
 
 import java.util.Collections;
 
 import org.apache.wicket.request.Response;
-import org.apache.wicket.resource.ResourceAggregator;
 
 /**
  * {@code HeaderItem} represents anything that can be rendered into the header. This can, for
  * example, be a {@linkplain JavaScriptHeaderItem script} or a {@linkplain CssHeaderItem stylesheet}
  * , but also {@linkplain OnEventHeaderItem event triggers} or {@linkplain StringHeaderItem free
- * form text}. {@code HeaderItem}s are used by {@link ResourceAggregator} to be able to collect all
+ * form text}. {@code HeaderItem}s are used by {@link org.apache.wicket.markup.head.ResourceAggregator} to be able to collect all
  * header sections in a uniform way. All {@code HeaderItem}s are expected to have decent
  * {@code equals}, {@code hashCode} and {@code toString} (for debugging).
  * 

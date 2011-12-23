@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.header;
+package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,7 +71,7 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 
 	/**
 	 * @return the resource reference pointing to the javascript resource
-	 * @see org.apache.wicket.resource.header.IReferenceHeaderItem#getReference()
+	 * @see IReferenceHeaderItem#getReference()
 	 */
 	@Override
 	public ResourceReference getReference()

@@ -19,7 +19,7 @@ package org.apache.wicket.resource;
 import java.util.Set;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.resource.header.HeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
 
 /**
  * Thrown when a circular dependency is detected between resources.

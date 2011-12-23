@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.resource.filtering;
 
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.resource.filtering.HeaderResponseContainerFilteringHeaderResponse.IHeaderResponseFilter;
-import org.apache.wicket.resource.header.HeaderItem;
 
 /**
  * A filter that takes another filter and always returns the opposite of another filter. This is

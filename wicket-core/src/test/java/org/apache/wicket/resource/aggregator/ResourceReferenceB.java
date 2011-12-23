@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.resource.aggregator;
 
-import static org.apache.wicket.resource.header.JavaScriptHeaderItem.forReference;
+import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 import java.util.Collections;
 
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.resource.header.HeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
 
 /**
  * js resource with dep on A

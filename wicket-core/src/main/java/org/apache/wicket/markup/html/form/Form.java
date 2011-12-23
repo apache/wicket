@@ -50,7 +50,7 @@ import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;

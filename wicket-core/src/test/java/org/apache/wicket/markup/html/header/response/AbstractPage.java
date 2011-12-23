@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.markup.html.header.response;
 
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.resource.header.StringHeaderItem;
+import org.apache.wicket.markup.head.PriorityHeaderItem;
 
 /**
  * Page with a head and header contribution
@@ -31,5 +32,7 @@ public class AbstractPage extends WebPage
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(StringHeaderItem.forString("<title>HeaderContributionInAbstractPage</title>\n"));
+		response.render(new PriorityHeaderItem(
+			StringHeaderItem.forString("<title>PriorityHeaderContributionInAbstractPage</title>\n")));
 	}
 }

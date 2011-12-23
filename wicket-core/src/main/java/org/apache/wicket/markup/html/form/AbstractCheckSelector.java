@@ -22,8 +22,8 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
-import org.apache.wicket.resource.header.OnLoadHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 
 /**
  * Base class for all Javascript-based "select-all" checkboxes. Provides a simple "select all"

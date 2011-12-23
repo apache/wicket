@@ -17,9 +17,9 @@
 package org.apache.wicket.resource;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 

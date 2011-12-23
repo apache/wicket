@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import junit.framework.Assert;
 
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -33,8 +34,7 @@ import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.header.CssHeaderItem;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;

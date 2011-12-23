@@ -33,7 +33,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.markup.head.CssHeaderItem;
 
 /**
  * Rating component that generates a number of stars where a user can click on to rate something.

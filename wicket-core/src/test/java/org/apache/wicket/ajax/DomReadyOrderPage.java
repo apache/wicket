@@ -17,9 +17,9 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 
 /**
  * @author jcompagner

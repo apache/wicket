@@ -19,8 +19,8 @@ package org.apache.wicket.resource;
 import java.util.Collections;
 import java.util.Locale;
 
-import org.apache.wicket.resource.header.HeaderItem;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 /**
  * Base class for JavaScript resources that are JQuery plugins. This class already defines a

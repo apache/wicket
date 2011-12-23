@@ -20,7 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 /**
  * Use the {@link #load(IHeaderResponse)} method to initialize the YUI library using the YUI loader.

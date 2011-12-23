@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.markup.html.header.response;
 
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.resource.header.StringHeaderItem;
+import org.apache.wicket.markup.head.PriorityHeaderItem;
 
 /**
  * Panel to be rendered in the header of the page, with a wicket:head and a contribution
@@ -41,5 +42,7 @@ public class HeaderPanel extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(StringHeaderItem.forString("<title>HeaderContributionInHeaderPanel</title>\n"));
+		response.render(new PriorityHeaderItem(
+			StringHeaderItem.forString("<title>PriorityHeaderContributionInHeaderPanel</title>\n")));
 	}
 }

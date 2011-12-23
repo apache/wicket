@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.resource.aggregator;
 
-import static org.apache.wicket.resource.header.JavaScriptHeaderItem.forReference;
+import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,15 +24,15 @@ import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
-import org.apache.wicket.resource.ResourceAggregator;
-import org.apache.wicket.resource.header.HeaderItem;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests for the {@link ResourceAggregator} class.
+ * Tests for the {@link org.apache.wicket.markup.head.ResourceAggregator} class.
  * 
  * @author Hielke Hoeve
  */

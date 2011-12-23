@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.resource.header.StringHeaderItem;
 
 /**
  * 

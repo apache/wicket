@@ -27,8 +27,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
-import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 /**
  * A panel where you can lazy load another panel. This can be used if you have a panel/component

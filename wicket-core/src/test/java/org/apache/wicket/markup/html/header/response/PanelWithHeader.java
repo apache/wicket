@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.markup.html.header.response;
 
+import java.util.Collections;
+
+import org.apache.wicket.markup.head.PriorityHeaderItem;
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.resource.header.StringHeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
 
 /**
  * Panel to be rendered in the body of the page, with a wicket:head and a contribution
@@ -26,6 +30,20 @@ import org.apache.wicket.resource.header.StringHeaderItem;
 public class PanelWithHeader extends Panel
 {
 	private static final long serialVersionUID = 1L;
+
+	private static class StringHeaderItemWithDependency extends StringHeaderItem
+	{
+		public StringHeaderItemWithDependency(CharSequence string)
+		{
+			super(string);
+		}
+
+		@Override
+		public Iterable<? extends HeaderItem> getDependencies()
+		{
+			return Collections.singletonList(StringHeaderItem.forString("<title>DependencyOfPriorityHeaderContributionInPanelWithHeader</title>\n"));
+		}
+	}
 
 	/**
 	 * Construct.
@@ -41,5 +59,7 @@ public class PanelWithHeader extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(StringHeaderItem.forString("<title>HeaderContributionInPanelWithHeader</title>\n"));
+		response.render(new PriorityHeaderItem(new StringHeaderItemWithDependency(
+			"<title>PriorityHeaderContributionInPanelWithHeader</title>\n")));
 	}
 }

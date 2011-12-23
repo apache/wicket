@@ -28,12 +28,13 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.head.PageHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.resource.header.StringHeaderItem;
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.response.StringResponse;
 
 
@@ -369,7 +370,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 		try
 		{
 			boolean ret = super.renderNext(markupStream);
-			getHeaderResponse().render(StringHeaderItem.forString(markupHeaderResponse.getBuffer()));
+			getHeaderResponse().render(new PageHeaderItem(markupHeaderResponse.getBuffer()));
 			return ret;
 		}
 		finally

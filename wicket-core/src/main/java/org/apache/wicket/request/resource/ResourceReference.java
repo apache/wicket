@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.resource.header.HeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;

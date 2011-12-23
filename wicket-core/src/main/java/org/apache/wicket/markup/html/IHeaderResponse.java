@@ -18,9 +18,9 @@ package org.apache.wicket.markup.html;
 
 import java.io.Closeable;
 
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.header.HeaderItem;
 
 /**
  * Interface that is used to render header elements (usually javascript and CSS references).

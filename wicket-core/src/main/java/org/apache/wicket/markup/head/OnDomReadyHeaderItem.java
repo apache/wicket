@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.header;
+package org.apache.wicket.markup.head;
 
 import java.util.Collections;
 
@@ -26,65 +26,40 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.JavaScriptUtils;
 
 /**
- * {@link HeaderItem} for event triggered scripts.
+ * {@link HeaderItem} for scripts that need to be executed directly after the DOM has been built,
+ * but before external resources, such as images, are loaded.
  * 
  * @author papegaaij
  */
-public class OnEventHeaderItem extends HeaderItem
+public class OnDomReadyHeaderItem extends HeaderItem
 {
 	/**
-	 * Creates a {@link OnEventHeaderItem} for the given parameters.
+	 * Creates a {@link OnDomReadyHeaderItem} for the script.
 	 * 
-	 * @param target
-	 *            The target of the event handler, for example 'window' or 'document'.
-	 * @param event
-	 *            The event itself, for example 'onclick'.
 	 * @param javaScript
-	 *            The script to execute on the event.
+	 *            The script to execute on the DOM ready event.
 	 * 
-	 * @return A newly created {@link OnEventHeaderItem}.
+	 * @return A newly created {@link OnDomReadyHeaderItem}.
 	 */
-	public static OnEventHeaderItem forScript(String target, String event, CharSequence javaScript)
+	public static OnDomReadyHeaderItem forScript(CharSequence javaScript)
 	{
-		return new OnEventHeaderItem(target, event, javaScript);
+		return new OnDomReadyHeaderItem(javaScript);
 	}
 
-	private final String target;
-	private final String event;
 	private final CharSequence javaScript;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param target
-	 * @param event
 	 * @param javaScript
 	 */
-	public OnEventHeaderItem(String target, String event, CharSequence javaScript)
+	public OnDomReadyHeaderItem(CharSequence javaScript)
 	{
-		this.target = Args.notEmpty(target, "target");
-		this.event = Args.notEmpty(event, "event");
 		this.javaScript = Args.notEmpty(javaScript, "javaScript");
 	}
 
 	/**
-	 * @return The target of the event handler, for example 'window' or 'document'.
-	 */
-	public String getTarget()
-	{
-		return target;
-	}
-
-	/**
-	 * @return The event itself, for example 'onclick'.
-	 */
-	public String getEvent()
-	{
-		return event;
-	}
-
-	/**
-	 * @return The script to execute on the event.
+	 * @return the script that gets executed on the DOM ready event.
 	 */
 	public CharSequence getJavaScript()
 	{
@@ -94,38 +69,33 @@ public class OnEventHeaderItem extends HeaderItem
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(" + getTarget() + ", \"" +
-			getEvent() + "\", function(event) { " + getJavaScript() + ";});");
+		JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"domready\", " +
+			"function(event) { " + getJavaScript() + ";});");
 	}
 
 	@Override
 	public Iterable<?> getRenderTokens()
 	{
-		return Collections.singletonList("javascript-event-" + getTarget() + "-" + getEvent() +
-			"-" + getJavaScript());
+		return Collections.singletonList("javascript-domready-" + getJavaScript());
 	}
 
 	@Override
 	public String toString()
 	{
-		return "OnEventHeaderItem(" + getTarget() + "," + getEvent() + "," + getJavaScript() + ")";
+		return "OnDomReadyHeaderItem(" + getJavaScript() + ")";
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return getTarget().hashCode() ^ getEvent().hashCode() ^ getJavaScript().hashCode();
+		return getJavaScript().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof OnEventHeaderItem)
-		{
-			OnEventHeaderItem other = (OnEventHeaderItem)obj;
-			return other.getTarget().equals(getTarget()) && other.getEvent().equals(getEvent()) &&
-				other.getJavaScript().equals(getJavaScript());
-		}
+		if (obj instanceof OnDomReadyHeaderItem)
+			return ((OnDomReadyHeaderItem)obj).getJavaScript().equals(getJavaScript());
 		return false;
 	}
 

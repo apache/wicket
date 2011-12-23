@@ -19,9 +19,9 @@ package org.apache.wicket.markup.html.internal;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.resource.header.HeaderItem;
 import org.apache.wicket.response.NullResponse;
 
 

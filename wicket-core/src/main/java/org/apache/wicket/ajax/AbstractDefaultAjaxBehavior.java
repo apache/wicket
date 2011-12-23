@@ -26,6 +26,7 @@ import org.apache.wicket.ajax.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -34,7 +35,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -80,7 +80,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		Url baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
 		response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl +
-			"\";", "wicket-ajax-base-url"));
+				"\";", "wicket-ajax-base-url"));
 
 		final IAjaxCallDecorator ajaxCallDecorator = getAjaxCallDecorator();
 		if (ajaxCallDecorator instanceof IComponentAwareHeaderContributor)

@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.header.response;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.head.PriorityFirstComparator;
 import org.junit.Test;
 
 /**
@@ -27,9 +28,14 @@ import org.junit.Test;
 public class HeaderResponseTest extends WicketTestCase
 {
 	/**
-	 * Renders items in child-first order. The expected order is: children in depth first order,
-	 * first rendering the wicket:head, then the header contributions, finally the head of the base
-	 * page is rendered, followed by the wicket:head of the concrete page
+	 * Renders items in child-first order and priority items and parent-first order. The expected
+	 * order is:
+	 * <ul>
+	 * <li>children in depth first order, first rendering the wicket:head, then the header
+	 * contributions</li>
+	 * <li>next the head of the base page is rendered</li>
+	 * <li>followed by the wicket:head of the concrete page</li>
+	 * </ul>
 	 * 
 	 * @throws Exception
 	 */
@@ -37,5 +43,18 @@ public class HeaderResponseTest extends WicketTestCase
 	public void testAllMarkup() throws Exception
 	{
 		executeTest(ConcretePage.class, "ExpectedResult.html");
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAllMarkupPageFirst() throws Exception
+	{
+		tester.getApplication()
+			.getResourceSettings()
+			.setHeaderItemComparator(new PriorityFirstComparator(true));
+		executeTest(ConcretePage.class, "ExpectedResultPageFirst.html");
 	}
 }

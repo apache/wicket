@@ -17,11 +17,10 @@
 package org.apache.wicket.resource.aggregator;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.resource.ResourceAggregator;
 import org.junit.Test;
 
 /**
- * Tests for the {@link ResourceAggregator} class.
+ * Tests for the {@link org.apache.wicket.markup.head.ResourceAggregator} class.
  * 
  * @author Hielke Hoeve
  */

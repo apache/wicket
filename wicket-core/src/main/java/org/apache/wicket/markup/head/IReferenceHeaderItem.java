@@ -14,37 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.header;
+package org.apache.wicket.markup.head;
 
-import java.util.Collections;
-
-import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
- * {@link HeaderItem} that is not rendered.
+ * Interface for {@link HeaderItem}s that represent a {@link ResourceReference}.
  * 
  * @author papegaaij
  */
-public class NoHeaderItem extends HeaderItem
+public interface IReferenceHeaderItem
 {
-	private static final NoHeaderItem INSTANCE = new NoHeaderItem();
-
 	/**
-	 * @return The singleton instance of {@code NoHeaderItem}
+	 * @return the reference for the item.
 	 */
-	public static NoHeaderItem get()
-	{
-		return INSTANCE;
-	}
-
-	@Override
-	public void render(Response response)
-	{
-	}
-
-	@Override
-	public Iterable<?> getRenderTokens()
-	{
-		return Collections.emptyList();
-	}
+	ResourceReference getReference();
 }

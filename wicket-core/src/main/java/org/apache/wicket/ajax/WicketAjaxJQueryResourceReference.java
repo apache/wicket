@@ -21,8 +21,8 @@ import java.util.Collections;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
-import org.apache.wicket.resource.header.HeaderItem;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 /**
  * @author hoeve

@@ -18,9 +18,9 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
-import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
-import org.apache.wicket.resource.header.OnLoadHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 
 class AjaxHeaderContribution extends Panel
 {

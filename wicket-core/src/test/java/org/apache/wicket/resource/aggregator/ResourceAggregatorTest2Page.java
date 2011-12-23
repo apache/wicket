@@ -18,11 +18,10 @@ package org.apache.wicket.resource.aggregator;
 
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
-import org.apache.wicket.resource.ResourceAggregator;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 /**
- * Dummy page used for testing the {@link ResourceAggregator}.
+ * Dummy page used for testing the {@link org.apache.wicket.markup.head.ResourceAggregator}.
  * 
  * @author Hielke Hoeve
  */

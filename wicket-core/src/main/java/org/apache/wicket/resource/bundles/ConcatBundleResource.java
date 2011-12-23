@@ -25,11 +25,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.resource.header.IReferenceHeaderItem;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;

@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.html.header;
 
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.resource.header.CssHeaderItem;
 
 /**
  * 
@@ -39,6 +39,6 @@ public class MyPage2 extends WebPage
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(CssHeaderItem.forReference(new PackageResourceReference(getClass(),
-			getClass().getSimpleName() + ".css")));
+				getClass().getSimpleName() + ".css")));
 	}
 }

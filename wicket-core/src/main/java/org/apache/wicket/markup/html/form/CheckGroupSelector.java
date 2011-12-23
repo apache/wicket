@@ -17,10 +17,10 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 
 /**
  * Selects and deselects all Check components under the same CheckGroup as itself. Selection

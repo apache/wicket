@@ -28,6 +28,7 @@ import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
+import org.apache.wicket.markup.head.PriorityFirstComparator;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
@@ -38,7 +39,7 @@ import org.apache.wicket.request.resource.caching.version.LastModifiedResourceVe
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.request.resource.caching.version.RequestCycleCachedResourceVersion;
 import org.apache.wicket.resource.PropertiesFactory;
-import org.apache.wicket.resource.ResourceAggregator.RecordedHeaderItem;
+import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItem;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
@@ -134,7 +135,8 @@ public class ResourceSettings implements IResourceSettings
 
 	private Boolean useMinifiedResources;
 
-	private Comparator<? super RecordedHeaderItem> headerItemComparator;
+	private Comparator<? super RecordedHeaderItem> headerItemComparator = new PriorityFirstComparator(
+		false);
 
 	/**
 	 * Configures Wicket's default ResourceLoaders.<br>

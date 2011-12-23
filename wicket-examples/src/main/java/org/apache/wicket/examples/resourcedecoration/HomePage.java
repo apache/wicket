@@ -21,6 +21,7 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -28,9 +29,8 @@ import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
 import org.apache.wicket.resource.filtering.HeaderResponseFilteredResponseContainer;
-import org.apache.wicket.resource.header.CssHeaderItem;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
-import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -95,7 +95,7 @@ public class HomePage extends WicketExamplePage
 		// two CSS resources in the same group. header.css is rendered first because has lower
 		// "order" number
 		response.render(CssHeaderItem.forReference(new CssResourceReference(HomePage.class,
-			"footer.css")));
+				"footer.css")));
 		response.render(CssHeaderItem.forReference(new CssResourceReference(HomePage.class,
 			"header.css")));
 

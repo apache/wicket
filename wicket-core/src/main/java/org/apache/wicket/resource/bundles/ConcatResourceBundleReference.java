@@ -24,11 +24,11 @@ import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ResourceBundles;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.header.HeaderItem;
-import org.apache.wicket.resource.header.IReferenceHeaderItem;
 import org.apache.wicket.util.lang.Args;
 
 /**

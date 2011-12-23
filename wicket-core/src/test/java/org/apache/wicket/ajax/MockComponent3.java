@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.ajax;
 
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.resource.header.CssHeaderItem;
 
 /**
  * 
@@ -43,6 +43,6 @@ public class MockComponent3 extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(CssHeaderItem.forReference(new PackageResourceReference(
-			MockComponent3.class, "mockStyleSheet3.css")));
+				MockComponent3.class, "mockStyleSheet3.css")));
 	}
 }

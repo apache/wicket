@@ -21,16 +21,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.markup.head.*;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.resource.bundles.ConcatResourceBundleReference;
-import org.apache.wicket.resource.header.CssHeaderItem;
-import org.apache.wicket.resource.header.CssReferenceHeaderItem;
-import org.apache.wicket.resource.header.HeaderItem;
-import org.apache.wicket.resource.header.IReferenceHeaderItem;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
-import org.apache.wicket.resource.header.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.head.CssReferenceHeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IReferenceHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 
 /**
  * Contains all resource bundles that are registered in the application. Resource bundles provide a
@@ -86,7 +86,7 @@ public class ResourceBundles
 			items.add(JavaScriptHeaderItem.forReference(curReference));
 		}
 		return addBundle(JavaScriptHeaderItem.forReference(new ConcatResourceBundleReference<JavaScriptReferenceHeaderItem>(
-			scope, name, items)));
+				scope, name, items)));
 	}
 
 

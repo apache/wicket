@@ -17,7 +17,6 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 
 /**
  * A behavior that updates the hosting {@link FormComponent} via Ajax when value of the component is

@@ -33,36 +33,32 @@ jQuery(document).ready(function() {
 		return text;
 	}
 
-	execute = function (dataElementId, options) {
+	execute = function (dataElementId, attributes) {
 		
 		var defaults = {
-				parseResponse: true,
-				randomUrl: false,
-				failureHandler: function () {
+				fh: function () {
 					start();
 					ok(false, 'Failure handler should not be called!');
 				},
-				channel: '0|s',
-				successHandler: function () {
+				ch: '0|s',
+				sh: function () {
 					start();
 					ok(true, 'Success handler is executed');
 				},
-				url: 'dummy/url',
-				transport: {
-					abort: function() {},
-					responseText: loadData(dataElementId),  // emulates Ajax response
-					responseXML: Wicket.Xml.parse(loadData(dataElementId)),  // emulates Ajax response (IE)
-					status: 200,
-					readyState: 4
-				}
+				u: 'dummy/url'
 		};
-		var opts = jQuery.extend({}, defaults, options);
-		var call = new Wicket.Ajax.Call(opts.url, opts.successHandler, opts.failureHandler, opts.channel);
-		var request = new Wicket.Ajax.Request(opts.url, call.loadedCallback.bind(call), opts.parseResponse, opts.randomUrl, opts.failureHandler, opts.channel, opts.successHandler);
+		var attrs = jQuery.extend({}, defaults, attributes);
+		var call = new Wicket.Ajax.Call();
 
-		request.transport = opts.transport;
+		var jqXHR = {
+			responseText: loadData(dataElementId),  // emulates Ajax response
+			responseXML: Wicket.Xml.parse(loadData(dataElementId)),  // emulates Ajax response (IE)
+			status: 200,
+			readyState: 4
+		};
 
-		request.stateChangeCallback();
+		call.channel = attrs.ch;
+		call.stateChangeCallback({}, "success", jqXHR, attrs);
 	};
 
 	module('Wicket.Ajax.stateChangeCallback');
@@ -93,7 +89,7 @@ jQuery(document).ready(function() {
 		expect(2);
 
 		var options = {
-			successHandler: function() {
+			sh: function() {
 				start();
 				
 				equal(jQuery('#componentToReplace').text(), 'new body', 'The component must be replaced');
@@ -121,7 +117,7 @@ jQuery(document).ready(function() {
 		};
 
 		var options = {
-			successHandler: function() {
+			sh: function() {
 				equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
 			}
 		};
@@ -134,7 +130,7 @@ jQuery(document).ready(function() {
 		expect(4);
 
 		var options = {
-			successHandler: function() {
+			sh: function() {
 				start();
 				equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
 			}
@@ -151,7 +147,7 @@ jQuery(document).ready(function() {
 		var oldTitle = jQuery('title').text();
 
 		var options = {
-			successHandler: function() {
+			sh: function() {
 				start();
 				var $title = jQuery('title');
 				equal($title.text(), 'new title', 'The title text should be updated!');

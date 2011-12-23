@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.header;
+package org.apache.wicket.markup.head;
 
 import java.util.Collections;
 
@@ -26,24 +26,23 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.JavaScriptUtils;
 
 /**
- * {@link HeaderItem} for scripts that need to be executed directly after the DOM has been built,
- * but before external resources, such as images, are loaded.
+ * {@link HeaderItem} for scripts that need to be executed after the entire page is loaded.
  * 
  * @author papegaaij
  */
-public class OnDomReadyHeaderItem extends HeaderItem
+public class OnLoadHeaderItem extends HeaderItem
 {
 	/**
-	 * Creates a {@link OnDomReadyHeaderItem} for the script.
+	 * Creates a {@link OnLoadHeaderItem} for the script.
 	 * 
 	 * @param javaScript
-	 *            The script to execute on the DOM ready event.
+	 *            The script to execute on the load event.
 	 * 
-	 * @return A newly created {@link OnDomReadyHeaderItem}.
+	 * @return A newly created {@link OnLoadHeaderItem}.
 	 */
-	public static OnDomReadyHeaderItem forScript(CharSequence javaScript)
+	public static OnLoadHeaderItem forScript(CharSequence javaScript)
 	{
-		return new OnDomReadyHeaderItem(javaScript);
+		return new OnLoadHeaderItem(javaScript);
 	}
 
 	private final CharSequence javaScript;
@@ -53,36 +52,37 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	 * 
 	 * @param javaScript
 	 */
-	public OnDomReadyHeaderItem(CharSequence javaScript)
+	public OnLoadHeaderItem(CharSequence javaScript)
 	{
 		this.javaScript = Args.notEmpty(javaScript, "javaScript");
 	}
 
 	/**
-	 * @return the script that gets executed on the DOM ready event.
+	 * @return the script that gets executed after the entire is loaded.
 	 */
 	public CharSequence getJavaScript()
 	{
 		return javaScript;
 	}
 
+
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"domready\", " +
+		JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
 			"function(event) { " + getJavaScript() + ";});");
 	}
 
 	@Override
 	public Iterable<?> getRenderTokens()
 	{
-		return Collections.singletonList("javascript-domready-" + getJavaScript());
+		return Collections.singletonList("javascript-load-" + getJavaScript());
 	}
 
 	@Override
 	public String toString()
 	{
-		return "OnDomReadyHeaderItem(" + getJavaScript() + ")";
+		return "OnLoadHeaderItem(" + getJavaScript() + ")";
 	}
 
 	@Override
@@ -94,8 +94,8 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof OnDomReadyHeaderItem)
-			return ((OnDomReadyHeaderItem)obj).getJavaScript().equals(getJavaScript());
+		if (obj instanceof OnLoadHeaderItem)
+			return ((OnLoadHeaderItem)obj).getJavaScript().equals(getJavaScript());
 		return false;
 	}
 

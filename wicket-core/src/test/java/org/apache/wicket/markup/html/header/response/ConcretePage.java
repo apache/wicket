@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.markup.html.header.response;
 
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.resource.header.StringHeaderItem;
+import org.apache.wicket.markup.head.PriorityHeaderItem;
 
 /**
  * Page with a wicket:head (markup inheritance), a header contribution and 2 panels, one in the
@@ -41,5 +42,7 @@ public class ConcretePage extends AbstractPage
 	{
 		super.renderHead(response);
 		response.render(StringHeaderItem.forString("<title>HeaderContributionInConcretePage</title>\n"));
+		response.render(new PriorityHeaderItem(
+			StringHeaderItem.forString("<title>PriorityHeaderContributionInConcretePage</title>\n")));
 	}
 }

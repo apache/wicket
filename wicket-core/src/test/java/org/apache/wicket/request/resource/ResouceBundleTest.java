@@ -19,8 +19,8 @@ package org.apache.wicket.request.resource;
 import java.util.Arrays;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.resource.bundles.ConcatBundleResource;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 import org.junit.Test;
 
 /**
@@ -38,7 +38,7 @@ public class ResouceBundleTest extends WicketTestCase
 	{
 		ConcatBundleResource bundle = new ConcatBundleResource(Arrays.asList(
 			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
-				ResouceBundleTest.class, "a.js")),
+					ResouceBundleTest.class, "a.js")),
 			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
 				ResouceBundleTest.class, "b.js"))));
 

@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.markup.head.CssHeaderItem;
 
 
 /**

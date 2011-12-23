@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.header;
+package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
 
@@ -62,7 +62,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 
 	/**
 	 * @return resource reference pointing to the CSS resource
-	 * @see org.apache.wicket.resource.header.IReferenceHeaderItem#getReference()
+	 * @see IReferenceHeaderItem#getReference()
 	 */
 	@Override
 	public ResourceReference getReference()

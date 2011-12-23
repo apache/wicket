@@ -18,9 +18,9 @@ package org.apache.wicket.ajax;
 
 import java.util.Collections;
 
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
-import org.apache.wicket.resource.header.HeaderItem;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
 
 /**
  * @author hoeve

@@ -24,14 +24,14 @@ import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ResourceBundles;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.header.HeaderItem;
 
 /**
  * A resource reference that wraps another resource to make it into a bundle. The resources that are
  * provided by the wrapped reference, have to be added with
- * {@link #addProvidedResources(HeaderItem...)}. Normally, you will have to register this bundle in
+ * {@link #addProvidedResources(org.apache.wicket.markup.head.HeaderItem...)}. Normally, you will have to register this bundle in
  * {@link ResourceBundles} under {@link Application#getResourceBundles()}. Dependencies are
  * inherited from the provided resources if the bundle does not provide them.
  * 

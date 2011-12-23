@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.resource.header.CssHeaderItem;
+import org.apache.wicket.markup.head.CssHeaderItem;
 
 /**
  * An {@link AutoCompleteTextField} which automatically includes the default CSS for the

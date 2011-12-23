@@ -16,13 +16,12 @@
  */
 package org.apache.wicket.resource.aggregator;
 
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.resource.ResourceAggregator;
-import org.apache.wicket.resource.header.OnDomReadyHeaderItem;
 
 /**
- * Dummy page used for testing the {@link ResourceAggregator}.
+ * Dummy page used for testing the {@link org.apache.wicket.markup.head.ResourceAggregator}.
  * 
  * @author Hielke Hoeve
  */

@@ -21,10 +21,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.resource.header.HeaderItem;
-import org.apache.wicket.resource.header.NoHeaderItem;
+import org.apache.wicket.markup.head.NoHeaderItem;
 import org.apache.wicket.response.StringResponse;
 
 /**

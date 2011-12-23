@@ -14,50 +14,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.header;
+package org.apache.wicket.markup.head;
+
+import org.apache.wicket.request.Response;
+import org.apache.wicket.util.string.CssUtils;
+import org.apache.wicket.util.string.Strings;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.apache.wicket.request.Response;
-import org.apache.wicket.util.string.JavaScriptUtils;
-import org.apache.wicket.util.string.Strings;
-
 /**
- * {@link HeaderItem} for internal (embedded in the header) javascript content.
+ * {@link HeaderItem} for internal (embedded in the header) css content.
  * 
  * @author papegaaij
  */
-public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
+public class CssContentHeaderItem extends CssHeaderItem
 {
-	private final CharSequence javaScript;
+	private final CharSequence css;
 	private final String id;
 
 	/**
-	 * Creates a new {@code JavaScriptContentHeaderItem}.
+	 * Creates a new {@code CSSContentHeaderItem}.
 	 * 
-	 * @param javaScript
-	 *            javascript content to be rendered.
+	 * @param css
+	 *            css content to be rendered.
 	 * @param id
-	 *            unique id for the javascript element. This can be null, however in that case the
-	 *            ajax header contribution can't detect duplicate script fragments.
+	 *            unique id for the &lt;style&gt; element. This can be <code>null</code>, however in
+	 *            that case the ajax header contribution can't detect duplicate CSS fragments.
 	 */
-	public JavaScriptContentHeaderItem(CharSequence javaScript, String id)
+	public CssContentHeaderItem(CharSequence css, String id)
 	{
-		this.javaScript = javaScript;
+		this.css = css;
 		this.id = id;
 	}
 
 	/**
-	 * @return javascript content to be rendered.
+	 * @return the css content to be rendered.
 	 */
-	public CharSequence getJavaScript()
+	public CharSequence getCss()
 	{
-		return javaScript;
+		return css;
 	}
 
 	/**
-	 * @return unique id for the javascript element.
+	 * @return unique id for the &lt;style&gt; element.
 	 */
 	public String getId()
 	{
@@ -67,34 +67,34 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, getJavaScript(), getId());
+		CssUtils.writeCss(response, getCss(), getId());
 	}
 
 	@Override
 	public Iterable<?> getRenderTokens()
 	{
 		if (Strings.isEmpty(getId()))
-			return Collections.singletonList(getJavaScript());
-		return Arrays.asList(getId(), getJavaScript());
+			return Collections.singletonList(getCss());
+		return Arrays.asList(getId(), getCss());
 	}
 
 	@Override
 	public String toString()
 	{
-		return "JavaScriptHeaderItem(" + getJavaScript() + ")";
+		return "CSSHeaderItem(" + getCss() + ")";
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return getJavaScript().hashCode();
+		return getCss().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof JavaScriptContentHeaderItem)
-			return ((JavaScriptContentHeaderItem)obj).getJavaScript().equals(getJavaScript());
+		if (obj instanceof CssContentHeaderItem)
+			return ((CssContentHeaderItem)obj).getCss().equals(getCss());
 		return false;
 	}
 }

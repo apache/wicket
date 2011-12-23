@@ -22,12 +22,12 @@ import java.text.ParseException;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.resource.header.HeaderItem;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
-import org.apache.wicket.resource.header.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -105,7 +105,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 			for (int i = 0; i < 10; i++)
 			{
 				response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(
-					"res" + i), Integer.toString(i)));
+						"res" + i), Integer.toString(i)));
 			}
 		}
 

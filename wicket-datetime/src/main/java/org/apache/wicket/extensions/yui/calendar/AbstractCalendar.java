@@ -22,11 +22,11 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.wicket.extensions.yui.YuiLib;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.resource.header.CssHeaderItem;
-import org.apache.wicket.resource.header.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.CssHeaderItem;
 
 
 /**
@@ -126,7 +126,7 @@ public abstract class AbstractCalendar extends WebComponent
 	private void contributeDependencies(IHeaderResponse response)
 	{
 		response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(
-			YuiLib.class, "yahoodomevent/yahoo-dom-event.js")));
+				YuiLib.class, "yahoodomevent/yahoo-dom-event.js")));
 		response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(
 			AbstractCalendar.class, "calendar-min.js")));
 		response.render(CssHeaderItem.forReference(new PackageResourceReference(

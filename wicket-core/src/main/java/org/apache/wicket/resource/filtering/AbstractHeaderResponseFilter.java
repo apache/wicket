@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.resource.filtering;
 
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.resource.filtering.HeaderResponseContainerFilteringHeaderResponse.IHeaderResponseFilter;
-import org.apache.wicket.resource.header.HeaderItem;
 
 /**
  * A default implementation of IHeaderResponseFilter that returns true for everything. It is defined

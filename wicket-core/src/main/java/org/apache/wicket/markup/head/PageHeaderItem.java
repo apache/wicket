@@ -14,33 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.aggregator;
-
-import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
-
-import java.util.Collections;
-
-import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
+package org.apache.wicket.markup.head;
 
 /**
- * another js resource with dep on A
+ * A special {@link StringHeaderItem} that is used for the &lt;head&gt; of a page, including the
+ * &lt;wicket:head&gt; for subclasses of a page.
+ * 
+ * @author papegaaij
  */
-public class ResourceReferenceC extends JavaScriptResourceReference
+public class PageHeaderItem extends StringHeaderItem
 {
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
+	 * 
+	 * @param string
 	 */
-	public ResourceReferenceC()
+	public PageHeaderItem(CharSequence string)
 	{
-		super(ResourceAggregatorTest.class, "c.js");
+		super(string);
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public String toString()
 	{
-		return Collections.singletonList(forReference(new ResourceReferenceA()));
+		return "PageHeaderItem(" + getString() + ")";
 	}
 }
