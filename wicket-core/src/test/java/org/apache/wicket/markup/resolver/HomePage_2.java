@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;

@@ -25,7 +25,7 @@ import org.apache.wicket.IComponentAwareEventSink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
  * Behaviors are kind of plug-ins for Components. They allow functionality to be added to a

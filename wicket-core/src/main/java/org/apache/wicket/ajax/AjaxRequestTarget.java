@@ -31,9 +31,9 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.internal.HeaderResponse;
+import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
@@ -1065,7 +1065,7 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 
 		/**
 		 * 
-		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#getRealResponse()
+		 * @see org.apache.wicket.markup.head.internal.HeaderResponse#getRealResponse()
 		 */
 		@Override
 		protected Response getRealResponse()

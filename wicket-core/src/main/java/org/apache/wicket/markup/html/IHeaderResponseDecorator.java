@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.markup.head.IHeaderResponse;
+
 /**
  * Setting an IHeaderResponseDecorator on an application allows you to wrap any IHeaderResponse
  * created by Wicket in a separate implementation that incrementally adds functionality to the

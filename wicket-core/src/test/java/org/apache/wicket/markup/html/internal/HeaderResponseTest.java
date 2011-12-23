@@ -25,8 +25,9 @@ import java.nio.charset.Charset;
 import junit.framework.Assert;
 
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;

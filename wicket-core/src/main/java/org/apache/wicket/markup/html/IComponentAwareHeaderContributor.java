@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
  * An interface to be implemented by {@link Behavior}s or {@link IAjaxCallDecorator}s that wish to

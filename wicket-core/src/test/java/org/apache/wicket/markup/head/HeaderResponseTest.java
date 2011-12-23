@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.header.response;
+package org.apache.wicket.markup.head;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.head.PriorityFirstComparator;
+import org.apache.wicket.markup.html.header.response.ConcretePage;
 import org.junit.Test;
 
 /**

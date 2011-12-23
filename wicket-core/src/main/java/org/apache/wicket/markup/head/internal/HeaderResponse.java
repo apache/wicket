@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.internal;
+package org.apache.wicket.markup.head.internal;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.response.NullResponse;
 
 
 /**
- * Default implementation of the {@link IHeaderResponse} interface.
+ * Default implementation of the {@link org.apache.wicket.markup.head.IHeaderResponse} interface.
  * 
  * @author Matej Knopp
  * @author Igor Vaynberg (ivaynberg)
@@ -38,7 +38,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	private boolean closed;
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#markRendered(java.lang.Object)
+	 * @see org.apache.wicket.markup.head.IHeaderResponse#markRendered(java.lang.Object)
 	 */
 	@Override
 	public final void markRendered(Object object)
@@ -75,7 +75,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#wasRendered(java.lang.Object)
+	 * @see org.apache.wicket.markup.head.IHeaderResponse#wasRendered(java.lang.Object)
 	 */
 	@Override
 	public final boolean wasRendered(Object object)
@@ -84,7 +84,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#close()
+	 * @see org.apache.wicket.markup.head.IHeaderResponse#close()
 	 */
 	@Override
 	public void close()
@@ -93,7 +93,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#getResponse()
+	 * @see org.apache.wicket.markup.head.IHeaderResponse#getResponse()
 	 */
 	@Override
 	public final Response getResponse()
@@ -102,7 +102,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#isClosed()
+	 * @see org.apache.wicket.markup.head.IHeaderResponse#isClosed()
 	 */
 	@Override
 	public boolean isClosed()

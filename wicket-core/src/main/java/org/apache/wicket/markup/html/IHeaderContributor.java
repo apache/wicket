@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
  * An interface to be implemented by components or application level listeners that wish to

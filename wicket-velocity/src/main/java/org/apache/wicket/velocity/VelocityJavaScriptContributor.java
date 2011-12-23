@@ -20,14 +20,14 @@ import java.util.Map;
 
 import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.util.lang.Packages;
 
 /**
  * A derivation of VelocityContributor that uses
- * {@link org.apache.wicket.markup.html.IHeaderResponse#renderJavaScript(CharSequence, String)}
+ * {@link org.apache.wicket.markup.head.IHeaderResponse#renderJavaScript(CharSequence, String)}
  */
 public class VelocityJavaScriptContributor extends VelocityContributor
 {

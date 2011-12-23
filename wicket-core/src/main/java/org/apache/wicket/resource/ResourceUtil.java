@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.util.io.IOUtils;

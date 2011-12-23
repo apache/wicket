@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.Response;
 
 /**

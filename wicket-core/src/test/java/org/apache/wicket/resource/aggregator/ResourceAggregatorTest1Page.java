@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.resource.aggregator;
 
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 
 /**

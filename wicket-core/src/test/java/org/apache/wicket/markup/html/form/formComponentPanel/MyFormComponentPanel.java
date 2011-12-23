@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.form.formComponentPanel;
 
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 
 /**

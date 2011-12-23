@@ -17,7 +17,7 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 

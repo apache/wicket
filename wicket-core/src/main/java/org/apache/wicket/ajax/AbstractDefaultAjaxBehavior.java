@@ -28,7 +28,7 @@ import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -68,7 +68,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(Component,org.apache.wicket.markup.html.IHeaderResponse)
+	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(Component, org.apache.wicket.markup.head.IHeaderResponse)
 	 */
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)

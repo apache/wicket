@@ -17,13 +17,13 @@
 package org.apache.wicket.extensions.yui;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 /**
- * Use the {@link #load(IHeaderResponse)} method to initialize the YUI library using the YUI loader.
+ * Use the {@link #load(org.apache.wicket.markup.head.IHeaderResponse)} method to initialize the YUI library using the YUI loader.
  * It is OK to call this multiple times.
  * 
  * By default the resource stream gets gzipped. You may disable it via

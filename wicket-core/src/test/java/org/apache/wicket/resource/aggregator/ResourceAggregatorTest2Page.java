@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.resource.aggregator;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 

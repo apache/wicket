@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.resource.filtering;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
  * A header response that creates two buckets. The header bucket will contain all references to CSS.

@@ -43,9 +43,9 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.DefaultMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -2653,7 +2653,7 @@ public abstract class Component
 	 * Make sure that all attached behaviors are asked as well.
 	 * <p>
 	 * NOT intended for overriding by framework clients. Rather, use
-	 * {@link Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)}
+	 * {@link Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)}
 	 * </p>
 	 * 
 	 * @param container
@@ -4406,7 +4406,7 @@ public abstract class Component
 	/**
 	 * CAUTION: this method is not meant to be overridden like it was in wicket 1.4 when
 	 * implementing {@link IHeaderContributor}. overload
-	 * {@link Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)} instead to
+	 * {@link Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)} instead to
 	 * contribute to the response header.
 	 * 
 	 * @param component

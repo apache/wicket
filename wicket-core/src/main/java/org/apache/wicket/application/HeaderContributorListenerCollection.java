@@ -17,7 +17,7 @@
 package org.apache.wicket.application;
 
 import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.util.listener.ListenerCollection;
 
 /**

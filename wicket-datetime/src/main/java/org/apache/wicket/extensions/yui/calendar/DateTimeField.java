@@ -25,7 +25,7 @@ import java.util.TimeZone;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentPanel;

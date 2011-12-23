@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import org.apache.wicket.markup.head.StringHeaderItem;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -54,7 +54,7 @@ public class HeaderSectionPage_20 extends WebPage
 		}
 
 		/**
-		 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+		 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)
 		 */
 		@Override
 		public void renderHead(IHeaderResponse response)
