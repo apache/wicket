@@ -689,7 +689,7 @@ public class FormTester
 			MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
 
 			WebRequestCycle requestCycle = baseWicketTester.createRequestCycle();
-			servletRequest.setRequestToComponent(workingForm);
+			servletRequest.setRequestToComponent(workingForm.getRootForm());
 
 			servletRequest.setUseMultiPartContentType(isMultiPart());
 			baseWicketTester.processRequestCycle(requestCycle);

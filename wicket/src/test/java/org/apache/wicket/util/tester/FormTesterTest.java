@@ -227,4 +227,37 @@ public class FormTesterTest extends WicketTestCase
 		FormTester formTester = tester.newFormTester("form");
 		formTester.submit();
 	}
+
+	public void testNestedFormHandlingOnInnerSubmit() throws Exception
+	{
+		NestedFormPage page = (NestedFormPage)tester.startPage(NestedFormPage.class);
+		FormTester form = tester.newFormTester("outer:inner");
+		form.submit("submit");
+		assertFalse("should not directly submit inner form - browsers submit the outer form!",
+			page.iface.contains("inner"));
+		assertFalse("outer form should not be processed", page.outerSubmitted);
+		assertTrue("inner form should be processed", page.innerSubmitted);
+	}
+
+	public void testNestedFormHandlingOnInnerSubmitWithOuterForm() throws Exception
+	{
+		NestedFormPage page = (NestedFormPage)tester.startPage(NestedFormPage.class);
+		FormTester form = tester.newFormTester("outer");
+		form.submit("inner:submit");
+		assertFalse("should not directly submit inner form - browsers submit the outer form!",
+			page.iface.contains("inner"));
+		assertFalse("outer form should not be processed", page.outerSubmitted);
+		assertTrue("inner form should be processed", page.innerSubmitted);
+	}
+
+	public void testNestedFormHandlingOnOuterSubmit() throws Exception
+	{
+		NestedFormPage page = (NestedFormPage)tester.startPage(NestedFormPage.class);
+		FormTester form = tester.newFormTester("outer");
+		form.submit();
+		assertFalse("should not directly submit inner form - browsers submit the outer form!",
+			page.iface.contains("inner"));
+		assertTrue("outer form should be processed", page.outerSubmitted);
+		assertTrue("inner form should be processed", page.innerSubmitted);
+	}
 }
