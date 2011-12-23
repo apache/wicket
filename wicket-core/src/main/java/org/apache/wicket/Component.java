@@ -24,10 +24,12 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.ajax.IAjaxRegionMarkupIdProvider;
+import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
+import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
@@ -46,14 +48,19 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.DefaultMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
+import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
@@ -87,127 +94,114 @@ import org.slf4j.LoggerFactory;
  * 
  * <ul>
  * <li><b>Identity </b>- All Components must have a non-null id which is retrieved by calling
- * getId(). The id must be unique within the MarkupContainer that holds the Component, but does not
- * have to be globally unique or unique within a Page's component hierarchy.
- * 
+ * getId(). The id must be unique within the {@link MarkupContainer} that holds the Component, but
+ * does not have to be globally unique or unique within a Page's component hierarchy.</li>
  * <li><b>Hierarchy </b>- A component has a parent which can be retrieved with {@link #getParent()}.
  * If a component is an instance of MarkupContainer, it may have children. In this way it has a
  * place in the hierarchy of components contained on a given page.
- * 
- * <li><b>Component Paths </b>- The path from the Page at the root of the component hierarchy to a
- * given Component is simply the concatenation with colon separators of each id along the way. For
- * example, the path "a:b:c" would refer to the component named "c" inside the MarkupContainer named
- * "b" inside the container named "a". The path to a component can be retrieved by calling
- * getPath(). To get a Component path relative to the page that contains it, you can
- * call getPageRelativePath().
- * 
+ * <p>
+ * The path from the Page at the root of the component hierarchy to a given Component is simply the
+ * concatenation with colon separators of each id along the way. For example, the path "a:b:c" would
+ * refer to the component named "c" inside the MarkupContainer named "b" inside the container named
+ * "a". The path to a component can be retrieved by calling {@link #getPath()}. To get a Component
+ * path relative to the page that contains it, you can call {@link #getPageRelativePath()}.
+ * </li>
  * <li><b>LifeCycle </b>- Components participate in the following lifecycle phases:
  * <ul>
  * <li><b>Construction </b>- A Component is constructed with the Java language new operator.
  * Children may be added during construction if the Component is a MarkupContainer.
- * 
+ * {@link IComponentInstantiationListener}s are notified of component instantiation.
+ * <p>
+ * {@link #onInitialize()} is called on the component as soon as the component is part of a page's
+ * component tree. At this state the component is able to access its markup.
+ * </li>
  * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler such
- * as WicketServlet. An associated Application object creates Session, Request and Response objects
- * for use by a given Component in updating its model and rendering a response. These objects are
- * stored inside a container called {@link RequestCycle} which is accessible via
- * {@link Component#getRequestCycle()}. The convenience methods {@link Component#getRequest()},
- * {@link Component#getResponse()} and {@link Component#getSession()} provide easy access to the
- * contents of this container.
- * 
- * <li><b>Listener Invocation </b>- If the request references a listener on an existing Component,
- * that listener is called, allowing arbitrary user code to handle events such as link clicks or
- * form submits. Although arbitrary listeners are supported in Wicket, the need to implement a new
- * class of listener is unlikely for a web application and even the need to implement a listener
- * interface directly is highly discouraged. Instead, calls to listeners are routed through logic
- * specific to the event, resulting in calls to user code through other overridable methods. For
- * example, the {@link org.apache.wicket.markup.html.form.IFormSubmitListener#onFormSubmitted()}
- * method implemented by the Form class is really a private implementation detail of the Form class
- * that is not designed to be overridden (although unfortunately, it must be public since all
- * interface methods in Java must be public). Instead, Form subclasses should override user-oriented
- * methods such as onValidate(), onSubmit() and onError() (although only the latter two are likely
- * to be overridden in practice).
- * 
- * <li><b>Form Submit </b>- If a Form has been submitted and the Component is a FormComponent, the
- * component's model is validated by a call to FormComponent.validate().
- * 
- * <li><b>Form Model Update </b>- If a valid Form has been submitted and the Component is a
- * FormComponent, the component's model is updated by a call to FormComponent.updateModel().
- * 
- * <li><b>Rendering </b>- A markup response is generated by the Component via
- * {@link Component#render()}, which calls subclass implementation code contained in
- * {@link org.apache.wicket.Component#onRender()}. Once this phase begins, a Component becomes
- * immutable. Attempts to alter the Component will result in a WicketRuntimeException.
- * 
+ * as {@link WicketFilter}. An associated Application object creates {@link Session},
+ * {@link Request} and {@link Response} objects for use by a given Component in updating its model
+ * and rendering a response. These objects are stored inside a container called {@link RequestCycle}
+ * which is accessible via {@link Component#getRequestCycle()}. The convenience methods
+ * {@link Component#getRequest()}, {@link Component#getResponse()} and
+ * {@link Component#getSession()} provide easy access to the contents of this container.</li>
+ * <li><b>Listener Invocation </b>- If the request references an {@link IRequestListener} on an
+ * existing Component (or one of its {@link Behavior}s, see below), that listener is notified,
+ * allowing arbitrary user code to handle events such as link clicks or form submits. Although
+ * arbitrary listeners are supported in Wicket, the need to implement a new class of listener is
+ * unlikely for a web application and even the need to implement a listener interface directly is
+ * highly discouraged. Instead, calls to listeners are routed through logic specific to the event,
+ * resulting in calls to user code through other overridable methods. See {@link Form} for an
+ * example of a component which listens for events via {@link IFormSubmitListener}.</li>
+ * <li><b>Rendering </b>- Before a page or part of a page (in case of Ajax updates) is rendered, all
+ * containing components are able to prepare for rendering via two hook methods:
+ * {@link #onConfigure()} (regardless whether they are visible or not) and {@link #onBeforeRender()}
+ * (if visible only) . <br>
+ * A markup response is generated by the Component via {@link Component#render()}, which calls
+ * subclass implementation code contained in {@link Component#onRender()}. Once this phase begins, a
+ * Component becomes immutable. Attempts to alter the Component will result in a
+ * WicketRuntimeException.</li>
+ * <li><b>Detachment </b>- Each request cycle finishes by detaching all touched components.
+ * Subclasses should clean up their state by overriding {@link #onDetach()} or more specifically
+ * {@link #detachModels()} if they keep references to models beside the default model.</li>
  * </ul>
- * 
- * <li><b>Component Models </b>- The primary responsibility of a component is to use its model (an
- * object that implements IModel), which can be set via
- * {@link Component#setDefaultModel(IModel model)} and retrieved via
- * {@link Component#getDefaultModel()}, to render a response in an appropriate markup language, such
- * as HTML. In addition, form components know how to update their models based on request
- * information. Since the IModel interface is a wrapper around an actual model object, a convenience
- * method {@link Component#getDefaultModelObject()} is provided to retrieve the model Object from
- * its IModel wrapper. A further convenience method,
- * {@link Component#getDefaultModelObjectAsString()} , is provided for the very common operation of
- * converting the wrapped model Object to a String.
- * 
- * <li><b>Visibility </b>- Components which have setVisible(false) will return false from
- * isVisible() and will not render a response (nor will their children).
- * 
- * <li><b>Page </b>- The Page containing any given Component can be retrieved by calling
- * {@link Component#getPage()}. If the Component is not attached to a Page, an IllegalStateException
- * will be thrown. An equivalent method, {@link Component#findPage()} is available for special
- * circumstances where it might be desirable to get a null reference back instead.
- * 
- * <li><b>Session </b>- The Page for a Component points back to the Session that contains the Page.
- * The Session for a component can be accessed with the convenience method getSession(), which
- * simply calls getPage().getSession().
- * 
- * <li><b>Locale </b>- The Locale for a Component is available through the convenience method
- * getLocale(), which is equivalent to getSession().getLocale().
- * 
+ * </li>
+ * <li><b>Visibility </b>- If a component is not visible (see {@link #setVisible(boolean)}) it will
+ * not render a response (nor will their children).</li>
+ * <li><b>Enabling </b>- Component subclasses take into account their enabled state (see
+ * {@link #setEnabled(boolean)} when rendering, and in case of a {@link FormComponent} will not not
+ * update its model while the request is handled.</li>
+ * <li><b>Models </b>- The primary responsibility of a component is to use its model (an object that
+ * implements {@link IModel}) to render a response in an appropriate markup language, such as HTML.
+ * In addition, {@link FormComponent}s know how to update their models based on request information,
+ * see {@link FormComponent#updateModel()}. Since the IModel interface is a wrapper around another
+ * object, a convenience method {@link Component#getDefaultModelObject()} is provided to retrieve
+ * the object from its IModel wrapper. A further convenience method,
+ * {@link Component#getDefaultModelObjectAsString()}, is provided for the very common operation of
+ * converting the wrapped object to a String. <br>
+ * The component's model can be passed in the constructor or set via
+ * {@link Component#setDefaultModel(IModel)}. In neither case a model can be created on demand with
+ * {@link #initModel()}.<br>
+ * Note that a component can have more models besides its default model.</li>
+ * <li><b>Behaviors </b>- You can add multiple {@link Behavior}s to any component if you need to
+ * dynamically alter the behavior of components, e.g. manipulate attributes of the markup tag to
+ * which a Component is attached. Behaviors take part in the component's lifecycle through various
+ * callback methods.</li>
+ * <li><b>Locale </b>- The Locale for a Component is available through {@link #getLocale()}, which
+ * delegates to its parent's locale, finally consulting the {@link Session}'s locale.</li>
+ * <li><b>Style </b>- The Session's style ("skin") is available through
+ * {@link org.apache.wicket.Component#getStyle()}. Styles are intended to give a particular look to
+ * all components or resources in a session that is independent of its Locale. For example, a style
+ * might be a set of resources, including images and markup files, which gives the design look of
+ * "ocean" to the user. If the Session's style is set to "ocean" and these resources are given names
+ * suffixed with "_ocean", Wicket's resource management logic will prefer these resources to other
+ * resources, such as default resources, which are not as good of a match.</li>
+ * <li><b>Variation </b>- Whereas styles are Session (user) specific, variations are component
+ * specific. E.g. if the Style is "ocean" and {@link #getVariation()} returnss "NorthSea", than the
+ * resources are given the names suffixed with "_ocean_NorthSea".</li>
  * <li><b>String Resources </b>- Components can have associated String resources via the
  * Application's Localizer, which is available through the method {@link Component#getLocalizer()}.
  * The convenience methods {@link Component#getString(String key)} and
  * {@link Component#getString(String key, IModel model)} wrap the identical methods on the
- * Application Localizer for easy access in Components.
- * 
- * <li><b>Style </b>- The style ("skin") for a component is available through
- * {@link org.apache.wicket.Component#getStyle()}, which is equivalent to getSession().getStyle().
- * Styles are intended to give a particular look to a Component or Resource that is independent of
- * its Locale. For example, a style might be a set of resources, including images and markup files,
- * which gives the design look of "ocean" to the user. If the Session's style is set to "ocean" and
- * these resources are given names suffixed with "_ocean", Wicket's resource management logic will
- * prefer these resources to other resources, such as default resources, which are not as good of a
- * match.
- * 
- * <li><b>Variation </b>- Whereas Styles are Session (user) specific, variations are component
- * specific. E.g. if the Style is "ocean" and the Variation is "NorthSea", than the resources are
- * given the names suffixed with "_ocean_NorthSea".
- * 
- * <li><b>AttributeModifiers </b>- You can add one or more {@link AttributeModifier}s to any
- * component if you need to programmatically manipulate attributes of the markup tag to which a
- * Component is attached.
- * 
- * <li><b>Application, ApplicationSettings and ApplicationPages </b>- The getApplication() method
- * provides convenient access to the Application for a Component via getSession().getApplication().
- * The getApplicationSettings() method is equivalent to getApplication().getSettings(). The
- * getApplicationPages is equivalent to getApplication().getPages().
- * 
+ * Application Localizer for easy access in Components.</li>
  * <li><b>Feedback Messages </b>- The {@link Component#debug(Serializable)},
  * {@link Component#info(Serializable)}, {@link Component#warn(Serializable)},
  * {@link Component#error(java.io.Serializable)} and {@link Component#fatal(Serializable)} methods
  * associate feedback messages with a Component. It is generally not necessary to use these methods
  * directly since Wicket validators automatically register feedback messages on Components. Feedback
- * message for a given Component can be retrieved with {@link Component#getFeedbackMessages}.
- * 
+ * message for a given Component can be retrieved with {@link Component#getFeedbackMessages}.</li>
  * <li><b>Versioning </b>- Pages are the unit of versioning in Wicket, but fine-grained control of
  * which Components should participate in versioning is possible via the
  * {@link Component#setVersioned(boolean)} method. The versioning participation of a given Component
- * can be retrieved with {@link Component#isVersioned()}.
- * 
+ * can be retrieved with {@link Component#isVersioned()}.</li>
+ * <li><b>Page </b>- The Page containing any given Component can be retrieved by calling
+ * {@link Component#getPage()}. If the Component is not attached to a Page, an IllegalStateException
+ * will be thrown. An equivalent method, {@link Component#findPage()} is available for special
+ * circumstances where it might be desirable to get a null reference back instead.</li>
+ * <li><b>Application </b>- The {@link #getApplication()} method provides convenient access to the
+ * {@link Application} for a Component.</li>
  * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page has been rendered at
- * least once by calling doRender().
+ * least once by calling doRender().</li>
+ * <li><b>Security </b>- All components are subject to an {@link IAuthorizationStrategy} which
+ * controls instantiation, visibility and enabling. See {@link SimplePageAuthorizationStrategy} for
+ * a simple implementation.</li>
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -1006,7 +1000,8 @@ public abstract class Component
 
 	/**
 	 * Called for every component when the page is getting to be rendered. it will call
-	 * onBeforeRender for this component and all the child components
+	 * {@link #configure()} and {@link #onBeforeRender()} for this component and all the child
+	 * components
 	 */
 	public final void beforeRender()
 	{
@@ -1781,7 +1776,8 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the path to this component relative to the page it is in.
+	 * Gets the path to this component relative to its containing page, i.e. without trailing page
+	 * id.
 	 * 
 	 * @return The path to this component relative to the page it is in
 	 */
@@ -1935,7 +1931,7 @@ public abstract class Component
 	}
 
 	/**
-	 * A convinient method. Same as Session.get().getStyle().
+	 * A convenience method to access the Sessions's style.
 	 * 
 	 * @return The style of this component respectively the style of the Session.
 	 * 
@@ -3706,8 +3702,15 @@ public abstract class Component
 
 	/**
 	 * Called when a null model is about to be retrieved in order to allow a subclass to provide an
-	 * initial model. This gives FormComponent, for example, an opportunity to instantiate a model
-	 * on the fly using the containing Form's model.
+	 * initial model.
+	 * <p>
+	 * By default this implementation looks components in the parent chain owning a
+	 * {@link IComponentInheritedModel} to provide a model for this component via
+	 * {@link IComponentInheritedModel#wrapOnInheritance(Component)}.
+	 * <p>
+	 * For example a {@link FormComponent} has the opportunity to instantiate a model on the fly
+	 * usings its {@code id} and the containing {@link Form}'s model, if the form holds a
+	 * {@link CompoundPropertyModel}.
 	 * 
 	 * @return The model
 	 */

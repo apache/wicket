@@ -58,8 +58,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 import org.apache.wicket.util.upload.FileUploadException;
+import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 import org.apache.wicket.util.value.LongValue;
 import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
@@ -70,64 +70,63 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Base class for forms. To implement a form, subclass this class, add {@link FormComponent}s (such
- * as {@link CheckBox}es, {@link ListChoice}s or {@link TextField}s) to the form. You can nest
- * multiple {@link IFormSubmittingComponent}s if you want to vary submit behavior. However, it is
- * not necessary to use any of Wicket's classes (such as {@link Button} or {@link SubmitLink}), just
- * putting e.g. &lt;input type="submit" value="go"/&gt; suffices.
+ * Container for {@link FormComponent}s (such as {@link CheckBox}es, {@link ListChoice}s or
+ * {@link TextField}s). Subclass this class to receive submit notifications through
+ * {@link #onSubmit()} or nest multiple {@link IFormSubmittingComponent}s if you want to vary submit
+ * behavior. In the former case it is not necessary to use any of Wicket's classes (such as
+ * {@link Button} or {@link SubmitLink}), just putting e.g. &lt;input type="submit" value="go"/&gt;
+ * suffices.
  * <p>
- * By default, the processing of a form works like this:
- * <li>The submitting component is looked up. An submitting {@link IFormSubmittingComponent} (such
- * as a button) is nested in this form (is a child component) and was clicked by the user. If an
- * {@link IFormSubmittingComponent} was found, and it has the defaultFormProcessing field set to
- * false (default is true), it's onSubmit method will be called right away, thus no validation is
- * done, and things like updating form component models that would normally be done are skipped. In
- * that respect, nesting an {@link IFormSubmittingComponent} with the defaultFormProcessing field
- * set to false has the same effect as nesting a normal link. If you want you can call
- * {@link #validate()} to execute form validation, {@link #hasError()} to find out whether
- * validate() resulted in validation errors, and {@link #updateFormComponentModels()} to update the
- * models of nested form components.</li>
- * <li>When no submitting {@link IFormSubmittingComponent} with defaultFormProcessing set to false
- * was found, this form is processed (method {@link #process(IFormSubmitter)}. Now, two possible
- * paths exist:
+ * As a {@link IFormSubmitListener} the form gets notified of listener requests in
+ * {@link #onFormSubmitted()}. By default, the processing of this submit works like this:
  * <ul>
- * <li>Form validation failed. All nested form components will be marked invalid, and
+ * <li>All nested {@link FormComponent}s are notified of new input via
+ * {@link FormComponent#inputChanged()}</li>
+ * <li>The form submitter is looked up, e.g. a {@link Button} is contained in the component
+ * hierarchy of this form and was clicked by the user:
+ * <ul>
+ * <li>If an {@link IFormSubmitter} was found which
+ * {@link IFormSubmitter#getDefaultFormProcessing()} returns {@code false} (default is {@code true}
+ * ), it's {@link IFormSubmitter#onSubmit()} method will be called right away, thus all further
+ * processing is skipped. This has the same effect as nesting a normal link in the form. <br>
+ * If needed the form submitter can continue processing however, by calling {@link #validate()} to
+ * execute form validation, {@link #hasError()} to find out whether validate() resulted in
+ * validation errors, and {@link #updateFormComponentModels()} to update the models of nested form
+ * components.</li>
+ * <li>Otherwise this form is further processed via {@link #process(IFormSubmitter)}, resulting in
+ * all nested components being validated via {@link FormComponent#validate()}. <br>
+ * <ul>
+ * <li>If form validation failed, all nested form components will be marked invalid, and
  * {@link #onError()} is called to allow clients to provide custom error handling code.</li>
- * <li>Form validation succeeded. The nested components will be asked to update their models and
- * persist their data is applicable. After that, method delegateSubmit with optionally the
- * submitting {@link IFormSubmittingComponent} is called. The default when there is a submitting
- * {@link IFormSubmittingComponent} is to first call onSubmit on that Component, and after that call
- * {@link #onSubmit()} on this form. Clients may override {@link #delegateSubmit(IFormSubmitter)} if
- * they want different behavior.</li>
+ * <li>Otherwise the nested components will be asked to update their models via
+ * {@link FormComponent#updateModel()}. After that submit notification is delegated to the
+ * {@link IFormSubmitter#onSubmit()} (if just found) before calling {@link #onSubmit()} on this
+ * form. Subclasses may override {@link #delegateSubmit(IFormSubmitter)} if they want a different
+ * behavior.</li>
  * </ul>
  * </li>
+ * </ul>
  * </li>
- * </p>
+ * </ul>
  * 
- * Form for handling (file) uploads with multipart requests is supported by calling
- * {@link #setMultiPart(boolean)}(true) ( although Wicket will try to automatically detect this for
- * you ). Use this with {@link FileUploadField} components. You can attach multiple
- * {@link FileUploadField} components for multiple file uploads.
+ * A Form can be configured for handling uploads with multipart requests (e.g. files) by calling
+ * {@link #setMultiPart(boolean)} (although Wicket will try to automatically detect this for you).
+ * Use this with {@link FileUploadField} components. You can attach multiple {@link FileUploadField}
+ * components for multiple file uploads.
  * <p>
- * In case of an upload error two resource keys are available to specify error messages:
- * uploadTooLarge and uploadFailed
+ * In case of an upload error two resource keys are available to specify error messages: {@code
+ * uploadTooLarge} and {@code uploadFailed}, i.e. for a form with id {@code myform} in {@code
+ * MyPage.properties}:
  * 
- * i.e. in [page].properties
+ * <pre>
+ * myform.uploadTooLarge=You have uploaded a file that is over the allowed limit of 2Mb
+ * </pre>
  * 
- * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed limit of 2Mb
- * 
- * <p>
- * If you want to have multiple {@link IFormSubmittingComponent}s which submit the same form, simply
- * put two or more {@link IFormSubmittingComponent}s somewhere in the hierarchy of components that
- * are children of the form.
- * </p>
- * <p>
  * Forms can be nested. You can put a form in another form. Since HTML doesn't allow nested
  * &lt;form&gt; tags, the inner forms will be rendered using the &lt;div&gt; tag. You have to submit
  * the inner forms using explicit components (like {@link Button} or {@link SubmitLink}), you can't
  * rely on implicit submit behavior (by using just &lt;input type="submit"&gt; that is not attached
  * to a component).
- * </p>
  * <p>
  * When a nested form is submitted, the user entered values in outer (parent) forms are preserved
  * and only the fields in the submitted form are validated. </b>
