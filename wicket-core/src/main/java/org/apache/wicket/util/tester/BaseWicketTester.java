@@ -1912,7 +1912,7 @@ public class BaseWicketTester
 	public void submitForm(String path)
 	{
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
-		Url url = Url.parse(form.urlFor(IFormSubmitListener.INTERFACE).toString(),
+		Url url = Url.parse(form.getRootForm().urlFor(IFormSubmitListener.INTERFACE).toString(),
 			Charset.forName(request.getCharacterEncoding()));
 
 		// make url absolute
