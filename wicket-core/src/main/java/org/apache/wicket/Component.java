@@ -892,20 +892,16 @@ public abstract class Component
 		return getFlag(FLAG_INITIALIZED);
 	}
 
+	void completeHierarchy()
+	{
+	}
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
 	 * 
 	 * Used to call {@link #onInitialize()}
 	 */
 	public void internalInitialize()
-	{
-		fireInitialize();
-	}
-
-	/**
-	 * Used to call {@link #onInitialize()}
-	 */
-	final void fireInitialize()
 	{
 		if (!getFlag(FLAG_INITIALIZED))
 		{
@@ -961,7 +957,7 @@ public abstract class Component
 	/**
 	 * 
 	 */
-	private final void internalBeforeRender()
+	final void internalBeforeRender()
 	{
 		configure();
 
@@ -973,6 +969,9 @@ public abstract class Component
 			getApplication().getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
 
 			onBeforeRender();
+
+			completeHierarchy();
+
 			getApplication().getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
 			if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
@@ -1070,6 +1069,7 @@ public abstract class Component
 	 */
 	public final void configure()
 	{
+		internalInitialize();
 		if (!getRequestFlag(RFLAG_CONFIGURED))
 		{
 			clearEnabledInHierarchyCache();

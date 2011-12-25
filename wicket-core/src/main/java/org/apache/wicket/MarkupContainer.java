@@ -16,12 +16,14 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -35,6 +37,7 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -96,6 +99,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 {
 	private static final long serialVersionUID = 1L;
 
+	private static MetaDataKey<ArrayList<Component>> QUEUE = new MetaDataKey<ArrayList<Component>>()
+	{
+	};
+
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(MarkupContainer.class);
 
@@ -116,6 +123,305 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	public MarkupContainer(final String id, IModel<?> model)
 	{
 		super(id, model);
+	}
+
+	public MarkupContainer queue(final Component... childs)
+	{
+		ArrayList<Component> queue = getMetaData(QUEUE);
+		if (queue == null)
+		{
+			queue = new ArrayList<Component>();
+			setMetaData(QUEUE, queue);
+		}
+
+		if (getApplication().usesDevelopmentConfig())
+		{
+			for (Component child : childs)
+			{
+				for (Component queued : queue)
+				{
+					if (queued.getId().equals(child.getId()))
+					{
+						throw new WicketRuntimeException(
+							"Component with id: '" +
+								queued.getId() +
+								"' is already queued in container: " +
+								this +
+								". Two components with the same id cannot be queued under the same container. Component alread queued: " +
+								queued + ". Component attempted to be queued: " + child);
+					}
+				}
+				queue.add(child);
+			}
+		}
+		return this;
+	}
+
+	// TODO hierarchy-completion
+	public static class ResolvedMeta implements Serializable
+	{
+		private String tagComponentId;
+		private int index;
+
+		public ResolvedMeta(MarkupStream stream)
+		{
+			tagComponentId = ((ComponentTag)stream.get()).getId();
+			index = stream.getCurrentIndex();
+		}
+
+		public boolean isFor(MarkupStream stream)
+		{
+			if (stream.getCurrentIndex() != index)
+			{
+				return false;
+			}
+			if (!tagComponentId.equals(((ComponentTag)stream.get()).getId()))
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
+	public static final MetaDataKey<ResolvedMeta> RESOLVED_KEY = new MetaDataKey<ResolvedMeta>()
+	{
+
+	};
+
+	/**
+	 * Completes component's hierarchy
+	 * 
+	 * @see org.apache.wicket.Component#completeHierarchy()
+	 */
+	@Override
+	void completeHierarchy()
+	{
+		/*
+		 * WARNING: THIS CODE IS EXTREMELY ROUGH AND DOES NOT FUNCTION IN THE SAME WAY THAT FINAL
+		 * CODE WILL. IT IS HERE ONLY SO VARIOUS TESTS CAN BE WRITTEN IN HierarchyCompletionTest TO
+		 * EXPLORE THIS IDEA
+		 */
+
+		class ComponentAndTag
+		{
+			ComponentTag tag;
+			MarkupContainer component;
+
+			public ComponentAndTag(ComponentTag tag, MarkupContainer component)
+			{
+				this.tag = tag;
+				this.component = component;
+			}
+		}
+
+		MarkupStream markup = null;
+
+		if (hasAssociatedMarkup())
+		{
+			markup = new MarkupStream(getMarkupSourcingStrategy().getMarkup(this, null));
+			// FIXME a hack to skip the first tag that does not resolve to any component such as
+			// wicket:panel or wicket:border
+			MarkupElement e = markup.get();
+			if (e instanceof WicketTag)
+			{
+				if (((WicketTag)e).isMajorWicketComponentTag())
+				{
+					markup.next();
+				}
+			}
+		}
+		else if (getParent() instanceof AbstractRepeater)
+		{
+			markup = new MarkupStream(getParent().getMarkup());
+
+			// skip the repeater tag, we only want to traverse the body
+			markup.next();
+		}
+		else
+		{
+			// we only complete the hierarchy of components with associated markup and direct
+			// children of repeaters. the rest of components should be inside the previous two
+			// types.
+
+			return;
+		}
+
+		// stack of components between the current tag in the markup and the markup's owner
+		Stack<ComponentAndTag> stack = new Stack<ComponentAndTag>();
+
+		// current component is the root of the stack. it has no component tag.
+		stack.push(new ComponentAndTag(null, this));
+
+		ComponentTag tag = null;
+		while (markup.hasMore())
+		{
+			if (tag != null)
+			{
+				// advance the markup stream if this is not the first time through
+				markup.next();
+			}
+			if (!markup.skipUntil(ComponentTag.class))
+			{
+				// TODO error if stack is not empty
+				return;
+			}
+
+			// the current markup tag
+			tag = (ComponentTag)markup.get();
+
+
+			if (tag.isClose())
+			{
+				if (stack.isEmpty())
+				{
+					// we are now out of the markup owner's body markup, most likely on a
+					// </wicket:panel> or something similar, we are done
+					return;
+				}
+				stack.pop();
+				continue;
+			}
+
+			final MarkupContainer parent = stack.peek().component;
+
+			// attempt to find a child component that corresponds to the markup tag
+
+			// TODO this should be get or resolve so transparent things work
+			Component child = parent.get(tag.getId());
+			if (child == null)
+			{
+				// try to deque a child component if one has not been found
+
+
+				for (int j = stack.size() - 1; j >= 0; j--)
+				{
+					// we try to find a queued component from the deepest nested parent all the way
+					// to the owner of the markup
+					ComponentAndTag cat = stack.get(j);
+					ArrayList<Component> queue = cat.component.getMetaData(QUEUE);
+					if (queue == null)
+					{
+						continue;
+					}
+
+					for (Component queued : queue)
+					{
+						if (queued.getId().equals(tag.getId()))
+						{
+							child = queued;
+							break;
+						}
+					}
+					if (child != null)
+					{
+						queue.remove(child);
+						break;
+					}
+				}
+			}
+
+			for (Component potential : parent)
+			{
+				ResolvedMeta meta = potential.getMetaData(RESOLVED_KEY);
+				if (meta != null)
+				{
+					int a = 2;
+					int b = a + 2;
+				}
+				if (meta != null && meta.isFor(markup))
+				{
+					child = potential;
+					break;
+				}
+			}
+
+			if (child == null)
+			{
+				// if we didnt find a queued child we could use try the resolvers
+
+				child = ComponentResolvers.resolve(parent, markup, tag, null);
+				if (child != null)
+				{
+					// tag.setId(child.getId());
+					// tag.setModified(true);
+					child.setMetaData(RESOLVED_KEY, new ResolvedMeta(markup));
+				}
+			}
+
+			if (child != null && child.getParent() == null)
+			{
+				lateAdd(parent, child);
+				// TODO do we need to continue unqueuing or can we skip this component
+				// and all its children if it has been deemed invisible? - dont think we can because
+				// that will leave components in the queue and ondetach() will bomb
+			}
+
+			if (child != null && child.isAuto())
+			{
+				// TODO this is yet another hack, need to figure out how auto components fit into
+				// this and why they dont get correctly resolved second time around
+				child.setAuto(false);
+			}
+
+			if (child == null)
+			{
+				// cannot resolve child component, error
+
+				// TODO make the mesage less queue-dependent. should be the same message that we
+				// throw during render when we cant resolve a child
+
+				String error = "Could not dequeue or resolve child: `" + tag.getId() + "`. ";
+				error += "Parent search stack: [";
+				for (int j = stack.size() - 1; j >= 0; j--)
+				{
+					if (j < stack.size() - 1)
+					{
+						error += ", ";
+					}
+					ComponentAndTag cat = stack.get(j);
+					error += cat.component.getClass().getSimpleName() + "('" +
+						cat.component.getId() + "')";
+				}
+				error += "]";
+				throw new WicketRuntimeException(error);
+			}
+
+			if (tag.isOpenClose())
+			{
+				// if this is an open/close tag we are done
+				continue;
+			}
+
+			if (child instanceof AbstractRepeater)
+			{
+				// TODO hack for repeaters, this will be delegated to repeaters themselves later
+
+				// skip inner markup, it will be processed by repeater items
+				markup.skipToMatchingCloseTag(tag);
+			}
+			else if (child instanceof MarkupContainer)
+			{
+				stack.push(new ComponentAndTag(tag, (MarkupContainer)child));
+			}
+			else
+			{
+				// the child is not a container so we can skip its inner markup
+				markup.skipToMatchingCloseTag(tag);
+			}
+		}
+	}
+
+	private void lateAdd(MarkupContainer parent, Component queued)
+	{
+		parent.add(queued);
+
+		// at this point queued.onInitialize() wouldve been called by add()
+
+		if (parent.isVisibleInHierarchy())
+		{
+			// call configure() and onbeforerender() which are done from inside internalBeforeRender
+			queued.internalBeforeRender();
+		}
 	}
 
 	/**
@@ -973,47 +1279,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				ComponentStrings.toString(child, new MarkupException("added")));
 		}
 
-		final Page page = findPage();
-		if (page != null)
-		{
-			// tell the page a component has been added first, to allow it to initialize
-			page.componentAdded(child);
-
-			// initialize the component
-			if (page.isInitialized())
-			{
-				child.internalInitialize();
-			}
-		}
-
 		// if the PREPARED_FOR_RENDER flag is set, we have already called
 		// beforeRender on this component's children. So we need to initialize the newly added one
 		if (isPreparedForRender())
 		{
 			child.beforeRender();
 		}
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
-	 * 
-	 * Overrides {@link Component#internalInitialize()} to call {@link Component#fireInitialize()}
-	 * for itself and for all its children.
-	 * 
-	 * @see org.apache.wicket.Component#fireInitialize()
-	 */
-	@Override
-	public final void internalInitialize()
-	{
-		super.fireInitialize();
-		visitChildren(new IVisitor<Component, Void>()
-		{
-			@Override
-			public void component(final Component component, final IVisit<Void> visit)
-			{
-				component.fireInitialize();
-			}
-		});
 	}
 
 	/**
@@ -1426,6 +1697,18 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			Component component = get(id);
 			if (component == null)
 			{
+				for (Component c : this)
+				{
+					ResolvedMeta meta = c.getMetaData(RESOLVED_KEY);
+					if (meta != null && meta.isFor(markupStream))
+					{
+						component = c;
+						break;
+					}
+				}
+			}
+			if (component == null)
+			{
 				component = ComponentResolvers.resolve(this, markupStream, tag, null);
 				if ((component != null) && (component.getParent() == null))
 				{
@@ -1643,6 +1926,28 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				Component component = (Component)child;
 				component.internalOnRemove();
 			}
+		}
+	}
+
+	@Override
+	protected void onDetach()
+	{
+		super.onDetach();
+		detachQueue();
+	}
+
+	private void detachQueue()
+	{
+		List<Component> queue = getMetaData(QUEUE);
+		if (queue != null)
+		{
+
+			if (!queue.isEmpty())
+			{
+				// FIXME QUEUEING error message
+				throw new WicketRuntimeException("SOME COMPONENTS WERE NOT DEQUEUED");
+			}
+			setMetaData(QUEUE, null);
 		}
 	}
 
