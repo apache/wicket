@@ -25,7 +25,6 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.protocol.http.IRequestLogger;
-import org.apache.wicket.protocol.http.IStagedRequestLogger;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -532,10 +531,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		if (Application.exists())
 		{
 			IRequestLogger requestLogger = Application.get().getRequestLogger();
-			if (requestLogger instanceof IStagedRequestLogger)
-			{
-				((IStagedRequestLogger)requestLogger).performLogging();
-			}
+			requestLogger.performLogging();
 		}
 	}
 

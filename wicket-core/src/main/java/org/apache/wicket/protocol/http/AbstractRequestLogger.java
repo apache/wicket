@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * implementation: currently Wicket supports two formats: a {@link RequestLogger legacy, log4j
  * compatible format}, and a {@link JsonRequestLogger JSON format}.
  */
-public abstract class AbstractRequestLogger implements IStagedRequestLogger
+public abstract class AbstractRequestLogger implements IRequestLogger
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractRequestLogger.class);
 

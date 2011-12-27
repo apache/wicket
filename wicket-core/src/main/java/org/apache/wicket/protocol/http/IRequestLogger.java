@@ -154,6 +154,11 @@ public interface IRequestLogger
 	void logRequestedUrl(String url);
 
 	/**
+	 * Perform the actual logging
+	 */
+	public void performLogging();
+
+	/**
 	 * This class hold the information one request of a session has.
 	 * 
 	 * @author jcompagner
