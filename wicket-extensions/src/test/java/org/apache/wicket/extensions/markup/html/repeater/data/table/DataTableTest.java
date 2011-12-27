@@ -97,8 +97,7 @@ public class DataTableTest extends Assert
 // log.error("==============================================");
 // log.error(removeFillers(document));
 
-		String doc = removeFillers(document);
-		DiffUtil.validatePage(doc, getClass(), "DataTablePage_ExpectedResult.html", true);
+		DiffUtil.validatePage(document, getClass(), "DataTablePage_ExpectedResult.html", true);
 	}
 
 	/**
@@ -145,18 +144,6 @@ public class DataTableTest extends Assert
 		int index = document.indexOf("<caption wicket:id=\"caption\">Caption</caption>");
 		assertTrue("Caption must be rendered!", index > -1);
 
-	}
-
-	private String removeFillers(String doc)
-	{
-		doc = doc.replaceAll("(?s)<span .*?>.*?</span>", "<x/>");
-		doc = doc.replaceAll("(?s)<div .*?>.*?</div>", "<x/>");
-		doc = doc.replaceAll("(?s)<a .*?>.*?</a>", "<x/>");
-		doc = doc.replaceAll("(?s)>\\s*?[\\n\\r]+\\s*?</", "><x/></");
-		doc = doc.replaceAll("(?s)[\\n\\r]+\\s*?([\\n\\r]+)", "\r\n");
-		doc = doc.replaceAll("(<x/>)+", "<x/>");
-
-		return doc;
 	}
 
 	/**
