@@ -34,10 +34,10 @@ import org.apache.wicket.validation.ValidationError;
  * <p>
  * Resource keys:
  * <ul>
- * <li>{@code RangeValidator.exact} if min==max</li>
+ * <li>{@code RangeValidator.exact} if min==max ({@link #exactLength(int)})</li>
  * <li>{@code RangeValidator.range} if both min and max are not {@code null}</li>
- * <li>{@code RangeValidator.minimum} if max is {@code null}</li>
- * <li>{@code RangeValidator.maximum} if min is {@code null}</li>
+ * <li>{@code RangeValidator.minimum} if max is {@code null} ({@link #minimumLength(int)})</li>
+ * <li>{@code RangeValidator.maximum} if min is {@code null} ({@link #maximumLength(int)})</li>
  * </ul>
  * (for backwards compatibility reasons resource keys of form {@code StringValidator.*} are still
  * checked)
@@ -106,4 +106,46 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 			tag.put("maxlen", getMaximum());
 		}
 	}
+
+	/**
+	 * @param length
+	 * @return a {@link StringValidator} that generates an error if a string is not of an exact
+	 *         length
+	 */
+	public static StringValidator exactLength(int length)
+	{
+		return new StringValidator(length, length);
+	}
+
+	/**
+	 * @param length
+	 * @return a {@link StringValidator} that generates an error if a string exceeds a maximum
+	 *         length
+	 */
+	public static StringValidator maximumLength(int length)
+	{
+		return new StringValidator(null, length);
+	}
+
+	/**
+	 * @param length
+	 * @return a {@link StringValidator} that generates an error if a string is not of a minimum
+	 *         length
+	 */
+	public static StringValidator minimumLength(int length)
+	{
+		return new StringValidator(length, null);
+	}
+
+	/**
+	 * @param minimum
+	 * @param maximum
+	 * @return a {@link StringValidator} that generates an error if the length of a string is not
+	 *         between (inclusive) minimum and maximum
+	 */
+	public static StringValidator lengthBetween(int minimum, int maximum)
+	{
+		return new StringValidator(minimum, maximum);
+	}
+
 }

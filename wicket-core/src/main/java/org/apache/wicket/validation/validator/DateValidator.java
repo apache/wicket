@@ -54,20 +54,121 @@ import org.apache.wicket.validation.ValidationError;
  */
 public class DateValidator extends RangeValidator<Date>
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @param minimum
+	 *            the minimum <code>Date</code>
+	 * @param maximum
+	 *            the maximum <code>Date</code>
+	 * @return a {@link DateValidator} that validates if a date is between (inclusive) a minimum and
+	 *         maximum
+	 */
+	public static DateValidator range(Date minimum, Date maximum)
+	{
+		return new DateValidator(minimum, maximum);
+	}
+
+	/**
+	 * @param minimum
+	 *            the minimum <code>Date</code>
+	 * @param maximum
+	 *            the maximum <code>Date</code>
+	 * @param format
+	 *            The format string used to format the date with SimpleDateFormat
+	 * 
+	 * @return a {@link DateValidator} that validates if a date is between (inclusive) a minimum and
+	 *         maximum
+	 */
+	public static DateValidator range(Date minimum, Date maximum, String format)
+	{
+		return new DateValidator(minimum, maximum, format);
+	}
+
+	/**
+	 * @param minimum
+	 *            the minimum <code>Date</code>
+	 * 
+	 * @return a {@link DateValidator} that validates if a date is after or equal to a minimum date
+	 */
+	public static DateValidator minimum(Date minimum)
+	{
+		return new DateValidator(minimum, null);
+	}
+
+	/**
+	 * @param minimum
+	 *            the minimum <code>Date</code>
+	 * @param format
+	 *            The format string used to format the date with SimpleDateFormat
+	 * 
+	 * @return a {@link DateValidator} that validates if a date is after or equal to a minimum date
+	 */
+	public static DateValidator minimum(Date minimum, String format)
+	{
+		return new DateValidator(minimum, null, format);
+	}
+
+	/**
+	 * @param maximum
+	 *            the maximum <code>Date</code>
+	 * 
+	 * @return a {@link DateValidator} that validates if a date is before or equal to a maximum date
+	 */
+	public static DateValidator maximum(Date maximum)
+	{
+		return new DateValidator(null, maximum);
+	}
+
+	/**
+	 * @param maximum
+	 *            the maximum <code>Date</code>
+	 * @param format
+	 *            The format string used to format the date with SimpleDateFormat
+	 * 
+	 * @return a {@link DateValidator} that validates if a date is before or equal to a maximum date
+	 */
+	public static DateValidator maximum(Date maximum, String format)
+	{
+		return new DateValidator(null, maximum, format);
+	}
+
 	private String format;
 
+	/**
+	 * Constructor that sets the minimum and maximum date values and a custom date formating.
+	 * 
+	 * @param minimum
+	 *            the minimum date
+	 * @param maximum
+	 *            the maximum date
+	 * @param format
+	 *            The format string used to format the date with SimpleDateFormat
+	 */
 	public DateValidator(Date minimum, Date maximum, String format)
 	{
 		super(minimum, maximum);
 		this.format = format;
 	}
 
+	/**
+	 * Constructor that sets the minimum and maximum date values.
+	 * 
+	 * @param minimum
+	 *            the minimum date
+	 * @param maximum
+	 *            the maximum date
+	 */
 	public DateValidator(Date minimum, Date maximum)
 	{
 		this(minimum, maximum, null);
 	}
 
-	public DateValidator()
+	/**
+	 * Constructor used for subclasses who want to set the range using
+	 * {@link #setRange(Comparable, Comparable)}
+	 */
+	protected DateValidator()
 	{
 	}
 

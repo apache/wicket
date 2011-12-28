@@ -59,6 +59,37 @@ public class RangeValidator<Z extends Comparable<Z> & Serializable> extends
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * @param minimum
+	 * @param maximum
+	 * @return a {@link RangeValidator} that validates if a value falls within a range
+	 */
+	public static <T extends Comparable<T> & Serializable> RangeValidator<T> range(T minimum,
+		T maximum)
+	{
+		return new RangeValidator<T>(minimum, maximum);
+	}
+
+	/**
+	 * @param minimum
+	 * @param maximum
+	 * @return a {@link RangeValidator} that validates if a value is a least {@code minimum}
+	 */
+	public static <T extends Comparable<T> & Serializable> RangeValidator<T> minmum(T minimum)
+	{
+		return new RangeValidator<T>(minimum, null);
+	}
+
+	/**
+	 * @param minimum
+	 * @param maximum
+	 * @return a {@link RangeValidator} that validates if a value is a most {@code maximum}
+	 */
+	public static <T extends Comparable<T> & Serializable> RangeValidator<T> maximum(T maximum)
+	{
+		return new RangeValidator<T>(null, maximum);
+	}
+
+	/**
 	 * Constructor that sets the minimum and maximum values.
 	 * 
 	 * @param minimum
