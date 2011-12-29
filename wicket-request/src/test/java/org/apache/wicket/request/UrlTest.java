@@ -592,4 +592,19 @@ public class UrlTest extends Assert
 		assertEquals(port, url.getPort());
 		assertEquals(Arrays.asList(segments), url.getSegments());
 	}
+
+	@Test
+	public void compact()
+	{
+		assertEquals("", Url.parse("").canonical().getPath());
+		assertEquals("/", Url.parse("/").canonical().getPath());
+		assertEquals("/a", Url.parse("/a").canonical().getPath());
+		assertEquals("a/", Url.parse("a/").canonical().getPath());
+		assertEquals("", Url.parse("example/..").canonical().getPath());
+		assertEquals("..", Url.parse("example/../..").canonical().getPath());
+		assertEquals("..", Url.parse("example/.././..").canonical().getPath());
+		assertEquals("a///", Url.parse("a///").canonical().getPath());
+		assertEquals("a//b/c", Url.parse("a//b/c").canonical().getPath());
+		assertEquals("foo/test", Url.parse("foo/bar/../baz/../test").canonical().getPath());
+	}
 }

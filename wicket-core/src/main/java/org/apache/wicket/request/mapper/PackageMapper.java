@@ -137,6 +137,12 @@ public class PackageMapper extends AbstractBookmarkableMapper
 
 			// load the page class
 			String className = url.getSegments().get(0);
+			
+			if (isValidClassName(className) == false)
+			{
+				return null;
+			}
+
 			className = transformFromUrl(className);
 			String fullyQualifiedClassName = packageName.getName() + '.' + className;
 			Class<? extends IRequestablePage> pageClass = getPageClass(fullyQualifiedClassName);
@@ -152,6 +158,30 @@ public class PackageMapper extends AbstractBookmarkableMapper
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * filter out invalid class names for package mapper. getting trash for class names
+	 * can e.g. happen when the home page is in the same package that is mounted by package mapper
+	 * but the request was previously mapped by e.g. {@link HomePageMapper}. We then get some 
+	 * strange url like '/example/..' and wicket tries to look up class name '..'.
+	 * <p/>
+	 *  @see <a href="https://issues.apache.org/jira/browse/WICKET-4303">WICKET-4303</a>
+	 *  <p/>
+	 */
+	private boolean isValidClassName(String className)
+	{
+		// darn simple check - feel free to enhance this method to your needs
+		if (className == null)
+		{
+			return false;
+		}
+		// java class names never start with '.'
+		if (className.startsWith("."))
+		{
+			return false;
+		}
+		return true;
 	}
 
 	/**
