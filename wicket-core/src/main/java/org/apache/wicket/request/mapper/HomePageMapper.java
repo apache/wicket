@@ -86,7 +86,9 @@ public class HomePageMapper extends MountedMapper
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
-		final Url url = request.getUrl();
+		// get canonical url
+		final Url url = request.getUrl().canonical();
+		
 		if (url.getSegments().size() > 0)
 		{
 			// home page cannot have segments/indexed parameters

@@ -1136,4 +1136,65 @@ public final class Url implements Serializable
 	{
 		return getQueryString(getCharset());
 	}
+	
+	
+	/**
+	 * Try to reduce url by eliminating '..' and '.' from the path where appropriate
+	 * (this is somehow similar to {@link java.io.File#getCanonicalPath()}).
+	 * Either by different / unexpected browser behavior or by malicious attacks it 
+	 * can happen that these kind of redundant urls are processed by wicket. These urls 
+	 * can cause some trouble when mapping the request.
+	 * <p/> 
+	 * <strong>example:</strong>
+	 * 
+	 * the url
+	 * 
+	 * <pre>  /example/..;jsessionid=234792?0</pre> 
+	 * 
+	 * will not get normalized by the browser due to the ';jsessionid' string that 
+	 * gets appended by the servlet container. After wicket strips the 
+	 * jsessionid part the resulting internal url will be
+	 * 
+	 * <pre>  /example/..</pre>
+	 * 
+	 * instead of
+	 * 
+	 * <pre>  /</pre>
+	 * 
+	 * <p/>
+	 * 
+	 * This code correlates to 
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-4303">WICKET-4303</a>
+	 *
+	 * @param url
+	 *         unprocessed url
+	 *
+	 * @return canonical url
+	 */
+	public Url canonical()
+	{
+		Url url = new Url(this);
+		url.segments.clear();
+
+		for (int i = 0; i < this.segments.size(); i++)
+		{
+			final String segment = this.segments.get(i);
+
+			// drop '.' from path  
+			if (".".equals(segment))
+			{
+				continue;
+			}
+
+			// skip segment if following segment is a '..'
+			if ((i + 1) < this.segments.size() && "..".equals(this.segments.get(i + 1)))
+			{
+				i++;
+				continue;
+			}
+
+			url.segments.add(segment);
+		}
+		return url;
+	}
 }
