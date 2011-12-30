@@ -531,7 +531,8 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		if (Application.exists())
 		{
 			IRequestLogger requestLogger = Application.get().getRequestLogger();
-			requestLogger.performLogging();
+			if (requestLogger != null)
+				requestLogger.performLogging();
 		}
 	}
 
