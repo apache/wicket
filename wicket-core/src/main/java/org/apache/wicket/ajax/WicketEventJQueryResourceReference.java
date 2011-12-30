@@ -28,8 +28,7 @@ import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 /**
  * @author hoeve
  */
-public class WicketEventJQueryResourceReference extends
-	MinifiedAwareJavaScriptResourceReference
+public class WicketEventJQueryResourceReference extends MinifiedAwareJavaScriptResourceReference
 {
 	private static final long serialVersionUID = -2918665261694523156L;
 
@@ -52,10 +51,14 @@ public class WicketEventJQueryResourceReference extends
 	public Iterable<? extends HeaderItem> getDependencies()
 	{
 		final ResourceReference backingLibraryReference;
-		if (Application.exists()) {
-			backingLibraryReference = Application.get().getJavaScriptLibrarySettings().getBackingLibraryReference();
+		if (Application.exists())
+		{
+			backingLibraryReference = Application.get()
+				.getJavaScriptLibrarySettings()
+				.getJQueryReference();
 		}
-		else {
+		else
+		{
 			backingLibraryReference = JQueryResourceReference.get();
 		}
 		return Arrays.asList(JavaScriptHeaderItem.forReference(backingLibraryReference));

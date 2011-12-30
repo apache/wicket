@@ -29,7 +29,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
 {
-	private ResourceReference backingLibraryReference = JQueryResourceReference.get();
+	private ResourceReference jQueryReference = JQueryResourceReference.get();
 
 	private ResourceReference wicketEventReference = WicketEventJQueryResourceReference.get();
 
@@ -38,15 +38,15 @@ public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
 	private ResourceReference wicketAjaxDebugReference = WicketAjaxDebugJQueryResourceReference.get();
 
 	@Override
-	public ResourceReference getBackingLibraryReference()
+	public ResourceReference getJQueryReference()
 	{
-		return backingLibraryReference;
+		return jQueryReference;
 	}
 
 	@Override
-	public void setBackingLibraryReference(ResourceReference backingLibraryReference)
+	public void setJQueryReference(ResourceReference jQueryReference)
 	{
-		this.backingLibraryReference = Args.notNull(backingLibraryReference, "backingLibraryReference");
+		this.jQueryReference = Args.notNull(jQueryReference, "jQueryReference");
 	}
 
 	@Override
@@ -82,7 +82,8 @@ public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
 	@Override
 	public void setWicketAjaxDebugReference(ResourceReference wicketAjaxDebugReference)
 	{
-		this.wicketAjaxDebugReference = Args.notNull(wicketAjaxDebugReference, "wicketAjaxDebugReference");
+		this.wicketAjaxDebugReference = Args.notNull(wicketAjaxDebugReference,
+			"wicketAjaxDebugReference");
 	}
 
 }
