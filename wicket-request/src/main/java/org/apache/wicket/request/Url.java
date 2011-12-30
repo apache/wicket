@@ -63,9 +63,9 @@ public final class Url implements Serializable
 
 	private static final String DEFAULT_CHARSET_NAME = "UTF-8";
 
-	private final List<String> segments = Generics.newArrayList();
+	private final List<String> segments;
 
-	private final List<QueryParameter> parameters = Generics.newArrayList();
+	private final List<QueryParameter> parameters;
 
 	private String charsetName;
 	private transient Charset _charset;
@@ -284,6 +284,8 @@ public final class Url implements Serializable
 	 */
 	public Url()
 	{
+		segments = Generics.newArrayList();
+		parameters = Generics.newArrayList();
 	}
 
 	/**
@@ -293,6 +295,7 @@ public final class Url implements Serializable
 	 */
 	public Url(final Charset charset)
 	{
+		this();
 		setCharset(charset);
 	}
 
@@ -307,9 +310,13 @@ public final class Url implements Serializable
 	{
 		Args.notNull(url, "url");
 
-		segments.addAll(url.getSegments());
-		parameters.addAll(url.getQueryParameters());
-		setCharset(url.getCharset());
+		this.protocol = url.protocol;
+		this.host = url.host;
+		this.port = url.port;
+		this.segments = new ArrayList<String>(url.segments);
+		this.parameters = new ArrayList<QueryParameter>(url.parameters);
+		this.charsetName = url.charsetName;
+		this._charset = url._charset;
 	}
 
 	/**
@@ -347,8 +354,8 @@ public final class Url implements Serializable
 		Args.notNull(segments, "segments");
 		Args.notNull(parameters, "parameters");
 
-		this.segments.addAll(segments);
-		this.parameters.addAll(parameters);
+		this.segments = new ArrayList<String>(segments);
+		this.parameters = new ArrayList<QueryParameter>(parameters);
 		setCharset(charset);
 	}
 
