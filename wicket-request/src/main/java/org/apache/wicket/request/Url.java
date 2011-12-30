@@ -79,7 +79,8 @@ public final class Url implements Serializable
 	 * 
 	 * @author igor
 	 */
-	public static enum StringMode {
+	public static enum StringMode 
+	{
 		/** local urls are rendered without the host name */
 		LOCAL,
 		/**
@@ -90,31 +91,83 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * 
-	 * @param qp
-	 * @param charset
-	 * @return query parameters
+	 * Construct.
 	 */
-	private static QueryParameter parseQueryParameter(final String qp, final Charset charset)
+	public Url()
 	{
-		if (qp.indexOf('=') == -1)
-		{
-			return new QueryParameter(decodeParameter(qp, charset), "");
-		}
-		String parts[] = Strings.split(qp, '=');
-		if (parts.length == 0)
-		{
-			return new QueryParameter("", "");
-		}
-		else if (parts.length == 1)
-		{
-			return new QueryParameter("", decodeParameter(parts[0], charset));
-		}
-		else
-		{
-			return new QueryParameter(decodeParameter(parts[0], charset), decodeParameter(parts[1],
-				charset));
-		}
+		segments = Generics.newArrayList();
+		parameters = Generics.newArrayList();
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param charset
+	 */
+	public Url(final Charset charset)
+	{
+		this();
+		setCharset(charset);
+	}
+
+
+	/**
+	 * copy constructor
+	 * 
+	 * @param url
+	 *            url being copied
+	 */
+	public Url(final Url url)
+	{
+		Args.notNull(url, "url");
+
+		this.protocol = url.protocol;
+		this.host = url.host;
+		this.port = url.port;
+		this.segments = new ArrayList<String>(url.segments);
+		this.parameters = new ArrayList<QueryParameter>(url.parameters);
+		this.charsetName = url.charsetName;
+		this._charset = url._charset;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param segments
+	 * @param parameters
+	 */
+	public Url(final List<String> segments, final List<QueryParameter> parameters)
+	{
+		this(segments, parameters, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param segments
+	 * @param charset
+	 */
+	public Url(final List<String> segments, final Charset charset)
+	{
+		this(segments, Collections.<QueryParameter> emptyList(), charset);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param segments
+	 * @param parameters
+	 * @param charset
+	 */
+	public Url(final List<String> segments, final List<QueryParameter> parameters,
+		final Charset charset)
+	{
+		Args.notNull(segments, "segments");
+		Args.notNull(parameters, "parameters");
+
+		this.segments = new ArrayList<String>(segments);
+		this.parameters = new ArrayList<QueryParameter>(parameters);
+		setCharset(charset);
 	}
 
 	/**
@@ -253,6 +306,34 @@ public final class Url implements Serializable
 	}
 
 	/**
+	 * 
+	 * @param qp
+	 * @param charset
+	 * @return query parameters
+	 */
+	private static QueryParameter parseQueryParameter(final String qp, final Charset charset)
+	{
+		if (qp.indexOf('=') == -1)
+		{
+			return new QueryParameter(decodeParameter(qp, charset), "");
+		}
+		String parts[] = Strings.split(qp, '=');
+		if (parts.length == 0)
+		{
+			return new QueryParameter("", "");
+		}
+		else if (parts.length == 1)
+		{
+			return new QueryParameter("", decodeParameter(parts[0], charset));
+		}
+		else
+		{
+			return new QueryParameter(decodeParameter(parts[0], charset), decodeParameter(parts[1],
+				charset));
+		}
+	}
+
+	/**
 	 * get default port number for protocol
 	 * 
 	 * @param protocol
@@ -277,86 +358,6 @@ public final class Url implements Serializable
 		{
 			return null;
 		}
-	}
-
-	/**
-	 * Construct.
-	 */
-	public Url()
-	{
-		segments = Generics.newArrayList();
-		parameters = Generics.newArrayList();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param charset
-	 */
-	public Url(final Charset charset)
-	{
-		this();
-		setCharset(charset);
-	}
-
-
-	/**
-	 * Construct.
-	 * 
-	 * @param url
-	 *            url being copied
-	 */
-	public Url(final Url url)
-	{
-		Args.notNull(url, "url");
-
-		this.protocol = url.protocol;
-		this.host = url.host;
-		this.port = url.port;
-		this.segments = new ArrayList<String>(url.segments);
-		this.parameters = new ArrayList<QueryParameter>(url.parameters);
-		this.charsetName = url.charsetName;
-		this._charset = url._charset;
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param segments
-	 * @param parameters
-	 */
-	public Url(final List<String> segments, final List<QueryParameter> parameters)
-	{
-		this(segments, parameters, null);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param segments
-	 * @param charset
-	 */
-	public Url(final List<String> segments, final Charset charset)
-	{
-		this(segments, Collections.<QueryParameter> emptyList(), charset);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param segments
-	 * @param parameters
-	 * @param charset
-	 */
-	public Url(final List<String> segments, final List<QueryParameter> parameters,
-		final Charset charset)
-	{
-		Args.notNull(segments, "segments");
-		Args.notNull(parameters, "parameters");
-
-		this.segments = new ArrayList<String>(segments);
-		this.parameters = new ArrayList<QueryParameter>(parameters);
-		setCharset(charset);
 	}
 
 	/**
@@ -795,7 +796,7 @@ public final class Url implements Serializable
 	 * @param segments
 	 * @return true if at least one segement is real
 	 */
-	private boolean isAtLeastOnSegmentReal(final List<String> segments)
+	private boolean isAtLeastOneSegmentReal(final List<String> segments)
 	{
 		for (String s : segments)
 		{
@@ -816,7 +817,7 @@ public final class Url implements Serializable
 	{
 		boolean checkedLastSegment = false;
 
-		if (!isAtLeastOnSegmentReal(segments) && !isLastSegmentEmpty(segments))
+		if (!isAtLeastOneSegmentReal(segments) && !isLastSegmentEmpty(segments))
 		{
 			segments = new ArrayList<String>(segments);
 			segments.add("");
