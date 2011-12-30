@@ -97,7 +97,21 @@ public class DataTableTest extends Assert
 // log.error("==============================================");
 // log.error(removeFillers(document));
 
-		DiffUtil.validatePage(document, getClass(), "DataTablePage_ExpectedResult.html", true);
+		DiffUtil.validatePage(removeFillers(document), getClass(),
+			"DataTablePage_ExpectedResult.html", true);
+	}
+
+	private String removeFillers(String doc)
+	{
+		doc = doc.replaceAll("<wicket:container .*?>.*?</wicket:container>", "<x/>");
+		doc = doc.replaceAll("(?s)<span .*?>.*?</span>", "<x/>");
+		doc = doc.replaceAll("(?s)<div .*?>.*?</div>", "<x/>");
+		doc = doc.replaceAll("(?s)<a .*?>.*?</a>", "<x/>");
+		doc = doc.replaceAll("(?s)>\\s*?[\\n\\r]+\\s*?</", "><x/></");
+		doc = doc.replaceAll("(?s)[\\n\\r]+\\s*?([\\n\\r]+)", "\r\n");
+		doc = doc.replaceAll("(<x/>)+", "<x/>");
+
+		return doc;
 	}
 
 	/**
