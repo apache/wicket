@@ -21,6 +21,7 @@ import java.util.Stack;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
@@ -157,8 +158,17 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	{
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
 		{
+			/*
+			 * TODO hierarchy completion: the container we pass in here is no longer guaranteed to
+			 * be able to retrieve the page and so we can no longer access the autoindex() sequence
+			 * we used to create unique wicket ids. this is why the line below was changed to use
+			 * session, which is not idea. we should consider refactoring this method to pass in the
+			 * page instance.
+			 */
+
+
 			// Yes, we handled the tag
-			return new Enclosure(tag.getId() + container.getPage().getAutoIndex(),
+			return new Enclosure(tag.getId() + Session.get().nextSequenceValue(),
 				tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
 		}
 

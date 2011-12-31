@@ -125,23 +125,18 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	}
 
 	@Override
-	protected void onInitialize()
+	protected void onConfigure()
 	{
-		super.onInitialize();
+		super.onConfigure();
 
 		// get Child Component. If not "added", ask a resolver to find it.
 		childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
+		setVisible(childComponent.determineVisibility());
 	}
 
 	protected final Component getChild()
 	{
 		return childComponent;
-	}
-
-	@Override
-	public boolean isVisible()
-	{
-		return childComponent.determineVisibility() && super.isVisible();
 	}
 
 	/**
@@ -179,7 +174,12 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	{
 		String fullChildId = getChildId();
 
-		Component controller = enclosureParent.get(fullChildId);
+		Component controller = get(fullChildId);
+		if (controller != null)
+		{
+			return controller;
+		}
+		controller = enclosureParent.get(fullChildId);
 		if (controller == null)
 		{
 			int orgIndex = markupStream.getCurrentIndex();

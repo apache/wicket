@@ -21,8 +21,10 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -253,6 +255,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		stack.push(new ComponentAndTag(null, this));
 
 		ComponentTag tag = null;
+
+		Map<Component, MarkupContainer> lateAdd = new HashMap<Component, MarkupContainer>();
+
 		while (markup.hasMore())
 		{
 			if (tag != null)
@@ -263,7 +268,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			if (!markup.skipUntil(ComponentTag.class))
 			{
 				// TODO error if stack is not empty
-				return;
+				break;
 			}
 
 			// the current markup tag
@@ -276,7 +281,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				{
 					// we are now out of the markup owner's body markup, most likely on a
 					// </wicket:panel> or something similar, we are done
-					return;
+					break;
+					// return;
 				}
 				stack.pop();
 				continue;
@@ -344,13 +350,24 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				{
 					// tag.setId(child.getId());
 					// tag.setModified(true);
+					child.setMarkup(markup.getMarkupFragment());
 					child.setMetaData(RESOLVED_KEY, new ResolvedMeta(markup));
 				}
 			}
 
 			if (child != null && child.getParent() == null)
 			{
-				lateAdd(parent, child);
+				if (parent.findParent(Page.class) != null)
+				{
+					// if the parent is linked to the page we will delay the lateadd call so
+					// onconfigure is now triggered on the child right away, but instead after its
+					// children have been resolved
+					lateAdd.put(child, parent);
+				}
+				else
+				{
+					lateAdd(parent, child);
+				}
 				// TODO do we need to continue unqueuing or can we skip this component
 				// and all its children if it has been deemed invisible? - dont think we can because
 				// that will leave components in the queue and ondetach() will bomb
@@ -409,6 +426,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				markup.skipToMatchingCloseTag(tag);
 			}
 		}
+		for (Map.Entry<Component, MarkupContainer> delayed : lateAdd.entrySet())
+		{
+			lateAdd(delayed.getValue(), delayed.getKey());
+		}
 	}
 
 	private void lateAdd(MarkupContainer parent, Component queued)
@@ -419,6 +440,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (parent.isVisibleInHierarchy())
 		{
+			// TODO hierarchy completion: this call may not be necessary because if we are alrady in
+			// render this will be called from markupcontainer.add()
+
 			// call configure() and onbeforerender() which are done from inside internalBeforeRender
 			queued.internalBeforeRender();
 		}
