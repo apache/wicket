@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.hierarchy.complete;
 
-import static org.apache.wicket.hierarchy.complete.WicketMatchers.hasPath;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
+import static org.apache.wicket.hierarchy.complete.WicketMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 
 import java.util.ArrayList;
 
@@ -29,6 +28,10 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -36,6 +39,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -154,7 +158,7 @@ public class HierarchyCompletionTest
 		try
 		{
 			tester.startPage(p);
-			fail();
+			Assert.fail();
 		}
 		catch (WicketRuntimeException e)
 		{
@@ -309,7 +313,7 @@ public class HierarchyCompletionTest
 		try
 		{
 			new A().queue(new B(), new B());
-			fail("Should not be able to queue two components with the same id under the same parent");
+			Assert.fail("Should not be able to queue two components with the same id under the same parent");
 		}
 		catch (WicketRuntimeException e)
 		{
@@ -369,6 +373,28 @@ public class HierarchyCompletionTest
 		}
 		tester.startPage(new MyPage());
 		tester.startPage(new MyPage());
+	}
+
+	@Test
+	public void enclosure1()
+	{
+		TestPage p = new TestPage();
+		p.setPageMarkup("<form wicket:id='f'><wicket:enclosure child='t'><input wicket:id='t' type='text'/><span wicket:id='l'></span></wicket:enclosure></form>");
+		Form<?> form = new Form<Void>("f");
+		Component t = new TextField<String>("t", new Model<String>());
+		Component l = new Label("l", "label");
+
+		p.queue(form);
+		form.queue(t, l);
+
+		t.setVisible(false); // this should make 'l' invisible
+		tester.startPage(p);
+
+		assertThat("dequeued into a resolved enclosure", //
+			t.getParent(), is(instanceOf(Enclosure.class)));
+
+		assertThat("should be made invisible by enclosure", //
+			l.isVisibleInHierarchy(), is(false));
 	}
 
 
