@@ -382,7 +382,16 @@ public class HierarchyCompletionTest
 		p.setPageMarkup("<form wicket:id='f'><wicket:enclosure child='t'><input wicket:id='t' type='text'/><span wicket:id='l'></span></wicket:enclosure></form>");
 		Form<?> form = new Form<Void>("f");
 		Component t = new TextField<String>("t", new Model<String>());
-		Component l = new Label("l", "label");
+		Component l = new Label("l", "label")
+		{
+			@Override
+			protected void onInitialize()
+			{
+				super.onInitialize();
+				assertThat("in oninitialize the component should be in the correct hierarchy",//
+					getParent(), is(instanceOf(Enclosure.class)));
+			}
+		};
 
 		p.queue(form);
 		form.queue(t, l);
