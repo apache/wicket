@@ -1,0 +1,29 @@
+<ajax-response><component id="componentToReplace"><![CDATA[
+
+    <table id="componentToReplace">
+        <thead>
+            <tr>
+                <th><div><script>start(); ok(true, 'script in thead > td has to be executed')</script></div>
+                </th>
+                <th>header 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>data 1
+<script>start(); ok(true, 'script in tbody > td has to be executed')</script>
+                </td>
+                <td>data 2</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>footer 1</td>
+                <td>footer 2
+                    <script>start(); ok(true, 'script in tfoot > td has to be executed')</script>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+]]></component></ajax-response>

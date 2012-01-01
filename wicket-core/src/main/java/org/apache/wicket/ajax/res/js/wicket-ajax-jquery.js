@@ -312,20 +312,6 @@
 
 		initialize: jQuery.noop,
 
-		// On ajax request failure
-		failure: function (message) {
-			if (message !== null) {
-				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
-			}
-			this.failureHandler();
-			Wicket.Ajax.invokePostCallHandlers();
-			Wicket.Ajax.invokeFailureHandlers();
-		},
-
-		done: function (channel) {
-			Wicket.channelManager.done(channel);
-		},
-
 		_normalizeAttributes: function (attrs) {
 
 			// (ajax channel)
@@ -342,6 +328,27 @@
 			if (typeof(attrs.dt) !== 'string') {
 				attrs.dt = 'xml';
 			}	
+		},
+
+		/**
+		 * A helper function that executes an array of handlers (before, success, failure)
+		 * @param {Array} handlers - the handlers to execute
+		 */
+		_executeHandlers: function (handlers) {
+			if (jQuery.isArray(handlers)) {
+
+				// cut the handlers argument
+				var args = Array.prototype.slice.call(arguments).slice(1);
+
+				for (var i = 0; i < handlers.length; i++) {
+					var handler = handlers[i];
+					if (jQuery.isFunction(handler)) {
+						handler.apply(this, args);
+					} else {
+						new Function(handler).apply(this, args);
+					}
+				}
+			}
 		},
 
 		/**
@@ -377,28 +384,6 @@
 
 				// keep a reference to the current context
 				self = this,
-
-				/**
-				 * A helper function that executes an array of handlers (before, success, failure)
-				 * @param {Array} handlers - the handlers to execute
-				 * @param {Object} context - the context to use while executing a handler
-				 */
-				executeHandlers = function (handlers, context) {
-					if (jQuery.isArray(handlers)) {
-
-						// cut the handlers argument
-						var args = Array.prototype.slice.call(arguments).slice(1);
-
-						for (var i = 0; i < handlers.length; i++) {
-							var handler = handlers[i];
-							if (jQuery.isFunction(handler)) {
-								handler.apply(this, args);
-							} else {
-								new Function(handler).apply(this, args);
-							}
-						}
-					}
-				},
 
 				// the precondition to use if there are no explicit ones
 				defaultPrecondition = [ function () {
@@ -482,7 +467,7 @@
 						}
 					}
 
-					executeHandlers(attrs.bh);
+					self._executeHandlers(attrs.bh);
 
 					if (attrs.i) {
 						// show the indicator
@@ -497,15 +482,13 @@
 				success: function(data, textStatus, jqXHR) {
 
 					if (attrs.wr) {
-						self.stateChangeCallback(data, textStatus, jqXHR, attrs);
+						self.processAjaxResponse(data, textStatus, jqXHR, attrs);
 					}
-
-					executeHandlers(attrs.sh, data, textStatus, jqXHR);
 
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 
-					executeHandlers(attrs.fh, jqXHR, textStatus, errorThrown);
+					self.failure(errorThrown, attrs);
 
 				},
 				complete: function (jqXHR, textStatus) {
@@ -514,7 +497,7 @@
 					}
 
 					this.done(attrs.ch);
-				}				
+				}
 			});
 
 			var allowDefault = attrs.ad || false; 
@@ -526,20 +509,13 @@
 			return allowDefault;
 		},
 
-		// Method that processes the request states
-		stateChangeCallback: function (data, textStatus, jqXHR, attrs) {
-			var status,
-				responseAsText,
-				redirectUrl,
-				urlDepth,
-				calculatedRedirect;
+		// Method that processes the <ajax-response>
+		processAjaxResponse: function (data, textStatus, jqXHR, attrs) {
 
 			if (jqXHR.readyState === 4) {
 
-				// response came without error
-				responseAsText = jqXHR.responseText;
-
 				// first try to get the redirect header
+				var redirectUrl;
 				try {
 					redirectUrl = jqXHR.getResponseHeader('Ajax-Location');
 				} catch (ignore) { // might happen in older mozilla
@@ -557,13 +533,13 @@
 						window.location = redirectUrl;
 					}
 					else {
-						urlDepth = 0;
+						var urlDepth = 0;
 						while (redirectUrl.substring(0, 3) === "../") {
 							urlDepth++;
 							redirectUrl = redirectUrl.substring(3);
 						}
 						// Make this a string.
-						calculatedRedirect = window.location.pathname;
+						var calculatedRedirect = window.location.pathname;
 						while (urlDepth > -1) {
 							urlDepth--;
 							var i = calculatedRedirect.lastIndexOf("/");
@@ -583,20 +559,12 @@
 				}
 				else {
 					// no redirect, just regular response
+					var responseAsText = jQuery(data).text();
 					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
-					if (this.debugContent) {
-						Wicket.Log.info("\n" + responseAsText);
-					}
+					Wicket.Log.info("\n" + responseAsText);
 
-					var xmldoc;
-					if (typeof(window.XMLHttpRequest) !== "undefined" && typeof(DOMParser) !== "undefined") {
-						var parser = new DOMParser();
-						xmldoc = parser.parseFromString(responseAsText, "text/xml");
-					} else if (window.ActiveXObject) {
-						xmldoc = jqXHR.responseXML;
-					}
 					// invoke the loaded callback with an xml document
-					this.loadedCallback(xmldoc, attrs);
+					return this.loadedCallback(data, attrs);
 				}
 			}
 		},
@@ -738,7 +706,7 @@
 				for (var i = 0; i < root.childNodes.length; ++i) {
 					var node = root.childNodes[i];
 					if (node.tagName === "priority-evaluate") {
-						this.processEvaluation(steps, node);
+						this.processEvaluation(steps, node, attrs);
 					}
 				}
 
@@ -768,20 +736,23 @@
 				}
 
 				// add the last step, which should trigger the success call the done method on request
-				this.success(steps);
+				this.success(steps, attrs);
 
 				Wicket.Log.info("Response parsed. Now invoking steps...");
 				var executer = new FunctionsExecuter(steps);
 				executer.start();
-			} catch (e) {
-				this.failure(e.message);
+			} catch (exception) {
+				this.failure(exception, attrs);
 			}
 		},
 
 		// Adds a closure to steps that should be invoked after all other steps have been successfully executed
-		success: function (steps) {
+		success: function (steps, attrs) {
 			steps.push(jQuery.proxy(function (notify) {
 				Wicket.Log.info("Response processed successfully.");
+
+				this._executeHandlers(attrs.sh);
+
 				Wicket.Ajax.invokePostCallHandlers();
 				// retach the events to the new components (a bit blunt method...)
 				// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
@@ -796,6 +767,20 @@
 				// continue to next step (which should make the processing stop, as success should be the final step)
 				notify();
 			}, this));
+		},
+
+		// On ajax request failure
+		failure: function (message, attrs) {
+			if (message !== null) {
+				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
+			}
+			this._executeHandlers(attrs.fh);
+			Wicket.Ajax.invokePostCallHandlers();
+			Wicket.Ajax.invokeFailureHandlers();
+		},
+
+		done: function (channel) {
+			Wicket.channelManager.done(channel);
 		},
 
 		// Adds a closure that replaces a component
@@ -1079,9 +1064,10 @@
 				var result = {};
 				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) { 
 					var $input = jQuery(input);
-					if ($input.length > 0 && $input.prop('disabled') === false) {
-						var name = $input.attr('name');
-						result[name] = $input.val();
+					var serialized = $input.serializeArray();
+					for (var i = 0; i < serialized.length; i++) {
+						var obj = serialized[i];
+						result[obj.name] = obj.value;
 					}
 				}
 				return result;
@@ -1094,7 +1080,10 @@
 			// Returns url/post-body fragment representing element (e)
 			serializeElement: function(element) {
 
-				if (typeof(element) === 'string') {
+				if (!element) {
+					return {};
+				}
+				else if (typeof(element) === 'string') {
 					element = Wicket.$(element);
 				}
 

@@ -15,146 +15,176 @@
  * limitations under the License.
  */
 
+/*
+	Note: these tests run only through Web Server.
+	Here is a possible setup for Apache HTTPD:
+
+		 Alias /ajax-tests "/path/to/wicket/wicket-core/src"
+
+		 <Directory "/path/to/wicket/wicket-core/src">
+
+		 Options Indexes
+		 AllowOverride None AuthConfig
+
+		 Order allow,deny
+		 Allow from all
+
+		 </Directory>
+
+	then run it by opening "http://localhost/ajax-tests/test/js/all.html" in the browser
+
+ */
+
 jQuery(document).ready(function() {
 
-	/**
-	 * Emulates an Ajax response from <script> element's body.
-	 * Using script element's body is cross browser compatible
-	 */
-	var loadData = function (id) {
-		var node = Wicket.$(id);
-		var text = "", i;
-
-		if (node.hasChildNodes()) {
-			for (i = 0; i < node.childNodes.length; i++) {
-				text = text + node.childNodes[i].nodeValue;
-			}
-		}
-		return text;
-	}
-
-	execute = function (dataElementId, attributes) {
+	execute = function (attributes) {
 		
 		var defaults = {
-				fh: function () {
-					start();
-					ok(false, 'Failure handler should not be called!');
-				},
+				fh: [
+					function () {
+						start();
+						ok(false, 'Failure handler should not be executed!');
+					}
+				],
 				ch: '0|s',
-				sh: function () {
-					start();
-					ok(true, 'Success handler is executed');
-				},
-				u: 'dummy/url'
+				sh: [
+					function () {
+						ok(true, 'Success handler is executed');
+					}
+				]
 		};
 		var attrs = jQuery.extend({}, defaults, attributes);
 		var call = new Wicket.Ajax.Call();
+		call.ajax(attrs);
 
-		var jqXHR = {
-			responseText: loadData(dataElementId),  // emulates Ajax response
-			responseXML: Wicket.Xml.parse(loadData(dataElementId)),  // emulates Ajax response (IE)
-			status: 200,
-			readyState: 4
-		};
-
-		call.channel = attrs.ch;
-		call.stateChangeCallback({}, "success", jqXHR, attrs);
 	};
 
-	module('Wicket.Ajax.stateChangeCallback');
+	// Ajax tests are executed only when run with Web Server
+	if ( !isLocal ) {
 
-	asyncTest('Wicket.Ajax - processEvaluation with mock data.', function () {
+		module('Wicket.Ajax.stateChangeCallback');
 
-		expect(2);
+		asyncTest('Wicket.Ajax - processEvaluation with mock data.', function () {
 
-		execute('evaluationId');
-	});
+			expect(2);
 
-	asyncTest('Wicket.Ajax - processEvaluation with mock data (priority-evaluate).', function () {
+			var attrs = {
+				u: 'data/ajax/evaluationId.xml',
+				c: 'evaluationId'
+			}
+			execute(attrs);
+		});
 
-		expect(2);
+		asyncTest('Wicket.Ajax - processEvaluation with mock data (priority-evaluate).', function () {
 
-		execute('priorityEvaluationId');
-	});
-	
-	asyncTest('Wicket.Ajax - processEvaluation with identifier|code.', function () {
+			expect(2);
 
-		expect(2);
+			var attrs = {
+				u: 'data/ajax/priorityEvaluationId.xml',
+				c: 'priorityEvaluationId'
+			}
+			execute(attrs);
+		});
 
-		execute('evaluationIdentifierAndCodeId');
-	});
+		/**
+		 * Executes the second part of 'something|functionBody' by passing 'notify' function as parameter
+		 */
+		asyncTest('Wicket.Ajax - processEvaluation with identifier|code.', function () {
 
-	asyncTest('Wicket.Ajax - processComponent, normal case.', function () {
+			expect(2);
 
-		expect(2);
+			var attrs = {
+				u: 'data/ajax/evaluationIdentifierAndCodeId.xml',
+				c: 'evaluationIdentifierAndCodeId'
+			}
+			execute(attrs);
+		});
 
-		var options = {
-			sh: function() {
+		asyncTest('Wicket.Ajax - processComponent, normal case.', function () {
+
+			expect(2);
+
+			equal(jQuery('#componentToReplace').text(), 'old body', 'The component is existing and has the old innerHTML');
+
+			var attrs = {
+				u: 'data/ajax/componentId.xml',
+				c: 'componentId',
+				sh: [
+					function() {
+						start();
+						equal(jQuery('#componentToReplace').text(), 'new body', 'The component must be replaced');
+					}
+				]
+			}
+			execute(attrs);
+		});
+
+
+		asyncTest('Wicket.Ajax - processComponent() but the old component doesn\'t exist.', function () {
+
+			expect(2);
+
+			var oldWicketLogError = Wicket.Log.error;
+
+			Wicket.Log.error = function(msg) {
 				start();
-				
-				equal(jQuery('#componentToReplace').text(), 'new body', 'The component must be replaced');
+				equal(msg, 'Wicket.Ajax.Call.processComponent: Component with id [[componentToReplaceDoesNotExist]] was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.');
+
+				// restore the original method
+				Wicket.Log.error = oldWicketLogError;
+			};
+
+			var attrs = {
+				u: 'data/ajax/componentDoesNotExistsId.xml',
+				c: 'componentDoesNotExistsId',
+				sh: [
+					function() {
+						start();
+						equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
+					}
+				]
 			}
-		};
+			execute(attrs);
+		});
 
-		equal(jQuery('#componentToReplace').text(), 'old body', 'The component is existing and has the old innerHTML');
+		asyncTest('Wicket.Ajax - processComponent() replace a component with a table with scripts inside.', function () {
 
-		execute('componentId', options);
-	});
+			expect(4);
 
-
-	asyncTest('Wicket.Ajax - processComponent() but the old component doesn\'t exist.', function () {
-
-		expect(2);
-
-		var oldWicketLogError = Wicket.Log.error;
-		
-		Wicket.Log.error = function(msg) {
-			start();
-			equal(msg, 'Wicket.Ajax.Call.processComponent: Component with id [[componentToReplaceDoesNotExist]] was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.');
-
-			// restore the original method
-			Wicket.Log.error = oldWicketLogError;
-		};
-
-		var options = {
-			sh: function() {
-				equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
+			var attrs = {
+				u: 'data/ajax/complexComponentId.xml',
+				c: 'complexComponentId',
+				sh: [
+					function() {
+						start();
+						equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
+					}
+				]
 			}
-		};
+			execute(attrs);
 
-		execute('componentDoesNotExistsId', options);
-	});
+		});
 
-	asyncTest('Wicket.Ajax - processComponent() replace a component with a table with scripts inside.', function () {
 
-		expect(4);
+		asyncTest('Wicket.Ajax - processComponent() replace title\'s text.', function () {
 
-		var options = {
-			sh: function() {
-				start();
-				equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
+			expect(1);
+
+			var oldTitle = jQuery('title').text();
+
+			var attrs = {
+				u: 'data/ajax/componentToReplaceTitle.xml',
+				c: 'componentToReplaceTitle',
+				sh: [
+					function() {
+						start();
+						var $title = jQuery('title');
+						equal($title.text(), 'new title', 'The title text should be updated!');
+						$title.text(oldTitle);
+					}
+				]
 			}
-		};
-
-		execute('complexComponentId', options);
-	});
-
-	
-	asyncTest('Wicket.Ajax - processComponent() replace title\'s text.', function () {
-
-		expect(1);
-
-		var oldTitle = jQuery('title').text();
-
-		var options = {
-			sh: function() {
-				start();
-				var $title = jQuery('title');
-				equal($title.text(), 'new title', 'The title text should be updated!');
-				$title.text(oldTitle);
-			}
-		};
-
-		execute('componentToReplaceTitle', options);
-	});
+			execute(attrs);
+		});
+	}
 });

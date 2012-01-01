@@ -1,0 +1,1 @@
+<ajax-response><evaluate>ignored|start(); ok(true, 'Evaluation with identifier must be executed!'); arguments[0]();</evaluate></ajax-response>

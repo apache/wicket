@@ -1,0 +1,1 @@
+<ajax-response><evaluate>start(); ok(true, 'Evaluation must be executed!');</evaluate></ajax-response>
