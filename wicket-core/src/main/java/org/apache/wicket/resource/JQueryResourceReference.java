@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.resource;
 
+import org.apache.wicket.settings.IJavaScriptLibrarySettings;
+
 
 /**
- * A resource reference for the jquery javascript library.
+ * The resource reference for the jquery javascript library as released with Wicket. To add a JQuery
+ * resource reference to a component, do not use this reference, but use
+ * {@link IJavaScriptLibrarySettings#getJQueryReference()} to prevent version conflicts.
  * 
  * @author papegaaij
  */
@@ -29,6 +33,9 @@ public class JQueryResourceReference extends MinifiedAwareJavaScriptResourceRefe
 	private static final JQueryResourceReference INSTANCE = new JQueryResourceReference();
 
 	/**
+	 * Normally you should not use this method, but use
+	 * {@link IJavaScriptLibrarySettings#getJQueryReference()} to prevent version conflicts.
+	 * 
 	 * @return the single instance of the resource reference
 	 */
 	public static JQueryResourceReference get()

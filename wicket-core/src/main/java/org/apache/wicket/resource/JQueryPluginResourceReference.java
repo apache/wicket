@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.resource;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Locale;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Base class for JavaScript resources that are JQuery plugins. This class already defines a
@@ -68,6 +70,17 @@ public class JQueryPluginResourceReference extends MinifiedAwareJavaScriptResour
 	@Override
 	public Iterable<? extends HeaderItem> getDependencies()
 	{
-		return Collections.singletonList(JavaScriptHeaderItem.forReference(JQueryResourceReference.get()));
+		final ResourceReference backingLibraryReference;
+		if (Application.exists())
+		{
+			backingLibraryReference = Application.get()
+				.getJavaScriptLibrarySettings()
+				.getJQueryReference();
+		}
+		else
+		{
+			backingLibraryReference = JQueryResourceReference.get();
+		}
+		return Arrays.asList(JavaScriptHeaderItem.forReference(backingLibraryReference));
 	}
 }

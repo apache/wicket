@@ -36,15 +36,17 @@ public interface IJavaScriptLibrarySettings
 {
 
 	/**
-	 * @return the reference to the JavaScript library used as backing library
+	 * @return the reference to the JQuery JavaScript library used as backing library for
+	 *         wicket-event and wicket-ajax
 	 */
-	ResourceReference getBackingLibraryReference();
+	ResourceReference getJQueryReference();
 
 	/**
 	 * @param reference
-	 *            a reference to the JavaScript library used as backing library
+	 *            a reference to the JQuery JavaScript library used as backing library for
+	 *            wicket-event and wicket-ajax
 	 */
-	void setBackingLibraryReference(ResourceReference reference);
+	void setJQueryReference(ResourceReference reference);
 
 	/**
 	 * @return the reference to the implementation of wicket-event.js
