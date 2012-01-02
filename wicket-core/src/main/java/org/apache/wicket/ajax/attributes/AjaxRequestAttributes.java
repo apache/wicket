@@ -17,7 +17,6 @@
 package org.apache.wicket.ajax.attributes;
 
 import org.apache.wicket.ajax.AjaxChannel;
-import org.apache.wicket.ajax.ExpressionDecorator;
 import org.apache.wicket.util.lang.Args;
 
 import java.util.ArrayList;
@@ -91,7 +90,6 @@ public final class AjaxRequestAttributes
 	private Map<String, Object> extraParameters = null;
 	private List<CharSequence> dynamicExtraParameters = null;
 	private List<CharSequence> requestQueueItemCreationListeners = null;
-	private List<ExpressionDecorator> expressionDecorators = null;
 	private AjaxChannel channel = null;
 
 	/**
@@ -398,27 +396,6 @@ public final class AjaxRequestAttributes
 			requestQueueItemCreationListeners = new ArrayList<CharSequence>();
 		}
 		return requestQueueItemCreationListeners;
-	}
-
-	/**
-	 * Certain behaviors support decorating the javascript expression they generate with
-	 * {@link ExpressionDecorator}s.
-	 * <p>
-	 * This usually decorates the javascript expression that is responsible for creating
-	 * <code>RequestQueueItem</code> and adding it to the queue. The decorator may be useful to
-	 * intercept the <code>RequestQueueItem</code> creation on in the earliest possible time.
-	 * <p>
-	 * Note that not all Ajax behaviors are required to support decorating the expression.
-	 * 
-	 * @return list of {@link ExpressionDecorator} .
-	 */
-	public List<ExpressionDecorator> getExpressionDecorators()
-	{
-		if (expressionDecorators == null)
-		{
-			expressionDecorators = new ArrayList<ExpressionDecorator>();
-		}
-		return expressionDecorators;
 	}
 
 	/**
