@@ -336,9 +336,14 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			}
 
 			String[] eventNames = attributes.getEventNames();
-			for (String eventName : eventNames)
-			{
-				attributesJson.append("e", eventName);
+			if (eventNames.length == 1) {
+				attributesJson.put("e", eventNames[0]);
+			}
+			else {
+				for (String eventName : eventNames)
+				{
+					attributesJson.append("e", eventName);
+				}
 			}
 
 			AjaxChannel channel = attributes.getChannel();

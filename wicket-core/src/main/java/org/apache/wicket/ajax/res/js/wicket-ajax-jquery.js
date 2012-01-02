@@ -1425,6 +1425,10 @@
 				var target	= attrs.c || window;
 				var events	= attrs.e || [ 'domready' ];
 
+				if (!jQuery.isArray(events)) {
+					events = [ events ];
+				}
+
 				jQuery.each(events, function (idx, evt) {
 					Wicket.Event.add(target, evt, function (jqEvent) {
 						var call = new Wicket.Ajax.Call();
