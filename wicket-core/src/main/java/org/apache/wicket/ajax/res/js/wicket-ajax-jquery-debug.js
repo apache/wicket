@@ -46,8 +46,6 @@
 		 */
 		enabled: false,
 
-		showResponseText : false,
-
 		scrollLock : false,
 
 		debugWindowId : 'wicketAjaxDebugWindow',
