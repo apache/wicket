@@ -47,7 +47,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 
 	public List<String> getSuffixes()
 	{
-		return Arrays.asList("js");
+		return Arrays.asList("js", "json");
 	}
 
 	@Override

@@ -186,5 +186,29 @@ jQuery(document).ready(function() {
 			}
 			execute(attrs);
 		});
+
+		asyncTest('Wicket.Ajax - non-wicket response.', function () {
+
+			expect(2);
+
+			var attrs = {
+				u: 'data/ajax/nonWicketResponse.json',
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				sh: [
+					function(data, textStatus, jqXHR) {
+						start();
+						var expected = {
+							one: 1,
+							two: '2',
+							three: true
+						};
+						deepEqual(data, expected);
+						equal('success', textStatus);
+					}
+				]
+			}
+			execute(attrs);
+		});
 	}
 });

@@ -483,6 +483,8 @@
 
 					if (attrs.wr) {
 						self.processAjaxResponse(data, textStatus, jqXHR, attrs);
+					} else {
+						self._executeHandlers(attrs.sh, data, textStatus, jqXHR);
 					}
 
 				},
