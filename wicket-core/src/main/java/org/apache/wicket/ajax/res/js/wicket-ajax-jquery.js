@@ -774,7 +774,7 @@
 
 		// On ajax request failure
 		failure: function (message, attrs) {
-			if (message !== null) {
+			if (message) {
 				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
 			}
 			this._executeHandlers(attrs.fh);
@@ -1582,12 +1582,12 @@
 						// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
 						var img = document.createElement('img');
 						var notifyCalled = false;
-						img.onerror = function() {
+						img.onerror = function () {
 							if (!notifyCalled) {
 								notifyCalled = true;
 								notify();
 							}
-						}
+						};
 						img.src = css.href;
 						if (img.complete) {
 						  if (!notifyCalled) {
@@ -1791,20 +1791,20 @@
 			 */
 			// WICKET-3596, WICKET-4312
 			_stripJSessionId: function (url) {
-				if (url == null)
+				if (url === null)
 				{
 					return null;
 				}
 
 				// http://.../abc;jsessionid=...?param=...
 				var ixSemiColon = url.indexOf(";");
-				if (ixSemiColon == -1)
+				if (ixSemiColon === -1)
 				{
 					return url;
 				}
 
 				var ixQuestionMark = url.indexOf("?");
-				if (ixQuestionMark == -1)
+				if (ixQuestionMark === -1)
 				{
 					// no query paramaters; cut off at ";"
 					// http://.../abc;jsession=...
@@ -2254,7 +2254,7 @@
 					var self = this;
 
 					if (false === jQuery.event.special.inputchange.keyDownPressed) {
-						setTimeout(function() {
+						window.setTimeout(function() {
 							jQuery.event.special.inputchange.handler.apply(self, arguments)
 						}, 10);
 					}
