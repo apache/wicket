@@ -500,6 +500,9 @@
 				}
 			});
 
+			// execute after handlers right after the Ajax request is fired
+			self._executeHandlers(attrs.ah);
+
 			var allowDefault = attrs.ad || false; 
 
 			if (!allowDefault && attrs.event) {

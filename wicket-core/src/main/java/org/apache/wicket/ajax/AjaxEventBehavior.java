@@ -84,7 +84,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * Sets the throttle delay for this behavior. Throttled behaviors only execute once within the
 	 * given delay even though they are triggered multiple times.
 	 * <p>
-	 * For example, this is useful when attaching this behavior to the onkeypress event. It is not
+	 * For example, this is useful when attaching this behavior to the keypress event. It is not
 	 * desirable to have an ajax call made every time the user types so we throttle that call to a
 	 * desirable delay, such as once per second. This gives us a near real time ability to provide
 	 * feedback without overloading the server with ajax calls.
