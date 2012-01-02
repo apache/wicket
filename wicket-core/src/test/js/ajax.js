@@ -210,5 +210,36 @@ jQuery(document).ready(function() {
 			}
 			execute(attrs);
 		});
+
+		asyncTest('Wicket.Ajax - listen on several events.', function () {
+
+			expect(4);
+
+			var attrs = {
+				u: 'data/ajax/nonWicketResponse.json',
+				e: [ 'event1', 'event2' ],
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				sh: [
+					function(data, textStatus, jqXHR) {
+						start();
+						var expected = {
+							one: 1,
+							two: '2',
+							three: true
+						};
+						deepEqual(data, expected);
+						equal('success', textStatus);
+					}
+				]
+			}
+
+			Wicket.Ajax.ajax(attrs);
+
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.triggerHandler("event2");
+			target.off("event1 event2");
+		});
 	}
 });
