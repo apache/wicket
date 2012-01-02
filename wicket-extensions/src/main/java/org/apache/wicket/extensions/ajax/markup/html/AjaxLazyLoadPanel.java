@@ -115,7 +115,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
-		attributes.setEventName("domready");
+		attributes.setEventNames("domready");
 	}
 
 	/**

@@ -59,9 +59,9 @@ public final class AjaxRequestAttributes
 	private boolean allowDefault = false;
 
 	/**
-	 * The name of the event that will trigger the Ajax call
+	 * The names of the events which will trigger the Ajax call
 	 */
-	private String eventName = null;
+	private String[] eventNames = new String[0];
 
 	/**
 	 * The id of the for that should be submitted
@@ -468,19 +468,20 @@ public final class AjaxRequestAttributes
 	/**
 	 * @return the name of the event that will trigger the Ajax call
 	 */
-	public String getEventName()
+	public String[] getEventNames()
 	{
-		return eventName;
+		return eventNames;
 	}
 
 	/**
-	 * @param eventName
-	 *            the name of the event that will trigger the Ajax call
+	 * @param eventNames
+	 *            the names of the events which will trigger the Ajax call
 	 * @return this object
 	 */
-	public AjaxRequestAttributes setEventName(String eventName)
+	public AjaxRequestAttributes setEventNames(String... eventNames)
 	{
-		this.eventName = eventName;
+		Args.notNull(eventNames, "eventNames");
+		this.eventNames = eventNames;
 		return this;
 	}
 

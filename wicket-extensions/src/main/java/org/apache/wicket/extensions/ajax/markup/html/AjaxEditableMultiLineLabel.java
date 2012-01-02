@@ -17,20 +17,19 @@
 package org.apache.wicket.extensions.ajax.markup.html;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+
+import java.util.List;
 
 /**
  * An inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
@@ -177,45 +176,34 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void renderHead(final Component component, final IHeaderResponse response)
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
-				super.renderHead(component, response);
+				super.updateAjaxAttributes(attributes);
+				attributes.setMethod(Method.POST);
+				attributes.setEventNames("blur", "keyup");
+				CharSequence dynamicExtraParameters =
+						"var result = {}, " +
+								"kc=Wicket.Event.keyCode(attrs.event)," +
+								"evtType=attrs.event.type;" +
+								"if (evtType === 'keyup') {" +
+									// ESCAPE key
+									"if (kc===27) { result.save = false }" +
+								"}" +
+								"else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }" +
+								"return result;";
+				List<CharSequence> dynamicParameters = attributes.getDynamicExtraParameters();
+				dynamicParameters.add(dynamicExtraParameters);
 
-				AjaxRequestAttributes saveAttributes = getAttributes();
-				saveAttributes.getExtraParameters().put("save", "true");
-				saveAttributes.setMethod(Method.POST);
-				saveAttributes.getDynamicExtraParameters().add(
-					"this.name+'='+Wicket.Form.encode(this.value)");
-				saveAttributes.setEventName("blur");
-
-				AjaxRequestAttributes cancelAttributes = getAttributes();
-				cancelAttributes.getExtraParameters().put("save", "false");
-				cancelAttributes.setEventName("keydown");
-
-				CharSequence saveAttributesJson = renderAjaxAttributes(component, saveAttributes);
-				String saveCall = "Wicket.Ajax.ajax(" + saveAttributesJson + ")";
-
-				CharSequence cancelAttributesJson = renderAjaxAttributes(component,
-					cancelAttributes);
-				String cancelCall = "Wicket.Ajax.ajax(" + cancelAttributesJson + ")";
-
-				final String keydown = "var kc=Wicket.Event.keyCode(attrs.event); if (kc===27) " +
-					cancelCall + " else if (kc===13) " + saveCall;
-
-				AjaxRequestTarget target = AjaxRequestTarget.get();
-				if (target != null)
-				{
-					target.appendJavaScript(saveCall);
-					target.appendJavaScript(keydown);
-				}
-				else
-				{
-					response.render(JavaScriptHeaderItem.forScript(saveCall, "editable-blur-" + component.getMarkupId()));
-					response.render(JavaScriptHeaderItem.forScript(keydown,
-						"editable-keydown-" + component.getMarkupId()));
-				}
+				CharSequence precondition =
+						"var kc=Wicket.Event.keyCode(attrs.event),"+
+								"evtType=attrs.event.type,"+
+								"ret=false;"+
+								"if(evtType==='blur' || (evtType==='keyup' && (kc===27))) ret = true;"+
+								"return ret;";
+				JavaScriptPrecondition javaScriptPrecondition = new JavaScriptPrecondition(precondition);
+				List<JavaScriptPrecondition> preconditions = attributes.getPreconditions();
+				preconditions.add(javaScriptPrecondition);
 			}
-
 		});
 		return editor;
 	}

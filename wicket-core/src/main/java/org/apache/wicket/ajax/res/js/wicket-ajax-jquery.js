@@ -409,7 +409,7 @@
 					if (jQuery.isFunction(dep)) {
 						extraParam = dep();
 					} else {
-						extraParam = new Function(dep)();
+						extraParam = new Function('attrs', dep)(attrs);
 					}
 					data = jQuery.extend({}, data, extraParam);
 				}
@@ -457,7 +457,7 @@
 							if (jQuery.isFunction(precondition)) {
 								result = precondition();
 							} else {
-								result = new Function(precondition)();
+								result = new Function('attrs', precondition)(attrs);
 							}
 							if (result === false) {
 								Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
@@ -1423,13 +1423,15 @@
 			ajax: function(attrs) {
 
 				var target	= attrs.c || window;
-				var evt		= attrs.e || 'domready';
+				var events	= attrs.e || [ 'domready' ];
 
-				Wicket.Event.add(target, evt, function (event) {
-					var call = new Wicket.Ajax.Call();
-					attrs.event = event;
+				jQuery.each(events, function (idx, evt) {
+					Wicket.Event.add(target, evt, function (jqEvent) {
+						var call = new Wicket.Ajax.Call();
+						attrs.event = jqEvent;
 
-					return call.ajax(attrs);
+						return call.ajax(attrs);
+					});
 				});
 			}
 		},

@@ -16,18 +16,16 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
-import java.io.Serializable;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
@@ -39,6 +37,7 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.validation.IValidator;
 
+import java.io.Serializable;
 
 /**
  * An implementation of ajaxified edit-in-place component using a {@link TextField} as it's editor.
@@ -95,35 +94,15 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 			super.renderHead(component, response);
 
-			AjaxRequestAttributes saveAttributes = getAttributes();
-			saveAttributes.getExtraParameters().put("save", "true");
-			saveAttributes.getDynamicExtraParameters().add(
-				"this.name+'='+Wicket.Form.encode(this.value)");
-			saveAttributes.setEventName("blur");
-
-			AjaxRequestAttributes cancelAttributes = getAttributes();
-			cancelAttributes.getExtraParameters().put("save", "false");
-			cancelAttributes.setEventName("keyup");
-
-			CharSequence saveAttributesJson = renderAjaxAttributes(component, saveAttributes);
-			String saveCall = "Wicket.Ajax.ajax(" + saveAttributesJson + ");";
-
-			CharSequence cancelAttributesJson = renderAjaxAttributes(component, cancelAttributes);
-			String cancelCall = "Wicket.Ajax.ajax(" + cancelAttributesJson + ");";
-
-			final String keyup = "var kc=Wicket.Event.keyCode(attrs.event); if (kc===27) " +
-				cancelCall + " else if (kc===13) " + saveCall;
-
 			AjaxRequestTarget target = AjaxRequestTarget.get();
 			if (target != null)
 			{
-				target.appendJavaScript(saveCall);
-				target.appendJavaScript(keyup);
-			}
-			else
-			{
-				response.render(JavaScriptHeaderItem.forScript(saveCall, "editable-blur-" + component.getMarkupId()));
-				response.render(JavaScriptHeaderItem.forScript(keyup, "editable-keydown-" + component.getMarkupId()));
+				AjaxRequestAttributes attributes = getAttributes();
+
+				CharSequence attributesJson = renderAjaxAttributes(component, attributes);
+				String jsCall = "Wicket.Ajax.ajax(" + attributesJson + ");";
+
+				target.appendJavaScript(jsCall);
 			}
 		}
 
@@ -326,7 +305,39 @@ public class AjaxEditableLabel<T> extends Panel
 		};
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
-		editor.add(new EditorAjaxBehavior());
+		editor.add(new EditorAjaxBehavior() {
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+				attributes.setEventNames("blur", "keyup");
+
+				CharSequence dynamicExtraParameters =
+						"var result = {}, " +
+								"kc=Wicket.Event.keyCode(attrs.event)," +
+								"evtType=attrs.event.type;" +
+								"if (evtType === 'keyup') {" +
+								// ESCAPE key
+								"if (kc===27) { result.save = false }" +
+
+								// ENTER key
+								"else if (kc===13) { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }" +
+								"}" +
+								"else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }" +
+								"return result;";
+				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
+
+				CharSequence precondition =
+						"var kc=Wicket.Event.keyCode(attrs.event),"+
+								"evtType=attrs.event.type,"+
+								"ret=false;"+
+								"if(evtType==='blur' || (evtType==='keyup' && (kc===27 || kc===13))) ret = true;"+
+								"return ret;";
+				JavaScriptPrecondition javaScriptPrecondition = new JavaScriptPrecondition(precondition);
+				attributes.getPreconditions().add(javaScriptPrecondition);
+
+			}
+		});
 		return editor;
 	}
 

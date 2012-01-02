@@ -105,7 +105,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		super.updateAjaxAttributes(attributes);
 
-		attributes.setEventName(event);
+		attributes.setEventNames(event);
 	}
 
 	/**

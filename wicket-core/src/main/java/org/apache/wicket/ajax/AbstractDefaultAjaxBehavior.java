@@ -335,10 +335,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put("async", false);
 			}
 
-			String eventName = attributes.getEventName();
-			if (Strings.isEmpty(eventName) == false)
+			String[] eventNames = attributes.getEventNames();
+			for (String eventName : eventNames)
 			{
-				attributesJson.put("e", eventName);
+				attributesJson.append("e", eventName);
 			}
 
 			AjaxChannel channel = attributes.getChannel();

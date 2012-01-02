@@ -16,16 +16,10 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
-import java.util.List;
-
-import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -37,6 +31,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.List;
 
 
 /**
@@ -209,30 +205,14 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void renderHead(final Component component, final IHeaderResponse response)
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
-				super.renderHead(component, response);
-
-				AjaxRequestAttributes saveAttributes = getAttributes();
-				saveAttributes.getExtraParameters().put("save", "true");
-				saveAttributes.getDynamicExtraParameters().add(
-					"this.name+'='+Wicket.Form.encode(this.value)");
-				saveAttributes.setEventName("change");
-
-				CharSequence saveAttributesJson = renderAjaxAttributes(component, saveAttributes);
-				String saveCall = "Wicket.Ajax.ajax(" + saveAttributesJson + ")";
-
-				AjaxRequestTarget target = AjaxRequestTarget.get();
-				if (target != null)
-				{
-					target.appendJavaScript(saveCall);
-				}
-				else
-				{
-					response.render(JavaScriptHeaderItem.forScript(saveCall, "editable-blur-" + component.getMarkupId()));
-				}
+				super.updateAjaxAttributes(attributes);
+				attributes.setEventNames("change");
+				attributes.getExtraParameters().put("save", "true");
+				List<CharSequence> dynamicParameters = attributes.getDynamicExtraParameters();
+				dynamicParameters.add("return Wicket.Form.serializeElement(attrs.c)");
 			}
-
 		});
 		return editor;
 	}
