@@ -498,7 +498,7 @@
 						Wicket.DOM.hide(attrs.i);
 					}
 
-					this.done(attrs.ch);
+					this.done();
 				}
 			});
 
@@ -531,7 +531,7 @@
 
 					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
 					// A file download popup will appear but the page in the browser won't change.
-					this.done(attrs.ch);
+					this.done();
 
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
 					if (redirectUrl.charAt(0) === ('/') || redirectUrl.match("^http://") === "http://" || redirectUrl.match("^https://") === "https://") {
@@ -767,7 +767,7 @@
 				// set the focus to the last component
 				window.setTimeout("Wicket.Focus.requestFocus();", 0);
 
-				Wicket.channelManager.done(this.channel);
+				this.done();
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
 				notify();
@@ -784,8 +784,8 @@
 			Wicket.Ajax.invokeFailureHandlers();
 		},
 
-		done: function (channel) {
-			Wicket.channelManager.done(channel);
+		done: function () {
+			Wicket.channelManager.done(this.channel);
 		},
 
 		// Adds a closure that replaces a component
