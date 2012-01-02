@@ -34,6 +34,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
+@Deprecated
 public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDecorator
 {
 	private static final long serialVersionUID = 1L;

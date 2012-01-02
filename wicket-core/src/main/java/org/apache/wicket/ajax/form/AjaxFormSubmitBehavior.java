@@ -18,8 +18,8 @@ package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestAttributes;
-import org.apache.wicket.ajax.AjaxRequestAttributes.Method;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;

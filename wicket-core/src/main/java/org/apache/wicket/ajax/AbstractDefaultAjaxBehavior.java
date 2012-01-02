@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.ajax;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AjaxRequestAttributes.Method;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
+import org.apache.wicket.ajax.attributes.JavaScriptAfterHandler;
+import org.apache.wicket.ajax.attributes.JavaScriptBeforeHandler;
+import org.apache.wicket.ajax.attributes.JavaScriptFailureHandler;
+import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
+import org.apache.wicket.ajax.attributes.JavaScriptSuccessHandler;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -39,6 +41,10 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -82,11 +88,52 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl +
 				"\";", "wicket-ajax-base-url"));
 
+		renderExtraHeaderContributors(component, response);
+	}
+
+	/**
+	 * Renders header contribution by JavaScriptFunctionBody instances which additionally implement
+	 * IComponentAwareHeaderContributor interface.
+	 *
+	 * @param component
+	 *      the component assigned to this behavior
+	 * @param response
+	 *      the current header response
+	 */
+	private void renderExtraHeaderContributors(Component component, IHeaderResponse response)
+	{
 		final IAjaxCallDecorator ajaxCallDecorator = getAjaxCallDecorator();
 		if (ajaxCallDecorator instanceof IComponentAwareHeaderContributor)
 		{
 			IComponentAwareHeaderContributor contributor = (IComponentAwareHeaderContributor)ajaxCallDecorator;
 			contributor.renderHead(component, response);
+		}
+
+		AjaxRequestAttributes attributes = getAttributes();
+
+		List<JavaScriptBeforeHandler> beforeHandlers = attributes.getBeforeHandlers();
+		for (JavaScriptBeforeHandler beforeHandler : beforeHandlers) {
+			beforeHandler.renderHead(component, response);
+		}
+
+		List<JavaScriptAfterHandler> afterHandlers = attributes.getAfterHandlers();
+		for (JavaScriptAfterHandler afterHandler : afterHandlers) {
+			afterHandler.renderHead(component, response);
+		}
+
+		List<JavaScriptFailureHandler> failureHandlers = attributes.getFailureHandlers();
+		for (JavaScriptFailureHandler failureHandler : failureHandlers) {
+			failureHandler.renderHead(component, response);
+		}
+
+		List<JavaScriptSuccessHandler> successHandlers = attributes.getSuccessHandlers();
+		for (JavaScriptSuccessHandler successHandler : successHandlers) {
+			successHandler.renderHead(component, response);
+		}
+
+		List<JavaScriptPrecondition> preconditions = attributes.getPreconditions();
+		for (JavaScriptPrecondition precondition : preconditions) {
+			precondition.renderHead(component, response);
 		}
 	}
 
@@ -127,7 +174,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 			if (onSuccessScript != null)
 			{
-				attributes.getSuccessHandlers().add(onSuccessScript);
+				JavaScriptSuccessHandler successHandler = new JavaScriptSuccessHandler(onSuccessScript);
+				attributes.getSuccessHandlers().add(successHandler);
 			}
 
 			CharSequence onFailureScript = callDecorator.decorateOnFailureScript(getComponent(),
@@ -135,14 +183,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 			if (onFailureScript != null)
 			{
-				attributes.getErrorHandlers().add(onFailureScript);
+				JavaScriptFailureHandler failureHandler = new JavaScriptFailureHandler(onFailureScript);
+				attributes.getFailureHandlers().add(failureHandler);
 			}
 		}
 
 		CharSequence preconditionScript = getPreconditionScript();
 		if (preconditionScript != null)
 		{
-			attributes.getPreconditions().add(preconditionScript);
+			JavaScriptPrecondition precondition = new JavaScriptPrecondition(preconditionScript);
+			attributes.getPreconditions().add(precondition);
 		}
 
 		AjaxChannel channel = getChannel();
@@ -230,22 +280,27 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put("i", indicatorId);
 			}
 
-			for (CharSequence bh : attributes.getBeforeHandlers())
+			for (JavaScriptBeforeHandler bh : attributes.getBeforeHandlers())
 			{
 				attributesJson.append("bh", bh);
 			}
 
-			for (CharSequence sh : attributes.getSuccessHandlers())
+			for (JavaScriptAfterHandler ah : attributes.getAfterHandlers())
+			{
+				attributesJson.append("ah", ah);
+			}
+
+			for (JavaScriptSuccessHandler sh : attributes.getSuccessHandlers())
 			{
 				attributesJson.append("sh", sh);
 			}
 
-			for (CharSequence fh : attributes.getErrorHandlers())
+			for (JavaScriptFailureHandler fh : attributes.getFailureHandlers())
 			{
 				attributesJson.append("fh", fh);
 			}
 
-			for (CharSequence pre : attributes.getPreconditions())
+			for (JavaScriptPrecondition pre : attributes.getPreconditions())
 			{
 				attributesJson.append("pre", pre);
 			}
@@ -335,7 +390,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * @return ajax call decorator used to decorate the call generated by this behavior or null for
 	 *         none
-	 * @deprecated Use {@link AjaxRequestAttributes} instead
+	 * @deprecated Use {@link org.apache.wicket.ajax.attributes.AjaxRequestAttributes} instead
 	 */
 	@Deprecated
 	protected IAjaxCallDecorator getAjaxCallDecorator()
@@ -348,13 +403,14 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getCallbackScript()
 	{
-		return generateCallbackScript("Wicket.Ajax.get('" + getCallbackUrl() + "'");
+		CharSequence attrsJson = renderAjaxAttributes(getComponent());
+		return "Wicket.Ajax.get(" + attrsJson + ")";
 	}
 
 	/**
 	 * @return an optional javascript expression that determines whether the request will actually
 	 *         execute (in form of return XXX;);
-	 * @deprecated Use {@link AjaxRequestAttributes}
+	 * @deprecated Use {@link org.apache.wicket.ajax.attributes.AjaxRequestAttributes}
 	 */
 	@Deprecated
 	protected CharSequence getPreconditionScript()
@@ -488,7 +544,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * Provides an AjaxChannel for this Behavior.
 	 * 
 	 * @return an AjaxChannel - Defaults to null.
-	 * @deprecated Use {@link AjaxRequestAttributes}
+	 * @deprecated Use {@link org.apache.wicket.ajax.attributes.AjaxRequestAttributes}
 	 */
 	@Deprecated
 	protected AjaxChannel getChannel()

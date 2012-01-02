@@ -19,8 +19,11 @@ package org.apache.wicket.examples.ajax.builtin;
 import java.util.List;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ajax.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.JavaScriptBeforeHandler;
+import org.apache.wicket.ajax.attributes.JavaScriptFailureHandler;
+import org.apache.wicket.ajax.attributes.JavaScriptSuccessHandler;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
@@ -139,10 +142,10 @@ public class LinksPage extends BasePage
 			{
 				super.updateAjaxAttributes(attributes);
 
-				attributes.getBeforeHandlers().add("alert('Before ajax call');");
-				attributes.getSuccessHandlers().add("alert('Success');");
+				attributes.getBeforeHandlers().add(new JavaScriptBeforeHandler("alert('Before ajax call');"));
+				attributes.getSuccessHandlers().add(new JavaScriptSuccessHandler("alert('Success');"));
 // attributes.getSuccessHandlers().add("alert('Success2');");
-				attributes.getErrorHandlers().add("alert('Failure');");
+				attributes.getFailureHandlers().add(new JavaScriptFailureHandler("alert('Failure');"));
 
 				List<CharSequence> urlArgumentMethods = attributes.getDynamicExtraParameters();
 				urlArgumentMethods.add("return {'htmlname': document.documentElement.tagName};");
@@ -171,9 +174,9 @@ public class LinksPage extends BasePage
 			{
 				super.updateAjaxAttributes(attributes);
 
-				attributes.getBeforeHandlers().add("alert('Before ajax call');");
-				attributes.getSuccessHandlers().add("alert('Success');");
-				attributes.getErrorHandlers().add("alert('Failure');");
+				attributes.getBeforeHandlers().add(new JavaScriptBeforeHandler("alert('Before ajax call');"));
+				attributes.getSuccessHandlers().add(new JavaScriptSuccessHandler("alert('Success');"));
+				attributes.getFailureHandlers().add(new JavaScriptFailureHandler("alert('Failure');"));
 			}
 		});
 

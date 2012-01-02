@@ -29,6 +29,7 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
+@Deprecated
 public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecorator
 {
 	/**

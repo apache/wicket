@@ -14,47 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax.calldecorator;
+package org.apache.wicket.ajax.attributes;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 
 /**
- * An adapter for implementations of {@link IAjaxCallDecorator}.
- * 
- * @see IAjaxCallDecorator for notes on escaping quotes in scripts
- * 
- * @since 1.2
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ * A base class for classes which contribute one way or another JavaScript
+ * to the AjaxRequestAttributes.
+ * Such classes can contribute to the header response by overriding #renderHead(Component, IHeaderResponse)
+ * method.
  */
-@Deprecated
-public abstract class AjaxCallDecorator implements IAjaxCallDecorator
+public class JavaScriptFunctionBody implements IComponentAwareHeaderContributor
 {
+	private final CharSequence functionBody;
 
 	/**
-	 * 
+	 * Constructor.
+	 *
+	 * @param functionBody
+	 *      the body of JavaScript function which will be evaluated in the browser
 	 */
-	private static final long serialVersionUID = 1L;
-
-	@Override
-	public CharSequence decorateScript(Component c, CharSequence script)
+	public JavaScriptFunctionBody(final CharSequence functionBody)
 	{
-		return script;
+		this.functionBody = functionBody;
 	}
 
 	@Override
-	public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
+	public String toString()
 	{
-		return script;
+		return functionBody.toString();
 	}
 
 	@Override
-	public CharSequence decorateOnFailureScript(Component c, CharSequence script)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
-		return script;
 	}
-
-
 }

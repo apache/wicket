@@ -128,6 +128,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 * @return the channel that manages how Ajax calls are executed
 	 * @see AbstractDefaultAjaxBehavior#getChannel()
 	 */
+	@Deprecated
 	protected AjaxChannel getChannel()
 	{
 		return null;
@@ -137,6 +138,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 * 
 	 * @return call decorator to use or null if none
 	 */
+	@Deprecated
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return null;

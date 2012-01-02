@@ -28,6 +28,7 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
+@Deprecated
 public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 {
 	private static final long serialVersionUID = 1L;

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
-import org.apache.wicket.ajax.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -77,7 +77,7 @@ public abstract class AjaxCheckBox extends CheckBox
 	/**
 	 * @param attributes
 	 *      the attributes to use for the Ajax request
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#updateAjaxAttributes(org.apache.wicket.ajax.AjaxRequestAttributes)
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#updateAjaxAttributes(org.apache.wicket.ajax.attributes.AjaxRequestAttributes)
 	 */
 	protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
 	{

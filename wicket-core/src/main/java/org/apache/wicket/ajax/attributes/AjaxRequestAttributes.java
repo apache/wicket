@@ -14,50 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax;
+package org.apache.wicket.ajax.attributes;
+
+import org.apache.wicket.ajax.AjaxChannel;
+import org.apache.wicket.ajax.ExpressionDecorator;
+import org.apache.wicket.util.lang.Args;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.util.lang.Args;
-
 /**
  * Attributes of an Ajax Request.
  * 
  * <hr>
- * 
- * <p>
- * Note that some of these attributes represent javascript functions. Those functions get a
- * <code>RequestQueueItem</code> instance as first argument. The instance provides access to
- * following properties that the javascript functions can use:
- * <dl>
- * <dt>attributes</dt>
- * <dd>Object with request queue item attributes. The <code>attributes</code> Object contains
- * following properties:
- * <dl>
- * 
- * <dt>component</dt>
- * <dd>component DOM element or <code>null</code> if the behavior is attached to page</dd>
- * 
- * <dt>formId</dt>
- * <dd>id of the form DOM element or <code>null</code> if not specified</dd>
- * 
- * <dt>token</dt>
- * <dd>token string or <code>null</code> if not specified</dd>
- * 
- * <dt></dd>
- * 
- * </dl>
- * </dd>
- * 
- * <dt>event</dt>
- * <dd>If the AJAX request was a result of javacript event (i.e. onclick) the <code>event</code>
- * property contains the actual event instance.
- * 
- * </dl>
- * 
+ *
  * @author Matej Knopp
  */
 public final class AjaxRequestAttributes
@@ -111,11 +83,11 @@ public final class AjaxRequestAttributes
 
 	private String dataType = XML_DATA_TYPE;
 
-	private List<CharSequence> preconditions = null;
-	private List<CharSequence> beforeHandlers = null;
-	private List<CharSequence> afterHandlers = null;
-	private List<CharSequence> successHandlers = null;
-	private List<CharSequence> errorHandlers = null;
+	private List<JavaScriptPrecondition> preconditions = null;
+	private List<JavaScriptBeforeHandler> beforeHandlers = null;
+	private List<JavaScriptAfterHandler> afterHandlers = null;
+	private List<JavaScriptSuccessHandler> successHandlers = null;
+	private List<JavaScriptFailureHandler> failureHandlers = null;
 	private Map<String, Object> extraParameters = null;
 	private List<CharSequence> dynamicExtraParameters = null;
 	private List<CharSequence> requestQueueItemCreationListeners = null;
@@ -257,13 +229,13 @@ public final class AjaxRequestAttributes
 	 *    }
 	 * </pre>
 	 * 
-	 * @return List<CharSequence>
+	 * @return List<JavaScriptPrecondition>
 	 */
-	public List<CharSequence> getPreconditions()
+	public List<JavaScriptPrecondition> getPreconditions()
 	{
 		if (preconditions == null)
 		{
-			preconditions = new ArrayList<CharSequence>();
+			preconditions = new ArrayList<JavaScriptPrecondition>();
 		}
 		return preconditions;
 	}
@@ -284,13 +256,13 @@ public final class AjaxRequestAttributes
 	 * 
 	 * @see #getPreconditions()
 	 * 
-	 * @return List<CharSequence>
+	 * @return List<JavaScriptBeforeHandler>
 	 */
-	public List<CharSequence> getBeforeHandlers()
+	public List<JavaScriptBeforeHandler> getBeforeHandlers()
 	{
 		if (beforeHandlers == null)
 		{
-			beforeHandlers = new ArrayList<CharSequence>();
+			beforeHandlers = new ArrayList<JavaScriptBeforeHandler>();
 		}
 		return beforeHandlers;
 	}
@@ -310,13 +282,13 @@ public final class AjaxRequestAttributes
 	 * 
 	 * @see #getPreconditions()
 	 * 
-	 * @return List<CharSequence>
+	 * @return List<JavaScriptAfterHandler>
 	 */
-	public List<CharSequence> getAfterHandlers()
+	public List<JavaScriptAfterHandler> getAfterHandlers()
 	{
 		if (afterHandlers == null)
 		{
-			afterHandlers = new ArrayList<CharSequence>();
+			afterHandlers = new ArrayList<JavaScriptAfterHandler>();
 		}
 		return afterHandlers;
 	}
@@ -334,13 +306,13 @@ public final class AjaxRequestAttributes
 	 *    }
 	 * </pre>
 	 * 
-	 * @return List<CharSequence>
+	 * @return List<JavaScriptSuccessHandler>
 	 */
-	public List<CharSequence> getSuccessHandlers()
+	public List<JavaScriptSuccessHandler> getSuccessHandlers()
 	{
 		if (successHandlers == null)
 		{
-			successHandlers = new ArrayList<CharSequence>();
+			successHandlers = new ArrayList<JavaScriptSuccessHandler>();
 		}
 		return successHandlers;
 	}
@@ -363,15 +335,15 @@ public final class AjaxRequestAttributes
 	 *    }
 	 * </pre>
 	 * 
-	 * @return List<CharSequence>
+	 * @return List<JavaScriptFailureHandler>
 	 */
-	public List<CharSequence> getErrorHandlers()
+	public List<JavaScriptFailureHandler> getFailureHandlers()
 	{
-		if (errorHandlers == null)
+		if (failureHandlers == null)
 		{
-			errorHandlers = new ArrayList<CharSequence>();
+			failureHandlers = new ArrayList<JavaScriptFailureHandler>();
 		}
-		return errorHandlers;
+		return failureHandlers;
 	}
 
 	/**

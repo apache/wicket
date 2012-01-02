@@ -19,7 +19,7 @@ package org.apache.wicket.ajax.markup.html;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;

@@ -14,47 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax.calldecorator;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+package org.apache.wicket.ajax.attributes;
 
 /**
- * An adapter for implementations of {@link IAjaxCallDecorator}.
- * 
- * @see IAjaxCallDecorator for notes on escaping quotes in scripts
- * 
- * @since 1.2
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ *
  */
-@Deprecated
-public abstract class AjaxCallDecorator implements IAjaxCallDecorator
+public class JavaScriptFailureHandler extends JavaScriptFunctionBody
 {
-
 	/**
-	 * 
+	 * Constructor.
+	 *
+	 * @param functionBody
 	 */
-	private static final long serialVersionUID = 1L;
-
-	@Override
-	public CharSequence decorateScript(Component c, CharSequence script)
+	public JavaScriptFailureHandler(final CharSequence functionBody)
 	{
-		return script;
+		super(functionBody);
 	}
-
-	@Override
-	public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
-	{
-		return script;
-	}
-
-	@Override
-	public CharSequence decorateOnFailureScript(Component c, CharSequence script)
-	{
-		return script;
-	}
-
-
 }

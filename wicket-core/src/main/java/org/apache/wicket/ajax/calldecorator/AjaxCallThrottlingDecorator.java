@@ -36,6 +36,7 @@ import org.apache.wicket.util.time.Duration;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
+@Deprecated
 public final class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDecorator
 {
 	private static final long serialVersionUID = 1L;
