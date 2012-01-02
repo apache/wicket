@@ -124,7 +124,7 @@ public class AjaxIndicatorAppender extends Behavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.Behavior#bind(org.apache.wicket.Component)
 	 */
 	@Override
 	public final void bind(final Component component)
