@@ -61,7 +61,7 @@ import org.apache.wicket.markup.html.IHeaderContributor;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @deprecated Use AjaxRequestAttributes instead.
+ * @deprecated Use IAjaxCallListener instead.
  */
 @Deprecated
 public interface IAjaxCallDecorator extends IClusterable

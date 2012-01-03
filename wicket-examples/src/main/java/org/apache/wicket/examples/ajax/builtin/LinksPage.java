@@ -16,20 +16,20 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import java.util.List;
-
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.JavaScriptBeforeHandler;
-import org.apache.wicket.ajax.attributes.JavaScriptFailureHandler;
-import org.apache.wicket.ajax.attributes.JavaScriptSuccessHandler;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.settings.IExceptionSettings.AjaxErrorStrategy;
+
+import java.util.List;
 
 
 /**
@@ -142,10 +142,26 @@ public class LinksPage extends BasePage
 			{
 				super.updateAjaxAttributes(attributes);
 
-				attributes.getBeforeHandlers().add(new JavaScriptBeforeHandler("alert('Before ajax call');"));
-				attributes.getSuccessHandlers().add(new JavaScriptSuccessHandler("alert('Success');"));
-// attributes.getSuccessHandlers().add("alert('Success2');");
-				attributes.getFailureHandlers().add(new JavaScriptFailureHandler("alert('Failure');"));
+				IAjaxCallListener ajaxCallListener = new AjaxCallListener() {
+					@Override
+					public CharSequence getSuccessHandler(Component component)
+					{
+						return "alert('Success');";
+					}
+
+					@Override
+					public CharSequence getBeforeHandler(Component component)
+					{
+						return "alert('Before ajax call');";
+					}
+
+					@Override
+					public CharSequence getFailureHandler(Component component)
+					{
+						return "alert('Failure');";
+					}
+				};
+				attributes.getAjaxCallListeners().add(ajaxCallListener);
 
 				List<CharSequence> urlArgumentMethods = attributes.getDynamicExtraParameters();
 				urlArgumentMethods.add("return {'htmlname': document.documentElement.tagName};");
@@ -173,10 +189,27 @@ public class LinksPage extends BasePage
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+				
+				IAjaxCallListener ajaxCallListener = new AjaxCallListener() {
+					@Override
+					public CharSequence getBeforeHandler(Component component)
+					{
+						return "alert('Before ajax call');";
+					}
 
-				attributes.getBeforeHandlers().add(new JavaScriptBeforeHandler("alert('Before ajax call');"));
-				attributes.getSuccessHandlers().add(new JavaScriptSuccessHandler("alert('Success');"));
-				attributes.getFailureHandlers().add(new JavaScriptFailureHandler("alert('Failure');"));
+					@Override
+					public CharSequence getSuccessHandler(Component component)
+					{
+						return "alert('Success');";
+					}
+
+					@Override
+					public CharSequence getFailureHandler(Component component)
+					{
+						return "alert('Failure');";
+					}
+				};
+				attributes.getAjaxCallListeners().add(ajaxCallListener);
 			}
 		});
 

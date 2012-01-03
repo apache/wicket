@@ -17,39 +17,41 @@
 package org.apache.wicket.ajax.attributes;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 
 /**
- * A base class for classes which contribute one way or another JavaScript
- * to the AjaxRequestAttributes.
- * Such classes can contribute to the header response by overriding #renderHead(Component, IHeaderResponse)
- * method.
+ * An adapter for implementations of IAjaxCallListener.
+ *
+ * @since 6.0
  */
-public class JavaScriptFunctionBody implements IComponentAwareHeaderContributor, IClusterable
+public class AjaxCallListener implements IAjaxCallListener
 {
-	private final CharSequence functionBody;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param functionBody
-	 *      the body of JavaScript function which will be evaluated in the browser
-	 */
-	public JavaScriptFunctionBody(final CharSequence functionBody)
+	@Override
+	public CharSequence getSuccessHandler(Component component)
 	{
-		this.functionBody = functionBody;
+		return null;
 	}
 
 	@Override
-	public String toString()
+	public CharSequence getFailureHandler(Component component)
 	{
-		return functionBody.toString();
+		return null;
 	}
 
 	@Override
-	public void renderHead(Component component, IHeaderResponse response)
+	public CharSequence getBeforeHandler(Component component)
 	{
+		return null;
+	}
+
+	@Override
+	public CharSequence getAfterHandler(Component component)
+	{
+		return null;
+	}
+
+	@Override
+	public CharSequence getCompleteHandler(Component component)
+	{
+		return null;
 	}
 }

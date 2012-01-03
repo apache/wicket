@@ -20,11 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.ajax.attributes.JavaScriptAfterHandler;
-import org.apache.wicket.ajax.attributes.JavaScriptBeforeHandler;
-import org.apache.wicket.ajax.attributes.JavaScriptFailureHandler;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
-import org.apache.wicket.ajax.attributes.JavaScriptSuccessHandler;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
@@ -111,24 +108,13 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		AjaxRequestAttributes attributes = getAttributes();
 
-		List<JavaScriptBeforeHandler> beforeHandlers = attributes.getBeforeHandlers();
-		for (JavaScriptBeforeHandler beforeHandler : beforeHandlers) {
-			beforeHandler.renderHead(component, response);
-		}
-
-		List<JavaScriptAfterHandler> afterHandlers = attributes.getAfterHandlers();
-		for (JavaScriptAfterHandler afterHandler : afterHandlers) {
-			afterHandler.renderHead(component, response);
-		}
-
-		List<JavaScriptFailureHandler> failureHandlers = attributes.getFailureHandlers();
-		for (JavaScriptFailureHandler failureHandler : failureHandlers) {
-			failureHandler.renderHead(component, response);
-		}
-
-		List<JavaScriptSuccessHandler> successHandlers = attributes.getSuccessHandlers();
-		for (JavaScriptSuccessHandler successHandler : successHandlers) {
-			successHandler.renderHead(component, response);
+		List<IAjaxCallListener> ajaxCallListeners = attributes.getAjaxCallListeners();
+		for (IAjaxCallListener ajaxCallListener : ajaxCallListeners) {
+			if (ajaxCallListener instanceof IComponentAwareHeaderContributor)
+			{
+				IComponentAwareHeaderContributor contributor = (IComponentAwareHeaderContributor) ajaxCallListener;
+				contributor.renderHead(component, response);
+			}
 		}
 
 		List<JavaScriptPrecondition> preconditions = attributes.getPreconditions();
@@ -166,28 +152,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	private void updateAjaxAttributesBackwardCompatibility(AjaxRequestAttributes attributes)
 	{
-		IAjaxCallDecorator callDecorator = getAjaxCallDecorator();
-		if (callDecorator != null)
-		{
-			CharSequence onSuccessScript = callDecorator.decorateOnSuccessScript(getComponent(),
-				getSuccessScript());
-
-			if (onSuccessScript != null)
-			{
-				JavaScriptSuccessHandler successHandler = new JavaScriptSuccessHandler(onSuccessScript);
-				attributes.getSuccessHandlers().add(successHandler);
-			}
-
-			CharSequence onFailureScript = callDecorator.decorateOnFailureScript(getComponent(),
-				getFailureScript());
-
-			if (onFailureScript != null)
-			{
-				JavaScriptFailureHandler failureHandler = new JavaScriptFailureHandler(onFailureScript);
-				attributes.getFailureHandlers().add(failureHandler);
-			}
-		}
-
 		CharSequence preconditionScript = getPreconditionScript();
 		if (preconditionScript != null)
 		{
@@ -280,24 +244,37 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put("i", indicatorId);
 			}
 
-			for (JavaScriptBeforeHandler bh : attributes.getBeforeHandlers())
+			for (IAjaxCallListener ajaxCallListener : attributes.getAjaxCallListeners())
 			{
-				attributesJson.append("bh", bh);
-			}
+				CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
+				if (Strings.isEmpty(beforeHandler) == false)
+				{
+					attributesJson.append("bh", beforeHandler);
+				}
 
-			for (JavaScriptAfterHandler ah : attributes.getAfterHandlers())
-			{
-				attributesJson.append("ah", ah);
-			}
+				CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
+				if (Strings.isEmpty(afterHandler) == false)
+				{
+					attributesJson.append("ah", afterHandler);
+				}
 
-			for (JavaScriptSuccessHandler sh : attributes.getSuccessHandlers())
-			{
-				attributesJson.append("sh", sh);
-			}
+				CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
+				if (Strings.isEmpty(successHandler) == false)
+				{
+					attributesJson.append("sh", successHandler);
+				}
 
-			for (JavaScriptFailureHandler fh : attributes.getFailureHandlers())
-			{
-				attributesJson.append("fh", fh);
+				CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
+				if (Strings.isEmpty(failureHandler) == false)
+				{
+					attributesJson.append("fh", failureHandler);
+				}
+
+				CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
+				if (Strings.isEmpty(completeHandler) == false)
+				{
+					attributesJson.append("ch", completeHandler);
+				}
 			}
 
 			for (JavaScriptPrecondition pre : attributes.getPreconditions())

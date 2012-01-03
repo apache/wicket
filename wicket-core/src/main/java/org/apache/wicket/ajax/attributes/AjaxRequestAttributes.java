@@ -82,11 +82,8 @@ public final class AjaxRequestAttributes
 
 	private String dataType = XML_DATA_TYPE;
 
+	private List<IAjaxCallListener> ajaxCallListeners = null;
 	private List<JavaScriptPrecondition> preconditions = null;
-	private List<JavaScriptBeforeHandler> beforeHandlers = null;
-	private List<JavaScriptAfterHandler> afterHandlers = null;
-	private List<JavaScriptSuccessHandler> successHandlers = null;
-	private List<JavaScriptFailureHandler> failureHandlers = null;
 	private Map<String, Object> extraParameters = null;
 	private List<CharSequence> dynamicExtraParameters = null;
 	private AjaxChannel channel = null;
@@ -238,109 +235,16 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * Array of javascript functions that are invoked before the actual AJAX request. This
-	 * invocation only happens when all precondition functions return true. Each of the function
-	 * will get a <code>RequestQueueItem</code> instance passed as first argument.
-	 * <p>
-	 * Example of single function:
-	 * 
-	 * <pre>
-	 *    function(requestQueueItem) 
-	 *    { 
-	 *      doSomethingWhenAjaxRequestBegins();
-	 *    }
-	 * </pre>
-	 * 
-	 * @see #getPreconditions()
-	 * 
-	 * @return List<JavaScriptBeforeHandler>
+	 *
+	 * @return List<IAjaxCallListener>
 	 */
-	public List<JavaScriptBeforeHandler> getBeforeHandlers()
+	public List<IAjaxCallListener> getAjaxCallListeners()
 	{
-		if (beforeHandlers == null)
+		if (ajaxCallListeners == null)
 		{
-			beforeHandlers = new ArrayList<JavaScriptBeforeHandler>();
+			ajaxCallListeners = new ArrayList<IAjaxCallListener>();
 		}
-		return beforeHandlers;
-	}
-
-	/**
-	 * Array of JavaScript functions that are invoked after the AJAX request if fired. This
-	 * invocation only happens when all precondition functions return true.
-	 * <p>
-	 * Example of single function:
-	 * 
-	 * <pre>
-	 * function()
-	 * {
-	 * 	doSomethingWhenAjaxRequestIsFired();
-	 * }
-	 * </pre>
-	 * 
-	 * @see #getPreconditions()
-	 * 
-	 * @return List<JavaScriptAfterHandler>
-	 */
-	public List<JavaScriptAfterHandler> getAfterHandlers()
-	{
-		if (afterHandlers == null)
-		{
-			afterHandlers = new ArrayList<JavaScriptAfterHandler>();
-		}
-		return afterHandlers;
-	}
-
-	/**
-	 * Array of javascript functions that are invoked after the request is successfully processed.
-	 * Each function will get a <code>RequestQueueItem</code> instance passed as fist argument.
-	 * <p>
-	 * Example of single function:
-	 * 
-	 * <pre>
-	 *    function(requestQueueItem) 
-	 *    { 
-	 *      doSomethingWhenRequestIsSuccessfullyProcessed();
-	 *    }
-	 * </pre>
-	 * 
-	 * @return List<JavaScriptSuccessHandler>
-	 */
-	public List<JavaScriptSuccessHandler> getSuccessHandlers()
-	{
-		if (successHandlers == null)
-		{
-			successHandlers = new ArrayList<JavaScriptSuccessHandler>();
-		}
-		return successHandlers;
-	}
-
-	/**
-	 * Array of javascript functions that are invoked when an unexpected error happens during the
-	 * AJAX request or the processing afterwards, or when some of the timeouts is exceeded. The
-	 * functions will get a <code>RequestQueueItem</code> passed as fist argument. If possible error
-	 * message will be second argument passed to the handlers.
-	 * <p>
-	 * Example of single function:
-	 * 
-	 * <pre>
-	 *    function(requestQueueItem, error) 
-	 *    { 
-	 *      if (typeof(error) == &quot;string&quot;) 
-	 *      {
-	 *      	alert('Error processing request ' + error);
-	 *      }
-	 *    }
-	 * </pre>
-	 * 
-	 * @return List<JavaScriptFailureHandler>
-	 */
-	public List<JavaScriptFailureHandler> getFailureHandlers()
-	{
-		if (failureHandlers == null)
-		{
-			failureHandlers = new ArrayList<JavaScriptFailureHandler>();
-		}
-		return failureHandlers;
+		return ajaxCallListeners;
 	}
 
 	/**
