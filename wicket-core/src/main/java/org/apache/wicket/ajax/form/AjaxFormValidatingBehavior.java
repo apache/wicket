@@ -18,6 +18,8 @@ package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -114,11 +116,20 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event);
-				if (throttleDelay != null)
-				{
-					behavior.setThrottleDelay(throttleDelay);
-				}
+				AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event) {
+					@Override
+					protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+					{
+						super.updateAjaxAttributes(attributes);
+
+						if (throttleDelay != null)
+						{
+							String id = "throttle-" + component.getMarkupId();
+							ThrottlingSettings throttlingSettings = new ThrottlingSettings(id, throttleDelay);
+							attributes.setThrottlingSettings(throttlingSettings);
+						}
+					}
+				};
 				component.add(behavior);
 				visit.dontGoDeeper();
 			}
