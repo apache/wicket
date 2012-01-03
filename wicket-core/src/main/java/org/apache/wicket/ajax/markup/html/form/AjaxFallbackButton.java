@@ -84,12 +84,6 @@ public abstract class AjaxFallbackButton extends Button
 			}
 
 			@Override
-			protected CharSequence getEventHandler()
-			{
-				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
-			}
-
-			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return AjaxFallbackButton.this.getAjaxCallDecorator();

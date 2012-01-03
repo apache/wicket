@@ -18,14 +18,13 @@ package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * Ajax event behavior that submits a form via ajax when the event it is attached to, is invoked.
@@ -139,36 +138,6 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			String submittingComponentName = ((IFormSubmittingComponent)getComponent()).getInputName();
 			attributes.setSubmittingComponentName(submittingComponentName);
 		}
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.AjaxEventBehavior#getEventHandler()
-	 */
-	@Override
-	protected CharSequence getEventHandler()
-	{
-		final String formId = getForm().getMarkupId();
-		final CharSequence url = getCallbackUrl();
-
-		AppendingStringBuffer call = new AppendingStringBuffer("Wicket.Ajax.submitForm('").append(
-			formId)
-			.append("', '")
-			.append(url)
-			.append("', ");
-
-		if (getComponent() instanceof IFormSubmittingComponent)
-		{
-			call.append("'")
-				.append(((IFormSubmittingComponent)getComponent()).getInputName())
-				.append("' ");
-		}
-		else
-		{
-			call.append("null");
-		}
-
-		return generateCallbackScript(call) + ";";
 	}
 
 	/**

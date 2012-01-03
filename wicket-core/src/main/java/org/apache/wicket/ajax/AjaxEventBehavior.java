@@ -85,32 +85,12 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		attributes.setEventNames(event);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
-	@Override
-	protected void onComponentTag(final ComponentTag tag)
-	{
-		super.onComponentTag(tag);
-
-		if ("href".equalsIgnoreCase(event))
-		{
-			// only add the event handler when the component is enabled.
-			if (getComponent().isEnabledInHierarchy())
-			{
-				String value = "javascript:" + getEventHandler();
-				tag.put(event, value);
-			}
-		}
-	}
-
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 		super.renderHead(component, response);
 
-		if ("href".equalsIgnoreCase(event) == false && component.isEnabledInHierarchy())
+		if (component.isEnabledInHierarchy())
 		{
 			StringBuilder js = new StringBuilder();
 			js.append("Wicket.Ajax.ajax(");
@@ -129,15 +109,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 				target.appendJavaScript(js);
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @return event handler
-	 */
-	protected CharSequence getEventHandler()
-	{
-		return getCallbackScript();
 	}
 
 	/**

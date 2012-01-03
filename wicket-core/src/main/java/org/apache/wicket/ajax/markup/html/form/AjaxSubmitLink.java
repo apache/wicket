@@ -76,12 +76,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			}
 
 			@Override
-			protected CharSequence getEventHandler()
-			{
-				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
-			}
-
-			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return AjaxSubmitLink.this.getAjaxCallDecorator();

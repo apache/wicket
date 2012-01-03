@@ -116,27 +116,6 @@ public abstract class AjaxButton extends Button
 
 			/**
 			 * 
-			 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#getEventHandler()
-			 */
-			@Override
-			protected CharSequence getEventHandler()
-			{
-				final String script = AjaxButton.this.getOnClickScript();
-
-				AppendingStringBuffer handler = new AppendingStringBuffer();
-
-				if (!Strings.isEmpty(script))
-				{
-					handler.append(script).append(";");
-				}
-
-				handler.append(super.getEventHandler());
-				handler.append("; return false;");
-				return handler;
-			}
-
-			/**
-			 * 
 			 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
 			 */
 			@Override

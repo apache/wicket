@@ -100,17 +100,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		return (FormComponent<?>)getComponent();
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.AjaxEventBehavior#getEventHandler()
-	 */
-	@Override
-	protected final CharSequence getEventHandler()
-	{
-		return generateCallbackScript(new AppendingStringBuffer("Wicket.Ajax.post('").append(
-			getCallbackUrl()).append(
-			"', Wicket.Form.serialize('" + getComponent().getMarkupId() + "')"));
-	}
-
 	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
