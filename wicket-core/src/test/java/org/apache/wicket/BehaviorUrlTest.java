@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.StringValue;
@@ -131,7 +132,8 @@ public class BehaviorUrlTest extends WicketTestCase
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			super.onComponentTag(component, tag);
-			tag.put("href", component.urlFor(this, IBehaviorListener.INTERFACE));
+			tag.put("href",
+				component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters()));
 		}
 
 		public void onRequest()

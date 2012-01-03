@@ -837,26 +837,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// Form has no error
 			delegateSubmit(submittingComponent);
 		}
-
-		// If the form is stateless page parameters contain all form component
-		// values. We need to remove those otherwise they get appended to action URL
-		final PageParameters parameters = page.getPageParameters();
-		if (parameters != null)
-		{
-			visitFormComponents(new IVisitor<FormComponent<?>, Void>()
-			{
-				public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
-				{
-					parameters.remove(formComponent.getInputName());
-				}
-			});
-			parameters.remove(hiddenFieldId);
-			if (submittingComponent instanceof AbstractSubmitLink)
-			{
-				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;
-				parameters.remove(submitLink.getInputName());
-			}
-		}
 	}
 
 	/**
@@ -1514,7 +1494,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected CharSequence getActionUrl()
 	{
-		return urlFor(IFormSubmitListener.INTERFACE);
+		return urlFor(IFormSubmitListener.INTERFACE, new PageParameters());
 	}
 
 	/**

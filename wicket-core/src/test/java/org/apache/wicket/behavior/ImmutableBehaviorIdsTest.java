@@ -26,6 +26,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
@@ -164,7 +165,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			super.onComponentTag(component, tag);
-			tag.put(attr, component.urlFor(this, IBehaviorListener.INTERFACE));
+			tag.put(attr, component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters()));
 		}
 
 		public void onRequest()

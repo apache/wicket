@@ -140,6 +140,6 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 			return getRequestCycle().urlFor(
 				new ResourceReferenceRequestHandler(resourceReference, resourceParameters));
 		}
-		return urlFor(IResourceListener.INTERFACE);
+		return urlFor(IResourceListener.INTERFACE, resourceParameters);
 	}
 }

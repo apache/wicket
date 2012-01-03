@@ -980,7 +980,7 @@ public class BaseWicketTester
 	{
 		Args.notNull(link, "link");
 
-		return link.urlFor(ILinkListener.INTERFACE).toString();
+		return link.urlFor(ILinkListener.INTERFACE, new PageParameters()).toString();
 	}
 
 	/**
@@ -1912,8 +1912,10 @@ public class BaseWicketTester
 	public void submitForm(String path)
 	{
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
-		Url url = Url.parse(form.getRootForm().urlFor(IFormSubmitListener.INTERFACE).toString(),
-			Charset.forName(request.getCharacterEncoding()));
+		Url url = Url.parse(
+			form.getRootForm()
+				.urlFor(IFormSubmitListener.INTERFACE, new PageParameters())
+				.toString(), Charset.forName(request.getCharacterEncoding()));
 
 		// make url absolute
 		transform(url);

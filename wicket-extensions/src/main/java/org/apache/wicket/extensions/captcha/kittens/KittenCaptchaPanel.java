@@ -43,6 +43,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.time.Time;
 
@@ -199,7 +200,8 @@ public class KittenCaptchaPanel extends Panel
 					javascript.append("Wicket.$('")
 						.append(image.getMarkupId())
 						.append("').src = '");
-					CharSequence url = image.urlFor(IResourceListener.INTERFACE);
+					CharSequence url = image.urlFor(IResourceListener.INTERFACE,
+						new PageParameters());
 					javascript.append(url);
 					javascript.append(url.toString().indexOf('?') > -1 ? "&amp;" : "?")
 						.append("rand=")

@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -321,7 +322,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 	 */
 	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.INTERFACE);
+		return urlFor(ILinkListener.INTERFACE, new PageParameters());
 	}
 
 	/**

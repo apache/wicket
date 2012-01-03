@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -403,7 +404,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				// when the option is clicked?
 				if (wantOnSelectionChangedNotifications())
 				{
-					CharSequence url = urlFor(IOnChangeListener.INTERFACE);
+					CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
 
 					Form<?> form = findParent(Form.class);
 					if (form != null)

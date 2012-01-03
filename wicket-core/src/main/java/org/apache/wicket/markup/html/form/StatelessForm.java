@@ -66,4 +66,10 @@ public class StatelessForm<T> extends Form<T>
 		setResponsePage(getPage().getClass(), getPage().getPageParameters());
 		return MethodMismatchResponse.ABORT;
 	}
+
+	@Override
+	protected CharSequence getActionUrl()
+	{
+		return urlFor(IFormSubmitListener.INTERFACE, getPage().getPageParameters());
+	}
 }

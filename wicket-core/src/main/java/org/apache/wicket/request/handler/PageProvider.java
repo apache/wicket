@@ -346,7 +346,7 @@ public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 	 * 
 	 * @param pageParameters
 	 */
-	private void setPageParameters(PageParameters pageParameters)
+	protected void setPageParameters(PageParameters pageParameters)
 	{
 		this.pageParameters = pageParameters;
 	}

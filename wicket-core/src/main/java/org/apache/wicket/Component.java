@@ -3272,7 +3272,7 @@ public abstract class Component
 	{
 		return getRequestCycle().urlFor(pageClass, parameters);
 	}
-
+	
 	/**
 	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
 	 * AjaxPagingNavigationBehavior).
@@ -3282,13 +3282,33 @@ public abstract class Component
 	 * @param listener
 	 *            The listener interface that the URL should call
 	 * @return The URL
+	 * @deprecated use {@link #urlFor(Behavior, RequestListenerInterface, PageParameters)} with explit parameters
 	 */
+	@Deprecated
 	public final CharSequence urlFor(final Behavior behaviour,
 		final RequestListenerInterface listener)
 	{
+		return urlFor(behaviour, listener, null);
+	}
+	
+	/**
+	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
+	 * AjaxPagingNavigationBehavior).
+	 * 
+	 * @param behaviour
+	 *            The behavior that the URL should point to
+	 * @param listener
+	 *            The listener interface that the URL should call
+	 * @param parameters
+	 *            The parameters that should be rendered into the urls
+	 * @return The URL
+	 */
+	public final CharSequence urlFor(final Behavior behaviour,
+		final RequestListenerInterface listener, final PageParameters parameters)
+	{
 		int id = getBehaviorId(behaviour);
 		Page page = getPage();
-		PageAndComponentProvider provider = new PageAndComponentProvider(page, this);
+		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 		IRequestHandler handler;
 		if (page.isPageStateless())
 		{
@@ -3315,7 +3335,7 @@ public abstract class Component
 	{
 		return getRequestCycle().urlFor(requestHandler);
 	}
-
+	
 	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
 	 * 
@@ -3324,11 +3344,30 @@ public abstract class Component
 	 * @param listener
 	 *            The listener interface that the URL should call
 	 * @return The URL
+	 * @deprecated use {@link #urlFor(RequestListenerInterface, PageParameters)} with explicit page parameters
 	 */
+	@Deprecated
 	public final CharSequence urlFor(final RequestListenerInterface listener)
 	{
+		return urlFor(listener, null);
+	}	
+
+	/**
+	 * Gets a URL for the listener interface (e.g. ILinkListener).
+	 * 
+	 * @see RequestCycle#urlFor(IRequestHandler)
+	 * 
+	 * @param listener
+	 *            The listener interface that the URL should call
+	 * @param parameters
+	 *            The parameters that should be rendered into the urls
+	 * @return The URL
+	 */
+	public final CharSequence urlFor(final RequestListenerInterface listener,
+		final PageParameters parameters)
+	{
 		Page page = getPage();
-		PageAndComponentProvider provider = new PageAndComponentProvider(page, this);
+		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 		IRequestHandler handler;
 		if (page.isPageStateless())
 		{
