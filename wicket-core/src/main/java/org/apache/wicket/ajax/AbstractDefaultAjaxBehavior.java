@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
+import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
@@ -352,6 +353,19 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put("dt", dataType);
 			}
 
+			ThrottlingSettings throttlingSettings = attributes.getThrottlingSettings();
+			if (throttlingSettings != null)
+			{
+				JSONObject throttlingSettingsJson = new JSONObject();
+				throttlingSettingsJson.put("id", throttlingSettings.getId());
+				throttlingSettingsJson.put("d", throttlingSettings.getDelay().getMilliseconds());
+				if (throttlingSettings.getPostponeTimerOnUpdate())
+				{
+					throttlingSettingsJson.put("p", true);
+				}
+				attributesJson.put("tr", throttlingSettingsJson);
+			}
+
 			postprocessConfiguration(attributesJson, component);
 		}
 		catch (JSONException e)
@@ -590,36 +604,4 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	// in the RequestCycle on the AjaxRequestTarget..
 	protected abstract void respond(AjaxRequestTarget target);
 
-	/**
-	 * Wraps the provided javascript with a throttled block. Throttled behaviors only execute once
-	 * within the given delay even though they are triggered multiple times.
-	 * <p>
-	 * For example, this is useful when attaching an event behavior to the onkeypress event. It is
-	 * not desirable to have an ajax call made every time the user types so we throttle that call to
-	 * a desirable delay, such as once per second. This gives us a near real time ability to provide
-	 * feedback without overloading the server with ajax calls.
-	 * 
-	 * @param script
-	 *            javascript to be throttled
-	 * @param throttleId
-	 *            the id of the throttle to be used. Usually this should remain constant for the
-	 *            same javascript block.
-	 * @param throttleDelay
-	 *            time span within which the javascript block will only execute once
-	 * @return wrapped javascript
-	 */
-	public static CharSequence throttleScript(CharSequence script, String throttleId,
-		Duration throttleDelay)
-	{
-		Args.notEmpty(script, "script");
-		Args.notEmpty(throttleId, "throttleId");
-		Args.notNull(throttleDelay, "throttleDelay");
-
-		return new AppendingStringBuffer("Wicket.throttler.throttle( '").append(throttleId)
-			.append("', ")
-			.append(throttleDelay.getMilliseconds())
-			.append(", Wicket.bind(function() { ")
-			.append(script)
-			.append("}, this));");
-	}
 }

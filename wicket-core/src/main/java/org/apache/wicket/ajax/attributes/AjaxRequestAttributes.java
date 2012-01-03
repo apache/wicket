@@ -66,12 +66,12 @@ public final class AjaxRequestAttributes
 	/**
 	 * The id of the for that should be submitted
 	 */
-	private String formId = null;
+	private String formId;
 
 	/**
 	 * The id of the button/link that submitted the form
 	 */
-	private String submittingComponentName = null;
+	private String submittingComponentName;
 
 	/**
 	 * Indicates whether or not this AjaxBehavior will produce <ajax-response>. By default it will
@@ -82,16 +82,28 @@ public final class AjaxRequestAttributes
 
 	private String dataType = XML_DATA_TYPE;
 
-	private List<IAjaxCallListener> ajaxCallListeners = null;
-	private List<JavaScriptPrecondition> preconditions = null;
-	private Map<String, Object> extraParameters = null;
-	private List<CharSequence> dynamicExtraParameters = null;
-	private AjaxChannel channel = null;
+	private List<IAjaxCallListener> ajaxCallListeners;
+	private List<JavaScriptPrecondition> preconditions;
+	private Map<String, Object> extraParameters;
+	private List<CharSequence> dynamicExtraParameters;
+	private AjaxChannel channel;
 
 	/**
 	 * Whether or not to use asynchronous XMLHttpRequest
 	 */
 	private boolean async = true;
+
+	/**
+	 * The settings to use if the Ajax call should be throttled.
+	 * Throttled behaviors only execute once within the given delay
+	 * even though they are triggered multiple times.
+	 * <p>
+	 * For example, this is useful when attaching a behavior to the keypress event. It is not
+	 * desirable to have an ajax call made every time the user types so we throttle that call to a
+	 * desirable delay, such as once per second. This gives us a near real time ability to provide
+	 * feedback without overloading the server with ajax calls.
+	 */
+	private ThrottlingSettings throttlingSettings;
 
 	/**
 	 * Returns whether the form submit is multipart.
@@ -444,6 +456,25 @@ public final class AjaxRequestAttributes
 	public AjaxRequestAttributes setDataType(String dataType)
 	{
 		this.dataType = dataType;
+		return this;
+	}
+
+	/**
+	 * @return the settings to use when throttling is needed.
+	 */
+	public ThrottlingSettings getThrottlingSettings()
+	{
+		return throttlingSettings;
+	}
+
+	/**
+	 * @param throttlingSettings
+	 *      the settings to use when throttling is needed. Pass {@code null} to disable throttling.
+	 * @return this object
+	 */
+	public AjaxRequestAttributes setThrottlingSettings(ThrottlingSettings throttlingSettings)
+	{
+		this.throttlingSettings = throttlingSettings;
 		return this;
 	}
 

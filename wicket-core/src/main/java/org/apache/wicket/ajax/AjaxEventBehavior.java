@@ -19,6 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -53,11 +54,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
 
-	private static long sequence = 0;
-
 	private final String event;
-
-	private ThrottlingSettings throttlingSettings;
 
 	/**
 	 * Construct.
@@ -78,26 +75,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		}
 
 		this.event = event;
-	}
-
-	/**
-	 * Sets the throttle delay for this behavior. Throttled behaviors only execute once within the
-	 * given delay even though they are triggered multiple times.
-	 * <p>
-	 * For example, this is useful when attaching this behavior to the keypress event. It is not
-	 * desirable to have an ajax call made every time the user types so we throttle that call to a
-	 * desirable delay, such as once per second. This gives us a near real time ability to provide
-	 * feedback without overloading the server with ajax calls.
-	 * 
-	 * 
-	 * @param throttleDelay
-	 *            throttle delay
-	 * @return this for chaining
-	 */
-	public final AjaxEventBehavior setThrottleDelay(Duration throttleDelay)
-	{
-		throttlingSettings = new ThrottlingSettings("th" + (++sequence), throttleDelay);
-		return this;
 	}
 
 	@Override
@@ -163,19 +140,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return getCallbackScript();
 	}
 
-	@Override
-	protected CharSequence generateCallbackScript(CharSequence partialCall)
-	{
-		CharSequence script = super.generateCallbackScript(partialCall);
-		final ThrottlingSettings ts = throttlingSettings;
-
-		if (ts != null)
-		{
-			script = AbstractDefaultAjaxBehavior.throttleScript(script, ts.getId(), ts.getDelay());
-		}
-		return script;
-	}
-
 	/**
 	 * 
 	 * @param event
@@ -209,49 +173,4 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * @param target
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
-
-
-	/**
-	 * Class to keep track of throttling settings.
-	 * 
-	 * @author ivaynberg
-	 */
-	private static class ThrottlingSettings implements IClusterable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final Duration delay;
-		private final String id;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 *            throttle id
-		 * @param delay
-		 *            throttle delay
-		 */
-		public ThrottlingSettings(final String id, final Duration delay)
-		{
-			super();
-			this.id = id;
-			this.delay = delay;
-		}
-
-		/**
-		 * @return throttle delay
-		 */
-		public Duration getDelay()
-		{
-			return delay;
-		}
-
-		/**
-		 * @return throttle id
-		 */
-		public String getId()
-		{
-			return id;
-		}
-	}
 }

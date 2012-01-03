@@ -931,6 +931,10 @@
 	};
 
 	Wicket.Throttler = Wicket.Class.create();
+
+	// declare it as static so that it can be shared between Throttler instances
+	Wicket.Throttler.entries = [];
+
 	Wicket.Throttler.prototype = {
 
 		/* "postponeTimerOnUpdate" is an optional parameter. If it is set to true, then the timer is
@@ -938,25 +942,20 @@
 		   to happen at X milliseconds after the *last* call to throttle.
 		   If the parameter is not set, or set to false, then the timer is not reset. */
 		initialize: function (postponeTimerOnUpdate) {
-			this.entries = [];
-			if (postponeTimerOnUpdate !== undefined) {
-				this.postponeTimerOnUpdate = postponeTimerOnUpdate;
-			}
-			else {
-				this.postponeTimerOnUpdate = false;
-			}
+			this.postponeTimerOnUpdate = postponeTimerOnUpdate;
 		},
 
 		throttle: function (id, millis, func) {
-			var entry = this.entries[id];
+			var entries = Wicket.Throttler.entries;
+			var entry = entries[id];
 			var me = this;
 			if (typeof(entry) === 'undefined') {
 				entry = new Wicket.ThrottlerEntry(func);
 				entry.setTimeoutVar(window.setTimeout(function() { me.execute(id); }, millis));
-				this.entries[id] = entry;
+				entries[id] = entry;
 			} else {
 				entry.setFunc(func);
-				if (this.postponeTimerOnUpdate === true)
+				if (this.postponeTimerOnUpdate)
 				{
 					window.clearTimeout(entry.getTimeoutVar());
 					entry.setTimeoutVar(window.setTimeout(function() { me.execute(id); }, millis));
@@ -965,11 +964,12 @@
 		},
 
 		execute: function (id) {
-			var entry = this.entries[id];
+			var entries = Wicket.Throttler.entries;
+			var entry = entries[id];
 			if (typeof(entry) !== 'undefined') {
 				var func = entry.getFunc();
-				this.entries[id] = undefined;
-				var tmp = func();
+				entries[id] = undefined;
+				return func();
 			}
 		}
 	};
@@ -1434,7 +1434,18 @@
 						var call = new Wicket.Ajax.Call();
 						attrs.event = jqEvent;
 
-						return call.ajax(attrs);
+						var throttlingSettings = attrs.tr;
+						if (throttlingSettings) {
+							var postponeTimerOnUpdate = throttlingSettings.p || false;
+							var throttler = new Wicket.Throttler(postponeTimerOnUpdate);
+							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
+								Wicket.bind(function () {
+									return call.ajax(attrs);
+								}, this));
+						}
+						else {
+							return call.ajax(attrs);
+						}
 					});
 				});
 			}

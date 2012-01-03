@@ -241,5 +241,47 @@ jQuery(document).ready(function() {
 			target.triggerHandler("event2");
 			target.off("event1 event2");
 		});
+
+
+		asyncTest('Wicket.Ajax - throttle execution.', function () {
+
+			expect(2);
+
+			var attrs = {
+				tr: {
+					id: "someId",
+					d: 100, // in millis
+					p: false
+				},
+				u: 'data/ajax/nonWicketResponse.json',
+				e: 'event1',
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				sh: [
+					function(data, textStatus, jqXHR) {
+						start();
+						var expected = {
+							one: 1,
+							two: '2',
+							three: true
+						};
+						deepEqual(data, expected);
+						equal('success', textStatus);
+					}
+				]
+			}
+
+			Wicket.Ajax.ajax(attrs);
+
+			var target = jQuery(window);
+
+			// this one will be throttled
+			target.triggerHandler("event1");
+
+			// this one will override the previous and will be throttled too
+			target.triggerHandler("event1");
+
+			target.off("event1");
+		});
 	}
 });
