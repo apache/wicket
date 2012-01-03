@@ -597,11 +597,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param target
 	 *            The AJAX target
 	 */
-	// TODO rename this to onEvent or something? respond is mostly the same as
-	// onRender
-	// this is not the case this is still the event handling period. respond is
-	// called
-	// in the RequestCycle on the AjaxRequestTarget..
 	protected abstract void respond(AjaxRequestTarget target);
 
 }
