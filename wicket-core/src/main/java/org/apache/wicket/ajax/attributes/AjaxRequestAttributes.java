@@ -89,7 +89,6 @@ public final class AjaxRequestAttributes
 	private List<JavaScriptFailureHandler> failureHandlers = null;
 	private Map<String, Object> extraParameters = null;
 	private List<CharSequence> dynamicExtraParameters = null;
-	private List<CharSequence> requestQueueItemCreationListeners = null;
 	private AjaxChannel channel = null;
 
 	/**
@@ -381,21 +380,6 @@ public final class AjaxRequestAttributes
 			dynamicExtraParameters = new ArrayList<CharSequence>();
 		}
 		return dynamicExtraParameters;
-	}
-
-	/**
-	 * Array of javascript functions invoked when a <code>RequestQueueItem</code> instance is
-	 * created. The <code>RequestQueueItem</code> instance will be passed as first argument.
-	 * 
-	 * @return List<CharSequence> or <code>null</code>
-	 */
-	public List<CharSequence> getRequestQueueItemCreationListeners()
-	{
-		if (requestQueueItemCreationListeners == null)
-		{
-			requestQueueItemCreationListeners = new ArrayList<CharSequence>();
-		}
-		return requestQueueItemCreationListeners;
 	}
 
 	/**
