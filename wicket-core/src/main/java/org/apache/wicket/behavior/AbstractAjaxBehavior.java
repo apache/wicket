@@ -19,6 +19,7 @@ package org.apache.wicket.behavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for javascript specific
@@ -86,7 +87,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 
 		rli = IBehaviorListener.INTERFACE;
 
-		return getComponent().urlFor(this, rli);
+		return getComponent().urlFor(this, rli, new PageParameters());
 	}
 
 	/**

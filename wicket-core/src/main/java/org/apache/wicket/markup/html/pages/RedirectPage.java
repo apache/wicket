@@ -69,7 +69,7 @@ public class RedirectPage extends WebPage
 	 */
 	public RedirectPage(final Page page)
 	{
-		this(page.urlFor(IRedirectListener.INTERFACE), 0);
+		this(page.urlFor(IRedirectListener.INTERFACE, page.getPageParameters()), 0);
 	}
 
 	/**
@@ -83,7 +83,8 @@ public class RedirectPage extends WebPage
 	 */
 	public RedirectPage(final Page page, final int waitBeforeRedirectInSeconds)
 	{
-		this(page.urlFor(IRedirectListener.INTERFACE), waitBeforeRedirectInSeconds);
+		this(page.urlFor(IRedirectListener.INTERFACE, page.getPageParameters()),
+			waitBeforeRedirectInSeconds);
 	}
 
 	/**

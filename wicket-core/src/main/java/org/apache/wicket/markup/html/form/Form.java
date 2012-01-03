@@ -33,6 +33,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
@@ -50,7 +51,6 @@ import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -58,8 +58,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
+import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.value.LongValue;
 import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
@@ -114,9 +114,9 @@ import org.slf4j.LoggerFactory;
  * Use this with {@link FileUploadField} components. You can attach multiple {@link FileUploadField}
  * components for multiple file uploads.
  * <p>
- * In case of an upload error two resource keys are available to specify error messages: {@code
- * uploadTooLarge} and {@code uploadFailed}, i.e. for a form with id {@code myform} in {@code
- * MyPage.properties}:
+ * In case of an upload error two resource keys are available to specify error messages:
+ * {@code uploadTooLarge} and {@code uploadFailed}, i.e. for a form with id {@code myform} in
+ * {@code MyPage.properties}:
  * 
  * <pre>
  * myform.uploadTooLarge=You have uploaded a file that is over the allowed limit of 2Mb
@@ -843,27 +843,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// Form has no error
 			delegateSubmit(submittingComponent);
 		}
-
-		// If the form is stateless page parameters contain all form component
-		// values. We need to remove those otherwise they get appended to action URL
-		final PageParameters parameters = page.getPageParameters();
-		if (parameters != null)
-		{
-			visitFormComponents(new IVisitor<FormComponent<?>, Void>()
-			{
-				@Override
-				public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
-				{
-					parameters.remove(formComponent.getInputName());
-				}
-			});
-			parameters.remove(hiddenFieldId);
-			if (submittingComponent instanceof AbstractSubmitLink)
-			{
-				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;
-				parameters.remove(submitLink.getInputName());
-			}
-		}
 	}
 
 	/**
@@ -1532,7 +1511,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected CharSequence getActionUrl()
 	{
-		return urlFor(IFormSubmitListener.INTERFACE);
+		return urlFor(IFormSubmitListener.INTERFACE, new PageParameters());
 	}
 
 	/**

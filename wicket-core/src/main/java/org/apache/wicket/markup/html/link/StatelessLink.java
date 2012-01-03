@@ -48,4 +48,10 @@ public abstract class StatelessLink<T> extends Link<T>
 	{
 		return true;
 	}
+
+	@Override
+	protected CharSequence getURL()
+	{
+		return urlFor(ILinkListener.INTERFACE, getPage().getPageParameters());
+	}
 }
