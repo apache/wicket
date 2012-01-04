@@ -47,6 +47,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @see RadioGroup
  * @see CheckGroup
  */
+// TODO Wicket 6.0 FIXME See hot to use the new AjaxRequestAttributes here
 public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
