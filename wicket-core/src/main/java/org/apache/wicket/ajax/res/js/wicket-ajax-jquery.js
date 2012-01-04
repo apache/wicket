@@ -728,7 +728,7 @@
 						stepIndexOfLastReplacedComponent = steps.length;
 						this.processComponent(steps, node);
 					} else if (node.tagName === "evaluate") {
-						this.processEvaluation(steps, node, attrs);
+						this.processEvaluation(steps, node, attrs, attrs.event);
 					} else if (node.tagName === "header-contribution") {
 						this.processHeaderContribution(steps, node);
 					} else if (node.tagName === "redirect") {
