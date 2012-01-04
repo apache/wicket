@@ -17,7 +17,14 @@
 package org.apache.wicket.ajax.attributes;
 
 /**
- *
+ * The JavaScript that will be executed before the Ajax call and will decide whether the Ajax
+ * should be aborted.
+ * The script will be executed in a function that receives the following parameters:
+ * <ol>
+ *     <li>attrs - the AjaxRequestAttributes as JSON</li>
+ *     <li>jqXHR - the jQuery XMLHttpRequest object</li>
+ *     <li>settings - the settings used for the jQuery.ajax() call</li>
+ * </ol>
  */
 public class JavaScriptPrecondition extends JavaScriptFunctionBody
 {

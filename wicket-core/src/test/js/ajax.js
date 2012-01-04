@@ -283,5 +283,109 @@ jQuery(document).ready(function() {
 
 			target.off("event1");
 		});
+
+		asyncTest('Wicket.Ajax - verify arguments to IAjaxCallListener handlers. Success scenario.', function () {
+
+			expect(11);
+
+			var attrs = {
+				u: 'data/ajax/nonWicketResponse.json',
+				e: 'event1',
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				sh: [
+					function(data, textStatus, jqXHR, attributes) {
+						start();
+						var expected = {
+							one: 1,
+							two: '2',
+							three: true
+						};
+						deepEqual(data, expected);
+						equal('success', textStatus);
+						deepEqual(attrs, attributes);
+						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+					}
+				],
+				fh: [
+					function(attributes) {
+						ok(false, 'Should not be called');
+					}
+				],
+				bh: [
+					function(attributes, jqXHR, settings) {
+						deepEqual(attrs, attributes);
+						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
+					}
+				],
+				ah: [
+					function(attributes) {
+						deepEqual(attrs, attributes);
+					}
+				],
+				coh: [
+					function(jqXHR, textStatus, attributes) {
+						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						equal('success', textStatus);
+						deepEqual(attrs, attributes);
+					}
+				]
+			}
+
+			Wicket.Ajax.ajax(attrs);
+
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+		});
+
+		asyncTest('Wicket.Ajax - verify arguments to IAjaxCallListener handlers. Failure scenario.', function () {
+
+			expect(8);
+
+			var attrs = {
+				u: 'data/ajax/nonExisting.json',
+				e: 'event1',
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				sh: [
+					function(data, textStatus, jqXHR, attributes) {
+						ok(false, 'Should not be called');
+					}
+				],
+				fh: [
+					function(attributes) {
+						start();
+						deepEqual(attrs, attributes);
+					}
+				],
+				bh: [
+					function(attributes, jqXHR, settings) {
+						deepEqual(attrs, attributes);
+						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
+					}
+				],
+				ah: [
+					function(attributes) {
+						deepEqual(attrs, attributes);
+					}
+				],
+				coh: [
+					function(jqXHR, textStatus, attributes) {
+						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						equal('error', textStatus);
+						deepEqual(attrs, attributes);
+					}
+				]
+			}
+
+			Wicket.Ajax.ajax(attrs);
+
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+		});
 	}
 });

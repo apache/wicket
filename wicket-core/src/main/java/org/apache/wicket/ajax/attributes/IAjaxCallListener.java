@@ -33,6 +33,15 @@ import org.apache.wicket.IClusterable;
 public interface IAjaxCallListener extends IClusterable
 {
 	/**
+	 * The JavaScript that will be executed after successful return of the Ajax call.
+	 * The script will be executed in a function that receives the following parameters:
+	 * <ol>
+	 *     <li>data - the Ajax response. Its type depends on {@link AjaxRequestAttributes#dataType}</li>
+	 *     <li>textStatus - the status as text</li>
+	 *     <li>jqXHR - the jQuery XMLHttpRequest object</li>
+	 *     <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
+	 *
 	 * @param component
 	 *      the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed after a successful
@@ -41,6 +50,12 @@ public interface IAjaxCallListener extends IClusterable
 	CharSequence getSuccessHandler(Component component);
 
 	/**
+	 * The JavaScript that will be executed after unsuccessful return of the Ajax call.
+	 * The script will be executed in a function that receives the following parameters:
+	 * <ol>
+	 *     <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
+	 *
 	 * @param component
 	 *      the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed after a unsuccessful
@@ -49,6 +64,14 @@ public interface IAjaxCallListener extends IClusterable
 	CharSequence getFailureHandler(Component component);
 
 	/**
+	 * The JavaScript that will be executed before the Ajax call.
+	 * The script will be executed in a function that receives the following parameters:
+	 * <ol>
+	 *     <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 *     <li>jqXHR - the jQuery XMLHttpRequest object</li>
+	 *     <li>settings - the settings used for the jQuery.ajax() call</li>
+	 * </ol>
+	 *
 	 * @param component
 	 *      the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed before the Ajax call.
@@ -56,6 +79,12 @@ public interface IAjaxCallListener extends IClusterable
 	CharSequence getBeforeHandler(Component component);
 
 	/**
+	 * The JavaScript that will be executed after the Ajax call.
+	 * The script will be executed in a function that receives the following parameters:
+	 * <ol>
+	 *     <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
+	 *
 	 * @param component
 	 *      the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed after the start of the Ajax call
@@ -67,6 +96,13 @@ public interface IAjaxCallListener extends IClusterable
 	CharSequence getAfterHandler(Component component);
 
 	/**
+	 * The JavaScript that will be executed after both successful and unsuccessful return of the Ajax call.
+	 * The script will be executed in a function that receives the following parameters:
+	 * <ol>
+	 *     <li>jqXHR - the jQuery XMLHttpRequest object</li>
+	 *     <li>textStatus - the status as text</li>
+	 *     <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
 	 * @param component
 	 *      the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed after both successful

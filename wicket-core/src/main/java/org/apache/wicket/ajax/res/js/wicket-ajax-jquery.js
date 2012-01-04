@@ -446,7 +446,7 @@
 				url: attrs.u,
 				type: attrs.m || 'GET',
 				context: self,
-				beforeSend: function () {
+				beforeSend: function (jqXHR, settings) {
 
 					var preconditions = attrs.pre || defaultPrecondition;
 					if (jQuery.isArray(preconditions)) {
@@ -457,7 +457,7 @@
 							if (jQuery.isFunction(precondition)) {
 								result = precondition();
 							} else {
-								result = new Function('attrs', precondition)(attrs);
+								result = new Function('attrs', 'jqXHR', 'settings', precondition)(attrs, jqXHR, settings);
 							}
 							if (result === false) {
 								Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
@@ -467,7 +467,7 @@
 						}
 					}
 
-					self._executeHandlers(attrs.bh);
+					self._executeHandlers(attrs.bh, attrs, jqXHR, settings);
 
 					if (attrs.i) {
 						// show the indicator
@@ -484,13 +484,13 @@
 					if (attrs.wr) {
 						self.processAjaxResponse(data, textStatus, jqXHR, attrs);
 					} else {
-						self._executeHandlers(attrs.sh, data, textStatus, jqXHR);
+						self._executeHandlers(attrs.sh, data, textStatus, jqXHR, attrs);
 					}
 
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 
-					self.failure(errorThrown, attrs);
+					self.failure(errorThrown, attrs, jqXHR, textStatus);
 
 				},
 				complete: function (jqXHR, textStatus) {
@@ -498,12 +498,14 @@
 						Wicket.DOM.hide(attrs.i);
 					}
 
+					self._executeHandlers(attrs.coh, jqXHR, textStatus, attrs);
+
 					this.done();
 				}
 			});
 
 			// execute after handlers right after the Ajax request is fired
-			self._executeHandlers(attrs.ah);
+			self._executeHandlers(attrs.ah, attrs);
 
 			var allowDefault = attrs.ad || false; 
 
@@ -756,7 +758,7 @@
 			steps.push(jQuery.proxy(function (notify) {
 				Wicket.Log.info("Response processed successfully.");
 
-				this._executeHandlers(attrs.sh);
+				this._executeHandlers(attrs.sh, null, 'success', null, attrs);
 
 				Wicket.Ajax.invokePostCallHandlers();
 				// retach the events to the new components (a bit blunt method...)
@@ -779,7 +781,7 @@
 			if (message) {
 				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
 			}
-			this._executeHandlers(attrs.fh);
+			this._executeHandlers(attrs.fh, attrs);
 			Wicket.Ajax.invokePostCallHandlers();
 			Wicket.Ajax.invokeFailureHandlers();
 		},

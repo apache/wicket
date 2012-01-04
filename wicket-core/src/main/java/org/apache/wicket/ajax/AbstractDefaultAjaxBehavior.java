@@ -274,7 +274,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
 				if (Strings.isEmpty(completeHandler) == false)
 				{
-					attributesJson.append("ch", completeHandler);
+					attributesJson.append("coh", completeHandler);
 				}
 			}
 
