@@ -314,7 +314,7 @@ public class AjaxEditableLabel<T> extends Panel
 
 				CharSequence dynamicExtraParameters =
 						"var result = {}, " +
-								"kc=Wicket.Event.keyCode(attrs.event)," +
+								"kc=Wicket.Event.keyCode(event)," +
 								"evtType=attrs.event.type;" +
 								"if (evtType === 'keyup') {" +
 								// ESCAPE key
@@ -328,7 +328,7 @@ public class AjaxEditableLabel<T> extends Panel
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
 				CharSequence precondition =
-						"var kc=Wicket.Event.keyCode(attrs.event),"+
+						"var kc=Wicket.Event.keyCode(event),"+
 								"evtType=attrs.event.type,"+
 								"ret=false;"+
 								"if(evtType==='blur' || (evtType==='keyup' && (kc===27 || kc===13))) ret = true;"+

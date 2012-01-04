@@ -818,8 +818,14 @@
 			});
 		},
 
-		// Adds a closure that evaluates javascript code
-		processEvaluation: function (steps, node, attrs) {
+		/**
+		 * Adds a closure that evaluates javascript code.
+		 * @param steps {Array} - the steps for FunctionExecutor
+		 * @param node {XmlElement} - the <[priority-]evaluate> element with the script to evaluate
+		 * @param attrs {Object} - the attributes used for the Ajax request
+		 * @param event {jQuery.Event} - the event that caused this Ajax call
+ 		 */
+		processEvaluation: function (steps, node, attrs, event) {
 			steps.push(function (notify) {
 				// get the javascript body
 				var text = jQuery(node).text();
