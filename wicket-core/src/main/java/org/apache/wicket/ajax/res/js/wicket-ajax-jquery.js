@@ -1431,13 +1431,13 @@
 			ajax: function(attrs) {
 
 				var target	= attrs.c || window;
-				var events	= attrs.e || [ 'domready' ];
+				attrs.e	= attrs.e || [ 'domready' ];
 
-				if (!jQuery.isArray(events)) {
-					events = [ events ];
+				if (!jQuery.isArray(attrs.e)) {
+					attrs.e = [ attrs.e ];
 				}
 
-				jQuery.each(events, function (idx, evt) {
+				jQuery.each(attrs.e, function (idx, evt) {
 					Wicket.Event.add(target, evt, function (jqEvent) {
 						var call = new Wicket.Ajax.Call();
 						attrs.event = jqEvent;
