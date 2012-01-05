@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
@@ -144,11 +145,26 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	private void updateAjaxAttributesBackwardCompatibility(AjaxRequestAttributes attributes)
 	{
 		CharSequence preconditionScript = getPreconditionScript();
-		if (preconditionScript != null)
+		if (Strings.isEmpty(preconditionScript) == false)
 		{
 			JavaScriptPrecondition precondition = new JavaScriptPrecondition(preconditionScript);
 			attributes.getPreconditions().add(precondition);
 		}
+
+		AjaxCallListener backwardCompatibleAjaxCallListener = new AjaxCallListener() {
+			@Override
+			public CharSequence getSuccessHandler(Component component)
+			{
+				return AbstractDefaultAjaxBehavior.this.getSuccessScript();
+			}
+
+			@Override
+			public CharSequence getFailureHandler(Component component)
+			{
+				return AbstractDefaultAjaxBehavior.this.getFailureScript();
+			}
+		};
+		attributes.getAjaxCallListeners().add(backwardCompatibleAjaxCallListener);
 
 		AjaxChannel channel = getChannel();
 		if (channel != null)
@@ -270,7 +286,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 			for (JavaScriptPrecondition pre : attributes.getPreconditions())
 			{
-				attributesJson.append("pre", pre);
+				String precondition = pre.toString();
+				if (Strings.isEmpty(precondition) == false)
+				{
+					attributesJson.append("pre", precondition);
+				}
 			}
 
 			JSONObject extraParameters = new JSONObject();
