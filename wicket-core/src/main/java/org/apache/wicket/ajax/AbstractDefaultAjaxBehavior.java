@@ -432,23 +432,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * Returns javascript that performs an ajax callback to this behavior.
-	 * 
-	 * @param partialCall
-	 *            JavaScript of a partial call to the function performing the actual ajax callback.
-	 *            Must be in format <code>function(params,</code> with signature
-	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>. Example:
-	 *            <code>wicketAjaxGet('callbackurl'</code>
-	 * 
-	 * @return script that performs ajax callback to this behavior
-	 */
-	@Deprecated
-	protected CharSequence generateCallbackScript(final CharSequence partialCall)
-	{
-		return "";
-	}
-
-	/**
 	 * Provides an AjaxChannel for this Behavior.
 	 * 
 	 * @return an AjaxChannel - Defaults to null.
