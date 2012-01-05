@@ -161,7 +161,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.INTERFACE);
+		return urlFor(ILinkListener.INTERFACE, new PageParameters());
 	}
 
 	/**

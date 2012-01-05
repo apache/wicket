@@ -134,6 +134,20 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 		setComponentPath(componentPath);
 	}
 
+	public PageAndComponentProvider(IRequestablePage page, IRequestableComponent component,
+		PageParameters parameters)
+	{
+		super(page);
+
+		Args.notNull(component, "component");
+
+		this.component = component;
+		if (parameters != null)
+		{
+			setPageParameters(parameters);
+		}
+	}
+
 	/**
 	 * @see org.apache.wicket.request.handler.IPageAndComponentProvider#getComponent()
 	 */

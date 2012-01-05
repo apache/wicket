@@ -27,6 +27,7 @@ import org.apache.wicket.request.handler.IPageAndComponentProvider;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Before;
@@ -134,7 +135,8 @@ public class BehaviorRequestTest extends WicketTestCase
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			super.onComponentTag(component, tag);
-			tag.put("href", component.urlFor(this, IBehaviorListener.INTERFACE));
+			tag.put("href",
+				component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters()));
 		}
 
 		@Override

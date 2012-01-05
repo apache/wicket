@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.convert.IConverter;
 
 /**
@@ -156,7 +157,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		// checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
 		{
-			CharSequence url = urlFor(IOnChangeListener.INTERFACE);
+			CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
 
 			Form<?> form = findParent(Form.class);
 			if (form != null)
