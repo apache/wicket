@@ -20,8 +20,8 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
@@ -44,7 +44,7 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAj
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final IAjaxCallDecorator decorator;
+	private final IAjaxCallListener ajaxCallListener;
 
 	/**
 	 * Constructor
@@ -79,12 +79,12 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAj
 	 * @param id
 	 * @param property
 	 * @param stateLocator
-	 * @param decorator
+	 * @param ajaxCallListener
 	 */
 	public AjaxFallbackOrderByLink(final String id, final String property,
-		final ISortStateLocator stateLocator, final IAjaxCallDecorator decorator)
+		final ISortStateLocator stateLocator, final IAjaxCallListener ajaxCallListener)
 	{
-		this(id, property, stateLocator, DefaultCssProvider.getInstance(), decorator);
+		this(id, property, stateLocator, DefaultCssProvider.getInstance(), ajaxCallListener);
 	}
 
 	/**
@@ -94,15 +94,15 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAj
 	 * @param property
 	 * @param stateLocator
 	 * @param cssProvider
-	 * @param decorator
+	 * @param ajaxCallListener
 	 */
 	public AjaxFallbackOrderByLink(final String id, final String property,
 		final ISortStateLocator stateLocator, final ICssProvider cssProvider,
-		final IAjaxCallDecorator decorator)
+		final IAjaxCallListener ajaxCallListener)
 	{
 		super(id, property, stateLocator, cssProvider);
 
-		this.decorator = decorator;
+		this.ajaxCallListener = ajaxCallListener;
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAj
 	{
 		super.onInitialize();
 
-		add(newAjaxEventBehavior("onclick"));
+		add(newAjaxEventBehavior("click"));
 	}
 
 	/**
@@ -132,9 +132,12 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAj
 			}
 
 			@Override
-			protected IAjaxCallDecorator getAjaxCallDecorator()
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
-				return new CancelEventIfNoAjaxDecorator(decorator);
+				super.updateAjaxAttributes(attributes);
+				if (ajaxCallListener != null) {
+					attributes.getAjaxCallListeners().add(ajaxCallListener);
+				}
 			}
 
 			@Override

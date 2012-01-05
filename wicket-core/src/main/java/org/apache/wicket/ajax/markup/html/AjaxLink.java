@@ -19,10 +19,8 @@ package org.apache.wicket.ajax.markup.html;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
@@ -88,12 +86,6 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 			}
 
 			@Override
-			protected IAjaxCallDecorator getAjaxCallDecorator()
-			{
-				return new CancelEventIfNoAjaxDecorator(AjaxLink.this.getAjaxCallDecorator());
-			}
-
-			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// add the onclick handler only if link is enabled
@@ -145,17 +137,6 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 			disableLink(tag);
 		}
 
-	}
-
-	/**
-	 * Returns ajax call decorator that will be used to decorate the ajax call.
-	 * 
-	 * @return ajax call decorator
-	 */
-	@Deprecated
-	protected IAjaxCallDecorator getAjaxCallDecorator()
-	{
-		return null;
 	}
 
 	/**

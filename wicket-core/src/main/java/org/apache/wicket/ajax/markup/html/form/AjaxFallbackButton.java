@@ -18,14 +18,12 @@ package org.apache.wicket.ajax.markup.html.form;
 
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * An ajax submit button that will degrade to a normal request if ajax is not available or
@@ -81,12 +79,6 @@ public abstract class AjaxFallbackButton extends Button
 			protected void onError(AjaxRequestTarget target)
 			{
 				AjaxFallbackButton.this.onError(target, AjaxFallbackButton.this.getForm());
-			}
-
-			@Override
-			protected IAjaxCallDecorator getAjaxCallDecorator()
-			{
-				return AjaxFallbackButton.this.getAjaxCallDecorator();
 			}
 
 			@Override
@@ -156,18 +148,9 @@ public abstract class AjaxFallbackButton extends Button
 	protected abstract void onSubmit(final AjaxRequestTarget target, final Form<?> form);
 
 	/**
-	 * 
-	 * @return call decorator to use or null if none
-	 */
-	@Deprecated
-	protected IAjaxCallDecorator getAjaxCallDecorator()
-	{
-		return null;
-	}
-
-	/**
 	 * @return the channel that manages how Ajax calls are executed
 	 * @see AbstractDefaultAjaxBehavior#getChannel()
+	 * @deprecated Use #updateAjaxAttributes() instead
 	 */
 	@Deprecated
 	protected AjaxChannel getChannel()

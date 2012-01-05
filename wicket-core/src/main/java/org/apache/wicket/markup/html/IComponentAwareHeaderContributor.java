@@ -18,23 +18,25 @@ package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
- * An interface to be implemented by {@link Behavior}s or {@link IAjaxCallDecorator}s that wish to
+ * An interface to be implemented by {@link org.apache.wicket.behavior.Behavior}s,
+ * {@link org.apache.wicket.ajax.attributes.IAjaxCallListener}s or
+ * {@link org.apache.wicket.ajax.attributes.JavaScriptFunctionBody}s which wish to
  * contribute to the header section of the page.
  * 
  * Example:
  * 
  * <pre>
- * class MyAjaxCallDecorator implements IAjaxCallDecorator, IHeaderContributor
+ * class MyAjaxCallDecorator implements IAjaxCallListener, IHeaderContributor
  * {
- * 
+ *
+ *  // IAjaxCallListener methods omitted for brevity
+ *
  * 	public void renderHead(Component component, IHeaderResponse response)
  * 	{
- * 		response.renderOnLoadJavaScript(&quot;alert('page loaded!');&quot;);
+ * 		response.render(new OnLoadJavaScriptHeaderItem(&quot;alert('page loaded!');&quot;));
  * 	}
  * }
  * </pre>

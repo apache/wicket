@@ -16,6 +16,31 @@
  */
 package org.apache.wicket.examples.source;
 
+import com.uwyn.jhighlight.renderer.Renderer;
+import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
+import org.apache.wicket.Component;
+import org.apache.wicket.Page;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.authorization.UnauthorizedInstantiationException;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.PackageName;
+import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -32,31 +57,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.Page;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.authorization.UnauthorizedInstantiationException;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.io.IOUtils;
-import org.apache.wicket.util.lang.PackageName;
-import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
-
-import com.uwyn.jhighlight.renderer.Renderer;
-import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Displays the resources in a packages directory in a browsable format.
@@ -409,43 +409,18 @@ public class SourcesPage extends WebPage
 						}
 
 						@Override
-						protected IAjaxCallDecorator getAjaxCallDecorator()
+						protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 						{
-							return new IAjaxCallDecorator()
-							{
-
-								public CharSequence decorateOnFailureScript(Component c,
-									CharSequence script)
+							super.updateAjaxAttributes(attributes);
+							AjaxCallListener ajaxCallListener = new AjaxCallListener() {
+								@Override
+								public CharSequence getFailureHandler(Component component)
 								{
 									return "window.location=this.href;";
-									// return "alert('It\\'s ok!')";
 								}
-
-								public CharSequence decorateOnSuccessScript(Component c,
-									CharSequence script)
-								{
-									if (script == null)
-									{
-										return "";
-									}
-									return script;
-								}
-
-								public CharSequence decorateScript(Component c, CharSequence script)
-								{
-									int index = script.toString().indexOf('?');
-									if (index >= 0)
-									{
-										String test = script.subSequence(0, index + 1) +
-											PAGE_CLASS + "=1" + "&" +
-											script.subSequence(index + 1, script.length());
-										return test;
-
-									}
-									return script;
-								}
-
 							};
+							attributes.getAjaxCallListeners().add(ajaxCallListener);
+							attributes.getExtraParameters().put(PAGE_CLASS, "1");
 						}
 					};
 					link.add(new Label("name", item.getDefaultModelObjectAsString()));

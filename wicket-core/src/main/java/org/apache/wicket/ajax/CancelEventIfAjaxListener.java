@@ -14,47 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax.calldecorator;
+package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 
 /**
- * An adapter for implementations of {@link IAjaxCallDecorator}.
+ * Decorator that can be used to cancel the regular action if ajax call was performed. This allows
+ * us to, for example, cancel the default anchor behavior (requesting href url) if an ajax call was
+ * made in the onclick event handler. Ajax call cannot be performed if javascript has been turned
+ * off or no compatible XmlHttpRequest object can be found. This decorator will make javascript
+ * return true if the ajax call was made, and false otherwise.
  * 
- * @see IAjaxCallDecorator for notes on escaping quotes in scripts
+ * @see AjaxFallbackLink
  * 
- * @since 1.2
+ * @since 6.0
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-@Deprecated
-public abstract class AjaxCallDecorator implements IAjaxCallDecorator
+public final class CancelEventIfAjaxListener extends AjaxCallListener
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public CharSequence decorateScript(Component c, CharSequence script)
+	public CharSequence getBeforeHandler(Component component)
 	{
-		return script;
+		return "if (attrs.event) { Wicket.Event.fix(attrs.event).preventDefault(); }";
 	}
-
-	@Override
-	public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
-	{
-		return script;
-	}
-
-	@Override
-	public CharSequence decorateOnFailureScript(Component c, CharSequence script)
-	{
-		return script;
-	}
-
-
 }

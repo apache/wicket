@@ -19,8 +19,6 @@ package org.apache.wicket.ajax.markup.html.navigation.paging;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
@@ -83,16 +81,6 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 			// tell the PagingNavigator to update the IPageable
 			navigator.onAjaxEvent(target);
 		}
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
-	 */
-	@Override
-	protected IAjaxCallDecorator getAjaxCallDecorator()
-	{
-		return new CancelEventIfNoAjaxDecorator();
 	}
 
 	/**
