@@ -36,7 +36,7 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 	SortParam<T> param;
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(String,
+	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(T,
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder)
 	 */
 	public void setPropertySortOrder(final T property, final SortOrder order)
@@ -58,7 +58,7 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertySortOrder(java.lang.String)
+	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertySortOrder(T)
 	 */
 	public SortOrder getPropertySortOrder(final T property)
 	{
