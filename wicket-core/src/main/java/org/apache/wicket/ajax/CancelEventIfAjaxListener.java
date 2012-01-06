@@ -41,6 +41,6 @@ public final class CancelEventIfAjaxListener extends AjaxCallListener
 	@Override
 	public CharSequence getBeforeHandler(Component component)
 	{
-		return "if (attrs.event) { Wicket.Event.fix(attrs.event).preventDefault(); }";
+		return "if (attrs.event) { attrs.event.preventDefault(); }";
 	}
 }

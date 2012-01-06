@@ -387,5 +387,49 @@ jQuery(document).ready(function() {
 			target.triggerHandler("event1");
 			target.off("event1");
 		});
+
+		/**
+		 * Only attributes with non-default values are transfered to the client side.
+		 * All defaults are initialized at the client side.
+		 */
+		asyncTest('Wicket.Ajax - verify default attributes.', function () {
+
+			expect(23);
+
+			var attrs = {
+				u: 'data/ajax/nonWicketResponse.json',
+				coh: [
+					function(jqXHR, textStatus, attributes) {
+						start();
+						equal(textStatus, "parsererror", "textStatus")
+						equal(attributes.u, attrs.u, "url");
+						deepEqual(attributes.e, [ "domready" ], "events");
+						equal(attributes.ch, '0|s', 'channel');
+						equal(attributes.dt, 'xml', 'data type');
+						equal(attributes.wr, true, 'wicket ajax response');
+						equal(attributes.m, 'GET', 'method');
+						ok(jQuery.isWindow(attributes.c), 'component');
+						ok(attributes.f === undefined, 'form');
+						ok(attributes.mp === undefined, 'multipart');
+						ok(attributes.sc === undefined, 'submitting component');
+						ok(attributes.i === undefined, 'indicator');
+						ok(attributes.pre === undefined, 'preconditions');
+						ok(attributes.bh === undefined, 'before handlers');
+						ok(attributes.ah === undefined, 'after handler');
+						ok(attributes.sh === undefined, 'success handlers');
+						ok(attributes.fh === undefined, 'failure handlers');
+						deepEqual(attrs.coh, attributes.coh, 'complete handlers');
+						ok(attributes.ep === undefined, 'extra parameters');
+						ok(attributes.dep === undefined, 'dynamic extra parameters');
+						equal(attributes.async, false, 'asynchronous');
+						equal(attributes.rt, 0, 'request timeout');
+						equal(attributes.ad, false, 'allow default');
+
+					}
+				]
+			}
+
+			Wicket.Ajax.ajax(attrs);
+		});
 	}
 });

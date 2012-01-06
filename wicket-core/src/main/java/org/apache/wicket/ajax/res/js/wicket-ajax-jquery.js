@@ -312,7 +312,7 @@
 
 		initialize: jQuery.noop,
 
-		_normalizeAttributes: function (attrs) {
+		_initializeDefaults: function (attrs) {
 
 			// (ajax channel)
 			if (typeof(attrs.ch) !== 'string') {
@@ -327,7 +327,23 @@
 			// (dataType) by default we expect XML responses from the Ajax behaviors
 			if (typeof(attrs.dt) !== 'string') {
 				attrs.dt = 'xml';
-			}	
+			}
+
+			if (typeof(attrs.m) != 'string') {
+				attrs.m = 'GET';
+			}
+
+			if (attrs.async !== true) {
+				attrs.async = false;
+			}
+
+			if (!jQuery.isNumeric(attrs.rt)) {
+				attrs.rt = 0;
+			}
+
+			if (attrs.ad !== true) {
+				attrs.ad = false;
+			}
 		},
 
 		/**
@@ -357,7 +373,7 @@
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
 		 */
 		ajax: function (attrs) {
-			this._normalizeAttributes(attrs);
+			this._initializeDefaults(attrs);
 
 			var res = Wicket.channelManager.schedule(attrs.ch, Wicket.bind(function () {
 				this.doAjax(attrs);
@@ -432,7 +448,7 @@
 					data = jQuery.extend({}, data, {scName: 1});
 				}
 
-			} else if (attrs.c) {
+			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
 				data = jQuery.extend({}, data, Wicket.Form.serializeElement(el));
@@ -444,7 +460,7 @@
 			// execute the request 
 			jQuery.ajax({
 				url: attrs.u,
-				type: attrs.m || 'GET',
+				type: attrs.m,
 				context: self,
 				beforeSend: function (jqXHR, settings) {
 
@@ -476,8 +492,8 @@
 				},
 				data: data,
 				dataType: attrs.dt,
-				async: attrs.async || true,
-				timeout: attrs.rt || 0,
+				async: attrs.async,
+				timeout: attrs.rt,
 				headers: headers,
 				success: function(data, textStatus, jqXHR) {
 
@@ -507,13 +523,11 @@
 			// execute after handlers right after the Ajax request is fired
 			self._executeHandlers(attrs.ah, attrs);
 
-			var allowDefault = attrs.ad || false; 
-
-			if (!allowDefault && attrs.event) {
-				Wicket.Event.fix(attrs.event).preventDefault();
+			if (!attrs.ad && attrs.event) {
+				attrs.event.preventDefault();
 			}
 
-			return allowDefault;
+			return attrs.ad;
 		},
 
 		// Method that processes the <ajax-response>
@@ -1430,17 +1444,17 @@
 
 			ajax: function(attrs) {
 
-				var target	= attrs.c || window;
-				attrs.e	= attrs.e || [ 'domready' ];
+				attrs.c = attrs.c || window;
+				attrs.e = attrs.e || [ 'domready' ];
 
 				if (!jQuery.isArray(attrs.e)) {
 					attrs.e = [ attrs.e ];
 				}
 
 				jQuery.each(attrs.e, function (idx, evt) {
-					Wicket.Event.add(target, evt, function (jqEvent) {
+					Wicket.Event.add(attrs.c, evt, function (jqEvent) {
 						var call = new Wicket.Ajax.Call();
-						attrs.event = jqEvent;
+						attrs.event = Wicket.Event.fix(jqEvent);
 
 						var throttlingSettings = attrs.tr;
 						if (throttlingSettings) {
