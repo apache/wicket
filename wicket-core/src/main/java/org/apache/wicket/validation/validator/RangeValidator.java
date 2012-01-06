@@ -71,16 +71,14 @@ public class RangeValidator<Z extends Comparable<Z> & Serializable> extends
 
 	/**
 	 * @param minimum
-	 * @param maximum
 	 * @return a {@link RangeValidator} that validates if a value is a least {@code minimum}
 	 */
-	public static <T extends Comparable<T> & Serializable> RangeValidator<T> minmum(T minimum)
+	public static <T extends Comparable<T> & Serializable> RangeValidator<T> minimum(T minimum)
 	{
 		return new RangeValidator<T>(minimum, null);
 	}
 
 	/**
-	 * @param minimum
 	 * @param maximum
 	 * @return a {@link RangeValidator} that validates if a value is a most {@code maximum}
 	 */

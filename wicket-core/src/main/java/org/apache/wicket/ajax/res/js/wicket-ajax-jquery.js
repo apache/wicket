@@ -312,7 +312,7 @@
 
 		initialize: jQuery.noop,
 
-		_normalizeAttributes: function (attrs) {
+		_initializeDefaults: function (attrs) {
 
 			// (ajax channel)
 			if (typeof(attrs.ch) !== 'string') {
@@ -327,7 +327,23 @@
 			// (dataType) by default we expect XML responses from the Ajax behaviors
 			if (typeof(attrs.dt) !== 'string') {
 				attrs.dt = 'xml';
-			}	
+			}
+
+			if (typeof(attrs.m) != 'string') {
+				attrs.m = 'GET';
+			}
+
+			if (attrs.async !== true) {
+				attrs.async = false;
+			}
+
+			if (!jQuery.isNumeric(attrs.rt)) {
+				attrs.rt = 0;
+			}
+
+			if (attrs.ad !== true) {
+				attrs.ad = false;
+			}
 		},
 
 		/**
@@ -357,7 +373,7 @@
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
 		 */
 		ajax: function (attrs) {
-			this._normalizeAttributes(attrs);
+			this._initializeDefaults(attrs);
 
 			var res = Wicket.channelManager.schedule(attrs.ch, Wicket.bind(function () {
 				this.doAjax(attrs);
@@ -432,7 +448,7 @@
 					data = jQuery.extend({}, data, {scName: 1});
 				}
 
-			} else if (attrs.c) {
+			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
 				data = jQuery.extend({}, data, Wicket.Form.serializeElement(el));
@@ -444,7 +460,7 @@
 			// execute the request 
 			jQuery.ajax({
 				url: attrs.u,
-				type: attrs.m || 'GET',
+				type: attrs.m,
 				context: self,
 				beforeSend: function (jqXHR, settings) {
 
@@ -467,6 +483,7 @@
 						}
 					}
 
+					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
 					self._executeHandlers(attrs.bh, attrs, jqXHR, settings);
 
 					if (attrs.i) {
@@ -476,8 +493,8 @@
 				},
 				data: data,
 				dataType: attrs.dt,
-				async: attrs.async || true,
-				timeout: attrs.rt || 0,
+				async: attrs.async,
+				timeout: attrs.rt,
 				headers: headers,
 				success: function(data, textStatus, jqXHR) {
 
@@ -486,11 +503,13 @@
 					} else {
 						self._executeHandlers(attrs.sh, data, textStatus, jqXHR, attrs);
 					}
+					Wicket.Event.publish('/ajax/call/success', data, textStatus, jqXHR, attrs);
 
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 
 					self.failure(errorThrown, attrs, jqXHR, textStatus);
+					Wicket.Event.publish('/ajax/call/failure', errorThrown, attrs, jqXHR, textStatus);
 
 				},
 				complete: function (jqXHR, textStatus) {
@@ -499,6 +518,7 @@
 					}
 
 					self._executeHandlers(attrs.coh, jqXHR, textStatus, attrs);
+					Wicket.Event.publish('/ajax/call/complete', jqXHR, textStatus, attrs);
 
 					this.done();
 				}
@@ -506,14 +526,13 @@
 
 			// execute after handlers right after the Ajax request is fired
 			self._executeHandlers(attrs.ah, attrs);
+			Wicket.Event.publish('/ajax/call/after', attrs);
 
-			var allowDefault = attrs.ad || false; 
-
-			if (!allowDefault && attrs.event) {
-				Wicket.Event.fix(attrs.event).preventDefault();
+			if (!attrs.ad && attrs.event) {
+				attrs.event.preventDefault();
 			}
 
-			return allowDefault;
+			return attrs.ad;
 		},
 
 		// Method that processes the <ajax-response>
@@ -632,9 +651,6 @@
 				var $btn = jQuery("<input type='hidden' name='" + attrs.sc + "' id='" + iframe.id + "-btn' value='1'/>");
 				form.appendChild($btn[0]);
 			}
-
-			// invoke pre call handlers
-			Wicket.Ajax.invokePreCallHandlers();
 
 			//submit the form into the iframe, response will be handled by the onload callback
 			form.submit();
@@ -760,8 +776,7 @@
 
 				this._executeHandlers(attrs.sh, null, 'success', null, attrs);
 
-				Wicket.Ajax.invokePostCallHandlers();
-				// retach the events to the new components (a bit blunt method...)
+				// re-attach the events to the new components (a bit blunt method...)
 				// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
 				// IE this will cause double events for everything.. (mostly because of the jQuery.proxy(element))
 				Wicket.Focus.attachFocusEvent();
@@ -782,8 +797,6 @@
 				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
 			}
 			this._executeHandlers(attrs.fh, attrs);
-			Wicket.Ajax.invokePostCallHandlers();
-			Wicket.Ajax.invokeFailureHandlers();
 		},
 
 		done: function () {
@@ -1358,61 +1371,12 @@
 		},
 
 		/**
-		 * The Ajax class handles low level details of creating and pooling XmlHttpRequest objects,
+		 * The Ajax class handles low level details of creating XmlHttpRequest objects,
 		 * as well as registering and execution of pre-call, post-call and failure handlers.
 		 */
 		 Ajax: {
 
 			Call: Wicket.Ajax.Call,
-
-			preCallHandlers: [],
-			postCallHandlers: [],
-			failureHandlers: [],
-
-			registerPreCallHandler: function (handler) {
-				var h = Wicket.Ajax.preCallHandlers;
-				h.push(handler);
-			},
-
-			registerPostCallHandler: function (handler) {
-				var h = Wicket.Ajax.postCallHandlers;
-				h.push(handler);
-			},
-
-			registerFailureHandler: function (handler) {
-				var h = Wicket.Ajax.failureHandlers;
-				h.push(handler);
-			},
-
-			invokePreCallHandlers: function () {
-				var h = Wicket.Ajax.preCallHandlers;
-				if (h.length > 0) {
-					Wicket.Log.info("Invoking pre-call handler(s)...");
-				}
-				for (var i = 0; i < h.length; ++i) {
-					h[i]();
-				}
-			},
-
-			invokePostCallHandlers: function () {
-				var h = Wicket.Ajax.postCallHandlers;
-				if (h.length > 0) {
-					Wicket.Log.info("Invoking post-call handler(s)...");
-				}
-				for (var i = 0; i < h.length; ++i) {
-					h[i]();
-				}
-			},
-
-			invokeFailureHandlers: function () {
-				var h = Wicket.Ajax.failureHandlers;
-				if (h.length > 0) {
-					Wicket.Log.info("Invoking failure handler(s)...");
-				}
-				for (var i = 0; i < h.length; ++i) {
-					h[i]();
-				}
-			},
 
 			get: function (attrs) {
 
@@ -1430,17 +1394,17 @@
 
 			ajax: function(attrs) {
 
-				var target	= attrs.c || window;
-				var events	= attrs.e || [ 'domready' ];
+				attrs.c = attrs.c || window;
+				attrs.e = attrs.e || [ 'domready' ];
 
-				if (!jQuery.isArray(events)) {
-					events = [ events ];
+				if (!jQuery.isArray(attrs.e)) {
+					attrs.e = [ attrs.e ];
 				}
 
-				jQuery.each(events, function (idx, evt) {
-					Wicket.Event.add(target, evt, function (jqEvent) {
+				jQuery.each(attrs.e, function (idx, evt) {
+					Wicket.Event.add(attrs.c, evt, function (jqEvent) {
 						var call = new Wicket.Ajax.Call();
-						attrs.event = jqEvent;
+						attrs.event = Wicket.Event.fix(jqEvent);
 
 						var throttlingSettings = attrs.tr;
 						if (throttlingSettings) {
@@ -2331,32 +2295,5 @@
 	// MISC FUNCTIONS
 
 	Wicket.Event.add(window, 'domready', Wicket.Focus.attachFocusEvent);
-
-	Wicket.Ajax.registerPreCallHandler(function () {
-		if (typeof(window.wicketGlobalPreCallHandler) !== "undefined") {
-			var global = window.wicketGlobalPreCallHandler;
-			if (global !== null) {
-				global();
-			}
-		}
-	});
-
-	Wicket.Ajax.registerPostCallHandler(function () {
-		if (typeof(window.wicketGlobalPostCallHandler) !== "undefined") {
-			var global = window.wicketGlobalPostCallHandler;
-			if (global !== null) {
-				global();
-			}
-		}
-	});
-
-	Wicket.Ajax.registerFailureHandler(function () {
-		if (typeof(window.wicketGlobalFailureHandler) !== "undefined") {
-			var global = window.wicketGlobalFailureHandler;
-			if (global !== null) {
-				global();
-			}
-		}
-	});
 
 })();

@@ -20,8 +20,7 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
@@ -93,17 +92,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 
 			/**
 			 * 
-			 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
-			 */
-			@Override
-			protected IAjaxCallDecorator getAjaxCallDecorator()
-			{
-				return new CancelEventIfNoAjaxDecorator(
-					AjaxFallbackLink.this.getAjaxCallDecorator());
-			}
-
-			/**
-			 * 
 			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
 			 */
 			@Override
@@ -121,7 +109,21 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 			{
 				return AjaxFallbackLink.this.getChannel();
 			}
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+				AjaxFallbackLink.this.updateAjaxAttributes(attributes);
+			}
 		};
+	}
+
+	/**
+	 * @param attributes
+	 */
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**
@@ -130,16 +132,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 */
 	@Deprecated
 	protected AjaxChannel getChannel()
-	{
-		return null;
-	}
-
-	/**
-	 * 
-	 * @return call decorator to use or null if none
-	 */
-	@Deprecated
-	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return null;
 	}

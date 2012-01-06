@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.markup.html.border.Border;
@@ -73,13 +73,13 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param id
 	 * @param property
 	 * @param stateLocator
-	 * @param decorator
+	 * @param ajaxCallListener
 	 */
 	public AjaxFallbackOrderByBorder(final String id, final String property,
-		final ISortStateLocator stateLocator, final IAjaxCallDecorator decorator)
+		final ISortStateLocator stateLocator, final IAjaxCallListener ajaxCallListener)
 	{
 		this(id, property, stateLocator, AjaxFallbackOrderByLink.DefaultCssProvider.getInstance(),
-			decorator);
+			ajaxCallListener);
 	}
 
 
@@ -90,15 +90,15 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param property
 	 * @param stateLocator
 	 * @param cssProvider
-	 * @param decorator
+	 * @param ajaxCallListener
 	 */
 	public AjaxFallbackOrderByBorder(final String id, final String property,
 		final ISortStateLocator stateLocator,
-		final AjaxFallbackOrderByLink.ICssProvider cssProvider, final IAjaxCallDecorator decorator)
+		final AjaxFallbackOrderByLink.ICssProvider cssProvider, final IAjaxCallListener ajaxCallListener)
 	{
 		super(id);
 		AjaxFallbackOrderByLink link = new AjaxFallbackOrderByLink("orderByLink", property,
-			stateLocator, cssProvider, decorator)
+			stateLocator, cssProvider, ajaxCallListener)
 		{
 
 			private static final long serialVersionUID = 1L;

@@ -553,7 +553,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             }
             if (popup.style.width == "auto") {
                 var newW = popup.offsetWidth - containerBorderWidths[0];
-                popup.style.width = (newW >= 0 ? newW : popup.offsetWidth)+'px';
+             	popup.style.width = (newW >= 0 ? (newW + (popup.scrollWidth-popup.clientWidth)) : popup.offsetWidth)+'px';
             }
         } else {
             leftPosition = inputPosition[0];

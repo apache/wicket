@@ -18,15 +18,12 @@ package org.apache.wicket.ajax.markup.html.form;
 
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * A button that submits the form via ajax.
@@ -114,16 +111,6 @@ public abstract class AjaxButton extends Button
 				AjaxButton.this.onError(target, AjaxButton.this.getForm());
 			}
 
-			/**
-			 * 
-			 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
-			 */
-			@Override
-			protected IAjaxCallDecorator getAjaxCallDecorator()
-			{
-				return AjaxButton.this.getAjaxCallDecorator();
-			}
-
 			@Override
 			protected AjaxChannel getChannel()
 			{
@@ -166,19 +153,6 @@ public abstract class AjaxButton extends Button
 		{
 			return super.getForm();
 		}
-	}
-
-
-	/**
-	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the generated javascript.
-	 * This is the preferred way of changing the javascript in the onclick handler
-	 * 
-	 * @return call decorator used to modify the generated javascript or null for none
-	 */
-	@Deprecated
-	protected IAjaxCallDecorator getAjaxCallDecorator()
-	{
-		return null;
 	}
 
 	/**

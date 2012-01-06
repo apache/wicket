@@ -27,7 +27,7 @@ import org.apache.wicket.util.lang.Packages;
 
 /**
  * A derivation of VelocityContributor that uses
- * {@link org.apache.wicket.markup.head.IHeaderResponse#renderJavaScript(CharSequence, String)}
+ * {@link org.apache.wicket.markup.head.IHeaderResponse#render(org.apache.wicket.markup.head.HeaderItem)}
  */
 public class VelocityJavaScriptContributor extends VelocityContributor
 {

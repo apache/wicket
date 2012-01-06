@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.table;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort.AjaxFallbackOrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -56,7 +56,7 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	protected WebMarkupContainer newSortableHeader(final String borderId, final String property,
 		final ISortStateLocator locator)
 	{
-		return new AjaxFallbackOrderByBorder(borderId, property, locator, getAjaxCallDecorator())
+		return new AjaxFallbackOrderByBorder(borderId, property, locator, getAjaxCallListener())
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -80,7 +80,7 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	 * 
 	 * @return decorator or null for none
 	 */
-	protected IAjaxCallDecorator getAjaxCallDecorator()
+	protected IAjaxCallListener getAjaxCallListener()
 	{
 		return null;
 	}

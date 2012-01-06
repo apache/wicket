@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * A link that submits a form via ajax. Since this link takes the form as a constructor argument it
@@ -76,12 +74,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			}
 
 			@Override
-			protected IAjaxCallDecorator getAjaxCallDecorator()
-			{
-				return AjaxSubmitLink.this.getAjaxCallDecorator();
-			}
-
-			@Override
 			protected Form<?> findForm()
 			{
 				return AjaxSubmitLink.this.getForm();
@@ -115,18 +107,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
-	}
-
-	/**
-	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the generated javascript.
-	 * This is the preferred way of changing the javascript in the onclick handler
-	 * 
-	 * @return call decorator used to modify the generated javascript or null for none
-	 */
-	@Deprecated
-	protected IAjaxCallDecorator getAjaxCallDecorator()
-	{
-		return null;
 	}
 
 	@Override

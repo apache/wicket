@@ -47,8 +47,7 @@ public class WicketExampleRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * @see org.apache.wicket.RequestCycle#onRuntimeException(org.apache.wicket.Page,
-	 *      java.lang.RuntimeException)
+	 * @see RequestCycle#handleException(Exception)
 	 */
 	@Override
 	public IRequestHandler handleException(final Exception e)
@@ -64,7 +63,7 @@ public class WicketExampleRequestCycle extends RequestCycle
 
 	/**
 	 * Checks to see if the request was ajax based. If so we send a 404 so that the
-	 * org.apache.wicket.ajax.IAjaxCallDecorator failure script is executed.
+	 * {@link org.apache.wicket.ajax.attributes.IAjaxCallListener#getFailureHandler(org.apache.wicket.Component)} failure script} is executed.
 	 * 
 	 * @param e
 	 */

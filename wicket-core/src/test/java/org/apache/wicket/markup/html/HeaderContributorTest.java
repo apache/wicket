@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.markup.html;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -32,8 +31,10 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
- * Tests that {@link Component}, {@link Behavior} and {@link IAjaxCallDecorator} that implements
+ * Tests that {@link Component}, {@link Behavior} and {@link org.apache.wicket.ajax.attributes.IAjaxCallListener} that implements
  * {@link IHeaderContributor} actually contributes to the header
  */
 public class HeaderContributorTest extends WicketTestCase
@@ -88,11 +89,11 @@ public class HeaderContributorTest extends WicketTestCase
 				}
 
 				@Override
-				protected IAjaxCallDecorator getAjaxCallDecorator()
+				protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 				{
-					return new HeaderContributingCallDecorator(callDecorator);
+					super.updateAjaxAttributes(attributes);
+					attributes.getAjaxCallListeners().add(new HeaderContributingCallDecorator(callDecorator));
 				}
-
 			});
 		}
 
@@ -115,8 +116,9 @@ public class HeaderContributorTest extends WicketTestCase
 	 * 
 	 */
 	public static class HeaderContributingCallDecorator
+		extends
+			AjaxCallListener
 		implements
-			IAjaxCallDecorator,
 			IComponentAwareHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
@@ -138,24 +140,5 @@ public class HeaderContributorTest extends WicketTestCase
 		{
 			callDecorator.set(true);
 		}
-
-		@Override
-		public CharSequence decorateScript(Component component, CharSequence script)
-		{
-			return null;
-		}
-
-		@Override
-		public CharSequence decorateOnSuccessScript(Component component, CharSequence script)
-		{
-			return null;
-		}
-
-		@Override
-		public CharSequence decorateOnFailureScript(Component component, CharSequence script)
-		{
-			return null;
-		}
-
 	}
 }

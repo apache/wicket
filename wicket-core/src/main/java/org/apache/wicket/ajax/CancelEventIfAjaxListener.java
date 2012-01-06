@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax.calldecorator;
+package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 
 /**
@@ -29,37 +29,18 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
  * 
  * @see AjaxFallbackLink
  * 
- * @since 1.2
+ * @since 6.0
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-@Deprecated
-public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDecorator
+public final class CancelEventIfAjaxListener extends AjaxCallListener
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Construct.
-	 */
-	public CancelEventIfNoAjaxDecorator()
-	{
-		this(null);
-	}
-
-	/**
-	 * Constructors that allows chaining of another decorator
-	 * 
-	 * @param delegate
-	 */
-	public CancelEventIfNoAjaxDecorator(IAjaxCallDecorator delegate)
-	{
-		super(delegate);
-	}
-
 	@Override
-	public final CharSequence postDecorateScript(Component c, CharSequence script)
+	public CharSequence getBeforeHandler(Component component)
 	{
-		return script + "return !" + IAjaxCallDecorator.WICKET_CALL_RESULT_VAR + ";";
+		return "if (attrs.event) { attrs.event.preventDefault(); }";
 	}
 }
