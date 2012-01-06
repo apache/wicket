@@ -20,6 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
@@ -89,4 +90,17 @@ public class StatelessFormTest extends WicketTestCase
 		assertTrue(page.isPanelInitialized());
 	}
 
+	/**
+	 * Tests if a stateless form renders an action url containing the pageparameters
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void pageWithParameters() throws Exception
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.add("first", "foo");
+		parameters.add("second", "bar");
+		executeTest(StatelessPageWithForm.class, parameters, "StatelessPageWithForm_expected.html");
+	}
 }
