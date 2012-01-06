@@ -352,7 +352,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	public void renderJavaScriptReference(final ResourceReference reference,
 		final PageParameters pageParameters, final String id, final boolean defer)
 	{
-		forJavaScript(new Runnable()
+		forReference(reference, new Runnable()
 		{
 			public void run()
 			{
@@ -366,7 +366,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		final PageParameters pageParameters, final String id, final boolean defer,
 		final String charset)
 	{
-		forJavaScript(new Runnable()
+		forReference(reference, new Runnable()
 		{
 			public void run()
 			{
