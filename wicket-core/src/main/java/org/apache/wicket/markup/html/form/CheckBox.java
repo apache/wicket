@@ -43,6 +43,11 @@ import org.apache.wicket.util.convert.IConverter;
  * You can can extend this class and override method wantOnSelectionChangedNotifications() to force
  * server roundtrips on each selection change.
  * </p>
+ * <p>
+ * A CheckBox always has a valid therefore values from methods
+ * {@link FormComponent#setRequired(boolean)} and {@link FormComponent#isRequired()} are not taken
+ * into account.
+ * </p>
  * 
  * @author Jonathan Locke
  */
@@ -244,6 +249,13 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		{
 			return value.toString();
 		}
+	}
+
+	@Override
+	public boolean checkRequired()
+	{
+		// a checkbox always has a value so this check always passes
+		return true;
 	}
 
 }
