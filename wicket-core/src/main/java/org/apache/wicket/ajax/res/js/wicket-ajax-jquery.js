@@ -483,6 +483,7 @@
 						}
 					}
 
+					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
 					self._executeHandlers(attrs.bh, attrs, jqXHR, settings);
 
 					if (attrs.i) {
@@ -502,11 +503,13 @@
 					} else {
 						self._executeHandlers(attrs.sh, data, textStatus, jqXHR, attrs);
 					}
+					Wicket.Event.publish('/ajax/call/success', data, textStatus, jqXHR, attrs);
 
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 
 					self.failure(errorThrown, attrs, jqXHR, textStatus);
+					Wicket.Event.publish('/ajax/call/failure', errorThrown, attrs, jqXHR, textStatus);
 
 				},
 				complete: function (jqXHR, textStatus) {
@@ -515,6 +518,7 @@
 					}
 
 					self._executeHandlers(attrs.coh, jqXHR, textStatus, attrs);
+					Wicket.Event.publish('/ajax/call/complete', jqXHR, textStatus, attrs);
 
 					this.done();
 				}
@@ -522,6 +526,7 @@
 
 			// execute after handlers right after the Ajax request is fired
 			self._executeHandlers(attrs.ah, attrs);
+			Wicket.Event.publish('/ajax/call/after', attrs);
 
 			if (!attrs.ad && attrs.event) {
 				attrs.event.preventDefault();
@@ -647,9 +652,6 @@
 				form.appendChild($btn[0]);
 			}
 
-			// invoke pre call handlers
-			Wicket.Ajax.invokePreCallHandlers();
-
 			//submit the form into the iframe, response will be handled by the onload callback
 			form.submit();
 
@@ -774,8 +776,7 @@
 
 				this._executeHandlers(attrs.sh, null, 'success', null, attrs);
 
-				Wicket.Ajax.invokePostCallHandlers();
-				// retach the events to the new components (a bit blunt method...)
+				// re-attach the events to the new components (a bit blunt method...)
 				// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
 				// IE this will cause double events for everything.. (mostly because of the jQuery.proxy(element))
 				Wicket.Focus.attachFocusEvent();
@@ -796,8 +797,6 @@
 				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
 			}
 			this._executeHandlers(attrs.fh, attrs);
-			Wicket.Ajax.invokePostCallHandlers();
-			Wicket.Ajax.invokeFailureHandlers();
 		},
 
 		done: function () {
@@ -1372,61 +1371,12 @@
 		},
 
 		/**
-		 * The Ajax class handles low level details of creating and pooling XmlHttpRequest objects,
+		 * The Ajax class handles low level details of creating XmlHttpRequest objects,
 		 * as well as registering and execution of pre-call, post-call and failure handlers.
 		 */
 		 Ajax: {
 
 			Call: Wicket.Ajax.Call,
-
-			preCallHandlers: [],
-			postCallHandlers: [],
-			failureHandlers: [],
-
-			registerPreCallHandler: function (handler) {
-				var h = Wicket.Ajax.preCallHandlers;
-				h.push(handler);
-			},
-
-			registerPostCallHandler: function (handler) {
-				var h = Wicket.Ajax.postCallHandlers;
-				h.push(handler);
-			},
-
-			registerFailureHandler: function (handler) {
-				var h = Wicket.Ajax.failureHandlers;
-				h.push(handler);
-			},
-
-			invokePreCallHandlers: function () {
-				var h = Wicket.Ajax.preCallHandlers;
-				if (h.length > 0) {
-					Wicket.Log.info("Invoking pre-call handler(s)...");
-				}
-				for (var i = 0; i < h.length; ++i) {
-					h[i]();
-				}
-			},
-
-			invokePostCallHandlers: function () {
-				var h = Wicket.Ajax.postCallHandlers;
-				if (h.length > 0) {
-					Wicket.Log.info("Invoking post-call handler(s)...");
-				}
-				for (var i = 0; i < h.length; ++i) {
-					h[i]();
-				}
-			},
-
-			invokeFailureHandlers: function () {
-				var h = Wicket.Ajax.failureHandlers;
-				if (h.length > 0) {
-					Wicket.Log.info("Invoking failure handler(s)...");
-				}
-				for (var i = 0; i < h.length; ++i) {
-					h[i]();
-				}
-			},
 
 			get: function (attrs) {
 
@@ -2345,32 +2295,5 @@
 	// MISC FUNCTIONS
 
 	Wicket.Event.add(window, 'domready', Wicket.Focus.attachFocusEvent);
-
-	Wicket.Ajax.registerPreCallHandler(function () {
-		if (typeof(window.wicketGlobalPreCallHandler) !== "undefined") {
-			var global = window.wicketGlobalPreCallHandler;
-			if (global !== null) {
-				global();
-			}
-		}
-	});
-
-	Wicket.Ajax.registerPostCallHandler(function () {
-		if (typeof(window.wicketGlobalPostCallHandler) !== "undefined") {
-			var global = window.wicketGlobalPostCallHandler;
-			if (global !== null) {
-				global();
-			}
-		}
-	});
-
-	Wicket.Ajax.registerFailureHandler(function () {
-		if (typeof(window.wicketGlobalFailureHandler) !== "undefined") {
-			var global = window.wicketGlobalFailureHandler;
-			if (global !== null) {
-				global();
-			}
-		}
-	});
 
 })();
