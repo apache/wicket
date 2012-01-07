@@ -48,10 +48,10 @@ import org.apache.wicket.request.Url;
  * exception occurred during the request processing, any of the following can be called:
  * </p>
  * <ul>
- * <li>{@link #onRequestHandlerResolved(IRequestHandler)}</li>
- * <li>{@link #onRequestHandlerScheduled(IRequestHandler)}</li>
+ * <li>{@link #onRequestHandlerResolved(RequestCycle, org.apache.wicket.request.IRequestHandler)}</li>
+ * <li>{@link #onRequestHandlerScheduled(RequestCycle, org.apache.wicket.request.IRequestHandler)}</li>
  * <li>{@link #onException(RequestCycle, Exception)}, followed by
- * {@link #onExceptionRequestHandlerResolved(IRequestHandler, Exception)}</li>
+ * {@link #onExceptionRequestHandlerResolved(RequestCycle, org.apache.wicket.request.IRequestHandler, Exception)} </li>
  * </ul>
  * 
  * <h3>Implementing your own</h3>
@@ -94,7 +94,7 @@ import org.apache.wicket.request.Url;
  * @author Martijn Dashorst
  * 
  * @see AbstractRequestCycleListener
- * @see Application#addRequestCycleListener(IRequestCycleListener)
+ * @see org.apache.wicket.Application#getRequestCycleListeners()
  */
 public interface IRequestCycleListener
 {
@@ -142,8 +142,8 @@ public interface IRequestCycleListener
 	 * Called when there is an exception in the request cycle that would normally be handled by
 	 * {@link RequestCycle#handleException(Exception)}
 	 * 
-	 * Note that in the event of an exception, {@link #onEndRequest()} will still be called after
-	 * these listeners have {@link #onException(Exception)} called
+	 * Note that in the event of an exception, {@link #onEndRequest(RequestCycle)} will still be called after
+	 * these listeners have {@link #onException(RequestCycle, Exception)} called
 	 * 
 	 * @param cycle
 	 * 
