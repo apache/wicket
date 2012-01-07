@@ -1311,6 +1311,7 @@ public class BaseWicketTester
 		}
 		catch (Exception e)
 		{
+			log.error(e.getMessage(), e);
 			fail(e.getMessage());
 		}
 
