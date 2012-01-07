@@ -472,7 +472,7 @@ public abstract class AbstractResource implements IResource
 	 * @see org.apache.wicket.request.resource.IResource#respond(org.apache.wicket.request.resource.IResource.Attributes)
 	 */
 	@Override
-	public final void respond(final Attributes attributes)
+	public void respond(final Attributes attributes)
 	{
 		// Get a "new" ResourceResponse to write a response
 		ResourceResponse data = newResourceResponse(attributes);
