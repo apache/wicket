@@ -214,6 +214,40 @@ public class StringResourceModelTest extends WicketTestCase
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4323
+	 */
+	@Test
+	public void detachSubstituteModelFromAssignmentWrapper()
+	{
+		IModel<WeatherStation> nullOnDetachModel = new Model<WeatherStation>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void detach()
+			{
+				setObject(null);
+			}
+		};
+
+		nullOnDetachModel.setObject(ws);
+		Label label1 = new Label("resourceModelWithComponent", new StringResourceModel(
+			"wrappedOnAssignment.text", page, nullOnDetachModel));
+		page.add(label1);
+		label1.getDefaultModelObject();
+		label1.detach();
+		Assert.assertNull(nullOnDetachModel.getObject());
+
+		nullOnDetachModel.setObject(ws);
+		Label label2 = new Label("resourceModelWithoutComponent", new StringResourceModel(
+			"wrappedOnAssignment.text", nullOnDetachModel));
+		page.add(label2);
+		label2.getDefaultModelObject();
+		label2.detach();
+		Assert.assertNull(nullOnDetachModel.getObject());
+	}
+
+	/**
 	 * Inner class used for testing.
 	 */
 	public static class WeatherStation implements Serializable

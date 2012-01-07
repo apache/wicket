@@ -233,6 +233,15 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		}
 
 		@Override
+		protected void onDetach()
+		{
+			if (StringResourceModel.this.component == null)
+			{
+				StringResourceModel.this.onDetach();
+			}
+		}
+
+		@Override
 		protected String load()
 		{
 			if (StringResourceModel.this.component != null)
@@ -582,6 +591,8 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	@Override
 	protected final void onDetach()
 	{
+		super.onDetach();
+
 		// detach any model
 		if (model != null)
 		{
