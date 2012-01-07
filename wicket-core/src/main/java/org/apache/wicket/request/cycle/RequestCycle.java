@@ -737,6 +737,33 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
+	 * Finds a IRequestHandler which is either the currently executing handler or
+	 * is scheduled to be executed.
+	 *
+	 * @return the found IRequestHandler or {@code null}
+	 */
+	public <T extends IRequestHandler> T find(final Class<T> type)
+	{
+		if (type == null)
+		{
+			return null;
+		}
+
+		IRequestHandler result = getActiveRequestHandler();
+
+		if (result == null || type.isAssignableFrom(result.getClass()) == false)
+		{
+			result = getRequestHandlerScheduledAfterCurrent();
+			if (result == null || result.getClass().isAssignableFrom(type) == false)
+			{
+				result = null;
+			}
+		}
+
+		return (T) result;
+	}
+
+	/**
 	 * Adapts {@link RequestHandlerStack} to this {@link RequestCycle}
 	 * 
 	 * @author Igor Vaynberg

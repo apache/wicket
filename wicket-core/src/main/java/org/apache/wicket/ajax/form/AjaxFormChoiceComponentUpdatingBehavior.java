@@ -21,13 +21,13 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -88,7 +88,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 	/**
 	 * Called to handle any error resulting from updating form component. Errors thrown from
-	 * {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * {@link #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)} will not be caught here.
 	 * 
 	 * The RuntimeException will be null if it was just a validation or conversion error of the
 	 * FormComponent

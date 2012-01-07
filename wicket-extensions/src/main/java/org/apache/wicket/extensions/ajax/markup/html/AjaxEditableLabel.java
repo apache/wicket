@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -37,20 +39,18 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.validation.IValidator;
 
-import java.io.Serializable;
-
 /**
  * An implementation of ajaxified edit-in-place component using a {@link TextField} as it's editor.
  * <p>
  * There are several methods that can be overridden for customization.
  * <ul>
- * <li>{@link #onEdit(AjaxRequestTarget)} is called when the label is clicked and the editor is to
+ * <li>{@link #onEdit(org.apache.wicket.ajax.AjaxRequestTarget)} is called when the label is clicked and the editor is to
  * be displayed. The default implementation switches the label for the editor and places the caret
  * at the end of the text.</li>
- * <li>{@link #onSubmit(AjaxRequestTarget)} is called when in edit mode, the user submitted new
+ * <li>{@link #onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)} is called when in edit mode, the user submitted new
  * content, that content validated well, and the model value successfully updated. This
  * implementation also clears any <code>window.status</code> set.</li>
- * <li>{@link #onError(AjaxRequestTarget)} is called when in edit mode, the user submitted new
+ * <li>{@link #onError(org.apache.wicket.ajax.AjaxRequestTarget)} is called when in edit mode, the user submitted new
  * content, but that content did not validate. Get the current input by calling
  * {@link FormComponent#getInput()} on {@link #getEditor()}, and the error message by calling:
  * 
@@ -61,7 +61,7 @@ import java.io.Serializable;
  * The default implementation of this method displays the error message in
  * <code>window.status</code>, redisplays the editor, selects the editor's content and sets the
  * focus on it.
- * <li>{@link #onCancel(AjaxRequestTarget)} is called when in edit mode, the user choose not to
+ * <li>{@link #onCancel(org.apache.wicket.ajax.AjaxRequestTarget)} is called when in edit mode, the user choose not to
  * submit the contents (he/she pressed escape). The default implementation displays the label again
  * without any further action.</li>
  * </ul>
@@ -94,7 +94,7 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 			super.renderHead(component, response);
 
-			AjaxRequestTarget target = AjaxRequestTarget.get();
+			AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
 			if (target != null)
 			{
 				AjaxRequestAttributes attributes = getAttributes();

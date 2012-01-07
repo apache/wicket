@@ -228,7 +228,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 
 	protected void render(HeaderItem item, List<HeaderItem> filteredItems)
 	{
-		if (AjaxRequestTarget.get() != null)
+		if (RequestCycle.get().find(AjaxRequestTarget.class) != null)
 		{
 			// we're in an ajax request, so we don't filter and separate stuff....
 			getRealResponse().render(item);

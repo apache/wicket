@@ -125,7 +125,7 @@ public class NonCachingImage extends Image
 		super.onComponentTag(tag);
 
 		// the parameter is already added for Ajax requests by the super call
-		if (AjaxRequestTarget.get() == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
 		{
 			addAntiCacheParameter(tag);
 		}

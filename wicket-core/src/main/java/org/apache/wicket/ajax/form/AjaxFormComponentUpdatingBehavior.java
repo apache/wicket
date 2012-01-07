@@ -19,12 +19,11 @@ package org.apache.wicket.ajax.form;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,7 +190,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 
 	/**
 	 * Called to handle any error resulting from updating form component. Errors thrown from
-	 * {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * {@link #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)} will not be caught here.
 	 * 
 	 * The RuntimeException will be null if it was just a validation or conversion error of the
 	 * FormComponent

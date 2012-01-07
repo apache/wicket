@@ -23,7 +23,6 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 
 import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;

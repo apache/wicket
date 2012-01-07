@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.model.IDetachable;
@@ -129,7 +128,7 @@ final class Behaviors implements IDetachable
 	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
 	 * 
 	 * Traverses all behaviors and calls detachModel() on them. This is needed to cleanup behavior
-	 * after render. This method is necessary for {@link AjaxRequestTarget} to be able to cleanup
+	 * after render. This method is necessary for {@link org.apache.wicket.ajax.AjaxRequestTarget} to be able to cleanup
 	 * component's behaviors after header contribution has been done (which is separated from
 	 * component render).
 	 */

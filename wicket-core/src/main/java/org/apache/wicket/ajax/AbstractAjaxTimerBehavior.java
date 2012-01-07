@@ -52,11 +52,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	public AbstractAjaxTimerBehavior(final Duration updateInterval)
 	{
-		if (updateInterval == null || updateInterval.getMilliseconds() <= 0)
-		{
-			throw new IllegalArgumentException("Invalid update interval");
-		}
-		this.updateInterval = updateInterval;
+		setUpdateInterval(updateInterval);
 	}
 
 	/**
@@ -132,7 +128,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	
 	/**
 	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(AjaxRequestTarget)
 	 */
 	@Override
 	protected final void respond(final AjaxRequestTarget target)

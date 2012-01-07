@@ -29,8 +29,9 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTargetListenerCollection;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.AutoLabelResolver;
@@ -866,9 +867,9 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Returns the provider for {@link AjaxRequestTarget} objects.
+	 * Returns the provider for {@link org.apache.wicket.ajax.AjaxRequestTarget} objects.
 	 * 
-	 * @return the provider for {@link AjaxRequestTarget} objects.
+	 * @return the provider for {@link org.apache.wicket.ajax.AjaxRequestTarget} objects.
 	 */
 	public IContextProvider<AjaxRequestTarget, Page> getAjaxRequestTargetProvider()
 	{
@@ -876,21 +877,21 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Sets the provider for {@link AjaxRequestTarget} objects.
+	 * Sets the provider for {@link org.apache.wicket.ajax.AjaxRequestTarget} objects.
 	 * 
 	 * @param ajaxRequestTargetProvider
 	 *            the new provider
 	 */
 	public void setAjaxRequestTargetProvider(
-		IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
+			IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
 	{
 		this.ajaxRequestTargetProvider = ajaxRequestTargetProvider;
 	}
 
 	/**
-	 * Returns the registered {@link AjaxRequestTarget.IListener} objects.
+	 * Returns the registered {@link org.apache.wicket.ajax.AjaxRequestTarget.IListener} objects.
 	 * 
-	 * @return the registered {@link AjaxRequestTarget.IListener} objects.
+	 * @return the registered {@link org.apache.wicket.ajax.AjaxRequestTarget.IListener} objects.
 	 */
 	public AjaxRequestTargetListenerCollection getAjaxRequestTargetListeners()
 	{
@@ -902,9 +903,9 @@ public abstract class WebApplication extends Application
 			IContextProvider<AjaxRequestTarget, Page>
 	{
 		@Override
-		public AjaxRequestTarget get(Page context)
+		public AjaxRequestTarget get(Page page)
 		{
-			return new AjaxRequestTarget(context);
+			return new AjaxRequestHandler(page);
 		}
 	}
 

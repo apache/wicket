@@ -121,7 +121,7 @@ public abstract class AjaxFallbackButton extends Button
 	@Override
 	public final void onSubmit()
 	{
-		if (AjaxRequestTarget.get() == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
 		{
 			onSubmit(null, getForm());
 		}

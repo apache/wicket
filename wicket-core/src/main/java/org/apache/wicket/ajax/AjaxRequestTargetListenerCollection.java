@@ -20,7 +20,7 @@ import org.apache.wicket.util.listener.ListenerCollection;
 
 /**
  * A collection of {@link AjaxRequestTarget.IListener}s
- * 
+ *
  * @since 1.5
  */
 public class AjaxRequestTargetListenerCollection extends

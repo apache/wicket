@@ -30,6 +30,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.resource.CircularDependencyException;
 
 /**
@@ -259,11 +260,14 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		renderHeaderItems();
 
-		if (AjaxRequestTarget.get() == null)
+		if (RequestCycle.get().find(AjaxRequestTarget.class) == null)
+		{
 			renderCombinedEventScripts();
+		}
 		else
+		{
 			renderSeperateEventScripts();
-
+		}
 		super.close();
 	}
 

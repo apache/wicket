@@ -27,6 +27,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
@@ -34,7 +35,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -211,7 +211,7 @@ public abstract class BaseTree extends AbstractTree
 		}
 
 		/**
-		 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
+		 * @see org.apache.wicket.behavior.Behavior#afterRender(org.apache.wicket.Component)
 		 */
 		@Override
 		public void afterRender(final Component component)

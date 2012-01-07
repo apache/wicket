@@ -23,7 +23,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 /**
  * Test page for <a href="https://issues.apache.org/jira/browse/WICKET-3719">WICKET-3719</a>
  * 
- * @see TransparentWebMarkupContainerTest#testAjaxUpdate()
+ * @see TransparentWebMarkupContainerTest#ajaxUpdate()
  */
 public class TransparentWithAjaxUpdatePage extends WebPage
 {

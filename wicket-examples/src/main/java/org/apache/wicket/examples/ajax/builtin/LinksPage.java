@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,8 +30,6 @@ import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.settings.IExceptionSettings.AjaxErrorStrategy;
-
-import java.util.List;
 
 
 /**

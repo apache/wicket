@@ -17,14 +17,10 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.attributes.ThrottlingSettings;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -99,7 +95,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 			js.append(");");
 
-			AjaxRequestTarget target = AjaxRequestTarget.get();
+			AjaxRequestTarget target = getComponent().getRequestCycle().find(AjaxRequestTarget.class);
 			if (target == null)
 			{
 				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
@@ -130,7 +126,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 	/**
 	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(AjaxRequestTarget)
 	 */
 	@Override
 	protected final void respond(final AjaxRequestTarget target)

@@ -38,8 +38,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
@@ -1127,20 +1127,20 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * Convenience method that updates changed portions on tree. You can call this method during
-	 * Ajax response, where calling {@link #updateTree(AjaxRequestTarget)} would be appropriate, but
+	 * Ajax response, where calling {@link #updateTree(org.apache.wicket.ajax.AjaxRequestTarget)} would be appropriate, but
 	 * you don't have the AjaxRequestTarget instance. However, it is also safe to call this method
 	 * outside Ajax response.
 	 */
 	public final void updateTree()
 	{
-		AjaxRequestTarget handler = AjaxRequestTarget.get();
-		if (handler == null)
+		AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
+		if (target == null)
 		{
 			throw new WicketRuntimeException(
 				"No AjaxRequestTarget available to execute updateTree(ART target)");
 		}
 
-		updateTree(handler);
+		updateTree(target);
 	}
 
 	/**

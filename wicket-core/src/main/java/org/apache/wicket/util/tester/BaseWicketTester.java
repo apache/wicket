@@ -58,7 +58,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -1112,7 +1111,7 @@ public class BaseWicketTester
 
 		// prepare the request
 		request.setUrl(application.getRootRequestMapper().mapHandler(
-			new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
+				new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
 
 		// process the request
 		processRequest();
@@ -1635,7 +1634,7 @@ public class BaseWicketTester
 	public Result ifContains(String pattern)
 	{
 		return isTrue("pattern '" + pattern + "' not found in:\n" + getLastResponseAsString(),
-			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
+				getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -1648,7 +1647,7 @@ public class BaseWicketTester
 	public Result ifContainsNot(String pattern)
 	{
 		return isFalse("pattern '" + pattern + "' found",
-			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
+				getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -1918,8 +1917,8 @@ public class BaseWicketTester
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
 		return isTrue(
-			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+				"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
+				messages.isEmpty());
 	}
 
 	/**
@@ -2003,7 +2002,7 @@ public class BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link AjaxRequestTarget#add(org.apache.wicket.Component...)}. This method actually tests that a
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(org.apache.wicket.Component...)}. This method actually tests that a
 	 * <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
@@ -2105,8 +2104,8 @@ public class BaseWicketTester
 					checkUsability(component, true);
 
 					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
-						component.getClassRelativePath());
-					AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior)b;
+							component.getClassRelativePath());
+					AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior) b;
 					if (!timer.isStopped())
 					{
 						executeBehavior(timer);
