@@ -1104,6 +1104,7 @@ public class BaseWicketTester
 			AjaxFormSubmitBehavior formSubmitBehavior = (AjaxFormSubmitBehavior)behavior;
 			Form<?> form = formSubmitBehavior.getForm();
 			getRequest().setUseMultiPartContentType(form.isMultiPart());
+			serializeFormToRequest(form);
 		}
 
 		processRequest();
