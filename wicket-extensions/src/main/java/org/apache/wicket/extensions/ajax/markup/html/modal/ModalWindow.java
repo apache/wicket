@@ -673,7 +673,7 @@ public class ModalWindow extends Panel
 	 */
 	public ModalWindow setCookieName(final String cookieName)
 	{
-		if ((cookieName != null) && cookieName.contains(",") && cookieName.contains("|"))
+		if ((cookieName != null) && (cookieName.contains(",") || cookieName.contains("|")))
 		{
 			throw new IllegalArgumentException("Cookie name may not contain ',' or '|' characters.");
 		}
