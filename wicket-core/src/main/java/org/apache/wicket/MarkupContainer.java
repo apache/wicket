@@ -21,10 +21,8 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -256,8 +254,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		ComponentTag tag = null;
 
-		Map<Component, MarkupContainer> lateAdd = new HashMap<Component, MarkupContainer>();
-
 		while (markup.hasMore())
 		{
 			if (tag != null)
@@ -357,17 +353,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			if (child != null && child.getParent() == null)
 			{
-				if (parent.findParent(Page.class) != null)
-				{
-					// if the parent is linked to the page we will delay the lateadd call so
-					// onconfigure is now triggered on the child right away, but instead after its
-					// children have been resolved
-					lateAdd.put(child, parent);
-				}
-				else
-				{
-					lateAdd(parent, child);
-				}
+				parent.add(child);
 				// TODO do we need to continue unqueuing or can we skip this component
 				// and all its children if it has been deemed invisible? - dont think we can because
 				// that will leave components in the queue and ondetach() will bomb
@@ -425,26 +411,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// the child is not a container so we can skip its inner markup
 				markup.skipToMatchingCloseTag(tag);
 			}
-		}
-		for (Map.Entry<Component, MarkupContainer> delayed : lateAdd.entrySet())
-		{
-			lateAdd(delayed.getValue(), delayed.getKey());
-		}
-	}
-
-	private void lateAdd(MarkupContainer parent, Component queued)
-	{
-		parent.add(queued);
-
-		// at this point queued.onInitialize() wouldve been called by add()
-
-		if (parent.isVisibleInHierarchy())
-		{
-			// TODO hierarchy completion: this call may not be necessary because if we are alrady in
-			// render this will be called from markupcontainer.add()
-
-			// call configure() and onbeforerender() which are done from inside internalBeforeRender
-			queued.internalBeforeRender();
 		}
 	}
 
