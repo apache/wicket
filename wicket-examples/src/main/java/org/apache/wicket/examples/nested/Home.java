@@ -26,10 +26,10 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
+import org.apache.wicket.extensions.markup.html.tree.LinkType;
 import org.apache.wicket.extensions.markup.html.tree.Tree;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.tree.LinkType;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 

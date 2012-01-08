@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 import javax.swing.tree.TreeModel;
 
@@ -23,6 +23,7 @@ import org.apache.wicket.model.util.GenericBaseModel;
 /**
  * @author Timo Rantalaiho
  */
+@Deprecated
 public class WicketTreeModel extends GenericBaseModel<TreeModel>
 {
 	private static final long serialVersionUID = 1L;

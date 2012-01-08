@@ -23,16 +23,16 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.extensions.markup.html.tree.AbstractTree;
 import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
+import org.apache.wicket.extensions.markup.html.tree.WicketTreeModel;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.html.tree.AbstractTree;
-import org.apache.wicket.markup.html.tree.WicketTreeModel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -45,6 +45,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public class TreeTable extends DefaultAbstractTree
 {
 	/**
@@ -207,7 +208,7 @@ public class TreeTable extends DefaultAbstractTree
 			public void renderHead(final Component component, final IHeaderResponse response)
 			{
 				response.render(OnDomReadyHeaderItem.forScript("Wicket.TreeTable.attachUpdate(\"" +
-						getMarkupId() + "\")"));
+					getMarkupId() + "\")"));
 			}
 		});
 	}

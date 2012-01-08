@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -44,8 +44,8 @@ public class LinkIconPanel extends LabelIconPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.LabelIconPanel#addComponents(org.apache.wicket.model.IModel,
-	 *      org.apache.wicket.markup.html.tree.BaseTree)
+	 * @see org.apache.wicket.extensions.markup.html.tree.LabelIconPanel#addComponents(org.apache.wicket.model.IModel,
+	 *      org.apache.wicket.extensions.markup.html.tree.BaseTree)
 	 */
 	@Override
 	protected void addComponents(final IModel<Object> model, final BaseTree tree)

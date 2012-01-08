@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	private final Set<Object> selectedNodes = new HashSet<Object>();
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#addTreeStateListener(org.apache.wicket.markup.html.tree.ITreeStateListener)
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#addTreeStateListener(org.apache.wicket.extensions.markup.html.tree.ITreeStateListener)
 	 */
 	@Override
 	public void addTreeStateListener(ITreeStateListener l)
@@ -67,7 +67,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#collapseAll()
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#collapseAll()
 	 */
 	@Override
 	public void collapseAll()
@@ -104,7 +104,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#expandAll()
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#expandAll()
 	 */
 	@Override
 	public void expandAll()
@@ -141,7 +141,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#getSelectedNodes()
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#getSelectedNodes()
 	 */
 	@Override
 	public Collection<Object> getSelectedNodes()
@@ -155,7 +155,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#isAllowSelectMultiple()
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#isAllowSelectMultiple()
 	 */
 	@Override
 	public boolean isAllowSelectMultiple()
@@ -183,7 +183,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#removeTreeStateListener(org.apache.wicket.markup.html.tree.ITreeStateListener)
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#removeTreeStateListener(org.apache.wicket.extensions.markup.html.tree.ITreeStateListener)
 	 */
 	@Override
 	public void removeTreeStateListener(ITreeStateListener l)
@@ -268,7 +268,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#setAllowSelectMultiple(boolean)
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#setAllowSelectMultiple(boolean)
 	 */
 	@Override
 	public void setAllowSelectMultiple(boolean value)

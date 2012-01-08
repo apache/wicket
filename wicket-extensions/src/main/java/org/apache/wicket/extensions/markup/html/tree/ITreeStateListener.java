@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 import java.io.Serializable;
 
@@ -23,6 +23,7 @@ import java.io.Serializable;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public interface ITreeStateListener extends Serializable
 {
 	/**

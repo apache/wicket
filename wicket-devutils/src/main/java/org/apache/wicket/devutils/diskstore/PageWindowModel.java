@@ -22,7 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.markup.html.tree.AbstractTree;
+import org.apache.wicket.extensions.markup.html.tree.AbstractTree;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 import org.apache.wicket.serialize.ISerializer;

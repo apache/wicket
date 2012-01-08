@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
@@ -63,6 +63,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public abstract class AbstractTree extends Panel
 	implements
 		ITreeStateListener,
@@ -688,7 +689,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeCollapsed(Object)
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeStateListener#nodeCollapsed(Object)
 	 */
 	@Override
 	public final void nodeCollapsed(Object node)
@@ -700,7 +701,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(Object)
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeStateListener#nodeExpanded(Object)
 	 */
 	@Override
 	public final void nodeExpanded(Object node)
@@ -712,7 +713,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(Object)
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeStateListener#nodeSelected(Object)
 	 */
 	@Override
 	public final void nodeSelected(Object node)
@@ -724,7 +725,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeUnselected(Object)
+	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeStateListener#nodeUnselected(Object)
 	 */
 	@Override
 	public final void nodeUnselected(Object node)

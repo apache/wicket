@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 import javax.swing.tree.TreeModel;
 
@@ -27,6 +27,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
@@ -34,7 +35,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -45,6 +45,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public abstract class BaseTree extends AbstractTree
 {
 	/**
@@ -88,7 +89,7 @@ public abstract class BaseTree extends AbstractTree
 	private static final String NODE_COMPONENT_ID = "nodeComponent";
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.AbstractTree#populateTreeItem(org.apache.wicket.markup.html.WebMarkupContainer,
+	 * @see org.apache.wicket.extensions.markup.html.tree.AbstractTree#populateTreeItem(org.apache.wicket.markup.html.WebMarkupContainer,
 	 *      int)
 	 */
 	@SuppressWarnings("unchecked")
@@ -453,7 +454,7 @@ public abstract class BaseTree extends AbstractTree
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.AbstractTree#isForceRebuildOnSelectionChange()
+	 * @see org.apache.wicket.extensions.markup.html.tree.AbstractTree#isForceRebuildOnSelectionChange()
 	 */
 	@Override
 	protected boolean isForceRebuildOnSelectionChange()

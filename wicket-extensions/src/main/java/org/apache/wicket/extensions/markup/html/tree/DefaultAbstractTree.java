@@ -32,9 +32,6 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.tree.AbstractTree;
-import org.apache.wicket.markup.html.tree.LinkType;
-import org.apache.wicket.markup.html.tree.WicketTreeModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -57,6 +54,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public abstract class DefaultAbstractTree extends AbstractTree
 {
 	private static final long serialVersionUID = 1L;

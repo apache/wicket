@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 import javax.swing.tree.TreeModel;
 
@@ -26,6 +26,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public class LabelTree extends BaseTree
 {
 	private static final long serialVersionUID = 1L;
@@ -66,7 +67,7 @@ public class LabelTree extends BaseTree
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.BaseTree#newNodeComponent(java.lang.String,
+	 * @see org.apache.wicket.extensions.markup.html.tree.BaseTree#newNodeComponent(java.lang.String,
 	 *      org.apache.wicket.model.IModel)
 	 */
 	@Override

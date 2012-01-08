@@ -34,6 +34,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public class Tree extends DefaultAbstractTree
 {
 	private static final long serialVersionUID = 1L;
