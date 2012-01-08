@@ -21,19 +21,24 @@ import static org.hamcrest.Matchers.*;
 import java.util.NoSuchElementException;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Before;
 import org.junit.Test;
 
 public class ComponentTagIteratorTest extends WicketTestCase
 {
-	@Test
-	public void test()
+	ComponentTagIterator it;
+
+	/** sets up a test iterator */
+	@Before
+	public void setupIterator()
 	{
-		Markup markup = Markup.of("<body wicket:id='body'><div wicket:id='label'> text </div></body>");
-		MarkupFragment fragment = new MarkupFragment(markup, 0);
-		MarkupStream stream = new MarkupStream(fragment);
+		it = newIterator("<body wicket:id='body'><div wicket:id='label'> text </div></body> tail");
+	}
 
-		ComponentTagIterator it = new ComponentTagIterator(stream);
-
+	/** tests basic iteration */
+	@Test
+	public void next()
+	{
 		// <body wicket:id='body'>
 
 		assertThat(it.hasNext(), is(true));
@@ -90,6 +95,90 @@ public class ComponentTagIteratorTest extends WicketTestCase
 		{
 			// expected
 		}
-
 	}
+
+	/** tests skipping to close tag */
+	@Test
+	public void skipToCloseTag()
+	{
+		it.next();
+		it.skipToCloseTag();
+
+		assertThat(it.hasNext(), is(true));
+
+		ComponentTag close = it.next();
+		assertThat(close.getName(), is("body"));
+		assertThat(close.isClose(), is(true));
+	}
+
+	/** tests skipping to close tag */
+	@Test
+	public void skipToCloseTag_error()
+	{
+		it.next();
+		it.next();
+
+		ComponentTag tag = it.next();
+		assertThat(tag.isClose(), is(true));
+		try
+		{
+			it.skipToCloseTag();
+			fail();
+		}
+		catch (IllegalStateException e)
+		{
+			// expected
+		}
+	}
+
+	/** tests basic iteration */
+	@Test
+	public void peek()
+	{
+		// peek
+
+		ComponentTag tag = it.peek();
+		assertThat(tag, is(not(nullValue())));
+		assertThat(tag.getName(), is("body"));
+
+		// peek again
+
+		assertThat(it.peek(), is(sameInstance(tag)));
+
+		// hasNext and peek again
+
+		assertThat(it.hasNext(), is(true));
+		assertThat(it.peek(), is(sameInstance(tag)));
+
+		// advance
+
+		assertThat(it.next(), is(sameInstance(tag)));
+
+		// peek again
+
+		tag = it.peek();
+		assertThat(tag, is(not(nullValue())));
+		assertThat(tag.getName(), is("div"));
+
+		// advance
+		assertThat(it.next(), is(sameInstance(tag)));
+
+		// peek a closed tag
+		tag = it.peek();
+		assertThat(tag, is(not(nullValue())));
+		assertThat(tag.getName(), is("div"));
+		assertThat(tag.isClose(), is(true));
+
+		// advance
+
+		assertThat(it.next(), is(sameInstance(tag)));
+	}
+
+	private static ComponentTagIterator newIterator(String markup)
+	{
+		MarkupFragment fragment = new MarkupFragment(Markup.of(markup), 0);
+		MarkupStream stream = new MarkupStream(fragment);
+		return new ComponentTagIterator(stream);
+	}
+
 }

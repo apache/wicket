@@ -26,6 +26,7 @@ public class ComponentTagIterator extends ReadOnlyIterator<ComponentTag>
 	private final MarkupStream stream;
 	private final Stack<ComponentTag> stack;
 	private ComponentTag next;
+	private ComponentTag last;
 	private boolean end;
 
 	public ComponentTagIterator(MarkupStream stream)
@@ -37,6 +38,33 @@ public class ComponentTagIterator extends ReadOnlyIterator<ComponentTag>
 	public Stack<ComponentTag> stack()
 	{
 		return stack;
+	}
+
+	public void skipToCloseTag()
+	{
+		if (last == null)
+		{
+			// if no next() has been called we skip to the end of the markup
+			end = true;
+		}
+		if (last.isClose() || last.isOpenClose())
+		{
+			throw new IllegalStateException("Cannot skip to the closing tag of a closed tag: " +
+				last);
+		}
+
+		MarkupElement element = null;
+		while ((element = stream.next()) != null)
+		{
+			if (element.closes(last))
+			{
+				next = (ComponentTag)element;
+				return;
+			}
+		}
+
+		end = true;
+		next = null;
 	}
 
 	@Override
@@ -66,6 +94,19 @@ public class ComponentTagIterator extends ReadOnlyIterator<ComponentTag>
 			el = stream.next();
 		}
 		next = (ComponentTag)el;
+	}
+
+	public ComponentTag peek()
+	{
+		if (end == true)
+		{
+			return null;
+		}
+		if (next == null)
+		{
+			findNext();
+		}
+		return next;
 	}
 
 	@Override
@@ -103,6 +144,7 @@ public class ComponentTagIterator extends ReadOnlyIterator<ComponentTag>
 			end = true;
 		}
 
+		last = result;
 		return result;
 	}
 
