@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,11 +26,11 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.DecoratingHeaderResponse;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
+import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.response.StringResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,20 +41,21 @@ import org.slf4j.LoggerFactory;
  * based on your filter logic. A typical use case for this header response is to move the loading of
  * JavaScript files (and inline script tags) to the footer of the page.
  * 
- * @see HeaderResponseFilteredResponseContainer
+ * @see HeaderResponseContainer
  * @see CssAcceptingHeaderResponseFilter
  * @see JavaScriptAcceptingHeaderResponseFilter
  * @author Jeremy Thomerson
+ * @author Emond Papegaaij
  */
-public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHeaderResponse
+public class FilteringHeaderResponse extends DecoratingHeaderResponse
 {
 
-	private static final Logger log = LoggerFactory.getLogger(HeaderResponseContainerFilteringHeaderResponse.class);
+	private static final Logger log = LoggerFactory.getLogger(FilteringHeaderResponse.class);
 
 	/**
 	 * A filter used to bucket your resources, inline scripts, etc, into different responses. The
-	 * bucketed resources are then rendered by a {@link HeaderResponseFilteredResponseContainer},
-	 * using the name of the filter to get the correct bucket.
+	 * bucketed resources are then rendered by a {@link HeaderResponseContainer}, using the name of
+	 * the filter to get the correct bucket.
 	 * 
 	 * @author Jeremy Thomerson
 	 */
@@ -80,7 +81,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	 * we store this HeaderResponseContainerFilteringHeaderResponse in the RequestCycle so that the
 	 * containers can access it to render their bucket of stuff
 	 */
-	private static final MetaDataKey<HeaderResponseContainerFilteringHeaderResponse> RESPONSE_KEY = new MetaDataKey<HeaderResponseContainerFilteringHeaderResponse>()
+	private static final MetaDataKey<FilteringHeaderResponse> RESPONSE_KEY = new MetaDataKey<FilteringHeaderResponse>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -102,8 +103,8 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	 *            filter, by name. There should typically be at least one filter with the same name
 	 *            as your headerFilterName
 	 */
-	public HeaderResponseContainerFilteringHeaderResponse(IHeaderResponse response,
-		String headerFilterName, IHeaderResponseFilter[] filters)
+	public FilteringHeaderResponse(IHeaderResponse response, String headerFilterName,
+		IHeaderResponseFilter[] filters)
 	{
 		super(response);
 		this.headerFilterName = headerFilterName;
@@ -129,7 +130,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	/**
 	 * @return the HeaderResponseContainerFilteringHeaderResponse being used in this RequestCycle
 	 */
-	public static HeaderResponseContainerFilteringHeaderResponse get()
+	public static FilteringHeaderResponse get()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		if (requestCycle == null)
@@ -137,7 +138,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 			throw new IllegalStateException(
 				"You can only get the HeaderResponseContainerFilteringHeaderResponse when there is a RequestCycle present");
 		}
-		HeaderResponseContainerFilteringHeaderResponse response = requestCycle.getMetaData(RESPONSE_KEY);
+		FilteringHeaderResponse response = requestCycle.getMetaData(RESPONSE_KEY);
 		if (response == null)
 		{
 			throw new IllegalStateException(

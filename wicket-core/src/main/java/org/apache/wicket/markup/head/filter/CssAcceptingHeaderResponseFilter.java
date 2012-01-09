@@ -14,43 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
 
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.resource.filtering.HeaderResponseContainerFilteringHeaderResponse.IHeaderResponseFilter;
 
 /**
- * A default implementation of IHeaderResponseFilter that returns true for everything. It is defined
- * as abstract because you are not supposed to use it directly, but use it as a base and override
- * any methods that you need to return something other than true from (whether that's always false
- * or conditional logic).
+ * This filter accepts anything that appears to be CSS. All CSS that is not a resource reference (
+ * {@link #acceptOtherCss()}) is accepted. All JS that is not a resource reference (
+ * {@link #acceptOtherJavaScript()}) is not accepted.
+ * 
+ * The references are accepted if they appear to be CSS. If the reference passed in is an instance
+ * of {@link AbstractResourceDependentResourceReference}, we use the {@link ResourceType} from it to
+ * determine if it is CSS. Otherwise, we see if the ResourceReference.name property ends with
+ * ".css".
  * 
  * @author Jeremy Thomerson
  */
-public abstract class AbstractHeaderResponseFilter implements IHeaderResponseFilter
+public class CssAcceptingHeaderResponseFilter extends AbstractHeaderResponseFilter
 {
 
-	private final String name;
-
 	/**
-	 * Create a response filter.
+	 * Construct.
 	 * 
 	 * @param name
+	 *            name of the filter (used by the container that renders these resources)
 	 */
-	public AbstractHeaderResponseFilter(String name)
+	public CssAcceptingHeaderResponseFilter(String name)
 	{
-		this.name = name;
-	}
-
-	@Override
-	public String getName()
-	{
-		return name;
+		super(name);
 	}
 
 	@Override
 	public boolean accepts(HeaderItem item)
 	{
-		return true;
+		return item instanceof CssHeaderItem;
 	}
 }

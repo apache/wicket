@@ -14,20 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
  * A header response that creates two buckets. The header bucket will contain all references to CSS.
  * The other bucket will contain all JavaScript, and you will need to add a
- * HeaderResponseFilteredResponseContainer to the footer of your page (typically just before the end
- * body tag) to render the JavaScript.
+ * {@link HeaderResponseContainer} to the footer of your page (typically just before the end body
+ * tag) to render the JavaScript.
  * 
  * @author Jeremy Thomerson
  */
-public final class JavaScriptFilteredIntoFooterHeaderResponse extends
-	HeaderResponseContainerFilteringHeaderResponse
+public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringHeaderResponse
 {
 	private static final String HEADER_FILTER_NAME = "headerBucket";
 

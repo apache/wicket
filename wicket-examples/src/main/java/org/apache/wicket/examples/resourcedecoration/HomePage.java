@@ -28,9 +28,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
-import org.apache.wicket.resource.filtering.HeaderResponseFilteredResponseContainer;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -84,7 +84,7 @@ public class HomePage extends WicketExamplePage
 		 * a container for all collected JavaScript contributions that will be loaded at the page
 		 * footer (after </body>)
 		 */
-		add(new HeaderResponseFilteredResponseContainer("footerJS", "footerJS"));
+		add(new HeaderResponseContainer("footerJS", "footerJS"));
 	}
 
 	@Override
