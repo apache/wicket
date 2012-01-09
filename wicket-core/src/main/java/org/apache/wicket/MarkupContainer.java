@@ -1839,7 +1839,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * @return True if this markup container has associated markup
+	 * @deprecated Use #getAssociatedMarkup() != null instead
 	 */
+	@Deprecated
 	public boolean hasAssociatedMarkup()
 	{
 		return getAssociatedMarkup() != null;
