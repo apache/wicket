@@ -30,6 +30,7 @@ import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,13 +70,8 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 */
 	public ThumbnailImageResource(final IResource unscaledImageResource, final int maxSize)
 	{
-		super();
-
-		if (unscaledImageResource == null)
-		{
-			throw new IllegalArgumentException("Argument unscaledImageResource must be not null");
-		}
-
+		Args.notNull(unscaledImageResource, "unscaledImageResource");
+		
 		this.unscaledImageResource = unscaledImageResource;
 		this.maxSize = maxSize;
 	}
@@ -125,14 +121,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 		}
 		finally
 		{
-			try
-			{
-				IOUtils.close(is);
-			}
-			catch (IOException e)
-			{
-				log.error(e.getMessage(), e);
-			}
+			IOUtils.closeQuietly(is);
 		}
 
 		int originalWidth = originalImage.getWidth();
@@ -157,11 +146,17 @@ public class ThumbnailImageResource extends DynamicImageResource
 			// http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
 			BufferedImage dimg = new BufferedImage(newWidth, newHeight, originalImage.getType());
 			Graphics2D g = dimg.createGraphics();
-			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-			g.drawImage(originalImage, 0, 0, newWidth, newHeight, 0, 0, originalWidth,
-				originalHeight, null);
-			g.dispose();
+			try
+			{
+				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+					RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				g.drawImage(originalImage, 0, 0, newWidth, newHeight, 0, 0, originalWidth,
+					originalHeight, null);
+			}
+			finally
+			{
+				g.dispose();
+			}
 
 			return dimg;
 		}
