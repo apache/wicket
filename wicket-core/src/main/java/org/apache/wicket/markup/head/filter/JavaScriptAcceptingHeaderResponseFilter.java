@@ -16,14 +16,21 @@
  */
 package org.apache.wicket.markup.head.filter;
 
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+
 /**
- * This filter returns the opposite of what {@link CssAcceptingHeaderResponseFilter} returns.
+ * This filter accepts all {@link JavaScriptHeaderItem}s.
  * 
- * @see CssAcceptingHeaderResponseFilter
+ * Note: this filter used to accept everything that is not css, it no longer does. For example,
+ * meta-tags are neither CSS nor JS.
+ * 
  * @author Jeremy Thomerson
+ * @author Emond Papegaaij
  */
-public class JavaScriptAcceptingHeaderResponseFilter extends OppositeHeaderResponseFilter
+public class JavaScriptAcceptingHeaderResponseFilter extends AbstractHeaderResponseFilter
 {
+
 	/**
 	 * Construct.
 	 * 
@@ -32,7 +39,12 @@ public class JavaScriptAcceptingHeaderResponseFilter extends OppositeHeaderRespo
 	 */
 	public JavaScriptAcceptingHeaderResponseFilter(String name)
 	{
-		super(name, new CssAcceptingHeaderResponseFilter("NOT_USED"));
+		super(name);
 	}
 
+	@Override
+	public boolean accepts(HeaderItem item)
+	{
+		return item instanceof JavaScriptHeaderItem;
+	}
 }

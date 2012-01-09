@@ -51,16 +51,17 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 	protected Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
 	{
 		IHeaderResponseFilter header = createHeaderFilter(HEADER_FILTER_NAME);
-		IHeaderResponseFilter footer = createFooterFilter(footerBucketName);
+		IHeaderResponseFilter footer = createFooterFilter(footerBucketName, header);
 		return Arrays.asList(header, footer);
 	}
 
-	protected JavaScriptAcceptingHeaderResponseFilter createFooterFilter(String footerBucketName)
+	protected IHeaderResponseFilter createFooterFilter(String footerBucketName,
+		IHeaderResponseFilter header)
 	{
-		return new JavaScriptAcceptingHeaderResponseFilter(footerBucketName);
+		return new OppositeHeaderResponseFilter(footerBucketName, header);
 	}
 
-	protected CssAcceptingHeaderResponseFilter createHeaderFilter(String headerFilterName)
+	protected IHeaderResponseFilter createHeaderFilter(String headerFilterName)
 	{
 		return new CssAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
 	}

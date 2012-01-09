@@ -20,14 +20,7 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
 
 /**
- * This filter accepts anything that appears to be CSS. All CSS that is not a resource reference (
- * {@link #acceptOtherCss()}) is accepted. All JS that is not a resource reference (
- * {@link #acceptOtherJavaScript()}) is not accepted.
- * 
- * The references are accepted if they appear to be CSS. If the reference passed in is an instance
- * of {@link AbstractResourceDependentResourceReference}, we use the {@link ResourceType} from it to
- * determine if it is CSS. Otherwise, we see if the ResourceReference.name property ends with
- * ".css".
+ * This filter accepts all {@link CssHeaderItem}s.
  * 
  * @author Jeremy Thomerson
  */
