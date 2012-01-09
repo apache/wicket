@@ -44,7 +44,9 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public CompoundFieldValueFactory(final IFieldValueFactory[] factories)
 	{
-		this(Arrays.asList(factories));
+		Args.notNull(factories, "factories");
+
+		delegates.addAll(Arrays.asList(factories));
 	}
 
 	/**
