@@ -87,7 +87,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	};
 
 	private final Map<String, List<HeaderItem>> responseFilterMap = new HashMap<String, List<HeaderItem>>();
-	private IHeaderResponseFilter[] filters;
+	private Iterable<? extends IHeaderResponseFilter> filters;
 	private final String headerFilterName;
 
 	/**
@@ -104,7 +104,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	 *            as your headerFilterName
 	 */
 	public FilteringHeaderResponse(IHeaderResponse response, String headerFilterName,
-		IHeaderResponseFilter[] filters)
+		Iterable<? extends IHeaderResponseFilter> filters)
 	{
 		super(response);
 		this.headerFilterName = headerFilterName;
@@ -114,7 +114,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		RequestCycle.get().setMetaData(RESPONSE_KEY, this);
 	}
 
-	protected void setFilters(IHeaderResponseFilter[] filters)
+	protected void setFilters(Iterable<? extends IHeaderResponseFilter> filters)
 	{
 		this.filters = filters;
 		if (filters == null)
