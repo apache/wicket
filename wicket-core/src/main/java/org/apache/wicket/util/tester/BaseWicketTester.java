@@ -1312,7 +1312,7 @@ public class BaseWicketTester
 		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
-			fail(e.getMessage());
+			fail(String.format("Cannot instantiate component with type '%s' because of '%s'", componentClass.getName(), e.getMessage()));
 		}
 
 		// process the component
