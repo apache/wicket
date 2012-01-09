@@ -1790,14 +1790,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * @return True if this markup container has associated markup
-	 */
-	public boolean hasAssociatedMarkup()
-	{
-		return getAssociatedMarkup() != null;
-	}
-
-	/**
 	 * 
 	 */
 	private static class ChildList extends AbstractList<Object> implements IClusterable

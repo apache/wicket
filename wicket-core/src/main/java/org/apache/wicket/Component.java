@@ -1289,7 +1289,7 @@ public abstract class Component
 		MarkupContainer container = parent;
 		while (container != null)
 		{
-			if (container.hasAssociatedMarkup())
+			if (container.getAssociatedMarkup() != null)
 			{
 				return container;
 			}
