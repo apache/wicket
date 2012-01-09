@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
@@ -126,9 +127,10 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 		{
 			// There is one more option if the markup provider has associated markup
 			MarkupContainer markupProvider = getMarkupProvider(container);
-			if (markupProvider.hasAssociatedMarkup())
+			Markup associatedMarkup = markupProvider.getAssociatedMarkup();
+			if (associatedMarkup != null)
 			{
-				markup = markupProvider.getAssociatedMarkup();
+				markup = associatedMarkup;
 				if (markup != null)
 				{
 					childMarkup = markup.find(markupId);
