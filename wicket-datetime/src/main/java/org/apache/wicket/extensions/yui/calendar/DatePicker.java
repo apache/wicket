@@ -64,7 +64,7 @@ import org.joda.time.DateTime;
  * To use, simply add a new instance to your component, which would typically a TextField, like
  * {@link DateTextField}.<br/>
  * 
- * The CalendarNavigator can be configured by overriding {@link #configure(Map)} and setting the
+ * The CalendarNavigator can be configured by overriding {@link #configure(java.util.Map, org.apache.wicket.markup.head.IHeaderResponse, java.util.Map)} and setting the
  * property or by returning <code>true</code> for {@link #enableMonthYearSelection()}.
  * 
  * @see <a
@@ -372,7 +372,7 @@ public class DatePicker extends Behavior
 	 * href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for the
 	 * available options. If you want to override/ remove properties, you should call
 	 * super.configure(properties) first. If you don't call that, be aware that you will have to
-	 * call {@link #localize(Map)} manually if you like localized strings to be added.
+	 * call {@link #localize(java.util.Map, org.apache.wicket.markup.head.IHeaderResponse, java.util.Map)} manually if you like localized strings to be added.
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
@@ -542,9 +542,9 @@ public class DatePicker extends Behavior
 	 * and week days. Also, the first week day is set according to the {@link Locale} returned by
 	 * {@link #getLocale()}. It should work well for most locales.
 	 * <p>
-	 * This method is called from {@link #configureWidgetProperties(Map)} and can be overridden if
+	 * This method is called from {@link #configure(java.util.Map, org.apache.wicket.markup.head.IHeaderResponse, java.util.Map)} and can be overridden if
 	 * you want to customize setting up the localized strings but are happy with the rest of
-	 * {@link #configureWidgetProperties(Map)}'s behavior. Note that you can call (overridable)
+	 * {@link #configure(java.util.Map, org.apache.wicket.markup.head.IHeaderResponse, java.util.Map)}'s behavior. Note that you can call (overridable)
 	 * method {@link #getLocale()} to get the locale that should be used for setting up the widget.
 	 * </p>
 	 * <p>
