@@ -495,6 +495,7 @@
 				dataType: attrs.dt,
 				async: attrs.async,
 				timeout: attrs.rt,
+				cache: false,
 				headers: headers,
 				success: function(data, textStatus, jqXHR) {
 
