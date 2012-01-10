@@ -33,7 +33,7 @@ stty -echo
 read passphrase
 stty $stty_orig
 
-# test the GPG passphrase to fail-fast:
+# test the GPGP passphrase to fail-fast:
 echo "$passphrase" | gpg --passphrase-fd 0 --armor --output pom.xml.asc --detach-sig pom.xml
 gpg --verify pom.xml.asc
 if [ $? -ne 0 ]; then
@@ -42,16 +42,23 @@ if [ $? -ne 0 ]; then
 fi
 rm pom.xml.asc
 
-echo "modifying poms with the new version: $version"
+branch="build/wicket-$version"
+
+echo "Removing previous build branch $branch (if exists)"
+oldbranch=`git branch |grep -e "$branch"|wc -l`
+[ "$oldbranch" -ne 0 ] && git branch -D $branch
+
+echo "Switching to branch $branch"
+git checkout -b $branch
+
+echo "Modifying poms with the new version: $version"
 mvn5 versions:set -DnewVersion=$version
 mvn5 versions:commit
 find . -name "pom.xml" | xargs sed -i -e "s/1.5-SNAPSHOT/$version/g"
 find . -name "pom.xml" | xargs sed -i -e "s/wicket\/trunk/wicket\/releases\/$version/g"
 
-echo "committing changes"
-echo "Failed: need to convert to git"
-exit
-svn commit -m "modified poms for release $version"
+echo "Committing changes"
+git commit -am "modified poms for release $version"
 
 # Clear the current NOTICE.txt file
 echo "Creating notice file."
@@ -82,6 +89,9 @@ do
 	echo >> $NOTICE
 done
 
+echo "Committing changes"
+git commit -am "changes to notice files"
+
 # prebuilding to work around javadoc generation problem
 mvn5 clean install -DskipTests=true
 mvn5 javadoc:jar
@@ -103,6 +113,9 @@ filename=`ls target/dist/apache-wicket*zip`
 gpg --print-md MD5 $filename > $filename.md5
 gpg --print-md SHA1 $filename > $filename.sha
 echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $filename.asc --detach-sig $filename
+
+echo "Publishing build branch"
+git push origin $branch:refs/heads/$branch
 
 echo "Uploading release"
 svn export http://svn.apache.org/repos/asf/wicket/common/KEYS target/dist/KEYS
