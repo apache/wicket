@@ -42,14 +42,21 @@ if [ $? -ne 0 ]; then
 fi
 rm pom.xml.asc
 
-echo "modifying poms with the new version: $version"
+branch="build/wicket-$version"
+
+echo "Removing previous build branch $branch (if exists)"
+git branch -D $branch
+echo "Switching to branch $branch"
+git checkout $branch
+
+echo "Modifying poms with the new version: $version"
 mvn5 versions:set -DnewVersion=$version
 mvn5 versions:commit
 find . -name "pom.xml" | xargs sed -i -e "s/1.5-SNAPSHOT/$version/g"
 find . -name "pom.xml" | xargs sed -i -e "s/wicket\/trunk/wicket\/releases\/$version/g"
 
-echo "committing changes"
-svn commit -m "modified poms for release $version"
+echo "Committing changes"
+git commit -am "modified poms for release $version"
 
 # Clear the current NOTICE.txt file
 echo "Creating notice file."
@@ -80,6 +87,9 @@ do
 	echo >> $NOTICE
 done
 
+echo "Committing changes"
+git commit -am "changes to notice files"
+
 # prebuilding to work around javadoc generation problem
 mvn5 clean install -DskipTests=true
 mvn5 javadoc:jar
@@ -101,6 +111,9 @@ filename=`ls target/dist/apache-wicket*zip`
 gpg --print-md MD5 $filename > $filename.md5
 gpg --print-md SHA1 $filename > $filename.sha
 echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $filename.asc --detach-sig $filename
+
+echo "Publishing build branch"
+git push origin $branch:refs/heads/$branch
 
 echo "Uploading release"
 svn export http://svn.apache.org/repos/asf/wicket/common/KEYS target/dist/KEYS
