@@ -45,9 +45,11 @@ rm pom.xml.asc
 branch="build/wicket-$version"
 
 echo "Removing previous build branch $branch (if exists)"
-git branch -D $branch
+oldbranch=`git branch |grep -e "$branch"|wc -l`
+[ "$oldbranch" -ne 0 ] && git branch -D $branch
+
 echo "Switching to branch $branch"
-git checkout $branch
+git checkout -b $branch
 
 echo "Modifying poms with the new version: $version"
 mvn5 versions:set -DnewVersion=$version
