@@ -150,17 +150,24 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	@Override
 	public void render(HeaderItem item)
 	{
-		for (IHeaderResponseFilter filter : filters)
+		if (item instanceof FilteredHeaderItem)
 		{
-			if (filter.accepts(item))
-			{
-				render(item, filter);
-				return;
-			}
+			render(item, ((FilteredHeaderItem)item).getFilterName());
 		}
-		log.warn(
-			"A HeaderItem '{}' was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests",
-			item);
+		else
+		{
+			for (IHeaderResponseFilter filter : filters)
+			{
+				if (filter.accepts(item))
+				{
+					render(item, filter.getName());
+					return;
+				}
+			}
+			log.warn(
+				"A HeaderItem '{}' was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests",
+				item);
+		}
 	}
 
 	@Override
@@ -211,9 +218,12 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		return strResponse.getBuffer();
 	}
 
-	private void render(HeaderItem item, IHeaderResponseFilter filter)
+	private void render(HeaderItem item, String filterName)
 	{
-		render(item, responseFilterMap.get(filter.getName()));
+		if (!responseFilterMap.containsKey(filterName))
+			throw new IllegalArgumentException("No filter named '" + filterName +
+				"', known filter names are: " + responseFilterMap.keySet());
+		render(item, responseFilterMap.get(filterName));
 	}
 
 	protected void render(HeaderItem item, List<HeaderItem> filteredItems)

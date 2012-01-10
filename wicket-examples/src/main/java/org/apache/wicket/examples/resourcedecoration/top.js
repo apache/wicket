@@ -14,10 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.bodyContent {
-	background-color: #DEDEDE;
-}
 
-.bodyContent.error {
-	border: 3px solid red;
+if (!!document.body) {
+	document.getElementById("bodyContent").className="bodyContent error";
 }

@@ -23,14 +23,17 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.filter.FilteredHeaderItem;
+import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
+import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -95,7 +98,7 @@ public class HomePage extends WicketExamplePage
 		// two CSS resources in the same group. header.css is rendered first because has lower
 		// "order" number
 		response.render(CssHeaderItem.forReference(new CssResourceReference(HomePage.class,
-				"footer.css")));
+			"footer.css")));
 		response.render(CssHeaderItem.forReference(new CssResourceReference(HomePage.class,
 			"header.css")));
 
@@ -108,6 +111,9 @@ public class HomePage extends WicketExamplePage
 			"HomePage.css")));
 		response.render(JavaScriptHeaderItem.forReference(new JQueryPluginResourceReference(
 			HomePage.class, "HomePage.js")));
+		response.render(new FilteredHeaderItem(
+			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(HomePage.class,
+				"top.js")), JavaScriptFilteredIntoFooterHeaderResponse.HEADER_FILTER_NAME));
 	}
 
 	private static class AjaxProofContainer extends WebMarkupContainer

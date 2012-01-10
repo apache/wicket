@@ -21,16 +21,19 @@ import java.util.Arrays;
 import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
- * A header response that creates two buckets. The header bucket will contain all references to CSS.
- * The other bucket will contain all JavaScript, and you will need to add a
- * {@link HeaderResponseContainer} to the footer of your page (typically just before the end body
- * tag) to render the JavaScript.
+ * A header response that creates two buckets. The header bucket will contain all references to CSS
+ * and markup from the &lt;head&gt; section from the page. The other bucket will contain all other
+ * header items, and you will need to add a {@link HeaderResponseContainer} to the footer of your
+ * page (typically just before the end body tag) to render those items.
  * 
  * @author Jeremy Thomerson
  */
 public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringHeaderResponse
 {
-	private static final String HEADER_FILTER_NAME = "headerBucket";
+	/**
+	 * The name of the filter that renders the head section of the page
+	 */
+	public static final String HEADER_FILTER_NAME = "headerBucket";
 
 	/**
 	 * Construct.
@@ -63,7 +66,7 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 
 	protected IHeaderResponseFilter createHeaderFilter(String headerFilterName)
 	{
-		return new CssAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
+		return new CssAndPageAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
 	}
 
 }
