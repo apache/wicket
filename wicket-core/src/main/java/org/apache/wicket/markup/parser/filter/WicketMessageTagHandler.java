@@ -24,7 +24,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -56,13 +55,6 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * The id automatically assigned to tags with wicket:message attribute but without id
 	 */
 	public final static String WICKET_MESSAGE_CONTAINER_ID = "_message_attr_";
-
-	/**
-	 * singleton instance of {@link AttributeLocalizer}
-	 * @deprecated Do not use it because it is not aware of the markup namespace
-	 */
-	@Deprecated
-	public static final Behavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
 
 	/**
 	 * Constructor for the IComponentResolver role.
@@ -120,11 +112,6 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		private static final long serialVersionUID = 1L;
 
 		private final String wicketMessageAttrName;
-
-		public AttributeLocalizer()
-		{
-			this(MarkupParser.WICKET+':'+"message");
-		}
 
 		public AttributeLocalizer(String wicketMessageAttrName)
 		{
