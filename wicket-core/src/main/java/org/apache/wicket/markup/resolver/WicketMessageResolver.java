@@ -168,7 +168,6 @@ public class WicketMessageResolver implements IComponentResolver
 		 * 
 		 * @param id
 		 * @param messageKey
-		 * @param markupFragment
 		 */
 		public MessageContainer(final String id, final String messageKey)
 		{

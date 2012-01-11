@@ -22,6 +22,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.HtmlSpecialTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupParser;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +39,9 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(AbstractMarkupFilter.class);
 
+	/** The markup created by reading the markup file */
+	private final MarkupResourceStream markupResourceStream;
+
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
 
@@ -45,7 +50,14 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 */
 	public AbstractMarkupFilter()
 	{
+		this(null);
 	}
+
+	public AbstractMarkupFilter(final MarkupResourceStream markupResourceStream)
+	{
+		this.markupResourceStream = markupResourceStream;
+	}
+
 
 	/**
 	 * @return The next MarkupFilter in the chain
@@ -139,5 +151,25 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 
 	public void postProcess(final Markup markup)
 	{
+	}
+
+	protected MarkupResourceStream getMarkupResourceStream() {
+		return markupResourceStream;
+	}
+
+	/**
+	 * @return the namespace of the loaded markup
+	 */
+	protected String getWicketNamespace()
+	{
+		String wicketNamespace;
+		if (markupResourceStream != null)
+		{
+			wicketNamespace = markupResourceStream.getWicketNamespace();
+		}
+		else {
+			wicketNamespace = MarkupParser.WICKET;
+		}
+		return wicketNamespace;
 	}
 }

@@ -40,9 +40,6 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	/** Wicket URI */
 	private static final String WICKET_URI = "http://wicket.apache.org";
 
-	/** The markup created by reading the markup file */
-	private final MarkupResourceStream markup;
-
 	/**
 	 * namespace prefix: e.g. <html xmlns:wicket="http://wicket.apache.org">
 	 */
@@ -56,7 +53,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	 */
 	public WicketNamespaceHandler(final MarkupResourceStream markup)
 	{
-		this.markup = markup;
+		super(markup);
 	}
 
 	@Override
@@ -67,7 +64,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 			final String namespace = determineWicketNamespace(tag);
 			if (namespace != null)
 			{
-				markup.setWicketNamespace(namespace);
+				getMarkupResourceStream().setWicketNamespace(namespace);
 			}
 		}
 
