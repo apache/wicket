@@ -169,7 +169,7 @@ public class MarkupParser extends AbstractMarkupParser
 		}
 
 		filters.add(new OpenCloseTagExpander());
-		filters.add(new RelativePathPrefixHandler());
+		filters.add(new RelativePathPrefixHandler(markupResourceStream));
 		filters.add(new EnclosureHandler());
 		filters.add(new InlineEnclosureHandler());
 		filters.add(new StyleAndScriptIdentifier(markup));
