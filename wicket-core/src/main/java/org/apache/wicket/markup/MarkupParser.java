@@ -156,7 +156,7 @@ public class MarkupParser extends AbstractMarkupParser
 			final ContainerInfo containerInfo = markupResourceStream.getContainerInfo();
 			if (containerInfo != null)
 			{
-				filters.add(new WicketMessageTagHandler());
+				filters.add(new WicketMessageTagHandler(markupResourceStream));
 
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))

@@ -97,9 +97,6 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		}
 	};
 
-	/** The markup created by reading the markup file */
-	private final MarkupResourceStream markup;
-
 	/**
 	 * Constructor for the IComponentResolver role.
 	 */
@@ -115,7 +112,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	 */
 	public RelativePathPrefixHandler(final MarkupResourceStream markup)
 	{
-		this.markup = markup;
+		super(markup);
 	}
 
 	@Override
@@ -172,18 +169,5 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			return new TransparentWebMarkupContainer(id);
 		}
 		return null;
-	}
-
-	private String getWicketNamespace()
-	{
-		String wicketNamespace;
-		if (markup != null)
-		{
-			wicketNamespace = markup.getWicketNamespace();
-		}
-		else {
-			wicketNamespace = MarkupParser.WICKET;
-		}
-		return wicketNamespace;
 	}
 }
