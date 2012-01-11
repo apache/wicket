@@ -44,7 +44,6 @@ import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequ
 import org.apache.wicket.request.target.resource.SharedResourceRequestTarget;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.value.ValueMap;
@@ -810,11 +809,39 @@ public abstract class RequestCycle
 	private final CharSequence encodeUrlFor(final IRequestTarget requestTarget)
 	{
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this, requestTarget);
-		url = JavascriptUtils.escapeQuotes(url);
+		url = cutNilChar(url);
 		urlForNewWindowEncoding = false;
 		return url;
 	}
 
+	/**
+	 * Removes any occurrence of \u0000 char and everything after it.
+	 *
+	 * @param input
+	 *      the CharSequence to process
+	 * @return
+	 *      a CharSequence without \u0000 in it
+	 */
+	// WICKET-4275, CVE-2011-2712
+	private CharSequence cutNilChar(CharSequence input)
+	{
+		StringBuilder result = new StringBuilder();
+		int length = input.length();
+		for (int i = 0; i < length; i++)
+		{
+			char c = input.charAt(i);
+			if (c == '\u0000')
+			{
+				break;
+			}
+			else {
+				result.append(c);
+			}
+		}
+
+		return result;
+	}
+	
 	/**
 	 * Returns a bookmarkable URL that references a given page class using a given set of page
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
