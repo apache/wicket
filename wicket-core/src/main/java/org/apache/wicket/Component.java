@@ -3261,7 +3261,7 @@ public abstract class Component
 				else
 				{
 					buffer.append(", page = ")
-						.append(getPage().getClass().getName())
+						.append(getPage().getPageClass().getName())
 						.append(", path = ")
 						.append(getPath())
 						.append('.')
