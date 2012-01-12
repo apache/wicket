@@ -17,7 +17,10 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.request.mapper.PageInstanceMapper;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.settings.IPageSettings;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,6 +70,39 @@ public class MountedPageLinkTest extends WicketTestCase
 		String url = link.getURL().toString();
 		// simulate a page expiry
 		url = url.replace("part2?0", "part2?3");
+		tester.executeUrl(url);
+	}
+
+	/**
+	 * Tests if the {@link PageInstanceMapper} is used if
+	 * {@link IPageSettings#getRecreateMountedPagesAfterExpiry()} is disabled
+	 */
+	@Test
+	public void testLinkOnPageWithRecreationDisabled()
+	{
+		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
+		PageWithLink page = tester.startPage(PageWithLink.class,
+			new PageParameters().add("param", "value"));
+		Link<?> link = (Link<?>)page.get("link");
+		String url = link.getURL().toString();
+		assertEquals("wicket/page?0-1.ILinkListener-link", url);
+		tester.executeUrl(url);
+	}
+
+	/**
+	 * ... and this should throw a {@link PageExpiredException} if the page is expired
+	 */
+	@Test(expected = PageExpiredException.class)
+	public void testExpiredPageWithRecreationDisabled()
+	{
+		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
+		PageWithLink page = tester.startPage(PageWithLink.class,
+			new PageParameters().add("param", "value"));
+		Link<?> link = (Link<?>)page.get("link");
+		String url = link.getURL().toString();
+		assertEquals("wicket/page?0-1.ILinkListener-link", url);
+		// simulate a page expiry
+		url = url.replace("page?0", "page?3");
 		tester.executeUrl(url);
 	}
 }

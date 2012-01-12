@@ -40,6 +40,9 @@ public class PageSettings implements IPageSettings
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
 
+	/** determines if mounted pages should be recreated after expiry */
+	private boolean recreateMountedPagesAfterExpiry = true;
+
 	/**
 	 * @see org.apache.wicket.settings.IPageSettings#addComponentResolver(org.apache.wicket.markup.resolver.IComponentResolver)
 	 */
@@ -70,5 +73,15 @@ public class PageSettings implements IPageSettings
 	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		versionPagesByDefault = pagesVersionedByDefault;
+	}
+
+	public boolean getRecreateMountedPagesAfterExpiry()
+	{
+		return recreateMountedPagesAfterExpiry;
+	}
+
+	public void setRecreateMountedPagesAfterExpiry(boolean recreateMountedPagesAfterExpiry)
+	{
+		this.recreateMountedPagesAfterExpiry = recreateMountedPagesAfterExpiry;
 	}
 }
