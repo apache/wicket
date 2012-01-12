@@ -21,14 +21,27 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Testcases for links on mounted pages. These links are special, because they refer the page by id
+ * AND by mount path (including parameters). This was done for WICKET-4014. WICKET-4290 broke this,
+ * because the page parameters are no longer rendered.
+ * 
+ * @author papegaaij
+ */
 public class MountedPageLinkTest extends WicketTestCase
 {
+	/**
+	 * Mount the page
+	 */
 	@Before
 	public void mountPage()
 	{
 		tester.getApplication().mountPage("mount/${param}/part2", PageWithLink.class);
 	}
 
+	/**
+	 * Tests if the page parameters are part of the url of the link, and if the link actually works.
+	 */
 	@Test
 	public void testPageParametersInLink()
 	{
@@ -41,6 +54,10 @@ public class MountedPageLinkTest extends WicketTestCase
 		tester.executeUrl(url);
 	}
 
+	/**
+	 * Tests if it is possible to re-instantiate the page if it is expired. The page should be
+	 * instantiated with the same page parameters. The link will not be clicked however.
+	 */
 	@Test
 	public void testLinkOnExpiredPage()
 	{
@@ -48,6 +65,7 @@ public class MountedPageLinkTest extends WicketTestCase
 			new PageParameters().add("param", "value"));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
+		// simulate a page expiry
 		url = url.replace("part2?0", "part2?3");
 		tester.executeUrl(url);
 	}
