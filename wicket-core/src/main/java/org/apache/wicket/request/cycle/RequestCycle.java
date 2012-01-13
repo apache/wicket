@@ -754,7 +754,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		if (result == null || type.isAssignableFrom(result.getClass()) == false)
 		{
 			result = getRequestHandlerScheduledAfterCurrent();
-			if (result == null || result.getClass().isAssignableFrom(type) == false)
+			if (result == null || type.isAssignableFrom(result.getClass()) == false)
 			{
 				result = null;
 			}
