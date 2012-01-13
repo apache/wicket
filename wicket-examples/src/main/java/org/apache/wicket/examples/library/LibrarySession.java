@@ -106,7 +106,7 @@ public final class LibrarySession extends AuthenticatedWebSession
 	}
 
 	/**
-	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#signOut()
+	 * @see AuthenticatedWebSession#signOut()
 	 */
 	@Override
 	public void signOut()
@@ -116,7 +116,7 @@ public final class LibrarySession extends AuthenticatedWebSession
 	}
 
 	/**
-	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#getRoles()
+	 * @see AuthenticatedWebSession#getRoles()
 	 */
 	@Override
 	public Roles getRoles()
