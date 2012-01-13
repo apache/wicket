@@ -76,26 +76,26 @@ public class ServletWebResponse extends WebResponse
 	@Override
 	public void setContentType(String mimeType)
 	{
-		httpServletResponse.setContentType(sanitize(mimeType));
+		httpServletResponse.setContentType(mimeType);
 	}
 
 	@Override
 	public void setDateHeader(String name, Time date)
 	{
 		Args.notNull(date, "date");
-		httpServletResponse.setDateHeader(sanitize(name), date.getMilliseconds());
+		httpServletResponse.setDateHeader(name, date.getMilliseconds());
 	}
 
 	@Override
 	public void setHeader(String name, String value)
 	{
-		httpServletResponse.setHeader(sanitize(name), sanitize(value));
+		httpServletResponse.setHeader(name, value);
 	}
 
 	@Override
 	public void addHeader(String name, String value)
 	{
-		httpServletResponse.addHeader(sanitize(name), sanitize(value));
+		httpServletResponse.addHeader(name, value);
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class ServletWebResponse extends WebResponse
 			}
 			else
 			{
-				httpServletResponse.sendError(sc, sanitize(msg));
+				httpServletResponse.sendError(sc, msg);
 			}
 		}
 		catch (IOException e)
@@ -203,7 +203,6 @@ public class ServletWebResponse extends WebResponse
 		try
 		{
 			redirect = true;
-			url = sanitize(url);
 			url = encodeRedirectURL(url);
 
 			// wicket redirects should never be cached
@@ -270,16 +269,4 @@ public class ServletWebResponse extends WebResponse
 		return httpServletResponse;
 	}
 
-	/**
-	 * Cleans the provided input (header name or value) from malicious characters.
-	 * 
-	 * @param input
-	 *            the string to sanitize
-	 * @return the sanitized string
-	 */
-	String sanitize(final String input)
-	{
-		String output = input.replace('\n', ' ').replace('\r', ' ');
-		return output;
-	}
 }
