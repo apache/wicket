@@ -1,4 +1,4 @@
 target
-velocity.log
+*velocity.log*
 .project
 .classpath
