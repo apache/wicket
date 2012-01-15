@@ -79,9 +79,6 @@ public class StatelessPage3 extends WicketExamplePage
 
 				// store the value in page parameters
 				getPage().getPageParameters().set(PARAMETER_NAME, number);
-
-				// force redirect, otherwise the listener interface URL would be kept
-				getRequestCycle().setResponsePage(getPage());
 			}
 
 		};
