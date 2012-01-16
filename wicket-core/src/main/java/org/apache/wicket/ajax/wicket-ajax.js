@@ -1201,7 +1201,7 @@ Wicket.Ajax.Call.prototype = {
 		form.method="post";
 		form.enctype="multipart/form-data";
 		form.encoding="multipart/form-data";
-		
+
 		// create submitting button element
 		if (submitButton!=null) {
 			try {
@@ -1249,7 +1249,7 @@ Wicket.Ajax.Call.prototype = {
 
 		var envelope=iframe.contentWindow.document;
 		if (envelope.XMLDocument!=null) { envelope=envelope.XMLDocument; }
-	
+
 		// process the response
 		this.loadedCallback(envelope);
 
@@ -1286,7 +1286,12 @@ Wicket.Ajax.Call.prototype = {
 		// loaded.
 		try {			
 			var root = envelope.getElementsByTagName("ajax-response")[0];
-					
+
+			if (root == null && envelope.compatMode == 'BackCompat') {
+				envelope = Wicket._htmlToDomDocument(envelope);
+				root = envelope.getElementsByTagName("ajax-response")[0];
+			}
+
 			// the root element must be <ajax-response	
 		    if (root == null || root.tagName != "ajax-response") {
 		    	this.failure("Could not find root <ajax-response> element");
@@ -1530,18 +1535,8 @@ Wicket.Head.Contributor.prototype = {
 		}
 
 		// build a DOM tree of the contribution
-		var xmldoc;
-		if (window.DOMParser) {
-			var parser = new DOMParser();
-			xmldoc = parser.parseFromString(text, "text/xml");
-		} else if (window.ActiveXObject) {
-			xmldoc = new ActiveXObject("Microsoft.XMLDOM");
-			if (!xmldoc.loadXML(text)) {
-				Wicket.Log.error("Error parsing response: "+text);
-			}
-		}
-
-		return xmldoc;	
+		var xmldoc = Wicket._createXmlDocument(text);
+		return xmldoc;
 	},
 	
 	// checks whether the passed node is the special "parsererror" 
@@ -2548,3 +2543,62 @@ Wicket._getAjaxBaseUrl = function() {
 	var baseUrl = Wicket.Ajax.baseUrl || '.';
 	return baseUrl;
 }
+
+/**
+ * Helper method that serializes HtmlDocument to string and then
+ * creates a DOMDocument by parsing this string.
+ * It is used as a workaround for the problem described at https://issues.apache.org/jira/browse/WICKET-4332
+ * @param envelope (DispHtmlDocument) the document object created by IE from the XML response in the iframe
+ */
+Wicket._htmlToDomDocument = function (envelope) {
+	var xmlAsString = envelope.body.outerText;
+	xmlAsString = xmlAsString.replace(/^\s+|\s+$/g, ''); // trim
+	xmlAsString = xmlAsString.replace(/(\n|\r)-*/g, ''); // remove '\r\n-'. The dash is optional.
+	var xmldoc = Wicket._createXmlDocument(xmlAsString);
+	xmldoc.async = "false";
+	if (!xmldoc.loadXML(xmlAsString)) {
+		Wicket.Log.error("Error parsing response: "+xmlAsString);
+	}
+	return xmldoc;
+};
+
+/**
+ * Helper method that creates a DOM Document using the best parser available.
+ *
+ * @param text {String} the text to parse and create Document from.
+ */
+Wicket._createXmlDocument = function (text) {
+	var xmlDocument;
+	if (window.DOMParser) {
+		var parser = new DOMParser();
+		xmlDocument = parser.parseFromString(text, "text/xml");
+	} else if (window.ActiveXObject) {
+		try {
+			xmlDocument = new ActiveXObject("Msxml2.DOMDocument.6.0");
+		} catch (err6) {
+			try {
+				xmlDocument = new ActiveXObject("Msxml2.DOMDocument.5.0");
+			} catch (err5) {
+				try {
+					xmlDocument = new ActiveXObject("Msxml2.DOMDocument.4.0");
+				} catch (err4) {
+					try {
+						xmlDocument = new ActiveXObject("MSXML2.DOMDocument.3.0");
+					} catch (err3) {
+						try {
+							xmlDocument = new ActiveXObject("Microsoft.XMLDOM");
+						} catch (err2) {
+							Wicket.Log.error("Cannot create DOM document: " + err2);
+						}
+					}
+				}
+			}
+		}
+
+		if (xmlDocument && !xmlDocument.loadXML(text)) {
+			Wicket.Log.error("Error parsing response: "+text);
+		}
+	}
+
+	return xmlDocument;
+};
