@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.breadcrumb.panel;
 import java.lang.reflect.Constructor;
 
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -44,10 +45,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 */
 	public BreadCrumbPanelFactory(final Class<? extends BreadCrumbPanel> panelClass)
 	{
-		if (panelClass == null)
-		{
-			throw new IllegalArgumentException("argument panelClass must be not null");
-		}
+		Args.notNull(panelClass, "panelClass");
 
 		if (!BreadCrumbPanel.class.isAssignableFrom(panelClass))
 		{
