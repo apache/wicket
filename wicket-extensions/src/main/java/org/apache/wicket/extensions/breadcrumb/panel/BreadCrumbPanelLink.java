@@ -68,7 +68,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
 	public BreadCrumbPanelLink(final String id, final IBreadCrumbModel breadCrumbModel,
-		final Class<BreadCrumbPanel> panelClass)
+		final Class<? extends BreadCrumbPanel> panelClass)
 	{
 		this(id, breadCrumbModel, new BreadCrumbPanelFactory(panelClass));
 	}
