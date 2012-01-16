@@ -134,7 +134,7 @@
 			// adds an event of specified type to the element
 			// also supports the domready event on window
 			// domready is event fired when the DOM is complete, but before loading external resources (images, ...)
-			add: function (element, type, fn) {
+			add: function (element, type, fn, data) {
 				if (type === 'domready') {
 					jQuery(fn);
 				} else {
@@ -149,7 +149,7 @@
 						console.log('Cannot find element with id: ' + element);
 					}
 					
-					jQuery(el).on(type, fn);
+					jQuery(el).on(type, data, fn);
 				}
 				return element;
 			},

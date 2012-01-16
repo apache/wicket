@@ -50,7 +50,8 @@
 	var createIFrame,
 		getAjaxBaseUrl,
 		isUndef,
-		replaceAll;
+		replaceAll,
+		htmlToDomDocument;
 
 	isUndef = function (target) {
 		return (typeof(target) === 'undefined' || target === null);
@@ -93,6 +94,19 @@
 		return baseUrl;
 	};
 
+	/**
+	 * Helper method that serializes HtmlDocument to string and then
+	 * creates a DOMDocument by parsing this string.
+	 * It is used as a workaround for the problem described at https://issues.apache.org/jira/browse/WICKET-4332
+	 * @param envelope (DispHtmlDocument) the document object created by IE from the XML response in the iframe
+	 */
+	htmlToDomDocument = function (htmlDocument) {
+		var xmlAsString = htmlDocument.body.outerText;
+		xmlAsString = xmlAsString.replace(/^\s+|\s+$/g, ''); // trim
+		xmlAsString = xmlAsString.replace(/(\n|\r)-*/g, ''); // remove '\r\n-'. The dash is optional.
+		var xmldoc = Wicket.Xml.parse(xmlAsString);
+		return xmldoc;
+	};
 
 	/**
 	 * Functions executer takes array of functions and executes them. Each function gets
@@ -658,7 +672,7 @@
 
 			// install handler to deal with the ajax response
 			// ... we add the onload event after form submit because chrome fires it prematurely
-			Wicket.Event.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this));
+			Wicket.Event.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), attrs);
 
 			// handled, restore state and return true
 			form.action = originalFormAction;
@@ -684,7 +698,8 @@
 			}
 
 			// process the response
-			this.loadedCallback(envelope);
+			var attrs = event.data;
+			this.loadedCallback(envelope, attrs);
 
 			// stop the event
 			event.stopPropagation();
@@ -709,6 +724,11 @@
 			// loaded.
 			try {
 				var root = envelope.getElementsByTagName("ajax-response")[0];
+
+				if (root == null && envelope.compatMode == 'BackCompat') {
+					envelope = htmlToDomDocument(envelope);
+					root = envelope.getElementsByTagName("ajax-response")[0];
+				}
 
 				// the root element must be <ajax-response
 				if (isUndef(root) || root.tagName !== "ajax-response") {
@@ -1029,19 +1049,42 @@
 
 		Xml: {
 			parse: function (text) {
-				var xmldoc;
-
+				var xmlDocument;
 				if (window.DOMParser) {
 					var parser = new DOMParser();
-					xmldoc = parser.parseFromString(text, "text/xml");
+					xmlDocument = parser.parseFromString(text, "text/xml");
 				} else if (window.ActiveXObject) {
-					xmldoc = new window.ActiveXObject("Microsoft.XMLDOM");
-					if (!xmldoc.loadXML(text)) {
-						Wicket.Log.error("Error while parsing to XML: " + text);
+					try {
+						xmlDocument = new ActiveXObject("Msxml2.DOMDocument.6.0");
+					} catch (err6) {
+						try {
+							xmlDocument = new ActiveXObject("Msxml2.DOMDocument.5.0");
+						} catch (err5) {
+							try {
+								xmlDocument = new ActiveXObject("Msxml2.DOMDocument.4.0");
+							} catch (err4) {
+								try {
+									xmlDocument = new ActiveXObject("MSXML2.DOMDocument.3.0");
+								} catch (err3) {
+									try {
+										xmlDocument = new ActiveXObject("Microsoft.XMLDOM");
+									} catch (err2) {
+										Wicket.Log.error("Cannot create DOM document: " + err2);
+									}
+								}
+							}
+						}
+					}
+
+					if (xmlDocument) {
+						xmlDocument.async = "false";
+						if (!xmlDocument.loadXML(text)) {
+							Wicket.Log.error("Error parsing response: "+text);
+						}
 					}
 				}
 
-				return xmldoc;
+				return xmlDocument;
 			}
 		},
 
