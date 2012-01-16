@@ -191,14 +191,15 @@ public class HeaderResponseTest
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4334
 	 * https://issues.apache.org/jira/browse/WICKET-4312
 	 */
 	@Test
-	public void preserveJSessionId() {
+	public void doNotPreserveJSessionId() {
 		WicketTester tester = new WicketTester();
 		try {
 			headerResponse.renderJavaScriptReference("js-resource.js;jsessionid=1h402r54r4xuep32znicouftm", "some-id", false, null);
-			String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"js-resource.js;jsessionid=1h402r54r4xuep32znicouftm\"></script>\n";
+			String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"js-resource.js\"></script>\n";
 			String actual = headerResponse.getResponse().toString();
 			Assert.assertEquals(expected, actual);
 		} finally {

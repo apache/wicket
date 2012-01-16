@@ -128,10 +128,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	private void internalRenderCSSReference(final String url, final String media,
 		final String condition)
 	{
-		if (Strings.isEmpty(url))
-		{
-			throw new IllegalArgumentException("url cannot be empty or null");
-		}
+		Args.notEmpty(url, "url");
+		
 		if (!closed)
 		{
 			String urlWoSessionId = Strings.stripJSessionId(url);
@@ -145,7 +143,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 					getResponse().write("]>");
 				}
 				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-				getResponse().write(url);
+				getResponse().write(urlWoSessionId);
 				getResponse().write("\"");
 				if (media != null)
 				{
@@ -230,10 +228,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	private void internalRenderJavaScriptReference(String url, String id, boolean defer,
 		String charset)
 	{
-		if (Strings.isEmpty(url))
-		{
-			throw new IllegalArgumentException("url cannot be empty or null");
-		}
+		Args.notEmpty(url, "url");
+
 		if (!closed)
 		{
 			String urlWoSessionId = Strings.stripJSessionId(url);
@@ -246,7 +242,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 			if (token1Unused && token2Unused)
 			{
-				JavaScriptUtils.writeJavaScriptUrl(getResponse(), url, id, defer,
+				JavaScriptUtils.writeJavaScriptUrl(getResponse(), urlWoSessionId, id, defer,
 					charset);
 				markRendered(token1);
 				if (token2 != null)
