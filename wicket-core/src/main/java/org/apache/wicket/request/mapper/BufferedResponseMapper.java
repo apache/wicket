@@ -109,7 +109,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
+	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
 	 */
 	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
