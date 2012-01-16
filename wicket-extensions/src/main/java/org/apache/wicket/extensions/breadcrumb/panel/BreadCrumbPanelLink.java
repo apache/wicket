@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.breadcrumb.panel;
 import org.apache.wicket.extensions.breadcrumb.BreadCrumbLink;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Bread crumb link specifically for {@link BreadCrumbPanel bread crumb panels}. It uses a
@@ -88,14 +89,8 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	{
 		super(id, breadCrumbModel);
 
-		if (breadCrumbModel == null)
-		{
-			throw new IllegalArgumentException("argument breadCrumbModel must be not null");
-		}
-		if (breadCrumbPanelFactory == null)
-		{
-			throw new IllegalArgumentException("argument breadCrumbPanelFactory must be not null");
-		}
+		Args.notNull(breadCrumbModel, "breadCrumbModel");
+		Args.notNull(breadCrumbPanelFactory, "breadCrumbPanelFactory");
 
 		this.breadCrumbModel = breadCrumbModel;
 		this.breadCrumbPanelFactory = breadCrumbPanelFactory;
