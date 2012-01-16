@@ -2555,10 +2555,6 @@ Wicket._htmlToDomDocument = function (envelope) {
 	xmlAsString = xmlAsString.replace(/^\s+|\s+$/g, ''); // trim
 	xmlAsString = xmlAsString.replace(/(\n|\r)-*/g, ''); // remove '\r\n-'. The dash is optional.
 	var xmldoc = Wicket._createXmlDocument(xmlAsString);
-	xmldoc.async = "false";
-	if (!xmldoc.loadXML(xmlAsString)) {
-		Wicket.Log.error("Error parsing response: "+xmlAsString);
-	}
 	return xmldoc;
 };
 
@@ -2595,8 +2591,11 @@ Wicket._createXmlDocument = function (text) {
 			}
 		}
 
-		if (xmlDocument && !xmlDocument.loadXML(text)) {
-			Wicket.Log.error("Error parsing response: "+text);
+		if (xmlDocument) {
+			xmlDocument.async = "false";
+			if (!xmlDocument.loadXML(text)) {
+				Wicket.Log.error("Error parsing response: "+text);
+			}
 		}
 	}
 
