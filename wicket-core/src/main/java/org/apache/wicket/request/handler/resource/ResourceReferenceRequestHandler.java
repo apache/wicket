@@ -82,7 +82,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 	}
 
 	/**
-	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public void detach(IRequestCycle requestCycle)
@@ -100,7 +100,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 
 
 	/**
-	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public void respond(IRequestCycle requestCycle)

@@ -40,8 +40,11 @@ import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -450,7 +453,8 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public final CharSequence urlFor(ResourceReference reference, PageParameters params)
 	{
-		return renderUrl(mapUrlFor(reference, params));
+		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference, params);
+		return renderUrl(mapUrlFor(handler), handler);
 	}
 
 	/**
@@ -469,7 +473,9 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
-		return renderUrl(mapUrlFor(pageClass, parameters));
+		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(pageClass,
+				parameters));
+		return renderUrl(mapUrlFor(handler), handler);
 	}
 
 	/**
@@ -483,14 +489,39 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public CharSequence urlFor(IRequestHandler handler)
 	{
-		return renderUrl(mapUrlFor(handler));
+		Url mappedUrl = mapUrlFor(handler);
+		CharSequence url = renderUrl(mappedUrl, handler);
+		return url;
 	}
 
-	private String renderUrl(Url url)
+	private String renderUrl(Url url, IRequestHandler handler)
 	{
 		if (url != null)
 		{
-			return getOriginalResponse().encodeURL(getUrlRenderer().renderUrl(url));
+			String renderedUrl = getUrlRenderer().renderUrl(url);
+			if (handler instanceof ResourceReferenceRequestHandler)
+			{
+				ResourceReferenceRequestHandler rrrh = (ResourceReferenceRequestHandler) handler;
+				IResource resource = rrrh.getResource();
+				if (resource instanceof IStaticCacheableResource == false)
+				{
+					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
+				}
+			}
+			else if (handler instanceof ResourceRequestHandler)
+			{
+				ResourceRequestHandler rrh = (ResourceRequestHandler) handler;
+				IResource resource = rrh.getResource();
+				if (resource instanceof IStaticCacheableResource == false)
+				{
+					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
+				}
+			}
+			else
+			{
+				renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
+			}
+			return renderedUrl;
 		}
 		else
 		{

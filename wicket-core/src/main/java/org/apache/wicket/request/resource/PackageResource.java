@@ -138,9 +138,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		// Convert resource path to absolute path relative to base package
 		absolutePath = Packages.absolutePath(scope, name);
 
-		final String parentEscape = Application.get()
-			.getResourceSettings()
-			.getParentFolderPlaceholder();
+		final String parentEscape = getParentFolderPlaceholder();
 
 		if (Strings.isEmpty(parentEscape) == false)
 		{
@@ -497,6 +495,21 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		else if (!variation.equals(other.variation))
 			return false;
 		return true;
+	}
+
+	String getParentFolderPlaceholder()
+	{
+		String parentFolderPlaceholder;
+		if (Application.exists())
+		{
+			parentFolderPlaceholder = Application.get()
+					.getResourceSettings()
+					.getParentFolderPlaceholder();
+		} else
+		{
+			parentFolderPlaceholder = "..";
+		}
+		return parentFolderPlaceholder;
 	}
 
 	private static class CacheKey implements Serializable

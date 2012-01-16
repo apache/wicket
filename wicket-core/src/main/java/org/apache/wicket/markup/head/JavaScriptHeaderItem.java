@@ -19,6 +19,7 @@ package org.apache.wicket.markup.head;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 
@@ -203,11 +204,8 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	protected static void internalRenderJavaScriptReference(Response response, String url,
 		String id, boolean defer, String charset)
 	{
-		if (Strings.isEmpty(url))
-		{
-			throw new IllegalArgumentException("url cannot be empty or null");
-		}
+		Args.notEmpty(url, "url");
 
-		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset);
+		JavaScriptUtils.writeJavaScriptUrl(response, Strings.stripJSessionId(url), id, defer, charset);
 	}
 }

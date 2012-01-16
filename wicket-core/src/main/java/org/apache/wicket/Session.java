@@ -49,9 +49,6 @@ import org.slf4j.LoggerFactory;
  * Holds information about a user session, including some fixed number of most recent pages (and all
  * their nested component information).
  * <ul>
- * <li><b>Access via RequestCycle </b>- The Session for a {@link RequestCycle} can be retrieved by
- * calling {@link RequestCycle#getSession()}.
- * 
  * <li><b>Access via Component </b>- If a RequestCycle object is not available, the Session can be
  * retrieved for a Component by calling {@link Component#getSession()}. As currently implemented,
  * each Component does not itself have a reference to the session that contains it. However, the
@@ -162,7 +159,7 @@ public abstract class Session implements IClusterable, IEventSink
 
 	/**
 	 * Cached instance of agent info which is typically designated by calling
-	 * {@link RequestCycle#newClientInfo()}.
+	 * {@link Session#getClientInfo()}.
 	 */
 	protected ClientInfo clientInfo;
 
@@ -841,9 +838,7 @@ public abstract class Session implements IClusterable, IEventSink
 
 	/**
 	 * Returns the {@link IPageManager} instance.
-	 * 
-	 * @see #newPageManager()
-	 * 
+	 *
 	 * @return {@link IPageManager} instance.
 	 */
 	public final IPageManager getPageManager()
