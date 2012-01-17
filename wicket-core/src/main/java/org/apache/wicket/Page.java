@@ -770,13 +770,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		});
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
 	@Override
-	protected void onBeforeRender()
+       protected void onConfigure()
 	{
+               super.onConfigure();
+
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
@@ -786,7 +784,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 			throw new UnauthorizedActionException(this, Component.RENDER);
 		}
+       }
 
+       /**
+        * 
+        * @see org.apache.wicket.Component#onBeforeRender()
+        */
+       @Override
+       protected void onBeforeRender()
+       {
 		// Make sure it is really empty
 		renderedComponents = null;
 
