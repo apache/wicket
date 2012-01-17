@@ -1257,7 +1257,9 @@ public class BaseWicketTester
 	 * @param panelClass
 	 *            a test <code>Panel</code> class with <code>Panel(String id)</code> constructor
 	 * @return a rendered <code>Panel</code>
+	 * @deprecated Use startComponentInPage(Class) instead
 	 */
+	@Deprecated
 	public final <C extends Panel> C startPanel(final Class<C> panelClass)
 	{
 		Args.notNull(panelClass, "panelClass");
