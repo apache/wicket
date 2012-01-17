@@ -105,8 +105,7 @@ import org.slf4j.LoggerFactory;
  * concatenation with colon separators of each id along the way. For example, the path "a:b:c" would
  * refer to the component named "c" inside the MarkupContainer named "b" inside the container named
  * "a". The path to a component can be retrieved by calling {@link #getPath()}. To get a Component
- * path relative to the page that contains it, you can call {@link #getPageRelativePath()}.
- * </li>
+ * path relative to the page that contains it, you can call {@link #getPageRelativePath()}.</li>
  * <li><b>LifeCycle </b>- Components participate in the following lifecycle phases:
  * <ul>
  * <li><b>Construction </b>- A Component is constructed with the Java language new operator.
@@ -114,8 +113,7 @@ import org.slf4j.LoggerFactory;
  * {@link IComponentInstantiationListener}s are notified of component instantiation.
  * <p>
  * {@link #onInitialize()} is called on the component as soon as the component is part of a page's
- * component tree. At this state the component is able to access its markup.
- * </li>
+ * component tree. At this state the component is able to access its markup.</li>
  * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler such
  * as {@link WicketFilter}. An associated Application object creates {@link Session},
  * {@link Request} and {@link Response} objects for use by a given Component in updating its model
@@ -1088,8 +1086,20 @@ public abstract class Component
 			// check authorization
 			setRenderAllowed();
 
+			internalOnAfterConfigure();
+
 			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
+	}
+
+	/**
+	 * 
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * Called after the {@link #onConfigure()}, but before {@link #onBeforeRender()}
+	 */
+	void internalOnAfterConfigure()
+	{
 	}
 
 	/**
@@ -2680,10 +2690,11 @@ public abstract class Component
 					// to be backward compatible. WICKET-3761
 					getMarkupSourcingStrategy().renderHead(this, container);
 					CharSequence headerContribution = markupHeaderResponse.getBuffer();
-					if (Strings.isEmpty(headerContribution) == false) {
+					if (Strings.isEmpty(headerContribution) == false)
+					{
 						response.render(StringHeaderItem.forString(headerContribution));
 					}
-				} 
+				}
 				finally
 				{
 					RequestCycle.get().setResponse(oldResponse);
@@ -3311,7 +3322,7 @@ public abstract class Component
 	{
 		return getRequestCycle().urlFor(pageClass, parameters);
 	}
-	
+
 	/**
 	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
 	 * AjaxPagingNavigationBehavior).
@@ -3356,7 +3367,7 @@ public abstract class Component
 	{
 		return getRequestCycle().urlFor(requestHandler);
 	}
-	
+
 	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
 	 * 
