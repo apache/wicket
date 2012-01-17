@@ -23,6 +23,7 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
@@ -34,6 +35,9 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.authorization.Action;
+import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -44,6 +48,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
@@ -62,6 +67,7 @@ import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -1119,5 +1125,42 @@ public class WicketTesterTest extends WicketTestCase
 
 		// assert that the cookie is not preserved for the next request cycle
 		assertNull(tester.getRequest().getCookies());
+	}
+
+
+	/**
+	 * Tests if the access-denied-page is rendered if a page is rerendered for which you don't have
+	 * permission anymore
+	 */
+	@Test
+	@Ignore
+	public void rerenderNotAllowed()
+	{
+		class YesNoPageAuthorizationStrategy implements IAuthorizationStrategy
+		{
+			private boolean allowed = true;
+
+			@Override
+			public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
+				Class<T> componentClass)
+			{
+				return allowed || !WebPage.class.isAssignableFrom(componentClass);
+			}
+
+			@Override
+			public boolean isActionAuthorized(Component component, Action action)
+			{
+				return allowed || !(component instanceof WebPage);
+			}
+		}
+		YesNoPageAuthorizationStrategy strategy = new YesNoPageAuthorizationStrategy();
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(strategy);
+		DummyHomePage start = tester.startPage(DummyHomePage.class);
+		tester.assertRenderedPage(DummyHomePage.class);
+		strategy.allowed = false;
+		tester.startPage(start);
+		tester.assertRenderedPage(tester.getApplication()
+			.getApplicationSettings()
+			.getAccessDeniedPage());
 	}
 }
