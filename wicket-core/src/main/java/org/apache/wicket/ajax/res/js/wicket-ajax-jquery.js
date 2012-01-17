@@ -347,8 +347,8 @@
 				attrs.m = 'GET';
 			}
 
-			if (attrs.async !== true) {
-				attrs.async = false;
+			if (attrs.async !== false) {
+				attrs.async = true;
 			}
 
 			if (!jQuery.isNumeric(attrs.rt)) {

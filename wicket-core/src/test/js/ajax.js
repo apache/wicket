@@ -421,7 +421,7 @@ jQuery(document).ready(function() {
 						deepEqual(attrs.coh, attributes.coh, 'complete handlers');
 						ok(attributes.ep === undefined, 'extra parameters');
 						ok(attributes.dep === undefined, 'dynamic extra parameters');
-						equal(attributes.async, false, 'asynchronous');
+						equal(attributes.async, true, 'asynchronous');
 						equal(attributes.rt, 0, 'request timeout');
 						equal(attributes.ad, false, 'allow default');
 
