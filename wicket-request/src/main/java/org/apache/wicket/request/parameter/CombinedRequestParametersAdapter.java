@@ -19,10 +19,12 @@ package org.apache.wicket.request.parameter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
 
 /**
@@ -41,11 +43,7 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 	 */
 	public CombinedRequestParametersAdapter(final IRequestParameters... parameters)
 	{
-		if (parameters == null)
-		{
-			throw new IllegalStateException("Argument 'parameters' may not be null");
-		}
-		this.parameters = parameters;
+		this.parameters = Args.notNull(parameters, "parameters");
 	}
 
 	/**
@@ -53,7 +51,7 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 	 */
 	public Set<String> getParameterNames()
 	{
-		Set<String> result = new HashSet<String>();
+		Set<String> result = new LinkedHashSet<String>();
 		for (IRequestParameters p : parameters)
 		{
 			result.addAll(p.getParameterNames());

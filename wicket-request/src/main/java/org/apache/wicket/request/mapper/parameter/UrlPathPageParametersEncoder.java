@@ -25,9 +25,12 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
+ * <p>
  * Encodes page parameters into Url path fragments instead of the query string like the default
  * {@link PageParametersEncoder}. The parameters are encoded in the following format:
  * {@code /param1Name/param1Value/param2Name/param2Value}.
+ * </p>
+ * <strong>Note</strong>: Because of the nature of the encoder it doesn't support POST request parameters.
  * <p>
  * This used to be the default way of encoding page parameters in 1.4.x applications. Newer 1.5.x+
  * applications use the query string, by default. This class facilitates backwards compatibility and
