@@ -606,10 +606,21 @@ public abstract class AbstractResource implements IResource
 			}
 
 			// 6. Flush the response
-			// This is necessary for firefox if this resource is an image, otherwise it messes up
-			// other images on page
-			webResponse.flush();
+			flushResponseAfterHeaders(webResponse);
 		}
+	}
+
+	/**
+	 * Flushes the response after setting the headers.
+	 * This is necessary for Firefox if this resource is an image,
+	 * otherwise it messes up other images on page.
+	 *
+	 * @param response
+	 *      the current web response
+	 */
+	protected void flushResponseAfterHeaders(final WebResponse response)
+	{
+		response.flush();
 	}
 
 	/**
