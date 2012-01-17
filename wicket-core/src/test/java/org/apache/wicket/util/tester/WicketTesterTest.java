@@ -43,6 +43,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
@@ -67,7 +68,6 @@ import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -1133,9 +1133,9 @@ public class WicketTesterTest extends WicketTestCase
 	 * permission anymore
 	 */
 	@Test
-	@Ignore
 	public void rerenderNotAllowed()
 	{
+		tester.setExposeExceptions(false);
 		class YesNoPageAuthorizationStrategy implements IAuthorizationStrategy
 		{
 			private boolean allowed = true;
@@ -1144,12 +1144,16 @@ public class WicketTesterTest extends WicketTestCase
 			public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 				Class<T> componentClass)
 			{
+				if (componentClass == AccessDeniedPage.class)
+					return true;
 				return allowed || !WebPage.class.isAssignableFrom(componentClass);
 			}
 
 			@Override
 			public boolean isActionAuthorized(Component component, Action action)
 			{
+				if (component instanceof AccessDeniedPage)
+					return true;
 				return allowed || !(component instanceof WebPage);
 			}
 		}
