@@ -1152,25 +1152,6 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Renders a <code>Panel</code> from a <code>Panel(String id)</code> constructor.
-	 * <p>
-	 * Note that when try to access a component, e.g. via accessLabel(), the 'path' parameter must
-	 * be relative to the panel. Not relative to the Page which will automatically be added for you.
-	 * 
-	 * @param <C>
-	 *            the type of the component
-	 * @param panelClass
-	 *            a test <code>Panel</code> class with <code>Panel(String id)</code> constructor
-	 * @return a rendered <code>Panel</code>
-	 */
-	public final <C extends Panel> C startPanel(final Class<C> panelClass)
-	{
-		Args.notNull(panelClass, "panelClass");
-
-		return startComponentInPage(panelClass, null);
-	}
-
-	/**
 	 * Process a component. A web page will be automatically created with the markup created in
 	 * {@link #createPageMarkup(String)}.
 	 * 
