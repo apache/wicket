@@ -33,12 +33,16 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.authorization.Action;
+import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.markup.html.PackageResource.PackageResourceBlockedException;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.MockPage;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -828,5 +832,40 @@ public class WicketTesterTest extends TestCase
 	private Button getSubmitButton()
 	{
 		return (Button)tester.getComponentFromLastRenderedPage("form:submit");
+	}
+
+	/**
+	 * Tests if the access-denied-page is rendered if a page is rerendered for which you don't have
+	 * permission anymore
+	 */
+	public void testRenderNotAllowed()
+	{
+		class YesNoPageAuthorizationStrategy implements IAuthorizationStrategy
+		{
+			private boolean allowed = true;
+
+			public <T extends Component> boolean isInstantiationAuthorized(Class<T> componentClass)
+			{
+				if (componentClass == AccessDeniedPage.class)
+					return true;
+				return allowed || !WebPage.class.isAssignableFrom(componentClass);
+			}
+
+			public boolean isActionAuthorized(Component component, Action action)
+			{
+				if (component instanceof AccessDeniedPage)
+					return true;
+				return allowed || !(component instanceof WebPage);
+			}
+		}
+		YesNoPageAuthorizationStrategy strategy = new YesNoPageAuthorizationStrategy();
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(strategy);
+		tester.startPage(DummyHomePage.class);
+		tester.assertRenderedPage(DummyHomePage.class);
+		strategy.allowed = false;
+		tester.startPage(DummyHomePage.class);
+		tester.assertRenderedPage(tester.getApplication()
+			.getApplicationSettings()
+			.getAccessDeniedPage());
 	}
 }
