@@ -44,6 +44,7 @@ import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
@@ -1248,6 +1249,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			RequestParameters parameters = getRequest().getRequestParameters();
 			pageMapName = parameters.getPageMapName();
+			if (pageMapName != null)
+			{
+				pageMapName = Strings.escapeMarkup(pageMapName).toString();
+			}
 		}
 
 		final IPageMap pageMap = PageMap.forName(pageMapName);
