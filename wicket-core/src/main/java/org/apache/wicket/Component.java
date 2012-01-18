@@ -756,7 +756,7 @@ public abstract class Component
 	{
 		if (log.isDebugEnabled())
 		{
-			log.debug("Markup available " + toString());
+			log.debug("Markup available {}", toString());
 		}
 	}
 
@@ -926,13 +926,11 @@ public abstract class Component
 	}
 
 	/**
-	 * Called on very component after the page is rendered. It will call onAfterRender for it self
+	 * Called on every component after the page is rendered. It will call onAfterRender for it self
 	 * and its children.
 	 */
 	public final void afterRender()
 	{
-		// if the component has been previously attached via attach()
-		// detach it now
 		try
 		{
 			setFlag(FLAG_AFTER_RENDERING, true);
@@ -1154,7 +1152,7 @@ public abstract class Component
 			throw new IllegalStateException(Component.class.getName() +
 				" has not been properly removed from hierachy. Something in the hierarchy of " +
 				getClass().getName() +
-				" has not called super.onRemovalFromHierarchy() in the override of onRemovalFromHierarchy() method");
+				" has not called super.onRemove() in the override of onRemove() method");
 		}
 		removeChildren();
 	}
@@ -1166,8 +1164,6 @@ public abstract class Component
 	@Override
 	public final void detach()
 	{
-		// if the component has been previously attached via attach()
-		// detach it now
 		setFlag(FLAG_DETACHING, true);
 		onDetach();
 		if (getFlag(FLAG_DETACHING))
@@ -1483,25 +1479,6 @@ public abstract class Component
 			id = getMarkupIdFromMarkup();
 		}
 		return id;
-	}
-
-	/**
-	 * Find the Page and get net value from an auto-index
-	 * 
-	 * @return autoIndex
-	 */
-	private final int nextAutoIndex()
-	{
-		Page page = findPage();
-		if (page == null)
-		{
-			throw new WicketRuntimeException(
-				"This component is not (yet) coupled to a page. It has to be able "
-					+ "to find the page it is supposed to operate in before you can call "
-					+ "this method (Component#getMarkupId)");
-		}
-
-		return page.getAutoIndex();
 	}
 
 	/**
@@ -2371,7 +2348,7 @@ public abstract class Component
 			// Rendering is beginning
 			if (log.isDebugEnabled())
 			{
-				log.debug("Begin render " + this);
+				log.debug("Begin render {}", this);
 			}
 
 			try
@@ -2390,7 +2367,7 @@ public abstract class Component
 
 			if (log.isDebugEnabled())
 			{
-				log.debug("End render " + this);
+				log.debug("End render {}", this);
 			}
 		}
 		// elem is null when rendering a page
@@ -2585,7 +2562,7 @@ public abstract class Component
 	 */
 	private boolean needToRenderTag(final ComponentTag openTag)
 	{
-		// If a open-close tag has been modified to be open-body-close than a
+		// If a open-close tag has been modified to be open-body-close then a
 		// synthetic close tag must be rendered.
 		boolean renderTag = (openTag != null && !(openTag instanceof WicketTag));
 		if (renderTag == false)
@@ -2673,7 +2650,7 @@ public abstract class Component
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("renderHead: " + toString(false));
+				log.debug("renderHead: {}", toString(false));
 			}
 
 			IHeaderResponse response = container.getHeaderResponse();
@@ -2739,10 +2716,8 @@ public abstract class Component
 	 */
 	public Component replaceWith(Component replacement)
 	{
-		if (replacement == null)
-		{
-			throw new IllegalArgumentException("Argument [[replacement]] cannot be null.");
-		}
+		Args.notNull(replacement, "replacement");
+
 		if (!getId().equals(replacement.getId()))
 		{
 			throw new IllegalArgumentException(
@@ -3596,7 +3571,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Prefixes an exception message with useful information about this. component.
+	 * Suffixes an exception message with useful information about this. component.
 	 * 
 	 * @param message
 	 *            The message
@@ -3612,7 +3587,6 @@ public abstract class Component
 	 * 
 	 * @return The markup stream for this component. Since a Component cannot have a markup stream,
 	 *         we ask this component's parent to search for it.
-	 * @TODO can be removed in 1.5
 	 */
 	protected final MarkupStream findMarkupStream()
 	{
@@ -3802,14 +3776,6 @@ public abstract class Component
 	}
 
 	/**
-	 * @return Component's markup stream
-	 */
-	protected MarkupStream locateMarkupStream()
-	{
-		return new MarkupStream(getMarkup());
-	}
-
-	/**
 	 * Called just after a component is rendered.
 	 */
 	protected void onAfterRender()
@@ -3893,8 +3859,6 @@ public abstract class Component
 	 * 
 	 * Overrides of this method MUST call the super implementation, the most logical place to do
 	 * this is the last line of the override method.
-	 * 
-	 * 
 	 */
 	protected void onRemove()
 	{
@@ -4149,19 +4113,8 @@ public abstract class Component
 			return this;
 		}
 		throw new IllegalArgumentException(
-			exceptionMessage("Component is not a container and so does " + "not contain the path " +
+			exceptionMessage("Component is not a container and so does not contain the path " +
 				path));
-	}
-
-	/**
-	 * Checks whether or not this component has a markup id value generated, whether it is automatic
-	 * or user defined
-	 * 
-	 * @return true if this component has a markup id value generated
-	 */
-	final boolean hasMarkupIdMetaData()
-	{
-		return getMarkupId() != null;
 	}
 
 	/**
@@ -4408,7 +4361,7 @@ public abstract class Component
 	 * <p>
 	 * Example usecase for overriding: Suppose you are building an component that displays images.
 	 * The component generates a callback to itself using {@link IRequestListener} interface and
-	 * uses this callback to stream image data. If such a component is placed inside a disable
+	 * uses this callback to stream image data. If such a component is placed inside a disabled
 	 * webmarkupcontainer we still want to allow the invocation of the request listener callback
 	 * method so that image data can be streamed. Such a component would override this method and
 	 * return {@literal true} if the listener method belongs to {@link IRequestListener}.
