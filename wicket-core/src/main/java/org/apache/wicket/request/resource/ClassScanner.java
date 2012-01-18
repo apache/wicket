@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 abstract class ClassScanner
 {
-	private static Logger log = LoggerFactory.getLogger(ClassScanner.class);
+	private static final Logger log = LoggerFactory.getLogger(ClassScanner.class);
 
 	private final Set<String> scannedClasses = new ConcurrentHashSet<String>();
 
