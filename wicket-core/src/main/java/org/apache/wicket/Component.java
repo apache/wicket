@@ -98,8 +98,8 @@ import org.slf4j.LoggerFactory;
  * given Component is simply the concatenation with colon separators of each id along the way. For
  * example, the path "a:b:c" would refer to the component named "c" inside the MarkupContainer named
  * "b" inside the container named "a". The path to a component can be retrieved by calling
- * getPath(). To get a Component path relative to the page that contains it, you can
- * call getPageRelativePath().
+ * getPath(). To get a Component path relative to the page that contains it, you can call
+ * getPageRelativePath().
  * 
  * <li><b>LifeCycle </b>- Components participate in the following lifecycle phases:
  * <ul>
@@ -1090,8 +1090,20 @@ public abstract class Component
 			// check authorization
 			setRenderAllowed();
 
+			internalOnAfterConfigure();
+
 			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
+	}
+
+	/**
+	 * 
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * Called after the {@link #onConfigure()}, but before {@link #onBeforeRender()}
+	 */
+	void internalOnAfterConfigure()
+	{
 	}
 
 	/**
@@ -3274,7 +3286,7 @@ public abstract class Component
 	{
 		return getRequestCycle().urlFor(pageClass, parameters);
 	}
-	
+
 	/**
 	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
 	 * AjaxPagingNavigationBehavior).
@@ -3284,7 +3296,8 @@ public abstract class Component
 	 * @param listener
 	 *            The listener interface that the URL should call
 	 * @return The URL
-	 * @deprecated use {@link #urlFor(Behavior, RequestListenerInterface, PageParameters)} with explit parameters
+	 * @deprecated use {@link #urlFor(Behavior, RequestListenerInterface, PageParameters)} with
+	 *             explit parameters
 	 */
 	@Deprecated
 	public final CharSequence urlFor(final Behavior behaviour,
@@ -3292,7 +3305,7 @@ public abstract class Component
 	{
 		return urlFor(behaviour, listener, null);
 	}
-	
+
 	/**
 	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
 	 * AjaxPagingNavigationBehavior).
@@ -3337,7 +3350,7 @@ public abstract class Component
 	{
 		return getRequestCycle().urlFor(requestHandler);
 	}
-	
+
 	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
 	 * 
@@ -3346,13 +3359,14 @@ public abstract class Component
 	 * @param listener
 	 *            The listener interface that the URL should call
 	 * @return The URL
-	 * @deprecated use {@link #urlFor(RequestListenerInterface, PageParameters)} with explicit page parameters
+	 * @deprecated use {@link #urlFor(RequestListenerInterface, PageParameters)} with explicit page
+	 *             parameters
 	 */
 	@Deprecated
 	public final CharSequence urlFor(final RequestListenerInterface listener)
 	{
 		return urlFor(listener, null);
-	}	
+	}
 
 	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
