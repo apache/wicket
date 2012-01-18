@@ -38,7 +38,7 @@ import org.apache.wicket.util.lang.Args;
  *         }
  * </pre>
  * 
- * This behavior will be linked to the onclick javascript event of the div WebMarkupContainer
+ * This behavior will be linked to the <em>click</em> javascript event of the div WebMarkupContainer
  * represents, and so anytime a user clicks this div the {@link #onEvent(AjaxRequestTarget)} of the
  * behavior is invoked.
  * 
@@ -56,7 +56,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * Construct.
 	 * 
 	 * @param event
-	 *            event this behavior will be attached to
+	 *      the event this behavior will be attached to
 	 */
 	public AjaxEventBehavior(String event)
 	{
@@ -81,35 +81,10 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		attributes.setEventNames(event);
 	}
 
-	@Override
-	public void renderHead(Component component, IHeaderResponse response)
-	{
-		super.renderHead(component, response);
-
-		if (component.isEnabledInHierarchy())
-		{
-			StringBuilder js = new StringBuilder();
-			js.append("Wicket.Ajax.ajax(");
-
-			js.append(renderAjaxAttributes(component));
-
-			js.append(");");
-
-			AjaxRequestTarget target = getComponent().getRequestCycle().find(AjaxRequestTarget.class);
-			if (target == null)
-			{
-				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
-			}
-			else
-			{
-				target.appendJavaScript(js);
-			}
-		}
-	}
-
 	/**
 	 * 
 	 * @param event
+	 *      the event this behavior will be attached to
 	 */
 	protected void onCheckEvent(final String event)
 	{
@@ -118,6 +93,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	/**
 	 * 
 	 * @return event
+	 *      the event this behavior is attached to
 	 */
 	public final String getEvent()
 	{
@@ -138,6 +114,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * Listener method for the ajax event
 	 * 
 	 * @param target
+	 *      the current request handler
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
 }

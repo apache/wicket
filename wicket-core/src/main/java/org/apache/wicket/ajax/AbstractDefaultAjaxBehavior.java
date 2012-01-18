@@ -34,6 +34,7 @@ import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
@@ -75,18 +76,39 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *      org.apache.wicket.markup.head.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(Component component, IHeaderResponse response)
+	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		super.renderHead(component, response);
 
 		CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
 
-		Url baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
+		RequestCycle requestCycle = component.getRequestCycle();
+		Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
 		response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl +
 			"\";", "wicket-ajax-base-url"));
 
 		renderExtraHeaderContributors(component, response);
+
+		if (component.isEnabledInHierarchy())
+		{
+			StringBuilder js = new StringBuilder();
+			js.append("Wicket.Ajax.ajax(");
+
+			js.append(renderAjaxAttributes(component));
+
+			js.append(");");
+
+			AjaxRequestTarget target = requestCycle.find(AjaxRequestTarget.class);
+			if (target == null)
+			{
+				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			}
+			else
+			{
+				target.appendJavaScript(js);
+			}
+		}
 	}
 
 	/**
