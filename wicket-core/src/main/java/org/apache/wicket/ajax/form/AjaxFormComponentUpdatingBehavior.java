@@ -81,7 +81,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			AjaxFormChoiceComponentUpdatingBehavior.appliesTo(getComponent()))
 		{
 			log.warn(String.format(
-				"AjaxFormComponentUpdatingBehavior is not suposed to be added in the form component at path: \"%s\". "
+				"AjaxFormComponentUpdatingBehavior is not supposed to be added in the form component at path: \"%s\". "
 					+ "Use the AjaxFormChoiceComponentUpdatingBehavior instead, that is meant for choices/groups that are not one component in the html but many",
 				getComponent().getPageRelativePath()));
 		}
@@ -104,19 +104,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		attributes.setMethod(Method.POST);
 		attributes.getDynamicExtraParameters().add(
 			"return Wicket.Form.serializeElement('" + getComponent().getMarkupId() + "')");
-	}
-
-	/**
-	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
-	 */
-	@Override
-	protected void onCheckEvent(String event)
-	{
-		if ("href".equalsIgnoreCase(event))
-		{
-			throw new IllegalArgumentException(
-				"this behavior cannot be attached to an 'href' event");
-		}
 	}
 
 	/**
@@ -185,6 +172,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * has been updated.
 	 * 
 	 * @param target
+	 *      the current request handler
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
@@ -196,7 +184,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * FormComponent
 	 * 
 	 * @param target
+	 *       the current request handler
 	 * @param e
+	 *      the error that occurred during the update of the component
 	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{
