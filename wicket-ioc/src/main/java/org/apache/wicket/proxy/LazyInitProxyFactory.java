@@ -68,7 +68,7 @@ import org.apache.wicket.util.lang.WicketObjects;
  * 	}
  * }
  * 
- * class UserDetachableModel extends LoadableModel
+ * class UserDetachableModel extends LoadableDetachableModel
  * {
  * 	private UserService svc;
  * 
@@ -179,7 +179,7 @@ public class LazyInitProxyFactory
 
 	/**
 	 * This interface is used to make the proxy forward writeReplace() call to the handler instead
-	 * of invoking it on itself. This allows us to serialize the replacement objet instead of the
+	 * of invoking it on itself. This allows us to serialize the replacement object instead of the
 	 * proxy itself in case the proxy subclass is deserialized on a VM that does not have it
 	 * created.
 	 * 

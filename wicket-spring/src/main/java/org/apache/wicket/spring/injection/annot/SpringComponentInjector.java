@@ -35,8 +35,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * {@link IComponentInstantiationListener} that injects component properties annotated with
- * {@link SpringBean} annotations.
+ * {@link IComponentInstantiationListener} that injects component and behavior properties
+ * annotated with {@link SpringBean} annotations.
  * 
  * To install in yourapplication.init() call
  * <code>getComponentInstantiationListeners().add(new SpringComponentInjector(this));</code>
@@ -121,20 +121,19 @@ public class SpringComponentInjector extends Injector
 		bind(webapp);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void inject(final Object object)
 	{
 		inject(object, fieldValueFactory);
 	}
 
-	/** {@inheritDoc} */
+	@Override
 	public void onInstantiation(final Component component)
 	{
 		inject(component);
 	}
 
-
+	@Override
 	public void onInstantiation(Behavior behavior)
 	{
 		inject(behavior);
@@ -145,7 +144,6 @@ public class SpringComponentInjector extends Injector
 	 * a transient cache of the lookup.
 	 * 
 	 * @author ivaynberg
-	 * 
 	 */
 	private static class ContextLocator implements ISpringContextLocator
 	{

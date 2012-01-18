@@ -32,7 +32,7 @@ import com.google.inject.Module;
 import com.google.inject.Stage;
 
 /**
- * Injects field members of components using Guice.
+ * Injects field members of components and behaviors using Guice.
  * <p>
  * Add this to your application in its {@link Application#init()} method like so:
  * 
@@ -117,23 +117,19 @@ public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
 		bind(app);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void inject(final Object object)
 	{
 		inject(object, fieldValueFactory);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public void onInstantiation(final Component component)
 	{
 		inject(component);
 	}
 
+	@Override
 	public void onInstantiation(Behavior behavior)
 	{
 		inject(behavior);

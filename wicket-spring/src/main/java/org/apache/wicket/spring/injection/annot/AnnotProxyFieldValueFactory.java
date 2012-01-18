@@ -30,6 +30,7 @@ import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 import org.apache.wicket.spring.ISpringContextLocator;
 import org.apache.wicket.spring.SpringBeanLocator;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.BeanFactory;
@@ -100,11 +101,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	public AnnotProxyFieldValueFactory(final ISpringContextLocator contextLocator,
 		final boolean wrapInProxies)
 	{
-		if (contextLocator == null)
-		{
-			throw new IllegalArgumentException("[contextLocator] argument cannot be null");
-		}
-		this.contextLocator = contextLocator;
+		this.contextLocator = Args.notNull(contextLocator, "contextLocator");
 		this.wrapInProxies = wrapInProxies;
 	}
 
@@ -198,7 +195,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
-	private final String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
+	private String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
 		final boolean required)
 	{
 		// get the list of all possible matching beans

@@ -90,8 +90,7 @@ public abstract class SpringWebApplication extends WebApplication
 	}
 
 	/**
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.
-	 *      springframework.context.ApplicationContext)
+	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
 	 */
 	public final void setApplicationContext(final ApplicationContext applicationContext)
 		throws BeansException
