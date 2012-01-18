@@ -89,26 +89,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			"\";", "wicket-ajax-base-url"));
 
 		renderExtraHeaderContributors(component, response);
-
-		if (component.isEnabledInHierarchy())
-		{
-			StringBuilder js = new StringBuilder();
-			js.append("Wicket.Ajax.ajax(");
-
-			js.append(renderAjaxAttributes(component));
-
-			js.append(");");
-
-			AjaxRequestTarget target = requestCycle.find(AjaxRequestTarget.class);
-			if (target == null)
-			{
-				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
-			}
-			else
-			{
-				target.appendJavaScript(js);
-			}
-		}
 	}
 
 	/**
@@ -509,7 +489,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		if (attributes.getExtraParameters().isEmpty())
 			sb.append("attrs.ep = params;\n");
 		else
-			sb.append("attrs.ep = jQuery.extend(attrs.ep, params);\n");
+			sb.append("attrs.ep = jQuery.extend({}, attrs.ep, params);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
 	}

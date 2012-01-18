@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -46,7 +48,8 @@ public class RadioChoicePage extends WicketExamplePage
 		setDefaultModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		feedbackPanel.setOutputMarkupId(true);
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
@@ -64,7 +67,17 @@ public class RadioChoicePage extends WicketExamplePage
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		form.add(new RadioChoice<String>("site", SITES));
+		RadioChoice<String> sites = new RadioChoice<String>("site", SITES);
+		sites.add(new AjaxFormChoiceComponentUpdatingBehavior()
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				info("Selected: " + getComponent().getDefaultModelObjectAsString());
+				target.add(feedbackPanel);
+			}
+		});
+		form.add(sites);
 	}
 
 	/** Simple data class that acts as a model for the input fields. */

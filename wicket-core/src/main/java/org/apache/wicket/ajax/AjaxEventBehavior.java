@@ -74,6 +74,32 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	}
 
 	@Override
+	public void renderHead(final Component component, final IHeaderResponse response)
+	{
+		super.renderHead(component, response);
+
+		if (component.isEnabledInHierarchy())
+		{
+			StringBuilder js = new StringBuilder();
+			js.append("Wicket.Ajax.ajax(");
+
+			js.append(renderAjaxAttributes(component));
+
+			js.append(");");
+
+			AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
+			if (target == null)
+			{
+				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			}
+			else
+			{
+				target.appendJavaScript(js);
+			}
+		}
+	}
+
+	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
 		super.updateAjaxAttributes(attributes);
