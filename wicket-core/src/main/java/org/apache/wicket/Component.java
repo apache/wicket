@@ -3598,7 +3598,6 @@ public abstract class Component
 	 * 
 	 * @return The markup stream for this component. Since a Component cannot have a markup stream,
 	 *         we ask this component's parent to search for it.
-	 * @TODO can be removed in 1.5
 	 */
 	protected final MarkupStream findMarkupStream()
 	{
@@ -3782,7 +3781,9 @@ public abstract class Component
 
 	/**
 	 * @return Component's markup stream
+	 * @deprecated Use findMarkupStream() instead.
 	 */
+	@Deprecated
 	protected MarkupStream locateMarkupStream()
 	{
 		return new MarkupStream(getMarkup());
