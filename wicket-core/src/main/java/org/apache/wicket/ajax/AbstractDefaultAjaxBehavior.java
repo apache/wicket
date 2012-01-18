@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
@@ -388,7 +389,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 		catch (JSONException e)
 		{
-			throw new RuntimeException(e);
+			throw new WicketRuntimeException(e);
 		}
 
 		String attributesAsJson = attributesJson.toString();
@@ -396,7 +397,18 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return attributesAsJson;
 	}
 
-	protected void postprocessConfiguration(JSONObject object, Component component)
+	/**
+	 * Gives a chance to modify the JSON attributesJson that is going to be used as
+	 * attributes for the Ajax call.
+	 *
+	 * @param attributesJson
+	 *      the JSON object created by #renderAjaxAttributes()
+	 * @param component
+	 *      the component with the attached Ajax behavior
+	 * @throws JSONException
+	 *      thrown if an error occurs while modifying {@literal attributesJson} argument
+	 */
+	protected void postprocessConfiguration(JSONObject attributesJson, Component component)
 		throws JSONException
 	{
 	}
