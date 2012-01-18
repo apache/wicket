@@ -435,6 +435,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		{
 			if (!first)
 				sb.append(",");
+			else
+				first = false;
 			sb.append(curExtraParameter);
 		}
 		sb.append(") {\n");
