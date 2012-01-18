@@ -149,7 +149,7 @@ public class CryptoMapper implements IRequestMapper
 
 	private Url decryptUrl(final Request request, final Url encryptedUrl)
 	{
-		if (encryptedUrl.getSegments().isEmpty() && encryptedUrl.getQueryParameters().isEmpty())
+		if (encryptedUrl.getSegments().isEmpty())
 		{
 			return encryptedUrl;
 		}
