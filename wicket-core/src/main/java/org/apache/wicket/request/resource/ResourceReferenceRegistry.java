@@ -146,7 +146,7 @@ public class ResourceReferenceRegistry
 	 * ResourceReference fields. Found fields get registered automatically (but are different from
 	 * auto-generated ResourceReferences).
 	 * 
-	 * @see #createDefaultResourceReference(Class, String, Locale, String, String)
+	 * @see #createDefaultResourceReference(org.apache.wicket.request.resource.ResourceReference.Key)
 	 * @see ClassScanner
 	 * 
 	 * @param scope
@@ -184,7 +184,7 @@ public class ResourceReferenceRegistry
 	 * ResourceReference fields. Found fields get registered automatically (but are different from
 	 * auto-generated ResourceReferences).
 	 * 
-	 * @see #createDefaultResourceReference(Class, String, Locale, String, String)
+	 * @see #createDefaultResourceReference(org.apache.wicket.request.resource.ResourceReference.Key)
 	 * @see ClassScanner
 	 * 
 	 * @param key
