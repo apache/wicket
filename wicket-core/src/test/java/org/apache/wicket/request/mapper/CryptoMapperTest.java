@@ -24,6 +24,7 @@ import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
@@ -99,6 +100,23 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(DummyHomePage.class, handler.getPageClass());
+	}
+
+	/**
+	 * Verifies that the home page can be reached with non-encrypted query parameters.
+	 * https://issues.apache.org/jira/browse/WICKET-4345
+	 */
+	@Test
+	public void decryptHomePageWithNonEncryptedQueryParameters()
+	{
+		Request request = getRequest(Url.parse("?named1=value1"));
+		IRequestHandler requestHandler = mapper.mapRequest(request);
+		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
+		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
+		StringValue queryParam = handler.getPageParameters().get("named1");
+		assertEquals("value1", queryParam.toOptionalString());
 	}
 
 	/**
