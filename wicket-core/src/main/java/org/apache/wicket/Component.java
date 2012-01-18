@@ -2453,7 +2453,7 @@ public abstract class Component
 		String markupId = null;
 		for (Behavior behavior : getBehaviors())
 		{
-			if (behavior instanceof IAjaxRegionMarkupIdProvider)
+			if (behavior instanceof IAjaxRegionMarkupIdProvider && behavior.isEnabled(this))
 			{
 				markupId = ((IAjaxRegionMarkupIdProvider)behavior).getAjaxRegionMarkupId(this);
 				break;
