@@ -85,23 +85,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(component, response);
 
-		WebRequest request = (WebRequest)RequestCycle.get().getRequest();
+		WebRequest request = (WebRequest) component.getRequest();
 
 		if (!isStopped() && (!headRendered || !request.isAjax()))
 		{
 			headRendered = true;
 			response.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 		}
-	}
-
-	@Override
-	protected void postprocessConfiguration(JSONObject attributes, Component component)
-		throws JSONException
-	{
-		super.postprocessConfiguration(attributes, component);
-
-		attributes.remove("c"); // window will be used
-		attributes.put("e", "domready");
 	}
 
 	/**
@@ -123,7 +113,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 * @return the name of the handle that is used to stop any scheduled timer
 	 */
 	private String getTimeoutHandle() {
-		return "Wicket.timeoutHandle_"+getComponent().getMarkupId();
+		return "Wicket.timerHandle_"+getComponent().getMarkupId();
 	}
 	
 	/**
