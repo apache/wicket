@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for javascript specific
@@ -37,7 +38,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 	private Component component;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 */
 	public AbstractAjaxBehavior()
 	{
@@ -52,10 +53,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 	@Override
 	public final void bind(final Component hostComponent)
 	{
-		if (hostComponent == null)
-		{
-			throw new IllegalArgumentException("Argument hostComponent must be not null");
-		}
+		Args.notNull(hostComponent, "hostComponent");
 
 		if (component != null)
 		{
