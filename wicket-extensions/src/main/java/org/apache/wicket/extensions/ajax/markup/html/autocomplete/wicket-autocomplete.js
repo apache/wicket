@@ -597,7 +597,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 		var input=Wicket.$(elementId);
    		if ((input != initialElement) || (document.activeElement != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
-			Wicket.Ajax.invokePostCallHandlers();
    			hideIndicator();
    			if (input != initialElement)
    			{
@@ -675,7 +674,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         scheduleEmptyCheck();
         
         Wicket.Log.info("Response processed successfully.");
-        Wicket.Ajax.invokePostCallHandlers();
         hideIndicator();
         
   		// hack for a focus issue in IE, WICKET-2279      
