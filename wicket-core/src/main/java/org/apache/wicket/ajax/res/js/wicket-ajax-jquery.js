@@ -364,18 +364,20 @@
 		 * A helper function that executes an array of handlers (before, success, failure)
 		 * @param {Array} handlers - the handlers to execute
 		 */
-		_executeHandlers: function (handlers) {
+		_executeHandlers: function (handlers, argumentNames) {
 			if (jQuery.isArray(handlers)) {
 
 				// cut the handlers argument
-				var args = Array.prototype.slice.call(arguments).slice(1);
+				var args = Array.prototype.slice.call(arguments).slice(2);
 
 				for (var i = 0; i < handlers.length; i++) {
 					var handler = handlers[i];
 					if (jQuery.isFunction(handler)) {
 						handler.apply(this, args);
 					} else {
-						new Function(handler).apply(this, args);
+						var functionArgs = argumentNames;
+						functionArgs.push(handler);
+						Function.apply(this, functionArgs).apply(this, args);
 					}
 				}
 			}
@@ -498,7 +500,9 @@
 					}
 
 					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
-					self._executeHandlers(attrs.bh, attrs, jqXHR, settings);
+					self._executeHandlers(attrs.bh,
+							["attrs", "jqXHR", "settings"],
+							attrs, jqXHR, settings);
 
 					if (attrs.i) {
 						// show the indicator
@@ -516,7 +520,9 @@
 					if (attrs.wr) {
 						self.processAjaxResponse(data, textStatus, jqXHR, attrs);
 					} else {
-						self._executeHandlers(attrs.sh, data, textStatus, jqXHR, attrs);
+						self._executeHandlers(attrs.sh,
+								["data", "textStatus", "jqXHR", "attrs"],
+								data, textStatus, jqXHR, attrs);
 					}
 					Wicket.Event.publish('/ajax/call/success', data, textStatus, jqXHR, attrs);
 
@@ -532,7 +538,9 @@
 						Wicket.DOM.hide(attrs.i);
 					}
 
-					self._executeHandlers(attrs.coh, jqXHR, textStatus, attrs);
+					self._executeHandlers(attrs.coh,
+							["jqXHR", "textStatus", "attrs"],
+							jqXHR, textStatus, attrs);
 					Wicket.Event.publish('/ajax/call/complete', jqXHR, textStatus, attrs);
 
 					this.done();
@@ -540,7 +548,7 @@
 			});
 
 			// execute after handlers right after the Ajax request is fired
-			self._executeHandlers(attrs.ah, attrs);
+			self._executeHandlers(attrs.ah, ["attrs"], attrs);
 			Wicket.Event.publish('/ajax/call/after', attrs);
 
 			if (!attrs.ad && attrs.event) {
@@ -795,7 +803,9 @@
 			steps.push(jQuery.proxy(function (notify) {
 				Wicket.Log.info("Response processed successfully.");
 
-				this._executeHandlers(attrs.sh, null, 'success', null, attrs);
+				this._executeHandlers(attrs.sh,
+						["data", "textStatus", "jqXHR", "attrs"],
+						null, 'success', null, attrs);
 
 				// re-attach the events to the new components (a bit blunt method...)
 				// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
@@ -817,7 +827,7 @@
 			if (message) {
 				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
 			}
-			this._executeHandlers(attrs.fh, attrs);
+			this._executeHandlers(attrs.fh, ["attrs"], attrs);
 		},
 
 		done: function () {
