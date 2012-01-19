@@ -76,7 +76,7 @@ public class DefaultPageManagerContext implements IPageManagerContext
 	}
 
 	/**
-	 * @see org.apache.wicket.page.IPageManagerContext#setRequestData(RequestAdapter)
+	 * @see org.apache.wicket.page.IPageManagerContext#setRequestData(Object)
 	 */
 	@Override
 	public void setRequestData(final Object data)
