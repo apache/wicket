@@ -19,6 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.calldecorator.IAjaxCallDecoratorDelegate;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -89,10 +90,52 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		response.renderJavaScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl + "\";",
 			"wicket-ajax-base-url");
 
-		final IAjaxCallDecorator ajaxCallDecorator = getAjaxCallDecorator();
-		if (ajaxCallDecorator instanceof IComponentAwareHeaderContributor)
+		contributeAjaxCallDecorator(component, response);
+	}
+
+	/**
+	 * Contributes dependencies of IAjaxCallDecorator to the header
+	 *
+	 * @param component
+	 *      the component this behavior is attached to
+	 * @param response
+	 *      the header response to write to
+	 */
+	private void contributeAjaxCallDecorator(Component component, IHeaderResponse response)
+	{
+		IAjaxCallDecorator ajaxCallDecorator = getAjaxCallDecorator();
+		contributeComponentAwareHeaderContributor(ajaxCallDecorator, component, response);
+
+		Object cursor = ajaxCallDecorator;
+		while (cursor != null)
 		{
-			IComponentAwareHeaderContributor contributor = (IComponentAwareHeaderContributor)ajaxCallDecorator;
+			if (cursor instanceof IAjaxCallDecoratorDelegate)
+			{
+				cursor = ((IAjaxCallDecoratorDelegate) cursor).getDelegate();
+				contributeComponentAwareHeaderContributor(cursor, component, response);
+			}
+			else
+			{
+				cursor = null;
+			}
+		}
+	}
+
+	/**
+	 * Contributes to the header if {@literal target} is an instance of IComponentAwareHeaderContributor
+	 *
+	 * @param target
+	 *      the candidate object that may contribute to the header
+	 * @param component
+	 *      the component this behavior is attached to
+	 * @param response
+	 *      the header response to write to
+	 */
+	private void contributeComponentAwareHeaderContributor(Object target, Component component, IHeaderResponse response)
+	{
+		if (target instanceof IComponentAwareHeaderContributor)
+		{
+			IComponentAwareHeaderContributor contributor = (IComponentAwareHeaderContributor)target;
 			contributor.renderHead(component, response);
 		}
 	}

@@ -29,7 +29,7 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecorator
+public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecorator, IAjaxCallDecoratorDelegate
 {
 	/**
 	 * 
@@ -107,5 +107,10 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	public CharSequence postDecorateOnFailureScript(Component component, CharSequence script)
 	{
 		return script;
+	}
+
+	public IAjaxCallDecorator getDelegate()
+	{
+		return delegate;
 	}
 }
