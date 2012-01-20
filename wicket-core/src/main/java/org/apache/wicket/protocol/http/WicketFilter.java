@@ -627,6 +627,11 @@ public class WicketFilter implements Filter
 
 	}
 
+	protected WebApplication getApplication()
+	{
+		return application;
+	}
+
 	/**
 	 * Checks whether this is a request to an ignored path
 	 * 
