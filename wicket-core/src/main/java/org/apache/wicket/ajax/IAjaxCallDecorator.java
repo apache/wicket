@@ -55,8 +55,9 @@ import org.apache.wicket.markup.html.IHeaderContributor;
  * 
  * <p>
  * Ajax call decorators are potential contributors to the page header by implementing
- * {@link IHeaderContributor}. E.g. the decoration may depend on some JavaScript library, by
- * implementing {@link IHeaderContributor} interface they can assure it will be loaded.
+ * {@link org.apache.wicket.markup.html.IComponentAwareHeaderContributor}. E.g. the decoration
+ * may depend on some JavaScript library, by implementing {@link org.apache.wicket.markup.html.IComponentAwareHeaderContributor}
+ * interface they can assure it will be loaded.
  * 
  * @since 1.2
  * 
