@@ -35,6 +35,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.file.WebXmlFile;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +94,28 @@ public class WicketFilter implements Filter
 	 * A flag indicating whether WicketFilter is used directly or through WicketServlet
 	 */
 	private boolean isServlet = false;
+
+	/**
+	 * default constructor, usually invoked through the servlet 
+	 * container by the web.xml configuration
+	 */
+	public WicketFilter()
+	{
+	}
+
+	/**
+	 * constructor supporting programmatic setup of the filter
+	 * <p/>
+	 *  this can be useful for programmatically creating and appending the 
+	 *  wicket filter to the servlet context using servlet 3 features.
+	 * 
+	 * @param application
+	 *           web application
+	 */
+	public WicketFilter(WebApplication application)
+	{
+		this.application = Args.notNull(application, "application");
+	}
 
 	/**
 	 * @return The class loader
@@ -306,8 +329,13 @@ public class WicketFilter implements Filter
 		this.isServlet = isServlet;
 		initIgnorePaths(filterConfig);
 
-		applicationFactory = getApplicationFactory();
-		application = applicationFactory.createApplication(this);
+		// locate application instance unless it was already specified during construction
+		if (application == null)
+		{
+			applicationFactory = getApplicationFactory();
+			application = applicationFactory.createApplication(this);
+		}
+
 		application.setName(filterConfig.getFilterName());
 		application.setWicketFilter(this);
 

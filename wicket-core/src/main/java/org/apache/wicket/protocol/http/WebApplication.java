@@ -615,6 +615,24 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
+	 * set runtime configuration type
+	 * <p/>
+	 * this is a write-once property: once configured it can not be changed later on.
+	 * 
+	 * @param configurationType
+	 */
+	public void setConfigurationType(RuntimeConfigurationType configurationType)
+	{
+		if (this.configurationType != null)
+		{
+			throw new IllegalStateException(
+				"Configuration type is write-once. You can not change it. " + "" +
+				"Current value='" + configurationType);
+		}
+		this.configurationType = Args.notNull(configurationType, "configurationType");
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
