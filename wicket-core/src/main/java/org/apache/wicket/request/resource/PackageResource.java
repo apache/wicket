@@ -271,14 +271,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				// read resource data
 				final byte[] bytes;
 
-				try
-				{
-					bytes = IOUtils.toByteArray(resourceStream.getInputStream());
-				}
-				finally
-				{
-					resourceStream.close();
-				}
+				bytes = IOUtils.toByteArray(resourceStream.getInputStream());
 
 				final byte[] processed = processResponse(attributes, bytes);
 
@@ -304,6 +297,16 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			{
 				log.debug(e.getMessage(), e);
 				return sendResourceError(resourceResponse, 500, "Unable to open resource stream");
+			}
+			finally
+			{
+				try {
+					resourceStream.close();
+				}
+				catch (IOException e)
+				{
+					log.warn("Unable to close the resource stream", e);
+				}
 			}
 		}
 

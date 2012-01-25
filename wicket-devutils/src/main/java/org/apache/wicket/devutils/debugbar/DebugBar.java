@@ -130,7 +130,6 @@ public class DebugBar extends DevUtilsPanel
 	 * Register your own custom contributor that will be part of the debug bar. You must have the
 	 * context of an application for this thread at the time of calling this method.
 	 * 
-	 * @param application
 	 * @param contrib
 	 *            custom contributor - can not be null
 	 */

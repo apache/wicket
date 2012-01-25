@@ -137,7 +137,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 			}
 			finally
 			{
-				IOUtils.close(inputStream);
+				IOUtils.close(stream);
 			}
 		}
 		catch (IOException e)

@@ -46,7 +46,6 @@ public class ResourceStreamResource extends AbstractResource
 	private String fileName;
 	private ContentDisposition contentDisposition = ContentDisposition.INLINE;
 	private String textEncoding;
-	private String mimeType;
 
 	private Duration cacheDuration;
 
@@ -145,14 +144,10 @@ public class ResourceStreamResource extends AbstractResource
 			}
 			data.setFileName(fileName);
 
-			final String contentType;
-			if (fileName != null && Application.exists())
+			String contentType = stream.getContentType();
+			if (contentType == null && fileName != null && Application.exists())
 			{
 				contentType = Application.get().getMimeType(fileName);
-			}
-			else
-			{
-				contentType = stream.getContentType();
 			}
 			data.setContentType(contentType);
 			data.setTextEncoding(textEncoding);
