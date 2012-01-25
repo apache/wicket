@@ -490,7 +490,7 @@ public abstract class ResourceReference implements Serializable
 	}
 
 	/**
-	 * @return the resoureces this ResourceReference depends on.
+	 * @return the resources this ResourceReference depends on.
 	 */
 	public Iterable<? extends HeaderItem> getDependencies()
 	{
