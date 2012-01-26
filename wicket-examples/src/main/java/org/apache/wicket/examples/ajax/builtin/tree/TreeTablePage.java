@@ -30,6 +30,7 @@ import org.apache.wicket.extensions.markup.html.tree.table.TreeTable;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public class TreeTablePage extends BaseTreePage
 {
 	private static final long serialVersionUID = 1L;

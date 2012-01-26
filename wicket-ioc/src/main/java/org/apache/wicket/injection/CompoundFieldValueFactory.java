@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.wicket.util.lang.Args;
+
 /**
  * Compound implementation of IFieldValueFactory. This field value factory will keep trying added
  * factories until one returns a non-null value or all are tried.
@@ -42,10 +44,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public CompoundFieldValueFactory(final IFieldValueFactory[] factories)
 	{
-		if (factories == null)
-		{
-			throw new IllegalArgumentException("argument [factories] cannot be null");
-		}
+		Args.notNull(factories, "factories");
 
 		delegates.addAll(Arrays.asList(factories));
 	}
@@ -57,10 +56,8 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public CompoundFieldValueFactory(final List<IFieldValueFactory> factories)
 	{
-		if (factories == null)
-		{
-			throw new IllegalArgumentException("argument [factories] cannot be null");
-		}
+		Args.notNull(factories, "factories");
+
 		delegates.addAll(factories);
 	}
 
@@ -72,14 +69,9 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public CompoundFieldValueFactory(final IFieldValueFactory f1, final IFieldValueFactory f2)
 	{
-		if (f1 == null)
-		{
-			throw new IllegalArgumentException("argument [f1] cannot be null");
-		}
-		if (f2 == null)
-		{
-			throw new IllegalArgumentException("argument [f2] cannot be null");
-		}
+		Args.notNull(f1, "f1");
+		Args.notNull(f2, "f2");
+
 		delegates.add(f1);
 		delegates.add(f2);
 	}
@@ -91,10 +83,8 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public void addFactory(final IFieldValueFactory factory)
 	{
-		if (factory == null)
-		{
-			throw new IllegalArgumentException("argument [factory] cannot be null");
-		}
+		Args.notNull(factory, "factory");
+
 		delegates.add(factory);
 	}
 

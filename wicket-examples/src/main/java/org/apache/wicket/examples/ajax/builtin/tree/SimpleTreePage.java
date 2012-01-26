@@ -27,6 +27,7 @@ import org.apache.wicket.extensions.markup.html.tree.LinkTree;
  * @author Matej
  * 
  */
+@Deprecated
 public class SimpleTreePage extends BaseTreePage
 {
 	private static final long serialVersionUID = 1L;

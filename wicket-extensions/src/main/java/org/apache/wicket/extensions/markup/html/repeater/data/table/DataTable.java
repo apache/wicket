@@ -92,15 +92,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 			String className = getCssClass();
 			if (!Strings.isEmpty(className))
 			{
-				CharSequence oldClassName = tag.getAttribute("class");
-				if (Strings.isEmpty(oldClassName))
-				{
-					tag.put("class", className);
-				}
-				else
-				{
-					tag.put("class", oldClassName + " " + className);
-				}
+				tag.append("class", className, " ");
 			}
 		}
 	}
@@ -155,7 +147,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 				final IColumn<T> column = DataTable.this.columns.get(index);
 				if (column instanceof IStyledColumn)
 				{
-					item.add(new DataTable.CssAttributeBehavior()
+					item.add(new CssAttributeBehavior()
 					{
 						private static final long serialVersionUID = 1L;
 

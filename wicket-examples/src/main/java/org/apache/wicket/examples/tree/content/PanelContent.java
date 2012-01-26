@@ -14,43 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.nested;
+package org.apache.wicket.examples.tree.content;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.Component;
+import org.apache.wicket.examples.tree.Foo;
+import org.apache.wicket.examples.tree.FooPanel;
+import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree;
+import org.apache.wicket.model.IDetachable;
+import org.apache.wicket.model.IModel;
 
 /**
- * Application class for the nested structure example.
- * 
- * @author Eelco Hillenius
+ * @author Sven Meier
  */
-public class NestedApplication extends WicketExampleApplication
+public class PanelContent extends Content implements IDetachable
 {
-	/**
-	 * Constructor.
-	 */
-	public NestedApplication()
-	{
-	}
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Initialize the application
-	 */
 	@Override
-	protected void init()
+	public Component newContentComponent(String id, AbstractTree<Foo> tree, IModel<Foo> model)
 	{
-		super.init();
-		// disable debugging mode, because it slows down the tree
-		getDebugSettings().setAjaxDebugModeEnabled(false);
+		return new FooPanel(id, model);
 	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	@Override
-	public Class< ? extends Page> getHomePage()
-	{
-		return Home.class;
-	}
-
 }

@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.examples.compref;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -37,5 +40,23 @@ class MyPanel extends Panel
 		super(id);
 		add(new Label("label", "yep, this is from a component proper"));
 		add(new AnotherPanel("otherPanel"));
+
+		// create a list with sublists
+		List<Object> l1 = new ArrayList<Object>();
+		l1.add("test 1.1");
+		l1.add("test 1.2");
+		List<Object> l2 = new ArrayList<Object>();
+		l2.add("test 2.1");
+		l2.add("test 2.2");
+		l2.add("test 2.3");
+		List<String> l3 = new ArrayList<String>();
+		l3.add("test 3.1");
+		l2.add(l3);
+		l2.add("test 2.4");
+		l1.add(l2);
+		l1.add("test 1.3");
+
+		// construct the panel
+		add(new RecursivePanel("recursive", l1));
 	}
 }

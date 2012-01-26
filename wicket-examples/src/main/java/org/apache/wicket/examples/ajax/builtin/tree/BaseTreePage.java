@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.ajax.builtin.tree;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -35,6 +34,7 @@ import org.apache.wicket.extensions.markup.html.tree.AbstractTree;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public abstract class BaseTreePage extends BasePage
 {
 
@@ -146,14 +146,14 @@ public abstract class BaseTreePage extends BasePage
 			if (obj instanceof List)
 			{
 				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean(
-						"subtree..."));
+					"subtree..."));
 				parent.add(child);
-				add(child, (List<Object>) obj);
+				add(child, (List<Object>)obj);
 			}
 			else
 			{
 				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean(
-						obj.toString()));
+					obj.toString()));
 				parent.add(child);
 			}
 		}

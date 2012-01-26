@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.form.Form;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public class EditableTreeTablePage extends BaseTreePage
 {
 	private static final long serialVersionUID = 1L;

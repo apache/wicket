@@ -687,8 +687,7 @@ public abstract class WebApplication extends Application
 	 * <p>
 	 * Default implementation: the page mime type must be "application/xhtml+xml" and request
 	 * HTTP_ACCEPT header must include "application/xhtml+xml" to automatically include the xml
-	 * decl. Please see {@linkplain here 
-	 * http://developer.mozilla.org/en/Writing_JavaScript_for_XHTML#Finally.3a_Content_Negotiation}
+	 * decl. Please see <a href="https://developer.mozilla.org/en/Writing_JavaScript_for_XHTML#Finally:_Content_Negotiation">Writing JavaScript for XHTML</a>
 	 * for details.
 	 * <p>
 	 * Please note that xml decls in Wicket's markup are only used for reading the markup. The

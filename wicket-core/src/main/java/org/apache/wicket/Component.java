@@ -39,6 +39,7 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
@@ -714,9 +715,10 @@ public abstract class Component
 			if (this instanceof MarkupContainer)
 			{
 				MarkupContainer container = (MarkupContainer)this;
-				if (container.hasAssociatedMarkup())
+				Markup associatedMarkup = container.getAssociatedMarkup();
+				if (associatedMarkup != null)
 				{
-					markup = container.getAssociatedMarkup();
+					markup = associatedMarkup;
 					return markup;
 				}
 			}
@@ -1287,7 +1289,7 @@ public abstract class Component
 		MarkupContainer container = parent;
 		while (container != null)
 		{
-			if (container.hasAssociatedMarkup())
+			if (container.getAssociatedMarkup() != null)
 			{
 				return container;
 			}
