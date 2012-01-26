@@ -1215,7 +1215,7 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
 				"</div>"+
 
 
-				"<div class=\"w_bottom_1\" id=\""+idBottom+"\">"+					
+				"<div class=\"w_bottom_1\" id=\""+idBottom+"_1\">"+					
 					
 					"<div class=\"w_bottomRight\"  id=\""+idBottomRight+"\">"+
 					"</div>"+
