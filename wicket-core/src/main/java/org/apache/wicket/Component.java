@@ -4457,12 +4457,6 @@ public abstract class Component
 	/**
 	 * Adds a behavior modifier to the component.
 	 * 
-	 * <p>
-	 * Note: this method is override to enable users to do things like discussed in <a
-	 * href="http://www.nabble.com/Why-add%28IBehavior%29-is-final--tf2598263.html#a7248198">this
-	 * thread</a>.
-	 * </p>
-	 * 
 	 * @param behaviors
 	 *            The behavior modifier(s) to be added
 	 * @return this (to allow method call chaining)
