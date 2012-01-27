@@ -174,19 +174,15 @@ public class Check<T> extends LabeledWebMarkupContainer
 				"] contains a null model object, must be an object of type java.util.Collection");
 		}
 
-		if (group.hasRawInput())
+		final String raw = group.getRawInput();
+		if (!Strings.isEmpty(raw))
 		{
-			// Wicket-2949 getInputAsArray() might not be the raw input
-			final String[] inputArray = group.getRawInput().split(FormComponent.VALUE_SEPARATOR);
-
-			if (inputArray != null)
+			final String[] values = raw.split(FormComponent.VALUE_SEPARATOR);
+			for (String value : values)
 			{
-				for (String input : inputArray)
+				if (uuid.equals(value))
 				{
-					if (uuid.equals(input))
-					{
-						tag.put("checked", "checked");
-					}
+					tag.put("checked", "checked");
 				}
 			}
 		}
