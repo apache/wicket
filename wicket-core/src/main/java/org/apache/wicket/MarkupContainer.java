@@ -608,10 +608,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		checkHierarchyChange(component);
 
-		if (component == null)
-		{
-			throw new IllegalArgumentException("argument component may not be null");
-		}
+		Args.notNull(component, "component");
 
 		children_remove(component);
 		removedComponent(component);
@@ -628,10 +625,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public MarkupContainer remove(final String id)
 	{
-		if (id == null)
-		{
-			throw new IllegalArgumentException("argument id may not be null");
-		}
+		Args.notNull(id, "id");
 
 		final Component component = get(id);
 		if (component != null)
