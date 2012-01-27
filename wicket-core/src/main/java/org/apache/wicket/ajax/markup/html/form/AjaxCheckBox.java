@@ -64,7 +64,6 @@ public abstract class AjaxCheckBox extends CheckBox
 			{
 				super.updateAjaxAttributes(attributes);
 				AjaxCheckBox.this.updateAjaxAttributes(attributes);
-				attributes.setAllowDefault(true);
 			}
 
 			@Override
