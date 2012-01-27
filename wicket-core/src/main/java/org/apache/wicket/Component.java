@@ -1655,13 +1655,12 @@ public abstract class Component
 				// Get model value for this component.
 				return model.getObject();
 			}
-			catch (RuntimeException ex)
+			catch (Exception ex)
 			{
-				log.error(
-					"Error while getting default model object for Component: " +
+				// wrap the exception so that it brings info about the component
+				RuntimeException rex = new RuntimeException("An error occurred while getting the model object for Component: " +
 						this.toString(true), ex);
-
-				throw ex;
+				throw rex;
 			}
 		}
 		return null;
