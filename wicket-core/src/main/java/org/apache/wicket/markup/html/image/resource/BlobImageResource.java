@@ -63,7 +63,11 @@ public abstract class BlobImageResource extends DynamicImageResource
 	{
 		try
 		{
-			Blob blob = getBlob();
+			Blob blob = getBlob(attributes);
+			if (blob == null)
+			{
+				blob = getBlob();
+			}
 			if (blob != null)
 			{
 				InputStream in = blob.getBinaryStream();
@@ -87,6 +91,21 @@ public abstract class BlobImageResource extends DynamicImageResource
 	 * Gets the BLOB (Binary Large OBject) that holds the raw image data.
 	 * 
 	 * @return the BLOB
+	 * @deprecated Use #getBlob(Attributes) instead.
 	 */
+	@Deprecated
 	protected abstract Blob getBlob();
+
+
+	/**
+	 * Gets the BLOB (Binary Large OBject) that holds the raw image data.
+	 *
+	 * @param attributes
+	 *      the current web attributes (request, response, parameters)
+	 * @return the BLOB
+	 */
+	protected Blob getBlob(Attributes attributes)
+	{
+		return null;
+	}
 }
