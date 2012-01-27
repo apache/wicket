@@ -177,7 +177,8 @@ public class Check<T> extends LabeledWebMarkupContainer
 
 		if (group.hasRawInput())
 		{
-			final String[] input = group.getInputAsArray();
+			// Wicket-2949 getInputAsArray() might not be the raw input
+			final String[] input = group.getRawInput().split(FormComponent.VALUE_SEPARATOR);
 
 			if (input != null)
 			{

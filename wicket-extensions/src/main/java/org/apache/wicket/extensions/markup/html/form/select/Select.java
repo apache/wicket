@@ -213,7 +213,8 @@ public class Select<T> extends FormComponent<T>
 		// if the raw input is specified use that, otherwise use model
 		if (hasRawInput())
 		{
-			String[] values = getInputAsArray();
+			// Wicket-2949 getInputAsArray() might not be the raw input
+			String[] values = getRawInput().split(VALUE_SEPARATOR);
 			if (values != null && values.length > 0)
 			{
 				for (int i = 0; i < values.length; i++)
