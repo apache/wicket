@@ -177,14 +177,13 @@ public class Check<T> extends LabeledWebMarkupContainer
 
 		if (group.hasRawInput())
 		{
-			// Wicket-2949 getInputAsArray() might not be the raw input
-			final String[] input = group.getRawInput().split(FormComponent.VALUE_SEPARATOR);
-
-			if (input != null)
+			final String raw = group.getRawInput();
+			if (!Strings.isEmpty(raw))
 			{
-				for (int i = 0; i < input.length; i++)
+				final String[] values = raw.split(FormComponent.VALUE_SEPARATOR);
+				for (String value : values)
 				{
-					if (uuid.equals(input[i]))
+					if (uuid.equals(value))
 					{
 						tag.put("checked", "checked");
 					}
