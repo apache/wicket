@@ -221,16 +221,19 @@ public class Select<T> extends FormComponent<T>
 		Args.notNull(option, "option");
 
 		// if the raw input is specified use that, otherwise use model
-		final String raw = getRawInput();
-		if (!Strings.isEmpty(raw))
+		if (hasRawInput())
 		{
-			String[] values = raw.split(VALUE_SEPARATOR);
-			for (int i = 0; i < values.length; i++)
+			final String raw = getRawInput();
+			if (!Strings.isEmpty(raw))
 			{
-				String value = values[i];
-				if (value.equals(option.getValue()))
+				String[] values = raw.split(VALUE_SEPARATOR);
+				for (int i = 0; i < values.length; i++)
 				{
-					return true;
+					String value = values[i];
+					if (value.equals(option.getValue()))
+					{
+						return true;
+					}
 				}
 			}
 			return false;
