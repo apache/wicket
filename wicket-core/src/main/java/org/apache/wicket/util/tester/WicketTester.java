@@ -380,7 +380,7 @@ public class WicketTester extends BaseWicketTester
 			boolean found = false;
 			for (FeedbackMessage actual : renderedMessages)
 			{
-				if (Objects.equal(expected, actual.toString()))
+				if (Objects.equal(expected, actual.getMessage().toString()))
 				{
 					found = true;
 					break;
