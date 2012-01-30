@@ -796,10 +796,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public void process(IFormSubmitter submittingComponent)
 	{
-		// save the page in case the component is removed during submit
-		final Page page = getPage();
-		String hiddenFieldId = getHiddenFieldId();
-
 		if (!isEnabledInHierarchy() || !isVisibleInHierarchy())
 		{
 			// since process() can be called outside of the default form workflow, an additional
