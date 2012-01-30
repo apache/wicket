@@ -19,6 +19,7 @@ package org.apache.wicket.markup.head;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -38,7 +39,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	 */
 	public static CssReferenceHeaderItem forReference(ResourceReference reference)
 	{
-		return new CssReferenceHeaderItem(reference, null, null, null);
+		return forReference(reference, null);
 	}
 
 	/**
@@ -52,7 +53,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	 */
 	public static CssReferenceHeaderItem forReference(ResourceReference reference, String media)
 	{
-		return new CssReferenceHeaderItem(reference, null, media, null);
+		return forReference(reference, null, media);
 	}
 
 	/**
@@ -69,7 +70,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	public static CssReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String media)
 	{
-		return new CssReferenceHeaderItem(reference, pageParameters, media, null);
+		return forReference(reference, pageParameters, media, null);
 	}
 
 	/**
@@ -115,7 +116,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	 */
 	public static CssUrlReferenceHeaderItem forUrl(String url)
 	{
-		return new CssUrlReferenceHeaderItem(url, null, null);
+		return forUrl(url, null);
 	}
 
 	/**
@@ -129,7 +130,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	 */
 	public static CssUrlReferenceHeaderItem forUrl(String url, String media)
 	{
-		return new CssUrlReferenceHeaderItem(url, media, null);
+		return forUrl(url, media, null);
 	}
 
 	/**
@@ -151,10 +152,8 @@ public abstract class CssHeaderItem extends HeaderItem
 	protected static void internalRenderCSSReference(Response response, String url, String media,
 		String condition)
 	{
-		if (Strings.isEmpty(url))
-		{
-			throw new IllegalArgumentException("url cannot be empty or null");
-		}
+		Args.notEmpty(url, "url");
+
 		String urlWoSessionId = Strings.stripJSessionId(url);
 		if (Strings.isEmpty(condition) == false)
 		{

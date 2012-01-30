@@ -40,7 +40,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 */
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, null, null, false, null);
+		return forReference(reference, null);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 */
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference, String id)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, null, id, false, null);
+		return forReference(reference, null, id);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String id)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, false, null);
+		return forReference(reference, pageParameters, id, false);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, null);
+		return forReference(reference, pageParameters, id, defer, null);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 */
 	public static JavaScriptUrlReferenceHeaderItem forUrl(String url)
 	{
-		return new JavaScriptUrlReferenceHeaderItem(url, null, false, null);
+		return forUrl(url, null);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 */
 	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id)
 	{
-		return new JavaScriptUrlReferenceHeaderItem(url, id, false, null);
+		return forUrl(url, id, false);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 */
 	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, boolean defer)
 	{
-		return new JavaScriptUrlReferenceHeaderItem(url, id, defer, null);
+		return forUrl(url, id, defer, null);
 	}
 
 	/**
