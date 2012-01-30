@@ -136,7 +136,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 */
 	public void save(final String username, final String password)
 	{
-		String value = "" + username + VALUE_SEPARATOR + password;
+		String value = username + VALUE_SEPARATOR + password;
 
 		String encryptedValue = getCrypt().encryptUrlSafe(value);
 
