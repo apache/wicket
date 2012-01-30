@@ -81,8 +81,7 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 
 		if (hasCondition)
 		{
-			response.write("<![endif]-->");
-			response.write("\n");
+			response.write("<![endif]-->\n");
 		}
 	}
 

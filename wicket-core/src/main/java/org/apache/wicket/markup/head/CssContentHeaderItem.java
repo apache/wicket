@@ -80,8 +80,7 @@ public class CssContentHeaderItem extends CssHeaderItem
 
 		if (hasCondition)
 		{
-			response.write("<![endif]-->");
-			response.write("\n");
+			response.write("<![endif]-->\n");
 		}
 	}
 

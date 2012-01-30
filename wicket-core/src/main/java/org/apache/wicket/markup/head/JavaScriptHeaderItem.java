@@ -301,8 +301,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		
 		if (hasCondition)
 		{
-			response.write("<![endif]-->");
-			response.write("\n");
+			response.write("<![endif]-->\n");
 		}
 	}
 }
