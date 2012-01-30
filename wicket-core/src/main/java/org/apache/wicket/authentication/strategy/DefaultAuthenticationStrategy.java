@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.crypt.ICrypt;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,11 +56,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 */
 	public DefaultAuthenticationStrategy(final String cookieKey)
 	{
-		if (Strings.isEmpty(cookieKey))
-		{
-			throw new IllegalArgumentException("Parameter 'cookieKey' must not be null or empty.");
-		}
-		this.cookieKey = cookieKey;
+		this.cookieKey = Args.notEmpty(cookieKey, "cookieKey");
 	}
 
 	/**
