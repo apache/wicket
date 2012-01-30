@@ -33,6 +33,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -124,11 +125,25 @@ public class HeaderResponseTest
     public void conditionalRenderCSSReferenceWithUrl()
     {
         headerResponse.render(CssHeaderItem.forUrl("resource.css", "screen", "lt IE 8"));
-        String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\"" +
-            RESOURCE_NAME + "\" media=\"screen\" /><![endif]-->\n";
+        String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\""+RESOURCE_NAME+"\" media=\"screen\" /><![endif]-->\n";
         String actual = headerResponse.getResponse().toString();
         Assert.assertEquals(expected, actual);
     }
+
+
+	/**
+	 * Tests the creation of a proper IE conditional comment
+	 */
+	@Test
+	public void conditionalRenderCSSContent()
+	{
+		headerResponse.render(CssHeaderItem.forCSS(".className { font-size: 10px}", "id", "lt IE 8"));
+		String expected = "<!--[if lt IE 8]><style type=\"text/css\" id=\"id\"><!--\n" +
+				".className { font-size: 10px}--></style>\n" +
+				"<![endif]-->\n";
+		String actual = headerResponse.getResponse().toString();
+		Assert.assertEquals(expected, actual);
+	}
 
     /**
      * Tests setting of 'defer' attribute
@@ -210,4 +225,58 @@ public class HeaderResponseTest
             tester.destroy();
         }
     }
+
+
+	/**
+	 * Tests the creation of a proper IE conditional comment
+	 */
+	@Test
+	public void conditionalRenderJSReference()
+	{
+		headerResponse.render(
+				JavaScriptHeaderItem.forReference(reference, new PageParameters(), "id", false, null, "lt IE 8"));
+
+		String expected = "<!--[if lt IE 8]><script type=\"text/javascript\" id=\"id\" src=\""+RESOURCE_NAME+"\"></script>\n<![endif]-->\n";
+
+		String actual = headerResponse.getResponse().toString();
+
+		Assert.assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests the creation of a proper IE conditional comment
+	 */
+	@Test
+	public void conditionalRenderJSReferenceWithUrl()
+	{
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "id", true, "cp1251", "lt IE 8"));
+
+		String expected = "<!--[if lt IE 8]><script type=\"text/javascript\" id=\"id\" defer=\"defer\" charset=\"cp1251\" src=\""+RESOURCE_NAME+"\"></script>\n" +
+				"<![endif]-->\n";
+
+		String actual = headerResponse.getResponse().toString();
+
+		Assert.assertEquals(expected, actual);
+	}
+
+
+	/**
+	 * Tests the creation of a proper IE conditional comment
+	 */
+	@Test
+	public void conditionalRenderJSContent()
+	{
+		headerResponse.render(JavaScriptHeaderItem.forScript("someJSMethod();", "id", "lt IE 8"));
+
+		String expected = "<!--[if lt IE 8]><script type=\"text/javascript\" id=\"id\">\n" +
+				"/*<![CDATA[*/\n" +
+				"someJSMethod();\n" +
+				"/*]]>*/\n" +
+				"</script>\n" +
+				"<![endif]-->\n";
+
+		String actual = headerResponse.getResponse().toString();
+
+		Assert.assertEquals(expected, actual);
+	}
 }

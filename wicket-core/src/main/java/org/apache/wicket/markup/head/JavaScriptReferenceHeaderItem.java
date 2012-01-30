@@ -60,8 +60,9 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	 *            a non null value specifies the charset attribute of the script tag
 	 */
 	public JavaScriptReferenceHeaderItem(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer, String charset)
+		PageParameters pageParameters, String id, boolean defer, String charset, String condition)
 	{
+		super(condition);
 		this.reference = reference;
 		this.pageParameters = pageParameters;
 		this.id = id;
@@ -129,7 +130,7 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	@Override
 	public void render(Response response)
 	{
-		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset());
+		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset(), getCondition());
 	}
 
 	@Override

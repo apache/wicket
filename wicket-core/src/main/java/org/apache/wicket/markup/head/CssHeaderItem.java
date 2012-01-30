@@ -31,6 +31,25 @@ import org.apache.wicket.util.string.Strings;
 public abstract class CssHeaderItem extends HeaderItem
 {
 	/**
+	 * The condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * {@code null} or empty string for no condition.
+	 */
+	private final String condition;
+	
+	protected CssHeaderItem(String condition)
+	{
+		this.condition = condition;
+	}
+
+	/**
+	 * @return the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 */
+	public String getCondition()
+	{
+		return condition;
+	}
+	
+	/**
 	 * Creates a {@link CssReferenceHeaderItem} for the given reference.
 	 * 
 	 * @param reference
@@ -104,9 +123,27 @@ public abstract class CssHeaderItem extends HeaderItem
 	 */
 	public static CssContentHeaderItem forCSS(CharSequence css, String id)
 	{
-		return new CssContentHeaderItem(css, id);
+		return forCSS(css, id, null);
 	}
 
+
+	/**
+	 * Creates a {@link CssContentHeaderItem} for the given content.
+	 *
+	 * @param css
+	 *            css content to be rendered.
+	 * @param id
+	 *            unique id for the &lt;style&gt; element. This can be <code>null</code>, however in
+	 *            that case the ajax header contribution can't detect duplicate CSS fragments.
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * @return A newly created {@link CssContentHeaderItem} for the given content.
+	 */
+	public static CssContentHeaderItem forCSS(CharSequence css, String id, String condition)
+	{
+		return new CssContentHeaderItem(css, id, condition);
+	}
+	
 	/**
 	 * Creates a {@link CssUrlReferenceHeaderItem} for the given url.
 	 * 
@@ -155,7 +192,9 @@ public abstract class CssHeaderItem extends HeaderItem
 		Args.notEmpty(url, "url");
 
 		String urlWoSessionId = Strings.stripJSessionId(url);
-		if (Strings.isEmpty(condition) == false)
+		
+		boolean hasCondition = Strings.isEmpty(condition) == false; 
+		if (hasCondition)
 		{
 			response.write("<!--[if ");
 			response.write(condition);
@@ -171,7 +210,7 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write("\"");
 		}
 		response.write(" />");
-		if (Strings.isEmpty(condition) == false)
+		if (hasCondition)
 		{
 			response.write("<![endif]-->");
 		}

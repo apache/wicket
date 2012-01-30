@@ -50,9 +50,12 @@ public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	public JavaScriptUrlReferenceHeaderItem(String url, String id, boolean defer, String charset)
+	public JavaScriptUrlReferenceHeaderItem(String url, String id, boolean defer, String charset, String condition)
 	{
+		super(condition);
 		this.url = url;
 		this.id = id;
 		this.defer = defer;
@@ -98,7 +101,7 @@ public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 	{
 		internalRenderJavaScriptReference(response,
 			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getId(), isDefer(),
-			getCharset());
+			getCharset(), getCondition());
 	}
 
 	@Override

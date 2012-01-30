@@ -32,6 +32,25 @@ import org.apache.wicket.util.string.Strings;
 public abstract class JavaScriptHeaderItem extends HeaderItem
 {
 	/**
+	 * The condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * {@code null} or empty string for no condition.
+	 */
+	private final String condition;
+	
+	protected JavaScriptHeaderItem(String condition)
+	{
+		this.condition = condition;
+	}
+
+	/**
+	 * @return the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 */
+	public String getCondition()
+	{
+		return condition;
+	}
+
+	/**
 	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
 	 * 
 	 * @param reference
@@ -117,7 +136,33 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer, String charset)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset);
+		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset, null);
+	}
+
+
+	/**
+	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
+	 *
+	 * @param reference
+	 *            resource reference pointing to the javascript resource
+	 * @param pageParameters
+	 *            the parameters for this Javascript resource reference
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 * @param charset
+	 *            a non null value specifies the charset attribute of the script tag
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
+	 */
+	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
+		PageParameters pageParameters, String id, boolean defer, String charset, String condition)
+	{
+		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset, condition);
 	}
 
 	/**
@@ -132,7 +177,24 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 */
 	public static JavaScriptContentHeaderItem forScript(CharSequence javascript, String id)
 	{
-		return new JavaScriptContentHeaderItem(javascript, id);
+		return forScript(javascript, id, null);
+	}
+
+	/**
+	 * Creates a {@link JavaScriptContentHeaderItem} for the given content.
+	 *
+	 * @param javascript
+	 *            javascript content to be rendered.
+	 * @param id
+	 *            unique id for the javascript element. This can be null, however in that case the
+	 *            ajax header contribution can't detect duplicate script fragments.
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * @return A newly created {@link JavaScriptContentHeaderItem} for the given content.
+	 */
+	public static JavaScriptContentHeaderItem forScript(CharSequence javascript, String id, String condition)
+	{
+		return new JavaScriptContentHeaderItem(javascript, id, condition);
 	}
 
 	/**
@@ -198,14 +260,49 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, boolean defer,
 		String charset)
 	{
-		return new JavaScriptUrlReferenceHeaderItem(url, id, defer, charset);
+		return forUrl(url, id, defer, charset, null);
+	}
+
+	/**
+	 * Creates a {@link JavaScriptUrlReferenceHeaderItem} for the given url.
+	 *
+	 * @param url
+	 *            context-relative url of the the javascript resource
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 * @param charset
+	 *            a non null value specifies the charset attribute of the script tag
+	 * @return A newly created {@link JavaScriptUrlReferenceHeaderItem} for the given url.
+	 */
+	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, boolean defer,
+		String charset, String condition)
+	{
+		return new JavaScriptUrlReferenceHeaderItem(url, id, defer, charset, condition);
 	}
 
 	protected static void internalRenderJavaScriptReference(Response response, String url,
-		String id, boolean defer, String charset)
+		String id, boolean defer, String charset, String condition)
 	{
 		Args.notEmpty(url, "url");
-
+		
+		boolean hasCondition = Strings.isEmpty(condition) == false; 
+		if (hasCondition)
+		{
+			response.write("<!--[if ");
+			response.write(condition);
+			response.write("]>");
+		}
+		
 		JavaScriptUtils.writeJavaScriptUrl(response, Strings.stripJSessionId(url), id, defer, charset);
+		
+		if (hasCondition)
+		{
+			response.write("<![endif]-->");
+			response.write("\n");
+		}
 	}
 }

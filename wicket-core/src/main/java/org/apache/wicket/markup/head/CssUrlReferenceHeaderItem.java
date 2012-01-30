@@ -32,7 +32,6 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 {
 	private final String url;
 	private final String media;
-	private final String condition;
 
 	/**
 	 * Creates a new {@code CSSUrlReferenceHeaderItem}.
@@ -46,9 +45,9 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	 */
 	public CssUrlReferenceHeaderItem(String url, String media, String condition)
 	{
+		super(condition);
 		this.url = url;
 		this.media = media;
-		this.condition = condition;
 	}
 
 	/**
@@ -65,14 +64,6 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	public String getMedia()
 	{
 		return media;
-	}
-
-	/**
-	 * @return the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 */
-	public String getCondition()
-	{
-		return condition;
 	}
 
 	@Override
