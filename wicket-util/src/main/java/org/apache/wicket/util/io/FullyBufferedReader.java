@@ -244,8 +244,6 @@ public final class FullyBufferedReader
 	 *            The index to start at
 	 * @param quotationChar
 	 *            The current quotation char. Must be ' or ", otherwise will be ignored.
-	 * @param insideQuotations
-	 *            Indicates if we are inside quotes or not.
 	 * @return -1 if not found
 	 */
 	// TODO Wicket 1.6 - remove 'throws ParseException' because it is not thrown
@@ -287,15 +285,6 @@ public final class FullyBufferedReader
 		}
 
 		return closeBracketIndex;
-	}
-
-	/**
-	 * 
-	 * @return line and column number
-	 */
-	private String getLineAndColumnText()
-	{
-		return " (line " + getLineNumber() + ", column " + getColumnNumber() + ")";
 	}
 
 	/**
