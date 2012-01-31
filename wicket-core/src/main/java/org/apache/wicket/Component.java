@@ -743,7 +743,7 @@ public abstract class Component
 	 * 
 	 * @return false, if it was called the first time
 	 */
-	final boolean internalOnMarkupAttached()
+	private boolean internalOnMarkupAttached()
 	{
 		boolean rtn = getFlag(FLAG_MARKUP_ATTACHED);
 		if (rtn == false)
@@ -886,6 +886,15 @@ public abstract class Component
 	protected void onInitialize()
 	{
 		setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
+
+		try
+		{
+			internalOnMarkupAttached();
+		}
+		catch (WicketRuntimeException exception)
+		{
+			// ignore
+		}
 	}
 
 	/**
