@@ -146,7 +146,6 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	 * @see IValueMap#getDouble(String, double)
 	 */
 	public double getDouble(final String key, final double defaultValue)
-		throws StringValueConversionException
 	{
 		return wrapped.getDouble(key, defaultValue);
 	}
@@ -163,7 +162,6 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	 * @see IValueMap#getInt(String, int)
 	 */
 	public int getInt(final String key, final int defaultValue)
-		throws StringValueConversionException
 	{
 		return wrapped.getInt(key, defaultValue);
 	}
@@ -188,7 +186,6 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	 * @see IValueMap#getLong(String, long)
 	 */
 	public long getLong(final String key, final long defaultValue)
-		throws StringValueConversionException
 	{
 		return wrapped.getLong(key, defaultValue);
 	}
