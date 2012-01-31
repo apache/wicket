@@ -26,6 +26,8 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -47,6 +49,8 @@ import org.apache.wicket.util.time.Time;
 public class StringValue implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(StringValue.class);
 
 	/** Locale to be used for formatting and parsing. */
 	private final Locale locale;
@@ -372,7 +376,23 @@ public class StringValue implements IClusterable
 	public final boolean toBoolean(final boolean defaultValue)
 		throws StringValueConversionException
 	{
-		return (text == null) ? defaultValue : toBoolean();
+		boolean result = defaultValue;
+		if (text != null)
+		{
+			try
+			{
+				result = toBoolean();
+			} catch (Exception x)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(String.format(
+							"An error occurred while converting '%s' to a boolean: %s", text, x.getMessage()), x);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -407,7 +427,23 @@ public class StringValue implements IClusterable
 	 */
 	public final char toChar(final char defaultValue) throws StringValueConversionException
 	{
-		return (text == null) ? defaultValue : toChar();
+		char result = defaultValue;
+		if (text != null)
+		{
+			try
+			{
+				result = toChar();
+			} catch (Exception x)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(String.format(
+						"An error occurred while converting '%s' to a character: %s", text, x.getMessage()), x);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -450,7 +486,23 @@ public class StringValue implements IClusterable
 	 */
 	public final double toDouble(final double defaultValue) throws StringValueConversionException
 	{
-		return (text == null) ? defaultValue : toDouble();
+		double result = defaultValue;
+		if (text != null)
+		{
+			try
+			{
+				result = toDouble();
+			} catch (Exception x)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(String.format(
+							"An error occurred while converting '%s' to a double: %s", text, x.getMessage()), x);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -486,7 +538,23 @@ public class StringValue implements IClusterable
 	public final Duration toDuration(final Duration defaultValue)
 		throws StringValueConversionException
 	{
-		return (text == null) ? defaultValue : toDuration();
+		Duration result = defaultValue;
+		if (text != null)
+		{
+			try
+			{
+				result = toDuration();
+			} catch (Exception x)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(String.format(
+							"An error occurred while converting '%s' to a Duration: %s", text, x.getMessage()), x);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -518,7 +586,23 @@ public class StringValue implements IClusterable
 	 */
 	public final int toInt(final int defaultValue) throws StringValueConversionException
 	{
-		return (text == null) ? defaultValue : toInt();
+		int result = defaultValue;
+		if (text != null)
+		{
+			try
+			{
+				result = toInt();
+			} catch (Exception x)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(String.format(
+						"An error occurred while converting '%s' to an integer: %s", text, x.getMessage()), x);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -569,7 +653,23 @@ public class StringValue implements IClusterable
 	 */
 	public final long toLong(final long defaultValue) throws StringValueConversionException
 	{
-		return (text == null) ? defaultValue : toLong();
+		long result = defaultValue;
+		if (text != null)
+		{
+			try
+			{
+				result = toLong();
+			} catch (Exception x)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(String.format(
+							"An error occurred while converting '%s' to a long: %s", text, x.getMessage()), x);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -728,7 +828,23 @@ public class StringValue implements IClusterable
 	 */
 	public final Time toTime(final Time defaultValue) throws StringValueConversionException
 	{
-		return (text == null) ? defaultValue : toTime();
+		Time result = defaultValue;
+		if (text != null)
+		{
+			try
+			{
+				result = toTime();
+			} catch (Exception x)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(String.format(
+						"An error occurred while converting '%s' to a Time: %s", text, x.getMessage()), x);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
