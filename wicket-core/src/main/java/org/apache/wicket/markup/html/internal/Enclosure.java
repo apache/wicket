@@ -77,7 +77,6 @@ import org.slf4j.LoggerFactory;
  * not visible to WicketTester.
  * </p>
  * 
- * @see EnclosureResolver
  * @see EnclosureHandler
  * @see EnclosureContainer
  * 
