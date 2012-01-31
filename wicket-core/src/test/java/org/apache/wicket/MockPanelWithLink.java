@@ -21,6 +21,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.IMarkupCacheKeyProvider;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.util.lang.Optional;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
@@ -46,9 +47,9 @@ public abstract class MockPanelWithLink extends Panel
 		add(new AjaxFallbackLink<Void>("link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> target)
 			{
-				MockPanelWithLink.this.onLinkClick(target);
+				MockPanelWithLink.this.onLinkClick(target.getUnsafe());
 			}
 		});
 	}
@@ -57,8 +58,9 @@ public abstract class MockPanelWithLink extends Panel
 	 * The callback to execute when the link is clicked.
 	 * 
 	 * @param target
-	 *            the current Ajax request target. May be {@code null} if
-	 *            {@link org.apache.wicket.util.tester.BaseWicketTester#clickLink(String, boolean false)} is used.
+	 *            the current Ajax request target. May be {@code null} if {@link
+	 *            org.apache.wicket.util.tester.BaseWicketTester#clickLink(String, boolean false)}
+	 *            is used.
 	 */
 	protected abstract void onLinkClick(AjaxRequestTarget target);
 

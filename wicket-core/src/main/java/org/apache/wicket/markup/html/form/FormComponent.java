@@ -42,6 +42,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Optional;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
@@ -781,9 +782,9 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @return The raw form input that is stored for this formcomponent
 	 */
-	public final String getRawInput()
+	public final Optional<String> getRawInput()
 	{
-		return NO_RAW_INPUT.equals(rawInput) ? null : rawInput;
+		return NO_RAW_INPUT.equals(rawInput) ? Optional.<String> ofNull() : Optional.of(rawInput);
 	}
 
 	/**

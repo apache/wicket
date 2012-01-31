@@ -176,7 +176,7 @@ public class Check<T> extends LabeledWebMarkupContainer
 
 		if (group.hasRawInput())
 		{
-			final String raw = group.getRawInput();
+			final String raw = group.getRawInput().get(null);
 			if (!Strings.isEmpty(raw))
 			{
 				final String[] values = raw.split(FormComponent.VALUE_SEPARATOR);

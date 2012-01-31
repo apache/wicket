@@ -24,6 +24,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Optional;
 
 /**
  * An ajax link that will degrade to a normal request if ajax is not available or javascript is
@@ -139,16 +140,22 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	@Override
 	public final void onClick()
 	{
-		onClick(null);
+		onClick((AjaxRequestTarget)null);
+	}
+
+	@Override
+	public void onClick(final AjaxRequestTarget target)
+	{
+		onClick(Optional.of(target));
 	}
 
 	/**
 	 * Callback for the onClick event. If ajax failed and this event was generated via a normal link
-	 * the target argument will be null
+	 * the target optional will contain a null
 	 * 
 	 * @param target
-	 *            ajax target if this linked was invoked using ajax, null otherwise
+	 *            ajax request target
 	 */
-	@Override
-	public abstract void onClick(final AjaxRequestTarget target);
+	public abstract void onClick(final Optional<AjaxRequestTarget> target);
+
 }

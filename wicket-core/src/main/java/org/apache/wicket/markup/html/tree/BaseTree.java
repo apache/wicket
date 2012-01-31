@@ -35,6 +35,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Optional;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -415,13 +416,11 @@ public abstract class BaseTree extends AbstractTree
 			{
 				private static final long serialVersionUID = 1L;
 
-				/**
-				 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
-				 */
 				@Override
-				public void onClick(AjaxRequestTarget target)
+				public void onClick(Optional<AjaxRequestTarget> target)
 				{
-					callback.onClick(target);
+					// FIXME OPTIONAL should not use getUnsafe()
+					callback.onClick(target.getUnsafe());
 				}
 			};
 		}

@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.util.lang.Optional;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -91,7 +92,7 @@ public class LinkPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> target)
 			{
 				getRequestCycle().setResponsePage(ResultPage.class);
 			}
@@ -102,7 +103,7 @@ public class LinkPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> target)
 			{
 				getRequestCycle().setResponsePage(new ResultPage("A special label"));
 			}

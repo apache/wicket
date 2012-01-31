@@ -20,6 +20,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.util.lang.Optional;
 
 /**
  * @author jcompagner
@@ -60,9 +61,9 @@ public class DomReadyOrderPage extends WebPage
 		}
 
 		@Override
-		public void onClick(AjaxRequestTarget target)
+		public void onClick(Optional<AjaxRequestTarget> target)
 		{
-			target.add(this);
+			target.get().add(this);
 		}
 	}
 }

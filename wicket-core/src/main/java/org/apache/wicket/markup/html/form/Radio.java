@@ -169,8 +169,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		// checked attribute, first check if there was a raw input on the group.
 		if (group.hasRawInput())
 		{
-			String rawInput = group.getRawInput();
-			if (rawInput != null && rawInput.equals(value))
+			if (group.getRawInput().isValueEqualTo(value))
 			{
 				tag.put("checked", "checked");
 			}

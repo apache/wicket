@@ -19,6 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.lang.Optional;
 
 /**
  * @author jcompagner
@@ -43,13 +44,13 @@ public class AjaxHeaderContributionPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> target)
 			{
-				target.prependJavaScript("prepend();");
-				target.add(test1);
-				target.add(test2);
-				target.add(test3);
-				target.appendJavaScript("append();");
+				target.get().prependJavaScript("prepend();");
+				target.get().add(test1);
+				target.get().add(test2);
+				target.get().add(test3);
+				target.get().appendJavaScript("append();");
 			}
 		});
 	}
