@@ -366,33 +366,31 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to primitive types, returning default value if text is null.
+	 * Convert to boolean, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
-	 *            the default value to return of text is null
-	 * @return the converted text as a primitive or the default if text is null
-	 * @throws StringValueConversionException
+	 *            the default value
+	 * @return the converted text as a boolean or the default value if text is empty or inconvertible
+	 * @see Strings#isTrue(String) 
 	 */
 	public final boolean toBoolean(final boolean defaultValue)
-		throws StringValueConversionException
 	{
-		boolean result = defaultValue;
 		if (text != null)
 		{
 			try
 			{
-				result = toBoolean();
-			} catch (Exception x)
+				return toBoolean();
+			}
+			catch (StringValueConversionException x)
 			{
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-							"An error occurred while converting '%s' to a boolean: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a boolean: %s", text, x.getMessage()), x);
 				}
 			}
 		}
-
-		return result;
+		return defaultValue;
 	}
 
 	/**
@@ -418,22 +416,21 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to primitive types, returning default value if text is null.
+	 * Convert to character, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
-	 *            the default value to return of text is null
-	 * @return the converted text as a primitive or the default if text is null
-	 * @throws StringValueConversionException
+	 *            the default value
+	 * @return the converted text as a primitive char or the default value if text is not a single character
 	 */
-	public final char toChar(final char defaultValue) throws StringValueConversionException
+	public final char toChar(final char defaultValue)
 	{
-		char result = defaultValue;
 		if (text != null)
 		{
 			try
 			{
-				result = toChar();
-			} catch (Exception x)
+				return toChar();
+			}
+			catch (StringValueConversionException x)
 			{
 				if (LOG.isDebugEnabled())
 				{
@@ -442,8 +439,7 @@ public class StringValue implements IClusterable
 				}
 			}
 		}
-
-		return result;
+		return defaultValue;
 	}
 
 	/**
@@ -477,32 +473,30 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to primitive types, returning default value if text is null.
+	 * Convert to double, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
-	 *            the default value to return of text is null
-	 * @return the converted text as a primitive or the default if text is null
-	 * @throws StringValueConversionException
+	 *            the default value
+	 * @return the converted text as a double or the default value if text is empty or inconvertible
 	 */
-	public final double toDouble(final double defaultValue) throws StringValueConversionException
+	public final double toDouble(final double defaultValue)
 	{
-		double result = defaultValue;
 		if (text != null)
 		{
 			try
 			{
-				result = toDouble();
-			} catch (Exception x)
+				return toDouble();
+			}
+			catch (Exception x)
 			{
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-							"An error occurred while converting '%s' to a double: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a double: %s", text, x.getMessage()), x);
 				}
 			}
 		}
-
-		return result;
+		return defaultValue;
 	}
 
 	/**
@@ -521,6 +515,7 @@ public class StringValue implements IClusterable
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
+	 * @see Duration#valueOf(String, java.util.Locale) 
 	 */
 	public final Duration toDuration() throws StringValueConversionException
 	{
@@ -528,33 +523,31 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to primitive types, returning default value if text is null.
+	 * Convert to duration, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
-	 *            the default value to return of text is null
-	 * @return the converted text as a primitive or the default if text is null
-	 * @throws StringValueConversionException
+	 *            the default value
+	 * @return the converted text as a duration or the default value if text is empty or inconvertible
+	 * @see Duration#valueOf(String, java.util.Locale) 
 	 */
 	public final Duration toDuration(final Duration defaultValue)
-		throws StringValueConversionException
 	{
-		Duration result = defaultValue;
 		if (text != null)
 		{
 			try
 			{
-				result = toDuration();
-			} catch (Exception x)
+				return toDuration();
+			}
+			catch (Exception x)
 			{
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-							"An error occurred while converting '%s' to a Duration: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a Duration: %s", text, x.getMessage()), x);
 				}
 			}
 		}
-
-		return result;
+		return defaultValue;
 	}
 
 	/**
@@ -577,22 +570,21 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to primitive types, returning default value if text is null.
+	 * Convert to integer, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
-	 *            the default value to return of text is null
-	 * @return the converted text as a primitive or the default if text is null
-	 * @throws StringValueConversionException
+	 *            the default value
+	 * @return the converted text as an integer or the default value if text is not an integer
 	 */
-	public final int toInt(final int defaultValue) throws StringValueConversionException
+	public final int toInt(final int defaultValue)
 	{
-		int result = defaultValue;
 		if (text != null)
 		{
 			try
 			{
-				result = toInt();
-			} catch (Exception x)
+				return toInt();
+			}
+			catch (StringValueConversionException x)
 			{
 				if (LOG.isDebugEnabled())
 				{
@@ -601,8 +593,7 @@ public class StringValue implements IClusterable
 				}
 			}
 		}
-
-		return result;
+		return defaultValue;
 	}
 
 	/**
@@ -644,32 +635,30 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to primitive types, returning default value if text is null.
+	 * Convert to long integer, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
-	 *            the default value to return of text is null
-	 * @return the converted text as a primitive or the default if text is null
-	 * @throws StringValueConversionException
+	 *            the default value
+	 * @return the converted text as a long integer or the default value if text is empty or inconvertible
 	 */
-	public final long toLong(final long defaultValue) throws StringValueConversionException
+	public final long toLong(final long defaultValue)
 	{
-		long result = defaultValue;
 		if (text != null)
 		{
 			try
 			{
-				result = toLong();
-			} catch (Exception x)
+				return toLong();
+			}
+			catch (StringValueConversionException x)
 			{
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-							"An error occurred while converting '%s' to a long: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a long: %s", text, x.getMessage()), x);
 				}
 			}
 		}
-
-		return result;
+		return defaultValue;
 	}
 
 	/**
@@ -819,22 +808,21 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to primitive types, returning default value if text is null.
+	 * Convert to time, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
-	 *            the default value to return of text is null
-	 * @return the converted text as a primitive or the default if text is null
-	 * @throws StringValueConversionException
+	 *            the default value
+	 * @return the converted text as a time or the default value if text is inconvertible.
 	 */
-	public final Time toTime(final Time defaultValue) throws StringValueConversionException
+	public final Time toTime(final Time defaultValue)
 	{
-		Time result = defaultValue;
 		if (text != null)
 		{
 			try
 			{
-				result = toTime();
-			} catch (Exception x)
+				return toTime();
+			}
+			catch (StringValueConversionException x)
 			{
 				if (LOG.isDebugEnabled())
 				{
@@ -843,8 +831,7 @@ public class StringValue implements IClusterable
 				}
 			}
 		}
-
-		return result;
+		return defaultValue;
 	}
 
 	/**
