@@ -3895,22 +3895,6 @@ public abstract class Component
 	{
 		if (needToRenderTag(tag))
 		{
-			// Apply behavior modifiers
-			List<? extends Behavior> behaviors = getBehaviors();
-			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
-				(isIgnoreAttributeModifier() == false))
-			{
-				tag = tag.mutable();
-				for (Behavior behavior : behaviors)
-				{
-					// Components may reject some behavior components
-					if (isBehaviorAccepted(behavior))
-					{
-						behavior.onComponentTag(this, tag);
-					}
-				}
-			}
-
 			// apply behaviors that are attached to the component tag.
 			if (tag.hasBehaviors())
 			{
@@ -3923,6 +3907,22 @@ public abstract class Component
 						behavior.onComponentTag(this, tag);
 					}
 					behavior.detach(this);
+				}
+			}
+
+			// Apply behavior modifiers
+			List<? extends Behavior> behaviors = getBehaviors();
+			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
+					(isIgnoreAttributeModifier() == false))
+			{
+				tag = tag.mutable();
+				for (Behavior behavior : behaviors)
+				{
+					// Components may reject some behavior components
+					if (isBehaviorAccepted(behavior))
+					{
+						behavior.onComponentTag(this, tag);
+					}
 				}
 			}
 
