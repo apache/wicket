@@ -389,8 +389,6 @@ public abstract class Component
 	private static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
 	private static final int FLAG_AFTER_RENDERING = 0x8000000;
 
-	private static final int FLAG_MARKUP_ATTACHED = 0x10000000;
-
 	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
 	 * component wants to restrict visibility of another component. Calling
