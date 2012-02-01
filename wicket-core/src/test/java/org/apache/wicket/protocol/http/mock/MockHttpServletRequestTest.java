@@ -16,10 +16,13 @@
  */
 package org.apache.wicket.protocol.http.mock;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * test features of {@link MockHttpServletRequest}
@@ -99,5 +102,38 @@ public class MockHttpServletRequestTest extends WicketTestCase
 
 		String pathInfo = request.getPathInfo();
 		assertEquals("/foo/bar/baz.html", pathInfo);
+	}
+	
+	@Test
+	public void getSessionFromNonMockHttpSession()
+	{
+		HttpSession httpSession = Mockito.mock(HttpSession.class);
+		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
+		assertNull("MockHttpServletRequest knows how to work only with MockHttpSession", request.getSession(true));
+		assertNull("MockHttpServletRequest knows how to work only with MockHttpSession", request.getSession(false));
+	}
+
+	@Test
+	public void getSessionFalseFromMockHttpSession()
+	{
+		HttpSession httpSession = new MockHttpSession(null);
+		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
+		assertNull("HttpSession should not be created!", request.getSession(false));
+	}
+
+	@Test
+	public void getSessionDefaultFromMockHttpSession()
+	{
+		HttpSession httpSession = new MockHttpSession(null);
+		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
+		assertSame("HttpSession should be created!", httpSession, request.getSession());
+	}
+
+	@Test
+	public void getSessionTrueFromMockHttpSession()
+	{
+		HttpSession httpSession = new MockHttpSession(null);
+		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
+		assertSame("HttpSession should be created!", httpSession, request.getSession(true));
 	}
 }

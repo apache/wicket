@@ -1029,11 +1029,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public HttpSession getSession()
 	{
-		if (session instanceof MockHttpSession && ((MockHttpSession)session).isTemporary())
-		{
-			return null;
-		}
-		return session;
+		return getSession(true);
 	}
 
 	/**
@@ -1045,11 +1041,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public HttpSession getSession(boolean b)
 	{
-		if (b && session instanceof MockHttpSession)
+		HttpSession sess = null;
+		if (session instanceof MockHttpSession)
 		{
-			((MockHttpSession)session).setTemporary(false);
+			MockHttpSession mockHttpSession = (MockHttpSession) session;
+			if (b)
+			{
+				mockHttpSession.setTemporary(false);
+			}
+
+			if (mockHttpSession.isTemporary() == false)
+			{
+				sess = session;
+			}
 		}
-		return getSession();
+		return sess;
 	}
 
 	/**

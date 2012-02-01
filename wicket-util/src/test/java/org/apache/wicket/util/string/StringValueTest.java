@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.string;
 
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -56,5 +58,26 @@ public class StringValueTest extends Assert
 		assertNull(sv.toOptionalLong());
 		assertNull(sv.toOptionalString());
 		assertNull(sv.toOptionalTime());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4356
+	 */
+	@Test
+	public void defaultValues()
+	{
+		StringValue sv = new StringValue("unknown");
+		
+		assertTrue(sv.toBoolean(true));
+		assertFalse(sv.toBoolean(false));
+		
+		assertEquals(4, sv.toInt(4));
+		assertEquals(4.0, sv.toDouble(4.0), 0.005);
+		assertEquals('c', sv.toChar('c'));
+		assertEquals(Duration.seconds(3), sv.toDuration(Duration.seconds(3)));
+		assertEquals(Time.millis(5), sv.toTime(Time.millis(5)));
+		assertEquals(40L, sv.toLong(40));
+
+		assertEquals("unknown", sv.toString("def"));
 	}
 }

@@ -25,7 +25,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * @author jcompagner
+ * @deprecated Superceded by SerializableChecker.WicketNotSerializableException
  */
+@Deprecated
 public class WicketSerializeableException extends NotSerializableException
 {
 	private static final long serialVersionUID = 1L;

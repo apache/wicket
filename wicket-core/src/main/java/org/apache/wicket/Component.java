@@ -743,7 +743,7 @@ public abstract class Component
 	 * 
 	 * @return false, if it was called the first time
 	 */
-	final boolean internalOnMarkupAttached()
+	private boolean internalOnMarkupAttached()
 	{
 		boolean rtn = getFlag(FLAG_MARKUP_ATTACHED);
 		if (rtn == false)
@@ -757,7 +757,10 @@ public abstract class Component
 	/**
 	 * Can be subclassed by any user to implement init-like logic which requires the markup to be
 	 * available
+	 *
+	 * @deprecated Use #onInitialize() instead.
 	 */
+	@Deprecated
 	protected void onMarkupAttached()
 	{
 		if (log.isDebugEnabled())
@@ -886,6 +889,15 @@ public abstract class Component
 	protected void onInitialize()
 	{
 		setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
+
+		try
+		{
+			internalOnMarkupAttached();
+		}
+		catch (WicketRuntimeException exception)
+		{
+			// ignore
+		}
 	}
 
 	/**
@@ -3925,22 +3937,6 @@ public abstract class Component
 	{
 		if (needToRenderTag(tag))
 		{
-			// Apply behavior modifiers
-			List<? extends Behavior> behaviors = getBehaviors();
-			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
-				(isIgnoreAttributeModifier() == false))
-			{
-				tag = tag.mutable();
-				for (Behavior behavior : behaviors)
-				{
-					// Components may reject some behavior components
-					if (isBehaviorAccepted(behavior))
-					{
-						behavior.onComponentTag(this, tag);
-					}
-				}
-			}
-
 			// apply behaviors that are attached to the component tag.
 			if (tag.hasBehaviors())
 			{
@@ -3953,6 +3949,22 @@ public abstract class Component
 						behavior.onComponentTag(this, tag);
 					}
 					behavior.detach(this);
+				}
+			}
+
+			// Apply behavior modifiers
+			List<? extends Behavior> behaviors = getBehaviors();
+			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
+					(isIgnoreAttributeModifier() == false))
+			{
+				tag = tag.mutable();
+				for (Behavior behavior : behaviors)
+				{
+					// Components may reject some behavior components
+					if (isBehaviorAccepted(behavior))
+					{
+						behavior.onComponentTag(this, tag);
+					}
 				}
 			}
 

@@ -174,48 +174,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				throw new IllegalArgumentException(exceptionMessage("A child with id '" +
 					child.getId() + "' already exists"));
 			}
-
-			// One of the key pre-requisites to successfully load markup, is the availability of the
-			// file extension. Which in turn is part of MarkupType which by default requires the
-			// Page.
-			if (getMarkupType() != null)
-			{
-				// Check if the markup is available after the child has been added to the parent
-				try
-				{
-					// If not yet triggered, then do now (e.g. Pages)
-					if (getMarkup() != null)
-					{
-						internalOnMarkupAttached();
-					}
-
-					if (child.getMarkup() != null)
-					{
-						child.internalOnMarkupAttached();
-
-						// Tell all children of "component" as well
-						if (child instanceof MarkupContainer)
-						{
-							MarkupContainer container = (MarkupContainer)child;
-							container.visitChildren(new IVisitor<Component, Void>()
-							{
-								public void component(final Component component,
-									final IVisit<Void> visit)
-								{
-									if (component.internalOnMarkupAttached())
-									{
-										visit.dontGoDeeper();
-									}
-								}
-							});
-						}
-					}
-				}
-				catch (WicketRuntimeException exception)
-				{
-					// ignore
-				}
-			}
 		}
 		return this;
 	}
