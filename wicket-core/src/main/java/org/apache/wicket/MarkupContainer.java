@@ -1901,20 +1901,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onMarkupAttached()
-	 */
-	@Override
-	protected void onMarkupAttached()
-	{
-		super.onMarkupAttached();
-
-		// createAndAddComponentsForWicketTags();
-	}
-
-
-	/**
 	 * Automatically create components for <wicket:xxx> tag.
 	 */
+	// to use it call it from #onInitialize()
 	private void createAndAddComponentsForWicketTags()
 	{
 		// Markup must be available
