@@ -308,52 +308,65 @@ public class StringValue implements IClusterable
 	 * @return The converted value
 	 * @throws StringValueConversionException
 	 */
-	public final Object to(final Class<?> type) throws StringValueConversionException
+	public final <T> T to(final Class<T> type) throws StringValueConversionException
 	{
 		if (type == String.class)
 		{
-			return toString();
+			return (T) toString();
 		}
 
 		if ((type == Integer.TYPE) || (type == Integer.class))
 		{
-			return toInteger();
+			return (T) toInteger();
 		}
 
 		if ((type == Long.TYPE) || (type == Long.class))
 		{
-			return toLongObject();
+			return (T) toLongObject();
 		}
 
 		if ((type == Boolean.TYPE) || (type == Boolean.class))
 		{
-			return toBooleanObject();
+			return (T) toBooleanObject();
 		}
 
 		if ((type == Double.TYPE) || (type == Double.class))
 		{
-			return toDoubleObject();
+			return (T) toDoubleObject();
 		}
 
 		if ((type == Character.TYPE) || (type == Character.class))
 		{
-			return toCharacter();
+			return (T) toCharacter();
 		}
 
 		if (type == Time.class)
 		{
-			return toTime();
+			return (T) toTime();
 		}
 
 		if (type == Duration.class)
 		{
-			return toDuration();
+			return (T) toDuration();
 		}
 
 		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type " +
 			type);
 	}
 
+	/**
+	 * Converts this StringValue to a given type or {@code null} if the value is empty.
+	 *
+	 * @param type
+	 *            The type to convert to
+	 * @return The converted value
+	 * @throws StringValueConversionException
+	 */
+	public final <T> T toOptional(final Class<T> type) throws StringValueConversionException
+	{
+		return Strings.isEmpty(text) ? null : to(type);
+	}
+	
 	/**
 	 * Convert this text to a boolean.
 	 * 

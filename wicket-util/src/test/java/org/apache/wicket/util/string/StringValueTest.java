@@ -80,4 +80,33 @@ public class StringValueTest extends Assert
 
 		assertEquals("unknown", sv.toString("def"));
 	}
+	
+	@Test
+	public void toType()
+	{
+		StringValue sv = new StringValue("4");
+		
+		assertEquals(Long.valueOf(4), sv.to(Long.class));
+		assertEquals(Integer.valueOf(4), sv.to(Integer.class));
+		assertEquals(Double.valueOf(4), sv.to(Double.class));
+		assertEquals(Character.valueOf('4'), sv.to(Character.class));
+		assertEquals("4", sv.to(String.class));
+		
+		try
+		{
+			sv.to(String[].class);
+			fail("Should not be able to convert to unsupported type!");
+		} catch (StringValueConversionException svcx)
+		{
+			assertTrue(true);
+		}
+		
+		sv = new StringValue(null);
+		assertNull(sv.toOptional(String.class));
+		assertNull(sv.toOptional(String[].class));
+
+		sv = new StringValue("");
+		assertNull(sv.toOptional(String.class));
+		assertNull(sv.toOptional(String[].class));
+	}
 }
