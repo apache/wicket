@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.Session;
 import org.apache.wicket.model.IModel;
 
 
@@ -45,6 +44,8 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	/** Comparator used for sorting the messages. */
 	private Comparator<FeedbackMessage> sortingComparator;
 
+	private final Component component;
+
 	/**
 	 * Constructor. Creates a model for all feedback messages on the page.
 	 * 
@@ -58,6 +59,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 		{
 			throw new IllegalArgumentException("Argument 'component' cannot be null");
 		}
+		this.component = component;
 	}
 
 	/**
@@ -101,7 +103,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 		if (messages == null)
 		{
 			// Get filtered messages from page where component lives
-			messages = Session.get().getFeedbackMessages().messages(filter);
+			messages = new FeedbackCollector(component).collect(filter);
 
 			// Sort the list before returning it
 			if (sortingComparator != null)

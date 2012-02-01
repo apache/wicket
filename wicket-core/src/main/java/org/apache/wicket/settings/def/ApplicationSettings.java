@@ -21,7 +21,10 @@ import java.lang.ref.WeakReference;
 import org.apache.wicket.Page;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.feedback.DefaultCleanupFeedbackMessageFilter;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
@@ -48,6 +51,8 @@ public class ApplicationSettings implements IApplicationSettings
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
 
 	private boolean uploadProgressUpdatesEnabled = false;
+
+	private IFeedbackMessageFilter feedbackMessageCleanupFilter = new DefaultCleanupFeedbackMessageFilter();
 
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getAccessDeniedPage()
@@ -191,5 +196,18 @@ public class ApplicationSettings implements IApplicationSettings
 			throw new IllegalArgumentException("argument " + pageClass +
 				" must be a subclass of Page");
 		}
+	}
+
+	@Override
+	public void setFeedbackMessageCleanupFilter(IFeedbackMessageFilter filter)
+	{
+		Args.notNull(filter, "filter");
+		feedbackMessageCleanupFilter = filter;
+	}
+
+	@Override
+	public IFeedbackMessageFilter getFeedbackMessageCleanupFilter()
+	{
+		return feedbackMessageCleanupFilter;
 	}
 }

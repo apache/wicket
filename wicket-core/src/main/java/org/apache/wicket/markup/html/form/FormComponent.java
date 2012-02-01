@@ -1087,6 +1087,15 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public void validate()
 	{
+		// clear any previous feedback messages
+
+		if (hasFeedbackMessage())
+		{
+			getFeedbackMessages().clear();
+		}
+
+		// validate
+
 		validateRequired();
 		if (isValid())
 		{

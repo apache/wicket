@@ -754,7 +754,7 @@ public class FormTester
 		checkClosed();
 		try
 		{
-			tester.getLastRenderedPage().getSession().cleanupFeedbackMessages();
+			tester.clearFeedbackMessages();
 			tester.getRequest().setUseMultiPartContentType(workingForm.isMultiPart());
 			tester.submitForm(path);
 		}
