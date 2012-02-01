@@ -757,7 +757,10 @@ public abstract class Component
 	/**
 	 * Can be subclassed by any user to implement init-like logic which requires the markup to be
 	 * available
+	 *
+	 * @deprecated Use #onInitialize() instead.
 	 */
+	@Deprecated
 	protected void onMarkupAttached()
 	{
 		if (log.isDebugEnabled())
