@@ -65,7 +65,7 @@
 
 	/**
 	 * Creates an iframe that can be used to load data asynchronously or as a
-	 * target for form submit.
+	 * target for Ajax form submit.
 	 *
 	 * @param {String} the value of the iframe's name attribute
 	 */
@@ -362,7 +362,9 @@
 
 		/**
 		 * A helper function that executes an array of handlers (before, success, failure)
-		 * @param {Array} handlers - the handlers to execute
+		 *
+		 * @param {Array[FunctionBody]} handlers - the handlers to execute
+		 * @param {Array[String]} argumentNames - the names of the arguments which are passes to the handles
 		 */
 		_executeHandlers: function (handlers, argumentNames) {
 			if (jQuery.isArray(handlers)) {
