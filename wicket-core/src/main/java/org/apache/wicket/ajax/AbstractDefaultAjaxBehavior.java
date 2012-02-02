@@ -34,7 +34,6 @@ import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
@@ -262,34 +261,37 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 			for (IAjaxCallListener ajaxCallListener : attributes.getAjaxCallListeners())
 			{
-				CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
-				if (Strings.isEmpty(beforeHandler) == false)
+				if (ajaxCallListener != null)
 				{
-					attributesJson.append("bh", beforeHandler);
-				}
+					CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
+					if (Strings.isEmpty(beforeHandler) == false)
+					{
+						attributesJson.append("bh", beforeHandler);
+					}
 
-				CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
-				if (Strings.isEmpty(afterHandler) == false)
-				{
-					attributesJson.append("ah", afterHandler);
-				}
+					CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
+					if (Strings.isEmpty(afterHandler) == false)
+					{
+						attributesJson.append("ah", afterHandler);
+					}
 
-				CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
-				if (Strings.isEmpty(successHandler) == false)
-				{
-					attributesJson.append("sh", successHandler);
-				}
+					CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
+					if (Strings.isEmpty(successHandler) == false)
+					{
+						attributesJson.append("sh", successHandler);
+					}
 
-				CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
-				if (Strings.isEmpty(failureHandler) == false)
-				{
-					attributesJson.append("fh", failureHandler);
-				}
+					CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
+					if (Strings.isEmpty(failureHandler) == false)
+					{
+						attributesJson.append("fh", failureHandler);
+					}
 
-				CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
-				if (Strings.isEmpty(completeHandler) == false)
-				{
-					attributesJson.append("coh", completeHandler);
+					CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
+					if (Strings.isEmpty(completeHandler) == false)
+					{
+						attributesJson.append("coh", completeHandler);
+					}
 				}
 			}
 
