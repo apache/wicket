@@ -441,7 +441,7 @@
 					var dep = deps[i],
 						extraParam = {};
 					if (jQuery.isFunction(dep)) {
-						extraParam = dep();
+						extraParam = dep(attrs);
 					} else {
 						extraParam = new Function('attrs', dep)(attrs);
 					}
@@ -489,7 +489,7 @@
 							var precondition = preconditions[p];
 							var result;
 							if (jQuery.isFunction(precondition)) {
-								result = precondition();
+								result = precondition(attrs, jqXHR, settings);
 							} else {
 								result = new Function('attrs', 'jqXHR', 'settings', precondition)(attrs, jqXHR, settings);
 							}
