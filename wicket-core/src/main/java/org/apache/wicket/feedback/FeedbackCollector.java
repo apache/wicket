@@ -25,8 +25,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
-import sun.swing.SwingUtilities2.Section;
-
 /**
  * Collects feedback messages from all the places where they can be stored.
  * 
@@ -62,7 +60,7 @@ public final class FeedbackCollector
 	/**
 	 * Controls whether or not feedback from the {@link Session} will be collected
 	 * 
-	 * See {@link Section#getFeedbackMessages}
+	 * See {@link Session#getFeedbackMessages}
 	 * 
 	 * @param value
 	 * @return {@code this} for chaining
