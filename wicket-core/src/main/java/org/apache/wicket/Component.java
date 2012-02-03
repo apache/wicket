@@ -1246,6 +1246,18 @@ public abstract class Component
 	}
 
 	/**
+	 * Registers a fatal feedback message for this component
+	 *
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void fatal(final Serializable message)
+	{
+		getFeedbackMessages().fatal(this, message);
+		addStateChange();
+	}
+
+	/**
 	 * Finds the first container parent of this component of the given class.
 	 * 
 	 * @param <Z>
