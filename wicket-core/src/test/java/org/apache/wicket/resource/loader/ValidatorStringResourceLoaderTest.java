@@ -70,7 +70,7 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 		formTester.setValue("passwd", "anything");
 		formTester.submit();
 
-		tester.assertErrorMessages("Interface error loaded OK");
+		tester.assertErrorMessages("Class error loaded OK");
 	}
 	
 	private static class ValidatorLoaderPage extends WebPage implements IMarkupResourceStreamProvider
