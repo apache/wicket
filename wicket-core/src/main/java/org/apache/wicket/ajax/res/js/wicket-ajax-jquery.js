@@ -560,7 +560,14 @@
 			return attrs.ad;
 		},
 
-		// Method that processes the <ajax-response>
+		/**
+		 * Method that processes the <ajax-response>.
+		 *
+		 * @param {XmlDocument} data - the <ajax-response> XML document
+		 * @param {String} textStatus - the response status as text (e.g. 'success', 'parsererror', etc.)
+		 * @param {Object} jqXHR - the jQuery wrapper around XMLHttpRequest
+		 * @param {Object} attrs - the Ajax request attributes
+		 */
 		processAjaxResponse: function (data, textStatus, jqXHR, attrs) {
 
 			if (jqXHR.readyState === 4) {
@@ -610,9 +617,11 @@
 				}
 				else {
 					// no redirect, just regular response
-					var responseAsText = jQuery(data).text();
-					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
-					Wicket.Log.info("\n" + responseAsText);
+					if (Wicket.Log.enabled()) {
+						var responseAsText = jQuery(data).text();
+						Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
+						Wicket.Log.info("\n" + responseAsText);
+					}
 
 					// invoke the loaded callback with an xml document
 					return this.loadedCallback(data, attrs);
