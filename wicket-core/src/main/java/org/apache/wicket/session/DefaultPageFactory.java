@@ -53,7 +53,7 @@ public final class DefaultPageFactory implements IPageFactory
 	private final Map<Class<?>, Constructor<?>> constructorForClass = Generics.newConcurrentHashMap();
 
 	/**
-	 * {@link #isBookmarkable()} is expensive, we cache the result here
+	 * {@link #isBookmarkable(Class)} is expensive, we cache the result here
 	 */
 	private final ConcurrentMap<String, Boolean> pageToBookmarkableCache = new ConcurrentHashMap<String, Boolean>();
 
@@ -105,8 +105,6 @@ public final class DefaultPageFactory implements IPageFactory
 
 	/**
 	 * Looks up a one-arg Page constructor by class and argument type.
-	 * 
-	 * @param <C>
 	 * 
 	 * @param pageClass
 	 *            The class of page
