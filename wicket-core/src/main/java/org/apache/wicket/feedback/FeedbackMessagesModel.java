@@ -44,22 +44,22 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	/** Comparator used for sorting the messages. */
 	private Comparator<FeedbackMessage> sortingComparator;
 
-	private final Component component;
+	private final Component pageResolvingComponent;
 
 	/**
 	 * Constructor. Creates a model for all feedback messages on the page.
 	 * 
-	 * @param component
+	 * @param pageResolvingComponent
 	 *            The component where the page will be get from for which messages will be displayed
 	 *            usually the same page as the one feedbackpanel is attached to
 	 */
-	public FeedbackMessagesModel(Component component)
+	public FeedbackMessagesModel(Component pageResolvingComponent)
 	{
-		if (component == null)
+		if (pageResolvingComponent == null)
 		{
-			throw new IllegalArgumentException("Argument 'component' cannot be null");
+			throw new IllegalArgumentException("Argument 'pageResolvingComponent' cannot be null");
 		}
-		this.component = component;
+		this.pageResolvingComponent = pageResolvingComponent;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 		if (messages == null)
 		{
 			// Get filtered messages from page where component lives
-			messages = new FeedbackCollector(component).collect(filter);
+			messages = new FeedbackCollector(pageResolvingComponent.getPage()).collect(filter);
 
 			// Sort the list before returning it
 			if (sortingComparator != null)
