@@ -508,7 +508,7 @@
 
 					if (attrs.i) {
 						// show the indicator
-						Wicket.DOM.show(attrs.i);
+						Wicket.DOM.showIncrementally(attrs.i);
 					}
 				},
 				data: data,
@@ -537,7 +537,7 @@
 				},
 				complete: function (jqXHR, textStatus) {
 					if (attrs.i) {
-						Wicket.DOM.hide(attrs.i);
+						Wicket.DOM.hideIncrementally(attrs.i);
 					}
 
 					self._executeHandlers(attrs.coh,
