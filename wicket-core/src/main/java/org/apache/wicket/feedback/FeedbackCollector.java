@@ -46,7 +46,7 @@ public final class FeedbackCollector
 	}
 
 	/**
-	 * Constrcuts a collector that will collect messages from {@link Session} and specified
+	 * Constructs a collector that will collect messages from {@link Session} and specified
 	 * {@code container}
 	 * 
 	 * @param component
