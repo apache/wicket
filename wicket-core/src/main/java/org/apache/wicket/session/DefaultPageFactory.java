@@ -95,8 +95,10 @@ public final class DefaultPageFactory implements IPageFactory
 		// If we got a PageParameters constructor
 		if (constructor != null)
 		{
+			final PageParameters nullSafeParams = parameters == null ? new PageParameters() : parameters;
+
 			// return new Page(parameters)
-			return processPage(newPage(constructor, parameters), parameters);
+			return processPage(newPage(constructor, nullSafeParams), nullSafeParams);
 		}
 
 		// Always try default constructor if one exists
