@@ -674,7 +674,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			String desiredMethod = getMethod();
 			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
-			if (!actualMethod.equalsIgnoreCase(getMethod()))
+			if (!actualMethod.equalsIgnoreCase(desiredMethod))
 			{
 				MethodMismatchResponse response = onMethodMismatch();
 				switch (response)
