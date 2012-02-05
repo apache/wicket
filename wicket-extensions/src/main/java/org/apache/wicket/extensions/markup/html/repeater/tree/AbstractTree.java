@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.markup.html.repeater.tree.util.ProviderSubset;
+import org.apache.wicket.extensions.markup.html.repeater.util.ProviderSubset;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.DefaultItemReuseStrategy;
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
@@ -194,7 +194,7 @@ public abstract class AbstractTree<T> extends Panel
 	{
 		getModelObject().add(t);
 
-		updateBranch(t, AjaxRequestTarget.get());
+		updateBranch(t, getRequestCycle().find(AjaxRequestTarget.class));
 	}
 
 	/**
@@ -212,7 +212,7 @@ public abstract class AbstractTree<T> extends Panel
 	{
 		getModelObject().remove(t);
 
-		updateBranch(t, AjaxRequestTarget.get());
+		updateBranch(t, getRequestCycle().find(AjaxRequestTarget.class));
 	}
 
 	/**

@@ -91,20 +91,12 @@ public abstract class AjaxButton extends Button
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * 
-			 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
-			 */
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				AjaxButton.this.onSubmit(target, AjaxButton.this.getForm());
 			}
 
-			/**
-			 * 
-			 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onError(org.apache.wicket.ajax.AjaxRequestTarget)
-			 */
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{

@@ -14,13 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.repeater.tree.util;
+package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
 import org.apache.wicket.extensions.markup.html.repeater.tree.ISortableTreeProvider;
-import org.apache.wicket.extensions.markup.html.repeater.util.SingleSortState;
-import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 
 /**
  * Convenience implementation of a tree provider that can also act as a locator for a

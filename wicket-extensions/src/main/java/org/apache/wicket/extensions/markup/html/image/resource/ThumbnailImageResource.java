@@ -106,7 +106,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 		{
 			// read original image
 			ByteArrayResponse byteResponse = new ByteArrayResponse();
-			Attributes dispatchAttributes = new Attributes(attributes.getRequest(), byteResponse);
+			Attributes dispatchAttributes = new Attributes(attributes.getRequest(), byteResponse, attributes.getParameters());
 			unscaledImageResource.respond(dispatchAttributes);
 			is = new ByteArrayInputStream(byteResponse.getBytes());
 			originalImage = ImageIO.read(is);

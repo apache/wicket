@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -23,6 +25,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -37,21 +40,19 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.validation.IValidator;
 
-import java.io.Serializable;
-
 /**
  * An implementation of ajaxified edit-in-place component using a {@link TextField} as it's editor.
  * <p>
  * There are several methods that can be overridden for customization.
  * <ul>
- * <li>{@link #onEdit(AjaxRequestTarget)} is called when the label is clicked and the editor is to
- * be displayed. The default implementation switches the label for the editor and places the caret
- * at the end of the text.</li>
- * <li>{@link #onSubmit(AjaxRequestTarget)} is called when in edit mode, the user submitted new
- * content, that content validated well, and the model value successfully updated. This
- * implementation also clears any <code>window.status</code> set.</li>
- * <li>{@link #onError(AjaxRequestTarget)} is called when in edit mode, the user submitted new
- * content, but that content did not validate. Get the current input by calling
+ * <li>{@link #onEdit(org.apache.wicket.ajax.AjaxRequestTarget)} is called when the label is clicked
+ * and the editor is to be displayed. The default implementation switches the label for the editor
+ * and places the caret at the end of the text.</li>
+ * <li>{@link #onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)} is called when in edit mode, the
+ * user submitted new content, that content validated well, and the model value successfully
+ * updated. This implementation also clears any <code>window.status</code> set.</li>
+ * <li>{@link #onError(org.apache.wicket.ajax.AjaxRequestTarget)} is called when in edit mode, the
+ * user submitted new content, but that content did not validate. Get the current input by calling
  * {@link FormComponent#getInput()} on {@link #getEditor()}, and the error message by calling:
  * 
  * <pre>
@@ -61,9 +62,9 @@ import java.io.Serializable;
  * The default implementation of this method displays the error message in
  * <code>window.status</code>, redisplays the editor, selects the editor's content and sets the
  * focus on it.
- * <li>{@link #onCancel(AjaxRequestTarget)} is called when in edit mode, the user choose not to
- * submit the contents (he/she pressed escape). The default implementation displays the label again
- * without any further action.</li>
+ * <li>{@link #onCancel(org.apache.wicket.ajax.AjaxRequestTarget)} is called when in edit mode, the
+ * user choose not to submit the contents (he/she pressed escape). The default implementation
+ * displays the label again without any further action.</li>
  * </ul>
  * </p>
  * 
@@ -94,7 +95,7 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 			super.renderHead(component, response);
 
-			AjaxRequestTarget target = AjaxRequestTarget.get();
+			AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
 			if (target != null)
 			{
 				AjaxRequestAttributes attributes = getAttributes();
@@ -305,35 +306,37 @@ public class AjaxEditableLabel<T> extends Panel
 		};
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
-		editor.add(new EditorAjaxBehavior() {
+		editor.add(new EditorAjaxBehavior()
+		{
 			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
 				attributes.setEventNames("blur", "keyup");
 
-				CharSequence dynamicExtraParameters =
-						"var result = {}, " +
-								"kc=Wicket.Event.keyCode(event)," +
-								"evtType=attrs.event.type;" +
-								"if (evtType === 'keyup') {" +
-								// ESCAPE key
-								"if (kc===27) { result.save = false }" +
+				CharSequence dynamicExtraParameters = "var result = {}, "
+					+ "kc=Wicket.Event.keyCode(event),"
+					+ "evtType=attrs.event.type;"
+					+ "if (evtType === 'keyup') {"
+					+
+					// ESCAPE key
+					"if (kc===27) { result.save = false }"
+					+
 
-								// ENTER key
-								"else if (kc===13) { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }" +
-								"}" +
-								"else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }" +
-								"return result;";
+					// ENTER key
+					"else if (kc===13) { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }"
+					+ "}"
+					+ "else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }"
+					+ "return result;";
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
-				CharSequence precondition =
-						"var kc=Wicket.Event.keyCode(event),"+
-								"evtType=attrs.event.type,"+
-								"ret=false;"+
-								"if(evtType==='blur' || (evtType==='keyup' && (kc===27 || kc===13))) ret = true;"+
-								"return ret;";
-				JavaScriptPrecondition javaScriptPrecondition = new JavaScriptPrecondition(precondition);
+				CharSequence precondition = "var kc=Wicket.Event.keyCode(event),"
+					+ "evtType=attrs.event.type,"
+					+ "ret=false;"
+					+ "if(evtType==='blur' || (evtType==='keyup' && (kc===27 || kc===13))) ret = true;"
+					+ "return ret;";
+				JavaScriptPrecondition javaScriptPrecondition = new JavaScriptPrecondition(
+					precondition);
 				attributes.getPreconditions().add(javaScriptPrecondition);
 
 			}
@@ -487,9 +490,9 @@ public class AjaxEditableLabel<T> extends Panel
 	 */
 	protected void onError(final AjaxRequestTarget target)
 	{
-		Serializable errorMessage = editor.getFeedbackMessage().getMessage();
-		if (errorMessage != null)
+		if (editor.hasErrorMessage())
 		{
+			Serializable errorMessage = editor.getFeedbackMessages().first(FeedbackMessage.ERROR);
 			target.appendJavaScript("window.status='" +
 				JavaScriptUtils.escapeQuotes(errorMessage.toString()) + "';");
 		}

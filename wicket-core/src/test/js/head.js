@@ -117,7 +117,8 @@ jQuery(document).ready(function() {
 		// add just jsessionid=1
 		Wicket.Head.addElement(script1);
 
-		ok(Wicket.Head.containsElement(script2, 'src'), 'The jsessionid part of the URL must be ignored.');
+		equal(true, Wicket.Head.containsElement(script1, 'src'), 'The jsessionid part of the URL must be ignored.');
+		equal(false, Wicket.Head.containsElement(script2, 'src'), 'The jsessionid part of the URL must be ignored.');
 	});
 
 	module('addJavascript');

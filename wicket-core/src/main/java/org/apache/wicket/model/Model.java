@@ -121,13 +121,13 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * 
 	 * @param <C>
 	 *            model type
-	 * @param set
+	 * @param collection
 	 *            The Collection, which may or may not be Serializable
 	 * @return A Model object wrapping the Set
 	 */
-	public static <C> IModel<Collection<? extends C>> of(final Collection<? extends C> set)
+	public static <C> IModel<Collection<? extends C>> of(final Collection<? extends C> collection)
 	{
-		return new WildcardCollectionModel<C>(set);
+		return new WildcardCollectionModel<C>(collection);
 	}
 
 
@@ -142,6 +142,19 @@ public class Model<T extends Serializable> implements IModel<T>
 	public static <T extends Serializable> Model<T> of(T object)
 	{
 		return new Model<T>(object);
+	}
+
+	/**
+	 * Supresses generics warning when converting model types
+	 * 
+	 * @param <T>
+	 * @param model
+	 * @return <code>model</code>
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> IModel<T> of(IModel<?> model)
+	{
+		return (IModel<T>)model;
 	}
 
 	/**
@@ -229,18 +242,5 @@ public class Model<T extends Serializable> implements IModel<T>
 		}
 		Model<?> that = (Model<?>)obj;
 		return Objects.equal(object, that.object);
-	}
-
-	/**
-	 * Supresses generics warning when converting model types
-	 * 
-	 * @param <T>
-	 * @param model
-	 * @return <code>model</code>
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> IModel<T> of(IModel<?> model)
-	{
-		return (IModel<T>)model;
 	}
 }

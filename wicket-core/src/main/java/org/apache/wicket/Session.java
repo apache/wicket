@@ -36,10 +36,12 @@ import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +51,6 @@ import org.slf4j.LoggerFactory;
  * Holds information about a user session, including some fixed number of most recent pages (and all
  * their nested component information).
  * <ul>
- * <li><b>Access via RequestCycle </b>- The Session for a {@link RequestCycle} can be retrieved by
- * calling {@link RequestCycle#getSession()}.
- * 
  * <li><b>Access via Component </b>- If a RequestCycle object is not available, the Session can be
  * retrieved for a Component by calling {@link Component#getSession()}. As currently implemented,
  * each Component does not itself have a reference to the session that contains it. However, the
@@ -162,7 +161,7 @@ public abstract class Session implements IClusterable, IEventSink
 
 	/**
 	 * Cached instance of agent info which is typically designated by calling
-	 * {@link RequestCycle#newClientInfo()}.
+	 * {@link Session#getClientInfo()}.
 	 */
 	protected ClientInfo clientInfo;
 
@@ -271,8 +270,16 @@ public abstract class Session implements IClusterable, IEventSink
 	/**
 	 * Cleans up all rendered feedback messages and any unrendered, dangling feedback messages there
 	 * may be left after that.
+	 * 
+	 * @deprecated see
+	 *             {@link IApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)}
+	 *             for cleanup during testing see {@link BaseWicketTester#cleanupFeedbackMessages()}
 	 */
-	public abstract void cleanupFeedbackMessages();
+	@Deprecated
+	public final void cleanupFeedbackMessages()
+	{
+		throw new UnsupportedOperationException("Deprecated, see the javadoc");
+	}
 
 
 	/**
@@ -643,10 +650,25 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void detach()
 	{
+		detachFeedback();
+
 		if (sessionInvalidated)
 		{
 			invalidateNow();
 		}
+	}
+
+	private void detachFeedback()
+	{
+		final int removed = feedbackMessages.clear(getApplication().getApplicationSettings()
+			.getFeedbackMessageCleanupFilter());
+
+		if (removed != 0)
+		{
+			dirty();
+		}
+
+		feedbackMessages.detach();
 	}
 
 	/**
@@ -841,8 +863,6 @@ public abstract class Session implements IClusterable, IEventSink
 
 	/**
 	 * Returns the {@link IPageManager} instance.
-	 * 
-	 * @see #newPageManager()
 	 * 
 	 * @return {@link IPageManager} instance.
 	 */

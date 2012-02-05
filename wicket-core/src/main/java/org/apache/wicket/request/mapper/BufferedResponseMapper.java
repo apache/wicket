@@ -16,15 +16,18 @@
  */
 package org.apache.wicket.request.mapper;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.BufferedResponseRequestHandler;
+import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -47,7 +50,20 @@ public class BufferedResponseMapper implements IRequestMapper
 	 */
 	protected String getSessionId()
 	{
-		return RequestCycle.get() != null ? Session.get().getId() : null;
+		String sessionId = null;
+
+		if (Application.exists() && RequestCycle.get() != null)
+		{
+			ISessionStore sessionStore = Application.get().getSessionStore();
+			IRequestCycle requestCycle = RequestCycle.get();
+			Session session = sessionStore.lookup(requestCycle.getRequest());
+			if (session != null)
+			{
+				sessionId = session.getId();
+			}
+		}
+
+		return sessionId;
 	}
 
 	protected boolean hasBufferedResponse(Url url)
@@ -109,7 +125,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
+	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
 	 */
 	@Override
 	public Url mapHandler(IRequestHandler requestHandler)

@@ -40,17 +40,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Test the {@link AjaxRequestTarget}.
- * 
+ * Test the {@link AjaxRequestHandler}.
+ *
  * @author Frank Bille
  */
-public class AjaxRequestTargetTest extends WicketTestCase
+public class AjaxRequestHandlerTest extends WicketTestCase
 {
-	private static final Logger log = LoggerFactory.getLogger(AjaxRequestTargetTest.class);
+	private static final Logger log = LoggerFactory.getLogger(AjaxRequestHandlerTest.class);
 
 	/**
 	 * Test that a normal <style> header contribution is added correctly.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -62,7 +62,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	/**
 	 * Test that if there are no headers contributed in any components added to the response, we
 	 * then don't add <header-contribution> at all.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -73,7 +73,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 
 	/**
 	 * Test that a link with a wicket:id is added correctly.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -258,7 +258,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	}
 
 	/**
-	 * Test page for {@linkplain AjaxRequestTargetTest#testAjaxRedirectSetsNoCachingHeaders()}
+	 * Test page for {@linkplain AjaxRequestHandlerTest#ajaxRedirectSetsNoCachingHeaders()}
 	 */
 	private static class Wicket3921 extends WebPage implements IMarkupResourceStreamProvider
 	{

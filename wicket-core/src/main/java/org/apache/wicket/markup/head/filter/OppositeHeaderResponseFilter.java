@@ -14,40 +14,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
 
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.filter.FilteringHeaderResponse.IHeaderResponseFilter;
 
 /**
- * This filter accepts anything that appears to be CSS. All CSS that is not a resource reference (
- * {@link #acceptOtherCss()}) is accepted. All JS that is not a resource reference (
- * {@link #acceptOtherJavaScript()}) is not accepted.
- * 
- * The references are accepted if they appear to be CSS. If the reference passed in is an instance
- * of {@link AbstractResourceDependentResourceReference}, we use the {@link ResourceType} from it to
- * determine if it is CSS. Otherwise, we see if the ResourceReference.name property ends with
- * ".css".
+ * A filter that takes another filter and always returns the opposite of another filter. This is
+ * useful where you have two filters (i.e. one for header and one for footer) and want to ensure
+ * that nothing ever has false returned for both cases.
  * 
  * @author Jeremy Thomerson
  */
-public class CssAcceptingHeaderResponseFilter extends AbstractHeaderResponseFilter
+public class OppositeHeaderResponseFilter implements IHeaderResponseFilter
 {
+
+	private final String name;
+	private final IHeaderResponseFilter other;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param name
-	 *            name of the filter (used by the container that renders these resources)
+	 *            the name used by this filter for its bucket o' stuff
+	 * @param other
+	 *            the other filter to return the opposite of
 	 */
-	public CssAcceptingHeaderResponseFilter(String name)
+	public OppositeHeaderResponseFilter(String name, IHeaderResponseFilter other)
 	{
-		super(name);
+		this.name = name;
+		this.other = other;
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
 	}
 
 	@Override
 	public boolean accepts(HeaderItem item)
 	{
-		return item instanceof CssHeaderItem;
+		return !other.accepts(item);
 	}
 }

@@ -82,6 +82,7 @@ public class ResourceReferenceRegistry
 	 * reference will not be registered.
 	 * 
 	 * @param reference
+	 *      the reference to register
 	 * @return True, if the resource was registered successfully or has been registered previously
 	 *         already.
 	 */
@@ -97,10 +98,11 @@ public class ResourceReferenceRegistry
 	 * reference will not be registered.
 	 * 
 	 * @param reference
+	 *      the reference to register
 	 * @return True, if the resource was registered successfully or has been registered previously
 	 *         already.
 	 */
-	private final Key _registerResourceReference(final ResourceReference reference)
+	private Key _registerResourceReference(final ResourceReference reference)
 	{
 		Args.notNull(reference, "reference");
 
@@ -146,7 +148,7 @@ public class ResourceReferenceRegistry
 	 * ResourceReference fields. Found fields get registered automatically (but are different from
 	 * auto-generated ResourceReferences).
 	 * 
-	 * @see #createDefaultResourceReference(Class, String, Locale, String, String)
+	 * @see #createDefaultResourceReference(org.apache.wicket.request.resource.ResourceReference.Key)
 	 * @see ClassScanner
 	 * 
 	 * @param scope
@@ -184,7 +186,7 @@ public class ResourceReferenceRegistry
 	 * ResourceReference fields. Found fields get registered automatically (but are different from
 	 * auto-generated ResourceReferences).
 	 * 
-	 * @see #createDefaultResourceReference(Class, String, Locale, String, String)
+	 * @see #createDefaultResourceReference(org.apache.wicket.request.resource.ResourceReference.Key)
 	 * @see ClassScanner
 	 * 
 	 * @param key
@@ -244,7 +246,7 @@ public class ResourceReferenceRegistry
 	 *            If true, "weaker" combination of scope, name, locale etc. are not tested
 	 * @return Either the resource reference found in the registry or null if not found
 	 */
-	private final ResourceReference _getResourceReference(final String scope, final String name,
+	private ResourceReference _getResourceReference(final String scope, final String name,
 		final Locale locale, final String style, final String variation, final boolean strict)
 	{
 		// Create a registry key containing all of the relevant attributes
@@ -289,6 +291,7 @@ public class ResourceReferenceRegistry
 	 * Creates a default resource reference and registers it.
 	 * 
 	 * @param key
+	 *      the data making up the resource reference
 	 * @return The default resource created
 	 */
 	private ResourceReference addDefaultResourceReference(final Key key)
@@ -313,8 +316,8 @@ public class ResourceReferenceRegistry
 		}
 		else
 		{
-			log.warn("Asked to auto-create a ResourceReference, but ResourceReferenceRegistry.createDefaultResourceReference() return null. " +
-				" [" + key.toString() + "]");
+			log.warn("Asked to auto-create a ResourceReference, but ResourceReferenceRegistry.createDefaultResourceReference() return null. [{}]",
+					key);
 		}
 		return reference;
 	}
@@ -348,6 +351,7 @@ public class ResourceReferenceRegistry
 	 * A {@link PackageResourceReference} will be created by default
 	 * 
 	 * @param key
+	 *      the data making up the resource reference
 	 * @return The RR created or null if not successful
 	 */
 	protected ResourceReference createDefaultResourceReference(final Key key)

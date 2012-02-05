@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.repeater.tree.util;
+package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import java.util.Iterator;
 
@@ -22,6 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 
+import org.apache.wicket.extensions.markup.html.repeater.util.TreeModelProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.junit.Assert;

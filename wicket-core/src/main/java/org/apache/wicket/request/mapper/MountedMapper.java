@@ -19,6 +19,7 @@ package org.apache.wicket.request.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -364,7 +365,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	{
 		Url url = super.mapHandler(requestHandler);
 
-		if (url == null && requestHandler instanceof ListenerInterfaceRequestHandler)
+		if (url == null && requestHandler instanceof ListenerInterfaceRequestHandler &&
+			getRecreateMountedPagesAfterExpiry())
 		{
 			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
 			IRequestablePage page = handler.getPage();
@@ -384,13 +386,19 @@ public class MountedMapper extends AbstractBookmarkableMapper
 					requestListenerInterfaceToString(listenerInterface), componentPath,
 					handler.getBehaviorIndex());
 				PageComponentInfo pageComponentInfo = new PageComponentInfo(pageInfo, componentInfo);
+				PageParameters parameters = new PageParameters(page.getPageParameters());
 				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(),
-					handler.getPageParameters());
+					parameters.mergeWith(handler.getPageParameters()));
 				url = buildUrl(urlInfo);
 			}
 		}
 
 		return url;
+	}
+
+	boolean getRecreateMountedPagesAfterExpiry()
+	{
+		return Application.get().getPageSettings().getRecreateMountedPagesAfterExpiry();
 	}
 
 	/**

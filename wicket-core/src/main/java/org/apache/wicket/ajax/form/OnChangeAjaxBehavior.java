@@ -36,7 +36,7 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The name of the special event that delegates to 'oninput', 'onkeyup', 'oncut' and 'onpaste'
+	 * The name of the special event that delegates to 'input', 'keyup', 'cut' and 'paste' events
 	 * depending on the browser.
 	 */
 	public static final String EVENT_NAME = "inputchange";

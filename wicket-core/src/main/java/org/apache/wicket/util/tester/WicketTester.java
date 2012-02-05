@@ -33,7 +33,6 @@ import junit.framework.AssertionFailedError;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
@@ -256,7 +255,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link AjaxRequestTarget#add(Component...)}. This method actually tests that a
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually tests that a
 	 * <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
@@ -274,7 +273,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link AjaxRequestTarget#add(Component...)}. This method actually tests that a
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually tests that a
 	 * <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
@@ -373,7 +372,7 @@ public class WicketTester extends BaseWicketTester
 			boolean found = false;
 			for (FeedbackMessage actual : renderedMessages)
 			{
-				if (Objects.equal(expected, actual.toString()))
+				if (Objects.equal(expected, actual.getMessage().toString()))
 				{
 					found = true;
 					break;

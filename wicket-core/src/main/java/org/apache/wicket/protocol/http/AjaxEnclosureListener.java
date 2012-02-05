@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxRequestTarget.IJavaScriptResponse;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.util.visit.IVisit;
@@ -53,7 +52,6 @@ import org.apache.wicket.util.visit.IVisitor;
  * @see WebApplication
  * @see InlineEnclosure
  * @see InlineEnclosureHandler
- * @see EnclosureResolver
  * 
  * @author Joonas Hamalainen
  */
@@ -111,7 +109,7 @@ public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
 	}
 
 	@Override
-	public void onAfterRespond(final Map<String, Component> map, final IJavaScriptResponse response)
+	public void onAfterRespond(final Map<String, Component> map, final AjaxRequestTarget.IJavaScriptResponse response)
 	{
 	}
 }

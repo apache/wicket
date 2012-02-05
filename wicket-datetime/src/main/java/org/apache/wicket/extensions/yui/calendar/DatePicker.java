@@ -37,8 +37,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.YuiLib;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -64,7 +64,7 @@ import org.joda.time.DateTime;
  * To use, simply add a new instance to your component, which would typically a TextField, like
  * {@link DateTextField}.<br/>
  * 
- * The CalendarNavigator can be configured by overriding {@link #configure(Map)} and setting the
+ * The CalendarNavigator can be configured by overriding {@link #configure(java.util.Map, org.apache.wicket.markup.head.IHeaderResponse, java.util.Map)} and setting the
  * property or by returning <code>true</code> for {@link #enableMonthYearSelection()}.
  * 
  * @see <a
@@ -269,7 +269,8 @@ public class DatePicker extends Behavior
 
 		// remove previously generated markup (see onRendered) via javascript in
 		// ajax requests to not render the yui calendar multiple times
-		if (AjaxRequestTarget.get() != null)
+		AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
+		if (target != null)
 		{
 			String escapedComponentMarkupId = getEscapedComponentMarkupId();
 			String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
@@ -279,7 +280,7 @@ public class DatePicker extends Behavior
 				escapedComponentMarkupId + "DpJs.destroy(); delete YAHOO.wicket." +
 				escapedComponentMarkupId + "DpJs;}";
 
-			AjaxRequestTarget.get().prependJavaScript(javascript);
+			target.prependJavaScript(javascript);
 		}
 	}
 
@@ -372,7 +373,7 @@ public class DatePicker extends Behavior
 	 * href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for the
 	 * available options. If you want to override/ remove properties, you should call
 	 * super.configure(properties) first. If you don't call that, be aware that you will have to
-	 * call {@link #localize(Map)} manually if you like localized strings to be added.
+	 * call {@link #localize(java.util.Map, org.apache.wicket.markup.head.IHeaderResponse, java.util.Map)} manually if you like localized strings to be added.
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
@@ -542,9 +543,9 @@ public class DatePicker extends Behavior
 	 * and week days. Also, the first week day is set according to the {@link Locale} returned by
 	 * {@link #getLocale()}. It should work well for most locales.
 	 * <p>
-	 * This method is called from {@link #configureWidgetProperties(Map)} and can be overridden if
+	 * This method is called from {@link #configure(java.util.Map, org.apache.wicket.markup.head.IHeaderResponse, java.util.Map)} and can be overridden if
 	 * you want to customize setting up the localized strings but are happy with the rest of
-	 * {@link #configureWidgetProperties(Map)}'s behavior. Note that you can call (overridable)
+	 * {@link #configure(java.util.Map, org.apache.wicket.markup.head.IHeaderResponse, java.util.Map)}'s behavior. Note that you can call (overridable)
 	 * method {@link #getLocale()} to get the locale that should be used for setting up the widget.
 	 * </p>
 	 * <p>

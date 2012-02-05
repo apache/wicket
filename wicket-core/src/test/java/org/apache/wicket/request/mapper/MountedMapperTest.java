@@ -55,6 +55,12 @@ public class MountedMapperTest extends AbstractMapperTest
 		{
 			return context;
 		}
+
+		@Override
+		boolean getRecreateMountedPagesAfterExpiry()
+		{
+			return true;
+		}
 	};
 
 	private final MountedMapper placeholderEncoder = new MountedMapper(
@@ -65,6 +71,12 @@ public class MountedMapperTest extends AbstractMapperTest
 		{
 			return context;
 		}
+
+		@Override
+		boolean getRecreateMountedPagesAfterExpiry()
+		{
+			return true;
+		}
 	};
 
 	private final MountedMapper optionPlaceholderEncoder = new MountedMapper(
@@ -74,6 +86,12 @@ public class MountedMapperTest extends AbstractMapperTest
 		protected IMapperContext getContext()
 		{
 			return context;
+		}
+
+		@Override
+		boolean getRecreateMountedPagesAfterExpiry()
+		{
+			return true;
 		}
 	};
 

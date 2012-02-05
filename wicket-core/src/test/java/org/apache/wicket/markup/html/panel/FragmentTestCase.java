@@ -28,6 +28,6 @@ public class FragmentTestCase extends WicketTestCase
 	 */
 	public void testFragments()
 	{
-		tester.startPanel(FragmentTestPanel.class);
+		tester.startComponentInPage(FragmentTestPanel.class);
 	}
 }

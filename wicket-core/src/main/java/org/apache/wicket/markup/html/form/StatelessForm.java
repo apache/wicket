@@ -17,6 +17,9 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * This StatelessForm is the same as a normal form but with the statelesshint default to true. The
@@ -71,5 +74,34 @@ public class StatelessForm<T> extends Form<T>
 	protected CharSequence getActionUrl()
 	{
 		return urlFor(IFormSubmitListener.INTERFACE, getPage().getPageParameters());
+	}
+
+	/**
+	 * Remove the page parameters for all form component otherwise they get appended to action URL
+	 *
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void process(IFormSubmitter submittingComponent)
+	{
+		super.process(submittingComponent);
+
+		final PageParameters parameters = getPage().getPageParameters();
+		if (parameters != null)
+		{
+			visitFormComponents(new IVisitor<FormComponent<?>, Void>()
+			{
+				public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
+				{
+					parameters.remove(formComponent.getInputName());
+				}
+			});
+			parameters.remove(getHiddenFieldId());
+			if (submittingComponent instanceof AbstractSubmitLink)
+			{
+				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;
+				parameters.remove(submitLink.getInputName());
+			}
+		}
 	}
 }

@@ -189,7 +189,7 @@ public class PanelTest extends WicketTestCase
 	@Test
 	public void startPanel()
 	{
-		tester.startPanel(MyPanel.class);
+		tester.startComponentInPage(MyPanel.class);
 		tester.assertLabel("label", "Hello, World!");
 	}
 }

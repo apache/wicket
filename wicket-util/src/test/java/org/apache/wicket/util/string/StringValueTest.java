@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.string;
 
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -56,5 +58,55 @@ public class StringValueTest extends Assert
 		assertNull(sv.toOptionalLong());
 		assertNull(sv.toOptionalString());
 		assertNull(sv.toOptionalTime());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4356
+	 */
+	@Test
+	public void defaultValues()
+	{
+		StringValue sv = new StringValue("unknown");
+		
+		assertTrue(sv.toBoolean(true));
+		assertFalse(sv.toBoolean(false));
+		
+		assertEquals(4, sv.toInt(4));
+		assertEquals(4.0, sv.toDouble(4.0), 0.005);
+		assertEquals('c', sv.toChar('c'));
+		assertEquals(Duration.seconds(3), sv.toDuration(Duration.seconds(3)));
+		assertEquals(Time.millis(5), sv.toTime(Time.millis(5)));
+		assertEquals(40L, sv.toLong(40));
+
+		assertEquals("unknown", sv.toString("def"));
+	}
+	
+	@Test
+	public void toType()
+	{
+		StringValue sv = new StringValue("4");
+		
+		assertEquals(Long.valueOf(4), sv.to(Long.class));
+		assertEquals(Integer.valueOf(4), sv.to(Integer.class));
+		assertEquals(Double.valueOf(4), sv.to(Double.class));
+		assertEquals(Character.valueOf('4'), sv.to(Character.class));
+		assertEquals("4", sv.to(String.class));
+		
+		try
+		{
+			sv.to(String[].class);
+			fail("Should not be able to convert to unsupported type!");
+		} catch (StringValueConversionException svcx)
+		{
+			assertTrue(true);
+		}
+		
+		sv = new StringValue(null);
+		assertNull(sv.toOptional(String.class));
+		assertNull(sv.toOptional(String[].class));
+
+		sv = new StringValue("");
+		assertNull(sv.toOptional(String.class));
+		assertNull(sv.toOptional(String[].class));
 	}
 }

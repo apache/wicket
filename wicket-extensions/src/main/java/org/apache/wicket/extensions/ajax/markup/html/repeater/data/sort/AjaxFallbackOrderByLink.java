@@ -128,7 +128,7 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAj
 			protected void onEvent(final AjaxRequestTarget target)
 			{
 				onClick();
-				onClick(target);
+				AjaxFallbackOrderByLink.this.onClick(target);
 			}
 
 			@Override

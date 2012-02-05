@@ -212,7 +212,7 @@ public abstract class BaseTree extends AbstractTree
 		}
 
 		/**
-		 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
+		 * @see org.apache.wicket.behavior.Behavior#afterRender(org.apache.wicket.Component)
 		 */
 		@Override
 		public void afterRender(final Component component)

@@ -14,29 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.ng;
+package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.ng.Page;
-import org.apache.wicket.ng.markup.html.Label;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.junit.Assert;
 
-public class TestPage4 extends Page
+public class PageWithLink extends WebPage
 {
-	private static final long serialVersionUID = 1L;
-
-	public TestPage4(PageParametersNg parameters)
+	public PageWithLink(PageParameters parameters)
 	{
 		super(parameters);
+		Assert.assertEquals("value", getPageParameters().get("param").toString());
+		add(new Link<Void>("link")
+		{
+			private static final long serialVersionUID = 1L;
 
-		add(new Label("label", parameters.getNamedParameter("color").toString("empty")));
-	}
-
-	/**
-	 * @see org.apache.wicket.ng.Page#isPageStateless()
-	 */
-	@Override
-	public boolean isPageStateless()
-	{
-		return true;
+			@Override
+			public void onClick()
+			{
+				Assert.assertEquals("value", getPageParameters().get("param").toString());
+			}
+		});
 	}
 }

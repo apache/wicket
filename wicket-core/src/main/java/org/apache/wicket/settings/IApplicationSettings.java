@@ -18,6 +18,7 @@ package org.apache.wicket.settings;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.lang.Bytes;
 
@@ -132,4 +133,21 @@ public interface IApplicationSettings
 	 *            if true upload progress monitoring is enabled
 	 */
 	void setUploadProgressUpdatesEnabled(boolean uploadProgressUpdatesEnabled);
+
+	/**
+	 * Sets the cleanup feedback message filter. see {@link #getFeedbackMessageCleanupFilter()} for
+	 * more details.
+	 * 
+	 * @param filter
+	 */
+	void setFeedbackMessageCleanupFilter(IFeedbackMessageFilter filter);
+
+	/**
+	 * Returns the cleanup feedack message filter. At the end of request all messages are ran
+	 * through this filter, and the ones accepted are removed. The default implementation accepts
+	 * (and therefore remkoves) all rendered messages.
+	 * 
+	 * @return feedback message filter
+	 */
+	IFeedbackMessageFilter getFeedbackMessageCleanupFilter();
 }

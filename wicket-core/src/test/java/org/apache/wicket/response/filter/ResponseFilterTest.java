@@ -19,7 +19,6 @@ package org.apache.wicket.response.filter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Assert;
-
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;

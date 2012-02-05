@@ -36,9 +36,6 @@ public class ResourceRequestHandler implements IRequestHandler
 	 * Construct.
 	 * 
 	 * @param resource
-	 * @param locale
-	 * @param style
-	 * @param variation
 	 * @param pageParameters
 	 */
 	public ResourceRequestHandler(IResource resource, PageParameters pageParameters)
@@ -68,7 +65,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	}
 
 	/**
-	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public void respond(final IRequestCycle requestCycle)
@@ -79,7 +76,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	}
 
 	/**
-	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public void detach(IRequestCycle requestCycle)

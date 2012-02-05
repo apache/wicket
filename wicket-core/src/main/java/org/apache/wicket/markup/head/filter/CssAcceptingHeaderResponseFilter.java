@@ -14,32 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.ng;
+package org.apache.wicket.markup.head.filter;
 
-import org.apache.wicket.ng.Page;
-import org.apache.wicket.ng.markup.html.form.Form;
-import org.apache.wicket.ng.markup.html.link.Link;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
 
-public class TestPage3 extends Page
+/**
+ * This filter accepts all {@link CssHeaderItem}s.
+ * 
+ * @author Jeremy Thomerson
+ */
+public class CssAcceptingHeaderResponseFilter extends AbstractHeaderResponseFilter
 {
-	private static final long serialVersionUID = 1L;
 
-	public TestPage3(final Page back)
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 *            name of the filter (used by the container that renders these resources)
+	 */
+	public CssAcceptingHeaderResponseFilter(String name)
 	{
-		Link b = new Link("back")
-		{
-			private static final long serialVersionUID = 1L;
+		super(name);
+	}
 
-			public void onLinkClicked()
-			{
-				RequestCycle.get().setResponsePage(back);
-			}
-		};
-		b.setLabel("Go Back");
-		add(b);
-
-		Form form = new Form("form");
-		add(form);
+	@Override
+	public boolean accepts(HeaderItem item)
+	{
+		return item instanceof CssHeaderItem;
 	}
 }

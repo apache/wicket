@@ -14,15 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.ng;
+package org.apache.wicket.feedback;
 
-import org.apache.wicket.ng.Page;
-
-public class TestPage2 extends Page
+/**
+ * The default message filter used to cleanup feedback messages. This message accepts (and therefore
+ * removes) all rendered feedback messages.
+ * 
+ * @author igor
+ */
+public class DefaultCleanupFeedbackMessageFilter implements IFeedbackMessageFilter
 {
 	private static final long serialVersionUID = 1L;
 
-	public TestPage2()
+	@Override
+	public boolean accept(FeedbackMessage message)
 	{
+		return message.isRendered();
 	}
+
 }

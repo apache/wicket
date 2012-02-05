@@ -36,6 +36,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.event.IEventSource;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -105,8 +106,7 @@ import org.slf4j.LoggerFactory;
  * concatenation with colon separators of each id along the way. For example, the path "a:b:c" would
  * refer to the component named "c" inside the MarkupContainer named "b" inside the container named
  * "a". The path to a component can be retrieved by calling {@link #getPath()}. To get a Component
- * path relative to the page that contains it, you can call {@link #getPageRelativePath()}.
- * </li>
+ * path relative to the page that contains it, you can call {@link #getPageRelativePath()}.</li>
  * <li><b>LifeCycle </b>- Components participate in the following lifecycle phases:
  * <ul>
  * <li><b>Construction </b>- A Component is constructed with the Java language new operator.
@@ -114,8 +114,7 @@ import org.slf4j.LoggerFactory;
  * {@link IComponentInstantiationListener}s are notified of component instantiation.
  * <p>
  * {@link #onInitialize()} is called on the component as soon as the component is part of a page's
- * component tree. At this state the component is able to access its markup.
- * </li>
+ * component tree. At this state the component is able to access its markup.</li>
  * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler such
  * as {@link WicketFilter}. An associated Application object creates {@link Session},
  * {@link Request} and {@link Response} objects for use by a given Component in updating its model
@@ -282,6 +281,13 @@ public abstract class Component
 		private static final long serialVersionUID = 1L;
 	};
 
+	/** meta data for user specified markup id */
+	private static final MetaDataKey<FeedbackMessages> FEEDBACK_KEY = new MetaDataKey<FeedbackMessages>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -390,8 +396,6 @@ public abstract class Component
 	private static final int FLAG_RENDERING = 0x2000000;
 	private static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
 	private static final int FLAG_AFTER_RENDERING = 0x8000000;
-
-	private static final int FLAG_MARKUP_ATTACHED = 0x10000000;
 
 	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
@@ -735,34 +739,6 @@ public abstract class Component
 	}
 
 	/**
-	 * Called when the component gets added to a parent
-	 * 
-	 * @return false, if it was called the first time
-	 */
-	final boolean internalOnMarkupAttached()
-	{
-		boolean rtn = getFlag(FLAG_MARKUP_ATTACHED);
-		if (rtn == false)
-		{
-			setFlag(FLAG_MARKUP_ATTACHED, true);
-			onMarkupAttached();
-		}
-		return rtn;
-	}
-
-	/**
-	 * Can be subclassed by any user to implement init-like logic which requires the markup to be
-	 * available
-	 */
-	protected void onMarkupAttached()
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("Markup available " + toString());
-		}
-	}
-
-	/**
 	 * @return The 'id' attribute from the associated markup tag
 	 */
 	public final String getMarkupIdFromMarkup()
@@ -928,13 +904,11 @@ public abstract class Component
 	}
 
 	/**
-	 * Called on very component after the page is rendered. It will call onAfterRender for it self
+	 * Called on every component after the page is rendered. It will call onAfterRender for it self
 	 * and its children.
 	 */
 	public final void afterRender()
 	{
-		// if the component has been previously attached via attach()
-		// detach it now
 		try
 		{
 			setFlag(FLAG_AFTER_RENDERING, true);
@@ -1088,8 +1062,20 @@ public abstract class Component
 			// check authorization
 			setRenderAllowed();
 
+			internalOnAfterConfigure();
+
 			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
+	}
+
+	/**
+	 * 
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * Called after the {@link #onConfigure()}, but before {@link #onBeforeRender()}
+	 */
+	void internalOnAfterConfigure()
+	{
 	}
 
 	/**
@@ -1128,8 +1114,8 @@ public abstract class Component
 	 */
 	public final void debug(final Serializable message)
 	{
-		getSession().getFeedbackMessages().debug(this, message);
-		getSession().dirty();
+		getFeedbackMessages().debug(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -1144,7 +1130,7 @@ public abstract class Component
 			throw new IllegalStateException(Component.class.getName() +
 				" has not been properly removed from hierachy. Something in the hierarchy of " +
 				getClass().getName() +
-				" has not called super.onRemovalFromHierarchy() in the override of onRemovalFromHierarchy() method");
+				" has not called super.onRemove() in the override of onRemove() method");
 		}
 		removeChildren();
 	}
@@ -1156,8 +1142,6 @@ public abstract class Component
 	@Override
 	public final void detach()
 	{
-		// if the component has been previously attached via attach()
-		// detach it now
 		setFlag(FLAG_DETACHING, true);
 		onDetach();
 		if (getFlag(FLAG_DETACHING))
@@ -1194,6 +1178,8 @@ public abstract class Component
 
 		requestFlags = 0;
 
+		detachFeedback();
+
 		internalDetach();
 
 		// notify any detach listener
@@ -1202,6 +1188,30 @@ public abstract class Component
 		if (detachListener != null)
 		{
 			detachListener.onDetach(this);
+		}
+	}
+
+	private void detachFeedback()
+	{
+		FeedbackMessages feedback = getMetaData(FEEDBACK_KEY);
+		if (feedback != null)
+		{
+			final int removed = feedback.clear(getApplication().getApplicationSettings()
+				.getFeedbackMessageCleanupFilter());
+
+			if (removed != 0)
+			{
+				addStateChange();
+			}
+
+			if (feedback.isEmpty())
+			{
+				setMetaData(FEEDBACK_KEY, null);
+			}
+			else
+			{
+				feedback.detach();
+			}
 		}
 	}
 
@@ -1231,20 +1241,20 @@ public abstract class Component
 	 */
 	public final void error(final Serializable message)
 	{
-		getSession().getFeedbackMessages().error(this, message);
-		getSession().dirty();
+		getFeedbackMessages().error(this, message);
+		addStateChange();
 	}
 
 	/**
-	 * Registers an fatal error feedback message for this component
-	 * 
+	 * Registers a fatal feedback message for this component
+	 *
 	 * @param message
 	 *            The feedback message
 	 */
 	public final void fatal(final Serializable message)
 	{
-		getSession().getFeedbackMessages().fatal(this, message);
-		getSession().dirty();
+		getFeedbackMessages().fatal(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -1342,23 +1352,6 @@ public abstract class Component
 	public final boolean getEscapeModelStrings()
 	{
 		return getFlag(FLAG_ESCAPE_MODEL_STRINGS);
-	}
-
-	/**
-	 * @return Any feedback message for this component
-	 */
-	@SuppressWarnings("deprecation")
-	public final FeedbackMessage getFeedbackMessage()
-	{
-		return getSession().getFeedbackMessages().messageForComponent(this);
-	}
-
-	/**
-	 * @return All feedback messages for this component
-	 */
-	public final List<FeedbackMessage> getFeedbackMessages()
-	{
-		return getSession().getFeedbackMessages().messagesForComponent(this);
 	}
 
 	/**
@@ -1473,25 +1466,6 @@ public abstract class Component
 			id = getMarkupIdFromMarkup();
 		}
 		return id;
-	}
-
-	/**
-	 * Find the Page and get net value from an auto-index
-	 * 
-	 * @return autoIndex
-	 */
-	private final int nextAutoIndex()
-	{
-		Page page = findPage();
-		if (page == null)
-		{
-			throw new WicketRuntimeException(
-				"This component is not (yet) coupled to a page. It has to be able "
-					+ "to find the page it is supposed to operate in before you can call "
-					+ "this method (Component#getMarkupId)");
-		}
-
-		return page.getAutoIndex();
 	}
 
 	/**
@@ -1663,13 +1637,13 @@ public abstract class Component
 				// Get model value for this component.
 				return model.getObject();
 			}
-			catch (RuntimeException ex)
+			catch (Exception ex)
 			{
-				log.error(
-					"Error while getting default model object for Component: " +
+				// wrap the exception so that it brings info about the component
+				RuntimeException rex = new RuntimeException(
+					"An error occurred while getting the model object for Component: " +
 						this.toString(true), ex);
-
-				throw ex;
+				throw rex;
 			}
 		}
 		return null;
@@ -1976,19 +1950,49 @@ public abstract class Component
 	}
 
 	/**
+	 * Gets feedback messages for this component. This method will instantiate a
+	 * {@link FeedbackMessages} instance and add it to the component metadata, even when called on a
+	 * component that has no feedback messages, to avoid the overhead use
+	 * {@link #hasFeedbackMessage()}
+	 * 
+	 * @return feedback messages instance
+	 */
+	public FeedbackMessages getFeedbackMessages()
+	{
+		FeedbackMessages messages = getMetaData(FEEDBACK_KEY);
+		if (messages == null)
+		{
+			messages = new FeedbackMessages();
+			setMetaData(FEEDBACK_KEY, messages);
+		}
+		return messages;
+	}
+
+	/**
 	 * @return True if this component has an error message
 	 */
 	public final boolean hasErrorMessage()
 	{
-		return getSession().getFeedbackMessages().hasErrorMessageFor(this);
+		FeedbackMessages messages = getMetaData(FEEDBACK_KEY);
+		if (messages == null)
+		{
+			return false;
+		}
+		return messages.hasMessage(FeedbackMessage.ERROR);
 	}
 
 	/**
 	 * @return True if this component has some kind of feedback message
+	 * 
 	 */
 	public final boolean hasFeedbackMessage()
 	{
-		return getSession().getFeedbackMessages().hasMessageFor(this);
+		FeedbackMessages messages = getMetaData(FEEDBACK_KEY);
+		if (messages == null)
+		{
+			return false;
+		}
+		return messages.size() > 0;
 	}
 
 	/**
@@ -1999,8 +2003,8 @@ public abstract class Component
 	 */
 	public final void info(final Serializable message)
 	{
-		getSession().getFeedbackMessages().info(this, message);
-		getSession().dirty();
+		getFeedbackMessages().info(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -2011,8 +2015,8 @@ public abstract class Component
 	 */
 	public final void success(final Serializable message)
 	{
-		getSession().getFeedbackMessages().success(this, message);
-		getSession().dirty();
+		getFeedbackMessages().success(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -2361,7 +2365,7 @@ public abstract class Component
 			// Rendering is beginning
 			if (log.isDebugEnabled())
 			{
-				log.debug("Begin render " + this);
+				log.debug("Begin render {}", this);
 			}
 
 			try
@@ -2380,7 +2384,7 @@ public abstract class Component
 
 			if (log.isDebugEnabled())
 			{
-				log.debug("End render " + this);
+				log.debug("End render {}", this);
 			}
 		}
 		// elem is null when rendering a page
@@ -2465,7 +2469,7 @@ public abstract class Component
 		String markupId = null;
 		for (Behavior behavior : getBehaviors())
 		{
-			if (behavior instanceof IAjaxRegionMarkupIdProvider)
+			if (behavior instanceof IAjaxRegionMarkupIdProvider && behavior.isEnabled(this))
 			{
 				markupId = ((IAjaxRegionMarkupIdProvider)behavior).getAjaxRegionMarkupId(this);
 				break;
@@ -2575,7 +2579,7 @@ public abstract class Component
 	 */
 	private boolean needToRenderTag(final ComponentTag openTag)
 	{
-		// If a open-close tag has been modified to be open-body-close than a
+		// If a open-close tag has been modified to be open-body-close then a
 		// synthetic close tag must be rendered.
 		boolean renderTag = (openTag != null && !(openTag instanceof WicketTag));
 		if (renderTag == false)
@@ -2663,7 +2667,7 @@ public abstract class Component
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("renderHead: " + toString(false));
+				log.debug("renderHead: {}", toString(false));
 			}
 
 			IHeaderResponse response = container.getHeaderResponse();
@@ -2680,10 +2684,11 @@ public abstract class Component
 					// to be backward compatible. WICKET-3761
 					getMarkupSourcingStrategy().renderHead(this, container);
 					CharSequence headerContribution = markupHeaderResponse.getBuffer();
-					if (Strings.isEmpty(headerContribution) == false) {
+					if (Strings.isEmpty(headerContribution) == false)
+					{
 						response.render(StringHeaderItem.forString(headerContribution));
 					}
-				} 
+				}
 				finally
 				{
 					RequestCycle.get().setResponse(oldResponse);
@@ -2728,10 +2733,8 @@ public abstract class Component
 	 */
 	public Component replaceWith(Component replacement)
 	{
-		if (replacement == null)
-		{
-			throw new IllegalArgumentException("Argument [[replacement]] cannot be null.");
-		}
+		Args.notNull(replacement, "replacement");
+
 		if (!getId().equals(replacement.getId()))
 		{
 			throw new IllegalArgumentException(
@@ -3261,7 +3264,7 @@ public abstract class Component
 				else
 				{
 					buffer.append(", page = ")
-						.append(getPage().getClass().getName())
+						.append(getPage().getPageClass().getName())
 						.append(", path = ")
 						.append(getPath())
 						.append('.')
@@ -3311,7 +3314,7 @@ public abstract class Component
 	{
 		return getRequestCycle().urlFor(pageClass, parameters);
 	}
-	
+
 	/**
 	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
 	 * AjaxPagingNavigationBehavior).
@@ -3356,7 +3359,7 @@ public abstract class Component
 	{
 		return getRequestCycle().urlFor(requestHandler);
 	}
-	
+
 	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
 	 * 
@@ -3447,8 +3450,8 @@ public abstract class Component
 	 */
 	public final void warn(final Serializable message)
 	{
-		getSession().getFeedbackMessages().warn(this, message);
-		getSession().dirty();
+		getFeedbackMessages().warn(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -3585,7 +3588,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Prefixes an exception message with useful information about this. component.
+	 * Suffixes an exception message with useful information about this. component.
 	 * 
 	 * @param message
 	 *            The message
@@ -3601,7 +3604,6 @@ public abstract class Component
 	 * 
 	 * @return The markup stream for this component. Since a Component cannot have a markup stream,
 	 *         we ask this component's parent to search for it.
-	 * @TODO can be removed in 1.5
 	 */
 	protected final MarkupStream findMarkupStream()
 	{
@@ -3791,14 +3793,6 @@ public abstract class Component
 	}
 
 	/**
-	 * @return Component's markup stream
-	 */
-	protected MarkupStream locateMarkupStream()
-	{
-		return new MarkupStream(getMarkup());
-	}
-
-	/**
 	 * Called just after a component is rendered.
 	 */
 	protected void onAfterRender()
@@ -3882,8 +3876,6 @@ public abstract class Component
 	 * 
 	 * Overrides of this method MUST call the super implementation, the most logical place to do
 	 * this is the last line of the override method.
-	 * 
-	 * 
 	 */
 	protected void onRemove()
 	{
@@ -3921,6 +3913,21 @@ public abstract class Component
 	{
 		if (needToRenderTag(tag))
 		{
+			// apply behaviors that are attached to the component tag.
+			if (tag.hasBehaviors())
+			{
+				Iterator<? extends Behavior> tagBehaviors = tag.getBehaviors();
+				while (tagBehaviors.hasNext())
+				{
+					final Behavior behavior = tagBehaviors.next();
+					if (behavior.isEnabled(this))
+					{
+						behavior.onComponentTag(this, tag);
+					}
+					behavior.detach(this);
+				}
+			}
+
 			// Apply behavior modifiers
 			List<? extends Behavior> behaviors = getBehaviors();
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
@@ -3934,21 +3941,6 @@ public abstract class Component
 					{
 						behavior.onComponentTag(this, tag);
 					}
-				}
-			}
-
-			// apply behaviors that are attached to the component tag.
-			if (tag.hasBehaviors())
-			{
-				Iterator<? extends Behavior> tagBehaviors = tag.getBehaviors();
-				while (tagBehaviors.hasNext())
-				{
-					final Behavior behavior = tagBehaviors.next();
-					if (behavior.isEnabled(this))
-					{
-						behavior.onComponentTag(this, tag);
-					}
-					behavior.detach(this);
 				}
 			}
 
@@ -4138,19 +4130,8 @@ public abstract class Component
 			return this;
 		}
 		throw new IllegalArgumentException(
-			exceptionMessage("Component is not a container and so does " + "not contain the path " +
+			exceptionMessage("Component is not a container and so does not contain the path " +
 				path));
-	}
-
-	/**
-	 * Checks whether or not this component has a markup id value generated, whether it is automatic
-	 * or user defined
-	 * 
-	 * @return true if this component has a markup id value generated
-	 */
-	final boolean hasMarkupIdMetaData()
-	{
-		return getMarkupId() != null;
 	}
 
 	/**
@@ -4397,7 +4378,7 @@ public abstract class Component
 	 * <p>
 	 * Example usecase for overriding: Suppose you are building an component that displays images.
 	 * The component generates a callback to itself using {@link IRequestListener} interface and
-	 * uses this callback to stream image data. If such a component is placed inside a disable
+	 * uses this callback to stream image data. If such a component is placed inside a disabled
 	 * webmarkupcontainer we still want to allow the invocation of the request listener callback
 	 * method so that image data can be streamed. Such a component would override this method and
 	 * return {@literal true} if the listener method belongs to {@link IRequestListener}.
@@ -4492,12 +4473,6 @@ public abstract class Component
 
 	/**
 	 * Adds a behavior modifier to the component.
-	 * 
-	 * <p>
-	 * Note: this method is override to enable users to do things like discussed in <a
-	 * href="http://www.nabble.com/Why-add%28IBehavior%29-is-final--tf2598263.html#a7248198">this
-	 * thread</a>.
-	 * </p>
 	 * 
 	 * @param behaviors
 	 *            The behavior modifier(s) to be added

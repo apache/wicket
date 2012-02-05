@@ -45,9 +45,6 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	/** List of well known wicket tag names */
 	private static List<String> wellKnownTagNames;
 
-	/** The current markup needed to get the markups namespace */
-	private final MarkupResourceStream markup;
-
 	/**
 	 * Construct.
 	 * 
@@ -56,7 +53,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 */
 	public WicketTagIdentifier(final MarkupResourceStream markup)
 	{
-		this.markup = markup;
+		super(markup);
 	}
 
 	/**
@@ -73,7 +70,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	@Override
 	protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
-		final String namespace = markup.getWicketNamespace();
+		final String namespace = getWicketNamespace();
 
 		// If the form <tag wicket:id = "value"> is used
 		final String wicketIdValue = tag.getAttributes().getString(namespace + ":id");

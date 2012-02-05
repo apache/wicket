@@ -222,7 +222,17 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	@Override
 	public Border remove(final Component component)
 	{
-		getBodyContainer().remove(component);
+		if (component == body)
+		{
+			// when the user calls foo.add(getBodyContainer()) this method will be called with it to
+			// clear body container's old parent, in which case we do not want to redirect to body
+			// container but to border's old remove.
+			super.remove(body);
+		}
+		else
+		{
+			getBodyContainer().remove(component);
+		}
 		return this;
 	}
 

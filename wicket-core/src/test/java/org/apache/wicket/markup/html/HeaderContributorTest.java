@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
@@ -30,8 +32,6 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Tests that {@link Component}, {@link Behavior} and {@link org.apache.wicket.ajax.attributes.IAjaxCallListener} that implements

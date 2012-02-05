@@ -55,8 +55,8 @@ import org.slf4j.LoggerFactory;
 /**
  * A MarkupContainer holds a map of child components.
  * <ul>
- * <li><b>Children </b>- Children can be added by calling the add() method, and they can be looked
- * up using a dotted path. For example, if a container called "a" held a nested container "b" which
+ * <li><b>Children </b>- Children can be added by calling the {@link #add(Component...)} method, and they can be looked
+ * up using a colon separated path. For example, if a container called "a" held a nested container "b" which
  * held a nested component "c", then a.get("b:c") would return the Component with id "c". The number
  * of children in a MarkupContainer can be determined by calling size(), and the whole hierarchy of
  * children held by a MarkupContainer can be traversed by calling visitChildren(), passing in an
@@ -73,19 +73,19 @@ import org.slf4j.LoggerFactory;
  * graphic designers may be setting attributes on component tags that affect visual presentation.
  * <p>
  * The type of markup held in a given container subclass can be determined by calling
- * getMarkupType(). Markup is accessed via a MarkupStream object which allows a component to
+ * {@link #getMarkupType()}. Markup is accessed via a MarkupStream object which allows a component to
  * traverse ComponentTag and RawMarkup MarkupElements while rendering a response. Markup in the
  * stream may be HTML or some other kind of markup, such as VXML, as determined by the specific
  * container subclass.
  * <p>
  * A markup stream may be directly associated with a container via setMarkupStream. However, a
  * container which does not have a markup stream (its getMarkupStream() returns null) may inherit a
- * markup stream from a container above it in the component hierarchy. The findMarkupStream() method
+ * markup stream from a container above it in the component hierarchy. The {@link #findMarkupStream()} method
  * will locate the first container at or above this container which has a markup stream.
  * <p>
  * All Page containers set a markup stream before rendering by calling the method
- * getAssociatedMarkupStream() to load the markup associated with the page. Since Page is at the top
- * of the container hierarchy, it is guaranteed that findMarkupStream will always return a valid
+ * {@link #getAssociatedMarkupStream(boolean)} to load the markup associated with the page. Since Page is at the top
+ * of the container hierarchy, it is guaranteed that {@link #findMarkupStream()} will always return a valid
  * markup stream.
  * 
  * @see MarkupStream
@@ -122,7 +122,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * Adds a child component to this container.
 	 * 
 	 * @param childs
-	 *            The child(s)
+	 *            The child(ren) to add.
 	 * @throws IllegalArgumentException
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
@@ -173,49 +173,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				throw new IllegalArgumentException(exceptionMessage("A child with id '" +
 					child.getId() + "' already exists"));
-			}
-
-			// One of the key pre-requisites to successfully load markup, is the availability of the
-			// file extension. Which in turn is part of MarkupType which by default requires the
-			// Page.
-			if (getMarkupType() != null)
-			{
-				// Check if the markup is available after the child has been added to the parent
-				try
-				{
-					// If not yet triggered, then do now (e.g. Pages)
-					if (getMarkup() != null)
-					{
-						internalOnMarkupAttached();
-					}
-
-					if (child.getMarkup() != null)
-					{
-						child.internalOnMarkupAttached();
-
-						// Tell all children of "component" as well
-						if (child instanceof MarkupContainer)
-						{
-							MarkupContainer container = (MarkupContainer)child;
-							container.visitChildren(new IVisitor<Component, Void>()
-							{
-								@Override
-								public void component(final Component component,
-									final IVisit<Void> visit)
-								{
-									if (component.internalOnMarkupAttached())
-									{
-										visit.dontGoDeeper();
-									}
-								}
-							});
-						}
-					}
-				}
-				catch (WicketRuntimeException exception)
-				{
-					// ignore
-				}
 			}
 		}
 		return this;
@@ -608,10 +565,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		checkHierarchyChange(component);
 
-		if (component == null)
-		{
-			throw new IllegalArgumentException("argument component may not be null");
-		}
+		Args.notNull(component, "component");
 
 		children_remove(component);
 		removedComponent(component);
@@ -628,10 +582,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public MarkupContainer remove(final String id)
 	{
-		if (id == null)
-		{
-			throw new IllegalArgumentException("argument id may not be null");
-		}
+		Args.notNull(id, "id");
 
 		final Component component = get(id);
 		if (component != null)
@@ -1950,20 +1901,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onMarkupAttached()
-	 */
-	@Override
-	protected void onMarkupAttached()
-	{
-		super.onMarkupAttached();
-
-		// createAndAddComponentsForWicketTags();
-	}
-
-
-	/**
 	 * Automatically create components for <wicket:xxx> tag.
 	 */
+	// to use it call it from #onInitialize()
 	private void createAndAddComponentsForWicketTags()
 	{
 		// Markup must be available

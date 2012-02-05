@@ -215,7 +215,7 @@ public class TodoList extends BasePage
 			}
 
 			/**
-			 * @see AjaxFallbackLink#onClick(AjaxRequestTarget)
+			 * @see AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
 			 */
 			@Override
 			public void onClick(AjaxRequestTarget target)

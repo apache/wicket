@@ -50,7 +50,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * use {@link Tree}
  * <p>
  * This class allows you to choose between 3 types of links.
- * {@link DefaultAbstractTree#setLinkType(org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType)}
+ * {@link DefaultAbstractTree#setLinkType(LinkType)}
  * 
  * @author Matej Knopp
  */

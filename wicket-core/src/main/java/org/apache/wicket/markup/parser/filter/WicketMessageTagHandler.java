@@ -24,6 +24,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebComponent;
@@ -50,22 +51,25 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	/** */
 	private static final long serialVersionUID = 1L;
 
-	/** TODO Post 1.2: General: Namespace should not be a constant */
-	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
-
 	/**
 	 * The id automatically assigned to tags with wicket:message attribute but without id
 	 */
 	public final static String WICKET_MESSAGE_CONTAINER_ID = "_message_attr_";
 
-	/** singleton instance of {@link AttributeLocalizer} */
-	public static final Behavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
-
 	/**
-	 * Construct.
+	 * Constructor for the IComponentResolver role.
 	 */
 	public WicketMessageTagHandler()
 	{
+		this(null);
+	}
+
+	/**
+	 * Constructor for the IMarkupFilter role.
+	 */
+	public WicketMessageTagHandler(final MarkupResourceStream markupResourceStream)
+	{
+		super(markupResourceStream);
 	}
 
 	@Override
@@ -77,7 +81,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		}
 
 		final String wicketMessageAttribute = tag.getAttributes().getString(
-			WICKET_MESSAGE_ATTRIBUTE_NAME);
+			getWicketMessageAttrName());
 
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
@@ -91,7 +95,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				tag.setAutoComponentTag(true);
 				tag.setModified(true);
 			}
-			tag.addBehavior(new AttributeLocalizer());
+			tag.addBehavior(new AttributeLocalizer(getWicketMessageAttrName()));
 		}
 
 		return tag;
@@ -107,10 +111,17 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	{
 		private static final long serialVersionUID = 1L;
 
+		private final String wicketMessageAttrName;
+
+		public AttributeLocalizer(String wicketMessageAttrName)
+		{
+			this.wicketMessageAttrName = wicketMessageAttrName;
+		}
+		
 		@Override
 		public void onComponentTag(final Component component, final ComponentTag tag)
 		{
-			String expr = tag.getAttributes().getString(WICKET_MESSAGE_ATTRIBUTE_NAME);
+			String expr = tag.getAttributes().getString(wicketMessageAttrName);
 			if (!Strings.isEmpty(expr))
 			{
 				expr = expr.trim();
@@ -170,5 +181,11 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 			return wc;
 		}
 		return null;
+	}
+	
+	private String getWicketMessageAttrName()
+	{
+		String wicketNamespace = getWicketNamespace();
+		return wicketNamespace + ':' + "message";
 	}
 }

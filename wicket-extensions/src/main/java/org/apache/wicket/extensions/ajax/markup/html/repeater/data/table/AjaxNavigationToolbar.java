@@ -66,7 +66,7 @@ public class AjaxNavigationToolbar extends NavigationToolbar
 			 * Implement our own ajax event handling in order to update the datatable itself, as the
 			 * default implementation doesn't support DataViews.
 			 * 
-			 * @see AjaxPagingNavigator#onAjaxEvent(AjaxRequestTarget)
+			 * @see AjaxPagingNavigator#onAjaxEvent(org.apache.wicket.ajax.AjaxRequestTarget)
 			 */
 			@Override
 			protected void onAjaxEvent(final AjaxRequestTarget target)

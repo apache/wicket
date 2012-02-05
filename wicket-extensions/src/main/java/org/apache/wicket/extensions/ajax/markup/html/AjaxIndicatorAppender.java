@@ -65,7 +65,7 @@ public class AjaxIndicatorAppender extends Behavior
 	{
 		super.renderHead(component, response);
 
-		AjaxRequestTarget target = AjaxRequestTarget.get();
+		AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
 		if (target != null)
 		{
 			final String javascript = "var e = Wicket.$('" + getMarkupId() +

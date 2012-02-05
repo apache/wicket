@@ -22,7 +22,7 @@ import org.apache.wicket.examples.tree.Foo;
 import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree;
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
 import org.apache.wicket.extensions.markup.html.repeater.tree.content.Folder;
-import org.apache.wicket.extensions.markup.html.repeater.tree.util.ProviderSubset;
+import org.apache.wicket.extensions.markup.html.repeater.util.ProviderSubset;
 import org.apache.wicket.model.IModel;
 
 /**

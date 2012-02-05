@@ -159,6 +159,28 @@ jQuery(document).ready(function() {
 		$el.remove();
 	});
 
+	test('add - with data', function () {
+
+		expect(1);
+
+		var $el = jQuery('<div id="addTestId">element body</div>');
+		$el.appendTo(jQuery('#qunit-fixture'));
+
+		var expectedData = {
+			pass: true
+		};
+
+		var handler = function(jqEvent) {
+			deepEqual(jqEvent.data, expectedData, "Wicket.Event.add should be able to pass data to the event.")
+		};
+
+		Wicket.Event.add($el[0], 'dummy', handler, expectedData);
+
+		Wicket.Event.fire($el[0], 'dummy');
+
+		$el.remove();
+	});
+
 	test('add - domready on window', function () {
 
 		expect(1);

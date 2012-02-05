@@ -21,20 +21,20 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * This is a Ajax Component Update Behavior that is meant for choices/groups that are not one
  * component in the html but many.
  * <p>
- * Use the normal {@link AjaxFormChoiceComponentUpdatingBehavior} for the normal single component
+ * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component
  * fields
  * <p>
  * In order to be supported by this behavior the group components must output children with markup
@@ -47,7 +47,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @see RadioGroup
  * @see CheckGroup
  */
-// TODO Wicket 6.0 FIXME See hot to use the new AjaxRequestAttributes here
 public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
@@ -58,7 +57,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		super.renderHead(component, response);
 
 		AppendingStringBuffer asb = new AppendingStringBuffer();
-		asb.append("function attachChoiceHandlers(markupId, callbackScript) {\n");
+		asb.append("function attachChoiceHandlers(markupId, attrs, callbackScript) {\n");
 		asb.append(" var inputNodes = Wicket.$(markupId).getElementsByTagName('input');\n");
 		asb.append(" for (var i = 0 ; i < inputNodes.length ; i ++) {\n");
 		asb.append(" var inputNode = inputNodes[i];\n");
@@ -66,15 +65,17 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append(" if (!(inputNode.className.indexOf('wicket-'+markupId)>=0)&&!(inputNode.id.indexOf(markupId+'-')>=0)) continue;\n");
 		asb.append(" var inputType = inputNode.type.toLowerCase();\n");
 		asb.append(" if (inputType === 'checkbox' || inputType === 'radio') {\n");
-		asb.append(" Wicket.Event.add(inputNode, 'click', callbackScript);\n");
+		asb.append(" \tvar dataAttrs = jQuery.extend({}, attrs, {c: inputNode.id});\n");
+		asb.append(" \tWicket.Event.add(inputNode, 'click', callbackScript, dataAttrs);\n");
 		asb.append(" }\n");
 		asb.append(" }\n");
 		asb.append("}\n");
 
-		response.render(JavaScriptHeaderItem.forScript(asb, "attachChoice"));
+		response.render(JavaScriptHeaderItem.forScript(asb, "attachChoice-"+component.getMarkupId()));
 
-		response.render(OnLoadHeaderItem.forScript("attachChoiceHandlers('" +
-			getComponent().getMarkupId() + "', function() {" + getEventHandler() + "});"));
+		String onLoadScript = String.format("attachChoiceHandlers('%s', %s, function(event) { \n\tWicket.Ajax.ajax(event.data);\n})",
+				component.getMarkupId(), renderAjaxAttributes(component));
+		response.render(OnLoadHeaderItem.forScript(onLoadScript));
 
 	}
 
@@ -83,18 +84,21 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 * has been updated.
 	 * 
 	 * @param target
+	 *      the current request handler
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
 	/**
 	 * Called to handle any error resulting from updating form component. Errors thrown from
-	 * {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * {@link #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)} will not be caught here.
 	 * 
 	 * The RuntimeException will be null if it was just a validation or conversion error of the
 	 * FormComponent
 	 * 
 	 * @param target
+	 *      the current request handler
 	 * @param e
+	 *      the error that occurred while updating the component
 	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{
@@ -135,16 +139,6 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	}
 
 	/**
-	 * @return event handler
-	 */
-	protected final CharSequence getEventHandler()
-	{
-		return new AppendingStringBuffer("Wicket.Ajax.post('").append(
-			getCallbackUrl()).append(
-			"', Wicket.Form.serialize('" + getComponent().getMarkupId() + "',false)");
-	}
-
-	/**
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
@@ -179,6 +173,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 	/**
 	 * @param component
+	 *      the component to check
 	 * @return if the component applies to the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 */
 	static boolean appliesTo(Component component)

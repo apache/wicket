@@ -14,47 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
 
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.resource.filtering.HeaderResponseContainerFilteringHeaderResponse.IHeaderResponseFilter;
+import org.apache.wicket.markup.head.PageHeaderItem;
 
 /**
- * A filter that takes another filter and always returns the opposite of another filter. This is
- * useful where you have two filters (i.e. one for header and one for footer) and want to ensure
- * that nothing ever has false returned for both cases.
+ * This filter accepts all {@link CssHeaderItem}s and {@link PageHeaderItem}s (header items for the
+ * &lt;head&gt; section of the page).
  * 
- * @author Jeremy Thomerson
+ * @author Emond Papegaaij
  */
-public class OppositeHeaderResponseFilter implements IHeaderResponseFilter
+public class CssAndPageAcceptingHeaderResponseFilter extends AbstractHeaderResponseFilter
 {
-
-	private final String name;
-	private final IHeaderResponseFilter other;
-
 	/**
 	 * Construct.
 	 * 
 	 * @param name
-	 *            the name used by this filter for its bucket o' stuff
-	 * @param other
-	 *            the other filter to return the opposite of
+	 *            name of the filter (used by the container that renders these resources)
 	 */
-	public OppositeHeaderResponseFilter(String name, IHeaderResponseFilter other)
+	public CssAndPageAcceptingHeaderResponseFilter(String name)
 	{
-		this.name = name;
-		this.other = other;
-	}
-
-	@Override
-	public String getName()
-	{
-		return name;
+		super(name);
 	}
 
 	@Override
 	public boolean accepts(HeaderItem item)
 	{
-		return !other.accepts(item);
+		return item instanceof CssHeaderItem || item instanceof PageHeaderItem;
 	}
 }

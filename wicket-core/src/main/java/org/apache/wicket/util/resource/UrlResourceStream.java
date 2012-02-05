@@ -230,8 +230,11 @@ public class UrlResourceStream extends AbstractResourceStream
 		if (data != null)
 		{
 			URLConnection connection = url.openConnection();
-			data.contentLength = connection.getContentLength();
-			Connections.close(connection);
+			try {
+				data.contentLength = connection.getContentLength();
+			} finally {
+				Connections.close(connection);
+			}
 		}
 	}
 

@@ -76,8 +76,6 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 	{
 		/**
 		 * Constructor.
-		 * 
-		 * @param parameters
 		 */
 		private AjaxTestPage()
 		{
@@ -90,7 +88,7 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 					throws Exception
 				{
 					CharSequence result;
-					if (AjaxRequestTarget.get() != null)
+					if (getRequestCycle().find(AjaxRequestTarget.class) != null)
 					{
 						result = "ajax request";
 					}

@@ -245,7 +245,6 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see IValueMap#getDouble(String, double)
 	 */
 	public final double getDouble(final String key, final double defaultValue)
-		throws StringValueConversionException
 	{
 		return getStringValue(key).toDouble(defaultValue);
 	}
@@ -270,7 +269,6 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see IValueMap#getInt(String, int)
 	 */
 	public final int getInt(final String key, final int defaultValue)
-		throws StringValueConversionException
 	{
 		return getStringValue(key).toInt(defaultValue);
 	}
@@ -287,7 +285,6 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see IValueMap#getLong(String, long)
 	 */
 	public final long getLong(final String key, final long defaultValue)
-		throws StringValueConversionException
 	{
 		return getStringValue(key).toLong(defaultValue);
 	}
@@ -642,14 +639,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 */
 	public int getAsInteger(final String key, final int defaultValue)
 	{
-		try
-		{
-			return getInt(key, defaultValue);
-		}
-		catch (StringValueConversionException ignored)
-		{
-			return defaultValue;
-		}
+		return getInt(key, defaultValue);
 	}
 
 	/**
@@ -677,14 +667,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 */
 	public long getAsLong(final String key, final long defaultValue)
 	{
-		try
-		{
-			return getLong(key, defaultValue);
-		}
-		catch (StringValueConversionException ignored)
-		{
-			return defaultValue;
-		}
+		return getLong(key, defaultValue);
 	}
 
 	/**
@@ -712,14 +695,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 */
 	public double getAsDouble(final String key, final double defaultValue)
 	{
-		try
-		{
-			return getDouble(key, defaultValue);
-		}
-		catch (StringValueConversionException ignored)
-		{
-			return defaultValue;
-		}
+		return getDouble(key, defaultValue);
 	}
 
 	/**

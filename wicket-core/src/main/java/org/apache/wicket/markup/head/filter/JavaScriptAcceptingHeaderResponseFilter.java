@@ -14,43 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
 
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.resource.filtering.HeaderResponseContainerFilteringHeaderResponse.IHeaderResponseFilter;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 /**
- * A default implementation of IHeaderResponseFilter that returns true for everything. It is defined
- * as abstract because you are not supposed to use it directly, but use it as a base and override
- * any methods that you need to return something other than true from (whether that's always false
- * or conditional logic).
+ * This filter accepts all {@link JavaScriptHeaderItem}s.
+ * 
+ * Note: this filter used to accept everything that is not css, it no longer does. For example,
+ * meta-tags are neither CSS nor JS.
  * 
  * @author Jeremy Thomerson
+ * @author Emond Papegaaij
  */
-public abstract class AbstractHeaderResponseFilter implements IHeaderResponseFilter
+public class JavaScriptAcceptingHeaderResponseFilter extends AbstractHeaderResponseFilter
 {
 
-	private final String name;
-
 	/**
-	 * Create a response filter.
+	 * Construct.
 	 * 
 	 * @param name
+	 *            name of the filter (used by the container that renders these resources)
 	 */
-	public AbstractHeaderResponseFilter(String name)
+	public JavaScriptAcceptingHeaderResponseFilter(String name)
 	{
-		this.name = name;
-	}
-
-	@Override
-	public String getName()
-	{
-		return name;
+		super(name);
 	}
 
 	@Override
 	public boolean accepts(HeaderItem item)
 	{
-		return true;
+		return item instanceof JavaScriptHeaderItem;
 	}
 }

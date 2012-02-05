@@ -17,8 +17,8 @@
 package org.apache.wicket.markup.html.form.validation;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Session;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -67,7 +67,8 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	{
 		super.onConfigure();
 		// Get the messages for the current page
-		setVisible(Session.get().getFeedbackMessages().hasMessage(getFeedbackMessageFilter()));
+		setVisible(new FeedbackCollector(getPage()).collect(getFeedbackMessageFilter())
+			.size() > 0);
 	}
 
 	/**

@@ -14,25 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
+
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.filter.FilteringHeaderResponse.IHeaderResponseFilter;
 
 /**
- * This filter returns the opposite of what {@link CssAcceptingHeaderResponseFilter} returns.
+ * A default implementation of IHeaderResponseFilter that returns true for everything. It is defined
+ * as abstract because you are not supposed to use it directly, but use it as a base and override
+ * any methods that you need to return something other than true from (whether that's always false
+ * or conditional logic).
  * 
- * @see CssAcceptingHeaderResponseFilter
  * @author Jeremy Thomerson
  */
-public class JavaScriptAcceptingHeaderResponseFilter extends OppositeHeaderResponseFilter
+public abstract class AbstractHeaderResponseFilter implements IHeaderResponseFilter
 {
+
+	private final String name;
+
 	/**
-	 * Construct.
+	 * Create a response filter.
 	 * 
 	 * @param name
-	 *            name of the filter (used by the container that renders these resources)
 	 */
-	public JavaScriptAcceptingHeaderResponseFilter(String name)
+	public AbstractHeaderResponseFilter(String name)
 	{
-		super(name, new CssAcceptingHeaderResponseFilter("NOT_USED"));
+		this.name = name;
 	}
 
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public boolean accepts(HeaderItem item)
+	{
+		return true;
+	}
 }

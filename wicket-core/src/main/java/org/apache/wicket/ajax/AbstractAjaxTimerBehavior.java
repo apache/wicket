@@ -52,11 +52,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	public AbstractAjaxTimerBehavior(final Duration updateInterval)
 	{
-		if (updateInterval == null || updateInterval.getMilliseconds() <= 0)
-		{
-			throw new IllegalArgumentException("Invalid update interval");
-		}
-		this.updateInterval = updateInterval;
+		setUpdateInterval(updateInterval);
 	}
 
 	/**
@@ -89,23 +85,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(component, response);
 
-		WebRequest request = (WebRequest)RequestCycle.get().getRequest();
+		WebRequest request = (WebRequest) component.getRequest();
 
 		if (!isStopped() && (!headRendered || !request.isAjax()))
 		{
 			headRendered = true;
 			response.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 		}
-	}
-
-	@Override
-	protected void postprocessConfiguration(JSONObject attributes, Component component)
-		throws JSONException
-	{
-		super.postprocessConfiguration(attributes, component);
-
-		attributes.remove("c"); // window will be used
-		attributes.put("e", "domready");
 	}
 
 	/**
@@ -127,12 +113,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 * @return the name of the handle that is used to stop any scheduled timer
 	 */
 	private String getTimeoutHandle() {
-		return "Wicket.timeoutHandle_"+getComponent().getMarkupId();
+		return "Wicket.timerHandle_"+getComponent().getMarkupId();
 	}
 	
 	/**
 	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(AjaxRequestTarget)
 	 */
 	@Override
 	protected final void respond(final AjaxRequestTarget target)

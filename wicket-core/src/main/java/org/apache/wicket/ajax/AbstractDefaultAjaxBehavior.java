@@ -16,8 +16,13 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
@@ -37,10 +42,6 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -70,19 +71,21 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(Component, org.apache.wicket.markup.head.IHeaderResponse)
+	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(Component,
+	 *      org.apache.wicket.markup.head.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(Component component, IHeaderResponse response)
+	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		super.renderHead(component, response);
 
 		CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
 
-		Url baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
+		RequestCycle requestCycle = component.getRequestCycle();
+		Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
 		response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl +
-				"\";", "wicket-ajax-base-url"));
+			"\";", "wicket-ajax-base-url"));
 
 		renderExtraHeaderContributors(component, response);
 	}
@@ -90,27 +93,29 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * Renders header contribution by JavaScriptFunctionBody instances which additionally implement
 	 * IComponentAwareHeaderContributor interface.
-	 *
+	 * 
 	 * @param component
-	 *      the component assigned to this behavior
+	 *            the component assigned to this behavior
 	 * @param response
-	 *      the current header response
+	 *            the current header response
 	 */
 	private void renderExtraHeaderContributors(Component component, IHeaderResponse response)
 	{
 		AjaxRequestAttributes attributes = getAttributes();
 
 		List<IAjaxCallListener> ajaxCallListeners = attributes.getAjaxCallListeners();
-		for (IAjaxCallListener ajaxCallListener : ajaxCallListeners) {
+		for (IAjaxCallListener ajaxCallListener : ajaxCallListeners)
+		{
 			if (ajaxCallListener instanceof IComponentAwareHeaderContributor)
 			{
-				IComponentAwareHeaderContributor contributor = (IComponentAwareHeaderContributor) ajaxCallListener;
+				IComponentAwareHeaderContributor contributor = (IComponentAwareHeaderContributor)ajaxCallListener;
 				contributor.renderHead(component, response);
 			}
 		}
 
 		List<JavaScriptPrecondition> preconditions = attributes.getPreconditions();
-		for (JavaScriptPrecondition precondition : preconditions) {
+		for (JavaScriptPrecondition precondition : preconditions)
+		{
 			precondition.renderHead(component, response);
 		}
 	}
@@ -151,7 +156,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			attributes.getPreconditions().add(precondition);
 		}
 
-		AjaxCallListener backwardCompatibleAjaxCallListener = new AjaxCallListener() {
+		AjaxCallListener backwardCompatibleAjaxCallListener = new AjaxCallListener()
+		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public CharSequence getSuccessHandler(Component component)
 			{
@@ -253,34 +261,37 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 			for (IAjaxCallListener ajaxCallListener : attributes.getAjaxCallListeners())
 			{
-				CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
-				if (Strings.isEmpty(beforeHandler) == false)
+				if (ajaxCallListener != null)
 				{
-					attributesJson.append("bh", beforeHandler);
-				}
+					CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
+					if (Strings.isEmpty(beforeHandler) == false)
+					{
+						attributesJson.append("bh", beforeHandler);
+					}
 
-				CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
-				if (Strings.isEmpty(afterHandler) == false)
-				{
-					attributesJson.append("ah", afterHandler);
-				}
+					CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
+					if (Strings.isEmpty(afterHandler) == false)
+					{
+						attributesJson.append("ah", afterHandler);
+					}
 
-				CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
-				if (Strings.isEmpty(successHandler) == false)
-				{
-					attributesJson.append("sh", successHandler);
-				}
+					CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
+					if (Strings.isEmpty(successHandler) == false)
+					{
+						attributesJson.append("sh", successHandler);
+					}
 
-				CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
-				if (Strings.isEmpty(failureHandler) == false)
-				{
-					attributesJson.append("fh", failureHandler);
-				}
+					CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
+					if (Strings.isEmpty(failureHandler) == false)
+					{
+						attributesJson.append("fh", failureHandler);
+					}
 
-				CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
-				if (Strings.isEmpty(completeHandler) == false)
-				{
-					attributesJson.append("coh", completeHandler);
+					CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
+					if (Strings.isEmpty(completeHandler) == false)
+					{
+						attributesJson.append("coh", completeHandler);
+					}
 				}
 			}
 
@@ -324,10 +335,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			}
 
 			String[] eventNames = attributes.getEventNames();
-			if (eventNames.length == 1) {
+			if (eventNames.length == 1)
+			{
 				attributesJson.put("e", eventNames[0]);
 			}
-			else {
+			else
+			{
 				for (String eventName : eventNames)
 				{
 					attributesJson.append("e", eventName);
@@ -380,7 +393,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 		catch (JSONException e)
 		{
-			throw new RuntimeException(e);
+			throw new WicketRuntimeException(e);
 		}
 
 		String attributesAsJson = attributesJson.toString();
@@ -388,7 +401,18 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return attributesAsJson;
 	}
 
-	protected void postprocessConfiguration(JSONObject object, Component component)
+	/**
+	 * Gives a chance to modify the JSON attributesJson that is going to be used as
+	 * attributes for the Ajax call.
+	 *
+	 * @param attributesJson
+	 *      the JSON object created by #renderAjaxAttributes()
+	 * @param component
+	 *      the component with the attached Ajax behavior
+	 * @throws JSONException
+	 *      thrown if an error occurs while modifying {@literal attributesJson} argument
+	 */
+	protected void postprocessConfiguration(JSONObject attributesJson, Component component)
 		throws JSONException
 	{
 	}
@@ -400,6 +424,76 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		CharSequence attrsJson = renderAjaxAttributes(getComponent());
 		return "Wicket.Ajax.get(" + attrsJson + ")";
+	}
+
+	/**
+	 * Generates a javascript function that can take parameters and performs an AJAX call which
+	 * includes these parameters. The generated code looks like this:
+	 * 
+	 * <pre>
+	 * function(param1, param2) {
+	 *    var attrs = attrsJson;
+	 *    var params = {'param1': param1, 'param2': param2};
+	 *    attrs.ep = jQuery.extend(attrs.ep, params);
+	 *    Wicket.Ajax.ajax(attrs);
+	 * }
+	 * </pre>
+	 * 
+	 * @param extraParameters
+	 * @return A function that can be used as a callback function in javascript
+	 */
+	protected CharSequence getCallbackFunction(String... extraParameters)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("function (");
+		boolean first = true;
+		for (String curExtraParameter : extraParameters)
+		{
+			if (!first)
+				sb.append(",");
+			else
+				first = false;
+			sb.append(curExtraParameter);
+		}
+		sb.append(") {\n");
+		sb.append(getCallbackFunctionBody(extraParameters));
+		sb.append("}\n");
+		return sb;
+	}
+
+	/**
+	 * Generates the body the {@linkplain #getCallbackFunction(String...) callback function}. To
+	 * embed this code directly into a piece of javascript, make sure the extra parameters are
+	 * available as local variables, global variables or within the closure.
+	 * 
+	 * @param extraParameters
+	 * @return The body of the {@linkplain #getCallbackFunction(String...) callback function}.
+	 */
+	protected CharSequence getCallbackFunctionBody(String... extraParameters)
+	{
+		AjaxRequestAttributes attributes = getAttributes();
+		CharSequence attrsJson = renderAjaxAttributes(getComponent(), attributes);
+		StringBuilder sb = new StringBuilder();
+		sb.append("var attrs = ");
+		sb.append(attrsJson);
+		sb.append(";\n");
+		sb.append("var params = {");
+		boolean first = true;
+		for (String curExtraParameter : extraParameters)
+		{
+			if (!first)
+				sb.append(",");
+			else
+				first = false;
+			sb.append("'").append(curExtraParameter).append("': ").append(curExtraParameter);
+		}
+		sb.append("};\n");
+		if (attributes.getExtraParameters().isEmpty())
+			sb.append("attrs.ep = params;\n");
+		else
+			sb.append("attrs.ep = jQuery.extend({}, attrs.ep, params);\n");
+		sb.append("Wicket.Ajax.ajax(attrs);\n");
+		return sb;
 	}
 
 	/**

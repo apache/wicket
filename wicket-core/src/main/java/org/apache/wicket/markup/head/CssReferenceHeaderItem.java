@@ -37,7 +37,6 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	private final ResourceReference reference;
 	private final String media;
 	private final PageParameters pageParameters;
-	private final String condition;
 
 	/**
 	 * Creates a new {@code CSSReferenceHeaderItem}.
@@ -54,10 +53,10 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	public CssReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters,
 		String media, String condition)
 	{
+		super(condition);
 		this.reference = reference;
 		this.pageParameters = pageParameters;
 		this.media = media;
-		this.condition = condition;
 	}
 
 	/**
@@ -86,14 +85,6 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 		return pageParameters;
 	}
 
-	/**
-	 * @return the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 */
-	public String getCondition()
-	{
-		return condition;
-	}
-
 	@Override
 	public Iterable<? extends HeaderItem> getDependencies()
 	{
@@ -111,7 +102,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public void render(Response response)
 	{
-		internalRenderCSSReference(response, getUrl(), media, condition);
+		internalRenderCSSReference(response, getUrl(), media, getCondition());
 	}
 
 	@Override

@@ -156,7 +156,7 @@ public class MarkupParser extends AbstractMarkupParser
 			final ContainerInfo containerInfo = markupResourceStream.getContainerInfo();
 			if (containerInfo != null)
 			{
-				filters.add(new WicketMessageTagHandler());
+				filters.add(new WicketMessageTagHandler(markupResourceStream));
 
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
@@ -169,7 +169,7 @@ public class MarkupParser extends AbstractMarkupParser
 		}
 
 		filters.add(new OpenCloseTagExpander());
-		filters.add(new RelativePathPrefixHandler());
+		filters.add(new RelativePathPrefixHandler(markupResourceStream));
 		filters.add(new EnclosureHandler());
 		filters.add(new InlineEnclosureHandler());
 		filters.add(new StyleAndScriptIdentifier(markup));

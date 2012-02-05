@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -23,13 +23,13 @@ import org.apache.wicket.markup.parser.XmlTag.TagType;
 
 /**
  * A container that renders the content that was bucketed into a certain bucket by
- * {@link HeaderResponseContainerFilteringHeaderResponse}.
+ * {@link FilteringHeaderResponse}.
  * 
  * Note that this container renders only its body by default.
  * 
  * @author Jeremy Thomerson
  */
-public class HeaderResponseFilteredResponseContainer extends WebMarkupContainer
+public class HeaderResponseContainer extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class HeaderResponseFilteredResponseContainer extends WebMarkupContainer
 	 * @param filterName
 	 *            the name of the filter that is bucketing stuff to be rendered in this container
 	 */
-	public HeaderResponseFilteredResponseContainer(String id, String filterName)
+	public HeaderResponseContainer(String id, String filterName)
 	{
 		super(id);
 		this.filterName = filterName;
@@ -61,7 +61,7 @@ public class HeaderResponseFilteredResponseContainer extends WebMarkupContainer
 	@Override
 	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		HeaderResponseContainerFilteringHeaderResponse response = HeaderResponseContainerFilteringHeaderResponse.get();
+		FilteringHeaderResponse response = FilteringHeaderResponse.get();
 		if (!response.isClosed())
 		{
 			throw new RuntimeException(

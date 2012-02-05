@@ -80,10 +80,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * 
-			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
-			 */
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{

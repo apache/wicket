@@ -14,97 +14,88 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.repeater.tree.util;
+package org.apache.wicket.examples.tree;
 
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IDetachable;
 
 /**
- * A set holding objects by their keys.
- * 
- * Note: Apart from {@link #contains(Object)} no query methods are supported.
- * 
- * @see #key(Object)
+ * An inverse set.
  * 
  * @author svenmeier
  */
-public abstract class KeyingSet<T> implements Set<T>, Serializable
+public class InverseSet<T> implements Set<T>, IDetachable
 {
 
-	private Set<Object> keys = new HashSet<Object>();
+	private static final long serialVersionUID = 1L;
+
+	private Set<T> set;
 
 	/**
-	 * Get the key for the given object.
+	 * Create a full set.
 	 * 
-	 * @param t
-	 *            object to get key for
+	 * @param set
+	 *            the contained set
 	 */
-	protected abstract Object key(T t);
-
-	public int size()
+	public InverseSet(Set<T> set)
 	{
-		return keys.size();
+		this.set = set;
+	}
+
+	public void detach()
+	{
+		if (set instanceof IDetachable)
+		{
+			((IDetachable)set).detach();
+		}
 	}
 
 	public boolean isEmpty()
 	{
-		return keys.isEmpty();
+		return !set.isEmpty();
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean contains(Object o)
 	{
-		Object key = key((T)o);
-		if (key == null)
-		{
-			return false;
-		}
-		else
-		{
-			return keys.contains(key);
-		}
+		return !set.contains(o);
 	}
 
 	public boolean add(T t)
 	{
-		return keys.add(key(t));
+		return set.remove(t);
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean remove(Object t)
+	public boolean remove(Object o)
 	{
-		return keys.remove(key((T)t));
+		return set.add((T)o);
+	}
+
+	public boolean addAll(Collection<? extends T> ts)
+	{
+		boolean changed = false;
+
+		for (T t : ts)
+		{
+			changed |= set.remove(t);
+		}
+
+		return changed;
 	}
 
 	public boolean containsAll(Collection<?> cs)
 	{
 		for (Object c : cs)
 		{
-			if (!contains(c))
+			if (set.contains(c))
 			{
 				return false;
 			}
 		}
 		return true;
-	}
-
-	@SuppressWarnings("unchecked")
-	public boolean addAll(Collection<? extends T> cs)
-	{
-		boolean changed = false;
-
-		for (Object c : cs)
-		{
-			changed |= add((T)c);
-		}
-
-		return changed;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -114,28 +105,23 @@ public abstract class KeyingSet<T> implements Set<T>, Serializable
 
 		for (Object c : cs)
 		{
-			changed |= remove(c);
+			changed |= set.add((T)c);
 		}
 
 		return changed;
 	}
 
+	public int size()
+	{
+		throw new UnsupportedOperationException();
+	}
+
 	public void clear()
 	{
-		keys.clear();
+		throw new UnsupportedOperationException();
 	}
 
 	public Iterator<T> iterator()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public Object[] toArray()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public <S> S[] toArray(S[] ts)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -145,20 +131,13 @@ public abstract class KeyingSet<T> implements Set<T>, Serializable
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * Create a model holding this set.
-	 * 
-	 * @return model
-	 */
-	public IModel<Set<T>> createModel()
+	public Object[] toArray()
 	{
-		return new AbstractReadOnlyModel<Set<T>>()
-		{
-			@Override
-			public Set<T> getObject()
-			{
-				return KeyingSet.this;
-			}
-		};
+		throw new UnsupportedOperationException();
+	}
+
+	public <S> S[] toArray(S[] a)
+	{
+		throw new UnsupportedOperationException();
 	}
 }

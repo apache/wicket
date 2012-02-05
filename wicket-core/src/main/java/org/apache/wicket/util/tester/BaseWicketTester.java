@@ -58,7 +58,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -66,7 +65,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -84,7 +83,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.mock.MockApplication;
@@ -188,6 +186,8 @@ public class BaseWicketTester
 	private boolean useRequestUrlAsBase = true;
 
 	private IRequestHandler forcedHandler;
+
+	private IFeedbackMessageFilter originalFeedbackMessageCleanupFilter;
 
 	// Simulates the cookies maintained by the browser
 	private final List<Cookie> browserCookies = Generics.newArrayList();
@@ -302,6 +302,12 @@ public class BaseWicketTester
 		application.setRequestCycleProvider(new TestRequestCycleProvider(
 			application.getRequestCycleProvider()));
 
+		// set a feedback message filter that will not remove any messages
+		originalFeedbackMessageCleanupFilter = application.getApplicationSettings()
+			.getFeedbackMessageCleanupFilter();
+		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
+			IFeedbackMessageFilter.NONE);
+
 		IPageManagerProvider pageManagerProvider = newTestPageManagerProvider();
 		if (pageManagerProvider != null)
 		{
@@ -377,13 +383,44 @@ public class BaseWicketTester
 		ServletWebRequest servletWebRequest = newServletWebRequest();
 		requestCycle = application.createRequestCycle(servletWebRequest,
 			newServletWebResponse(servletWebRequest));
-		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
 
 		if (session == null)
 		{
 			newSession();
 		}
+	}
+
+	/**
+	 * Cleans up feedback messages. This usually happens on detach, but is disabled in unit testing
+	 * so feedback mesasges can be examined.
+	 */
+	public void cleanupFeedbackMessages()
+	{
+		cleanupFeedbackMessages(originalFeedbackMessageCleanupFilter);
+	}
+
+	/**
+	 * Removes all feedback messages
+	 */
+	public void clearFeedbackMessages()
+	{
+		cleanupFeedbackMessages(IFeedbackMessageFilter.ALL);
+	}
+
+	/**
+	 * Cleans up feedback messages given the specified filter.
+	 * 
+	 * @param filter
+	 *            filter used to cleanup messages, accepted messages will be removed
+	 */
+	private void cleanupFeedbackMessages(IFeedbackMessageFilter filter)
+	{
+		application.getApplicationSettings().setFeedbackMessageCleanupFilter(filter);
+		getLastRenderedPage().detach();
+		getSession().detach();
+		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
+			IFeedbackMessageFilter.NONE);
 	}
 
 	/**
@@ -593,15 +630,6 @@ public class BaseWicketTester
 
 		try
 		{
-			if (!redirect)
-			{
-				/*
-				 * we do not reset the session during redirect processing because we want to
-				 * preserve the state before the redirect, eg any error messages reported
-				 */
-				session.cleanupFeedbackMessages();
-			}
-
 			if (getLastResponse() != null)
 			{
 				// transfer cookies from previous response to this request, quirky but how old stuff
@@ -1153,25 +1181,6 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Renders a <code>Panel</code> from a <code>Panel(String id)</code> constructor.
-	 * <p>
-	 * Note that when try to access a component, e.g. via accessLabel(), the 'path' parameter must
-	 * be relative to the panel. Not relative to the Page which will automatically be added for you.
-	 * 
-	 * @param <C>
-	 *            the type of the component
-	 * @param panelClass
-	 *            a test <code>Panel</code> class with <code>Panel(String id)</code> constructor
-	 * @return a rendered <code>Panel</code>
-	 */
-	public final <C extends Panel> C startPanel(final Class<C> panelClass)
-	{
-		Args.notNull(panelClass, "panelClass");
-
-		return startComponentInPage(panelClass, null);
-	}
-
-	/**
 	 * Process a component. A web page will be automatically created with the markup created in
 	 * {@link #createPageMarkup(String)}.
 	 * 
@@ -1218,7 +1227,8 @@ public class BaseWicketTester
 		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
-			fail(String.format("Cannot instantiate component with type '%s' because of '%s'", componentClass.getName(), e.getMessage()));
+			fail(String.format("Cannot instantiate component with type '%s' because of '%s'",
+				componentClass.getName(), e.getMessage()));
 		}
 
 		// process the component
@@ -1946,10 +1956,9 @@ public class BaseWicketTester
 	 */
 	public List<Serializable> getMessages(final int level)
 	{
-		FeedbackMessages feedbackMessages = Session.get().getFeedbackMessages();
-		List<FeedbackMessage> allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
+
+		List<FeedbackMessage> allMessages = new FeedbackCollector(getLastRenderedPage()).collect(new IFeedbackMessageFilter()
 		{
-			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean accept(FeedbackMessage message)
@@ -1957,7 +1966,6 @@ public class BaseWicketTester
 				return message.getLevel() == level;
 			}
 		});
-
 		List<Serializable> actualMessages = Generics.newArrayList();
 		for (FeedbackMessage message : allMessages)
 		{
@@ -2003,8 +2011,9 @@ public class BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link AjaxRequestTarget#add(org.apache.wicket.Component...)}. This method actually tests that a
-	 * <code>Component</code> is on the Ajax response sent back to the client.
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(org.apache.wicket.Component...)}. This
+	 * method actually tests that a <code>Component</code> is on the Ajax response sent back to the
+	 * client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript. But it shouldn't be needed because you have to trust that the Wicket
@@ -2087,7 +2096,7 @@ public class BaseWicketTester
 
 	/**
 	 * Simulates the firing of all ajax timer behaviors on the page
-	 *
+	 * 
 	 * @param container
 	 */
 	public void executeAllTimerBehaviors(final MarkupContainer container)

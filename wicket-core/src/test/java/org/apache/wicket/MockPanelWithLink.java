@@ -58,7 +58,7 @@ public abstract class MockPanelWithLink extends Panel
 	 * 
 	 * @param target
 	 *            the current Ajax request target. May be {@code null} if
-	 *            {@link BaseWicketTester#clickLink(String, false)} is used.
+	 *            {@link org.apache.wicket.util.tester.BaseWicketTester#clickLink(String, boolean false)} is used.
 	 */
 	protected abstract void onLinkClick(AjaxRequestTarget target);
 

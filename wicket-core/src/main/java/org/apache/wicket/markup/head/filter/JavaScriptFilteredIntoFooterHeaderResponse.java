@@ -14,22 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.filtering;
+package org.apache.wicket.markup.head.filter;
+
+import java.util.Arrays;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
- * A header response that creates two buckets. The header bucket will contain all references to CSS.
- * The other bucket will contain all JavaScript, and you will need to add a
- * HeaderResponseFilteredResponseContainer to the footer of your page (typically just before the end
- * body tag) to render the JavaScript.
+ * A header response that creates two buckets. The header bucket will contain all references to CSS
+ * and markup from the &lt;head&gt; section from the page. The other bucket will contain all other
+ * header items, and you will need to add a {@link HeaderResponseContainer} to the footer of your
+ * page (typically just before the end body tag) to render those items.
  * 
  * @author Jeremy Thomerson
  */
-public final class JavaScriptFilteredIntoFooterHeaderResponse extends
-	HeaderResponseContainerFilteringHeaderResponse
+public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringHeaderResponse
 {
-	private static final String HEADER_FILTER_NAME = "headerBucket";
+	/**
+	 * The name of the filter that renders the head section of the page
+	 */
+	public static final String HEADER_FILTER_NAME = "headerBucket";
 
 	/**
 	 * Construct.
@@ -47,21 +51,22 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends
 		setFilters(createFilters(footerBucketName));
 	}
 
-	protected IHeaderResponseFilter[] createFilters(String footerBucketName)
+	protected Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
 	{
 		IHeaderResponseFilter header = createHeaderFilter(HEADER_FILTER_NAME);
-		IHeaderResponseFilter footer = createFooterFilter(footerBucketName);
-		return new IHeaderResponseFilter[] { header, footer };
+		IHeaderResponseFilter footer = createFooterFilter(footerBucketName, header);
+		return Arrays.asList(header, footer);
 	}
 
-	protected JavaScriptAcceptingHeaderResponseFilter createFooterFilter(String footerBucketName)
+	protected IHeaderResponseFilter createFooterFilter(String footerBucketName,
+		IHeaderResponseFilter header)
 	{
-		return new JavaScriptAcceptingHeaderResponseFilter(footerBucketName);
+		return new OppositeHeaderResponseFilter(footerBucketName, header);
 	}
 
-	protected CssAcceptingHeaderResponseFilter createHeaderFilter(String headerFilterName)
+	protected IHeaderResponseFilter createHeaderFilter(String headerFilterName)
 	{
-		return new CssAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
+		return new CssAndPageAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
 	}
 
 }

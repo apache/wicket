@@ -482,8 +482,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @throws IllegalArgumentException
 	 *             if validator is null
 	 * @see IValidator
-	 * @see IValidatorAddListener
-	 * 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final FormComponent<T> add(final IValidator<? super T> validator)
@@ -555,7 +553,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @throws IllegalArgumentException
 	 *             if validator is null
 	 * @see IValidator
-	 * @see IValidatorAddListener
 	 */
 	public final FormComponent<T> add(final IValidator<? super T>... validators)
 	{
@@ -1090,6 +1087,15 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public void validate()
 	{
+		// clear any previous feedback messages
+
+		if (hasFeedbackMessage())
+		{
+			getFeedbackMessages().clear();
+		}
+
+		// validate
+
 		validateRequired();
 		if (isValid())
 		{

@@ -43,6 +43,8 @@ public class StartExamples
 	 */
 	public static void main(String[] args)
 	{
+//		System.setProperty("wicket.configuration", "development");
+
 		Server server = new Server();
 		SocketConnector connector = new SocketConnector();
 

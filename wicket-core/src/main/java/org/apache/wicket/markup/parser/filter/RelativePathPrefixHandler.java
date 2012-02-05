@@ -23,6 +23,8 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupParser;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -95,6 +97,24 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		}
 	};
 
+	/**
+	 * Constructor for the IComponentResolver role.
+	 */
+	public RelativePathPrefixHandler()
+	{
+		this(null);
+	}
+
+	/**
+	 * Constructor for the IMarkupFilter role
+	 * @param markup
+	 *      The markup created by reading the markup file
+	 */
+	public RelativePathPrefixHandler(final MarkupResourceStream markup)
+	{
+		super(markup);
+	}
+
 	@Override
 	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
@@ -103,9 +123,11 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			return tag;
 		}
 
+		String wicketIdAttr = getWicketNamespace() + ":" + "id";
+
 		// Don't touch any wicket:id component and any auto-components
 		if ((tag instanceof WicketTag) || (tag.isAutolinkEnabled() == true) ||
-			(tag.getAttributes().get("wicket:id") != null))
+			(tag.getAttributes().get(wicketIdAttr) != null))
 		{
 			return tag;
 		}

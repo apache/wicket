@@ -41,5 +41,4 @@ public class InterfaceObject implements IInterface
 	{
 		return message;
 	}
-
 }

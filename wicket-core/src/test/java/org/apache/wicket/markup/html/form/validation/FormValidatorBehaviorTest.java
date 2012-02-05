@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -72,7 +73,7 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 		FormTester ft = tester.newFormTester("form");
 		ft.setValue("name", "999999999");
 		ft.submit();
-		assertEquals(0, tester.getSession().getFeedbackMessages().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 		MaxLenValidator max = new MaxLenValidator(page.name);
 		page.form.add(max);
@@ -80,18 +81,16 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "999999999");
 		ft.submit();
-		assertEquals(1, tester.getSession().getFeedbackMessages().size());
-		assertEquals("MAX", tester.getSession()
-			.getFeedbackMessages()
-			.iterator()
-			.next()
+		assertEquals(1, new FeedbackCollector(page).collect().size());
+		assertEquals("MAX", new FeedbackCollector(page).collect()
+			.get(0)
 			.getMessage()
 			.toString());
 
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "22");
 		ft.submit();
-		assertEquals(0, tester.getSession().getFeedbackMessages().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 		MinLenValidator min = new MinLenValidator(page.name);
 		page.form.add(min);
@@ -99,32 +98,30 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "22");
 		ft.submit();
-		assertEquals(1, tester.getSession().getFeedbackMessages().size());
-		assertEquals("MINIMUM", tester.getSession()
-			.getFeedbackMessages()
-			.iterator()
-			.next()
+		assertEquals(1, new FeedbackCollector(page).collect().size());
+		assertEquals("MINIMUM", new FeedbackCollector(page).collect()
+			.get(0)
 			.getMessage()
 			.toString());
 
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "7777777");
 		ft.submit();
-		assertEquals(0, tester.getSession().getFeedbackMessages().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 		page.form.remove(min);
 
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "22");
 		ft.submit();
-		assertEquals(0, tester.getSession().getFeedbackMessages().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 		page.form.remove(max);
 
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "999999999");
 		ft.submit();
-		assertEquals(0, tester.getSession().getFeedbackMessages().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 	}
 

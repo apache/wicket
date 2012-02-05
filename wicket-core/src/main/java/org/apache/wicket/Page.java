@@ -300,8 +300,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component was rendered standalone. If it is a <code>
-	 * MarkupContainer</code>
-	 * then the rendering for that container is checked.
+	 * MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 */
@@ -770,15 +769,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		});
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
 	@Override
-	protected void onBeforeRender()
+	void internalOnAfterConfigure()
 	{
+		super.internalOnAfterConfigure();
+
 		// first try to check if the page can be rendered:
-		if (!isActionAuthorized(RENDER))
+		if (!isRenderAllowed())
 		{
 			if (log.isDebugEnabled())
 			{
@@ -786,7 +783,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 			throw new UnauthorizedActionException(this, Component.RENDER);
 		}
+	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
+	@Override
+	protected void onBeforeRender()
+	{
 		// Make sure it is really empty
 		renderedComponents = null;
 

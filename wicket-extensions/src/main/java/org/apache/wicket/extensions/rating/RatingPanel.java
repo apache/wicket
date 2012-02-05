@@ -37,7 +37,7 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 
 /**
  * Rating component that generates a number of stars where a user can click on to rate something.
- * Subclasses should implement {@link #onRated(int, AjaxRequestTarget)} to provide the calculation
+ * Subclasses should implement {@link #onRated(int, org.apache.wicket.ajax.AjaxRequestTarget)} to provide the calculation
  * of the rating, and {@link #onIsStarActive(int)} to indicate whether to render an active star or
  * an inactive star.
  * <p>

@@ -215,6 +215,8 @@ jQuery(document).ready(function() {
 
 			expect(4);
 
+			var calls = 0;
+
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
 				e: [ 'event1', 'event2' ],
@@ -222,7 +224,6 @@ jQuery(document).ready(function() {
 				wr: false, // not Wicket's <ajax-response>
 				sh: [
 					function(data, textStatus, jqXHR) {
-						start();
 						var expected = {
 							one: 1,
 							two: '2',
@@ -230,6 +231,11 @@ jQuery(document).ready(function() {
 						};
 						deepEqual(data, expected);
 						equal('success', textStatus);
+
+						if (++calls === 2) {
+							start();
+							jQuery(window).off("event1 event2");
+						}
 					}
 				]
 			}
@@ -239,7 +245,6 @@ jQuery(document).ready(function() {
 			var target = jQuery(window);
 			target.triggerHandler("event1");
 			target.triggerHandler("event2");
-			target.off("event1 event2");
 		});
 
 
@@ -421,7 +426,7 @@ jQuery(document).ready(function() {
 						deepEqual(attrs.coh, attributes.coh, 'complete handlers');
 						ok(attributes.ep === undefined, 'extra parameters');
 						ok(attributes.dep === undefined, 'dynamic extra parameters');
-						equal(attributes.async, false, 'asynchronous');
+						equal(attributes.async, true, 'asynchronous');
 						equal(attributes.rt, 0, 'request timeout');
 						equal(attributes.ad, false, 'allow default');
 
@@ -450,10 +455,10 @@ jQuery(document).ready(function() {
 					two: '2',
 					three: true
 				};
-				deepEqual(data, expected, 'data');
-				equal('success', textStatus, 'textStatus');
-				deepEqual(attrs, attributes, 'attrs');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+				deepEqual(data, expected, 'Success: data');
+				equal('success', textStatus, 'Success: textStatus');
+				deepEqual(attrs, attributes, 'Success: attrs');
+				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attributes) {
@@ -461,19 +466,22 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
-				deepEqual(attrs, attributes, 'attrs');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-				ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
+				deepEqual(attrs, attributes, 'Before: attrs');
+				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
-				deepEqual(attrs, attributes, 'attrs');
+				deepEqual(attrs, attributes, 'After: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, jqXHR, textStatus, attributes) {
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-				equal('success', textStatus, 'textStatus');
-				deepEqual(attrs, attributes, 'attrs');
+				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+				equal('success', textStatus, 'Complete: textStatus');
+				deepEqual(attrs, attributes, 'Complete: attrs');
+
+				// unregister all subscribers
+				jQuery(document).off();
 			});
 
 			Wicket.Ajax.ajax(attrs);
@@ -481,9 +489,6 @@ jQuery(document).ready(function() {
 			var target = jQuery(window);
 			target.triggerHandler("event1");
 			target.off("event1");
-
-			// unregister all subscribers
-			jQuery(document).off();
 		});
 
 		asyncTest('Wicket.Ajax - verify arguments to global listeners. Failure scenario.', function () {
@@ -503,26 +508,29 @@ jQuery(document).ready(function() {
 
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, errorThrown, attributes, jqXHR, textStatus) {
 				start();
-				ok('Not Found', errorThrown);
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-				equal('error', textStatus, 'textStatus');
-				deepEqual(attrs, attributes, 'attrs');
+				equal('Not Found', errorThrown, 'Failure: errorThrown');
+				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Failure: Assert that jqXHR is a XMLHttpRequest');
+				equal('error', textStatus, 'Failure: textStatus');
+				deepEqual(attrs, attributes, 'Failure: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
-				deepEqual(attrs, attributes, 'attrs');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-				ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
+				deepEqual(attrs, attributes, 'Before: attrs');
+				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
-				deepEqual(attrs, attributes, 'attrs');
+				deepEqual(attrs, attributes, 'After: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, jqXHR, textStatus, attributes) {
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-				equal('error', textStatus, 'textStatus');
-				deepEqual(attrs, attributes, 'attrs');
+				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+				equal('error', textStatus, 'Complete: textStatus');
+				deepEqual(attrs, attributes, 'Complete: attrs');
+
+				// unregister all subscribers
+				jQuery(document).off();
 			});
 
 			Wicket.Ajax.ajax(attrs);
@@ -531,8 +539,7 @@ jQuery(document).ready(function() {
 			target.triggerHandler("event1");
 			target.off("event1");
 
-			// unregister all subscribers
-			jQuery(document).off();
 		});
+
 	}
 });

@@ -19,7 +19,6 @@ package org.apache.wicket.request.handler;
 import java.nio.charset.Charset;
 
 import junit.framework.TestCase;
-
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;

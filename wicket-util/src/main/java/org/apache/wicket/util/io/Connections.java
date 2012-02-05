@@ -124,6 +124,16 @@ public class Connections
 			return;
 		}
 
+		String protocol = connection.getURL().getProtocol();
+		if ("file".equals(protocol)) // XXX what about JarUrlConnection ?!
+		{
+			// Close FileUrlConnection's input stream because
+			// otherwise it leaks open file handles. See WICKET-4359.
+			// Most other connection types should not call getInputStream() here,
+			// especially remote connections.
+			connection.getInputStream().close();
+		}
+
 		if (connection instanceof HttpURLConnection)
 		{
 			((HttpURLConnection)connection).disconnect();

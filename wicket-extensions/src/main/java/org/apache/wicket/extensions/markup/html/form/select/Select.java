@@ -180,7 +180,7 @@ public class Select<T> extends FormComponent<T>
 	/**
 	 * @see FormComponent#updateModel()
 	 */
-	@SuppressWarnings( { "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void updateModel()
 	{
@@ -223,9 +223,10 @@ public class Select<T> extends FormComponent<T>
 		// if the raw input is specified use that, otherwise use model
 		if (hasRawInput())
 		{
-			String[] values = getInputAsArray();
-			if (values != null && values.length > 0)
+			final String raw = getRawInput();
+			if (!Strings.isEmpty(raw))
 			{
+				String[] values = raw.split(VALUE_SEPARATOR);
 				for (int i = 0; i < values.length; i++)
 				{
 					String value = values[i];
@@ -234,8 +235,8 @@ public class Select<T> extends FormComponent<T>
 						return true;
 					}
 				}
-				return false;
 			}
+			return false;
 		}
 
 		return compareModels(getDefaultModelObject(), option.getDefaultModelObject());

@@ -18,10 +18,10 @@ package org.apache.wicket.examples.resourcedecoration;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.resource.filtering.JavaScriptFilteredIntoFooterHeaderResponse;
 
 /**
  * An application showing how to return several resources into a single http response.

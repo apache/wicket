@@ -17,14 +17,10 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.attributes.ThrottlingSettings;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -42,7 +38,7 @@ import org.apache.wicket.util.time.Duration;
  *         }
  * </pre>
  * 
- * This behavior will be linked to the onclick javascript event of the div WebMarkupContainer
+ * This behavior will be linked to the <em>click</em> javascript event of the div WebMarkupContainer
  * represents, and so anytime a user clicks this div the {@link #onEvent(AjaxRequestTarget)} of the
  * behavior is invoked.
  * 
@@ -60,7 +56,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * Construct.
 	 * 
 	 * @param event
-	 *            event this behavior will be attached to
+	 *      the event this behavior will be attached to
 	 */
 	public AjaxEventBehavior(String event)
 	{
@@ -78,15 +74,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	}
 
 	@Override
-	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
-	{
-		super.updateAjaxAttributes(attributes);
-
-		attributes.setEventNames(event);
-	}
-
-	@Override
-	public void renderHead(Component component, IHeaderResponse response)
+	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		super.renderHead(component, response);
 
@@ -99,7 +87,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 			js.append(");");
 
-			AjaxRequestTarget target = AjaxRequestTarget.get();
+			AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
 			if (target == null)
 			{
 				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
@@ -111,9 +99,18 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		}
 	}
 
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+		super.updateAjaxAttributes(attributes);
+
+		attributes.setEventNames(event);
+	}
+
 	/**
 	 * 
 	 * @param event
+	 *      the event this behavior will be attached to
 	 */
 	protected void onCheckEvent(final String event)
 	{
@@ -122,6 +119,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	/**
 	 * 
 	 * @return event
+	 *      the event this behavior is attached to
 	 */
 	public final String getEvent()
 	{
@@ -130,7 +128,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 	/**
 	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(AjaxRequestTarget)
 	 */
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
@@ -142,6 +140,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * Listener method for the ajax event
 	 * 
 	 * @param target
+	 *      the current request handler
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
 }

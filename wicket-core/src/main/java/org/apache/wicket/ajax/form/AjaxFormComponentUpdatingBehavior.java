@@ -19,12 +19,11 @@ package org.apache.wicket.ajax.form;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +81,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			AjaxFormChoiceComponentUpdatingBehavior.appliesTo(getComponent()))
 		{
 			log.warn(String.format(
-				"AjaxFormComponentUpdatingBehavior is not suposed to be added in the form component at path: \"%s\". "
+				"AjaxFormComponentUpdatingBehavior is not supposed to be added in the form component at path: \"%s\". "
 					+ "Use the AjaxFormChoiceComponentUpdatingBehavior instead, that is meant for choices/groups that are not one component in the html but many",
 				getComponent().getPageRelativePath()));
 		}
@@ -105,19 +104,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		attributes.setMethod(Method.POST);
 		attributes.getDynamicExtraParameters().add(
 			"return Wicket.Form.serializeElement('" + getComponent().getMarkupId() + "')");
-	}
-
-	/**
-	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
-	 */
-	@Override
-	protected void onCheckEvent(String event)
-	{
-		if ("href".equalsIgnoreCase(event))
-		{
-			throw new IllegalArgumentException(
-				"this behavior cannot be attached to an 'href' event");
-		}
+		attributes.setAllowDefault(true);
 	}
 
 	/**
@@ -186,18 +173,21 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * has been updated.
 	 * 
 	 * @param target
+	 *      the current request handler
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
 	/**
 	 * Called to handle any error resulting from updating form component. Errors thrown from
-	 * {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * {@link #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)} will not be caught here.
 	 * 
 	 * The RuntimeException will be null if it was just a validation or conversion error of the
 	 * FormComponent
 	 * 
 	 * @param target
+	 *       the current request handler
 	 * @param e
+	 *      the error that occurred during the update of the component
 	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{

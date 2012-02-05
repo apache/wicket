@@ -42,8 +42,9 @@ public class CssContentHeaderItem extends CssHeaderItem
 	 *            unique id for the &lt;style&gt; element. This can be <code>null</code>, however in
 	 *            that case the ajax header contribution can't detect duplicate CSS fragments.
 	 */
-	public CssContentHeaderItem(CharSequence css, String id)
+	public CssContentHeaderItem(CharSequence css, String id, String condition)
 	{
+		super(condition);
 		this.css = css;
 		this.id = id;
 	}
@@ -67,7 +68,20 @@ public class CssContentHeaderItem extends CssHeaderItem
 	@Override
 	public void render(Response response)
 	{
+		boolean hasCondition = Strings.isEmpty(getCondition()) == false;
+		if (hasCondition)
+		{
+			response.write("<!--[if ");
+			response.write(getCondition());
+			response.write("]>");
+		}
+
 		CssUtils.writeCss(response, getCss(), getId());
+
+		if (hasCondition)
+		{
+			response.write("<![endif]-->\n");
+		}
 	}
 
 	@Override

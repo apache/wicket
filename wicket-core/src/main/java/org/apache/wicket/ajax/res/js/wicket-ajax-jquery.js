@@ -50,7 +50,8 @@
 	var createIFrame,
 		getAjaxBaseUrl,
 		isUndef,
-		replaceAll;
+		replaceAll,
+		htmlToDomDocument;
 
 	isUndef = function (target) {
 		return (typeof(target) === 'undefined' || target === null);
@@ -64,7 +65,7 @@
 
 	/**
 	 * Creates an iframe that can be used to load data asynchronously or as a
-	 * target for form submit.
+	 * target for Ajax form submit.
 	 *
 	 * @param {String} the value of the iframe's name attribute
 	 */
@@ -93,6 +94,19 @@
 		return baseUrl;
 	};
 
+	/**
+	 * Helper method that serializes HtmlDocument to string and then
+	 * creates a DOMDocument by parsing this string.
+	 * It is used as a workaround for the problem described at https://issues.apache.org/jira/browse/WICKET-4332
+	 * @param envelope (DispHtmlDocument) the document object created by IE from the XML response in the iframe
+	 */
+	htmlToDomDocument = function (htmlDocument) {
+		var xmlAsString = htmlDocument.body.outerText;
+		xmlAsString = xmlAsString.replace(/^\s+|\s+$/g, ''); // trim
+		xmlAsString = xmlAsString.replace(/(\n|\r)-*/g, ''); // remove '\r\n-'. The dash is optional.
+		var xmldoc = Wicket.Xml.parse(xmlAsString);
+		return xmldoc;
+	};
 
 	/**
 	 * Functions executer takes array of functions and executes them. Each function gets
@@ -333,8 +347,8 @@
 				attrs.m = 'GET';
 			}
 
-			if (attrs.async !== true) {
-				attrs.async = false;
+			if (attrs.async !== false) {
+				attrs.async = true;
 			}
 
 			if (!jQuery.isNumeric(attrs.rt)) {
@@ -348,20 +362,24 @@
 
 		/**
 		 * A helper function that executes an array of handlers (before, success, failure)
-		 * @param {Array} handlers - the handlers to execute
+		 *
+		 * @param {Array[FunctionBody]} handlers - the handlers to execute
+		 * @param {Array[String]} argumentNames - the names of the arguments which are passes to the handles
 		 */
-		_executeHandlers: function (handlers) {
+		_executeHandlers: function (handlers, argumentNames) {
 			if (jQuery.isArray(handlers)) {
 
 				// cut the handlers argument
-				var args = Array.prototype.slice.call(arguments).slice(1);
+				var args = Array.prototype.slice.call(arguments).slice(2);
 
 				for (var i = 0; i < handlers.length; i++) {
 					var handler = handlers[i];
 					if (jQuery.isFunction(handler)) {
 						handler.apply(this, args);
 					} else {
-						new Function(handler).apply(this, args);
+						var functionArgs = argumentNames;
+						functionArgs.push(handler);
+						Function.apply(this, functionArgs).apply(this, args);
 					}
 				}
 			}
@@ -423,7 +441,7 @@
 					var dep = deps[i],
 						extraParam = {};
 					if (jQuery.isFunction(dep)) {
-						extraParam = dep();
+						extraParam = dep(attrs);
 					} else {
 						extraParam = new Function('attrs', dep)(attrs);
 					}
@@ -471,7 +489,7 @@
 							var precondition = preconditions[p];
 							var result;
 							if (jQuery.isFunction(precondition)) {
-								result = precondition();
+								result = precondition(attrs, jqXHR, settings);
 							} else {
 								result = new Function('attrs', 'jqXHR', 'settings', precondition)(attrs, jqXHR, settings);
 							}
@@ -484,7 +502,9 @@
 					}
 
 					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
-					self._executeHandlers(attrs.bh, attrs, jqXHR, settings);
+					self._executeHandlers(attrs.bh,
+							["attrs", "jqXHR", "settings"],
+							attrs, jqXHR, settings);
 
 					if (attrs.i) {
 						// show the indicator
@@ -495,13 +515,16 @@
 				dataType: attrs.dt,
 				async: attrs.async,
 				timeout: attrs.rt,
+				cache: false,
 				headers: headers,
 				success: function(data, textStatus, jqXHR) {
 
 					if (attrs.wr) {
 						self.processAjaxResponse(data, textStatus, jqXHR, attrs);
 					} else {
-						self._executeHandlers(attrs.sh, data, textStatus, jqXHR, attrs);
+						self._executeHandlers(attrs.sh,
+								["data", "textStatus", "jqXHR", "attrs"],
+								data, textStatus, jqXHR, attrs);
 					}
 					Wicket.Event.publish('/ajax/call/success', data, textStatus, jqXHR, attrs);
 
@@ -517,7 +540,9 @@
 						Wicket.DOM.hide(attrs.i);
 					}
 
-					self._executeHandlers(attrs.coh, jqXHR, textStatus, attrs);
+					self._executeHandlers(attrs.coh,
+							["jqXHR", "textStatus", "attrs"],
+							jqXHR, textStatus, attrs);
 					Wicket.Event.publish('/ajax/call/complete', jqXHR, textStatus, attrs);
 
 					this.done();
@@ -525,7 +550,7 @@
 			});
 
 			// execute after handlers right after the Ajax request is fired
-			self._executeHandlers(attrs.ah, attrs);
+			self._executeHandlers(attrs.ah, ["attrs"], attrs);
 			Wicket.Event.publish('/ajax/call/after', attrs);
 
 			if (!attrs.ad && attrs.event) {
@@ -535,7 +560,14 @@
 			return attrs.ad;
 		},
 
-		// Method that processes the <ajax-response>
+		/**
+		 * Method that processes the <ajax-response>.
+		 *
+		 * @param {XmlDocument} data - the <ajax-response> XML document
+		 * @param {String} textStatus - the response status as text (e.g. 'success', 'parsererror', etc.)
+		 * @param {Object} jqXHR - the jQuery wrapper around XMLHttpRequest
+		 * @param {Object} attrs - the Ajax request attributes
+		 */
 		processAjaxResponse: function (data, textStatus, jqXHR, attrs) {
 
 			if (jqXHR.readyState === 4) {
@@ -585,9 +617,11 @@
 				}
 				else {
 					// no redirect, just regular response
-					var responseAsText = jQuery(data).text();
-					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
-					Wicket.Log.info("\n" + responseAsText);
+					if (Wicket.Log.enabled()) {
+						var responseAsText = jQuery(data).text();
+						Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
+						Wicket.Log.info("\n" + responseAsText);
+					}
 
 					// invoke the loaded callback with an xml document
 					return this.loadedCallback(data, attrs);
@@ -657,7 +691,7 @@
 
 			// install handler to deal with the ajax response
 			// ... we add the onload event after form submit because chrome fires it prematurely
-			Wicket.Event.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this));
+			Wicket.Event.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), attrs);
 
 			// handled, restore state and return true
 			form.action = originalFormAction;
@@ -683,7 +717,8 @@
 			}
 
 			// process the response
-			this.loadedCallback(envelope);
+			var attrs = event.data;
+			this.loadedCallback(envelope, attrs);
 
 			// stop the event
 			event.stopPropagation();
@@ -708,6 +743,11 @@
 			// loaded.
 			try {
 				var root = envelope.getElementsByTagName("ajax-response")[0];
+
+				if (root == null && envelope.compatMode == 'BackCompat') {
+					envelope = htmlToDomDocument(envelope);
+					root = envelope.getElementsByTagName("ajax-response")[0];
+				}
 
 				// the root element must be <ajax-response
 				if (isUndef(root) || root.tagName !== "ajax-response") {
@@ -774,7 +814,9 @@
 			steps.push(jQuery.proxy(function (notify) {
 				Wicket.Log.info("Response processed successfully.");
 
-				this._executeHandlers(attrs.sh, null, 'success', null, attrs);
+				this._executeHandlers(attrs.sh,
+						["data", "textStatus", "jqXHR", "attrs"],
+						null, 'success', null, attrs);
 
 				// re-attach the events to the new components (a bit blunt method...)
 				// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
@@ -796,7 +838,7 @@
 			if (message) {
 				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
 			}
-			this._executeHandlers(attrs.fh, attrs);
+			this._executeHandlers(attrs.fh, ["attrs"], attrs);
 		},
 
 		done: function () {
@@ -1028,19 +1070,42 @@
 
 		Xml: {
 			parse: function (text) {
-				var xmldoc;
-
+				var xmlDocument;
 				if (window.DOMParser) {
 					var parser = new DOMParser();
-					xmldoc = parser.parseFromString(text, "text/xml");
+					xmlDocument = parser.parseFromString(text, "text/xml");
 				} else if (window.ActiveXObject) {
-					xmldoc = new window.ActiveXObject("Microsoft.XMLDOM");
-					if (!xmldoc.loadXML(text)) {
-						Wicket.Log.error("Error while parsing to XML: " + text);
+					try {
+						xmlDocument = new ActiveXObject("Msxml2.DOMDocument.6.0");
+					} catch (err6) {
+						try {
+							xmlDocument = new ActiveXObject("Msxml2.DOMDocument.5.0");
+						} catch (err5) {
+							try {
+								xmlDocument = new ActiveXObject("Msxml2.DOMDocument.4.0");
+							} catch (err4) {
+								try {
+									xmlDocument = new ActiveXObject("MSXML2.DOMDocument.3.0");
+								} catch (err3) {
+									try {
+										xmlDocument = new ActiveXObject("Microsoft.XMLDOM");
+									} catch (err2) {
+										Wicket.Log.error("Cannot create DOM document: " + err2);
+									}
+								}
+							}
+						}
+					}
+
+					if (xmlDocument) {
+						xmlDocument.async = "false";
+						if (!xmlDocument.loadXML(text)) {
+							Wicket.Log.error("Error parsing response: "+text);
+						}
 					}
 				}
 
-				return xmldoc;
+				return xmlDocument;
 			}
 		},
 
@@ -1742,7 +1807,7 @@
 			// is an element in head that is of same type as myElement, and whose src
 			// attribute is same as myElement.src.
 			containsElement: function (element, mandatoryAttribute) {
-				var attr = Wicket.Head._stripJSessionId(element.getAttribute(mandatoryAttribute));
+				var attr = element.getAttribute(mandatoryAttribute);
 				if (isUndef(attr) || attr === "") {
 					return false;
 				}
@@ -1763,52 +1828,14 @@
 					// this is necessary for filtering script references
 					if (node.tagName.toLowerCase() === element.tagName.toLowerCase()) {
 
-						var loadedUrl = Wicket.Head._stripJSessionId(node.getAttribute(mandatoryAttribute));
-						var loadedUrl_ = Wicket.Head._stripJSessionId(
-							node.getAttribute(mandatoryAttribute+"_"));
+						var loadedUrl = node.getAttribute(mandatoryAttribute);
+						var loadedUrl_ = node.getAttribute(mandatoryAttribute+"_");
 						if (loadedUrl === attr || loadedUrl_ === attr) {
 							return true;
 						}
 					}
 				}
 				return false;
-			},
-
-			/**
-			 * Removes the optional ';jsessionid=...' from the passed url
-			 *
-			 * @param {String} url the url to strip the jsessionid from
-			 * @return {String} the url without the jsessionid and its value
-			 */
-			// WICKET-3596, WICKET-4312
-			_stripJSessionId: function (url) {
-				if (url === null)
-				{
-					return null;
-				}
-
-				// http://.../abc;jsessionid=...?param=...
-				var ixSemiColon = url.indexOf(";");
-				if (ixSemiColon === -1)
-				{
-					return url;
-				}
-
-				var ixQuestionMark = url.indexOf("?");
-				if (ixQuestionMark === -1)
-				{
-					// no query paramaters; cut off at ";"
-					// http://.../abc;jsession=...
-					return url.substring(0, ixSemiColon);
-				}
-
-				if (ixQuestionMark <= ixSemiColon)
-				{
-					// ? is before ; - no jsessionid in the url
-					return url;
-				}
-
-				return url.substring(0, ixSemiColon) + url.substring(ixQuestionMark);
 			},
 
 			// Adds a javascript element to page header.

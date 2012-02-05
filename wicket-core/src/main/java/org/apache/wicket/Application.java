@@ -1645,7 +1645,10 @@ public abstract class Application implements UnboundListener, IEventSink
 			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
-				Session.get().getPageManager().commitRequest();
+				if (Session.exists())
+				{
+					Session.get().getPageManager().commitRequest();
+				}
 			}
 
 			@Override
