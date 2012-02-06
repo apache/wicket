@@ -324,13 +324,14 @@ public class MarkupCache implements IMarkupCache
 	 * <p>
 	 * Subclasses may change the default implementation. E.g. they might choose not to update the
 	 * cache to enforce reloading of any markup not found. This might be useful in very dynamic
-	 * environments.
+	 * environments. Additionally a non-caching IResourceStreamLocator should be used.
 	 * 
 	 * @param cacheKey
 	 * @param container
 	 * @param markup
 	 *            Markup.NO_MARKUP
 	 * @return Same as parameter "markup"
+	 * @see org.apache.wicket.settings.IResourceSettings#setResourceStreamLocator(org.apache.wicket.util.resource.locator.IResourceStreamLocator)
 	 */
 	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer container,
 		final Markup markup)
