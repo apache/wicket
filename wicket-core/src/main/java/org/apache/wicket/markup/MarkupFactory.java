@@ -269,21 +269,6 @@ public class MarkupFactory
 	}
 
 	/**
-	 * Check if container has associated markup
-	 * 
-	 * @param container
-	 *            The container to find the markup for
-	 * @return True if this markup container has associated markup
-	 * @deprecated please use {@link #getMarkup(MarkupContainer, boolean)} instead
-	 */
-	@Deprecated
-	public final boolean hasAssociatedMarkup(final MarkupContainer container)
-	{
-		Markup markup = getMarkup(container, false);
-		return markup != null && markup != Markup.NO_MARKUP;
-	}
-
-	/**
 	 * Get the markup resource stream provider registered with the factory.
 	 * <p>
 	 * If the 'container' implements {@link IMarkupResourceStreamProvider}, the container itself
