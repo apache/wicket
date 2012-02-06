@@ -127,7 +127,7 @@ public class MarkupCache implements IMarkupCache
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("Remove from cache: " + cacheKey);
+			log.debug("Removing from cache: " + cacheKey);
 		}
 
 		// Remove the markup from the cache
@@ -147,7 +147,7 @@ public class MarkupCache implements IMarkupCache
 			log.debug("Removed from cache: " + locationString);
 		}
 
-		// If a base markup file has been removed from the cache, than
+		// If a base markup file has been removed from the cache then
 		// the derived markup should be removed as well.
 		removeMarkupWhereBaseMarkupIsNoLongerInTheCache();
 
@@ -341,7 +341,7 @@ public class MarkupCache implements IMarkupCache
 			log.debug("Markup not found: " + cacheKey);
 		}
 
-		// If cacheKey == null, than caching is disabled for the component
+		// If cacheKey == null then caching is disabled for the component
 		if (cacheKey != null)
 		{
 			// flag markup as non-existent
@@ -464,7 +464,7 @@ public class MarkupCache implements IMarkupCache
 			return markup;
 		}
 
-		// In case the markup could not be loaded (without exception), than ..
+		// In case the markup could not be loaded (without exception) then ..
 		if (cacheKey != null)
 		{
 			removeMarkup(cacheKey);

@@ -32,7 +32,7 @@ public interface IResourceStreamLocator
 	 * Locate a resource, given a path and class. Typically this method is either called by external
 	 * clients if they are not interested in a lookup that takes the style and locale into account,
 	 * or it is called by the implementation of
-	 * {@link #locate(Class, String, String, Locale, String)} where the latter just takes care of
+	 * {@link #locate(Class, String, String, String, java.util.Locale, String, boolean)} where the latter just takes care of
 	 * trying out the different combinations for the provided style and locale and uses this method
 	 * to actually load the resource stream.
 	 * 

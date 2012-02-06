@@ -435,7 +435,7 @@ public class MarkupFactory
 			log.error("Error while reading the markup " + markupResourceStream, e);
 
 			// Wrap with wicket exception and re-throw
-			throw new MarkupException(markupResourceStream, "IO error while readin markup: " +
+			throw new MarkupException(markupResourceStream, "IO error while reading markup: " +
 				e.getMessage(), e);
 		}
 		catch (WicketRuntimeException e)
