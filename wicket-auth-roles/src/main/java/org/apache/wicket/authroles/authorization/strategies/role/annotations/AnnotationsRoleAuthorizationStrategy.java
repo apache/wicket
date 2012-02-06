@@ -25,9 +25,7 @@ import org.apache.wicket.request.component.IRequestableComponent;
 
 
 /**
- * Strategy that checks the
- * {@link org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation}
- * annotation.
+ * Strategy that checks the {@link AuthorizeInstantiation} annotation.
  * 
  * @author Eelco Hillenius
  */
