@@ -27,6 +27,7 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MergedMarkup;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 
 /**
  * Merge the 2+ markups involved in markup inheritance. From a users perspective there is only one
@@ -73,7 +74,8 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 						.getContainerInfo()
 						.getContainerClass()
 						.getName() +
-					". Enable debug messages for org.apache.wicket.util.resource.locator.ResourceStreamLocator to get a list of all filenames tried.");
+					". Enable debug messages for " + ResourceStreamLocator.class.getName() +
+					" to get a list of all filenames tried.");
 		}
 
 		// Merge base and derived markup
