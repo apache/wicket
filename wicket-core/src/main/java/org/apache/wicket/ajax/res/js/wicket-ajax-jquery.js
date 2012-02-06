@@ -476,7 +476,7 @@
 			data = jQuery.param(data, true);
 
 			// execute the request 
-			jQuery.ajax({
+			var jqXHR = jQuery.ajax({
 				url: attrs.u,
 				type: attrs.m,
 				context: self,
@@ -557,7 +557,7 @@
 				attrs.event.preventDefault();
 			}
 
-			return attrs.ad;
+			return jqXHR;
 		},
 
 		/**
@@ -1276,7 +1276,6 @@
 					Wicket.DOM.show(e);
 				}
 				e.setAttribute("showIncrementallyCount", count + 1);
-
 			},
 
 			/** call-counting implementation of Wicket.DOM.hide() */
@@ -1477,11 +1476,13 @@
 							var throttler = new Wicket.Throttler(postponeTimerOnUpdate);
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
-									return call.ajax(attrs);
+									call.ajax(attrs);
+									return attrs.ad;
 								}, this));
 						}
 						else {
-							return call.ajax(attrs);
+							call.ajax(attrs);
+							return attrs.ad;
 						}
 					});
 				});
