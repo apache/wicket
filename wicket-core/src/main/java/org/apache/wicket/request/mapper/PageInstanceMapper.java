@@ -97,7 +97,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
+	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(IRequestHandler)
 	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
@@ -160,6 +160,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 
 	private boolean matches(final Url url)
 	{
-		return urlStartsWith(url, getContext().getNamespace(), getContext().getPageIdentifier());
+		IMapperContext mapperContext = getContext();
+		return urlStartsWith(url, mapperContext.getNamespace(), mapperContext.getPageIdentifier());
 	}
 }
