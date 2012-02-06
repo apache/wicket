@@ -77,7 +77,12 @@ public class ZipResourceStream extends AbstractResourceStream
 		try
 		{
 			ZipOutputStream out = new ZipOutputStream(bytearray);
-			zipDir(dir, out, "", recursive);
+			try
+			{
+				zipDir(dir, out, "", recursive);
+			} finally {
+				out.close();
+			}
 		}
 		catch (RuntimeException e)
 		{
@@ -129,8 +134,10 @@ public class ZipResourceStream extends AbstractResourceStream
 
 		for (String file : files)
 		{
-			log.debug("Adding: '{}'", file);
-
+			if (log.isDebugEnabled())
+			{
+				log.debug("Adding: '{}'", file);
+			}
 			File f = new File(dir, file);
 			if (f.isDirectory())
 			{
@@ -146,12 +153,16 @@ public class ZipResourceStream extends AbstractResourceStream
 				FileInputStream fi = new FileInputStream(f);
 				origin = new BufferedInputStream(fi, BUFFER);
 
-				int count;
-				while ((count = origin.read(data, 0, BUFFER)) != -1)
+				try
 				{
-					out.write(data, 0, count);
+					int count;
+					while ((count = origin.read(data, 0, BUFFER)) != -1)
+					{
+						out.write(data, 0, count);
+					}
+				} finally {
+					origin.close();
 				}
-				origin.close();
 			}
 		}
 
