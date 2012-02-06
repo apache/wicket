@@ -787,9 +787,10 @@ public class BaseWicketTester
 	 * @param page
 	 * @return Page
 	 */
-	public Page startPage(final Page page)
+	@SuppressWarnings("unchecked")
+	public <T extends Page> T startPage(final T page)
 	{
-		return startPage(new PageProvider(page));
+		return (T)startPage(new PageProvider(page));
 	}
 
 	/**
