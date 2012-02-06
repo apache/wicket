@@ -541,5 +541,84 @@ jQuery(document).ready(function() {
 
 		});
 
+		asyncTest('show/hide incrementally (WICKET-4364)', function() {
+
+			expect(4);
+
+			var $indicator = jQuery('<div id="indicator"></div>');
+			var $el = jQuery('<div id="elementId"></div>');
+			jQuery('#qunit-fixture')
+				.append($indicator)
+				.append($el);
+
+			// counts how many complete handlers have been executed
+			var calls = 0;
+
+			// returns the number of 'shows' of the indicator
+			var getCurrentCount = function () {
+				var count = $indicator.attr('showIncrementallyCount');
+				return count ? parseInt(count, 10) : 0;
+			}
+
+			// called as 'success' for requestOne and as 'failure' for requestTwo
+			var successFailureHandler = function () {
+				var count = getCurrentCount();
+				ok(count === 1 || count === 2, "'showIncrementallyCount' must be 1 or 2. Value is: " + count);
+			};
+
+			// notifies when the last (second) complete handler is done
+			var deferred = jQuery.Deferred();
+
+			var completeHandler = function () {
+				if (++calls === 2) {
+					deferred.resolve();
+				}
+			};
+
+			var attrs = {
+				u: 'data/ajax/nonWicketResponse.json',
+				e: 'event1',
+				i: $indicator.attr('id'),
+				c: $el.attr('id'),
+				dt: 'json', // datatype
+				sh: [ successFailureHandler ],
+				fh: [ successFailureHandler ],
+				coh: [ completeHandler ],
+				wr: false // not Wicket's <ajax-response>
+			};
+
+			// binds requestOne (success)
+			Wicket.Ajax.ajax(attrs);
+
+			var attrsTwo = jQuery.extend({}, attrs, {
+				u: 'data/ajax/nonExisting.json'
+			});
+			// binds requestTwo (failure - non-existing URL => error 404)
+			Wicket.Ajax.ajax(attrsTwo);
+
+			var attrsThree = jQuery.extend({}, attrs, {
+				pre: [
+					function () {
+						ok(true, 'Request 3: Precondition called.')
+						return false;
+					}
+				]
+			});
+			// binds requestThree - not executed due to precondition
+			Wicket.Ajax.ajax(attrsThree);
+
+			// executed when the last request is in its 'onComplete' phase.
+			jQuery.when(deferred)
+				.done(function () {
+					start();
+					var count = getCurrentCount();
+					equal(0, count, "'showIncrementallyCount' must be 0 after the executions but is: " + count);
+					$indicator.remove();
+					$el.off().remove();
+				});
+
+			// fire all requests
+			$el.triggerHandler("event1");
+		});
 	}
 });
