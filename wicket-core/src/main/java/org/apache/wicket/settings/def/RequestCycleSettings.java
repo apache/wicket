@@ -58,7 +58,7 @@ public class RequestCycleSettings implements IRequestCycleSettings
 	 */
 	private IRequestCycleSettings.RenderStrategy renderStrategy = RenderStrategy.REDIRECT_TO_BUFFER;
 
-	/** List of {@link org.apache.wicket.IResponseFilter}s. */
+	/** List of {@link IResponseFilter}s. */
 	private List<IResponseFilter> responseFilters;
 
 	/**
@@ -79,7 +79,7 @@ public class RequestCycleSettings implements IRequestCycleSettings
 // ****************************************************************************
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(org.apache.wicket.IResponseFilter)
+	 * @see org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(IResponseFilter)
 	 */
 	@Override
 	public void addResponseFilter(IResponseFilter responseFilter)
@@ -180,7 +180,7 @@ public class RequestCycleSettings implements IRequestCycleSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#setRenderStrategy(org.apache.wicket.settings.Settings.RenderStrategy)
+	 * @see org.apache.wicket.settings.IRequestCycleSettings#setRenderStrategy(RenderStrategy)
 	 */
 	@Override
 	public void setRenderStrategy(IRequestCycleSettings.RenderStrategy renderStrategy)
@@ -212,7 +212,7 @@ public class RequestCycleSettings implements IRequestCycleSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.Settings.UnexpectedExceptionDisplay)
+	 * @see org.apache.wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay)
 	 */
 	@Override
 	public void setUnexpectedExceptionDisplay(
