@@ -148,7 +148,7 @@ public interface IRequestCycleSettings
 	/**
 	 * Gets whether Wicket should try to get extensive client info by redirecting to
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
-	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * default implementation of {@link org.apache.wicket.Session#getClientInfo()}, so if that method is
 	 * overridden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @return Whether to gather extensive client info
@@ -212,7 +212,7 @@ public interface IRequestCycleSettings
 	/**
 	 * Sets whether Wicket should try to get extensive client info by redirecting to
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
-	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * default implementation of {@link org.apache.wicket.Session#getClientInfo()}, so if that method is
 	 * overridden, there is no guarantee this method will be taken into account.
 	 * 
 	 * <p>
