@@ -57,6 +57,7 @@ import org.apache.wicket.request.UrlEncoder;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileUploadBase;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -1691,8 +1692,19 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Url getUrl()
 	{
-		String urlString = getRequestURI() + '?' + getQueryString();
-		Url url = Url.parse(urlString, getCharset());
+		final String urlString;
+		final String queryString = getQueryString();
+
+		if (Strings.isEmpty(queryString))
+		{
+			urlString = getRequestURI();
+		}
+		else
+		{
+			urlString = getRequestURI() + '?' + queryString;
+		}
+
+		final Url url = Url.parse(urlString, getCharset());
 		url.setProtocol(scheme);
 		url.setHost(serverName);
 		url.setPort(serverPort);
