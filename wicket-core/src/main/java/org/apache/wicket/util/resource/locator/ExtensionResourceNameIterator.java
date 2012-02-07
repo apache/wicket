@@ -23,7 +23,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Iterate over a list of 'comma' separated strings. If an empty string is provided, hasNext() will
- * successfully return once with next() returning an empty string ("").
+ * successfully return once with next() returning {@code null}.
  * 
  * @author Juergen Donnerstag
  */
@@ -37,6 +37,7 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	 * Construct.
 	 * 
 	 * @param extension
+	 *            {@code null} or comma separated extensions
 	 * @param separatorChar
 	 */
 	public ExtensionResourceNameIterator(final String extension, final char separatorChar)
@@ -46,7 +47,7 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 		if (extensions.length == 0)
 		{
 			// Fail safe: hasNext() needs to return at least once with true.
-			extensions = new String[] { "" };
+			extensions = new String[] { null };
 		}
 		this.extensions = extensions;
 
@@ -64,13 +65,14 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	}
 
 	/**
-	 * @return The next filename extension. A leading '.' will be removed.
+	 * @return The next filename extension.
 	 */
 	@Override
 	public String next()
 	{
-		String rtn = extensions[index++].trim();
-		return rtn.startsWith(".") ? rtn.substring(1) : rtn;
+		index++;
+
+		return getExtension();
 	}
 
 	/**
@@ -78,8 +80,16 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	 */
 	public final String getExtension()
 	{
-		String rtn = extensions[index - 1].trim();
-		return rtn.startsWith(".") ? rtn.substring(1) : rtn;
+		String extension = extensions[index - 1];
+		if (extension != null)
+		{
+			extension = extension.trim();
+			if (extension.startsWith("."))
+			{
+				extension = extension.substring(1);
+			}
+		}
+		return extension;
 	}
 
 	/**
