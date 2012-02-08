@@ -446,8 +446,6 @@ public class TagTester
 	 *            the attribute which should be on the tag in the markup
 	 * @param value
 	 *            the value which the attribute must have
-	 * @param stopAfterFirst
-	 *            if true search will stop after the first match
 	 * @return the <code>TagTester</code> which matches the tag in the markup, that has the given
 	 *         value on the given attribute
 	 */
