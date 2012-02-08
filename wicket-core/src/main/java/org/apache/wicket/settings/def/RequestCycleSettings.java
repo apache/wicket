@@ -153,15 +153,6 @@ public class RequestCycleSettings implements IRequestCycleSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()
-	 */
-	@Override
-	public IExceptionSettings.UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
-	{
-		return unexpectedExceptionDisplay;
-	}
-
-	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)
 	 */
 	@Override
@@ -209,15 +200,5 @@ public class RequestCycleSettings implements IRequestCycleSettings
 			throw new IllegalArgumentException("timeout cannot be null");
 		}
 		this.timeout = timeout;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay)
-	 */
-	@Override
-	public void setUnexpectedExceptionDisplay(
-		final IExceptionSettings.UnexpectedExceptionDisplay unexpectedExceptionDisplay)
-	{
-		this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
 	}
 }

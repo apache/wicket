@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.response.filter.IResponseFilter;
-import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import org.apache.wicket.util.time.Duration;
 
 
@@ -197,13 +196,6 @@ public interface IRequestCycleSettings
 	Duration getTimeout();
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#getUnexpectedExceptionDisplay()
-	 * 
-	 * @return UnexpectedExceptionDisplay
-	 */
-	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
-
-	/**
 	 * @param bufferResponse
 	 *            True if this application should buffer responses.
 	 */
@@ -286,9 +278,4 @@ public interface IRequestCycleSettings
 	 * @param timeout
 	 */
 	void setTimeout(Duration timeout);
-
-	/**
-	 * @param unexpectedExceptionDisplay
-	 */
-	void setUnexpectedExceptionDisplay(final UnexpectedExceptionDisplay unexpectedExceptionDisplay);
 }
