@@ -200,7 +200,9 @@ public interface IRequestCycleSettings
 	 * @see org.apache.wicket.settings.IExceptionSettings#getUnexpectedExceptionDisplay()
 	 * 
 	 * @return UnexpectedExceptionDisplay
+	 * @deprecated Use IExceptionSettings#getUnexpectedExceptionDisplay()
 	 */
+	@Deprecated
 	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
 
 	/**
@@ -289,6 +291,8 @@ public interface IRequestCycleSettings
 
 	/**
 	 * @param unexpectedExceptionDisplay
+	 * @deprecated Use IExceptionSettings#setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay)
 	 */
+	@Deprecated
 	void setUnexpectedExceptionDisplay(final UnexpectedExceptionDisplay unexpectedExceptionDisplay);
 }
