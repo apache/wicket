@@ -65,7 +65,7 @@ public class HeaderResponseContainer extends WebMarkupContainer
 		if (!response.isClosed())
 		{
 			throw new RuntimeException(
-				"there was an error processing the header response - you tried to render a bucket of response from HeaderResponseContainerFilteringHeaderResponse, but it had not yet run and been closed.  this should occur when the header container that is standard in wicket renders, so perhaps you have done something to keep that from rendering?");
+				"there was an error processing the header response - you tried to render a bucket of response from FilteringHeaderResponse, but it had not yet run and been closed.  this should occur when the header container that is standard in wicket renders, so perhaps you have done something to keep that from rendering?");
 		}
 		CharSequence foot = response.getContent(filterName);
 		replaceComponentTagBody(markupStream, openTag, foot);

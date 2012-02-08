@@ -41,9 +41,9 @@ public class ResourceBundleReference extends ResourceReference implements IResou
 {
 	private static final long serialVersionUID = 1L;
 
-	private ResourceReference bundleRef;
+	private final ResourceReference bundleRef;
 
-	private List<HeaderItem> providedResources = new ArrayList<HeaderItem>();
+	private final List<HeaderItem> providedResources;
 
 	/**
 	 * Creates a new bundle reference from the given reference.
@@ -54,7 +54,9 @@ public class ResourceBundleReference extends ResourceReference implements IResou
 	{
 		super(bundleRef.getScope(), bundleRef.getName(), bundleRef.getLocale(),
 			bundleRef.getStyle(), bundleRef.getVariation());
+
 		this.bundleRef = bundleRef;
+		this.providedResources = new ArrayList<HeaderItem>();
 	}
 
 	/**
