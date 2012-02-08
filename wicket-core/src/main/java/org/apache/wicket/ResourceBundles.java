@@ -21,16 +21,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.markup.head.*;
-import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.ResourceReferenceRegistry;
-import org.apache.wicket.resource.bundles.ConcatResourceBundleReference;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReferenceRegistry;
+import org.apache.wicket.resource.bundles.ConcatResourceBundleReference;
 
 /**
  * Contains all resource bundles that are registered in the application. Resource bundles provide a
@@ -46,9 +46,9 @@ public class ResourceBundles
 {
 	private final ResourceReferenceRegistry registry;
 
-	private final List<HeaderItem> bundles = new ArrayList<HeaderItem>();
+	private final List<HeaderItem> bundles;
 
-	private final Map<HeaderItem, HeaderItem> providedResourcesToBundles = new HashMap<HeaderItem, HeaderItem>();
+	private final Map<HeaderItem, HeaderItem> providedResourcesToBundles;
 
 	/**
 	 * Construct.
@@ -58,6 +58,8 @@ public class ResourceBundles
 	public ResourceBundles(ResourceReferenceRegistry registry)
 	{
 		this.registry = registry;
+		this.bundles= new ArrayList<HeaderItem>();
+		this.providedResourcesToBundles = new HashMap<HeaderItem, HeaderItem>();
 	}
 
 	/**

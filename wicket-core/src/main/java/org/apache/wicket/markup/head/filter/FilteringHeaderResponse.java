@@ -78,7 +78,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	}
 
 	/**
-	 * we store this HeaderResponseContainerFilteringHeaderResponse in the RequestCycle so that the
+	 * we store this FilteringHeaderResponse in the RequestCycle so that the
 	 * containers can access it to render their bucket of stuff
 	 */
 	private static final MetaDataKey<FilteringHeaderResponse> RESPONSE_KEY = new MetaDataKey<FilteringHeaderResponse>()
@@ -128,7 +128,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	}
 
 	/**
-	 * @return the HeaderResponseContainerFilteringHeaderResponse being used in this RequestCycle
+	 * @return the FilteringHeaderResponse being used in this RequestCycle
 	 */
 	public static FilteringHeaderResponse get()
 	{
@@ -136,13 +136,13 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		if (requestCycle == null)
 		{
 			throw new IllegalStateException(
-				"You can only get the HeaderResponseContainerFilteringHeaderResponse when there is a RequestCycle present");
+				"You can only get the FilteringHeaderResponse when there is a RequestCycle present");
 		}
 		FilteringHeaderResponse response = requestCycle.getMetaData(RESPONSE_KEY);
 		if (response == null)
 		{
 			throw new IllegalStateException(
-				"No HeaderResponseContainerFilteringHeaderResponse is present in the request cycle.  This may mean that you have not decorated the header response with a HeaderResponseContainerFilteringHeaderResponse.  Simply calling the HeaderResponseContainerFilteringHeaderResponse constructor sets itself on the request cycle");
+				"No FilteringHeaderResponse is present in the request cycle.  This may mean that you have not decorated the header response with a FilteringHeaderResponse.  Simply calling the FilteringHeaderResponse constructor sets itself on the request cycle");
 		}
 		return response;
 	}
@@ -152,7 +152,8 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	{
 		if (item instanceof FilteredHeaderItem)
 		{
-			render(item, ((FilteredHeaderItem)item).getFilterName());
+			String filterName = ((FilteredHeaderItem) item).getFilterName();
+			render(item, filterName);
 		}
 		else
 		{
@@ -220,9 +221,11 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 
 	private void render(HeaderItem item, String filterName)
 	{
-		if (!responseFilterMap.containsKey(filterName))
+		if (responseFilterMap.containsKey(filterName) == false)
+		{
 			throw new IllegalArgumentException("No filter named '" + filterName +
 				"', known filter names are: " + responseFilterMap.keySet());
+		}
 		render(item, responseFilterMap.get(filterName));
 	}
 
