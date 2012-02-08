@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.util.resource;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import javax.servlet.ServletContext;
 
@@ -79,8 +81,14 @@ public class WebExternalResourceStream extends AbstractResourceStream
 		try
 		{
 			final ServletContext context = ((WebApplication)Application.get()).getServletContext();
+			final URL resourceURL = context.getResource(url);
+			if (resourceURL == null)
+			{
+				throw new FileNotFoundException("Unable to find resource '" + url +
+					"' in the serlvet context");
+			}
 
-			return Connections.getLastModified(context.getResource(url));
+			return Connections.getLastModified(resourceURL);
 		}
 		catch (IOException e)
 		{
