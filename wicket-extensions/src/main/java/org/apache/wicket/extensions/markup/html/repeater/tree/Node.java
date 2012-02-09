@@ -123,7 +123,13 @@ public abstract class Node<T> extends Panel
 		};
 	}
 
-	private void toggle()
+	/**
+	 * Toggle the node.
+	 * 
+	 * @see AbstractTree#collapse(Object)
+	 * @see AbstractTree#expand(Object)
+	 */
+	protected void toggle()
 	{
 		T t = getModelObject();
 

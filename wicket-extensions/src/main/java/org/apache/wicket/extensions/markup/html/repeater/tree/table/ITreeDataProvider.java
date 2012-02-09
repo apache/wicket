@@ -23,12 +23,17 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  * An adapter from a {@link ITreeProvider} to a {@link IDataProvider}.
  * 
  * @author svenmeier
+ * @param <T>
+ *            node type
  */
 public interface ITreeDataProvider<T> extends IDataProvider<T>
 {
 	/**
 	 * Wrap the given node in a {@link NodeModel} which provides additional branch information
-	 * needed by {@link TreeColumn}
+	 * needed by {@link TreeColumn}.
+	 * 
+	 * @param node
+	 *            node
 	 */
-	public NodeModel<T> model(T object);
+	public NodeModel<T> model(T node);
 }

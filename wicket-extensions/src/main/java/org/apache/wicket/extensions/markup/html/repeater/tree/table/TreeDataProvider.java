@@ -26,6 +26,8 @@ import org.apache.wicket.model.IModel;
  * An adapter of a {@link ITreeProvider} to a {@link IDataProvider}.
  * 
  * @author svenmeier
+ * @param <T>
+ *            node type
  */
 public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 {
@@ -39,6 +41,12 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 
 	private int size = -1;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param provider
+	 *            the provider to adapt
+	 */
 	public TreeDataProvider(ITreeProvider<T> provider)
 	{
 		this.provider = provider;
@@ -117,8 +125,13 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 
 	/**
 	 * Hook method to decide wether the given node's children should be iterated.
+	 * 
+	 * @param node
+	 *            node
+	 * 
+	 * @return {@code true} if the node's children should be iterated
 	 */
-	protected abstract boolean iterateChildren(T object);
+	protected abstract boolean iterateChildren(T node);
 
 	public NodeModel<T> model(T object)
 	{

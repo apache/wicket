@@ -18,22 +18,41 @@ package org.apache.wicket.extensions.markup.html.repeater.tree.table;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.tree.TableTree;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 
 /**
+ * A column displaying the tree nodes hierarchy.
+ * 
  * @author svenmeier
+ * @param <T>
+ *            node type
  */
 public class TreeColumn<T> extends AbstractTreeColumn<T>
 {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param displayModel
+	 *            model used to generate header text
+	 */
 	public TreeColumn(IModel<String> displayModel)
 	{
 		super(displayModel);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param displayModel
+	 *            model used to generate header text
+	 * @param sortProperty
+	 *            sort property
+	 */
 	public TreeColumn(IModel<String> displayModel, String sortProperty)
 	{
 		super(displayModel, sortProperty);
@@ -48,7 +67,6 @@ public class TreeColumn<T> extends AbstractTreeColumn<T>
 	public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId,
 		IModel<T> rowModel)
 	{
-
 		NodeModel<T> nodeModel = (NodeModel<T>)rowModel;
 
 		Component nodeComponent = getTree().newNodeComponent(componentId,

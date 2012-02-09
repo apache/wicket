@@ -28,18 +28,36 @@ import org.apache.wicket.model.IModel;
  * on a standard {@link NestedTree}.
  * 
  * @param <T>
- *            The model object type
+ *            The node type
  * @author svenmeier
  */
 public class DefaultNestedTree<T> extends NestedTree<T>
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param provider
+	 *            provider of the tree
+	 */
 	public DefaultNestedTree(String id, ITreeProvider<T> provider)
 	{
 		this(id, provider, null);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param provider
+	 *            provider of the tree
+	 * @param state
+	 *            expansion state
+	 */
 	public DefaultNestedTree(String id, ITreeProvider<T> provider, IModel<Set<T>> state)
 	{
 		super(id, provider, state);
@@ -47,9 +65,17 @@ public class DefaultNestedTree<T> extends NestedTree<T>
 		add(new WindowsTheme());
 	}
 
+	/**
+	 * Creates {@link Folder} for each node.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param node
+	 *            the node model
+	 */
 	@Override
-	protected Component newContentComponent(String id, IModel<T> model)
+	protected Component newContentComponent(String id, IModel<T> node)
 	{
-		return new Folder<T>(id, this, model);
+		return new Folder<T>(id, this, node);
 	}
 }

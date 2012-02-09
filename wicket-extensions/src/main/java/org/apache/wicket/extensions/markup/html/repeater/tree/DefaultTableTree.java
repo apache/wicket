@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
@@ -35,7 +36,7 @@ import org.apache.wicket.model.IModel;
  * and by adding navigation, headers and no-records-found toolbars to a standard {@link TableTree}.
  * 
  * @param <T>
- *            The model object type
+ *            The node type
  * @author svenmeier
  */
 public class DefaultTableTree<T> extends TableTree<T>
@@ -43,12 +44,38 @@ public class DefaultTableTree<T> extends TableTree<T>
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param columns
+	 *            columns for the {@link DataTable}
+	 * @param provider
+	 *            the provider of the tree
+	 * @param rowsPerPage
+	 *            rows to show on each page
+	 */
 	public DefaultTableTree(String id, List<IColumn<T>> columns, ISortableTreeProvider<T> provider,
 		int rowsPerPage)
 	{
 		this(id, columns, provider, rowsPerPage, null);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param columns
+	 *            columns for the {@link DataTable}
+	 * @param provider
+	 *            the provider of the tree
+	 * @param rowsPerPage
+	 *            rows to show on each page
+	 * @param state
+	 *            expansion state
+	 */
 	public DefaultTableTree(String id, List<IColumn<T>> columns, ISortableTreeProvider<T> provider,
 		int rowsPerPage, IModel<Set<T>> state)
 	{
@@ -61,15 +88,31 @@ public class DefaultTableTree<T> extends TableTree<T>
 		add(new WindowsTheme());
 	}
 
+	/**
+	 * Creates {@link Folder} for each node.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param node
+	 *            the node model
+	 */
 	@Override
 	protected Component newContentComponent(String id, IModel<T> model)
 	{
 		return new Folder<T>(id, this, model);
 	}
 
+	/**
+	 * Creates an {@link OddEvenItem}.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param node
+	 *            the node model
+	 */
 	@Override
-	protected Item<T> newRowItem(String id, int index, IModel<T> model)
+	protected Item<T> newRowItem(String id, int index, IModel<T> node)
 	{
-		return new OddEvenItem<T>(id, index, model);
+		return new OddEvenItem<T>(id, index, node);
 	}
 }

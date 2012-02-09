@@ -40,7 +40,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * 
  * @author svenmeier
  * @param <T>
- *            the model object type
+ *            the node type
  */
 public abstract class AbstractTree<T> extends Panel
 {
@@ -292,10 +292,12 @@ public abstract class AbstractTree<T> extends Panel
 	 * 
 	 * This default implementation adds this whole component for rendering.
 	 * 
-	 * @param t
+	 * @param node
+	 *            node to update
 	 * @param target
+	 *            request target
 	 */
-	public void updateBranch(T t, final AjaxRequestTarget target)
+	public void updateBranch(T node, final AjaxRequestTarget target)
 	{
 		if (target != null)
 		{
@@ -305,16 +307,18 @@ public abstract class AbstractTree<T> extends Panel
 
 	/**
 	 * Convenience method to update a single node on an {@link AjaxRequestTarget}. Does nothing if
-	 * the given node is currently not visible or target is <code>null</code>.
+	 * the given node is currently not visible or target is {@code null}.
 	 * 
-	 * @param t
+	 * @param node
+	 *            node to update
 	 * @param target
+	 *            request target or {@code null}
 	 */
-	public void updateNode(T t, final AjaxRequestTarget target)
+	public void updateNode(T node, final AjaxRequestTarget target)
 	{
 		if (target != null)
 		{
-			final IModel<T> model = getProvider().model(t);
+			final IModel<T> model = getProvider().model(node);
 			visitChildren(Node.class, new IVisitor<Node<T>, Void>()
 			{
 				public void component(Node<T> node, IVisit<Void> visit)
