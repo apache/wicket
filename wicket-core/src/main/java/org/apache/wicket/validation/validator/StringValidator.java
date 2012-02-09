@@ -103,7 +103,7 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 		super.onComponentTag(component, tag);
 		if (getMaximum() != null && "input".equalsIgnoreCase(tag.getName()))
 		{
-			tag.put("maxlen", getMaximum());
+			tag.put("maxlength", getMaximum());
 		}
 	}
 
