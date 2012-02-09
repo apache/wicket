@@ -36,6 +36,7 @@ import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketNamespaceHandler;
 import org.apache.wicket.markup.parser.filter.WicketRemoveTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.util.lang.Objects;
 
 /**
  * This is Wicket's default markup parser. It gets pre-configured with Wicket's default wicket
@@ -172,7 +173,9 @@ public class MarkupParser extends AbstractMarkupParser
 		filters.add(new RelativePathPrefixHandler(markupResourceStream));
 		filters.add(new EnclosureHandler());
 		filters.add(new InlineEnclosureHandler());
-		filters.add(new StyleAndScriptIdentifier(markup));
+
+		// Append it. See WICKET-4390
+		filters.add(new StyleAndScriptIdentifier(markup), StyleAndScriptIdentifier.class);
 		filters.add(new ConditionalCommentFilter());
 
 		return filters;
@@ -206,7 +209,7 @@ public class MarkupParser extends AbstractMarkupParser
 				return false;
 			}
 
-			int index = indexOf(beforeFilter);
+			int index = firstIndexOfClass(beforeFilter);
 			if (index < 0)
 			{
 				return super.add(filter);
@@ -214,6 +217,32 @@ public class MarkupParser extends AbstractMarkupParser
 
 			super.add(index, filter);
 			return true;
+		}
+
+		/**
+		 * Finds the index of the first entry which is from the same type as the passed
+		 * {@literal filterClass} argument.
+		 *
+		 * @param filterClass
+		 *      the class to search for
+		 * @return the index of the first match or -1 otherwise
+		 */
+		private int firstIndexOfClass(final Class<? extends IMarkupFilter> filterClass)
+		{
+			int result = -1;
+			if (filterClass != null)
+			{
+				final int size = size();
+				for (int index = 0; index < size; index++) {
+					Class<? extends IMarkupFilter> currentFilterClass = get(index).getClass();
+					if (Objects.equal(filterClass, currentFilterClass))
+					{
+						result = index;
+						break;
+					}
+				}
+			}
+			return result;
 		}
 
 		/**
