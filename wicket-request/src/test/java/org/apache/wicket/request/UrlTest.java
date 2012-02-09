@@ -199,7 +199,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url, "", "b");
 	}
 
-
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4398
 	 */
@@ -212,6 +211,17 @@ public class UrlTest extends Assert
 		checkQueryParams(url, "a", "b");
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4398
+	 */
+	@Test
+	public void testParse14()
+	{
+		String s = "/?a=b&+";
+		Url url = Url.parse(s);
+		checkSegments(url, "", "");
+		checkQueryParams(url, "a", "b", " ", "");
+	}
 	/**
 	 * 
 	 */
