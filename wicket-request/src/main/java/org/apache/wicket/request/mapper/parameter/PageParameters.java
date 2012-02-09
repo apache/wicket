@@ -337,9 +337,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		 */
 		public NamedPair(final String key, final String value)
 		{
-			Args.notEmpty(key, "key");
-			this.key = key;
-			this.value = value;
+			this.key = Args.notEmpty(key, "key");;
+			this.value = Args.notNull(value, "value");
 		}
 
 		/**

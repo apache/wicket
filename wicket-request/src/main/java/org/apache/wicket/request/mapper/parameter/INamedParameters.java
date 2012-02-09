@@ -30,7 +30,6 @@ import org.apache.wicket.util.string.StringValue;
  */
 public interface INamedParameters
 {
-
 	/**
 	 * Return set of all named parameter names.
 	 * 
