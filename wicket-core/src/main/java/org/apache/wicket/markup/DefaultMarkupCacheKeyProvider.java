@@ -54,33 +54,22 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 		final StringBuilder buffer = new StringBuilder(classname.length() + 64);
 		buffer.append(classname);
 
-		if (container.getVariation() != null)
+		final String variation = container.getVariation();
+		if (variation != null)
 		{
-			buffer.append('_').append(container.getVariation());
+			buffer.append('_').append(variation);
 		}
 
-		if (container.getStyle() != null)
+		final String style = container.getStyle();
+		if (style != null)
 		{
-			buffer.append('_').append(container.getStyle());
+			buffer.append('_').append(style);
 		}
 
 		final Locale locale = container.getLocale();
 		if (locale != null)
 		{
-			buffer.append('_').append(locale.getLanguage());
-
-			final boolean hasLocale = locale.getLanguage().length() != 0;
-			final boolean hasCountry = locale.getCountry().length() != 0;
-			final boolean hasVariant = locale.getVariant().length() != 0;
-
-			if (hasCountry || (hasLocale && hasVariant))
-			{
-				buffer.append('_').append(locale.getCountry());
-			}
-			if (hasVariant && (hasLocale || hasCountry))
-			{
-				buffer.append('_').append(locale.getVariant());
-			}
+			buffer.append('_').append(locale.toString());
 		}
 
 		buffer.append('.').append(container.getMarkupType().getExtension());
