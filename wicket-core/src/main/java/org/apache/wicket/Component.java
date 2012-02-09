@@ -2345,7 +2345,7 @@ public abstract class Component
 		// MarkupStream is an Iterator for the markup
 		MarkupStream markupStream = new MarkupStream(markup);
 
-		// Flag: we stated the render process
+		// Flag: we started the render process
 		markRendering(true);
 
 		MarkupElement elem = markup.get(0);
