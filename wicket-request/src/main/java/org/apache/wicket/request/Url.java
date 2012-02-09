@@ -298,7 +298,10 @@ public final class Url implements Serializable
 			String queryArray[] = Strings.split(queryString, '&');
 			for (String s : queryArray)
 			{
-				result.parameters.add(parseQueryParameter(s, charset));
+				if (Strings.isEmpty(s) == false)
+				{
+					result.parameters.add(parseQueryParameter(s, charset));
+				}
 			}
 		}
 
@@ -315,22 +318,13 @@ public final class Url implements Serializable
 	{
 		if (qp.indexOf('=') == -1)
 		{
+			// name => empty value
 			return new QueryParameter(decodeParameter(qp, charset), "");
 		}
+
 		String parts[] = Strings.split(qp, '=');
-		if (parts.length == 0)
-		{
-			return new QueryParameter("", "");
-		}
-		else if (parts.length == 1)
-		{
-			return new QueryParameter("", decodeParameter(parts[0], charset));
-		}
-		else
-		{
-			return new QueryParameter(decodeParameter(parts[0], charset), decodeParameter(parts[1],
-				charset));
-		}
+		return new QueryParameter(decodeParameter(parts[0], charset), decodeParameter(parts[1],
+			charset));
 	}
 
 	/**

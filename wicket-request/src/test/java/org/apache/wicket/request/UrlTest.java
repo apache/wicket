@@ -164,6 +164,55 @@ public class UrlTest extends Assert
 	}
 
 	/**
+	 *
+	 */
+	@Test
+	public void testParse10()
+	{
+		String s = "/?a";
+		Url url = Url.parse(s);
+		checkSegments(url, "", "");
+		checkQueryParams(url, "a", "");
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void testParse11()
+	{
+		String s = "/?a=";
+		Url url = Url.parse(s);
+		checkSegments(url, "", "");
+		checkQueryParams(url, "a", "");
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void testParse12()
+	{
+		String s = "/?=b";
+		Url url = Url.parse(s);
+		checkSegments(url, "", "");
+		checkQueryParams(url, "", "b");
+	}
+
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4398
+	 */
+	@Test
+	public void testParse13()
+	{
+		String s = "/?a=b&";
+		Url url = Url.parse(s);
+		checkSegments(url, "", "");
+		checkQueryParams(url, "a", "b");
+	}
+
+	/**
 	 * 
 	 */
 	@Test
