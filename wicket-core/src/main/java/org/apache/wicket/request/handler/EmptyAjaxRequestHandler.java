@@ -23,6 +23,8 @@ import org.apache.wicket.request.http.WebResponse;
 
 /**
  * The empty AJAX request target does output an empty AJAX response.
+ * <br/>
+ * May be used as a light, "do nothing" Ajax response.
  * 
  * @author Matej Knopp
  */
