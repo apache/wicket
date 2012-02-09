@@ -29,7 +29,7 @@ import org.apache.wicket.util.string.StringList;
  * 
  * @author Jonathan Locke
  */
-public final class Path implements IResourcePath
+public class Path implements IResourcePath
 {
 	/** The list of folders in the path */
 	private final List<Folder> folders = new ArrayList<Folder>();
@@ -88,6 +88,7 @@ public final class Path implements IResourcePath
 	 *            Folder to add to path
 	 * @see org.apache.wicket.util.file.IResourcePath#add(java.lang.String)
 	 */
+	@Override
 	public void add(final String path)
 	{
 		add(new Folder(path));
@@ -97,6 +98,7 @@ public final class Path implements IResourcePath
 	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
+	@Override
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
 		for (Folder folder : folders)

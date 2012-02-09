@@ -28,7 +28,7 @@ import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 public class WicketAjaxDebugJQueryResourceReference extends
 	MinifiedAwareJavaScriptResourceReference
 {
-	private static final long serialVersionUID = -2918665261694523156L;
+	private static final long serialVersionUID = 1L;
 
 	private static WicketAjaxDebugJQueryResourceReference instance = new WicketAjaxDebugJQueryResourceReference();
 

@@ -46,7 +46,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		tester.assertErrorMessages("'foo' in veld 'integer' moet een geheel getal zijn. ");
 		tester.getSession().setLocale(new Locale("us"));
 
-		tester.getSession().cleanupFeedbackMessages();
+		tester.clearFeedbackMessages();
 
 		page = new LocalizedMessagePage();
 		tester.startPage(page);
@@ -84,7 +84,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		tester.assertErrorMessages("'foo' ist kein g\u00FCltiger Wert f\u00FCr 'Integer'.");
 		tester.getSession().setLocale(new Locale("pl"));
 
-		tester.getSession().cleanupFeedbackMessages();
+		tester.clearFeedbackMessages();
 
 		page = new LocalizedMessagePage();
 		tester.startPage(page);

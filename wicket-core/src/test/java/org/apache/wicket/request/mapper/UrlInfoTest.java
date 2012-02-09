@@ -41,6 +41,6 @@ public class UrlInfoTest extends Assert
 		parameters.add(WebRequest.PARAM_AJAX_REQUEST_ANTI_CACHE, "12345.6879");
 
 		AbstractBookmarkableMapper.UrlInfo info = new UrlInfo(null, MockPage.class, parameters);
-		assertTrue(info.getPageParameters().isEmpty());
+		assertNull(info.getPageParameters());
 	}
 }

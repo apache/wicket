@@ -95,8 +95,8 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	 */
 	public static class HeaderStreamState
 	{
-		private MarkupStream markupStream;
-		private ComponentTag openTag;
+		private final MarkupStream markupStream;
+		private final ComponentTag openTag;
 
 		private HeaderStreamState(MarkupStream markupStream, ComponentTag openTag)
 		{

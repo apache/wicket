@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.List;
-
-import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
@@ -30,9 +27,6 @@ import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.settings.IRequestCycleSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,62 +90,6 @@ public class WebSession extends Session
 	public WebSession(Request request)
 	{
 		super(request);
-	}
-
-
-	/**
-	 * @see org.apache.wicket.Session#cleanupFeedbackMessages()
-	 */
-	@Override
-	public void cleanupFeedbackMessages()
-	{
-		// remove all component feedback messages if we are either using one
-		// pass or render to buffer render strategy (in which case we can remove
-		// without further delay) or in case the redirect to render strategy is
-		// used, when we're doing the render request (isRedirect should return
-		// false in that case)
-
-		// TODO NG - does this huge if really make sense?
-
-		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER ||
-			((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
-			(!((WebResponse)RequestCycle.get().getResponse()).isRedirect()))
-		{
-			// If session scoped, rendered messages got indeed cleaned up, mark
-			// the session as dirty
-			if (getFeedbackMessages().clear(RENDERED_SESSION_SCOPED_MESSAGES) > 0)
-			{
-				dirty();
-			}
-
-			// see if any component related feedback messages were left unrendered and warn if in
-			// dev mode
-			if (getApplication().usesDevelopmentConfig())
-			{
-				List<FeedbackMessage> messages = getFeedbackMessages().messages(
-					WebSession.MESSAGES_FOR_COMPONENTS);
-				for (FeedbackMessage message : messages)
-				{
-					if (!message.isRendered())
-					{
-						logger.warn(
-							"Component-targetted feedback message was left unrendered. This could be because you are missing a FeedbackPanel on the page.  Message: {}",
-							message);
-					}
-				}
-			}
-
-			cleanupComponentFeedbackMessages();
-		}
-	}
-
-	/**
-	 * Clear all feedback messages
-	 */
-	protected void cleanupComponentFeedbackMessages()
-	{
-		// clean up all component related feedback messages
-		getFeedbackMessages().clear(WebSession.MESSAGES_FOR_COMPONENTS);
 	}
 
 	/**

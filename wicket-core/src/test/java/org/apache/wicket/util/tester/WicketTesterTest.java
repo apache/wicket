@@ -893,7 +893,7 @@ public class WicketTesterTest extends WicketTestCase
 
 		form.setValue("text", "XX");
 		setTextFieldAndAssertSubmit(false);
-		Session.get().cleanupFeedbackMessages();
+		tester.clearFeedbackMessages();
 
 		form.setValue("text", "XXXYYYXXX");
 		setTextFieldAndAssertSubmit(true);

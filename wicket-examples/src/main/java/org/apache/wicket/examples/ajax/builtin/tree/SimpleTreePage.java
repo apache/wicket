@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples.ajax.builtin.tree;
 
-import org.apache.wicket.markup.html.tree.AbstractTree;
-import org.apache.wicket.markup.html.tree.BaseTree;
-import org.apache.wicket.markup.html.tree.LinkTree;
+import org.apache.wicket.extensions.markup.html.tree.AbstractTree;
+import org.apache.wicket.extensions.markup.html.tree.BaseTree;
+import org.apache.wicket.extensions.markup.html.tree.LinkTree;
 
 
 /**
@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.tree.LinkTree;
  * @author Matej
  * 
  */
+@Deprecated
 public class SimpleTreePage extends BaseTreePage
 {
 	private static final long serialVersionUID = 1L;

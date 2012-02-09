@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.response.filter.IResponseFilter;
-import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import org.apache.wicket.util.time.Duration;
 
 
@@ -148,7 +147,7 @@ public interface IRequestCycleSettings
 	/**
 	 * Gets whether Wicket should try to get extensive client info by redirecting to
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
-	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * default implementation of {@link org.apache.wicket.Session#getClientInfo()}, so if that method is
 	 * overridden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @return Whether to gather extensive client info
@@ -197,13 +196,6 @@ public interface IRequestCycleSettings
 	Duration getTimeout();
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#getUnexpectedExceptionDisplay()
-	 * 
-	 * @return UnexpectedExceptionDisplay
-	 */
-	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
-
-	/**
 	 * @param bufferResponse
 	 *            True if this application should buffer responses.
 	 */
@@ -212,7 +204,7 @@ public interface IRequestCycleSettings
 	/**
 	 * Sets whether Wicket should try to get extensive client info by redirecting to
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
-	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * default implementation of {@link org.apache.wicket.Session#getClientInfo()}, so if that method is
 	 * overridden, there is no guarantee this method will be taken into account.
 	 * 
 	 * <p>
@@ -286,9 +278,4 @@ public interface IRequestCycleSettings
 	 * @param timeout
 	 */
 	void setTimeout(Duration timeout);
-
-	/**
-	 * @param unexpectedExceptionDisplay
-	 */
-	void setUnexpectedExceptionDisplay(final UnexpectedExceptionDisplay unexpectedExceptionDisplay);
 }

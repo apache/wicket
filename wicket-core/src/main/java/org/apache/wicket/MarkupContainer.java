@@ -1561,7 +1561,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// Go back to where we were and move the markup stream forward to whatever the next
 			// element is.
 			markupStream.setCurrentIndex(index);
-			MarkupElement elem = markupStream.get();
+
 			if (rawMarkup)
 			{
 				markupStream.next();

@@ -67,7 +67,6 @@ public class DiskDataStore implements IDataStore
 	 * @param applicationName
 	 * @param fileStoreFolder
 	 * @param maxSizePerSession
-	 * @param fileChannelPoolCapacity
 	 */
 	public DiskDataStore(final String applicationName, final File fileStoreFolder,
 		final Bytes maxSizePerSession)
@@ -215,17 +214,22 @@ public class DiskDataStore implements IDataStore
 			{
 				InputStream stream = new FileInputStream(index);
 				ObjectInputStream ois = new ObjectInputStream(stream);
-				Map<String, SessionEntry> map = (Map<String, SessionEntry>)ois.readObject();
-				sessionEntryMap.clear();
-				sessionEntryMap.putAll(map);
-
-				for (Entry<String, SessionEntry> entry : sessionEntryMap.entrySet())
+				try
 				{
-					// initialize the diskPageStore reference
-					SessionEntry sessionEntry = entry.getValue();
-					sessionEntry.diskDataStore = this;
+					Map<String, SessionEntry> map = (Map<String, SessionEntry>)ois.readObject();
+					sessionEntryMap.clear();
+					sessionEntryMap.putAll(map);
+
+					for (Entry<String, SessionEntry> entry : sessionEntryMap.entrySet())
+					{
+						// initialize the diskPageStore reference
+						SessionEntry sessionEntry = entry.getValue();
+						sessionEntry.diskDataStore = this;
+					}
+				} finally {
+					stream.close();
+					ois.close();
 				}
-				stream.close();
 			}
 			catch (Exception e)
 			{
@@ -249,17 +253,22 @@ public class DiskDataStore implements IDataStore
 			{
 				OutputStream stream = new FileOutputStream(index);
 				ObjectOutputStream oos = new ObjectOutputStream(stream);
-				Map<String, SessionEntry> map = new HashMap<String, SessionEntry>(
-					sessionEntryMap.size());
-				for (Entry<String, SessionEntry> e : sessionEntryMap.entrySet())
+				try
 				{
-					if (e.getValue().unbound == false)
+					Map<String, SessionEntry> map = new HashMap<String, SessionEntry>(
+						sessionEntryMap.size());
+					for (Entry<String, SessionEntry> e : sessionEntryMap.entrySet())
 					{
-						map.put(e.getKey(), e.getValue());
+						if (e.getValue().unbound == false)
+						{
+							map.put(e.getKey(), e.getValue());
+						}
 					}
+					oos.writeObject(map);
+				} finally {
+					stream.close();
+					oos.close();
 				}
-				oos.writeObject(map);
-				stream.close();
 			}
 			catch (Exception e)
 			{

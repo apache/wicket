@@ -36,10 +36,12 @@ import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,8 +270,16 @@ public abstract class Session implements IClusterable, IEventSink
 	/**
 	 * Cleans up all rendered feedback messages and any unrendered, dangling feedback messages there
 	 * may be left after that.
+	 * 
+	 * @deprecated see
+	 *             {@link IApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)}
+	 *             for cleanup during testing see {@link BaseWicketTester#cleanupFeedbackMessages()}
 	 */
-	public abstract void cleanupFeedbackMessages();
+	@Deprecated
+	public final void cleanupFeedbackMessages()
+	{
+		throw new UnsupportedOperationException("Deprecated, see the javadoc");
+	}
 
 
 	/**
@@ -640,10 +650,25 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void detach()
 	{
+		detachFeedback();
+
 		if (sessionInvalidated)
 		{
 			invalidateNow();
 		}
+	}
+
+	private void detachFeedback()
+	{
+		final int removed = feedbackMessages.clear(getApplication().getApplicationSettings()
+			.getFeedbackMessageCleanupFilter());
+
+		if (removed != 0)
+		{
+			dirty();
+		}
+
+		feedbackMessages.detach();
 	}
 
 	/**
@@ -838,7 +863,7 @@ public abstract class Session implements IClusterable, IEventSink
 
 	/**
 	 * Returns the {@link IPageManager} instance.
-	 *
+	 * 
 	 * @return {@link IPageManager} instance.
 	 */
 	public final IPageManager getPageManager()

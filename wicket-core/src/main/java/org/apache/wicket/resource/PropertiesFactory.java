@@ -147,7 +147,7 @@ public class PropertiesFactory implements IPropertiesFactory
 			while ((properties == null) && iter.hasNext())
 			{
 				IPropertiesLoader loader = iter.next();
-				String fullPath = path + loader.getFileExtension();
+				String fullPath = path + "." + loader.getFileExtension();
 
 				// If not in the cache than try to load properties
 				IResourceStream resourceStream = context.getResourceStreamLocator()

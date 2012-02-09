@@ -1174,9 +1174,6 @@ public final class Url implements Serializable
 	 * This code correlates to 
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-4303">WICKET-4303</a>
 	 *
-	 * @param url
-	 *         unprocessed url
-	 *
 	 * @return canonical url
 	 */
 	public Url canonical()

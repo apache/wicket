@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
@@ -68,7 +69,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	/** In case of the inherited markup, this is the base markup */
 	private transient Markup baseMarkup;
 
-	/** The encoding as found in <?xml ... encoding="" ?>. Null, else */
+	/** The encoding as found in &lt;?xml ... encoding="" ?&gt;. {@code null}, otherwise */
 	private String encoding;
 
 	/** Wicket namespace: see WICKET_XHTML_DTD */
@@ -100,14 +101,9 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	public MarkupResourceStream(final IResourceStream resourceStream,
 		final ContainerInfo containerInfo, final Class<?> markupClass)
 	{
-		this.resourceStream = resourceStream;
+		this.resourceStream = Args.notNull(resourceStream, "resourceStream");
 		this.containerInfo = containerInfo;
 		markupClassName = markupClass == null ? null : markupClass.getName();
-
-		if (resourceStream == null)
-		{
-			throw new IllegalArgumentException("Parameter 'resourceStream' must not be null");
-		}
 
 		setWicketNamespace(MarkupParser.WICKET);
 	}
@@ -267,7 +263,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		this.wicketNamespace = wicketNamespace;
 		wicketId = wicketNamespace + ":id";
 
-		if (!MarkupParser.WICKET.equals(wicketNamespace))
+		if (!MarkupParser.WICKET.equals(wicketNamespace) && log.isDebugEnabled())
 		{
 			log.debug("You are using a non-standard namespace name: '{}'", wicketNamespace);
 		}
@@ -386,7 +382,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	}
 
 	/**
-	 * @see href http://www.w3.org/TR/html5-diff/#doctype
+	 * @see <a href="http://www.w3.org/TR/html5-diff/#doctype">DOCTYPE</a>
 	 * @return True, if doctype == &lt;!DOCTYPE html&gt;
 	 */
 	public boolean isHtml5()

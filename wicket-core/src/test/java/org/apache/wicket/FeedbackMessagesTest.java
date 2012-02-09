@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import junit.framework.Assert;
 
-import org.apache.wicket.feedback.FeedbackMessage;
 import org.junit.Test;
 
 /**
@@ -40,9 +39,6 @@ public class FeedbackMessagesTest extends WicketTestCase
 		page.debug("debug message");
 		page.info("info message");
 		page.error("error message");
-		Assert.assertTrue(tester.getLastRenderedPage()
-			.getSession()
-			.getFeedbackMessages()
-			.hasMessageFor(page, FeedbackMessage.ERROR));
+		Assert.assertTrue(tester.getLastRenderedPage().hasErrorMessage());
 	}
 }

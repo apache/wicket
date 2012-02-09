@@ -65,7 +65,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -83,7 +83,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.mock.MockApplication;
@@ -187,6 +186,8 @@ public class BaseWicketTester
 	private boolean useRequestUrlAsBase = true;
 
 	private IRequestHandler forcedHandler;
+
+	private IFeedbackMessageFilter originalFeedbackMessageCleanupFilter;
 
 	// Simulates the cookies maintained by the browser
 	private final List<Cookie> browserCookies = Generics.newArrayList();
@@ -301,6 +302,12 @@ public class BaseWicketTester
 		application.setRequestCycleProvider(new TestRequestCycleProvider(
 			application.getRequestCycleProvider()));
 
+		// set a feedback message filter that will not remove any messages
+		originalFeedbackMessageCleanupFilter = application.getApplicationSettings()
+			.getFeedbackMessageCleanupFilter();
+		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
+			IFeedbackMessageFilter.NONE);
+
 		IPageManagerProvider pageManagerProvider = newTestPageManagerProvider();
 		if (pageManagerProvider != null)
 		{
@@ -376,13 +383,44 @@ public class BaseWicketTester
 		ServletWebRequest servletWebRequest = newServletWebRequest();
 		requestCycle = application.createRequestCycle(servletWebRequest,
 			newServletWebResponse(servletWebRequest));
-		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
 
 		if (session == null)
 		{
 			newSession();
 		}
+	}
+
+	/**
+	 * Cleans up feedback messages. This usually happens on detach, but is disabled in unit testing
+	 * so feedback mesasges can be examined.
+	 */
+	public void cleanupFeedbackMessages()
+	{
+		cleanupFeedbackMessages(originalFeedbackMessageCleanupFilter);
+	}
+
+	/**
+	 * Removes all feedback messages
+	 */
+	public void clearFeedbackMessages()
+	{
+		cleanupFeedbackMessages(IFeedbackMessageFilter.ALL);
+	}
+
+	/**
+	 * Cleans up feedback messages given the specified filter.
+	 * 
+	 * @param filter
+	 *            filter used to cleanup messages, accepted messages will be removed
+	 */
+	private void cleanupFeedbackMessages(IFeedbackMessageFilter filter)
+	{
+		application.getApplicationSettings().setFeedbackMessageCleanupFilter(filter);
+		getLastRenderedPage().detach();
+		getSession().detach();
+		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
+			IFeedbackMessageFilter.NONE);
 	}
 
 	/**
@@ -592,15 +630,6 @@ public class BaseWicketTester
 
 		try
 		{
-			if (!redirect)
-			{
-				/*
-				 * we do not reset the session during redirect processing because we want to
-				 * preserve the state before the redirect, eg any error messages reported
-				 */
-				session.cleanupFeedbackMessages();
-			}
-
 			if (getLastResponse() != null)
 			{
 				// transfer cookies from previous response to this request, quirky but how old stuff
@@ -758,9 +787,10 @@ public class BaseWicketTester
 	 * @param page
 	 * @return Page
 	 */
-	public Page startPage(final Page page)
+	@SuppressWarnings("unchecked")
+	public <T extends Page> T startPage(final T page)
 	{
-		return startPage(new PageProvider(page));
+		return (T)startPage(new PageProvider(page));
 	}
 
 	/**
@@ -1111,7 +1141,7 @@ public class BaseWicketTester
 
 		// prepare the request
 		request.setUrl(application.getRootRequestMapper().mapHandler(
-				new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
+			new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
 
 		// process the request
 		processRequest();
@@ -1198,7 +1228,8 @@ public class BaseWicketTester
 		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
-			fail(String.format("Cannot instantiate component with type '%s' because of '%s'", componentClass.getName(), e.getMessage()));
+			fail(String.format("Cannot instantiate component with type '%s' because of '%s'",
+				componentClass.getName(), e.getMessage()));
 		}
 
 		// process the component
@@ -1615,7 +1646,7 @@ public class BaseWicketTester
 	public Result ifContains(String pattern)
 	{
 		return isTrue("pattern '" + pattern + "' not found in:\n" + getLastResponseAsString(),
-				getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
+			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -1628,7 +1659,7 @@ public class BaseWicketTester
 	public Result ifContainsNot(String pattern)
 	{
 		return isFalse("pattern '" + pattern + "' found",
-				getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
+			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -1898,8 +1929,8 @@ public class BaseWicketTester
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
 		return isTrue(
-				"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
-				messages.isEmpty());
+			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -1926,10 +1957,9 @@ public class BaseWicketTester
 	 */
 	public List<Serializable> getMessages(final int level)
 	{
-		FeedbackMessages feedbackMessages = Session.get().getFeedbackMessages();
-		List<FeedbackMessage> allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
+
+		List<FeedbackMessage> allMessages = new FeedbackCollector(getLastRenderedPage()).collect(new IFeedbackMessageFilter()
 		{
-			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean accept(FeedbackMessage message)
@@ -1937,7 +1967,6 @@ public class BaseWicketTester
 				return message.getLevel() == level;
 			}
 		});
-
 		List<Serializable> actualMessages = Generics.newArrayList();
 		for (FeedbackMessage message : allMessages)
 		{
@@ -1983,8 +2012,9 @@ public class BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(org.apache.wicket.Component...)}. This method actually tests that a
-	 * <code>Component</code> is on the Ajax response sent back to the client.
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(org.apache.wicket.Component...)}. This
+	 * method actually tests that a <code>Component</code> is on the Ajax response sent back to the
+	 * client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript. But it shouldn't be needed because you have to trust that the Wicket
@@ -2067,7 +2097,7 @@ public class BaseWicketTester
 
 	/**
 	 * Simulates the firing of all ajax timer behaviors on the page
-	 *
+	 * 
 	 * @param container
 	 */
 	public void executeAllTimerBehaviors(final MarkupContainer container)
@@ -2085,8 +2115,8 @@ public class BaseWicketTester
 					checkUsability(component, true);
 
 					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
-							component.getClassRelativePath());
-					AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior) b;
+						component.getClassRelativePath());
+					AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior)b;
 					if (!timer.isStopped())
 					{
 						executeBehavior(timer);

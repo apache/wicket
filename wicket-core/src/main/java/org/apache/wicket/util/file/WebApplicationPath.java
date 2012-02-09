@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
 import org.apache.wicket.util.string.StringList;
@@ -36,15 +35,12 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Johan Compagner
  */
-public final class WebApplicationPath implements IResourcePath
+public final class WebApplicationPath extends Path
 {
 	private final static Logger log = LoggerFactory.getLogger(WebApplicationPath.class);
 
 	/** The list of urls in the path */
 	private final List<String> webappPaths = new ArrayList<String>();
-
-	/** The list of folders in the path */
-	private final List<Folder> folders = new ArrayList<Folder>();
 
 	/** The web apps servlet context */
 	private final ServletContext servletContext;
@@ -73,7 +69,7 @@ public final class WebApplicationPath implements IResourcePath
 		final Folder folder = new Folder(path);
 		if (folder.exists())
 		{
-			folders.add(folder);
+			super.add(folder);
 		}
 		else
 		{
@@ -96,41 +92,42 @@ public final class WebApplicationPath implements IResourcePath
 	@Override
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
-		for (Folder folder : folders)
-		{
-			final File file = new File(folder, pathname);
-			if (file.exists())
-			{
-				return new FileResourceStream(file);
-			}
-		}
+		IResourceStream resourceStream = super.find(clazz, pathname);
 
-		for (String path : webappPaths)
+		if (resourceStream == null)
 		{
-			try
+			for (String path : webappPaths)
 			{
-				final URL url = servletContext.getResource(path + pathname);
-				if (url != null)
+				try
 				{
-					return new UrlResourceStream(url);
+					final URL url = servletContext.getResource(path + pathname);
+					if (url != null)
+					{
+						resourceStream = new UrlResourceStream(url);
+						break;
+					}
+				}
+				catch (Exception ex)
+				{
+					// ignore, file couldn't be found
 				}
 			}
-			catch (Exception ex)
-			{
-				// ignore, file couldn't be found
-			}
 		}
 
-		return null;
+		return resourceStream;
 	}
 
+	public List<String> getWebappPaths()
+	{
+		return webappPaths;
+	}
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: " +
+		return "[folders = " + StringList.valueOf(getFolders()) + ", webapppaths: " +
 			StringList.valueOf(webappPaths) + "]";
 	}
 }

@@ -67,6 +67,13 @@ public class Page_1 extends WebPage
 		panel.setRenderBodyOnly(true);
 		panelContainer.add(panel);
 
+		MarkupContainer xsltContainer = new XsltOutputTransformerContainer("test4");
+		add(xsltContainer);
+		Border border2 = new SimpleBorder("myBorder2");
+		border2.setRenderBodyOnly(false);
+		border2.add(new AttributeModifier("testAttr", "myValue"));
+		xsltContainer.add(border2);
+
 		MarkupContainer borderContainer = new AbstractOutputTransformerContainer("test3")
 		{
 			private static final long serialVersionUID = 1L;
@@ -83,18 +90,9 @@ public class Page_1 extends WebPage
 		Border border = new SimpleBorder("myBorder");
 		borderContainer.add(border);
 
-		MarkupContainer xsltContainer = new XsltOutputTransformerContainer("test4");
-		add(xsltContainer);
-
-		Border border2 = new SimpleBorder("myBorder2");
-		border2.setRenderBodyOnly(false);
-		border2.add(new AttributeModifier("testAttr", "myValue"));
-		xsltContainer.add(border2);
-
 		MarkupContainer xsltContainer2 = new XsltOutputTransformerContainer("test5", null,
 			"org/apache/wicket/markup/outputTransformer/anyName.xsl");
 		add(xsltContainer2);
-
 		Border border3 = new SimpleBorder("myBorder3");
 		border3.setRenderBodyOnly(false);
 		border3.add(new AttributeModifier("testAttr", "myValue"));

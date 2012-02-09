@@ -25,11 +25,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Holds list of feedback messages. The list can be added to, cleared, queried and filtered.
@@ -74,7 +72,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 		}
 		messages.add(message);
 	}
-	
+
 	/**
 	 * Adds a message
 	 * 
@@ -220,50 +218,53 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
-	 * Looks up whether the given component registered a message with this list.
+	 * Checks if a message of the specified {@code level} was registered
 	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @return whether the given component registered a message with this list
-	 */
-	public final boolean hasMessageFor(Component component)
-	{
-		return hasMessage(new ComponentFeedbackMessageFilter(component));
-	}
-
-	/**
-	 * Looks up whether the given component registered a message with this list with the given
-	 * level.
-	 * 
-	 * @param component
-	 *            The component to look up whether it registered a message
 	 * @param level
 	 *            The level of the message
-	 * @return Whether the given component registered a message with this list with the given level
+	 * @return {code true} iff a message with the specified {@code level} was registered
 	 */
-	public final boolean hasMessageFor(final Component component, final int level)
+	public final boolean hasMessage(final int level)
 	{
-		return hasMessage(new IFeedbackMessageFilter()
+		for (FeedbackMessage message : messages)
 		{
-			@Override
-			public boolean accept(FeedbackMessage message)
+			if (message.isLevel(level))
 			{
-				return Objects.equal(message.getReporter(), component) && message.isLevel(level);
+				return true;
 			}
-		});
+		}
+		return false;
 	}
 
 	/**
-	 * Convenience method that looks up whether the given component registered a message with this
-	 * list with the level ERROR.
+	 * Retrieves the first message
 	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @return whether the given component registered a message with this list with level ERROR
+	 * @param level
+	 *            The level of the message
+	 * @return message or {@code null} if none
 	 */
-	public final boolean hasErrorMessageFor(Component component)
+	public final FeedbackMessage first()
 	{
-		return hasMessageFor(component, FeedbackMessage.ERROR);
+		return messages.size() > 0 ? messages.get(0) : null;
+	}
+
+	/**
+	 * Retrieves the first message matching the specified {@code level}
+	 * 
+	 * @param level
+	 *            The level of the message
+	 * @return matching message or {@code null} if none
+	 */
+	public final FeedbackMessage first(final int level)
+	{
+		for (FeedbackMessage message : messages)
+		{
+			if (message.isLevel(level))
+			{
+				return message;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -300,36 +301,6 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 			}
 		}
 		return list;
-	}
-
-	/**
-	 * Looks up a single message for the given component.
-	 * 
-	 * @param component
-	 *            the component to look up the message for
-	 * @return the message that is found for the given component (first match) or null if none was
-	 *         found
-	 *         
-	 * @deprecated use {@link FeedbackMessages#messagesForComponent(org.apache.wicket.Component)} instead
-	 */
-	@Deprecated
-	public final FeedbackMessage messageForComponent(final Component component)
-	{
-		final List<FeedbackMessage> list = messagesForComponent(component);
-
-		return list.isEmpty() ? null : list.get(0);
-	}
-
-	/**
-	 * Looks up the messages for the given component.
-	 * 
-	 * @param component
-	 *            the component to look up the message for
-	 * @return the messages that were found for the given component
-	 */
-	public final List<FeedbackMessage> messagesForComponent(final Component component)
-	{
-		return messages(new ComponentFeedbackMessageFilter(component)); 
 	}
 
 	/**
@@ -380,5 +351,26 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	public String toString()
 	{
 		return "[feedbackMessages = " + StringList.valueOf(messages) + ']';
+	}
+
+	/**
+	 * Retrieves all stored messages as an unmodifiable list
+	 * 
+	 * @return stored messages as unmodifiable list
+	 */
+	public List<FeedbackMessage> toList()
+	{
+		return Collections.unmodifiableList(messages);
+	}
+
+	/**
+	 * Detaches each stored message
+	 */
+	public void detach()
+	{
+		for (FeedbackMessage message : messages)
+		{
+			message.detach();
+		}
 	}
 }

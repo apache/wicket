@@ -144,15 +144,6 @@
 	</filter>
 
 	<filter>
-		<filter-name>NestedApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>org.apache.wicket.examples.nested.NestedApplication</param-value>
-		</init-param>
-	</filter>
-
-	<filter>
 		<filter-name>GuestBookApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -257,6 +248,15 @@
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>org.apache.wicket.examples.repeater.RepeaterApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>TreeApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.tree.TreeApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -474,6 +474,13 @@
 	</filter-mapping>
 
 	<filter-mapping>
+		<filter-name>TreeApplication</filter-name>
+		<url-pattern>/tree/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
 		<filter-name>NiceUrlApplication</filter-name>
 		<url-pattern>/niceurl/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
@@ -494,13 +501,6 @@
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
-	<filter-mapping>
-		<filter-name>NestedApplication</filter-name>
-		<url-pattern>/nested/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-	</filter-mapping>
-	 
 	<filter-mapping>
 		<filter-name>PubApplication</filter-name>
 		<url-pattern>/pub/*</url-pattern>

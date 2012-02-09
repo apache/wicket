@@ -36,6 +36,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.event.IEventSource;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -279,6 +280,13 @@ public abstract class Component
 	{
 		private static final long serialVersionUID = 1L;
 	};
+
+	/** meta data for user specified markup id */
+	private static final MetaDataKey<FeedbackMessages> FEEDBACK_KEY = new MetaDataKey<FeedbackMessages>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
@@ -1106,8 +1114,8 @@ public abstract class Component
 	 */
 	public final void debug(final Serializable message)
 	{
-		getSession().getFeedbackMessages().debug(this, message);
-		getSession().dirty();
+		getFeedbackMessages().debug(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -1170,6 +1178,8 @@ public abstract class Component
 
 		requestFlags = 0;
 
+		detachFeedback();
+
 		internalDetach();
 
 		// notify any detach listener
@@ -1178,6 +1188,30 @@ public abstract class Component
 		if (detachListener != null)
 		{
 			detachListener.onDetach(this);
+		}
+	}
+
+	private void detachFeedback()
+	{
+		FeedbackMessages feedback = getMetaData(FEEDBACK_KEY);
+		if (feedback != null)
+		{
+			final int removed = feedback.clear(getApplication().getApplicationSettings()
+				.getFeedbackMessageCleanupFilter());
+
+			if (removed != 0)
+			{
+				addStateChange();
+			}
+
+			if (feedback.isEmpty())
+			{
+				setMetaData(FEEDBACK_KEY, null);
+			}
+			else
+			{
+				feedback.detach();
+			}
 		}
 	}
 
@@ -1207,20 +1241,20 @@ public abstract class Component
 	 */
 	public final void error(final Serializable message)
 	{
-		getSession().getFeedbackMessages().error(this, message);
-		getSession().dirty();
+		getFeedbackMessages().error(this, message);
+		addStateChange();
 	}
 
 	/**
-	 * Registers an fatal error feedback message for this component
-	 * 
+	 * Registers a fatal feedback message for this component
+	 *
 	 * @param message
 	 *            The feedback message
 	 */
 	public final void fatal(final Serializable message)
 	{
-		getSession().getFeedbackMessages().fatal(this, message);
-		getSession().dirty();
+		getFeedbackMessages().fatal(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -1318,23 +1352,6 @@ public abstract class Component
 	public final boolean getEscapeModelStrings()
 	{
 		return getFlag(FLAG_ESCAPE_MODEL_STRINGS);
-	}
-
-	/**
-	 * @return Any feedback message for this component
-	 */
-	@SuppressWarnings("deprecation")
-	public final FeedbackMessage getFeedbackMessage()
-	{
-		return getSession().getFeedbackMessages().messageForComponent(this);
-	}
-
-	/**
-	 * @return All feedback messages for this component
-	 */
-	public final List<FeedbackMessage> getFeedbackMessages()
-	{
-		return getSession().getFeedbackMessages().messagesForComponent(this);
 	}
 
 	/**
@@ -1623,7 +1640,8 @@ public abstract class Component
 			catch (Exception ex)
 			{
 				// wrap the exception so that it brings info about the component
-				RuntimeException rex = new RuntimeException("An error occurred while getting the model object for Component: " +
+				RuntimeException rex = new RuntimeException(
+					"An error occurred while getting the model object for Component: " +
 						this.toString(true), ex);
 				throw rex;
 			}
@@ -1932,19 +1950,49 @@ public abstract class Component
 	}
 
 	/**
+	 * Gets feedback messages for this component. This method will instantiate a
+	 * {@link FeedbackMessages} instance and add it to the component metadata, even when called on a
+	 * component that has no feedback messages, to avoid the overhead use
+	 * {@link #hasFeedbackMessage()}
+	 * 
+	 * @return feedback messages instance
+	 */
+	public FeedbackMessages getFeedbackMessages()
+	{
+		FeedbackMessages messages = getMetaData(FEEDBACK_KEY);
+		if (messages == null)
+		{
+			messages = new FeedbackMessages();
+			setMetaData(FEEDBACK_KEY, messages);
+		}
+		return messages;
+	}
+
+	/**
 	 * @return True if this component has an error message
 	 */
 	public final boolean hasErrorMessage()
 	{
-		return getSession().getFeedbackMessages().hasErrorMessageFor(this);
+		FeedbackMessages messages = getMetaData(FEEDBACK_KEY);
+		if (messages == null)
+		{
+			return false;
+		}
+		return messages.hasMessage(FeedbackMessage.ERROR);
 	}
 
 	/**
 	 * @return True if this component has some kind of feedback message
+	 * 
 	 */
 	public final boolean hasFeedbackMessage()
 	{
-		return getSession().getFeedbackMessages().hasMessageFor(this);
+		FeedbackMessages messages = getMetaData(FEEDBACK_KEY);
+		if (messages == null)
+		{
+			return false;
+		}
+		return messages.size() > 0;
 	}
 
 	/**
@@ -1955,8 +2003,8 @@ public abstract class Component
 	 */
 	public final void info(final Serializable message)
 	{
-		getSession().getFeedbackMessages().info(this, message);
-		getSession().dirty();
+		getFeedbackMessages().info(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -1967,8 +2015,8 @@ public abstract class Component
 	 */
 	public final void success(final Serializable message)
 	{
-		getSession().getFeedbackMessages().success(this, message);
-		getSession().dirty();
+		getFeedbackMessages().success(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -3402,8 +3450,8 @@ public abstract class Component
 	 */
 	public final void warn(final Serializable message)
 	{
-		getSession().getFeedbackMessages().warn(this, message);
-		getSession().dirty();
+		getFeedbackMessages().warn(this, message);
+		addStateChange();
 	}
 
 	/**
@@ -3883,7 +3931,7 @@ public abstract class Component
 			// Apply behavior modifiers
 			List<? extends Behavior> behaviors = getBehaviors();
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
-					(isIgnoreAttributeModifier() == false))
+				(isIgnoreAttributeModifier() == false))
 			{
 				tag = tag.mutable();
 				for (Behavior behavior : behaviors)

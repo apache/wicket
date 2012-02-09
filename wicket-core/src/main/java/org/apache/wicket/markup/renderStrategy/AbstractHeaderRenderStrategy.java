@@ -18,6 +18,8 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.application.HeaderContributorListenerCollection;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer.HeaderStreamState;
@@ -145,10 +147,13 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 
 		if (Application.exists())
 		{
-			for (IHeaderContributor listener : Application.get()
-				.getHeaderContributorListenerCollection())
+			HeaderContributorListenerCollection headerContributorListenerCollection =
+					Application.get().getHeaderContributorListenerCollection();
+			IHeaderResponse headerResponse = headerContainer.getHeaderResponse();
+
+			for (IHeaderContributor listener : headerContributorListenerCollection)
 			{
-				listener.renderHead(headerContainer.getHeaderResponse());
+				listener.renderHead(headerResponse);
 			}
 		}
 	}

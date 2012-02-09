@@ -18,7 +18,6 @@ package org.apache.wicket.markup.head;
 
 import java.io.Closeable;
 
-import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 

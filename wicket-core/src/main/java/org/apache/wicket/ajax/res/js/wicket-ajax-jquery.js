@@ -65,7 +65,7 @@
 
 	/**
 	 * Creates an iframe that can be used to load data asynchronously or as a
-	 * target for form submit.
+	 * target for Ajax form submit.
 	 *
 	 * @param {String} the value of the iframe's name attribute
 	 */
@@ -362,7 +362,9 @@
 
 		/**
 		 * A helper function that executes an array of handlers (before, success, failure)
-		 * @param {Array} handlers - the handlers to execute
+		 *
+		 * @param {Array[FunctionBody]} handlers - the handlers to execute
+		 * @param {Array[String]} argumentNames - the names of the arguments which are passes to the handles
 		 */
 		_executeHandlers: function (handlers, argumentNames) {
 			if (jQuery.isArray(handlers)) {
@@ -439,7 +441,7 @@
 					var dep = deps[i],
 						extraParam = {};
 					if (jQuery.isFunction(dep)) {
-						extraParam = dep();
+						extraParam = dep(attrs);
 					} else {
 						extraParam = new Function('attrs', dep)(attrs);
 					}
@@ -474,7 +476,7 @@
 			data = jQuery.param(data, true);
 
 			// execute the request 
-			jQuery.ajax({
+			var jqXHR = jQuery.ajax({
 				url: attrs.u,
 				type: attrs.m,
 				context: self,
@@ -487,7 +489,7 @@
 							var precondition = preconditions[p];
 							var result;
 							if (jQuery.isFunction(precondition)) {
-								result = precondition();
+								result = precondition(attrs, jqXHR, settings);
 							} else {
 								result = new Function('attrs', 'jqXHR', 'settings', precondition)(attrs, jqXHR, settings);
 							}
@@ -506,7 +508,7 @@
 
 					if (attrs.i) {
 						// show the indicator
-						Wicket.DOM.show(attrs.i);
+						Wicket.DOM.showIncrementally(attrs.i);
 					}
 				},
 				data: data,
@@ -535,7 +537,7 @@
 				},
 				complete: function (jqXHR, textStatus) {
 					if (attrs.i) {
-						Wicket.DOM.hide(attrs.i);
+						Wicket.DOM.hideIncrementally(attrs.i);
 					}
 
 					self._executeHandlers(attrs.coh,
@@ -555,10 +557,17 @@
 				attrs.event.preventDefault();
 			}
 
-			return attrs.ad;
+			return jqXHR;
 		},
 
-		// Method that processes the <ajax-response>
+		/**
+		 * Method that processes the <ajax-response>.
+		 *
+		 * @param {XmlDocument} data - the <ajax-response> XML document
+		 * @param {String} textStatus - the response status as text (e.g. 'success', 'parsererror', etc.)
+		 * @param {Object} jqXHR - the jQuery wrapper around XMLHttpRequest
+		 * @param {Object} attrs - the Ajax request attributes
+		 */
 		processAjaxResponse: function (data, textStatus, jqXHR, attrs) {
 
 			if (jqXHR.readyState === 4) {
@@ -608,9 +617,11 @@
 				}
 				else {
 					// no redirect, just regular response
-					var responseAsText = jQuery(data).text();
-					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
-					Wicket.Log.info("\n" + responseAsText);
+					if (Wicket.Log.enabled()) {
+						var responseAsText = jQuery(data).text();
+						Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
+						Wicket.Log.info("\n" + responseAsText);
+					}
 
 					// invoke the loaded callback with an xml document
 					return this.loadedCallback(data, attrs);
@@ -1265,7 +1276,6 @@
 					Wicket.DOM.show(e);
 				}
 				e.setAttribute("showIncrementallyCount", count + 1);
-
 			},
 
 			/** call-counting implementation of Wicket.DOM.hide() */
@@ -1466,11 +1476,13 @@
 							var throttler = new Wicket.Throttler(postponeTimerOnUpdate);
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
-									return call.ajax(attrs);
+									call.ajax(attrs);
+									return attrs.ad;
 								}, this));
 						}
 						else {
-							return call.ajax(attrs);
+							call.ajax(attrs);
+							return attrs.ad;
 						}
 					});
 				});

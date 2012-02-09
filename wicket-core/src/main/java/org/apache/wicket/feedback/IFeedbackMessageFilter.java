@@ -40,6 +40,20 @@ public interface IFeedbackMessageFilter extends IClusterable
 	};
 
 	/**
+	 * Filter that does not match any message
+	 */
+	public static final IFeedbackMessageFilter NONE = new IFeedbackMessageFilter()
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public boolean accept(FeedbackMessage message)
+		{
+			return false;
+		}
+	};
+
+	/**
 	 * @param message
 	 *            The message to test for inclusion
 	 * @return True if the message should be included, false to exclude it
