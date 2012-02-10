@@ -85,7 +85,7 @@ public class MaximumValidator<Z extends Comparable<Z> & Serializable> extends Be
 	// TODO Wicket 1.6 - remove that method and make this class extending AbstractValidator
 	protected String resourceKey()
 	{
-		return Classes.simpleName(getClass());
+		return Classes.simpleName(MaximumValidator.class);
 	}
 
 }
