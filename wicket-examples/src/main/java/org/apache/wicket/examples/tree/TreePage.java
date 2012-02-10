@@ -38,7 +38,6 @@ import org.apache.wicket.examples.tree.content.SelectableFolderContent;
 import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree;
 import org.apache.wicket.extensions.markup.html.repeater.tree.theme.HumanTheme;
 import org.apache.wicket.extensions.markup.html.repeater.tree.theme.WindowsTheme;
-import org.apache.wicket.extensions.markup.html.repeater.util.ProviderSubset;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.Button;
@@ -47,7 +46,6 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -65,8 +63,6 @@ public abstract class TreePage extends WicketExamplePage
 
 	private FooProvider provider = new FooProvider();
 
-	private Set<Foo> state = new ProviderSubset<Foo>(provider);
-
 	private Content content;
 
 	private List<Content> contents;
@@ -83,7 +79,7 @@ public abstract class TreePage extends WicketExamplePage
 		Form<Void> form = new Form<Void>("form");
 		add(form);
 
-		tree = createTree(provider, newStateModel());
+		tree = createTree(provider, new FooExpansionModel());
 		tree.add(new Behavior()
 		{
 			private static final long serialVersionUID = 1L;
@@ -134,8 +130,7 @@ public abstract class TreePage extends WicketExamplePage
 			@Override
 			public void onClick()
 			{
-				((IDetachable)state).detach();
-				state = new InverseSet<Foo>(new ProviderSubset<Foo>(provider));
+				FooExpansion.get().expandAll();
 			}
 		});
 
@@ -146,8 +141,7 @@ public abstract class TreePage extends WicketExamplePage
 			@Override
 			public void onClick()
 			{
-				((IDetachable)state).detach();
-				state = new ProviderSubset<Foo>(provider);
+				FooExpansion.get().collapseAll();
 			}
 		});
 
@@ -160,26 +154,6 @@ public abstract class TreePage extends WicketExamplePage
 			{
 			}
 		});
-	}
-
-	private IModel<Set<Foo>> newStateModel()
-	{
-		return new AbstractReadOnlyModel<Set<Foo>>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Set<Foo> getObject()
-			{
-				return state;
-			}
-
-			@Override
-			public void detach()
-			{
-				((IDetachable)state).detach();
-			}
-		};
 	}
 
 	protected abstract AbstractTree<Foo> createTree(FooProvider provider, IModel<Set<Foo>> state);
@@ -231,5 +205,14 @@ public abstract class TreePage extends WicketExamplePage
 	protected Component newContentComponent(String id, IModel<Foo> model)
 	{
 		return content.newContentComponent(id, tree, model);
+	}
+
+	private class FooExpansionModel extends AbstractReadOnlyModel<Set<Foo>>
+	{
+		@Override
+		public Set<Foo> getObject()
+		{
+			return FooExpansion.get();
+		}
 	}
 }
