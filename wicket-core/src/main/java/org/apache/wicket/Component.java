@@ -1199,11 +1199,6 @@ public abstract class Component
 			final int removed = feedback.clear(getApplication().getApplicationSettings()
 				.getFeedbackMessageCleanupFilter());
 
-			if (removed != 0)
-			{
-				addStateChange();
-			}
-
 			if (feedback.isEmpty())
 			{
 				setMetaData(FEEDBACK_KEY, null);
@@ -1247,7 +1242,7 @@ public abstract class Component
 
 	/**
 	 * Registers a fatal feedback message for this component
-	 *
+	 * 
 	 * @param message
 	 *            The feedback message
 	 */
