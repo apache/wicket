@@ -77,13 +77,14 @@ public class Args
 	 * @throws IllegalArgumentException
 	 *             if the passed collection is either null or empty
 	 */
-	public static void notEmpty(final Collection<?> collection, final String message,
+	public static <T extends Collection<?>> T notEmpty(final T collection, final String message,
 		final Object... params)
 	{
 		if (collection == null || collection.isEmpty())
 		{
 			throw new IllegalArgumentException(Args.format(message, params));
 		}
+		return collection;
 	}
 
 	/**
@@ -94,9 +95,9 @@ public class Args
 	 * @throws IllegalArgumentException
 	 *             if the passed collection is either null or empty
 	 */
-	public static void notEmpty(final Collection<?> collection, final String name)
+	public static <T extends Collection<?>> T notEmpty(final T collection, final String name)
 	{
-		notEmpty(collection, "Collection '%s' may not be null or empty.", name);
+		return notEmpty(collection, "Collection '%s' may not be null or empty.", name);
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class Args
 	 * @param name
 	 * @throws IllegalArgumentException
 	 */
-	public static <T extends Comparable<T>> void withinRange(final T min, final T max,
+	public static <T extends Comparable<T>> T withinRange(final T min, final T max,
 		final T value, final String name)
 	{
 		notNull(min, name);
@@ -120,6 +121,7 @@ public class Args
 				String.format("Argument '%s' must have a value within [%s,%s], but was %s", name,
 					min, max, value));
 		}
+		return value;
 	}
 
 	/**
