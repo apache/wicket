@@ -380,7 +380,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			dt: 'html',
 			sh: [ doUpdateChoices ]
 		};
-	    attrs.ep[paramName] = processValue(value);
+	    attrs.ep[paramName] = value;
 	    Wicket.Ajax.ajax(attrs);
     }
     
@@ -392,10 +392,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 		Wicket.DOM.hide(indicatorId);
     }
     
-    function processValue(param) {
-        return Wicket.Form.encode(param);
-    }
-
     function showAutoComplete(){
         var input = Wicket.$(elementId);
         var container = getAutocompleteContainer();
