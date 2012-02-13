@@ -25,23 +25,29 @@ import org.apache.wicket.extensions.markup.html.repeater.tree.ISortableTreeProvi
  * {@link SingleSortState} object.
  * 
  * @author svenmeier
+ * @param <T>
  */
 public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T>
 {
-	private SingleSortState state = new SingleSortState();
+	private static final long serialVersionUID = 1L;
+
+	private SingleSortState<String> state = new SingleSortState<String>();
 
 	/**
 	 * @see ISortableDataProvider#getSortState()
 	 */
-	public final ISortState getSortState()
+	@SuppressWarnings("unchecked")
+	public final <S> ISortState<S> getSortState()
 	{
-		return state;
+		return (ISortState<S>)state;
 	}
 
 	/**
 	 * @see ISortableDataProvider#setSortState(org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState)
+	 * @param state
 	 */
-	public final void setSortState(ISortState state)
+	@SuppressWarnings("unchecked")
+	public final void setSortState(ISortState<?> state)
 	{
 		if (!(state instanceof SingleSortState))
 		{
@@ -49,7 +55,7 @@ public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T
 				"argument [state] must be an instance of SingleSortState, but it is [" +
 					state.getClass().getName() + "]:[" + state.toString() + "]");
 		}
-		this.state = (SingleSortState)state;
+		this.state = (SingleSortState<String>)state;
 	}
 
 	/**
@@ -57,7 +63,7 @@ public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T
 	 * 
 	 * @return current sort state
 	 */
-	public SortParam getSort()
+	public SortParam<String> getSort()
 	{
 		return state.getSort();
 	}
@@ -68,7 +74,7 @@ public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T
 	 * @param param
 	 *            parameter containing new sorting information
 	 */
-	public void setSort(SortParam param)
+	public void setSort(SortParam<String> param)
 	{
 		state.setSort(param);
 	}
@@ -83,7 +89,7 @@ public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T
 	 */
 	public void setSort(String property, boolean ascending)
 	{
-		setSort(new SortParam(property, ascending));
+		setSort(new SortParam<String>(property, ascending));
 	}
 
 	/**
