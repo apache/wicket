@@ -401,7 +401,7 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 		{
 			Args.notNull(component, "component");
 
-			if (component.getOutputMarkupId() == false)
+			if (component.getOutputMarkupId() == false && !(component instanceof Page))
 			{
 				throw new IllegalArgumentException(
 					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
