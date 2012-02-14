@@ -45,7 +45,7 @@ public class ApplicationListenerCollection extends ListenerCollection<IApplicati
 		{
 			public void notify(IApplicationListener listener)
 			{
-				listener.onAfterInitialized(application);
+				listener.onBeforeDestroyed(application);
 			}
 		});
 	}
