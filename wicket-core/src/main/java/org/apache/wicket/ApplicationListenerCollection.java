@@ -49,7 +49,7 @@ public class ApplicationListenerCollection extends ListenerCollection<IApplicati
 			@Override
 			public void notify(IApplicationListener listener)
 			{
-				listener.onAfterInitialized(application);
+				listener.onBeforeDestroyed(application);
 			}
 		});
 	}
