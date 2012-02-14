@@ -56,9 +56,8 @@ import org.slf4j.LoggerFactory;
  * component markup as well as evaluate arbitrary javascript.
  * <p>
  * A component whose markup needs to be updated should be added to this target via
- * AjaxRequestTarget#add(Component) method. Its body will be rendered and added to the
- * envelope when the target is processed, and refreshed on the client side when the ajax response is
- * received.
+ * AjaxRequestTarget#add(Component) method. Its body will be rendered and added to the envelope when
+ * the target is processed, and refreshed on the client side when the ajax response is received.
  * <p>
  * It is important that the component whose markup needs to be updated contains an id attribute in
  * the generated markup that is equal to the value retrieved from Component#getMarkupId(). This can
@@ -70,12 +69,12 @@ import org.slf4j.LoggerFactory;
  * AjaxRequestTarget#append/prependJavaScript(String). For example, this feature can be useful when
  * it is desirable to link component update with some javascript effects.
  * <p>
- * The target provides a listener interface {@link AjaxRequestTarget.IListener} that can be used to add code that
- * responds to various target events by adding listeners via
+ * The target provides a listener interface {@link AjaxRequestTarget.IListener} that can be used to
+ * add code that responds to various target events by adding listeners via
  * {@link #addListener(AjaxRequestTarget.IListener)}
- *
+ * 
  * @since 1.2
- *
+ * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
@@ -85,8 +84,8 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestHandler.class);
 
 	/**
-	 * A POJO-like that collects the data for the Ajax response written to the client
-	 * and serializes it to specific String-based format (XML, JSON, ...).
+	 * A POJO-like that collects the data for the Ajax response written to the client and serializes
+	 * it to specific String-based format (XML, JSON, ...).
 	 */
 	private final AbstractAjaxResponse responseObject;
 
@@ -107,19 +106,20 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param page
 	 */
 	public AjaxRequestHandler(final Page page)
 	{
 		this.page = Args.notNull(page, "page");
 
-		responseObject =  new XmlAjaxResponse(page) {
+		responseObject = new XmlAjaxResponse(page)
+		{
 
 			/**
-			 * Freezes the {@link AjaxRequestHandler#listeners}, and does not un-freeze them as the events will have been
-			 * fired by now.
-			 *
+			 * Freezes the {@link AjaxRequestHandler#listeners}, and does not un-freeze them as the
+			 * events will have been fired by now.
+			 * 
 			 * @param response
 			 */
 			@Override
@@ -151,8 +151,9 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			}
 
 			/**
-			 * Freezes the {@link AjaxRequestHandler#listeners} before firing the event and un-freezes them afterwards to
-			 * allow components to add more {@link AjaxRequestTarget.IListener}s for the second event.
+			 * Freezes the {@link AjaxRequestHandler#listeners} before firing the event and
+			 * un-freezes them afterwards to allow components to add more
+			 * {@link AjaxRequestTarget.IListener}s for the second event.
 			 */
 			@Override
 			protected void fireOnBeforeRespondListeners()
@@ -225,7 +226,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		{
 			Args.notNull(component, "component");
 
-			if (component.getOutputMarkupId() == false)
+			if (component.getOutputMarkupId() == false && !(component instanceof Page))
 			{
 				throw new IllegalArgumentException(
 					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
@@ -373,7 +374,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 
 	/**
 	 * Runs the configured {@link IResponseFilter}s over the constructed Ajax response
-	 *
+	 * 
 	 * @param contentResponse
 	 *            the Ajax {@link Response} body
 	 * @return filtered response
@@ -413,13 +414,13 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	/**
-	 *
+	 * 
 	 * @return
 	 */
 	@Override
 	public String getLastFocusedElementId()
 	{
-		WebRequest request = (WebRequest) page.getRequest();
+		WebRequest request = (WebRequest)page.getRequest();
 		String id = request.getHeader("Wicket-FocusedElementId");
 		return Strings.isEmpty(id) ? null : id;
 	}
@@ -475,7 +476,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		if (frozen)
 		{
 			throw new IllegalStateException(clazz.getSimpleName() + "s can no " +
-					" longer be added");
+				" longer be added");
 		}
 	}
 
