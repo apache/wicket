@@ -88,10 +88,7 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 			{
 				for (StringValue v : values)
 				{
-					if (!result.contains(v))
-					{
-						result.add(v);
-					}
+					result.add(v);
 				}
 			}
 		}
