@@ -129,13 +129,15 @@ public class ChoiceFilter<T> extends AbstractFilter
 	protected DropDownChoice<T> newDropDownChoice(final String id, final IModel<T> model,
 		final IModel<List<? extends T>> choices, final IChoiceRenderer<T> renderer)
 	{
-		return new DropDownChoice<T>(id, model, choices, renderer);
+		DropDownChoice<T> dropDownChoice = new DropDownChoice<T>(id, model, choices, renderer);
+		dropDownChoice.setNullValid(true);
+		return dropDownChoice;
 	}
 
 	/**
 	 * @return the DropDownChoice form component created to represent this filter
 	 */
-	public DropDownChoice<T> getChoice()
+	public final DropDownChoice<T> getChoice()
 	{
 		return choice;
 	}
