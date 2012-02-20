@@ -1041,12 +1041,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void dispatchEvent(final Page page, final String url)
 	{
-		// the current requst's url is most likely wicket/page?x-y.IFormSubmitListener-path-to-form
+		// the current request's url is most likely wicket/page?x-y.IFormSubmitListener-path-to-form
 		// while the passed in url is most likely page?x.y.IOnChangeListener-path-to-component
 		// we transform the passed in url into wicket/page?x-y.IOnChangeListener-path-to-component
 		// so the system mapper can interpret it
+		String urlWoJSessionId = Strings.stripJSessionId(url);
 		Url resolved = new Url(getRequest().getUrl());
-		resolved.resolveRelative(Url.parse(url));
+		resolved.resolveRelative(Url.parse(urlWoJSessionId));
 
 		IRequestMapper mapper = getApplication().getRootRequestMapper();
 		Request request = getRequest().cloneWithUrl(resolved);

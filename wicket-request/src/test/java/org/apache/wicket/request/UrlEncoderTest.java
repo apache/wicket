@@ -23,7 +23,7 @@ import org.junit.Test;
 /**
  * Tests for {@link UrlDecoder}
  */
-public class UrlEncoderTest
+public class UrlEncoderTest extends Assert
 {
 
 	/**
@@ -34,7 +34,19 @@ public class UrlEncoderTest
 	@Test
 	public void encodeApostrophe()
 	{
-		Assert.assertEquals("someone%27s%20bad%20url",
+		assertEquals("someone%27s%20bad%20url",
 			UrlEncoder.FULL_PATH_INSTANCE.encode("someone's bad url", CharEncoding.UTF_8));
+	}
+
+	/**
+	 * Do not encode semicolon in the Url's path because it is used in ';jsessionid=...'
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-4409
+	 */
+	@Test
+	public void dontEncodeSemicolon()
+	{
+		String encoded = UrlEncoder.PATH_INSTANCE.encode("path;jsessionid=1234567890", CharEncoding.UTF_8);
+		assertEquals("path;jsessionid=1234567890", encoded);
 	}
 }

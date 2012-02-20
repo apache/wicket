@@ -218,6 +218,8 @@ public class UrlEncoder
 				dontNeedEncoding.set('&');
 				dontNeedEncoding.set('=');
 				dontNeedEncoding.set('+');
+				// don't encode semicolon because it is used in ;jsessionid=
+				dontNeedEncoding.set(';');
 				break;
 
 			// same as path, but '/' will not be encoded
