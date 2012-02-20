@@ -57,8 +57,19 @@ public class DeflatedJavaSerializer extends JavaSerializer
 	@Override
 	protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 	{
-		return super.newObjectOutputStream(new DeflaterOutputStream(out, new Deflater(
-			Deflater.BEST_SPEED), COMPRESS_BUF_SIZE));
+		return super.newObjectOutputStream(new DeflaterOutputStream(out, createDeflater(),
+			COMPRESS_BUF_SIZE));
+	}
+
+	/**
+	 * Creates the {@code Deflater}. Override this method to customize the deflater, for example to
+	 * change the compression level and/or strategy.
+	 * 
+	 * @return the {@code Deflater}
+	 */
+	protected Deflater createDeflater()
+	{
+		return new Deflater(Deflater.BEST_SPEED);
 	}
 
 	@Override
