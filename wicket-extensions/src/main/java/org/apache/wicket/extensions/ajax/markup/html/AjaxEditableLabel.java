@@ -314,19 +314,19 @@ public class AjaxEditableLabel<T> extends Panel
 				super.updateAjaxAttributes(attributes);
 				attributes.setEventNames("blur", "keyup");
 
-				CharSequence dynamicExtraParameters = "var result = {}, "
+				CharSequence dynamicExtraParameters = "var result = [], "
 					+ "kc=Wicket.Event.keyCode(event),"
 					+ "evtType=attrs.event.type;"
 					+ "if (evtType === 'keyup') {"
 					+
 					// ESCAPE key
-					"if (kc===27) { result.save = false }"
+					"if (kc===27) { result.push( { name: 'save', value: false } ); }"
 					+
 
 					// ENTER key
-					"else if (kc===13) { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }"
+					"else if (kc===13) { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }"
 					+ "}"
-					+ "else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }"
+					+ "else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }"
 					+ "return result;";
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 

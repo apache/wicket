@@ -386,6 +386,30 @@
 		},
 
 		/**
+		 * Converts an object (hash) to an array suitable for consumption
+		 * by jQuery.param()
+		 *
+		 * @param {Object} parameters - the object to convert to an array of
+		 *      name -> value pairs.
+		 * @see jQuery.param
+		 * @see jQuery.serializeArray
+		 */
+		_asParamArray: function(parameters) {
+			var result = [];
+			if (jQuery.isArray(parameters)) {
+				result = parameters;
+			}
+			else if (jQuery.isPlainObject(parameters)) {
+				for (var name in parameters) {
+					var value = parameters[name];
+					result.push({name: name, value: value});
+				}
+			}
+
+			return result;
+		},
+
+		/**
 		 * Executes or schedules for execution #doAjax()
 		 *
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
@@ -414,7 +438,7 @@
 				},
 
 				// the request (extra) parameters
-				data = attrs.ep || {},
+				data = this._asParamArray(attrs.ep),
 
 				// keep a reference to the current context
 				self = this,
@@ -439,13 +463,14 @@
 				var deps = attrs.dep;
 				for (var i = 0; i < deps.length; i++) {
 					var dep = deps[i],
-						extraParam = {};
+						extraParam;
 					if (jQuery.isFunction(dep)) {
 						extraParam = dep(attrs);
 					} else {
 						extraParam = new Function('attrs', dep)(attrs);
 					}
-					data = jQuery.extend({}, data, extraParam);
+					extraParam = this._asParamArray(extraParam);
+					data = data.concat(extraParam);
 				}
 			}
 
@@ -458,22 +483,22 @@
 			if (attrs.f) {
 				// serialize the form with id == attrs.f
 				var form = Wicket.$(attrs.f);
-				data = jQuery.extend({}, data, Wicket.Form.serializeForm(form));
+				data = data.concat(Wicket.Form.serializeForm(form));
 
 				// set the submitting component input name
 				if (attrs.sc) {
 					var scName = attrs.sc;
-					data = jQuery.extend({}, data, {scName: 1});
+					data = data.concat({name: scName, value: 1});
 				}
 
 			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
-				data = jQuery.extend({}, data, Wicket.Form.serializeElement(el));
+				data = data.concat(Wicket.Form.serializeElement(el));
 			}
 
 			// convert to URL encoded string
-			data = jQuery.param(data, true);
+			data = jQuery.param(data);
 
 			// execute the request 
 			var jqXHR = jQuery.ajax({
@@ -1133,12 +1158,12 @@
 			 *		or empty object if the form element is disabled.
 			 */
 			serializeSelect: function (select){
-				var result = {};
+				var result = [];
 				if (select) {
 					var $select = jQuery(select);
 					if ($select.length > 0 && $select.prop('disabled') === false) {
 						var name = $select.attr('name');
-						result[name] = $select.val();
+						result.push( { name: name, value: $select.val() } );
 					}
 				}
 				return result;
@@ -1152,14 +1177,10 @@
 			 * @return the URL encoded key=value pair or empty string if the form element is disabled.
 			 */
 			serializeInput: function (input) {
-				var result = {};
+				var result = [];
 				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) { 
 					var $input = jQuery(input);
-					var serialized = $input.serializeArray();
-					for (var i = 0; i < serialized.length; i++) {
-						var obj = serialized[i];
-						result[obj.name] = obj.value;
-					}
+					result = $input.serializeArray();
 				}
 				return result;
 			},
@@ -1172,14 +1193,14 @@
 			serializeElement: function(element) {
 
 				if (!element) {
-					return {};
+					return [];
 				}
 				else if (typeof(element) === 'string') {
 					element = Wicket.$(element);
 				}
 
 				if (Wicket.Form.excludeFromAjaxSerialization && element.id && Wicket.Form.excludeFromAjaxSerialization[element.id] === "true") {
-					return {};
+					return [];
 				}
 
 				var tag = element.tagName.toLowerCase();
@@ -1188,17 +1209,17 @@
 				} else if (tag === "input" || tag === "textarea") {
 					return Wicket.Form.serializeInput(element);
 				} else {
-					return {};
+					return [];
 				}
 			},
 
 			serializeForm: function (form) {
-				var result = {},
+				var result = [],
 					elements = form.elements;
 				for (var i = 0; i < elements.length; ++i) {
 					var el = elements[i];
 					if (el.name && el.name !== "") {
-						result = jQuery.extend({}, result, Wicket.Form.serializeElement(el));
+						result = result.concat(Wicket.Form.serializeElement(el));
 					}
 				}
 				return result;

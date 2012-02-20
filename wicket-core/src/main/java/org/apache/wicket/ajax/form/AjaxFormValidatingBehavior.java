@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
@@ -111,28 +112,41 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	public static void addToAllFormComponents(final Form<?> form, final String event,
 		final Duration throttleDelay)
 	{
-		form.visitChildren(FormComponent.class, new IVisitor<Component, Void>()
+		form.visitChildren(FormComponent.class, new FormValidateVisitor(form, event, throttleDelay));
+	}
+	
+	private static class FormValidateVisitor implements IVisitor<Component, Void>, IClusterable
+	{
+		private final Form<?> form;
+		private final String event;
+		private final Duration throttleDelay;
+		
+		private FormValidateVisitor(Form<?> form, String event, Duration throttleDelay)
 		{
-			@Override
-			public void component(final Component component, final IVisit<Void> visit)
-			{
-				AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event) {
-					@Override
-					protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
-					{
-						super.updateAjaxAttributes(attributes);
+			this.form = form;
+			this.event = event;
+			this.throttleDelay = throttleDelay;
+		}
+		
+		@Override
+		public void component(final Component component, final IVisit<Void> visit)
+		{
+			final AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event) {
+				@Override
+				protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
+				{
+					super.updateAjaxAttributes(attributes);
 
-						if (throttleDelay != null)
-						{
-							String id = "throttle-" + component.getMarkupId();
-							ThrottlingSettings throttlingSettings = new ThrottlingSettings(id, throttleDelay);
-							attributes.setThrottlingSettings(throttlingSettings);
-						}
+					if (throttleDelay != null)
+					{
+						String id = "throttle-" + component.getMarkupId();
+						ThrottlingSettings throttlingSettings = new ThrottlingSettings(id, throttleDelay);
+						attributes.setThrottlingSettings(throttlingSettings);
 					}
-				};
-				component.add(behavior);
-				visit.dontGoDeeper();
-			}
-		});
+				}
+			};
+			component.add(behavior);
+			visit.dontGoDeeper();
+		}
 	}
 }

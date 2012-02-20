@@ -182,14 +182,14 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				attributes.setMethod(Method.POST);
 				attributes.setEventNames("blur", "keyup");
 				CharSequence dynamicExtraParameters =
-						"var result = {}, " +
+						"var result = [], " +
 								"kc=Wicket.Event.keyCode(event)," +
 								"evtType=attrs.event.type;" +
 								"if (evtType === 'keyup') {" +
 									// ESCAPE key
-									"if (kc===27) { result.save = false }" +
+									"if (kc===27) { result.push( { name: 'save', value: false } ); }" +
 								"}" +
-								"else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.save = true; }" +
+								"else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }" +
 								"return result;";
 				List<CharSequence> dynamicParameters = attributes.getDynamicExtraParameters();
 				dynamicParameters.add(dynamicExtraParameters);
