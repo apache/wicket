@@ -20,6 +20,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -33,7 +34,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.resource.MinifiedAwareCssResourceReference;
 
 /**
  * Rating component that generates a number of stars where a user can click on to rate something.
@@ -323,7 +324,7 @@ public abstract class RatingPanel extends Panel
 		super.renderHead(response);
 		if (addDefaultCssStyle)
 		{
-			response.render(CssHeaderItem.forReference(new PackageResourceReference(
+			response.render(CssHeaderItem.forReference(new MinifiedAwareCssResourceReference(
 				RatingPanel.class, "RatingPanel.css")));
 		}
 

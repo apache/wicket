@@ -48,8 +48,8 @@ import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.visit.IVisit;
@@ -1362,7 +1362,7 @@ public abstract class AbstractTree extends Panel
 		return item.getMarkupId().substring(skip);
 	}
 
-	private final static ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
+	private final static ResourceReference JAVASCRIPT = new MinifiedAwareJavaScriptResourceReference(
 		AbstractTree.class, "res/tree.js");
 
 	/**

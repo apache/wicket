@@ -21,8 +21,8 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.MinifiedAwareCssResourceReference;
 
 /**
  * @author svenmeier
@@ -31,7 +31,7 @@ public class HumanTheme extends Behavior
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final ResourceReference CSS = new PackageResourceReference(WindowsTheme.class,
+	private static final ResourceReference CSS = new MinifiedAwareCssResourceReference(WindowsTheme.class,
 		"human/theme.css");
 
 	@Override

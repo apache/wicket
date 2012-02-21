@@ -40,6 +40,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileItem;
@@ -93,7 +94,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	private static final String MAGIC_SEPARATOR = "_mf_";
 
 
-	private static final ResourceReference JS = new JavaScriptResourceReference(
+	private static final ResourceReference JS = new MinifiedAwareJavaScriptResourceReference(
 		MultiFileUploadField.class, "MultiFileUploadField.js");
 
 

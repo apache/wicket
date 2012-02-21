@@ -18,14 +18,14 @@ package org.apache.wicket.extensions.wizard;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.resource.MinifiedAwareCssResourceReference;
 
 
 /**
@@ -114,7 +114,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param id
 	 *            The component model
 	 * @param addDefaultCssStyle
-	 *            Whether to add the {@link #addDefaultCssStyle() default style}
+	 *            Whether to add the {@link #addDefaultCssStyle(org.apache.wicket.markup.head.IHeaderResponse) default style}
 	 */
 	public Wizard(final String id, final boolean addDefaultCssStyle)
 	{
@@ -149,7 +149,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param wizardModel
 	 *            The transitions model
 	 * @param addDefaultCssStyle
-	 *            Whether to add the {@link #addDefaultCssStyle() default style}
+	 *            Whether to add the {@link #addDefaultCssStyle(org.apache.wicket.markup.head.IHeaderResponse) default style}
 	 */
 	public Wizard(final String id, final IWizardModel wizardModel, final boolean addDefaultCssStyle)
 	{
@@ -168,7 +168,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	public void addDefaultCssStyle(final IHeaderResponse response)
 	{
-		response.render(CssHeaderItem.forReference(new PackageResourceReference(Wizard.class,
+		response.render(CssHeaderItem.forReference(new MinifiedAwareCssResourceReference(Wizard.class,
 			"Wizard.css")));
 	}
 

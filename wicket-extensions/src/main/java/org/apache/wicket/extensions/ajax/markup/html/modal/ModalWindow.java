@@ -35,10 +35,10 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.apache.wicket.resource.MinifiedAwareCssResourceReference;
+import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -125,10 +125,10 @@ public class ModalWindow extends Panel
 	/** CSS class for window with gray border. */
 	public final static String CSS_CLASS_GRAY = "w_silver";
 
-	private static final ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
+	private static final ResourceReference JAVASCRIPT = new MinifiedAwareJavaScriptResourceReference(
 		ModalWindow.class, "res/modal.js");
 
-	private static final ResourceReference CSS = new PackageResourceReference(ModalWindow.class,
+	private static final ResourceReference CSS = new MinifiedAwareCssResourceReference(ModalWindow.class,
 		"res/modal.css");
 
 	/** the default id of the content component */

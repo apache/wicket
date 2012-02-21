@@ -33,8 +33,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.MinifiedAwareCssResourceReference;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -70,7 +70,7 @@ public abstract class BaseTree extends AbstractTree
 	}
 
 	// default stylesheet resource
-	private static final ResourceReference CSS = new PackageResourceReference(BaseTree.class,
+	private static final ResourceReference CSS = new MinifiedAwareCssResourceReference(BaseTree.class,
 		"res/base-tree.css");
 
 	/**
