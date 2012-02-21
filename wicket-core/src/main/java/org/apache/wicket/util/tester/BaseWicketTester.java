@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -1270,12 +1269,19 @@ public class BaseWicketTester
 	/**
 	 * Process a component. A web page will be automatically created with the markup created in
 	 * {@link #createPageMarkup(String)}.
+	 * <p>
+	 *     <strong>Note</strong>: the instantiated component will have an auto-generated id. To
+	 *     reach any of its children use their relative path to the component itself. For example
+	 *     if the started component has a child a Link component with id "link" then after starting
+	 *     the component you can click it with: <code>tester.clickLink("link")</code>
+	 * </p>
 	 * 
 	 * @param <C>
 	 *            the type of the component
 	 * @param componentClass
 	 *            the class of the component to be tested
 	 * @return The component processed
+	 * @see #startComponentInPage(org.apache.wicket.Component)
 	 */
 	public final <C extends Component> C startComponentInPage(final Class<C> componentClass)
 	{
@@ -1286,6 +1292,12 @@ public class BaseWicketTester
 	 * Process a component. A web page will be automatically created with the {@code pageMarkup}
 	 * provided. In case pageMarkup is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
+	 * <p>
+	 *     <strong>Note</strong>: the instantiated component will have an auto-generated id. To
+	 *     reach any of its children use their relative path to the component itself. For example
+	 *     if the started component has a child a Link component with id "link" then after starting
+	 *     the component you can click it with: <code>tester.clickLink("link")</code>
+	 * </p>
 	 * 
 	 * @param <C>
 	 *            the type of the component
@@ -1324,12 +1336,19 @@ public class BaseWicketTester
 	/**
 	 * Process a component. A web page will be automatically created with markup created by the
 	 * {@link #createPageMarkup(String)}.
+	 * <p>
+	 *     <strong>Note</strong>: the component id is set by the user. To
+	 *     reach any of its children use this id + their relative path to the component itself. For example
+	 *     if the started component has id <em>compId</em> and a Link child component component with id "link"
+	 *     then after starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
+	 * </p>
 	 * 
 	 * @param <C>
 	 *            the type of the component
 	 * @param component
 	 *            the component to be tested
 	 * @return The component processed
+	 * @see #startComponentInPage(Class)
 	 */
 	public final <C extends Component> C startComponentInPage(final C component)
 	{
@@ -1340,6 +1359,12 @@ public class BaseWicketTester
 	 * Process a component. A web page will be automatically created with the {@code pageMarkup}
 	 * provided. In case {@code pageMarkup} is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
+	 * <p>
+	 *     <strong>Note</strong>: the component id is set by the user. To
+	 *     reach any of its children use this id + their relative path to the component itself. For example
+	 *     if the started component has id <em>compId</em> and a Link child component component with id "link"
+	 *     then after starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
+	 * </p>
 	 * 
 	 * @param <C>
 	 *            the type of the component
@@ -1522,7 +1547,11 @@ public class BaseWicketTester
 	{
 		if (componentInPage != null && componentInPage.isInstantiated)
 		{
-			path = componentInPage.component.getId() + ":" + path;
+			String componentIdPageId = componentInPage.component.getId() + ':';
+			if (path.startsWith(componentIdPageId) == false)
+			{
+				path =  componentIdPageId + path;
+			}
 		}
 
 		Component component = getLastRenderedPage().get(path);
