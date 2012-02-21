@@ -93,7 +93,7 @@ public class DefaultTableTree<T> extends TableTree<T>
 	 * 
 	 * @param id
 	 *            component id
-	 * @param node
+	 * @param model
 	 *            the node model
 	 */
 	@Override

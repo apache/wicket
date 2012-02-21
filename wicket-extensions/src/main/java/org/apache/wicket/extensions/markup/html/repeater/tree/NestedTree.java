@@ -86,7 +86,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	}
 
 	/**
-	 * Overriden to update the affected {@link BranchItem} only.
+	 * Overridden to update the affected {@link BranchItem} only.
 	 */
 	@Override
 	public void updateBranch(T t, final AjaxRequestTarget target)
