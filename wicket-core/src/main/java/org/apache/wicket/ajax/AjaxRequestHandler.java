@@ -48,8 +48,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A request target that produces ajax response envelopes used on the client side to update
@@ -81,8 +79,6 @@ import org.slf4j.LoggerFactory;
 public class AjaxRequestHandler implements AjaxRequestTarget
 {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestHandler.class);
-
 	/**
 	 * A POJO-like that collects the data for the Ajax response written to the client and serializes
 	 * it to specific String-based format (XML, JSON, ...).
@@ -108,6 +104,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	 * Constructor
 	 * 
 	 * @param page
+	 *      the currently active page
 	 */
 	public AjaxRequestHandler(final Page page)
 	{
@@ -121,6 +118,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			 * events will have been fired by now.
 			 * 
 			 * @param response
+			 *      the response to write to
 			 */
 			@Override
 			protected void fireOnAfterRespondListeners(final Response response)
@@ -139,7 +137,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 						@Override
 						public void addJavaScript(String script)
 						{
-							writeNormalEvaluation(response, script);
+							writeNormalEvaluations(response, Collections.<CharSequence>singleton(script));
 						}
 					};
 
@@ -414,8 +412,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return the markup id of the focused element in the browser
 	 */
 	@Override
 	public String getLastFocusedElementId()

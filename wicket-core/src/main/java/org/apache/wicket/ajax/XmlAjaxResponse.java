@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.Collection;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.Response;
@@ -176,15 +178,24 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	}
 
 	@Override
-	protected void writeNormalEvaluation(final Response response, final CharSequence js)
+	protected void writeNormalEvaluations(final Response response, final Collection<CharSequence> scripts)
 	{
-		writeEvaluation("evaluate", response, js);
+		writeEvaluations(response, "evaluate", scripts);
+
 	}
 
 	@Override
-	protected void writePriorityEvaluation(Response response, CharSequence js)
+	protected void writePriorityEvaluations(Response response, Collection<CharSequence> scripts)
 	{
-		writeEvaluation("priority-evaluate", response, js);
+		writeEvaluations(response, "priority-evaluate", scripts);
+	}
+
+	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
+	{
+		for (CharSequence script : scripts)
+		{
+			writeEvaluation(elementName, response, script);
+		}
 	}
 
 	/**

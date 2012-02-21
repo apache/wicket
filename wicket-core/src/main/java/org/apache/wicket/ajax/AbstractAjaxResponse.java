@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -146,28 +147,14 @@ abstract class AbstractAjaxResponse
 
 		// queue up prepend javascripts. unlike other steps these are executed out of order so that
 		// components can contribute them from inside their onbeforerender methods.
-		Iterator<CharSequence> it = prependJavaScripts.iterator();
-		while (it.hasNext())
-		{
-			CharSequence js = it.next();
-			writePriorityEvaluation(response, js);
-		}
+		writePriorityEvaluations(response, prependJavaScripts);
 
 		// execute the dom ready javascripts as first javascripts
 		// after component replacement
-		it = domReadyJavaScripts.iterator();
-		while (it.hasNext())
-		{
-			CharSequence js = it.next();
-			writeNormalEvaluation(response, js);
-		}
-
-		it = appendJavaScripts.iterator();
-		while (it.hasNext())
-		{
-			CharSequence js = it.next();
-			writeNormalEvaluation(response, js);
-		}
+		List<CharSequence> evaluationScripts = new ArrayList<CharSequence>();
+		evaluationScripts.addAll(domReadyJavaScripts);
+		evaluationScripts.addAll(appendJavaScripts);
+		writeNormalEvaluations(response, evaluationScripts);
 
 		writeFooter(response, encoding);
 	}
@@ -191,7 +178,7 @@ abstract class AbstractAjaxResponse
 	 * @param js
 	 *      the JavaScript to evaluate
 	 */
-	protected abstract void writePriorityEvaluation(Response response, CharSequence js);
+	protected abstract void writePriorityEvaluations(Response response, Collection<CharSequence> js);
 
 	/**
 	 *
@@ -200,7 +187,7 @@ abstract class AbstractAjaxResponse
 	 * @param js
 	 *      the JavaScript to evaluate
 	 */
-	protected abstract void writeNormalEvaluation(Response response, CharSequence js);
+	protected abstract void writeNormalEvaluations(Response response, Collection<CharSequence> js);
 
 	/**
 	 * Processes components added to the target. This involves attaching components, rendering
