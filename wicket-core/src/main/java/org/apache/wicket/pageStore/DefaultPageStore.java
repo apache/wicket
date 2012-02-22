@@ -379,7 +379,7 @@ public class DefaultPageStore implements IPageStore
 		{
 			serializedPage = new SerializedPage(sessionId, page.getPageId(), data);
 		}
-		else
+		else if (LOG.isWarnEnabled())
 		{
 			LOG.warn("Page {} cannot be serialized. See previous logs for possible reasons.", page);
 		}
