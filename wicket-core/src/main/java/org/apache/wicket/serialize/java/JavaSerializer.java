@@ -43,8 +43,6 @@ import org.slf4j.LoggerFactory;
  * 
  * Requires the application key to enable serialization and deserialisation outside thread in which
  * application thread local is set
- * 
- * @see IObjectStreamFactory
  */
 public class JavaSerializer implements ISerializer
 {
