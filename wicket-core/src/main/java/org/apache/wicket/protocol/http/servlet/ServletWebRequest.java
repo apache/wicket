@@ -94,11 +94,20 @@ public class ServletWebRequest extends WebRequest
 		Args.notNull(filterPrefix, "filterPrefix");
 
 		this.httpServletRequest = httpServletRequest;
-		this.filterPrefix = filterPrefix;
 
 		errorAttributes = ErrorAttributes.of(httpServletRequest);
 
 		forwardAttributes = ForwardAttributes.of(httpServletRequest);
+
+		if (forwardAttributes != null || errorAttributes != null)
+		{
+			// the filter prefix is not needed when the current request is internal
+			// see WICKET-4387
+			this.filterPrefix = "";
+		} else
+		{
+			this.filterPrefix = filterPrefix;
+		}
 
 		if (url != null)
 		{
