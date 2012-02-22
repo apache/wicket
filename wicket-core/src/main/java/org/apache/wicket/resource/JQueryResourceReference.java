@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.resource;
 
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 
 
@@ -26,7 +27,7 @@ import org.apache.wicket.settings.IJavaScriptLibrarySettings;
  * 
  * @author papegaaij
  */
-public class JQueryResourceReference extends MinifiedAwareJavaScriptResourceReference
+public class JQueryResourceReference extends JavaScriptResourceReference
 {
 	private static final long serialVersionUID = 1L;
 

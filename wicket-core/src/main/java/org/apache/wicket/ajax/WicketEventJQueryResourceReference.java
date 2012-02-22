@@ -21,14 +21,14 @@ import java.util.Arrays;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
-import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 
 /**
  * @author hoeve
  */
-public class WicketEventJQueryResourceReference extends MinifiedAwareJavaScriptResourceReference
+public class WicketEventJQueryResourceReference extends JavaScriptResourceReference
 {
 	private static final long serialVersionUID = -2918665261694523156L;
 

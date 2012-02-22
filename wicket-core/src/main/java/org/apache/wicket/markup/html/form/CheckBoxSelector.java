@@ -21,9 +21,8 @@ import java.util.Arrays;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 
 
 /**
@@ -38,7 +37,7 @@ public class CheckBoxSelector extends AbstractCheckSelector
 {
 	private static final long serialVersionUID = 1L;
 
-	private final static ResourceReference JS = new MinifiedAwareJavaScriptResourceReference(
+	private final static ResourceReference JS = new JavaScriptResourceReference(
 		CheckBoxSelector.class, "CheckBoxSelector.js");
 
 	/**

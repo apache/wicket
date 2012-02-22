@@ -37,9 +37,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.MinifiedAwareCssResourceReference;
-import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 
 
 /**
@@ -114,11 +114,11 @@ public class Palette<T> extends Panel
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final ResourceReference JAVASCRIPT = new MinifiedAwareJavaScriptResourceReference(
+	private static final ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
 		Palette.class, "palette.js");
 
 	/** reference to the palette's css resource */
-	private static final ResourceReference CSS = new MinifiedAwareCssResourceReference(Palette.class,
+	private static final ResourceReference CSS = new CssResourceReference(Palette.class,
 		"palette.css");
 
 	/**

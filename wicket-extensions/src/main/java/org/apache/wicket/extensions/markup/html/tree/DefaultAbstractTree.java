@@ -37,9 +37,9 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.MinifiedAwareCssResourceReference;
 
 /**
  * Tree class that contains convenient functions related to presentation of the tree, which includes
@@ -72,7 +72,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Reference to the css file.
 	 */
-	private static final ResourceReference CSS = new MinifiedAwareCssResourceReference(
+	private static final ResourceReference CSS = new CssResourceReference(
 		DefaultAbstractTree.class, "res/tree.css");
 
 	/** Reference to the icon of closed tree folder */

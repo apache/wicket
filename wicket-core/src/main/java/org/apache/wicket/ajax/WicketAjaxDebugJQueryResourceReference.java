@@ -20,13 +20,12 @@ import java.util.Collections;
 
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
  * @author hoeve
  */
-public class WicketAjaxDebugJQueryResourceReference extends
-	MinifiedAwareJavaScriptResourceReference
+public class WicketAjaxDebugJQueryResourceReference extends JavaScriptResourceReference
 {
 	private static final long serialVersionUID = 1L;
 

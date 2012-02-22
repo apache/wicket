@@ -22,6 +22,7 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -30,7 +31,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author papegaaij
  */
-public class JQueryPluginResourceReference extends MinifiedAwareJavaScriptResourceReference
+public class JQueryPluginResourceReference extends JavaScriptResourceReference
 {
 	private static final long serialVersionUID = 1L;
 

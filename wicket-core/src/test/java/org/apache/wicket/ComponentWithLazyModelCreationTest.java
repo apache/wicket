@@ -32,7 +32,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
 
 /**
- * @see href https://issues.apache.org/jira/browse/WICKET3142
+ * @see <a href="https://issues.apache.org/jira/browse/WICKET3142">WICKET3142</a>
  */
 public class ComponentWithLazyModelCreationTest extends WicketTestCase
 {

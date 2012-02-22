@@ -19,12 +19,13 @@ package org.apache.wicket.request.resource;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.resource.IResource.Attributes;
-import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.junit.Test;
 
 /**
- * Testcases for minified aware resources
+ * Testcases for minified aware resources.
+ * There is a logic in PackageResourceReference to use a minified version of a resource
+ * if there is such.
  * 
  * @author papegaaij
  */
@@ -47,7 +48,7 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 	public void minifiedResourceAvailable()
 	{
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
-		ResourceReference reference = new MinifiedAwareJavaScriptResourceReference(
+		ResourceReference reference = new JavaScriptResourceReference(
 			MinifiedAwareResourceReferenceTest.class, "b.js");
 		assertEquals("b.min.js", reference.getName());
 		String fileContent = renderResource(reference);
@@ -61,7 +62,7 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 	public void noMinifiedResourceAvailable()
 	{
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
-		ResourceReference reference = new MinifiedAwareJavaScriptResourceReference(
+		ResourceReference reference = new JavaScriptResourceReference(
 			MinifiedAwareResourceReferenceTest.class, "a.js");
 		assertEquals("a.js", reference.getName());
 		String fileContent = renderResource(reference);

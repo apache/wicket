@@ -32,11 +32,11 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
-import org.apache.wicket.resource.MinifiedAwareCssResourceReference;
-import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -110,10 +110,10 @@ public class UploadProgressBar extends Panel
 		}
 	}
 
-	private static final ResourceReference JS = new MinifiedAwareJavaScriptResourceReference(
+	private static final ResourceReference JS = new JavaScriptResourceReference(
 		UploadProgressBar.class, "progressbar.js");
 
-	private static final ResourceReference CSS = new MinifiedAwareCssResourceReference(
+	private static final ResourceReference CSS = new CssResourceReference(
 		UploadProgressBar.class, "UploadProgressBar.css");
 
 	private static final String RESOURCE_NAME = UploadProgressBar.class.getName();

@@ -19,9 +19,8 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.MinifiedAwareJavaScriptResourceReference;
 
 /**
  * Selects and deselects all Check components under the same CheckGroup as itself. Selection
@@ -41,7 +40,7 @@ public class CheckGroupSelector extends AbstractCheckSelector
 	/** */
 	private static final long serialVersionUID = 1L;
 
-	private final static ResourceReference JS = new MinifiedAwareJavaScriptResourceReference(
+	private final static ResourceReference JS = new JavaScriptResourceReference(
 		CheckGroupSelector.class, "CheckGroupSelector.js");
 
 	private CheckGroup<?> group;

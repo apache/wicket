@@ -25,6 +25,8 @@ import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO javadoc
@@ -33,10 +35,17 @@ public class PackageResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final Logger log = LoggerFactory.getLogger(PackageResourceReference.class);
+
 	private static final String CSS_EXTENSION = "css";
 	private static final String JAVASCRIPT_EXTENSION = "js";
 
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
+
+	/**
+	 * Cache for existence check of minified file
+	 */
+	private Boolean minifiedExists = null;
 
 	/**
 	 * Construct.
@@ -92,21 +101,30 @@ public class PackageResourceReference extends ResourceReference
 	{
 		final String extension = getExtension();
 
+		final PackageResource resource;
+
 		if (CSS_EXTENSION.equals(extension))
 		{
-			return new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
+			resource = new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
 				getVariation());
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
-			return new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
+			resource = new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
 				getVariation());
 		}
 		else
 		{
-			return new PackageResource(getScope(), getName(), getLocale(), getStyle(),
+			resource = new PackageResource(getScope(), getName(), getLocale(), getStyle(),
 				getVariation());
 		}
+
+		if (minifiedExists)
+		{
+			resource.setCompress(false);
+		}
+
+		return resource;
 	}
 
 	private UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
@@ -134,6 +152,56 @@ public class PackageResourceReference extends ResourceReference
 	private String getCurrentStyle()
 	{
 		return getStyle() != null ? getStyle() : Session.get().getStyle();
+	}
+
+	/**
+	 * Initializes the cache for the existence of the minified resource.
+	 */
+	private void initMinifiedExists()
+	{
+		if (minifiedExists != null)
+		{
+			return;
+		}
+
+		String name = getMinifiedName();
+		IResourceStreamLocator locator = Application.get()
+				.getResourceSettings()
+				.getResourceStreamLocator();
+		String absolutePath = Packages.absolutePath(getScope(), name);
+		IResourceStream stream = locator.locate(getScope(), absolutePath, getStyle(),
+				getVariation(), getLocale(), null, true);
+		minifiedExists = stream != null;
+		if (!minifiedExists && log.isDebugEnabled())
+		{
+			log.debug("No minified version of '" + super.getName() +
+					"' found, expected a file with the name '" + name + "', using full version");
+		}
+	}
+
+	/**
+	 * @return How the minified file should be named.
+	 */
+	private String getMinifiedName()
+	{
+		String name = super.getName();
+		String extension = name.substring(name.lastIndexOf('.'));
+		return name.substring(0, name.length() - extension.length() + 1) + "min" + extension;
+	}
+
+	/**
+	 * Returns the name of the file: minified or full version. This method is called in a
+	 * multithreaded context, so it has to be thread safe.
+	 *
+	 * @see org.apache.wicket.request.resource.ResourceReference#getName()
+	 */
+	@Override
+	public String getName()
+	{
+		initMinifiedExists();
+		if (minifiedExists && Application.get().getResourceSettings().getUseMinifiedResources())
+			return getMinifiedName();
+		return super.getName();
 	}
 
 	@Override

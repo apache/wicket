@@ -116,6 +116,12 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 */
 	private final String variation;
 
+	/**
+	 * A flag indicating whether {@code ITextResourceCompressor} can be used to compress this resource.
+	 * Default is {@code false} because this resource may be used for binary data (e.g. an image).
+	 * Specializations of this class should change this flag appropriately.
+	 */
+	private boolean compress = false;
 
 	/**
 	 * Hidden constructor.
@@ -365,6 +371,24 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			.getResourceSettings()
 			.getResourceStreamLocator()
 			.locate(getScope(), absolutePath, style, variation, locale, null, false);
+	}
+
+	/**
+	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to compress the
+	 *         resource.
+	 */
+	public boolean getCompress()
+	{
+		return compress;
+	}
+
+	/**
+	 * @param compress
+	 *            A flag indicating whether the resource should be compressed.
+	 */
+	public void setCompress(boolean compress)
+	{
+		this.compress = compress;
 	}
 
 	/**
