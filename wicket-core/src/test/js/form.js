@@ -70,7 +70,7 @@ jQuery(document).ready(function() {
 			{ name: "searchInput",    value: "wicket"             },
 			{ name: "rangeInput",     value: "67"                 },
 			{ name: "numberInput",    value: "16"                 },
-			{ name: "colorInput",     value: "123456"             }
+			{ name: "colorInput",     value: "#123456"            }
 		];
 		deepEqual(actual, expected);
 	});
@@ -119,7 +119,7 @@ jQuery(document).ready(function() {
 			{ name: "searchInput",    value: "wicket"             },
 			{ name: "rangeInput",     value: "67"                 },
 			{ name: "numberInput",    value: "16"                 },
-			{ name: "colorInput",     value: "123456"             },
+			{ name: "colorInput",     value: "#123456"            },
 			{ name: "multipleSelect", value: "0"                  },
 			{ name: "multipleSelect", value: "2"                  },
 			{ name: "select",         value: "0"                  },
@@ -155,7 +155,7 @@ jQuery(document).ready(function() {
 		});
 
 		queryString = jQuery.param(queryString, true);
-		equal(queryString, 'textInput=textValue&textUTFInput=%D0%BD%D0%B5%D1%89%D0%BE+%D0%BD%D0%B0+%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8&checkBoxInput1=cbValue1&checkBoxInput3=cbValue3&radioInput=radioValue1&emailInput=m%40g.com&urlInput=http%3A%2F%2Fexample.com&searchInput=wicket&rangeInput=67&numberInput=16&colorInput=123456&multipleSelect=0&multipleSelect=2&select=0&textArea=some+text', 'Wicket.Form.serialize should serialize the whole form when an element is passed and the parent form should be searched');
+		equal(queryString, 'textInput=textValue&textUTFInput=%D0%BD%D0%B5%D1%89%D0%BE+%D0%BD%D0%B0+%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8&checkBoxInput1=cbValue1&checkBoxInput3=cbValue3&radioInput=radioValue1&emailInput=m%40g.com&urlInput=http%3A%2F%2Fexample.com&searchInput=wicket&rangeInput=67&numberInput=16&colorInput=%23123456&multipleSelect=0&multipleSelect=2&select=0&textArea=some+text', 'Wicket.Form.serialize should serialize the whole form when an element is passed and the parent form should be searched');
 	});
 
 
@@ -169,7 +169,7 @@ jQuery(document).ready(function() {
 		});
 
 		queryString = jQuery.param(queryString, true);
-		equal(queryString, 'textInput=textValue&textUTFInput=%D0%BD%D0%B5%D1%89%D0%BE+%D0%BD%D0%B0+%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8&checkBoxInput1=cbValue1&checkBoxInput3=cbValue3&radioInput=radioValue1&emailInput=m%40g.com&urlInput=http%3A%2F%2Fexample.com&searchInput=wicket&rangeInput=67&numberInput=16&colorInput=123456&multipleSelect=0&multipleSelect=2&select=0&textArea=some+text', 'Wicket.Form.serialize should serialize the whole form when a the form itself is passed');
+		equal(queryString, 'textInput=textValue&textUTFInput=%D0%BD%D0%B5%D1%89%D0%BE+%D0%BD%D0%B0+%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8&checkBoxInput1=cbValue1&checkBoxInput3=cbValue3&radioInput=radioValue1&emailInput=m%40g.com&urlInput=http%3A%2F%2Fexample.com&searchInput=wicket&rangeInput=67&numberInput=16&colorInput=%23123456&multipleSelect=0&multipleSelect=2&select=0&textArea=some+text', 'Wicket.Form.serialize should serialize the whole form when a the form itself is passed');
 	});
 
 });
