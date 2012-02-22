@@ -1163,7 +1163,15 @@
 					var $select = jQuery(select);
 					if ($select.length > 0 && $select.prop('disabled') === false) {
 						var name = $select.attr('name');
-						result.push( { name: name, value: $select.val() } );
+						var values = $select.val();
+						if (jQuery.isArray(values)) {
+							for (var v = 0; v < values.length; v++) {
+								var value = values[v];
+								result.push( { name: name, value: value } );
+							}
+						} else {
+							result.push( { name: name, value: values } );
+						}
 					}
 				}
 				return result;

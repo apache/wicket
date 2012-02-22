@@ -17,35 +17,6 @@
 
 jQuery(document).ready(function() {
 
-	/**
-	 * Extends oldObject with the properties from newObject.
-	 * If there is already a property with the same name then the
-	 * values are collected in an array
-	 *
-	 * @param oldObject {Object} the object to extend
-	 * @param newObject {Object} the object to extend from
-	 * @returns {Object} the object with all properties
-	 */
-	var extend = function (oldObject, newObject) {
-
-		for (var prop in newObject) {
-
-			if (!oldObject[prop]) {
-				oldObject[prop] = newObject[prop];
-			}
-			else if (jQuery.isArray(oldObject[prop])) {
-				oldObject[prop].push(newObject[prop]);
-			}
-			else {
-				oldObject[prop] = [ oldObject[prop], newObject[prop] ];
-			}
-		}
-
-		return oldObject;
-	}
-
-	var existingId = 'testElement';
-
 	module("encode");
 
 	test("Wicket.Form.encode ", function() {
@@ -82,42 +53,45 @@ jQuery(document).ready(function() {
 	test('Wicket.Form.serializeInput - input element', function() {
 		expect(1);
 
-		var queryString = {};
+		var actual = [];
 		jQuery('#testForm input').each(function() {
 			var serialized = Wicket.Form.serializeInput(this);
-			queryString = extend(queryString, serialized);
+			actual = actual.concat(serialized);
 		});
 
-		var expected = {
-			"textInput": "textValue",
-			"textUTFInput": "нещо на български",
-			"checkBoxInput1": "cbValue1",
-			"checkBoxInput3": "cbValue3",
-			"radioInput": "radioValue1",
-			"emailInput": "m@g.com",
-			"urlInput": "http://example.com",
-			"searchInput": "wicket",
-			"rangeInput": "67",
-			"numberInput": "16",
-			"colorInput": "123456"
-		};
-		deepEqual(queryString, expected);
+		var expected = [
+			{ name: "textInput",      value: "textValue"          },
+			{ name: "textUTFInput",   value: "нещо на български"  },
+			{ name: "checkBoxInput1", value: "cbValue1"           },
+			{ name: "checkBoxInput3", value: "cbValue3"           },
+			{ name: "radioInput",     value: "radioValue1"        },
+			{ name: "emailInput",     value: "m@g.com"            },
+			{ name: "urlInput",       value: "http://example.com" },
+			{ name: "searchInput",    value: "wicket"             },
+			{ name: "rangeInput",     value: "67"                 },
+			{ name: "numberInput",    value: "16"                 },
+			{ name: "colorInput",     value: "123456"             }
+		];
+		deepEqual(actual, expected);
 	});
 
 
 	test('Wicket.Form.serializeInput - textarea element', function() {
 		expect(1);
 
-		var queryString = {};
+		var actual = [];
 		jQuery('#testForm textarea').each(function() {
 			var serialized = Wicket.Form.serializeInput(this);
-			queryString = extend(queryString, serialized);
+			actual = actual.concat(serialized);
 		});
 
-		var expected = {
-			"textArea": "some text"
-		};
-		deepEqual(queryString, expected);
+		var expected = [
+			{
+				name: "textArea",
+				value: "some text"
+			}
+		];
+		deepEqual(actual, expected);
 	});
 
 	module('Wicket.Form.serializeElement');
@@ -129,31 +103,29 @@ jQuery(document).ready(function() {
 
 		expect(1);
 
-		var queryString = {};
+		var actual = [];
 		jQuery('input, textarea, select', jQuery('#testForm')).each(function() {
 			var serialized = Wicket.Form.serializeElement(this);
-			queryString = extend(queryString, serialized);
+			actual = actual.concat(serialized);
 		});
 
-		var expected = {
-			"textInput": "textValue",
-			"checkBoxInput1": "cbValue1",
-			"checkBoxInput3": "cbValue3",
-			"radioInput": "radioValue1",
-			"emailInput": "m@g.com",
-			"urlInput": "http://example.com",
-			"searchInput": "wicket",
-			"rangeInput": "67",
-			"numberInput": "16",
-			"colorInput": "123456",
-			"multipleSelect": [
-				"0",
-				"2"
-			],
-			"select": "0",
-			"textArea": "some text"
-		};
-		deepEqual(queryString, expected);
+		var expected = [
+			{ name: "textInput",      value: "textValue"          },
+			{ name: "checkBoxInput1", value: "cbValue1"           },
+			{ name: "checkBoxInput3", value: "cbValue3"           },
+			{ name: "radioInput",     value: "radioValue1"        },
+			{ name: "emailInput",     value: "m@g.com"            },
+			{ name: "urlInput",       value: "http://example.com" },
+			{ name: "searchInput",    value: "wicket"             },
+			{ name: "rangeInput",     value: "67"                 },
+			{ name: "numberInput",    value: "16"                 },
+			{ name: "colorInput",     value: "123456"             },
+			{ name: "multipleSelect", value: "0"                  },
+			{ name: "multipleSelect", value: "2"                  },
+			{ name: "select",         value: "0"                  },
+			{ name: "textArea",       value: "some text"          }
+		];
+		deepEqual(actual, expected);
 
 		Wicket.Form.excludeFromAjaxSerialization = null;
 	});
