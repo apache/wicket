@@ -175,7 +175,7 @@ public class MarkupParser extends AbstractMarkupParser
 		filters.add(new InlineEnclosureHandler());
 
 		// Append it. See WICKET-4390
-		filters.add(new StyleAndScriptIdentifier(markup), StyleAndScriptIdentifier.class);
+		filters.add(new StyleAndScriptIdentifier(), StyleAndScriptIdentifier.class);
 		filters.add(new ConditionalCommentFilter());
 
 		return filters;

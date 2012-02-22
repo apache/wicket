@@ -39,11 +39,8 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 {
 	/**
 	 * Constructor.
-	 * 
-	 * @param markup
-	 *      Unused. Will be removed in next major version.
 	 */
-	public StyleAndScriptIdentifier(@SuppressWarnings("unused")final Markup markup)
+	public StyleAndScriptIdentifier()
 	{
 	}
 
