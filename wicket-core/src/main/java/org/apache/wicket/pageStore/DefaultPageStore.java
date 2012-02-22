@@ -525,8 +525,8 @@ public class DefaultPageStore implements IPageStore
 		/**
 		 * Store the serialized page in cache
 		 * 
-		 * @param sessionId
 		 * @param page
+		 *      the data to serialize (page id, session id, bytes)
 		 */
 		void storePage(SerializedPage page)
 		{
