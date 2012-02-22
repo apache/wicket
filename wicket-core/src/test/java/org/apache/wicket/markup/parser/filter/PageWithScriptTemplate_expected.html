@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Apache Wicket Quickstart</title>
+	<link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:regular,bold' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="../../style.css" type="text/css" media="screen" title="Stylesheet"/>
+</head>
+<body>
+<div id="hd">
+	<div id="logo">
+		<img src="../../logo.png" width="50px" height="50px" alt="Wicket Logo"/>
+		<h1>Apache Wicket</h1>
+	</div>
+</div>
+<div id="bd">
+	<h2>Check the alert!</h2>
+	<p>
+		If the text of the alert popup starts with /*&lt;![CDATA[*/ that is a bug. See the bug report for the expected behavior.
+	</p>
+</div>
+<div id="ft">
+</div>
+<script id="script1" type="text/x-jquery-tmpl">
+	This is a "Script" that Wicket should not alter
+</script>
+<script type="text/javascript">/*<![CDATA[*/
+alert(document.getElementById("script1").innerHTML);
+/*]]>*/</script>
+
+<script type="text/javascript">
+/*<![CDATA[*/
+console.log('Nice')
+/*]]>*/
+</script>
+</body>
+</html>
