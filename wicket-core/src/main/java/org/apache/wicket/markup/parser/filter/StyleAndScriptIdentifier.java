@@ -63,6 +63,7 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 				// Not needed, but must not be null
 				tag.setId("_ScriptStyle");
 				tag.setModified(true);
+				tag.setAutoComponentTag(true);
 			}
 
 			tag.setFlag(ComponentTag.RENDER_RAW, true);
