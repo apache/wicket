@@ -28,21 +28,23 @@ import org.apache.wicket.util.string.JavaScriptUtils;
 
 
 /**
+ * An IMarkupFilter that wraps the body of all &lt;style&gt; elements and &lt;script&gt;
+ * elements which are plain JavaScript in CDATA blocks. This allows the user application
+ * to use unescaped XML characters without caring that those may break Wicket's XML Ajax
+ * response.
  * 
  * @author Juergen Donnerstag
  */
 public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 {
-	private final Markup markup;
-
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param markup
+	 *      Unused. Will be removed in next major version.
 	 */
-	public StyleAndScriptIdentifier(final Markup markup)
+	public StyleAndScriptIdentifier(@SuppressWarnings("unused")final Markup markup)
 	{
-		this.markup = markup;
 	}
 
 	@Override
@@ -79,7 +81,8 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 			if (elem instanceof ComponentTag)
 			{
 				ComponentTag open = (ComponentTag)elem;
-				if (open.getUserData("STYLE_OR_SCRIPT") != null)
+
+				if (shouldProcess(open))
 				{
 					if (open.isOpen() && ((i + 2) < markup.size()))
 					{
@@ -105,5 +108,20 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 				}
 			}
 		}
+	}
+
+	private boolean shouldProcess(ComponentTag openTag)
+	{
+		// do not wrap in CDATA any <script> which has special MIME type. WICKET-4425
+		String typeAttribute = openTag.getAttribute("type");
+		boolean shouldProcess =
+				// style elements should be processed
+				"style".equals(openTag.getName()) ||
+
+				// script elements should be processed only if they have no type (HTML5 recommendation)
+				// or the type is "text/javascript"
+				(typeAttribute == null || "text/javascript".equalsIgnoreCase(typeAttribute));
+
+		return shouldProcess && openTag.getUserData("STYLE_OR_SCRIPT") != null;
 	}
 }
