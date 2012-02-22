@@ -60,7 +60,7 @@ public class ServletWebRequestTest extends Assert
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "/");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
-		assertEquals("any/source/of/error", errorClientUrl.toString());
+		assertEquals("/any/source/of/error", errorClientUrl.toString());
 	}
 
 	/**
