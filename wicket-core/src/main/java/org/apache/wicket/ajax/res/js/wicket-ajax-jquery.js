@@ -1384,7 +1384,8 @@
 					return;
 				} else {
 					var $newElement = jQuery(text);
-					jQuery(element).replaceWith($newElement);
+					// WICKET-4236
+					jQuery(element).after($newElement).remove();
 				}
 
 				var newElement = Wicket.$(element.id);
