@@ -34,16 +34,21 @@ public interface IPageManager
 	 * Retrieve page instance with given id.
 	 * 
 	 * @param id
+	 *      the id of the page to load
 	 * @return page instance or <code>null</code>
-	 * @throws CouldNotLockPageException
+	 * @throws CouldNotLockPageException if the page is already locked by another thread
+	 * and the lock cannot be acquired for some timeout
 	 */
 	public IManageablePage getPage(int id) throws CouldNotLockPageException;
 
 	/**
 	 * Marks page as changed.
+	 * <p><strong>Note:</strong>Only stateful pages are stored.</p>
 	 * 
 	 * @param page
-	 * @throws CouldNotLockPageException
+	 *      the page that should be stored in the page stores at the end of the request.
+	 * @throws CouldNotLockPageException if the page is already locked by another thread
+	 * and the lock cannot be acquired for some timeout
 	 */
 	public void touchPage(IManageablePage page) throws CouldNotLockPageException;
 
@@ -64,8 +69,6 @@ public interface IPageManager
 
 	/**
 	 * Invoked when new session has been created.
-	 * 
-	 * @param context
 	 */
 	public void newSessionCreated();
 
@@ -73,6 +76,7 @@ public interface IPageManager
 	 * Invoked when the session has been expired.
 	 * 
 	 * @param sessionId
+	 *      the id of the expired session
 	 */
 	public void sessionExpired(String sessionId);
 
