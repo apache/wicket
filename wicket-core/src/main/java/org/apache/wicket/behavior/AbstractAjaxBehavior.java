@@ -144,12 +144,4 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.Behavior#getStatelessHint(Component)
-	 */
-	@Override
-	public boolean getStatelessHint(Component component)
-	{
-		return false;
-	}
 }
