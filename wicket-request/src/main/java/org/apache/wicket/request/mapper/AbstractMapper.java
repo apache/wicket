@@ -149,7 +149,7 @@ public abstract class AbstractMapper implements IRequestMapper
 			removeMetaParameter(urlCopy);
 		}
 
-		return encoder.decodePageParameters(request.cloneWithUrl(urlCopy));
+		return encoder.decodePageParameters(urlCopy);
 	}
 
 	/**

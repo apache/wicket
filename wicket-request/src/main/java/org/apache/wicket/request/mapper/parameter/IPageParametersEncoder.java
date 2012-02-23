@@ -17,7 +17,6 @@
 package org.apache.wicket.request.mapper.parameter;
 
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 
 /**
@@ -32,6 +31,7 @@ public interface IPageParametersEncoder
 	 * the URL generated for {@link IRequestHandler}.
 	 * 
 	 * @param pageParameters
+	 *            parameters to encode
 	 * @return Url generated from the page parameters
 	 */
 	Url encodePageParameters(PageParameters pageParameters);
@@ -40,8 +40,9 @@ public interface IPageParametersEncoder
 	 * Decodes the given URL to {@link PageParameters}. The URL will have all
 	 * {@link IRequestHandler} specified segments/parameters stripped.
 	 * 
-	 * @param request
+	 * @param url
+	 *            url to decode
 	 * @return {@link PageParameters} instance or <code>null</code> if empty
 	 */
-	PageParameters decodePageParameters(Request request);
+	PageParameters decodePageParameters(Url url);
 }

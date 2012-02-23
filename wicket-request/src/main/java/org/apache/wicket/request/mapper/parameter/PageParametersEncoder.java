@@ -16,13 +16,8 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
-import java.util.List;
-
-import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
-import org.apache.wicket.util.string.StringValue;
 
 /**
  * Simple encoder with direct indexed/named parameters mapping.
@@ -41,25 +36,20 @@ public class PageParametersEncoder implements IPageParametersEncoder
 	/**
 	 * @see org.apache.wicket.request.mapper.parameter.IPageParametersEncoder#decodePageParameters(org.apache.wicket.request.Request)
 	 */
-	public PageParameters decodePageParameters(final Request request)
+	public PageParameters decodePageParameters(final Url url)
 	{
 		PageParameters parameters = new PageParameters();
 
 		int i = 0;
-		for (String s : request.getUrl().getSegments())
+		for (String s : url.getSegments())
 		{
 			parameters.set(i, s);
 			++i;
 		}
-		
-		IRequestParameters requestParameters = request.getRequestParameters();
-		for (String paramName : requestParameters.getParameterNames())
+
+		for (QueryParameter p : url.getQueryParameters())
 		{
-			List<StringValue> parameterValues = requestParameters.getParameterValues(paramName);
-			for (StringValue paramValue : parameterValues)
-			{
-				parameters.add(paramName, paramValue);
-			}
+			parameters.add(p.getName(), p.getValue());
 		}
 
 		return parameters.isEmpty() ? null : parameters;

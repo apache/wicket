@@ -16,19 +16,7 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.util.string.StringValue;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,89 +26,21 @@ import org.junit.Test;
 public class PageParametersEncoderTest extends Assert
 {
 	/**
-	 * Tests that PageParametersEncoder decodes both GET and POST parameters
+	 * Tests that PageParametersEncoder decodes parameters
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void decodePostParameters() throws Exception
+	public void decodeParameters() throws Exception
 	{
 		PageParametersEncoder encoder = new PageParametersEncoder();
-		Request request = new Request()
-		{
-			@Override
-			public Url getUrl()
-			{
-				return Url.parse("idx1/idx2?named1=value1&named2=value2");
-			}
 
-			@Override
-			public Url getClientUrl()
-			{
-				return null;
-			}
+		Url url = Url.parse("idx1/idx2?named1=value1&named2=value2");
 
-			@Override
-			public Locale getLocale()
-			{
-				return null;
-			}
-
-			@Override
-			public Charset getCharset()
-			{
-				return null;
-			}
-
-			@Override
-			public Object getContainerRequest()
-			{
-				return null;
-			}
-
-			@Override
-			public IRequestParameters getPostParameters()
-			{
-				return new PostParameters();
-			}
-		};
-
-		PageParameters pageParameters = encoder.decodePageParameters(request);
+		PageParameters pageParameters = encoder.decodePageParameters(url);
 		assertEquals("idx1", pageParameters.get(0).toOptionalString());
 		assertEquals("idx2", pageParameters.get(1).toOptionalString());
 		assertEquals("value1", pageParameters.get("named1").toOptionalString());
 		assertEquals("value2", pageParameters.get("named2").toOptionalString());
-		assertEquals("1", pageParameters.get("postOne").toOptionalString());
-		assertEquals("2", pageParameters.getValues("postTwo").get(0).toOptionalString());
-		assertEquals("2.1", pageParameters.getValues("postTwo").get(1).toOptionalString());
-	}
-
-	/**
-	 * Mock IRequestParameters that provides static POST parameters
-	 */
-	private static class PostParameters implements IRequestParameters
-	{
-		private final Map<String, List<StringValue>> params = new HashMap<String, List<StringValue>>();
-		{
-			params.put("postOne", Arrays.asList(StringValue.valueOf("1")));
-			params.put("postTwo", Arrays.asList(StringValue.valueOf("2"), StringValue.valueOf("2.1")));
-		}
-
-		public Set<String> getParameterNames()
-		{
-			return params.keySet();
-		}
-
-		public StringValue getParameterValue(String name)
-		{
-			List<StringValue> values = params.get(name);
-			return (values != null && !values.isEmpty()) ? values.get(0)
-					: StringValue.valueOf((String)null);
-		}
-
-		public List<StringValue> getParameterValues(String name)
-		{
-			List<StringValue> values = params.get(name);
-			return values != null ? Collections.unmodifiableList(values) : null;
-		}
 	}
 }

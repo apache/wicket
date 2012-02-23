@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
-import java.nio.charset.Charset;
-import java.util.Locale;
-
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.junit.Assert;
 import org.junit.Test;
@@ -85,10 +81,9 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	public void decodeUrl()
 	{
 		Url url = Url.parse("name1/value1/name2/value2");
-		Request request = getRequest(url);
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(request);
+		PageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -103,10 +98,9 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	public void decodeUrlWithTrailingSlash()
 	{
 		Url url = Url.parse("name1/value1/name2/value2/");
-		Request request = getRequest(url);
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(request);
+		PageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -121,10 +115,9 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	public void decodeUrlWithTrailingSlashAfterName()
 	{
 		Url url = Url.parse("name1/value1/name2/value2/name3");
-		Request request = getRequest(url);
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(request);
+		PageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -138,10 +131,9 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	public void decodeUrlWithLeadingSlash()
 	{
 		Url url = Url.parse("/name1/value1/name2/value2");
-		Request request = getRequest(url);
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(request);
+		PageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -156,10 +148,9 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	public void decodeUrlWithSlashesInTheMiddle()
 	{
 		Url url = Url.parse("name1/value1////name2/value2");
-		Request request = getRequest(url);
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(request);
+		PageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -174,49 +165,12 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	public void decodeUrlWithSlashesInTheMiddleAndEmptyValue()
 	{
 		Url url = Url.parse("name1/value1////name2//");
-		Request request = getRequest(url);
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(request);
+		PageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
 		assertEquals("", parameters.get("name2").toString());
-	}
-
-	private Request getRequest(final Url url)
-	{
-		return new Request()
-		{
-			@Override
-			public Url getUrl()
-			{
-				return url;
-			}
-
-			@Override
-			public Locale getLocale()
-			{
-				return null;
-			}
-
-			@Override
-			public Object getContainerRequest()
-			{
-				return null;
-			}
-
-			@Override
-			public Url getClientUrl()
-			{
-				return url;
-			}
-
-			@Override
-			public Charset getCharset()
-			{
-				return null;
-			}
-		};
 	}
 }
