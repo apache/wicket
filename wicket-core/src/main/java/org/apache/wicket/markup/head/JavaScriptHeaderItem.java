@@ -284,7 +284,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		return new JavaScriptUrlReferenceHeaderItem(url, id, defer, charset, condition);
 	}
 
-	protected static void internalRenderJavaScriptReference(Response response, String url,
+	protected final void internalRenderJavaScriptReference(Response response, String url,
 		String id, boolean defer, String charset, String condition)
 	{
 		Args.notEmpty(url, "url");

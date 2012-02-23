@@ -38,38 +38,17 @@ public class ListChoice<T> extends DropDownChoice<T>
 	private static final long serialVersionUID = 1L;
 
 	/** The default maximum number of rows to display. */
-	private static int defaultMaxRows = 8;
+	private static final int DEFAULT_MAX_ROWS = 8;
 
 	/** The maximum number of rows to display. */
 	private int maxRows;
-
-	/**
-	 * Gets the default maximum number of rows to display.
-	 * 
-	 * @return Returns the defaultMaxRows.
-	 */
-	protected static int getDefaultMaxRows()
-	{
-		return defaultMaxRows;
-	}
-
-	/**
-	 * Sets the default maximum number of rows to display.
-	 * 
-	 * @param defaultMaxRows
-	 *            The defaultMaxRows to set.
-	 */
-	protected static void setDefaultMaxRows(final int defaultMaxRows)
-	{
-		ListChoice.defaultMaxRows = defaultMaxRows;
-	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
 	public ListChoice(final String id)
 	{
-		this(id, null, (List<? extends T>)null, null, defaultMaxRows);
+		this(id, null, (List<? extends T>)null, null, DEFAULT_MAX_ROWS);
 	}
 
 	/**
@@ -77,7 +56,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 */
 	public ListChoice(final String id, final List<? extends T> choices)
 	{
-		this(id, null, choices, null, defaultMaxRows);
+		this(id, null, choices, null, DEFAULT_MAX_ROWS);
 	}
 
 	/**
@@ -93,7 +72,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	public ListChoice(final String id, final List<? extends T> choices,
 		final IChoiceRenderer<? super T> renderer)
 	{
-		this(id, null, choices, renderer, defaultMaxRows);
+		this(id, null, choices, renderer, DEFAULT_MAX_ROWS);
 	}
 
 
@@ -108,7 +87,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 */
 	public ListChoice(final String id, final IModel<T> model, final List<? extends T> choices)
 	{
-		this(id, model, choices, null, defaultMaxRows);
+		this(id, model, choices, null, DEFAULT_MAX_ROWS);
 	}
 
 	/**
@@ -142,7 +121,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	public ListChoice(final String id, final IModel<T> model, final List<? extends T> choices,
 		final IChoiceRenderer<? super T> renderer)
 	{
-		this(id, model, choices, renderer, defaultMaxRows);
+		this(id, model, choices, renderer, DEFAULT_MAX_ROWS);
 	}
 
 	/**
@@ -170,7 +149,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 */
 	public ListChoice(String id, IModel<? extends List<? extends T>> choices)
 	{
-		this(id, null, choices, null, defaultMaxRows);
+		this(id, null, choices, null, DEFAULT_MAX_ROWS);
 	}
 
 	/**
@@ -178,7 +157,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 */
 	public ListChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices)
 	{
-		this(id, model, choices, null, defaultMaxRows);
+		this(id, model, choices, null, DEFAULT_MAX_ROWS);
 	}
 
 	/**
@@ -188,7 +167,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	public ListChoice(String id, IModel<? extends List<? extends T>> choices,
 		IChoiceRenderer<? super T> renderer)
 	{
-		this(id, null, choices, renderer, defaultMaxRows);
+		this(id, null, choices, renderer, DEFAULT_MAX_ROWS);
 	}
 
 
@@ -199,7 +178,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	public ListChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
 		IChoiceRenderer<? super T> renderer)
 	{
-		this(id, model, choices, renderer, defaultMaxRows);
+		this(id, model, choices, renderer, DEFAULT_MAX_ROWS);
 	}
 
 	/**

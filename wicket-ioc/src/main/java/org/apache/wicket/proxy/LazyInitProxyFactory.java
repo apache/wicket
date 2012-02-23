@@ -445,7 +445,7 @@ public class LazyInitProxyFactory
 	 *            method being tested
 	 * @return true if the method is derived from Object.equals(), false otherwise
 	 */
-	protected static boolean isEqualsMethod(final Method method)
+	public static boolean isEqualsMethod(final Method method)
 	{
 		return (method.getReturnType() == boolean.class) &&
 			(method.getParameterTypes().length == 1) &&
@@ -459,7 +459,7 @@ public class LazyInitProxyFactory
 	 *            method being tested
 	 * @return true if the method is defined from Object.hashCode(), false otherwise
 	 */
-	protected static boolean isHashCodeMethod(final Method method)
+	public static boolean isHashCodeMethod(final Method method)
 	{
 		return (method.getReturnType() == int.class) && (method.getParameterTypes().length == 0) &&
 			method.getName().equals("hashCode");
@@ -472,7 +472,7 @@ public class LazyInitProxyFactory
 	 *            method being tested
 	 * @return true if the method is defined from Object.toString(), false otherwise
 	 */
-	protected static boolean isToStringMethod(final Method method)
+	public static boolean isToStringMethod(final Method method)
 	{
 		return (method.getReturnType() == String.class) &&
 			(method.getParameterTypes().length == 0) && method.getName().equals("toString");
@@ -485,7 +485,7 @@ public class LazyInitProxyFactory
 	 *            method being tested
 	 * @return true if the method is defined from Object.finalize(), false otherwise
 	 */
-	protected static boolean isFinalizeMethod(final Method method)
+	public static boolean isFinalizeMethod(final Method method)
 	{
 		return (method.getReturnType() == void.class) && (method.getParameterTypes().length == 0) &&
 			method.getName().equals("finalize");
@@ -498,7 +498,7 @@ public class LazyInitProxyFactory
 	 *            method being tested
 	 * @return true if the method is the writeReplace method, false otherwise
 	 */
-	protected static boolean isWriteReplaceMethod(final Method method)
+	public static boolean isWriteReplaceMethod(final Method method)
 	{
 		return (method.getReturnType() == Object.class) &&
 			(method.getParameterTypes().length == 0) && method.getName().equals("writeReplace");

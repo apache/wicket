@@ -50,31 +50,10 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	};
 
 	/** The default maximum number of rows to display. */
-	private static int defaultMaxRows = 8;
+	private static final int DEFAULT_MAX_ROWS = 8;
 
 	/** The maximum number of rows to display. */
-	private int maxRows = defaultMaxRows;
-
-	/**
-	 * Gets the default maximum number of rows to display.
-	 * 
-	 * @return Returns the defaultMaxRows.
-	 */
-	protected static int getDefaultMaxRows()
-	{
-		return defaultMaxRows;
-	}
-
-	/**
-	 * Sets the default maximum number of rows to display.
-	 * 
-	 * @param defaultMaxRows
-	 *            The defaultMaxRows to set.
-	 */
-	protected static void setDefaultMaxRows(final int defaultMaxRows)
-	{
-		ListMultipleChoice.defaultMaxRows = defaultMaxRows;
-	}
+	private int maxRows = DEFAULT_MAX_ROWS;
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String)

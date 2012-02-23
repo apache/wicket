@@ -1534,7 +1534,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @throws UnsupportedOperationException
 	 *             if the existing model object Collection cannot be modified
 	 */
-	protected static <S> void updateCollectionModel(FormComponent<Collection<S>> formComponent)
+	public static <S> void updateCollectionModel(FormComponent<Collection<S>> formComponent)
 	{
 		Collection<S> convertedInput = formComponent.getConvertedInput();
 

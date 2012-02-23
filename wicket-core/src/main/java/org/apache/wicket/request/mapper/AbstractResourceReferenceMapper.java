@@ -32,7 +32,7 @@ import org.apache.wicket.util.string.Strings;
 public abstract class AbstractResourceReferenceMapper extends AbstractComponentMapper
 {
 
-	protected static String encodeResourceReferenceAttributes(
+	protected final String encodeResourceReferenceAttributes(
 		ResourceReference.UrlAttributes attributes)
 	{
 		if (attributes == null ||
@@ -81,7 +81,7 @@ public abstract class AbstractResourceReferenceMapper extends AbstractComponentM
 		}
 	}
 
-	protected static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(
+	protected final ResourceReference.UrlAttributes decodeResourceReferenceAttributes(
 		String attributes)
 	{
 		Locale locale = null;

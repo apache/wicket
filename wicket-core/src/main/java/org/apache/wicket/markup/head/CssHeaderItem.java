@@ -186,7 +186,7 @@ public abstract class CssHeaderItem extends HeaderItem
 		return new CssUrlReferenceHeaderItem(url, media, condition);
 	}
 
-	protected static void internalRenderCSSReference(Response response, String url, String media,
+	protected final void internalRenderCSSReference(Response response, String url, String media,
 		String condition)
 	{
 		Args.notEmpty(url, "url");
