@@ -38,11 +38,12 @@ import org.junit.Test;
 public class PageParametersEncoderTest extends Assert
 {
 	/**
-	 * Tests that PageParametersEncoder decodes both GET and POST parameters
+	 * Tests that PageParametersEncoder decodes GET parameters, not POST
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void decodePostParameters() throws Exception
+	public void decodeParameters() throws Exception
 	{
 		PageParametersEncoder encoder = new PageParametersEncoder();
 		Request request = new Request()
@@ -89,9 +90,9 @@ public class PageParametersEncoderTest extends Assert
 		assertEquals("idx2", pageParameters.get(1).toOptionalString());
 		assertEquals("value1", pageParameters.get("named1").toOptionalString());
 		assertEquals("value2", pageParameters.get("named2").toOptionalString());
-		assertEquals("1", pageParameters.get("postOne").toOptionalString());
-		assertEquals("2", pageParameters.getValues("postTwo").get(0).toOptionalString());
-		assertEquals("2.1", pageParameters.getValues("postTwo").get(1).toOptionalString());
+		assertEquals(null, pageParameters.get("postOne").toOptionalString());
+		assertTrue(pageParameters.getValues("postTwo").isEmpty());
+		assertTrue(pageParameters.getValues("postTwo").isEmpty());
 	}
 
 	/**
@@ -102,7 +103,8 @@ public class PageParametersEncoderTest extends Assert
 		private final Map<String, List<StringValue>> params = new HashMap<String, List<StringValue>>();
 		{
 			params.put("postOne", Arrays.asList(StringValue.valueOf("1")));
-			params.put("postTwo", Arrays.asList(StringValue.valueOf("2"), StringValue.valueOf("2.1")));
+			params.put("postTwo",
+				Arrays.asList(StringValue.valueOf("2"), StringValue.valueOf("2.1")));
 		}
 
 		public Set<String> getParameterNames()
@@ -114,7 +116,7 @@ public class PageParametersEncoderTest extends Assert
 		{
 			List<StringValue> values = params.get(name);
 			return (values != null && !values.isEmpty()) ? values.get(0)
-					: StringValue.valueOf((String)null);
+				: StringValue.valueOf((String)null);
 		}
 
 		public List<StringValue> getParameterValues(String name)
