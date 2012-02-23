@@ -375,7 +375,7 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 * @param useMinifiedResources
 	 *            The new value for the setting
 	 */
-	void setUseMinifiedResources(Boolean useMinifiedResources);
+	void setUseMinifiedResources(boolean useMinifiedResources);
 
 	/**
 	 * @return Whether pre-minified resources will be used.

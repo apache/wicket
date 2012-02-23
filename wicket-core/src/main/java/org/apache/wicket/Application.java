@@ -303,6 +303,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			case DEVELOPMENT : {
 				getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 				getResourceSettings().setJavaScriptCompressor(null);
+				getResourceSettings().setUseMinifiedResources(false);
 				getMarkupSettings().setStripWicketTags(false);
 				getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_EXCEPTION_PAGE);

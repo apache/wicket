@@ -133,7 +133,7 @@ public class ResourceSettings implements IResourceSettings
 
 	private boolean useDefaultResourceAggregator = true;
 
-	private Boolean useMinifiedResources;
+	private boolean useMinifiedResources = true;
 
 	private Comparator<? super RecordedHeaderItem> headerItemComparator = new PriorityFirstComparator(
 		false);
@@ -574,7 +574,7 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	@Override
-	public void setUseMinifiedResources(Boolean useMinifiedResources)
+	public void setUseMinifiedResources(boolean useMinifiedResources)
 	{
 		this.useMinifiedResources = useMinifiedResources;
 	}
@@ -582,10 +582,6 @@ public class ResourceSettings implements IResourceSettings
 	@Override
 	public boolean getUseMinifiedResources()
 	{
-		if (useMinifiedResources == null)
-		{
-			return !application.usesDevelopmentConfig();
-		}
 		return useMinifiedResources;
 	}
 
