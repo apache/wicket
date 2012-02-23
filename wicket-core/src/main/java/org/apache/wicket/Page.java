@@ -281,18 +281,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		final IPageManager pageManager = getSession().getPageManager();
-		if (!getFlag(FLAG_IS_DIRTY) && isVersioned() && pageManager.supportsVersioning())
+		if (!getFlag(FLAG_IS_DIRTY) &&
+			(
+				isVersioned() && pageManager.supportsVersioning() ||
+
+				// we need to get pageId for new page instances even when the page doesn't need
+				// versioning, otherwise pages override each other in the page store and back button
+				// support is broken
+				isInitialization
+			)
+		)
 		{
 			setFlag(FLAG_IS_DIRTY, true);
 			setNextAvailableId();
 			pageManager.touchPage(this);
-		}
-		else if (isInitialization)
-		{
-			// we need to get pageId for new page instances even when the page doesn't need
-			// versioning, otherwise pages override each other in the page store and back button
-			// support is broken
-			setNextAvailableId();
 		}
 	}
 

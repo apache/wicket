@@ -45,13 +45,22 @@ public interface IPageSettings
 	List<IComponentResolver> getComponentResolvers();
 
 	/**
-	 * @return Returns the pagesVersionedByDefault.
+	 * @return whether all pages should should update their page id when their component hierarchy
+	 *      changes somehow
 	 */
 	boolean getVersionPagesByDefault();
 
 	/**
+	 * A global setting that tells the pages to update their page id if their component
+	 * hierarchy changes somehow. This way versioned pages can have several versions
+	 * stored in the page stores and the user can go back and forth through the different
+	 * versions. If a page is not versioned then only its last state is keep in the page
+	 * stores and going back will lead the user to the page before the current one, not
+	 * to the previous state of the current one.
+	 *
 	 * @param pagesVersionedByDefault
-	 *            The pagesVersionedByDefault to set.
+	 *      a flag that indicates whether pages should increase their page id when
+	 *      their component hierarchy changes somehow.
 	 */
 	void setVersionPagesByDefault(boolean pagesVersionedByDefault);
 
