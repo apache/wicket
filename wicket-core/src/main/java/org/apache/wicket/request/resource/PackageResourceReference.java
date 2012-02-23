@@ -182,7 +182,7 @@ public class PackageResourceReference extends ResourceReference
 	/**
 	 * @return How the minified file should be named.
 	 */
-	private String getMinifiedName()
+	protected String getMinifiedName()
 	{
 		String name = super.getName();
 		String minifiedName;
