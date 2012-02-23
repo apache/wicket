@@ -28,8 +28,6 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -40,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * the original location as was passed in as a URL argument in the constructor.
  * </p>
  * <p>
- * This page is being used by the default implementation of {@link WebRequestCycle#newClientInfo},
+ * This page is being used by the default implementation of {@link org.apache.wicket.Session#getClientInfo()},
  * which in turn uses {@link IRequestCycleSettings#getGatherExtendedBrowserInfo() a setting} to
  * determine whether this page should be redirected to (it does when it is true).
  * </p>
@@ -49,18 +47,12 @@ import org.slf4j.LoggerFactory;
  */
 public class BrowserInfoPage extends WebPage
 {
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(BrowserInfoPage.class);
-
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Bookmarkable constructor. This is not for normal framework client use. It will be called
 	 * whenever JavaScript is not supported, and the browser info page's meta refresh fires to this
 	 * page. Prior to this, the other constructor should already have been called.
-	 * 
-	 * @param parameters
-	 *            page parameters with the original url in it
 	 */
 	public BrowserInfoPage()
 	{
@@ -94,7 +86,7 @@ public class BrowserInfoPage extends WebPage
 	/**
 	 * Adds components.
 	 */
-	private final void initComps()
+	private void initComps()
 	{
 		WebComponent meta = new WebComponent("meta");
 
