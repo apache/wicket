@@ -29,7 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO javadoc
+ * This is a ResourceReference that knows how to find and serve resources located in the
+ * Java package (i.e. next to the class files).
  */
 public class PackageResourceReference extends ResourceReference
 {
@@ -43,9 +44,18 @@ public class PackageResourceReference extends ResourceReference
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
 
 	/**
-	 * Cache for existence check of minified file
+	 * Cache for existence of minified version of the resource to avoid repetitive calls
+	 * to org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate() and
+	 * #getMinifiedName().
 	 */
-	private Boolean minifiedExists = null;
+	private static final ConcurrentMap<PackageResourceReference, String> MINIFIED_NAMES_CACHE
+			= Generics.newConcurrentHashMap();
+
+	/**
+	 * A constant used to indicate that there is no minified version of the resource.
+	 */
+	// Any file system wont allow a file with this name, so there wont be clashes.
+	private static final String NO_MINIFIED_NAME = "~!@#$%^&*()_+<>?|}";
 
 	/**
 	 * Construct.
@@ -119,7 +129,8 @@ public class PackageResourceReference extends ResourceReference
 				getVariation());
 		}
 
-		if (minifiedExists)
+		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
+		if (minifiedName != null && minifiedName != NO_MINIFIED_NAME)
 		{
 			resource.setCompress(false);
 		}
@@ -156,12 +167,15 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Initializes the cache for the existence of the minified resource.
+	 * @return the name of the minified resource or the special constant {@value #NO_MINIFIED_NAME}
+	 * if there is no minified version
 	 */
-	private void initMinifiedExists()
+	private String internalGetMinifiedName()
 	{
-		if (minifiedExists != null)
+		String minifiedExists = MINIFIED_NAMES_CACHE.get(this);
+		if (minifiedExists != null && minifiedExists != NO_MINIFIED_NAME)
 		{
-			return;
+			return minifiedExists;
 		}
 
 		String name = getMinifiedName();
@@ -171,12 +185,15 @@ public class PackageResourceReference extends ResourceReference
 		String absolutePath = Packages.absolutePath(getScope(), name);
 		IResourceStream stream = locator.locate(getScope(), absolutePath, getStyle(),
 				getVariation(), getLocale(), null, true);
-		minifiedExists = stream != null;
-		if (!minifiedExists && log.isDebugEnabled())
+
+		minifiedExists = stream != null ? name : NO_MINIFIED_NAME;
+		MINIFIED_NAMES_CACHE.put(this, minifiedExists);
+		if (minifiedExists == NO_MINIFIED_NAME && log.isDebugEnabled())
 		{
 			log.debug("No minified version of '" + super.getName() +
 					"' found, expected a file with the name '" + name + "', using full version");
 		}
+		return minifiedExists;
 	}
 
 	/**
@@ -207,10 +224,22 @@ public class PackageResourceReference extends ResourceReference
 	@Override
 	public String getName()
 	{
-		initMinifiedExists();
-		if (minifiedExists && Application.get().getResourceSettings().getUseMinifiedResources())
-			return getMinifiedName();
-		return super.getName();
+		String name = null;
+
+		if (Application.exists() && Application.get().getResourceSettings().getUseMinifiedResources())
+		{
+			String minifiedName = internalGetMinifiedName();
+			if (minifiedName != NO_MINIFIED_NAME)
+			{
+				name = minifiedName;
+			}
+		}
+
+		if (name == null)
+		{
+			name = super.getName();
+		}
+		return name;
 	}
 
 	@Override
