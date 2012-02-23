@@ -450,7 +450,7 @@ public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFacto
 		/** @see #setProtocolHeader(String) */
 		private String protocolHeader = null;
 
-		/** @see #setProtocolHeaderSsl(String) */
+		/** @see #setProtocolHeaderSslValue(String) */
 		private String protocolHeaderSslValue = "https";
 
 		/** @see #setProxiesHeader(String) */
@@ -462,7 +462,7 @@ public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFacto
 		/** @see #setTrustedProxies(String) */
 		private Pattern[] trustedProxies = new Pattern[0];
 
-		/** @see #setInternalProxies(String) */
+		/** @see #setTrustedProxies(String) */
 		private Pattern[] allowedInternalProxies = new Pattern[] {
 				Pattern.compile("10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"),
 				Pattern.compile("192\\.168\\.\\d{1,3}\\.\\d{1,3}"),
