@@ -102,8 +102,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		super.updateAjaxAttributes(attributes);
 
 		attributes.setMethod(Method.POST);
-		attributes.getDynamicExtraParameters().add(
-			"return Wicket.Form.serializeElement('" + getComponent().getMarkupId() + "')");
 		attributes.setAllowDefault(true);
 	}
 
