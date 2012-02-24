@@ -303,4 +303,4 @@ Wicket.DateTime.init2 = function(widgetId, componentId, calendarInit, datePatter
 	});
 }
 
-YAHOO.register("wicket-date", Wicket.DateTime, {version: "1.5", build: "RC6"});
+YAHOO.register("wicket-date", Wicket.DateTime, {version: "1.5.5", build: "1"});
