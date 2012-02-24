@@ -21,6 +21,8 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -48,6 +50,8 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
+	private static final Logger LOG = LoggerFactory.getLogger(AjaxEventBehavior.class);
+
 	private static long sequence = 0;
 
 	private static final long serialVersionUID = 1L;
@@ -108,6 +112,20 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		Component myComponent = getComponent();
 		if (myComponent.isEnabledInHierarchy())
 		{
+			if (LOG.isWarnEnabled() && myComponent.getApplication().usesDevelopmentConfig())
+			{
+				String attribute = tag.getAttribute(event);
+				if (Strings.isEmpty(attribute) == false)
+				{
+					LOG.warn("{} assigned to {} is overriding the previous value of the inline attribute. " +
+						"Maybe there are several Ajax event behaviors on the same type assigned to this component.",
+						new Object[] {
+							this, myComponent
+						}
+					);
+				}
+			}
+
 			tag.put(event, getEventHandler());
 		}
 	}
@@ -173,6 +191,11 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
 
+	@Override
+	public String toString()
+	{
+		return getClass().getName() + " {" + "event='" + event + '\'' + '}';
+	}
 
 	/**
 	 * Class to keep track of throttling settings.
