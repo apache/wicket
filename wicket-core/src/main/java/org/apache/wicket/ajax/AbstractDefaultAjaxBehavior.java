@@ -435,7 +435,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	protected CharSequence getCallbackScript(final Component component)
 	{
 		CharSequence ajaxAttributes = renderAjaxAttributes(component);
-		return "Wicket.Ajax.ajax("+ajaxAttributes+")";
+		return "Wicket.Ajax.ajax("+ajaxAttributes+");";
 	}
 
 	/**
