@@ -225,7 +225,6 @@ public class UrlRenderer
 			}
 			else
 			{
-
 				for (int i = common + 1; i < baseUrlSize; ++i)
 				{
 					newSegments.add("..");
@@ -234,7 +233,21 @@ public class UrlRenderer
 			newSegments.addAll(urlSegments);
 
 			String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
-			return Strings.isEmpty(renderedUrl) ? "." : renderedUrl;
+			String result;
+			if (Strings.isEmpty(renderedUrl))
+			{
+				result = ".";
+			}
+			else if (renderedUrl.endsWith(".."))
+			{
+				// WICKET-4401
+				result = renderedUrl + '/';
+			}
+			else
+			{
+				result = renderedUrl;
+			}
+			return  result;
 		}
 	}
 
