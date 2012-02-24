@@ -1223,7 +1223,28 @@
 
 			serializeForm: function (form) {
 				var result = [],
+					elements,
+					nodeListToArray,
+					nodeId;
+
+				nodeListToArray = function (nodeList) {
+					var arr = [];
+					if (nodeList && nodeList.length) {
+						for (nodeId = 0; nodeId < nodeList.length; nodeId++) {
+							arr.push(nodeList.item(nodeId));
+						}
+					}
+					return arr;
+				};
+
+				if (form && form.tagName.toLowerCase() === 'form') {
 					elements = form.elements;
+				} else {
+					elements = nodeListToArray(form.getElementsByTagName("input"));
+					elements = nodeListToArray(form.getElementsByTagName("select"));
+					elements = nodeListToArray(form.getElementsByTagName("textarea"));
+				}
+
 				for (var i = 0; i < elements.length; ++i) {
 					var el = elements[i];
 					if (el.name && el.name !== "") {
