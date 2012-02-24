@@ -938,7 +938,7 @@ public class ModalWindow extends Panel
 		}
 
 		@Override
-		protected CharSequence getCallbackScript()
+		public CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
 		}
@@ -969,7 +969,7 @@ public class ModalWindow extends Panel
 		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getCallbackScript()
 		 */
 		@Override
-		protected final CharSequence getCallbackScript()
+		public final CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
 		}

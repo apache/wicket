@@ -80,12 +80,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 		if (component.isEnabledInHierarchy())
 		{
-			StringBuilder js = new StringBuilder();
-			js.append("Wicket.Ajax.ajax(");
-
-			js.append(renderAjaxAttributes(component));
-
-			js.append(");");
+			CharSequence js = getCallbackScript(component);
 
 			AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
 			if (target == null)

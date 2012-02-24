@@ -419,11 +419,23 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 	/**
 	 * @return javascript that will generate an ajax GET request to this behavior
+	 *  with its assigned component
 	 */
-	protected CharSequence getCallbackScript()
+	public CharSequence getCallbackScript()
 	{
-		CharSequence attrsJson = renderAjaxAttributes(getComponent());
-		return "Wicket.Ajax.get(" + attrsJson + ")";
+		return getCallbackScript(getComponent());
+	}
+
+	/**
+	 * @param component the component to use when generating the attributes
+	 * @return script that can be used to execute this Ajax behavior.
+	 */
+	// 'protected' because this method is intended to be called by other Behavior methods which
+	// accept the component as parameter
+	protected CharSequence getCallbackScript(final Component component)
+	{
+		CharSequence ajaxAttributes = renderAjaxAttributes(component);
+		return "Wicket.Ajax.ajax("+ajaxAttributes+")";
 	}
 
 	/**
