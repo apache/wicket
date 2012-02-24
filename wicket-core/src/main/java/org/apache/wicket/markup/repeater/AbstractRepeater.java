@@ -77,9 +77,6 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 
 	/**
 	 * Renders all child items in no specified order
-	 * 
-	 * @param markupStream
-	 *            The markup stream
 	 */
 	@Override
 	protected final void onRender()
