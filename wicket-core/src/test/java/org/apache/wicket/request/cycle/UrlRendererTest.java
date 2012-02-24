@@ -148,4 +148,16 @@ public class UrlRendererTest extends TestCase
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("?0")));
 		assertEquals(".", r1.renderUrl(Url.parse("")));
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4401
+	 *
+	 * A Url should not ends with '..' because some web containers do not handle it
+	 * properly. Using '../' works better.
+	 */
+	public void test13()
+	{
+		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar")));
+		assertEquals("../", r1.renderUrl(Url.parse("")));
+	}
 }
