@@ -90,7 +90,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		}
 		else
 		{
-			ext = path.substring(ixExtension + 1).toLowerCase();
+			ext = path.substring(ixExtension + 1).toLowerCase().trim();
 		}
 
 		if ("html".equals(ext) &&
@@ -166,6 +166,10 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 */
 	protected boolean acceptFile(String file)
 	{
+		if (file != null)
+		{
+			file = file.trim();
+		}
 		return (!blockedFiles.contains(file));
 	}
 
