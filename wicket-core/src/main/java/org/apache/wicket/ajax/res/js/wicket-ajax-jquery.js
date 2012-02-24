@@ -1241,8 +1241,8 @@
 					elements = form.elements;
 				} else {
 					elements = nodeListToArray(form.getElementsByTagName("input"));
-					elements = nodeListToArray(form.getElementsByTagName("select"));
-					elements = nodeListToArray(form.getElementsByTagName("textarea"));
+					elements = elements.concat(nodeListToArray(form.getElementsByTagName("select")));
+					elements = elements.concat(nodeListToArray(form.getElementsByTagName("textarea")));
 				}
 
 				for (var i = 0; i < elements.length; ++i) {
