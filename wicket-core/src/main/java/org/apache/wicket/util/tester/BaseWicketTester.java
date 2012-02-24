@@ -62,7 +62,6 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
@@ -2127,32 +2126,42 @@ public class BaseWicketTester
 	/**
 	 * Simulates the firing of all ajax timer behaviors on the page
 	 * 
-	 * @param container
+	 * @param page
+	 *      the page which timers will be executed
 	 */
-	public void executeAllTimerBehaviors(final MarkupContainer container)
+	public void executeAllTimerBehaviors(final MarkupContainer page)
 	{
-		container.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer, Void>()
+		// execute all timer behaviors for the page itself
+		internalExecuteAllTimerBehaviors(page);
+
+		// and for all its children
+		page.visitChildren(Component.class, new IVisitor<Component, Void>()
 		{
 			@Override
-			public void component(final MarkupContainer component, final IVisit<Void> visit)
+			public void component(final Component component, final IVisit<Void> visit)
 			{
-				// get the AbstractAjaxBehaviour which is responsible for
-				// getting the contents of the lazy panel
-				List<AbstractAjaxTimerBehavior> behaviors = component.getBehaviors(AbstractAjaxTimerBehavior.class);
-				for (Behavior b : behaviors)
-				{
-					checkUsability(component, true);
-
-					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
-						component.getClassRelativePath());
-					AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior)b;
-					if (!timer.isStopped())
-					{
-						executeBehavior(timer);
-					}
-				}
+				internalExecuteAllTimerBehaviors(component);
 			}
 		});
+	}
+
+	private void internalExecuteAllTimerBehaviors(final Component component)
+	{
+		List<AbstractAjaxTimerBehavior> behaviors = component.getBehaviors(AbstractAjaxTimerBehavior.class);
+		for (AbstractAjaxTimerBehavior timer : behaviors)
+		{
+			checkUsability(component, true);
+
+			if (!timer.isStopped())
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}", component.getClassRelativePath());
+				}
+
+				executeBehavior(timer);
+			}
+		}
 	}
 
 	/**
