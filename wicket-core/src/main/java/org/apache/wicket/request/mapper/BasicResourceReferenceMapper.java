@@ -95,6 +95,12 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			{
 				String segment = url.getSegments().get(i);
 
+				// skip possibly malicious segments
+				if (segment.contains("/"))
+				{
+					return null;
+				}
+
 				// remove caching information
 				if (i + 1 == segmentsSize && Strings.isEmpty(segment) == false)
 				{
