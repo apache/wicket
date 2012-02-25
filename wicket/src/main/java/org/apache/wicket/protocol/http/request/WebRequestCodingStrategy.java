@@ -725,6 +725,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			{
 				StringBuffer path = new StringBuffer(
 					WicketURLDecoder.PATH_INSTANCE.decode(pathInfo.substring(ix)));
+				
 				int ixSemiColon = path.indexOf(";");
 				// strip off any jsession id
 				if (ixSemiColon != -1)
@@ -736,7 +737,16 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					}
 					path.delete(ixSemiColon, ixEnd);
 				}
-				parameters.setResourceKey(path.toString());
+				String resourcePath = path.toString();
+
+				// do not accept a leading slash or a duplicate slash in the resource path 
+				// which probably is the result of a maliciously constructed url
+				if (resourcePath.startsWith("/") || resourcePath.indexOf("//") != -1)
+				{
+					return;
+				}
+
+				parameters.setResourceKey(resourcePath);
 			}
 		}
 	}
