@@ -32,6 +32,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.crypt.StringUtils;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -93,6 +94,12 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			for (int i = 3; i < segmentsSize; ++i)
 			{
 				String segment = url.getSegments().get(i);
+
+				// ignore invalid segments
+				if (segment.contains("/"))
+				{
+					return null;
+				}
 
 				// remove caching information
 				if (i + 1 == segmentsSize && Strings.isEmpty(segment) == false)
