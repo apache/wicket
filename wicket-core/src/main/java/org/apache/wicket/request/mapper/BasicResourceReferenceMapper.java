@@ -120,7 +120,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 			Class<?> scope = resolveClass(className);
 			
-			if (scope != null && !scope.isPrimitive())
+			if (scope != null && scope.getPackage() != null)
 			{
 				ResourceReference res = getContext().getResourceReferenceRegistry()
 					.getResourceReference(scope, name.toString(), attributes.getLocale(),
