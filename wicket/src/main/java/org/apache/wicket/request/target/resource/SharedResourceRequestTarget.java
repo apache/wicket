@@ -149,6 +149,11 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 					if (scope == null)
 					{
 						scope = resolver.resolveClass(className);
+						
+						if(scope.getPackage() == null) // do not accept default package as scope
+						{
+							scope = null;
+						}
 					}
 
 					// get path component of resource key, replace '..' with
