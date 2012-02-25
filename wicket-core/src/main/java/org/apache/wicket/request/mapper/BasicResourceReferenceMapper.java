@@ -119,7 +119,8 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			ResourceReference.UrlAttributes attributes = getResourceReferenceAttributes(url);
 
 			Class<?> scope = resolveClass(className);
-			if (scope != null)
+			
+			if (scope != null && !scope.isPrimitive())
 			{
 				ResourceReference res = getContext().getResourceReferenceRegistry()
 					.getResourceReference(scope, name.toString(), attributes.getLocale(),
