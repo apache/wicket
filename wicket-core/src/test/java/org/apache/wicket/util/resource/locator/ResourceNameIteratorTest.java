@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.resource.locator;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
@@ -117,18 +118,17 @@ public class ResourceNameIteratorTest extends WicketTestCase
 	@Test
 	public void extensionResourceNameIterator()
 	{
-		ExtensionResourceNameIterator iterator = new ExtensionResourceNameIterator(null, ',');
+		ExtensionResourceNameIterator iterator = new ExtensionResourceNameIterator(null);
 		assertTrue(iterator.hasNext());
 		assertEquals(null, iterator.next());
 		assertFalse(iterator.hasNext());
 
-		iterator = new ExtensionResourceNameIterator("txt", ',');
+		iterator = new ExtensionResourceNameIterator(Arrays.asList("txt"));
 		assertTrue(iterator.hasNext());
 		assertEquals("txt", iterator.next());
 		assertFalse(iterator.hasNext());
 
-		iterator = new ExtensionResourceNameIterator("properties,utf8.properties,properties.xml",
-			',');
+		iterator = new ExtensionResourceNameIterator(Arrays.asList("properties", "utf8.properties", "properties.xml"));
 		assertTrue(iterator.hasNext());
 		assertEquals("properties", iterator.next());
 		assertTrue(iterator.hasNext());
@@ -148,9 +148,9 @@ public class ResourceNameIteratorTest extends WicketTestCase
 		String style = null;
 		String var = "var";
 		Locale locale = Locale.getDefault();
-		String ext = null;
+		Iterable<String> extensions = null;
 		boolean strict = false;
-		Iterator<String> iterator = new ResourceNameIterator(path, style, var, locale, ext, strict);
+		Iterator<String> iterator = new ResourceNameIterator(path, style, var, locale, extensions, strict);
 		HashSet<String> variations = new HashSet<String>();
 		while (iterator.hasNext())
 		{

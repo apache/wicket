@@ -16,52 +16,46 @@
  */
 package org.apache.wicket.util.resource.locator;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
-import org.apache.wicket.util.string.Strings;
-
-
 /**
- * Iterate over a list of 'comma' separated strings. If an empty string is provided, hasNext() will
+ * Iterate over a set of extensions. If null is provided, hasNext() will
  * successfully return once with next() returning {@code null}.
  * 
  * @author Juergen Donnerstag
  */
 public class ExtensionResourceNameIterator implements Iterator<String>
 {
-	private final String[] extensions;
+	private static final Iterable<String> NULL_ITERABLE = Arrays.asList((String)null);
 
-	private int index;
+	private final Iterator<String> iterator;
+	
+	private String current;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param extension
-	 *            {@code null} or comma separated extensions
-	 * @param separatorChar
+	 * @param extensions
+	 *            {@code null} or iterable with extensions
 	 */
-	public ExtensionResourceNameIterator(final String extension, final char separatorChar)
+	public ExtensionResourceNameIterator(final Iterable<String> extensions)
 	{
-		// Extension can be a comma separated list
-		String[] extensions = Strings.split(extension, separatorChar);
-		if (extensions.length == 0)
+		// Fail safe: hasNext() needs to return at least once with true
+		if (extensions == null || !extensions.iterator().hasNext())
 		{
-			// Fail safe: hasNext() needs to return at least once with true.
-			extensions = new String[] { null };
+			this.iterator = NULL_ITERABLE.iterator();
 		}
-		this.extensions = extensions;
-
-		index = 0;
+		else
+		{
+			this.iterator = extensions.iterator();
+		}
 	}
 
-	/**
-	 * 
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext()
 	{
-		return (index < extensions.length);
+		return iterator.hasNext();
 	}
 
 	/**
@@ -70,8 +64,7 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	@Override
 	public String next()
 	{
-		index++;
-
+		current = iterator.next();
 		return getExtension();
 	}
 
@@ -80,25 +73,26 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	 */
 	public final String getExtension()
 	{
-		String extension = extensions[index - 1];
-		if (extension != null)
+		String ext = current;
+
+		if (ext != null)
 		{
-			extension = extension.trim();
-			if (extension.startsWith("."))
+			ext = ext.trim();
+			if (ext.startsWith("."))
 			{
-				extension = extension.substring(1);
+				ext = ext.substring(1);
 			}
 		}
-		return extension;
+		return ext;
 	}
 
 	/**
 	 * Noop.
 	 * 
-	 * @see java.util.Iterator#remove()
 	 */
 	@Override
 	public void remove()
 	{
+		iterator.remove();
 	}
 }

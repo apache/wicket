@@ -17,6 +17,8 @@
 package org.apache.wicket.util.resource.locator;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
@@ -59,6 +61,8 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 {
 	/** Logging */
 	private static final Logger log = LoggerFactory.getLogger(ResourceStreamLocator.class);
+
+	private static final Iterable<String> NO_EXTENSIONS = new ArrayList<String>(0);
 
 	/** If null, the application registered finder will be used */
 	private IResourceFinder finder;
@@ -250,6 +254,8 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	public ResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
 		final String style, final String variation, final String extension, final boolean strict)
 	{
-		return new ResourceNameIterator(path, style, variation, locale, extension, strict);
+		final Iterable<String> extensions = extension == null ? NO_EXTENSIONS : Arrays.asList(extension);
+
+		return new ResourceNameIterator(path, style, variation, locale, extensions, strict);
 	}
 }

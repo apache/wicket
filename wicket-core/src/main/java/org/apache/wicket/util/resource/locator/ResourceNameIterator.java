@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.resource.locator;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -43,8 +44,6 @@ import org.apache.wicket.util.string.Strings;
  * <li>&lt;language&gt;_&lt;country&gt;</li>
  * <li>&lt;language&gt;</li>
  * </ol>
- * <p>
- * Extensions may be a comma separated list of extensions, e.g. "properties,xml"
  * 
  * @author Juergen Donnerstag
  */
@@ -53,8 +52,8 @@ public class ResourceNameIterator implements Iterator<String>
 	// The base path without extension, style, locale etc.
 	private final String path;
 
-	// The extensions (comma separated) to search for the resource file
-	private final String extensions;
+	// The extensions to search for the resource file
+	private final Iterable<String> extensions;
 
 	// The locale to search for the resource file
 	private final Locale locale;
@@ -81,17 +80,20 @@ public class ResourceNameIterator implements Iterator<String>
 	 * @param locale
 	 *            The Locale to apply
 	 * @param extensions
-	 *            the filname's extensions (comma separated)
+	 *            the filename's extensions
 	 * @param strict
 	 *            If false, weaker combinations of style, locale, etc. are tested as well
 	 */
 	public ResourceNameIterator(final String path, final String style, final String variation,
-		final Locale locale, final String extensions, boolean strict)
+		final Locale locale, final Iterable<String> extensions, final boolean strict)
 	{
 		this.locale = locale;
-		if ((extensions == null) && (path != null) && (path.indexOf('.') != -1))
+
+		boolean noext = extensions == null || !extensions.iterator().hasNext();
+		
+		if (noext && (path != null) && (path.indexOf('.') != -1))
 		{
-			this.extensions = Strings.afterLast(path, '.');
+			this.extensions = Arrays.asList(Strings.afterLast(path, '.').split(","));
 			this.path = Strings.beforeLast(path, '.');
 		}
 		else
@@ -271,9 +273,9 @@ public class ResourceNameIterator implements Iterator<String>
 	 * @param extensions
 	 * @return New iterator
 	 */
-	protected ExtensionResourceNameIterator newExtensionResourceNameIterator(final String extensions)
+	protected ExtensionResourceNameIterator newExtensionResourceNameIterator(final Iterable<String> extensions)
 	{
-		return new ExtensionResourceNameIterator(extensions, ',');
+		return new ExtensionResourceNameIterator(extensions);
 	}
 
 	/**
