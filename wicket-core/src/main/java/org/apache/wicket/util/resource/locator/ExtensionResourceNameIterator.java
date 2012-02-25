@@ -67,8 +67,8 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	 */
 	public String next()
 	{
-		String rtn = extensions[index++].trim();
-		return rtn.startsWith(".") ? rtn.substring(1) : rtn;
+		index++;
+		return getExtension();
 	}
 
 	/**
@@ -76,8 +76,8 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	 */
 	public final String getExtension()
 	{
-		String rtn = extensions[index - 1].trim();
-		return rtn.startsWith(".") ? rtn.substring(1) : rtn;
+		String ext = extensions[index - 1];
+		return ext.startsWith(".") ? ext.substring(1) : ext;
 	}
 
 	/**
