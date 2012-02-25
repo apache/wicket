@@ -77,7 +77,6 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 
 		if (ext != null)
 		{
-			ext = ext.trim();
 			if (ext.startsWith("."))
 			{
 				ext = ext.substring(1);
