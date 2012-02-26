@@ -835,6 +835,7 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		try
 		{
+			// todo, should there be a better check? because this call already fails..
 			tester.startPage(BlockedResourceLinkPage.class);
 
 			TagTester linkTag = TagTester.createTagByAttribute(tester.getLastResponseAsString(),
@@ -848,6 +849,40 @@ public class WicketTesterTest extends WicketTestCase
 		catch (PackageResourceBlockedException e)
 		{
 
+		}
+
+		tester.startPage(MockResourceLinkPage.class);
+		tester.clickLink("link");
+		// assertNull(getRequestCodingStrategy());
+	}
+
+	/**
+	 * Test that clickLink on a ResourceLink with a ResourceReference on it works.
+	 * 
+	 * <p>
+	 * See also WICKET-280 Allow to access html resources
+	 * </p>
+	 */
+	@Test
+	public void clickResourceLinkWithSomeCommaAppendedUrl()
+	{
+		try
+		{
+			// todo, should there be a better check? because this call already fails..
+			tester.startPage(BlockedResourceLinkPage.class);
+
+			TagTester linkTag = TagTester.createTagByAttribute(tester.getLastResponseAsString(),
+				"wicket:id", "link");
+			String url = linkTag.getAttribute("href");
+			url = url.replace("../", "wicket/");
+			url += ",xml";
+			tester.executeUrl(url);
+			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " +
+				PackageResourceBlockedException.class);
+		}
+		catch (PackageResourceBlockedException e)
+		{
+// e.printStackTrace();
 		}
 
 		tester.startPage(MockResourceLinkPage.class);
