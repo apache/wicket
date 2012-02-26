@@ -44,6 +44,7 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.lang.Packages;
+import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
@@ -667,7 +668,16 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 			.getResourceSettings()
 			.getPackageResourceGuard();
 
-		return guard.accept(scope, path);
+		String realPath = path;
+		IResourceStream resourceStream = Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(getScope(), absolutePath, style, locale, null);
+		if (resourceStream instanceof IFixedLocationResourceStream)
+		{
+			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
+		}
+		return guard.accept(scope, realPath);
 	}
 
 	@Override
