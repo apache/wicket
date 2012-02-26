@@ -156,17 +156,16 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			path = name;
 		}
 
+		scopeName = scope.getName();
+		this.locale = locale;
+		this.style = style;
+		this.variation = variation;
 		if (!accept(scope, path))
 		{
 			throw new PackageResourceBlockedException(
 				"Access denied to (static) package resource " + absolutePath +
 					". See IPackageResourceGuard");
 		}
-
-		scopeName = scope.getName();
-		this.locale = locale;
-		this.style = style;
-		this.variation = variation;
 	}
 
 	private Locale getCurrentLocale()
