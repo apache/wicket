@@ -85,10 +85,6 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 		return ext;
 	}
 
-	/**
-	 * Noop.
-	 * 
-	 */
 	@Override
 	public void remove()
 	{

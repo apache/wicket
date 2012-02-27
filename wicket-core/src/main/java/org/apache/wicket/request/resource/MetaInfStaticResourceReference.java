@@ -22,6 +22,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Packages;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Resource reference for static files. The resource must reside under the "/META-INF/resources/"
@@ -76,13 +77,14 @@ public class MetaInfStaticResourceReference extends PackageResourceReference
 
 		List<String> segments = url.getSegments();
 
-		String[] parts = Packages.extractPackageName(getScope()).split("\\.");
+		String packageName = Packages.extractPackageName(getScope());
+		String[] parts = Strings.split(packageName, '.');
 		for (String p : parts)
 		{
 			segments.add(p);
 		}
 
-		parts = getName().split("/");
+		parts = Strings.split(getName(), '/');
 		for (String p : parts)
 		{
 			segments.add(p);
