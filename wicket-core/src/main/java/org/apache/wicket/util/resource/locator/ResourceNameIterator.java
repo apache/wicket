@@ -93,7 +93,8 @@ public class ResourceNameIterator implements Iterator<String>
 		
 		if (noext && (path != null) && (path.indexOf('.') != -1))
 		{
-			this.extensions = Arrays.asList(Strings.afterLast(path, '.').split(","));
+			String[] extns = Strings.split(Strings.afterLast(path, '.'), ',');
+			this.extensions = Arrays.asList(extns);
 			this.path = Strings.beforeLast(path, '.');
 		}
 		else
