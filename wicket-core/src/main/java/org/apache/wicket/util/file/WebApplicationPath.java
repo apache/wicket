@@ -40,6 +40,8 @@ public final class WebApplicationPath implements IResourcePath
 {
 	private final static Logger log = LoggerFactory.getLogger(WebApplicationPath.class);
 
+	private static final String WEB_INF = "WEB-INF/";
+
 	/** The list of urls in the path */
 	private final List<String> webappPaths = new ArrayList<String>();
 
@@ -103,19 +105,22 @@ public final class WebApplicationPath implements IResourcePath
 			}
 		}
 
-		for (String path : webappPaths)
+		if (pathname.startsWith(WEB_INF) == false)
 		{
-			try
+			for (String path : webappPaths)
 			{
-				final URL url = servletContext.getResource(path + pathname);
-				if (url != null)
+				try
 				{
-					return new UrlResourceStream(url);
+					final URL url = servletContext.getResource(path + pathname);
+					if (url != null)
+					{
+						return new UrlResourceStream(url);
+					}
 				}
-			}
-			catch (Exception ex)
-			{
-				// ignore, file couldn't be found
+				catch (Exception ex)
+				{
+					// ignore, file couldn't be found
+				}
 			}
 		}
 
