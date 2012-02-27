@@ -39,6 +39,8 @@ public final class WebApplicationPath extends Path
 {
 	private final static Logger log = LoggerFactory.getLogger(WebApplicationPath.class);
 
+	private static final String WEB_INF = "WEB-INF/";
+
 	/** The list of urls in the path */
 	private final List<String> webappPaths = new ArrayList<String>();
 
@@ -69,6 +71,7 @@ public final class WebApplicationPath extends Path
 		final Folder folder = new Folder(path);
 		if (folder.exists())
 		{
+			log.debug("Added path '{}' as a folder.", path);
 			super.add(folder);
 		}
 		else
@@ -81,6 +84,7 @@ public final class WebApplicationPath extends Path
 			{
 				path += "/";
 			}
+			log.debug("Added path '{}' as a web path.", path);
 			webappPaths.add(path);
 		}
 	}
@@ -92,9 +96,14 @@ public final class WebApplicationPath extends Path
 	@Override
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
+		if (pathname == null)
+		{
+			return null;
+		}
+
 		IResourceStream resourceStream = super.find(clazz, pathname);
 
-		if (resourceStream == null)
+		if (resourceStream == null && pathname.startsWith(WEB_INF) == false)
 		{
 			for (String path : webappPaths)
 			{
