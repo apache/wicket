@@ -676,6 +676,21 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		if (resourceStream instanceof IFixedLocationResourceStream)
 		{
 			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
+			if (realPath != null)
+			{
+				int index = realPath.indexOf(path);
+				if (index != -1)
+				{
+					realPath = realPath.substring(index);
+				}
+				else
+					// TODO just fall back on the full path without a scope..
+					return guard.accept(null, realPath);
+			}
+			else
+			{
+				realPath = path;
+			}
 		}
 		return guard.accept(scope, realPath);
 	}
