@@ -54,8 +54,8 @@ public class PackageResourceReference extends ResourceReference
 	/**
 	 * A constant used to indicate that there is no minified version of the resource.
 	 */
-	// Any file system wont allow a file with this name, so there wont be clashes.
-	private static final String NO_MINIFIED_NAME = "~!@#$%^&*()_+<>?|}";
+	// WARNING: always compare by identity!
+	private static final String NO_MINIFIED_NAME = new String();
 
 	/**
 	 * Construct.
@@ -167,7 +167,7 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Initializes the cache for the existence of the minified resource.
-	 * @return the name of the minified resource or the special constant {@value #NO_MINIFIED_NAME}
+	 * @return the name of the minified resource or the special constant {@link #NO_MINIFIED_NAME}
 	 * if there is no minified version
 	 */
 	private String internalGetMinifiedName()
