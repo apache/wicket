@@ -225,7 +225,7 @@ public class Recorder<T> extends HiddenField<Object>
 		}
 		else
 		{
-			ids = value.split(",");
+			ids = Strings.split(value, ',');
 		}
 	}
 

@@ -36,6 +36,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -419,7 +420,7 @@ public class MockServletContext implements ServletContext
 		}
 		else
 		{
-			elements = name.split("/");
+			elements = Strings.split(name, '/');
 		}
 
 		File current = webappRoot;

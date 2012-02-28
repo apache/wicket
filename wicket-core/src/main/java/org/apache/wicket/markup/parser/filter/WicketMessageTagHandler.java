@@ -126,7 +126,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 			{
 				expr = expr.trim();
 
-				String[] attrsAndKeys = expr.split(",");
+				String[] attrsAndKeys = Strings.split(expr, ',');
 
 				for (String attrAndKey : attrsAndKeys)
 				{

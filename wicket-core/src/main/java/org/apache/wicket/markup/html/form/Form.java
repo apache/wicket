@@ -1575,7 +1575,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			{
 				String url = getActionUrl().toString();
 				int i = url.indexOf('?');
-				String[] params = ((i > -1) ? url.substring(i + 1) : url).split("&");
+				String queryString = (i > -1) ? url.substring(i + 1) : url;
+				String[] params = Strings.split(queryString, '&');
 
 				writeParamsAsHiddenFields(params, buffer);
 			}

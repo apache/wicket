@@ -26,6 +26,7 @@ import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,7 +141,7 @@ public class WebClientInfo extends ClientInfo
 			{
 				// sometimes the header is of form client ip,proxy 1 ip,proxy 2 ip,...,proxy n ip,
 				// we just want the client
-				remoteAddr = remoteAddr.split(",")[0].trim();
+				remoteAddr = Strings.split(remoteAddr, ',')[0].trim();
 			}
 		}
 		return remoteAddr;

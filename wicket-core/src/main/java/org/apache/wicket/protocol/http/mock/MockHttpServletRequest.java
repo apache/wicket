@@ -604,7 +604,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	private Locale getLocale(final String value)
 	{
-		final String[] bits = value.split("-");
+		final String[] bits = Strings.split(value, '-');
 		if (bits.length < 1)
 		{
 			return null;
@@ -634,7 +634,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		final String header = getHeader("Accept-Language");
 		if (header != null)
 		{
-			final String[] locales = header.split(",");
+			final String[] locales = Strings.split(header, ',');
 			for (String value : locales)
 			{
 				Locale locale = getLocale(value);

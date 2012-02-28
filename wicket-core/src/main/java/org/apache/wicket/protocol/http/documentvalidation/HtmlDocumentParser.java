@@ -159,10 +159,10 @@ public class HtmlDocumentParser
 		Map<String, String> m = new HashMap<String, String>();
 		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ").toString();
 		attributeString = Strings.replaceAll(attributeString, " = ", "=").toString();
-		String[] attributeElements = attributeString.split(" ");
+		String[] attributeElements = Strings.split(attributeString, ' ');
 		for (String attributeElement : attributeElements)
 		{
-			String[] bits = attributeElement.split("=");
+			String[] bits = Strings.split(attributeElement, '=');
 			if (bits.length == 1)
 			{
 				m.put(bits[0].trim().toLowerCase(), "");
