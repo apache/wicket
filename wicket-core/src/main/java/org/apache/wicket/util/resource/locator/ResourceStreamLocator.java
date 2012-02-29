@@ -254,8 +254,13 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		if ((extension == null) && (path != null) && (path.indexOf('.') != -1))
 		{
 			realPath = Strings.beforeLast(path, '.');
-			// for extensions with separator take the first extension						
-			realExtension = Strings.afterLast(path, '.').split(",")[0];
+			// for extensions with separator take the first extension
+			realExtension = Strings.afterLast(path, '.');
+			if (realExtension.indexOf(',') > -1)
+			{
+				// multiple extensions are not allowed in the path parameter
+				return new EmptyResourceNameIterator();
+			}
 		}
 		else
 		{

@@ -824,81 +824,37 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * Test that clickLink on a ResourceLink with a ResourceReference on it works.
-	 * 
-	 * <p>
-	 * See also WICKET-280 Allow to access html resources
-	 * </p>
+	 * Loading of page markup resource should not be allowed
 	 */
-	@Test
-	public void clickResourceLink()
+	@Test(expected = PackageResourceBlockedException.class)
+	public void loadPageMarkupTemplate()
 	{
-		try
-		{
-			// todo, should there be a better check? because this call already fails..
-			tester.startPage(BlockedResourceLinkPage.class);
-
-			TagTester linkTag = TagTester.createTagByAttribute(tester.getLastResponseAsString(),
-				"wicket:id", "link");
-			String url = linkTag.getAttribute("href");
-			url = url.replace("../", "wicket/");
-			tester.executeUrl(url);
-			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " +
-				PackageResourceBlockedException.class);
-		}
-		catch (PackageResourceBlockedException e)
-		{
-
-		}
-
-		tester.startPage(MockResourceLinkPage.class);
-		tester.clickLink("link");
-		// assertNull(getRequestCodingStrategy());
+		String url = "wicket/resource/"+BlockedResourceLinkPage.class.getName()+"/"+BlockedResourceLinkPage.class.getSimpleName()+".html";
+		tester.executeUrl(url);
 	}
 
 	/**
-	 * Test that clickLink on a ResourceLink with a ResourceReference on it works.
-	 * 
-	 * <p>
-	 * See also WICKET-280 Allow to access html resources
-	 * </p>
+	 * WICKET-280 Allow to access html resources (non-page markup templates)
+	 */
+	@Test
+	public void loadNonPageMarkupTemplate()
+	{
+		String url = "wicket/resource/"+BlockedResourceLinkPage.class.getName()+"/test.html";
+		tester.executeUrl(url);
+		assertEquals("This is a test!\n", tester.getLastResponseAsString());
+	}
+
+	/**
+	 * Comma separated extensions should not be allowed.
+	 * The result is kinda error code 404 (resource not found)
 	 */
 	@Test
 	public void clickResourceLinkWithSomeCommaAppendedUrl()
 	{
-		try
-		{
-			// todo, should there be a better check? because this call already fails..
-			tester.startPage(BlockedResourceLinkPage.class);
-
-			TagTester linkTag = TagTester.createTagByAttribute(tester.getLastResponseAsString(),
-				"wicket:id", "link");
-			String url = linkTag.getAttribute("href");
-			url = url.replace("../", "wicket/");
-			url += ",xml";
-			tester.executeUrl(url);
-			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " +
-				PackageResourceBlockedException.class);
-		}
-		catch (PackageResourceBlockedException e)
-		{
-// e.printStackTrace();
-		}
-
-		tester.startPage(MockResourceLinkPage.class);
-		tester.clickLink("link");
-		// assertNull(getRequestCodingStrategy());
+		String url = "wicket/resource/"+BlockedResourceLinkPage.class.getName()+"/"+BlockedResourceLinkPage.class.getSimpleName()+".html,xml";
+		tester.executeUrl(url);
+		assertNull("Comma separated extensions are not supported and wont find any resource", tester.getLastResponse());
 	}
-
-// IRequestTargetUrlCodingStrategy getRequestCodingStrategy()
-// {
-// String relativePath = tester.getApplication().getWicketFilter().getRelativePath(
-// tester.getServletRequest());
-// return tester.getApplication()
-// .getRequestCycleProcessor()
-// .getRequestCodingStrategy()
-// .urlCodingStrategyForPath(relativePath);
-// }
 
 	/**
 	 * Toggle submit button to disabled state.

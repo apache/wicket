@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
-import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
@@ -154,12 +153,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
-		if (!accept(scope, path))
-		{
-			throw new PackageResourceBlockedException(
-				"Access denied to (static) package resource " + absolutePath +
-					". See IPackageResourceGuard");
-		}
 	}
 
 	private Locale getCurrentLocale()
@@ -170,28 +163,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private String getCurrentStyle()
 	{
 		return style != null ? style : Session.get().getStyle();
-	}
-
-	/**
-	 * be aware that method takes the current wicket session's locale and style into account when
-	 * locating the stream.
-	 * 
-	 * @return resource stream
-	 * 
-	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
-	 * @see #getResourceStream()
-	 */
-	public IResourceStream getCacheableResourceStream()
-	{
-		// get resource locator
-		IResourceStreamLocator locator = ThreadContext.getApplication()
-			.getResourceSettings()
-			.getResourceStreamLocator();
-
-		// determine current resource stream
-		// taking client locale and style into account
-		return locator.locate(getScope(), absolutePath, getCurrentStyle(), variation,
-			getCurrentLocale(), null, false);
 	}
 
 	public Serializable getCacheKey()
@@ -352,6 +323,21 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return resourceResponse;
 	}
 
+
+	/**
+	 * be aware that method takes the current wicket session's locale and style into account when
+	 * locating the stream.
+	 *
+	 * @return resource stream
+	 *
+	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
+	 * @see #getResourceStream()
+	 */
+	public IResourceStream getCacheableResourceStream()
+	{
+		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
+	}
+	
 	/**
 	 * locate resource stream for current resource
 	 * <p/>
@@ -392,11 +378,49 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 */
 	protected IResourceStream getResourceStream()
 	{
-		// Locate resource
-		return ThreadContext.getApplication()
-			.getResourceSettings()
-			.getResourceStreamLocator()
-			.locate(getScope(), absolutePath, style, variation, locale, null, false);
+		return internalGetResourceStream(style, locale);
+	}
+
+	private IResourceStream internalGetResourceStream(final String style, final Locale locale)
+	{
+		IResourceStreamLocator resourceStreamLocator = Application.get()
+				.getResourceSettings()
+				.getResourceStreamLocator();
+		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath, style, variation, locale, null, false);
+
+		Class<?> realScope = getScope();
+		String realPath = absolutePath;
+		if (resourceStream instanceof IFixedLocationResourceStream)
+		{
+			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
+			if (realPath != null)
+			{
+				int index = realPath.indexOf(absolutePath);
+				if (index != -1)
+				{
+					realPath = realPath.substring(index);
+				}
+				else
+				{
+					// just fall back on the full path without a scope..
+					realScope = null;
+				}
+			}
+			else
+			{
+				realPath = absolutePath;
+			}
+
+		}
+
+		if (accept(realScope, realPath) == false)
+		{
+			throw new PackageResourceBlockedException(
+					"Access denied to (static) package resource " + absolutePath +
+						". See IPackageResourceGuard");
+		}
+
+		return resourceStream;
 	}
 
 	/**
@@ -408,34 +432,12 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 */
 	private boolean accept(Class<?> scope, String path)
 	{
-		IPackageResourceGuard guard = ThreadContext.getApplication()
+		IPackageResourceGuard guard = Application.get()
 			.getResourceSettings()
 			.getPackageResourceGuard();
 
-		String realPath = path;
-		IResourceStream resourceStream = getResourceStream();
-		if (resourceStream instanceof IFixedLocationResourceStream)
-		{
-			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
-			if (realPath != null)
-			{
-				int index = realPath.indexOf(path);
-				if (index != -1)
-				{
-					realPath = realPath.substring(index);
-				}
-				else
-					// TODO just fall back on the full path without a scope..
-					return guard.accept(null, realPath);
-			}
-			else
-			{
-				realPath = path;
-			}
-
-		}
-		return guard.accept(scope, realPath);
-	}
+		return guard.accept(scope, path);
+}
 
 	/**
 	 * Gets whether a resource for a given set of criteria exists.
@@ -458,7 +460,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		final String style, final String variation)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
-		return ThreadContext.getApplication()
+		return Application.get()
 			.getResourceSettings()
 			.getResourceStreamLocator()
 			.locate(scope, absolutePath, style, variation, locale, null, false) != null;
