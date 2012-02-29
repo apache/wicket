@@ -27,8 +27,8 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
-import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.markup.head.PriorityFirstComparator;
+import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
@@ -80,7 +80,8 @@ public class ResourceSettings implements IResourceSettings
 	private final Map<String, IResourceFactory> nameToResourceFactory = Generics.newHashMap();
 
 	/** The package resource guard. */
-	private IPackageResourceGuard packageResourceGuard = new PackageResourceGuard();
+	private IPackageResourceGuard packageResourceGuard =
+			new SecurePackageResourceGuard(new SecurePackageResourceGuard.SimpleCache(100));
 
 	/** The factory to be used for the property files */
 	private org.apache.wicket.resource.IPropertiesFactory propertiesFactory;
@@ -378,11 +379,7 @@ public class ResourceSettings implements IResourceSettings
 	@Override
 	public void setPackageResourceGuard(IPackageResourceGuard packageResourceGuard)
 	{
-		if (packageResourceGuard == null)
-		{
-			throw new IllegalArgumentException("Argument packageResourceGuard may not be null");
-		}
-		this.packageResourceGuard = packageResourceGuard;
+		this.packageResourceGuard = Args.notNull(packageResourceGuard, "packageResourceGuard");
 	}
 
 	/**

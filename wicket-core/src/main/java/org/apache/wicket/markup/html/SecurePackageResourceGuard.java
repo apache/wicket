@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.collections.ReverseListIterator;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,14 +83,41 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	private List<SearchPattern> pattern = new ArrayList<SearchPattern>();
 
 	/** A cache to speed up the checks */
-	private final ConcurrentHashMap<String, Boolean> cache;
+	private final ConcurrentMap<String, Boolean> cache;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 */
 	public SecurePackageResourceGuard()
 	{
-		cache = newCache();
+		this(new SimpleCache(100));
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param cache
+	 *      the internal cache that will hold the results for all already checked resources
+	 */
+	public SecurePackageResourceGuard(final ConcurrentMap<String, Boolean> cache)
+	{
+		this.cache = Args.notNull(cache, "cache");
+
+		// the order is important for better performance
+		// first add the most commonly used
+		addPattern("+*.js");
+		addPattern("+*.css");
+		addPattern("+*.png");
+		addPattern("+*.jpg");
+		addPattern("+*.gif");
+		addPattern("+*.ico");
+
+		// WICKET-208 non page templates may be served
+		addPattern("+*.html");
+
+		addPattern("+*.txt");
+		addPattern("+*.swf");
+		addPattern("+*.bmp");
 	}
 
 	/**
@@ -97,7 +126,9 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	 * "old" entries.
 	 * 
 	 * @return the cache implementation
+	 * @deprecated Pass the cache as a parameter to the constructor
 	 */
+	@Deprecated
 	public ConcurrentHashMap<String, Boolean> newCache()
 	{
 		return new SimpleCache(100);
