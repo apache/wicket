@@ -183,8 +183,14 @@ public class CryptoMapper implements IRequestMapper
 			int segNo = 1;
 			for (; segNo < encryptedNumberOfSegments; segNo++)
 			{
-				if (segNo > originalNumberOfSegments ||
-					!generator.next().equals(encryptedSegments.get(segNo)))
+				if (segNo > originalNumberOfSegments)
+				{
+					break;
+				}
+
+				String next = generator.next();
+				String encryptedSegment = encryptedSegments.get(segNo);
+				if (!next.equals(encryptedSegment))
 				{
 					break;
 				}
