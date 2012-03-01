@@ -87,10 +87,10 @@ class UploadStatusResource extends AbstractResource
 	 */
 	private String getStatus(final Attributes attributes)
 	{
+		final String upload = attributes.getParameters().get(UPLOAD_PARAMETER).toString();
+
 		final HttpServletRequest req = (HttpServletRequest)attributes.getRequest()
 			.getContainerRequest();
-
-		final String upload = req.getParameter(UPLOAD_PARAMETER);
 
 		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(req, upload);
 
