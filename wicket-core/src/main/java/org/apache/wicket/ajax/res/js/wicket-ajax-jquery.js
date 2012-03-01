@@ -1237,12 +1237,14 @@
 					return arr;
 				};
 
-				if (form && form.tagName.toLowerCase() === 'form') {
-					elements = form.elements;
-				} else {
-					elements = nodeListToArray(form.getElementsByTagName("input"));
-					elements = elements.concat(nodeListToArray(form.getElementsByTagName("select")));
-					elements = elements.concat(nodeListToArray(form.getElementsByTagName("textarea")));
+				if (form) {
+					if (form.tagName.toLowerCase() === 'form') {
+						elements = form.elements;
+					} else {
+						elements = nodeListToArray(form.getElementsByTagName("input"));
+						elements = elements.concat(nodeListToArray(form.getElementsByTagName("select")));
+						elements = elements.concat(nodeListToArray(form.getElementsByTagName("textarea")));
+					}
 				}
 
 				for (var i = 0; i < elements.length; ++i) {
