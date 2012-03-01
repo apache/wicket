@@ -96,10 +96,10 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 					if (c == null)
 					{
 						// not found... do a reverse search (upwards)
-						c = parent.visitParents(Component.class,
-							new IVisitor<Component, Component>()
+						c = parent.visitParents(MarkupContainer.class,
+							new IVisitor<MarkupContainer, Component>()
 							{
-								public void component(final Component component,
+								public void component(final MarkupContainer component,
 									final IVisit<Component> visit)
 								{
 									if (component.getId().equals(thisId))

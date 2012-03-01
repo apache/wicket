@@ -21,9 +21,9 @@ package org.apache.wicket.util.visit;
  * 
  * @author igor.vaynberg
  */
-public class ClassVisitFilter implements IVisitFilter
+public class ClassVisitFilter<T> implements IVisitFilter
 {
-	private final Class<?> clazz;
+	private final Class<T> clazz;
 
 	/**
 	 * Constructor
@@ -31,7 +31,7 @@ public class ClassVisitFilter implements IVisitFilter
 	 * @param clazz
 	 *            class of objects that visitors should be restricted to
 	 */
-	public ClassVisitFilter(final Class<?> clazz)
+	public ClassVisitFilter(final Class<T> clazz)
 	{
 		this.clazz = clazz;
 	}

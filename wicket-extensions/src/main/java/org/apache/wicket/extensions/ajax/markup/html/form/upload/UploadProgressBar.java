@@ -19,7 +19,6 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 import java.util.Formatter;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -242,9 +241,9 @@ public class UploadProgressBar extends Panel
 	private Form<?> getCallbackForm()
 	{
 		Boolean insideModal = form.visitParents(ModalWindow.class,
-			new IVisitor<Component, Boolean>()
+			new IVisitor<ModalWindow, Boolean>()
 			{
-				public void component(final Component object, final IVisit<Boolean> visit)
+				public void component(final ModalWindow object, final IVisit<Boolean> visit)
 				{
 					visit.stop(true);
 				}

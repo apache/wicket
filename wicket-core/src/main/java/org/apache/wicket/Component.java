@@ -84,7 +84,9 @@ import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitFilter;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visit;
 import org.slf4j.Logger;
@@ -3401,20 +3403,50 @@ public abstract class Component
 	}
 
 	/**
-	 * Traverses all parent components of the given class in this container, calling the visitor's
+	 * Traverses all parent components of the given class in this parentClass, calling the visitor's
 	 * visit method at each one.
 	 * 
 	 * @param <R>
-	 * @param c
+	 *     the type of the result object
+	 * @param parentClass
 	 *            Class
 	 * @param visitor
 	 *            The visitor to call at each parent of the given type
 	 * @return First non-null value returned by visitor callback
 	 */
-	public final <R> R visitParents(final Class<?> c, final IVisitor<Component, R> visitor)
+	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass, final IVisitor<C, R> visitor)
 	{
+		return visitParents(parentClass, visitor, new ClassVisitFilter<R>(null) {
+			@Override
+			public boolean visitObject(Object object)
+			{
+				return true;
+			}
+		});
+	}
+
+
+	/**
+	 * Traverses all parent components of the given class in this parentClass, calling the visitor's
+	 * visit method at each one.
+	 *
+	 * @param <R>
+	 *     the type of the result object
+	 * @param parentClass
+	 *            the class of the parent component
+	 * @param visitor
+	 *            The visitor to call at each parent of the given type
+	 * @param filter
+	 *      a filter that adds an additional logic to the condition whether a parent container matches
+	 * @return First non-null value returned by visitor callback
+	 * @see org.apache.wicket.util.visit.ClassVisitFilter
+	 */
+	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass, final IVisitor<C, R> visitor, ClassVisitFilter<R> filter)
+	{
+		Args.notNull(filter, "filter");
+
 		// Start here
-		Component current = getParent();
+		C current = (C) getParent();
 
 		Visit<R> visit = new Visit<R>();
 
@@ -3422,7 +3454,7 @@ public abstract class Component
 		while (current != null)
 		{
 			// Is current an instance of this class?
-			if (c.isInstance(current))
+			if (parentClass.isInstance(current) && filter.visitObject(current))
 			{
 				visitor.component(current, visit);
 				if (visit.isStopped())
@@ -3432,7 +3464,7 @@ public abstract class Component
 			}
 
 			// Check parent
-			current = current.getParent();
+			current = (C) current.getParent();
 		}
 		return null;
 	}
