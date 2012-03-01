@@ -23,7 +23,7 @@ import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 
 /**
- * Tree content factory for the {@link ContentPage}.
+ * Tree content factory for the {@link org.apache.wicket.examples.tree.TreePage}.
  * 
  * Note: This indirection is used for demonstration purposes only! Don't jump through similar hoops
  * if you're just using one type of content for your application's trees.
