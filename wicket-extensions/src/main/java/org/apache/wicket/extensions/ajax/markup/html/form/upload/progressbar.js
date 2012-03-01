@@ -65,7 +65,7 @@ Wicket.WUPB.prototype = {
 		if( oldLabel != null){
 			Wicket.$(this.statusid).removeChild(oldLabel);
 		}
-		Wicket.$(this.statusid).appendChild(label);		
+		Wicket.$(this.statusid).appendChild(label);
 	},
 	
 	setPercent : function(progressPercent){
@@ -77,7 +77,7 @@ Wicket.WUPB.prototype = {
 	},
 
 	load : function() {
-		var URL = this.url + '&anticache=' + Math.random();
+		var URL = this.url;
 		
     	this.iframe = Wicket._createIFrame(""+Math.random());
 		
@@ -88,11 +88,12 @@ Wicket.WUPB.prototype = {
 	},
 
 	update : function() {
+		var responseAsText;
 		if(this.iframe.contentDocument){
-			var responseAsText = this.iframe.contentDocument.body.innerHTML;
+			responseAsText = this.iframe.contentDocument.body.innerHTML;
 		}else{
 			// for IE 5.5, 6 and 7:
-			var responseAsText = this.iframe.contentWindow.document.body.innerHTML
+			responseAsText = this.iframe.contentWindow.document.body.innerHTML
 		}
 		
 		var update = responseAsText.split('|');

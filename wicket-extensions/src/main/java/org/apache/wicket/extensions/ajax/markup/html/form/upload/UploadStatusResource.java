@@ -26,6 +26,7 @@ import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
 import org.apache.wicket.protocol.http.servlet.UploadInfo;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * A resource that prints out basic statistics about the current upload. This resource is used to
@@ -62,6 +63,7 @@ class UploadStatusResource extends AbstractResource
 
 		ResourceResponse response = new ResourceResponse();
 		response.setContentType("text/html; charset=" + encoding);
+		response.setCacheDuration(Duration.NONE);
 
 		final String status = getStatus(attributes);
 		response.setWriteCallback(new WriteCallback()
