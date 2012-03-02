@@ -25,8 +25,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.lang.PropertyResolver;
 import org.apache.wicket.util.lang.PropertyResolverConverter;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Serves as a base class for different kinds of property models. By default, this class uses
@@ -45,20 +43,12 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The Model object type
  */
-public abstract class AbstractPropertyModel<T>
+public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 	implements
-		IChainingModel<T>,
 		IObjectClassAwareModel<T>,
 		IPropertyReflectionAwareModel<T>
 {
-	private static final Logger logger = LoggerFactory.getLogger(AbstractPropertyModel.class);
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/** Any model object (which may or may not implement IModel) */
-	private Object target;
 
 	/**
 	 * Constructor
@@ -68,48 +58,7 @@ public abstract class AbstractPropertyModel<T>
 	 */
 	public AbstractPropertyModel(final Object modelObject)
 	{
-		if (modelObject == null)
-		{
-			throw new IllegalArgumentException("Parameter modelObject cannot be null");
-		}
-
-		if (modelObject instanceof Session)
-		{
-			logger.warn("It is not a good idea to reference the Session instance "
-				+ "in models directly as it may lead to serialization problems. "
-				+ "If you need to access a property of the session via the model use the "
-				+ "page instance as the model object and 'session.attribute' as the path.");
-		}
-
-		target = modelObject;
-	}
-
-	/**
-	 * Unsets this property model's instance variables and detaches the model.
-	 * 
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	@Override
-	public void detach()
-	{
-		// Detach nested object if it's a detachable
-		if (target instanceof IDetachable)
-		{
-			((IDetachable)target).detach();
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
-	 */
-	@Override
-	public IModel<?> getChainedModel()
-	{
-		if (target instanceof IModel)
-		{
-			return (IModel<?>)target;
-		}
-		return null;
+		super(modelObject);
 	}
 
 	/**
@@ -150,15 +99,6 @@ public abstract class AbstractPropertyModel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
-	 */
-	@Override
-	public void setChainedModel(IModel<?> model)
-	{
-		target = model;
-	}
-
-	/**
 	 * Applies the property expression on the model object using the given object argument.
 	 * 
 	 * @param object
@@ -174,13 +114,14 @@ public abstract class AbstractPropertyModel<T>
 		{
 			// TODO check, really do this?
 			// why not just set the target to the object?
+			Object target = getPlainTarget();
 			if (target instanceof IModel)
 			{
 				((IModel<T>)target).setObject(object);
 			}
 			else
 			{
-				target = object;
+				setPlainTarget(object);
 			}
 		}
 		else
@@ -190,36 +131,6 @@ public abstract class AbstractPropertyModel<T>
 				Session.get().getLocale());
 			PropertyResolver.setValue(expression, getTarget(), object, prc);
 		}
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-	 StringBuilder sb = new StringBuilder("Model:classname=[");
-		sb.append(getClass().getName()).append("]");
-		sb.append(":nestedModel=[").append(target).append("]");
-		return sb.toString();
-	}
-
-	/**
-	 * @return The target object
-	 */
-	public final Object getTarget()
-	{
-		Object object = target;
-		while (object instanceof IModel)
-		{
-			Object tmp = ((IModel<?>)object).getObject();
-			if (tmp == object)
-			{
-				break;
-			}
-			object = tmp;
-		}
-		return object;
 	}
 
 	/**
@@ -249,11 +160,11 @@ public abstract class AbstractPropertyModel<T>
 				// ignore.
 			}
 		}
-		else if (this.target instanceof IObjectClassAwareModel)
+		else if (getPlainTarget() instanceof IObjectClassAwareModel)
 		{
 			try
 			{
-				Class<?> targetClass = ((IObjectClassAwareModel<?>)this.target).getObjectClass();
+				Class<?> targetClass = ((IObjectClassAwareModel<?>)getPlainTarget()).getObjectClass();
 				if (targetClass != null)
 				{
 					return PropertyResolver.getPropertyClass(expression, targetClass);

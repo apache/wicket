@@ -17,7 +17,6 @@
 package org.apache.wicket.model;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * A simple compound model which uses the component's name as the property expression to retrieve
@@ -36,11 +35,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @param <T>
  *            The model object type
  */
-public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IChainingModel<T>
+public class CompoundPropertyModel<T> extends ChainingModel<T> implements IComponentInheritedModel<T>
 {
 	private static final long serialVersionUID = 1L;
-
-	private Object target;
 
 	/**
 	 * Constructor
@@ -50,7 +47,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 */
 	public CompoundPropertyModel(final IModel<T> model)
 	{
-		target = model;
+		super(model);
 	}
 
 	/**
@@ -61,72 +58,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 */
 	public CompoundPropertyModel(final T object)
 	{
-		target = object;
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public T getObject()
-	{
-		if (target instanceof IModel)
-		{
-			return ((IModel<T>)target).getObject();
-		}
-		return (T)target;
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public void setObject(T object)
-	{
-		if (target instanceof IModel)
-		{
-			((IModel<T>)target).setObject(object);
-		}
-		else
-		{
-			target = object;
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
-	 */
-	@Override
-	public IModel<?> getChainedModel()
-	{
-		if (target instanceof IModel)
-		{
-			return (IModel<?>)target;
-		}
-		return null;
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
-	 */
-	@Override
-	public void setChainedModel(IModel<?> model)
-	{
-		target = model;
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	@Override
-	public void detach()
-	{
-		if (target instanceof IDetachable)
-		{
-			((IDetachable)target).detach();
-		}
+		super(object);
 	}
 
 	/**
@@ -155,6 +87,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * id of the Component isn't a valid property for the data object.
 	 * 
 	 * @param property
+	 *      the name that will be used to find
 	 * @return The IModel that is a wrapper around the current model and the property
 	 * @param <S>
 	 *            the type of the property
@@ -222,21 +155,10 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=[" +
-			getClass().getName() + "]");
-		sb.append(":nestedModel=[").append(target).append("]");
-		return sb.toString();
-	}
-
-	/**
 	 * Type-infering factory method
 	 * 
 	 * @param <Z>
+	 *     the type of the model's object
 	 * @param model
 	 *            model
 	 * @return {@link CompoundPropertyModel} instance

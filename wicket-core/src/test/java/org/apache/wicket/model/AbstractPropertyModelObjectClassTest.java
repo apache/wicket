@@ -19,6 +19,8 @@ package org.apache.wicket.model;
 import java.io.Serializable;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * <p>
@@ -29,12 +31,13 @@ import junit.framework.TestCase;
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-2937">WICKET-2937</a>
  * @author Pedro Santos
  */
-public class AbstractPropertyModelObjectClassTest extends TestCase
+public class AbstractPropertyModelObjectClassTest extends Assert
 {
 
 	/**
 	 * 
 	 */
+	@Test
 	public void testCompoundPropertyModel()
 	{
 		assertPropertyModelTargetTypeIsInteger(new CompoundPropertyModel<CustomType>(
@@ -44,6 +47,7 @@ public class AbstractPropertyModelObjectClassTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testCompoundPropertyModelBind()
 	{
 		CompoundPropertyModel<CustomBean> compoundPropertyModel = new CompoundPropertyModel<CustomBean>(
@@ -55,6 +59,7 @@ public class AbstractPropertyModelObjectClassTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testModel()
 	{
 		assertPropertyModelTargetTypeIsInteger(new Model<CustomType>(new CustomType()));
@@ -78,6 +83,7 @@ public class AbstractPropertyModelObjectClassTest extends TestCase
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3253">WICKET-3253</a>
 	 */
+	@Test
 	public void testLazyClassResolution()
 	{
 		Model<CustomBean> modelCustomBean = new Model<CustomBean>(null);
