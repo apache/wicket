@@ -135,7 +135,7 @@ public class MountMapper extends AbstractMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
+	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
 	 */
 	public Url mapHandler(final IRequestHandler handler)
 	{
