@@ -16,8 +16,12 @@
  */
 package org.apache.wicket.request.handler.logger;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IFormSubmitListener;
+import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.handler.IPageAndComponentProvider;
 
@@ -36,6 +40,8 @@ public class ListenerInterfaceLogData extends PageLogData
 	private Class<? extends Behavior> behaviorClass;
 	private final String interfaceName;
 	private final String interfaceMethod;
+	private Class<? extends IRequestableComponent> submittingComponentClass;
+	private String submittingComponentPath;
 
 	/**
 	 * Construct.
@@ -70,6 +76,15 @@ public class ListenerInterfaceLogData extends PageLogData
 		}
 		interfaceName = listenerInterface.getName();
 		interfaceMethod = listenerInterface.getMethod().getName();
+		if (listenerInterface.getListenerInterfaceClass().equals(IFormSubmitListener.class))
+		{
+			final Component formSubmitter = tryToGetFormSubmittingComponent(pageAndComponentProvider);
+			if (formSubmitter != null)
+			{
+				submittingComponentClass = formSubmitter.getClass();
+				submittingComponentPath = formSubmitter.getPageRelativePath();
+			}
+		}
 	}
 
 	private static Class<? extends IRequestableComponent> tryToGetComponentClass(
@@ -96,6 +111,26 @@ public class ListenerInterfaceLogData extends PageLogData
 		catch (Exception e)
 		{
 			// getComponentPath might fail if the page does not exist (ie session timeout)
+			return null;
+		}
+	}
+
+	private static Component tryToGetFormSubmittingComponent(
+		IPageAndComponentProvider pageAndComponentProvider)
+	{
+		try
+		{
+			final IRequestableComponent component = pageAndComponentProvider.getComponent();
+			if (component instanceof Form)
+			{
+				final IFormSubmitter submitter = ((Form<?>)component).findSubmittingButton();
+				return submitter instanceof Component ? (Component)submitter : null;
+			}
+			return null;
+		}
+		catch (Exception e)
+		{
+			// getComponent might fail if the page does not exist (ie session timeout)
 			return null;
 		}
 	}
@@ -148,6 +183,22 @@ public class ListenerInterfaceLogData extends PageLogData
 		return interfaceMethod;
 	}
 
+	/**
+	 * @return submittingComponentClass
+	 */
+	public Class<? extends IRequestableComponent> getSubmittingComponentClass()
+	{
+		return submittingComponentClass;
+	}
+
+	/**
+	 * @return submittingComponentPath
+	 */
+	public String getSubmittingComponentPath()
+	{
+		return submittingComponentPath;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -176,6 +227,16 @@ public class ListenerInterfaceLogData extends PageLogData
 		sb.append(getInterfaceName());
 		sb.append(",interfaceMethod=");
 		sb.append(getInterfaceMethod());
+		if (getSubmittingComponentClass() != null)
+		{
+			sb.append(",submittingComponentClass=");
+			sb.append(getSubmittingComponentClass().getName());
+		}
+		if (getSubmittingComponentPath() != null)
+		{
+			sb.append(",submittingComponentPath=");
+			sb.append(getSubmittingComponentPath());
+		}
 		sb.append("}");
 		return sb.toString();
 	}
