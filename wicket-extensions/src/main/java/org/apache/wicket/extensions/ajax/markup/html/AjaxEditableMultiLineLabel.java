@@ -187,8 +187,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 					"; ";
 
 				tag.put("onblur", saveCall);
-				tag.put("onkeypress", "if (Wicket.Browser.isSafari()) { return; }; " + keypress);
-				tag.put("onkeydown", "if (!Wicket.Browser.isSafari()) { return; }; " + keypress);
+				tag.put("onkeydown", keypress);
 			}
 		});
 		return editor;
