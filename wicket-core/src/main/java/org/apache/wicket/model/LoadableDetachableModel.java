@@ -113,7 +113,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
 	@Override
-	public T getObject()
+	public final T getObject()
 	{
 		if (!attached)
 		{
