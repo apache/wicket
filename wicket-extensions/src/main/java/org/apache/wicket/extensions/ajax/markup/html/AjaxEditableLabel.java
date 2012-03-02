@@ -98,12 +98,8 @@ public class AjaxEditableLabel<T> extends Panel
 			AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
 			if (target != null)
 			{
-				AjaxRequestAttributes attributes = getAttributes();
-
-				CharSequence attributesJson = renderAjaxAttributes(component, attributes);
-				String jsCall = "Wicket.Ajax.ajax(" + attributesJson + ");";
-
-				target.appendJavaScript(jsCall);
+				CharSequence callbackScript = getCallbackScript(component);
+				target.appendJavaScript(callbackScript);
 			}
 		}
 

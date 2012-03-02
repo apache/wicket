@@ -101,11 +101,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
-		CharSequence ajaxAttributes = renderAjaxAttributes(getComponent());
+		CharSequence js = getCallbackScript();
 
 		String timeoutHandle = getTimeoutHandle();
 		// this might look strange, but it is necessary for IE not to leak :(
-		return timeoutHandle+" = setTimeout('Wicket.Ajax.ajax(" + ajaxAttributes + ");', " +
+		return timeoutHandle+" = setTimeout('" + js + "', " +
 			updateInterval.getMilliseconds() + ")";
 	}
 

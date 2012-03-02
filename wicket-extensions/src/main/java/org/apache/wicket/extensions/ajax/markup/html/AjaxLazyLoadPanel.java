@@ -105,8 +105,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 				super.renderHead(component, response);
 				if (state < 2)
 				{
-					CharSequence attributesJson = renderAjaxAttributes(component);
-					String js = "Wicket.Ajax.ajax(" + attributesJson + ")";
+					CharSequence js = getCallbackScript(component);
 					handleCallbackScript(response, js, component);
 				}
 			}
@@ -126,7 +125,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 * @param component
 	 */
 	protected void handleCallbackScript(final IHeaderResponse response,
-		final String callbackScript, final Component component)
+		final CharSequence callbackScript, final Component component)
 	{
 		response.render(JavaScriptHeaderItem.forScript(callbackScript, "lazy-load-" + component.getMarkupId()));
 	}
