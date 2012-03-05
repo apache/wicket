@@ -72,7 +72,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			return (T)getTarget();
+			return (T) getInnermostModelOrObject();
 		}
 		else if (expression.startsWith("."))
 		{
@@ -80,7 +80,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 				"Property expressions cannot start with a '.' character");
 		}
 
-		final Object target = getTarget();
+		final Object target = getInnermostModelOrObject();
 		if (target != null)
 		{
 			return (T)PropertyResolver.getValue(expression, target);
@@ -114,14 +114,14 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		{
 			// TODO check, really do this?
 			// why not just set the target to the object?
-			Object target = getPlainTarget();
+			Object target = getTarget();
 			if (target instanceof IModel)
 			{
 				((IModel<T>)target).setObject(object);
 			}
 			else
 			{
-				setPlainTarget(object);
+				setTarget(object);
 			}
 		}
 		else
@@ -129,7 +129,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 			PropertyResolverConverter prc = null;
 			prc = new PropertyResolverConverter(Application.get().getConverterLocator(),
 				Session.get().getLocale());
-			PropertyResolver.setValue(expression, getTarget(), object, prc);
+			PropertyResolver.setValue(expression, getInnermostModelOrObject(), object, prc);
 		}
 	}
 
@@ -144,11 +144,11 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			Object target = getTarget();
+			Object target = getInnermostModelOrObject();
 			return (Class<T>)(target != null ? target.getClass() : null);
 		}
 
-		final Object target = getTarget();
+		final Object target = getInnermostModelOrObject();
 		if (target != null)
 		{
 			try
@@ -160,11 +160,11 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 				// ignore.
 			}
 		}
-		else if (getPlainTarget() instanceof IObjectClassAwareModel)
+		else if (getTarget() instanceof IObjectClassAwareModel)
 		{
 			try
 			{
-				Class<?> targetClass = ((IObjectClassAwareModel<?>)getPlainTarget()).getObjectClass();
+				Class<?> targetClass = ((IObjectClassAwareModel<?>) getTarget()).getObjectClass();
 				if (targetClass != null)
 				{
 					return PropertyResolver.getPropertyClass(expression, targetClass);
@@ -188,7 +188,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		String expression = propertyExpression();
 		if (Strings.isEmpty(expression) == false)
 		{
-			Object target = getTarget();
+			Object target = getInnermostModelOrObject();
 			if (target != null)
 			{
 				try
@@ -213,7 +213,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		String expression = propertyExpression();
 		if (Strings.isEmpty(expression) == false)
 		{
-			Object target = getTarget();
+			Object target = getInnermostModelOrObject();
 			if (target != null)
 			{
 				try
@@ -237,7 +237,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		String expression = propertyExpression();
 		if (Strings.isEmpty(expression) == false)
 		{
-			Object target = getTarget();
+			Object target = getInnermostModelOrObject();
 			if (target != null)
 			{
 				try
@@ -256,4 +256,23 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 	 * @return The property expression for the component
 	 */
 	protected abstract String propertyExpression();
+
+	/**
+	 * @return The innermost model or the object if the target is not a model
+	 */
+	// legacy method ...
+	public final Object getInnermostModelOrObject()
+	{
+		Object object = getTarget();
+		while (object instanceof IModel)
+		{
+			Object tmp = ((IModel<?>)object).getObject();
+			if (tmp == object)
+			{
+				break;
+			}
+			object = tmp;
+		}
+		return object;
+	}
 }

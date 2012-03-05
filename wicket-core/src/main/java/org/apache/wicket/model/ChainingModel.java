@@ -125,7 +125,7 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 	/**
 	 * @return The target - object or model
 	 */
-	protected final Object getPlainTarget()
+	protected final Object getTarget()
 	{
 		return target;
 	}
@@ -134,29 +134,10 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 	 * Sets a new target - object or model
 	 * @return this object
 	 */
-	protected final ChainingModel<T> setPlainTarget(final Object modelObject)
+	protected final ChainingModel<T> setTarget(final Object modelObject)
 	{
 		this.target = modelObject;
 		return this;
-	}
-
-	/**
-	 * @return The innermost model or the object if the target is not a model
-	 */
-	// legacy method ...
-	public final Object getTarget()
-	{
-		Object object = target;
-		while (object instanceof IModel)
-		{
-			Object tmp = ((IModel<?>)object).getObject();
-			if (tmp == object)
-			{
-				break;
-			}
-			object = tmp;
-		}
-		return object;
 	}
 
 	/**
