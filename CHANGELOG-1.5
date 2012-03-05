@@ -1,6 +1,67 @@
 This file contains all changes done on the 1.5 version.
 
 
+Release Notes - Wicket - Version 1.5.5
+
+** Sub-task
+    * [WICKET-4417] - CombinedRequestParametersAdapter ignores duplicate values for the same parameter name
+
+** Bug
+    * [WICKET-2949] - Select does not work properly in functional flows e.g. Wizards
+    * [WICKET-4257] - Ajax indicator getting stuck when button is pressed multiple times
+    * [WICKET-4267] - Descendants of DynamicImageResource don't pass PageParameters to rendering code
+    * [WICKET-4296] - In Firefox the auto complete dialog will not be closed when clicking besides it.
+    * [WICKET-4297] - Wicket autocomplete when click right into the popup list without moving the mouse will not selelect the item under the mouse
+    * [WICKET-4330] - Non standard ("wicket") namespace causes incorrect relative URL in certain cases
+    * [WICKET-4338] - POST params ignored by IPageParametersEncoder#decodePageParameters()
+    * [WICKET-4345] - CryptoMapper does not work for applications having a home page that needs query parameters
+    * [WICKET-4346] - getAjaxRegionMarkupId called for not enabled behaviors
+    * [WICKET-4347] - renderHead not called in an IAjaxCallDecorator that implements IComponentAwareHeaderContributor
+    * [WICKET-4357] - Calling WebResponse#enableCaching() is insufficient to enable caching on WebPage (which by default is non-cacheable)
+    * [WICKET-4359] - Package resources leak file handles
+    * [WICKET-4361] - Markup Inheritance & getVariation(): markup loading (and merging) order depends on whether the super constructor adds components or not.
+    * [WICKET-4363] - Duplicate html ID for generated divs in modal.js
+    * [WICKET-4365] - Form components' name/value are encoded in stateless form's action url
+    * [WICKET-4367] - WicketTester.assertFeedback broken
+    * [WICKET-4370] - HttpSession getSession() in MockHttpServletRequest is not compliant with the j2ee servlet spec
+    * [WICKET-4378] - datatime extension's calendar-min.js appears to be corrupted / out of sync
+    * [WICKET-4379] - org.apache.wicket.validation.ValidatorAdapter class causes problem with validator properties to be loaded
+    * [WICKET-4384] - improve wicket's handling of empty / null page parameters
+    * [WICKET-4387] - StringIndexOutOfBoundsException when forwarding requests
+    * [WICKET-4390] - MarkupParser#add(IMarkupFilter filter,Class beforeFilter) doesn't add the filter into the correct place.
+    * [WICKET-4391] - XsltOutputTransformerContainer incorrectly claims markup type "xsl"
+    * [WICKET-4392] - autocomplete: show list on empty input is ignored if show list on focus gain is false
+    * [WICKET-4398] - Any empty url-parameter will make wicket 1.5 crash
+    * [WICKET-4401] - Redirect after sign in with SignInPanel does not always reach homepage
+    * [WICKET-4406] - ApplicationListenerCollection onBeforeDestroyed calls onAfterInitialized for each of the listeners
+    * [WICKET-4409] - Form#getJsForInterfaceUrl(..) works not correct if cookies are disabled
+    * [WICKET-4420] - Unversioned pages don't get touched when created and cannot be found by ID later
+    * [WICKET-4424] - getComponentFromLastRenderedPage appends componentInPage id when it shouldn't
+    * [WICKET-4425] - Wicket 1.5 rewrites template content where it should not
+    * [WICKET-4429] - executeAllTimerBehaviors does not find all timer behaviours
+    * [WICKET-4435] - UploadProgressBar won't update while uploading if CryptoMapper is used as RootRequestMapper
+    * [WICKET-4436] - Pressing ESCAPE doesn't work for AjaxEditable components
+
+** Improvement
+    * [WICKET-2244] - Allow overriding of the Validator default MessageKey 
+    * [WICKET-2745] - Add info about SubmittingButton to RequestLogger
+    * [WICKET-4350] - Add more programmatic support for web app construction via servlet 3.0 
+    * [WICKET-4354] - org/apache/wicket/util/io/FullyBufferedReader getLineAndColumnText not used
+    * [WICKET-4356] - StringValueConversionException should not be thrown when requesting a conversion on StringValue with a default value
+    * [WICKET-4368] - Useless concatenation with empty string in DefaultAuthenticationStrategy.save 
+    * [WICKET-4369] - Allow user supplied behaviors to override automatically created ones
+    * [WICKET-4372] - Two WicketSerializableException classes
+    * [WICKET-4380] - Null url argument on missing static resource
+    * [WICKET-4386] - Add maxlength to  wicket-datetime hours, minutes input fields
+
+** New Feature
+    * [WICKET-4419] - Option to deflate serialized pages on the fly
+
+** Task
+    * [WICKET-4377] - Deprecate Component#onMarkupAttached()
+    * [WICKET-4389] - Is there any use for EmptyAjaxRequestHandler?
+    * [WICKET-4399] - Remove IRequestCycleSettings#(s|g)etUnexpectedExceptionDisplay in favour of IExceptionSettings
+
 Release Notes - Wicket - Version 1.5.4
 
 ** Bug
