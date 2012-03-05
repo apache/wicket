@@ -92,8 +92,12 @@ public final class WebApplicationPath implements IResourcePath
 	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
-	public IResourceStream find(final Class<?> clazz, final String pathname)
+	public IResourceStream find(final Class<?> clazz, String pathname)
 	{
+		while (pathname.startsWith("/"))
+		{
+			pathname = pathname.substring(1);
+		}
 		Iterator<Folder> foldersIter = folders.iterator();
 		while (foldersIter.hasNext())
 		{
@@ -137,5 +141,11 @@ public final class WebApplicationPath implements IResourcePath
 	{
 		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: " +
 			StringList.valueOf(webappPaths) + "]";
+	}
+
+	/* package private for test in 1.4 only */
+	final void addToWebPath(String path)
+	{
+		webappPaths.add(path);
 	}
 }

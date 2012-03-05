@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.lang;
 
-import org.apache.wicket.util.string.IStringIterator;
 import org.apache.wicket.util.string.StringList;
 
 /**
@@ -87,10 +86,10 @@ public final class Packages
 			final StringList folders = StringList.tokenize(relativePath, "/\\");
 
 			// Iterate through folders
-			for (final IStringIterator iterator = folders.iterator(); iterator.hasNext();)
+			for (int i = 0, size = folders.size(); i < size; i++)
 			{
 				// Get next folder
-				final String folder = iterator.next();
+				final String folder = folders.get(i);
 
 				// Up one?
 				if ("..".equals(folder))
@@ -105,7 +104,7 @@ public final class Packages
 						throw new IllegalArgumentException("Invalid path " + relativePath);
 					}
 				}
-				else
+				else if (absolutePath.size() <= i || absolutePath.get(i).equals(folder) == false)
 				{
 					// Add to stack
 					absolutePath.add(folder);

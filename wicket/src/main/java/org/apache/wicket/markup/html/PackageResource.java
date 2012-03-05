@@ -504,13 +504,6 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		// Convert resource path to absolute path relative to base package
 		absolutePath = Packages.absolutePath(scope, path);
 
-		if (!accept(scope, path))
-		{
-			throw new PackageResourceBlockedException(
-				"Access denied to (static) package resource " + absolutePath +
-					". See IPackageResourceGuard");
-		}
-
 		scopeName = scope.getName();
 		this.path = path;
 		this.locale = locale;
@@ -603,6 +596,37 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 			}
 		}
 
+		Class<?> realScope = getScope();
+		String realPath = absolutePath;
+		if (resourceStream instanceof IFixedLocationResourceStream)
+		{
+			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
+			if (realPath != null)
+			{
+				int index = realPath.indexOf(absolutePath);
+				if (index != -1)
+				{
+					realPath = realPath.substring(index);
+				}
+				else
+				{
+					// TODO just fall back on the full path without a scope..
+					realScope = null;
+				}
+			}
+			else
+			{
+				realPath = absolutePath;
+			}
+		}
+
+		if (accept(realScope, realPath) == false)
+		{
+			throw new PackageResourceBlockedException(
+					"Access denied to (static) package resource " + absolutePath +
+							". See IPackageResourceGuard");
+		}
+
 		locale = resourceStream.getLocale();
 
 		if (resourceStream != null)
@@ -668,31 +692,7 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 			.getResourceSettings()
 			.getPackageResourceGuard();
 
-		String realPath = path;
-		IResourceStream resourceStream = Application.get()
-			.getResourceSettings()
-			.getResourceStreamLocator()
-			.locate(getScope(), absolutePath, style, locale, null);
-		if (resourceStream instanceof IFixedLocationResourceStream)
-		{
-			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
-			if (realPath != null)
-			{
-				int index = realPath.indexOf(path);
-				if (index != -1)
-				{
-					realPath = realPath.substring(index);
-				}
-				else
-					// TODO just fall back on the full path without a scope..
-					return guard.accept(null, realPath);
-			}
-			else
-			{
-				realPath = path;
-			}
-		}
-		return guard.accept(scope, realPath);
+		return guard.accept(scope, path);
 	}
 
 	@Override

@@ -35,7 +35,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
-import org.apache.wicket.markup.html.PackageResource.PackageResourceBlockedException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -432,7 +431,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testAssertComponentOnAjaxResponse()
 	{
@@ -679,7 +678,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testRedirectWithPageParameters()
 	{
@@ -705,16 +704,17 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testClickResourceLink()
 	{
-		try
-		{
-			tester.startPage(BlockedResourceLinkPage.class);
-			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " +
-				PackageResourceBlockedException.class);
-		}
-		catch (PackageResourceBlockedException e)
-		{
-
-		}
+		/*
+		 * With the changes in PackageResource that no longer check the resource guard in the
+		 * constructor but in getResourceStream, this can no longer be tested with the 1.4
+		 * WicketTester
+		 * 
+		 * try { tester.startPage(BlockedResourceLinkPage.class); fail("Accessing " +
+		 * BlockedResourceLinkPage.class + " should have raised a " +
+		 * PackageResourceBlockedException.class); } catch (PackageResourceBlockedException e) {
+		 * 
+		 * }
+		 */
 
 		tester.startPage(MockResourceLinkPage.class);
 		tester.clickLink("link");

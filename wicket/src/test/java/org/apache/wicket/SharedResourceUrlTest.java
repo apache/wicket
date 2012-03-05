@@ -68,7 +68,8 @@ public class SharedResourceUrlTest extends WicketTestCase
 
 		rr = new ResourceReference(SharedResourceUrlTest.class, "test");
 		url = cycle.urlFor(rr, new ValueMap("param=value", ""));
-		assertEquals("resources/org.apache.wicket.SharedResourceUrlTest/test?param=value", url.toString());
+		assertEquals("resources/org.apache.wicket.SharedResourceUrlTest/test?param=value",
+			url.toString());
 	}
 
 	public void testResourceReferenceUrl_SessionLocale() throws Exception
@@ -77,13 +78,13 @@ public class SharedResourceUrlTest extends WicketTestCase
 		WebRequestCycle cycle = tester.createRequestCycle();
 
 		Session.get().setLocale(Locale.GERMANY);
-		ResourceReference rr = new ResourceReference(Application.class, "test", true, false);
+		ResourceReference rr = new ResourceReference(Application.class, "test.css", true, false);
 		CharSequence url = cycle.urlFor(rr);
-		assertEquals("resources/org.apache.wicket.Application/test_de_DE", url.toString());
+		assertEquals("resources/org.apache.wicket.Application/test_de_DE.css", url.toString());
 
 		Session.get().setLocale(Locale.US);
 		url = cycle.urlFor(rr);
-		assertEquals("resources/org.apache.wicket.Application/test_en_US", url.toString());
+		assertEquals("resources/org.apache.wicket.Application/test_en_US.css", url.toString());
 	}
 
 	/**
@@ -115,19 +116,19 @@ public class SharedResourceUrlTest extends WicketTestCase
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
 
-		ResourceReference rr = new ResourceReference(Application.class, "test", true, true);
+		ResourceReference rr = new ResourceReference(Application.class, "test.css", true, true);
 		Session.get().setLocale(Locale.GERMANY);
 		CharSequence url = cycle.urlFor(rr);
-		assertEquals("resources/org.apache.wicket.Application/test_de_DE", url.toString());
+		assertEquals("resources/org.apache.wicket.Application/test_de_DE.css", url.toString());
 
 		Session.get().setStyle("foo");
 		url = cycle.urlFor(rr);
-		assertEquals("resources/org.apache.wicket.Application/test_foo_de_DE", url.toString());
+		assertEquals("resources/org.apache.wicket.Application/test_foo_de_DE.css", url.toString());
 
 		Session.get().setStyle("bar");
 		Session.get().setLocale(Locale.US);
 		url = cycle.urlFor(rr);
-		assertEquals("resources/org.apache.wicket.Application/test_bar_en_US", url.toString());
+		assertEquals("resources/org.apache.wicket.Application/test_bar_en_US.css", url.toString());
 	}
 
 	/**

@@ -42,7 +42,7 @@ import org.apache.wicket.markup.IMarkupParserFactory;
 import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.MarkupParserFactory;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
-import org.apache.wicket.markup.html.PackageResourceGuard;
+import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
@@ -205,7 +205,8 @@ public final class Settings
 	private final Map<String, IResourceFactory> nameToResourceFactory = new HashMap<String, IResourceFactory>();
 
 	/** The package resource guard. */
-	private IPackageResourceGuard packageResourceGuard = new PackageResourceGuard();
+	private IPackageResourceGuard packageResourceGuard = new SecurePackageResourceGuard(
+		new SecurePackageResourceGuard.SimpleCache(100));
 
 	/** The error page displayed when an expired page is accessed. */
 	private WeakReference<Class<? extends Page>> pageExpiredErrorPage;
