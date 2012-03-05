@@ -24,7 +24,7 @@ public interface ISerializer
 
 	/**
 	 * Converts the object to byte array
-	 * 
+	 *
 	 * @param object
 	 *            the object to serialize
 	 * @return the serialized page as byte array
@@ -33,7 +33,7 @@ public interface ISerializer
 
 	/**
 	 * Reconstructs the object from its serialized state
-	 * 
+	 *
 	 * @param data
 	 *            the serialized state of the object
 	 * @return the object reconstructed from its serialized state
