@@ -1,6 +1,7 @@
 package org.apache.wicket.osgi;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -63,9 +64,23 @@ public class OsgiClashingPackagesTest extends Assert
 
 	private void fail(Entry<String, List<Project>> entry) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Package '").append(entry.getKey()).append("' has classes in two or more modules: ");
+		String packageName = entry.getKey();
+		builder.append("Package '").append(packageName).append("' has files in two or more modules: ");
 		for (Project conflict : entry.getValue()) {
 			builder.append(conflict.getName()).append(", ");
+		}
+		try
+		{
+			builder.append("\nResources:\n");
+			Enumeration<URL> resources = getClass().getClassLoader().getResources(packageName);
+			while (resources.hasMoreElements())
+			{
+				URL resource = resources.nextElement();
+				builder.append("\n\t").append(resource.toExternalForm());
+			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 		fail(builder.toString());
 	}
@@ -107,10 +122,10 @@ public class OsgiClashingPackagesTest extends Assert
 			while (entries.hasMoreElements())
 			{
 				JarEntry jarEntry = entries.nextElement();
-				String className = jarEntry.getName();
-				if (className.endsWith(".class"))
+				String entryName = jarEntry.getName();
+				if (shouldCollect(entryName))
 				{
-					String packageName = Strings.beforeLast(className, '/');
+					String packageName = Strings.beforeLast(entryName, '/');
 					packagesWithContent.add(packageName);
 				}
 			}
@@ -126,6 +141,22 @@ public class OsgiClashingPackagesTest extends Assert
 			return "Project{" +
 					"name='" + name + '\'' +
 					'}';
+		}
+
+		private boolean shouldCollect(final String entryName)
+		{
+			if (
+				// all modules have META-INF {MANIFEST.MF, Maven stuff, ..}
+				entryName.startsWith("META-INF/") ||
+
+				// ignore Wicket's IInitializer conf files
+				(entryName.startsWith("wicket") && entryName.endsWith(".properties"))
+			)
+			{
+				return false;
+			}
+
+			return true;
 		}
 	}
 
