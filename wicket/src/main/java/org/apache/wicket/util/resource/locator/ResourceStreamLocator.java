@@ -23,6 +23,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,7 +115,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	{
 		// Try the various combinations of style, locale and extension to find
 		// the resource.
-		ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, extension);
+		ResourceNameIterator iter = newResourceNameIterator(path, style, locale, extension);
 		while (iter.hasNext())
 		{
 			String newPath = iter.next();
@@ -128,6 +129,32 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		}
 
 		return null;
+	}
+
+	private ResourceNameIterator newResourceNameIterator(String path, String style, Locale locale,
+		String extension)
+	{
+		final String realPath;
+		final String realExtension;
+
+		if ((extension == null) && (path != null) && (path.indexOf('.') != -1))
+		{
+			realPath = Strings.beforeLast(path, '.');
+			// for extensions with separator take the first extension
+			realExtension = Strings.afterLast(path, '.');
+			if (realExtension.indexOf(',') > -1)
+			{
+				// multiple extensions are not allowed in the path parameter
+				return new EmptyResourceNameIterator();
+			}
+		}
+		else
+		{
+			realPath = path;
+			realExtension = extension;
+		}
+
+		return new ResourceNameIterator(realPath, style, locale, realExtension);
 	}
 
 	/**

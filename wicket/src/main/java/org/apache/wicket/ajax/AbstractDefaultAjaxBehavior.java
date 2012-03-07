@@ -206,6 +206,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		if (precondition != null)
 		{
 			buff.append(", function() {");
+			if (Strings.isEmpty(indicatorId) == false)
+			{
+				// WICKET-4257 - ugly way to revert showIncrementally if
+				// the precondition doesn't match after channel postpone
+				buff.append("if (!function() {");
+				buff.append(precondition);
+				buff.append("}.bind(this)()) {Wicket.hideIncrementally('");
+				buff.append(indicatorId);
+				buff.append("');}");
+			}
 			buff.append(precondition);
 			buff.append("}.bind(this)");
 		}

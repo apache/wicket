@@ -34,6 +34,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
@@ -1203,40 +1204,46 @@ public class BaseWicketTester extends MockWebApplication
 
 	/**
 	 * Simulates the firing of all ajax timer behaviors on the page
-	 * 
-	 * @param wt
-	 * @param container
+	 *
+	 * @param page
+	 *      the page which timers will be executed
 	 */
-	public void executeAllTimerBehaviors(MarkupContainer container)
+	public void executeAllTimerBehaviors(final MarkupContainer page)
 	{
-		container.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer>()
-		{
-			public Object component(MarkupContainer component)
-			{
-				// get the AbstractAjaxBehaviour which is responsible for
-				// getting the contents of the lazy panel
-				List<IBehavior> behaviors = BehaviorsUtil.getBehaviors(component,
-					AjaxSelfUpdatingTimerBehavior.class);
-				for (IBehavior b : behaviors)
-				{
-					if (b instanceof AjaxSelfUpdatingTimerBehavior)
-					{
-						checkUsability(component);
+		// execute all timer behaviors for the page itself
+		internalExecuteAllTimerBehaviors(page);
 
-						log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
-							component.getClassRelativePath());
-						AjaxSelfUpdatingTimerBehavior abstractAjaxBehaviour = (AjaxSelfUpdatingTimerBehavior)b;
-						if (!abstractAjaxBehaviour.isStopped())
-						{
-							executeBehavior(abstractAjaxBehaviour);
-						}
-					}
-				}
+		// and for all its children
+		page.visitChildren(Component.class, new IVisitor<Component>()
+		{
+			public Object component(final Component component)
+			{
+				internalExecuteAllTimerBehaviors(component);
 				return CONTINUE_TRAVERSAL;
 			}
 		});
 	}
 
+	private void internalExecuteAllTimerBehaviors(final Component component)
+	{
+		List<IBehavior> behaviors = BehaviorsUtil.getBehaviors(component, AbstractAjaxTimerBehavior.class);
+		for (IBehavior b : behaviors)
+		{
+			AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior) b;
+			
+			if (!timer.isStopped())
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}", component.getClassRelativePath());
+				}
+
+				checkUsability(component);
+				
+				executeBehavior(timer);
+			}
+		}
+	}
 
 	/**
 	 * Simulates the firing of an Ajax event. You add an Ajax event to a <code>Component</code> by

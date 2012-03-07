@@ -22,6 +22,8 @@ import java.util.List;
 import org.apache.velocity.app.Velocity;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -92,7 +94,13 @@ public class VelocityTemplateApplication extends WebApplication
 	protected void init()
 	{
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
-
+		IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
+		if (packageResourceGuard instanceof SecurePackageResourceGuard)
+		{
+			SecurePackageResourceGuard guard = (SecurePackageResourceGuard)packageResourceGuard;
+			// allow velocity macros resources
+			guard.addPattern("+*.vm");
+		}
 		// initialize velocity
 		try
 		{

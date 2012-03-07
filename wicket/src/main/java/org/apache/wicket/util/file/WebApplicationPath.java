@@ -41,6 +41,8 @@ public final class WebApplicationPath implements IResourcePath
 {
 	private final static Logger log = LoggerFactory.getLogger(WebApplicationPath.class);
 
+	private static final String WEB_INF = "WEB-INF/";
+
 	/** The list of urls in the path */
 	private final List<String> webappPaths = new ArrayList<String>();
 
@@ -90,8 +92,12 @@ public final class WebApplicationPath implements IResourcePath
 	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
-	public IResourceStream find(final Class<?> clazz, final String pathname)
+	public IResourceStream find(final Class<?> clazz, String pathname)
 	{
+		while (pathname.startsWith("/"))
+		{
+			pathname = pathname.substring(1);
+		}
 		Iterator<Folder> foldersIter = folders.iterator();
 		while (foldersIter.hasNext())
 		{
@@ -103,21 +109,24 @@ public final class WebApplicationPath implements IResourcePath
 			}
 		}
 
-		Iterator<String> webappPathsIter = webappPaths.iterator();
-		while (webappPathsIter.hasNext())
+		if (pathname.startsWith(WEB_INF) == false)
 		{
-			String path = webappPathsIter.next();
-			try
+			Iterator<String> webappPathsIter = webappPaths.iterator();
+			while (webappPathsIter.hasNext())
 			{
-				final URL url = servletContext.getResource(path + pathname);
-				if (url != null)
+				String path = webappPathsIter.next();
+				try
 				{
-					return new UrlResourceStream(url);
+					final URL url = servletContext.getResource(path + pathname);
+					if (url != null)
+					{
+						return new UrlResourceStream(url);
+					}
 				}
-			}
-			catch (Exception ex)
-			{
-				// ignore, file couldn't be found
+				catch (Exception ex)
+				{
+					// ignore, file couldn't be found
+				}
 			}
 		}
 
@@ -132,5 +141,11 @@ public final class WebApplicationPath implements IResourcePath
 	{
 		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: " +
 			StringList.valueOf(webappPaths) + "]";
+	}
+
+	/* package private for test in 1.4 only */
+	final void addToWebPath(String path)
+	{
+		webappPaths.add(path);
 	}
 }

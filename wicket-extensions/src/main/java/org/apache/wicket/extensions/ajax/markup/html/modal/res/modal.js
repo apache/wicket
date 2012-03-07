@@ -69,7 +69,7 @@ Wicket.Iframe = {
 	findPosX: function(e) { 
 		if (e.offsetParent) {
 			var c = 0;
-			while (e.offsetParent) {
+			while (e) {
 				c += e.offsetLeft
 				e = e.offsetParent;
 			}
@@ -87,7 +87,7 @@ Wicket.Iframe = {
 	findPosY: function(e) {
 		if (e.offsetParent) {
 			var c = 0;
-			while (e.offsetParent) {
+			while (e) {
 				c += e.offsetTop
 				e = e.offsetParent;
 			}

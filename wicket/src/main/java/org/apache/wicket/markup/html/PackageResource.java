@@ -44,6 +44,7 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.lang.Packages;
+import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
@@ -503,13 +504,6 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		// Convert resource path to absolute path relative to base package
 		absolutePath = Packages.absolutePath(scope, path);
 
-		if (!accept(scope, path))
-		{
-			throw new PackageResourceBlockedException(
-				"Access denied to (static) package resource " + absolutePath +
-					". See IPackageResourceGuard");
-		}
-
 		scopeName = scope.getName();
 		this.path = path;
 		this.locale = locale;
@@ -600,6 +594,37 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 			{
 				throw new AbortException();
 			}
+		}
+
+		Class<?> realScope = getScope();
+		String realPath = absolutePath;
+		if (resourceStream instanceof IFixedLocationResourceStream)
+		{
+			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
+			if (realPath != null)
+			{
+				int index = realPath.indexOf(absolutePath);
+				if (index != -1)
+				{
+					realPath = realPath.substring(index);
+				}
+				else
+				{
+					// TODO just fall back on the full path without a scope..
+					realScope = null;
+				}
+			}
+			else
+			{
+				realPath = absolutePath;
+			}
+		}
+
+		if (accept(realScope, realPath) == false)
+		{
+			throw new PackageResourceBlockedException(
+					"Access denied to (static) package resource " + absolutePath +
+							". See IPackageResourceGuard");
 		}
 
 		locale = resourceStream.getLocale();

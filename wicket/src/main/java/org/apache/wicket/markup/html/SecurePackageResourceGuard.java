@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.settings.IResourceSettings;
@@ -80,16 +81,38 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	private List<SearchPattern> pattern = new ArrayList<SearchPattern>();
 
 	/** A cache to speed up the checks */
-	private final ConcurrentHashMap<String, Boolean> cache;
+	private final ConcurrentMap<String, Boolean> cache;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 */
 	public SecurePackageResourceGuard()
 	{
-		cache = newCache();
+		this(new SimpleCache(100));
 	}
 
+	public SecurePackageResourceGuard(ConcurrentMap<String, Boolean> cache)
+	{
+		this.cache = cache;
+
+		// the order is important for better performance
+		// first add the most commonly used
+		addPattern("+*.js");
+		addPattern("+*.css");
+		addPattern("+*.png");
+		addPattern("+*.jpg");
+		addPattern("+*.jpeg");
+		addPattern("+*.gif");
+		addPattern("+*.ico");
+
+		// WICKET-208 non page templates may be served
+		addPattern("+*.html");
+
+		addPattern("+*.txt");
+		addPattern("+*.swf");
+		addPattern("+*.bmp");
+	}
+	
 	/**
 	 * Get a new cache implementation. Subclasses may return null to disable caching. More advanced
 	 * caches (e.h. ehcache) should be used in production environments to limit the size and remove
@@ -97,6 +120,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	 * 
 	 * @return the cache implementation
 	 */
+	@Deprecated
 	public ConcurrentHashMap<String, Boolean> newCache()
 	{
 		return new SimpleCache(100);
