@@ -153,6 +153,7 @@ public class ModalWindow extends Panel
 	private IModel<String> title = null;
 	private MaskType maskType = MaskType.SEMI_TRANSPARENT;
 	private boolean autoSize = false;
+	private boolean unloadConfirmation = true;
 
 	private PageCreator pageCreator = null;
 	private CloseButtonCallback closeButtonCallback = null;
@@ -624,6 +625,30 @@ public class ModalWindow extends Panel
 	public boolean isResizable()
 	{
 		return resizable;
+	}
+
+	/**
+	 * Sets a flag whether to ask the user before leaving the page.
+	 *
+	 * @param unloadConfirmation
+	 *            a flag whether to ask the user before leaving the page
+	 * @return {@code this} instance, for chaining
+	 */
+	public ModalWindow showUnloadConfirmation(final boolean unloadConfirmation)
+	{
+		this.unloadConfirmation = unloadConfirmation;
+		return this;
+	}
+
+	/**
+	 * Returns whether the user should be asked before leaving the page.
+	 *
+	 * @return {@code true} if the user should be asked if the last action
+	 *  causes leaving the page, {@code false} otherwise
+	 */
+	public boolean showUnloadConfirmation()
+	{
+		return unloadConfirmation;
 	}
 
 	/**
@@ -1099,6 +1124,7 @@ public class ModalWindow extends Panel
 
 		appendAssignment(buffer, "settings.autoSize", autoSize);
 
+		appendAssignment(buffer, "settings.unloadConfirmation", showUnloadConfirmation());
 
 		// set true if we set a windowclosedcallback
 		boolean haveCloseCallback = false;

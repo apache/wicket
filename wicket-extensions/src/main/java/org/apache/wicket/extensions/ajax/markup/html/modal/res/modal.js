@@ -194,6 +194,7 @@ Wicket.Window = Wicket.Class.create();
 
 /**
  * Display confirmation dialog if the user is about to leave a page (IE and FF).
+ * @deprecated Use the settings instead. TODO Removed for/after Wicket 7.0
  */
 Wicket.Window.unloadConfirmation = true;
 
@@ -214,7 +215,7 @@ Wicket.Window.create = function(settings) {
 		} catch (ignore) {		
 		}
 	}
-	
+
 	// no parent...
 	if (typeof(win) == "undefined") {
 		win = Wicket.Window;
@@ -734,8 +735,10 @@ Wicket.Window.prototype = {
 		
 		// preserve old beforeunload handler
 		this.old_onbeforeunload = window.onbeforeunload;
-		
-		if (Wicket.Window.unloadConfirmation == true) {
+
+		// Wicket.Window.unloadConfirmation is deprecated but we need to check it
+		// for backward compatibility. Remove it after Wicket 7.0
+		if (this.settings.unloadConfirmation && Wicket.Window.unloadConfirmation) {
 			// new beforeunload handler - ask user before reloading window
 			window.onbeforeunload = function() {
 				return "Reloading this page will cause the modal window to disappear.";
