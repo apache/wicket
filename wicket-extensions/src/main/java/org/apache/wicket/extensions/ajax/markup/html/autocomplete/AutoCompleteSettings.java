@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * This class encapsulates various settings for {@link AbstractAutoCompleteBehavior}. See the

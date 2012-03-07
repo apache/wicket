@@ -22,7 +22,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;

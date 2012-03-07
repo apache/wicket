@@ -17,7 +17,6 @@
 package org.apache.wicket.authroles.authorization.strategies.role.metadata;
 
 import junit.framework.TestCase;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;

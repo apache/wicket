@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.wizard;
 
 import java.util.Iterator;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * This interface defines the model for wizards. This model knows about the wizard's steps and the

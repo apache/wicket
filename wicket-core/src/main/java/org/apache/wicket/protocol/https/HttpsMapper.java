@@ -26,7 +26,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.IPageClassRequestHandler;
+import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.collections.ClassMetaCache;
@@ -197,10 +197,7 @@ public class HttpsMapper implements IRequestMapper
 	/**
 	 * Determines the {@link Scheme} of the request
 	 * 
-	 * @param url
 	 * @param request
-	 * @throws IlelgalStateException
-	 *             if protocol cannot be determined
 	 * @return {@link Scheme#HTTPS} or {@link Scheme#HTTP}
 	 */
 	protected Scheme getSchemeOf(Request request)

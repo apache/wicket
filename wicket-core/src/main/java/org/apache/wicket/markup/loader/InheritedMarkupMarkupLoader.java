@@ -27,7 +27,7 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MergedMarkup;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 
 /**
  * Merge the 2+ markups involved in markup inheritance. From a users perspective there is only one

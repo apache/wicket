@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import java.util.List;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
@@ -31,8 +33,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
-
-import java.util.List;
 
 
 /**

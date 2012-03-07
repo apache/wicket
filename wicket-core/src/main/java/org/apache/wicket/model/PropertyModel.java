@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.model;
 
-import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 
 /**
  * A PropertyModel is used to dynamically access a model using a "property expression". See

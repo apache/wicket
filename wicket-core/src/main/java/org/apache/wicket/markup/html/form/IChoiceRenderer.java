@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Renders one choice. Separates the 'id' values used for internal representation from 'display

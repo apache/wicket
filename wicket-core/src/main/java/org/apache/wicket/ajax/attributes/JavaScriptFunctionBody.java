@@ -17,7 +17,7 @@
 package org.apache.wicket.ajax.attributes;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 

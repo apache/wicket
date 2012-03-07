@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.string.interpolator;
 
+import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
 import org.junit.Assert;
 import org.junit.Test;
 

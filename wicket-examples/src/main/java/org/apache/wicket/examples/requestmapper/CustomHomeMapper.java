@@ -24,11 +24,11 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.handler.IPageRequestHandler;
-import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.request.mapper.AbstractComponentMapper;
-import org.apache.wicket.request.mapper.HomePageMapper;
+import org.apache.wicket.core.request.handler.IPageRequestHandler;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.mapper.AbstractComponentMapper;
+import org.apache.wicket.core.request.mapper.HomePageMapper;
 
 /**
  * An {@link IRequestMapper} that handles requests to the home page ('/') and appends the string
@@ -45,7 +45,7 @@ public class CustomHomeMapper extends AbstractComponentMapper
 	 * If there is just one url segment (the locale?!) then return a bigger compatibility score than
 	 * {@link HomePageMapper#getCompatibilityScore(Request)}
 	 * 
-	 * @see org.apache.wicket.request.mapper.HomePageMapper#getCompatibilityScore(org.apache.wicket.request.Request)
+	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
 	public int getCompatibilityScore(Request request)
 	{
@@ -53,7 +53,7 @@ public class CustomHomeMapper extends AbstractComponentMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.HomePageMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
+	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
 	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
@@ -75,7 +75,7 @@ public class CustomHomeMapper extends AbstractComponentMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.HomePageMapper#mapRequest(org.apache.wicket.request.Request)
+	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
 	public IRequestHandler mapRequest(Request request)
 	{

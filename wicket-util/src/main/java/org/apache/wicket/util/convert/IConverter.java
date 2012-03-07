@@ -19,7 +19,7 @@ package org.apache.wicket.util.convert;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

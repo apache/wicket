@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.request.resource;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
 /**

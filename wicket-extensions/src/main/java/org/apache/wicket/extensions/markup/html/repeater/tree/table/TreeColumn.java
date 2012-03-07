@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.markup.html.repeater.tree.table;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.markup.html.repeater.tree.TableTree;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 

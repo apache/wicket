@@ -18,8 +18,8 @@ package org.apache.wicket.extensions.markup.html.tree.table;
 
 import javax.swing.tree.TreeNode;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

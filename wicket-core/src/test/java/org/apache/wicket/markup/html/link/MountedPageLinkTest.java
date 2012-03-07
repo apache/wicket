@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.request.mapper.PageInstanceMapper;
+import org.apache.wicket.core.request.mapper.PageInstanceMapper;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IPageSettings;
 import org.junit.Before;

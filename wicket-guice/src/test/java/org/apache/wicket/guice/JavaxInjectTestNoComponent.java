@@ -19,8 +19,8 @@ package org.apache.wicket.guice;
 import javax.inject.Inject;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.injection.Injector;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Tests injection of services in classes which do not extend {@link Component}

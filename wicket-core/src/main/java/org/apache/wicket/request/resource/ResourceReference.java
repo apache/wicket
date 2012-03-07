@@ -22,9 +22,10 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.core.util.lang.WicketObjects;
 
 /**
  * Reference to a resource. Can be used to reference global resources.
@@ -38,7 +39,7 @@ import org.apache.wicket.util.lang.WicketObjects;
  * @author Matej Knopp
  * @author Juergen Donnerstag
  */
-public abstract class ResourceReference implements Serializable
+public abstract class ResourceReference implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

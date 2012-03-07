@@ -19,8 +19,8 @@ package org.apache.wicket.validation.validator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;

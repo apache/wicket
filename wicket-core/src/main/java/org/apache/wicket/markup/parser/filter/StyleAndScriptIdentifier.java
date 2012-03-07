@@ -24,7 +24,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
-import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 
 
 /**

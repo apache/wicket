@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IDetachable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Default implementation of TreeState.

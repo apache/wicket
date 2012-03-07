@@ -20,6 +20,7 @@ import java.net.URL;
 
 import javax.servlet.ServletContext;
 
+import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.junit.Assert;
 import org.junit.Test;

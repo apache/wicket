@@ -28,6 +28,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.IRequestCycle;
@@ -35,9 +38,6 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.request.handler.logger.PageLogData;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -175,7 +175,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPage()
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPage()
 	 */
 	@Override
 	public Page getPage()
@@ -266,7 +266,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public void detach(final IRequestCycle requestCycle)
@@ -318,7 +318,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public final void respond(final IRequestCycle requestCycle)
@@ -423,7 +423,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageClass()
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageClass()
 	 */
 	@Override
 	public Class<? extends IRequestablePage> getPageClass()
@@ -432,7 +432,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageId()
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageId()
 	 */
 	@Override
 	public Integer getPageId()
@@ -441,7 +441,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageParameters()
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageParameters()
 	 */
 	@Override
 	public PageParameters getPageParameters()

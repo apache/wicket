@@ -18,11 +18,10 @@ package org.apache.wicket.guice;
 
 import java.util.Map;
 
-import org.apache.wicket.Component;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
+import org.apache.wicket.Component;
 
 /**
  */

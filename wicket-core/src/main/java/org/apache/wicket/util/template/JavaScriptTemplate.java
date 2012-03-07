@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.resource.ITextResourceCompressor;
-import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 
 
 /**

@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.Session;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Duration;
 
@@ -64,8 +64,6 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
-	 * @param locale
-	 *            locale for formatting
 	 * @return human readable string of bytes uploaded so far
 	 */
 	public String getBytesUploadedString()
@@ -74,8 +72,6 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
-	 * @param locale
-	 *            locale for formatting
 	 * @return human readable string of total number of bytes
 	 */
 	public String getTotalBytesString()
@@ -117,8 +113,6 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
-	 * @param locale
-	 *            locale for formatting
 	 * @return transfer rate in a human readable string
 	 */
 	public String getTransferRateString()
@@ -154,8 +148,6 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
-	 * @param locale
-	 *            locale for formatting
 	 * @return estimate of the remaining time in a human readable string
 	 */
 	public String getRemainingTimeString()

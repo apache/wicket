@@ -18,7 +18,6 @@ package org.apache.wicket.jmx;
 
 import java.io.IOException;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.RuntimeConfigurationType;
 
 

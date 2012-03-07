@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * An abstraction for lazy-initializing values. Guarantees only a single instance of the value is

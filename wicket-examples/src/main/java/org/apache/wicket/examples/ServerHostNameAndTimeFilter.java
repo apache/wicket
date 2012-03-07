@@ -22,7 +22,7 @@ import java.net.UnknownHostException;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 
@@ -77,7 +77,7 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 	}
 
 	/**
-	 * @see org.apache.wicket.IResponseFilter#filter(AppendingStringBuffer)
+	 * @see IResponseFilter#filter(AppendingStringBuffer)
 	 */
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{

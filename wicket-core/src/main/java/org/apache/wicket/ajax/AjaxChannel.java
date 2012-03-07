@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
 /**

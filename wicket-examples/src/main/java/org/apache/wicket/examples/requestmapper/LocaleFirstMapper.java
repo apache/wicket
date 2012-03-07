@@ -24,7 +24,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.mapper.AbstractComponentMapper;
+import org.apache.wicket.core.request.mapper.AbstractComponentMapper;
 import org.apache.wicket.util.string.Strings;
 
 /**

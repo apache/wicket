@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.proxy;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface the lazy init proxies implement to make identification of the proxy and retrival of

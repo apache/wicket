@@ -18,7 +18,7 @@ package org.apache.wicket.filtertest;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.request.mapper.MountedMapper;
+import org.apache.wicket.core.request.mapper.MountedMapper;
 
 /**
  * Application class.

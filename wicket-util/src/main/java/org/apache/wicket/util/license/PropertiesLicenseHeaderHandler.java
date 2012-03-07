@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.Assert;
-
 import org.apache.wicket.util.diff.Diff;
 import org.apache.wicket.util.diff.Revision;
 

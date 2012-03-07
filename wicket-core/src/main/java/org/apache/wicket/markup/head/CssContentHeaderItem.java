@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.markup.head;
 
-import org.apache.wicket.request.Response;
-import org.apache.wicket.util.string.CssUtils;
-import org.apache.wicket.util.string.Strings;
-
 import java.util.Arrays;
 import java.util.Collections;
+
+import org.apache.wicket.request.Response;
+import org.apache.wicket.core.util.string.CssUtils;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for internal (embedded in the header) css content.

@@ -16,13 +16,12 @@
  */
 package org.apache.wicket.examples.guice;
 
+import com.google.inject.Inject;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.guice.service.IMyService;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-
-import com.google.inject.Inject;
 
 /**
  * Everybody's favorite example (Hello World), modified to use Guice.

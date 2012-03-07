@@ -17,7 +17,7 @@
 package org.apache.wicket.ajax.attributes;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface used to listen at the most important points when Wicket performs an Ajax callback.

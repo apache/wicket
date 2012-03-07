@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.ajax.attributes;
 
-import org.apache.wicket.ajax.AjaxChannel;
-import org.apache.wicket.util.lang.Args;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.wicket.ajax.AjaxChannel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Attributes of an Ajax Request.

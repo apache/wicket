@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.wizard;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Models one step in a wizard, and is the equivalent of one panel in a wizard from an end-user's

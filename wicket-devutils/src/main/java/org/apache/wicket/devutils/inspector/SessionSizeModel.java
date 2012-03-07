@@ -19,7 +19,7 @@ package org.apache.wicket.devutils.inspector;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.core.util.lang.WicketObjects;
 
 /**
  * 

@@ -18,7 +18,7 @@ package org.apache.wicket.request.handler.resource;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.resource.ContentDisposition;
-import org.apache.wicket.util.resource.WebExternalResourceStream;
+import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Request target that is not a Wicket resource. For example, such a resource could denote an image
  * in the web application directory (not mapped to a Wicket servlet). NOTE: this target can only be
- * used in a servlet environment with {@link org.apache.wicket.protocol.http.RequestCycle}s.
+ * used in a servlet environment with {@link org.apache.wicket.request.cycle.RequestCycle}s.
  * 
  * <p>
  * <b>NOTE:</b> this class is a wrapper around

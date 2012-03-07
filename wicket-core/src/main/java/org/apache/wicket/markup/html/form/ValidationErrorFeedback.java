@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.io.Serializable;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.validation.IValidationError;
 
 

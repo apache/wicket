@@ -17,6 +17,8 @@
 package org.apache.wicket;
 
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * Class used for holding meta data entries.
  * 

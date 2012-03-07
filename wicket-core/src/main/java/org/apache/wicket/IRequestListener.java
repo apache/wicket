@@ -17,6 +17,8 @@
 package org.apache.wicket;
 
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * Base interface for all interfaces that listen for requests from the client browser. All
  * sub-interfaces of this interface must have a single method which takes no arguments.

@@ -18,10 +18,10 @@ package org.apache.wicket.examples.hangman;
 
 import java.awt.Color;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Primitives;
 
 

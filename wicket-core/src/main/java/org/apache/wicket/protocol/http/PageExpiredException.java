@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.request.handler.IPageProvider;
+import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.settings.IStoreSettings;
 
 /**

@@ -23,6 +23,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.util.lang.Bytes;
 import org.junit.Assert;
 import org.junit.Test;

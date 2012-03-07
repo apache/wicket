@@ -22,7 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;

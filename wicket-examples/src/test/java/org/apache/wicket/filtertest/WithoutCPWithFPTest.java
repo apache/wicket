@@ -16,11 +16,10 @@
  */
 package org.apache.wicket.filtertest;
 
+import com.meterware.httpunit.WebResponse;
 import org.apache.wicket.examples.WicketWebTestCase;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.meterware.httpunit.WebResponse;
 
 /**
  * jWebUnit test for Hello World.

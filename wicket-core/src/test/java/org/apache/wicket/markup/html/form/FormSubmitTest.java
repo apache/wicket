@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.NestedFormsPage.NestableForm;
-import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
+import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Before;
 import org.junit.Test;

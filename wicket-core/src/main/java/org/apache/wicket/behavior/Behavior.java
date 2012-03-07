@@ -20,12 +20,12 @@ import java.lang.reflect.Method;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.IComponentAwareEventSink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Behaviors are kind of plug-ins for Components. They allow functionality to be added to a

@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;

@@ -31,7 +31,7 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
+import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

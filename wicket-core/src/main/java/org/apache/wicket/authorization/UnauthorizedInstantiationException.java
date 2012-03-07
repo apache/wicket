@@ -17,7 +17,7 @@
 package org.apache.wicket.authorization;
 
 import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.core.util.lang.WicketObjects;
 
 /**
  * Exception that is thrown when the creation of a component is not allowed.

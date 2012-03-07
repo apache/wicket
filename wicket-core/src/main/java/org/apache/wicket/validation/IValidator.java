@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.validation;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface representing a validator that can validate an {@link IValidatable} object.

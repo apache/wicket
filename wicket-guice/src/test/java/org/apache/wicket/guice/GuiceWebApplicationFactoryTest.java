@@ -21,13 +21,12 @@ import java.util.Enumeration;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 
+import com.google.inject.AbstractModule;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.junit.Test;
-
-import com.google.inject.AbstractModule;
 
 /**
  */

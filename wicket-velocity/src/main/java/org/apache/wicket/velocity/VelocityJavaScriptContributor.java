@@ -21,8 +21,8 @@ import java.util.Map;
 import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Packages;
 
 /**

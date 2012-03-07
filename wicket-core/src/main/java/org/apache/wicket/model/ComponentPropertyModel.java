@@ -17,7 +17,7 @@
 package org.apache.wicket.model;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 
 /**
  * A model that references a property by name on the current model of the component it is bound to.

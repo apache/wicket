@@ -23,7 +23,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 	private static final Logger log = LoggerFactory.getLogger(ServerAndClientTimeFilter.class);
 
 	/**
-	 * @see org.apache.wicket.IResponseFilter#filter(AppendingStringBuffer)
+	 * @see IResponseFilter#filter(AppendingStringBuffer)
 	 */
 	@Override
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)

@@ -22,7 +22,7 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 	private static Logger log = LoggerFactory.getLogger(AjaxServerAndClientTimeFilter.class);
 
 	/**
-	 * @see org.apache.wicket.IResponseFilter#filter(org.apache.wicket.util.string.AppendingStringBuffer)
+	 * @see IResponseFilter#filter(org.apache.wicket.util.string.AppendingStringBuffer)
 	 */
 	@Override
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)

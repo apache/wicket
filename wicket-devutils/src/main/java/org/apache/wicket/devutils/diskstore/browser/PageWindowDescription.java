@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.devutils.diskstore.browser;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A serializable representation of the page information

@@ -26,7 +26,7 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.Session;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
+import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
 
 
 /**

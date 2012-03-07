@@ -20,13 +20,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import com.google.inject.BindingAnnotation;
+import com.google.inject.Inject;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
-
-import com.google.inject.BindingAnnotation;
-import com.google.inject.Inject;
 
 /**
  * 

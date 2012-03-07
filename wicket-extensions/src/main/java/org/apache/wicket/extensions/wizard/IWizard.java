@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.wizard;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface for the wizard component. This interface is here for ultimate flexibility, though it

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.string.StringList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -239,8 +239,6 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	/**
 	 * Retrieves the first message
 	 * 
-	 * @param level
-	 *            The level of the message
 	 * @return message or {@code null} if none
 	 */
 	public final FeedbackMessage first()

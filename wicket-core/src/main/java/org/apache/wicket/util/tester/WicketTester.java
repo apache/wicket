@@ -29,7 +29,6 @@ import java.util.List;
 import javax.servlet.ServletContext;
 
 import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;

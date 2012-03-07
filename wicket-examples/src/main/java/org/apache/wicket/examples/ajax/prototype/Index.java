@@ -24,9 +24,9 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.ComponentRenderingRequestHandler;
-import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.request.handler.PageAndComponentProvider;
+import org.apache.wicket.core.request.handler.ComponentRenderingRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 

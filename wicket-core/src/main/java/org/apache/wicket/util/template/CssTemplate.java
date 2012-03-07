@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.css.ICssCompressor;
-import org.apache.wicket.util.string.CssUtils;
+import org.apache.wicket.core.util.string.CssUtils;
 
 
 /**

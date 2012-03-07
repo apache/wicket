@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Components that implement this interface will be pageable, they should return the pagecount so

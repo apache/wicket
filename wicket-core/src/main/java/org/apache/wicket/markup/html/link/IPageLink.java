@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface that is used to implement delayed page linking. The getPage() method returns an

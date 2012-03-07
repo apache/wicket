@@ -27,7 +27,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.file.WebApplicationPath;
+import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;

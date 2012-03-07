@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.form.select;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * @param <T>

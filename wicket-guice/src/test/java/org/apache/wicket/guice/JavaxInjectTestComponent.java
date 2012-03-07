@@ -20,9 +20,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.wicket.Component;
-
 import com.google.inject.Provider;
+import org.apache.wicket.Component;
 
 /**
  */

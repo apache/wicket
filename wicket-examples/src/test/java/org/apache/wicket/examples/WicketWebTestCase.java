@@ -16,11 +16,10 @@
  */
 package org.apache.wicket.examples;
 
-import org.junit.After;
-import org.junit.Before;
-
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
+import org.junit.After;
+import org.junit.Before;
 
 /**
  * WebTestCase for tests that need to run inside Jetty to test for example the wicket filter using

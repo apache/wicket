@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.lang;
 
-import org.apache.wicket.util.string.IStringIterator;
 import org.apache.wicket.util.string.StringList;
 
 /**

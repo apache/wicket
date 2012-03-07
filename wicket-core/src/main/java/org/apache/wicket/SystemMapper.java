@@ -17,12 +17,12 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.BookmarkableMapper;
-import org.apache.wicket.request.mapper.BufferedResponseMapper;
+import org.apache.wicket.core.request.mapper.BookmarkableMapper;
+import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
-import org.apache.wicket.request.mapper.HomePageMapper;
-import org.apache.wicket.request.mapper.PageInstanceMapper;
-import org.apache.wicket.request.mapper.ResourceReferenceMapper;
+import org.apache.wicket.core.request.mapper.HomePageMapper;
+import org.apache.wicket.core.request.mapper.PageInstanceMapper;
+import org.apache.wicket.core.request.mapper.ResourceReferenceMapper;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.util.ClassProvider;

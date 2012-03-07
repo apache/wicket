@@ -19,7 +19,7 @@ package org.apache.wicket.examples.wizard;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

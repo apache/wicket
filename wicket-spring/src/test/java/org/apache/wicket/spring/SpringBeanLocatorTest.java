@@ -18,7 +18,7 @@ package org.apache.wicket.spring;
 
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.spring.test.SpringContextLocatorMock;
-import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

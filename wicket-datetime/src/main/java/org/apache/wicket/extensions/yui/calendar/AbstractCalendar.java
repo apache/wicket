@@ -22,11 +22,11 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.wicket.extensions.yui.YuiLib;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.markup.head.CssHeaderItem;
 
 
 /**

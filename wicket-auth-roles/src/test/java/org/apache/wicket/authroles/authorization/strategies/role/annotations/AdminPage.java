@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 
-import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.WebPage;
 
 /**

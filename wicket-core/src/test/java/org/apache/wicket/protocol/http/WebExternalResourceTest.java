@@ -24,7 +24,7 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.handler.resource.WebExternalResourceRequestHandler;
 import org.apache.wicket.util.io.Streams;
-import org.apache.wicket.util.resource.WebExternalResourceStream;
+import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Assert;

@@ -22,7 +22,7 @@ import java.util.Collections;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.string.UrlUtils;
+import org.apache.wicket.core.util.string.UrlUtils;
 
 /**
  * {@link HeaderItem} for script tags that are rendered using a fixed URL, for example resources

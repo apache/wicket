@@ -17,7 +17,6 @@
 package org.apache.wicket.devutils.inspector;
 
 import junit.framework.TestCase;
-
 import org.apache.wicket.Session;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;

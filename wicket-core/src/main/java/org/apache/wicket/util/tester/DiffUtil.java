@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.net.URL;
 
 import junit.framework.Assert;
-
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.diff.Diff;

@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.markup.html.repeater.tree.table;
 
 import junit.framework.Assert;
-
 import org.apache.wicket.model.IModel;
 import org.junit.Test;
 

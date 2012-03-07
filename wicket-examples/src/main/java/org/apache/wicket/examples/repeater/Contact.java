@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.repeater;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * domain object for demonstrations.

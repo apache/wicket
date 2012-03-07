@@ -17,8 +17,8 @@
 package org.apache.wicket.authorization.strategies.action;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.authorization.Action;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A way to provide authorization for a specific component action.

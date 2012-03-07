@@ -18,8 +18,6 @@ package org.apache.wicket.examples.spring.common;
 
 import java.util.Iterator;
 
-import org.apache.wicket.examples.spring.common.QueryParam;
-
 /**
  * interface for retrieving contacts from a database
  * 

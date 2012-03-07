@@ -18,8 +18,8 @@ package org.apache.wicket.resource.bundles;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ResourceBundles;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /***
  * Interface implemented by {@link ResourceReference}s that are bundles. A bundle is a resource that

@@ -19,13 +19,12 @@ package org.apache.wicket.examples.requestmapper;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.requestmapper.packageMount.PackageMountedPage;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.mapper.MountedMapper;
+import org.apache.wicket.core.request.mapper.MountedMapper;
 
 /**
  * @author mgrigorov

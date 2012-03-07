@@ -31,7 +31,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IStringResourceStream;
-import org.apache.wicket.util.resource.PackageResourceStream;
+import org.apache.wicket.core.util.resource.PackageResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
 

@@ -18,7 +18,7 @@ package org.apache.wicket.authroles.authorization.strategies.role;
 
 import java.util.HashSet;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.string.StringList;
 
 

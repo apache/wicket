@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.guice;
 
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.MetaDataKey;
-
 import com.google.inject.Injector;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * This is a holder for the Injector. The reason we need a holder is that metadata only supports

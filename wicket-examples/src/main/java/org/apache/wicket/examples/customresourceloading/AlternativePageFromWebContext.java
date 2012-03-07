@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.customresourceloading;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 
 
 /**

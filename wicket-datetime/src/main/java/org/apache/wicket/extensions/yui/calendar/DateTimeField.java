@@ -34,7 +34,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.ZeroPaddingIntegerConverter;
 import org.apache.wicket.validation.validator.RangeValidator;
@@ -243,7 +243,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for the
 	 * available options. If you want to override/ remove properties, you should call
 	 * super.configure(properties) first. If you don't call that, be aware that you will have to
-	 * call {@link #localize(Map)} manually if you like localized strings to be added.
+	 * call {@link #configure(java.util.Map)} manually if you like localized strings to be added.
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties

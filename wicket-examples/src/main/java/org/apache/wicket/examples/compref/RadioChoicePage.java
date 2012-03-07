@@ -19,7 +19,7 @@ package org.apache.wicket.examples.compref;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.examples.WicketExamplePage;

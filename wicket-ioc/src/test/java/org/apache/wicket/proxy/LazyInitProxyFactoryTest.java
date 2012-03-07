@@ -24,7 +24,7 @@ import org.apache.wicket.proxy.util.IInterface;
 import org.apache.wicket.proxy.util.IObjectMethodTester;
 import org.apache.wicket.proxy.util.InterfaceObject;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
-import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.junit.Assert;
 import org.junit.Test;
 

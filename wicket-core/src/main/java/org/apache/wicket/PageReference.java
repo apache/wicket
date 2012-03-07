@@ -17,6 +17,8 @@
 package org.apache.wicket;
 
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * Unique identifier of a page instance
  * 
@@ -31,9 +33,7 @@ public class PageReference implements IClusterable
 	/**
 	 * Constructor
 	 * 
-	 * @param pageMapName
 	 * @param pageId
-	 * @param version
 	 */
 	PageReference(int pageId)
 	{

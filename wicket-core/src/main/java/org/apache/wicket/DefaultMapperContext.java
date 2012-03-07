@@ -16,10 +16,10 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.IMapperContext;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
@@ -51,7 +51,7 @@ public class DefaultMapperContext implements IMapperContext
 		this.application = application;
 	}
 	/**
-	 * @see org.apache.wicket.request.mapper.IMapperContext#getBookmarkableIdentifier()
+	 * @see org.apache.wicket.core.request.mapper.IMapperContext#getBookmarkableIdentifier()
 	 */
 	@Override
 	public String getBookmarkableIdentifier()
@@ -61,7 +61,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IMapperContext#getNamespace()
+	 * @see org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()
 	 */
 	@Override
 	public String getNamespace()
@@ -71,7 +71,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IMapperContext#getPageIdentifier()
+	 * @see org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()
 	 */
 	@Override
 	public String getPageIdentifier()
@@ -81,7 +81,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IMapperContext#getResourceIdentifier()
+	 * @see org.apache.wicket.core.request.mapper.IMapperContext#getResourceIdentifier()
 	 */
 	@Override
 	public String getResourceIdentifier()
@@ -91,7 +91,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IMapperContext#getResourceReferenceRegistry()
+	 * @see org.apache.wicket.core.request.mapper.IMapperContext#getResourceReferenceRegistry()
 	 */
 	@Override
 	public ResourceReferenceRegistry getResourceReferenceRegistry()
@@ -101,7 +101,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IMapperContext#requestListenerInterfaceFromString(java.lang.String)
+	 * @see org.apache.wicket.core.request.mapper.IMapperContext#requestListenerInterfaceFromString(java.lang.String)
 	 */
 	@Override
 	public RequestListenerInterface requestListenerInterfaceFromString(final String interfaceName)
@@ -111,7 +111,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IMapperContext#requestListenerInterfaceToString(org.apache.wicket.RequestListenerInterface)
+	 * @see org.apache.wicket.core.request.mapper.IMapperContext#requestListenerInterfaceToString(org.apache.wicket.RequestListenerInterface)
 	 */
 	@Override
 	public String requestListenerInterfaceToString(final RequestListenerInterface listenerInterface)
@@ -121,7 +121,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IPageSource#newPageInstance(java.lang.Class,
+	 * @see org.apache.wicket.core.request.mapper.IPageSource#newPageInstance(java.lang.Class,
 	 *      org.apache.wicket.request.mapper.parameter.PageParameters)
 	 */
 	@Override
@@ -140,7 +140,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IPageSource#getPageInstance(int)
+	 * @see org.apache.wicket.core.request.mapper.IPageSource#getPageInstance(int)
 	 */
 	@Override
 	public IRequestablePage getPageInstance(final int pageId)
@@ -156,7 +156,7 @@ public class DefaultMapperContext implements IMapperContext
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.mapper.IMapperContext#getHomePageClass()
+	 * @see org.apache.wicket.core.request.mapper.IMapperContext#getHomePageClass()
 	 */
 	@Override
 	public Class<? extends IRequestablePage> getHomePageClass()

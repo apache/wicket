@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.forminput;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Represents a US phone number. We use this instead of the direct string to trigger conversion to

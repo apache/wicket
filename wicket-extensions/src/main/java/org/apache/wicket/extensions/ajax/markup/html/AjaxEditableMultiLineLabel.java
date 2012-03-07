@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import java.util.List;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -28,8 +30,6 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-
-import java.util.List;
 
 /**
  * An inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.linkomatic;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Simple book model.

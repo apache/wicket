@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.model.Model;

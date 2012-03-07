@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples;
 
+import com.meterware.httpunit.HttpUnitOptions;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
@@ -23,8 +24,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-
-import com.meterware.httpunit.HttpUnitOptions;
 
 /**
  * Test decorator that starts a jetty instance

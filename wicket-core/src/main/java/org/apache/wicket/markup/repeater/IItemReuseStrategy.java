@@ -18,8 +18,8 @@ package org.apache.wicket.markup.repeater;
 
 import java.util.Iterator;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

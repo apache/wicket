@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.grid;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Represents an object that is capable of populating an {@link Item} container representing a cell

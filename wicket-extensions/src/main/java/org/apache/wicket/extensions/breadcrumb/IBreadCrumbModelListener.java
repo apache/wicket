@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.breadcrumb;
 
 import java.util.EventListener;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Bread crumb model listeners get notified by {@link IBreadCrumbModel bread crumb models} of

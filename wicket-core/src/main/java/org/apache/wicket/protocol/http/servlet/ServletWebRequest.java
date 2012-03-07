@@ -42,7 +42,7 @@ import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.string.UrlUtils;
+import org.apache.wicket.core.util.string.UrlUtils;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.upload.FileItemFactory;
 import org.apache.wicket.util.upload.FileUploadException;

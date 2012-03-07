@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.threadtest.apps.app1;
 
-import org.apache.wicket.markup.repeater.IItemReuseStrategy;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.LoadableDetachableModel;
 

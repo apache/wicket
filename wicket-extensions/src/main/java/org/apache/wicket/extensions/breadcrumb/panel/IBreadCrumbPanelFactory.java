@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.extensions.breadcrumb.panel;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

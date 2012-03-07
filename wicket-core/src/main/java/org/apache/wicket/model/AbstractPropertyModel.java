@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.lang.PropertyResolver;
-import org.apache.wicket.util.lang.PropertyResolverConverter;
+import org.apache.wicket.core.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolverConverter;
 import org.apache.wicket.util.string.Strings;
 
 /**

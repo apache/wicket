@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;

@@ -20,14 +20,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.util.lang.WicketObjects;
-
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
+import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.proxy.IProxyTargetLocator;
+import org.apache.wicket.core.util.lang.WicketObjects;
 
 class GuiceProxyTargetLocator implements IProxyTargetLocator
 {

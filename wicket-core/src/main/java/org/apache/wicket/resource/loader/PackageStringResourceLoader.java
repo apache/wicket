@@ -21,7 +21,7 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
-import org.apache.wicket.util.resource.locator.ResourceNameIterator;
+import org.apache.wicket.core.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

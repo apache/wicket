@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.core.util.lang.WicketObjects;
 
 /**
  * Renders a stable link which can be cached in a web browser and used at a later time.

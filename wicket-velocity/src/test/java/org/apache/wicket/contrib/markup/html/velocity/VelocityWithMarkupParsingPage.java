@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.UrlResourceStream;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
 /**

@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.examples.frames;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Simple struct for holding the class of the right frame.

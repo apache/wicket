@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.feedback;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface for filtering feedback messages.

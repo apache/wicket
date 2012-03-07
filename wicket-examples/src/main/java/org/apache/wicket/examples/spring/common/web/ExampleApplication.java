@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.spring.common.web;
 
 import org.apache.wicket.examples.spring.common.ContactDao;
-import org.apache.wicket.examples.spring.common.web.HomePage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 

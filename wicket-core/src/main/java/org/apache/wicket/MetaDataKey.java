@@ -17,6 +17,8 @@
 package org.apache.wicket;
 
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * A key to a piece of metadata associated with a {@link Component}, {@link Session} or
  * {@link Application} at runtime. The key contains type information that can be used to check the

@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MarkupContainer;

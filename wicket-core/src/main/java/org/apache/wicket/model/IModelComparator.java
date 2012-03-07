@@ -17,7 +17,7 @@
 package org.apache.wicket.model;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Implementations of this interface compare model object. The component is given so that a

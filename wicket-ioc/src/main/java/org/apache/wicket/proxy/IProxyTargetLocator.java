@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.proxy;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Represents a service locator for lazy init proxies. When the first method invocation occurs on

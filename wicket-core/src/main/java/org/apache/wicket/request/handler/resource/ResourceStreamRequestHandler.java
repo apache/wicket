@@ -19,7 +19,7 @@ package org.apache.wicket.request.handler.resource;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.handler.logger.ResourceStreamLogData;
+import org.apache.wicket.core.request.handler.logger.ResourceStreamLogData;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;

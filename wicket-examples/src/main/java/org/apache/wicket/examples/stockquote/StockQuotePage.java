@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.examples.stockquote;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

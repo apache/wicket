@@ -24,7 +24,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -18,7 +18,6 @@ package org.apache.wicket.examples.upload;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.request.mapper.MountedMapper;
 import org.apache.wicket.util.file.Folder;
 
 
@@ -70,8 +69,8 @@ public class UploadApplication extends WicketExampleApplication
 		// Ensure folder exists
 		uploadFolder.mkdirs();
 
-		getRootRequestMapperAsCompound().add(new MountedMapper("/multi", MultiUploadPage.class));
-		getRootRequestMapperAsCompound().add(new MountedMapper("/single", UploadPage.class));
+		mountPage("/multi", MultiUploadPage.class);
+		mountPage("/single", UploadPage.class);
 
 		getApplicationSettings().setUploadProgressUpdatesEnabled(true);
 	}

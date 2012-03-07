@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface that represents validators that check multiple components. These validators are added

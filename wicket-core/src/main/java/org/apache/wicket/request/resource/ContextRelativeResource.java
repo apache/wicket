@@ -27,7 +27,7 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.resource.WebExternalResourceStream;
+import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

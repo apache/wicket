@@ -21,7 +21,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.lang.Packages;
-import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.velocity.VelocityJavaScriptContributor;
 
 /**

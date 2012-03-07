@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.convert.IConverter;
 
 /**

@@ -19,7 +19,7 @@ package org.apache.wicket.request.parameter;
 import java.util.List;
 
 import org.apache.wicket.request.Url;
-import org.apache.wicket.util.string.*;
+import org.apache.wicket.util.string.StringValue;
 import org.junit.Assert;
 import org.junit.Test;
 

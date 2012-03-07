@@ -17,11 +17,11 @@
 package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.settings.def.PageSettings;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * IComponentResolvers are responsible for mapping component names to Wicket components. Resolvers

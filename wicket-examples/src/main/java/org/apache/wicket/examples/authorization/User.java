@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.authorization;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

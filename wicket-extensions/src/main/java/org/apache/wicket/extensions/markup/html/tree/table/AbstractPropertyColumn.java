@@ -23,7 +23,7 @@ import javax.swing.tree.TreeNode;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 
 
 /**

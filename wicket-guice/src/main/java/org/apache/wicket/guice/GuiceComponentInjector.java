@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.guice;
 
+import com.google.inject.Guice;
+import com.google.inject.ImplementedBy;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Stage;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IBehaviorInstantiationListener;
@@ -24,12 +29,6 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.model.Model;
-
-import com.google.inject.Guice;
-import com.google.inject.ImplementedBy;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.Stage;
 
 /**
  * Injects field members of components and behaviors using Guice.

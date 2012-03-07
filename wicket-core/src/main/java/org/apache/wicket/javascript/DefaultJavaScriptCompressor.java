@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.javascript;
 
-import org.apache.wicket.util.string.JavaScriptStripper;
+import org.apache.wicket.core.util.string.JavaScriptStripper;
 
 /**
  * Wicket default implementation of a javascript compressor

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.model;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface to logic for detaching transient information from a detachable model. Detachable models

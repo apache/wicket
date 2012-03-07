@@ -18,7 +18,7 @@ package org.apache.wicket.pageStore.memory;
 
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.core.util.lang.WicketObjects;
 
 /**
  * An eviction strategy that keeps the data store size up to configured bytes

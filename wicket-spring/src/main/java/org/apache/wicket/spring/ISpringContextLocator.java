@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.spring;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.springframework.context.ApplicationContext;
 
 

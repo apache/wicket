@@ -23,7 +23,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.IMarkupCacheKeyProvider;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.UrlResourceStream;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
 
 
 /**

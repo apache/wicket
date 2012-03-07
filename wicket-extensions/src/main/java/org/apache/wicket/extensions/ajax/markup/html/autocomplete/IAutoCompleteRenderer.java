@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A renderer used to generate html output for the {@link AutoCompleteBehavior}.

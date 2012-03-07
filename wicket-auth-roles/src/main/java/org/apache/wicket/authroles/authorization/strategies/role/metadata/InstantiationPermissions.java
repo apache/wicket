@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

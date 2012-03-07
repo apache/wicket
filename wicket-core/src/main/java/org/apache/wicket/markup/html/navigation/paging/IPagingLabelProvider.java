@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * This interface is used by the PagingNavigator components to get the label of the pages there are

@@ -24,10 +24,11 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.net.URL;
 
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.resource.UrlResourceStream;
-import org.apache.wicket.util.resource.locator.caching.CachingResourceStreamLocator;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
+import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.junit.Test;
 
 /**

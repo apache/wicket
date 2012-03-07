@@ -24,7 +24,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.ILoggableRequestHandler;
-import org.apache.wicket.request.handler.IPageRequestHandler;
+import org.apache.wicket.core.request.handler.IPageRequestHandler;
 
 /**
  *

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,12 +92,7 @@ public class PopupSettings implements IClusterable
 	private String windowName = null;
 
 	/**
-	 * Construct. If you are not using these popup settings with an external link - in which case we
-	 * don't need to know about a page map - you should use one of the constructors with a
-	 * {@link PageMap} argument. Typically, you should put any popup in a separate page map as
-	 * Wicket holds references to a limited number of pages/ versions only. If you don't put your
-	 * popup in a separate page map, the user might get page expired exceptions when getting back to
-	 * the main window again.
+	 * Constructor.
 	 */
 	public PopupSettings()
 	{

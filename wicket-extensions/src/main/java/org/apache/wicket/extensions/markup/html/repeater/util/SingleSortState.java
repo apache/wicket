@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
 /**

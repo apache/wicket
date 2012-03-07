@@ -29,8 +29,8 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.resource.ResourceUtil;
-import org.apache.wicket.util.resource.UrlResourceStream;
-import org.apache.wicket.util.string.UrlUtils;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
+import org.apache.wicket.core.util.string.UrlUtils;
 
 
 /**

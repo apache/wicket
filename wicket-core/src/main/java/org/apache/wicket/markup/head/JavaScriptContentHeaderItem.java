@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.apache.wicket.request.Response;
-import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 
 /**

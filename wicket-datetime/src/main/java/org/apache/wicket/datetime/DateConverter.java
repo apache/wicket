@@ -23,7 +23,7 @@ import java.util.TimeZone;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;

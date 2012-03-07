@@ -24,9 +24,9 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.UrlResourceStream;
-import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
-import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	private final class CustomResourceStreamLocator extends ResourceStreamLocator
 	{
 		/**
-		 * @see org.apache.wicket.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class,
+		 * @see org.apache.wicket.core.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class,
 		 *      java.lang.String)
 		 */
 		@Override

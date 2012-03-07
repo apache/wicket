@@ -19,6 +19,7 @@ package org.apache.wicket.util.lang;
 import java.io.Serializable;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;

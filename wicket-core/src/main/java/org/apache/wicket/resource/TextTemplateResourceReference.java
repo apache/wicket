@@ -20,11 +20,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceStreamResource;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.template.PackageTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;

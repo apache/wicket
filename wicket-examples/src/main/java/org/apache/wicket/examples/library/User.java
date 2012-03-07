@@ -19,7 +19,7 @@ package org.apache.wicket.examples.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**

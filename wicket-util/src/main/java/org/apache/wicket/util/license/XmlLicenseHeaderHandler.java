@@ -23,7 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import junit.framework.Assert;
-
 import org.apache.wicket.util.diff.Diff;
 import org.apache.wicket.util.diff.Revision;
 import org.apache.wicket.util.string.Strings;

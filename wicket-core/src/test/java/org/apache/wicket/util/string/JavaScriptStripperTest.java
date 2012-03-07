@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.string;
 
+import org.apache.wicket.core.util.string.JavaScriptStripper;
 import org.junit.Assert;
 import org.junit.Test;
 

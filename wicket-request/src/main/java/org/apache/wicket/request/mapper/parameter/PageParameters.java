@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.IStringIterator;

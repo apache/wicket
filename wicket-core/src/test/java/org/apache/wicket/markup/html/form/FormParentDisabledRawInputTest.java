@@ -21,7 +21,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
+import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.junit.Test;
 
 /**

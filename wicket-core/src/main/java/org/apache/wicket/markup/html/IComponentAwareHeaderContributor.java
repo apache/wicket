@@ -17,8 +17,8 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * An interface to be implemented by {@link org.apache.wicket.behavior.Behavior}s,

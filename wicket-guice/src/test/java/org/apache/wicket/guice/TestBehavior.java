@@ -16,11 +16,10 @@
  */
 package org.apache.wicket.guice;
 
+import com.google.inject.Inject;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.junit.Assert;
-
-import com.google.inject.Inject;
 
 /**
  * A behavior that will be use injected services

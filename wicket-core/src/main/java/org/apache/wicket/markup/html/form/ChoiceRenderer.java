@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 
 /**
  * Default implementation of {@link org.apache.wicket.markup.html.form.IChoiceRenderer}. Usage:

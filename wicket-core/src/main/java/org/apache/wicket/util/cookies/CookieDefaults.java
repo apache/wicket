@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.cookies;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * This class provides default values that are used by the CookieValuePersister class when it

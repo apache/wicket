@@ -22,11 +22,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 
 
 /**
