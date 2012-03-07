@@ -1562,7 +1562,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	protected IMapperContext newMapperContext()
 	{
-		return new DefaultMapperContext();
+		return new DefaultMapperContext(this);
 	}
 
 	/**

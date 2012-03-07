@@ -28,6 +28,28 @@ import org.apache.wicket.request.resource.ResourceReferenceRegistry;
  */
 public class DefaultMapperContext implements IMapperContext
 {
+	private final Application application;
+
+	/**
+	 * Constructor.
+	 *
+	 * Uses the threal local Application
+	 */
+	public DefaultMapperContext()
+	{
+		this(Application.get());
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param application
+	 *      the application instance to use
+	 */
+	public DefaultMapperContext(final Application application)
+	{
+		this.application = application;
+	}
 	/**
 	 * @see org.apache.wicket.request.mapper.IMapperContext#getBookmarkableIdentifier()
 	 */
@@ -74,7 +96,7 @@ public class DefaultMapperContext implements IMapperContext
 	@Override
 	public ResourceReferenceRegistry getResourceReferenceRegistry()
 	{
-		return Application.get().getResourceReferenceRegistry();
+		return application.getResourceReferenceRegistry();
 	}
 
 	/**
@@ -108,11 +130,11 @@ public class DefaultMapperContext implements IMapperContext
 	{
 		if (pageParameters == null)
 		{
-			return Application.get().getPageFactory().newPage(pageClass);
+			return application.getPageFactory().newPage(pageClass);
 		}
 		else
 		{
-			return Application.get().getPageFactory().newPage(pageClass, pageParameters);
+			return application.getPageFactory().newPage(pageClass, pageParameters);
 		}
 	}
 
@@ -139,6 +161,6 @@ public class DefaultMapperContext implements IMapperContext
 	@Override
 	public Class<? extends IRequestablePage> getHomePageClass()
 	{
-		return Application.get().getHomePage();
+		return application.getHomePage();
 	}
 }
