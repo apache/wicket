@@ -43,6 +43,8 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.PageWithLink;
+import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -54,8 +56,10 @@ import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
 import org.apache.wicket.resource.DummyPage;
+import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
@@ -1157,5 +1161,24 @@ public class WicketTesterTest extends WicketTestCase
 		tester.assertRenderedPage(tester.getApplication()
 			.getApplicationSettings()
 			.getAccessDeniedPage());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4437
+	 *
+	 * Clicking on ResourceLink should deliver the resource content
+	 */
+	@Test
+	public void clickResourceLink()
+	{
+		MockPageWithLink page = new MockPageWithLink();
+		String content = "content";
+		ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(), "fileName.txt");
+		ResourceLink<Void> link = new ResourceLink<Void>(MockPageWithLink.LINK_ID, resource);
+		page.add(link);
+		tester.startPage(page);
+		tester.clickLink(MockPageWithLink.LINK_ID, false);
+		assertEquals(tester.getContentTypeFromResponseHeader(), "text/plain");
+		assertEquals(content, tester.getLastResponseAsString());
 	}
 }
