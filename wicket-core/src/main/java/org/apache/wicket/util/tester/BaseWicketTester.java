@@ -49,6 +49,7 @@ import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.IRequestListener;
+import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
@@ -82,6 +83,7 @@ import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.XmlPullParser;
@@ -1909,7 +1911,6 @@ public class BaseWicketTester
 						bookmarkablePageLink, (Object[])null);
 
 					startPage(bookmarkablePageLink.getPageClass(), parameters);
-					return;
 				}
 				catch (Exception e)
 				{
@@ -1917,8 +1918,14 @@ public class BaseWicketTester
 						+ "Please report this in Wicket's Issue Tracker.", e);
 				}
 			}
-
-			executeListener(link, ILinkListener.INTERFACE);
+			else if (link instanceof ResourceLink)
+			{
+				executeListener(link, IResourceListener.INTERFACE);
+			}
+			else
+			{
+				executeListener(link, ILinkListener.INTERFACE);
+			}
 		}
 		else
 		{
