@@ -1,5 +1,29 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.20
+
+** Bug
+    * [WICKET-2949] - Select does not work properly in functional flows e.g. Wizards
+    * [WICKET-3633] - content type in header is being lost when using a AbstractTransformerBehavior
+    * [WICKET-4159] - Javascript error when loading datepicker
+    * [WICKET-4223] - Wrong Ajax form submit with wicket-1.418 and IBM WebSphere Portal 6.1
+    * [WICKET-4257] - Ajax indicator getting stuck when button is pressed multiple times
+    * [WICKET-4261] - Wicket autocomplete keeps working on the replaced element when somehow the element is replaced by another ajax request when it is shown.
+    * [WICKET-4275] - URL parameters containing a single quote are incorrectly escaped
+    * [WICKET-4276] - Select component loses it's value
+    * [WICKET-4296] - In Firefox the auto complete dialog will not be closed when clicking besides it.
+    * [WICKET-4297] - Wicket autocomplete when click right into the popup list without moving the mouse will not selelect the item under the mouse
+    * [WICKET-4298] - FormTester doesn't handle nested forms correctly
+    * [WICKET-4392] - autocomplete: show list on empty input is ignored if show list on focus gain is false
+    * [WICKET-4429] - executeAllTimerBehaviors does not find all timer behaviours
+
+** Improvement
+    * [WICKET-4210] - AutoCompleteTextField should not kill Escape keypress event if options are not shown
+    * [WICKET-4262] - Wicket autocomplete should try to select the real selected value in the list if preselect property is true instead of just always 0
+    * [WICKET-4285] - PageSavingThread.stop() blocks forever
+    * [WICKET-4355] - make client-side redirects easier by introducing RedirectException
+
+
 Release Notes - Wicket - Version 1.4.19
 
 ** Bug
