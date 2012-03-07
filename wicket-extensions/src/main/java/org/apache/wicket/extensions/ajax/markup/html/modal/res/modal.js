@@ -194,7 +194,7 @@ Wicket.Window = Wicket.Class.create();
 
 /**
  * Display confirmation dialog if the user is about to leave a page (IE and FF).
- * @deprecated Use the settings instead. TODO Removed for/after Wicket 7.0
+ * @deprecated Use the settings instead. TODO Remove for/after Wicket 7.0
  */
 Wicket.Window.unloadConfirmation = true;
 
