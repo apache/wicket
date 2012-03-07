@@ -97,11 +97,12 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	 * Constructor.
 	 *
 	 * @param cache
-	 *      the internal cache that will hold the results for all already checked resources
+	 *      the internal cache that will hold the results for all already checked resources.
+	 *      Use {@code null} to disable caching.
 	 */
 	public SecurePackageResourceGuard(final ConcurrentMap<String, Boolean> cache)
 	{
-		this.cache = Args.notNull(cache, "cache");
+		this.cache = cache;
 
 		// the order is important for better performance
 		// first add the most commonly used
@@ -109,6 +110,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.css");
 		addPattern("+*.png");
 		addPattern("+*.jpg");
+		addPattern("+*.jpeg");
 		addPattern("+*.gif");
 		addPattern("+*.ico");
 
