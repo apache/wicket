@@ -18,17 +18,16 @@ package org.apache.wicket.application;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.collections.UrlExternalFormComparator;
 
 /**
  * An abstract implementation of a {@link IClassResolver} which uses a {@link ClassLoader} for
@@ -128,35 +127,28 @@ public abstract class AbstractClassResolver implements IClassResolver
 	@Override
 	public Iterator<URL> getResources(final String name)
 	{
-		List<URL> resultList = new ArrayList<URL>();
+		Set<URL> resultSet = new TreeSet<URL>(new UrlExternalFormComparator());
 
-		// URL's externalForm should be used instead of URLs as Set keys. See WICKET-3867/4203.
-		Set<String> loadedResources = new HashSet<String>();
 		try
 		{
 			// Try the classloader for the wicket jar/bundle
 			Enumeration<URL> resources = Application.class.getClassLoader().getResources(name);
-			loadResources(resources, loadedResources);
+			loadResources(resources, resultSet);
 
 			// Try the classloader for the user's application jar/bundle
 			resources = Application.get().getClass().getClassLoader().getResources(name);
-			loadResources(resources, loadedResources);
+			loadResources(resources, resultSet);
 
 			// Try the context class loader
 			resources = getClassLoader().getResources(name);
-			loadResources(resources, loadedResources);
-
-			for (String urlExternalForm : loadedResources)
-			{
-				resultList.add(new URL(urlExternalForm));
-			}
+			loadResources(resources, resultSet);
 		}
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException(e);
 		}
 
-		return resultList.iterator();
+		return resultSet.iterator();
 	}
 
 	/**
@@ -164,15 +156,14 @@ public abstract class AbstractClassResolver implements IClassResolver
 	 * @param resources
 	 * @param loadedResources
 	 */
-	private void loadResources(Enumeration<URL> resources, Set<String> loadedResources)
+	private void loadResources(Enumeration<URL> resources, Set<URL> loadedResources)
 	{
 		if (resources != null)
 		{
 			while (resources.hasMoreElements())
 			{
 				final URL url = resources.nextElement();
-				String externalForm = url.toExternalForm();
-				loadedResources.add(externalForm);
+				loadedResources.add(url);
 			}
 		}
 	}
