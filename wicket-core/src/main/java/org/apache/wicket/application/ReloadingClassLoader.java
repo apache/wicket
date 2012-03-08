@@ -21,11 +21,12 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.apache.wicket.util.collections.UrlExternalFormComparator;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.time.Duration;
@@ -45,7 +46,7 @@ public class ReloadingClassLoader extends URLClassLoader
 {
 	private static final Logger log = LoggerFactory.getLogger(ReloadingClassLoader.class);
 
-	private static final Set<URL> urls = new HashSet<URL>();
+	private static final Set<URL> urls = new TreeSet<URL>(new UrlExternalFormComparator());
 
 	private static final List<String> patterns = new ArrayList<String>();
 
