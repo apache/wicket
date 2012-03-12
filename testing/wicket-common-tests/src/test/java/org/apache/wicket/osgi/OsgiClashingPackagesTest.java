@@ -146,6 +146,9 @@ public class OsgiClashingPackagesTest extends Assert
 		private boolean shouldCollect(final String entryName)
 		{
 			if (
+				// ignore folder names. count just files/resources
+				entryName.endsWith("/") ||
+
 				// all modules have META-INF {MANIFEST.MF, Maven stuff, ..}
 				entryName.startsWith("META-INF/") ||
 
