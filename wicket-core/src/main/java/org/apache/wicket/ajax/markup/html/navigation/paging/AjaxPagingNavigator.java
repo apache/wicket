@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.markup.html.navigation.paging;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
@@ -91,7 +92,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the increment link
 	 */
 	@Override
-	protected Link<?> newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	protected AbstractLink newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
 	{
 		return new AjaxPagingNavigationIncrementLink(id, pageable, increment);
 	}
@@ -109,7 +110,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the pagenumber link
 	 */
 	@Override
-	protected Link<?> newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	protected AbstractLink newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
 		return new AjaxPagingNavigationLink(id, pageable, pageNumber);
 	}
