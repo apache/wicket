@@ -117,7 +117,7 @@ public class HttpSessionStore implements ISessionStore
 				// register an unbinding listener for cleaning up
 				String applicationKey = Application.get().getName();
 				httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
-					new SessionBindingListener(applicationKey, httpSession.getId()));
+					new SessionBindingListener(applicationKey));
 
 				// register the session object itself
 				setAttribute(request, Session.SESSION_ATTRIBUTE_NAME, newSession);
@@ -413,21 +413,15 @@ public class HttpSessionStore implements ISessionStore
 		/** The unique key of the application within this web application. */
 		private final String applicationKey;
 
-		/** Session id. */
-		private final String sessionId;
-
 		/**
 		 * Construct.
 		 * 
 		 * @param applicationKey
 		 *            The unique key of the application within this web application
-		 * @param sessionId
-		 *            The session's id
 		 */
-		public SessionBindingListener(final String applicationKey, final String sessionId)
+		public SessionBindingListener(final String applicationKey)
 		{
 			this.applicationKey = applicationKey;
-			this.sessionId = sessionId;
 		}
 
 		/**
@@ -444,15 +438,14 @@ public class HttpSessionStore implements ISessionStore
 		@Override
 		public void valueUnbound(final HttpSessionBindingEvent evt)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Session unbound: " + sessionId);
-			}
+			String sessionId = evt.getSession().getId();
+
+			log.debug("Session unbound: {}", sessionId);
 
 			Application application = Application.get(applicationKey);
 			if (application == null)
 			{
-				log.debug("Wicket application with name '" + applicationKey + "' not found.");
+				log.debug("Wicket application with name '{}' not found.", applicationKey);
 				return;
 			}
 
