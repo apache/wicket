@@ -42,6 +42,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -63,6 +64,12 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.core.request.handler.IPageProvider;
+import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.PageAndComponentProvider;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
@@ -107,12 +114,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.PageAndComponentProvider;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
@@ -977,7 +978,8 @@ public class BaseWicketTester
 	{
 		Args.notNull(link, "link");
 
-		return link.urlFor(ILinkListener.INTERFACE, new PageParameters()).toString();
+		Url url = Url.parse(link.urlFor(ILinkListener.INTERFACE, new PageParameters()).toString());
+		return transform(url).toString();
 	}
 
 	/**
@@ -1887,7 +1889,8 @@ public class BaseWicketTester
 	 */
 	private Url transform(final Url url)
 	{
-		while (url.getSegments().size() > 0 && url.getSegments().get(0).equals(".."))
+		while (url.getSegments().size() > 0 &&
+			(url.getSegments().get(0).equals("..") || url.getSegments().get(0).equals(".")))
 		{
 			url.getSegments().remove(0);
 		}

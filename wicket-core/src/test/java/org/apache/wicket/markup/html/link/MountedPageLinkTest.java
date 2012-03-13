@@ -85,7 +85,7 @@ public class MountedPageLinkTest extends WicketTestCase
 			new PageParameters().add("param", "value"));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
-		assertEquals("wicket/page?0-1.ILinkListener-link", url);
+		assertEquals("./wicket/page?0-1.ILinkListener-link", url);
 		tester.executeUrl(url);
 	}
 
@@ -100,7 +100,7 @@ public class MountedPageLinkTest extends WicketTestCase
 			new PageParameters().add("param", "value"));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
-		assertEquals("wicket/page?0-1.ILinkListener-link", url);
+		assertEquals("./wicket/page?0-1.ILinkListener-link", url);
 		// simulate a page expiry
 		url = url.replace("page?0", "page?3");
 		tester.executeUrl(url);
