@@ -16,13 +16,11 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
-import java.util.List;
-
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -181,7 +179,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				super.updateAjaxAttributes(attributes);
 				attributes.setMethod(Method.POST);
 				attributes.setEventNames("blur", "keyup");
-				CharSequence dynamicExtraParameters =
+				CharSequence dynamicExtraParameters = 
 						"var result = [], " +
 								"kc=Wicket.Event.keyCode(event)," +
 								"evtType=attrs.event.type;" +
@@ -191,8 +189,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 								"}" +
 								"else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }" +
 								"return result;";
-				List<CharSequence> dynamicParameters = attributes.getDynamicExtraParameters();
-				dynamicParameters.add(dynamicExtraParameters);
+				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
 				CharSequence precondition =
 						"var kc=Wicket.Event.keyCode(event),"+
@@ -200,9 +197,9 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 								"ret=false;"+
 								"if(evtType==='blur' || (evtType==='keyup' && (kc===27))) ret = true;"+
 								"return ret;";
-				JavaScriptPrecondition javaScriptPrecondition = new JavaScriptPrecondition(precondition);
-				List<JavaScriptPrecondition> preconditions = attributes.getPreconditions();
-				preconditions.add(javaScriptPrecondition);
+				AjaxCallListener ajaxCallListener = new AjaxCallListener();
+				ajaxCallListener.onPrecondition(precondition);
+				attributes.getAjaxCallListeners().add(ajaxCallListener);
 			}
 		});
 		return editor;

@@ -23,12 +23,11 @@ import java.util.Map;
 
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * Attributes of an Ajax Request.
  * 
- * <hr>
- *
  * @author Matej Knopp
  */
 public final class AjaxRequestAttributes
@@ -54,8 +53,11 @@ public final class AjaxRequestAttributes
 	public static final String XML_DATA_TYPE = "xml";
 
 	private boolean multipart = false;
+
 	private Method method = Method.GET;
-	private Integer requestTimeout;
+
+	private Duration requestTimeout;
+
 	private boolean allowDefault = false;
 
 	/**
@@ -83,9 +85,11 @@ public final class AjaxRequestAttributes
 	private String dataType = XML_DATA_TYPE;
 
 	private List<IAjaxCallListener> ajaxCallListeners;
-	private List<JavaScriptPrecondition> preconditions;
+
 	private Map<String, Object> extraParameters;
+
 	private List<CharSequence> dynamicExtraParameters;
+
 	private AjaxChannel channel;
 
 	/**
@@ -136,13 +140,12 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * Returns whether the Ajax request should be a <code>POST</code> regardless of whether a form
-	 * is being submitted.
+	 * Returns the type of the Ajax request: <code>GET</code> or <code>POST</code>.
 	 * <p>
 	 * For a <code>POST</code>request all URL arguments are submitted as body. This can be useful if
 	 * the URL parameters are longer than maximal URL length.
 	 * 
-	 * @return <code>true</code> if the request should be post, <code>false</code> otherwise.
+	 * @return the type of the Ajax request. Default: {@linkplain Method#GET}
 	 */
 	public Method getMethod()
 	{
@@ -150,16 +153,16 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * Determines whether the Ajax request should be a <code>POST</code> regardless of whether a
-	 * form is being submitted.
+	 * Sets the type of the Ajax request: <code>GET</code> or <code>POST</code>.
 	 * <p>
 	 * For a <code>POST</code>request all URL arguments are submitted as body. This can be useful if
 	 * the URL parameters are longer than maximal URL length.
 	 * 
 	 * @param method
-	 * @return this object
+	 *      the type of the Ajax request
+	 * @return {@code this} object for chaining
 	 */
-	public AjaxRequestAttributes setMethod(Method method)
+	public AjaxRequestAttributes setMethod(final Method method)
 	{
 		this.method = Args.notNull(method, "method");
 		return this;
@@ -170,9 +173,9 @@ public final class AjaxRequestAttributes
 	 * communication and not the processing afterwards. Can be <code>null</code> in which case the
 	 * default request timeout will be used.
 	 * 
-	 * @return request timeout in milliseconds or <code>null<code> for default timeout
+	 * @return request timeout or <code>null<code> for default timeout. Default: no timeout.
 	 */
-	public Integer getRequestTimeout()
+	public Duration getRequestTimeout()
 	{
 		return requestTimeout;
 	}
@@ -185,70 +188,15 @@ public final class AjaxRequestAttributes
 	 * @param requestTimeout
 	 * @return this object
 	 */
-	public AjaxRequestAttributes setRequestTimeout(Integer requestTimeout)
+	public AjaxRequestAttributes setRequestTimeout(final Duration requestTimeout)
 	{
 		this.requestTimeout = requestTimeout;
 		return this;
 	}
 
 	/**
-	 * Array of javascript functions that are invoked before the request executes. The functions
-	 * will get a <code>RequestQueueItem</code> instance passed as fist argument and have to return
-	 * a boolean value. If any of these functions returns <code>false</code> the request is
-	 * canceled.
-	 * <p>
-	 * Example of single function:
-	 * 
-	 * <pre>
-	 *    function(requestQueueItem) 
-	 *    { 
-	 *      if (someCondition()) 
-	 *      {
-	 *         return true; 
-	 *      } 
-	 *      else 
-	 *      {
-	 *         return false;
-	 *      }
-	 *    }
-	 * </pre>
-	 * 
-	 * Preconditions can also be asynchronous (with the rest of the queue waiting until precondition
-	 * finishes). An example of asynchronous precondition:
-	 * 
-	 * <pre>
-	 *    function(requestQueueItem, makeAsync, asyncReturn) 
-	 *    { 
-	 *      makeAsync(); // let the queue know that this precondition is asynchronous
-	 *      var f = function()
-	 *      {
-	 *        if (someCondition())
-	 *        {
-	 *          asyncReturn(true); // return the precondition value
-	 *        }
-	 *        else
-	 *        {
-	 *          asyncReturn(false); // return the precondition value
-	 *        }
-	 *      };
-	 *      window.setTimeout(f, 1000); // postpone the actual check 1000 millisecond. The queue will wait.
-	 *    }
-	 * </pre>
-	 * 
-	 * @return List<JavaScriptPrecondition>
-	 */
-	public List<JavaScriptPrecondition> getPreconditions()
-	{
-		if (preconditions == null)
-		{
-			preconditions = new ArrayList<JavaScriptPrecondition>();
-		}
-		return preconditions;
-	}
-
-	/**
-	 *
-	 * @return List<IAjaxCallListener>
+	 * @return a list of {@link IAjaxCallListener}s which will be notified during the
+	 *  the execution of the Ajax call.
 	 */
 	public List<IAjaxCallListener> getAjaxCallListeners()
 	{
@@ -263,7 +211,7 @@ public final class AjaxRequestAttributes
 	 * Map that contains additional (static) URL parameters. These will be appended to the request
 	 * URL. This is simpler alternative to {@link #getDynamicExtraParameters()}
 	 * 
-	 * @return Map with additional URL arguments
+	 * @return a map with additional URL arguments
 	 */
 	public Map<String, Object> getExtraParameters()
 	{
@@ -275,18 +223,33 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * Array of JavaScript functions that produce additional URL arguments. Each of the functions
-	 * must return a <code>Map&lt;String, String&gt;</code> (Object).
-	 * <p>
-	 * Example of single function:
-	 * 
+	 * Array of JavaScript functions that produce additional URL arguments.
+	 *
+	 * <p>If there are no multivalued parameters then the function can return a
+	 * simple JavaScript object. Example:
+	 *
 	 * <pre>
-	 *    function()
-	 *    {
-	 *    	return { 'param1': document.body.tagName }
-	 *    }
+	 *  return {
+	 *      'param1': document.body.tagName,
+	 *      'param2': calculateParam2()
+	 *  }
 	 * </pre>
-	 * 
+	 *
+	 * </p>
+	 * <p>If there are multivalued parameters then an array of objects may be used.
+	 * Example:
+	 *
+	 * <pre>
+	 *  return [
+	 *      { name: 'param1', value: document.body.tagName },
+	 *      { name: 'param1', value: calculateSecondValueForParam1() },
+	 *      { name: 'param2', value: calculateParam2() }
+	 *  ]
+	 *
+	 * </pre>
+	 *
+	 * </p>
+	 *
 	 * @return a list of functions that produce additional URL arguments.
 	 */
 	public List<CharSequence> getDynamicExtraParameters()
@@ -302,10 +265,11 @@ public final class AjaxRequestAttributes
 	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
 	 * handler to be invoked. For example if the behavior is attached to a link and
 	 * {@link #isAllowDefault()} returns <code>false</code> (which is default value), the link's URL
-	 * will not be followed. If {@link #isAllowDefault()} returns <code>true</code>, the link URL
-	 * will be loaded (and the onclick handler fired if there is any).
+	 * will not be followed. If the Ajax behavior is attached to a checkbox or a radio button then
+	 * the default behavior should be allowed to actually check the box or radio button, i.e.
+	 * this method should return <code>true</code>.
 	 * 
-	 * @return <code>true</code> if the default event handler should be invoked, <code>false</code>
+	 * @return {@code true} if the default event handler should be invoked, {@code false}
 	 *         otherwise.
 	 */
 	public boolean isAllowDefault()
@@ -320,7 +284,8 @@ public final class AjaxRequestAttributes
 	 * @see #isAllowDefault()
 	 * 
 	 * @param allowDefault
-	 * @return this object
+	 * @return {@code this} object for chaining
+	 * @see #isAllowDefault()
 	 */
 	public AjaxRequestAttributes setAllowDefault(boolean allowDefault)
 	{
@@ -331,7 +296,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * @param async
 	 *            a flag whether to do asynchronous Ajax call or not
-	 * @return this object
+	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setAsynchronous(final boolean async)
 	{
@@ -357,16 +322,18 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param channel
-	 * @return this object
+	 *      the Ajax channel to use. Pass {@code null} to use the default channel
+	 *      with name <em>0</em> and queueing type.
+	 * @return {@code this} object for chaining
 	 */
-	public AjaxRequestAttributes setChannel(AjaxChannel channel)
+	public AjaxRequestAttributes setChannel(final AjaxChannel channel)
 	{
 		this.channel = channel;
 		return this;
 	}
 
 	/**
-	 * @return the name of the event that will trigger the Ajax call
+	 * @return the name(s) of the event(s) which will trigger the Ajax call
 	 */
 	public String[] getEventNames()
 	{
@@ -376,7 +343,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * @param eventNames
 	 *            the names of the events which will trigger the Ajax call
-	 * @return this object
+	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setEventNames(String... eventNames)
 	{
@@ -396,16 +363,16 @@ public final class AjaxRequestAttributes
 	/**
 	 * @param formId
 	 *            the id of the for that should be submitted
-	 * @return this object
+	 * @return {@code this} object for chaining
 	 */
-	public AjaxRequestAttributes setFormId(String formId)
+	public AjaxRequestAttributes setFormId(final String formId)
 	{
 		this.formId = formId;
 		return this;
 	}
 
 	/**
-	 * @return the input name of the button/link that submitted the form
+	 * @return the input name of the button/link that submits the form
 	 */
 	public String getSubmittingComponentName()
 	{
@@ -414,8 +381,8 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param submittingComponentName
-	 *            the input name of the button/link that submitted the form
-	 * @return this object
+	 *            the input name of the button/link that submits the form
+	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setSubmittingComponentName(String submittingComponentName)
 	{
@@ -424,25 +391,31 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * @return
+	 * @return a flag indicating whether the Ajax response should be processed by
+	 *  Wicket (i.e. to replace components, execute scripts, etc.). Default: {@code true}.
 	 */
-	public Boolean isWicketAjaxResponse()
+	public boolean isWicketAjaxResponse()
 	{
 		return wicketAjaxResponse;
 	}
 
 	/**
 	 * @param wicketAjaxResponse
-	 * @return this object
+	 *      a flag indicating whether the Ajax response should be processed by
+	 *       Wicket (i.e. to replace components, execute scripts, etc.).
+	 * @return {@code this} object for chaining
 	 */
-	public AjaxRequestAttributes setWicketAjaxResponse(Boolean wicketAjaxResponse)
+	public AjaxRequestAttributes setWicketAjaxResponse(final boolean wicketAjaxResponse)
 	{
 		this.wicketAjaxResponse = wicketAjaxResponse;
 		return this;
 	}
 
 	/**
-	 * @return
+	 * Returns the type of the data in the Ajax response. For example: 'xml', 'json', 'html', etc.
+	 * See the documentation of jQuery.ajax() method for more information.
+	 *
+	 * @return the type of the data in the Ajax response.
 	 */
 	public String getDataType()
 	{
@@ -451,11 +424,12 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param dataType
-	 * @return
+	 *      the type of the data in the Ajax response.
+	 * @return {@code this} object for chaining
 	 */
-	public AjaxRequestAttributes setDataType(String dataType)
+	public AjaxRequestAttributes setDataType(final String dataType)
 	{
-		this.dataType = dataType;
+		this.dataType = Args.notEmpty(dataType, "dataType");
 		return this;
 	}
 
@@ -470,7 +444,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * @param throttlingSettings
 	 *      the settings to use when throttling is needed. Pass {@code null} to disable throttling.
-	 * @return this object
+	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setThrottlingSettings(ThrottlingSettings throttlingSettings)
 	{

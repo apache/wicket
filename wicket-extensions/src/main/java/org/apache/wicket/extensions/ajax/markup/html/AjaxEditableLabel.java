@@ -23,8 +23,9 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -37,7 +38,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.validation.IValidator;
 
 /**
@@ -331,9 +331,9 @@ public class AjaxEditableLabel<T> extends Panel
 					+ "ret=false;"
 					+ "if(evtType==='blur' || (evtType==='keyup' && (kc===27 || kc===13))) ret = true;"
 					+ "return ret;";
-				JavaScriptPrecondition javaScriptPrecondition = new JavaScriptPrecondition(
-					precondition);
-				attributes.getPreconditions().add(javaScriptPrecondition);
+				AjaxCallListener ajaxCallListener = new AjaxCallListener();
+				ajaxCallListener.onPrecondition(precondition);
+				attributes.getAjaxCallListeners().add(ajaxCallListener);
 
 			}
 		});

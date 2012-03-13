@@ -27,7 +27,6 @@ import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
-import org.apache.wicket.ajax.attributes.JavaScriptPrecondition;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
@@ -42,6 +41,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -91,7 +91,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * Renders header contribution by JavaScriptFunctionBody instances which additionally implement
+	 * Renders header contribution by IAjaxCallListener instances which additionally implement
 	 * IComponentAwareHeaderContributor interface.
 	 * 
 	 * @param component
@@ -99,7 +99,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param response
 	 *            the current header response
 	 */
-	private void renderExtraHeaderContributors(Component component, IHeaderResponse response)
+	private void renderExtraHeaderContributors(final Component component, final IHeaderResponse response)
 	{
 		AjaxRequestAttributes attributes = getAttributes();
 
@@ -111,12 +111,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				IComponentAwareHeaderContributor contributor = (IComponentAwareHeaderContributor)ajaxCallListener;
 				contributor.renderHead(component, response);
 			}
-		}
-
-		List<JavaScriptPrecondition> preconditions = attributes.getPreconditions();
-		for (JavaScriptPrecondition precondition : preconditions)
-		{
-			precondition.renderHead(component, response);
 		}
 	}
 
@@ -147,31 +141,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @param attributes
 	 */
-	private void updateAjaxAttributesBackwardCompatibility(AjaxRequestAttributes attributes)
+	private void updateAjaxAttributesBackwardCompatibility(final AjaxRequestAttributes attributes)
 	{
-		CharSequence preconditionScript = getPreconditionScript();
-		if (Strings.isEmpty(preconditionScript) == false)
-		{
-			JavaScriptPrecondition precondition = new JavaScriptPrecondition(preconditionScript);
-			attributes.getPreconditions().add(precondition);
-		}
-
-		AjaxCallListener backwardCompatibleAjaxCallListener = new AjaxCallListener()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public CharSequence getSuccessHandler(Component component)
-			{
-				return AbstractDefaultAjaxBehavior.this.getSuccessScript();
-			}
-
-			@Override
-			public CharSequence getFailureHandler(Component component)
-			{
-				return AbstractDefaultAjaxBehavior.this.getFailureScript();
-			}
-		};
+		AjaxCallListener backwardCompatibleAjaxCallListener = new AjaxCallListener();
+		backwardCompatibleAjaxCallListener.onSuccess(getSuccessScript());
+		backwardCompatibleAjaxCallListener.onFailure(getFailureScript());
+		backwardCompatibleAjaxCallListener.onPrecondition(getPreconditionScript());
 		attributes.getAjaxCallListeners().add(backwardCompatibleAjaxCallListener);
 
 		AjaxChannel channel = getChannel();
@@ -292,15 +267,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 					{
 						attributesJson.append("coh", completeHandler);
 					}
-				}
-			}
 
-			for (JavaScriptPrecondition pre : attributes.getPreconditions())
-			{
-				String precondition = pre.toString();
-				if (Strings.isEmpty(precondition) == false)
-				{
-					attributesJson.append("pre", precondition);
+					CharSequence precondition = ajaxCallListener.getPrecondition(component);
+					if (Strings.isEmpty(precondition) == false)
+					{
+						attributesJson.append("pre", precondition);
+					}
 				}
 			}
 
@@ -320,12 +292,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put("ep", extraParameters);
 			}
 
-			List<CharSequence> urlArgumentMethods = attributes.getDynamicExtraParameters();
-			if (urlArgumentMethods != null)
+			List<CharSequence> dynamicExtraParameters = attributes.getDynamicExtraParameters();
+			if (dynamicExtraParameters != null)
 			{
-				for (CharSequence urlArgument : urlArgumentMethods)
+				for (CharSequence dynamicExtraParameter : dynamicExtraParameters)
 				{
-					attributesJson.append("dep", urlArgument);
+					attributesJson.append("dep", dynamicExtraParameter);
 				}
 			}
 
@@ -358,10 +330,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put("ad", true);
 			}
 
-			Integer requestTimeout = attributes.getRequestTimeout();
+			Duration requestTimeout = attributes.getRequestTimeout();
 			if (requestTimeout != null)
 			{
-				attributesJson.put("rt", requestTimeout);
+				attributesJson.put("rt", requestTimeout.getMilliseconds());
 			}
 
 			boolean wicketAjaxResponse = attributes.isWicketAjaxResponse();

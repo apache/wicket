@@ -166,8 +166,6 @@ public class LinksPage extends BasePage
 				List<CharSequence> urlArgumentMethods = attributes.getDynamicExtraParameters();
 				urlArgumentMethods.add("return {'htmlname': document.documentElement.tagName};");
 				urlArgumentMethods.add("return {'bodyname': document.body.tagName};");
-
-// attributes.getPreconditions().add(0, "return false;");
 			}
 		});
 

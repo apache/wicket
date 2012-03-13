@@ -22,14 +22,12 @@ import org.apache.wicket.util.io.IClusterable;
 
 /**
  * An interface to be implemented by {@link org.apache.wicket.behavior.Behavior}s,
- * {@link org.apache.wicket.ajax.attributes.IAjaxCallListener}s or
- * {@link org.apache.wicket.ajax.attributes.JavaScriptFunctionBody}s which wish to
- * contribute to the header section of the page.
+ * {@link org.apache.wicket.ajax.attributes.IAjaxCallListener}s.
  * 
  * Example:
  * 
  * <pre>
- * class MyAjaxCallDecorator implements IAjaxCallListener, IHeaderContributor
+ * class MyAjaxCallDecorator implements IAjaxCallListener, IComponentAwareHeaderContributor
  * {
  *
  *  // IAjaxCallListener methods omitted for brevity

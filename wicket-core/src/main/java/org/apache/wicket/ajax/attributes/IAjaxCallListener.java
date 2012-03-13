@@ -17,7 +17,6 @@
 package org.apache.wicket.ajax.attributes;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface used to listen at the most important points when Wicket performs an Ajax callback.
@@ -30,7 +29,7 @@ import org.apache.wicket.util.io.IClusterable;
  *
  * @since 6.0
  */
-public interface IAjaxCallListener extends IClusterable
+public interface IAjaxCallListener
 {
 	/**
 	 * The JavaScript that will be executed after successful return of the Ajax call.
@@ -109,4 +108,13 @@ public interface IAjaxCallListener extends IClusterable
 	 *      and unsuccessful return of the Ajax call.
 	 */
 	CharSequence getCompleteHandler(Component component);
+
+	/**
+	 * A JavaScript function that is invoked before the request executes.
+	 * If it returns {@code false} then the execution of the Ajax call will
+	 * be cancelled.
+	 *
+	 * @return
+	 */
+	CharSequence getPrecondition(Component component);
 }
