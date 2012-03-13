@@ -33,7 +33,7 @@ import org.junit.Test;
 
 /**
  * Tests for IAjaxCallDecoratorDelegate
- *
+ * 
  * @since 1.5
  */
 public class AjaxCallDecoratorDelegateTest extends WicketTestCase
@@ -43,46 +43,56 @@ public class AjaxCallDecoratorDelegateTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4347
 	 */
 	@Test
-	public void delegateShouldContributeToTheHeader() {
-		
+	public void delegateShouldContributeToTheHeader()
+	{
+
 		tester.startPage(new HomePage());
 
-		tester.assertContains("<script type=\"text/javascript\" src=\"resource/org.apache.wicket.ajax.calldecorator.AjaxCallDecoratorDelegateTest\\$ContributingDecorator/myscript.js\"></script>");
+		tester.assertContains("<script type=\"text/javascript\" src=\"./resource/org.apache.wicket.ajax.calldecorator.AjaxCallDecoratorDelegateTest\\$ContributingDecorator/myscript.js\"></script>");
 	}
-	
+
 	private static class HomePage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public HomePage() {
-			add(new AjaxLink("link") {
-	
+		public HomePage()
+		{
+			add(new AjaxLink("link")
+			{
+
 				@Override
-				public void onClick(AjaxRequestTarget target) {
+				public void onClick(AjaxRequestTarget target)
+				{
 				}
-	
+
 				@Override
-				protected IAjaxCallDecorator getAjaxCallDecorator() {
+				protected IAjaxCallDecorator getAjaxCallDecorator()
+				{
 					return new ContributingDecorator(super.getAjaxCallDecorator());
 				}
 			});
 		}
 
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body><a wicket:id='link'>link</a></body></html>");
+			return new StringResourceStream(
+				"<html><body><a wicket:id='link'>link</a></body></html>");
 		}
 	}
-	
-	private static class ContributingDecorator 
-			extends AjaxPreprocessingCallDecorator 
-			implements IComponentAwareHeaderContributor
+
+	private static class ContributingDecorator extends AjaxPreprocessingCallDecorator
+		implements
+			IComponentAwareHeaderContributor
 	{
 
-		private ContributingDecorator(IAjaxCallDecorator delegate) {
+		private ContributingDecorator(IAjaxCallDecorator delegate)
+		{
 			super(delegate);
 		}
 
-		public void renderHead(Component component, IHeaderResponse response) {
-			response.renderJavaScriptReference(new PackageResourceReference(getClass(), "myscript.js"));
+		public void renderHead(Component component, IHeaderResponse response)
+		{
+			response.renderJavaScriptReference(new PackageResourceReference(getClass(),
+				"myscript.js"));
 		}
 	}
 

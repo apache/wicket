@@ -233,21 +233,17 @@ public class UrlRenderer
 			newSegments.addAll(urlSegments);
 
 			String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
-			String result;
-			if (Strings.isEmpty(renderedUrl))
+			if (!renderedUrl.startsWith(".."))
 			{
-				result = ".";
+				// WICKET-4260
+				renderedUrl = "./" + renderedUrl;
 			}
-			else if (renderedUrl.endsWith(".."))
+			if (renderedUrl.endsWith(".."))
 			{
 				// WICKET-4401
-				result = renderedUrl + '/';
+				renderedUrl = renderedUrl + '/';
 			}
-			else
-			{
-				result = renderedUrl;
-			}
-			return  result;
+			return renderedUrl;
 		}
 	}
 

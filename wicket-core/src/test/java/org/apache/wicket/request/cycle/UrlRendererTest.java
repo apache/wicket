@@ -33,8 +33,8 @@ public class UrlRendererTest extends TestCase
 	public void test1()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar/baz?a=b")));
-		assertEquals("xyz?x=y", r1.renderUrl(Url.parse("foo/bar/xyz?x=y")));
-		assertEquals("baz/xyz?x=y", r1.renderUrl(Url.parse("foo/bar/baz/xyz?x=y")));
+		assertEquals("./xyz?x=y", r1.renderUrl(Url.parse("foo/bar/xyz?x=y")));
+		assertEquals("./baz/xyz?x=y", r1.renderUrl(Url.parse("foo/bar/baz/xyz?x=y")));
 		assertEquals("../aaa/xyz?x=y", r1.renderUrl(Url.parse("foo/aaa/xyz?x=y")));
 		assertEquals("../../bbb/aaa/xyz?x=y", r1.renderUrl(Url.parse("bbb/aaa/xyz?x=y")));
 	}
@@ -55,7 +55,7 @@ public class UrlRendererTest extends TestCase
 	public void test3()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("?a=b")));
-		assertEquals("a/b/c?x=y", r1.renderUrl(Url.parse("a/b/c?x=y")));
+		assertEquals("./a/b/c?x=y", r1.renderUrl(Url.parse("a/b/c?x=y")));
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class UrlRendererTest extends TestCase
 	public void test5()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("url")));
-		assertEquals("url?1", r1.renderUrl(Url.parse("url?1")));
+		assertEquals("./url?1", r1.renderUrl(Url.parse("url?1")));
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class UrlRendererTest extends TestCase
 	public void test6()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("url/")));
-		assertEquals("x?1", r1.renderUrl(Url.parse("url/x?1")));
+		assertEquals("./x?1", r1.renderUrl(Url.parse("url/x?1")));
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class UrlRendererTest extends TestCase
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(
 			Url.parse("en/first-test-page?16-1.ILinkListener-l1")));
-		assertEquals("first-test-page/indexed1/indexed2/indexed3?p1=v1",
+		assertEquals("./first-test-page/indexed1/indexed2/indexed3?p1=v1",
 			r1.renderUrl(Url.parse("en/first-test-page/indexed1/indexed2/indexed3?p1=v1")));
 	}
 
@@ -137,7 +137,7 @@ public class UrlRendererTest extends TestCase
 	public void test11()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("a")));
-		assertEquals(".", r1.renderUrl(Url.parse("")));
+		assertEquals("./.", r1.renderUrl(Url.parse("")));
 	}
 
 	/**
@@ -146,14 +146,14 @@ public class UrlRendererTest extends TestCase
 	public void test12()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("?0")));
-		assertEquals(".", r1.renderUrl(Url.parse("")));
+		assertEquals("./", r1.renderUrl(Url.parse("")));
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4401
-	 *
-	 * A Url should not ends with '..' because some web containers do not handle it
-	 * properly. Using '../' works better.
+	 * 
+	 * A Url should not end with '..' because some web containers do not handle it properly. Using
+	 * '../' works better.
 	 */
 	public void test13()
 	{

@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -980,7 +981,8 @@ public class BaseWicketTester
 	{
 		Args.notNull(link, "link");
 
-		return link.urlFor(ILinkListener.INTERFACE, new PageParameters()).toString();
+		Url url = Url.parse(link.urlFor(ILinkListener.INTERFACE, new PageParameters()).toString());
+		return transform(url).toString();
 	}
 
 	/**
@@ -1972,7 +1974,8 @@ public class BaseWicketTester
 	 */
 	private Url transform(final Url url)
 	{
-		while (url.getSegments().size() > 0 && url.getSegments().get(0).equals(".."))
+		while (url.getSegments().size() > 0 &&
+			(url.getSegments().get(0).equals("..") || url.getSegments().get(0).equals(".")))
 		{
 			url.getSegments().remove(0);
 		}
@@ -2247,7 +2250,8 @@ public class BaseWicketTester
 			{
 				if (log.isDebugEnabled())
 				{
-					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}", component.getClassRelativePath());
+					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}",
+						component.getClassRelativePath());
 				}
 
 				executeBehavior(timer);
