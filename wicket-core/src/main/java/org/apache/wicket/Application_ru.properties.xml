@@ -49,6 +49,12 @@
 	<entry key="null">Выберите значение</entry>
 	<entry key="nullValid"></entry>
 	
+	<entry key="PagingNavigator.first">Перейти на первую страницу</entry>
+	<entry key="PagingNavigator.previous">Перейти на предыдущую страницу</entry>
+	<entry key="PagingNavigator.next">Перейти на следующую страницу</entry>
+	<entry key="PagingNavigator.last">Перейти на последнюю страницу</entry>
+	<entry key="PagingNavigation.page">Перейти на страницу ${page}</entry>
+	
 	<entry key="org.apache.wicket.mfu.caption.unlimited">Файлы:</entry>
 	<entry key="org.apache.wicket.mfu.caption.limited">Файлы (всего не больше ${max}): </entry>
 </properties>
