@@ -41,6 +41,6 @@ public class PageExpiredErrorPage extends AbstractErrorPage
 	@Override
 	protected void setHeaders(final WebResponse response)
 	{
-		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		response.setStatus(HttpServletResponse.SC_GONE);
 	}
 }
