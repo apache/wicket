@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.io.Serializable;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -626,7 +627,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		Args.notNull(error, "error");
 
 		MessageSource source = new MessageSource();
-		String message = error.getErrorMessage(source);
+		Serializable message = error.getErrorMessage(source);
 
 		if (message == null)
 		{
@@ -649,9 +650,9 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			}
 			buffer.append(".");
 			message = buffer.toString();
-			logger.warn(message);
+			logger.warn(message.toString());
 		}
-		error(new ValidationErrorFeedback(error, message));
+		error(message);
 	}
 
 	/**

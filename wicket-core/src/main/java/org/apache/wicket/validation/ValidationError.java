@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.validation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.wicket.markup.html.form.ValidationErrorFeedback;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -233,7 +235,7 @@ public final class ValidationError implements IValidationError
 	 * @see IValidationError#getErrorMessage(IErrorMessageSource)
 	 */
 	@Override
-	public final String getErrorMessage(IErrorMessageSource messageSource)
+	public final Serializable getErrorMessage(IErrorMessageSource messageSource)
 	{
 		String errorMessage = null;
 
@@ -262,7 +264,7 @@ public final class ValidationError implements IValidationError
 			final Map<String, Object> p = (vars != null) ? vars : EMPTY_VARS;
 			errorMessage = messageSource.substitute(errorMessage, p);
 		}
-		return errorMessage;
+		return new ValidationErrorFeedback(this, errorMessage);
 	}
 
 	/**

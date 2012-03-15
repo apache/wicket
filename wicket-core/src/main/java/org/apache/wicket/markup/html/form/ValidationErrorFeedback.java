@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidationError;
 
 
@@ -39,7 +40,7 @@ public class ValidationErrorFeedback implements IClusterable
 	private final IValidationError error;
 
 	/** error message */
-	private final String message;
+	private final Serializable message;
 
 	/**
 	 * Construct.
@@ -47,24 +48,10 @@ public class ValidationErrorFeedback implements IClusterable
 	 * @param error
 	 * @param message
 	 */
-	public ValidationErrorFeedback(final IValidationError error, final String message)
+	public ValidationErrorFeedback(final IValidationError error, final Serializable message)
 	{
-		if (error == null)
-		{
-			throw new IllegalArgumentException("Argument [[error]] cannot be null");
-		}
-		this.error = error;
+		this.error = Args.notNull(error, "error");
 		this.message = message;
-	}
-
-	/**
-	 * Gets serialVersionUID.
-	 * 
-	 * @return serialVersionUID
-	 */
-	public static long getSerialVersionUID()
-	{
-		return serialVersionUID;
 	}
 
 	/**
@@ -82,7 +69,7 @@ public class ValidationErrorFeedback implements IClusterable
 	 * 
 	 * @return message
 	 */
-	public String getMessage()
+	public Serializable getMessage()
 	{
 		return message;
 	}
@@ -93,8 +80,6 @@ public class ValidationErrorFeedback implements IClusterable
 	@Override
 	public String toString()
 	{
-		return message;
+		return message.toString();
 	}
-
-
 }
