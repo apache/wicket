@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.parser.filter;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.MarkupElement;
 import org.junit.Test;
 
 /**
@@ -39,4 +41,60 @@ public class StyleAndScriptIdentifierTest extends WicketTestCase
 		executeTest(PageWithScriptTemplate.class, "PageWithScriptTemplate_expected.html");
 	}
 
+	@Test
+	public void showWrapInCdata()
+	{
+		StyleAndScriptIdentifier filter = new StyleAndScriptIdentifier();
+
+		String elementBody = "<!-- someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+
+		elementBody = "\n<!-- someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+
+		elementBody = "  <!-- someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+
+
+		elementBody = "<![CDATA[ someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+
+		elementBody = "\n<![CDATA[ someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+
+		elementBody = "  <![CDATA[ someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+
+
+		elementBody = "/*<![CDATA[*/ someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+
+		elementBody = "\n/*<![CDATA[ */ someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+
+		elementBody = "  /* <![CDATA[ */ \n someJS() ";
+		assertFalse(filter.shouldWrapInCdata(elementBody));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4453
+	 *
+	 * This test wraps rawMarkup in org.apache.wicket.util.string.JavaScriptUtils#SCRIPT_CONTENT_PREFIX
+	 * twice - once in Markup.of() and second in the explicit call to StyleAndScriptIdentifier.postProcess().
+	 * The second time it realizes that the element body is already wrapped and skips it.
+	 */
+	@Test
+	public void postProcess()
+	{
+		String rawMarkup = "<script>someJS()</script>";
+		Markup createMarkupElementsMarkup = Markup.of(rawMarkup);
+		Markup markup = new Markup(createMarkupElementsMarkup.getMarkupResourceStream());
+		for (MarkupElement markupElement : createMarkupElementsMarkup)
+		{
+			markup.addMarkupElement(markupElement);
+		}
+		StyleAndScriptIdentifier filter = new StyleAndScriptIdentifier();
+		filter.postProcess(markup);
+		assertEquals("<script>\n/*<![CDATA[*/\nsomeJS()\n/*]]>*/\n</script>", markup.toString(true));
+	}
 }
