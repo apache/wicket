@@ -35,7 +35,7 @@ public class PageReference implements IClusterable
 	 * 
 	 * @param pageId
 	 */
-	PageReference(int pageId)
+	public PageReference(int pageId)
 	{
 		this.pageId = pageId;
 	}
