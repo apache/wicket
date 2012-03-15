@@ -19,6 +19,8 @@ package org.apache.wicket.examples.resourcedecoration;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
+import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.filtering.JavaScriptFilteredIntoFooterHeaderResponse;
 
@@ -62,6 +64,13 @@ public class ResourceDecorationApplication extends WebApplication
 					javaScriptFooterResponse);
 			}
 		});
+
+		IPackageResourceGuard guard = getResourceSettings().getPackageResourceGuard();
+		if (guard instanceof SecurePackageResourceGuard)
+		{
+			SecurePackageResourceGuard secureGuard = (SecurePackageResourceGuard) guard;
+			secureGuard.addPattern("+org/apache/wicket/merged-resources");
+		}
 	}
 
 	@Override
