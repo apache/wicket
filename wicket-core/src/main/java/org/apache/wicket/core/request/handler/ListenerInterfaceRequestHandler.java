@@ -186,7 +186,7 @@ public class ListenerInterfaceRequestHandler
 				: RedirectPolicy.AUTO_REDIRECT;
 			final IPageProvider pageProvider = new PageProvider(page);
 
-			if (freshPage && isStateless == false)
+			if (freshPage && (isStateless == false || component == null))
 			{
 				// A listener interface is invoked on an expired page.
 
