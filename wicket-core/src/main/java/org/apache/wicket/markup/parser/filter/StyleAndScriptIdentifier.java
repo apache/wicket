@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
@@ -24,6 +25,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.JavaScriptUtils;
 
 
@@ -95,8 +97,7 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 							if (close.closes(open))
 							{
 								String text = body.toString().trim();
-								if (!text.startsWith("<!--") && !text.startsWith("<![CDATA[") &&
-									!text.startsWith("/*<![CDATA[*/"))
+								if (shouldWrapInCdata(text))
 								{
 									text = JavaScriptUtils.SCRIPT_CONTENT_PREFIX + body.toString() +
 										JavaScriptUtils.SCRIPT_CONTENT_SUFFIX;
@@ -108,6 +109,35 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 				}
 			}
 		}
+	}
+
+	// OES == optional empty space
+
+	// OES<!--OES
+	private static final Pattern HTML_START_COMMENT = Pattern.compile("^\\s*<!--\\s*.*", Pattern.DOTALL);
+
+	// OES<![CDATA[OES
+	private static final Pattern CDATA_START_COMMENT = Pattern.compile("^\\s*<!\\[CDATA\\[\\s*.*", Pattern.DOTALL);
+
+	// OES/*OES<![CDATA[OES*/OES
+	private static final Pattern JS_CDATA_START_COMMENT = Pattern.compile("^\\s*\\/\\*\\s*<!\\[CDATA\\[\\s*\\*\\/\\s*.*", Pattern.DOTALL);
+
+	boolean shouldWrapInCdata(final String elementBody)
+	{
+		Args.notNull(elementBody, "elementBody");
+
+		boolean shouldWrap = true;
+
+		if (
+				HTML_START_COMMENT.matcher(elementBody).matches() ||
+				CDATA_START_COMMENT.matcher(elementBody).matches() ||
+				JS_CDATA_START_COMMENT.matcher(elementBody).matches()
+			)
+		{
+			shouldWrap = false;
+		}
+
+		return shouldWrap;
 	}
 
 	private boolean shouldProcess(ComponentTag openTag)
