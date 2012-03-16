@@ -136,7 +136,7 @@ public class WebSession extends Session
 	 * because the temporary page needs a constructed {@link Session} to be able to work.
 	 * <p>
 	 * If you need to set a default client info property then better use
-	 * {@link #setClientInfo(org.apache.wicket.request.ClientInfo)} directly.
+	 * {@link #setClientInfo(org.apache.wicket.core.request.ClientInfo)} directly.
 	 */
 	@Override
 	public WebClientInfo getClientInfo()

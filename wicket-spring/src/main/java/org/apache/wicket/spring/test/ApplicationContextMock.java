@@ -354,8 +354,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 
 
 	/**
-	 * @see org.springframework.context.MessageSource#getMessage(org.springframework
-	 *      .context.MessageSourceResolvable, java.util.Locale)
+	 * @see org.springframework.context.MessageSource#getMessage(org.springframework.context.MessageSourceResolvable, java.util.Locale)
 	 */
 	public String getMessage(final MessageSourceResolvable resolvable, final Locale locale)
 		throws NoSuchMessageException
