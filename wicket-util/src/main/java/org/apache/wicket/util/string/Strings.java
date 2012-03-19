@@ -248,7 +248,7 @@ public final class Strings
 	 * 
 	 * @param s
 	 *            The characters to escape
-	 * @see Strings#escapeMarkup(String, boolean)
+	 * @see Strings#escapeMarkup(CharSequence, boolean)
 	 * @return The escaped string
 	 */
 	public static CharSequence escapeMarkup(final CharSequence s)
