@@ -62,7 +62,7 @@ public class JavaScriptPackageResource extends PackageResource
 			try
 			{
 				String nonCompressed = new String(processedResponse, "UTF-8");
-				return compressor.compress(nonCompressed).getBytes();
+				return compressor.compress(nonCompressed).getBytes("UTF-8");
 			}
 			catch (Exception e)
 			{
