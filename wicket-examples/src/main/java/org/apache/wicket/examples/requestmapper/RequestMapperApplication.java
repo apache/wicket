@@ -50,7 +50,7 @@ public class RequestMapperApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		getRootRequestMapperAsCompound().add(new CustomHomeMapper());
+		getRootRequestMapperAsCompound().add(new CustomHomeMapper(getHomePage()));
 
 		getRootRequestMapperAsCompound().add(
 			new LocaleFirstMapper(new MountedMapper("/localized", LocalizedPage.class)));

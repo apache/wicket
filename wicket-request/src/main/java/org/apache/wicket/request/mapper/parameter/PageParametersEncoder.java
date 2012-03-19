@@ -34,7 +34,7 @@ public class PageParametersEncoder implements IPageParametersEncoder
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameter.IPageParametersEncoder#decodePageParameters(org.apache.wicket.request.Request)
+	 * @see IPageParametersEncoder#decodePageParameters(org.apache.wicket.request.Url)
 	 */
 	public PageParameters decodePageParameters(final Url url)
 	{
@@ -62,15 +62,18 @@ public class PageParametersEncoder implements IPageParametersEncoder
 	{
 		Url url = new Url();
 
-		for (int i = 0; i < pageParameters.getIndexedCount(); ++i)
+		if (pageParameters != null)
 		{
-			url.getSegments().add(pageParameters.get(i).toString());
-		}
+			for (int i = 0; i < pageParameters.getIndexedCount(); ++i)
+			{
+				url.getSegments().add(pageParameters.get(i).toString());
+			}
 
-		for (PageParameters.NamedPair pair : pageParameters.getAllNamed())
-		{
-			QueryParameter param = new QueryParameter(pair.getKey(), pair.getValue());
-			url.getQueryParameters().add(param);
+			for (PageParameters.NamedPair pair : pageParameters.getAllNamed())
+			{
+				QueryParameter param = new QueryParameter(pair.getKey(), pair.getValue());
+				url.getQueryParameters().add(param);
+			}
 		}
 
 		return url;

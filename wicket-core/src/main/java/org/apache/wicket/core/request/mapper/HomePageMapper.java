@@ -81,7 +81,7 @@ public class HomePageMapper extends MountedMapper
 	/**
 	 * Matches only when there are no segments/indexed parameters
 	 *
-	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
+	 * @see AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
 	 */
 	@Override
 	protected UrlInfo parseRequest(Request request)
@@ -101,7 +101,7 @@ public class HomePageMapper extends MountedMapper
 	/**
 	 * Use this mapper as a last option. Let all other mappers to try to handle the request
 	 *
-	 * @see org.apache.wicket.request.mapper.MountedMapper#getCompatibilityScore(org.apache.wicket.request.Request)
+	 * @see MountedMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
 	@Override
 	public int getCompatibilityScore(Request request)

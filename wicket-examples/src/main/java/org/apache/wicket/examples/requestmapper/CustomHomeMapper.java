@@ -17,18 +17,15 @@
 package org.apache.wicket.examples.requestmapper;
 
 import java.util.List;
+import java.util.Locale;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.core.request.mapper.HomePageMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.core.request.mapper.AbstractComponentMapper;
-import org.apache.wicket.core.request.mapper.HomePageMapper;
+import org.apache.wicket.request.component.IRequestablePage;
 
 /**
  * An {@link IRequestMapper} that handles requests to the home page ('/') and appends the string
@@ -36,82 +33,74 @@ import org.apache.wicket.core.request.mapper.HomePageMapper;
  * 
  * <p>
  * I.e. a request to http://example.com/app will end up in http://example.com/app/en_US
- * 
- * @author mgrigorov
  */
-public class CustomHomeMapper extends AbstractComponentMapper
+public class CustomHomeMapper extends HomePageMapper
 {
 	/**
-	 * If there is just one url segment (the locale?!) then return a bigger compatibility score than
-	 * {@link HomePageMapper#getCompatibilityScore(Request)}
-	 * 
-	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#getCompatibilityScore(org.apache.wicket.request.Request)
+	 * Constructor.
+	 *
+	 * @param pageClass
+	 *      the class of the home page
 	 */
-	public int getCompatibilityScore(Request request)
+	public CustomHomeMapper(final Class<? extends IRequestablePage> pageClass)
 	{
-		return request.getUrl().getSegments().size() == 1 ? 1 : 0;
+		super(pageClass);
 	}
 
 	/**
+	 * Sets the current session Locale as first segment in the Url.
+	 *
 	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
 	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
-		Url homeUrl = null;
+		Url homeUrl = super.mapHandler(requestHandler);
 
-		if (requestHandler instanceof IPageRequestHandler)
+		if (homeUrl != null)
 		{
-			IPageRequestHandler pageRequestHandler = (IPageRequestHandler)requestHandler;
-
-			if (pageRequestHandler.getPageClass().equals(Application.get().getHomePage()))
-			{
-				String locale = Session.get().getLocale().toString();
-				homeUrl = new Url();
-				homeUrl.getSegments().add(0, locale);
-			}
+			String locale = Session.get().getLocale().toString();
+			homeUrl.getSegments().add(0, locale);
 		}
 
 		return homeUrl;
 	}
 
 	/**
+	 * Removes the leading segment if it a valid Locale
+	 *
 	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
 	public IRequestHandler mapRequest(Request request)
 	{
-		if (isHomeUrl(request))
+		IRequestHandler requestHandler = null;
+		Url url = request.getUrl();
+		List<String> segments = url.getSegments();
+
+		if (segments.size() == 1)
 		{
-			return new RenderPageRequestHandler(new PageProvider(getContext().getHomePageClass()));
+			String localeAsString = segments.get(0);
+			Locale locale = LocaleHelper.parseLocale(localeAsString);
+			if (locale != null)
+			{
+				Session.get().setLocale(locale);
+				segments.remove(0);
+
+				Request requestWithoutLocale = request.cloneWithUrl(url);
+				requestHandler = super.mapRequest(requestWithoutLocale);
+			}
 		}
-		else
-		{
-			return null;
-		}
+
+		return requestHandler;
 	}
 
 	/**
-	 * A home URL is considered a URL without any segments or with one segment and its value is
-	 * valid locale
-	 * 
-	 * @param request
-	 * @return <code>true</code> if the request is to the home page ("/")
+	 * If there is just one url segment (the locale?!) then return a bigger compatibility score than
+	 * {@link HomePageMapper#getCompatibilityScore(Request)}
+	 *
+	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
-	private boolean isHomeUrl(Request request)
+	public int getCompatibilityScore(Request request)
 	{
-		boolean isHomeUrl = false;
-
-		List<String> segments = request.getUrl().getSegments();
-		if (segments.isEmpty())
-		{
-			isHomeUrl = true;
-		}
-		else if (segments.size() == 1)
-		{
-			String localeCandidate = segments.get(0);
-			isHomeUrl = LocaleHelper.isLocale(localeCandidate);
-			// on success the Session's locale can be changed here
-		}
-
-		return isHomeUrl;
+		return request.getUrl().getSegments().size() == 1 ? 1 : 0;
 	}
 }
