@@ -702,8 +702,6 @@ public abstract class Session implements IClusterable, IEventSink
 	 *            The name of the attribute to store
 	 * @return The value of the attribute
 	 */
-	// TODO WICKET-NG made public for page manager, used to be protected, see if there is a way to
-	// revert
 	public final Serializable getAttribute(final String name)
 	{
 		if (!isTemporary())
@@ -727,7 +725,7 @@ public abstract class Session implements IClusterable, IEventSink
 	/**
 	 * @return List of attributes for this session
 	 */
-	protected final List<String> getAttributeNames()
+	public final List<String> getAttributeNames()
 	{
 		if (!isTemporary())
 		{
@@ -769,7 +767,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param name
 	 *            the name of the attribute to remove
 	 */
-	protected final void removeAttribute(String name)
+	public final void removeAttribute(String name)
 	{
 		if (!isTemporary())
 		{
@@ -796,8 +794,6 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param value
 	 *            The value of the attribute
 	 */
-	// TODO WICKET-NG made public for page manager, used to be protected, see if there is a way to
-	// revert
 	public final void setAttribute(String name, Serializable value)
 	{
 		if (!isTemporary())
