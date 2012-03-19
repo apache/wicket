@@ -32,6 +32,10 @@ import org.apache.wicket.model.IModel;
 /**
  * An inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
  * content and a {@link TextArea text area} as its editor.
+ * <p>
+ *     <strong>Note</strong>: attach this component to a block HTML element (like &lt;div&gt;)
+ *     because its label uses block elements to show the content.
+ * </p>
  * 
  * @author eelcohillenius
  * 
