@@ -190,7 +190,10 @@ public final class RequestUtils
 		if (request != null)
 		{
 			String charsetName = request.getCharacterEncoding();
-			charset = Charset.forName(charsetName);
+			if (charsetName != null)
+			{
+				charset = Charset.forName(charsetName);
+			}
 		}
 		if (charset == null)
 		{
