@@ -163,10 +163,9 @@ public final class RequestUtils
 	{
 		String charsetName = null;
 
-		Application application = Application.get();
-		if (application != null)
+		if (Application.exists())
 		{
-			charsetName = application.getRequestCycleSettings().getResponseRequestEncoding();
+			charsetName = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
 		if (Strings.isEmpty(charsetName))
 		{
@@ -182,27 +181,21 @@ public final class RequestUtils
 
 	/**
 	 * @param request
+	 *      the http servlet request to extract the charset from
 	 * @return the request's charset
 	 */
 	public static Charset getCharset(HttpServletRequest request)
 	{
-		String charsetName = null;
+		Charset charset = null;
 		if (request != null)
 		{
-			charsetName = request.getCharacterEncoding();
+			String charsetName = request.getCharacterEncoding();
+			charset = Charset.forName(charsetName);
 		}
-		if (Strings.isEmpty(charsetName))
+		if (charset == null)
 		{
-			Application application = Application.get();
-			if (application != null)
-			{
-				charsetName = application.getRequestCycleSettings().getResponseRequestEncoding();
-			}
+			charset = getDefaultCharset();
 		}
-		if (Strings.isEmpty(charsetName))
-		{
-			charsetName = "UTF-8";
-		}
-		return Charset.forName(charsetName);
+		return charset;
 	}
 }
