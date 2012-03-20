@@ -35,6 +35,8 @@ import org.apache.wicket.application.HeaderContributorListenerCollection;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.core.request.mapper.IMapperContext;
+import org.apache.wicket.core.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
@@ -92,7 +94,6 @@ import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
-import org.apache.wicket.settings.ISessionSettings;
 import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.settings.def.DebugSettings;
@@ -105,14 +106,11 @@ import org.apache.wicket.settings.def.RequestCycleSettings;
 import org.apache.wicket.settings.def.RequestLoggerSettings;
 import org.apache.wicket.settings.def.ResourceSettings;
 import org.apache.wicket.settings.def.SecuritySettings;
-import org.apache.wicket.settings.def.SessionSettings;
 import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.core.util.lang.PropertyResolver;
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1050,9 +1048,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** The Security Settings */
 	private ISecuritySettings securitySettings;
 
-	/** The Session Settings */
-	private ISessionSettings sessionSettings;
-
 	/** The settings for {@link IPageStore}, {@link IDataStore} and {@link IPageManager} */
 	private IStoreSettings storeSettings;
 
@@ -1302,28 +1297,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final void setSecuritySettings(final ISecuritySettings securitySettings)
 	{
 		this.securitySettings = securitySettings;
-	}
-
-	/**
-	 * @return Application's session related settings
-	 */
-	public final ISessionSettings getSessionSettings()
-	{
-		checkSettingsAvailable();
-		if (sessionSettings == null)
-		{
-			sessionSettings = new SessionSettings();
-		}
-		return sessionSettings;
-	}
-
-	/**
-	 * 
-	 * @param sessionSettings
-	 */
-	public final void setSessionSettings(final ISessionSettings sessionSettings)
-	{
-		this.sessionSettings = sessionSettings;
 	}
 
 	/**
