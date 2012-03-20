@@ -97,7 +97,7 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 		protected void onValidate(IValidatable<String> validatable)
 		{
 			ValidationError error = new ValidationError();
-			error.addMessageKey("testError");
+			error.addKey("testError");
 			validatable.error(error);
 		}
 	}
@@ -108,7 +108,7 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 		public void validate(IValidatable<String> validatable)
 		{
 			ValidationError error = new ValidationError();
-			error.addMessageKey("testError");
+			error.addKey("testError");
 			validatable.error(error);
 		}
 	}
