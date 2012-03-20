@@ -25,15 +25,13 @@ import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidatorAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * This is one of Wicket's default string resource loaders.
  * <p>
  * The validator string resource loader checks resource bundles attached to validators (eg
- * MinimumValidator.properties). The validator list is pulled from the form component in error.
+ * MinimumValidator.properties). The validator list is pulled from the form / form component in error.
  * <p>
  * This implementation is fully aware of both locale and style values when trying to obtain the
  * appropriate resources.
@@ -43,8 +41,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 {
-	private static final Logger log = LoggerFactory.getLogger(ValidatorStringResourceLoader.class);
-
 	/**
 	 * Create and initialize the resource loader.
 	 */
