@@ -143,7 +143,7 @@ public class Initializer implements IInitializer
 					}
 					if (mbeanServer == null)
 					{
-						log.error("unable to find mbean server of type " + impl);
+						log.error("unable to find mbean server of type '{}'", impl);
 					}
 				}
 			}
@@ -153,7 +153,7 @@ public class Initializer implements IInitializer
 				// never null
 			}
 
-			log.info("registering Wicket mbeans with server " + mbeanServer);
+			log.info("registering Wicket mbeans with server '{}'", mbeanServer);
 
 			// register top level application object, but first check whether
 			// multiple instances of the same application (name) are running and
