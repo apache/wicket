@@ -114,6 +114,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         });	 
                 
       	obj.onfocus=function(event){
+            event = Wicket.fixEvent(event);
             if (mouseactive==1) {
                 ignoreOneFocusGain = false;
                 return killEvent(event);
