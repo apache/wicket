@@ -113,7 +113,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 ignoreOneFocusGain = false;
                 return killEvent(event);
             }
-            var input = event.target;
+            var input = event.target ? event.target : event.srcElement;
             if (!ignoreOneFocusGain && (cfg.showListOnFocusGain || (cfg.showListOnEmptyInput && (input.value==null || input.value==""))) && visible==0) {
             	getAutocompleteMenu().showingAutocomplete = true;
                 if (cfg.showCompleteListOnFocusGain) {
