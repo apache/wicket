@@ -70,7 +70,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#buildUrl(org.apache.wicket.request.mapper.AbstractBookmarkableMapper.UrlInfo)
+	 * @see AbstractBookmarkableMapper#buildUrl(AbstractBookmarkableMapper.UrlInfo)
 	 */
 	@Override
 	protected Url buildUrl(UrlInfo info)
@@ -86,7 +86,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
+	 * @see AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
 	 */
 	@Override
 	protected UrlInfo parseRequest(Request request)
@@ -123,7 +123,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#pageMustHaveBeenCreatedBookmarkable()
+	 * @see AbstractBookmarkableMapper#pageMustHaveBeenCreatedBookmarkable()
 	 */
 	@Override
 	protected boolean pageMustHaveBeenCreatedBookmarkable()
@@ -132,7 +132,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.request.Request)
+	 * @see AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
 	@Override
 	public int getCompatibilityScore(Request request)
