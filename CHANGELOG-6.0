@@ -19,7 +19,6 @@ Release Notes - Wicket - Version 6.0.0-beta1
 ** Bug
     * [WICKET-2705] - Feedback messages get cleaned up in AJAX request, thus never rendered and never visible to user
     * [WICKET-2949] - Select does not work properly in functional flows e.g. Wizards
-    * [WICKET-3602] - Wrong relative URLs in an error page during error dispatching when using non-empty context path or wicket filter prefix
     * [WICKET-3669] - <script> element in Ajax requests is executed twice in Opera 11
     * [WICKET-3974] - Wicket-auth annotation always denies access if the deny list is empty
     * [WICKET-4000] - Header contributions order is not stable
@@ -117,20 +116,17 @@ Release Notes - Wicket - Version 6.0.0-beta1
     * [WICKET-1525] - Ability to enable/disable AbstractAjaxTimerBehavior
     * [WICKET-1557] - Handling lost connection from AJAX button
     * [WICKET-1654] - Update validators to accept IModel parameter for easy override of error messages
-    * [WICKET-2128] - StringValidator error messages erroneously mention input instead of label
     * [WICKET-2249] - Modal Window: add overridable wantUnloadConfirmation() method
     * [WICKET-2498] - IChainingModel implementation
     * [WICKET-2745] - Add info about SubmittingButton to RequestLogger
     * [WICKET-2747] - AjaxPagingNavigator Link factories should return AbstractLink
     * [WICKET-3227] - Complete documentation of Component Lifecycle
-    * [WICKET-3404] - Improve ModalWindow form handling
     * [WICKET-3554] - Constructor of org.apache.wicket.PageReference should be public
     * [WICKET-3805] - Change Component#visitParents to enable visitors of any type
     * [WICKET-3879] - Support FormValidator and package level resource bundles
     * [WICKET-3911] - Hungarian localisation for upload component and examples
     * [WICKET-3990] - Eliminate all protected static methods for better Scala integration
     * [WICKET-4035] - Allow to set the property type in ISortState
-    * [WICKET-4065] - Improve behavior#getStatelessHint() by accounting for the common cases when behaviors are not stateless
     * [WICKET-4074] - RequestLogger needs a clear separation of concerns
     * [WICKET-4088] - Make Application#init() run after IInitializers to allow the application to override any settings configured by initializers
     * [WICKET-4091] - Automate output of markup ids
@@ -184,8 +180,6 @@ Release Notes - Wicket - Version 6.0.0-beta1
 ** New Feature
     * [WICKET-1384] - TreeTable should support MultilineLabel for NodeLink
     * [WICKET-2302] - Add Folder.freeDiskSpace
-    * [WICKET-3335] - Component Queuing (extract hierarchy information from markup)
-    * [WICKET-3969] - Add CDI integration
     * [WICKET-4064] - Guice 3.0 integration does not support JSR-330 @javax.inject.Inject annotations
     * [WICKET-4162] - Add new StringResourceLoader to allow Wicket extensions to provide localization resource bundles
     * [WICKET-4212] - Add ISessionStore BindListener
@@ -200,14 +194,12 @@ Release Notes - Wicket - Version 6.0.0-beta1
 
 ** Task
     * [WICKET-3068] - remove application settings which are no longer needed
-    * [WICKET-4201] - IPageProvider and its implementations need to be improved
     * [WICKET-4211] - package.properties should be prefixed with "wicket-" namespace
     * [WICKET-4280] - Remove IComponentSource and related code
     * [WICKET-4281] - Simplify Maven build for development
     * [WICKET-4377] - Deprecate Component#onMarkupAttached()
     * [WICKET-4389] - Is there any use for EmptyAjaxRequestHandler?
     * [WICKET-4399] - Remove IRequestCycleSettings#(s|g)etUnexpectedExceptionDisplay in favour of IExceptionSettings
-    * [WICKET-4438] - Make Wicket more OSGi friendly
     * [WICKET-4461] - Make all Session methods which deal with attributes public
 
 
