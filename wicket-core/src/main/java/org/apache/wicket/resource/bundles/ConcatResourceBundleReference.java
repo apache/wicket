@@ -26,7 +26,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ResourceBundles;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
@@ -118,12 +120,13 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 	{
 		for (T curProvidedResource : providedResources)
 		{
-			if (!(curProvidedResource.getReference() instanceof PackageResourceReference))
+			ResourceReference reference = curProvidedResource.getReference();
+			if (!(reference instanceof CssResourceReference || reference instanceof JavaScriptResourceReference))
 			{
 				throw new IllegalArgumentException(
-					"ConcatResourceBundleReference only works with PackageResourceReference, " +
+					"ConcatResourceBundleReference only works with CssResourceReference and JavaScriptResourceReference, " +
 						curProvidedResource + " provides a " +
-						curProvidedResource.getReference().getClass().getSimpleName());
+						reference.getClass().getSimpleName());
 			}
 		}
 	}

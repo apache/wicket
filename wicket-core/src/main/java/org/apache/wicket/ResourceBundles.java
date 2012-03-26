@@ -27,10 +27,12 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.resource.bundles.ConcatResourceBundleReference;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Contains all resource bundles that are registered in the application. Resource bundles provide a
@@ -46,19 +48,17 @@ public class ResourceBundles
 {
 	private final ResourceReferenceRegistry registry;
 
-	private final List<HeaderItem> bundles;
-
 	private final Map<HeaderItem, HeaderItem> providedResourcesToBundles;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param registry
+	 *      the registry that keeps all referenced resources
 	 */
-	public ResourceBundles(ResourceReferenceRegistry registry)
+	public ResourceBundles(final ResourceReferenceRegistry registry)
 	{
-		this.registry = registry;
-		this.bundles= new ArrayList<HeaderItem>();
+		this.registry = Args.notNull(registry, "registry");
 		this.providedResourcesToBundles = new HashMap<HeaderItem, HeaderItem>();
 	}
 
@@ -80,10 +80,10 @@ public class ResourceBundles
 	 * @return the newly created bundle
 	 */
 	public JavaScriptReferenceHeaderItem addJavaScriptBundle(Class<?> scope, String name,
-		PackageResourceReference... references)
+		JavaScriptResourceReference... references)
 	{
 		List<JavaScriptReferenceHeaderItem> items = new ArrayList<JavaScriptReferenceHeaderItem>();
-		for (PackageResourceReference curReference : references)
+		for (JavaScriptResourceReference curReference : references)
 		{
 			items.add(JavaScriptHeaderItem.forReference(curReference));
 		}
@@ -110,10 +110,10 @@ public class ResourceBundles
 	 * @return the newly created bundle
 	 */
 	public CssReferenceHeaderItem addCssBundle(Class<?> scope, String name,
-		PackageResourceReference... references)
+		CssResourceReference... references)
 	{
 		List<CssReferenceHeaderItem> items = new ArrayList<CssReferenceHeaderItem>();
-		for (PackageResourceReference curReference : references)
+		for (CssResourceReference curReference : references)
 		{
 			items.add(CssHeaderItem.forReference(curReference));
 		}
@@ -144,9 +144,14 @@ public class ResourceBundles
 			}
 			providedResourcesToBundles.put(curProvidedResource, bundle);
 		}
-		bundles.add(bundle);
 		if (bundle instanceof IReferenceHeaderItem)
-			registry.registerResourceReference(((IReferenceHeaderItem)bundle).getReference());
+		{
+			ResourceReference reference = ((IReferenceHeaderItem) bundle).getReference();
+			if (reference.canBeRegistered())
+			{
+				registry.registerResourceReference(reference);
+			}
+		}
 		return bundle;
 	}
 
