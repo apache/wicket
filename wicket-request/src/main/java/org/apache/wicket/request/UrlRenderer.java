@@ -126,8 +126,11 @@ public class UrlRenderer
 			render.append(port);
 		}
 
-		render.append(request.getContextPath());
-		render.append(request.getFilterPath());
+		if (url.isAbsolute() == false)
+		{
+			render.append(request.getContextPath());
+			render.append(request.getFilterPath());
+		}
 		return Strings.join("/", render.toString(), path);
 	}
 

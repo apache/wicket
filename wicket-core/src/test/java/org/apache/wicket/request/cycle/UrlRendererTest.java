@@ -172,4 +172,20 @@ public class UrlRendererTest extends Assert
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar")));
 		assertEquals("../", r1.renderUrl(Url.parse("")));
 	}
+
+	/**
+	 * Verify that absolute urls are rendered as is, ignoring
+	 * the current client url and base url completely.
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-4466
+	 */
+	@Test
+	public void renderAbsoluteUrl()
+	{
+		String absoluteUrl = "http://www.example.com/some/path.ext";
+		Url url = Url.parse(absoluteUrl);
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar")));
+		String renderedUrl = renderer.renderUrl(url);
+		assertEquals(absoluteUrl, renderedUrl);
+	}
 }
