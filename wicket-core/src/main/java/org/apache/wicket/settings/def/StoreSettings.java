@@ -99,7 +99,6 @@ public class StoreSettings implements IStoreSettings
 			try
 			{
 				fileStoreFolder = File.createTempFile("file-prefix", null).getParentFile();
-				System.err.println("==================\n\nTMP dir\n\n: " + System.getProperty("java.io.tmpdir") + "\n\n=================");
 			}
 			catch (IOException e)
 			{
