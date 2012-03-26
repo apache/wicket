@@ -2080,6 +2080,18 @@ public abstract class Component
 			return false;
 		}
 
+		if (
+			// the component is either invisible or disabled
+			(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
+
+			// and it can't call listener interfaces
+			canCallListenerInterface(null) == false
+		)
+		{
+			// then pretend the component is stateless
+			return true;
+		}
+
 		for (Behavior behavior : getBehaviors())
 		{
 			if (!behavior.getStatelessHint(this))
@@ -4412,7 +4424,8 @@ public abstract class Component
 	 * </p>
 	 * 
 	 * @param method
-	 *            listener method about to be invoked on this component
+	 *            listener method about to be invoked on this component. Could be {@code null} - in this
+	 *            case it means <em>any</em> method.
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */

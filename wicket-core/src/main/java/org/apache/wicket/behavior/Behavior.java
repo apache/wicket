@@ -122,7 +122,9 @@ public abstract class Behavior
 	}
 
 	/**
-	 * In case an unexpected exception happened anywhere between onComponentTag() and rendered(),
+	 * In case an unexpected exception happened anywhere between
+	 * {@linkplain #onComponentTag(org.apache.wicket.Component, org.apache.wicket.markup.ComponentTag)} and
+	 * {@linkplain #afterRender(org.apache.wicket.Component)},
 	 * onException() will be called for any behavior. Typically, if you clean up resources in
 	 * {@link #afterRender(Component)}, you should do the same in the implementation of this method.
 	 * 
