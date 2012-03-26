@@ -16,7 +16,12 @@
  */
 package org.apache.wicket;
 
+import java.lang.reflect.Method;
+
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.junit.Test;
 
 /**
@@ -88,5 +93,59 @@ public class ComponentTest extends WicketTestCase
 	public void renderHomePage_1() throws Exception
 	{
 		executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4468
+	 *
+	 * Verifies that a stateful component can pretend to be stateless if both conditions are
+	 * fulfilled:
+	 * <ol>
+	 *     <li>it is either invisible or disabled (or both)</li>
+	 *     <li>it cannot call any listener interface method while invisible/disabled</li>
+	 * </ol>
+	 */
+	@Test
+	public void isStateless()
+	{
+		Behavior statefulBehavior = new Behavior()
+		{
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return false;
+			}
+		};
+
+		WebComponent component = new WebComponent("someId");
+
+		// by default every component is stateless
+		assertTrue(component.isStateless());
+
+		// make the component stateful
+		component.add(statefulBehavior);
+		assertFalse(component.isStateless());
+
+		// invisible component cannot be requested by default so it
+		// can pretend being stateless
+		component.setVisible(false);
+		assertTrue(component.isStateless());
+
+		// same for disabled component
+		component.setVisible(true).setEnabled(false);
+		assertTrue(component.isStateless());
+
+		// make the component such that it can call listener interface
+		// methods no matter whether it is visible or enabled
+		component = new WebComponent("someId") {
+			@Override
+			public boolean canCallListenerInterface(Method method)
+			{
+				return true;
+			}
+		};
+		component.add(statefulBehavior);
+		component.setVisible(false);
+		assertFalse(component.isStateless());
 	}
 }

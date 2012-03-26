@@ -296,7 +296,7 @@ public class Image extends WebComponent implements IResourceListener
 	@Override
 	public boolean canCallListenerInterface(Method method)
 	{
-		boolean isResource = IResourceListener.class.isAssignableFrom(method.getDeclaringClass());
+		boolean isResource = method != null && IResourceListener.class.isAssignableFrom(method.getDeclaringClass());
 		if (isResource && isVisibleInHierarchy())
 		{
 			// when the image data is requested we do not care if this component is enabled in
