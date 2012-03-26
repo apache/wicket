@@ -39,9 +39,9 @@ import org.apache.wicket.util.lang.Args;
  * subclasses). After creating the bundle, you normally have to register it in the
  * {@link ResourceBundles} under {@link Application#getResourceBundles()}. {@link ResourceBundles}
  * has two utility methods to create instances of this class:
- * {@link ResourceBundles#addJavaScriptBundle(Class, String, PackageResourceReference...)
+ * {@link ResourceBundles#addJavaScriptBundle(Class, String, JavaScriptResourceReference...)
  * addJavaScriptBundle} and
- * {@link ResourceBundles#addCssBundle(Class, String, PackageResourceReference...) addCssBundle}.
+ * {@link ResourceBundles#addCssBundle(Class, String, CssResourceReference...) addCssBundle}.
  * Dependencies are inherited from the provided resources, if the bundle does not provide all
  * dependencies itself.
  * 
