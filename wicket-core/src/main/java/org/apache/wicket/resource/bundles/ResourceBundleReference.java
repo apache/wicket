@@ -31,9 +31,10 @@ import org.apache.wicket.request.resource.ResourceReference;
 /**
  * A resource reference that wraps another resource to make it into a bundle. The resources that are
  * provided by the wrapped reference, have to be added with
- * {@link #addProvidedResources(org.apache.wicket.markup.head.HeaderItem...)}. Normally, you will have to register this bundle in
- * {@link ResourceBundles} under {@link Application#getResourceBundles()}. Dependencies are
- * inherited from the provided resources if the bundle does not provide them.
+ * {@link #addProvidedResources(org.apache.wicket.markup.head.HeaderItem...)}. Normally, you will
+ * have to register this bundle in {@link ResourceBundles} under
+ * {@link Application#getResourceBundles()}. Dependencies are inherited from the provided resources
+ * if the bundle does not provide them.
  * 
  * @author papegaaij
  */
@@ -56,7 +57,15 @@ public class ResourceBundleReference extends ResourceReference implements IResou
 			bundleRef.getStyle(), bundleRef.getVariation());
 
 		this.bundleRef = bundleRef;
-		this.providedResources = new ArrayList<HeaderItem>();
+		providedResources = new ArrayList<HeaderItem>();
+	}
+
+	/**
+	 * @return The resource reference that is served for this bundle
+	 */
+	public ResourceReference getBundleReference()
+	{
+		return bundleRef;
 	}
 
 	/**
@@ -72,8 +81,9 @@ public class ResourceBundleReference extends ResourceReference implements IResou
 	@Override
 	public IResource getResource()
 	{
-		return bundleRef.getResource();
+		return getBundleReference().getResource();
 	}
+
 
 	@Override
 	public Iterable<? extends HeaderItem> getProvidedResources()
