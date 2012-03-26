@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Convenience class for {@link IPageManager} implementations. Subclass should extend
- * {@link RequestAdapter} and override {@link #newRequestAdater()} method to return it's
+ * {@link RequestAdapter} and override {@link #newRequestAdapter(IPageManagerContext)} method to return it's
  * {@link RequestAdapter} implementation.
  * 
  * @author Matej Knopp
@@ -102,7 +102,7 @@ public abstract class AbstractPageManager implements IPageManager
 		IManageablePage page = getRequestAdapter().getPage(id);
 		if (page != null)
 		{
-			touchPage(page);
+			getRequestAdapter().touch(page);
 		}
 		return page;
 	}
