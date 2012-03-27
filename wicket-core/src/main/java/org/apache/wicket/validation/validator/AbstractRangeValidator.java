@@ -174,7 +174,7 @@ public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializa
 		{
 			return Mode.MINIMUM;
 		}
-		else if (max.equals(min))
+		else if ((min == null && max == null) || max.equals(min))
 		{
 			return Mode.EXACT;
 		}
