@@ -48,9 +48,6 @@ public class RequestCycleSettings implements IRequestCycleSettings
 	 */
 	private boolean gatherExtendedBrowserInfo = false;
 
-	/** Type of handling for unexpected exceptions */
-	private IExceptionSettings.UnexpectedExceptionDisplay unexpectedExceptionDisplay = IExceptionSettings.SHOW_EXCEPTION_PAGE;
-
 	/**
 	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'. This property influences the default
 	 * way in how a logical request that consists of an 'action' and a 'render' part is handled, and
