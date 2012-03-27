@@ -29,7 +29,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 public class DefaultLinkParser extends LinkParser
 {
 	/** Email address pattern */
-	private static final String emailPattern = "[\\w\\.-\\\\+]+@[\\w\\.-]+";
+	private static final String emailPattern = "[\\w\\.\\-\\\\+]+@[\\w\\.\\-]+";
 
 	/** URL pattern */
 	private static final String urlPattern = "([a-zA-Z]+://[\\w\\.\\-\\:\\/~]+)[\\w\\.:\\-/?&=%]*";

@@ -76,7 +76,7 @@ public class DefaultLinkParserTest extends Assert
 	}
 
 	/**
-	 * testEmailWithPlusChar()
+	 * WICKET-3174
 	 */
 	@Test
 	public void testEmailWithPlusChar()
@@ -87,6 +87,21 @@ public class DefaultLinkParserTest extends Assert
 		ILinkParser parser = new DefaultLinkParser();
 		final String result = parser.parse(testEmailAddress);
 		assertEquals("Expected chars to left of + to be included in the link.", testExpectedLink,
+			result);
+	}
+
+	/**
+	 * WICKET-4477
+	 */
+	@Test
+	public void testEmailWithMinusChar()
+	{
+		final String testEmailAddress = "my-test@example.com";
+		final String testExpectedLink = "<a href=\"mailto:my-test@example.com\">my-test@example.com</a>";
+
+		ILinkParser parser = new DefaultLinkParser();
+		final String result = parser.parse(testEmailAddress);
+		assertEquals("Expected chars to left of - to be included in the link.", testExpectedLink,
 			result);
 	}
 }
