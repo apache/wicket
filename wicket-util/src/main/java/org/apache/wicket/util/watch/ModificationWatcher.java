@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.listener.ChangeListenerSet;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.thread.ICode;
@@ -43,7 +44,7 @@ public class ModificationWatcher implements IModificationWatcher
 	private static final Logger log = LoggerFactory.getLogger(ModificationWatcher.class);
 
 	/** maps <code>IModifiable</code> objects to <code>Entry</code> objects */
-	private final Map<IModifiable, Entry> modifiableToEntry = new ConcurrentHashMap<IModifiable, Entry>();
+	private final Map<IModifiable, Entry> modifiableToEntry = Generics.newConcurrentHashMap();
 
 	/** the <code>Task</code> to run */
 	private Task task;
@@ -51,16 +52,16 @@ public class ModificationWatcher implements IModificationWatcher
 	/**
 	 * Container class for holding modifiable entries to watch.
 	 */
-	private static final class Entry
+	protected static final class Entry
 	{
 		// The most recent lastModificationTime polled on the object
-		Time lastModifiedTime;
+		public Time lastModifiedTime;
 
 		// The set of listeners to call when the modifiable changes
-		final ChangeListenerSet listeners = new ChangeListenerSet();
+		public final ChangeListenerSet listeners = new ChangeListenerSet();
 
 		// The modifiable thing
-		IModifiable modifiable;
+		public IModifiable modifiable;
 	}
 
 	/**
@@ -81,10 +82,7 @@ public class ModificationWatcher implements IModificationWatcher
 		start(pollFrequency);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.watch.IModificationWatcher#add(org.apache.wicket.util.watch.IModifiable,
-	 *      org.apache.wicket.util.listener.IChangeListener)
-	 */
+	@Override
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
 		// Look up entry for modifiable
@@ -121,9 +119,7 @@ public class ModificationWatcher implements IModificationWatcher
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.util.watch.IModificationWatcher#remove(org.apache.wicket.util.watch.IModifiable)
-	 */
+	@Override
 	public IModifiable remove(final IModifiable modifiable)
 	{
 		final Entry entry = modifiableToEntry.remove(modifiable);
@@ -134,9 +130,7 @@ public class ModificationWatcher implements IModificationWatcher
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.watch.IModificationWatcher#start(org.apache.wicket.util.time.Duration)
-	 */
+	@Override
 	public void start(final Duration pollFrequency)
 	{
 		// Construct task with the given polling frequency
@@ -144,30 +138,37 @@ public class ModificationWatcher implements IModificationWatcher
 
 		task.run(pollFrequency, new ICode()
 		{
+			@Override
 			public void run(final Logger log)
 			{
-				for (Entry entry : modifiableToEntry.values())
-				{
-					// If the modifiable has been modified after the last known
-					// modification time
-					final Time modifiableLastModified = entry.modifiable.lastModifiedTime();
-					if ((modifiableLastModified != null) &&
-						modifiableLastModified.after(entry.lastModifiedTime))
-					{
-						// Notify all listeners that the modifiable was modified
-						entry.listeners.notifyListeners();
-
-						// Update timestamp
-						entry.lastModifiedTime = modifiableLastModified;
-					}
-				}
+				checkModified();
 			}
 		});
 	}
 
 	/**
-	 * @see org.apache.wicket.util.watch.IModificationWatcher#destroy()
+	 * Checks which IModifiables were modified and notifies their listeners
 	 */
+	protected void checkModified()
+	{
+		for (Entry entry : modifiableToEntry.values())
+		{
+			// If the modifiable has been modified after the last known
+			// modification time
+			final Time modifiableLastModified = entry.modifiable.lastModifiedTime();
+			if ((modifiableLastModified != null) &&
+					modifiableLastModified.after(entry.lastModifiedTime))
+			{
+				// Notify all listeners that the modifiable was modified
+				entry.listeners.notifyListeners();
+
+				// Update timestamp
+				entry.lastModifiedTime = modifiableLastModified;
+			}
+		}
+	}
+
+	@Override
 	public void destroy()
 	{
 		if (task != null)
@@ -177,9 +178,7 @@ public class ModificationWatcher implements IModificationWatcher
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.util.watch.IModificationWatcher#getEntries()
-	 */
+	@Override
 	public final Set<IModifiable> getEntries()
 	{
 		return modifiableToEntry.keySet();

@@ -331,7 +331,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param markup
 	 *            Markup.NO_MARKUP
 	 * @return Same as parameter "markup"
-	 * @see org.apache.wicket.settings.IResourceSettings#setResourceStreamLocator(org.apache.wicket.util.resource.locator.IResourceStreamLocator)
+	 * @see org.apache.wicket.settings.IResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
 	 */
 	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer container,
 		final Markup markup)
