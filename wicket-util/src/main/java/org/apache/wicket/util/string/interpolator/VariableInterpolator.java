@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.string.interpolator;
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * Base class for variable interpolators. An interpolator substitutes values into a
  * <code>String</code>. So, a variable interpolator substitutes the values of one or more variables
@@ -35,12 +37,12 @@ package org.apache.wicket.util.string.interpolator;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public abstract class VariableInterpolator
+public abstract class VariableInterpolator implements IClusterable
 {
 	/** The <code>String</code> to interpolate into */
 	protected final String string;
 
-	private boolean exceptionOnNullVarValue = false;
+	private final boolean exceptionOnNullVarValue;
 
 	/**
 	 * Constructor.
@@ -50,7 +52,7 @@ public abstract class VariableInterpolator
 	 */
 	public VariableInterpolator(final String string)
 	{
-		this.string = string;
+		this(string, false);
 	}
 
 	/**
