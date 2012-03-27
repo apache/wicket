@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.head;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.wicket.Page;
@@ -30,13 +31,13 @@ import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItemLocati
  * 
  * @author papegaaij
  */
-public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>
+public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, Serializable
 {
-	protected enum HeaderItemType {
+	protected static enum HeaderItemType {
 		PRIORITY, PAGE, COMPONENT;
 	}
 
-	private boolean renderPageFirst = false;
+	private final boolean renderPageFirst;
 
 	/**
 	 * Construct.

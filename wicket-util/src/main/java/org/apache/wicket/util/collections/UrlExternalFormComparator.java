@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.collections;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Comparator;
 
@@ -29,7 +30,7 @@ import java.util.Comparator;
  *
  * @since 1.5.6
  */
-public class UrlExternalFormComparator implements Comparator<URL>
+public class UrlExternalFormComparator implements Comparator<URL>, Serializable
 {
 	public int compare(URL url1, URL url2)
 	{
