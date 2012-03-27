@@ -34,7 +34,7 @@ public class LongEncoder
 	 * default alphabet that should be safe to use in most circumstances, while still providing good
 	 * shortening of long values
 	 */
-	public static String DEFAULT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public static final String DEFAULT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	private LongEncoder()
 	{
