@@ -19,6 +19,7 @@ package org.apache.wicket.core.util.resource.locator;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
@@ -255,28 +256,37 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	public ResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
 		final String style, final String variation, final String extension, final boolean strict)
 	{
-		final Iterable<String> extensions = extension == null ? NO_EXTENSIONS : Arrays.asList(extension);
+		final Iterable<String> extensions;
 
 		final String realPath;
-		final String realExtension;
 
 		if ((extension == null) && (path != null) && (path.indexOf('.') != -1))
 		{
+			// extract the path and extension
 			realPath = Strings.beforeLast(path, '.');
-			// for extensions with separator take the first extension
-			realExtension = Strings.afterLast(path, '.');
+			String realExtension = Strings.afterLast(path, '.');
 			if (realExtension.indexOf(',') > -1)
 			{
 				// multiple extensions are not allowed in the path parameter
+				// it could be an attack, so ignore it and pretend there are no resources
 				return new EmptyResourceNameIterator();
 			}
+			extensions = Collections.singleton(realExtension);
 		}
 		else
 		{
 			realPath = path;
-			realExtension = extension;
+			if (extension == null)
+			{
+				extensions = NO_EXTENSIONS;
+			}
+			else
+			{
+				String[] commaSeparated = Strings.split(extension, ',');
+				extensions = Arrays.asList(commaSeparated);
+			}
 		}
 
-		return new ResourceNameIterator(path, style, variation, locale, extensions, strict);
+		return new ResourceNameIterator(realPath, style, variation, locale, extensions, strict);
 	}
 }
