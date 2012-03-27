@@ -20,7 +20,9 @@ import java.util.Arrays;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.bundles.ConcatBundleResource;
+import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.junit.Test;
 
 /**
@@ -38,11 +40,53 @@ public class ResouceBundleTest extends WicketTestCase
 	{
 		ConcatBundleResource bundle = new ConcatBundleResource(Arrays.asList(
 			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
-					ResouceBundleTest.class, "a.js")),
+				ResouceBundleTest.class, "a.js")),
 			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
 				ResouceBundleTest.class, "b.js"))));
 
 		tester.startResource(bundle);
 		assertEquals("//a\n//b\n", tester.getLastResponseAsString());
+	}
+
+	/**
+	 * Tests the replacement of provided resources by their bundle
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void providedResource() throws Exception
+	{
+		tester.getApplication()
+			.getResourceBundles()
+			.addJavaScriptBundle(ResouceBundleTest.class, "ab.js",
+				new JavaScriptResourceReference(ResouceBundleTest.class, "a.js"),
+				new JavaScriptResourceReference(ResouceBundleTest.class, "b.js"));
+
+		executeTest(BundlesPage.class, "BundlesPage_result.html");
+	}
+
+	/**
+	 * Tests an external resource bundle
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void externalBundle() throws Exception
+	{
+		ResourceBundleReference bundle = new ResourceBundleReference(
+			new ExternalUrlResourceReference(
+				Url.parse("http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js")));
+		bundle.addProvidedResources(
+			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
+				ResouceBundleTest.class, "a.js")),
+			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
+				ResouceBundleTest.class, "b.js")));
+
+		tester.getApplication()
+			.getResourceBundles()
+			.addBundle(JavaScriptHeaderItem.forReference(bundle));
+
+
+		executeTest(BundlesPage.class, "BundlesPage_ext_result.html");
 	}
 }
