@@ -2985,15 +2985,11 @@ public abstract class Component
 		// Change model
 		if (wrappedModel != model)
 		{
-			if (wrappedModel != null)
-			{
-				addStateChange();
-			}
-
+			modelChanging();
 			setModelImpl(wrap(model));
+			modelChanged();
 		}
 
-		modelChanged();
 		return this;
 	}
 

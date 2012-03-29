@@ -17,11 +17,14 @@
 package org.apache.wicket;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.junit.Test;
 
 /**
@@ -147,5 +150,48 @@ public class ComponentTest extends WicketTestCase
 		component.add(statefulBehavior);
 		component.setVisible(false);
 		assertFalse(component.isStateless());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4483
+	 *
+	 * setDefaultModel() should call modelChanging/modelChanged only if the new model
+	 * is different that the old one. The same as setDefaultModelObject().
+	 */
+	@Test
+	public void modelChange()
+	{
+		final AtomicBoolean modelChanging = new AtomicBoolean(false);
+		final AtomicBoolean modelChanged = new AtomicBoolean(false);
+
+		WebComponent component = new WebComponent("someId")
+		{
+			@Override
+			protected void onModelChanging()
+			{
+				super.onModelChanging();
+				modelChanging.set(true);
+			}
+
+			@Override
+			protected void onModelChanged()
+			{
+				super.onModelChanged();
+				modelChanged.set(true);
+			}
+		};
+
+		assertNull(component.getDefaultModel());
+		IModel<Integer> model = Model.of(1);
+
+		// set a model which is different that the old one (old = null, new = non-null)
+		component.setDefaultModel(model);
+		assertTrue(modelChanging.getAndSet(false));
+		assertTrue(modelChanged.getAndSet(false));
+
+		// set the same instance - no change notifications should happen
+		component.setDefaultModel(model);
+		assertFalse(modelChanging.get());
+		assertFalse(modelChanged.get());
 	}
 }
