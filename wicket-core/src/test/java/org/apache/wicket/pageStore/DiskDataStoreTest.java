@@ -396,7 +396,11 @@ public class DiskDataStoreTest extends Assert
 
 		String sessionId = "abcdefg";
 		java.io.File sessionFolder = store.getSessionFolder(sessionId, true);
-		assertEquals("/tmp/sessionFolderName-filestore/7141/1279/abcdefg", sessionFolder.getAbsolutePath());
+		String absolutePath = sessionFolder.getAbsolutePath();
+		assertTrue(absolutePath.contains("sessionFolderName-filestore"));
+		assertTrue(absolutePath.contains("7141"));
+		assertTrue(absolutePath.contains("1279"));
+		assertTrue(absolutePath.contains("abcdefg"));
 
 		DiskDataStore.SessionEntry sessionEntry = new DiskDataStore.SessionEntry(store, sessionId);
 		sessionEntry.unbind();
