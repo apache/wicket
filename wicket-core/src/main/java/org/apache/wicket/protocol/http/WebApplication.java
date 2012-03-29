@@ -108,7 +108,6 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.settings.IRequestCycleSettings
  * @see org.apache.wicket.settings.IResourceSettings
  * @see org.apache.wicket.settings.ISecuritySettings
- * @see org.apache.wicket.settings.ISessionSettings
  * @see javax.servlet.Filter
  * @see javax.servlet.FilterConfig
  * @see javax.servlet.ServletContext
