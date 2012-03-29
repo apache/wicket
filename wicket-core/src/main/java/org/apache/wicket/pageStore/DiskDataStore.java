@@ -449,8 +449,32 @@ public class DiskDataStore implements IDataStore
 			if (sessionFolder.exists())
 			{
 				Files.removeFolder(sessionFolder);
+				cleanup(sessionFolder);
 			}
 			unbound = true;
+		}
+
+		/**
+		 * deletes the sessionFolder's parent and grandparent, if (and only if) they are empty.
+		 *
+		 * @see #createPathFrom(String sessionId)
+		 * @param sessionFolder
+		 *            must not be null
+		 */
+		private void cleanup(final File sessionFolder)
+		{
+			File high = sessionFolder.getParentFile();
+			if (high.list().length == 0)
+			{
+				if (Files.removeFolder(high))
+				{
+					File low = high.getParentFile();
+					if (low.list().length == 0)
+					{
+						Files.removeFolder(low);
+					}
+				}
+			}
 		}
 	}
 
@@ -494,6 +518,8 @@ public class DiskDataStore implements IDataStore
 		sessionId = sessionId.replace('/', '_');
 		sessionId = sessionId.replace(':', '_');
 
+		sessionId = createPathFrom(sessionId);
+
 		File sessionFolder = new File(storeFolder, sessionId);
 		if (create && sessionFolder.exists() == false)
 		{
@@ -502,4 +528,33 @@ public class DiskDataStore implements IDataStore
 		return sessionFolder;
 	}
 
+	/**
+	 * creates a three-level path from the sessionId in the format 0000/0000/<sessionId>. The two
+	 * prefixing directories are created from the sesionId's hascode and thus, should be well
+	 * distributed.
+	 *
+	 * This is used to avoid problems with Filesystems allowing no more than 32k entries in a
+	 * directory.
+	 *
+	 * Note that the prefix paths are created from Integers and not guaranteed to be four chars
+	 * long.
+	 *
+	 * @param sessionId
+	 *      must not be null
+	 * @return path in the form 0000/0000/sessionId
+	 */
+	private String createPathFrom(final String sessionId)
+	{
+		int hash = Math.abs(sessionId.hashCode());
+		String low = String.valueOf(hash % 9973);
+		String high = String.valueOf((hash / 9973) % 9973);
+		StringBuilder bs = new StringBuilder(sessionId.length() + 10);
+		bs.append(low);
+		bs.append(File.separator);
+		bs.append(high);
+		bs.append(File.separator);
+		bs.append(sessionId);
+
+		return bs.toString();
+	}
 }

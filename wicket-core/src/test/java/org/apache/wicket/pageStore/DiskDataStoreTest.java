@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.page.persistent.disk;
+package org.apache.wicket.pageStore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +26,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.wicket.pageStore.AsynchronousDataStore;
-import org.apache.wicket.pageStore.DiskDataStore;
-import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.lang.Bytes;
@@ -379,5 +376,29 @@ public class DiskDataStoreTest extends Assert
 		doTestDataStore();
 
 		dataStore.destroy();
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4478
+	 *
+	 * Tests that the folder where a session data is put is partitioned, i.e.
+	 * it is put in folders which names are automatically calculated on the fly.
+	 */
+	@Test
+	public void sessionFolderName()
+	{
+		IStoreSettings storeSettings = new StoreSettings(null);
+		java.io.File fileStoreFolder = storeSettings.getFileStoreFolder();
+		DiskDataStore store = new DiskDataStore("sessionFolderName", fileStoreFolder, MAX_SIZE_PER_SESSION);
+
+		String sessionId = "abcdefg";
+		java.io.File sessionFolder = store.getSessionFolder(sessionId, true);
+		assertEquals("/tmp/sessionFolderName-filestore/7141/1279/abcdefg", sessionFolder.getAbsolutePath());
+
+		DiskDataStore.SessionEntry sessionEntry = new DiskDataStore.SessionEntry(store, sessionId);
+		sessionEntry.unbind();
+		// assert that the 'sessionId' folder and the parents two levels up are removed
+		assertFalse(sessionFolder.getParentFile().getParentFile().exists());
+
 	}
 }
