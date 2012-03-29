@@ -209,7 +209,6 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
 				String id = tag.getId() + "-" + container.getPage().getAutoIndex();
-				tag.setId(id);
 
 				return new TransparentWebMarkupContainer(id);
 			}
