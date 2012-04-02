@@ -294,6 +294,28 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
+	 * Sets a header to the request. Overrides any previous value of this header.
+	 *
+	 * @param name
+	 *            The name of the header to add
+	 * @param value
+	 *            The value
+	 * @see #addHeader(String, String)
+	 */
+	public void setHeader(String name, String value)
+	{
+		@SuppressWarnings("unchecked")
+		List<String> list = (List<String>)headers.get(name);
+		if (list == null)
+		{
+			list = new ArrayList<String>(1);
+			headers.put(name, list);
+		}
+		list.clear();
+		list.add(value);
+	}
+
+	/**
 	 * @param name
 	 * @param date
 	 */

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.mock;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.WicketTestCase;
@@ -135,5 +137,29 @@ public class MockHttpServletRequestTest extends WicketTestCase
 		HttpSession httpSession = new MockHttpSession(null);
 		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
 		assertSame("HttpSession should be created!", httpSession, request.getSession(true));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4481
+	 */
+	@Test
+	public void setHeader()
+	{
+		HttpSession httpSession = new MockHttpSession(null);
+		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
+		String headerName = "headerName";
+		request.setHeader(headerName, "headerValue");
+		Enumeration<String> headers = request.getHeaders(headerName);
+		assertEquals("headerValue", headers.nextElement());
+		assertFalse(headers.hasMoreElements());
+		request.addHeader(headerName, "headerValue2");
+		headers = request.getHeaders(headerName);
+		assertEquals("headerValue", headers.nextElement());
+		assertEquals("headerValue2", headers.nextElement());
+		assertFalse(headers.hasMoreElements());
+		request.setHeader(headerName, "completelyNewValue");
+		headers = request.getHeaders(headerName);
+		assertEquals("completelyNewValue", headers.nextElement());
+		assertFalse(headers.hasMoreElements());
 	}
 }
