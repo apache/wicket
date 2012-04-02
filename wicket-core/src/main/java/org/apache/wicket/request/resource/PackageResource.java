@@ -217,16 +217,22 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	{
 		final ResourceResponse resourceResponse = new ResourceResponse();
 
+		final IResourceStream resourceStream = getResourceStream();
+
+		// bail out if resource stream could not be found
+		if (resourceStream == null)
+		{
+			return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND,
+					"Unable to find resource");
+		}
+
+		// add Last-Modified header (to support HEAD requests and If-Modified-Since)
+		final Time lastModified = resourceStream.lastModifiedTime();
+
+		resourceResponse.setLastModified(lastModified);
+
 		if (resourceResponse.dataNeedsToBeWritten(attributes))
 		{
-			// get resource stream
-			final IResourceStream resourceStream = getResourceStream();
-
-			// bail out if resource stream could not be found
-			if (resourceStream == null)
-				return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND,
-					"Unable to find resource");
-
 			String contentType = resourceStream.getContentType();
 
 			if (contentType == null && Application.exists())
@@ -236,12 +242,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 			// set Content-Type (may be null)
 			resourceResponse.setContentType(contentType);
-
-			// add Last-Modified header (to support HEAD requests and If-Modified-Since)
-			final Time lastModified = resourceStream.lastModifiedTime();
-
-			if (lastModified != null)
-				resourceResponse.setLastModified(lastModified);
 
 			try
 			{

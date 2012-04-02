@@ -82,42 +82,39 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 	{
 		final ResourceResponse resourceResponse = new ResourceResponse();
 
-		if (resourceResponse.dataNeedsToBeWritten(attributes))
+		final WebExternalResourceStream webExternalResourceStream =
+			new WebExternalResourceStream(path);
+		resourceResponse.setContentType(webExternalResourceStream.getContentType());
+		resourceResponse.setLastModified(webExternalResourceStream.lastModifiedTime());
+		resourceResponse.setFileName(path);
+		resourceResponse.setWriteCallback(new WriteCallback()
 		{
-			final WebExternalResourceStream webExternalResourceStream = 
-				new WebExternalResourceStream(path);
-			resourceResponse.setContentType(webExternalResourceStream.getContentType());
-			resourceResponse.setLastModified(webExternalResourceStream.lastModifiedTime());
-			resourceResponse.setFileName(path);
-			resourceResponse.setWriteCallback(new WriteCallback()
+			@Override
+			public void writeData(final Attributes attributes)
 			{
-				@Override
-				public void writeData(final Attributes attributes)
+				InputStream inputStream = null;
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				try
 				{
-					InputStream inputStream = null;
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					try
-					{
-						inputStream = webExternalResourceStream.getInputStream();
-						Streams.copy(inputStream, baos);
-						attributes.getResponse().write(baos.toByteArray());
-					}
-					catch (ResourceStreamNotFoundException rsnfx)
-					{
-						throw new WicketRuntimeException(rsnfx);
-					}
-					catch (IOException iox)
-					{
-						throw new WicketRuntimeException(iox);
-					}
-					finally
-					{
-						IOUtils.closeQuietly(inputStream);
-						IOUtils.closeQuietly(baos);
-					}
+					inputStream = webExternalResourceStream.getInputStream();
+					Streams.copy(inputStream, baos);
+					attributes.getResponse().write(baos.toByteArray());
 				}
-			});
-		}
+				catch (ResourceStreamNotFoundException rsnfx)
+				{
+					throw new WicketRuntimeException(rsnfx);
+				}
+				catch (IOException iox)
+				{
+					throw new WicketRuntimeException(iox);
+				}
+				finally
+				{
+					IOUtils.closeQuietly(inputStream);
+					IOUtils.closeQuietly(baos);
+				}
+			}
+		});
 
 		return resourceResponse;
 	}
