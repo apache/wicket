@@ -22,7 +22,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Properties;
+
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Utilities methods for working with input and output streams.
@@ -130,6 +134,24 @@ public final class Streams
 		}
 
 		properties.loadFromXML(inputStream);
+	}
+
+	/**
+	 * Sets the connection to a URL as non-caching and returns the input stream.
+	 *
+	 * @param url
+	 *      the url to read from
+	 * @return the input stream for this url
+	 * @throws IOException when a connection cannot be opened
+	 */
+	public static InputStream readNonCaching(final URL url) throws IOException
+	{
+		Args.notNull(url, "url");
+
+		URLConnection urlConnection = url.openConnection();
+		urlConnection.setUseCaches(false);
+		InputStream inputStream = urlConnection.getInputStream();
+		return inputStream;
 	}
 
 	/**
