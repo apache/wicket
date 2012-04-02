@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
  * 'controllingChildId') controls the visibility of the whole enclosure and it's children. This also
  * works in Ajax calls without extra markup or java code.
  * 
- * @see EnclosureResolver
  * @see InlineEnclosureHandler
  * 
  * @author Joonas Hamalainen
@@ -51,7 +50,6 @@ public class InlineEnclosure extends Enclosure
 	 * 
 	 * @param id
 	 * @param childId
-	 * @param isInlineEnclosure
 	 */
 	public InlineEnclosure(final String id, final String childId)
 	{
@@ -80,7 +78,7 @@ public class InlineEnclosure extends Enclosure
 	 */
 	public boolean updateVisibility()
 	{
-		boolean visible = getChild().isVisible();
+		boolean visible = getChild().determineVisibility();
 		setVisible(visible);
 		return visible;
 	}

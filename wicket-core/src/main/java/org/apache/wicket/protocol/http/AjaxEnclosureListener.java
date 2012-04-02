@@ -52,7 +52,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * @see WebApplication
  * @see InlineEnclosure
  * @see InlineEnclosureHandler
- * 
+ *
  * @author Joonas Hamalainen
  */
 public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
