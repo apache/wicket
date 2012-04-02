@@ -52,6 +52,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -218,7 +219,7 @@ public class SourcesPage extends WebPage
 			BufferedReader br = null;
 			try
 			{
-				InputStream openStream = packageListing.openStream();
+				InputStream openStream = Streams.readNonCaching(packageListing);
 				if (openStream == null)
 				{
 					return;

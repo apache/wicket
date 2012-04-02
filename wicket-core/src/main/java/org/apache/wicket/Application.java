@@ -109,6 +109,7 @@ import org.apache.wicket.settings.def.SecuritySettings;
 import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.time.Duration;
@@ -500,7 +501,7 @@ public abstract class Application implements UnboundListener, IEventSink
 				{
 					final URL url = resources.next();
 					final Properties properties = new Properties();
-					in = url.openStream();
+					in = Streams.readNonCaching(url);
 					properties.load(in);
 					load(properties);
 				}
@@ -586,8 +587,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Iterate initializers list, calling {@link IInitializer#destroy(Application)} on any instances
-	 * found in it.
+	 * Iterate initializers list, calling their {@link IInitializer#destroy(Application) destroy} methods.
 	 */
 	private void destroyInitializers()
 	{
