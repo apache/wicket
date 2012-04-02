@@ -16,17 +16,31 @@
  */
 package org.apache.wicket.markup;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.util.value.IValueMap;
+import org.apache.wicket.util.value.ValueMap;
 
 
 /**
- * Some utils to handle tags which otherwise would bloat the Tag AP.
+ * Some utils to handle tags which otherwise would bloat the Tag API.
  * 
  * @author Juergen Donnerstag
  */
 public class TagUtils
 {
+	private static final String DEFAULT_ATTRIBUTE_SEPARATOR = "; ";
+	/**
+	 * A map that keeps the separators which should be used for the different HTML
+	 * element attributes.
+	 */
+	// 'public' so that user applications can add/modify the entries, if needed
+	public static final IValueMap ATTRIBUTES_SEPARATORS = new ValueMap();
+	static {
+		ATTRIBUTES_SEPARATORS.put("class", " ");
+		ATTRIBUTES_SEPARATORS.put("style", DEFAULT_ATTRIBUTE_SEPARATOR);
+		ATTRIBUTES_SEPARATORS.put("onclick", DEFAULT_ATTRIBUTE_SEPARATOR);
+	}
+
 	/**
 	 * Constructor
 	 */
@@ -147,16 +161,18 @@ public class TagUtils
 
 	/**
 	 * Copy attributes from e.g. &lt;wicket:panel&gt; (or border) to the "calling" tag.
-	 * 
+	 *
 	 * @see <a href="http://issues.apache.org/jira/browse/WICKET-2874">WICKET-2874</a>
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3812">WICKET-3812</a>
-	 * 
+	 *
 	 * @param component
+	 *      the markup container which attributes will be copied
 	 * @param tag
+	 *      the component tag where the attributes will be applied
 	 */
-	public static void copyAttributes(final Component component, final ComponentTag tag)
+	public static void copyAttributes(final MarkupContainer component, final ComponentTag tag)
 	{
-		IMarkupFragment markup = ((MarkupContainer)component).getMarkup(null);
+		IMarkupFragment markup = component.getMarkup(null);
 		String namespace = markup.getMarkupResourceStream().getWicketNamespace() + ":";
 
 		MarkupElement elem = markup.get(0);
@@ -168,7 +184,8 @@ public class TagUtils
 				// exclude "wicket:XX" attributes
 				if (key.startsWith(namespace) == false)
 				{
-					tag.append(key, panelTag.getAttribute(key), ", ");
+					String separator = ATTRIBUTES_SEPARATORS.getString(key, DEFAULT_ATTRIBUTE_SEPARATOR);
+					tag.append(key, panelTag.getAttribute(key), separator);
 				}
 			}
 		}
