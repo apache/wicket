@@ -52,7 +52,7 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 		tester.assertLabel("message",
 			"If you see this message wicket is properly configured and running");
 
-		tester.executeAjaxEvent("form:select", "inputchange");
+		tester.executeAjaxEvent("form:select", "inputchange change");
 
 		// assert rendered page class
 		tester.assertRenderedPage(ThirdPage.class);
