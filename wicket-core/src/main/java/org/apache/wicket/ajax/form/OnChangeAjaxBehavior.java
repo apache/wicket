@@ -21,10 +21,12 @@ import org.apache.wicket.markup.html.form.FormComponent;
 /**
  * A behavior that updates the hosting {@link FormComponent} via Ajax when value of the component is
  * changed.
- * 
+ * <p>
  * This behavior uses best available method to track changes on different types of form components.
- * To accomplish this it uses a custom event, named 'inputchange', that is handled in the best way
- * for the specific browser.
+ * To accomplish this for text input form components it uses a custom event, named 'inputchange',
+ * that is handled in the best way for the specific browser. For other form component types the
+ * 'change' event is used.
+ * </p>
  * 
  * @author Janne Hietam&auml;ki (janne)
  * 
@@ -36,10 +38,11 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The name of the special event that delegates to 'input', 'keyup', 'cut' and 'paste' events
-	 * depending on the browser.
+	 * 'inputchange' event delegates to 'input', 'keyup', 'cut' and 'paste' events
+	 * for text input form component depending on the browser.
+	 * 'change' is used as a fallback for all other form component types.
 	 */
-	public static final String EVENT_NAME = "inputchange";
+	public static final String EVENT_NAME = "inputchange change";
 
 	/**
 	 * Constructor.
