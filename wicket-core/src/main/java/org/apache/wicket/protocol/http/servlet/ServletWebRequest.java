@@ -58,6 +58,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ServletWebRequest extends WebRequest
 {
+	private static final Logger LOG = LoggerFactory.getLogger(ServletWebRequest.class);
+
 	private final HttpServletRequest httpServletRequest;
 
 	private final Url url;
@@ -101,6 +103,11 @@ public class ServletWebRequest extends WebRequest
 
 		if (forwardAttributes != null || errorAttributes != null)
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Setting filterPrefix('{}') to '' because there is either an error or a forward. {}, {}",
+						new Object[] {filterPrefix, forwardAttributes, errorAttributes});
+			}
 			// the filter prefix is not needed when the current request is internal
 			// see WICKET-4387
 			this.filterPrefix = "";
@@ -154,9 +161,7 @@ public class ServletWebRequest extends WebRequest
 		}
 		else
 		{
-			String base = null;
-
-			base = getHeader(HEADER_AJAX_BASE_URL);
+			String base = getHeader(HEADER_AJAX_BASE_URL);
 
 			if (base == null)
 			{
@@ -185,7 +190,15 @@ public class ServletWebRequest extends WebRequest
 		}
 		StringBuilder url = new StringBuilder();
 		uri = Strings.stripJSessionId(uri);
-		final int start = httpServletRequest.getContextPath().length() + filterPrefix.length() + 1;
+		String contextPath = httpServletRequest.getContextPath();
+
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Calculating context relative path from: context path '{}', filterPrefix '{}', uri '{}'",
+					new Object[] {contextPath, filterPrefix, uri});
+		}
+
+		final int start = contextPath.length() + filterPrefix.length() + 1;
 		url.append(uri.substring(start));
 
 		if (errorAttributes == null)

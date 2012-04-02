@@ -159,5 +159,16 @@ public class ErrorAttributes
 		return null;
 	}
 
-
+	@Override
+	public String toString()
+	{
+		return "ErrorAttributes{" +
+				"statusCode=" + statusCode +
+				", message='" + message + '\'' +
+				", requestUri='" + requestUri + '\'' +
+				", servletName='" + servletName + '\'' +
+				", exceptionType=" + exceptionType +
+				", exception=" + exception +
+				'}';
+	}
 }
