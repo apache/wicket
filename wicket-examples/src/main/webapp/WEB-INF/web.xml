@@ -787,7 +787,37 @@
 		<url-pattern>/servlettest/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>AtmosphereApplication</servlet-name>
+		<servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.atmosphere.AtmosphereApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.useWebSocket</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.useNative</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>filterMappingUrlPattern</param-name>
+			<param-value>/atmosphere/*</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.websocket.WebSocketProtocol</param-name>
+			<param-value>org.atmosphere.websocket.protocol.EchoProtocol</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
+	<servlet-mapping>
+		<servlet-name>AtmosphereApplication</servlet-name>
+		<url-pattern>/atmosphere/*</url-pattern>
+	</servlet-mapping>
+	
 	<session-config>
 		<session-timeout>5</session-timeout>
 	</session-config>
