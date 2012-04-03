@@ -67,7 +67,6 @@ public class BookmarkableListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param component
 	 * @param listenerInterface
 	 */
 	public BookmarkableListenerInterfaceRequestHandler(
@@ -77,7 +76,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IComponentRequestHandler#getComponent()
+	 * @see org.apache.wicket.core.request.handler.IComponentRequestHandler#getComponent()
 	 */
 	@Override
 	public IRequestableComponent getComponent()
@@ -92,7 +91,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPage()
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPage()
 	 */
 	@Override
 	public IRequestablePage getPage()
@@ -101,7 +100,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageClass()
+	 * @see org.apache.wicket.core.request.handler.IPageClassRequestHandler#getPageClass()
 	 */
 	@Override
 	public Class<? extends IRequestablePage> getPageClass()
@@ -110,7 +109,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageId()
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageId()
 	 */
 	@Override
 	public Integer getPageId()
@@ -119,7 +118,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageParameters()
+	 * @see org.apache.wicket.core.request.handler.IPageClassRequestHandler#getPageParameters()
 	 */
 	@Override
 	public PageParameters getPageParameters()
@@ -128,7 +127,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	}
 
 	/**
-	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public void detach(IRequestCycle requestCycle)
@@ -158,7 +157,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	}
 
 	/**
-	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public void respond(IRequestCycle requestCycle)
