@@ -26,7 +26,7 @@ public class PageKey
 
 	public boolean isForSession(String sessionId)
 	{
-		return sessionId.equals(sessionId);
+		return getSessionId().equals(sessionId);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class PageKey
 	{
 		if (obj instanceof PageKey)
 		{
-			PageKey other = (PageKey) obj;
+			PageKey other = (PageKey)obj;
 			return Objects.equal(pageId, other.pageId) && Objects.equal(sessionId, other.sessionId);
 		}
 		return false;
