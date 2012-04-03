@@ -32,7 +32,7 @@
 
 		var connectedEndpoint = $.atmosphere.subscribe(params.url,
 				!callbackAdded ? callback : null, $.atmosphere.request = {
-					logLevel : "info",
+					logLevel : "debug",
 					transport : "websocket",
 					// transport : "streaming",
 					// transport : "long-polling",

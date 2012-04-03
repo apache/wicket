@@ -111,14 +111,6 @@ public class AtmosphereBehavior extends Behavior
 			if (transport.equalsIgnoreCase(HeaderConfig.LONG_POLLING_TRANSPORT))
 			{
 				Meteor meteor = Meteor.lookup(event.getResource().getRequest());
-				meteor.removeListener(this);
-				meteor.resume();
-			}
-			else if (transport.equalsIgnoreCase(HeaderConfig.STREAMING_TRANSPORT) &&
-				(System.currentTimeMillis() - connectedAt) > 10000)
-			{
-				Meteor meteor = Meteor.lookup(event.getResource().getRequest());
-				meteor.removeListener(this);
 				meteor.resume();
 			}
 		}
