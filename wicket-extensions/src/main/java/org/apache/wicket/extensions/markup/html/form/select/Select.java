@@ -34,7 +34,7 @@ import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Component that represents a <code>&lt;select&gt;</code> box. Elements are provided by one or more
- * <code>SelectChoice</code> or <code>SelectOptions</code> components in the hierarchy below the
+ * <code>SelectOptions</code> components in the hierarchy below the
  * <code>Select</code> component.
  * 
  * Advantages to the standard choice components is that the user has a lot more control over the
@@ -63,10 +63,17 @@ import org.apache.wicket.util.visit.IVisitor;
  * 
  * Note that you don't need to add component(s) for the &lt;option&gt; tag - they are created by
  * SelectOptions
+ * </p>
  * <p>
+ *     <strong>Note</strong>: due to the usage of a SelectOption for each &lt;option&gt; the memory footprint
+ *     of the page will grow with the number of &lt;option&gt;s you need. Consider using
+ *     {@link org.apache.wicket.markup.html.form.DropDownChoice} component if it is able to fulfill your
+ *     requirements.
+ * </p>
  * 
  * @see SelectOption
  * @see SelectOptions
+ * @see org.apache.wicket.markup.html.form.DropDownChoice
  * 
  * @author Igor Vaynberg
  * @param <T>

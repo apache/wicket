@@ -30,6 +30,11 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Abstract base class for all choice (html select) options.
+ * <p>
+ *     This component uses String concatenation to keep its memory footprint light.
+ *     Use Select, SelectOptions and SelectOption from wicket-extensions for more
+ *     sophisticated needs.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -382,19 +387,8 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		}
 
 		buffer.append("\n<option ");
-		if (isSelected(choice, index, selected))
-		{
-			buffer.append("selected=\"selected\" ");
-		}
-
-		if (isDisabled(choice, index, selected))
-		{
-			buffer.append("disabled=\"disabled\" ");
-		}
-
-		buffer.append("value=\"");
-		buffer.append(Strings.escapeMarkup(renderer.getIdValue(choice, index)));
-		buffer.append("\">");
+		setOptionAttributes(buffer, choice, index, selected);
+		buffer.append(">");
 
 		String display = displayValue;
 		if (localizeDisplayValues())
@@ -410,6 +404,35 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 
 		buffer.append(escaped);
 		buffer.append("</option>");
+	}
+
+	/**
+	 * Sets the attributes of a single choice into the provided buffer.
+	 *
+	 * @param buffer
+	 *            Appending string buffer that will have the generated html appended
+	 * @param choice
+	 *            Choice object
+	 * @param index
+	 *            The index of this option
+	 * @param selected
+	 *            The currently selected string value
+	 */
+	protected void setOptionAttributes(AppendingStringBuffer buffer, E choice, int index, String selected)
+	{
+		if (isSelected(choice, index, selected))
+		{
+			buffer.append("selected=\"selected\" ");
+		}
+
+		if (isDisabled(choice, index, selected))
+		{
+			buffer.append("disabled=\"disabled\" ");
+		}
+
+		buffer.append("value=\"");
+		buffer.append(Strings.escapeMarkup(renderer.getIdValue(choice, index)));
+		buffer.append("\"");
 	}
 
 	/**

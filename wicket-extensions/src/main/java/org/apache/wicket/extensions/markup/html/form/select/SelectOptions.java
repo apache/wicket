@@ -32,9 +32,9 @@ import org.apache.wicket.model.util.WildcardCollectionModel;
  * Example markup:
  * 
  * <pre>
- * &lt;code&gt;
- * &lt;wicket:container wicket:id=&quot;selectOptions&quot;&gt;&lt;option wicket:id=&quot;option&quot;&gt;&lt;/option&gt;&lt;/wicket:contaner&gt;
- * &lt;/code&gt;
+ * <code>
+ * &lt;wicket:container wicket:id=&quot;selectOptions&quot;&gt;&lt;option wicket:id=&quot;option&quot;&gt;&lt;/option&gt;&lt;/wicket:container&gt;
+ * </code>
  * </pre>
  * 
  * @param <T>

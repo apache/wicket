@@ -24,9 +24,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * Component representing a single <code>&lt;option&gt;</code> html element
- * 
- * TODO Post 1.2: General: Example
- * 
+ *
  * @see Select
  * @param <T>
  * 
