@@ -1,11 +1,11 @@
 package org.apache.wicket.atmosphere;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
@@ -20,7 +20,7 @@ public class EventSubscription
 	public EventSubscription(Component component, Method method)
 	{
 		componentPath = component.getPageRelativePath();
-		Class< ? > eventType = method.getParameterTypes()[1];
+		Class<?> eventType = method.getParameterTypes()[1];
 		filter = Predicates.and(Predicates.instanceOf(eventType), createFilter(method));
 		methodName = method.getName();
 	}
@@ -31,7 +31,7 @@ public class EventSubscription
 		Subscribe subscribe = method.getAnnotation(Subscribe.class);
 		try
 		{
-			return (Predicate<Object>) subscribe.filter().newInstance();
+			return (Predicate<Object>)subscribe.filter().newInstance();
 		}
 		catch (InstantiationException e)
 		{
@@ -61,7 +61,7 @@ public class EventSubscription
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(componentPath, methodName);
+		return Objects.hashCode(componentPath, methodName);
 	}
 
 	@Override
@@ -69,9 +69,9 @@ public class EventSubscription
 	{
 		if (obj instanceof EventSubscription)
 		{
-			EventSubscription other = (EventSubscription) obj;
-			return Objects.equals(componentPath, other.getComponentPath())
-				&& Objects.equals(methodName, other.getMethodName());
+			EventSubscription other = (EventSubscription)obj;
+			return Objects.equal(componentPath, other.getComponentPath()) &&
+				Objects.equal(methodName, other.getMethodName());
 		}
 		return false;
 	}
