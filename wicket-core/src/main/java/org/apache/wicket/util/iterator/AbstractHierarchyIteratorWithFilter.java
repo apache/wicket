@@ -71,8 +71,6 @@ public abstract class AbstractHierarchyIteratorWithFilter<N, I extends N> extend
 	}
 
 	/**
-	 * 
-	 * @param filter
 	 * @return Gets the List of all registered filters. A new list will be created if no filter has
 	 *         been registered yet (never return null).
 	 */

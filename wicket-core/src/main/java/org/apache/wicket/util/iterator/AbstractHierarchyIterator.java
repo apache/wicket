@@ -26,7 +26,7 @@ import org.apache.wicket.util.lang.Args;
  * markup. It supports child first and parent first traversal and intercepts while moving down or up
  * the hierarchy.
  * <p>
- * It assume the container class implements <code>Iterable</code>. The leaf nodes don't need to.
+ * It assumes the container class implements <code>Iterable</code>. The leaf nodes don't need to.
  * <p>
  * Consecutive calls to <code>hasNext()</code> without <code>next()</code> in between, don't move
  * the cursor, but return the same value until <code>next()</code> is called.
