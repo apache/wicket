@@ -173,7 +173,7 @@ public class TagUtils
 	 */
 	public static void copyAttributes(final Component component, final ComponentTag tag)
 	{
-		IMarkupFragment markup = component.getMarkup(null);
+		IMarkupFragment markup = ((MarkupContainer)component).getMarkup(null);
 		String namespace = markup.getMarkupResourceStream().getWicketNamespace() + ":";
 
 		MarkupElement elem = markup.get(0);
