@@ -80,4 +80,34 @@ public class StringValueTest extends Assert
 
 		assertEquals("unknown", sv.toString("def"));
 	}
+
+	static enum TestEnum {
+		FOO, BAR, BAZ
+	}
+
+	@Test
+	public void enums() throws Exception
+	{
+		assertEquals(TestEnum.FOO, new StringValue("FOO").toEnum(TestEnum.class));
+		assertEquals(TestEnum.FOO, new StringValue("FOO").toEnum(TestEnum.BAR));
+		assertEquals(TestEnum.FOO, new StringValue("FOO").toEnum(TestEnum.class, TestEnum.BAR));
+
+		assertEquals(TestEnum.BAR, new StringValue(null).toEnum(TestEnum.BAR));
+		assertEquals(TestEnum.BAZ, new StringValue("killer rabbit").toEnum(TestEnum.BAZ));
+		assertEquals(TestEnum.BAZ,
+			new StringValue("killer rabbit").toEnum(TestEnum.class, TestEnum.BAZ));
+		assertNull(new StringValue(null).toOptionalEnum(TestEnum.class));
+	}
+
+	@Test(expected = StringValueConversionException.class)
+	public void failingEnum() throws Exception
+	{
+		new StringValue("camelot").toEnum(TestEnum.class);
+	}
+
+	@Test(expected = StringValueConversionException.class)
+	public void failingEnum2() throws Exception
+	{
+		new StringValue("camelot").toOptionalEnum(TestEnum.class);
+	}
 }

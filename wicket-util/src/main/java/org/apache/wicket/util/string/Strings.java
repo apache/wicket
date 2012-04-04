@@ -1515,4 +1515,28 @@ public final class Strings
 		}
 		return hex.toString();
 	}
+
+
+	/**
+	 * Return this value as en enum value.
+	 *
+	 * @param enumClass
+	 *            the enum type
+	 * @return an enum value
+	 */
+	public static <T extends Enum<T>> T toEnum(final CharSequence value, final Class<T> enumClass)
+	{
+		Args.notNull(enumClass, "enumClass");
+		Args.notNull(value, "value");
+
+		try
+		{
+			return Enum.valueOf(enumClass, value.toString());
+		}
+		catch (Exception e)
+		{
+			throw new StringValueConversionException(
+					String.format("Cannot convert '{}' to enum constant of type '{}'.", value, enumClass),					e);
+		}
+	}
 }
