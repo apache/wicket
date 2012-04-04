@@ -19,6 +19,8 @@ import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.Collections2;
@@ -29,6 +31,8 @@ import com.google.common.collect.Multimap;
 
 public class EventBus implements UnboundListener
 {
+	private static final Logger log = LoggerFactory.getLogger(EventBus.class);
+
 	private static final MetaDataKey<EventBus> EVENT_BUS_KEY = new MetaDataKey<EventBus>()
 	{
 		private static final long serialVersionUID = 1L;
@@ -51,9 +55,10 @@ public class EventBus implements UnboundListener
 	{
 		this.application = application;
 		application.setMetaData(EVENT_BUS_KEY, this);
-		application.mount(new PushRequestMapper());
+		application.mount(new AtmosphereRequestMapper());
 		application.getComponentPreOnBeforeRenderListeners().add(
 			new AtmosphereEventSubscriptionCollector(this));
+		application.getSessionStore().registerUnboundListener(this);
 		broadcaster = BroadcasterFactory.getDefault().lookup("/*");
 	}
 
@@ -64,10 +69,14 @@ public class EventBus implements UnboundListener
 		if (oldPage != null && !oldPage.equals(pageKey))
 			subscriptions.removeAll(oldPage);
 		trackedPages.forcePut(trackingId, pageKey);
+		log.info("registered page {} for session {}",
+			new Object[] { pageKey.getPageId(), pageKey.getSessionId() });
 	}
 
 	public synchronized void register(Page page, EventSubscription subscription)
 	{
+		log.info("registering component for {} for session {}: {}", new Object[] {
+				page.getPageId(), Session.get().getId(), subscription.getComponentPath() });
 		subscriptions.put(new PageKey(page.getPageId(), Session.get().getId()), subscription);
 	}
 
@@ -87,7 +96,10 @@ public class EventBus implements UnboundListener
 						Collections.unmodifiableCollection(subscriptions.get(key)),
 						new EventFilter(event));
 				}
-				post(resource, key, subscriptionsForPage, event);
+				if (key == null)
+					broadcaster.removeAtmosphereResource(resource);
+				else
+					post(resource, key, subscriptionsForPage, event);
 			}
 		}
 		finally
@@ -113,9 +125,9 @@ public class EventBus implements UnboundListener
 				return ret == null ? "" : ret;
 			}
 		};
-		PushWebRequest request = new PushWebRequest(application.newWebRequest(httpRequest,
-			filterPath), pageKey, subscriptionsForPage, event);
-		Response response = new StringWebResponse();
+		AtmosphereWebRequest request = new AtmosphereWebRequest(application.newWebRequest(
+			httpRequest, filterPath), pageKey, subscriptionsForPage, event);
+		Response response = new AtmosphereWebResponse(resource.getResponse());
 		if (application.createRequestCycle(request, response).processRequestAndDetach())
 			broadcaster.broadcast(response.toString(), resource);
 	}
@@ -123,6 +135,7 @@ public class EventBus implements UnboundListener
 	@Override
 	public synchronized void sessionUnbound(String sessionId)
 	{
+		log.info("Session unbound {}", sessionId);
 		Iterator<PageKey> it = Iterators.concat(trackedPages.values().iterator(),
 			subscriptions.keySet().iterator());
 		while (it.hasNext())

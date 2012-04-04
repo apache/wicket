@@ -11,7 +11,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.time.Time;
 
-public class PushWebRequest extends WebRequest
+public class AtmosphereWebRequest extends WebRequest
 {
 	private WebRequest wrappedRequest;
 
@@ -21,7 +21,7 @@ public class PushWebRequest extends WebRequest
 
 	private Object event;
 
-	public PushWebRequest(WebRequest wrappedRequest, PageKey pageKey,
+	public AtmosphereWebRequest(WebRequest wrappedRequest, PageKey pageKey,
 			Collection<EventSubscription> subscriptions, Object event)
 	{
 		this.wrappedRequest = wrappedRequest;

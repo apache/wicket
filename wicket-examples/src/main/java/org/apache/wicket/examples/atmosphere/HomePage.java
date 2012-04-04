@@ -20,6 +20,7 @@ public class HomePage extends WebPage
 	{
 		add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
 		add(timeLabel = new Label("time", Model.of("start")).setOutputMarkupId(true));
+		setVersioned(false);
 	}
 
 	@Subscribe

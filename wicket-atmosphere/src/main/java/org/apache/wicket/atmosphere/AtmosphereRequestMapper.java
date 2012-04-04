@@ -5,14 +5,14 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 
-public class PushRequestMapper implements IRequestMapper
+public class AtmosphereRequestMapper implements IRequestMapper
 {
 	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
-		if (request instanceof PushWebRequest)
+		if (request instanceof AtmosphereWebRequest)
 		{
-			PushWebRequest pushRequest = (PushWebRequest) request;
+			AtmosphereWebRequest pushRequest = (AtmosphereWebRequest) request;
 			return new AtmosphereRequestHandler(pushRequest.getPageKey(),
 				pushRequest.getSubscriptions(), pushRequest.getEvent());
 		}
@@ -22,7 +22,7 @@ public class PushRequestMapper implements IRequestMapper
 	@Override
 	public int getCompatibilityScore(Request request)
 	{
-		return request instanceof PushWebRequest ? Integer.MAX_VALUE : 0;
+		return request instanceof AtmosphereWebRequest ? Integer.MAX_VALUE : 0;
 	}
 
 	@Override

@@ -5,20 +5,23 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.time.Time;
+import org.atmosphere.cpr.AtmosphereResponse;
 
-public class StringWebResponse extends WebResponse
+public class AtmosphereWebResponse extends WebResponse
 {
-	protected final AppendingStringBuffer out;
+	private AtmosphereResponse response;
+	private final AppendingStringBuffer out;
 
-	public StringWebResponse()
+	public AtmosphereWebResponse(AtmosphereResponse response)
 	{
+		this.response = response;
 		out = new AppendingStringBuffer(128);
 	}
 
 	@Override
 	public void addCookie(Cookie cookie)
 	{
-		throw new UnsupportedOperationException();
+		response.addCookie(cookie);
 	}
 
 	@Override
@@ -30,34 +33,37 @@ public class StringWebResponse extends WebResponse
 	@Override
 	public void setHeader(String name, String value)
 	{
+		response.setHeader(name, value);
 	}
 
 	@Override
 	public void addHeader(String name, String value)
 	{
-		throw new UnsupportedOperationException();
+		response.addHeader(name, value);
 	}
 
 	@Override
 	public void setDateHeader(String name, Time date)
 	{
+		response.setDateHeader(name, date.getMilliseconds());
 	}
 
 	@Override
 	public void setContentLength(long length)
 	{
-		throw new UnsupportedOperationException();
+		response.setContentLength((int)length);
 	}
 
 	@Override
 	public void setContentType(String mimeType)
 	{
+		response.setContentType(mimeType);
 	}
 
 	@Override
 	public void setStatus(int sc)
 	{
-		throw new UnsupportedOperationException();
+		response.setStatus(sc);
 	}
 
 	@Override
@@ -69,7 +75,7 @@ public class StringWebResponse extends WebResponse
 	@Override
 	public String encodeRedirectURL(CharSequence url)
 	{
-		throw new UnsupportedOperationException();
+		return response.encodeRedirectUrl(url.toString());
 	}
 
 	@Override
@@ -93,13 +99,13 @@ public class StringWebResponse extends WebResponse
 	@Override
 	public String encodeURL(CharSequence url)
 	{
-		throw new UnsupportedOperationException();
+		return response.encodeURL(url.toString());
 	}
 
 	@Override
 	public Object getContainerResponse()
 	{
-		throw new UnsupportedOperationException();
+		return response;
 	}
 
 	@Override

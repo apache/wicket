@@ -113,6 +113,12 @@ public class AtmosphereBehavior extends Behavior
 				Meteor meteor = Meteor.lookup(event.getResource().getRequest());
 				meteor.resume();
 			}
+
+			if ((System.currentTimeMillis() - connectedAt) > 10000)
+			{
+				Meteor meteor = Meteor.lookup(event.getResource().getRequest());
+				meteor.resume();
+			}
 		}
 	}
 

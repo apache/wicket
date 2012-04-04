@@ -5,17 +5,6 @@
 
 		// jquery.atmosphere.response
 		function callback(response) {
-			console.log(response.responseBody);
-			// Websocket events.
-			// $.atmosphere.log('info', [ "response.state: " +
-			// response.state
-			// ]);
-			// $.atmosphere.log('info', [ "response.transport: "
-			// + response.transport ]);
-			// $.atmosphere.log('info', [ "response.status: " +
-			// response.status
-			// ]);
-
 			detectedTransport = response.transport;
 			if (response.transport != 'polling'
 					&& response.state == 'messageReceived') {
