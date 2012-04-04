@@ -58,10 +58,10 @@ public class ComponentTag extends MarkupElement
 	/** True, if attributes have been modified or added */
 	private final static int MODIFIED = 0x0002;
 
-	/** If true, than the MarkupParser will ignore (remove) it. Temporary working variable */
+	/** If true, then the MarkupParser will ignore (remove) it. Temporary working variable */
 	private final static int IGNORE = 0x0004;
 
-	/** If true, than the tag contain an automatically created wicket id */
+	/** If true, then the tag contain an automatically created wicket id */
 	private final static int AUTO_COMPONENT = 0x0008;
 
 	/** Some HTML tags are allow to have no close tag, e.g. 'br' */
@@ -70,7 +70,7 @@ public class ComponentTag extends MarkupElement
 	/** Render the tag as RawMarkup even if no Component can be found */
 	public final static int RENDER_RAW = 0x0020;
 
-	/** If close tag, than reference to the corresponding close tag */
+	/** If close tag, than reference to the corresponding open tag */
 	private ComponentTag openTag;
 
 	/** The underlying xml tag */
@@ -264,19 +264,6 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Please use {@link #getAttribute(String)} instead
-	 * 
-	 * @param name
-	 * @return The attribute
-	 * @deprecated since 1.5
-	 */
-	@Deprecated
-	public final String getString(String name)
-	{
-		return getAttribute(name);
-	}
-
-	/**
 	 * Get the tag's component id
 	 * 
 	 * @return The component id attribute of this tag
@@ -443,8 +430,11 @@ public class ComponentTag extends MarkupElement
 		}
 		if (behaviors != null)
 		{
-			dest.behaviors = new ArrayList<Behavior>(behaviors.size());
-			dest.behaviors.addAll(behaviors);
+			dest.behaviors = new ArrayList<Behavior>(behaviors);
+		}
+		if (userData != null)
+		{
+			dest.userData = new HashMap<String, Object>(userData);
 		}
 	}
 
@@ -507,7 +497,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	private void checkIdAttribute(String key)
 	{
-		if ((key != null) && (key.equalsIgnoreCase("id")))
+		if ("id".equalsIgnoreCase(key))
 		{
 			log.warn("Please use component.setMarkupId(String) to change the tag's 'id' attribute.");
 		}
@@ -696,7 +686,6 @@ public class ComponentTag extends MarkupElement
 	 *            if true, wicket:id are removed from output
 	 * @param namespace
 	 *            Wicket's namespace to use
-	 * @param escapeAttributeValue
 	 */
 	public final void writeOutput(final Response response, final boolean stripWicketAttributes,
 		final String namespace)
@@ -941,7 +930,7 @@ public class ComponentTag extends MarkupElement
 	 * @param component
 	 *            The component that is about to be rendered
 	 * @param markupStream
-	 *            The current amrkup stream
+	 *            The current markup stream
 	 */
 	public void onBeforeRender(final Component component, final MarkupStream markupStream)
 	{
