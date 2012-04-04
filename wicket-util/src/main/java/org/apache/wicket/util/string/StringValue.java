@@ -358,7 +358,7 @@ public class StringValue implements IClusterable
 
 		if (type.isEnum())
 		{
-			return (T) toEnum((Class) type);
+			return toEnum((Class) type);
 		}
 
 		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type " +
