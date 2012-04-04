@@ -61,7 +61,7 @@ public interface IMarkupSourcingStrategy
 	 * Will <b>replace</b> the respective component's method.
 	 * <p>
 	 * It's perfectly valid to call <code>component.onComponentTagBody(markupStream, openTag)</code>
-	 * from insight this method.
+	 * from inside this method.
 	 * 
 	 * @see Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 * 
