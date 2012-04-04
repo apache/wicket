@@ -311,6 +311,11 @@ public class StringValue implements IClusterable
 	 */
 	public final <T> T to(final Class<T> type) throws StringValueConversionException
 	{
+		if (type == null)
+		{
+			return null;
+		}
+
 		if (type == String.class)
 		{
 			return (T) toString();
@@ -349,6 +354,11 @@ public class StringValue implements IClusterable
 		if (type == Duration.class)
 		{
 			return (T) toDuration();
+		}
+
+		if (type.isEnum())
+		{
+			return (T) toEnum((Class) type);
 		}
 
 		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type " +
