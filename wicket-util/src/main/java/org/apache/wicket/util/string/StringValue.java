@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
@@ -845,6 +846,77 @@ public class StringValue implements IClusterable
 			}
 		}
 		return defaultValue;
+	}
+
+	/**
+	 * Convert this text to an enum.
+	 *
+	 * @param eClass
+	 *            enum type
+	 * @return The value as an enum
+	 * @throws StringValueConversionException
+	 */
+	public final <T extends Enum<T>> T toEnum(Class<T> eClass)
+		throws StringValueConversionException
+	{
+		return Strings.toEnum(text, eClass);
+	}
+
+	/**
+	 * Convert this text to an enum.
+	 *
+	 * @param defaultValue
+	 *            This will be returned if there is an error converting the value
+	 * @return The value as an enum
+	 */
+	public final <T extends Enum<T>> T toEnum(final T defaultValue)
+	{
+		Args.notNull(defaultValue, "defaultValue");
+		return toEnum((Class<T>)defaultValue.getClass(), defaultValue);
+	}
+
+	/**
+	 * Convert this text to an enum.
+	 *
+	 * @param eClass
+	 *            enum type
+	 * @param defaultValue
+	 *            This will be returned if there is an error converting the value
+	 * @return The value as an enum
+	 */
+	public final <T extends Enum<T>> T toEnum(Class<T> eClass, final T defaultValue)
+	{
+		if (text != null)
+		{
+			try
+			{
+				return toEnum(eClass);
+			}
+			catch (StringValueConversionException x)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(String.format("An error occurred while converting '%s' to a %s: %s",
+						text, eClass, x.getMessage()), x);
+				}
+			}
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * Convert to enum, returning null if text is null or empty.
+	 *
+	 * @param eClass
+	 *            enum type
+	 *
+	 * @return converted
+	 * @throws StringValueConversionException
+	 */
+	public final <T extends Enum<T>> T toOptionalEnum(Class<T> eClass)
+		throws StringValueConversionException
+	{
+		return Strings.isEmpty(text) ? null : toEnum(eClass);
 	}
 
 	/**
