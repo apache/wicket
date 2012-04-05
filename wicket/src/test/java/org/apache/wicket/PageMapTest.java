@@ -47,6 +47,28 @@ public class PageMapTest extends WicketTestCase
 	private static final int MAX_PAGE_MAPS = 2;
 	private static final long BIG_OBJECT_SIZE = 10000;
 
+
+	public void testSafePageMapName() throws Exception
+	{
+		IPageMap safe = PageMap.forName("this-is-a-safe-name");
+		assertNotNull(safe);
+		assertEquals("this-is-a-safe-name", safe.getName());
+	}
+
+	public void testDefaultPageMapName() throws Exception
+	{
+		IPageMap defaultPM = PageMap.forName(PageMap.DEFAULT_NAME);
+		assertNotNull(defaultPM);
+		assertNull(defaultPM.getName());
+	}
+
+	public void testUnsafePageMapName() throws Exception
+	{
+		IPageMap sanitizedPM = PageMap.forName("../../foobar.txt");
+		assertNotNull(sanitizedPM);
+		assertEquals(".._.._foobar.txt", sanitizedPM.getName());
+	}
+
 	/**
 	 * Making sure that the TO_REMOVE_PAGEMAP doesn't get back to session after a call to
 	 * IPageMap.remove()

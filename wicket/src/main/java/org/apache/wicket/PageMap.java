@@ -25,7 +25,9 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
+import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,16 +94,23 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/**
 	 * Constructor
 	 * 
-	 * @param name
+	 * @param nameForNewPagemap
 	 *            The name of this page map
 	 */
-	public PageMap(String name)
+	public PageMap(String nameForNewPagemap)
 	{
-		if ("".equals(name))
+		if (nameForNewPagemap == null)
+		{
+			name = null;
+		}
+		else if (Strings.isEmpty(nameForNewPagemap))
 		{
 			throw new IllegalStateException("Empty string name for pagemaps is not allowed");
 		}
-		this.name = name;
+		else
+		{
+			name = Files.cleanupFilename(nameForNewPagemap);
+		}
 	}
 
 	/**
