@@ -27,8 +27,6 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
-import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -49,7 +47,7 @@ public class ServletWebResponseTest extends Assert
 	@Test
 	public void sendRedirectAjax() throws IOException
 	{
-		final String url = "relative/path";
+		final String url = "./relative/path";
 
 		ServletWebRequest webRequest = mock(ServletWebRequest.class);
 		when(webRequest.isAjax()).thenReturn(Boolean.TRUE);
@@ -69,7 +67,7 @@ public class ServletWebResponseTest extends Assert
 		verify(httpServletResponse).addHeader("Ajax-Location", url);
 		verify(httpServletResponse).setContentType("text/xml;charset=UTF-8");
 		assertEquals(
-			"<ajax-response><redirect><![CDATA[relative/path]]></redirect></ajax-response>",
+			"<ajax-response><redirect><![CDATA[./relative/path]]></redirect></ajax-response>",
 			writer.toString());
 		assertTrue(webResponse.isRedirect());
 
@@ -81,12 +79,16 @@ public class ServletWebResponseTest extends Assert
 	 * Redirects in normal (non-Ajax) requests should call HttpServletResponse's sendRedirect()
 	 * which cares to make the url absolute
 	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-4260
+	 * 
+	 * Redirect to relative url should be stripped of leading dot
+	 * 
 	 * @throws IOException
 	 */
 	@Test
 	public void sendRedirect() throws IOException
 	{
-		final String url = "relative/path";
+		final String url = "./relative/path";
 
 		ServletWebRequest webRequest = mock(ServletWebRequest.class);
 		when(webRequest.isAjax()).thenReturn(Boolean.FALSE);
@@ -97,9 +99,7 @@ public class ServletWebResponseTest extends Assert
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		webResponse.sendRedirect(url);
 
-		verify(httpServletResponse).sendRedirect(url);
+		verify(httpServletResponse).sendRedirect("relative/path");
 		assertTrue(webResponse.isRedirect());
-
 	}
-
 }
