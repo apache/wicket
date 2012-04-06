@@ -227,6 +227,14 @@ public class ServletWebResponse extends WebResponse
 			}
 			else
 			{
+				if (url.startsWith("./"))
+				{
+					/*
+					 * WICKET-4260 Tomcat does not canonalize urls, which leads to problems with IE
+					 * when url is relative and starts with a dot
+					 */
+					url = url.substring(2);
+				}
 				httpServletResponse.sendRedirect(url);
 			}
 		}

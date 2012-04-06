@@ -62,6 +62,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.xml.sax.SAXException;
 
 /**
@@ -372,6 +374,13 @@ public class WicketFilterTest extends Assert
 			.thenReturn("/contextPath/servlet/wicket/bookmarkable/" + DummyHomePage.class.getName());
 		when(request.getContextPath()).thenReturn("/contextPath");
 		HttpServletResponse response = mock(HttpServletResponse.class);
+		when(response.encodeRedirectURL(Matchers.anyString())).thenAnswer(new Answer<String>()
+		{
+			public String answer(InvocationOnMock invocation) throws Throwable
+			{
+				return (String)invocation.getArguments()[0];
+			}
+		});
 		FilterChain chain = mock(FilterChain.class);
 
 		// execute 3 requests - 1 for bla.js, 1 for bla.css and 1 for bla.img
