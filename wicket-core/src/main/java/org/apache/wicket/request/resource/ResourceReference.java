@@ -110,7 +110,7 @@ public abstract class ResourceReference implements IClusterable
 	 *         ResourceReferenceRegistry to make up the key under which the resource reference gets
 	 *         stored.
 	 */
-	public Key getKey()
+	public final Key getKey()
 	{
 		return data;
 	}

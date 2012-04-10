@@ -41,6 +41,8 @@ public class TextTemplateResourceReferenceTest extends WicketTestCase
 	private static final String TEMPLATE_NAME = "textTemplateResRef.tmpl";
 
 	private static final String EXPECTED_VALUE = "value";
+	private static final String SECOND_EXPECTED_VALUE = "second-value";
+	private static final String VARIABLE_NAME = "variable";
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3971
@@ -50,13 +52,20 @@ public class TextTemplateResourceReferenceTest extends WicketTestCase
 	{
 		// the page will render just <script> element with url to the template
 		// this will register it in the application's ResourceReferenceRegistry
-		Page page = tester.startPage(new TemplateResourceReferencePage());
+		TemplateResourceReferencePage page = new TemplateResourceReferencePage();
+		tester.startPage(page);
 
 		// make a separate request to the template resource
 		CharSequence urlForTemplate = page.urlFor(new PackageResourceReference(
 			TextTemplateResourceReferenceTest.class, TEMPLATE_NAME), null);
 		tester.executeUrl(urlForTemplate.toString());
 		tester.assertContains("TMPL_START\\|" + EXPECTED_VALUE + "\\|TMPL_END");
+
+		// update the model and re-render (WICKET-4487)
+		page.variables.put(VARIABLE_NAME, SECOND_EXPECTED_VALUE);
+		tester.executeUrl(urlForTemplate.toString());
+		tester.assertContains("TMPL_START\\|"+SECOND_EXPECTED_VALUE+"\\|TMPL_END");
+
 	}
 
 	private static class TemplateResourceReferencePage extends WebPage
@@ -65,13 +74,14 @@ public class TextTemplateResourceReferenceTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
+		private final Map<String, Object> variables = new HashMap<String, Object>();
+
 		@Override
 		public void renderHead(IHeaderResponse response)
 		{
 			super.renderHead(response);
 
-			Map<String, Object> variables = new HashMap<String, Object>();
-			variables.put("variable", EXPECTED_VALUE);
+			variables.put(VARIABLE_NAME, EXPECTED_VALUE);
 
 			final TextTemplateResourceReference reference = new TextTemplateResourceReference(
 				TextTemplateResourceReferenceTest.class, TEMPLATE_NAME, Model.ofMap(variables));

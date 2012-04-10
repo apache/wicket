@@ -22,8 +22,8 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.core.util.resource.IResourceStreamWriter;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -42,7 +42,7 @@ public class ResourceStreamResource extends AbstractResource
 
 	private static final Logger logger = LoggerFactory.getLogger(ResourceStreamResource.class);
 
-	private final IResourceStream stream;
+	private IResourceStream stream;
 	private String fileName;
 	private ContentDisposition contentDisposition = ContentDisposition.INLINE;
 	private String textEncoding;
@@ -56,7 +56,6 @@ public class ResourceStreamResource extends AbstractResource
 	 */
 	public ResourceStreamResource(IResourceStream stream)
 	{
-		Args.notNull(stream, "stream");
 		this.stream = stream;
 	}
 
@@ -109,14 +108,36 @@ public class ResourceStreamResource extends AbstractResource
 		return this;
 	}
 
+	/**
+	 * Lazy or dynamic initialization of the wrapped IResourceStream(Writer)
+	 * @return the underlying IResourceStream
+	 */
+	protected IResourceStream getResourceStream()
+	{
+		return stream;
+	}
+
+	private IResourceStream internalGetResourceStream()
+	{
+		final IResourceStream resourceStream = getResourceStream();
+		Checks.notNull(resourceStream, "%s#getResourceStream() should not return null!", ResourceStreamResource.class.getName());
+		return resourceStream;
+	}
+
 	@Override
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
+		final IResourceStream resourceStream = internalGetResourceStream();
 		ResourceResponse data = new ResourceResponse();
-		Time lastModifiedTime = stream.lastModifiedTime();
+		Time lastModifiedTime = resourceStream.lastModifiedTime();
 		if (lastModifiedTime != null)
 		{
 			data.setLastModified(lastModifiedTime);
+		}
+
+		if (cacheDuration != null)
+		{
+			data.setCacheDuration(cacheDuration);
 		}
 
 		// performance check; don't bother to do anything if the resource is still cached by client
@@ -127,7 +148,7 @@ public class ResourceStreamResource extends AbstractResource
 			{
 				try
 				{
-					inputStream = stream.getInputStream();
+					inputStream = resourceStream.getInputStream();
 				}
 				catch (ResourceStreamNotFoundException e)
 				{
@@ -137,14 +158,14 @@ public class ResourceStreamResource extends AbstractResource
 			}
 
 			data.setContentDisposition(contentDisposition);
-			Bytes length = stream.length();
+			Bytes length = resourceStream.length();
 			if (length != null)
 			{
 				data.setContentLength(length.bytes());
 			}
 			data.setFileName(fileName);
 
-			String contentType = stream.getContentType();
+			String contentType = resourceStream.getContentType();
 			if (contentType == null && fileName != null && Application.exists())
 			{
 				contentType = Application.get().getMimeType(fileName);
@@ -152,19 +173,14 @@ public class ResourceStreamResource extends AbstractResource
 			data.setContentType(contentType);
 			data.setTextEncoding(textEncoding);
 
-			if (cacheDuration != null)
-			{
-				data.setCacheDuration(cacheDuration);
-			}
-
-			if (stream instanceof IResourceStreamWriter)
+			if (resourceStream instanceof IResourceStreamWriter)
 			{
 				data.setWriteCallback(new WriteCallback()
 				{
 					@Override
 					public void writeData(Attributes attributes)
 					{
-						((IResourceStreamWriter)stream).write(attributes.getResponse());
+						((IResourceStreamWriter)resourceStream).write(attributes.getResponse());
 						close();
 					}
 				});
@@ -197,7 +213,7 @@ public class ResourceStreamResource extends AbstractResource
 	{
 		try
 		{
-			stream.close();
+			internalGetResourceStream().close();
 		}
 		catch (IOException e)
 		{

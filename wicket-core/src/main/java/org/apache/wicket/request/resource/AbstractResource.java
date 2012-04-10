@@ -301,7 +301,7 @@ public abstract class AbstractResource implements IResource
 			WebRequest request = (WebRequest)attributes.getRequest();
 			Time ifModifiedSince = request.getIfModifiedSinceHeader();
 
-			if (ifModifiedSince != null && lastModified != null)
+			if (cacheDuration != Duration.NONE && ifModifiedSince != null && lastModified != null)
 			{
 				// [Last-Modified] headers have a maximum precision of one second
 				// so we have to truncate the milliseconds part for a proper compare.
