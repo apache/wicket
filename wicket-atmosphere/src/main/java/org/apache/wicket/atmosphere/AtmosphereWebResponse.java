@@ -11,6 +11,7 @@ public class AtmosphereWebResponse extends WebResponse
 {
 	private AtmosphereResponse response;
 	private final AppendingStringBuffer out;
+	private boolean redirect;
 
 	public AtmosphereWebResponse(AtmosphereResponse response)
 	{
@@ -81,7 +82,9 @@ public class AtmosphereWebResponse extends WebResponse
 	@Override
 	public void sendRedirect(String url)
 	{
-		throw new UnsupportedOperationException();
+		out.clear();
+		out.append("<ajax-response><redirect><![CDATA[" + url + "]]></redirect></ajax-response>");
+		redirect = true;
 	}
 
 	@Override
@@ -128,7 +131,8 @@ public class AtmosphereWebResponse extends WebResponse
 	@Override
 	public void write(CharSequence sequence)
 	{
-		out.append(sequence);
+		if (!redirect)
+			out.append(sequence);
 	}
 
 	/**

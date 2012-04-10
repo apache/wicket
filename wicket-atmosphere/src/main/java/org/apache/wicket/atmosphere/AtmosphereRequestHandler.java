@@ -34,8 +34,8 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	{
 		Page page = (Page)Application.get().getMapperContext().getPageInstance(pageKey.getPageId());
 		AjaxRequestTarget target = WebApplication.get().newAjaxRequestTarget(page);
-		executeHandlers(target, page);
 		requestCycle.scheduleRequestHandlerAfterCurrent(target);
+		executeHandlers(target, page);
 	}
 
 	private void executeHandlers(AjaxRequestTarget target, Page page)
