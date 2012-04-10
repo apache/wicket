@@ -92,7 +92,8 @@ public class PageProviderTest extends WicketTestCase
 	/**
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3252">WICKET-3252</a>
 	 * */
-	public void testStalePageException()
+	@Test
+ 	public void testStalePageException()
 	{
 		tester.startPage(TestPage.class);
 		TestPage testPage = (TestPage)tester.getLastRenderedPage();
@@ -126,6 +127,7 @@ public class PageProviderTest extends WicketTestCase
 	 * @throws IOException
 	 * 
 	 */
+	@Test
 	public void testStalePageExceptionOnAjaxRequest() throws IOException,
 		ResourceStreamNotFoundException, ParseException
 	{
@@ -170,6 +172,7 @@ public class PageProviderTest extends WicketTestCase
 	 * prevent an resulting page with broken relative paths, as related in <a
 	 * href="https://issues.apache.org/jira/browse/WICKET-3339">WICKET-3339</a>
 	 */
+	@Test
 	public void test()
 	{
 		tester.setFollowRedirects(false);
@@ -178,6 +181,7 @@ public class PageProviderTest extends WicketTestCase
 		assertTrue(tester.getLastResponse().isRedirect());
 	}
 
+	@Test
 	public void testPageProperties_provided()
 	{
 		PageProvider provider = new PageProvider(new StatelessPageTest());
@@ -185,6 +189,7 @@ public class PageProviderTest extends WicketTestCase
 		assertFalse(provider.isPageInstanceFresh());
 	}
 
+	@Test
 	public void testPageProperties_bookmarkable()
 	{
 		PageProvider provider = new PageProvider(StatelessPageTest.class);
@@ -205,6 +210,7 @@ public class PageProviderTest extends WicketTestCase
 		assertTrue(provider.isPageInstanceFresh());
 	}
 
+	@Test
 	public void testPageProperties_stored()
 	{
 		TestMapperContext mapperContext = new TestMapperContext();
