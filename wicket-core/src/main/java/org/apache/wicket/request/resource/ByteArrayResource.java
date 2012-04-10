@@ -18,10 +18,9 @@ package org.apache.wicket.request.resource;
 
 import java.net.URLConnection;
 
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.time.Time;
-
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.wicket.util.time.Time;
 
 /**
  * An {@link IResource} for byte arrays. The byte array can be static - passed to the constructor,

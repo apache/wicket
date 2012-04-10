@@ -39,7 +39,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	 */
 	public StringResourceStream(final CharSequence string)
 	{
-		this.string = string;
+		this(string, null);
 	}
 
 	/**
@@ -74,9 +74,6 @@ public final class StringResourceStream extends AbstractStringResourceStream
 		return string.toString();
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractResourceStream#asString()
-	 */
 	@Override
 	public String asString()
 	{

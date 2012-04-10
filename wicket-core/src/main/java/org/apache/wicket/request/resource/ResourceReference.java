@@ -107,7 +107,7 @@ public abstract class ResourceReference implements Serializable
 	 *         ResourceReferenceRegistry to make up the key under which the resource reference gets
 	 *         stored.
 	 */
-	Key getKey()
+	public final Key getKey()
 	{
 		return data;
 	}

@@ -24,10 +24,14 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.request.resource.ResourceStreamResource;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.template.PackageTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 
 /**
  * A class which adapts a {@link PackageTextTemplate} to a {@link ResourceReference}.
@@ -38,18 +42,12 @@ import org.apache.wicket.util.template.TextTemplate;
  */
 public class TextTemplateResourceReference extends ResourceReference implements IClusterable
 {
-// **********************************************************************************************************************
-// Fields
-// **********************************************************************************************************************
 
 	private static final long serialVersionUID = 1L;
+
 	private final TextTemplate textTemplate;
 	private final IModel<Map<String, Object>> variablesModel;
-	private IResource resource;
-
-// **********************************************************************************************************************
-// Constructors
-// **********************************************************************************************************************
+	private final ResourceStreamResource resource;
 
 	/**
 	 * Creates a resource reference to a {@link PackageTextTemplate}.
@@ -142,15 +140,33 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 		textTemplate = new PackageTextTemplate(scope, fileName, contentType, encoding);
 		this.variablesModel = variablesModel;
 
+		resource = new ResourceStreamResource(null)
+		{
+			@Override
+			protected IResourceStream getResourceStream()
+			{
+				IModel<Map<String, Object>> variables = TextTemplateResourceReference.this.variablesModel;
+				String stringValue = textTemplate.asString(variables.getObject());
+				variables.detach(); // We're done with the model so detach it!
+
+				StringResourceStream resourceStream = new StringResourceStream(stringValue,
+						textTemplate.getContentType());
+				resourceStream.setLastModified(Time.now());
+
+				return resourceStream;
+			}
+		};
+		resource.setCacheDuration(Duration.NONE);
+
 		if (Application.exists())
 		{
-			Application.get().getResourceReferenceRegistry().registerResourceReference(this);
+			// TextTemplateResourceReference should not be cached due to its dynamic nature
+			// Old entry in the registry would keep wrong 'variablesModel'
+			ResourceReferenceRegistry resourceReferenceRegistry = Application.get().getResourceReferenceRegistry();
+			resourceReferenceRegistry.unregisterResourceReference(getKey());
+			resourceReferenceRegistry.registerResourceReference(this);
 		}
 	}
-
-// **********************************************************************************************************************
-// Other Methods
-// **********************************************************************************************************************
 
 	/**
 	 * Creates a new resource which returns the interpolated value of the text template.
@@ -160,19 +176,6 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 	@Override
 	public IResource getResource()
 	{
-		if (resource != null)
-		{
-			return resource;
-		}
-
-		String stringValue = textTemplate.asString(variablesModel.getObject());
-		variablesModel.detach(); // We're done with the model so detach it!
-
-		StringResourceStream resourceStream = new StringResourceStream(stringValue,
-			textTemplate.getContentType());
-		resourceStream.setLastModified(textTemplate.lastModifiedTime());
-
-		resource = new ResourceStreamResource(resourceStream);
 		return resource;
 	}
 }
