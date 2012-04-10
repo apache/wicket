@@ -36,7 +36,7 @@ import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.versioning.InMemoryPageStore;
 
 /**
- * Simple {@link EncoderContext} implementation for testing purposes
+ * Simple {@link IMapperContext} implementation for testing purposes
  * 
  * @author Matej Knopp
  */

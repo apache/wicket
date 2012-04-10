@@ -21,6 +21,7 @@ import java.text.ParseException;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPage;
+import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.WicketTestCase;
@@ -224,6 +225,30 @@ public class PageProviderTest extends WicketTestCase
 		PageProvider provider = mapperContext.new TestPageProvider(page.getPageId(), 0);
 		assertTrue(provider.hasPageInstance());
 		assertFalse(provider.isPageInstanceFresh());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4488
+	 *
+	 * There is a stored page with id = 0 and class Page1.
+	 * A following request to page2?0 should not use the stored page with id=0 because
+	 * the requested and the found page classes do not match.
+	 */
+	@Test
+	public void ignorePageFoundByIdIfItsClassDoesntMatch()
+	{
+		TestMapperContext mapperContext = new TestMapperContext();
+		Page page = new TestPage();
+		mapperContext.getPageManager().touchPage(page);
+		mapperContext.getPageManager().commitRequest();
+
+		// by cleaning session cache we make sure of not being testing the same in-memory instance
+		mapperContext.cleanSessionCache();
+
+		PageProvider provider = new PageProvider(page.getPageId(), MockPageWithLink.class, 0);
+		assertFalse(provider.hasPageInstance());
+		assertEquals(MockPageWithLink.class, provider.getPageInstance().getClass());
+		assertTrue(provider.isPageInstanceFresh());
 	}
 
 	/** */
