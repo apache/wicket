@@ -40,8 +40,6 @@ public class AtmosphereBehavior extends Behavior
 
 	private static final long serialVersionUID = 1L;
 
-	private long connectedAt;
-
 	private Component component;
 
 	public AtmosphereBehavior()
@@ -63,7 +61,6 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onResourceRequested()
 	{
-		connectedAt = System.currentTimeMillis();
 		RequestCycle requestCycle = RequestCycle.get();
 		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
 		System.out.println(request.getUrl());
@@ -109,12 +106,6 @@ public class AtmosphereBehavior extends Behavior
 		if (transport != null)
 		{
 			if (transport.equalsIgnoreCase(HeaderConfig.LONG_POLLING_TRANSPORT))
-			{
-				Meteor meteor = Meteor.lookup(event.getResource().getRequest());
-				meteor.resume();
-			}
-
-			if ((System.currentTimeMillis() - connectedAt) > 10000)
 			{
 				Meteor meteor = Meteor.lookup(event.getResource().getRequest());
 				meteor.resume();
