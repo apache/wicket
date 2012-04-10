@@ -452,6 +452,11 @@ public class HttpSessionStore implements ISessionStore
 			ISessionStore sessionStore = application.getSessionStore();
 			if (sessionStore != null)
 			{
+				if (sessionStore instanceof HttpSessionStore)
+				{
+					((HttpSessionStore) sessionStore).onUnbind(sessionId);
+				}
+
 				for (UnboundListener listener : sessionStore.getUnboundListener())
 				{
 					listener.sessionUnbound(sessionId);
