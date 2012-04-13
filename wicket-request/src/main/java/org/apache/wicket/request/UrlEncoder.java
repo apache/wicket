@@ -341,15 +341,7 @@ public class UrlEncoder
 
 				charArrayWriter.flush();
 				String str = new String(charArrayWriter.toCharArray());
-				byte[] ba;
-				try
-				{
-					ba = str.getBytes(charset.name());
-				}
-				catch (UnsupportedEncodingException e)
-				{
-					throw new RuntimeException(e);
-				}
+				byte[] ba = str.getBytes(charset);
 				for (byte b : ba)
 				{
 					out.append('%');
