@@ -214,8 +214,8 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 		xmlIgnore.add("nb-configuration.xml");
 
 		/*
-				 * License header in test files lower the visibility of the test.
-				 */
+		 * License header in test files lower the visibility of the test.
+		 */
 		htmlIgnore.add("src/test/java");
 
 		/*
