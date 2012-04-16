@@ -211,6 +211,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 		// addHeaders = true;
 		xmlIgnore.add(".settings");
 		xmlIgnore.add("EclipseCodeFormat.xml");
+		xmlIgnore.add("nb-configuration.xml");
 
 		/*
 		 * License header in test files lower the visibility of the test.
