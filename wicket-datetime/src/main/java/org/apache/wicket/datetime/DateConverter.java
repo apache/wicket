@@ -133,7 +133,7 @@ public abstract class DateConverter implements IConverter<Date>
 	 */
 	public String convertToString(Date value, Locale locale)
 	{
-		DateTime dt = new DateTime((value).getTime(), getTimeZone());
+		DateTime dt = new DateTime(value.getTime(), getTimeZone());
 		DateTimeFormatter format = getFormat(locale);
 
 		if (applyTimeZoneDifference)

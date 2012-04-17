@@ -225,7 +225,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public final <C> IConverter<C> getConverter(Class<C> clazz)
+	public <C> IConverter<C> getConverter(Class<C> clazz)
 	{
 		if (Date.class.isAssignableFrom(clazz))
 		{
