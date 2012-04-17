@@ -139,7 +139,8 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 
 		for (MapperWithScore mapperWithScore : list)
 		{
-			IRequestHandler handler = mapperWithScore.getMapper().mapRequest(request);
+			IRequestMapper mapper = mapperWithScore.getMapper();
+			IRequestHandler handler = mapper.mapRequest(request);
 			if (handler != null)
 			{
 				return handler;
