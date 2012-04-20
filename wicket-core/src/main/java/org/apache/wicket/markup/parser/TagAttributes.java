@@ -60,12 +60,12 @@ public class TagAttributes extends ValueMap
 	@Override
 	public final void putAll(Map<? extends String, ?> map)
 	{
-		for (Object o : map.keySet())
+		for (Map.Entry<? extends String, ?> entry : map.entrySet())
 		{
-			String key = (String)o;
+			String key = entry.getKey();
+			Object value = entry.getValue();
+			put(key, value);
 		}
-
-		super.putAll(map);
 	}
 
 	/**
