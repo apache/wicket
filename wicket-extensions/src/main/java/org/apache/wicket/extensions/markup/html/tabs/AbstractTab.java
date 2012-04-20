@@ -20,7 +20,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
 /**
- * Convinience class that takes care of common ITab functionality
+ * Convenience class that takes care of common ITab functionality
  * 
  * @see ITab
  * 

@@ -114,7 +114,6 @@ public abstract class AjaxLazyLoadPanel extends Panel
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
-		attributes.setEventNames("domready");
 	}
 
 	/**
@@ -127,7 +126,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	protected void handleCallbackScript(final IHeaderResponse response,
 		final CharSequence callbackScript, final Component component)
 	{
-		response.render(JavaScriptHeaderItem.forScript(callbackScript, "lazy-load-" + component.getMarkupId()));
+		response.render(JavaScriptHeaderItem.forScript(callbackScript, null));
 	}
 
 	/**
