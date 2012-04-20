@@ -27,8 +27,8 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * A {@link TextField} for HTML5 &lt;input&gt; with type <em>number</em>.
  * 
  * <p>
- * Automatically validates the input against the configured {@link #setMinimum(Double) min} and
- * {@link #setMaximum(Double) max} attributes. If any of them is <code>null</code> then
+ * Automatically validates the input against the configured {@link #setMinimum(Number) min} and
+ * {@link #setMaximum(Number) max} attributes. If any of them is <code>null</code> then
  * {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
  * 
  * Note: {@link #setType(Class)} must be called explicitly!
