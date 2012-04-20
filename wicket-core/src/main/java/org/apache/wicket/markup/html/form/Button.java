@@ -103,6 +103,17 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	}
 
 	/**
+	 * Override to not throw exception if there is no parent form.
+	 *
+	 * @return the parent form or {@code null}
+	 */
+	@Override
+	public Form getForm()
+	{
+		return Form.findForm(this);
+	}
+
+	/**
 	 * Gets the defaultFormProcessing property. When false (default is true), all validation and
 	 * formupdating is bypassed and the onSubmit method of that button is called directly, and the
 	 * onSubmit method of the parent form is not called. A common use for this is to create a cancel
