@@ -626,7 +626,7 @@ public abstract class WebApplication extends Application
 		{
 			throw new IllegalStateException(
 				"Configuration type is write-once. You can not change it. " + "" +
-				"Current value='" + configurationType);
+				"Current value='" + configurationType + "'");
 		}
 		this.configurationType = Args.notNull(configurationType, "configurationType");
 	}
