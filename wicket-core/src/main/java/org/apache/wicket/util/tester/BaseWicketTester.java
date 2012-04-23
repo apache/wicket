@@ -152,10 +152,6 @@ public class BaseWicketTester
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BaseWicketTester.class);
 
-	/** matches the last closing tag before </body> */
-	private static final Pattern pattern = Pattern.compile(".*(<\\/.*[^<\\/])<\\/body>.*",
-		Pattern.MULTILINE | Pattern.DOTALL);
-
 	private final ServletContext servletContext;
 	private MockHttpSession httpSession;
 
@@ -878,14 +874,11 @@ public class BaseWicketTester
 			return response;
 		}
 
-		// remove the markup for the auto-generated page. leave just component's markup body
-		String componentId = componentInPage.component.getId();
-		String before = "wicket:id=\"" + componentId + "\">";
-		Matcher matcher = pattern.matcher(response);
-		if (matcher.matches())
+		// remove the markup for the auto-generated page. leave just component's markup
+		int end = response.lastIndexOf("</body>");
+		if (end > -1)
 		{
-			int start = response.indexOf(before) + before.length();
-			int end = matcher.start(1);
+			int start = response.indexOf("<body>") + "<body>".length();
 			response = response.substring(start, end);
 		}
 
