@@ -126,7 +126,8 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	protected void handleCallbackScript(final IHeaderResponse response,
 		final CharSequence callbackScript, final Component component)
 	{
-		response.render(JavaScriptHeaderItem.forScript(callbackScript, null));
+		response.render(JavaScriptHeaderItem.forScript(callbackScript,
+				String.format("lazy-load-%s-%d", component.getMarkupId(), component.getPage().getAutoIndex())));
 	}
 
 	/**
