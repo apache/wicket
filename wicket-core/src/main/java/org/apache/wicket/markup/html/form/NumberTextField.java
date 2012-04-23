@@ -16,10 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.convert.converter.AbstractDecimalConverter;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.validation.validator.RangeValidator;
 
@@ -39,6 +42,13 @@ import org.apache.wicket.validation.validator.RangeValidator;
 public class NumberTextField<N extends Number & Comparable<N>> extends TextField<N>
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * A special locale which is used to render decimal number formats that are HTML5 compliant.
+	 *
+	 * See <a href="http://dev.w3.org/html5/markup/datatypes.html#common.data.float">HTML5 number format</a>
+	 */
+	private static final Locale HTML5_LOCALE = new Locale("en", "", "wicket-html5");
 
 	private RangeValidator<N> validator;
 
@@ -169,6 +179,27 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	@Override
 	public Locale getLocale()
 	{
-		return Locale.ENGLISH;
+		return HTML5_LOCALE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * WICKET-4501 NumberTextField&lt;BigDecimal> renders its value in unsupported number format
+	 */
+	@Override
+	public <C> IConverter<C> getConverter(Class<C> type)
+	{
+		IConverter<C> converter = super.getConverter(type);
+		if (converter instanceof AbstractDecimalConverter<?>)
+		{
+			AbstractDecimalConverter<?> adc = (AbstractDecimalConverter<?>)converter;
+			NumberFormat numberFormat = adc.getNumberFormat(HTML5_LOCALE);
+			// do not use grouping for HTML5 number/range fields because
+			// it is not supported by browsers
+			numberFormat.setGroupingUsed(false);
+			adc.setNumberFormat(HTML5_LOCALE, numberFormat);
+		}
+		return converter;
 	}
 }
