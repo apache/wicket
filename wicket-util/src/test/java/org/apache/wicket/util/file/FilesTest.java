@@ -17,6 +17,7 @@
 package org.apache.wicket.util.file;
 
 import java.io.IOException;
+import java.net.URL;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -98,8 +99,8 @@ public class FilesTest extends Assert
 
 		File nonExistingFile = new File(
 			"/somethingThatDoesntExistsOnMostMachines-111111111111111111111111111111");
-		assertTrue("Even non existing file are scheduled for deletion.", Files.removeFolderAsync(
-			nonExistingFile, fileCleaner));
+		assertTrue("Even non existing file are scheduled for deletion.",
+			Files.removeFolderAsync(nonExistingFile, fileCleaner));
 		assertFalse(nonExistingFile.exists());
 
 		java.io.File file = java.io.File.createTempFile("wicket-test--", ".tmp");
@@ -148,11 +149,24 @@ public class FilesTest extends Assert
 		file.createNewFile();
 		assertTrue(file.exists());
 
-		assertTrue("The folder is scheduled for deletion.", Files.removeFolderAsync(folder,
-			fileCleaner));
+		assertTrue("The folder is scheduled for deletion.",
+			Files.removeFolderAsync(folder, fileCleaner));
 		// give chance to the file cleaner to run and delete the folder
 		System.gc();
 		Thread.sleep(5);
 		assertFalse("", folder.exists());
+	}
+
+	/**
+	 * WICKET-4509
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void fileWithWhitespace() throws Exception
+	{
+		URL url = new URL("file:/file%20with%20whitespace");
+
+		assertEquals("/file with whitespace", Files.getLocalFileFromUrl(url).getPath());
 	}
 }
