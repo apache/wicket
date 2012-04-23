@@ -50,6 +50,7 @@ public class TestMapperContext implements IMapperContext
 	PageStoreManager pageManager;
 	private String appName;
 	private boolean createMockPageIfInstanceNotFound = true;
+	private PageParameters currentPageParameters = null;
 
 	/**
 	 * Construct.
@@ -171,6 +172,11 @@ public class TestMapperContext implements IMapperContext
 			page.setCreatedBookmarkable(createdBookmarkable);
 			page.setRenderCount(nextPageRenderCount);
 			requestablePage = page;
+			if (currentPageParameters != null)
+			{
+				page.getPageParameters().overwriteWith(currentPageParameters);
+				currentPageParameters = null;
+			}
 		}
 		return requestablePage;
 
@@ -184,8 +190,7 @@ public class TestMapperContext implements IMapperContext
 	{
 		try
 		{
-			MockPage page;
-			page = (MockPage)pageClass.newInstance();
+			MockPage page = (MockPage)pageClass.newInstance();
 			page.setPageId(++idCounter);
 			page.setBookmarkable(true);
 			page.setCreatedBookmarkable(true);
@@ -219,6 +224,12 @@ public class TestMapperContext implements IMapperContext
 		return MockPage.class;
 	}
 
+	public TestMapperContext setCurrentPageParameters(PageParameters parameters)
+	{
+		this.currentPageParameters = parameters;
+		return this;
+	}
+
 	/**
 	 *
 	 * Adapts {@link PageProvider} to this {@link IMapperContext}
@@ -227,7 +238,6 @@ public class TestMapperContext implements IMapperContext
 	 */
 	public class TestPageProvider extends PageProvider
 	{
-
 		/**
 		 * Construct.
 		 *
