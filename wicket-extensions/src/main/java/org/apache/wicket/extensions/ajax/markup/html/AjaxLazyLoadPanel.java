@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -86,7 +87,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 				{
 					Component component = getLazyLoadComponent(LAZY_LOAD_COMPONENT_ID);
 					AjaxLazyLoadPanel.this.replace(component);
-					setState((byte)2);
+					setState((byte) 2);
 				}
 				target.add(AjaxLazyLoadPanel.this);
 
@@ -120,14 +121,16 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 * Allows subclasses to change the callback script if needed.
 	 * 
 	 * @param response
+	 *      the current response that writes to the header
 	 * @param callbackScript
+	 *      the JavaScript to write in the header
 	 * @param component
+	 *      the component which produced the callback script
 	 */
 	protected void handleCallbackScript(final IHeaderResponse response,
 		final CharSequence callbackScript, final Component component)
 	{
-		response.render(JavaScriptHeaderItem.forScript(callbackScript,
-				String.format("lazy-load-%s-%d", component.getMarkupId(), component.getPage().getAutoIndex())));
+		response.render(OnDomReadyHeaderItem.forScript(callbackScript));
 	}
 
 	/**
