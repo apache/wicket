@@ -310,7 +310,7 @@ public class MarkupCache implements IMarkupCache
 			}
 		}
 
-		// NO_MARKUP should only be used insight the Cache.
+		// NO_MARKUP should only be used inside the Cache.
 		if (markup == Markup.NO_MARKUP)
 		{
 			markup = null;

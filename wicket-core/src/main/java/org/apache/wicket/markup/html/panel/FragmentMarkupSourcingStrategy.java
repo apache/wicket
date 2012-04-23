@@ -149,7 +149,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 			return childMarkup;
 		}
 
-		// search for the child insight the fragment markup
+		// search for the child inside the fragment markup
 		return childMarkup.find(child.getId());
 	}
 }

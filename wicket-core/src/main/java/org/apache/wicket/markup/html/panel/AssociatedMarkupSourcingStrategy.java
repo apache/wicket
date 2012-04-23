@@ -359,7 +359,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 					return associatedMarkupStream.getCurrentIndex();
 				}
 				// wicket:head must be before border, panel or extend
-				// @TODO why is that? Why can't it be anywhere? (except insight wicket:fragment
+				// @TODO why is that? Why can't it be anywhere? (except inside wicket:fragment)
 				else if (tag.isOpen() &&
 					(tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
 				{
