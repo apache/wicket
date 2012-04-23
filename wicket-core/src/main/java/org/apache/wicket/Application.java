@@ -349,7 +349,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * debugging checks and resource polling is inefficient and may leak resources, particularly on
 	 * webapp redeploy.
 	 * 
-	 * <div style="bored-width:10px;border-style:solid;">
+	 * <div style="border-style:solid;">
 	 * <p>
 	 * To change the deployment mode, add the following to your web.xml, inside your <servlet>
 	 * mapping (or <filter> mapping if you're using 1.3.x):
