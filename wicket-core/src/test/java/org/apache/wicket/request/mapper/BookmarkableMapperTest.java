@@ -112,13 +112,14 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
+		context.setCurrentPageParameters(((RenderPageRequestHandler)handler).getPageParameters());
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(0, p.getIndexedCount());
+		assertEquals(2, p.getIndexedCount());
 
-		assertEquals(0, p.getNamedKeys().size());
+		assertEquals(2, p.getNamedKeys().size());
 	}
 
 	/**
@@ -154,7 +155,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 
 		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
-
+		context.setCurrentPageParameters(h.getPageParameters());
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
@@ -162,9 +163,9 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(0, p.getIndexedCount());
+		assertEquals(2, p.getIndexedCount());
 
-		assertEquals(0, p.getNamedKeys().size());
+		assertEquals(2, p.getNamedKeys().size());
 	}
 
 	/**
@@ -204,6 +205,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 
 		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		context.setCurrentPageParameters(h.getPageParameters());
 
 		IRequestablePage page = h.getPage();
 		assertEquals(page.getRenderCount(), 5);
@@ -220,7 +222,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 
 		context.setNextPageRenderCount(6);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-
+		context.setCurrentPageParameters(((ListenerInterfaceRequestHandler)handler).getPageParameters());
 		((IPageRequestHandler)handler).getPage();
 	}
 

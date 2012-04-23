@@ -292,7 +292,10 @@ public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 		IRequestablePage storedPageInstance = getPageSource().getPageInstance(pageId);
 		if (storedPageInstance != null)
 		{
-			if (pageClass == null || pageClass.equals(storedPageInstance.getClass()))
+			if (
+				(pageClass == null || pageClass.equals(storedPageInstance.getClass())) &&
+				(isPageParametersEmpty(pageParameters) || arePageParametersSame(storedPageInstance))
+			)
 			{
 				pageInstance = storedPageInstance;
 				pageInstanceIsFresh = false;
@@ -403,5 +406,24 @@ public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 			throw new IllegalStateException("Page instance not yet resolved");
 		}
 		return pageInstanceIsFresh;
+	}
+
+	/**
+	 * A helper method that compares the requested PageParameters with the ones in the stored
+	 * page instance. {@code null} and empty PageParameters are considered equal.
+	 *
+	 * @param storedPageInstance
+	 *      the page instance with the original page parameters
+	 * @return {@code true} if the indexed and named parameters are equal, {@code false} - otherwise
+	 */
+	private boolean arePageParametersSame(IRequestablePage storedPageInstance) {
+		PageParameters currentCopy = new PageParameters(pageParameters);
+		PageParameters storedCopy = new PageParameters(storedPageInstance.getPageParameters());
+		return currentCopy.equals(storedCopy);
+	}
+
+	private boolean isPageParametersEmpty(PageParameters parameters)
+	{
+		return parameters == null || parameters.isEmpty();
 	}
 }
