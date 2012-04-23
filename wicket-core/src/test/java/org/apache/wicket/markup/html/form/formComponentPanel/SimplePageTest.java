@@ -38,7 +38,7 @@ public class SimplePageTest extends WicketTestCase
 		tester.startComponentInPage(MyFormComponentPanel.class);
 		String doc = tester.getLastResponseAsString();
 		// log.error(doc);
-		assertEquals("<wicket:panel>test</wicket:panel>", doc);
+		assertEquals("<span wicket:id=\"testObject\"><wicket:panel>test</wicket:panel></span>", doc);
 	}
 
 	/**
