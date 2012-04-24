@@ -45,8 +45,8 @@ public class ComponentTagAttributeEscapingTest extends WicketTestCase
 		assertTrue("must not be double escaped", response.contains("Watch escaped value: &gt;&gt;"));
 		assertTrue("following the last assert logic, this one would true",
 			response.contains("alerting: &amp;"));
-		assertTrue("not double escape manually add attributes",
-			response.contains("some_attribute=\"&amp;\""));
+		assertTrue("escape manually added attributes",
+			response.contains("some_attribute=\"&amp;amp;\""));
 	}
 
 	/**

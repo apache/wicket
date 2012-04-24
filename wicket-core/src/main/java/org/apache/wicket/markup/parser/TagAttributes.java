@@ -54,7 +54,7 @@ public class TagAttributes extends ValueMap
 	public final Object put(String key, Object value)
 	{
 
-		return super.put(key, unescapeHtml(value));
+		return super.put(key, value);
 	}
 
 	@Override
