@@ -728,7 +728,7 @@ public abstract class WebApplication extends Application
 			{
 				WebRequest request = (WebRequest)cycle.getRequest();
 
-				String accept = request.getHeader("HTTP_ACCEPT");
+				String accept = request.getHeader("Accept");
 				insert = ((accept == null) || (accept.indexOf(MarkupType.XML_MIME) != -1));
 			}
 
