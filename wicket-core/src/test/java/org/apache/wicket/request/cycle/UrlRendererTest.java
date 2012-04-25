@@ -188,4 +188,33 @@ public class UrlRendererTest extends Assert
 		String renderedUrl = renderer.renderUrl(url);
 		assertEquals(absoluteUrl, renderedUrl);
 	}
+
+	@Test
+	public void renderFullUrlWithRelativeArgument()
+	{
+		Url baseUrl = Url.parse("one/two/three");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("www.example.com");
+		baseUrl.setPort(8888);
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		renderer.setBaseUrl(baseUrl); // this is needed because MockWebRequest cuts data
+		String fullUrl = renderer.renderFullUrl(Url.parse("../four"));
+		assertEquals("http://www.example.com:8888/one/four", fullUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4514
+	 */
+	@Test
+	public void renderFullUrlWithAbsoluteArgument()
+	{
+		Url baseUrl = Url.parse("one/two/three");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("www.example.com");
+		baseUrl.setPort(8888);
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		renderer.setBaseUrl(baseUrl); // this is needed because MockWebRequest cuts data
+		String fullUrl = renderer.renderFullUrl(Url.parse("/four")); // url starting with slash is considered absolute
+		assertEquals("http://www.example.com:8888/four", fullUrl);
+	}
 }
