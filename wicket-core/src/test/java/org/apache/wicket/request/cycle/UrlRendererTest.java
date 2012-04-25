@@ -16,20 +16,21 @@
  */
 package org.apache.wicket.request.cycle;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Matej Knopp
  */
-public class UrlRendererTest extends TestCase
+public class UrlRendererTest extends Assert
 {
 	/**
 	 * 
 	 */
+	@Test
 	public void test1()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar/baz?a=b")));
@@ -42,6 +43,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test2()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar/baz?a=b")));
@@ -52,6 +54,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test3()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("?a=b")));
@@ -61,6 +64,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test5()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("url")));
@@ -70,6 +74,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test6()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("url/")));
@@ -79,6 +84,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test7()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(
@@ -89,6 +95,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test8()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(
@@ -100,6 +107,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test9()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("a/b/q/d/e")));
@@ -109,6 +117,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test10()
 	{
 		MockWebRequest request = new MockWebRequest(Url.parse("a/b/q/d/e"), "/contextPath",
@@ -134,6 +143,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3337">WICKET-3337</a>
 	 */
+	@Test
 	public void test11()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("a")));
@@ -143,6 +153,7 @@ public class UrlRendererTest extends TestCase
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3567">WICKET-3567</a>
 	 */
+	@Test
 	public void test12()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("?0")));
@@ -155,9 +166,42 @@ public class UrlRendererTest extends TestCase
 	 * A Url should not end with '..' because some web containers do not handle it properly. Using
 	 * '../' works better.
 	 */
+	@Test
 	public void test13()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar")));
 		assertEquals("../", r1.renderUrl(Url.parse("")));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4514
+	 */
+	@Test
+	public void renderFullUrlWithRelativeArgument()
+	{
+		Url baseUrl = Url.parse("one/two/three");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("www.example.com");
+		baseUrl.setPort(8888);
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		renderer.setBaseUrl(baseUrl); // this is needed because MockWebRequest cuts data
+		String fullUrl = renderer.renderFullUrl(Url.parse("../four"));
+		assertEquals("http://www.example.com:8888/one/four", fullUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4514
+	 */
+	@Test
+	public void renderFullUrlWithAbsoluteArgument()
+	{
+		Url baseUrl = Url.parse("one/two/three");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("www.example.com");
+		baseUrl.setPort(8888);
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		renderer.setBaseUrl(baseUrl); // this is needed because MockWebRequest cuts data
+		String fullUrl = renderer.renderFullUrl(Url.parse("/four")); // url starting with slash is considered absolute
+		assertEquals("http://www.example.com:8888/four", fullUrl);
 	}
 }

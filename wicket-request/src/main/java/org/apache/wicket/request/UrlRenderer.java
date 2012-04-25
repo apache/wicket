@@ -113,7 +113,18 @@ public class UrlRenderer
 		final String protocol = resolveProtocol(url);
 		final String host = resolveHost(url);
 		final Integer port = resolvePort(url);
-		final String path = url.toString();
+
+		final String path;
+		if (url.isAbsolute())
+		{
+			path = url.toString();
+		}
+		else
+		{
+			Url base = new Url(baseUrl);
+			base.resolveRelative(url);
+			path = base.toString();
+		}
 
 		StringBuilder render = new StringBuilder();
 		render.append(protocol);
