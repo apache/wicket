@@ -25,6 +25,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
+import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,11 +148,11 @@ public class XmlTag
 		{
 			if ((copyOf == this) || (copyOf == null) || (copyOf.attributes == null))
 			{
-				attributes = new TagAttributes();
+				attributes = new ValueMap();
 			}
 			else
 			{
-				attributes = new TagAttributes(copyOf.attributes);
+				attributes = new ValueMap(copyOf.attributes);
 			}
 		}
 		return attributes;
@@ -353,7 +354,7 @@ public class XmlTag
 		dest.copyOf = copyOf;
 		if (attributes != null)
 		{
-			dest.attributes = new TagAttributes(attributes);
+			dest.attributes = new ValueMap(attributes);
 		}
 	}
 
