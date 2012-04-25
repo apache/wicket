@@ -39,14 +39,14 @@ public class ComponentTagAttributeEscapingTest extends WicketTestCase
 	{
 		tester.startPage(ButtonValuePage.class);
 		String response = tester.getLastResponseAsString();
-		System.out.println(response);
+//		System.out.println(response);
 		assertTrue("One of the pound entity representations is missing: &pound; or &#163;",
 			response.contains("\u00a3\u00a3"));
 		assertTrue("must not be double escaped", response.contains("Watch escaped value: &gt;&gt;"));
 		assertTrue("following the last assert logic, this one would true",
 			response.contains("alerting: &amp;"));
 		assertTrue("escape manually added attributes",
-			response.contains("some_attribute=\"&amp;amp;\""));
+			response.contains("some_attribute=\"a &amp; b\""));
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class ComponentTagAttributeEscapingTest extends WicketTestCase
 				protected void onComponentTag(ComponentTag tag)
 				{
 					super.onComponentTag(tag);
-					tag.put("some_attribute", "&amp;");
+					tag.put("some_attribute", "a & b");
 				}
 			});
 		}
