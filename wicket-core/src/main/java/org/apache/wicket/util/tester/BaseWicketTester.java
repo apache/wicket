@@ -612,7 +612,7 @@ public class BaseWicketTester
 			{
 				if (Strings.isEmpty(entry.getKey()) == false)
 				{
-					request.addHeader(entry.getKey(), entry.getValue());
+					request.setHeader(entry.getKey(), entry.getValue());
 				}
 			}
 
