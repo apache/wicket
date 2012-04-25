@@ -37,7 +37,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.WicketObjects;
@@ -313,16 +312,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		final IPageManager pageManager = getSession().getPageManager();
-		if (!getFlag(FLAG_IS_DIRTY) &&
-			(
-				isVersioned() && pageManager.supportsVersioning() ||
+		if (!getFlag(FLAG_IS_DIRTY) && (isVersioned() && pageManager.supportsVersioning() ||
 
-				// we need to get pageId for new page instances even when the page doesn't need
-				// versioning, otherwise pages override each other in the page store and back button
-				// support is broken
-				isInitialization
-			)
-		)
+		// we need to get pageId for new page instances even when the page doesn't need
+		// versioning, otherwise pages override each other in the page store and back button
+		// support is broken
+			isInitialization))
 		{
 			setFlag(FLAG_IS_DIRTY, true);
 			setNextAvailableId();
@@ -1032,11 +1027,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public void renderPage()
 	{
-		if (getApplication().getRequestCycleSettings().getRenderStrategy() != RenderStrategy.REDIRECT_TO_BUFFER)
-		{
-			// don't increment page id for redirect to render and one pass render during rendering
-			setFreezePageId(true);
-		}
+		// page id is frozen during the render
+		final boolean frozen = setFreezePageId(true);
 		try
 		{
 			++renderCount;
@@ -1044,7 +1036,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 		finally
 		{
-			setFreezePageId(false);
+			setFreezePageId(frozen);
 		}
 	}
 
