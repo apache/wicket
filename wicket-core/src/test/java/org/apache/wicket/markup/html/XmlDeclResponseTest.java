@@ -33,6 +33,7 @@ public class XmlDeclResponseTest extends WicketTestCase
 	private static final String markupWithout = "<html><body></body></html>";
 
 	private static final String acceptString = "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+	public static final String ACCEPT = "Accept";
 
 	private int insertXmlDecl = 0;
 
@@ -75,22 +76,22 @@ public class XmlDeclResponseTest extends WicketTestCase
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWith, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", acceptString);
+		tester.addRequestHeader(ACCEPT, acceptString);
 		tester.startPage(new SimplePage(MarkupType.HTML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWith, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", acceptString);
+		tester.addRequestHeader(ACCEPT, acceptString);
 		tester.startPage(new SimplePage(MarkupType.XML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWith, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", "xx");
+		tester.addRequestHeader(ACCEPT, "xx");
 		tester.startPage(new SimplePage(MarkupType.HTML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWith, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", "xx");
+		tester.addRequestHeader(ACCEPT, "xx");
 		tester.startPage(new SimplePage(MarkupType.XML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWith, doc);
@@ -110,22 +111,22 @@ public class XmlDeclResponseTest extends WicketTestCase
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWithout, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", acceptString);
+		tester.addRequestHeader(ACCEPT, acceptString);
 		tester.startPage(new SimplePage(MarkupType.HTML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWithout, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", acceptString);
+		tester.addRequestHeader(ACCEPT, acceptString);
 		tester.startPage(new SimplePage(MarkupType.XML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWithout, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", "xx");
+		tester.addRequestHeader(ACCEPT, "xx");
 		tester.startPage(new SimplePage(MarkupType.HTML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWithout, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", "xx");
+		tester.addRequestHeader(ACCEPT, "xx");
 		tester.startPage(new SimplePage(MarkupType.XML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWithout, doc);
@@ -145,22 +146,22 @@ public class XmlDeclResponseTest extends WicketTestCase
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWith, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", acceptString);
+		tester.addRequestHeader(ACCEPT, acceptString);
 		tester.startPage(new SimplePage(MarkupType.HTML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWithout, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", acceptString);
+		tester.addRequestHeader(ACCEPT, acceptString);
 		tester.startPage(new SimplePage(MarkupType.XML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWith, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", "xx");
+		tester.addRequestHeader(ACCEPT, "xx");
 		tester.startPage(new SimplePage(MarkupType.HTML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWithout, doc);
 
-		tester.addRequestHeader("HTTP_ACCEPT", "xx");
+		tester.addRequestHeader(ACCEPT, "xx");
 		tester.startPage(new SimplePage(MarkupType.XML_MIME));
 		doc = tester.getLastResponseAsString();
 		assertEquals(markupWithout, doc);
