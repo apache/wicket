@@ -667,4 +667,29 @@ public class UrlTest extends Assert
 		assertEquals("a//b/c", Url.parse("a//b/c").canonical().getPath());
 		assertEquals("foo/test", Url.parse("foo/bar/../baz/../test").canonical().getPath());
 	}
+
+	@Test
+	public void copyConstructor()
+	{
+		String protocol = "myProtocol";
+		String host = "www.example.com";
+		Integer port = 12345;
+		Url url = Url.parse("segment1/segment2?name1=value1");
+		url.setProtocol(protocol);
+		url.setHost(host);
+		url.setPort(port);
+		Url copy = new Url(url);
+		List<String> segments = copy.getSegments();
+		assertEquals(2, segments.size());
+		assertEquals("segment1", segments.get(0));
+		assertEquals("segment2", segments.get(1));
+		List<QueryParameter> queryParameters = copy.getQueryParameters();
+		assertEquals(1, queryParameters.size());
+		QueryParameter queryParameter = queryParameters.get(0);
+		assertEquals("name1", queryParameter.getName());
+		assertEquals("value1", queryParameter.getValue());
+		assertEquals(protocol, copy.getProtocol());
+		assertEquals(host, copy.getHost());
+		assertEquals(port, copy.getPort());
+	}
 }
