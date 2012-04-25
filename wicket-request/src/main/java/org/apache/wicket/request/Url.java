@@ -304,6 +304,9 @@ public final class Url implements Serializable
 		segments.addAll(url.getSegments());
 		parameters.addAll(url.getQueryParameters());
 		setCharset(url.getCharset());
+		setProtocol(url.getProtocol());
+		setHost(url.getHost());
+		setPort(url.getPort());
 	}
 
 	/**
