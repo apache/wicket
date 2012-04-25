@@ -67,7 +67,9 @@ public class WebPage extends Page
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor. Having this constructor public means that your page is 'bookmarkable' and hence
+	 * Constructor.
+	 *
+	 * Having this constructor public means that your page is 'bookmarkable' and hence
 	 * can be called/ created from anywhere.
 	 */
 	protected WebPage()
@@ -133,7 +135,7 @@ public class WebPage extends Page
 		// Configure the response such as headers etc.
 		configureResponse((WebResponse)RequestCycle.get().getResponse());
 
-		// The rules if and when to insert an xml decl in the response are a it tricky. Allow the
+		// The rules if and when to insert an xml decl in the response are a bit tricky. Allow the
 		// user to replace the default per page and per application.
 		renderXmlDecl();
 
@@ -141,7 +143,7 @@ public class WebPage extends Page
 	}
 
 	/**
-	 * The rules if and when to insert an xml decl in the response are a it tricky. Allow the user
+	 * The rules if and when to insert an xml decl in the response are a bit tricky. Allow the user
 	 * to replace the default per page and per application.
 	 */
 	protected void renderXmlDecl()
@@ -308,7 +310,7 @@ public class WebPage extends Page
 	}
 
 	/**
-	 * Prevents page from get dirt inside an AJAX request.
+	 * Prevents page from get dirty inside an AJAX request.
 	 */
 	@Override
 	public final void dirty(boolean isInitialization)
