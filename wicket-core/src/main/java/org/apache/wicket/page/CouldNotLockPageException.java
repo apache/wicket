@@ -19,7 +19,12 @@ package org.apache.wicket.page;
 import org.apache.wicket.util.time.Duration;
 
 /**
- * TODO javadoc
+ * An exception that is being thrown when a second thread attempts to get
+ * the lock on a page instance that is currently locked by another thread and it cannot
+ * do that for some specified {@link org.apache.wicket.settings.IRequestCycleSettings#getTimeout() duration}
+ *
+ * @see org.apache.wicket.settings.IRequestCycleSettings#setTimeout(org.apache.wicket.util.time.Duration)
+ * @see org.apache.wicket.settings.IExceptionSettings#setThreadDumpStrategy(org.apache.wicket.settings.IExceptionSettings.ThreadDumpStrategy)
  */
 public class CouldNotLockPageException extends RuntimeException
 {
@@ -33,8 +38,11 @@ public class CouldNotLockPageException extends RuntimeException
 	 * Construct.
 	 * 
 	 * @param page
+	 *      the id of the page instance which is already locked
 	 * @param threadName
+	 *      the name of the thread that attempts to acquire the lock on the page
 	 * @param timeout
+	 *      the duration that the second thread waited for the lock
 	 */
 	public CouldNotLockPageException(int page, String threadName, Duration timeout)
 	{
