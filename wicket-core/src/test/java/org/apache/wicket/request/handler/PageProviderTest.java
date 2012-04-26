@@ -252,36 +252,6 @@ public class PageProviderTest extends WicketTestCase
 		assertTrue(provider.isPageInstanceFresh());
 	}
 
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-4441
-	 *
-	 * ProductPage is mounted at /product/${productId}.
-	 * A request to /product/10?2 will show the product with id = 10.
-	 * A following request to /product/20?2 (e.g. a bookmarked url sent by a colleague)
-	 * will again show product with id=10 ignoring the fact that product with id=20 is
-	 * requested because Wicket loads the old page with pageId=2 from the current session.
-	 */
-	@Test
-	public void ignorePageFoundByIdIfItsClassMatchButPageParametersDont()
-	{
-		TestMapperContext mapperContext = new TestMapperContext();
-		PageParameters initialParameters = new PageParameters();
-		initialParameters.add("name1", "value1");
-		Page page = new TestPage(initialParameters);
-		mapperContext.getPageManager().touchPage(page);
-		mapperContext.getPageManager().commitRequest();
-
-		// by cleaning session cache we make sure of not being testing the same in-memory instance
-		mapperContext.cleanSessionCache();
-
-		PageParameters newParameters = new PageParameters();
-		newParameters.add("name2", "value2");
-		PageProvider provider = new PageProvider(page.getPageId(), TestPage.class, newParameters, 0);
-		assertFalse(provider.hasPageInstance());
-		assertEquals(TestPage.class, provider.getPageInstance().getClass());
-		assertTrue(provider.isPageInstanceFresh());
-	}
-
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
