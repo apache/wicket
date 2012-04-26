@@ -984,17 +984,28 @@ public final class Url implements Serializable
 			// strip the first non-folder segment
 			getSegments().remove(getSegments().size() - 1);
 		}
-		// remove all './' (current folder) from the relative url
-		if (!relative.getSegments().isEmpty() && ".".equals(relative.getSegments().get(0)))
-		{
-			relative.getSegments().remove(0);
-		}
 
-		// process any ../ segments in the relative url
-		while (!relative.getSegments().isEmpty() && "..".equals(relative.getSegments().get(0)))
+		// remove leading './' (current folder) and empty segments, process any ../ segments from the
+		// relative url
+		while (!relative.getSegments().isEmpty())
 		{
-			relative.getSegments().remove(0);
-			getSegments().remove(getSegments().size() - 1);
+			if (".".equals(relative.getSegments().get(0)))
+			{
+				relative.getSegments().remove(0);
+			}
+			else if ("".equals(relative.getSegments().get(0)))
+			{
+				relative.getSegments().remove(0);
+			}
+			else if ("..".equals(relative.getSegments().get(0)))
+			{
+				relative.getSegments().remove(0);
+				getSegments().remove(getSegments().size() - 1);
+			}
+			else
+			{
+				break;
+			}
 		}
 
 		// append the remaining relative segments
