@@ -479,6 +479,19 @@ public class UrlTest extends Assert
 	}
 
 	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
+	 */
+	@Test
+	public void testResolveRelative4()
+	{
+		Url relative = Url.parse("../?p1=v1");
+		Url baseUrl = Url.parse("c/d");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("?p1=v1", baseUrl.toString());
+	}
+
+	/**
 	 * Tries to resolve a relative url against a base that has no segments
 	 */
 	@Test
@@ -502,6 +515,38 @@ public class UrlTest extends Assert
 		baseUrl.resolveRelative(relative);
 
 		assertEquals("bar/baz?a=b", baseUrl.toString());
+	}
+
+	/**
+	 * Tries to resolve a relative url that starts with dot followed by empty segment
+	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
+	 */
+	@Test
+	public void testResolveRelative_DotFollowedByEmptySegment1()
+	{
+		Url relative = Url.parse("./?a=b");
+		Url baseUrl = Url.parse("bar");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("?a=b", baseUrl.toString());
+		assertEquals("no empty segment", 0, baseUrl.getSegments().size());
+	}
+
+	/**
+	 * Tries to resolve a relative url that starts with dot followed by empty segment
+	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
+	 */
+	@Test
+	public void testResolveRelative_DotFollowedByEmptySegment2()
+	{
+		Url relative = Url.parse("./?a=b");
+		Url baseUrl = Url.parse("bar/baz");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("bar?a=b", baseUrl.toString());
+		assertEquals("no empty segment", 1, baseUrl.getSegments().size());
 	}
 
 	/**
