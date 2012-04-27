@@ -56,6 +56,34 @@ public class InlineEnclosureTest extends WicketTestCase
 		executeTest(InlineEnclosurePanelPage.class, "InlineEnclosurePanelPageExpectedResult.html");
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4520
+	 *
+	 * Tests that wicket:enclosure and wicket:message attributes can co-exist
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void inlineEnclosureWithWicketMessageVisible() throws Exception
+	{
+		executeTest(new InlineEnclosureWithWicketMessagePage(true),
+				"InlineEnclosureWithWicketMessagePage_visible_expected.html");
+	}
+
+	/**
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-4520
+	 *
+	 * Tests that wicket:enclosure and wicket:message attributes can co-exist
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void inlineEnclosureWithWicketMessageInvisible() throws Exception
+	{
+		executeTest(new InlineEnclosureWithWicketMessagePage(false),
+				"InlineEnclosureWithWicketMessagePage_invisible_expected.html");
+	}
 
 	@Override
 	protected WebApplication newApplication()
