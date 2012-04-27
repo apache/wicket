@@ -680,11 +680,11 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageSettings.addComponentResolver(new HtmlHeaderResolver());
 		pageSettings.addComponentResolver(new WicketLinkTagHandler());
 		pageSettings.addComponentResolver(new WicketMessageResolver());
-		pageSettings.addComponentResolver(new WicketMessageTagHandler());
 		pageSettings.addComponentResolver(new FragmentResolver());
 		pageSettings.addComponentResolver(new RelativePathPrefixHandler());
 		pageSettings.addComponentResolver(new EnclosureHandler());
 		pageSettings.addComponentResolver(new InlineEnclosureHandler());
+		pageSettings.addComponentResolver(new WicketMessageTagHandler());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
 
 		// Install button image resource factory

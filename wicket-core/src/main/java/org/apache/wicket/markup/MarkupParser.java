@@ -150,6 +150,7 @@ public class MarkupParser extends AbstractMarkupParser
 		filters.add(new WicketLinkTagHandler());
 		filters.add(new AutoLabelTagHandler());
 		filters.add(new WicketNamespaceHandler(markupResourceStream));
+		filters.add(new WicketMessageTagHandler(markupResourceStream));
 
 		// Provided the wicket component requesting the markup is known ...
 		if ((markupResourceStream != null) && (markupResourceStream.getResource() != null))
@@ -157,8 +158,6 @@ public class MarkupParser extends AbstractMarkupParser
 			final ContainerInfo containerInfo = markupResourceStream.getContainerInfo();
 			if (containerInfo != null)
 			{
-				filters.add(new WicketMessageTagHandler(markupResourceStream));
-
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{

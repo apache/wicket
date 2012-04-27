@@ -43,7 +43,6 @@ import org.apache.wicket.util.string.Strings;
  * enclosure is identified by the 'child' attribute value which must be equal to the relative child
  * id path.
  * 
- * @see EnclosureResolver
  * @see InlineEnclosure
  * 
  * @author Joonas Hamalainen
@@ -96,7 +95,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 							tag.toString(), tag.getPos());
 				}
 
-				// if it doesn't have a wicket-id already, than assign one now.
+				// if it doesn't have a wicket-id already, then assign one now.
 				if (Strings.isEmpty(tag.getId()))
 				{
 					if (Strings.isEmpty(htmlId))
@@ -129,7 +128,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		// Are we within an enclosure?
 		else if ((enclosures != null) && (enclosures.size() > 0))
 		{
-			// In case the enclosure tag did not provide a child component id, than assign the
+			// In case the enclosure tag did not provide a child component id, then assign the
 			// first ComponentTag's id found as the controlling child to the enclosure.
 			if (tag.isOpen() && (tag.getId() != null) && !(tag instanceof WicketTag) &&
 				!tag.isAutoComponentTag())
