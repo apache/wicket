@@ -27,6 +27,9 @@
 	<packaging>pom</packaging>
 	<name>Wicket-Experimental</name>
 	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
+	<properties>
+		<wicket.version>6.0-SNAPSHOT</wicket.version>
+	</properties>
 	<modules>
 		<module>wicket-atmosphere</module>
 	</modules>
