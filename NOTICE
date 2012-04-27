@@ -12,21 +12,27 @@ NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
     AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
 
 ---------------------------------------------------------------------------
-src/./wicket-guice
+src/./wicket-datetime
 ---------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2006-2012 Apache Software Foundation
+   Apache Wicket Date Time
+   Copyright 2006-2011 Apache Software Foundation
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
+   
+   Contains code of the Yahoo User Interface library (version: 2.8.2r1),
+   released under the BSD License:
+   http://developer.yahoo.net/yui/license.txt
+   Copyright (c) 2010, Yahoo! Inc.
 
-   This product includes Guice, developed at Google, and licensed
-   under the Apache License 2.0. (http://code.google.com/p/google-guice/).
+   This product includes software developed by
+   Joda.org (http://www.joda.org/).
+   
 ---------------------------------------------------------------------------
 src/./wicket-examples
 ---------------------------------------------------------------------------
    Apache Wicket Examples
-   Copyright 2006-2012 Apache Software Foundation
+   Copyright 2006-2011 Apache Software Foundation
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
@@ -66,10 +72,21 @@ src/./wicket-examples
    which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
 
 ---------------------------------------------------------------------------
+src/./wicket-guice
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2006-2011 Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+   This product includes Guice, developed at Google, and licensed
+   under the Apache License 2.0. (http://code.google.com/p/google-guice/).
+---------------------------------------------------------------------------
 src/./wicket-core
 ---------------------------------------------------------------------------
    Apache Wicket
-   Copyright 2006-2012 Apache Software Foundation
+   Copyright 2006-2011 Apache Software Foundation
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
@@ -100,20 +117,3 @@ src/./wicket-core
           'neal'"
    [1]: http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
 
----------------------------------------------------------------------------
-src/./wicket-datetime
----------------------------------------------------------------------------
-   Apache Wicket Date Time
-   Copyright 2006-2012 Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-   
-   Contains code of the Yahoo User Interface library (version: 2.8.2r1),
-   released under the BSD License:
-   http://developer.yahoo.net/yui/license.txt
-   Copyright (c) 2010, Yahoo! Inc.
-
-   This product includes software developed by
-   Joda.org (http://www.joda.org/).
-   
