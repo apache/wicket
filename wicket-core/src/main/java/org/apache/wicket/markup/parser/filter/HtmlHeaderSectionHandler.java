@@ -21,6 +21,8 @@ import java.text.ParseException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 
@@ -45,6 +47,9 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 
 	/** True if <head> has been found already */
 	private boolean foundHead = false;
+
+	/** True if </head> has been found already */
+	private boolean foundClosingHead = false;
 
 	/** True if all the rest of the markup file can be ignored */
 	private boolean ignoreTheRest = false;
@@ -78,15 +83,20 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			if (tag.getNamespace() == null)
 			{
 				// we found <head>
-				if (tag.isClose())
+				if (tag.isOpen())
 				{
 					foundHead = true;
+
+					if (tag.getId() == null)
+					{
+						tag.setId(HEADER_ID);
+						tag.setAutoComponentTag(true);
+						tag.setModified(true);
+					}
 				}
-				else if (tag.getId() == null)
+				else if (tag.isClose())
 				{
-					tag.setId(HEADER_ID);
-					tag.setAutoComponentTag(true);
-					tag.setModified(true);
+					foundClosingHead = true;
 				}
 
 				return tag;
@@ -95,10 +105,18 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			{
 				// we found <wicket:head>
 				foundHead = true;
+				foundClosingHead = true;
 			}
 		}
 		else if (BODY.equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
 		{
+			// WICKET-4511: We found <body> inside <head> tag. Markup is not valid!
+			if (foundHead && !foundClosingHead)
+			{
+				throw new MarkupException(new MarkupStream(markup),
+					"Invalid page markup. Tag <BODY> found inside <HEAD>");
+			}
+
 			// We found <body>
 			if (foundHead == false)
 			{
