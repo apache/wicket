@@ -44,7 +44,6 @@
         <module>wicket-request</module>
         <module>wicket-devutils</module>
         <module>wicket-extensions</module>
-        <module>wicket-atmosphere</module>
         <module>wicket-ioc</module>
         <module>wicket-spring</module>
         <module>wicket-velocity</module>
@@ -53,6 +52,7 @@
         <module>wicket-jmx</module>
         <module>wicket-objectssizeof-agent</module>
         <module>wicket-examples</module>
+        <module>wicket-experimental</module>
         <module>archetypes/quickstart</module>
         <module>testing/wicket-common-tests</module>
     </modules>
