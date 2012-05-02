@@ -18,14 +18,12 @@ package org.apache.wicket.extensions.markup.html.form.palette.component;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
@@ -49,7 +47,7 @@ public class Recorder<T> extends HiddenField<Object>
 	private static final long serialVersionUID = 1L;
 
 	/**  set of selected ids */
-	private final Set<String> ids;
+	private final List<String> selectedIds;
 
 	/** parent palette object */
 	private final Palette<T> palette;
@@ -65,13 +63,13 @@ public class Recorder<T> extends HiddenField<Object>
 	}
 
 	/**
-	 * internal access to ids for subclasses
+	 * selected ids of component
 	 * 
 	 * @return set of ids
 	 */
-	protected Set<String> getIds()
+	protected List<String> getSelectedIds()
 	{
-		return ids;
+		return selectedIds;
 	}
 
 	/**
@@ -84,7 +82,7 @@ public class Recorder<T> extends HiddenField<Object>
 	{
 		super(id);
 		this.palette = palette;
-		this.ids = new LinkedHashSet<String>(); // hash set with insertion order 
+		this.selectedIds = new ArrayList<String>();
 		setDefaultModel(new Model<Serializable>());
 		setOutputMarkupId(true);
 	}
@@ -154,21 +152,32 @@ public class Recorder<T> extends HiddenField<Object>
 	 */
 	protected List<T> getSelectedList()
 	{
-		if (getIds().isEmpty())
+		if (getSelectedIds().isEmpty())
 		{
 			return Collections.EMPTY_LIST;
 		}
 
 		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
-		final List<T> selected = new ArrayList<T>(getIds().size());
+		final List<T> selected = new ArrayList<T>(getSelectedIds().size());
 		final Collection<? extends T> choices = getPalette().getChoices();
+		final Map<T, String> idForChoice = new HashMap<T, String>(choices.size());
 
-		for (T choice : choices)
+		// reduce number of method calls by building a lookup table
+		for (final T choice : choices)
 		{
-			final String idValue = renderer.getIdValue(choice, 0);
-			if (getIds().contains(idValue))
+			idForChoice.put(choice, renderer.getIdValue(choice, 0));
+		}
+
+		for (final String id : getSelectedIds())
+		{
+			for (final T choice : choices)
 			{
-				selected.add(choice);
+				final String idValue = idForChoice.get(choice);
+				if (id.equals(idValue)) // null-safe compare
+				{
+					selected.add(choice);
+					break;
+				}
 			}
 		}
 		return selected;
@@ -189,18 +198,19 @@ public class Recorder<T> extends HiddenField<Object>
 	{
 		final Collection<? extends T> choices = getPalette().getChoices();
 
-		if (choices.size() - getIds().size() == 0)
+		if (choices.size() - getSelectedIds().size() == 0)
 		{
 			return Collections.<T>emptyList();
 		}
 
 		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
-		final List<T> unselected = new ArrayList<T>(Math.max(1, choices.size() - getIds().size()));
+		final List<T> unselected = new ArrayList<T>(Math.max(1, choices.size() - getSelectedIds().size()));
 
-		for (T choice : choices)
+		for (final T choice : choices)
 		{
-			final String idValue = renderer.getIdValue(choice, 0);
-			if (!getIds().contains(idValue))
+			final String choiceId = renderer.getIdValue(choice, 0);
+
+			if (getSelectedIds().contains(choiceId) == false)
 			{
 				unselected.add(choice);
 			}
@@ -233,11 +243,11 @@ public class Recorder<T> extends HiddenField<Object>
 
 	protected void updateIds(final String value)
 	{
-		getIds().clear();
+		getSelectedIds().clear();
 
-		for (String id : Strings.split(value, ','))
+		for (final String id : Strings.split(value, ','))
 		{
-			getIds().add(id);
+			getSelectedIds().add(id);
 		}
 	}
 }
