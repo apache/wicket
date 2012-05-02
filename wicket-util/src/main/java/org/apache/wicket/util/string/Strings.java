@@ -60,6 +60,8 @@ public final class Strings
 			'A', 'B', 'C', 'D', 'E', 'F' };
 
 	private static final Pattern HTML_NUMBER_REGEX = Pattern.compile("&#\\d+;");
+	
+	private static final String[] NO_STRINGS = new String[0];
 
 	static
 	{
@@ -827,9 +829,9 @@ public final class Strings
 	 */
 	public static String[] split(final String s, final char c)
 	{
-		if (s == null)
+		if (s == null || s.length() == 0)
 		{
-			return new String[0];
+			return NO_STRINGS;
 		}
 		final List<String> strings = new ArrayList<String>();
 		int pos = 0;
