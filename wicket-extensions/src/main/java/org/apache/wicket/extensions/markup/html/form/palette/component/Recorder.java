@@ -153,9 +153,10 @@ public class Recorder<T> extends HiddenField<Object>
 		}
 
 		List<T> selected = new ArrayList<T>(ids.length);
+		Collection<? extends T> choices = getPalette().getChoices();
 		for (String id : ids)
 		{
-			for (T choice : getPalette().getChoices())
+			for (T choice : choices)
 			{
 				if (renderer.getIdValue(choice, 0).equals(id))
 				{
