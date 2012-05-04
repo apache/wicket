@@ -1,2 +1,0 @@
-
-include 'wicket-util', 'wicket-request', 'wicket-core', 'wicket-datetime', 'wicket-devutils', 'wicket-extensions', 'wicket-ioc', 'wicket-spring', 'wicket-velocity', 'wicket-auth-roles', 'wicket-guice', 'wicket-jmx', 'wicket-objectsizeof-agent', 'wicket-examples', 'wicket-archetype-quickstart', 'wicket-threadtest', 'wicket'
