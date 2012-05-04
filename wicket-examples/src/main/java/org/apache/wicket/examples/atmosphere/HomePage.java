@@ -20,29 +20,57 @@ import java.util.Date;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.atmosphere.EventBus;
 import org.apache.wicket.atmosphere.Subscribe;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class HomePage extends WebPage
+public class HomePage extends WicketExamplePage
 {
 	private static final long serialVersionUID = 1L;
 
 	private Component timeLabel;
+	private Component messageLabel;
+	private TextField<String> input;
 
 	public HomePage(final PageParameters parameters)
 	{
-		add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
 		add(timeLabel = new Label("time", Model.of("start")).setOutputMarkupId(true));
+		add(messageLabel = new Label("message", Model.of("-")).setOutputMarkupId(true));
+
+		Form<Void> form = new Form<Void>("form");
+		add(form);
+		form.add(input = new TextField<String>("input", Model.of("")));
+		form.add(new AjaxLink<Void>("send")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				EventBus.get().post(input.getModelObject());
+			}
+		});
+
 		setVersioned(false);
 	}
 
 	@Subscribe
-	public void test(AjaxRequestTarget target, Date event)
+	public void updateTime(AjaxRequestTarget target, Date event)
 	{
 		timeLabel.setDefaultModelObject(event.toString());
 		target.add(timeLabel);
+	}
+
+	@Subscribe
+	public void receiveMessage(AjaxRequestTarget target, String message)
+	{
+		messageLabel.setDefaultModelObject(message);
+		target.add(messageLabel);
 	}
 }
