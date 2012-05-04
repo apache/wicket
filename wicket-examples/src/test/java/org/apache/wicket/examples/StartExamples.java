@@ -23,7 +23,7 @@ import javax.management.MBeanServer;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
@@ -46,7 +46,7 @@ public class StartExamples
 // System.setProperty("wicket.configuration", "development");
 
 		Server server = new Server();
-		SocketConnector connector = new SocketConnector();
+		SelectChannelConnector connector = new SelectChannelConnector();
 
 		// Set some timeout options to make debugging easier.
 		connector.setMaxIdleTime(1000 * 60 * 60);
