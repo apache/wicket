@@ -363,7 +363,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			dt: 'html',
 			ep: {},
 			wr: false,
-			sh: [ doUpdateChoices ]
+			sh: [ doUpdateAllChoices ]
 		};
 		attrs.ep[paramName] = '';
 		Wicket.Ajax.ajax(attrs);
@@ -587,7 +587,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         return [leftPosition,topPosition];
     }
     
-    function doUpdateChoices(resp){
+    function doUpdateAllChoices(resp) {
+    	doUpdateChoices(resp,-1);
+    }
+    function doUpdateChoices(resp, defaultSelection){
     	
     	getAutocompleteMenu().showingAutocomplete = false;
     	
@@ -645,7 +648,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 
         if(elementCount>0){
             if(cfg.preselect==true){
-                var selectedIndex = 0;
+                var selectedIndex = defaultSelection?defaultSelection:0;
                 for(var i = 0;i < elementCount; i++) {
                	 	var node = selectableElements[i];
                	 	var attr= node.attributes['textvalue'];
