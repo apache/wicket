@@ -29,6 +29,21 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
 
+/**
+ * Broadcasts events to methods on components annotated with {@link Subscribe}.
+ * {@linkplain EventBus#post(Object) Posted} events are broadcasted to all components on active
+ * pages if they have a method annotated with {@link Subscribe}. To create and register an
+ * {@code EventBus}, put the following code in your application's init method:
+ * 
+ * <pre>
+ * this.eventBus = new EventBus(this);
+ * </pre>
+ * 
+ * The {@code EventBus} will register itself in the application once instantiated. It might be
+ * practical to keep a reference in the application, but you can always get it using {@link #get()}.
+ * 
+ * @author papegaaij
+ */
 public class EventBus implements UnboundListener
 {
 	private static final Logger log = LoggerFactory.getLogger(EventBus.class);
@@ -38,6 +53,9 @@ public class EventBus implements UnboundListener
 		private static final long serialVersionUID = 1L;
 	};
 
+	/**
+	 * @return the {@code EventBus} registered for the current Wicket application.
+	 */
 	public static EventBus get()
 	{
 		return Application.get().getMetaData(EVENT_BUS_KEY);
@@ -51,6 +69,11 @@ public class EventBus implements UnboundListener
 
 	private BiMap<String, PageKey> trackedPages = HashBiMap.create();
 
+	/**
+	 * Creates and registers an {@code EventBus} for the given application
+	 * 
+	 * @param application
+	 */
 	public EventBus(WebApplication application)
 	{
 		this.application = application;
@@ -62,6 +85,12 @@ public class EventBus implements UnboundListener
 		broadcaster = BroadcasterFactory.getDefault().lookup("/*");
 	}
 
+	/**
+	 * Registers a page for the given tracking-id in the {@code EventBus}.
+	 * 
+	 * @param trackingId
+	 * @param page
+	 */
 	public synchronized void registerPage(String trackingId, Page page)
 	{
 		PageKey oldPage = trackedPages.remove(trackingId);

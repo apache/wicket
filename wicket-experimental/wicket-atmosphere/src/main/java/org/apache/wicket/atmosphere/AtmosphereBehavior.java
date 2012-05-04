@@ -1,7 +1,5 @@
 package org.apache.wicket.atmosphere;
 
-import java.util.Enumeration;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Component;
@@ -63,13 +61,6 @@ public class AtmosphereBehavior extends Behavior
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
-		System.out.println(request.getUrl());
-		Enumeration<String> e = request.getContainerRequest().getHeaderNames();
-		while (e.hasMoreElements())
-		{
-			String header = e.nextElement();
-			System.out.println(header + ": " + request.getHeader(header));
-		}
 
 		// Grab a Meteor
 		Meteor meteor = Meteor.build(request.getContainerRequest());
@@ -153,7 +144,7 @@ public class AtmosphereBehavior extends Behavior
 		{
 			CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
 
-			response.render(JavaScriptHeaderItem.forReference(new JQueryWicketAtmosphereResourceReference()));
+			response.render(JavaScriptHeaderItem.forReference(JQueryWicketAtmosphereResourceReference.get()));
 			JSONObject options = new JSONObject();
 			options.put("url",
 				component.urlFor(this, IResourceListener.INTERFACE, new PageParameters())
