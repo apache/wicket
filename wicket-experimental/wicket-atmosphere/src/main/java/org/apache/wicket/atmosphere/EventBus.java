@@ -111,8 +111,10 @@ public class EventBus implements UnboundListener
 
 	public void post(Object event)
 	{
+		ThreadContext oldContext = ThreadContext.get(false);
 		try
 		{
+			ThreadContext.restore(null);
 			ThreadContext.setApplication(application);
 			for (AtmosphereResource resource : broadcaster.getAtmosphereResources())
 			{
@@ -134,6 +136,8 @@ public class EventBus implements UnboundListener
 		finally
 		{
 			ThreadContext.detach();
+			if (oldContext != null)
+				ThreadContext.restore(oldContext);
 		}
 	}
 
