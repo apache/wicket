@@ -358,7 +358,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     function actualUpdateChoicesShowAll()
     {
     	showIndicator();
-       	var request = new Wicket.Ajax.Request(callbackUrl+"&q=", doUpdateChoices, false, true, false, "wicket-autocomplete|d");
+       	var request = new Wicket.Ajax.Request(callbackUrl+"&q=", doUpdateAllChoices, false, true, false, "wicket-autocomplete|d");
        	request.get();
     }
 
@@ -580,7 +580,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         return [leftPosition,topPosition];
     }
     
-    function doUpdateChoices(resp){
+    function doUpdateAllChoices(resp) {
+    	doUpdateChoices(resp,-1);
+    }
+    function doUpdateChoices(resp, defaultSelection){
     	
     	getAutocompleteMenu().showingAutocomplete = false;
     	
@@ -638,7 +641,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 
         if(elementCount>0){
             if(cfg.preselect==true){
-                var selectedIndex = 0;
+                var selectedIndex = defaultSelection?defaultSelection:0;
                 for(var i = 0;i < elementCount; i++) {
                	 	var node = selectableElements[i];
                	 	var attr= node.attributes['textvalue'];
