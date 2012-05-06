@@ -99,7 +99,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param response
 	 *            the current header response
 	 */
-	private void renderExtraHeaderContributors(final Component component, final IHeaderResponse response)
+	private void renderExtraHeaderContributors(final Component component,
+		final IHeaderResponse response)
 	{
 		AjaxRequestAttributes attributes = getAttributes();
 
@@ -374,15 +375,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * Gives a chance to modify the JSON attributesJson that is going to be used as
-	 * attributes for the Ajax call.
-	 *
+	 * Gives a chance to modify the JSON attributesJson that is going to be used as attributes for
+	 * the Ajax call.
+	 * 
 	 * @param attributesJson
-	 *      the JSON object created by #renderAjaxAttributes()
+	 *            the JSON object created by #renderAjaxAttributes()
 	 * @param component
-	 *      the component with the attached Ajax behavior
+	 *            the component with the attached Ajax behavior
 	 * @throws JSONException
-	 *      thrown if an error occurs while modifying {@literal attributesJson} argument
+	 *             thrown if an error occurs while modifying {@literal attributesJson} argument
 	 */
 	protected void postprocessConfiguration(JSONObject attributesJson, Component component)
 		throws JSONException
@@ -390,8 +391,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @return javascript that will generate an ajax GET request to this behavior
-	 *  with its assigned component
+	 * @return javascript that will generate an ajax GET request to this behavior with its assigned
+	 *         component
 	 */
 	public CharSequence getCallbackScript()
 	{
@@ -399,7 +400,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @param component the component to use when generating the attributes
+	 * @param component
+	 *            the component to use when generating the attributes
 	 * @return script that can be used to execute this Ajax behavior.
 	 */
 	// 'protected' because this method is intended to be called by other Behavior methods which
@@ -407,7 +409,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	protected CharSequence getCallbackScript(final Component component)
 	{
 		CharSequence ajaxAttributes = renderAjaxAttributes(component);
-		return "Wicket.Ajax.ajax("+ajaxAttributes+");";
+		return "Wicket.Ajax.ajax(" + ajaxAttributes + ");";
 	}
 
 	/**
@@ -426,7 +428,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param extraParameters
 	 * @return A function that can be used as a callback function in javascript
 	 */
-	protected CharSequence getCallbackFunction(String... extraParameters)
+	public CharSequence getCallbackFunction(String... extraParameters)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("function (");
@@ -453,7 +455,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param extraParameters
 	 * @return The body of the {@linkplain #getCallbackFunction(String...) callback function}.
 	 */
-	protected CharSequence getCallbackFunctionBody(String... extraParameters)
+	public CharSequence getCallbackFunctionBody(String... extraParameters)
 	{
 		AjaxRequestAttributes attributes = getAttributes();
 		CharSequence attrsJson = renderAjaxAttributes(getComponent(), attributes);
