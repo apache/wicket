@@ -480,7 +480,14 @@ public abstract class AbstractResource implements IResource
 		// let caching strategy decorate response if resource is intended to be cached
 		if (this instanceof IStaticCacheableResource)
 		{
-			getCachingStrategy().decorateResponse(data, (IStaticCacheableResource)this);
+			final IStaticCacheableResource cacheable = (IStaticCacheableResource)this;
+
+			// is caching enabled?
+			if (cacheable.getCacheKey() != null)
+			{
+				// decorate web response
+				getCachingStrategy().decorateResponse(data, cacheable);
+			}
 		}
 		// set response header
 		setResponseHeaders(data, attributes);

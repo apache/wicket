@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Package resource for javascript files. It strips comments and whitespace from javascript.
  */
-public class JavaScriptPackageResource extends PackageResource
+public class JavaScriptPackageResource extends PackageResource implements IJavaScriptPackageResource
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class JavaScriptPackageResource extends PackageResource
 
 		IJavaScriptCompressor compressor = getCompressor();
 
-		if (compressor != null && getCompress())
+		if (compressor != null && isCompress())
 		{
 			try
 			{

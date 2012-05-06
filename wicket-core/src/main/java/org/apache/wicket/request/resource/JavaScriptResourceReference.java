@@ -65,7 +65,7 @@ public class JavaScriptResourceReference extends PackageResourceReference
 	}
 
 	@Override
-	public JavaScriptPackageResource getResource()
+	public IJavaScriptPackageResource getResource()
 	{
 		return new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
 			getVariation());
