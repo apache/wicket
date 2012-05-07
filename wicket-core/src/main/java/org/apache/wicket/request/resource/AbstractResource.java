@@ -225,8 +225,8 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
-		 * Sets the text encoding for the resource. The encoding is only used if the content type
-		 * indicates a textual resource.
+		 * Sets the text encoding for the resource. This setting must only used 
+		 * if the resource response represents text.
 		 * 
 		 * @param textEncoding
 		 *            character encoding of text body
@@ -554,12 +554,6 @@ public abstract class AbstractResource implements IResource
 			String fileName = data.getFileName();
 			ContentDisposition disposition = data.getContentDisposition();
 			String mimeType = data.getContentType();
-			String encoding = null;
-
-			if (mimeType != null && mimeType.contains("text"))
-			{
-				encoding = data.getTextEncoding();
-			}
 
 			long contentLength = data.getContentLength();
 
@@ -576,6 +570,8 @@ public abstract class AbstractResource implements IResource
 			// 4. Mime Type (+ encoding)
 			if (mimeType != null)
 			{
+				final String encoding = data.getTextEncoding();
+				
 				if (encoding == null)
 				{
 					webResponse.setContentType(mimeType);

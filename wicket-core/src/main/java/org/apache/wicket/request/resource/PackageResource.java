@@ -116,6 +116,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 */
 	private final String variation;
 
+	/**
+	 * text encoding (may be null) - only makes sense for character-based resources
+	 */
+	
+	private String textEncoding = null;
 
 	/**
 	 * Hidden constructor.
@@ -149,7 +154,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			path = name;
 		}
 
-		scopeName = scope.getName();
+		this.scopeName = scope.getName();
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
@@ -163,6 +168,27 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private String getCurrentStyle()
 	{
 		return style != null ? style : Session.get().getStyle();
+	}
+
+	/**
+	 * get text encoding (intented for character-based resources)
+	 
+	 * @return custom encoding or {@code null} to use default
+	 */
+	public String getTextEncoding()
+	{
+		return textEncoding;
+	}
+
+	/**
+	 * set text encoding (intented for character-based resources)
+	 *
+	 * @param textEncoding
+	 *            custom encoding or {@code null} to use default
+	 */
+	public void setTextEncoding(final String textEncoding)
+	{
+		this.textEncoding = textEncoding;
 	}
 
 	public Serializable getCacheKey()
@@ -237,6 +263,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			// set Content-Type (may be null)
 			resourceResponse.setContentType(contentType);
 
+			// set content encoding (may be null)
+			resourceResponse.setTextEncoding(getTextEncoding());
+			
 			try
 			{
 				// read resource data
