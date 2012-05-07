@@ -131,6 +131,12 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private boolean cachingEnabled = true;
 	
 	/**
+	 * text encoding (may be null) - only makes sense for character-based resources
+	 */
+	
+	private String textEncoding = null;
+	
+	/**
 	 * Hidden constructor.
 	 * 
 	 * @param scope
@@ -187,6 +193,27 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	public void setCachingEnabled(final boolean enabled)
 	{
 		this.cachingEnabled = enabled;
+	}
+
+	/**
+	 * get text encoding (intented for character-based resources)
+	 
+	 * @return custom encoding or {@code null} to use default
+	 */
+	public String getTextEncoding()
+	{
+		return textEncoding;
+	}
+
+	/**
+	 * set text encoding (intented for character-based resources)
+	 *
+	 * @param textEncoding
+	 *            custom encoding or {@code null} to use default
+	 */
+	public void setTextEncoding(final String textEncoding)
+	{
+		this.textEncoding = textEncoding;
 	}
 
 	@Override
@@ -261,6 +288,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 			// set Content-Type (may be null)
 			resourceResponse.setContentType(contentType);
+			
+			// set content encoding (may be null)
+			resourceResponse.setTextEncoding(getTextEncoding());
 
 			try
 			{
