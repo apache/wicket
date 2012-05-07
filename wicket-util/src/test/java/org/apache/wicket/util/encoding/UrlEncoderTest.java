@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request;
+package org.apache.wicket.util.encoding;
 
 import org.apache.wicket.util.crypt.CharEncoding;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests for {@link UrlDecoder}
+ * Tests for {@link org.apache.wicket.util.encoding.UrlDecoder}
  */
 public class UrlEncoderTest extends Assert
 {

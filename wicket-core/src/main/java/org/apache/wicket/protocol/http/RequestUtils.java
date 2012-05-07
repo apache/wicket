@@ -24,9 +24,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.string.Strings;
 
 /**

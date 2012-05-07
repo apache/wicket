@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request;
+package org.apache.wicket.util.encoding;
 
 import java.io.CharArrayWriter;
 import java.io.UnsupportedEncodingException;

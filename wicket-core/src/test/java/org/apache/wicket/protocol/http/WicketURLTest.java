@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.request.UrlDecoder;
-import org.apache.wicket.request.UrlEncoder;
+import org.apache.wicket.util.encoding.UrlDecoder;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 
