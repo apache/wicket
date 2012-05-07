@@ -128,7 +128,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * should be applied to resource
 	 */
 	
-	private boolean cachingEnabled;
+	private boolean cachingEnabled = true;
 	
 	/**
 	 * Hidden constructor.
@@ -166,7 +166,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
-		this.cachingEnabled = true;
 	}
 
 	private Locale getCurrentLocale()
