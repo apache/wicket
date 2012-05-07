@@ -22,6 +22,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.SharedResources;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.JavaScriptPackageResource;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -155,5 +157,35 @@ public class PackageResourceTest extends WicketTestCase
 
 		tester.startResource(jsResource);
 		assertEquals("text/javascript", tester.getLastResponse().getContentType());
+	}
+
+	@Test
+	public void textFileWithEncoding()
+	{
+		final String encoding = "Klingon-8859-42";
+		final PackageResource resource =
+			new PackageResource(PackageResourceTest.class, "packaged1.txt", null, null, null)
+			{
+				private static final long serialVersionUID = 1L;
+			};
+		resource.setTextEncoding(encoding);
+		tester.startResource(resource);
+		final String contentType = tester.getLastResponse().getContentType();
+		assertEquals("text/plain; charset=" + encoding, contentType);
+	}
+
+	@Test
+	public void javascriptFileWithEncoding()
+	{
+		final String encoding = "Klingon-8859-42";
+		final JavaScriptPackageResource resource =
+			new JavaScriptPackageResource(PackageResourceTest.class, "packaged3.js", null, null, null)
+			{
+				private static final long serialVersionUID = 1L;
+			};
+		resource.setTextEncoding(encoding);
+		tester.startResource(resource);
+		final String contentType = tester.getLastResponse().getContentType();
+		assertEquals("text/javascript; charset=" + encoding, contentType);
 	}
 }
