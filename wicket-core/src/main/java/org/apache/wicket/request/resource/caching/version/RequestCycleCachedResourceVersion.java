@@ -81,7 +81,7 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 			key = resource.getCacheKey();
 
 			// does cache exist within current request cycle?
-			if (cache == null && key != null)
+			if (cache == null)
 			{
 				// no, so create it
 				requestCycle.setMetaData(CACHE_KEY, cache = Generics.newHashMap());

@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @author Matej Knopp
  */
-public class PackageResource extends AbstractResource implements IPackageResource
+public class PackageResource extends AbstractResource implements IStaticCacheableResource
 {
 	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
 
@@ -171,10 +171,9 @@ public class PackageResource extends AbstractResource implements IPackageResourc
 		return style != null ? style : Session.get().getStyle();
 	}
 
-	@Override
 	public Serializable getCacheKey()
 	{
-		final IResourceStream stream = locateResourceStream(getCurrentStyle(), getCurrentLocale());
+		IResourceStream stream = getCacheableResourceStream();
 
 		// if resource stream can not be found do not cache
 		if (stream == null)
@@ -186,13 +185,21 @@ public class PackageResource extends AbstractResource implements IPackageResourc
 			stream.getVariation());
 	}
 
-	@Override
+	/**
+	 * Gets the scoping class, used for class loading and to determine the package.
+	 * 
+	 * @return the scoping class
+	 */
 	public final Class<?> getScope()
 	{
 		return WicketObjects.resolveClass(scopeName);
 	}
 
-	@Override
+	/**
+	 * Gets the style.
+	 * 
+	 * @return the style
+	 */
 	public final String getStyle()
 	{
 		return style;
@@ -332,25 +339,34 @@ public class PackageResource extends AbstractResource implements IPackageResourc
 	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
 	 * @see #getResourceStream()
 	 */
-	@Override
 	public IResourceStream getCacheableResourceStream()
 	{
 		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
 	}
 	
-	@Override
+	/**
+	 * locate resource stream for current resource
+	 * 
+	 * @return resource stream or <code>null</code> if not found
+	 */
 	public IResourceStream getResourceStream()
 	{
 		return internalGetResourceStream(style, locale);
 	}
 
-	@Override
-	public boolean isCompress()
+	/**
+	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to compress the
+	 *         resource.
+	 */
+	public boolean getCompress()
 	{
 		return compress;
 	}
 
-	@Override
+	/**
+	 * @param compress
+	 *            A flag indicating whether the resource should be compressed.
+	 */
 	public void setCompress(boolean compress)
 	{
 		this.compress = compress;
@@ -358,7 +374,10 @@ public class PackageResource extends AbstractResource implements IPackageResourc
 
 	private IResourceStream internalGetResourceStream(final String style, final Locale locale)
 	{
-		IResourceStream resourceStream = locateResourceStream(style, locale);
+		IResourceStreamLocator resourceStreamLocator = Application.get()
+				.getResourceSettings()
+				.getResourceStreamLocator();
+		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath, style, variation, locale, null, false);
 
 		Class<?> realScope = getScope();
 		String realPath = absolutePath;
@@ -393,24 +412,6 @@ public class PackageResource extends AbstractResource implements IPackageResourc
 		}
 
 		return resourceStream;
-	}
-
-	/**
-	 * locate resource stream taking style and locale into account
-	 * 
-	 * @param style
-	 *          client style
-	 * @param locale
-	 *           client locale
-	 * @return client-specific resource stream
-	 */
-	private IResourceStream locateResourceStream(final String style, final Locale locale)
-	{
-		IResourceStreamLocator resourceStreamLocator = Application.get()
-				.getResourceSettings()
-				.getResourceStreamLocator();
-		
-		return resourceStreamLocator.locate(getScope(), absolutePath, style, variation, locale, null, false);
 	}
 
 	/**

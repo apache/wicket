@@ -107,7 +107,7 @@ public class PackageResourceReference extends ResourceReference
 	 * @see org.apache.wicket.request.resource.ResourceReference#getResource()
 	 */
 	@Override
-	public IPackageResource getResource()
+	public PackageResource getResource()
 	{
 		final String extension = getExtension();
 

@@ -215,27 +215,22 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 		if (Strings.isEmpty(filename) == false)
 		{
+			// TODO is calling getResource() a potential performance bottleneck?
 			final IResource resource = resourceReference.getResource();
 
-			// is resource supposed to be cached?
 			if (resource instanceof IStaticCacheableResource)
 			{
 				final IStaticCacheableResource cacheable = (IStaticCacheableResource)resource;
+				final ResourceUrl cacheUrl = new ResourceUrl(filename, parameters);
 
-				// is caching enabled?
-				if (cacheable.getCacheKey() != null)
+				getCachingStrategy().decorateUrl(cacheUrl, cacheable);
+
+				if (Strings.isEmpty(cacheUrl.getFileName()))
 				{
-					final ResourceUrl cacheUrl = new ResourceUrl(filename, parameters);
-
-					getCachingStrategy().decorateUrl(cacheUrl, cacheable);
-
-					if (Strings.isEmpty(cacheUrl.getFileName()))
-					{
-						throw new IllegalStateException("caching strategy returned empty name for " +
-						                                resource);
-					}
-					segments.set(lastSegmentAt, cacheUrl.getFileName());
+					throw new IllegalStateException("caching strategy returned empty name for " +
+						resource);
 				}
+				segments.set(lastSegmentAt, cacheUrl.getFileName());
 			}
 		}
 	}

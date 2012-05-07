@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Package resource for css files. It strips comments and whitespace from css.
  */
-public class CssPackageResource extends PackageResource implements ICssPackageResource
+public class CssPackageResource extends PackageResource
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class CssPackageResource extends PackageResource implements ICssPackageRe
 
 		ICssCompressor compressor = getCompressor();
 
-		if (compressor != null && isCompress())
+		if (compressor != null && getCompress())
 		{
 			try
 			{

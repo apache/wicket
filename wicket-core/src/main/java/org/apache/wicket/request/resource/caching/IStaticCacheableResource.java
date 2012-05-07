@@ -34,9 +34,8 @@ public interface IStaticCacheableResource extends IResource
 	 * get unique caching key for the resource stream produced by
 	 * {@link #getCacheableResourceStream()}
 	 * 
-	 * @return serializable key with properly implements {@link #equals(Object)} and
-	 *         {@link #hashCode()} or {@code null} which indicates the resource
-	 *         must not be processed by {@link IResourceCachingStrategy}
+	 * @return serializable key with properly supports {@link #equals(Object)} and
+	 *         {@link #hashCode()}
 	 */
 	Serializable getCacheKey();
 
