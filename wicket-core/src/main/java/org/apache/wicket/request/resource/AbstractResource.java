@@ -483,7 +483,7 @@ public abstract class AbstractResource implements IResource
 			final IStaticCacheableResource cacheable = (IStaticCacheableResource)this;
 
 			// is caching enabled?
-			if (cacheable.isCacheEnabled())
+			if (cacheable.isCachingEnabled())
 			{
 				// apply caching strategy to response
 				getCachingStrategy().decorateResponse(data, cacheable);

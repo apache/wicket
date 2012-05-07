@@ -35,7 +35,7 @@ public interface IStaticCacheableResource extends IResource
 	 * 
 	 * @return @{code true} if caching is enabled
 	 */
-	boolean isCacheEnabled();
+	boolean isCachingEnabled();
 	
 	/**
 	 * get unique caching key for the resource stream produced by

@@ -479,7 +479,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			}
 
 			@Override
-			public boolean isCacheEnabled()
+			public boolean isCachingEnabled()
 			{
 				return true;
 			}

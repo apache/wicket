@@ -232,7 +232,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 						final IStaticCacheableResource cacheable = (IStaticCacheableResource)resource;
 						
 						// is caching enabled?
-						if(cacheable.isCacheEnabled())
+						if(cacheable.isCachingEnabled())
 						{
 							// apply caching scheme to resource url
 							final ResourceUrl resourceUrl = new ResourceUrl(token, parameters);

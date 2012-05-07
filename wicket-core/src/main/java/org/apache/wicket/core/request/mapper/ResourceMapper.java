@@ -221,7 +221,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 			{
 				final IStaticCacheableResource cacheable = (IStaticCacheableResource)resource;
 				
-				if(cacheable.isCacheEnabled())
+				if(cacheable.isCachingEnabled())
 				{
 					final ResourceUrl cacheUrl = new ResourceUrl(filename, parameters);
 	

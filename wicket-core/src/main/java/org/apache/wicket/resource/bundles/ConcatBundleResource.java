@@ -54,7 +54,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 
 	private static final long serialVersionUID = 1L;
 	private List<? extends IReferenceHeaderItem> providedResources;
-	private boolean cacheEnabled;
+	private boolean cachingEnabled;
 
 	/**
 	 * Construct.
@@ -64,7 +64,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	public ConcatBundleResource(List<? extends IReferenceHeaderItem> providedResources)
 	{
 		this.providedResources = Args.notNull(providedResources, "providedResources");
-		this.cacheEnabled = true;
+		this.cachingEnabled = true;
 	}
 
 	@Override
@@ -175,14 +175,14 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	}
 
 	@Override
-	public boolean isCacheEnabled()
+	public boolean isCachingEnabled()
 	{
-		return cacheEnabled;
+		return cachingEnabled;
 	}
 
-	public void setCacheEnabled(final boolean cacheEnabled)
+	public void setCachingEnabled(final boolean enabled)
 	{
-		this.cacheEnabled = cacheEnabled;
+		this.cachingEnabled = enabled;
 	}
 
 	@Override
