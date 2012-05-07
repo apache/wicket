@@ -477,10 +477,17 @@ public abstract class AbstractResource implements IResource
 		// Get a "new" ResourceResponse to write a response
 		ResourceResponse data = newResourceResponse(attributes);
 
-		// let caching strategy decorate response if resource is intended to be cached
+		// is resource supposed to be cached?
 		if (this instanceof IStaticCacheableResource)
 		{
-			getCachingStrategy().decorateResponse(data, (IStaticCacheableResource)this);
+			final IStaticCacheableResource cacheable = (IStaticCacheableResource)this;
+
+			// is caching enabled?
+			if (cacheable.isCacheEnabled())
+			{
+				// apply caching strategy to response
+				getCachingStrategy().decorateResponse(data, cacheable);
+			}
 		}
 		// set response header
 		setResponseHeaders(data, attributes);

@@ -124,6 +124,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private boolean compress = false;
 
 	/**
+	 * controls whether {@link org.apache.wicket.request.resource.caching.IResourceCachingStrategy}
+	 * should be applied to resource
+	 */
+	
+	private boolean cacheEnabled;
+	
+	/**
 	 * Hidden constructor.
 	 * 
 	 * @param scope
@@ -155,10 +162,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			path = name;
 		}
 
-		scopeName = scope.getName();
+		this.scopeName = scope.getName();
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
+		this.cacheEnabled = true;
 	}
 
 	private Locale getCurrentLocale()
@@ -171,6 +179,18 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return style != null ? style : Session.get().getStyle();
 	}
 
+	@Override
+	public boolean isCacheEnabled()
+	{
+		return cacheEnabled;
+	}
+
+	public void setCacheEnabled(final boolean cacheEnabled)
+	{
+		this.cacheEnabled = cacheEnabled;
+	}
+
+	@Override
 	public Serializable getCacheKey()
 	{
 		IResourceStream stream = getCacheableResourceStream();
@@ -339,6 +359,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
 	 * @see #getResourceStream()
 	 */
+	@Override
 	public IResourceStream getCacheableResourceStream()
 	{
 		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());

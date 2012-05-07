@@ -226,19 +226,24 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				{
 					final IResource resource = reference.getResource();
 
-					// apply caching if required
+					// is resource supposed to be cached?
 					if (resource instanceof IStaticCacheableResource)
 					{
-						// add caching related information to filename + query parameters
 						final IStaticCacheableResource cacheable = (IStaticCacheableResource)resource;
-						final ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
-						getCachingStrategy().decorateUrl(resourceUrl, cacheable);
-						token = resourceUrl.getFileName();
-
-						if (Strings.isEmpty(token))
+						
+						// is caching enabled?
+						if(cacheable.isCacheEnabled())
 						{
-							throw new IllegalStateException(
-								"caching strategy returned empty name for " + resource);
+							// apply caching scheme to resource url
+							final ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
+							getCachingStrategy().decorateUrl(resourceUrl, cacheable);
+							token = resourceUrl.getFileName();
+	
+							if (Strings.isEmpty(token))
+							{
+								throw new IllegalStateException(
+									"caching strategy returned empty name for " + resource);
+							}
 						}
 					}
 				}

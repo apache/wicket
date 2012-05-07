@@ -31,6 +31,13 @@ import org.apache.wicket.util.resource.IResourceStream;
 public interface IStaticCacheableResource extends IResource
 {
 	/**
+	 * controls whether caching of the resource is enabled or disabled
+	 * 
+	 * @return @{code true} if caching is enabled
+	 */
+	boolean isCacheEnabled();
+	
+	/**
 	 * get unique caching key for the resource stream produced by
 	 * {@link #getCacheableResourceStream()}
 	 * 

@@ -477,6 +477,12 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			public void respond(Attributes attributes)
 			{
 			}
+
+			@Override
+			public boolean isCacheEnabled()
+			{
+				return true;
+			}
 		};
 
 		final ResourceReference reference = new ResourceReference(getClass(), "versioned",

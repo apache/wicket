@@ -44,6 +44,7 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 	private static final Logger log = LoggerFactory.getLogger(ContextRelativeResource.class);
 
 	private final String path;
+	private boolean cacheEnabled;
 
 	/**
 	 * Construct.
@@ -62,9 +63,21 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 		{
 			pathRelativeToContextRoot = "/" + pathRelativeToContextRoot;
 		}
-		path = pathRelativeToContextRoot;
+		this.path = pathRelativeToContextRoot;
+		this.cacheEnabled = true;
 	}
-	
+
+	@Override
+	public boolean isCacheEnabled()
+	{
+		return cacheEnabled;
+	}
+
+	public void setCacheEnabled(final boolean cacheEnabled)
+	{
+		this.cacheEnabled = cacheEnabled;
+	}
+
 	@Override
 	public Serializable getCacheKey()
 	{
