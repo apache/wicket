@@ -18,7 +18,9 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.wicket.MetaDataKey;
@@ -281,28 +283,44 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 		{
 			// Get values that could be selected
-			final List<? extends T> choices = getChoices();
+			final Map<String, T> choiceIds2choiceValues = createChoicesIdsMap();
 
 			// Loop through selected indices
 			for (String id : ids)
 			{
-				for (int index = 0; index < choices.size(); index++)
+				if (choiceIds2choiceValues.containsKey(id))
 				{
-					// Get next choice
-					final T choice = choices.get(index);
-					if (getChoiceRenderer().getIdValue(choice, index).equals(id))
-					{
-						selectedValues.add(choice);
-						break;
-					}
+					selectedValues.add(choiceIds2choiceValues.get(id));
 				}
 			}
 		}
-
 		addRetainedDisabled(selectedValues);
 
 		return selectedValues;
 
+	}
+
+	/**
+	 * Creates a map of choice IDs to choice values. This map can be used to speed up lookups e.g.
+	 * in {@link #convertChoiceIdsToChoices(String[])}. <strong>Do not store the result of this
+	 * method.</strong> The choices list can change between requests so this map <em>must</em> be
+	 * regenerated.
+	 * 
+	 * @return a map.
+	 */
+	private Map<String, T> createChoicesIdsMap()
+	{
+		final List<? extends T> choices = getChoices();
+
+		final Map<String, T> choiceIds2choiceValues = new HashMap<String, T>(choices.size(), 1);
+
+		for (int index = 0; index < choices.size(); index++)
+		{
+			// Get next choice
+			final T choice = choices.get(index);
+			choiceIds2choiceValues.put(getChoiceRenderer().getIdValue(choice, index), choice);
+		}
+		return choiceIds2choiceValues;
 	}
 
 	private void addRetainedDisabled(ArrayList<T> selectedValues)

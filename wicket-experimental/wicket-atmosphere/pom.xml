@@ -27,7 +27,7 @@
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<properties>
-		<atmosphere.version>0.9</atmosphere.version>
+		<atmosphere.version>0.9.3</atmosphere.version>
 	</properties>
 	<name>Wicket-Atmosphere</name>
 	<description>Wicket-Atmosphere provides integration of the Atmosphere Framework in Wicket.</description>
