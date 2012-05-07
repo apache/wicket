@@ -108,7 +108,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 * @return the parent form or {@code null}
 	 */
 	@Override
-	public Form getForm()
+	public Form<?> getForm()
 	{
 		return Form.findForm(this);
 	}
