@@ -40,7 +40,7 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 	private static final List<String> replaceForTags = Arrays.asList("a", "q", "sub", "sup",
 		"abbr", "acronym", "cite", "code", "del", "dfn", "em", "ins", "kbd", "samp", "var",
 		"label", "textarea", "tr", "td", "th", "caption", "thead", "tbody", "tfoot", "dl", "dt",
-		"dd", "li", "ol", "ul", "h1", "h2", "h3", "h4", "h5", "h6",
+		"dd", "li", "ol", "ul", "h1", "h2", "h3", "h4", "h5", "h6", "i",
 		"pre",
 		"title",
 		"div",
