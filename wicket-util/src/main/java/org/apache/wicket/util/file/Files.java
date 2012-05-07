@@ -295,7 +295,7 @@ public class Files
 		}
 	}
 
-	private static String FORBIDDEN_IN_NAME = "\"*/:<>?\\|,";
+	private static final String FORBIDDEN_IN_NAME = "\"*/:<>?\\|,";
 
 	/**
 	 * <p>
