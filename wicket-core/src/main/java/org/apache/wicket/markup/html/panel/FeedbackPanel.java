@@ -149,9 +149,10 @@ public class FeedbackPanel extends Panel implements IFeedback
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public boolean isVisible()
+			protected void onConfigure()
 			{
-				return anyMessage();
+				super.onConfigure();
+				setVisible(anyMessage());
 			}
 		};
 		add(messagesContainer);
