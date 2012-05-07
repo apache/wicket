@@ -1204,14 +1204,21 @@ public abstract class Session implements IClusterable
 	 */
 	protected void detach()
 	{
-		// remove the session id in case a container like tomcat tries to be smart by doing
-		// session fixation protection by changing the session id. this will simply be re-read
-		// from the underlying httpsession when needed.
-		id = null;
+		refreshId();
 		if (sessionInvalidated)
 		{
 			invalidateNow();
 		}
+	}
+
+	private void refreshId()
+	{
+		// refresh the session id in case a container like tomcat tries to be smart by doing
+		// session fixation protection by changing the session id.
+		// first, clear the id:
+		id = null;
+		// then re-read the id from the underlying http session:
+		getId();
 	}
 
 	/**
