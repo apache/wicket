@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLDecoder;
 
+import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
@@ -366,15 +366,7 @@ public class Files
 	public static File getLocalFileFromUrl(URL url)
 	{
 		final URL location = Args.notNull(url, "url");
-
-		try
-		{
-			return getLocalFileFromUrl(URLDecoder.decode(location.toExternalForm(), "UTF-8"));
-		}
-		catch (UnsupportedEncodingException ex)
-		{
-			return null;
-		}
+		return getLocalFileFromUrl(UrlDecoder.PATH_INSTANCE.decode(location.toExternalForm(), "UTF-8"));
 	}
 
 	/**
