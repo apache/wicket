@@ -11,7 +11,14 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.time.Time;
 
-public class AtmosphereWebRequest extends WebRequest
+/**
+ * Internal request to signal the processing of an event. This request will be mapped by
+ * {@link AtmosphereRequestMapper} to an {@link AtmosphereRequestHandler}. The response will be
+ * written to the client of a suspended connection.
+ * 
+ * @author papegaaij
+ */
+class AtmosphereWebRequest extends WebRequest
 {
 	private WebRequest wrappedRequest;
 
@@ -21,8 +28,8 @@ public class AtmosphereWebRequest extends WebRequest
 
 	private Object event;
 
-	public AtmosphereWebRequest(WebRequest wrappedRequest, PageKey pageKey,
-			Collection<EventSubscription> subscriptions, Object event)
+	AtmosphereWebRequest(WebRequest wrappedRequest, PageKey pageKey,
+		Collection<EventSubscription> subscriptions, Object event)
 	{
 		this.wrappedRequest = wrappedRequest;
 		this.pageKey = pageKey;

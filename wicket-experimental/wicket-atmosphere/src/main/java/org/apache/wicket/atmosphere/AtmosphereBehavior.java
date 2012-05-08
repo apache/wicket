@@ -24,6 +24,14 @@ import org.atmosphere.cpr.Meteor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * {@code AtmosphereBehavior} manages the suspended connection from the client. It adds the required
+ * javascript libraries to the markup which setup a suspended connection. This connection can be
+ * websocket, streaming http or long-polling, depending on what the client and server support. This
+ * behavior is added automatically to pages with components with event subscriptions.
+ * 
+ * @author papegaaij
+ */
 public class AtmosphereBehavior extends Behavior
 	implements
 		IResourceListener,
@@ -31,6 +39,9 @@ public class AtmosphereBehavior extends Behavior
 {
 	private static final Logger log = LoggerFactory.getLogger(AtmosphereBehavior.class);
 
+	/**
+	 * The key under which a unique id is stored in the page. This id is unique for all clients.
+	 */
 	public static MetaDataKey<String> ATMOSPHERE_UUID = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
@@ -40,6 +51,9 @@ public class AtmosphereBehavior extends Behavior
 
 	private Component component;
 
+	/**
+	 * Construct.
+	 */
 	public AtmosphereBehavior()
 	{
 	}
@@ -134,7 +148,7 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onThrowable(AtmosphereResourceEvent event)
 	{
-		event.throwable().printStackTrace();
+		log.error(event.throwable().getMessage(), event.throwable());
 	}
 
 	@Override
@@ -158,6 +172,10 @@ public class AtmosphereBehavior extends Behavior
 		}
 	}
 
+	/**
+	 * @param resource
+	 * @return the unique id for the given suspended connection
+	 */
 	public static String getUUID(AtmosphereResource resource)
 	{
 		String trackingId = resource.getRequest().getHeader(HeaderConfig.X_ATMOSPHERE_TRACKING_ID);

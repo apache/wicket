@@ -9,6 +9,12 @@ import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+/**
+ * The subscription of a method on a component to certain events. This is used by {@link EventBus}
+ * to track the subscriptions.
+ * 
+ * @author papegaaij
+ */
 public class EventSubscription
 {
 	private String componentPath;
@@ -17,6 +23,12 @@ public class EventSubscription
 
 	private Predicate<Object> filter;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param component
+	 * @param method
+	 */
 	public EventSubscription(Component component, Method method)
 	{
 		componentPath = component.getPageRelativePath();
@@ -43,16 +55,26 @@ public class EventSubscription
 		}
 	}
 
+	/**
+	 * @return The path of the subscribed component
+	 */
 	public String getComponentPath()
 	{
 		return componentPath;
 	}
 
+	/**
+	 * @return The filter on incomming events, a combination of the type and the
+	 *         {@link Subscribe#filter()} parameter.
+	 */
 	public Predicate<Object> getFilter()
 	{
 		return filter;
 	}
 
+	/**
+	 * @return The method that is subscribed
+	 */
 	public String getMethodName()
 	{
 		return methodName;

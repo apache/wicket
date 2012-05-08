@@ -102,6 +102,12 @@ public class EventBus implements UnboundListener
 			new Object[] { pageKey.getPageId(), pageKey.getSessionId() });
 	}
 
+	/**
+	 * Registers an {@link EventSubscription} for the given page.
+	 * 
+	 * @param page
+	 * @param subscription
+	 */
 	public synchronized void register(Page page, EventSubscription subscription)
 	{
 		log.info("registering component for {} for session {}: {}", new Object[] {
@@ -109,6 +115,13 @@ public class EventBus implements UnboundListener
 		subscriptions.put(new PageKey(page.getPageId(), Session.get().getId()), subscription);
 	}
 
+	/**
+	 * Post an event to all pages that have a suspended connection. This will invoke the event
+	 * handlers on components, annotated with {@link Subscribe}. The resulting AJAX updates are
+	 * pushed to the clients.
+	 * 
+	 * @param event
+	 */
 	public void post(Object event)
 	{
 		ThreadContext oldContext = ThreadContext.get(false);

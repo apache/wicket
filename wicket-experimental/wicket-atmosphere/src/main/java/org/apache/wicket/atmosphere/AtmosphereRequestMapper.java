@@ -5,6 +5,12 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 
+/**
+ * Internal {@link IRequestMapper} to map {@link AtmosphereWebRequest} to
+ * {@link AtmosphereRequestHandler}. This mapper is registered automatically by {@link EventBus}.
+ * 
+ * @author papegaaij
+ */
 public class AtmosphereRequestMapper implements IRequestMapper
 {
 	@Override
@@ -12,7 +18,7 @@ public class AtmosphereRequestMapper implements IRequestMapper
 	{
 		if (request instanceof AtmosphereWebRequest)
 		{
-			AtmosphereWebRequest pushRequest = (AtmosphereWebRequest) request;
+			AtmosphereWebRequest pushRequest = (AtmosphereWebRequest)request;
 			return new AtmosphereRequestHandler(pushRequest.getPageKey(),
 				pushRequest.getSubscriptions(), pushRequest.getEvent());
 		}

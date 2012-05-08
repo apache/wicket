@@ -13,6 +13,12 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 
+/**
+ * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the
+ * subscribed methods are invoked.
+ * 
+ * @author papegaaij
+ */
 public class AtmosphereRequestHandler implements IRequestHandler
 {
 	private PageKey pageKey;
@@ -21,6 +27,13 @@ public class AtmosphereRequestHandler implements IRequestHandler
 
 	private Collection<EventSubscription> subscriptions;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param pageKey
+	 * @param subscriptions
+	 * @param event
+	 */
 	public AtmosphereRequestHandler(PageKey pageKey, Collection<EventSubscription> subscriptions,
 		Object event)
 	{

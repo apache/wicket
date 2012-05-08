@@ -7,13 +7,23 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.time.Time;
 import org.atmosphere.cpr.AtmosphereResponse;
 
-public class AtmosphereWebResponse extends WebResponse
+/**
+ * Internal response class to wrap {@code AtmosphereResponse} to a {@link WebResponse}.
+ * 
+ * @author papegaaij
+ */
+class AtmosphereWebResponse extends WebResponse
 {
 	private AtmosphereResponse response;
 	private final AppendingStringBuffer out;
 	private boolean redirect;
 
-	public AtmosphereWebResponse(AtmosphereResponse response)
+	/**
+	 * Construct.
+	 * 
+	 * @param response
+	 */
+	AtmosphereWebResponse(AtmosphereResponse response)
 	{
 		this.response = response;
 		out = new AppendingStringBuffer(128);
