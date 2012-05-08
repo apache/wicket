@@ -43,12 +43,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.atmosphere</groupId>
-			<artifactId>atmosphere-jquery</artifactId>
-			<version>${atmosphere.version}</version>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>org.atmosphere</groupId>
 			<artifactId>atmosphere-runtime</artifactId>
 			<version>${atmosphere.version}</version>
 			<exclusions>
