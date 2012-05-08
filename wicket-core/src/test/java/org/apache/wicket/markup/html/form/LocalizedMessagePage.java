@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.Model;
 
 /**
  * @author dashorst
@@ -40,7 +41,11 @@ public class LocalizedMessagePage extends WebPage
 	public LocalizedMessagePage()
 	{
 		add(form = new Form<Void>("form"));
-		form.add(integerField = new TextField<Integer>("integer", Integer.class));
+
+		integerField = new TextField<Integer>("integer", Integer.class);
+		integerField.setLabel(Model.of("Number"));
+		form.add(integerField);
+
 		form.add(feedback = new FeedbackPanel("feedback"));
 	}
 }
