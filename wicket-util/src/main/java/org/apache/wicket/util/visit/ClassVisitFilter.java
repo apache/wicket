@@ -45,6 +45,6 @@ public class ClassVisitFilter<T> implements IVisitFilter
 	/** {@inheritDoc} */
 	public boolean visitObject(final Object object)
 	{
-		return clazz.isAssignableFrom(object.getClass());
+		return clazz == null || clazz.isAssignableFrom(object.getClass());
 	}
 }
