@@ -100,7 +100,8 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 				{
 					if (Strings.isEmpty(htmlId))
 					{
-						tag.setId(INLINE_ENCLOSURE_ID_PREFIX);
+						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX;
+						tag.setId(id);
 					}
 					else
 					{
@@ -176,7 +177,11 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		String inlineEnclosureChildId = getInlineEnclosureAttribute(tag);
 		if (Strings.isEmpty(inlineEnclosureChildId) == false)
 		{
-			String id = tag.getId() + container.getPage().getAutoIndex();
+			String id = tag.getId();
+			if (id.startsWith(getWicketNamespace()))
+			{
+				id = id + container.getPage().getAutoIndex();
+			}
 			// Yes, we handled the tag
 			return new InlineEnclosure(id, inlineEnclosureChildId);
 		}

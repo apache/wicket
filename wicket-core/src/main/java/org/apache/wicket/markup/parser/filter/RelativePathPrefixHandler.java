@@ -141,7 +141,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				if (tag.getId() == null)
 				{
-					tag.setId(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID);
+					tag.setId(getWicketRelativePathPrefix());
 					tag.setAutoComponentTag(true);
 				}
 				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
@@ -157,10 +157,9 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		if ((tag != null) && (tag.getId().startsWith(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID)))
+		if ((tag != null) && (tag.getId().equals(getWicketRelativePathPrefix())))
 		{
-			String id = WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID +
-				container.getPage().getAutoIndex();
+			String id = tag.getId() + container.getPage().getAutoIndex();
 
 			// we do not want to mess with the hierarchy, so the container has to be
 			// transparent as it may have wicket components inside. for example a raw anchor tag
@@ -168,5 +167,10 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			return new TransparentWebMarkupContainer(id);
 		}
 		return null;
+	}
+
+	private String getWicketRelativePathPrefix()
+	{
+		return getWicketNamespace() + WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID;
 	}
 }
