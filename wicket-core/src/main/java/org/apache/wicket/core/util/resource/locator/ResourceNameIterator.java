@@ -17,7 +17,6 @@
 package org.apache.wicket.core.util.resource.locator;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.wicket.WicketRuntimeException;
@@ -44,10 +43,10 @@ import org.apache.wicket.util.string.Strings;
  * <li>&lt;language&gt;_&lt;country&gt;</li>
  * <li>&lt;language&gt;</li>
  * </ol>
- *
+ * 
  * @author Juergen Donnerstag
  */
-public class ResourceNameIterator implements Iterator<String>
+public class ResourceNameIterator implements IResourceNameIterator
 {
 	// The base path without extension, style, locale etc.
 	private final String path;
@@ -69,7 +68,7 @@ public class ResourceNameIterator implements Iterator<String>
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param path
 	 *            The path of the resource. In case the parameter 'extensions' is null, the path
 	 *            will be checked and if a filename extension is present, it'll be used instead.
@@ -109,7 +108,7 @@ public class ResourceNameIterator implements Iterator<String>
 
 	/**
 	 * Get the exact Locale which has been used for the latest resource path.
-	 *
+	 * 
 	 * @return current Locale
 	 */
 	public final Locale getLocale()
@@ -119,7 +118,7 @@ public class ResourceNameIterator implements Iterator<String>
 
 	/**
 	 * Get the exact Style which has been used for the latest resource path.
-	 *
+	 * 
 	 * @return current Style
 	 */
 	public final String getStyle()
@@ -129,7 +128,7 @@ public class ResourceNameIterator implements Iterator<String>
 
 	/**
 	 * Get the exact Variation which has been used for the latest resource path.
-	 *
+	 * 
 	 * @return current Variation
 	 */
 	public final String getVariation()
@@ -139,7 +138,7 @@ public class ResourceNameIterator implements Iterator<String>
 
 	/**
 	 * Get the exact filename extension used for the latest resource path.
-	 *
+	 * 
 	 * @return current filename extension
 	 */
 	public final String getExtension()
@@ -237,7 +236,7 @@ public class ResourceNameIterator implements Iterator<String>
 	}
 
 	/**
-	 *
+	 * 
 	 * @param string
 	 * @param prepend
 	 * @return The string prepended with the char
@@ -259,7 +258,7 @@ public class ResourceNameIterator implements Iterator<String>
 	}
 
 	/**
-	 *
+	 * 
 	 * @param style
 	 * @param variation
 	 * @return new iterator
@@ -274,7 +273,8 @@ public class ResourceNameIterator implements Iterator<String>
 	 * @param extensions
 	 * @return New iterator
 	 */
-	protected ExtensionResourceNameIterator newExtensionResourceNameIterator(final Iterable<String> extensions)
+	protected ExtensionResourceNameIterator newExtensionResourceNameIterator(
+		final Iterable<String> extensions)
 	{
 		return new ExtensionResourceNameIterator(extensions);
 	}

@@ -23,7 +23,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 
 /**
  * Interface for code that locates resources.
- *
+ * 
  * @author Jonathan Locke
  */
 public interface IResourceStreamLocator
@@ -32,15 +32,15 @@ public interface IResourceStreamLocator
 	 * Locate a resource, given a path and class. Typically this method is either called by external
 	 * clients if they are not interested in a lookup that takes the style and locale into account,
 	 * or it is called by the implementation of
-	 * {@link #locate(Class, String, String, String, java.util.Locale, String, boolean)} where the latter just takes care of
-	 * trying out the different combinations for the provided style and locale and uses this method
-	 * to actually load the resource stream.
-	 *
+	 * {@link #locate(Class, String, String, String, java.util.Locale, String, boolean)} where the
+	 * latter just takes care of trying out the different combinations for the provided style and
+	 * locale and uses this method to actually load the resource stream.
+	 * 
 	 * @param clazz
 	 *            The class loader for delegating the loading of the resource
 	 * @param path
 	 *            The path of the resource
-	 *
+	 * 
 	 * @return The resource or null
 	 */
 	IResourceStream locate(Class<?> clazz, String path);
@@ -48,7 +48,7 @@ public interface IResourceStreamLocator
 	/**
 	 * Locate a resource by combining the given path, style, variation, locale and extension
 	 * parameters. The exact search order depends on the implementation.
-	 *
+	 * 
 	 * @param clazz
 	 *            The class loader for delegating the loading of the resource
 	 * @param path
@@ -72,7 +72,7 @@ public interface IResourceStreamLocator
 	 * Markup resources and Properties files both need to iterate over different combinations of
 	 * locale, style, etc.. And though no single locate(..) method exists which is used by both,
 	 * they both use ResourceNameIterators.
-	 *
+	 * 
 	 * @param path
 	 *            The path of the resource
 	 * @param style
@@ -87,6 +87,6 @@ public interface IResourceStreamLocator
 	 *            whether the specified attributes must match exactly
 	 * @return resource name iterator
 	 */
-	ResourceNameIterator newResourceNameIterator(String path, Locale locale, String style,
+	IResourceNameIterator newResourceNameIterator(String path, Locale locale, String style,
 		String variation, String extension, boolean strict);
 }

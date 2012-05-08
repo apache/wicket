@@ -21,8 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.core.util.resource.UrlResourceStream;
+import org.apache.wicket.core.util.resource.locator.IResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
-import org.apache.wicket.core.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.request.resource.ResourceReference.Key;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -49,7 +49,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param resourceStreamLocator
 	 *            the delegate
 	 */
@@ -64,7 +64,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * Checks for {@link IResourceStreamReference} in the cache and returns <code>null</code> if the
 	 * result is {@link NullResourceStreamReference#INSTANCE}, or {@link FileResourceStream} /
 	 * {@link UrlResourceStream} if there is an entry in the cache. Otherwise asks the delegate to
@@ -132,7 +132,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	@Override
-	public ResourceNameIterator newResourceNameIterator(String path, Locale locale, String style,
+	public IResourceNameIterator newResourceNameIterator(String path, Locale locale, String style,
 		String variation, String extension, boolean strict)
 	{
 		return delegate.newResourceNameIterator(path, locale, style, variation, extension, strict);

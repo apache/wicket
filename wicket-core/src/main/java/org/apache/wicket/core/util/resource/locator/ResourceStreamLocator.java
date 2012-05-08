@@ -23,11 +23,11 @@ import java.util.Collections;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceUtils;
 import org.apache.wicket.util.resource.ResourceUtils.PathLocale;
-import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * <li>&lt;language&gt;_&lt;country&gt;</li>
  * <li>&lt;language&gt;</li>
  * </ol>
- *
+ * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
@@ -78,7 +78,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param finder
 	 *            resource finder
 	 */
@@ -88,7 +88,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.core.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String)
 	 */
@@ -114,7 +114,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.core.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
 	 *      java.lang.String, boolean)
@@ -132,7 +132,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		}
 
 		// Try the various combinations of style, locale and extension to find the resource.
-		ResourceNameIterator iter = newResourceNameIterator(path, locale, style, variation,
+		IResourceNameIterator iter = newResourceNameIterator(path, locale, style, variation,
 			extension, strict);
 		while (iter.hasNext())
 		{
@@ -153,7 +153,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 
 	/**
 	 * Search the the resource my means of the various classloaders available
-	 *
+	 * 
 	 * @param clazz
 	 * @param path
 	 * @return resource stream
@@ -190,7 +190,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 
 	/**
 	 * Get the resource
-	 *
+	 * 
 	 * @param classLoader
 	 * @param path
 	 * @return resource stream
@@ -225,7 +225,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 
 	/**
 	 * Search the resource by means of the application registered resource finder
-	 *
+	 * 
 	 * @param clazz
 	 * @param path
 	 * @return resource stream
@@ -248,12 +248,12 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.core.util.resource.locator.IResourceStreamLocator#newResourceNameIterator(java.lang.String,
 	 *      java.util.Locale, java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public ResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
+	public IResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
 		final String style, final String variation, final String extension, final boolean strict)
 	{
 		final Iterable<String> extensions;
