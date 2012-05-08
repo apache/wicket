@@ -18,6 +18,7 @@ package org.apache.wicket.markup;
 
 import java.util.ArrayList;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.form.AutoLabelTagHandler;
 import org.apache.wicket.markup.parser.IMarkupFilter;
@@ -31,6 +32,7 @@ import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.markup.parser.filter.OpenCloseTagExpander;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.StyleAndScriptIdentifier;
+import org.apache.wicket.markup.parser.filter.WicketContainerTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketNamespaceHandler;
@@ -176,6 +178,7 @@ public class MarkupParser extends AbstractMarkupParser
 		// Append it. See WICKET-4390
 		filters.add(new StyleAndScriptIdentifier(), StyleAndScriptIdentifier.class);
 		filters.add(new ConditionalCommentFilter());
+		filters.add(new WicketContainerTagHandler(Application.get().usesDevelopmentConfig()));
 
 		return filters;
 	}
