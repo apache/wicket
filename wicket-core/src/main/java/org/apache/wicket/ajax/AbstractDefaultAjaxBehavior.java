@@ -26,6 +26,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
+import org.apache.wicket.ajax.attributes.CallbackParameter;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.ajax.json.JSONException;
@@ -428,18 +429,21 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param extraParameters
 	 * @return A function that can be used as a callback function in javascript
 	 */
-	public CharSequence getCallbackFunction(String... extraParameters)
+	public CharSequence getCallbackFunction(CallbackParameter... extraParameters)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("function (");
 		boolean first = true;
-		for (String curExtraParameter : extraParameters)
+		for (CallbackParameter curExtraParameter : extraParameters)
 		{
-			if (!first)
-				sb.append(",");
-			else
-				first = false;
-			sb.append(curExtraParameter);
+			if (curExtraParameter.getFunctionParameterName() != null)
+			{
+				if (!first)
+					sb.append(",");
+				else
+					first = false;
+				sb.append(curExtraParameter.getFunctionParameterName());
+			}
 		}
 		sb.append(") {\n");
 		sb.append(getCallbackFunctionBody(extraParameters));
@@ -448,14 +452,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * Generates the body the {@linkplain #getCallbackFunction(String...) callback function}. To
-	 * embed this code directly into a piece of javascript, make sure the extra parameters are
-	 * available as local variables, global variables or within the closure.
+	 * Generates the body the {@linkplain #getCallbackFunction(CallbackParameter...) callback
+	 * function}. To embed this code directly into a piece of javascript, make sure any context
+	 * parameters are available as local variables, global variables or within the closure.
 	 * 
 	 * @param extraParameters
-	 * @return The body of the {@linkplain #getCallbackFunction(String...) callback function}.
+	 * @return The body of the {@linkplain #getCallbackFunction(CallbackParameter...) callback
+	 *         function}.
 	 */
-	public CharSequence getCallbackFunctionBody(String... extraParameters)
+	public CharSequence getCallbackFunctionBody(CallbackParameter... extraParameters)
 	{
 		AjaxRequestAttributes attributes = getAttributes();
 		CharSequence attrsJson = renderAjaxAttributes(getComponent(), attributes);
@@ -465,13 +470,19 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		sb.append(";\n");
 		sb.append("var params = {");
 		boolean first = true;
-		for (String curExtraParameter : extraParameters)
+		for (CallbackParameter curExtraParameter : extraParameters)
 		{
-			if (!first)
-				sb.append(",");
-			else
-				first = false;
-			sb.append("'").append(curExtraParameter).append("': ").append(curExtraParameter);
+			if (curExtraParameter.getAjaxParameterName() != null)
+			{
+				if (!first)
+					sb.append(",");
+				else
+					first = false;
+				sb.append("'")
+					.append(curExtraParameter.getAjaxParameterName())
+					.append("': ")
+					.append(curExtraParameter.getAjaxParameterCode());
+			}
 		}
 		sb.append("};\n");
 		if (attributes.getExtraParameters().isEmpty())
