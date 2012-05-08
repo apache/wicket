@@ -488,7 +488,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		if (attributes.getExtraParameters().isEmpty())
 			sb.append("attrs.ep = params;\n");
 		else
-			sb.append("attrs.ep = jQuery.extend({}, attrs.ep, params);\n");
+			sb.append("attrs.ep = Wicket.merge(attrs.ep, params);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
 	}

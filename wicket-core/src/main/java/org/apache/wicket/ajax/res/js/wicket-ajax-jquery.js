@@ -1083,6 +1083,17 @@
 		},
 
 		/**
+		 * Merges two objects. Values of the second will overwrite values of the first.
+		 * 
+		 * @param {Object} object1 - the first object to merge
+		 * @param {Object} object2 - the second object to merge
+		 * @return {Object} a new object with the values of object1 and object2
+		 */
+		merge: function(object1, object2) {
+			return jQuery.extend({}, object1, object2);
+		},
+		
+		/**
 		 * Takes a function and returns a new one that will always have a particular context, i.e. 'this' will be the passed context.
 		 * 
 		 * @param {Function} fn - the function which context will be set
