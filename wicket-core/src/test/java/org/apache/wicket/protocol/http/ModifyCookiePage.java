@@ -51,9 +51,4 @@ public class ModifyCookiePage extends WebPage
 			}
 		});
 	}
-
-	private WebResponse getWebResponse()
-	{
-		return (WebResponse)getResponse();
-	}
 }
