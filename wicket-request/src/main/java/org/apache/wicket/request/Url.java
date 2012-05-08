@@ -59,7 +59,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Matej Knopp
  * @author Igor Vaynberg
  */
-public final class Url implements Serializable
+public class Url implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
