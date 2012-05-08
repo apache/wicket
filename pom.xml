@@ -748,6 +748,7 @@
                             </goals>
                             <configuration>
                                 <instructions>
+                                    <Export-Package>org.apache.wicket*</Export-Package> 
                                     <Import-Package>org.apache.wicket*</Import-Package>
                                     <DynamicImport-Package>*</DynamicImport-Package>
                                     <_nouses>true</_nouses>
