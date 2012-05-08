@@ -109,7 +109,7 @@ public class ResourceNameIterator implements Iterator<String>
 	 * 
 	 * @return current Locale
 	 */
-	public final Locale getLocale()
+	public Locale getLocale()
 	{
 		return localeIterator.getLocale();
 	}
@@ -119,7 +119,7 @@ public class ResourceNameIterator implements Iterator<String>
 	 * 
 	 * @return current Style
 	 */
-	public final String getStyle()
+	public String getStyle()
 	{
 		return styleIterator.getStyle();
 	}
@@ -129,7 +129,7 @@ public class ResourceNameIterator implements Iterator<String>
 	 * 
 	 * @return current Variation
 	 */
-	public final String getVariation()
+	public String getVariation()
 	{
 		return styleIterator.getVariation();
 	}
@@ -139,7 +139,7 @@ public class ResourceNameIterator implements Iterator<String>
 	 * 
 	 * @return current filename extension
 	 */
-	public final String getExtension()
+	public String getExtension()
 	{
 		return extensionsIterator.getExtension();
 	}
