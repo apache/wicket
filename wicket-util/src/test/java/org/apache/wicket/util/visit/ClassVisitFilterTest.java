@@ -27,11 +27,11 @@ public class ClassVisitFilterTest extends Assert
 	@Test
 	public void visitObject() throws Exception
 	{
-		ClassVisitFilter<String> filter = new ClassVisitFilter<String>(String.class);
+		ClassVisitFilter filter = new ClassVisitFilter(String.class);
 		assertTrue(filter.visitObject("a string"));
 		assertFalse(filter.visitObject(123));
 
-		filter = new ClassVisitFilter<String>(null);
+		filter = new ClassVisitFilter(null);
 		assertTrue(filter.visitObject("a string"));
 		assertTrue(filter.visitObject(123));
 	}
