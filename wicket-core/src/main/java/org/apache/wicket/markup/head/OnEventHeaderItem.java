@@ -108,7 +108,7 @@ public class OnEventHeaderItem extends HeaderItem
 	@Override
 	public String toString()
 	{
-		return "OnEventHeaderItem(" + getTarget() + "," + getEvent() + "," + getJavaScript() + ")";
+		return "OnEventHeaderItem(" + getTarget() + ", '" + getEvent() + "', '" + getJavaScript() + "')";
 	}
 
 	@Override

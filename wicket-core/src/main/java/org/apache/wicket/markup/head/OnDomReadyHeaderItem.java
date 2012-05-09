@@ -82,7 +82,7 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	@Override
 	public String toString()
 	{
-		return "OnDomReadyHeaderItem(" + getJavaScript() + ")";
+		return "OnDomReadyHeaderItem('" + getJavaScript() + "')";
 	}
 
 	@Override

@@ -82,7 +82,7 @@ public class OnLoadHeaderItem extends HeaderItem
 	@Override
 	public String toString()
 	{
-		return "OnLoadHeaderItem(" + getJavaScript() + ")";
+		return "OnLoadHeaderItem('" + getJavaScript() + "')";
 	}
 
 	@Override
