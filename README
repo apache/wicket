@@ -1,4 +1,4 @@
-Apache Wicket 1.5
+Apache Wicket 6.0
 =================
 
 This is the readme file for the Apache Wicket project. 
@@ -20,7 +20,7 @@ Contents
  - Getting started
  - Dependencies
  - Building Wicket from source
- - Migrating from 1.4
+ - Migrating from 1.5
  - Getting help
  - Cryptographic Software Notice
 
@@ -34,7 +34,7 @@ of the project.
 Java/Application server requirements
 ------------------------------------
 
-Wicket requires at least Java 1.5. The application server for running your web
+Wicket requires at least Java 1.6. The application server for running your web
 application should adhere to the servlet specification version 2.5 or newer.
 Note that your Wicket application might run on containers based on servlet
 specification 2.4, but there are no guarantees.
@@ -107,7 +107,7 @@ started quickly:
  - wicket-examples:
 
     shows all components in short usage examples, also available live on:
-    http://www.wicketstuff.org/wicket
+    http://www.wicket-library.com/wicket-examples
 
  - wicket-quickstart archetype:
 
@@ -197,12 +197,12 @@ do:
     creates wicket-x.y.z.jar in target/ subdirectory and installs the file
     into your local Maven repository for use in other projects.
 
-Migrating from 1.4
+Migrating from 1.5
 ------------------
 
 This file is a copy of the migration guide from available on our Wiki:
 
-    http://cwiki.apache.org/WICKET/migrate-15.html
+    https://cwiki.apache.org/WICKET/migration-to-wicket-60.html
     
 Getting help
 ------------
@@ -210,7 +210,7 @@ Getting help
  - Read the online documentation available on our website
    (http://wicket.apache.org)
 
- - Read the migration guide (migrate-15.html)
+ - Read the migration guide (migration-to-wicket-60.html)
 
  - Read the mailing archives available on Nabble, GMane and Apache
 
@@ -242,7 +242,7 @@ both object code and source code.
 
 The following provides more details on the included cryptographic software:
 
-For encoding HTTP URL data (see org.apache.wicket.request.mapper.CryptoMapper)
+For encoding HTTP URL data (see org.apache.wicket.core.request.mapper.CryptoMapper)
 Wicket requires the Java Cryptography extensions
 (http://java.sun.com/javase/technologies/security/). Wicket does not include
 these libraries itself, but is designed to use them.
