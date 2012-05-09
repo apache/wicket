@@ -25,7 +25,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
  * A data table that shows the attributes of the recently stored pages in the data store. The last
  * used pages are rendered first.
  */
-class BrowserTable extends DefaultDataTable<PageWindowDescription>
+class BrowserTable extends DefaultDataTable<PageWindowDescription, String>
 {
 
 	/**

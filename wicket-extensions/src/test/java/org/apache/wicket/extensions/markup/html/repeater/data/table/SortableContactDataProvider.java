@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
  * @author igor
  * 
  */
-public class SortableContactDataProvider extends SortableDataProvider<Contact>
+public class SortableContactDataProvider extends SortableDataProvider<Contact, String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int, int)
+	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(long, long)
 	 */
 	public Iterator<Contact> iterator(final long first, final long count)
 	{

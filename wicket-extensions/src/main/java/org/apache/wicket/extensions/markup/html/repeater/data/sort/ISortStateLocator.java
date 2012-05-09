@@ -26,10 +26,10 @@ import org.apache.wicket.util.io.IClusterable;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ISortStateLocator extends IClusterable
+public interface ISortStateLocator<T> extends IClusterable
 {
 	/**
 	 * @return ISortState object
 	 */
-	<T> ISortState<T> getSortState();
+	ISortState<T> getSortState();
 }

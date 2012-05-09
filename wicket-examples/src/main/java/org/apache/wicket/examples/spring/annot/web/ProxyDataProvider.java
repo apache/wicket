@@ -36,9 +36,9 @@ public class ProxyDataProvider extends ContactDataProvider
 		return dao;
 	}
 
-	public IModel model(Object object)
+	public IModel<Contact> model(Contact contact)
 	{
-		return new ProxyModel((Contact)object, dao);
+		return new ProxyModel(contact, dao);
 	}
 
 }

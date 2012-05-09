@@ -25,6 +25,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLoc
  * @param <T>
  *            node type
  */
-public interface ISortableTreeProvider<T> extends ITreeProvider<T>, ISortStateLocator
+public interface ISortableTreeProvider<T, S> extends ITreeProvider<T>, ISortStateLocator<S>
 {
 }

@@ -18,10 +18,10 @@ package org.apache.wicket.examples.spring.common.web;
 
 import java.util.Arrays;
 
+import org.apache.wicket.examples.spring.common.Contact;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.Model;
 
 
@@ -47,5 +47,5 @@ public abstract class ContactsDisplayPage extends BasePage
 		add(new DefaultDataTable("contacts", Arrays.asList(cols), getDataProvider(), 5));
 	}
 
-	protected abstract SortableDataProvider<?> getDataProvider();
+	protected abstract ContactDataProvider getDataProvider();
 }

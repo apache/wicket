@@ -44,10 +44,12 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg ( ivaynberg )
  * 
  * @param <T>
- *            The model object type
+ *     The model object type
+ * @param <S>
+ *     the type of the sorting parameter
  * 
  */
-public class AjaxFallbackDefaultDataTable<T> extends DataTable<T>
+public class AjaxFallbackDefaultDataTable<T, S> extends DataTable<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +66,7 @@ public class AjaxFallbackDefaultDataTable<T> extends DataTable<T>
 	 *            number of rows per page
 	 */
 	public AjaxFallbackDefaultDataTable(final String id, final List<IColumn<T>> columns,
-		final ISortableDataProvider<T> dataProvider, final int rowsPerPage)
+		final ISortableDataProvider<T, S> dataProvider, final int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);
 		setOutputMarkupId(true);

@@ -36,7 +36,7 @@ public interface ContactDao
 	 *            sorting and paging info
 	 * @return iterator over contacts
 	 */
-	Iterator find(QueryParam qp);
+	Iterator<Contact> find(QueryParam qp);
 
 	/**
 	 * @param id

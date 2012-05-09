@@ -25,9 +25,11 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  * 
  * @author Igor Vaynberg (ivaynberg at apache dot org)
  * @param <T>
+ * @param <S>
+ *     the type of the sorting parameter
  * 
  */
-public interface ISortableDataProvider<T> extends IDataProvider<T>, ISortStateLocator
+public interface ISortableDataProvider<T, S> extends IDataProvider<T>, ISortStateLocator<S>
 {
 
 

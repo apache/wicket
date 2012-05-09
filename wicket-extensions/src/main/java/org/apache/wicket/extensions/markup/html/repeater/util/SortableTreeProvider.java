@@ -27,27 +27,27 @@ import org.apache.wicket.extensions.markup.html.repeater.tree.ISortableTreeProvi
  * @author svenmeier
  * @param <T>
  */
-public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T>
+public abstract class SortableTreeProvider<T, S> implements ISortableTreeProvider<T, S>
 {
 	private static final long serialVersionUID = 1L;
 
-	private SingleSortState<String> state = new SingleSortState<String>();
+	private SingleSortState<S> state = new SingleSortState<S>();
 
 	/**
 	 * @see ISortableDataProvider#getSortState()
 	 */
 	@SuppressWarnings("unchecked")
-	public final <S> ISortState<S> getSortState()
+	public final ISortState<S> getSortState()
 	{
 		return (ISortState<S>)state;
 	}
 
 	/**
-	 * @see ISortableDataProvider#setSortState(org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState)
+	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider#getSortState()
 	 * @param state
 	 */
 	@SuppressWarnings("unchecked")
-	public final void setSortState(ISortState<?> state)
+	public final void setSortState(ISortState<S> state)
 	{
 		if (!(state instanceof SingleSortState))
 		{
@@ -55,7 +55,7 @@ public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T
 				"argument [state] must be an instance of SingleSortState, but it is [" +
 					state.getClass().getName() + "]:[" + state.toString() + "]");
 		}
-		this.state = (SingleSortState<String>)state;
+		this.state = (SingleSortState<S>)state;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T
 	 * 
 	 * @return current sort state
 	 */
-	public SortParam<String> getSort()
+	public SortParam<S> getSort()
 	{
 		return state.getSort();
 	}
@@ -74,7 +74,7 @@ public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T
 	 * @param param
 	 *            parameter containing new sorting information
 	 */
-	public void setSort(SortParam<String> param)
+	public void setSort(SortParam<S> param)
 	{
 		state.setSort(param);
 	}
@@ -87,14 +87,15 @@ public abstract class SortableTreeProvider<T> implements ISortableTreeProvider<T
 	 * @param ascending
 	 *            sort direction
 	 */
-	public void setSort(String property, boolean ascending)
+	public void setSort(S property, boolean ascending)
 	{
-		setSort(new SortParam<String>(property, ascending));
+		setSort(new SortParam<S>(property, ascending));
 	}
 
 	/**
 	 * @see ISortableDataProvider#detach()
 	 */
+	@Override
 	public void detach()
 	{
 	}

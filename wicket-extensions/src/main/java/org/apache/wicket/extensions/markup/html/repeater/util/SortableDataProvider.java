@@ -30,19 +30,21 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
  * 
  * @author Igor Vaynberg (ivaynberg at apache dot org)
  * @param <T>
+ * @param <S>
+ *     the type of the sorting parameter
  */
-public abstract class SortableDataProvider<T> implements ISortableDataProvider<T>
+public abstract class SortableDataProvider<T, S> implements ISortableDataProvider<T, S>
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private SingleSortState state = new SingleSortState();
+	private SingleSortState<S> state = new SingleSortState<S>();
 
 	/**
 	 * @see ISortableDataProvider#getSortState()
 	 */
-	public final ISortState getSortState()
+	public final ISortState<S> getSortState()
 	{
 		return state;
 	}
@@ -52,7 +54,7 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	 * 
 	 * @return current sort state
 	 */
-	public SortParam getSort()
+	public SortParam<S> getSort()
 	{
 		return state.getSort();
 	}
@@ -63,7 +65,7 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	 * @param param
 	 *            parameter containing new sorting information
 	 */
-	public void setSort(final SortParam param)
+	public void setSort(final SortParam<S> param)
 	{
 		state.setSort(param);
 	}
@@ -76,7 +78,7 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	 * @param order
 	 *            sort order
 	 */
-	public void setSort(final String property, final SortOrder order)
+	public void setSort(final S property, final SortOrder order)
 	{
 		state.setPropertySortOrder(property, order);
 	}

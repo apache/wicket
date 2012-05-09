@@ -31,7 +31,7 @@ import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 /**
  * An {@link IDataProvider} that extracts the information about the stored pages
  */
-class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
+class PageWindowProvider implements ISortableDataProvider<PageWindowDescription, String>
 {
 	private static final int MAX_PAGES_TO_READ = 1000;
 
@@ -95,7 +95,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
 	 * No sort state for now. The provider is ISortableDataProvider just because we use
 	 * DefaultDataTable
 	 */
-	public ISortState getSortState()
+	public ISortState<String> getSortState()
 	{
 		return null;
 	}

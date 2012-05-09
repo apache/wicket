@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.spring.annot.web;
 
 import org.apache.wicket.examples.spring.common.ContactDao;
+import org.apache.wicket.examples.spring.common.web.ContactDataProvider;
 import org.apache.wicket.examples.spring.common.web.ContactsDisplayPage;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -38,11 +39,8 @@ public class AnnotPage extends ContactsDisplayPage
 
 	}
 
-	/**
-	 * @see org.apache.wicket.spring.common.web.ContactsDisplayPage#getDataProvider()
-	 */
 	@Override
-	protected SortableDataProvider<?> getDataProvider()
+	protected ContactDataProvider getDataProvider()
 	{
 		return new ProxyDataProvider(dao);
 	}

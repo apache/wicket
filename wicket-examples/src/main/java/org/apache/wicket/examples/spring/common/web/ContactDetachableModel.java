@@ -27,7 +27,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class ContactDetachableModel extends LoadableDetachableModel
+public abstract class ContactDetachableModel extends LoadableDetachableModel<Contact>
 {
 
 	private long id;

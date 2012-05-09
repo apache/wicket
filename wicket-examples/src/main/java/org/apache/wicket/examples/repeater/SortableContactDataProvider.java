@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
  * @author igor
  * 
  */
-public class SortableContactDataProvider extends SortableDataProvider<Contact>
+public class SortableContactDataProvider extends SortableDataProvider<Contact, String>
 {
 	/**
 	 * constructor

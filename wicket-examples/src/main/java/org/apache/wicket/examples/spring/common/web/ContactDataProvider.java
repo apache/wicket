@@ -18,6 +18,7 @@ package org.apache.wicket.examples.spring.common.web;
 
 import java.util.Iterator;
 
+import org.apache.wicket.examples.spring.common.Contact;
 import org.apache.wicket.examples.spring.common.ContactDao;
 import org.apache.wicket.examples.spring.common.QueryParam;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
@@ -30,7 +31,7 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvid
  * @author Igor Vaynberg (ivaynerg)
  * 
  */
-public abstract class ContactDataProvider extends SortableDataProvider
+public abstract class ContactDataProvider extends SortableDataProvider<Contact, String>
 {
 
 	public ContactDataProvider()
@@ -40,7 +41,7 @@ public abstract class ContactDataProvider extends SortableDataProvider
 
 	protected abstract ContactDao getContactDao();
 
-	public final Iterator iterator(long first, long count)
+	public final Iterator<Contact> iterator(long first, long count)
 	{
 		QueryParam qp = new QueryParam(first, count, getSort());
 		return getContactDao().find(qp);
