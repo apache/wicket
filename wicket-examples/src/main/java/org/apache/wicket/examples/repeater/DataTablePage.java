@@ -43,9 +43,9 @@ public class DataTablePage extends BasePage
 	 */
 	public DataTablePage()
 	{
-		List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+		List<IColumn<Contact, String>> columns = new ArrayList<IColumn<Contact, String>>();
 
-		columns.add(new AbstractColumn<Contact>(new Model<String>("Actions"))
+		columns.add(new AbstractColumn<Contact, String>(new Model<String>("Actions"))
 		{
 			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
 				IModel<Contact> model)

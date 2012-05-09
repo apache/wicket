@@ -41,7 +41,7 @@ import org.apache.wicket.model.IModel;
  * @param <S>
  *      the type of the sorting parameter
  */
-public class DefaultDataTable<T, S> extends DataTable<T>
+public class DefaultDataTable<T, S> extends DataTable<T, S>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class DefaultDataTable<T, S> extends DataTable<T>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(final String id, final List<IColumn<T>> columns,
+	public DefaultDataTable(final String id, final List<IColumn<T, S>> columns,
 		final ISortableDataProvider<T, S> dataProvider, final int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);

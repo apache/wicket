@@ -42,12 +42,14 @@ import org.apache.wicket.util.visit.IVisitor;
  * 
  * @param <T>
  *            The model object type
+ * @param <S>
+ *            the type of the sort property
  */
-public abstract class TableTree<T> extends AbstractTree<T>
+public abstract class TableTree<T, S> extends AbstractTree<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final DataTable<T> table;
+	private final DataTable<T, S> table;
 
 	/**
 	 * Constructor
@@ -61,7 +63,7 @@ public abstract class TableTree<T> extends AbstractTree<T>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public TableTree(final String id, final List<IColumn<T>> columns,
+	public TableTree(final String id, final List<IColumn<T, S>> columns,
 		final ITreeProvider<T> dataProvider, final long rowsPerPage)
 	{
 		this(id, columns, dataProvider, rowsPerPage, null);
@@ -81,17 +83,17 @@ public abstract class TableTree<T> extends AbstractTree<T>
 	 * @param state
 	 *            the expansion state
 	 */
-	public TableTree(final String id, final List<IColumn<T>> columns,
+	public TableTree(final String id, final List<IColumn<T, S>> columns,
 		final ITreeProvider<T> provider, final long rowsPerPage, IModel<Set<T>> state)
 	{
 		super(id, provider, state);
 
 		Args.notEmpty(columns, "columns");
-		for (IColumn<T> column : columns)
+		for (IColumn<T, S> column : columns)
 		{
-			if (column instanceof ITreeColumn<?>)
+			if (column instanceof ITreeColumn<?, ?>)
 			{
-				((ITreeColumn<T>)column).setTree(this);
+				((ITreeColumn<T, S>)column).setTree(this);
 			}
 		}
 
@@ -108,10 +110,10 @@ public abstract class TableTree<T> extends AbstractTree<T>
 	 * @param rowsPerPage
 	 * @return nested data table
 	 */
-	protected DataTable<T> newDataTable(String id, List<IColumn<T>> columns,
+	protected DataTable<T, S> newDataTable(String id, List<IColumn<T, S>> columns,
 		IDataProvider<T> dataProvider, long rowsPerPage)
 	{
-		return new DataTable<T>(id, columns, dataProvider, rowsPerPage)
+		return new DataTable<T, S>(id, columns, dataProvider, rowsPerPage)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -133,7 +135,7 @@ public abstract class TableTree<T> extends AbstractTree<T>
 	 * 
 	 * @return the nested table
 	 */
-	public DataTable<T> getTable()
+	public DataTable<T, S> getTable()
 	{
 		return table;
 	}
@@ -149,7 +151,7 @@ public abstract class TableTree<T> extends AbstractTree<T>
 	 * @return this for chaining
 	 */
 	@Override
-	public final TableTree<T> setItemReuseStrategy(final IItemReuseStrategy strategy)
+	public final TableTree<T, S> setItemReuseStrategy(final IItemReuseStrategy strategy)
 	{
 		table.setItemReuseStrategy(strategy);
 

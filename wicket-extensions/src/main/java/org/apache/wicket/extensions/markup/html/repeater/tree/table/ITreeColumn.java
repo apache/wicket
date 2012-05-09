@@ -20,9 +20,13 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.tree.TableTree;
 
 /**
+ * @param <T>
+ *     the type of the model object
+ * @param <S>
+ *     the type of the sorting parameter
  * @author svenmeier
  */
-public interface ITreeColumn<T> extends IColumn<T>
+public interface ITreeColumn<T, S> extends IColumn<T, S>
 {
-	public void setTree(TableTree<T> t);
+	public void setTree(TableTree<T, S> t);
 }

@@ -24,8 +24,10 @@ import org.apache.wicket.model.Model;
  * 
  * @author Igor Vaynberg
  * @param <T>
+ * @param <S>
+ *            the type of the sort property
  */
-public abstract class HeaderlessColumn<T> extends AbstractColumn<T>
+public abstract class HeaderlessColumn<T, S> extends AbstractColumn<T, S>
 {
 	private static final long serialVersionUID = 1L;
 

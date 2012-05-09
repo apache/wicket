@@ -26,12 +26,13 @@ import org.apache.wicket.markup.html.border.Border;
  * For example:
  * 
  * &lt;th wicket:id="order-by-border"&gt;Heading&lt;/th&gt;
- * 
- * 
+ *
+ * @param <S>
+ *      the type of the sorting parameter
  * @author Igor Vaynberg ( ivaynberg )
  * 
  */
-public class OrderByBorder extends Border
+public class OrderByBorder<S> extends Border
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,8 +50,8 @@ public class OrderByBorder extends Border
 	 *            see
 	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 */
-	public OrderByBorder(final String id, final String property,
-		final ISortStateLocator stateLocator, final OrderByLink.ICssProvider cssProvider)
+	public OrderByBorder(final String id, final S property,
+		final ISortStateLocator<S> stateLocator, final OrderByLink.ICssProvider<String> cssProvider)
 	{
 		super(id);
 
@@ -71,8 +72,8 @@ public class OrderByBorder extends Border
 	 *            sort state locator
 	 * @return link
 	 */
-	protected OrderByLink newOrderByLink(final String id, final String property,
-		final ISortStateLocator stateLocator)
+	protected OrderByLink newOrderByLink(final String id, final S property,
+		final ISortStateLocator<S> stateLocator)
 	{
 		return new OrderByLink(id, property, stateLocator,
 			OrderByLink.VoidCssProvider.getInstance())
@@ -103,8 +104,8 @@ public class OrderByBorder extends Border
 	 * @param stateLocator
 	 *            see {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
 	 */
-	public OrderByBorder(final String id, final String property,
-		final ISortStateLocator stateLocator)
+	public OrderByBorder(final String id, final S property,
+		final ISortStateLocator<S> stateLocator)
 	{
 		this(id, property, stateLocator, OrderByLink.DefaultCssProvider.getInstance());
 	}

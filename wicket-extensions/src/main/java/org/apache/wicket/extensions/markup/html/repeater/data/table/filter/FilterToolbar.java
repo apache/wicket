@@ -50,7 +50,7 @@ public class FilterToolbar extends AbstractToolbar
 	 *            type of filter state object
 	 * 
 	 */
-	public <T> FilterToolbar(final DataTable<T> table, final FilterForm<T> form,
+	public <T, S> FilterToolbar(final DataTable<T, S> table, final FilterForm<T> form,
 		final IFilterStateLocator<T> stateLocator)
 	{
 		super(table);
@@ -70,8 +70,8 @@ public class FilterToolbar extends AbstractToolbar
 		filters.setRenderBodyOnly(true);
 		add(filters);
 
-		List<IColumn<T>> cols = table.getColumns();
-		for (IColumn<T> col : cols)
+		List<IColumn<T, S>> cols = table.getColumns();
+		for (IColumn<T, S> col : cols)
 		{
 			WebMarkupContainer item = new WebMarkupContainer(filters.newChildId());
 			item.setRenderBodyOnly(true);
@@ -80,7 +80,7 @@ public class FilterToolbar extends AbstractToolbar
 
 			if (col instanceof IFilteredColumn)
 			{
-				IFilteredColumn<?> filteredCol = (IFilteredColumn<?>)col;
+				IFilteredColumn<T, S> filteredCol = (IFilteredColumn<T, S>)col;
 				filter = filteredCol.getFilter(FILTER_ID, form);
 			}
 

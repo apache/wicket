@@ -45,14 +45,14 @@ public class TableTreePage extends TreePage
 
 	private static final long serialVersionUID = 1L;
 
-	private TableTree<Foo> tree;
+	private TableTree<Foo, String> tree;
 
 	@Override
 	protected AbstractTree<Foo> createTree(FooProvider provider, IModel<Set<Foo>> state)
 	{
-		List<IColumn<Foo>> columns = createColumns();
+		List<IColumn<Foo, String>> columns = createColumns();
 
-		tree = new TableTree<Foo>("tree", columns, provider, Integer.MAX_VALUE, state)
+		tree = new TableTree<Foo, String>("tree", columns, provider, Integer.MAX_VALUE, state)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -73,15 +73,15 @@ public class TableTreePage extends TreePage
 		return tree;
 	}
 
-	private List<IColumn<Foo>> createColumns()
+	private List<IColumn<Foo, String>> createColumns()
 	{
-		List<IColumn<Foo>> columns = new ArrayList<IColumn<Foo>>();
+		List<IColumn<Foo, String>> columns = new ArrayList<IColumn<Foo, String>>();
 
-		columns.add(new PropertyColumn<Foo>(Model.of("ID"), "id"));
+		columns.add(new PropertyColumn<Foo, String>(Model.of("ID"), "id"));
 
-		columns.add(new TreeColumn<Foo>(Model.of("Tree")));
+		columns.add(new TreeColumn<Foo, String>(Model.of("Tree")));
 
-		columns.add(new AbstractColumn<Foo>(Model.of("Depth"))
+		columns.add(new AbstractColumn<Foo, String>(Model.of("Depth"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -100,8 +100,8 @@ public class TableTreePage extends TreePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Foo>(Model.of("Bar"), "bar"));
-		columns.add(new PropertyColumn<Foo>(Model.of("Baz"), "baz"));
+		columns.add(new PropertyColumn<Foo, String>(Model.of("Bar"), "bar"));
+		columns.add(new PropertyColumn<Foo, String>(Model.of("Baz"), "baz"));
 
 		return columns;
 	}

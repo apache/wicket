@@ -25,11 +25,13 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @param <T>
+ * @param <S>
+ *            the type of the sort property
  * 
  */
-public abstract class FilteredAbstractColumn<T> extends AbstractColumn<T>
+public abstract class FilteredAbstractColumn<T, S> extends AbstractColumn<T, S>
 	implements
-		IFilteredColumn<T>
+		IFilteredColumn<T, S>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +44,7 @@ public abstract class FilteredAbstractColumn<T> extends AbstractColumn<T>
 	 * @param sortProperty
 	 *            sort property this column represents
 	 */
-	public FilteredAbstractColumn(final IModel<String> displayModel, final String sortProperty)
+	public FilteredAbstractColumn(final IModel<String> displayModel, final S sortProperty)
 	{
 		super(displayModel, sortProperty);
 	}

@@ -116,7 +116,7 @@ public class BrowserPanel extends Panel
 	{
 		PageWindowProvider provider = new PageWindowProvider(sessionId);
 
-		List<IColumn<PageWindowDescription>> columns = new ArrayList<IColumn<PageWindowDescription>>();
+		List<IColumn<PageWindowDescription, String>> columns = new ArrayList<IColumn<PageWindowDescription, String>>();
 
 		PageWindowColumn pageIdColumn = new PageWindowColumn(Model.of("Id"), "id");
 		columns.add(pageIdColumn);

@@ -29,13 +29,15 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 /**
  * Toolbars that displays column headers. If the column is sortable a sortable header will be
  * displayed.
- * 
+ *
+ * @param <S>
+ *     the type of the sorting parameter
  * @see DefaultDataTable
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class HeadersToolbar extends AbstractToolbar
+public class HeadersToolbar<S> extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,15 +51,15 @@ public class HeadersToolbar extends AbstractToolbar
 	 * @param stateLocator
 	 *            locator for the ISortState implementation used by sortable headers
 	 */
-	public <T> HeadersToolbar(final DataTable<T> table, final ISortStateLocator stateLocator)
+	public <T> HeadersToolbar(final DataTable<T, S> table, final ISortStateLocator<S> stateLocator)
 	{
 		super(table);
 
 		RepeatingView headers = new RepeatingView("headers");
 		add(headers);
 
-		final List<IColumn<T>> columns = table.getColumns();
-		for (final IColumn<T> column : columns)
+		final List<IColumn<T, S>> columns = table.getColumns();
+		for (final IColumn<T, S> column : columns)
 		{
 			AbstractItem item = new AbstractItem(headers.newChildId());
 			headers.add(item);
@@ -81,7 +83,7 @@ public class HeadersToolbar extends AbstractToolbar
 					@Override
 					protected String getCssClass()
 					{
-						return ((IStyledColumn<?>)column).getCssClass();
+						return ((IStyledColumn<?, S>)column).getCssClass();
 					}
 				};
 
@@ -106,10 +108,10 @@ public class HeadersToolbar extends AbstractToolbar
 	 *            sort state locator
 	 * @return created header component
 	 */
-	protected WebMarkupContainer newSortableHeader(final String headerId, final String property,
-		final ISortStateLocator locator)
+	protected WebMarkupContainer newSortableHeader(final String headerId, final S property,
+		final ISortStateLocator<S> locator)
 	{
-		return new OrderByBorder(headerId, property, locator)
+		return new OrderByBorder<S>(headerId, property, locator)
 		{
 			private static final long serialVersionUID = 1L;
 

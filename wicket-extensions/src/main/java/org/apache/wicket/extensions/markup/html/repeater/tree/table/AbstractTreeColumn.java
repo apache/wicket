@@ -21,29 +21,33 @@ import org.apache.wicket.extensions.markup.html.repeater.tree.TableTree;
 import org.apache.wicket.model.IModel;
 
 /**
+ * @param <T>
+ *            the type of the model object
+ * @param <S>
+ *            the type of the sort property
  * @author svenmeier
  */
-public abstract class AbstractTreeColumn<T> extends AbstractColumn<T> implements ITreeColumn<T>
+public abstract class AbstractTreeColumn<T, S> extends AbstractColumn<T, S> implements ITreeColumn<T, S>
 {
 
-	private TableTree<T> tree;
+	private TableTree<T, S> tree;
 
 	public AbstractTreeColumn(IModel<String> displayModel)
 	{
 		super(displayModel);
 	}
 
-	public AbstractTreeColumn(IModel<String> displayModel, String sortProperty)
+	public AbstractTreeColumn(IModel<String> displayModel, S sortProperty)
 	{
 		super(displayModel, sortProperty);
 	}
 
-	public void setTree(TableTree<T> tree)
+	public void setTree(TableTree<T, S> tree)
 	{
 		this.tree = tree;
 	}
 
-	public TableTree<T> getTree()
+	public TableTree<T, S> getTree()
 	{
 		return tree;
 	}

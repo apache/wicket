@@ -28,6 +28,7 @@ import org.apache.wicket.util.io.IClusterable;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public interface IColumn extends IClusterable
 {
 	/**

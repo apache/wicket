@@ -28,9 +28,11 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @param <T>
+ * @param <S>
+ *     the type of the sorting parameter
  * 
  */
-public interface IFilteredColumn<T> extends IColumn<T>
+public interface IFilteredColumn<T, S> extends IColumn<T, S>
 {
 	/**
 	 * Returns the component used by user to filter the column. If null is returned, no filter will

@@ -31,9 +31,11 @@ import org.apache.wicket.model.PropertyModel;
  *            The column's model object type
  * @param <F>
  *            Filter's model object type
+ * @param <S>
+ *            the type of the sort property
  * 
  */
-public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
+public class TextFilteredPropertyColumn<T, F, S> extends FilteredPropertyColumn<T, S>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +44,7 @@ public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
 	 * @param sortProperty
 	 * @param propertyExpression
 	 */
-	public TextFilteredPropertyColumn(final IModel<String> displayModel, final String sortProperty,
+	public TextFilteredPropertyColumn(final IModel<String> displayModel, final S sortProperty,
 		final String propertyExpression)
 	{
 		super(displayModel, sortProperty, propertyExpression);

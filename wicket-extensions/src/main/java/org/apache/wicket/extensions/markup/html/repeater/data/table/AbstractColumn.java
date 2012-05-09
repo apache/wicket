@@ -25,12 +25,14 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * @param <T>
+ * @param <S>
+ *            the type of the sort property
  */
-public abstract class AbstractColumn<T> implements IStyledColumn<T>
+public abstract class AbstractColumn<T, S> implements IStyledColumn<T, S>
 {
 	private static final long serialVersionUID = 1L;
 	private IModel<String> displayModel;
-	private String sortProperty;
+	private S sortProperty;
 
 	/**
 	 * @param displayModel
@@ -38,7 +40,7 @@ public abstract class AbstractColumn<T> implements IStyledColumn<T>
 	 * @param sortProperty
 	 *            sort property this column represents
 	 */
-	public AbstractColumn(final IModel<String> displayModel, final String sortProperty)
+	public AbstractColumn(final IModel<String> displayModel, final S sortProperty)
 	{
 		this.displayModel = displayModel;
 		this.sortProperty = sortProperty;
@@ -64,7 +66,7 @@ public abstract class AbstractColumn<T> implements IStyledColumn<T>
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn#getSortProperty()
 	 */
-	public String getSortProperty()
+	public S getSortProperty()
 	{
 		return sortProperty;
 	}

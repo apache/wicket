@@ -41,7 +41,7 @@ public class AjaxNavigationToolbar extends NavigationToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AjaxNavigationToolbar(final DataTable<?> table)
+	public AjaxNavigationToolbar(final DataTable<?, ?> table)
 	{
 		super(table);
 	}
@@ -56,7 +56,7 @@ public class AjaxNavigationToolbar extends NavigationToolbar
 	 * @return paging navigator that will be used to navigate the data table
 	 */
 	@Override
-	protected PagingNavigator newPagingNavigator(final String navigatorId, final DataTable<?> table)
+	protected PagingNavigator newPagingNavigator(final String navigatorId, final DataTable<?, ?> table)
 	{
 		return new AjaxPagingNavigator(navigatorId, table)
 		{

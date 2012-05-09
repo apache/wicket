@@ -33,7 +33,7 @@ public abstract class AbstractToolbar extends Panel
 
 	private static int counter = 0;
 
-	private final DataTable<?> table;
+	private final DataTable<?, ?> table;
 
 	/**
 	 * Constructor
@@ -43,7 +43,7 @@ public abstract class AbstractToolbar extends Panel
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(final IModel<?> model, final DataTable<?> table)
+	public AbstractToolbar(final IModel<?> model, final DataTable<?, ?> table)
 	{
 		super("" + (counter++), model);
 		this.table = table;
@@ -55,7 +55,7 @@ public abstract class AbstractToolbar extends Panel
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(final DataTable<?> table)
+	public AbstractToolbar(final DataTable<?, ?> table)
 	{
 		this(null, table);
 	}
@@ -63,7 +63,7 @@ public abstract class AbstractToolbar extends Panel
 	/**
 	 * @return DataTable this toolbar is attached to
 	 */
-	protected DataTable<?> getTable()
+	protected DataTable<?, ?> getTable()
 	{
 		return table;
 	}

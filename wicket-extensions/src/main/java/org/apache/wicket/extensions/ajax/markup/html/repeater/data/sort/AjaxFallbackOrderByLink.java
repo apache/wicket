@@ -29,7 +29,9 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 
 /**
  * Ajaxified {@link OrderByLink}
- * 
+ *
+ * @param <S>
+ *            the type of the sort property
  * @see OrderByLink
  * 
  * @since 1.2.1
@@ -37,7 +39,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAjaxLink
+public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implements IAjaxLink
 {
 	/**
 	 * 
@@ -50,57 +52,57 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAj
 	 * Constructor
 	 * 
 	 * @param id
-	 * @param property
+	 * @param sortProperty
 	 * @param stateLocator
 	 * @param cssProvider
 	 */
-	public AjaxFallbackOrderByLink(final String id, final String property,
-		final ISortStateLocator stateLocator, final ICssProvider cssProvider)
+	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
+		final ISortStateLocator<S> stateLocator, final ICssProvider<String> cssProvider)
 	{
-		this(id, property, stateLocator, cssProvider, null);
+		this(id, sortProperty, stateLocator, cssProvider, null);
 	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
-	 * @param property
+	 * @param sortProperty
 	 * @param stateLocator
 	 */
-	public AjaxFallbackOrderByLink(final String id, final String property,
-		final ISortStateLocator stateLocator)
+	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
+		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, property, stateLocator, DefaultCssProvider.getInstance(), null);
+		this(id, sortProperty, stateLocator, DefaultCssProvider.getInstance(), null);
 	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
-	 * @param property
+	 * @param sortProperty
 	 * @param stateLocator
 	 * @param ajaxCallListener
 	 */
-	public AjaxFallbackOrderByLink(final String id, final String property,
-		final ISortStateLocator stateLocator, final IAjaxCallListener ajaxCallListener)
+	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
+		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
 	{
-		this(id, property, stateLocator, DefaultCssProvider.getInstance(), ajaxCallListener);
+		this(id, sortProperty, stateLocator, DefaultCssProvider.getInstance(), ajaxCallListener);
 	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
-	 * @param property
+	 * @param sortProperty
 	 * @param stateLocator
 	 * @param cssProvider
 	 * @param ajaxCallListener
 	 */
-	public AjaxFallbackOrderByLink(final String id, final String property,
-		final ISortStateLocator stateLocator, final ICssProvider cssProvider,
+	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
+		final ISortStateLocator<S> stateLocator, final ICssProvider<String> cssProvider,
 		final IAjaxCallListener ajaxCallListener)
 	{
-		super(id, property, stateLocator, cssProvider);
+		super(id, sortProperty, stateLocator, cssProvider);
 
 		this.ajaxCallListener = ajaxCallListener;
 	}

@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.examples.spring.common.web;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.examples.spring.common.Contact;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
@@ -38,13 +39,13 @@ public abstract class ContactsDisplayPage extends BasePage
 	 */
 	public ContactsDisplayPage()
 	{
-		IColumn<?>[] cols = new IColumn[4];
-		cols[0] = new PropertyColumn(new Model<String>("first name"), "firstName", "firstName");
-		cols[1] = new PropertyColumn(new Model<String>("last name"), "lastName", "lastName");
-		cols[2] = new PropertyColumn(new Model<String>("home phone"), "homePhone");
-		cols[3] = new PropertyColumn(new Model<String>("cell phone"), "cellPhone");
+		List<IColumn<Contact, String>> cols = new ArrayList<IColumn<Contact, String>>(4);
+		cols.add(new PropertyColumn<Contact, String>(new Model<String>("first name"), "firstName", "firstName"));
+		cols.add(new PropertyColumn<Contact, String>(new Model<String>("last name"), "lastName", "lastName"));
+		cols.add(new PropertyColumn<Contact, String>(new Model<String>("home phone"), "homePhone"));
+		cols.add(new PropertyColumn<Contact, String>(new Model<String>("cell phone"), "cellPhone"));
 
-		add(new DefaultDataTable("contacts", Arrays.asList(cols), getDataProvider(), 5));
+		add(new DefaultDataTable<Contact, String>("contacts", cols, getDataProvider(), 5));
 	}
 
 	protected abstract ContactDataProvider getDataProvider();

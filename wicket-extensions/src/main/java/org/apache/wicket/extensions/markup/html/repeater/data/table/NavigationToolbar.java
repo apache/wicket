@@ -37,7 +37,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public NavigationToolbar(final DataTable<?> table)
+	public NavigationToolbar(final DataTable<?, ?> table)
 	{
 		super(table);
 
@@ -58,7 +58,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 *            dataview used by datatable
 	 * @return paging navigator that will be used to navigate the data table
 	 */
-	protected PagingNavigator newPagingNavigator(final String navigatorId, final DataTable<?> table)
+	protected PagingNavigator newPagingNavigator(final String navigatorId, final DataTable<?, ?> table)
 	{
 		return new PagingNavigator(navigatorId, table);
 	}
@@ -73,7 +73,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 * @return navigator label that will be used to navigate the data table
 	 * 
 	 */
-	protected WebComponent newNavigatorLabel(final String navigatorId, final DataTable<?> table)
+	protected WebComponent newNavigatorLabel(final String navigatorId, final DataTable<?, ?> table)
 	{
 		return new NavigatorLabel(navigatorId, table);
 	}

@@ -22,8 +22,10 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
  * 
  * @author Matej Knopp
  * @param <T>
+ * @param <S>
+ *     the type of the sorting parameter
  */
-public interface IStyledColumn<T> extends IColumn<T>
+public interface IStyledColumn<T, S> extends IColumn<T, S>
 {
 	/**
 	 * Returns the css class for this column.

@@ -41,7 +41,7 @@ import org.apache.wicket.model.IModel;
  *     the type of the sorting parameter
  * @author svenmeier
  */
-public class DefaultTableTree<T, S> extends TableTree<T>
+public class DefaultTableTree<T, S> extends TableTree<T, S>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -58,7 +58,7 @@ public class DefaultTableTree<T, S> extends TableTree<T>
 	 * @param rowsPerPage
 	 *            rows to show on each page
 	 */
-	public DefaultTableTree(String id, List<IColumn<T>> columns, ISortableTreeProvider<T, S> provider,
+	public DefaultTableTree(String id, List<IColumn<T, S>> columns, ISortableTreeProvider<T, S> provider,
 		int rowsPerPage)
 	{
 		this(id, columns, provider, rowsPerPage, null);
@@ -78,7 +78,7 @@ public class DefaultTableTree<T, S> extends TableTree<T>
 	 * @param state
 	 *            expansion state
 	 */
-	public DefaultTableTree(String id, List<IColumn<T>> columns, ISortableTreeProvider<T, S> provider,
+	public DefaultTableTree(String id, List<IColumn<T, S>> columns, ISortableTreeProvider<T, S> provider,
 		int rowsPerPage, IModel<Set<T>> state)
 	{
 		super(id, columns, provider, rowsPerPage, state);

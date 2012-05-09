@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Matej Knopp
  */
+@Deprecated
 public abstract class AbstractColumn implements IColumn
 {
 	private static final long serialVersionUID = 1L;

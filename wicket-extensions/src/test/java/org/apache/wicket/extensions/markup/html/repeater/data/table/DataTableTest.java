@@ -205,10 +205,10 @@ public class DataTableTest extends Assert
 				}
 			};
 
-			List<IColumn<Number>> columns = new ArrayList<IColumn<Number>>();
-			columns.add(new PropertyColumn<Number>(Model.of("value"), "value"));
+			List<IColumn<Number, String>> columns = new ArrayList<IColumn<Number, String>>();
+			columns.add(new PropertyColumn<Number, String>(Model.of("value"), "value"));
 
-			DataTable<Number> table = new DataTable<Number>("table", columns, provider, 10);
+			DataTable<Number, String> table = new DataTable<Number, String>("table", columns, provider, 10);
 			table.addBottomToolbar(new NoRecordsToolbar(table));
 			table.addTopToolbar(new NoRecordsToolbar(table));
 			add(table);

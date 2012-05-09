@@ -38,7 +38,7 @@ class BrowserTable extends DefaultDataTable<PageWindowDescription, String>
 	 * @param provider
 	 *            the provider of page descriptions
 	 */
-	public BrowserTable(String id, List<IColumn<PageWindowDescription>> columns,
+	public BrowserTable(String id, List<IColumn<PageWindowDescription, String>> columns,
 		PageWindowProvider provider)
 	{
 		super(id, columns, provider, 20);

@@ -27,8 +27,10 @@ import org.apache.wicket.model.IModel;
  * @author svenmeier
  * @param <T>
  *            node type
+ * @param <S>
+ *            the type of the sort property
  */
-public class TreeColumn<T> extends AbstractTreeColumn<T>
+public class TreeColumn<T, S> extends AbstractTreeColumn<T, S>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -52,7 +54,7 @@ public class TreeColumn<T> extends AbstractTreeColumn<T>
 	 * @param sortProperty
 	 *            sort property
 	 */
-	public TreeColumn(IModel<String> displayModel, String sortProperty)
+	public TreeColumn(IModel<String> displayModel, S sortProperty)
 	{
 		super(displayModel, sortProperty);
 	}
