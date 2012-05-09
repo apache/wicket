@@ -107,7 +107,7 @@ started quickly:
  - wicket-examples:
 
     shows all components in short usage examples, also available live on:
-    http://www.wicketstuff.org/wicket
+    http://www.wicket-library.com/wicket-examples
 
  - wicket-quickstart archetype:
 
@@ -202,7 +202,7 @@ Migrating from 1.4
 
 This file is a copy of the migration guide from available on our Wiki:
 
-    http://cwiki.apache.org/WICKET/migrate-15.html
+    https://cwiki.apache.org/WICKET/migration-to-wicket-15.html
     
 Getting help
 ------------
@@ -210,7 +210,7 @@ Getting help
  - Read the online documentation available on our website
    (http://wicket.apache.org)
 
- - Read the migration guide (migrate-15.html)
+ - Read the migration guide (migration-to-wicket-15.html)
 
  - Read the mailing archives available on Nabble, GMane and Apache
 
