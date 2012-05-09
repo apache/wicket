@@ -202,7 +202,6 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 		super(id, model, Date.class);
 
 		Args.notNull(converter, "converter");
-		converter.setComponent(this);
 		this.converter = converter;
 	}
 
@@ -240,6 +239,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider#getTextFormat()
 	 */
+        @Override
 	public final String getTextFormat()
 	{
 		return converter.getDatePattern(getLocale());
