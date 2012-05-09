@@ -111,6 +111,7 @@ public class ResourceNameIterator implements IResourceNameIterator
 	 * 
 	 * @return current Locale
 	 */
+	@Override
 	public final Locale getLocale()
 	{
 		return localeIterator.getLocale();
@@ -121,6 +122,7 @@ public class ResourceNameIterator implements IResourceNameIterator
 	 * 
 	 * @return current Style
 	 */
+	@Override
 	public final String getStyle()
 	{
 		return styleIterator.getStyle();
@@ -131,6 +133,7 @@ public class ResourceNameIterator implements IResourceNameIterator
 	 * 
 	 * @return current Variation
 	 */
+	@Override
 	public final String getVariation()
 	{
 		return styleIterator.getVariation();
@@ -141,6 +144,7 @@ public class ResourceNameIterator implements IResourceNameIterator
 	 * 
 	 * @return current filename extension
 	 */
+	@Override
 	public final String getExtension()
 	{
 		return extensionsIterator.getExtension();
