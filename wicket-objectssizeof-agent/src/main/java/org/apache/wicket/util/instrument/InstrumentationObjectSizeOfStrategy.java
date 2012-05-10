@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.lang.instrument.Instrumentation;
 
 import org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Object size of strategy that is based on instrumentation.
@@ -31,7 +33,52 @@ import org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy;
  */
 public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrategy
 {
+        private static final Logger log = LoggerFactory.getLogger(InstrumentationObjectSizeOfStrategy.class);
+	/**
+	 * Instrumentation instance.
+	 */
+	private final Instrumentation instrumentation;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param instrumentation
+	 */
+	public InstrumentationObjectSizeOfStrategy(Instrumentation instrumentation)
+	{
+		this.instrumentation = instrumentation;
+	}
+
+	/**
+	 * Calculates full size of object iterating over its hierarchy graph.
+	 * 
+	 * @param obj
+	 *            object to calculate size of
+	 * @return object size
+	 * 
+	 * @see org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable)
+	 */
+        @Override
+	public long sizeOf(Serializable obj)
+	{
+		if (obj == null)
+		{
+			return 0;
+		}
+		try
+		{
+			SizeRecodingOuputStream recorder = new SizeRecodingOuputStream();
+			recorder.writeObject(obj);
+			return recorder.getTotalSize();
+		}
+		catch (IOException e)
+		{
+			log.error("Error calculating size of object", e);
+			return -1;
+		}
+
+	}
+        
 	/**
 	 * Records the size of an object and it's dependents as if they were serialized but using the
 	 * instrumentation API to calculate.
@@ -80,49 +127,5 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 
 			return obj;
 		}
-	}
-
-	/**
-	 * Instrumentation instance.
-	 */
-	private final Instrumentation instrumentation;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param instrumentation
-	 */
-	public InstrumentationObjectSizeOfStrategy(Instrumentation instrumentation)
-	{
-		this.instrumentation = instrumentation;
-	}
-
-	/**
-	 * Calculates full size of object iterating over its hierarchy graph.
-	 * 
-	 * @param obj
-	 *            object to calculate size of
-	 * @return object size
-	 * 
-	 * @see org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable)
-	 */
-	public long sizeOf(Serializable obj)
-	{
-		if (obj == null)
-		{
-			return 0;
-		}
-		try
-		{
-			SizeRecodingOuputStream recorder = new SizeRecodingOuputStream();
-			recorder.writeObject(obj);
-			return recorder.getTotalSize();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return -1;
-		}
-
 	}
 }

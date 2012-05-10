@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.core.request.ClientInfo;
@@ -51,11 +50,6 @@ public abstract class DateConverter implements IConverter<Date>
 	private final boolean applyTimeZoneDifference;
 
 	/**
-	 * Optional component to use for determining the locale.
-	 */
-	private Component component = null;
-
-	/**
 	 * Construct. </p> When applyTimeZoneDifference is true, the current time is applied on the
 	 * parsed date, and the date will be corrected for the time zone difference between the server
 	 * and the client. For instance, if I'm in Seattle and the server I'm working on is in
@@ -75,6 +69,7 @@ public abstract class DateConverter implements IConverter<Date>
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 	 *      java.util.Locale)
 	 */
+        @Override
 	public Date convertToObject(String value, Locale locale)
 	{
 		if (Strings.isEmpty(value))
@@ -131,6 +126,7 @@ public abstract class DateConverter implements IConverter<Date>
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 	 *      java.util.Locale)
 	 */
+        @Override
 	public String convertToString(Date value, Locale locale)
 	{
 		DateTime dt = new DateTime(value.getTime(), getTimeZone());
@@ -166,29 +162,10 @@ public abstract class DateConverter implements IConverter<Date>
 	}
 
 	/**
-	 * @return optional component to use for determining the locale.
-	 */
-	public final Component getComponent()
-	{
-		return component;
-	}
-
-	/**
 	 * @param locale
 	 * @return Gets the pattern that is used for printing and parsing
 	 */
 	public abstract String getDatePattern(Locale locale);
-
-	/**
-	 * Sets component for getting the locale
-	 * 
-	 * @param component
-	 *            optional component to use for determining the locale.
-	 */
-	public final void setComponent(Component component)
-	{
-		this.component = component;
-	}
 
 	/**
 	 * Gets the client's time zone.
@@ -211,17 +188,6 @@ public abstract class DateConverter implements IConverter<Date>
 	 * @return formatter The formatter for the current conversion
 	 */
 	protected abstract DateTimeFormatter getFormat(Locale locale);
-
-	/**
-	 * Gets the locale to use.
-	 * 
-	 * @return the locale from either the component if that is set, or from the session
-	 */
-	protected Locale getLocale()
-	{
-		Component c = getComponent();
-		return (c != null) ? c.getLocale() : Session.get().getLocale();
-	}
 
 	/**
 	 * Gets the server time zone. Override this method if you want to fix to a certain time zone,
