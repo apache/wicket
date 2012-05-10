@@ -39,23 +39,23 @@ public class OrderByBorder<S> extends Border
 	/**
 	 * @param id
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param property
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param stateLocator
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param cssProvider
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 */
 	public OrderByBorder(final String id, final S property,
 		final ISortStateLocator<S> stateLocator, final OrderByLink.ICssProvider<String> cssProvider)
 	{
 		super(id);
 
-		OrderByLink link = newOrderByLink("orderByLink", property, stateLocator);
+		OrderByLink<S> link = newOrderByLink("orderByLink", property, stateLocator);
 		addToBorder(link);
 		add(new OrderByLink.CssModifier(link, cssProvider));
 		link.add(getBodyContainer());
@@ -72,7 +72,7 @@ public class OrderByBorder<S> extends Border
 	 *            sort state locator
 	 * @return link
 	 */
-	protected OrderByLink newOrderByLink(final String id, final S property,
+	protected OrderByLink<S> newOrderByLink(final String id, final S property,
 		final ISortStateLocator<S> stateLocator)
 	{
 		return new OrderByLink(id, property, stateLocator,
@@ -98,11 +98,11 @@ public class OrderByBorder<S> extends Border
 
 	/**
 	 * @param id
-	 *            see {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator)}
 	 * @param property
-	 *            see {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator)}
 	 * @param stateLocator
-	 *            see {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator)}
 	 */
 	public OrderByBorder(final String id, final S property,
 		final ISortStateLocator<S> stateLocator)
