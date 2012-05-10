@@ -34,7 +34,6 @@
 		<spring.version>3.0.6.RELEASE</spring.version>
 		<maven.javadoc.version>2.8</maven.javadoc.version>
 		<maven.surefire.version>2.11</maven.surefire.version>
-		<wicket.version>${project.version}</wicket.version>
 	</properties>
 	<modules>
 		<module>wicket</module>
@@ -197,7 +196,7 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<!-- It seems there is a bug in Maven (2.2.1 & 3.0.1) and
                 type 'pom' is not properly inherited. I.e. the
                 dependency management doesn't work -->
@@ -206,73 +205,73 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-request</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-extensions</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-util</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-ioc</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-jmx</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-auth-roles</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-datetime</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-velocity</artifactId>
-				<version>${wicket.version}</version>
+				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
@@ -581,7 +580,7 @@
 						<descriptors>
 							<descriptor>wicket-assembly-all.xml</descriptor>
 						</descriptors>
-						<finalName>apache-wicket-${wicket.version}</finalName>
+						<finalName>apache-wicket-6.0-SNAPSHOT</finalName>
 					</configuration>
 				</plugin>
 				<plugin>
