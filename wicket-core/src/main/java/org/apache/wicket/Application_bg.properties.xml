@@ -19,9 +19,10 @@
 <properties>
 	<entry key="Required">Полето '${label}' е задължително.</entry>
 	<entry key="IConverter">'${input}' не е валиден ${type}.</entry>
-	<entry key="RangeValidator">${input} трябва да бъде между ${minimum} и ${maximum}.</entry>
-	<entry key="MinimumValidator">'${input}' трябва да бъде най-малко ${minimum}.</entry>
-	<entry key="MaximumValidator">'${input}' трябва да бъде най-много ${maximum}.</entry>
+	<entry key="RangeValidator.range">${input} трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="RangeValidator.exact">${input} трябва да бъде точно ${minimum}.</entry>
+	<entry key="RangeValidator.minimum">'${input}' трябва да бъде най-малко ${minimum}.</entry>
+	<entry key="RangeValidator.maximum">'${input}' трябва да бъде най-много ${maximum}.</entry>
 
 	<entry key="StringValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum} символа.</entry>
 	<entry key="StringValidator.minimum">'${input}' трябва да бъде поне ${minimum} символа.</entry>

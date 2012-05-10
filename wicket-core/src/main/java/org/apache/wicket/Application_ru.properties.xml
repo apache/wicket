@@ -19,9 +19,9 @@
 <properties>
 	<entry key="Required">Поле '${label}' обязательно для ввода.</entry>
 	<entry key="IConverter">'${input}' должно соответствовать типу ${type}.</entry>
-	<entry key="RangeValidator">'${input}' не находится между ${minimum} и ${maximum}.</entry>
-	<entry key="MinimumValidator">'${input}' меньше минимального значения ${minimum}.</entry>
-	<entry key="MaximumValidator">'${input}' больше максимального значения ${maximum}.</entry>
+	<entry key="RangeValidator.range">'${input}' не находится между ${minimum} и ${maximum}.</entry>
+	<entry key="RangeValidator.minimum">'${input}' меньше минимального значения ${minimum}.</entry>
+	<entry key="RangeValidator.maximum">'${input}' больше максимального значения ${maximum}.</entry>
 
 	<entry key="StringValidator.range">Количество символов в '${input}' не между ${minimum} и ${maximum}.</entry>
 	<entry key="StringValidator.minimum">Количество символов в '${input}' меньше ${minimum}.</entry>

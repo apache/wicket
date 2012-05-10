@@ -70,16 +70,16 @@ public class ValidationErrorFeedback implements IClusterable
 	 * @return message
 	 */
 	public Serializable getMessage()
+
 	{
 		return message;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
-		return message.toString();
+		return "ValidationErrorFeedback{" +
+				"message=" + message +
+				'}';
 	}
 }

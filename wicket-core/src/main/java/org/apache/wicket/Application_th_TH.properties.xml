@@ -20,9 +20,9 @@
 	<!-- have to confirm whether this is really ok -->
 	<entry key="Required">ข้อมูลใน ${label} เป็นที่ต้องการ.</entry>
 	<entry key="IConverter">ไม่ใช่ '${input}' ที่ใช้งานได้จริง ${type}.</entry>
-	<entry key="NumberValidator.range">${input} ต้องอยู่ระหว่าง ${minimum} และ ${maximum}.</entry>
-	<entry key="NumberValidator.minimum">'${input}' ต้องมากกว่า ${minimum}.</entry>
-	<entry key="NumberValidator.maximum">'${input}' ต้องน้อยกว่า ${maximum}.</entry>
+	<entry key="RangeValidator.range">${input} ต้องอยู่ระหว่าง ${minimum} และ ${maximum}.</entry>
+	<entry key="RangeValidator.minimum">'${input}' ต้องมากกว่า ${minimum}.</entry>
+	<entry key="RangeValidator.maximum">'${input}' ต้องน้อยกว่า ${maximum}.</entry>
 	<entry key="StringValidator.range">'${input}' ต้องอยู่ระหว่าง ${minimum} และ ${maximum} chars.</entry>
 	<entry key="StringValidator.minimum">'${input}' ต้องมีอย่างน้อย ${minimum} ตัวอักษร.</entry>
 	<entry key="StringValidator.maximum">'${input}' ต้องมีไม่เกิน ${maximum} ตัวอักษร.</entry>
