@@ -143,12 +143,12 @@ public abstract class HeaderResponse implements IHeaderResponse
 					getResponse().write("]>");
 				}
 				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-				getResponse().write(urlWoSessionId);
+				getResponse().write(Strings.escapeMarkup(urlWoSessionId));
 				getResponse().write("\"");
 				if (media != null)
 				{
 					getResponse().write(" media=\"");
-					getResponse().write(media);
+					getResponse().write(Strings.escapeMarkup(media));
 					getResponse().write("\"");
 				}
 				getResponse().write(" />");

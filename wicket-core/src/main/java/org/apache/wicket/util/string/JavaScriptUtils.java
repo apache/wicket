@@ -129,7 +129,7 @@ public class JavaScriptUtils
 		response.write("<script type=\"text/javascript\" ");
 		if (id != null)
 		{
-			response.write("id=\"" + id + "\" ");
+			response.write("id=\"" + Strings.escapeMarkup(id) + "\" ");
 		}
 		if (defer)
 		{
@@ -137,10 +137,10 @@ public class JavaScriptUtils
 		}
 		if (charset != null)
 		{
-			response.write("charset=\"" + charset + "\" ");
+			response.write("charset=\"" + Strings.escapeMarkup(charset) + "\" ");
 		}
 		response.write("src=\"");
-		response.write(url);
+		response.write(Strings.escapeMarkup(url));
 		response.write("\"></script>");
 		response.write("\n");
 	}
