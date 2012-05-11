@@ -233,7 +233,6 @@ public class DateLabel extends Label
 		{
 			throw new IllegalStateException("converter may not be null");
 		}
-		converter.setComponent(this);
 		this.converter = converter;
 	}
 

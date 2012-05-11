@@ -202,7 +202,6 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 		super(id, model, Date.class);
 
 		Args.notNull(converter, "converter");
-		converter.setComponent(this);
 		this.converter = converter;
 	}
 
