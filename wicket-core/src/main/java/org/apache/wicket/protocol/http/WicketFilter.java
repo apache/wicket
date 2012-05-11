@@ -167,7 +167,10 @@ public class WicketFilter implements Filter
 			if (shouldIgnorePath(httpServletRequest))
 			{
 				log.debug("Ignoring request {}", httpServletRequest.getRequestURL());
-				chain.doFilter(request, response);
+				if (chain != null)
+				{
+					chain.doFilter(request, response);
+				}
 				return false;
 			}
 
