@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.lang.instrument.Instrumentation;
 
 import org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Object size of strategy that is based on instrumentation.
@@ -31,6 +33,8 @@ import org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy;
  */
 public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrategy
 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(InstrumentationObjectSizeOfStrategy.class);
 
 	/**
 	 * Records the size of an object and it's dependents as if they were serialized but using the
@@ -120,7 +124,7 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			LOG.error("Error calculating size of object", e);
 			return -1;
 		}
 

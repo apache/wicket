@@ -50,6 +50,8 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A unique and fun-to-use captcha technique I developed at Thoof.
@@ -59,6 +61,8 @@ import org.apache.wicket.util.time.Time;
 public class KittenCaptchaPanel extends Panel
 {
 	private static final long serialVersionUID = 2711167040323855070L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(KittenCaptchaPanel.class);
 
 	// The background grass area
 	private static BufferedImage grass = load("images/grass.png");
@@ -98,7 +102,7 @@ public class KittenCaptchaPanel extends Panel
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			LOG.error("Error loading image", e);
 			return null;
 		}
 	}
@@ -379,7 +383,7 @@ public class KittenCaptchaPanel extends Panel
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				LOG.error("Error loading image", e);
 				return null;
 			}
 		}
