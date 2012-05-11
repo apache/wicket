@@ -17,6 +17,7 @@
 package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Utility methods for CSS.
@@ -77,5 +78,29 @@ public final class CssUtils
 	public static void writeCloseTag(final Response response)
 	{
 		response.write(INLINE_CLOSE_TAG);
+	}
+
+	/**
+	 * Writes a reference to a css file in the response object
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param url
+	 *      the url of the css reference
+	 * @param media
+	 *      the CSS media
+	 */
+	public static void writeLinkUrl(final Response response, final CharSequence url, final CharSequence media)
+	{
+		response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+		response.write(Strings.escapeMarkup(url));
+		response.write("\"");
+		if (media != null)
+		{
+			response.write(" media=\"");
+			response.write(Strings.escapeMarkup(media));
+			response.write("\"");
+		}
+		response.write(" />");
 	}
 }

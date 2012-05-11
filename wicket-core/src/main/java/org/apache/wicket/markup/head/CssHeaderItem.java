@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.head;
 
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -190,8 +191,6 @@ public abstract class CssHeaderItem extends HeaderItem
 		String condition)
 	{
 		Args.notEmpty(url, "url");
-
-		String urlWoSessionId = Strings.stripJSessionId(url);
 		
 		boolean hasCondition = Strings.isEmpty(condition) == false; 
 		if (hasCondition)
@@ -200,16 +199,10 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write(condition);
 			response.write("]>");
 		}
-		response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-		response.write(urlWoSessionId);
-		response.write("\"");
-		if (media != null)
-		{
-			response.write(" media=\"");
-			response.write(media);
-			response.write("\"");
-		}
-		response.write(" />");
+
+		String urlWoSessionId = Strings.stripJSessionId(url);
+		CssUtils.writeLinkUrl(response, urlWoSessionId, media);
+
 		if (hasCondition)
 		{
 			response.write("<![endif]-->");
