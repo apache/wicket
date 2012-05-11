@@ -34,18 +34,19 @@ import org.apache.wicket.util.io.IClusterable;
  * translated to a corresponding {@link Date} object.
  * 
  * Notice that incoming value, when used by a FormComponent, will never be null because before
- * validation form components perform the required (see {@link FormComponent#isRequired()} check
+ * validation form components perform the required (see FormComponent.isRequired()) check
  * which errors out on null values. In the case the FormComponent is not required and the user
  * enters a null value converters will not be invoked because no type conversion is necessary.
  * </p>
- * 
+ *
+ * See org.apache.wicket.Component#getConverter(Class)
+ * See org.apache.wicket.Application#getConverterLocator()
+ *
  * @author Eelco Hillenius
  * @author Jonathan Locke
  * 
  * @param <C>
  *            The object to convert from and to String
- * @see org.apache.wicket.Component#getConverter(Class)
- * @see org.apache.wicket.Application#getConverterLocator()
  */
 public interface IConverter<C> extends IClusterable
 {
