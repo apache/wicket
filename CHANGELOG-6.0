@@ -1,5 +1,82 @@
 This file contains all changes done on the 6.0 version.
 
+Release Notes - Wicket - Version 6.0.0-beta2
+
+** Sub-task
+    * [WICKET-4517] - Wicket-core don't export "internal" packages in OSGi manifest.
+    * [WICKET-4521] - Improve all IComponentResolvers which are also IMarkupFilters to set tag ids with common prefix
+
+** Bug
+    * [WICKET-4260] - UrlRenderer renders invalid relative URLs if first segment contains colon
+    * [WICKET-4286] - ListView causes page ID increment
+    * [WICKET-4458] - wicket-core-1.5.5.jar not closed when Application is undeployed from directory
+    * [WICKET-4475] - Inline Enclosure needs to check isVisibleInHierarchy, not only isVisible
+    * [WICKET-4477] - SmartLinkLabel failing to process email with -
+    * [WICKET-4480] - newResourceResponse() always process IResourceStream
+    * [WICKET-4483] - Component#setDefaultModel() should call #modelChanging()
+    * [WICKET-4484] - wicket:link component ids get too long
+    * [WICKET-4485] - TagUtils uses wrong separator in its #copyAttributes()
+    * [WICKET-4487] - TextTemplate in RenderHead() on component doesn't Re-Render for every page
+    * [WICKET-4488] - URL with a previous page version ignores requested page based on mount path
+    * [WICKET-4489] - HttpSessionStore.onUnbind is never invoked
+    * [WICKET-4494] - HtmlHandler wrongly handles tags not requiring closed tags if the markup does not have "top" level tag
+    * [WICKET-4500] - InterceptData never cleared from session after continueToOriginalDestination is called
+    * [WICKET-4501] - NumberTextField<BigDecimal> renders its value in unsupported number format 
+    * [WICKET-4502] - Make it easier to produce a page with links with absolute urls
+    * [WICKET-4504] - AjaxLazyLoadPanel not replaced within AjaxTabbedPanel
+    * [WICKET-4505] - AbstractTextComponent not escaping html data by default therefore user text is not redisplayed correctly
+    * [WICKET-4506] - Fix missing in 1.4.19, was fixed in 1.3.3:  Discrepancy between Button implementation of getForm and the code in Form.findSubmittingButton()
+    * [WICKET-4507] - wicktTester.getLastResponseAsString() returns wrong result after starting a Component
+    * [WICKET-4509] - Spaces in path cause ModifcationWatcher to fail
+    * [WICKET-4511] - Stack overflow when render malformed html.
+    * [WICKET-4514] - UrlRenderer produces wrong full urls when the passed parameter is not absolute (as Url understands 'absolute')
+    * [WICKET-4516] - WebApplication#renderXmlDecl() uses wrong name of the 'Accept' request header
+    * [WICKET-4518] - Wicket example 'forminput' is broken due to bad url for IOnChangeListener
+    * [WICKET-4519] - discrepancy between JavaDoc and code in MarkupContainer#visitChildren()
+    * [WICKET-4520] - Inline enclosure doesn't work if wicket:message attribute is used on the same tag
+    * [WICKET-4530] - Final methods on ResourceNameIterator prevent full customization of IResourceStreamLocator
+    * [WICKET-4535] - Inconsistent use of generics in sorting APIs
+    * [WICKET-4543] - AbstractDefaultAjaxBehavior.getCallbackFunctionBody uses jQuery.extend
+    * [WICKET-4546] - Unencoded ampersands in CSS-/Javascript-Reference
+    * [WICKET-4548] - NullPointerException in org.apache.wicket.markup.html.form.ValidationErrorFeedback
+
+** Improvement
+    * [WICKET-598] - Support jetty continuations in wicket
+    * [WICKET-2128] - StringValidator error messages erroneously mention input instead of label
+    * [WICKET-2674] - AbstractChoice Option Style Hook
+    * [WICKET-4466] - Use an external host for the static javascript files (specially JQuery)
+    * [WICKET-4468] - Stateful components which are invisible force page to be stateful
+    * [WICKET-4474] - Disallow PackageResources in the bundles
+    * [WICKET-4478] - DiskDataStore to use multi-level directory structure to avoid slowness when thousands of sessions are active.
+    * [WICKET-4479] - Маке ModificationWatcher easier for extending
+    * [WICKET-4481] - Add setHeader() to MockHttpServletRequest to be able to override default headers
+    * [WICKET-4486] - Give StringValue toEnum methods
+    * [WICKET-4503] - org.apache.wicket.datetime.markup.html.form.DateTextField#getConverter() is final, should not be
+    * [WICKET-4523] - Use new maven compiler plugin to speed up build time
+    * [WICKET-4524] - ListMultipleChoice has a performance issue with very large lists, patch included
+    * [WICKET-4526] - OpenCloseTagExpander should include i tag
+    * [WICKET-4527] - Recorder#getSelectedChoices() can be very slow under certain circumstances
+    * [WICKET-4528] - make recorder component of wicket-extensions palette more efficient for large number of items and easier to extend
+    * [WICKET-4533] - Resource bundle api should have convenience methods for resource replacements
+    * [WICKET-4540] - Allow AJAX callback function generation to also generate parameters
+    * [WICKET-4541] - Warn if wicket:container has an attribute
+    * [WICKET-4542] - Session.java javadoc needs to be corrected
+    * [WICKET-4552] - WicketFilter.processRequest() should check that given FilterChain is not null
+
+** New Feature
+    * [WICKET-363] - Push behavior to handle server side events
+    * [WICKET-4532] - Disable caching for particular resources.
+
+** Task
+    * [WICKET-4482] - Regression in OnChangeAjaxBehavior
+
+** Wish
+    * [WICKET-4308] - onNewBrowserWindow wanted
+    * [WICKET-4498] - Ignore Netbeans XML configuration files in Apache License Header Test Case
+
+
+
+
 Release Notes - Wicket - Version 6.0.0-beta1
 
 ** Sub-task
