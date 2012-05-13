@@ -29,13 +29,13 @@ import org.apache.wicket.util.string.StringValue;
 
 /**
  * An Ajax behavior that notifies when a new browser window/tab is opened with
- * url to a page instance which is already opened in another window/tab.
+ * url to a page instance which is already opened in another window/tab in the same user session.
  *
  * Note: this behavior may be assigned only to an instance of a WebPage class.
  *
  * @since 6.0
  */
-public abstract class NewWindowNotifier extends AbstractDefaultAjaxBehavior
+public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 {
 	/**
 	 * A unique name used for the page window's name
@@ -55,7 +55,7 @@ public abstract class NewWindowNotifier extends AbstractDefaultAjaxBehavior
 	/**
 	 * Constructor.
 	 */
-	public NewWindowNotifier()
+	public AjaxNewWindowNotifyingBehavior()
 	{
 		this(UUID.randomUUID().toString());
 	}
@@ -66,7 +66,7 @@ public abstract class NewWindowNotifier extends AbstractDefaultAjaxBehavior
 	 * @param windowName
 	 *      the custom name to use for the page's window
 	 */
-	public NewWindowNotifier(final String windowName)
+	public AjaxNewWindowNotifyingBehavior(final String windowName)
 	{
 		this.windowName = windowName;
 	}
@@ -79,7 +79,7 @@ public abstract class NewWindowNotifier extends AbstractDefaultAjaxBehavior
 		Component component = getComponent();
 		if (component instanceof WebPage == false)
 		{
-			throw new WicketRuntimeException(NewWindowNotifier.class.getName() + " can be assigned only to WebPage instances.");
+			throw new WicketRuntimeException(AjaxNewWindowNotifyingBehavior.class.getName() + " can be assigned only to WebPage instances.");
 		}
 	}
 
