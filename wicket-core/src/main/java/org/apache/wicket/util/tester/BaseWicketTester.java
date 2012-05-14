@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.FilterConfig;
@@ -662,6 +660,14 @@ public class BaseWicketTester
 				Url newUrl = Url.parse(lastResponse.getRedirectLocation(),
 					Charset.forName(request.getCharacterEncoding()));
 
+				if (isExternalRedirect(lastRequest.getUrl(), newUrl))
+				{
+					// we can't handle external redirects here
+					// just bail out here and let the user's test code
+					// check #assertRedirectUrl
+					return true;
+				}
+
 				if (newUrl.isAbsolute())
 				{
 					request.setUrl(newUrl);
@@ -704,6 +710,35 @@ public class BaseWicketTester
 		finally
 		{
 			redirectCount = 0;
+		}
+	}
+
+	/**
+	 * Determine whether a given response contains a redirect leading to an external site (which
+	 * cannot be replicated in WicketTester). This is done by comparing the previous request's
+	 * hostname with the hostname given in the redirect.
+	 * 
+	 * @param requestUrl
+	 *            request...
+	 * @param newUrl
+	 *            ...and the redirect generated in its response
+	 * @return true if there is a redirect and it is external, false otherwise
+	 */
+	private boolean isExternalRedirect(Url requestUrl, Url newUrl)
+	{
+		String originalHost = requestUrl.getHost();
+		String redirectHost = newUrl.getHost();
+		if (originalHost == redirectHost)
+		{
+			return false; // identical or both null
+		}
+		else if (redirectHost == null)
+		{
+			return false; // no new host
+		}
+		else
+		{
+			return !(redirectHost.equals(originalHost));
 		}
 	}
 
@@ -1266,10 +1301,10 @@ public class BaseWicketTester
 	 * Process a component. A web page will be automatically created with the markup created in
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the instantiated component will have an auto-generated id. To
-	 *     reach any of its children use their relative path to the component itself. For example
-	 *     if the started component has a child a Link component with id "link" then after starting
-	 *     the component you can click it with: <code>tester.clickLink("link")</code>
+	 * <strong>Note</strong>: the instantiated component will have an auto-generated id. To reach
+	 * any of its children use their relative path to the component itself. For example if the
+	 * started component has a child a Link component with id "link" then after starting the
+	 * component you can click it with: <code>tester.clickLink("link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1289,10 +1324,10 @@ public class BaseWicketTester
 	 * provided. In case pageMarkup is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the instantiated component will have an auto-generated id. To
-	 *     reach any of its children use their relative path to the component itself. For example
-	 *     if the started component has a child a Link component with id "link" then after starting
-	 *     the component you can click it with: <code>tester.clickLink("link")</code>
+	 * <strong>Note</strong>: the instantiated component will have an auto-generated id. To reach
+	 * any of its children use their relative path to the component itself. For example if the
+	 * started component has a child a Link component with id "link" then after starting the
+	 * component you can click it with: <code>tester.clickLink("link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1322,7 +1357,8 @@ public class BaseWicketTester
 		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
-			fail(String.format("Cannot instantiate component with type '%s' because of '%s'", componentClass.getName(), e.getMessage()));
+			fail(String.format("Cannot instantiate component with type '%s' because of '%s'",
+				componentClass.getName(), e.getMessage()));
 		}
 
 		// process the component
@@ -1333,10 +1369,10 @@ public class BaseWicketTester
 	 * Process a component. A web page will be automatically created with markup created by the
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the component id is set by the user. To
-	 *     reach any of its children use this id + their relative path to the component itself. For example
-	 *     if the started component has id <em>compId</em> and a Link child component component with id "link"
-	 *     then after starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
+	 * <strong>Note</strong>: the component id is set by the user. To reach any of its children use
+	 * this id + their relative path to the component itself. For example if the started component
+	 * has id <em>compId</em> and a Link child component component with id "link" then after
+	 * starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1356,10 +1392,10 @@ public class BaseWicketTester
 	 * provided. In case {@code pageMarkup} is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the component id is set by the user. To
-	 *     reach any of its children use this id + their relative path to the component itself. For example
-	 *     if the started component has id <em>compId</em> and a Link child component component with id "link"
-	 *     then after starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
+	 * <strong>Note</strong>: the component id is set by the user. To reach any of its children use
+	 * this id + their relative path to the component itself. For example if the started component
+	 * has id <em>compId</em> and a Link child component component with id "link" then after
+	 * starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1546,7 +1582,7 @@ public class BaseWicketTester
 			String componentIdPageId = componentInPage.component.getId() + ':';
 			if (path.startsWith(componentIdPageId) == false)
 			{
-				path =  componentIdPageId + path;
+				path = componentIdPageId + path;
 			}
 		}
 
@@ -2129,8 +2165,8 @@ public class BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link AjaxRequestTarget#add(org.apache.wicket.Component...)}. This method actually tests that a
-	 * <code>Component</code> is on the Ajax response sent back to the client.
+	 * {@link AjaxRequestTarget#add(org.apache.wicket.Component...)}. This method actually tests
+	 * that a <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript. But it shouldn't be needed because you have to trust that the Wicket
@@ -2215,7 +2251,7 @@ public class BaseWicketTester
 	 * Simulates the firing of all ajax timer behaviors on the page
 	 * 
 	 * @param page
-	 *      the page which timers will be executed
+	 *            the page which timers will be executed
 	 */
 	public void executeAllTimerBehaviors(final MarkupContainer page)
 	{
