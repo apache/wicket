@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.FilterConfig;
@@ -42,7 +41,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
