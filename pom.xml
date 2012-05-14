@@ -159,9 +159,9 @@
 		<url>https://hudson.apache.org/hudson/job/Apache%20Wicket%201.5.x/</url>
 	</ciManagement>
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/releases/6.0-SNAPSHOT</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/releases/6.0-SNAPSHOT</developerConnection>
-		<url>http://svn.apache.org/viewvc/wicket/releases/6.0-SNAPSHOT</url>
+		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
+		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
+		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
 	</scm>
 	<mailingLists>
 		<mailingList>
