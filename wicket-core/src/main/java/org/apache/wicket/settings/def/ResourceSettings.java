@@ -132,8 +132,6 @@ public class ResourceSettings implements IResourceSettings
 	// application these settings are bound to
 	private final Application application;
 
-	private boolean useDefaultResourceAggregator = true;
-
 	private boolean useMinifiedResources = true;
 
 	private Comparator<? super RecordedHeaderItem> headerItemComparator = new PriorityFirstComparator(
@@ -556,18 +554,6 @@ public class ResourceSettings implements IResourceSettings
 					"Please use " + NoOpResourceCachingStrategy.class.getName() + " instead.");
 		}
 		resourceCachingStrategy = strategy;
-	}
-
-	@Override
-	public void setUseDefaultResourceAggregator(boolean useDefaultResourceAggregator)
-	{
-		this.useDefaultResourceAggregator = useDefaultResourceAggregator;
-	}
-
-	@Override
-	public boolean getUseDefaultResourceAggregator()
-	{
-		return useDefaultResourceAggregator;
 	}
 
 	@Override

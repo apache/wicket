@@ -351,21 +351,6 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	ICssCompressor getCssCompressor();
 
 	/**
-	 * Allows to disable the default {@linkplain ResourceAggregator resource aggregation}. If this
-	 * setting is disabled, you will have to take care of implementing resource dependencies and
-	 * bundles yourself.
-	 * 
-	 * @param useDefaultResourceAggregator
-	 *            The new value for the setting
-	 */
-	void setUseDefaultResourceAggregator(boolean useDefaultResourceAggregator);
-
-	/**
-	 * @return Whether to use the default {@linkplain org.apache.wicket.markup.head.ResourceAggregator resource aggregator}.
-	 */
-	boolean getUseDefaultResourceAggregator();
-
-	/**
 	 * Sets whether to use pre-minified resources when available. Minified resources are detected by
 	 * name. The minified version of {@code x.js} is expected to be called {@code x.min.js}. For css
 	 * files, the same convention is used: {@code x.min.css} is the minified version of

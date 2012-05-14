@@ -1667,18 +1667,16 @@ public abstract class Application implements UnboundListener, IEventSink
 	 *            the response Wicket created
 	 * @return the response Wicket should use in IHeaderContributor traversal
 	 */
-	public final IHeaderResponse decorateHeaderResponse(IHeaderResponse response)
+	public final IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
 	{
-		if (getResourceSettings().getUseDefaultResourceAggregator())
-		{
-			response = new ResourceAggregator(response);
-		}
+		final IHeaderResponse aggregatingResponse = new ResourceAggregator(response);
 
 		if (headerResponseDecorator == null)
 		{
-			return response;
+			return aggregatingResponse;
 		}
-		return headerResponseDecorator.decorate(response);
+
+		return headerResponseDecorator.decorate(aggregatingResponse);
 	}
 
 	/**
