@@ -20,7 +20,7 @@
     <parent>
 			<groupId>org.apache</groupId>
             <artifactId>apache</artifactId>
-            <version>9</version>	
+            <version>9</version>
 	</parent>
 
 	<groupId>org.apache.wicket</groupId>
@@ -36,7 +36,7 @@
 		<maven.javadoc.version>2.8</maven.javadoc.version>
 		<maven.surefire.version>2.11</maven.surefire.version>
 	</properties>
-	
+
 	<modules>
 		<module>wicket</module>
 		<module>wicket-core</module>
@@ -164,9 +164,9 @@
 		<url>https://hudson.apache.org/hudson/job/Apache%20Wicket%201.5.x/</url>
 	</ciManagement>
 	<scm>
-		<connection>scm:svn:http://git.apache.org/wicket.git</connection>
-		<developerConnection>scm:svn:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
-		<url>http://git-wip-us.apache.org/repos/asf/wicket.git</url>
+		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
+		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
+		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
 	</scm>
 	<mailingLists>
 		<mailingList>
