@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -721,6 +718,18 @@ public class WicketTester extends BaseWicketTester
 
 		executeBehavior(behavior);
 		assertResultPage(testClass, filename);
+	}
+
+	/**
+	 * Assert that the last request redirected to the given Url.
+	 * 
+	 * @param expectedRedirectUrl
+	 *            expected
+	 */
+	public void assertRedirectUrl(String expectedRedirectUrl)
+	{
+		String actualRedirectUrl = getLastResponse().getRedirectLocation();
+		assertEquals(expectedRedirectUrl, actualRedirectUrl);
 	}
 
 	/**

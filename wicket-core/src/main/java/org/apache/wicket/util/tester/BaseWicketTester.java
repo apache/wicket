@@ -41,6 +41,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -183,7 +184,6 @@ public class BaseWicketTester
 	private IRequestHandler forcedHandler;
 
 	private IFeedbackMessageFilter originalFeedbackMessageCleanupFilter;
-
 	// Simulates the cookies maintained by the browser
 	private final List<Cookie> browserCookies = Generics.newArrayList();
 
@@ -302,7 +302,6 @@ public class BaseWicketTester
 			.getFeedbackMessageCleanupFilter();
 		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
 			IFeedbackMessageFilter.NONE);
-
 		IPageManagerProvider pageManagerProvider = newTestPageManagerProvider();
 		if (pageManagerProvider != null)
 		{
@@ -351,8 +350,8 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private void setupNextRequestCycle()
 	{
 		request = new MockHttpServletRequest(application, httpSession, servletContext);
@@ -455,12 +454,13 @@ public class BaseWicketTester
 	private ServletWebRequest newServletWebRequest()
 	{
 
+
 		return (ServletWebRequest)application.newWebRequest(request, request.getFilterPrefix());
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private void newSession()
 	{
 		ThreadContext.setSession(null);
@@ -656,6 +656,14 @@ public class BaseWicketTester
 				Url newUrl = Url.parse(lastResponse.getRedirectLocation(),
 					Charset.forName(request.getCharacterEncoding()));
 
+				if (isExternalRedirect(lastRequest.getUrl(), newUrl))
+				{
+					// we can't handle external redirects here
+					// just bail out here and let the user's test code
+					// check #assertRedirectUrl
+					return true;
+				}
+
 				if (newUrl.isAbsolute())
 				{
 					request.setUrl(newUrl);
@@ -702,6 +710,35 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * Determine whether a given response contains a redirect leading to an external site (which
+	 * cannot be replicated in WicketTester). This is done by comparing the previous request's
+	 * hostname with the hostname given in the redirect.
+	 * 
+	 * @param requestUrl
+	 *            request...
+	 * @param newUrl
+	 *            ...and the redirect generated in its response
+	 * @return true if there is a redirect and it is external, false otherwise
+	 */
+	private boolean isExternalRedirect(Url requestUrl, Url newUrl)
+	{
+		String originalHost = requestUrl.getHost();
+		String redirectHost = newUrl.getHost();
+		if (originalHost == redirectHost)
+		{
+			return false; // identical or both null
+		}
+		else if (redirectHost == null)
+		{
+			return false; // no new host
+		}
+		else
+		{
+			return !(redirectHost.equals(originalHost));
+		}
+	}
+
+	/**
 	 * Allows to set Request header value any time. They'll be applied (add/modify) on process
 	 * execution {@link #processRequest(MockHttpServletRequest, IRequestHandler, boolean)}. They are
 	 * reset immediately after and thus are not re-used for a sequence of requests.
@@ -726,8 +763,8 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private void recordRequestResponse()
 	{
 		lastRequest = request;
@@ -1986,7 +2023,6 @@ public class BaseWicketTester
 	 */
 	public List<Serializable> getMessages(final int level)
 	{
-
 		List<FeedbackMessage> allMessages = new FeedbackCollector(getLastRenderedPage()).collect(new IFeedbackMessageFilter()
 		{
 
@@ -1996,6 +2032,7 @@ public class BaseWicketTester
 				return message.getLevel() == level;
 			}
 		});
+
 		List<Serializable> actualMessages = Generics.newArrayList();
 		for (FeedbackMessage message : allMessages)
 		{
@@ -2542,8 +2579,8 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
 	{
 		private final IPageRendererProvider delegate;
@@ -2571,8 +2608,8 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private class TestExceptionMapper implements IExceptionMapper
 	{
 		private final IExceptionMapper delegate;
@@ -2604,8 +2641,8 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private class TestRequestCycleProvider implements IRequestCycleProvider
 	{
 		private final IRequestCycleProvider delegate;
@@ -2626,8 +2663,8 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private class TestRequestMapper implements IRequestMapper
 	{
 		private final IRequestMapper delegate;
@@ -2666,12 +2703,12 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 
 	/**
-     *
-     */
+	 *
+	 */
 	private static class TestPageManagerProvider implements IPageManagerProvider
 	{
 		@Override
@@ -2682,8 +2719,8 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private class TestFilterConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<String, String>();
@@ -2719,8 +2756,8 @@ public class BaseWicketTester
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private static class WicketTesterServletWebResponse extends ServletWebResponse
 		implements
 			IMetaDataBufferingWebResponse

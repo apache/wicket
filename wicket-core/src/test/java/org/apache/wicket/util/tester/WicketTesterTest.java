@@ -37,6 +37,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.core.request.handler.IPageProvider;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -52,9 +55,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
@@ -449,7 +450,7 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void assertComponentOnAjaxResponse()
@@ -686,7 +687,7 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void submittingFormWithAjaxEventSubmitsFormValues()
@@ -703,7 +704,7 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void redirectWithPageParameters()
@@ -834,7 +835,8 @@ public class WicketTesterTest extends WicketTestCase
 	@Test(expected = PackageResourceBlockedException.class)
 	public void loadPageMarkupTemplate()
 	{
-		String url = "wicket/resource/"+BlockedResourceLinkPage.class.getName()+"/"+BlockedResourceLinkPage.class.getSimpleName()+".html";
+		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/" +
+			BlockedResourceLinkPage.class.getSimpleName() + ".html";
 		tester.executeUrl(url);
 	}
 
@@ -844,21 +846,23 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void loadNonPageMarkupTemplate()
 	{
-		String url = "wicket/resource/"+BlockedResourceLinkPage.class.getName()+"/test.html";
+		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/test.html";
 		tester.executeUrl(url);
 		assertEquals("This is a test!\n", tester.getLastResponseAsString());
 	}
 
 	/**
-	 * Comma separated extensions should not be allowed.
-	 * The result is kinda error code 404 (resource not found)
+	 * Comma separated extensions should not be allowed. The result is kinda error code 404
+	 * (resource not found)
 	 */
 	@Test
 	public void clickResourceLinkWithSomeCommaAppendedUrl()
 	{
-		String url = "wicket/resource/"+BlockedResourceLinkPage.class.getName()+"/"+BlockedResourceLinkPage.class.getSimpleName()+".html,xml";
+		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/" +
+			BlockedResourceLinkPage.class.getSimpleName() + ".html,xml";
 		tester.executeUrl(url);
-		assertNull("Comma separated extensions are not supported and wont find any resource", tester.getLastResponse());
+		assertNull("Comma separated extensions are not supported and wont find any resource",
+			tester.getLastResponse());
 	}
 
 	/**
@@ -897,7 +901,7 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void cookieIsFoundWhenAddedToRequest()
@@ -907,7 +911,7 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void cookieIsFoundWhenAddedToResponse()
@@ -919,7 +923,7 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void cookieIsFoundOnNextRequestWhenAddedToResponse()
@@ -1121,7 +1125,6 @@ public class WicketTesterTest extends WicketTestCase
 		assertNull(tester.getRequest().getCookies());
 	}
 
-
 	/**
 	 * Tests if the access-denied-page is rendered if a page is rerendered for which you don't have
 	 * permission anymore
@@ -1164,7 +1167,7 @@ public class WicketTesterTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4437
-	 *
+	 * 
 	 * Clicking on ResourceLink should deliver the resource content
 	 */
 	@Test
@@ -1172,7 +1175,8 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		MockPageWithLink page = new MockPageWithLink();
 		String content = "content";
-		ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(), "fileName.txt");
+		ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
+			"fileName.txt");
 		ResourceLink<Void> link = new ResourceLink<Void>(MockPageWithLink.LINK_ID, resource);
 		page.add(link);
 		tester.startPage(page);
@@ -1183,9 +1187,9 @@ public class WicketTesterTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4507
-	 *
-	 * When WicketTester#startComponentInPage() is used then #getLastResponseAsString()
-	 * should return only the component's markup, without the autogenerated markup for the page
+	 * 
+	 * When WicketTester#startComponentInPage() is used then #getLastResponseAsString() should
+	 * return only the component's markup, without the autogenerated markup for the page
 	 */
 	@Test
 	public void renderOnlyComponentsMarkup()
@@ -1204,5 +1208,62 @@ public class WicketTesterTest extends WicketTestCase
 
 		assertEquals("<span wicket:id=\"label\" test=\"123\">content</span>",
 			tester.getLastResponseAsString());
+	}
+
+	@Test
+	public void catchExternalRedirect() throws Exception
+	{
+		class RedirectPage extends WebPage
+		{
+			@Override
+			protected void onConfigure()
+			{
+				throw new RedirectToUrlException(
+					"https://issues.apache.org/jira/browse/WICKET-4558");
+			}
+		}
+		tester.startPage(new RedirectPage());
+		tester.assertRedirectUrl("https://issues.apache.org/jira/browse/WICKET-4558");
+	}
+
+	@Test
+	public void catchExternalRedirectFailure() throws Exception
+	{
+		class RedirectPage extends WebPage
+		{
+			@Override
+			protected void onConfigure()
+			{
+				throw new RedirectToUrlException("http://some.url/");
+			}
+		}
+		tester.startPage(new RedirectPage());
+		boolean caught;
+		try
+		{
+			tester.assertRedirectUrl("http://this.did.not.happen");
+			caught = false;
+		}
+		catch (AssertionFailedError e)
+		{
+			caught = true;
+		}
+		assertTrue(caught);
+	}
+
+	@Test
+	public void dontCatchInternalRedirect() throws Exception
+	{
+		class RedirectPage extends WebPage
+		{
+			@Override
+			protected void onConfigure()
+			{
+				throw new RedirectToUrlException("wicket/bookmarkable/" +
+					CreateBook.class.getName());
+			}
+		}
+		tester.startPage(new RedirectPage());
+		tester.assertRenderedPage(CreateBook.class);
 	}
 }
