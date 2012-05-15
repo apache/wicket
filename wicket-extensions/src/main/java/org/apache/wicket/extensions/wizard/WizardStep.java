@@ -166,26 +166,43 @@ public class WizardStep extends Panel implements IWizardStep
         protected void onInitialize() {
             super.onInitialize();
 
-            add(new Label("title", new AbstractReadOnlyModel<String>()
-            {
+            // Title
+            final AbstractReadOnlyModel<String> titleModel = new AbstractReadOnlyModel<String>() {
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                public String getObject()
-                {
+                public String getObject() {
                     return getTitle();
                 }
-            }).setEscapeModelStrings(getEscapeModelStrings()));
-            add(new Label("summary", new AbstractReadOnlyModel<String>()
-            {
+            };
+            add(new Label("title", titleModel) {
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                public String getObject()
-                {
+                protected void onConfigure() {
+                    super.onConfigure();
+                    setEscapeModelStrings(Header.this.getEscapeModelStrings());
+                }
+            });
+
+            // Summary
+            final AbstractReadOnlyModel<String> summaryModel = new AbstractReadOnlyModel<String>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public String getObject() {
                     return getSummary();
                 }
-            }).setEscapeModelStrings(getEscapeModelStrings()));
+            };
+            add(new Label("summary", summaryModel) {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                protected void onConfigure() {
+                    super.onConfigure();
+                    setEscapeModelStrings(Header.this.getEscapeModelStrings());
+                }
+            });
         }
 
     }
