@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.model;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -32,6 +31,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	/**
 	 * Detach model.
 	 */
+        @Override
 	public void detach()
 	{
 	}
@@ -57,6 +57,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	 * 
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+        @Override
 	public final Boolean getObject()
 	{
 		return isSelected();
@@ -65,6 +66,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
+        @Override
 	public final void setObject(final Boolean object)
 	{
 		if (Boolean.TRUE.equals(object))
@@ -75,52 +77,5 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 		{
 			unselect();
 		}
-	}
-
-
-	// TODO Remove methods after deprecation release is done
-
-	/**
-	 * @param component
-	 * @return throws UnsupportedOperationException
-	 * @deprecated replaced by {@link #getObject()}
-	 */
-	@Deprecated
-	public final Object getObject(final Component component)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param component
-	 * @return throws UnsupportedOperationException
-	 * @deprecated replaced by {@link #isSelected()}
-	 */
-	@Deprecated
-	public final boolean isSelected(final Component component)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param component
-	 * @param object
-	 * @deprecated replaced by {@link #setObject(Object)}
-	 */
-	@Deprecated
-	public final void setObject(final Component component, final Object object)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param component
-	 * @param sel
-	 * @deprecated replaced by {@link #select()}
-	 */
-	@Deprecated
-	public final void setSelected(final Component component, final boolean sel)
-	{
-		throw new UnsupportedOperationException();
 	}
 }

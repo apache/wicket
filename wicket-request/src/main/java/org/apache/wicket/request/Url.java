@@ -615,59 +615,7 @@ public class Url implements Serializable
 		return toString(getCharset());
 	}
 
-	/**
-	 * render full representation of url (including protocol, host and port) into string
-	 * representation
-	 * 
-	 * @return absolute representation of the url
-	 * @deprecated see {@link Url#toString(StringMode)}
-	 */
-	@Deprecated
-	public String toAbsoluteString()
-	{
-		return toAbsoluteString(getCharset());
-	}
-
-	/**
-	 * render full representation of url (including protocol, host and port) into string
-	 * representation
-	 * 
-	 * @param charset
-	 * 
-	 * @return see toStringRepresentation
-	 * @deprecated see {@link Url#toString(StringMode, Charset)}
-	 */
-	@Deprecated
-	public String toAbsoluteString(final Charset charset)
-	{
-		StringBuilder result = new StringBuilder();
-
-		String protocol = this.protocol;
-		if (Strings.isEmpty(protocol))
-		{
-			protocol = "http";
-		}
-
-		// output scheme://host:port if specified
-		if (Strings.isEmpty(host) == false)
-		{
-			result.append(protocol);
-			result.append("://");
-			result.append(host);
-
-			if (port != null && port.equals(getDefaultPortForProtocol(protocol)) == false)
-			{
-				result.append(':');
-				result.append(port);
-			}
-		}
-
-		// append relative part
-		return Strings.join("/", result.toString(), this.toString());
-	}
-
-
-	/**
+        /**
 	 * Stringizes this url
 	 * 
 	 * @param mode

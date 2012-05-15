@@ -79,7 +79,7 @@ public class MockFormFileUploadPage extends WebPage
 	@SuppressWarnings("deprecation")
 	public MockFormFileUploadPage()
 	{
-		this(new PageParameters("required=true"));
+		this(new PageParameters().set("required", "true"));
 	}
 
 	/**

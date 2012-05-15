@@ -28,10 +28,7 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.string.IStringIterator;
-import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Mutable class that holds parameters of a Page. Page parameters consist of indexed parameters and
@@ -128,76 +125,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			}
 		}
 	}
-
-
-	/**
-	 * Construct.
-	 * 
-	 * @param keyValuePairs
-	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
-	 * @see ValueMap#ValueMap(String)
-	 * @deprecated use various setter methods to set parameters
-	 */
-	@Deprecated
-	public PageParameters(final String keyValuePairs)
-	{
-		this(keyValuePairs, ",");
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param keyValuePairs
-	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
-	 * @param delimiter
-	 *            Delimiter string used to separate key/value pairs
-	 * @see ValueMap#ValueMap(String)
-	 * 
-	 * @deprecated use various setter methods to set parameters
-	 */
-	@Deprecated
-	public PageParameters(final String keyValuePairs, final String delimiter)
-	{
-		super();
-
-		// We can not use ValueMaps constructor as it uses
-		// VariableAssignmentParser which is more suitable for markup
-		// attributes, rather than URL parameters. URL param keys for
-		// examples are allowed to start with a digit (e.g. 0=xxx)
-		// and quotes are not "quotes".
-
-		// Get list of strings separated by the delimiter
-		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
-
-		// Go through each string in the list
-		for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
-		{
-			// Get the next key value pair
-			final String pair = iterator.next();
-
-			final int pos = pair.indexOf('=');
-			if (pos == 0)
-			{
-				throw new IllegalArgumentException("URL parameter is missing the lvalue: " + pair);
-			}
-			else if (pos != -1)
-			{
-				final String key = pair.substring(0, pos).trim();
-				final String value = pair.substring(pos + 1).trim();
-
-				add(key, value);
-			}
-			else
-			{
-				final String key = pair.trim();
-				// null value is not allowed by #add
-				final String value = "";
-
-				add(key, value);
-			}
-		}
-	}
-
 
 	/**
 	 * @return count of indexed parameters

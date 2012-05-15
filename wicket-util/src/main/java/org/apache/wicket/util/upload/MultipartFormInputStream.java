@@ -291,50 +291,6 @@ public class MultipartFormInputStream
 	// ----------------------------------------------------------- Constructors
 
 	/**
-	 * Creates a new instance.
-	 * 
-	 * @deprecated Use
-	 *             {@link #MultipartStream(InputStream, byte[], org.apache.wicket.util.uploadMultipartStream.ProgressNotifier)}
-	 *             , or
-	 *             {@link #MultipartStream(InputStream, byte[], int, org.apache.wicket.util.uploadMultipartStream.ProgressNotifier)}
-	 */
-	@Deprecated
-	public MultipartFormInputStream()
-	{
-		// boundary can not be null
-		this(null, new byte[0], null);
-	}
-
-	/**
-	 * <p>
-	 * Constructs a <code>MultipartStream</code> with a custom size buffer and no progress notifier.
-	 * 
-	 * <p>
-	 * Note that the buffer must be at least big enough to contain the boundary string, plus 4
-	 * characters for CR/LF and double dash, plus at least one byte of data. Too small a buffer size
-	 * setting will degrade performance.
-	 * 
-	 * @param input
-	 *            The <code>InputStream</code> to serve as a data source.
-	 * @param boundary
-	 *            The token used for dividing the stream into <code>encapsulations</code>.
-	 * @param bufSize
-	 *            The size of the buffer to be used, in bytes.
-	 * 
-	 * @see #MultipartFormInputStream(InputStream, byte[],
-	 *      MultipartFormInputStream.ProgressNotifier)
-	 * @deprecated Use
-	 *             {@link #MultipartStream(InputStream, byte[], int, org.apache.wicket.util.uploadMultipartStream.ProgressNotifier)}
-	 *             .
-	 */
-	@Deprecated
-	public MultipartFormInputStream(final InputStream input, final byte[] boundary,
-		final int bufSize)
-	{
-		this(input, boundary, bufSize, null);
-	}
-
-	/**
 	 * <p>
 	 * Constructs a <code>MultipartStream</code> with a custom size buffer.
 	 * 

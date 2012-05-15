@@ -120,21 +120,6 @@ public final class Time extends AbstractTime
 		return parseDate(localtime, string);
 	}
 
-
-	/**
-	 * Retrieves a <code>Time</code> instance based on the given milliseconds.
-	 * 
-	 * @param time
-	 *            the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
-	 * @return a corresponding immutable <code>Time</code> object
-	 * 
-	 * @deprecated use {@link Time#millis(long)} instead
-	 */
-	public static Time valueOf(final long time)
-	{
-		return millis(time);
-	}
-	
 	/**
 	 * Retrieves a <code>Time</code> instance by parsing 'yyyy.MM.dd-h.mma' format.
 	 * 

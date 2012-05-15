@@ -171,19 +171,6 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	/**
 	 * Renders this image
 	 * 
-	 * @return The image data
-	 * @deprecated Use {@link #render(org.apache.wicket.request.resource.IResource.Attributes)}
-	 *             instead.
-	 */
-	@Deprecated
-	protected byte[] render()
-	{
-		return render((Attributes)null);
-	}
-
-	/**
-	 * Renders this image
-	 * 
 	 * @param attributes
 	 *            the current request attributes
 	 * @return The image data

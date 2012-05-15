@@ -313,20 +313,6 @@ public class UrlRenderer
 		return buffer.toString();
 	}
 
-	/**
-	 * Renders the URL within context relative to current base URL.
-	 * 
-	 * @param url
-	 * @return relative URL
-	 * @deprecated
-	 * @see #renderContextRelativeUrl(String)
-	 */
-	@Deprecated
-	public String renderContextPathRelativeUrl(String url)
-	{
-		return renderContextRelativeUrl(url);
-	}
-
 	private static String choose(String value, final String fallback1, final String fallback2)
 	{
 		if (Strings.isEmpty(value))

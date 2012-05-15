@@ -228,14 +228,4 @@ public class ExternalLink extends AbstractLink
 		this.contextRelative = contextRelative;
 		return this;
 	}
-
-	/**
-	 * @deprecated use {@link #getBody()} instead
-	 * @return the model used for the link's body
-	 */
-	@Deprecated
-	public IModel<?> getLabel()
-	{
-		return getBody();
-	}
 }
