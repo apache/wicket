@@ -174,7 +174,7 @@ public class WizardStep extends Panel implements IWizardStep
 				{
 					return getTitle();
 				}
-			}).setEscapeModelStrings(false));
+			}));
 			add(new Label("summary", new AbstractReadOnlyModel<String>()
 			{
 				private static final long serialVersionUID = 1L;
@@ -184,7 +184,7 @@ public class WizardStep extends Panel implements IWizardStep
 				{
 					return getSummary();
 				}
-			}).setEscapeModelStrings(false));
+			}));
 		}
 	}
 
