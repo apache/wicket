@@ -31,14 +31,14 @@ public class WicketAjaxJQueryResourceReference extends JavaScriptResourceReferen
 {
 	private static final long serialVersionUID = -2918665261694523156L;
 
-	private static WicketAjaxJQueryResourceReference instance = new WicketAjaxJQueryResourceReference();
+	private static final WicketAjaxJQueryResourceReference INSTANCE = new WicketAjaxJQueryResourceReference();
 
 	/**
-	 * @return the singleton instance
+	 * @return the singleton INSTANCE
 	 */
 	public static WicketAjaxJQueryResourceReference get()
 	{
-		return instance;
+		return INSTANCE;
 	}
 
 	private WicketAjaxJQueryResourceReference()

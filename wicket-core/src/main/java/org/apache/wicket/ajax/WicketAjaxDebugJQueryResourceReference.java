@@ -18,9 +18,11 @@ package org.apache.wicket.ajax;
 
 import java.util.Collections;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * @author hoeve
@@ -29,14 +31,14 @@ public class WicketAjaxDebugJQueryResourceReference extends JavaScriptResourceRe
 {
 	private static final long serialVersionUID = 1L;
 
-	private static WicketAjaxDebugJQueryResourceReference instance = new WicketAjaxDebugJQueryResourceReference();
+	private static final WicketAjaxDebugJQueryResourceReference INSTANCE = new WicketAjaxDebugJQueryResourceReference();
 
 	/**
-	 * @return the singleton instance
+	 * @return the singleton INSTANCE
 	 */
 	public static WicketAjaxDebugJQueryResourceReference get()
 	{
-		return instance;
+		return INSTANCE;
 	}
 
 	private WicketAjaxDebugJQueryResourceReference()
@@ -47,6 +49,13 @@ public class WicketAjaxDebugJQueryResourceReference extends JavaScriptResourceRe
 	@Override
 	public Iterable<? extends HeaderItem> getDependencies()
 	{
-		return Collections.singletonList(JavaScriptHeaderItem.forReference(WicketAjaxJQueryResourceReference.get()));
+		final ResourceReference wicketAjaxReference;
+		if (Application.exists()) {
+			wicketAjaxReference = Application.get().getJavaScriptLibrarySettings().getWicketAjaxReference();
+		}
+		else {
+			wicketAjaxReference = WicketAjaxJQueryResourceReference.get();
+		}
+		return Collections.singletonList(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 	}
 }
