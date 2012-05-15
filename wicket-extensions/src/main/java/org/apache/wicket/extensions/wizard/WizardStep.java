@@ -175,15 +175,7 @@ public class WizardStep extends Panel implements IWizardStep
                     return getTitle();
                 }
             };
-            add(new Label("title", titleModel) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                protected void onConfigure() {
-                    super.onConfigure();
-                    setEscapeModelStrings(Header.this.getEscapeModelStrings());
-                }
-            });
+            add(new HeaderLabel("title", titleModel, this));
 
             // Summary
             final AbstractReadOnlyModel<String> summaryModel = new AbstractReadOnlyModel<String>() {
@@ -194,15 +186,40 @@ public class WizardStep extends Panel implements IWizardStep
                     return getSummary();
                 }
             };
-            add(new Label("summary", summaryModel) {
-                private static final long serialVersionUID = 1L;
+            add(new HeaderLabel("summary", summaryModel, this));
+        }
 
-                @Override
-                protected void onConfigure() {
-                    super.onConfigure();
-                    setEscapeModelStrings(Header.this.getEscapeModelStrings());
-                }
-            });
+    }
+
+    /**
+     * Default label for title and summary, calls {@link Header#getEscapeModelStrings()}
+     * to determine wether it's model strings should be escaped or not.
+     */
+    private static final class HeaderLabel extends Label
+    {
+        private static final long serialVersionUID = 1L;
+        private final Header header;
+
+        /**
+         * Construct.
+         *
+         * @param id
+         *          The component id
+         * @param model
+         *          The model
+         * @param header
+         *          The wizard's header
+         */
+        private HeaderLabel(String id, IModel<?> model, Header header) {
+            super(id, model);
+            this.header = header;
+        }
+
+        @Override
+        protected void onConfigure() {
+            super.onConfigure();
+            // Header decides about escaping of model strings
+            setEscapeModelStrings(header.getEscapeModelStrings());
         }
 
     }
