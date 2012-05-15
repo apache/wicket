@@ -16,12 +16,6 @@
  */
 package org.apache.wicket.extensions.wizard;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.wizard.dynamic.DynamicWizardModel;
 import org.apache.wicket.markup.html.basic.Label;
@@ -34,6 +28,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import java.util.*;
 
 /**
  * default implementation of {@link IWizardStep}. It is also a panel, which is used as the view
@@ -149,44 +144,51 @@ public class WizardStep extends Panel implements IWizardStep
 	/**
 	 * Default header for wizards.
 	 */
-	private final class Header extends Panel
-	{
-		private static final long serialVersionUID = 1L;
+    private final class Header extends Panel
+    {
+        private static final long serialVersionUID = 1L;
 
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 *            The component id
-		 * @param wizard
-		 *            The containing wizard
-		 */
-		public Header(final String id, final IWizard wizard)
-		{
-			super(id);
-			setDefaultModel(new CompoundPropertyModel<IWizard>(wizard));
-			add(new Label("title", new AbstractReadOnlyModel<String>()
-			{
-				private static final long serialVersionUID = 1L;
+        /**
+         * Construct.
+         *
+         * @param id
+         *            The component id
+         * @param wizard
+         *            The containing wizard
+         */
+        public Header(final String id, final IWizard wizard)
+        {
+            super(id);
+            setDefaultModel(new CompoundPropertyModel<IWizard>(wizard));
+        }
 
-				@Override
-				public String getObject()
-				{
-					return getTitle();
-				}
-			}).setEscapeModelStrings(false));
-			add(new Label("summary", new AbstractReadOnlyModel<String>()
-			{
-				private static final long serialVersionUID = 1L;
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
 
-				@Override
-				public String getObject()
-				{
-					return getSummary();
-				}
-			}).setEscapeModelStrings(false));
-		}
-	}
+            add(new Label("title", new AbstractReadOnlyModel<String>()
+            {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public String getObject()
+                {
+                    return getTitle();
+                }
+            }).setEscapeModelStrings(getEscapeModelStrings()));
+            add(new Label("summary", new AbstractReadOnlyModel<String>()
+            {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public String getObject()
+                {
+                    return getSummary();
+                }
+            }).setEscapeModelStrings(getEscapeModelStrings()));
+        }
+
+    }
 
 	private static final long serialVersionUID = 1L;
 
