@@ -42,7 +42,7 @@ public class AtmosphereBehavior extends Behavior
 	/**
 	 * The key under which a unique id is stored in the page. This id is unique for all clients.
 	 */
-	public static MetaDataKey<String> ATMOSPHERE_UUID = new MetaDataKey<String>()
+	public static final MetaDataKey<String> ATMOSPHERE_UUID = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -65,7 +65,7 @@ public class AtmosphereBehavior extends Behavior
 	}
 
 	@Override
-	public boolean getStatelessHint(Component component)
+	public final boolean getStatelessHint(Component component)
 	{
 		return false;
 	}
@@ -85,8 +85,8 @@ public class AtmosphereBehavior extends Behavior
 		// Add us to the listener list.
 		meteor.addListener(this);
 
-		String header = request.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
-		if (header != null && header.equalsIgnoreCase(HeaderConfig.LONG_POLLING_TRANSPORT))
+		String transport = request.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
+		if (HeaderConfig.LONG_POLLING_TRANSPORT.equalsIgnoreCase(transport))
 		{
 			// request.getContainerRequest().setAttribute(ApplicationConfig.RESUME_ON_BROADCAST,
 			// Boolean.TRUE);
@@ -101,48 +101,55 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onBroadcast(AtmosphereResourceEvent event)
 	{
-		log.info("onBroadcast: " + event.getMessage());
+		log.info("onBroadcast: {}", event.getMessage());
 
 		// If we are using long-polling, resume the connection as soon as we get
 		// an event.
 		String transport = event.getResource()
 			.getRequest()
 			.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
-		if (transport != null)
+
+		if (HeaderConfig.LONG_POLLING_TRANSPORT.equalsIgnoreCase(transport))
 		{
-			if (transport.equalsIgnoreCase(HeaderConfig.LONG_POLLING_TRANSPORT))
-			{
-				Meteor meteor = Meteor.lookup(event.getResource().getRequest());
-				meteor.resume();
-			}
+			Meteor meteor = Meteor.lookup(event.getResource().getRequest());
+			meteor.resume();
 		}
 	}
 
 	@Override
 	public void onSuspend(AtmosphereResourceEvent event)
 	{
-		String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
-		HttpServletRequest req = event.getResource().getRequest();
-		log.info(String.format("Suspending the %s response from ip %s:%s", transport == null
-			? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+		if (log.isInfoEnabled())
+		{
+			String transport = event.getResource().getRequest().getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
+			HttpServletRequest req = event.getResource().getRequest();
+			log.info(String.format("Suspending the %s response from ip %s:%s", transport == null
+				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+		}
 	}
 
 	@Override
 	public void onResume(AtmosphereResourceEvent event)
 	{
-		String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
-		HttpServletRequest req = event.getResource().getRequest();
-		log.info(String.format("Resuming the %s response from ip %s:%s", transport == null
-			? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+		if (log.isInfoEnabled())
+		{
+			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
+			HttpServletRequest req = event.getResource().getRequest();
+			log.info(String.format("Resuming the %s response from ip %s:%s", transport == null
+				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+		}
 	}
 
 	@Override
 	public void onDisconnect(AtmosphereResourceEvent event)
 	{
-		String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
-		HttpServletRequest req = event.getResource().getRequest();
-		log.info(String.format("%s connection dropped from ip %s:%s", transport == null
-			? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+		if (log.isInfoEnabled())
+		{
+			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
+			HttpServletRequest req = event.getResource().getRequest();
+			log.info(String.format("%s connection dropped from ip %s:%s", transport == null
+				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+		}
 	}
 
 	@Override

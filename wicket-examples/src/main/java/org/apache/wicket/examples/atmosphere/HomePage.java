@@ -40,6 +40,8 @@ public class HomePage extends WicketExamplePage
 
 	public HomePage(final PageParameters parameters)
 	{
+		super(parameters);
+
 		add(timeLabel = new Label("time", Model.of("start")).setOutputMarkupId(true));
 		add(messageLabel = new Label("message", Model.of("-")).setOutputMarkupId(true));
 
