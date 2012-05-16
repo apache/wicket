@@ -311,7 +311,7 @@ public class AjaxEditableLabel<T> extends Panel
 				attributes.setEventNames("blur", "keyup");
 
 				CharSequence dynamicExtraParameters = "var result = [], "
-					+ "kc=Wicket.Event.keyCode(event),"
+					+ "kc=Wicket.Event.keyCode(attrs.event),"
 					+ "evtType=attrs.event.type;"
 					+ "if (evtType === 'keyup') {"
 					+
@@ -326,7 +326,7 @@ public class AjaxEditableLabel<T> extends Panel
 					+ "return result;";
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
-				CharSequence precondition = "var kc=Wicket.Event.keyCode(event),"
+				CharSequence precondition = "var kc=Wicket.Event.keyCode(attrs.event),"
 					+ "evtType=attrs.event.type,"
 					+ "ret=false;"
 					+ "if(evtType==='blur' || (evtType==='keyup' && (kc===27 || kc===13))) ret = true;"
@@ -396,7 +396,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 */
 	protected String getLabelAjaxEvent()
 	{
-		return "onclick";
+		return "click";
 	}
 
 
@@ -469,12 +469,9 @@ public class AjaxEditableLabel<T> extends Panel
 		label.setVisible(false);
 		editor.setVisible(true);
 		target.add(AjaxEditableLabel.this);
-		// put focus on the textfield and stupid explorer hack to move the
-		// caret to the end
-		target.appendJavaScript("{ var el=Wicket.$('" + editor.getMarkupId() + "');" +
-			"   if (el.createTextRange) { " +
-			"     var v = el.value; var r = el.createTextRange(); " +
-			"     r.moveStart('character', v.length); r.select(); } }");
+		String selectScript = String.format("(function(){var el = Wicket.$('%s'); if (el.select) el.select();})()",
+				editor.getMarkupId());
+		target.appendJavaScript(selectScript);
 		target.focusComponent(editor);
 	}
 
@@ -492,8 +489,9 @@ public class AjaxEditableLabel<T> extends Panel
 			target.appendJavaScript("window.status='" +
 				JavaScriptUtils.escapeQuotes(errorMessage.toString()) + "';");
 		}
-		target.appendJavaScript("{var el=Wicket.$('" + editor.getMarkupId() +
-			"'); el.select(); el.focus();}");
+		String selectAndFocusScript = String.format("(function(){var el=Wicket.$('%s'); if (el.select) el.select(); el.focus();})()",
+				editor.getMarkupId());
+		target.appendJavaScript(selectAndFocusScript);
 	}
 
 	/**

@@ -185,7 +185,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				attributes.setEventNames("blur", "keyup");
 				CharSequence dynamicExtraParameters = 
 						"var result = [], " +
-								"kc=Wicket.Event.keyCode(event)," +
+								"kc=Wicket.Event.keyCode(attrs.event)," +
 								"evtType=attrs.event.type;" +
 								"if (evtType === 'keyup') {" +
 									// ESCAPE key
@@ -196,7 +196,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
 				CharSequence precondition =
-						"var kc=Wicket.Event.keyCode(event),"+
+						"var kc=Wicket.Event.keyCode(attrs.event),"+
 								"evtType=attrs.event.type,"+
 								"ret=false;"+
 								"if(evtType==='blur' || (evtType==='keyup' && (kc===27))) ret = true;"+
