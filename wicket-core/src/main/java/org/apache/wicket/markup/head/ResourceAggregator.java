@@ -51,9 +51,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	public static class RecordedHeaderItemLocation
 	{
-		private Object renderBase;
-		private int indexInRenderBase;
-		private int indexInRequest;
+		private final Object renderBase;
+		private final int indexInRenderBase;
+		private final int indexInRequest;
 
 		/**
 		 * Construct.
@@ -113,9 +113,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	public static class RecordedHeaderItem
 	{
-		private HeaderItem item;
+		private final HeaderItem item;
 
-		private List<RecordedHeaderItemLocation> locations = new ArrayList<RecordedHeaderItemLocation>();
+		private final List<RecordedHeaderItemLocation> locations;
 
 		/**
 		 * Construct.
@@ -125,6 +125,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		public RecordedHeaderItem(HeaderItem item)
 		{
 			this.item = item;
+			this.locations = new ArrayList<RecordedHeaderItemLocation>();
 		}
 
 		/**
@@ -167,9 +168,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 	}
 
-	private Map<HeaderItem, RecordedHeaderItem> itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
-	private List<OnDomReadyHeaderItem> domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
-	private List<OnLoadHeaderItem> loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
+	private final Map<HeaderItem, RecordedHeaderItem> itemsToBeRendered;
+	private final List<OnDomReadyHeaderItem> domReadyItemsToBeRendered;
+	private final List<OnLoadHeaderItem> loadItemsToBeRendered;
 
 	private Object renderBase;
 	private int indexInRenderBase;
@@ -183,6 +184,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	public ResourceAggregator(IHeaderResponse real)
 	{
 		super(real);
+
+		this.itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
+		this.domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
+		this.loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
 	}
 
 	@Override
@@ -227,9 +232,13 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		for (HeaderItem curDependency : item.getDependencies())
 		{
 			if (depsDone.add(curDependency))
+			{
 				recordHeaderItem(curDependency, depsDone);
+			}
 			else
+			{
 				throw new CircularDependencyException(depsDone, curDependency);
+			}
 			depsDone.remove(curDependency);
 		}
 	}
@@ -282,7 +291,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 			.getResourceSettings()
 			.getHeaderItemComparator();
 		if (headerItemComparator != null)
+		{
 			Collections.sort(sortedItemsToBeRendered, headerItemComparator);
+		}
 		for (RecordedHeaderItem curRenderItem : sortedItemsToBeRendered)
 		{
 			getRealResponse().render(getItemToBeRendered(curRenderItem.getItem()));
@@ -305,11 +316,15 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 				combinedScript.append(";");
 			}
 			else
+			{
 				getRealResponse().render(itemToBeRendered);
+			}
 		}
 		if (combinedScript.length() > 0)
+		{
 			getRealResponse().render(
 				OnDomReadyHeaderItem.forScript(combinedScript.append("\n").toString()));
+		}
 
 		combinedScript.setLength(0);
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
@@ -322,11 +337,15 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 				combinedScript.append(";");
 			}
 			else
+			{
 				getRealResponse().render(itemToBeRendered);
+			}
 		}
 		if (combinedScript.length() > 0)
+		{
 			getRealResponse().render(
 				OnLoadHeaderItem.forScript(combinedScript.append("\n").toString()));
+		}
 	}
 
 	/**
@@ -335,9 +354,14 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	private void renderSeperateEventScripts()
 	{
 		for (OnDomReadyHeaderItem curItem : domReadyItemsToBeRendered)
+		{
 			getRealResponse().render(getItemToBeRendered(curItem));
+		}
+
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
+		{
 			getRealResponse().render(getItemToBeRendered(curItem));
+		}
 	}
 
 	/**
@@ -351,15 +375,21 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	private HeaderItem getItemToBeRendered(HeaderItem item)
 	{
 		if (getRealResponse().wasRendered(item))
+		{
 			return NoHeaderItem.get();
+		}
 
 		getRealResponse().markRendered(item);
 		HeaderItem bundle = Application.get().getResourceBundles().findBundle(item);
 		if (bundle == null)
+		{
 			return item;
+		}
 
 		for (HeaderItem curProvided : bundle.getProvidedResources())
+		{
 			getRealResponse().markRendered(curProvided);
+		}
 
 		return bundle;
 	}

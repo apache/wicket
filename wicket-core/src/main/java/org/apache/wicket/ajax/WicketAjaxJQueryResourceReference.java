@@ -50,10 +50,12 @@ public class WicketAjaxJQueryResourceReference extends JavaScriptResourceReferen
 	public Iterable<? extends HeaderItem> getDependencies()
 	{
 		final ResourceReference wicketEventReference;
-		if (Application.exists()) {
+		if (Application.exists())
+		{
 			wicketEventReference = Application.get().getJavaScriptLibrarySettings().getWicketEventReference();
 		}
-		else {
+		else
+		{
 			wicketEventReference = WicketEventJQueryResourceReference.get();
 		}
 		return Collections.singletonList(JavaScriptHeaderItem.forReference(wicketEventReference));

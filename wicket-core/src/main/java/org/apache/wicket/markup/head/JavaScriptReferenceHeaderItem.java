@@ -26,6 +26,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.IResourceBundle;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -58,12 +59,14 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
 	public JavaScriptReferenceHeaderItem(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer, String charset, String condition)
 	{
 		super(condition);
-		this.reference = reference;
+		this.reference = Args.notNull(reference, "reference");
 		this.pageParameters = pageParameters;
 		this.id = id;
 		this.defer = defer;
@@ -72,7 +75,6 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 
 	/**
 	 * @return the resource reference pointing to the javascript resource
-	 * @see IReferenceHeaderItem#getReference()
 	 */
 	@Override
 	public ResourceReference getReference()
@@ -146,7 +148,7 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	@Override
 	public String toString()
 	{
-		return "JavaScriptReferenceHeaderItem(" + getUrl() + ")";
+		return "JavaScriptReferenceHeaderItem(" + getUrl() + ')';
 	}
 
 	private String getUrl()
