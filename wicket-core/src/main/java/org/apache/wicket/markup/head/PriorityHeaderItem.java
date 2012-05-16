@@ -28,7 +28,7 @@ import org.apache.wicket.request.Response;
  * 
  * @author papegaaij
  */
-public class PriorityHeaderItem extends HeaderItem
+public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 {
 	private HeaderItem wrapped;
 

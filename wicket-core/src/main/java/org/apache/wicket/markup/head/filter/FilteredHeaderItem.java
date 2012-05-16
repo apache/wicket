@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.request.Response;
 
 /**
@@ -31,7 +32,7 @@ import org.apache.wicket.request.Response;
  * 
  * @author papegaaij
  */
-public class FilteredHeaderItem extends HeaderItem
+public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 {
 	private HeaderItem wrapped;
 
