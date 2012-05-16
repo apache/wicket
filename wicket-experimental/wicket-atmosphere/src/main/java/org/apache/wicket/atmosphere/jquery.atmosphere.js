@@ -467,10 +467,7 @@ jQuery.atmosphere = function() {
             function _buildWebSocketUrl() {
                 var url = _request.url;
                 url = _attachHeaders();
-                if (url.indexOf("http") == -1 && url.indexOf("ws") == -1) {
-                    url = jQuery.atmosphere.parseUri(document.location, url);
-                }
-                return url.replace('http:', 'ws:').replace('https:', 'wss:');
+                return decodeURI($('<a href="' + url + '"/>')[0].href.replace(/^http/, "ws"));
             }
 
             /**
@@ -843,8 +840,8 @@ jQuery.atmosphere = function() {
                 }
 
                 jQuery.each(rq.headers, function(name, value) {
-                    var h = jQuery.isFunction(value) ? value.call(this, ajaxRequest, request, create) : value;
-                    if (h) {
+                    var h = jQuery.isFunction(value) ? value.call(this, rq, request, _response) : value;
+                    if (h != null) {
                         url += "&" + encodeURIComponent(name) + "=" + encodeURIComponent(h);
                     }
                 });
@@ -976,10 +973,6 @@ jQuery.atmosphere = function() {
                             update = true;
                         } else {
                             clearTimeout(rq.id);
-                        }
-
-                        if (!jQuery.browser.msie && jQuery.trim(ajaxRequest.responseText).length == 0) {
-                            update = false;
                         }
 
                         if (update) {
@@ -1173,7 +1166,7 @@ jQuery.atmosphere = function() {
 
                 jQuery.each(request.headers, function(name, value) {
                     var h = jQuery.isFunction(value) ? value.call(this, ajaxRequest, request, create, _response) : value;
-                    if (h) {
+                    if (h != null) {
                         ajaxRequest.setRequestHeader(name, h);
                     }
                 });
@@ -1229,24 +1222,14 @@ jQuery.atmosphere = function() {
                 var rewriteURL = rq.rewriteURL || function(url) {
                     // Maintaining session by rewriting URL
                     // http://stackoverflow.com/questions/6453779/maintaining-session-by-rewriting-url
-                    var rewriters = {
-                        JSESSIONID: function(sid) {
-                            return url.replace(/;jsessionid=[^\?]*|(\?)|$/, ";jsessionid=" + sid + "$1");
-                        },
-                        PHPSESSID: function(sid) {
-                            return url.replace(/\?PHPSESSID=[^&]*&?|\?|$/, "?PHPSESSID=" + sid + "&").replace(/&$/, "");
-                        }
-                    };
+                    var match = /(?:^|;\s*)(JSESSIONID|PHPSESSID)=([^;]*)/.exec(document.cookie);
 
-                    for (var name in rewriters) {
-                        // Finds session id from cookie
-                        var matcher = new RegExp("(?:^|;\\s*)" + encodeURIComponent(name) + "=([^;]*)").exec(document.cookie);
-                        if (matcher) {
-                            return rewriters[name](matcher[1]);
-                        }
+                    switch (match && match[1]) {
+                        case "JSESSIONID":
+                            return url.replace(/;jsessionid=[^\?]*|(\?)|$/, ";jsessionid=" + match[2] + "$1");
+                        case "PHPSESSID":
+                            return url.replace(/\?PHPSESSID=[^&]*&?|\?|$/, "?PHPSESSID=" + match[2] + "&").replace(/&$/, "");
                     }
-
-                    return url;
                 };
 
                 // Handles open and message event
@@ -1320,7 +1303,7 @@ jQuery.atmosphere = function() {
 
                 return {
                     open: function() {
-                        var iframe = doc.createElement("iframe");
+                        var iframe, cdoc;
 
                         url = _attachHeaders(rq);
                         if (rq.data != '') {
@@ -1330,92 +1313,72 @@ jQuery.atmosphere = function() {
                         // Finally attach a timestamp to prevent Android and IE caching.
                         url = jQuery.atmosphere.prepareURL(url);
 
+                        doc = new ActiveXObject("htmlfile");
+                        doc.open();
+                        doc.close();
+
+                        iframe = doc.createElement("iframe");
                         iframe.src = url;
                         doc.body.appendChild(iframe);
 
-                        // For the server to respond in a consistent format regardless of user agent, we polls response text
-                        var cdoc = iframe.contentDocument || iframe.contentWindow.document;
-
+                        cdoc = iframe.contentDocument || iframe.contentWindow.document;
                         stop = jQuery.atmosphere.iterate(function() {
                             if (!cdoc.firstChild) {
                                 return;
                             }
 
+                            var response = cdoc.body.lastChild;
+
                             // Detects connection failure
-                            if (cdoc.readyState === "complete") {
-                                try {
-                                    jQuery.noop(cdoc.fileSize);
-                                } catch(e) {
-                                    _prepareCallback("Connection Failure", "error", 500, rq.transport);
-                                    return false;
-                                }
+                            if (!response) {
+                                _prepareCallback("Connection Failure", "error", 500, rq.transport);
+                                return false;
                             }
 
-                            var res = cdoc.body ? cdoc.body.lastChild : cdoc;
-                            var readResponse = function() {
-                                // Clones the element not to disturb the original one
-                                var clone = res.cloneNode(true);
+                            try {
+                                response.innerText = "";
+                                _prepareCallback("", "opening", 200, rq.transport);
 
-                                // If the last character is a carriage return or a line feed, IE ignores it in the innerText property
-                                // therefore, we add another non-newline character to preserve it
-                                clone.appendChild(cdoc.createTextNode("."));
+                                stop = jQuery.atmosphere.iterate(function() {
+                                    var clone = response.cloneNode(true), text;
 
-                                var text = clone.innerText;
-                                var isJunkEnded = true;
+                                    // Adds a character not CR and LF to circumvent an Internet Explorer bug
+                                    // If the contents of an element ends with one or more CR or LF, Internet Explorer ignores them in the innerText property
+                                    clone.appendChild(cdoc.createTextNode("."));
+                                    text = clone.innerText;
+                                    text = text.substring(0, text.length - 1);
 
-                                if (text.indexOf("<!-- Welcome to the Atmosphere Framework.") == -1) {
-                                    isJunkEnded = false;
-                                }
+                                    if (text) {
+                                        response.innerText = "";
+                                        var isJunkEnded = true;
 
-                                if (isJunkEnded) {
-                                    var endOfJunk = "<!-- EOD -->";
-                                    var endOfJunkLenght = endOfJunk.length;
-                                    var junkEnd = text.indexOf(endOfJunk) + endOfJunkLenght;
+                                        if (text.indexOf("<!-- Welcome to the Atmosphere Framework.") == -1) {
+                                            isJunkEnded = false;
+                                        }
 
-                                    text = text.substring(junkEnd);
-                                }
-                                return text.substring(0, text.length - 1);
-                            };
+                                        if (isJunkEnded) {
+                                            var endOfJunk = "<!-- EOD -->";
+                                            var endOfJunkLenght = endOfJunk.length;
+                                            var junkEnd = text.indexOf(endOfJunk) + endOfJunkLenght;
 
-                            //To support text/html content type
-                            if (!jQuery.nodeName(res, "pre")) {
-                                // Injects a plaintext element which renders text without interpreting the HTML and cannot be stopped
-                                // it is deprecated in HTML5, but still works
-                                var head = cdoc.head || cdoc.getElementsByTagName("head")[0] || cdoc.documentElement || cdoc;
-                                var script = cdoc.createElement("script");
+                                            text = text.substring(junkEnd);
+                                        }
+                                        text = text.substring(0, text.length - 1);
 
-                                script.text = "document.write('<plaintext>')";
+                                        _prepareCallback(text, "messageReceived", 200, rq.transport);
+                                    }
 
-                                head.insertBefore(script, head.firstChild);
-                                head.removeChild(script);
+                                    if (cdoc.readyState === "complete") {
+                                        _prepareCallback("", "re-opening", 200, rq.transport);
+                                        _ieStreaming(rq);
+                                        return false;
+                                    }
+                                });
 
-                                // The plaintext element will be the response container
-                                res = cdoc.body.lastChild;
+                                return false;
+                            } catch (err) {
+                                jQuery.atmosphere.error(err);
                             }
-
-                            // Handles open event
-                            _prepareCallback(readResponse(), "opening", 200, rq.transport);
-
-                            // Handles message and close event
-                            stop = jQuery.atmosphere.iterate(function() {
-                                var text = readResponse();
-                                if (text.length > rq.lastIndex) {
-                                    _response.status = 200;
-                                    _prepareCallback(text, "messageReceived", 200, rq.transport);
-
-                                    // Empties response every time that it is handled
-                                    res.innerText = "";
-                                    rq.lastIndex = 0;
-                                }
-
-                                if (cdoc.readyState === "complete") {
-                                    _prepareCallback("", "re-opening", 200, rq.transport);
-                                    _ieStreaming(rq);
-                                    return false;
-                                }
-                            }, null);
-
-                            return false;
                         });
                     },
 
@@ -1844,84 +1807,6 @@ jQuery.atmosphere = function() {
             return function() {
                 clearTimeout(timeoutId);
             };
-        },
-
-        parseUri : function(baseUrl, uri) {
-            var protocol = window.location.protocol;
-            var host = window.location.host;
-            var path = window.location.pathname;
-            var parameters = {};
-            var anchor = '';
-            var pos;
-
-            if ((pos = uri.search(/\:/)) >= 0) {
-                protocol = uri.substring(0, pos + 1);
-                uri = uri.substring(pos + 1);
-            }
-
-            if ((pos = uri.search(/\#/)) >= 0) {
-                anchor = uri.substring(pos + 1);
-                uri = uri.substring(0, pos);
-            }
-
-            if ((pos = uri.search(/\?/)) >= 0) {
-                var paramsStr = uri.substring(pos + 1) + '&;';
-                uri = uri.substring(0, pos);
-                while ((pos = paramsStr.search(/\&/)) >= 0) {
-                    var paramStr = paramsStr.substring(0, pos);
-                    paramsStr = paramsStr.substring(pos + 1);
-
-                    if (paramStr.length) {
-                        var equPos = paramStr.search(/\=/);
-                        if (equPos < 0) {
-                            parameters[paramStr] = '';
-                        } else {
-                            parameters[paramStr.substring(0, equPos)] =
-                                decodeURIComponent(paramStr.substring(equPos + 1));
-                        }
-                    }
-                }
-            }
-
-            if (uri.search(/\/\//) == 0) {
-                uri = uri.substring(2);
-                if ((pos = uri.search(/\//)) >= 0) {
-                    host = uri.substring(0, pos);
-                    path = uri.substring(pos);
-                } else {
-                    host = uri;
-                    path = '/';
-                }
-            } else if (uri.search(/\//) == 0) {
-                path = uri;
-            }
-
-            else // relative to directory
-            {
-                var p = path.lastIndexOf('/');
-                if (p < 0) {
-                    path = '/';
-                } else if (p < path.length - 1) {
-                    path = path.substring(0, p + 1);
-                }
-
-                while (uri.search(/\.\.\//) == 0) {
-                    p = path.lastIndexOf('/', path.lastIndexOf('/') - 1);
-                    if (p >= 0) {
-                        path = path.substring(0, p + 1);
-                    }
-                    uri = uri.substring(3);
-                }
-                path = path + uri;
-            }
-
-            var formattedUri = protocol + '//' + host + path;
-            var div = '?';
-            for (var key in parameters) {
-                formattedUri += div + key + '=' + encodeURIComponent(parameters[key]);
-                div = '&';
-            }
-            return formattedUri;
         },
 
         log: function (level, args) {
