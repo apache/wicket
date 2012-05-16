@@ -209,24 +209,6 @@ public class HeaderResponseTest
         Assert.assertEquals(expected, actual);
     }
 
-    /**
-     * https://issues.apache.org/jira/browse/WICKET-4334
-     * https://issues.apache.org/jira/browse/WICKET-4312
-     */
-    @Test
-    public void doNotPreserveJSessionId() {
-        WicketTester tester = new WicketTester();
-        try {
-            headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js;jsessionid=1h402r54r4xuep32znicouftm", "some-id", false, null));
-            String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"js-resource.js\"></script>\n";
-            String actual = headerResponse.getResponse().toString();
-            Assert.assertEquals(expected, actual);
-        } finally {
-            tester.destroy();
-        }
-    }
-
-
 	/**
 	 * Tests the creation of a proper IE conditional comment
 	 */

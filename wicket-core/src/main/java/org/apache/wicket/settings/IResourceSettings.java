@@ -383,4 +383,24 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 * @return The comparator used to sort header items.
 	 */
 	Comparator<? super RecordedHeaderItem> getHeaderItemComparator();
+
+	/**
+	 * A flag indicating whether static resources should have <tt>jsessionid</tt> encoded
+	 * in their url.
+	 *
+	 * @return {@code true} if the jsessionid should be encoded in the url for resources implementing
+	 * {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when the cookies
+	 * are disabled and there is an active http session.
+	 */
+	boolean isEncodeJSessionId();
+
+	/**
+	 * Sets a flag indicating whether the jsessionid should be encoded in the url for resources implementing
+	 * {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when the cookies are
+	 * disabled and there is an active http session.
+	 *
+	 * @param encodeJSessionId
+	 *      {@code true} when the jsessionid should be encoded, {@code false} - otherwise
+	 */
+	void setEncodeJSessionId(boolean encodeJSessionId);
 }

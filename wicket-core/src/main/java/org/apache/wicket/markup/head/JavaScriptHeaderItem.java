@@ -297,7 +297,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 		
-		JavaScriptUtils.writeJavaScriptUrl(response, Strings.stripJSessionId(url), id, defer, charset);
+		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset);
 		
 		if (hasCondition)
 		{

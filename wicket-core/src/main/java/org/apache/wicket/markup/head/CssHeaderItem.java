@@ -200,8 +200,7 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		String urlWoSessionId = Strings.stripJSessionId(url);
-		CssUtils.writeLinkUrl(response, urlWoSessionId, media);
+		CssUtils.writeLinkUrl(response, url, media);
 
 		if (hasCondition)
 		{

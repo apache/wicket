@@ -137,6 +137,8 @@ public class ResourceSettings implements IResourceSettings
 	private Comparator<? super RecordedHeaderItem> headerItemComparator = new PriorityFirstComparator(
 		false);
 
+	private boolean encodeJSessionId = false;
+
 	/**
 	 * Configures Wicket's default ResourceLoaders.<br>
 	 * For an example in {@code FooApplication} let {@code bar.Foo} extend {@link Component}, this
@@ -578,5 +580,15 @@ public class ResourceSettings implements IResourceSettings
 	public void setHeaderItemComparator(Comparator<? super RecordedHeaderItem> headerItemComparator)
 	{
 		this.headerItemComparator = headerItemComparator;
+	}
+
+	public boolean isEncodeJSessionId()
+	{
+		return encodeJSessionId;
+	}
+
+	public void setEncodeJSessionId(boolean encodeJSessionId)
+	{
+		this.encodeJSessionId = encodeJSessionId;
 	}
 }
