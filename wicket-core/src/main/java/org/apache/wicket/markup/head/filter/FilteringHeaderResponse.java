@@ -21,11 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.Response;
@@ -176,6 +176,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		// write the stuff that was actually supposed to be in the header to the
 		// response, which is used by the built-in HtmlHeaderContainer to get
 		// its contents
+
 		CharSequence headerContent = getContent(headerFilterName);
 		RequestCycle.get().getResponse().write(headerContent);
 		// must make sure our super (and with it, the wrapped response) get closed:
@@ -207,14 +208,14 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 			}
 		};
 
-		IHeaderResponse headerResponseDecorated = Application.get().decorateHeaderResponse(headerRenderer);
+		ResourceAggregator resourceAggregator = new ResourceAggregator(headerRenderer);
 
 		for (HeaderItem curItem : resp)
 		{
-			headerResponseDecorated.render(curItem);
+			resourceAggregator.render(curItem);
 		}
 
-		headerRenderer.close();
+		resourceAggregator.close();
 
 		return strResponse.getBuffer();
 	}
