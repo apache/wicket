@@ -128,6 +128,8 @@ public class ResourceSettings implements IResourceSettings
 	// application these settings are bound to
 	private final Application application;
 
+	private boolean encodeJSessionId = false;
+
 	/**
 	 * Configures Wicket's default ResourceLoaders.<br>
 	 * For an example in {@code FooApplication} let {@code bar.Foo} extend {@link Component}, this
@@ -446,6 +448,16 @@ public class ResourceSettings implements IResourceSettings
 	public ICssCompressor getCssCompressor()
 	{
 		return cssCompressor;
+	}
+
+	public boolean isEncodeJSessionId()
+	{
+		return encodeJSessionId;
+	}
+
+	public void setEncodeJSessionId(boolean encodeJSessionId)
+	{
+		this.encodeJSessionId = encodeJSessionId;
 	}
 
 	public ICssCompressor setCssCompressor(ICssCompressor compressor)

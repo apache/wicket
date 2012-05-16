@@ -453,7 +453,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	public final CharSequence urlFor(ResourceReference reference, PageParameters params)
 	{
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference, params);
-		return renderUrl(mapUrlFor(handler), handler);
+		return urlFor(handler);
 	}
 
 	/**
@@ -474,7 +474,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	{
 		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(pageClass,
 				parameters));
-		return renderUrl(mapUrlFor(handler), handler);
+		return urlFor(handler);
 	}
 
 	/**
@@ -497,12 +497,15 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	{
 		if (url != null)
 		{
+			boolean shouldEncodeStaticResource = Application.exists() &&
+					Application.get().getResourceSettings().isEncodeJSessionId();
+
 			String renderedUrl = getUrlRenderer().renderUrl(url);
 			if (handler instanceof ResourceReferenceRequestHandler)
 			{
 				ResourceReferenceRequestHandler rrrh = (ResourceReferenceRequestHandler) handler;
 				IResource resource = rrrh.getResource();
-				if (resource instanceof IStaticCacheableResource == false)
+				if (!(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
 				{
 					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
 				}
@@ -511,7 +514,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			{
 				ResourceRequestHandler rrh = (ResourceRequestHandler) handler;
 				IResource resource = rrh.getResource();
-				if (resource instanceof IStaticCacheableResource == false)
+				if (!(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
 				{
 					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
 				}
