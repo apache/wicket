@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.request.http.WebRequest;
@@ -99,6 +100,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
 		CharSequence js = getCallbackScript();
+		js = JavaScriptUtils.escapeQuotes(js);
 
 		String timeoutHandle = getTimeoutHandle();
 		// this might look strange, but it is necessary for IE not to leak :(
