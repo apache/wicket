@@ -141,7 +141,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 		if (childMarkup == null)
 		{
 			throw new MarkupNotFoundException("No Markup found for Fragment " + markupId +
-				" in providing markup container " + getMarkupProvider(container).toString());
+				" in providing markup container " + getMarkupProvider(container));
 		}
 
 		if (child == null)
