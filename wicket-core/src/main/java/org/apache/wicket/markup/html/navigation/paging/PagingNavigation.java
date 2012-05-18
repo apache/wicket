@@ -268,7 +268,7 @@ public class PagingNavigation extends Loop
 	 * the link is pointing to. Subclasses may provide there own implementation adding more
 	 * sophisticated page links.
 	 * 
-	 * @see org.apache.wicket.markup.html.list.Loop#populateItem(Loop.LoopItem)
+	 * @see org.apache.wicket.markup.html.list.Loop#populateItem(org.apache.wicket.markup.html.list.LoopItem)
 	 */
 	@Override
 	protected void populateItem(final LoopItem loopItem)
@@ -313,7 +313,7 @@ public class PagingNavigation extends Loop
 	/**
 	 * Renders the page link. Add the separator if not the last page link
 	 * 
-	 * @see Loop#renderItem(Loop.LoopItem)
+	 * @see Loop#renderItem(org.apache.wicket.markup.html.list.LoopItem) 
 	 */
 	@Override
 	protected void renderItem(final LoopItem loopItem)
