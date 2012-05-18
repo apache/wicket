@@ -46,11 +46,11 @@ import org.apache.wicket.util.time.Duration;
 
 /**
  * The base class for Wicket's default AJAX implementation.
- * 
+ *
  * @since 1.2
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
- * 
+ *
  */
 public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 {
@@ -62,7 +62,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 	/**
 	 * Subclasses should call super.onBind()
-	 * 
+	 *
 	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
 	@Override
@@ -94,7 +94,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * Renders header contribution by IAjaxCallListener instances which additionally implement
 	 * IComponentAwareHeaderContributor interface.
-	 * 
+	 *
 	 * @param component
 	 *            the component assigned to this behavior
 	 * @param response
@@ -130,7 +130,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 	/**
 	 * Gives a chance to the specializations to modify the attributes.
-	 * 
+	 *
 	 * @param attributes
 	 * @since 6.0
 	 */
@@ -140,7 +140,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 	/**
 	 * The code below handles backward compatibility.
-	 * 
+	 *
 	 * @param attributes
 	 */
 	private void updateAjaxAttributesBackwardCompatibility(final AjaxRequestAttributes attributes)
@@ -162,21 +162,20 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * <pre>
 	 * 				{
 	 * 					u: 'editable-label?6-1.IBehaviorListener.0-text1-label',  // url
-	 * 					m: 'POST',		// method name. Default: 'GET'
-	 * 					c: 'label7',	// component id (String) or window for page
-	 * 					e: 'click',		// event name
-	 * 					sh: [],			// list of success handlers
-	 * 					fh: [],			// list of failure handlers
-	 * 					pre: [],		// list of preconditions. If empty set default : Wicket.$(settings{c}) !== null
-	 * 					ep: {},			// extra parameters
-	 * 					async: true|false,	// asynchronous XHR or not
-	 * 					ch: 'someName|d',	// AjaxChannel
-	 * 					i: 'indicatorId',	// indicator component id
-	 * 					ad: true,			// allow default
-	 * 					
+	 * 					m: 'POST',          // method name. Default: 'GET'
+	 * 					c: 'label7',        // component id (String) or window for page
+	 * 					e: 'click',         // event name
+	 * 					sh: [],             // list of success handlers
+	 * 					fh: [],             // list of failure handlers
+	 * 					pre: [],            // list of preconditions. If empty set default : Wicket.$(settings{c}) !== null
+	 * 					ep: {},             // extra parameters
+	 * 					async: true|false,  // asynchronous XHR or not
+	 * 					ch: 'someName|d',   // AjaxChannel
+	 * 					i: 'indicatorId',   // indicator component id
+	 * 					ad: true,           // allow default
 	 * 				}
 	 * </pre>
-	 * 
+	 *
 	 * @param component
 	 *            the component with that behavior
 	 * @return the attributes as string in JSON format
@@ -188,7 +187,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * 
+	 *
 	 * @param component
 	 * @param attributes
 	 * @return the attributes as string in JSON format
@@ -378,7 +377,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * Gives a chance to modify the JSON attributesJson that is going to be used as attributes for
 	 * the Ajax call.
-	 * 
+	 *
 	 * @param attributesJson
 	 *            the JSON object created by #renderAjaxAttributes()
 	 * @param component
@@ -416,7 +415,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * Generates a javascript function that can take parameters and performs an AJAX call which
 	 * includes these parameters. The generated code looks like this:
-	 * 
+	 *
 	 * <pre>
 	 * function(param1, param2) {
 	 *    var attrs = attrsJson;
@@ -425,7 +424,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *    Wicket.Ajax.ajax(attrs);
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @param extraParameters
 	 * @return A function that can be used as a callback function in javascript
 	 */
@@ -455,7 +454,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * Generates the body the {@linkplain #getCallbackFunction(CallbackParameter...) callback
 	 * function}. To embed this code directly into a piece of javascript, make sure any context
 	 * parameters are available as local variables, global variables or within the closure.
-	 * 
+	 *
 	 * @param extraParameters
 	 * @return The body of the {@linkplain #getCallbackFunction(CallbackParameter...) callback
 	 *         function}.
@@ -524,7 +523,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 	/**
 	 * Provides an AjaxChannel for this Behavior.
-	 * 
+	 *
 	 * @return an AjaxChannel - Defaults to null.
 	 * @deprecated Use {@link org.apache.wicket.ajax.attributes.AjaxRequestAttributes}
 	 */
@@ -537,7 +536,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * Finds the markup id of the indicator. The default search order is: component, behavior,
 	 * component's parent hierarchy.
-	 * 
+	 *
 	 * @return markup id or <code>null</code> if no indicator found
 	 */
 	protected String findIndicatorId()
