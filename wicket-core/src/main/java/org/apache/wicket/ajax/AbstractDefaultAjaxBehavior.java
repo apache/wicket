@@ -31,6 +31,7 @@ import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
+import org.apache.wicket.ajax.json.JsonFunction;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -59,6 +60,14 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/** reference to the default indicator gif file. */
 	public static final ResourceReference INDICATOR = new PackageResourceReference(
 		AbstractDefaultAjaxBehavior.class, "indicator.gif");
+
+	private static final String DYNAMIC_PARAMETER_FUNCTION_TEMPLATE = "function(){%s}";
+	private static final String PRECONDITION_FUNCTION_TEMPLATE      = "function(attrs, jqXHR, settings){%s}";
+	private static final String COMPLETE_HANDLER_FUNCTION_TEMPLATE  = "function(attrs, jqXHR, textStatus){%s}";
+	private static final String FAILURE_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, errorMessage){%s}";
+	private static final String SUCCESS_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, jqXHR, data, textStatus){%s}";
+	private static final String AFTER_HANDLER_FUNCTION_TEMPLATE     = "function(attrs){%s}";
+	private static final String BEFORE_HANDLER_FUNCTION_TEMPLATE    = "function(attrs, jqXHR, settings){%s}";
 
 	/**
 	 * Subclasses should call super.onBind()
@@ -242,37 +251,49 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 					CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
 					if (Strings.isEmpty(beforeHandler) == false)
 					{
-						attributesJson.append("bh", beforeHandler);
+						String func = String.format(BEFORE_HANDLER_FUNCTION_TEMPLATE, beforeHandler);
+						JsonFunction function = new JsonFunction(func);
+						attributesJson.append("bh", function);
 					}
 
 					CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
 					if (Strings.isEmpty(afterHandler) == false)
 					{
-						attributesJson.append("ah", afterHandler);
+						String func = String.format(AFTER_HANDLER_FUNCTION_TEMPLATE, afterHandler);
+						JsonFunction function = new JsonFunction(func);
+						attributesJson.append("ah", function);
 					}
 
 					CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
 					if (Strings.isEmpty(successHandler) == false)
 					{
-						attributesJson.append("sh", successHandler);
+						String func = String.format(SUCCESS_HANDLER_FUNCTION_TEMPLATE, successHandler);
+						JsonFunction function = new JsonFunction(func);
+						attributesJson.append("sh", function);
 					}
 
 					CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
 					if (Strings.isEmpty(failureHandler) == false)
 					{
-						attributesJson.append("fh", failureHandler);
+						String func = String.format(FAILURE_HANDLER_FUNCTION_TEMPLATE, failureHandler);
+						JsonFunction function = new JsonFunction(func);
+						attributesJson.append("fh", function);
 					}
 
 					CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
 					if (Strings.isEmpty(completeHandler) == false)
 					{
-						attributesJson.append("coh", completeHandler);
+						String func = String.format(COMPLETE_HANDLER_FUNCTION_TEMPLATE, completeHandler);
+						JsonFunction function = new JsonFunction(func);
+						attributesJson.append("coh", function);
 					}
 
 					CharSequence precondition = ajaxCallListener.getPrecondition(component);
 					if (Strings.isEmpty(precondition) == false)
 					{
-						attributesJson.append("pre", precondition);
+						String func = String.format(PRECONDITION_FUNCTION_TEMPLATE, precondition);
+						JsonFunction function = new JsonFunction(func);
+						attributesJson.append("pre", function);
 					}
 				}
 			}
@@ -298,7 +319,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			{
 				for (CharSequence dynamicExtraParameter : dynamicExtraParameters)
 				{
-					attributesJson.append("dep", dynamicExtraParameter);
+					String func = String.format(DYNAMIC_PARAMETER_FUNCTION_TEMPLATE, dynamicExtraParameter);
+					JsonFunction function = new JsonFunction(func);
+					attributesJson.append("dep", function);
 				}
 			}
 

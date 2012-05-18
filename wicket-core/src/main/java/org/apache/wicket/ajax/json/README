@@ -1,2 +1,4 @@
 These classes are copied from https://github.com/douglascrockford/JSON-java.
 Last update: May 18 2012
+
+Only JsonFunction is custom one. It is borrowed from https://github.com/ivaynberg/wicket-select2.

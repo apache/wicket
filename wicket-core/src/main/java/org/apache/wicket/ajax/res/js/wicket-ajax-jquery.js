@@ -364,22 +364,19 @@
 		 * A helper function that executes an array of handlers (before, success, failure)
 		 *
 		 * @param {Array[FunctionBody]} handlers - the handlers to execute
-		 * @param {Array[String]} argumentNames - the names of the arguments which are passes to the handles
 		 */
-		_executeHandlers: function (handlers, argumentNames) {
+		_executeHandlers: function (handlers) {
 			if (jQuery.isArray(handlers)) {
 
 				// cut the handlers argument
-				var args = Array.prototype.slice.call(arguments).slice(2);
+				var args = Array.prototype.slice.call(arguments).slice(1);
 
 				for (var i = 0; i < handlers.length; i++) {
 					var handler = handlers[i];
 					if (jQuery.isFunction(handler)) {
 						handler.apply(this, args);
 					} else {
-						var functionArgs = argumentNames;
-						functionArgs.push(handler);
-						Function.apply(this, functionArgs).apply(this, args);
+						new Function(handler).apply(this, args);
 					}
 				}
 			}
@@ -430,7 +427,7 @@
 		 */
 		doAjax: function (attrs) {
 
-			var 
+			var
 				// the headers to use for each Ajax request
 				headers = {
 					'Wicket-Ajax': 'true',
@@ -475,7 +472,7 @@
 			}
 
 			if (attrs.mp) { // multipart form. jQuery doesn't help here ...
-				// TODO Wicket.next - should we execute all handlers ?! 
+				// TODO Wicket.next - should we execute all handlers ?!
 				// Wicket 1.5 didn't support success/failure handlers for this, but we can do it
 				return this.submitMultipartForm(attrs);
 			}
@@ -500,7 +497,7 @@
 			// convert to URL encoded string
 			data = jQuery.param(data);
 
-			// execute the request 
+			// execute the request
 			var jqXHR = jQuery.ajax({
 				url: attrs.u,
 				type: attrs.m,
@@ -527,9 +524,7 @@
 					}
 
 					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
-					self._executeHandlers(attrs.bh,
-							["attrs", "jqXHR", "settings"],
-							attrs, jqXHR, settings);
+					self._executeHandlers(attrs.bh, attrs, jqXHR, settings);
 
 					if (attrs.i) {
 						// show the indicator
@@ -547,17 +542,15 @@
 					if (attrs.wr) {
 						self.processAjaxResponse(data, textStatus, jqXHR, attrs);
 					} else {
-						self._executeHandlers(attrs.sh,
-								["data", "textStatus", "jqXHR", "attrs"],
-								data, textStatus, jqXHR, attrs);
+						self._executeHandlers(attrs.sh, attrs, jqXHR, data, textStatus);
 					}
-					Wicket.Event.publish('/ajax/call/success', data, textStatus, jqXHR, attrs);
+					Wicket.Event.publish('/ajax/call/success', attrs, jqXHR, data, textStatus);
 
 				},
-				error: function(jqXHR, textStatus, errorThrown) {
+				error: function(jqXHR, textStatus, errorMessage) {
 
-					self.failure(errorThrown, attrs, jqXHR, textStatus);
-					Wicket.Event.publish('/ajax/call/failure', errorThrown, attrs, jqXHR, textStatus);
+					self.failure(attrs, jqXHR, errorMessage, textStatus);
+					Wicket.Event.publish('/ajax/call/failure', attrs, jqXHR, errorMessage, textStatus);
 
 				},
 				complete: function (jqXHR, textStatus) {
@@ -565,17 +558,15 @@
 						Wicket.DOM.hideIncrementally(attrs.i);
 					}
 
-					self._executeHandlers(attrs.coh,
-							["jqXHR", "textStatus", "attrs"],
-							jqXHR, textStatus, attrs);
-					Wicket.Event.publish('/ajax/call/complete', jqXHR, textStatus, attrs);
+					self._executeHandlers(attrs.coh, attrs, jqXHR, textStatus);
+					Wicket.Event.publish('/ajax/call/complete', attrs, jqXHR, textStatus);
 
 					this.done();
 				}
 			});
 
 			// execute after handlers right after the Ajax request is fired
-			self._executeHandlers(attrs.ah, ["attrs"], attrs);
+			self._executeHandlers(attrs.ah, attrs);
 			Wicket.Event.publish('/ajax/call/after', attrs);
 
 			if (!attrs.ad && attrs.event) {
@@ -830,7 +821,7 @@
 				var executer = new FunctionsExecuter(steps);
 				executer.start();
 			} catch (exception) {
-				this.failure(exception, attrs);
+				this.failure(attrs, null, exception);
 			}
 		},
 
@@ -859,11 +850,11 @@
 		},
 
 		// On ajax request failure
-		failure: function (message, attrs) {
-			if (message) {
-				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
+		failure: function (attrs, jqXHR, errorMessage, textStatus) {
+			if (errorMessage) {
+				Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + errorMessage);
 			}
-			this._executeHandlers(attrs.fh, ["attrs"], attrs);
+			this._executeHandlers(attrs.fh, attrs, errorMessage);
 		},
 
 		done: function () {
@@ -1084,7 +1075,7 @@
 
 		/**
 		 * Merges two objects. Values of the second will overwrite values of the first.
-		 * 
+		 *
 		 * @param {Object} object1 - the first object to merge
 		 * @param {Object} object2 - the second object to merge
 		 * @return {Object} a new object with the values of object1 and object2
@@ -1092,10 +1083,10 @@
 		merge: function(object1, object2) {
 			return jQuery.extend({}, object1, object2);
 		},
-		
+
 		/**
 		 * Takes a function and returns a new one that will always have a particular context, i.e. 'this' will be the passed context.
-		 * 
+		 *
 		 * @param {Function} fn - the function which context will be set
 		 * @param {Object} context - the new context for the function
 		 * @return {Function} the original function with the changed context
@@ -1164,7 +1155,7 @@
 			/**
 			 * Serializes HTMLFormSelectElement to URL encoded key=value string.
 			 *
-			 * @param {HTMLFormSelectElement} select - the form element to serialize 
+			 * @param {HTMLFormSelectElement} select - the form element to serialize
 			 * @return an object of key -> value pair where 'value' can be an array of Strings if the select is .multiple,
 			 *		or empty object if the form element is disabled.
 			 */
@@ -1197,7 +1188,7 @@
 			 */
 			serializeInput: function (input) {
 				var result = [];
-				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) { 
+				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) {
 					var $input = jQuery(input);
 					result = $input.serializeArray();
 				}
@@ -1270,7 +1261,7 @@
 			serialize: function (element, dontTryToFindRootForm) {
 				if (typeof(element) === 'string') {
 					element = Wicket.$(element);
-				} 
+				}
 
 				if (element.tagName.toLowerCase() === "form") {
 					return Wicket.Form.serializeForm(element);

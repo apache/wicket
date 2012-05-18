@@ -38,7 +38,7 @@
 jQuery(document).ready(function() {
 
 	execute = function (attributes) {
-		
+
 		var defaults = {
 				fh: [
 					function () {
@@ -196,7 +196,7 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
 				sh: [
-					function(data, textStatus, jqXHR) {
+					function(attributes, jqXHR, data, textStatus) {
 						start();
 						var expected = {
 							one: 1,
@@ -223,7 +223,7 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
 				sh: [
-					function(data, textStatus, jqXHR) {
+					function(attributes, jqXHR, data, textStatus) {
 						var expected = {
 							one: 1,
 							two: '2',
@@ -263,7 +263,7 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
 				sh: [
-					function(data, textStatus, jqXHR) {
+					function(attributes, jqXHR, data, textStatus) {
 						start();
 						var expected = {
 							one: 1,
@@ -299,41 +299,41 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
 				sh: [
-					function(data, textStatus, jqXHR, attributes) {
+					function(attributes, jqXHR, data, textStatus) {
 						start();
 						var expected = {
 							one: 1,
 							two: '2',
 							three: true
 						};
-						deepEqual(data, expected);
-						equal('success', textStatus);
-						deepEqual(attrs, attributes);
-						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						deepEqual(data, expected, 'Success: data deep equal');
+						equal('success', textStatus, 'Success: textStatus');
+						deepEqual(attrs, attributes, 'Success: attributes deep equal');
+						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
 					}
 				],
 				fh: [
-					function(attributes) {
+					function(attributes, errorMessage) {
 						ok(false, 'Should not be called');
 					}
 				],
 				bh: [
 					function(attributes, jqXHR, settings) {
-						deepEqual(attrs, attributes);
-						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-						ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
+						deepEqual(attrs, attributes, 'Before: attributes deep equal');
+						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+						ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 					}
 				],
 				ah: [
 					function(attributes) {
-						deepEqual(attrs, attributes);
+						deepEqual(attrs, attributes, 'After: attributes deep equal');
 					}
 				],
 				coh: [
-					function(jqXHR, textStatus, attributes) {
-						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-						equal('success', textStatus);
-						deepEqual(attrs, attributes);
+					function(attributes, jqXHR, textStatus) {
+						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+						equal('success', textStatus, 'Complete: textStatus');
+						deepEqual(attrs, attributes, 'Complete: attributes deep equal');
 					}
 				]
 			}
@@ -355,7 +355,7 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
 				sh: [
-					function(data, textStatus, jqXHR, attributes) {
+					function(attributes, jqXHR, data, textStatus) {
 						ok(false, 'Should not be called');
 					}
 				],
@@ -378,7 +378,7 @@ jQuery(document).ready(function() {
 					}
 				],
 				coh: [
-					function(jqXHR, textStatus, attributes) {
+					function(attributes, jqXHR, textStatus) {
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
 						equal('error', textStatus);
 						deepEqual(attrs, attributes);
@@ -404,7 +404,7 @@ jQuery(document).ready(function() {
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
 				coh: [
-					function(jqXHR, textStatus, attributes) {
+					function(attributes, jqXHR, textStatus) {
 						start();
 						equal(textStatus, "parsererror", "textStatus")
 						equal(attributes.u, attrs.u, "url");
@@ -448,7 +448,7 @@ jQuery(document).ready(function() {
 				wr: false // not Wicket's <ajax-response>
 			};
 
-			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, data, textStatus, jqXHR, attributes) {
+			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attributes, jqXHR, data, textStatus) {
 				start();
 				var expected = {
 					one: 1,
@@ -475,7 +475,7 @@ jQuery(document).ready(function() {
 				deepEqual(attrs, attributes, 'After: attrs');
 			});
 
-			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, jqXHR, textStatus, attributes) {
+			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				equal('success', textStatus, 'Complete: textStatus');
 				deepEqual(attrs, attributes, 'Complete: attrs');
@@ -502,11 +502,11 @@ jQuery(document).ready(function() {
 				wr: false // not Wicket's <ajax-response>
 			};
 
-			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, data, textStatus, jqXHR, attributes) {
+			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attributes, jqXHR, data, textStatus) {
 				ok(false, 'Success handles should not be called');
 			});
 
-			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, errorThrown, attributes, jqXHR, textStatus) {
+			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {
 				start();
 				equal('Not Found', errorThrown, 'Failure: errorThrown');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Failure: Assert that jqXHR is a XMLHttpRequest');
@@ -524,7 +524,7 @@ jQuery(document).ready(function() {
 				deepEqual(attrs, attributes, 'After: attrs');
 			});
 
-			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, jqXHR, textStatus, attributes) {
+			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				equal('error', textStatus, 'Complete: textStatus');
 				deepEqual(attrs, attributes, 'Complete: attrs');
