@@ -737,4 +737,30 @@ public class UrlTest extends Assert
 		assertEquals(host, copy.getHost());
 		assertEquals(port, copy.getPort());
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4387
+	 * Parse uri with '://' in it should consider it as absolute only if there are
+	 * no slashes earlier in the string.
+	 */
+	@Test
+	public void parseHttpSlashSlashColon()
+	{
+		// relative
+		String uri = "/abc/http://host:9090/";
+		Url url = Url.parse(uri);
+		assertEquals(uri, url.toString());
+		assertNull(url.getProtocol());
+		assertNull(url.getHost());
+		assertNull(url.getPort());
+
+		// absolute
+		uri = "abchttp://host:9090/";
+		url = Url.parse(uri);
+		assertEquals(uri, url.toString(StringMode.FULL));
+		assertEquals("abchttp", url.getProtocol());
+		assertEquals("host", url.getHost());
+		assertEquals(Integer.valueOf(9090), url.getPort());
+
+	}
 }
