@@ -81,29 +81,24 @@ public class PagingNavigator extends Panel
 		return pageable;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
 	@Override
-	protected void onBeforeRender()
+	protected void onInitialize()
 	{
-		if (get("first") == null)
-		{
-			// Get the navigation bar and add it to the hierarchy
-			pagingNavigation = newNavigation("navigation", pageable, labelProvider);
-			add(pagingNavigation);
+		super.onInitialize();
 
-			// Add additional page links
-			add(newPagingNavigationLink("first", pageable, 0).add(
-				new TitleAppender("PagingNavigator.first")));
-			add(newPagingNavigationIncrementLink("prev", pageable, -1).add(
-				new TitleAppender("PagingNavigator.previous")));
-			add(newPagingNavigationIncrementLink("next", pageable, 1).add(
-				new TitleAppender("PagingNavigator.next")));
-			add(newPagingNavigationLink("last", pageable, -1).add(
-				new TitleAppender("PagingNavigator.last")));
-		}
-		super.onBeforeRender();
+		// Get the navigation bar and add it to the hierarchy
+		pagingNavigation = newNavigation("navigation", pageable, labelProvider);
+		add(pagingNavigation);
+
+		// Add additional page links
+		add(newPagingNavigationLink("first", pageable, 0).add(
+			new TitleAppender("PagingNavigator.first")));
+		add(newPagingNavigationIncrementLink("prev", pageable, -1).add(
+			new TitleAppender("PagingNavigator.previous")));
+		add(newPagingNavigationIncrementLink("next", pageable, 1).add(
+			new TitleAppender("PagingNavigator.next")));
+		add(newPagingNavigationLink("last", pageable, -1).add(
+			new TitleAppender("PagingNavigator.last")));
 	}
 
 	/**
