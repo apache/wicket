@@ -511,7 +511,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-					<comparisonVersion>1.5.5</comparisonVersion>
+					<comparisonVersion>1.5.6</comparisonVersion>
 					<failOnError>false</failOnError>
 					<logResults>true</logResults>
 				</configuration>
