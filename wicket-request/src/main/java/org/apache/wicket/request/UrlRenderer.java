@@ -92,14 +92,25 @@ public class UrlRenderer
 	 */
 	public String renderUrl(final Url url)
 	{
+		final String renderedUrl;
 		if (shouldRenderAsFull(url))
 		{
-			return renderFullUrl(url);
+			if (url.isAbsolute() == false)
+			{
+				String relativeUrl = renderRelativeUrl(url);
+				Url relative = Url.parse(relativeUrl, url.getCharset());
+				renderedUrl = renderFullUrl(relative);
+			}
+			else
+			{
+				renderedUrl = renderFullUrl(url);
+			}
 		}
-		else
+		else 
 		{
-			return renderRelativeUrl(url);
+			renderedUrl = renderRelativeUrl(url);
 		}
+		return renderedUrl;
 	}
 
 	/**
