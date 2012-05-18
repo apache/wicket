@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
  * the event target and what {@link IRequestHandler} was the response target. It also records what
  * session data was touched for this and how long the request did take.
  * 
- * To view this information live see the {@link InspectorBug} that shows the {@link InspectorPage}
- * with the {@link LiveSessionsPage}.
+ * To view this information live see org.apache.wicket.devutils.inspector.InspectorBug that shows
+ * the org.apache.wicket.devutils.inspector.InspectorPage with the org.apache.wicket.devutils.inspector.LiveSessionsPage.
  * 
  * This implementation uses a rounded buffer for storing the request data, and strives to minimize
  * contention on accessing the rounded buffer. At the beginning of your application start, the
