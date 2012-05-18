@@ -204,4 +204,49 @@ public class UrlRendererTest extends Assert
 		String fullUrl = renderer.renderFullUrl(Url.parse("/four")); // url starting with slash is considered absolute
 		assertEquals("http://www.example.com:8888/four", fullUrl);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4561
+	 * https://issues.apache.org/jira/browse/WICKET-4562
+	 */
+	@Test
+	public void renderUrlWithRelativeArgument()
+	{
+		Url baseUrl = Url.parse("one/two/three");
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("www.example.com");
+		baseUrl.setPort(8888);
+		renderer.setBaseUrl(baseUrl);
+
+		Url newUrl = Url.parse("four");
+		newUrl.setProtocol("https");
+		String fullUrl = renderer.renderUrl(newUrl);
+		assertEquals("http://www.example.com:8888/four", fullUrl);
+
+		newUrl = Url.parse("./four");
+		newUrl.setProtocol("https");
+		fullUrl = renderer.renderUrl(newUrl);
+		assertEquals("http://www.example.com:8888/four", fullUrl);
+
+		newUrl = Url.parse("./././four");
+		newUrl.setProtocol("https");
+		fullUrl = renderer.renderUrl(newUrl);
+		assertEquals("http://www.example.com:8888/four", fullUrl);
+
+		newUrl = Url.parse("../four");
+		newUrl.setProtocol("https");
+		fullUrl = renderer.renderUrl(newUrl);
+		assertEquals("http://www.example.com:8888/four", fullUrl);
+
+		newUrl = Url.parse(".././four");
+		newUrl.setProtocol("https");
+		fullUrl = renderer.renderUrl(newUrl);
+		assertEquals("http://www.example.com:8888/four", fullUrl);
+
+		newUrl = Url.parse("../../../../four");
+		newUrl.setProtocol("https");
+		fullUrl = renderer.renderUrl(newUrl);
+		assertEquals("http://www.example.com:8888/four", fullUrl);
+	}
 }

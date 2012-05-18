@@ -1001,7 +1001,10 @@ public class Url implements Serializable
 			else if ("..".equals(relative.getSegments().get(0)))
 			{
 				relative.getSegments().remove(0);
-				getSegments().remove(getSegments().size() - 1);
+				if (getSegments().isEmpty() == false)
+				{
+					getSegments().remove(getSegments().size() - 1);
+				}
 			}
 			else
 			{
