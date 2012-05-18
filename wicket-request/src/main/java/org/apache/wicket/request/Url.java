@@ -222,9 +222,10 @@ public class Url implements Serializable
 		String relativeUrl;
 
 		// absolute urls contain a scheme://
+		final int idxOfFirstSlash = absoluteUrl.indexOf('/');
 		final int protocolAt = absoluteUrl.indexOf("://");
 
-		if (protocolAt != -1)
+		if (protocolAt > -1 && (protocolAt < idxOfFirstSlash))
 		{
 			result.protocol = absoluteUrl.substring(0, protocolAt).toLowerCase(Locale.US);
 

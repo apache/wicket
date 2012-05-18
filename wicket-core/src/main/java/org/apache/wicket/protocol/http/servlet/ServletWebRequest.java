@@ -199,7 +199,10 @@ public class ServletWebRequest extends WebRequest
 		}
 
 		final int start = contextPath.length() + filterPrefix.length() + 1;
-		url.append(uri.substring(start));
+		if (uri.length() > start)
+		{
+			url.append(uri.substring(start));
+		}
 
 		if (errorAttributes == null)
 		{
