@@ -96,12 +96,24 @@ public class MockServletContext implements ServletContext
 			}
 		}
 
-		// assume we're running in maven or an eclipse project created by maven,
+		// the user app can configure specific work folder by setting -Dwicket.tester.work.folder JVM option,
+		// otherwise assume we're running in maven or an eclipse project created by maven,
 		// so the sessions directory will be created inside the target directory,
 		// and will be cleaned up with a mvn clean
 
-		File file = new File("target/work/");
-		file.mkdirs();
+		String workFolder = System.getProperty("wicket.tester.work.folder", "target/work/");
+		File file = new File(workFolder);
+		try
+		{
+			file.mkdirs();
+		}
+		catch (SecurityException sx)
+		{
+			// not allowed to write so fallback to tmpdir
+			String tmpDir = System.getProperty("java.io.tmpdir");
+			file = new File(tmpDir);
+		}
+			
 		attributes.put("javax.servlet.context.tempdir", file);
 
 		mimeTypes.put("html", "text/html");
