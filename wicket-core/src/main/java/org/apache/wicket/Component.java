@@ -1533,8 +1533,13 @@ public abstract class Component
 			return null;
 		}
 
-		final int generatedMarkupId = storedMarkupId instanceof Integer ? (Integer)storedMarkupId
+		int generatedMarkupId = storedMarkupId instanceof Integer ? (Integer)storedMarkupId
 			: getSession().nextSequenceValue();
+
+		if (generatedMarkupId == 0xAD) {
+			// WICKET-4559 skip suffix 'ad' because some ad-blocking solutions may hide the component
+			generatedMarkupId = getSession().nextSequenceValue();
+		}
 
 		if (storedMarkupId == null)
 		{
