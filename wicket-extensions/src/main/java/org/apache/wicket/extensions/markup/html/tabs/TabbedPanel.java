@@ -68,15 +68,18 @@ import org.apache.wicket.util.lang.Args;
  * @see org.apache.wicket.extensions.markup.html.tabs.ITab
  * 
  * @author Igor Vaynberg (ivaynberg at apache dot org)
+ * @param <T>
+ *            The type of panel to be used for this component's tabs. Just use {@link ITab} if you
+ *            have no special needs here.
  */
-public class TabbedPanel extends Panel
+public class TabbedPanel<T extends ITab> extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
 	/** id used for child panels */
 	public static final String TAB_PANEL_ID = "panel";
 
-	private final List<? extends ITab> tabs;
+	private final List<T> tabs;
 
 	private transient Boolean[] tabsVisibilityCache;
 
@@ -88,7 +91,7 @@ public class TabbedPanel extends Panel
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(final String id, final List<? extends ITab> tabs)
+	public TabbedPanel(final String id, final List<T> tabs)
 	{
 		super(id, new Model<Integer>(-1));
 
@@ -117,7 +120,7 @@ public class TabbedPanel extends Panel
 			protected void populateItem(final LoopItem item)
 			{
 				final int index = item.getIndex();
-				final ITab tab = TabbedPanel.this.tabs.get(index);
+				final T tab = TabbedPanel.this.tabs.get(index);
 
 				final WebMarkupContainer titleLink = newLink("link", index);
 
@@ -251,7 +254,7 @@ public class TabbedPanel extends Panel
 	/**
 	 * @return list of tabs that can be used by the user to add/remove/reorder tabs in the panel
 	 */
-	public final List<? extends ITab> getTabs()
+	public final List<T> getTabs()
 	{
 		return tabs;
 	}
@@ -347,7 +350,7 @@ public class TabbedPanel extends Panel
 		else
 		{
 			// show panel from selected tab
-			ITab tab = tabs.get(index);
+			T tab = tabs.get(index);
 			component = tab.getPanel(TAB_PANEL_ID);
 			if (component == null)
 			{
