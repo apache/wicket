@@ -31,16 +31,16 @@ import org.junit.Test;
 
 /**
  * Tests for FilteringHeaderResponse
- *
+ * 
  * @since 6.0
  */
-@Ignore
 public class FilteringHeaderResponseTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
 	{
-		MockApplication application = new MockApplication() {
+		MockApplication application = new MockApplication()
+		{
 			@Override
 			protected void init()
 			{
@@ -56,23 +56,26 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 				});
 			}
 		};
-		
+
 		return application;
 	}
 
 	/**
 	 * Tests using FilteredResponseContainer in <head>
-	 *
+	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-4396
 	 */
 	@Test
+	@Ignore
 	public void filter()
 	{
 		HeaderFilteringPage page = new HeaderFilteringPage();
 		tester.startPage(page);
 	}
-	
-	private static class HeaderFilteringPage extends WebPage implements IMarkupResourceStreamProvider
+
+	private static class HeaderFilteringPage extends WebPage
+		implements
+			IMarkupResourceStreamProvider
 	{
 		private HeaderFilteringPage()
 		{
@@ -80,9 +83,27 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 		}
 
 		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><head><wicket:container wicket:id='headerJS'/></head></html>");
+			return new StringResourceStream(
+				"<html><head><wicket:container wicket:id='headerJS'/></head></html>");
 		}
+	}
+
+	@Test
+	public void footerDependsOnHeadItem() throws Exception
+	{
+		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
+		{
+
+			public IHeaderResponse decorate(IHeaderResponse response)
+			{
+				// use this header resource decorator to load all JavaScript resources in the page
+				// footer (after </body>)
+				return new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS");
+			}
+		});
+		executeTest(FilteredHeaderPage.class, "FilteredHeaderPageExpected.html");
 	}
 }

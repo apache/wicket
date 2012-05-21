@@ -77,8 +77,8 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	}
 
 	/**
-	 * we store this FilteringHeaderResponse in the RequestCycle so that the
-	 * containers can access it to render their bucket of stuff
+	 * we store this FilteringHeaderResponse in the RequestCycle so that the containers can access
+	 * it to render their bucket of stuff
 	 */
 	private static final MetaDataKey<FilteringHeaderResponse> RESPONSE_KEY = new MetaDataKey<FilteringHeaderResponse>()
 	{
@@ -151,7 +151,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	{
 		if (item instanceof FilteredHeaderItem)
 		{
-			String filterName = ((FilteredHeaderItem) item).getFilterName();
+			String filterName = ((FilteredHeaderItem)item).getFilterName();
 			render(item, filterName);
 		}
 		else
@@ -205,6 +205,18 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 			protected Response getRealResponse()
 			{
 				return strResponse;
+			}
+
+			@Override
+			public boolean wasRendered(Object object)
+			{
+				return FilteringHeaderResponse.this.getRealResponse().wasRendered(object);
+			}
+
+			@Override
+			public void markRendered(Object object)
+			{
+				FilteringHeaderResponse.this.getRealResponse().markRendered(object);
 			}
 		};
 

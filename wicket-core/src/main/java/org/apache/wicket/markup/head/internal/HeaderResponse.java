@@ -48,7 +48,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 * @see org.apache.wicket.markup.head.IHeaderResponse#markRendered(java.lang.Object)
 	 */
 	@Override
-	public final void markRendered(Object object)
+	public void markRendered(Object object)
 	{
 		Set<Object> rendered = getRenderedResources();
 		rendered.add(object);
@@ -86,7 +86,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 * @see org.apache.wicket.markup.head.IHeaderResponse#wasRendered(java.lang.Object)
 	 */
 	@Override
-	public final boolean wasRendered(Object object)
+	public boolean wasRendered(Object object)
 	{
 		Set<Object> rendered = getRenderedResources();
 		return rendered.contains(object);
