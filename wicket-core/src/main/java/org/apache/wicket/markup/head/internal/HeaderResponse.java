@@ -19,11 +19,9 @@ package org.apache.wicket.markup.head.internal;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.NullResponse;
 
 
@@ -35,12 +33,7 @@ import org.apache.wicket.response.NullResponse;
  */
 public abstract class HeaderResponse implements IHeaderResponse
 {
-	/**
-	 * A key used to keep the set of rendered resources in the request cycle's meta data
-	 */
-	private static final MetaDataKey<Set<Object>> RENDERED_RESOURCES = new MetaDataKey<Set<Object>>()
-	{
-	};
+	private final Set<Object> rendered = new HashSet<Object>();
 
 	private boolean closed;
 
@@ -50,7 +43,6 @@ public abstract class HeaderResponse implements IHeaderResponse
 	@Override
 	public void markRendered(Object object)
 	{
-		Set<Object> rendered = getRenderedResources();
 		rendered.add(object);
 	}
 
@@ -88,7 +80,6 @@ public abstract class HeaderResponse implements IHeaderResponse
 	@Override
 	public boolean wasRendered(Object object)
 	{
-		Set<Object> rendered = getRenderedResources();
 		return rendered.contains(object);
 	}
 
@@ -127,19 +118,4 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 * @return Response
 	 */
 	protected abstract Response getRealResponse();
-
-	/**
-	 * @return the set of rendered resources per request cycle
-	 */
-	private Set<Object> getRenderedResources()
-	{
-		RequestCycle requestCycle = RequestCycle.get();
-		Set<Object> rendered = requestCycle.getMetaData(RENDERED_RESOURCES);
-		if (rendered == null)
-		{
-			rendered = new HashSet<Object>();
-			requestCycle.setMetaData(RENDERED_RESOURCES, rendered);
-		}
-		return rendered;
-	}
 }
