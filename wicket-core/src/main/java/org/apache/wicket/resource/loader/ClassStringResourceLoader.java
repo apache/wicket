@@ -67,7 +67,7 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 
 	/**
 	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(org.apache.wicket.Component,
-	 *      java.lang.String, java.util.Locale, java.lang.String)
+     *      String, java.util.Locale, String, String)
 	 */
 	@Override
 	public String loadStringResource(final Component component, final String key,

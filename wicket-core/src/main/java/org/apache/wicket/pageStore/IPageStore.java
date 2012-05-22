@@ -90,8 +90,6 @@ public interface IPageStore
 	 * This method should restore the serialized page to intermediate object that can be converted
 	 * to real page instance using {@link #convertToPage(Object)}.
 	 * 
-	 * @param sessionId
-	 *            The session of the page that must be removed
 	 * @param serializable
 	 * @return Page
 	 */

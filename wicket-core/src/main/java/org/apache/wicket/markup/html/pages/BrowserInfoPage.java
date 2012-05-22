@@ -34,7 +34,7 @@ import org.apache.wicket.settings.IRequestCycleSettings;
  * <p>
  * This page uses a form post right after the page has loaded in the browser, using JavaScript or
  * alternative means to detect and pass on settings to the embedded form. The form submit method
- * updates this session's {@link org.apache.wicket.request.ClientInfo} object and then redirects to
+ * updates this session's {@link org.apache.wicket.core.request.ClientInfo} object and then redirects to
  * the original location as was passed in as a URL argument in the constructor.
  * </p>
  * <p>

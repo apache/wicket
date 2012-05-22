@@ -75,7 +75,7 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	}
 
 	/**
-	 * @see org.apache.wicket.util.resource.AbstractResourceStream#asString()
+	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#asString()
 	 */
 	@Override
 	public String asString()

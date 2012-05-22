@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <h3>Order of notification</h3>
  * <p>
- * {@link #onBeginRequest(RequestCycle)}, {@link #onRequestHandlerScheduled(IRequestHandler)} and
- * {@link #onRequestHandlerResolved(IRequestHandler)} are notified in first in, first out order.
+ * {@link #onBeginRequest(RequestCycle)}, {@link #onRequestHandlerScheduled(RequestCycle, IRequestHandler)} and
+ * {@link #onRequestHandlerResolved(RequestCycle, IRequestHandler)} are notified in first in, first out order.
  * <p>
  * {@link #onEndRequest(RequestCycle)} and {@link #onDetach(RequestCycle)} are notified in last in
  * first out order (i.e. reversed order). So for these events the collection functions as a stack.

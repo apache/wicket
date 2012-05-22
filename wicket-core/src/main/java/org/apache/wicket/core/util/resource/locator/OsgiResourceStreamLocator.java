@@ -45,7 +45,7 @@ public class OsgiResourceStreamLocator extends ResourceStreamLocator
 
 	/**
 	 *
-	 * @see org.apache.wicket.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class,
+	 * @see org.apache.wicket.core.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String)
 	 */
 	@Override
