@@ -492,11 +492,6 @@
 		</testResources>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<inherited>true</inherited>
-			</plugin>
-			<plugin>
 				<artifactId>maven-remote-resources-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
@@ -572,20 +567,6 @@
 					<version>2.5</version>
 					<configuration>
 						<encoding>${project.build.sourceEncoding}</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.3</version>
-					<configuration>
-						<appendAssemblyId>false</appendAssemblyId>
-						<tarLongFileMode>gnu</tarLongFileMode>
-						<outputDirectory>target/dist</outputDirectory>
-						<descriptors>
-							<descriptor>wicket-assembly-all.xml</descriptor>
-						</descriptors>
-						<finalName>apache-wicket-6.0-SNAPSHOT</finalName>
 					</configuration>
 				</plugin>
 				<plugin>
