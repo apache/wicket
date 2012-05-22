@@ -229,7 +229,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * Renders button image.
 	 * 
-	 * @see RenderedDynamicImageResource#render(Graphics2D)
+	 * @see RenderedDynamicImageResource#render(java.awt.Graphics2D, Attributes)
 	 */
 	@Override
 	protected boolean render(Graphics2D graphics, Attributes attributes)

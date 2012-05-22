@@ -84,7 +84,7 @@ public interface IDataProvider<T> extends IDetachable
 
 	/**
 	 * Callback used by the consumer of this data provider to wrap objects retrieved from
-	 * {@link #iterator(int, int)} with a model (usually a detachable one).
+	 * {@link #iterator(long, long)} with a model (usually a detachable one).
 	 * 
 	 * @param object
 	 *            the object that needs to be wrapped

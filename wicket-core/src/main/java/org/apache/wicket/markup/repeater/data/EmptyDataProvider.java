@@ -46,7 +46,7 @@ public class EmptyDataProvider<T> implements IDataProvider<T>
 	}
 
 	/**
-	 * @see IDataProvider#iterator(int, int)
+	 * @see IDataProvider#iterator(long, long)
 	 */
 	@Override
 	public Iterator<T> iterator(long first, long count)

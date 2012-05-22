@@ -38,8 +38,9 @@ public interface IPageProvider
 	 * @throws StalePageException
 	 *             if render count has been specified in constructor and the render count of page
 	 *             does not match the value
-	 * @throws {@link PageExpiredException} if the specified page could not have been found and the
-	 *         constructor used did not provide enough information to create new page instance
+	 * @throws {@link org.apache.wicket.protocol.http.PageExpiredException} if the specified page
+     *          could not have been found and the constructor used did not provide enough information
+     *          to create new page instance
 	 */
 	IRequestablePage getPageInstance();
 

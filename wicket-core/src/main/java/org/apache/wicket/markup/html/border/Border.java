@@ -127,8 +127,8 @@ import org.apache.wicket.util.lang.Args;
  * Other methods like {@link #remove()}, {@link #get(int)}, {@link #iterator()}, etc. are not
  * aliased to work on the border's body and attention must be paid when they need to be used.
  * 
- * @see PanelBorder An alternative implementation based on Panel
- * @see BorderBehavior A behavior which add (raw) markup before and after the component
+ * @see BorderPanel An alternative implementation based on Panel
+ * @see BorderBehavior A behavior which adds (raw) markup before and after the component
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag

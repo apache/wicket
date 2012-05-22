@@ -22,7 +22,7 @@ import org.apache.wicket.event.IEventSink;
 
 /**
  * A specialization of {@link IEventSink} that adds component as an additional parameter to the
- * {@link #onEvent(IEvent, Component)} method. This interface is useful for component plugins which
+ * {@link #onEvent(Component, IEvent)} method. This interface is useful for component plugins which
  * wish to participate in event processing, for example {@link Behavior}s
  * 
  * @author igor

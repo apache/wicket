@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A {@link DataStore} which stores the pages in the {@link HttpSession}. Uses
+ * A {@link IDataStore} which stores the pages in the {@link HttpSession}. Uses
  * {@link IDataStoreEvictionStrategy} to keep the memory footprint reasonable.
  * 
  * <p>

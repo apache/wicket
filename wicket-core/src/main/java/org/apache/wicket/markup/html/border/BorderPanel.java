@@ -63,7 +63,7 @@ import org.apache.wicket.model.IModel;
  * }
  * </pre>
  * 
- * @see BorderBehavior A behavior which add (raw) markup before and after the component
+ * @see BorderBehavior A behavior which adds (raw) markup before and after the component
  * 
  * @author Juergen Donnerstag
  */
