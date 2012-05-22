@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class AjaxTabbedPanel extends TabbedPanel
+public class AjaxTabbedPanel<T extends ITab> extends TabbedPanel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +42,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	 * @param id
 	 * @param tabs
 	 */
-	public AjaxTabbedPanel(final String id, final List<ITab> tabs)
+	public AjaxTabbedPanel(final String id, final List<T> tabs)
 	{
 		super(id, tabs);
 		setOutputMarkupId(true);

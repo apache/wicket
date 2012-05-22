@@ -29,7 +29,7 @@ import org.junit.Test;
 
 public class TabbedPanelTest extends WicketTestCase
 {
-	public static class TestPage extends WebPage
+	public class TestPage extends WebPage
 	{
 		public TabbedPanel<ITab> tabbedPanel;
 
@@ -54,9 +54,15 @@ public class TabbedPanelTest extends WicketTestCase
 					return new TestPanel(panelId, "default 2");
 				}
 			});
-			tabbedPanel = new TabbedPanel<ITab>("tabpanel", defaultTabs);
+			tabbedPanel = newTabbedPanel(defaultTabs);
 			add(tabbedPanel);
 		}
+
+	}
+
+	TabbedPanel<ITab> newTabbedPanel(List<ITab> defaultTabs)
+	{
+		return new TabbedPanel<ITab>("tabpanel", defaultTabs);
 	}
 
 	public static class TestPanel extends Panel
@@ -71,7 +77,7 @@ public class TabbedPanelTest extends WicketTestCase
 	@Test
 	public void renderDefaultTabsOnly() throws Exception
 	{
-		tester.startPage(TestPage.class);
+		tester.startPage(new TestPage());
 		tester.assertContains("<span wicket:id=\"title\">default 1</span></a>");
 		tester.assertContains("<span wicket:id=\"label\">default 1</span>");
 		tester.assertContains("<span wicket:id=\"title\">default 2</span></a>");
@@ -82,7 +88,7 @@ public class TabbedPanelTest extends WicketTestCase
 	@Test
 	public void renderAdditionalTabs() throws Exception
 	{
-		TestPage page = tester.startPage(TestPage.class);
+		TestPage page = (TestPage)tester.startPage(new TestPage());
 		page.tabbedPanel.getTabs().add(new AbstractTab(Model.of("added 1"))
 		{
 			@Override
