@@ -16,12 +16,6 @@
  */
 package org.apache.wicket.extensions.wizard;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.wizard.dynamic.DynamicWizardModel;
 import org.apache.wicket.markup.html.basic.Label;
@@ -34,16 +28,17 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import java.util.*;
 
 /**
  * default implementation of {@link IWizardStep}. It is also a panel, which is used as the view
  * component.
- * 
+ *
  * <p>
  * And example of a custom step with a panel follows.
- * 
+ *
  * Java (defined e.g. in class x.NewUserWizard):
- * 
+ *
  * <pre>
  * private final class UserNameStep extends WizardStep
  * {
@@ -55,9 +50,9 @@ import org.apache.wicket.model.Model;
  * 	}
  * }
  * </pre>
- * 
+ *
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
- * 
+ *
  * <pre>
  *  &lt;wicket:panel&gt;
  *   &lt;table&gt;
@@ -72,9 +67,9 @@ import org.apache.wicket.model.Model;
  *   &lt;/table&gt;
  *  &lt;/wicket:panel&gt;
  * </pre>
- * 
+ *
  * </p>
- * 
+ *
  * @author Eelco Hillenius
  */
 public class WizardStep extends Panel implements IWizardStep
@@ -92,7 +87,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 		/**
 		 * Adds a form validator.
-		 * 
+		 *
 		 * @param validator
 		 *            The validator to add
 		 */
@@ -149,44 +144,85 @@ public class WizardStep extends Panel implements IWizardStep
 	/**
 	 * Default header for wizards.
 	 */
-	private final class Header extends Panel
-	{
-		private static final long serialVersionUID = 1L;
+    private final class Header extends Panel
+    {
+        private static final long serialVersionUID = 1L;
 
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 *            The component id
-		 * @param wizard
-		 *            The containing wizard
-		 */
-		public Header(final String id, final IWizard wizard)
-		{
-			super(id);
-			setDefaultModel(new CompoundPropertyModel<IWizard>(wizard));
-			add(new Label("title", new AbstractReadOnlyModel<String>()
-			{
-				private static final long serialVersionUID = 1L;
+        /**
+         * Construct.
+         *
+         * @param id
+         *            The component id
+         * @param wizard
+         *            The containing wizard
+         */
+        public Header(final String id, final IWizard wizard)
+        {
+            super(id);
+            setDefaultModel(new CompoundPropertyModel<IWizard>(wizard));
+        }
 
-				@Override
-				public String getObject()
-				{
-					return getTitle();
-				}
-			}).setEscapeModelStrings(false));
-			add(new Label("summary", new AbstractReadOnlyModel<String>()
-			{
-				private static final long serialVersionUID = 1L;
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
 
-				@Override
-				public String getObject()
-				{
-					return getSummary();
-				}
-			}).setEscapeModelStrings(false));
-		}
-	}
+            // Title
+            final AbstractReadOnlyModel<String> titleModel = new AbstractReadOnlyModel<String>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public String getObject() {
+                    return getTitle();
+                }
+            };
+            add(new HeaderLabel("title", titleModel, this));
+
+            // Summary
+            final AbstractReadOnlyModel<String> summaryModel = new AbstractReadOnlyModel<String>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public String getObject() {
+                    return getSummary();
+                }
+            };
+            add(new HeaderLabel("summary", summaryModel, this));
+        }
+
+    }
+
+    /**
+     * Default label for title and summary, calls {@link Header#getEscapeModelStrings()}
+     * to determine wether it's model strings should be escaped or not.
+     */
+    private static final class HeaderLabel extends Label
+    {
+        private static final long serialVersionUID = 1L;
+        private final Header header;
+
+        /**
+         * Construct.
+         *
+         * @param id
+         *          The component id
+         * @param model
+         *          The model
+         * @param header
+         *          The wizard's header
+         */
+        private HeaderLabel(String id, IModel<?> model, Header header) {
+            super(id, model);
+            this.header = header;
+        }
+
+        @Override
+        protected void onConfigure() {
+            super.onConfigure();
+            // Header decides about escaping of model strings
+            setEscapeModelStrings(header.getEscapeModelStrings());
+        }
+
+    }
 
 	private static final long serialVersionUID = 1L;
 
