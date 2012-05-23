@@ -558,11 +558,12 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
+					<artifactId>plugin</artifactId>
 					<version>2.3</version>
 					<inherited>true</inherited>
 					<configuration>
 						<pushChanges>false</pushChanges>
+						<tagNameFormat>wicket-@{project.version}</tagNameFormat>
 					</configuration>
 				</plugin>
 				<plugin>
