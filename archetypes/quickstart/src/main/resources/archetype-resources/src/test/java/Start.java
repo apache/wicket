@@ -35,7 +35,7 @@ public class Start {
             SslContextFactory factory = new SslContextFactory();
             factory.setKeyStoreResource(keystore);
             factory.setKeyStorePassword("wicket");
-            factory.setTrustStore(keystore);
+            factory.setTrustStoreResource(keystore);
             factory.setKeyManagerPassword("wicket");
             SslSocketConnector sslConnector = new SslSocketConnector(factory);
             sslConnector.setMaxIdleTime(timeout);
