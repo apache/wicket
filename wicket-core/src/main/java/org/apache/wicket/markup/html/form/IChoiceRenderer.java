@@ -42,6 +42,9 @@ public interface IChoiceRenderer<T> extends IClusterable
 	 * This method is called to get the id value of an object (used as the value attribute of a
 	 * choice element) The id can be extracted from the object like a primary key, or if the list is
 	 * stable you could just return a toString of the index.
+	 * <p>
+	 * Note that the given index can be {@code -1} if the object in question is not contained in the
+	 * available choices.
 	 * 
 	 * @param object
 	 *            The object for which the id should be generated

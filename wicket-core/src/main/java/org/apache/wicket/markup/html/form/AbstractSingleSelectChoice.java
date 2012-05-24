@@ -194,20 +194,6 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		if (object != null)
 		{
 			int index = getChoices().indexOf(object);
-
-			if (index < 0)
-			{
-				// the model is returning a choice that is not in the available choices collection
-
-				logger.warn(
-					"Detected inconsistency in choice component: {}/{}. Model returned object: {}, but this object is not available in the list of selected objects.",
-					new Object[] { getPage().getClass(), getPageRelativePath(), object });
-
-				// pretend like nothing is selected
-
-				return "";
-			}
-
 			return getChoiceRenderer().getIdValue(object, index);
 		}
 		else
