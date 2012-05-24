@@ -27,7 +27,7 @@ import org.junit.Before;
 /**
  * see WICKET-2015
  */
-public class TestFileUploadError extends WicketTestCase
+public class FileUploadErrorTest extends WicketTestCase
 {
 	private FormTester formTester;
 	private final String textFieldId = "textField";
@@ -78,7 +78,8 @@ public class TestFileUploadError extends WicketTestCase
 		formTester.setValue(textFieldId, "te");
 		formTester.submit();
 
-		tester.assertErrorMessages("'te' is not between 3 and 10 characters long.");
+		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
+			textFieldId));
 	}
 
 	/**
@@ -89,7 +90,8 @@ public class TestFileUploadError extends WicketTestCase
 		formTester.setValue(textFieldId, "12345678901");
 		formTester.submit();
 
-		tester.assertErrorMessages("'12345678901' is not between 3 and 10 characters long.");
+		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
+			textFieldId));
 	}
 
 	/**
@@ -101,7 +103,8 @@ public class TestFileUploadError extends WicketTestCase
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
 		formTester.submit();
 
-		tester.assertErrorMessages("'te' is not between 3 and 10 characters long.");
+		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
+			textFieldId));
 	}
 
 	/**
