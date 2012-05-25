@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -114,8 +115,10 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
-		// this might look strange, but it is necessary for IE not to leak :(
-		return "setTimeout(\"" + getCallbackScript() + "\", " + updateInterval.getMilliseconds() +
+		CharSequence callbackScript = getCallbackScript();
+		callbackScript = JavaScriptUtils.escapeQuotes(callbackScript);
+		// use setTimeout(String) instead of setTimeout(function) because IE leaks memory
+		return "setTimeout(\"" + callbackScript + "\", " + updateInterval.getMilliseconds() +
 			");";
 	}
 
