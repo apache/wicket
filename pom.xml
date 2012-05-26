@@ -169,21 +169,21 @@
 			<post>announce@wicket.apache.org</post>
 			<subscribe>announce-subscribe@wicket.apache.org</subscribe>
 			<unsubscribe>announce-unsubscribe@wicket.apache.org</unsubscribe>
-			<archive>http://www.nabble.com/Wicket---Announce-f13975.html</archive>
+			<archive>http://apache-wicket.1842946.n4.nabble.com/Announcements-f2538089.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket User List</name>
 			<post>users@wicket.apache.org</post>
 			<subscribe>users-subscribe@wicket.apache.org</subscribe>
 			<unsubscribe>users-unsubscribe@wicket.apache.org</unsubscribe>
-			<archive>http://www.nabble.com/Wicket---User-f13976.html</archive>
+			<archive>http://apache-wicket.1842946.n4.nabble.com/Users-forum-f1842947.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket Development List</name>
 			<post>dev@wicket.apache.org</post>
 			<subscribe>dev-subscribe@wicket.apache.org</subscribe>
 			<unsubscribe>dev-unsubscribe@wicket.apache.org</unsubscribe>
-			<archive>http://www.nabble.com/Wicket---Dev-f13977.html</archive>
+			<archive>http://apache-wicket.1842946.n4.nabble.com/Forum-for-Wicket-Core-developers-f1894267.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket commit List</name>
