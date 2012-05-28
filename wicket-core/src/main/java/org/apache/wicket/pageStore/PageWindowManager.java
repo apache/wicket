@@ -64,6 +64,11 @@ public class PageWindowManager implements Serializable
 	 */
 	private IntHashMap<Integer> idToWindowIndex = null;
 
+	/**
+	 * Inversed index of #idToWindowIndex
+	 */
+	private IntHashMap<Integer> windowIndexToPageId = null;
+
 	/** index of last added page */
 	private int indexPointer = -1;
 
@@ -84,7 +89,13 @@ public class PageWindowManager implements Serializable
 	{
 		if (idToWindowIndex != null && pageId != -1 && windowIndex != -1)
 		{
+			Integer oldPageId = windowIndexToPageId.remove(windowIndex);
+			if (oldPageId != null)
+			{
+				idToWindowIndex.remove(oldPageId);
+			}
 			idToWindowIndex.put(pageId, windowIndex);
+			windowIndexToPageId.put(windowIndex, pageId);
 		}
 	}
 
@@ -94,7 +105,11 @@ public class PageWindowManager implements Serializable
 	 */
 	private void removeWindowIndex(int pageId)
 	{
-		idToWindowIndex.remove(pageId);
+		Integer windowIndex = idToWindowIndex.remove(pageId);
+		if (windowIndex != null)
+		{
+			windowIndexToPageId.remove(windowIndex);
+		}
 	}
 
 	/**
@@ -104,6 +119,8 @@ public class PageWindowManager implements Serializable
 	{
 		idToWindowIndex = null;
 		idToWindowIndex = new IntHashMap<Integer>();
+		windowIndexToPageId = null;
+		windowIndexToPageId = new IntHashMap<Integer>();
 		for (int i = 0; i < windows.size(); ++i)
 		{
 			PageWindowInternal window = windows.get(i);
@@ -195,6 +212,7 @@ public class PageWindowManager implements Serializable
 		}
 
 		idToWindowIndex = null;
+		windowIndexToPageId = null;
 	}
 
 	/**
@@ -213,6 +231,7 @@ public class PageWindowManager implements Serializable
 
 			windows.remove(index + 1);
 			idToWindowIndex = null; // reset index
+			windowIndexToPageId = null;
 		}
 	}
 
@@ -364,7 +383,7 @@ public class PageWindowManager implements Serializable
 		}
 
 		// if we are not going to reuse a page window (because it's not on
-		// indexPointor position or because we didn't find it), increment the
+		// indexPointer position or because we didn't find it), increment the
 		// indexPointer
 		if (index == -1 || index != indexPointer)
 		{

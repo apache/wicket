@@ -27,6 +27,41 @@ import org.junit.Test;
 public class PageWindowManagerTest extends Assert
 {
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4572
+	 */
+	@Test
+	public void removeObsoleteIndices()
+	{
+		int page0id = 0,
+			page1id = 1,
+			page2id = 2;
+		int maxSize = 10;
+
+		PageWindowManager manager = new PageWindowManager(maxSize);
+
+		// Add few pages.
+		// All of them fully occupy the max space in the pageWindowManager.
+		// So adding N+1st page removes the Nth page.
+		manager.createPageWindow(page0id, maxSize);
+		PageWindow page0Window = manager.getPageWindow(page0id);
+		assertWindow(page0Window, page0id, page0Window.getFilePartOffset(), page0Window.getFilePartSize());
+
+		manager.createPageWindow(page1id, maxSize);
+		PageWindow page1Window = manager.getPageWindow(page1id);
+		assertWindow(page1Window, page1id, page1Window.getFilePartOffset(), page1Window.getFilePartSize());
+
+		// Try to get a page which has been lost with the adding of page1
+		assertNull("Page0 must be lost when Page1 has been added.", manager.getPageWindow(page0id));
+
+		manager.createPageWindow(page2id, maxSize);
+		PageWindow page2Window = manager.getPageWindow(page2id);
+		assertWindow(page2Window, page2id, page2Window.getFilePartOffset(), page2Window.getFilePartSize());
+
+		// Try to get a page which has been lost with the adding of page2
+		assertNull("Page1 must be lost when Page2 has been added.", manager.getPageWindow(page1id));
+	}
+
+	/**
 	 * 
 	 */
 	@Test
