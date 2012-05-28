@@ -31,7 +31,7 @@ public class ThreadContext
 
 	private Session session;
 
-	private static ThreadLocal<ThreadContext> threadLocal = new ThreadLocal<ThreadContext>();
+	private static final ThreadLocal<ThreadContext> threadLocal = new ThreadLocal<ThreadContext>();
 
 	/**
 	 * INTERNAL METHOD
@@ -42,10 +42,21 @@ public class ThreadContext
 	public static ThreadContext get(boolean createIfDoesNotExist)
 	{
 		ThreadContext context = threadLocal.get();
-		if (createIfDoesNotExist && context == null)
+		if (context == null)
 		{
-			context = new ThreadContext();
-			threadLocal.set(context);
+			if (createIfDoesNotExist)
+			{
+				context = new ThreadContext();
+				threadLocal.set(context);
+			}
+			else
+			{
+				/*
+				 * There is no ThreadContext set, but the threadLocal.get() operation has registered
+				 * registered the threadLocal in this Thread's ThreadLocal map. We must now remove it.
+				 */
+				threadLocal.remove();
+			}
 		}
 		return context;
 	}
@@ -140,7 +151,14 @@ public class ThreadContext
 	 */
 	public static void restore(ThreadContext threadContext)
 	{
-		threadLocal.set(threadContext);
+		if (threadContext == null)
+		{
+			threadLocal.remove();
+		}
+		else
+		{
+			threadLocal.set(threadContext);
+		}
 	}
 
 	/**
