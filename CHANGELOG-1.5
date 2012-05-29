@@ -1,6 +1,42 @@
 This file contains all changes done on the 1.5 version.
 
 
+Release Notes - Wicket - Version 1.5.7
+
+** Bug
+    * [WICKET-4353] - Choice is not rendered as selected on different instances semantically equal
+    * [WICKET-4387] - StringIndexOutOfBoundsException when forwarding requests
+    * [WICKET-4445] - ArrayIndexOutOfBoundsException in Url.resolveRelative by using Check and alias for Page
+    * [WICKET-4502] - Make it easier to produce a page with links with absolute urls
+    * [WICKET-4519] - discrepancy between JavaDoc and code in MarkupContainer#visitChildren()
+    * [WICKET-4529] - AjaxEditableLabel not selecting text or moving cursor on Firefox 11.0 or Safari 5.0.5
+    * [WICKET-4530] - Final methods on ResourceNameIterator prevent full customization of IResourceStreamLocator
+    * [WICKET-4536] - FeedbackPanel does not show messages on stateless pages
+    * [WICKET-4546] - Unencoded ampersands in CSS-/Javascript-Reference
+    * [WICKET-4550] - jsessionid is not added to resources if cookies are disabled by the server
+    * [WICKET-4558] - WicketTester fails with a StringIndexOutOfBounds exception when using an external redirect
+    * [WICKET-4559] - Component#getMarkupId() generates id that gets hidden by AdBlock
+    * [WICKET-4561] - Wicket 1.5.6 duplicates segments in absolute URLs
+    * [WICKET-4563] - Possible NPE in FragmentMarkupSourcingStrategy.getMarkup
+    * [WICKET-4572] - DiskDataStore returns the wrong page when the page disk space is full 
+    * [WICKET-4573] - AbstractAjaxTimerBehavior should escape the quotes for the code that it schedules to execute
+
+** Improvement
+    * [WICKET-4457] - setTextEncoding on JavascriptResourceReferences/CssResourceReferences
+    * [WICKET-4523] - Use new maven compiler plugin to speed up build time
+    * [WICKET-4524] - ListMultipleChoice has a performance issue with very large lists, patch included
+    * [WICKET-4526] - OpenCloseTagExpander should include i tag
+    * [WICKET-4527] - Recorder#getSelectedChoices() can be very slow under certain circumstances
+    * [WICKET-4528] - make recorder component of wicket-extensions palette more efficient for large number of items and easier to extend
+    * [WICKET-4537] - Add Generics to TabbedPanel: <T extends ITab>
+    * [WICKET-4552] - WicketFilter.processRequest() should check that given FilterChain is not null
+    * [WICKET-4554] - WicketTester tries to create a directory called "tester" every time the tests run and thus fails when run under the security manager
+
+** Wish
+    * [WICKET-4308] - onNewBrowserWindow wanted
+
+
+
 Release Notes - Wicket - Version 1.5.6
 
 ** Bug
