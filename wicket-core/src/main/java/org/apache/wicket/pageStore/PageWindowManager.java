@@ -371,7 +371,7 @@ public class PageWindowManager implements Serializable
 	 * @param size
 	 * @return page window
 	 */
-	public PageWindow createPageWindow(int pageId, int size)
+	public synchronized PageWindow createPageWindow(int pageId, int size)
 	{
 		int index = getWindowIndex(pageId);
 
@@ -403,7 +403,7 @@ public class PageWindowManager implements Serializable
 	 * @param pageId
 	 * @return page window or null
 	 */
-	public PageWindow getPageWindow(int pageId)
+	public synchronized PageWindow getPageWindow(int pageId)
 	{
 		int index = getWindowIndex(pageId);
 		if (index != -1)
@@ -418,7 +418,7 @@ public class PageWindowManager implements Serializable
 	 * 
 	 * @param pageId
 	 */
-	public void removePage(int pageId)
+	public synchronized void removePage(int pageId)
 	{
 		int index = getWindowIndex(pageId);
 		if (index != -1)
@@ -499,7 +499,7 @@ public class PageWindowManager implements Serializable
 	 * 
 	 * @return total size
 	 */
-	public int getTotalSize()
+	public synchronized int getTotalSize()
 	{
 		return totalSize;
 	}
