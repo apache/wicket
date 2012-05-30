@@ -452,6 +452,7 @@ public class Files
 			try
 			{
 				Thread.sleep(100);
+				if (folder.exists()) return true;
 			}
 			catch (InterruptedException ix)
 			{

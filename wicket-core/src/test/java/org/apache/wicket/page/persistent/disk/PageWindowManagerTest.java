@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.page.persistent.disk;
 
+import java.security.SecureRandom;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.apache.wicket.pageStore.PageWindowManager;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 import org.junit.Assert;
@@ -179,5 +184,117 @@ public class PageWindowManagerTest extends Assert
 	{
 		assertTrue(window.getPageId() == pageId && window.getFilePartOffset() == filePartOffset &&
 			window.getFilePartSize() == filePartSize);
+	}
+
+	/** how many operations to execute */
+	private static final int EXECUTIONS = 10000;
+
+	/** used to wait the executions */
+	private static final CountDownLatch LATCH = new CountDownLatch(EXECUTIONS);
+
+	private final PageWindowManager pageWindowManager = new PageWindowManager(1000L);
+
+	/** the execution types */
+	private final Runnable[] TASKS = new Runnable[]
+	{
+		new CreatePageWindowTask(pageWindowManager),
+		new GetPageWindowTask(pageWindowManager),
+		new RemovePageInSessionTask(pageWindowManager)
+	};
+
+	private static final SecureRandom RND = new SecureRandom();
+
+	/**
+	 * Executes random mutator and accessor operations on {@link org.apache.wicket.pageStore.AsynchronousDataStore} validating
+	 * that the used data structures can be used simultaneously.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void randomOperations() throws Exception
+	{
+		ExecutorService executorService = Executors.newFixedThreadPool(50);
+
+		for (int i = 0; i < EXECUTIONS; i++)
+		{
+			Runnable task = TASKS[RND.nextInt(TASKS.length)];
+			executorService.submit(task);
+		}
+		LATCH.await();
+		executorService.shutdown();
+	}
+
+	private static abstract class AbstractTask implements Runnable
+	{
+		/** the ids for the stored/removed pages */
+		private static final int[] PAGE_IDS = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+		protected final PageWindowManager pageWindowManager;
+
+		private AbstractTask(PageWindowManager pageWindowManager)
+		{
+			this.pageWindowManager = pageWindowManager;
+		}
+
+		protected abstract void r();
+
+		public void run()
+		{
+			try
+			{
+				r();
+			}
+			finally
+			{
+				LATCH.countDown();
+			}
+		}
+
+		protected int getPageId()
+		{
+			return PAGE_IDS[RND.nextInt(PAGE_IDS.length)];
+		}
+	}
+
+	private static class CreatePageWindowTask extends AbstractTask
+	{
+		private CreatePageWindowTask(PageWindowManager pageWindowManager)
+		{
+			super(pageWindowManager);
+		}
+
+		@Override
+		public void r()
+		{
+			pageWindowManager.createPageWindow(getPageId(), 1000);
+		}
+	}
+
+	private static class GetPageWindowTask extends AbstractTask
+	{
+		private GetPageWindowTask(PageWindowManager pageWindowManager)
+		{
+			super(pageWindowManager);
+		}
+
+		@Override
+		public void r()
+		{
+			pageWindowManager.getPageWindow(getPageId());
+		}
+	}
+
+	private static class RemovePageInSessionTask extends AbstractTask
+	{
+		private RemovePageInSessionTask(PageWindowManager pageWindowManager)
+		{
+			super(pageWindowManager);
+		}
+
+		@Override
+		public void r()
+		{
+			pageWindowManager.removePage(getPageId());
+		}
 	}
 }
