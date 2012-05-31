@@ -29,8 +29,11 @@ import org.junit.Test;
  */
 public class AsynchronousDataStoreTest
 {
+//	private static final IDataStore WRAPPED_DATA_STORE = new DiskDataStore("asyncDataStoreApp", new StoreSettings(null).getFileStoreFolder(), Bytes.kilobytes(1));
+	private static final IDataStore WRAPPED_DATA_STORE = new InMemoryPageStore();
+
 	/** the data store under test */
-	private static IDataStore DATA_STORE = new AsynchronousDataStore(new InMemoryPageStore(), 100);
+	private static final IDataStore DATA_STORE = new AsynchronousDataStore(WRAPPED_DATA_STORE, 100);
 
 	/** the data for each page */
 	private static final byte[] DATA = new byte[] { 1, 2, 3 };
@@ -76,7 +79,6 @@ public class AsynchronousDataStoreTest
 
 	private static abstract class AbstractTask implements Runnable
 	{
-
 		protected abstract void r();
 
 		@Override

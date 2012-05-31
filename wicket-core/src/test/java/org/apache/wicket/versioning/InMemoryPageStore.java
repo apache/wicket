@@ -18,6 +18,7 @@ package org.apache.wicket.versioning;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.pageStore.IDataStore;
 
@@ -40,7 +41,7 @@ public class InMemoryPageStore implements IDataStore
 	 */
 	public InMemoryPageStore()
 	{
-		store = new HashMap<String, Map<Integer, byte[]>>();
+		store = new ConcurrentHashMap<String, Map<Integer, byte[]>> ();
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class InMemoryPageStore implements IDataStore
 		Map<Integer, byte[]> sessionPages = store.get(sessionId);
 		if (sessionPages == null)
 		{
-			sessionPages = new HashMap<Integer, byte[]>();
+			sessionPages = new ConcurrentHashMap<Integer, byte[]>();
 			store.put(sessionId, sessionPages);
 		}
 
