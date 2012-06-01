@@ -62,12 +62,15 @@ public class StringValueTest extends Assert
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4356
+     * https://issues.apache.org/jira/browse/WICKET-4580
 	 */
 	@Test
 	public void defaultValues()
 	{
 		StringValue sv = new StringValue("unknown");
-		
+
+        // https://issues.apache.org/jira/browse/WICKET-4356
+
 		assertTrue(sv.toBoolean(true));
 		assertFalse(sv.toBoolean(false));
 		
@@ -79,6 +82,27 @@ public class StringValueTest extends Assert
 		assertEquals(40L, sv.toLong(40));
 
 		assertEquals("unknown", sv.toString("def"));
+
+        // https://issues.apache.org/jira/browse/WICKET-4580
+
+        // test correct values don't use defaultValues
+        assertEquals(Boolean.TRUE, new StringValue("true").toBooleanObject(Boolean.FALSE));
+        assertEquals(Character.valueOf('c'), new StringValue("c").toCharacter('d'));
+        assertEquals(Double.valueOf(4.0), new StringValue("4.0").toDoubleObject(5.0));
+        assertEquals(Integer.valueOf(4), new StringValue("4").toInteger(5));
+        assertEquals(Long.valueOf(4L), new StringValue("4").toLongObject(5L));
+        // test inconvertible so use defaultValues
+        assertTrue(sv.toBooleanObject(Boolean.TRUE));
+        assertFalse(sv.toBooleanObject(Boolean.FALSE));
+        assertEquals(Character.valueOf('c'), sv.toCharacter('c'));
+        assertEquals(4.0, sv.toDoubleObject(4.0), 0.005);
+        assertEquals(Integer.valueOf(4), sv.toInteger(4));
+        assertEquals(Long.valueOf(4L), sv.toLongObject(4L));
+        assertNull(sv.toBooleanObject(null));
+        assertNull(sv.toCharacter(null));
+        assertNull(sv.toDoubleObject(null));
+        assertNull(sv.toInteger(null));
+        assertNull(sv.toLongObject(null));
 	}
 
 	static enum TestEnum {
