@@ -20,7 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -80,7 +81,7 @@ public class SharedBehaviorTest extends WicketTestCase
 		public void renderHead(Component component, IHeaderResponse response)
 		{
 			super.renderHead(component, response);
-			response.renderString("\nRendering header contribution for component with id: " + component.getId());
+			response.render(StringHeaderItem.forString("\nRendering header contribution for component with id: " + component.getId()));
 		}
 	}
 }
