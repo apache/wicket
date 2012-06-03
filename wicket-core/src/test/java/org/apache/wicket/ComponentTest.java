@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.Link;
 import org.junit.Test;
 
 /**
@@ -147,5 +148,47 @@ public class ComponentTest extends WicketTestCase
 		component.add(statefulBehavior);
 		component.setVisible(false);
 		assertFalse(component.isStateless());
+                
+		// do the same set of tests on a component that is stateful "by itself"
+		// rather than from a behavior
+
+        
+		Link link = new Link("someId") {
+			@Override
+			public void onClick()
+			{
+			}
+		};
+        
+		// Links are stateful by default
+		assertFalse(link.isStateless());
+        
+		//make the link invisible
+		link.setVisible(false);
+
+		// invisible link cannot be requested by default so it
+		// can pretend being stateless
+		assertTrue(link.isStateless());
+
+		// same for disabled link
+		link.setVisible(true).setEnabled(false);
+		assertTrue(link.isStateless());
+        
+		// make the link such that it can call listener interface
+		// methods no matter whether it is visible or enabled
+		link = new Link("someId") {
+
+		    @Override
+		    public boolean canCallListenerInterface(Method method) {
+			return true;
+		    }
+
+		    @Override
+		    public void onClick() {
+		    }
+		};
+
+		link.setVisible(false);
+		assertFalse(link.isStateless());
 	}
 }
