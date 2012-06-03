@@ -32,7 +32,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-final class ActionPermissions implements IClusterable
+public final class ActionPermissions implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
