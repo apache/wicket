@@ -587,10 +587,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         return [leftPosition,topPosition];
     }
     
-    function doUpdateAllChoices(resp) {
-    	doUpdateChoices(resp,-1);
+    function doUpdateAllChoices(attributes, jqXHR, resp, textStatus) {
+    	doUpdateChoices(attributes, jqXHR, resp, textStatus, -1);
     }
-    function doUpdateChoices(resp, defaultSelection){
+    function doUpdateChoices(attributes, jqXHR, resp, textStatus, defaultSelection) {
     	
     	getAutocompleteMenu().showingAutocomplete = false;
     	
