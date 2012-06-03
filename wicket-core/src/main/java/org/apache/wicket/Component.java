@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -2705,7 +2706,8 @@ public abstract class Component
 					if (response.wasRendered(behavior) == false)
 					{
 						behavior.renderHead(this, response);
-						response.markRendered(behavior);
+						List<IClusterable> pair = Arrays.asList(this, behavior);
+						response.markRendered(pair);
 					}
 				}
 			}
