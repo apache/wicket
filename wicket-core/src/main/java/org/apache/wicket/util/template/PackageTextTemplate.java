@@ -17,6 +17,7 @@
 package org.apache.wicket.util.template;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.Application;
@@ -100,6 +101,32 @@ public class PackageTextTemplate extends TextTemplate
 	public PackageTextTemplate(final Class<?> clazz, final String fileName,
 		final String contentType, final String encoding)
 	{
+		this(clazz, fileName, null, null, null, contentType, encoding);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param clazz
+	 *            the <code>Class</code> to be used for retrieving the classloader for loading the
+	 *            <code>PackagedTextTemplate</code>
+	 * @param fileName
+	 *            the name of the file, relative to the <code>clazz</code> position
+	 * @param style
+	 *            Any resource style, such as a skin style (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The template's variation (of the style)
+	 * @param locale
+	 *            The locale of the resource to load
+	 * @param contentType
+	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "
+	 *            <code>text/html</code>"
+	 * @param encoding
+	 *            the file's encoding, for example, "<code>UTF-8</code>"
+	 */
+	public PackageTextTemplate(final Class<?> clazz, final String fileName, final String style, final String variation,
+		final Locale locale, final String contentType, final String encoding)
+	{
 		super(contentType);
 
 		String path = Packages.absolutePath(clazz, fileName);
@@ -109,12 +136,12 @@ public class PackageTextTemplate extends TextTemplate
 		// first try default class loading locator to find the resource
 		IResourceStream stream = app.getResourceSettings()
 			.getResourceStreamLocator()
-			.locate(clazz, path);
+			.locate(clazz, path, style, variation, locale, null, false);
 
 		if (stream == null)
 		{
 			// if the default locator didn't find the resource then fallback
-			stream = new ResourceStreamLocator().locate(clazz, path);
+			stream = new ResourceStreamLocator().locate(clazz, path, style, variation, locale, null, false);
 		}
 
 		if (stream == null)
