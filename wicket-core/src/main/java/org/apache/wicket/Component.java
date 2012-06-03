@@ -2080,11 +2080,6 @@ public abstract class Component
 	 */
 	public final boolean isStateless()
 	{
-		if (!getStatelessHint())
-		{
-			return false;
-		}
-
 		if (
 			// the component is either invisible or disabled
 			(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
@@ -2095,6 +2090,11 @@ public abstract class Component
 		{
 			// then pretend the component is stateless
 			return true;
+		}
+
+		if (!getStatelessHint())
+		{
+			return false;
 		}
 
 		for (Behavior behavior : getBehaviors())
