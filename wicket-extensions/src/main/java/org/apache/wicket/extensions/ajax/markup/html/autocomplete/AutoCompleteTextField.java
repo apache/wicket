@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import java.util.Iterator;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 
@@ -226,4 +227,14 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @return iterator over all possible choice objects
 	 */
 	protected abstract Iterator<T> getChoices(String input);
+
+    /**
+   	 * @return The {@link IAutoCompleteRenderer} used to generate
+     *         html output for the {@link AutoCompleteBehavior}.
+   	 */
+    public final IAutoCompleteRenderer<T> getChoiceRenderer()
+    {
+        return renderer;
+    }
+
 }
