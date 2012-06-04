@@ -226,4 +226,14 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @return iterator over all possible choice objects
 	 */
 	protected abstract Iterator<T> getChoices(String input);
+
+    /**
+   	 * @return The {@link IAutoCompleteRenderer} used to generate
+     *         html output for the {@link AutoCompleteBehavior}.
+   	 */
+    public final IAutoCompleteRenderer<T> getChoiceRenderer()
+    {
+        return renderer;
+    }
+
 }
