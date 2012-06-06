@@ -27,6 +27,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.junit.Test;
 
+/**
+ * Test for {@link TabbedPanel}.
+ */
 public class TabbedPanelTest extends WicketTestCase
 {
 	public class TestPage extends WebPage
@@ -75,20 +78,41 @@ public class TabbedPanelTest extends WicketTestCase
 	}
 
 	@Test
+	public void renderNoTabs() throws Exception
+	{
+		TestPage page = new TestPage();
+		page.tabbedPanel.getTabs().clear();
+		tester.startPage(page);
+
+		tester.assertContainsNot("<span wicket:id=\"title\">default 1</span></a>");
+		tester.assertContainsNot("<span wicket:id=\"label\">default 1</span>");
+		tester.assertContainsNot("<span wicket:id=\"title\">default 2</span></a>");
+		tester.assertContainsNot("<span wicket:id=\"label\">default 2</span>");
+		tester.assertContains("<!-- no panel -->");
+
+		assertEquals(Integer.valueOf(-1), page.tabbedPanel.getModelObject());
+	}
+
+	@Test
 	public void renderDefaultTabsOnly() throws Exception
 	{
-		tester.startPage(new TestPage());
+		TestPage page = tester.startPage(new TestPage());
 		tester.assertContains("<span wicket:id=\"title\">default 1</span></a>");
 		tester.assertContains("<span wicket:id=\"label\">default 1</span>");
 		tester.assertContains("<span wicket:id=\"title\">default 2</span></a>");
+
+		assertEquals(Integer.valueOf(0), page.tabbedPanel.getModelObject());
+
 		tester.clickLink("tabpanel:tabs-container:tabs:1:link");
 		tester.assertContains("<span wicket:id=\"label\">default 2</span>");
+
+		assertEquals(Integer.valueOf(1), page.tabbedPanel.getModelObject());
 	}
 
 	@Test
 	public void renderAdditionalTabs() throws Exception
 	{
-		TestPage page = (TestPage)tester.startPage(new TestPage());
+		TestPage page = tester.startPage(new TestPage());
 		page.tabbedPanel.getTabs().add(new AbstractTab(Model.of("added 1"))
 		{
 			@Override
@@ -101,14 +125,20 @@ public class TabbedPanelTest extends WicketTestCase
 		tester.assertContainsNot("<span wicket:id=\"title\">added 1</span></a>");
 		tester.assertContainsNot("<span wicket:id=\"label\">added 1</span>");
 
+		assertEquals(Integer.valueOf(0), page.tabbedPanel.getModelObject());
+
 		// now its title is visible, but the contents not
 		tester.clickLink("tabpanel:tabs-container:tabs:1:link");
 		tester.assertContains("<span wicket:id=\"title\">added 1</span></a>");
 		tester.assertContainsNot("<span wicket:id=\"label\">added 1</span>");
 
+		assertEquals(Integer.valueOf(1), page.tabbedPanel.getModelObject());
+
 		// now the entire panel should be there
 		tester.clickLink("tabpanel:tabs-container:tabs:2:link");
 		tester.assertContains("<span wicket:id=\"title\">added 1</span></a>");
 		tester.assertContains("<span wicket:id=\"label\">added 1</span>");
+
+		assertEquals(Integer.valueOf(2), page.tabbedPanel.getModelObject());
 	}
 }
