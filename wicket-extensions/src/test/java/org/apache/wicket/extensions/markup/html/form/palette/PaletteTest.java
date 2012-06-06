@@ -124,4 +124,21 @@ public class PaletteTest extends WicketTestCase
 		assertEquals(1, collection.size());
 		assertEquals("D", collection.iterator().next());
 	}
+
+	/**
+	 * WICKET-4590 single unselected item
+	 */
+	@Test
+	public void choicesModelSingleNotSelected()
+	{
+		IModel<List<String>> selected = new ListModel<String>(new ArrayList<String>());
+
+		IModel<List<String>> all = new ListModel<String>(new ArrayList<String>(Arrays.asList("A")));
+
+		PaletteTestPage testPage = new PaletteTestPage(selected, all);
+
+		tester.startPage(testPage);
+
+		tester.assertContains("<option value=\"A\">A</option>");
+	}
 }
