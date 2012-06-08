@@ -66,11 +66,16 @@ public class MountedPageLinkTest extends WicketTestCase
 	{
 		PageWithLink page = tester.startPage(PageWithLink.class,
 			new PageParameters().add("param", "value"));
+		assertEquals("value", page.getPageParameters().get("param").toString());
+		tester.assertContains("param=value");
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
 		// simulate a page expiry
 		url = url.replace("part2?0", "part2?3");
 		tester.executeUrl(url);
+
+		// request parameters to callback urls should be ignored for the re-created page (WICKET-4594)
+		tester.assertContainsNot("param=value");
 	}
 
 	/**
