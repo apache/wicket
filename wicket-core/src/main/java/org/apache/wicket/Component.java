@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -2080,11 +2081,6 @@ public abstract class Component
 	 */
 	public final boolean isStateless()
 	{
-		if (!getStatelessHint())
-		{
-			return false;
-		}
-
 		if (
 			// the component is either invisible or disabled
 			(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
@@ -2095,6 +2091,11 @@ public abstract class Component
 		{
 			// then pretend the component is stateless
 			return true;
+		}
+
+		if (!getStatelessHint())
+		{
+			return false;
 		}
 
 		for (Behavior behavior : getBehaviors())
@@ -2721,7 +2722,8 @@ public abstract class Component
 					if (response.wasRendered(behavior) == false)
 					{
 						behavior.renderHead(this, response);
-						response.markRendered(behavior);
+						List<IClusterable> pair = Arrays.asList(this, behavior);
+						response.markRendered(pair);
 					}
 				}
 			}
