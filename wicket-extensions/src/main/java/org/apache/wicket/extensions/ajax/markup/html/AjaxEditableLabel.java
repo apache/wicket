@@ -87,9 +87,6 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		private static final long serialVersionUID = 1L;
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void renderHead(final Component component, final IHeaderResponse response)
 		{
@@ -103,9 +100,6 @@ public class AjaxEditableLabel<T> extends Panel
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected void respond(final AjaxRequestTarget target)
 		{
@@ -149,9 +143,6 @@ public class AjaxEditableLabel<T> extends Panel
 			super(event);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected void onEvent(final AjaxRequestTarget target)
 		{
@@ -224,9 +215,6 @@ public class AjaxEditableLabel<T> extends Panel
 		return this;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public final AjaxEditableLabel<T> setDefaultModel(final IModel<?> model)
 	{
@@ -428,9 +416,6 @@ public class AjaxEditableLabel<T> extends Panel
 		return label;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onBeforeRender()
 	{

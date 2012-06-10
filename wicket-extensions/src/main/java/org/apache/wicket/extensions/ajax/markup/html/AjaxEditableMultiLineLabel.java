@@ -122,9 +122,6 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 		return "click";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected FormComponent<T> newEditor(final MarkupContainer parent, final String componentId,
 		final IModel<T> model)
@@ -133,18 +130,12 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			protected void onModelChanged()
 			{
 				AjaxEditableMultiLineLabel.this.onModelChanged();
 			}
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			protected void onModelChanging()
 			{
