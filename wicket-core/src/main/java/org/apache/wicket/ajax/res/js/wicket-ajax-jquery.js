@@ -455,22 +455,6 @@
 				headers["Wicket-FocusedElementId"] = Wicket.Focus.lastFocusId;
 			}
 
-			// collect the dynamic extra parameters
-			if (jQuery.isArray(attrs.dep)) {
-				var deps = attrs.dep;
-				for (var i = 0; i < deps.length; i++) {
-					var dep = deps[i],
-						extraParam;
-					if (jQuery.isFunction(dep)) {
-						extraParam = dep(attrs);
-					} else {
-						extraParam = new Function('attrs', dep)(attrs);
-					}
-					extraParam = this._asParamArray(extraParam);
-					data = data.concat(extraParam);
-				}
-			}
-
 			if (attrs.mp) { // multipart form. jQuery doesn't help here ...
 				// TODO Wicket.next - should we execute all handlers ?!
 				// Wicket 1.5 didn't support success/failure handlers for this, but we can do it
@@ -521,6 +505,29 @@
 								return false;
 							}
 						}
+					}
+
+					// collect the dynamic extra parameters
+					if (jQuery.isArray(attrs.dep)) {
+						var deps = attrs.dep,
+							params = [],
+							queryString,
+							separator;
+
+						for (var i = 0; i < deps.length; i++) {
+							var dep = deps[i],
+								extraParam;
+							if (jQuery.isFunction(dep)) {
+								extraParam = dep(attrs);
+							} else {
+								extraParam = new Function('attrs', dep)(attrs);
+							}
+							extraParam = this._asParamArray(extraParam);
+							params = params.concat(extraParam);
+						}
+						queryString = jQuery.param(params);
+						separator = settings.url.indexOf('?') > -1 ? '&' : '?';
+						settings.url = settings.url + separator + queryString;
 					}
 
 					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
