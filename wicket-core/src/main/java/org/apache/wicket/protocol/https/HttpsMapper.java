@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.https;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Session;
+import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
@@ -26,10 +27,10 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.collections.ClassMetaCache;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A {@link IRequestMapper} that will issue a redirect to secured communication (over https) if the
@@ -74,7 +75,7 @@ public class HttpsMapper implements IRequestMapper
 	 */
 	public HttpsMapper(IRequestMapper delegate, HttpsConfig config)
 	{
-		this.delegate = delegate;
+		this.delegate = Args.notNull(delegate, "delegate");
 		this.config = config;
 	}
 
@@ -202,7 +203,7 @@ public class HttpsMapper implements IRequestMapper
 	 */
 	protected Scheme getSchemeOf(Request request)
 	{
-		HttpServletRequest req = (HttpServletRequest)((WebRequest)request).getContainerRequest();
+		HttpServletRequest req = (HttpServletRequest) request.getContainerRequest();
 
 		if ("https".equalsIgnoreCase(req.getScheme()))
 		{
@@ -300,8 +301,8 @@ public class HttpsMapper implements IRequestMapper
 		 */
 		public RedirectHandler(String url, HttpsConfig config)
 		{
-			this.url = url;
-			this.config = config;
+			this.url = Args.notNull(url, "url");
+			this.config = Args.notNull(config, "config");
 		}
 
 		/**
@@ -315,7 +316,7 @@ public class HttpsMapper implements IRequestMapper
 		@Override
 		public void respond(IRequestCycle requestCycle)
 		{
-			String location = url.toString();
+			String location = url;
 
 			if (location.startsWith("/"))
 			{
