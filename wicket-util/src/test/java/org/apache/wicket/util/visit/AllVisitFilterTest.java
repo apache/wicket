@@ -20,20 +20,20 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Test for {@link ClassVisitFilter}.
+ * Test for {@link AllVisitFilter}.
  * 
  * @since 1.5.7
  */
-public class ClassVisitFilterTest extends Assert
+public class AllVisitFilterTest extends Assert
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void visitStrings() throws Exception
+	public void visitAll() throws Exception
 	{
-		ClassVisitFilter filter = new ClassVisitFilter(String.class);
+		IVisitFilter filter = new AllVisitFilter();
 		assertTrue(filter.visitObject("a string"));
-		assertFalse(filter.visitObject(123));
+		assertTrue(filter.visitObject(123));
 	}
 }
