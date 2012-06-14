@@ -2087,6 +2087,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * @author igor
 	 */
 	public static enum MethodMismatchResponse {
-		CONTINUE, ABORT;
+		/**
+		 * Continue processing.
+		 */
+		CONTINUE,
+
+		/**
+		 * Abort processing.
+		 */
+		ABORT;
 	}
 }
