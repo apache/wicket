@@ -1909,7 +1909,7 @@
 			// also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 			// Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
 			addJavascript: function (content, id, fakeSrc) {
-				content = 'try{'+content+'}catch(e){Wicket.Ajax.DebugWindow.logError(e);}';
+				content = 'try{'+content+'}catch(e){Wicket.Log.error(e);}';
 				var script = Wicket.Head.createElement("script");
 				if (id) {
 					script.id = id;
