@@ -107,4 +107,27 @@ public final class DurationTest
 		assertEquals("1.5 hours", Duration.hours(1.5).toString(Locale.US));
 		assertEquals("1,5 hours", Duration.hours(1.5).toString(Locale.GERMAN));
 	}
+
+
+	/**
+	 * Check if toString(Locale locale) respects the appropriate value and format (in English).
+	 */
+	@Test
+	public void toStringValues()
+	{
+		assertEquals("1 day", Duration.days(1).toString(Locale.ENGLISH));
+		assertEquals("5 days", Duration.days(5).toString(Locale.ENGLISH));
+
+		assertEquals("1 hour", Duration.hours(1).toString(Locale.ENGLISH));
+		assertEquals("23 hours", Duration.hours(23).toString(Locale.ENGLISH));
+
+		assertEquals("1 minute", Duration.minutes(1).toString(Locale.ENGLISH));
+		assertEquals("2 minutes", Duration.minutes(2).toString(Locale.ENGLISH));
+
+		assertEquals("1 second", Duration.seconds(1).toString(Locale.ENGLISH));
+		assertEquals("2 seconds", Duration.seconds(2).toString(Locale.ENGLISH));
+
+		assertEquals("1 millisecond", Duration.milliseconds(1).toString(Locale.ENGLISH));
+		assertEquals("955 milliseconds", Duration.milliseconds(955).toString(Locale.ENGLISH));
+	}
 }
