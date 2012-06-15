@@ -34,9 +34,6 @@ public class HomePage extends WebPage
 	private String text1;
 	private String text2;
 
-
-	// TODO Add any page properties or variables here
-
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
 	 * 
