@@ -26,8 +26,6 @@ import org.apache.wicket.model.IModel;
 /**
  * An implementation of a textfield with the autoassist ajax behavior {@link AutoCompleteBehavior}.
  * 
- * FIXME javadoc - constructors need proper descriptions
- * 
  * Note that you must add your own CSS to make the suggestion display properly, see
  * {@link DefaultCssAutoCompleteTextField} for an example.
  * 
@@ -56,8 +54,12 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	private final AutoCompleteSettings settings;
 
 	/**
+	 * Constructor for the given type with default settings.
+	 * 
 	 * @param id
+	 *            component id
 	 * @param type
+	 *            model objec type
 	 */
 	public AutoCompleteTextField(final String id, final Class<T> type)
 	{
@@ -65,12 +67,16 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	}
 
 	/**
-	 * Construct.
+	 * Constructor for the given model and type.
 	 * 
 	 * @param id
+	 *            component id
 	 * @param model
+	 *            model
 	 * @param type
+	 *            model object type
 	 * @param settings
+	 *            settings for autocomplete
 	 */
 	@SuppressWarnings("unchecked")
 	public AutoCompleteTextField(final String id, final IModel<T> model, final Class<T> type,
@@ -80,32 +86,41 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	}
 
 	/**
-	 * Construct.
+	 * Constructor for given model.
 	 * 
 	 * @param id
-	 * @param object
+	 *            component id
+	 * @param model
+	 *            model
 	 * @param settings
+	 *            settings for autocomplete
 	 */
-	public AutoCompleteTextField(final String id, final IModel<T> object,
+	public AutoCompleteTextField(final String id, final IModel<T> model,
 		final AutoCompleteSettings settings)
 	{
-		this(id, object, null, settings);
+		this(id, model, null, settings);
 	}
 
 	/**
-	 * @param id
-	 * @param object
-	 */
-	public AutoCompleteTextField(final String id, final IModel<T> object)
-	{
-		this(id, object, null, new AutoCompleteSettings());
-	}
-
-	/**
-	 * Construct.
+	 * Constructor for the given model.
 	 * 
 	 * @param id
+	 *            component id
+	 * @param model
+	 *            model
+	 */
+	public AutoCompleteTextField(final String id, final IModel<T> model)
+	{
+		this(id, model, null, new AutoCompleteSettings());
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            component id
 	 * @param settings
+	 *            settings for autocomplete
 	 */
 	public AutoCompleteTextField(final String id, final AutoCompleteSettings settings)
 	{
@@ -113,7 +128,10 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param id
+	 *            component id
 	 */
 	public AutoCompleteTextField(final String id)
 	{
@@ -121,8 +139,12 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	}
 
 	/**
+	 * Constructor using the given renderer.
+	 * 
 	 * @param id
+	 *            component id
 	 * @param renderer
+	 *            renderer for autocomplete
 	 */
 	public AutoCompleteTextField(final String id, final IAutoCompleteRenderer<T> renderer)
 	{
@@ -130,9 +152,14 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	}
 
 	/**
+	 * Constructor for the given type using the given renderer
+	 * 
 	 * @param id
+	 *            component id
 	 * @param type
+	 *            model object type
 	 * @param renderer
+	 *            renderer for autocomplete
 	 */
 	public AutoCompleteTextField(final String id, final Class<T> type,
 		final IAutoCompleteRenderer<T> renderer)
@@ -141,9 +168,14 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	}
 
 	/**
+	 * Constructor for the given model using the given renderer.
+	 * 
 	 * @param id
+	 *            component id
 	 * @param model
+	 *            model
 	 * @param renderer
+	 *            renderer for autocomplete
 	 */
 	public AutoCompleteTextField(final String id, final IModel<T> model,
 		final IAutoCompleteRenderer<T> renderer)
@@ -152,13 +184,18 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	}
 
 	/**
-	 * Construct.
+	 * Constructor for the given model using the given renderer.
 	 * 
 	 * @param id
+	 *            component id
 	 * @param model
+	 *            model
 	 * @param type
+	 *            model object type
 	 * @param renderer
+	 *            renderer for autocomplete
 	 * @param settings
+	 *            settings for autocomplete
 	 */
 	public AutoCompleteTextField(final String id, final IModel<T> model, final Class<T> type,
 		final IAutoCompleteRenderer<T> renderer, final AutoCompleteSettings settings)
