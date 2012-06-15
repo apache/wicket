@@ -586,7 +586,6 @@ public abstract class AbstractTree extends Panel
 
 			// add this object as listener of the state
 			state.addTreeStateListener(this);
-			// FIXME: Where should we remove the listener?
 		}
 		return state;
 	}
