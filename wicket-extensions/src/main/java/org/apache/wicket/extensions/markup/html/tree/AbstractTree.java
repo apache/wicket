@@ -1128,9 +1128,9 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * Convenience method that updates changed portions on tree. You can call this method during
-	 * Ajax response, where calling {@link #updateTree(org.apache.wicket.ajax.AjaxRequestTarget)} would be appropriate, but
-	 * you don't have the AjaxRequestTarget instance. However, it is also safe to call this method
-	 * outside Ajax response.
+	 * Ajax response, where calling {@link #updateTree(org.apache.wicket.ajax.AjaxRequestTarget)}
+	 * would be appropriate, but you don't have the AjaxRequestTarget instance. However, it is also
+	 * safe to call this method outside Ajax response.
 	 */
 	public final void updateTree()
 	{
@@ -1710,7 +1710,7 @@ public abstract class AbstractTree extends Panel
 		dirtyAll = false;
 		dirtyItems.clear();
 		dirtyItemsCreateDOM.clear();
-		deleteIds.clear(); // FIXME: Recreate it to save some space?
+		deleteIds.clear();
 	}
 
 	/**
