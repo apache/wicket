@@ -237,6 +237,9 @@ public final class ValidationError implements IValidationError
 	@Override
 	public final Serializable getErrorMessage(IErrorMessageSource messageSource)
 	{
+
+		final Map<String, Object> p = (vars != null) ? vars : EMPTY_VARS;
+
 		String errorMessage = null;
 
 		if (keys != null)
@@ -244,7 +247,7 @@ public final class ValidationError implements IValidationError
 			// try any message keys ...
 			for (String key : keys)
 			{
-				errorMessage = messageSource.getMessage(key);
+				errorMessage = messageSource.getMessage(key, vars);
 				if (errorMessage != null)
 				{
 					break;
@@ -258,12 +261,6 @@ public final class ValidationError implements IValidationError
 			errorMessage = message;
 		}
 
-		// if a message was found perform variable substitution
-		if (errorMessage != null)
-		{
-			final Map<String, Object> p = (vars != null) ? vars : EMPTY_VARS;
-			errorMessage = messageSource.substitute(errorMessage, p);
-		}
 		return new ValidationErrorFeedback(this, errorMessage);
 	}
 

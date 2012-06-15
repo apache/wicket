@@ -36,6 +36,7 @@ import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
@@ -43,11 +44,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
+import org.apache.wicket.util.string.interpolator.VariableInterpolator;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitFilter;
 import org.apache.wicket.util.visit.IVisitor;
@@ -116,7 +116,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(java.lang.String)
 		 */
 		@Override
-		public String getMessage(String key)
+		public String getMessage(String key, Map<String, Object> vars)
 		{
 			final FormComponent<T> formComponent = FormComponent.this;
 
@@ -131,12 +131,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			String prefix = formComponent.getValidatorKeyPrefix();
 			String message = null;
 
-			// first try the full form of key [form-component-id].[key]
+			// first try the full form of key [form-component-id].[prefix].[key]
 			String resource = getId() + "." + prefix(prefix, key);
 			message = getString(localizer, resource, formComponent);
 
 			// if not found, try a more general form (without prefix)
-			// [form-component-id].[prefix].[key]
+			// [form-component-id].[key]
 			if (Strings.isEmpty(message) && Strings.isEmpty(prefix))
 			{
 				resource = getId() + "." + key;
@@ -162,6 +162,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			if (Strings.isEmpty(message))
 			{
 				message = null;
+			}
+			else
+			{
+				message = substitute(message, addDefaultVars(vars));
 			}
 			return message;
 		}
@@ -195,17 +199,38 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			return localizer.getString(key, component, "");
 		}
 
-		/**
-		 * @see org.apache.wicket.validation.IErrorMessageSource#substitute(java.lang.String,
-		 *      java.util.Map)
-		 */
-		@Override
-		public String substitute(String string, Map<String, Object> vars)
+		private String substitute(String string, final Map<String, Object> vars)
 			throws IllegalStateException
 		{
-			return new MapVariableInterpolator(string, addDefaultVars(vars), Application.get()
+			return new VariableInterpolator(string, Application.get()
 				.getResourceSettings()
-				.getThrowExceptionOnMissingResource()).toString();
+				.getThrowExceptionOnMissingResource())
+			{
+				private static final long serialVersionUID = 1L;
+
+				@SuppressWarnings({ "rawtypes", "unchecked" })
+				@Override
+				protected String getValue(String variableName)
+				{
+					Object value = vars.get(variableName);
+					if (value == null)
+					{
+						return null;
+					}
+					else
+					{
+						IConverter converter = getConverter(value.getClass());
+						if (converter == null)
+						{
+							return Strings.toString(value);
+						}
+						else
+						{
+							return converter.convertToString(value, getLocale());
+						}
+					}
+				}
+			}.toString();
 		}
 
 		/**
