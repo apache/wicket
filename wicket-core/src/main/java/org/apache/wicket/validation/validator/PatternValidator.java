@@ -18,53 +18,42 @@ package org.apache.wicket.validation.validator;
 
 import java.util.regex.Pattern;
 
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
-// FIXME 2.0: ivaynberg: look over javadoc
 /**
- * Validates a <code>Component</code> by matching the component's value against a regular expression
- * pattern. A <code>PatternValidator</code> can be constructed with either a Java regular expression
- * (compiled or not) or a <code>MetaPattern</code>. If the pattern matches against the value of the
- * <code>Component</code> it is attached to when <code>validate</code> is called by the framework,
- * then that input value is considered valid. If the pattern does not match, the
- * <code>errorMessage</code> method will be called.
+ * Validates an {@link IValidatable} by matching the value against a regular expression pattern. A
+ * <code>PatternValidator</code> can be constructed with either a Java regular expression (compiled
+ * or not) or a {@link MetaPattern}. If the pattern matches against the value then it is considered
+ * valid. If the pattern does not match, the an {@link IValidationError} will be reported on the
+ * {@link IValidatable}.
  * <p>
  * For example, to restrict a field to only digits, you might add a <code>PatternValidator</code>
  * constructed with the pattern "\d+". Another way to do the same thing would be to construct the
- * <code>PatternValidator</code> passing in <code>MetaPattern.DIGITS</code>. The advantages of using
- * <code>MetaPattern</code> over straight Java regular expressions are that the patterns are easier
- * to construct and easier to combine into complex patterns. They are also more readable and more
- * reusable. See {@link org.apache.wicket.util.parse.metapattern.MetaPattern MetaPattern} for
- * details.
+ * <code>PatternValidator</code> passing in {@link MetaPattern#DIGITS}. The advantages of using
+ * {@link MetaPattern} over straight Java regular expressions are that the patterns are easier to
+ * construct and easier to combine into complex patterns. They are also more readable and more
+ * reusable. See {@link MetaPattern} for details.
  * <p>
- * The error message will be generated with the key "PatternValidator" and the message keys that can
- * be used are:
- * <p>
- * <ul>
- * <li>${pattern}: the pattern which failed to match</li>
- * <li>${input}: the input the user gave</li>
- * <li>${name}: the name of the <code>Component</code> that failed</li>
- * <li>${label}: the label of the <code>Component</code> - either comes from
- * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that order
- * </li>
- * </ul>
+ * The error message will be generated with the key "PatternValidator" and one additional message
+ * key ${pattern} for the pattern which failed to match. See {@link FormComponent} for a list of
+ * further messages keys.
  * 
  * @see java.util.regex.Pattern
- * @see org.apache.wicket.util.parse.metapattern.MetaPattern
  * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
- * 
  * @since 1.2.6
  */
 public class PatternValidator implements IValidator<String>
 {
 	private static final long serialVersionUID = 1L;
 
-	/** the <code>java.util.regex.Pattern</code> */
+	/** the pattern to match */
 	private final Pattern pattern;
 
 	/** whether to exclude matching input **/
@@ -96,10 +85,10 @@ public class PatternValidator implements IValidator<String>
 	}
 
 	/**
-	 * Constructor that accepts a Java <code>regex</code> <code>Pattern</code> argument.
+	 * Constructor that accepts a compiled pattern.
 	 * 
 	 * @param pattern
-	 *            a Java <code>regex</code> <code>Pattern</code>
+	 *            a compiled pattern
 	 */
 	public PatternValidator(final Pattern pattern)
 	{
@@ -177,5 +166,4 @@ public class PatternValidator implements IValidator<String>
 	{
 		return error;
 	}
-
 }
