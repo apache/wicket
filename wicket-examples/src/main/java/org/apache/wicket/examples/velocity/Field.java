@@ -19,7 +19,7 @@ package org.apache.wicket.examples.velocity;
 import java.io.Serializable;
 
 /**
- * // TODO Describe the class or the interface here.
+ * Description of a dynamic field to be rendered into the Velocity template.
  */
 public class Field implements Serializable
 {
@@ -57,25 +57,5 @@ public class Field implements Serializable
 	public int getFieldSize()
 	{
 		return fieldSize;
-	}
-
-	/**
-	 * Sets the field's name.
-	 * 
-	 * @param fieldName
-	 */
-	public void setFieldName(String fieldName)
-	{
-		this.fieldName = fieldName;
-	}
-
-	/**
-	 * Sets the field's size.
-	 * 
-	 * @param fieldSize
-	 */
-	public void setFieldSize(int fieldSize)
-	{
-		this.fieldSize = fieldSize;
 	}
 }
