@@ -104,7 +104,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 	/**
 	 * Override to not throw exception if there is no parent form.
-	 *
+	 * 
 	 * @return the parent form or {@code null}
 	 */
 	@Override
@@ -228,5 +228,17 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	public void onError()
 	{
 
+	}
+
+	/**
+	 * Defaults to running before {@link Form#onSubmit()}. Override if you want to run afterwards
+	 * instead.
+	 * 
+	 * @see org.apache.wicket.markup.html.form.IFormSubmitter#getSubmitOrder()
+	 */
+	@Override
+	public SubmitOrder getSubmitOrder()
+	{
+		return SubmitOrder.BEFORE_FORM;
 	}
 }

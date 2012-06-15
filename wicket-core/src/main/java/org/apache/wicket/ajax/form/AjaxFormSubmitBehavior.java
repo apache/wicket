@@ -24,6 +24,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
+import org.apache.wicket.markup.html.form.IFormSubmitter.SubmitOrder;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 
 /**
@@ -171,7 +172,26 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			{
 				AjaxFormSubmitBehavior.this.onError(target);
 			}
+
+			@Override
+			public SubmitOrder getSubmitOrder()
+			{
+				return AjaxFormSubmitBehavior.this.getSubmitOrder();
+			}
 		});
+	}
+
+	/**
+	 * Defaults to running before {@link Form#onSubmit()}. Override if you want to run afterwards
+	 * instead.
+	 * 
+	 * @return submit order
+	 * 
+	 * @see org.apache.wicket.markup.html.form.IFormSubmitter#getSubmitOrder()
+	 */
+	public IFormSubmitter.SubmitOrder getSubmitOrder()
+	{
+		return SubmitOrder.BEFORE_FORM;
 	}
 
 	/**

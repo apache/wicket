@@ -52,4 +52,22 @@ public interface IFormSubmitter
 	 * errors.
 	 */
 	void onError();
+
+	/**
+	 * Returns whether this component's {@link #onSubmit()} method should be called before or after
+	 * {@link Form#onSubmit()}.
+	 * 
+	 * @return submit order
+	 */
+	SubmitOrder getSubmitOrder();
+
+	/**
+	 * Indicates whether this component's {@link #onSubmit()} method should be called before or
+	 * after {@link Form#onSubmit()}.
+	 * 
+	 * @author Carl-Eric Menzel (cmenzel)
+	 */
+	static enum SubmitOrder {
+		BEFORE_FORM, AFTER_FORM
+	}
 }

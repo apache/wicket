@@ -35,6 +35,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.IFormSubmitter.SubmitOrder;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
@@ -1223,15 +1224,34 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		final Form<?> processingForm = findFormToProcess(submittingComponent);
 
-
-		// process submitting component (if specified)
-		if (submittingComponent != null)
+		if (submittingComponent == null)
 		{
-			// invoke submit on component
-			submittingComponent.onSubmit();
+			// no submitter => just process the forms
+			submitFormsIncludingNested(processingForm);
 		}
+		else
+		{
+			// submitter button was clicked => check order
+			final SubmitOrder submitOrder = submittingComponent.getSubmitOrder();
+			switch (submitOrder)
+			{
+				case BEFORE_FORM :
+					submittingComponent.onSubmit();
+					submitFormsIncludingNested(processingForm);
+					break;
+				case AFTER_FORM :
+					submitFormsIncludingNested(processingForm);
+					submittingComponent.onSubmit();
+					break;
+				default :
+					throw new IllegalStateException("unknown submitorder: " + submitOrder);
+			}
+		}
+	}
 
-		// invoke Form#onSubmit(..) going from innermost to outermost
+	// invoke Form#onSubmit(..) going from innermost to outermost
+	private void submitFormsIncludingNested(final Form<?> processingForm)
+	{
 		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
 		{
 			@Override

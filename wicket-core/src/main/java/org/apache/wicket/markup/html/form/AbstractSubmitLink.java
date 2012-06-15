@@ -28,7 +28,7 @@ import org.apache.wicket.model.IModel;
 public abstract class AbstractSubmitLink extends AbstractLink implements IFormSubmittingComponent
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -145,5 +145,17 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	public String getInputName()
 	{
 		return Form.getRootFormRelativeId(this);
+	}
+
+	/**
+	 * Defaults to running before {@link Form#onSubmit()}. Override if you want to run afterwards
+	 * instead.
+	 * 
+	 * @see org.apache.wicket.markup.html.form.IFormSubmitter#getSubmitOrder()
+	 */
+	@Override
+	public SubmitOrder getSubmitOrder()
+	{
+		return SubmitOrder.BEFORE_FORM;
 	}
 }
