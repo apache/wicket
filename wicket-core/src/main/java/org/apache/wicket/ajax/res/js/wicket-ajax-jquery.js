@@ -609,8 +609,11 @@
 					// A file download popup will appear but the page in the browser won't change.
 					this.done();
 
+					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
+					    rhttps = /^https:\/\//; // checks whether the string starts with https://
+
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
-					if (redirectUrl.charAt(0) === ('/') || redirectUrl.match("^http://") === "http://" || redirectUrl.match("^https://") === "https://") {
+					if (redirectUrl.charAt(0)==('/') || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
 						window.location = redirectUrl;
 					}
 					else {
