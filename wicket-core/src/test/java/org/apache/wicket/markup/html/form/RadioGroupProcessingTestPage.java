@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
@@ -25,23 +26,27 @@ import org.apache.wicket.model.Model;
  * 
  * @author igor
  */
-public class RadioGroupTestPage1 extends WebPage
+public class RadioGroupProcessingTestPage extends WebPage
 {
 	/**
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public Form<Void> form;
+	public RadioGroup<String> group;
+	public Radio<String> radio1;
+	public Radio<String> radio2;
 
 	/**
 	 * Constructor
 	 */
-	public RadioGroupTestPage1()
+	public RadioGroupProcessingTestPage(IModel<String> model)
 	{
-		Form<Void> form = new Form<Void>("form");
-		RadioGroup<String> group = new RadioGroup<String>("group", new Model<String>("radio2"));
+		form = new Form<Void>("form");
+		group = new RadioGroup<String>("group", model);
 		WebMarkupContainer container = new WebMarkupContainer("container");
-		Radio<String> radio1 = new Radio<String>("radio1", new Model<String>("radio1"));
-		Radio<String> radio2 = new Radio<String>("radio2", new Model<String>("radio2"));
+		radio1 = new Radio<String>("radio1", new Model<String>("radio1"));
+		radio2 = new Radio<String>("radio2", new Model<String>("radio2"));
 
 
 		add(form);
