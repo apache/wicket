@@ -526,7 +526,7 @@ public class Duration extends AbstractTimeValue
 				return unitString(seconds(), "second", locale);
 			}
 
-			return unitString(seconds(), "millisecond", locale);
+			return unitString(getMilliseconds(), "millisecond", locale);
 		}
 		else
 		{
