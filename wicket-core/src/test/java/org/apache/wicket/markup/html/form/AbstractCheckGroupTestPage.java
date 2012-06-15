@@ -36,6 +36,13 @@ public abstract class AbstractCheckGroupTestPage extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public Form<?> form;
+
+	public CheckGroup<String> group;
+
+	public Check<String> check1;
+
+	public Check<String> check2;
 
 	/**
 	 * Constructor
@@ -45,12 +52,11 @@ public abstract class AbstractCheckGroupTestPage extends WebPage
 	public AbstractCheckGroupTestPage(List<String> list)
 	{
 
-		Form<?> form = new Form<Void>("form");
-		CheckGroup<String> group = new CheckGroup<String>("group",
-			new CollectionModel<String>(list));
+		form = new Form<Void>("form");
+		group = new CheckGroup<String>("group", new CollectionModel<String>(list));
 		WebMarkupContainer container = new WebMarkupContainer("container");
-		Check<String> check1 = new Check<String>("check1", new Model<String>("check1"));
-		Check<String> check2 = new Check<String>("check2", new Model<String>("check2"));
+		check1 = new Check<String>("check1", new Model<String>("check1"));
+		check2 = new Check<String>("check2", new Model<String>("check2"));
 
 
 		add(form);
