@@ -51,8 +51,6 @@ package org.apache.wicket.model;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  * 
- *         TODO 3.0: Vote on renaming get/setObject to get/setValue
- * 
  * @param <T>
  *            Model object.
  */
