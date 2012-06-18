@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.resource;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -37,5 +38,5 @@ public interface IResourceStreamWriter extends IResourceStream
 	 * @param output
 	 *            The response where the resource can write its content into.
 	 */
-	void write(OutputStream output);
+	void write(OutputStream output) throws IOException;
 }

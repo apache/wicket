@@ -103,7 +103,7 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 		resourceResponse.setWriteCallback(new WriteCallback()
 		{
 			@Override
-			public void writeData(final Attributes attributes)
+			public void writeData(final Attributes attributes) throws IOException
 			{
 				InputStream inputStream = null;
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -116,10 +116,6 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 				catch (ResourceStreamNotFoundException rsnfx)
 				{
 					throw new WicketRuntimeException(rsnfx);
-				}
-				catch (IOException iox)
-				{
-					throw new WicketRuntimeException(iox);
 				}
 				finally
 				{

@@ -501,7 +501,14 @@ public abstract class AbstractResource implements IResource
 			throw new IllegalStateException("ResourceResponse#setWriteCallback() must be set.");
 		}
 
-		data.getWriteCallback().writeData(attributes);
+		try
+		{
+			data.getWriteCallback().writeData(attributes);
+		}
+		catch (IOException iox)
+		{
+			throw new WicketRuntimeException(iox);
+		}
 	}
 
 	/**
@@ -640,7 +647,7 @@ public abstract class AbstractResource implements IResource
 		 * @param attributes
 		 *            request attributes
 		 */
-		public abstract void writeData(Attributes attributes);
+		public abstract void writeData(Attributes attributes) throws IOException;
 
 		/**
 		 * Convenience method to write an {@link InputStream} to response.
@@ -650,17 +657,10 @@ public abstract class AbstractResource implements IResource
 		 * @param stream
 		 *            input stream
 		 */
-		protected final void writeStream(Attributes attributes, InputStream stream)
+		protected final void writeStream(Attributes attributes, InputStream stream) throws IOException
 		{
 			final Response response = attributes.getResponse();
-			try
-			{
-				Streams.copy(stream, response.getOutputStream());
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException(e);
-			}
+			Streams.copy(stream, response.getOutputStream());
 		}
 	}
 }

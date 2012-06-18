@@ -178,7 +178,7 @@ public class ResourceStreamResource extends AbstractResource
 				data.setWriteCallback(new WriteCallback()
 				{
 					@Override
-					public void writeData(Attributes attributes)
+					public void writeData(Attributes attributes) throws IOException
 					{
 						((IResourceStreamWriter)resourceStream).write(attributes.getResponse().getOutputStream());
 						close();
@@ -191,7 +191,7 @@ public class ResourceStreamResource extends AbstractResource
 				data.setWriteCallback(new WriteCallback()
 				{
 					@Override
-					public void writeData(Attributes attributes)
+					public void writeData(Attributes attributes) throws IOException
 					{
 						try
 						{
