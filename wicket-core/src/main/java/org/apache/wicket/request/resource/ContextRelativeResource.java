@@ -21,13 +21,12 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,22 +104,20 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 			@Override
 			public void writeData(final Attributes attributes) throws IOException
 			{
-				InputStream inputStream = null;
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				try
 				{
-					inputStream = webExternalResourceStream.getInputStream();
-					Streams.copy(inputStream, baos);
-					attributes.getResponse().write(baos.toByteArray());
+					InputStream inputStream = webExternalResourceStream.getInputStream();
+					try
+					{
+						Streams.copy(inputStream, attributes.getResponse().getOutputStream());
+					}
+					finally {
+						IOUtils.closeQuietly(inputStream);
+					}
 				}
 				catch (ResourceStreamNotFoundException rsnfx)
 				{
 					throw new WicketRuntimeException(rsnfx);
-				}
-				finally
-				{
-					IOUtils.closeQuietly(inputStream);
-					IOUtils.closeQuietly(baos);
 				}
 			}
 		});
