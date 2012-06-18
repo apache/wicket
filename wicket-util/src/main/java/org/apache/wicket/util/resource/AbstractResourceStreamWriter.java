@@ -82,13 +82,13 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	}
 
 	/**
-	 * this method should not be used as it is not required for resource writers
+	 * {@inheritDoc}
 	 * <p>
-	 * resource write generate content directly, not using an input stream, so there's nothing to
-	 * close later.
+	 * This implementation does nothing.
+	 * @throws IOException if an error occurred.
 	 */
 	@Override
-	public final void close() throws IOException
+	public void close() throws IOException
 	{
 	}
 
