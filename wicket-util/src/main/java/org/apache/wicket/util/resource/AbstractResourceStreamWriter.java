@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.core.util.resource;
+package org.apache.wicket.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
 
 /**
  * Base implementation of an IResourceStreamWriter so that you only have to override the
- * {@link IResourceStreamWriter#write(org.apache.wicket.request.Response)}. Don't forget to overwrite the
+ * {@link org.apache.wicket.util.resource.IResourceStreamWriter#write(java.io.OutputStream)}. Don't forget to overwrite the
  * {@link org.apache.wicket.util.resource.IResourceStream#length()} method if you do know the total
  * length that will be generated.
  *
- * @see IResourceStreamWriter
+ * @see org.apache.wicket.util.resource.IResourceStreamWriter
  */
 public abstract class AbstractResourceStreamWriter implements IResourceStreamWriter
 {
@@ -77,9 +76,9 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	 * this method should not be used as it is not required for resource writers
 	 */
 	@Override
-	public final InputStream getInputStream() throws ResourceStreamNotFoundException
+	public final InputStream getInputStream()
 	{
-		throw new IllegalStateException("getInputStream is not used with IResourceStreamWriter");
+		throw new IllegalStateException("getInputStream() is not used with IResourceStreamWriter");
 	}
 
 	/**

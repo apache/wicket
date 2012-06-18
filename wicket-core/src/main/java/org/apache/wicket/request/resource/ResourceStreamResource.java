@@ -25,7 +25,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.core.util.resource.IResourceStreamWriter;
+import org.apache.wicket.util.resource.IResourceStreamWriter;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
@@ -180,7 +180,7 @@ public class ResourceStreamResource extends AbstractResource
 					@Override
 					public void writeData(Attributes attributes)
 					{
-						((IResourceStreamWriter)resourceStream).write(attributes.getResponse());
+						((IResourceStreamWriter)resourceStream).write(attributes.getResponse().getOutputStream());
 						close();
 					}
 				});

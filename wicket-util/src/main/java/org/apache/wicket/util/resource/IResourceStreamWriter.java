@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.core.util.resource;
+package org.apache.wicket.util.resource;
 
-import org.apache.wicket.request.Response;
-import org.apache.wicket.util.resource.IResourceStream;
+import java.io.OutputStream;
 
 /**
  * Special IResourceStream implementation that a Resource can return when it directly wants to write
@@ -33,10 +32,10 @@ import org.apache.wicket.util.resource.IResourceStream;
 public interface IResourceStreamWriter extends IResourceStream
 {
 	/**
-	 * Implement this method to write the resource data directly the the given OutputStream.
+	 * Implement this method to write the resource data directly the the given {@link OutputStream}.
 	 *
 	 * @param output
 	 *            The response where the resource can write its content into.
 	 */
-	void write(Response output);
+	void write(OutputStream output);
 }
