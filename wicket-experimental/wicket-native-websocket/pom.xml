@@ -19,16 +19,28 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-parent</artifactId>
+		<artifactId>wicket-experimental</artifactId>
 		<version>6.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-experimental</artifactId>
+	<artifactId>wicket-native-websocket</artifactId>
+    <version>0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Wicket-Experimental</name>
-	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
+	<name>Apache Wicket Native WebSocket Parent</name>
+	<description>Wicket Native WebSocket provides native integration for WebSocket support with Servlet web containers.</description>
 	<modules>
-		<module>wicket-atmosphere</module>
-		<module>wicket-native-websocket</module>
+		<module>wicket-native-websocket-core</module>
+		<module>wicket-native-websocket-jetty</module>
+		<module>wicket-native-websocket-tomcat</module>
 	</modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-native-websocket-core</artifactId>
+                <version>0.1-SNAPSHOT</version>
+                <type>jar</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
