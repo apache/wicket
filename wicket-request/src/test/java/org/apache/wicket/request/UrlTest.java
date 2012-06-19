@@ -23,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.request.Url.QueryParameter;
@@ -34,8 +35,6 @@ import org.junit.Test;
  * @author Matej Knopp
  * @author Igor Vaynberg
  */
-
-// TODO test removeleadingsegments,prependleadingsegments
 public class UrlTest extends Assert
 {
 	private void checkSegments(Url url, String... segments)
@@ -739,9 +738,8 @@ public class UrlTest extends Assert
 	}
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-4387
-	 * Parse uri with '://' in it should consider it as absolute only if there are
-	 * no slashes earlier in the string.
+	 * https://issues.apache.org/jira/browse/WICKET-4387 Parse uri with '://' in it should consider
+	 * it as absolute only if there are no slashes earlier in the string.
 	 */
 	@Test
 	public void parseHttpSlashSlashColon()
@@ -762,5 +760,92 @@ public class UrlTest extends Assert
 		assertEquals("host", url.getHost());
 		assertEquals(Integer.valueOf(9090), url.getPort());
 
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void prependLeadingSegments1()
+	{
+		Url url = Url.parse("a");
+
+		url.prependLeadingSegments(Arrays.asList("x", "y"));
+
+		assertEquals("x/y/a", url.toString());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void prependLeadingSegments2()
+	{
+		Url url = Url.parse("a");
+
+		url.prependLeadingSegments(Arrays.asList("x"));
+
+		assertEquals("x/a", url.toString());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void prependLeadingSegments3()
+	{
+		Url url = Url.parse("a");
+
+		url.prependLeadingSegments(Collections.<String> emptyList());
+
+		assertEquals("a", url.toString());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void prependLeadingSegments4()
+	{
+		Url url = new Url();
+
+		url.prependLeadingSegments(Arrays.asList("x"));
+
+		assertEquals("x", url.toString());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void removeLeadingSegments1()
+	{
+		Url url = Url.parse("a/b");
+
+		url.removeLeadingSegments(1);
+		assertEquals("b", url.toString());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void removeLeadingSegments2()
+	{
+		Url url = Url.parse("a/b");
+
+		url.removeLeadingSegments(2);
+		assertEquals("", url.toString());
+	}
+
+	/**
+	 * 
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void removeLeadingSegments3()
+	{
+		Url url = Url.parse("a/b");
+
+		url.removeLeadingSegments(3);
 	}
 }
