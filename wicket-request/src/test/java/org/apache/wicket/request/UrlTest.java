@@ -58,7 +58,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse1()
+	public void parse1()
 	{
 		String s = "foo/bar/baz?a=4&b=5";
 		Url url = Url.parse(s);
@@ -70,7 +70,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse2()
+	public void parse2()
 	{
 		String s = "foo/bar//baz?=4&6";
 		Url url = Url.parse(s);
@@ -82,7 +82,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse3()
+	public void parse3()
 	{
 		String s = "//foo/bar/";
 		Url url = Url.parse(s);
@@ -94,7 +94,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse4()
+	public void parse4()
 	{
 		String s = "/foo/bar//";
 		Url url = Url.parse(s);
@@ -106,7 +106,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse5()
+	public void parse5()
 	{
 		String s = "foo/b%3Dr/b%26z/x%3F?a=b&x%3F%264=y%3Dz";
 		Url url = Url.parse(s);
@@ -118,7 +118,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse6()
+	public void parse6()
 	{
 		String s = "";
 		Url url = Url.parse(s);
@@ -130,7 +130,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse7()
+	public void parse7()
 	{
 		String s = "?a=b";
 		Url url = Url.parse(s);
@@ -142,7 +142,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse8()
+	public void parse8()
 	{
 		String s = "/";
 		Url url = Url.parse(s);
@@ -154,7 +154,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParse9()
+	public void parse9()
 	{
 		String s = "/?a=b";
 		Url url = Url.parse(s);
@@ -166,7 +166,7 @@ public class UrlTest extends Assert
 	 *
 	 */
 	@Test
-	public void testParse10()
+	public void parse10()
 	{
 		String s = "/?a";
 		Url url = Url.parse(s);
@@ -178,7 +178,7 @@ public class UrlTest extends Assert
 	 *
 	 */
 	@Test
-	public void testParse11()
+	public void parse11()
 	{
 		String s = "/?a=";
 		Url url = Url.parse(s);
@@ -190,7 +190,7 @@ public class UrlTest extends Assert
 	 *
 	 */
 	@Test
-	public void testParse12()
+	public void parse12()
 	{
 		String s = "/?=b";
 		Url url = Url.parse(s);
@@ -202,7 +202,7 @@ public class UrlTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4398
 	 */
 	@Test
-	public void testParse13()
+	public void parse13()
 	{
 		String s = "/?a=b&";
 		Url url = Url.parse(s);
@@ -214,7 +214,7 @@ public class UrlTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4398
 	 */
 	@Test
-	public void testParse14()
+	public void parse14()
 	{
 		String s = "/?a=b&+";
 		Url url = Url.parse(s);
@@ -226,7 +226,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testRender1()
+	public void render1()
 	{
 		Url url = new Url();
 		url.getSegments().add("foo");
@@ -243,7 +243,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testRender2()
+	public void render2()
 	{
 		String s = "/absolute/url";
 		Url url = Url.parse(s);
@@ -254,7 +254,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testRender3()
+	public void render3()
 	{
 		String s = "//absolute/url";
 		Url url = Url.parse(s);
@@ -265,7 +265,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testRender4()
+	public void render4()
 	{
 		String s = "/";
 		Url url = Url.parse(s);
@@ -292,7 +292,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testAbsolute1()
+	public void absolute1()
 	{
 		Url url = Url.parse("abc/efg");
 		assertFalse(url.isAbsolute());
@@ -302,7 +302,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testAbsolute2()
+	public void absolute2()
 	{
 		Url url = Url.parse("");
 		assertFalse(url.isAbsolute());
@@ -312,7 +312,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testAbsolute3()
+	public void absolute3()
 	{
 		Url url = Url.parse("/");
 		assertTrue(url.isAbsolute());
@@ -322,7 +322,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testAbsolute4()
+	public void absolute4()
 	{
 		Url url = Url.parse("/abc/efg");
 		assertTrue(url.isAbsolute());
@@ -343,7 +343,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat1()
+	public void concat1()
 	{
 		Url url = Url.parse("abc/efg");
 		url.concatSegments(Arrays.asList("xx", "yy"));
@@ -354,7 +354,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat2()
+	public void concat2()
 	{
 		Url url = Url.parse("abc/efg");
 		url.concatSegments(Arrays.asList(".", "..", "xx", "yy"));
@@ -365,7 +365,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat3()
+	public void concat3()
 	{
 		Url url = Url.parse("abc/efg");
 		url.concatSegments(Arrays.asList("..", "..", "xx", "yy"));
@@ -376,7 +376,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat4()
+	public void concat4()
 	{
 		Url url = Url.parse("abc/efg");
 		url.concatSegments(Arrays.asList("..", "..", "..", "xx", "yy"));
@@ -387,7 +387,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat5()
+	public void concat5()
 	{
 		Url url = Url.parse("abc/efg/");
 		url.concatSegments(Arrays.asList("xx", "yy"));
@@ -398,7 +398,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat6()
+	public void concat6()
 	{
 		Url url = Url.parse("abc/efg/");
 		url.concatSegments(Arrays.asList(".."));
@@ -409,7 +409,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat7()
+	public void concat7()
 	{
 		Url url = Url.parse("abc/efg/");
 		url.concatSegments(Arrays.asList("..", ".."));
@@ -420,7 +420,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat8()
+	public void concat8()
 	{
 		Url url = Url.parse("fff/abc/efg/xxx");
 		url.concatSegments(Arrays.asList(".."));
@@ -431,7 +431,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testConcat9()
+	public void concat9()
 	{
 		Url url = Url.parse("fff/abc/efg/xxx");
 		url.concatSegments(Arrays.asList("..", ".."));
@@ -442,7 +442,7 @@ public class UrlTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
 	 */
 	@Test
-	public void testResolveRelative1()
+	public void resolveRelative1()
 	{
 		Url relative = Url.parse("./a/b?p1=v1");
 		Url baseUrl = Url.parse("c/d?p2=v2");
@@ -455,7 +455,7 @@ public class UrlTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
 	 */
 	@Test
-	public void testResolveRelative2()
+	public void resolveRelative2()
 	{
 		Url relative = Url.parse("a/b?p1=v1");
 		Url baseUrl = Url.parse("c/d?p2=v2");
@@ -468,7 +468,7 @@ public class UrlTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
 	 */
 	@Test
-	public void testResolveRelative3()
+	public void resolveRelative3()
 	{
 		Url relative = Url.parse("../a/b?p1=v1");
 		Url baseUrl = Url.parse("c/d");
@@ -481,7 +481,7 @@ public class UrlTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
 	 */
 	@Test
-	public void testResolveRelative4()
+	public void resolveRelative4()
 	{
 		Url relative = Url.parse("../?p1=v1");
 		Url baseUrl = Url.parse("c/d");
@@ -494,7 +494,7 @@ public class UrlTest extends Assert
 	 * Tries to resolve a relative url against a base that has no segments
 	 */
 	@Test
-	public void testResolveRelative_NoSegmentsInBase()
+	public void resolveRelative_NoSegmentsInBase()
 	{
 		Url relative = Url.parse("?a=b");
 		Url baseUrl = Url.parse("?foo=bar");
@@ -507,7 +507,7 @@ public class UrlTest extends Assert
 	 * Tries to resolve a relative url against a base that has no segments
 	 */
 	@Test
-	public void testResolveRelative_NoSegmentsInBase2()
+	public void resolveRelative_NoSegmentsInBase2()
 	{
 		Url relative = Url.parse("bar/baz?a=b");
 		Url baseUrl = Url.parse("?foo=bar");
@@ -522,7 +522,7 @@ public class UrlTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
 	 */
 	@Test
-	public void testResolveRelative_DotFollowedByEmptySegment1()
+	public void resolveRelative_DotFollowedByEmptySegment1()
 	{
 		Url relative = Url.parse("./?a=b");
 		Url baseUrl = Url.parse("bar");
@@ -538,7 +538,7 @@ public class UrlTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
 	 */
 	@Test
-	public void testResolveRelative_DotFollowedByEmptySegment2()
+	public void resolveRelative_DotFollowedByEmptySegment2()
 	{
 		Url relative = Url.parse("./?a=b");
 		Url baseUrl = Url.parse("bar/baz");
@@ -552,7 +552,7 @@ public class UrlTest extends Assert
 	 * Tests that the default charset is UTF-8
 	 */
 	@Test
-	public void testCharset1()
+	public void charset1()
 	{
 		Url url = new Url();
 		assertEquals(Charset.forName("UTF-8"), url.getCharset());
@@ -562,7 +562,7 @@ public class UrlTest extends Assert
 	 * Tests setting the charset explicitly in the constructor
 	 */
 	@Test
-	public void testCharset2()
+	public void charset2()
 	{
 		Charset expected = Charset.forName("ISO-8859-2");
 		Url url = new Url(expected);
@@ -575,7 +575,7 @@ public class UrlTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testCharset3() throws Exception
+	public void charset3() throws Exception
 	{
 		Charset expected = Charset.forName("ISO-8859-1");
 		Url url = new Url(expected);
@@ -596,7 +596,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParseRelativeUrl()
+	public void parseRelativeUrl()
 	{
 		Url url = Url.parse("foo");
 		checkUrl(url, null, null, null, "foo");
@@ -625,7 +625,7 @@ public class UrlTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testParseAbsoluteUrl()
+	public void parseAbsoluteUrl()
 	{
 		Url url = Url.parse("ftp://myhost:8081");
 		checkUrl(url, "ftp", "myhost", 8081, "", "");
