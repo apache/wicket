@@ -29,7 +29,7 @@ public interface IWebSocketRequestHandler
 	 * @param message
 	 *      the text message to push to the client if the web socket connection is open
 	 */
-	void push(String message);
+	void push(CharSequence message);
 
 	/**
 	 * Pushes a binary message to the client.

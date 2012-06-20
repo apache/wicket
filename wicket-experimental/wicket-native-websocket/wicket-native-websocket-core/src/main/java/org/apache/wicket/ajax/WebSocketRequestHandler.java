@@ -75,17 +75,22 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	}
 
 	@Override
-	public void push(String message)
+	public void push(CharSequence message)
 	{
 		if (connection.isOpen())
 		{
+			Args.notNull(message, "message");
 			try
 			{
-				connection.sendMessage(message);
+				connection.sendMessage(message.toString());
 			} catch (IOException iox)
 			{
 				LOG.error("An error occurred while pushing text message.", iox);
 			}
+		}
+		else
+		{
+			LOG.warn("The websocket connection is already closed. Cannot push the text message '{}'", message);
 		}
 	}
 
@@ -94,6 +99,7 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	{
 		if (connection.isOpen())
 		{
+			Args.notNull(message, "message");
 			try
 			{
 				connection.sendMessage(message, offset, length);
@@ -101,6 +107,10 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 			{
 				LOG.error("An error occurred while pushing binary message.", iox);
 			}
+		}
+		else
+		{
+			LOG.warn("The websocket connection is already closed. Cannot push the binary message '{}'", message);
 		}
 	}
 	
