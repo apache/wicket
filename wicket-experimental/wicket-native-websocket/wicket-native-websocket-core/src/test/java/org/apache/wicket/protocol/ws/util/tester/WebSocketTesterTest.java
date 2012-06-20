@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
@@ -75,9 +77,9 @@ public class WebSocketTesterTest extends Assert
 	 * pushes back the same message but capitalized, offset plus 1 and length minus 1.
 	 */
 	@Test
-	public void sendBinaryMessage()
+	public void sendBinaryMessage() throws UnsupportedEncodingException
 	{
-		final byte[] expectedMessage = "some message".getBytes();
+		final byte[] expectedMessage = "some message".getBytes("UTF-8");
 		final int offset = 1;
 		final int length = 2;
 
@@ -88,12 +90,19 @@ public class WebSocketTesterTest extends Assert
 			@Override
 			protected void onOutMessage(byte[] message, int off, int len)
 			{
-				String msg = new String(expectedMessage);
-				byte[] pushedMessage = Strings.capitalize(msg).getBytes();
+				try
+				{
+					String msg = new String(expectedMessage);
+					byte[] pushedMessage = Strings.capitalize(msg).getBytes("UTF-8");
 
-				assertArrayEquals(pushedMessage, message);
-				assertEquals(offset + 1, off);
-				assertEquals(length - 1, len);
+					assertArrayEquals(pushedMessage, message);
+					assertEquals(offset + 1, off);
+					assertEquals(length - 1, len);
+
+				} catch (UnsupportedEncodingException uex)
+				{
+					throw new RuntimeException(uex);
+				}
 			}
 		};
 
