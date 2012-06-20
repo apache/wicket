@@ -14,12 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.license;
+package org.apache.wicket.core.util.license;
 
+
+import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 
 /**
  * Test that the license headers are in place in this project. The tests are run from
- * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
+ * {@link org.apache.wicket.util.license.ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
  * 
  * @author Frank Bille Jensen (frankbille)
  */
