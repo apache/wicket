@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import java.util.Map;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.WebSocketRequestHandler;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
@@ -31,6 +34,8 @@ import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.template.PackageTextTemplate;
 
 /**
  * A behavior that contributes {@link WicketWebSocketJQueryResourceReference} and
@@ -99,10 +104,14 @@ public abstract class WebSocketBehavior extends Behavior
 
 		response.render(JavaScriptHeaderItem.forReference(WicketWebSocketJQueryResourceReference.get()));
 
+		PackageTextTemplate webSocketSetupTemplate =
+				new PackageTextTemplate(WicketWebSocketJQueryResourceReference.class, "res/js/wicket-websocket-setup.js.tmpl");
+		Map<String, Object> variables = Generics.newHashMap();
 		int pageId = component.getPage().getPageId();
-		response.render(JavaScriptHeaderItem.forScript(
-				"jQuery.extend(Wicket.WebSocket, { pageId: " + pageId + "});",
-				"wicket-web-socket"));
+		variables.put("pageId", Integer.valueOf(pageId));
+		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
+
+		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));
 	}
 
 	@Override

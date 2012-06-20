@@ -82,23 +82,53 @@
 					}
 				};
 			} else {
-				Wicket.Log.error('WebSocket not supported in your browser!');
-
+				var errMessage = '[WebSocket.initialize] WebSocket is not supported in your browser!';
+				Wicket.Log.error(errMessage);
+				throw errMessage;
 			}
 		},
 
 		send: function (text) {
-			if (this.ws) {
-				Wicket.Log.info("WebSocket.send: " + text);
+			if (this.ws && text) {
+				Wicket.Log.info("[WebSocket.send] Sending: " + text);
 				this.ws.send(text);
+			} else if (!text) {
+				Wicket.Log.error("[WebSocket.send] Cannot send an empty text message!");
+			} else {
+				Wicket.Log.error("[WebSocket.send] No open WebSocket connection! Cannot send text message: " + text);
 			}
 		},
 
 		close: function () {
 			if (this.ws) {
 				this.ws.close();
-				Wicket.Log.info("WebSocket closed");
+				Wicket.Log.info("[WebSocket.close] Connection closed.");
+			} else {
+				Wicket.Log.info("[WebSocket.close] Connection already closed.");
 			}
+		}
+	};
+
+	Wicket.WebSocket.createDefaultConnection = function () {
+		if (!Wicket.WebSocket.INSTANCE) {
+			Wicket.WebSocket.INSTANCE = new Wicket.WebSocket();
+		}
+	};
+
+	Wicket.WebSocket.send = function (text) {
+		if (Wicket.WebSocket.INSTANCE) {
+			Wicket.WebSocket.INSTANCE.send(text);
+		} else {
+			Wicket.Log.error("[WebSocket.send] No default connection available!");
+		}
+	};
+
+	Wicket.WebSocket.close = function () {
+		if (Wicket.WebSocket.INSTANCE) {
+			Wicket.WebSocket.INSTANCE.close();
+			delete Wicket.WebSocket.INSTANCE;
+		} else {
+			Wicket.Log.info("[WebSocket.close] No default connection to close.");
 		}
 	};
 
