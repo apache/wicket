@@ -43,7 +43,7 @@ class WebSocketTestPage extends WebPage implements IMarkupResourceStreamProvider
 			protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 			{
 				// assert the inbould message
-				Assert.assertEquals(expectedMessage, message.getMessage());
+				Assert.assertEquals(expectedMessage, message.getText());
 				
 				// now send an outbound message
 				handler.push(Strings.capitalize(expectedMessage));

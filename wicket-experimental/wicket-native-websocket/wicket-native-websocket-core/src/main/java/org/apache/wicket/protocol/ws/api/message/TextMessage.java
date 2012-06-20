@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
+import org.apache.wicket.util.lang.Args;
+
 /**
  * A {@link IWebSocketMessage message} with text data
  *
@@ -23,15 +25,15 @@ package org.apache.wicket.protocol.ws.api.message;
  */
 public class TextMessage implements IWebSocketMessage
 {
-	private final CharSequence message;
+	private final CharSequence text;
 
-	public TextMessage(final CharSequence message)
+	public TextMessage(final CharSequence text)
 	{
-		this.message = message;
+		this.text = Args.notEmpty(text, "text");
 	}
 
-	public final String getMessage()
+	public final String getText()
 	{
-		return message.toString();
+		return text.toString();
 	}
 }
