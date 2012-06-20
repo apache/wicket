@@ -46,7 +46,7 @@ public abstract class WebSocketBehavior extends Behavior
 		Object payload = event.getPayload();
 		if (payload instanceof WebSocketPayload)
 		{
-			WebSocketPayload wsPayload = (WebSocketPayload) payload;
+			WebSocketPayload<?> wsPayload = (WebSocketPayload<?>) payload;
 			WebSocketRequestHandler webSocketHandler = wsPayload.getHandler();
 
 			if (payload instanceof WebSocketTextPayload)
@@ -76,11 +76,11 @@ public abstract class WebSocketBehavior extends Behavior
 		}
 	}
 
-	protected void onConnect(ConnectedMessage message)
+	protected void onConnect(@SuppressWarnings("unused")ConnectedMessage message)
 	{
 	}
 
-	protected void onClose(ClosedMessage message)
+	protected void onClose(@SuppressWarnings("unused")ClosedMessage message)
 	{
 	}
 
