@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * A {@link Response} used to cache the written data to the web socket client
  * when Wicket thread locals are available.
  *
- * When the thread locals are not available then you can write directly to the {@link WebSocketConnection}
+ * When the thread locals are not available then you can write directly to the {@link IWebSocketConnection}
  * taken from {@link SimpleWebSocketConnectionRegistry}. In this case the response wont be cached.
  *
  * @since 6.0
@@ -36,13 +36,13 @@ public class WebSocketResponse extends Response
 {
 	private static final Logger LOG = LoggerFactory.getLogger(WebSocketResponse.class);
 	
-	private final WebSocketConnection connection;
+	private final IWebSocketConnection connection;
 
 	private StringBuilder text;
 
 	private ByteArrayOutputStream binary;
 
-	public WebSocketResponse(final WebSocketConnection conn)
+	public WebSocketResponse(final IWebSocketConnection conn)
 	{
 		this.connection = conn;
 	}
@@ -129,7 +129,7 @@ public class WebSocketResponse extends Response
 	}
 
 	@Override
-	public final WebSocketConnection getContainerResponse()
+	public final IWebSocketConnection getContainerResponse()
 	{
 		return connection;
 	}

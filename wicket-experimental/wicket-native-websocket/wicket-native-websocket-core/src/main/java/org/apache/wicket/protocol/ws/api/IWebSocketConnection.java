@@ -23,7 +23,7 @@ import java.io.IOException;
  *
  * @since 6.0
  */
-public interface WebSocketConnection 
+public interface IWebSocketConnection
 {
 	/**
 	 * @return {@code true} when the underlying native web socket
@@ -49,7 +49,7 @@ public interface WebSocketConnection
 	 * @return {@code this} object, for chaining methods
 	 * @throws IOException when an IO error occurs during the write to the client
 	 */
-	WebSocketConnection sendMessage(String message) throws IOException;
+	IWebSocketConnection sendMessage(String message) throws IOException;
 
 	/**
 	 * Sends a binary message to the client.
@@ -63,5 +63,5 @@ public interface WebSocketConnection
 	 * @return {@code this} object, for chaining methods
 	 * @throws IOException when an IO error occurs during the write to the client
 	 */
-	WebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException;
+	IWebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException;
 }

@@ -34,7 +34,7 @@ public interface IWebSocketConnectionRegistry
 	 *      the web socket client page id
 	 * @return the web socket connection used by a client from the specified coordinates
 	 */
-	WebSocketConnection getConnection(Application application, String sessionId, Integer pageId);
+	IWebSocketConnection getConnection(Application application, String sessionId, Integer pageId);
 
 	/**
 	 * Adds a new connection into the registry at the specified coordinates (application+session+page)
@@ -48,7 +48,7 @@ public interface IWebSocketConnectionRegistry
 	 * @param connection
 	 *      the web socket connection to add
 	 */
-	void setConnection(Application application, String sessionId, Integer pageId, WebSocketConnection connection);
+	void setConnection(Application application, String sessionId, Integer pageId, IWebSocketConnection connection);
 
 	/**
 	 * Removes a web socket connection from the registry at the specified coordinates (application+session+page)

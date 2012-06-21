@@ -18,14 +18,14 @@ package org.apache.wicket.protocol.ws.util.tester;
 
 import java.io.IOException;
 
-import org.apache.wicket.protocol.ws.api.WebSocketConnection;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 
 /**
  * A WebSocketConnection used for the testing.
  *
  * @since 6.0
  */
-abstract class TestWebSocketConnection implements WebSocketConnection
+abstract class TestWebSocketConnection implements IWebSocketConnection
 {
 	private boolean isOpen = true;
 
@@ -42,7 +42,7 @@ abstract class TestWebSocketConnection implements WebSocketConnection
 	}
 
 	@Override
-	public WebSocketConnection sendMessage(String message) throws IOException
+	public IWebSocketConnection sendMessage(String message) throws IOException
 	{
 		checkOpenness();
 		onOutMessage(message);
@@ -50,7 +50,7 @@ abstract class TestWebSocketConnection implements WebSocketConnection
 	}
 
 	@Override
-	public WebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException
+	public IWebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException
 	{
 		checkOpenness();
 		onOutMessage(message, offset, length);

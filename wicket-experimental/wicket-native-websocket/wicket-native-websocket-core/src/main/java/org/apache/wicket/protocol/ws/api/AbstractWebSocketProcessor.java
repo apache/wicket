@@ -104,7 +104,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *      the web socket connection to use to communicate with the client
 	 * @see #onOpen(Object)
 	 */
-	protected final void onConnect(final WebSocketConnection connection)
+	protected final void onConnect(final IWebSocketConnection connection)
 	{
 		connectionRegistry.setConnection(getApplication(), getSessionId(), pageId, connection);
 		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), pageId));
@@ -131,7 +131,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 */
 	protected final void broadcastMessage(final IWebSocketMessage message)
 	{
-		WebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, pageId);
+		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, pageId);
 
 		if (connection != null && connection.isOpen())
 		{

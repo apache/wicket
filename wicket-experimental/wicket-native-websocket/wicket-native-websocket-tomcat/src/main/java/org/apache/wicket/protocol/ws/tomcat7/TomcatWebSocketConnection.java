@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 
 import org.apache.catalina.websocket.WsOutbound;
-import org.apache.wicket.protocol.ws.api.WebSocketConnection;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0
  */
-public class TomcatWebSocketConnection implements WebSocketConnection
+public class TomcatWebSocketConnection implements IWebSocketConnection
 {
 	private static final Logger LOG = LoggerFactory.getLogger(TomcatWebSocketConnection.class);
 	
@@ -69,7 +69,7 @@ public class TomcatWebSocketConnection implements WebSocketConnection
 	}
 
 	@Override
-	public WebSocketConnection sendMessage(String message) throws IOException
+	public IWebSocketConnection sendMessage(String message) throws IOException
 	{
 		checkClosed();
 

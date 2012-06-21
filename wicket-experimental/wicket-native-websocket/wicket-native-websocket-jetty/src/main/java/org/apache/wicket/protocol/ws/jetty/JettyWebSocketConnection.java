@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.ws.jetty;
 
 import java.io.IOException;
 
-import org.apache.wicket.protocol.ws.api.WebSocketConnection;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.util.lang.Args;
 import org.eclipse.jetty.websocket.WebSocket;
 
@@ -27,7 +27,7 @@ import org.eclipse.jetty.websocket.WebSocket;
  *
  * @since 6.0
  */
-public class JettyWebSocketConnection implements WebSocketConnection
+public class JettyWebSocketConnection implements IWebSocketConnection
 {
 	private WebSocket.Connection connection;
 
@@ -52,7 +52,7 @@ public class JettyWebSocketConnection implements WebSocketConnection
 	}
 
 	@Override
-	public WebSocketConnection sendMessage(String message) throws IOException
+	public IWebSocketConnection sendMessage(String message) throws IOException
 	{
 		checkClosed();
 
@@ -61,7 +61,7 @@ public class JettyWebSocketConnection implements WebSocketConnection
 	}
 
 	@Override
-	public WebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException
+	public IWebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException
 	{
 		checkClosed();
 

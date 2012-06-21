@@ -24,7 +24,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.protocol.ws.api.WebSocketConnection;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Response;
@@ -50,13 +50,13 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 
 	private final Page page;
 
-	private final WebSocketConnection connection;
+	private final IWebSocketConnection connection;
 
 	private final AbstractAjaxResponse ajaxResponse;
 
 	private PageLogData logData;
 
-	public WebSocketRequestHandler(final Component component, final WebSocketConnection connection)
+	public WebSocketRequestHandler(final Component component, final IWebSocketConnection connection)
 	{
 		this.page = Args.notNull(component, "component").getPage();
 		this.connection = Args.notNull(connection, "connection");
