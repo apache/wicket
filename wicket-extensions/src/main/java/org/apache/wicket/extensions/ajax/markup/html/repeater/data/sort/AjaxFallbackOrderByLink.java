@@ -57,7 +57,7 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	 * @param cssProvider
 	 */
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final ICssProvider<String> cssProvider)
+		final ISortStateLocator<S> stateLocator, final ICssProvider<S> cssProvider)
 	{
 		this(id, sortProperty, stateLocator, cssProvider, null);
 	}
@@ -72,7 +72,7 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, sortProperty, stateLocator, DefaultCssProvider.getInstance(), null);
+		this(id, sortProperty, stateLocator, new DefaultCssProvider<S>(), null);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
 	{
-		this(id, sortProperty, stateLocator, DefaultCssProvider.getInstance(), ajaxCallListener);
+		this(id, sortProperty, stateLocator, new DefaultCssProvider<S>(), ajaxCallListener);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	 * @param ajaxCallListener
 	 */
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final ICssProvider<String> cssProvider,
+		final ISortStateLocator<S> stateLocator, final ICssProvider<S> cssProvider,
 		final IAjaxCallListener ajaxCallListener)
 	{
 		super(id, sortProperty, stateLocator, cssProvider);

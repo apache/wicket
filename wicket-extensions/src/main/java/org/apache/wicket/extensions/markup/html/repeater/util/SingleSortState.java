@@ -35,10 +35,7 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 
 	SortParam<T> param;
 
-	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(T,
-	 *      org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder)
-	 */
+	@Override
 	public void setPropertySortOrder(final T property, final SortOrder order)
 	{
 		Args.notNull(property, "property");
@@ -57,9 +54,7 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertySortOrder(T)
-	 */
+	@Override
 	public SortOrder getPropertySortOrder(final T property)
 	{
 		Args.notNull(property, "property");
@@ -90,13 +85,10 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 		this.param = param;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
-		return "[SingleSortState sort=" + ((param == null) ? "null" : param.toString()) + "]";
+		return "[SingleSortState sort=" + ((param == null) ? "null" : param.toString()) + ']';
 	}
 
 }

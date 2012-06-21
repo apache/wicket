@@ -58,7 +58,7 @@ public class OrderByLink<S> extends Link<Void>
 	 */
 	public OrderByLink(final String id, final S sortProperty, final ISortStateLocator<S> stateLocator)
 	{
-		this(id, sortProperty, stateLocator, DefaultCssProvider.getInstance());
+		this(id, sortProperty, stateLocator, new DefaultCssProvider<S>());
 	}
 
 	/**
@@ -77,10 +77,10 @@ public class OrderByLink<S> extends Link<Void>
 	 *            CSS provider that will be used generate the value of class attribute for this link
 	 * 
 	 * @see OrderByLink.ICssProvider
-	 * 
+	 *
 	 */
 	public OrderByLink(final String id, final S property, final ISortStateLocator<S> stateLocator,
-		final ICssProvider<String> cssProvider)
+		final ICssProvider<S> cssProvider)
 	{
 		super(id);
 
@@ -89,7 +89,7 @@ public class OrderByLink<S> extends Link<Void>
 
 		this.property = property;
 		this.stateLocator = stateLocator;
-		add(new CssModifier(this, cssProvider));
+		add(new CssModifier<S>(this, cssProvider));
 	}
 
 	/**
@@ -220,9 +220,9 @@ public class OrderByLink<S> extends Link<Void>
 	 * Easily constructible implementation of ICSSProvider
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
-	 * 
+	 *
 	 */
-	public static class CssProvider implements ICssProvider<String>
+	public static class CssProvider<S> implements ICssProvider<S>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -247,10 +247,8 @@ public class OrderByLink<S> extends Link<Void>
 			this.none = none;
 		}
 
-		/**
-		 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider#getClassAttributeValue(ISortState, Object)
-		 */
-		public String getClassAttributeValue(final ISortState<String> state, final String sortProperty)
+		@Override
+		public String getClassAttributeValue(final ISortState<S> state, final S sortProperty)
 		{
 			SortOrder dir = state.getPropertySortOrder(sortProperty);
 
@@ -272,24 +270,14 @@ public class OrderByLink<S> extends Link<Void>
 	/**
 	 * Convenience implementation of ICssProvider that always returns a null and so never adds a
 	 * class attribute
-	 * 
+	 *
 	 * @author Igor Vaynberg ( ivaynberg )
 	 */
-	public static class VoidCssProvider extends CssProvider
+	public static class VoidCssProvider<S> extends CssProvider<S>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private static ICssProvider<String> instance = new VoidCssProvider();
-
-		/**
-		 * @return singleton instance
-		 */
-		public static ICssProvider<String> getInstance()
-		{
-			return instance;
-		}
-
-		private VoidCssProvider()
+		public VoidCssProvider()
 		{
 			super("", "", "");
 		}
@@ -297,26 +285,16 @@ public class OrderByLink<S> extends Link<Void>
 
 	/**
 	 * Default implementation of ICssProvider
-	 * 
+	 *
 	 * @author Igor Vaynberg ( ivaynberg )
 	 */
-	public static class DefaultCssProvider extends CssProvider
+	public static class DefaultCssProvider<S> extends CssProvider<S>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private static DefaultCssProvider instance = new DefaultCssProvider();
-
-		private DefaultCssProvider()
+		public DefaultCssProvider()
 		{
 			super("wicket_orderUp", "wicket_orderDown", "wicket_orderNone");
-		}
-
-		/**
-		 * @return singleton instance
-		 */
-		public static DefaultCssProvider getInstance()
-		{
-			return instance;
 		}
 	}
 

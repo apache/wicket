@@ -39,25 +39,25 @@ public class OrderByBorder<S> extends Border
 	/**
 	 * @param id
 	 *            see
-	 *            {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param property
 	 *            see
-	 *            {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param stateLocator
 	 *            see
-	 *            {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param cssProvider
 	 *            see
-	 *            {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 */
 	public OrderByBorder(final String id, final S property,
-		final ISortStateLocator<S> stateLocator, final OrderByLink.ICssProvider<String> cssProvider)
+		final ISortStateLocator<S> stateLocator, final OrderByLink.ICssProvider<S> cssProvider)
 	{
 		super(id);
 
 		OrderByLink<S> link = newOrderByLink("orderByLink", property, stateLocator);
 		addToBorder(link);
-		add(new OrderByLink.CssModifier(link, cssProvider));
+		add(new OrderByLink.CssModifier<S>(link, cssProvider));
 		link.add(getBodyContainer());
 	}
 
@@ -75,8 +75,8 @@ public class OrderByBorder<S> extends Border
 	protected OrderByLink<S> newOrderByLink(final String id, final S property,
 		final ISortStateLocator<S> stateLocator)
 	{
-		return new OrderByLink(id, property, stateLocator,
-			OrderByLink.VoidCssProvider.getInstance())
+		return new OrderByLink<S>(id, property, stateLocator,
+			new OrderByLink.VoidCssProvider<S>())
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -98,16 +98,16 @@ public class OrderByBorder<S> extends Border
 
 	/**
 	 * @param id
-	 *            see {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
 	 * @param property
-	 *            see {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
 	 * @param stateLocator
-	 *            see {@link OrderByLink#OrderByLink<S></S>(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
 	 */
 	public OrderByBorder(final String id, final S property,
 		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, property, stateLocator, OrderByLink.DefaultCssProvider.getInstance());
+		this(id, property, stateLocator, new OrderByLink.DefaultCssProvider<S>());
 	}
 
 }

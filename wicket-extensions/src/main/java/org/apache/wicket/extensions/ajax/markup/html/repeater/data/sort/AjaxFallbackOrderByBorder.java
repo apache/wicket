@@ -49,7 +49,7 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, sortProperty, stateLocator, AjaxFallbackOrderByLink.DefaultCssProvider.getInstance(),
+		this(id, sortProperty, stateLocator, new AjaxFallbackOrderByLink.DefaultCssProvider<S>(),
 			null);
 	}
 
@@ -63,7 +63,7 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 	 * @param cssProvider
 	 */
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final AjaxFallbackOrderByLink.ICssProvider<String> cssProvider)
+		final ISortStateLocator<S> stateLocator, final AjaxFallbackOrderByLink.ICssProvider<S> cssProvider)
 	{
 		this(id, sortProperty, stateLocator, cssProvider, null);
 	}
@@ -80,7 +80,7 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
 	{
-		this(id, sortProperty, stateLocator, AjaxFallbackOrderByLink.DefaultCssProvider.getInstance(),
+		this(id, sortProperty, stateLocator, new AjaxFallbackOrderByLink.DefaultCssProvider<S>(),
 			ajaxCallListener);
 	}
 
@@ -96,7 +96,7 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 	 */
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator,
-		final AjaxFallbackOrderByLink.ICssProvider<String> cssProvider, final IAjaxCallListener ajaxCallListener)
+		final AjaxFallbackOrderByLink.ICssProvider<S> cssProvider, final IAjaxCallListener ajaxCallListener)
 	{
 		super(id);
 		AjaxFallbackOrderByLink<S> link = new AjaxFallbackOrderByLink<S>("orderByLink", sortProperty,
@@ -119,7 +119,7 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 			}
 		};
 		addToBorder(link);
-		add(new AjaxFallbackOrderByLink.CssModifier(link, cssProvider));
+		add(new AjaxFallbackOrderByLink.CssModifier<S>(link, cssProvider));
 		link.add(getBodyContainer());
 	}
 
