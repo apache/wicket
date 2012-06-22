@@ -19,7 +19,6 @@ package org.apache.wicket.session;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.IPageFactory;
@@ -38,7 +37,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A factory that constructs Pages.
  * 
- * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(org.apache.wicket.IPageFactory)
  * @see IPageFactory
  * 
  * @author Juergen Donnerstag
@@ -55,7 +53,7 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * {@link #isBookmarkable(Class)} is expensive, we cache the result here
 	 */
-	private final ConcurrentMap<String, Boolean> pageToBookmarkableCache = new ConcurrentHashMap<String, Boolean>();
+	private final ConcurrentMap<String, Boolean> pageToBookmarkableCache = Generics.newConcurrentHashMap();
 
 	@Override
 	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass)
@@ -64,7 +62,7 @@ public final class DefaultPageFactory implements IPageFactory
 		{
 			// throw an exception in case default constructor is missing
 			// => improved error message
-			Constructor<? extends IRequestablePage> constructor = pageClass.getConstructor((Class[])null);
+			Constructor<? extends IRequestablePage> constructor = pageClass.getConstructor((Class<?>[])null);
 
 			return processPage(newPage(constructor, null), null);
 		}
@@ -115,7 +113,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final <C extends IRequestablePage> Constructor<?> constructor(final Class<C> pageClass,
+	private <C extends IRequestablePage> Constructor<?> constructor(final Class<C> pageClass,
 		final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
@@ -166,7 +164,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given constructor and
 	 *             argument.
 	 */
-	private final Page newPage(final Constructor<?> constructor, final Object argument)
+	private Page newPage(final Constructor<?> constructor, final Object argument)
 	{
 		try
 		{
