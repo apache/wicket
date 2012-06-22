@@ -223,7 +223,7 @@ public abstract class RequestHandlerStack
 		 * @see java.lang.Throwable#fillInStackTrace()
 		 */
 		@Override
-		public synchronized Throwable fillInStackTrace()
+		public Throwable fillInStackTrace()
 		{
 			// don't do anything here
 			return null;
