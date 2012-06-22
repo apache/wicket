@@ -43,13 +43,18 @@ public interface IFormSubmitter
 
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. It is called
-	 * whenever the user clicks this particular button.
+	 * whenever the user clicks this particular button, <em>before</em> {@link Form#onSubmit()}.
+	 * 
+	 * @deprecated Use {@link IBeforeAndAfterFormSubmitter#onSubmitAfterForm()} and/or
+	 *             {@link IBeforeAndAfterFormSubmitter#onSubmitBeforeForm()} instead. This method
+	 *             will be removed in 6.0.
 	 */
+	@Deprecated
 	void onSubmit();
 
 	/**
 	 * Method that is invoked when form processing fails; for example, when there are validation
-	 * errors.
+	 * errors. This method will be called <em>before</em> {@link Form#onError()}.
 	 */
 	void onError();
 }

@@ -25,10 +25,13 @@ import org.apache.wicket.model.IModel;
  * @author Matej Knopp
  * 
  */
-public abstract class AbstractSubmitLink extends AbstractLink implements IFormSubmittingComponent
+public abstract class AbstractSubmitLink extends AbstractLink
+	implements
+		IFormSubmittingComponent,
+		IBeforeAndAfterFormSubmitter
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

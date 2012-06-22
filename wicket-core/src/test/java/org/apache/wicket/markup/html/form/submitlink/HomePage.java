@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.submitlink;
 
+import static junit.framework.Assert.*;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
@@ -27,10 +29,12 @@ import org.apache.wicket.model.PropertyModel;
 public class HomePage extends WebPage
 {
 	boolean submitted = false;
-	boolean submittedViaLink = false;
+	boolean submittedViaLinkDeprecated = false;
+	boolean submittedViaLinkBefore = false;
+	boolean submittedViaLinkAfter = false;
 	String text;
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +47,7 @@ public class HomePage extends WebPage
 		Form<Void> form = new Form<Void>("form")
 		{
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -58,14 +62,32 @@ public class HomePage extends WebPage
 		{
 
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			public void onSubmitBeforeForm()
+			{
+				submittedViaLinkBefore = true;
+				assertFalse("before must be the first!", submittedViaLinkAfter);
+				assertFalse("before must be the first!", submittedViaLinkDeprecated);
+			}
+
+			@Override
 			public void onSubmit()
 			{
-				submittedViaLink = true;
+				assertTrue("before must have been called!", submittedViaLinkBefore);
+				submittedViaLinkDeprecated = true;
+				assertFalse("after must not yet have been called", submittedViaLinkAfter);
+			}
+
+			@Override
+			public void onSubmitAfterForm()
+			{
+				assertTrue("before must have been called!", submittedViaLinkBefore);
+				assertTrue("onsubmit must have been called!", submittedViaLinkDeprecated);
+				submittedViaLinkAfter = true;
 			}
 
 		});
@@ -102,6 +124,16 @@ public class HomePage extends WebPage
 	 */
 	public boolean isSubmittedViaLink()
 	{
-		return submittedViaLink;
+		return submittedViaLinkDeprecated;
+	}
+
+	boolean isSubmittedViaLinkBefore()
+	{
+		return submittedViaLinkBefore;
+	}
+
+	boolean isSubmittedViaLinkAfter()
+	{
+		return submittedViaLinkAfter;
 	}
 }

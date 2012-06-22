@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -77,6 +78,19 @@ public abstract class AjaxFallbackButton extends Button
 			}
 
 			@Override
+			protected void onSubmitBeforeForm(AjaxRequestTarget target)
+			{
+				AjaxFallbackButton.this.onSubmitBeforeForm(target,
+					AjaxFallbackButton.this.getForm());
+			}
+
+			@Override
+			protected void onSubmitAfterForm(AjaxRequestTarget target)
+			{
+				AjaxFallbackButton.this.onSubmitAfterForm(target, AjaxFallbackButton.this.getForm());
+			}
+
+			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
 				AjaxFallbackButton.this.onError(target, AjaxFallbackButton.this.getForm());
@@ -114,7 +128,9 @@ public abstract class AjaxFallbackButton extends Button
 	 * @param target
 	 * @param form
 	 */
-	protected abstract void onError(AjaxRequestTarget target, Form<?> form);
+	protected void onError(AjaxRequestTarget target, Form<?> form)
+	{
+	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
@@ -125,6 +141,30 @@ public abstract class AjaxFallbackButton extends Button
 		if (AjaxRequestTarget.get() == null)
 		{
 			onSubmit(null, getForm());
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
+	 */
+	@Override
+	public final void onSubmitBeforeForm()
+	{
+		if (AjaxRequestTarget.get() == null)
+		{
+			onSubmitBeforeForm(null, getForm());
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
+	 */
+	@Override
+	public final void onSubmitAfterForm()
+	{
+		if (AjaxRequestTarget.get() == null)
+		{
+			onSubmitAfterForm(null, getForm());
 		}
 	}
 
@@ -145,8 +185,36 @@ public abstract class AjaxFallbackButton extends Button
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
+	 * @deprecated see {@link IFormSubmitter#onSubmit()}
 	 */
-	protected abstract void onSubmit(final AjaxRequestTarget target, final Form<?> form);
+	@Deprecated
+	protected void onSubmit(final AjaxRequestTarget target, final Form<?> form)
+	{
+	}
+
+	/**
+	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
+	 * submission, the target argument will be null
+	 * 
+	 * @param target
+	 *            ajax target if this linked was invoked using ajax, null otherwise
+	 * @param form
+	 */
+	protected void onSubmitBeforeForm(final AjaxRequestTarget target, final Form<?> form)
+	{
+	}
+
+	/**
+	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
+	 * submission, the target argument will be null
+	 * 
+	 * @param target
+	 *            ajax target if this linked was invoked using ajax, null otherwise
+	 * @param form
+	 */
+	protected void onSubmitAfterForm(final AjaxRequestTarget target, final Form<?> form)
+	{
+	}
 
 	/**
 	 * 

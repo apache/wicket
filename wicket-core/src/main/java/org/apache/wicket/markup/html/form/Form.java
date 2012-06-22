@@ -1217,7 +1217,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		if (submittingComponent != null)
 		{
 			// invoke submit on component
-			submittingComponent.onSubmit();
+			if (submittingComponent instanceof IBeforeAndAfterFormSubmitter)
+			{
+				((IBeforeAndAfterFormSubmitter)submittingComponent).onSubmitBeforeForm();
+			}
+			submittingComponent.onSubmit(); // remove this for 6.0
 		}
 
 		// invoke Form#onSubmit(..) going from innermost to outermost
@@ -1232,6 +1236,15 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				}
 			}
 		}, new ClassVisitFilter(Form.class));
+
+
+		if (submittingComponent != null)
+		{
+			if (submittingComponent instanceof IBeforeAndAfterFormSubmitter)
+			{
+				((IBeforeAndAfterFormSubmitter)submittingComponent).onSubmitAfterForm();
+			}
+		}
 	}
 
 	/**

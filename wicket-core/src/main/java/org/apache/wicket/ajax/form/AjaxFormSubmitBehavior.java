@@ -21,7 +21,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IFormSubmitter;
+import org.apache.wicket.markup.html.form.IBeforeAndAfterFormSubmitter;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -155,7 +155,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected void onEvent(final AjaxRequestTarget target)
 	{
-		getForm().getRootForm().onFormSubmitted(new IFormSubmitter()
+		getForm().getRootForm().onFormSubmitted(new IBeforeAndAfterFormSubmitter()
 		{
 			public Form<?> getForm()
 			{
@@ -176,7 +176,33 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			{
 				AjaxFormSubmitBehavior.this.onError(target);
 			}
+
+			public void onSubmitBeforeForm()
+			{
+				AjaxFormSubmitBehavior.this.onSubmitBeforeForm(target);
+			}
+
+			public void onSubmitAfterForm()
+			{
+				AjaxFormSubmitBehavior.this.onSubmitAfterForm(target);
+			}
 		});
+	}
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>after</em> the form's onSubmit method.
+	 */
+	protected void onSubmitAfterForm(AjaxRequestTarget target)
+	{
+	}
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>before</em> the form's onSubmit method.
+	 */
+	protected void onSubmitBeforeForm(AjaxRequestTarget target)
+	{
 	}
 
 	/**
@@ -184,15 +210,23 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * errors
 	 * 
 	 * @param target
+	 * @deprecated Will be removed in 6.0. Use {@link #onSubmitBeforeForm(AjaxRequestTarget)} and/or
+	 *             link #onSubmitAfterForm(AjaxRequestTarget)} instead.
 	 */
-	protected abstract void onSubmit(AjaxRequestTarget target);
+	@Deprecated
+	protected void onSubmit(AjaxRequestTarget target)
+	{
+	}
 
 	/**
-	 * Listener method invoked when the form has been processed and errors occurred
+	 * Listener method invoked when the form has been processed and errors occurred. This method is
+	 * called <em>before</em> {@link Form#onError()}.
 	 * 
 	 * @param target
 	 */
-	protected abstract void onError(AjaxRequestTarget target);
+	protected void onError(AjaxRequestTarget target)
+	{
+	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
