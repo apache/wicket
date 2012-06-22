@@ -32,7 +32,7 @@ public class HomePage extends WebPage
 	private final TestForm form;
 
 	/**
-	 * 
+	 *
 	 */
 	public HomePage()
 	{
@@ -63,7 +63,7 @@ class TestForm extends Form<Void>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit()
+			public void onSubmitBeforeForm()
 			{
 				throw new IllegalStateException("CANCEL button hit!");
 			}
@@ -74,7 +74,7 @@ class TestForm extends Form<Void>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 			}
 

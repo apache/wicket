@@ -70,9 +70,16 @@ public abstract class AjaxFallbackButton extends Button
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmit(target, AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onSubmitBeforeForm(target,
+					AjaxFallbackButton.this.getForm());
+			}
+
+			@Override
+			protected void onSubmitAfterForm(AjaxRequestTarget target)
+			{
+				AjaxFallbackButton.this.onSubmitAfterForm(target, AjaxFallbackButton.this.getForm());
 			}
 
 			@Override
@@ -116,14 +123,26 @@ public abstract class AjaxFallbackButton extends Button
 	protected abstract void onError(AjaxRequestTarget target, Form<?> form);
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
+	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmitBeforeForm()
 	 */
 	@Override
-	public final void onSubmit()
+	public final void onSubmitBeforeForm()
 	{
 		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
 		{
-			onSubmit(null, getForm());
+			onSubmitBeforeForm(null, getForm());
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmitAfterForm()
+	 */
+	@Override
+	public final void onSubmitAfterForm()
+	{
+		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		{
+			onSubmitAfterForm(null, getForm());
 		}
 	}
 
@@ -139,13 +158,29 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
-	 * submission, the target argument will be null
+	 * submission, the target argument will be null. This method will be called <em>before</em>
+	 * {@link Form#onSubmit()}.
 	 * 
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
 	 */
-	protected abstract void onSubmit(final AjaxRequestTarget target, final Form<?> form);
+	protected void onSubmitBeforeForm(final AjaxRequestTarget target, final Form<?> form)
+	{
+	}
+
+	/**
+	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
+	 * submission, the target argument will be null. This method will be called <em>after</em>
+	 * {@link Form#onSubmit()}.
+	 * 
+	 * @param target
+	 *            ajax target if this linked was invoked using ajax, null otherwise
+	 * @param form
+	 */
+	protected void onSubmitAfterForm(final AjaxRequestTarget target, final Form<?> form)
+	{
+	}
 
 	/**
 	 * @return the channel that manages how Ajax calls are executed

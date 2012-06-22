@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.form.IFormSubmitter.SubmitOrder;
 import org.junit.Test;
 
 public class FormSubmitOrderTest extends WicketTestCase
@@ -27,7 +26,7 @@ public class FormSubmitOrderTest extends WicketTestCase
 	{
 		String result = "";
 
-		public TestPage(final SubmitOrder order)
+		public TestPage()
 		{
 			Form form = new Form("form")
 			{
@@ -39,54 +38,30 @@ public class FormSubmitOrderTest extends WicketTestCase
 				}
 			};
 			this.add(form);
-			form.add(new Button("custom")
+			form.add(new Button("button")
 			{
 				@Override
-				public SubmitOrder getSubmitOrder()
+				public void onSubmitBeforeForm()
 				{
-					return order;
+					super.onSubmitBeforeForm();
+					result += "before";
 				}
 
 				@Override
-				public void onSubmit()
+				public void onSubmitAfterForm()
 				{
-					super.onSubmit();
-					result += "custom";
-				}
-			});
-			form.add(new Button("default")
-			{
-				@Override
-				public void onSubmit()
-				{
-					super.onSubmit();
-					result += "default";
+					super.onSubmitAfterForm();
+					result += "after";
 				}
 			});
 		}
 	}
 
 	@Test
-	public void defaultOrder() throws Exception
+	public void submitOrder() throws Exception
 	{
-		TestPage page = tester.startPage(new TestPage(null));
-		tester.newFormTester("form").submit("default");
-		assertEquals("defaultform", page.result);
-	}
-
-	@Test
-	public void customOrderBefore() throws Exception
-	{
-		TestPage page = tester.startPage(new TestPage(SubmitOrder.BEFORE_FORM));
-		tester.newFormTester("form").submit("custom");
-		assertEquals("customform", page.result);
-	}
-
-	@Test
-	public void customOrderAfter() throws Exception
-	{
-		TestPage page = tester.startPage(new TestPage(SubmitOrder.AFTER_FORM));
-		tester.newFormTester("form").submit("custom");
-		assertEquals("formcustom", page.result);
+		TestPage page = tester.startPage(TestPage.class);
+		tester.newFormTester("form").submit("button");
+		assertEquals("beforeformafter", page.result);
 	}
 }

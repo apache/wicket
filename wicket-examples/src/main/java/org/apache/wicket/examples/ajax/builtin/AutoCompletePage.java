@@ -24,13 +24,13 @@ import java.util.Locale;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -91,7 +91,7 @@ public class AutoCompletePage extends BasePage
 		field.add(new AjaxFormSubmitBehavior(form, "change")
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target)
 			{
 				BookmarkablePageRequestHandler bookmarkablePageRequestHandler = new BookmarkablePageRequestHandler(
 					new PageProvider(Index.class));

@@ -98,7 +98,7 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 				form.add(new AjaxSubmitLink("submit")
 				{
 					@Override
-					protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+					protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 					{
 						submitted = true;
 					}

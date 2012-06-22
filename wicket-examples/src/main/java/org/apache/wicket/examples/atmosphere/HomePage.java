@@ -53,7 +53,7 @@ public class HomePage extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				EventBus.get().post(input.getModelObject());
 			}

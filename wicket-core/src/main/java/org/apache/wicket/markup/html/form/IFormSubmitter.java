@@ -42,32 +42,20 @@ public interface IFormSubmitter
 	boolean getDefaultFormProcessing();
 
 	/**
-	 * Override this method to provide special submit handling in a multi-button form. It is called
-	 * whenever the user clicks this particular button.
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>before</em> the form's onSubmit method.
 	 */
-	void onSubmit();
+	void onSubmitBeforeForm();
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>after</em> the form's onSubmit method.
+	 */
+	void onSubmitAfterForm();
 
 	/**
 	 * Method that is invoked when form processing fails; for example, when there are validation
 	 * errors.
 	 */
 	void onError();
-
-	/**
-	 * Returns whether this component's {@link #onSubmit()} method should be called before or after
-	 * {@link Form#onSubmit()}.
-	 * 
-	 * @return submit order
-	 */
-	SubmitOrder getSubmitOrder();
-
-	/**
-	 * Indicates whether this component's {@link #onSubmit()} method should be called before or
-	 * after {@link Form#onSubmit()}.
-	 * 
-	 * @author Carl-Eric Menzel (cmenzel)
-	 */
-	static enum SubmitOrder {
-		BEFORE_FORM, AFTER_FORM
-	}
 }

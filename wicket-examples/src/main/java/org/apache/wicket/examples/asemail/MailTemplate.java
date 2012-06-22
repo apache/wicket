@@ -24,6 +24,9 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -38,9 +41,6 @@ import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -93,7 +93,7 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				CharSequence pageHtml = renderPage(TemplateBasedOnPage.class);
 
@@ -113,7 +113,7 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				CharSequence panelHtml = renderPanel(new MailTemplatePanel(DummyPage.COMP_ID,
 					new PropertyModel<String>(MailTemplate.this, "name")));
@@ -134,7 +134,7 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 
 				CharSequence templateHtml = renderTemplate(new PackageTextTemplate(

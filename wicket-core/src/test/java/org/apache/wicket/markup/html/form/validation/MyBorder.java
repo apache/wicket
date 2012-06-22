@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 /**
- * 
+ *
  */
 public class MyBorder extends Border
 {
@@ -53,7 +53,7 @@ public class MyBorder extends Border
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				info("onSubmit");
 				hitOnSubmit = true;

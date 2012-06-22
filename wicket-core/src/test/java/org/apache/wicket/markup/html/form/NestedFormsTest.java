@@ -35,7 +35,7 @@ import org.junit.Test;
 public class NestedFormsTest extends WicketTestCase
 {
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void postOrderSequenceSubmittingRootForm()
@@ -51,7 +51,7 @@ public class NestedFormsTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void postOrderSequenceSubmittingInnerForm()
@@ -99,7 +99,7 @@ public class NestedFormsTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void onSubmit()
+				public void onSubmitBeforeForm()
 				{
 					submitSequence.add(this);
 				}
@@ -123,7 +123,7 @@ public class NestedFormsTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void onSubmit()
+				public void onSubmitBeforeForm()
 				{
 					submitSequence.add(this);
 				}

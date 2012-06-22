@@ -146,16 +146,4 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	{
 		return Form.getRootFormRelativeId(this);
 	}
-
-	/**
-	 * Defaults to running before {@link Form#onSubmit()}. Override if you want to run afterwards
-	 * instead.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.IFormSubmitter#getSubmitOrder()
-	 */
-	@Override
-	public SubmitOrder getSubmitOrder()
-	{
-		return SubmitOrder.BEFORE_FORM;
-	}
 }

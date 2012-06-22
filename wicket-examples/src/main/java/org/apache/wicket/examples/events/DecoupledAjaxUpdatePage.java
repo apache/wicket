@@ -60,7 +60,7 @@ public class DecoupledAjaxUpdatePage extends BasePage
 		{
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				send(getPage(), Broadcast.BREADTH, new CounterUpdate(target));
 			}

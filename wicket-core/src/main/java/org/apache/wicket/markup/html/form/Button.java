@@ -213,15 +213,6 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	}
 
 	/**
-	 * Override this method to provide special submit handling in a multi-button form. It is called
-	 * whenever the user clicks this particular button, except if validation fails.
-	 */
-	@Override
-	public void onSubmit()
-	{
-	}
-
-	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()
 	 */
 	@Override
@@ -231,14 +222,20 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	}
 
 	/**
-	 * Defaults to running before {@link Form#onSubmit()}. Override if you want to run afterwards
-	 * instead.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.IFormSubmitter#getSubmitOrder()
+	 * Override this method to provide special submit handling in a multi-button form. It is called
+	 * whenever the user clicks this particular button, except if validation fails. This method will
+	 * be called <em>before</em> {@link Form#onSubmit()}.
 	 */
-	@Override
-	public SubmitOrder getSubmitOrder()
+	public void onSubmitBeforeForm()
 	{
-		return SubmitOrder.BEFORE_FORM;
+	}
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. It is called
+	 * whenever the user clicks this particular button, except if validation fails. This method will
+	 * be called <em>after</em> {@link Form#onSubmit()}.
+	 */
+	public void onSubmitAfterForm()
+	{
 	}
 }

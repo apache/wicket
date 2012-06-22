@@ -34,7 +34,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	private boolean linkClicked;
 
 	/**
-	 * 
+	 *
 	 */
 	@Before
 	public void before()
@@ -43,7 +43,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testClickLinkInsideForm_ajaxSubmitLink()
 	{
@@ -56,7 +56,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				assertNotNull(form);
 				linkClicked = true;
@@ -88,7 +88,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testClickLink_ajaxSubmitLink()
 	{
@@ -101,7 +101,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				assertNotNull(form);
 				linkClicked = true;

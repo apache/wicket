@@ -66,7 +66,7 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void buttonInvokedFirst()
@@ -109,7 +109,7 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void onSubmit()
+				public void onSubmitBeforeForm()
 				{
 					submitSequence.add(this);
 				};
@@ -119,7 +119,7 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+				protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 				{
 					submitSequence.add(this);
 				}

@@ -24,7 +24,6 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
-import org.apache.wicket.markup.html.form.IFormSubmitter.SubmitOrder;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 
 /**
@@ -162,52 +161,50 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			}
 
 			@Override
-			public void onSubmit()
-			{
-				AjaxFormSubmitBehavior.this.onSubmit(target);
-			}
-
-			@Override
 			public void onError()
 			{
 				AjaxFormSubmitBehavior.this.onError(target);
 			}
 
 			@Override
-			public SubmitOrder getSubmitOrder()
+			public void onSubmitBeforeForm()
 			{
-				return AjaxFormSubmitBehavior.this.getSubmitOrder();
+				AjaxFormSubmitBehavior.this.onSubmitBeforeForm(target);
+			}
+
+			@Override
+			public void onSubmitAfterForm()
+			{
+				AjaxFormSubmitBehavior.this.onSubmitAfterForm(target);
 			}
 		});
 	}
 
 	/**
-	 * Defaults to running before {@link Form#onSubmit()}. Override if you want to run afterwards
-	 * instead.
-	 * 
-	 * @return submit order
-	 * 
-	 * @see org.apache.wicket.markup.html.form.IFormSubmitter#getSubmitOrder()
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>after</em> the form's onSubmit method.
 	 */
-	public IFormSubmitter.SubmitOrder getSubmitOrder()
+	protected void onSubmitAfterForm(AjaxRequestTarget target)
 	{
-		return SubmitOrder.BEFORE_FORM;
 	}
 
 	/**
-	 * Listener method that is invoked after the form has been submitted and processed without
-	 * errors
-	 * 
-	 * @param target
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>before</em> the form's onSubmit method.
 	 */
-	protected abstract void onSubmit(AjaxRequestTarget target);
+	protected void onSubmitBeforeForm(AjaxRequestTarget target)
+	{
+	}
+
 
 	/**
 	 * Listener method invoked when the form has been processed and errors occurred
 	 * 
 	 * @param target
 	 */
-	protected abstract void onError(AjaxRequestTarget target);
+	protected void onError(AjaxRequestTarget target)
+	{
+	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
