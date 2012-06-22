@@ -20,6 +20,8 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 
 /**
@@ -46,6 +48,23 @@ public class PropertyTreeColumn<T> extends AbstractPropertyColumn<T>
 	 */
 	public PropertyTreeColumn(final ColumnLocation location, final String header,
 		final String propertyExpression)
+	{
+		this(location, Model.of(header), propertyExpression);
+	}
+
+	/**
+	 * Creates new column. Checks if the column is not aligned in middle. In case it is, throws an
+	 * exception.
+	 *
+	 * @param location
+	 *            Specifies how the column should be aligned and what his size should be
+	 * @param header
+	 *            Header caption
+	 * @param propertyExpression
+	 *            Expression for property access
+	 */
+	public PropertyTreeColumn(final ColumnLocation location, final IModel<String> header,
+	                          final String propertyExpression)
 	{
 		super(location, header, propertyExpression);
 	}

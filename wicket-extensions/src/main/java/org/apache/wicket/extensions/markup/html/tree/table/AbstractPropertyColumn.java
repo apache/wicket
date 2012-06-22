@@ -22,8 +22,10 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
-import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.core.util.lang.PropertyResolver;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.convert.IConverter;
 
 
 /**
@@ -55,6 +57,22 @@ public abstract class AbstractPropertyColumn<T> extends AbstractColumn
 	 */
 	public AbstractPropertyColumn(final ColumnLocation location, final String header,
 		final String propertyExpression)
+	{
+		this(location, Model.of(header), propertyExpression);
+	}
+
+	/**
+	 * Creates the tree column.
+	 *
+	 * @param location
+	 *            Specifies how the column should be aligned and what his size should be
+	 * @param header
+	 *            Header caption
+	 * @param propertyExpression
+	 *            Expression for property access
+	 */
+	public AbstractPropertyColumn(final ColumnLocation location, final IModel<String> header,
+	                              final String propertyExpression)
 	{
 		super(location, header);
 

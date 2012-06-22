@@ -24,6 +24,8 @@ import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation;
 import org.apache.wicket.extensions.markup.html.tree.table.IColumn;
 import org.apache.wicket.extensions.markup.html.tree.table.IRenderable;
 import org.apache.wicket.extensions.markup.html.tree.table.PropertyRenderableColumn;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 
@@ -47,6 +49,18 @@ public class PropertyEditableColumn<T> extends PropertyRenderableColumn<T>
 	 * @param propertyExpression
 	 */
 	public PropertyEditableColumn(ColumnLocation location, String header, String propertyExpression)
+	{
+		this(location, Model.of(header), propertyExpression);
+	}
+
+	/**
+	 * Column constructor.
+	 *
+	 * @param location
+	 * @param header
+	 * @param propertyExpression
+	 */
+	public PropertyEditableColumn(ColumnLocation location, IModel<String> header, String propertyExpression)
 	{
 		super(location, header, propertyExpression);
 	}

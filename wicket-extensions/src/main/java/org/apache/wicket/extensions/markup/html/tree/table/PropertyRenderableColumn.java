@@ -20,6 +20,8 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
@@ -51,6 +53,22 @@ public class PropertyRenderableColumn<T> extends AbstractPropertyColumn<T>
 	 */
 	public PropertyRenderableColumn(final ColumnLocation location, final String header,
 		final String propertyExpression)
+	{
+		this(location, Model.of(header), propertyExpression);
+	}
+
+	/**
+	 * Creates the column
+	 *
+	 * @param location
+	 *            Specifies how the column should be aligned and what his size should be
+	 * @param header
+	 *            Header caption
+	 * @param propertyExpression
+	 *            Expression for property access
+	 */
+	public PropertyRenderableColumn(final ColumnLocation location, final IModel<String> header,
+	                                final String propertyExpression)
 	{
 		super(location, header, propertyExpression);
 	}
