@@ -17,6 +17,8 @@
 package org.apache.wicket.util.resource.locator;
 
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
@@ -63,6 +65,12 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 
 	/** If null, the application registered finder will be used */
 	private IResourceFinder finder;
+
+	private final List<String> classpathLocationPrefixes = new LinkedList<String>();
+	{
+		classpathLocationPrefixes.add("");
+		classpathLocationPrefixes.add("META-INF/resources");
+	}
 
 	/**
 	 * Constructor
@@ -201,18 +209,16 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 				classLoader);
 		}
 
-		// Try loading path using classloader
-		URL url = classLoader.getResource(path);
-		if (url == null)
+		for (String prefix : classpathLocationPrefixes)
 		{
-			// maybe it is in the Servlet 3.0 like directory
-			url = classLoader.getResource("META-INF/resources/" + path);
+			String fullPath = prefix.length() > 0 ? prefix + "/" + path : path;
+			URL url = classLoader.getResource(fullPath);
+			if (url != null)
+			{
+				return new UrlResourceStream(url);
+			}
 		}
 
-		if (url != null)
-		{
-			return new UrlResourceStream(url);
-		}
 		return null;
 	}
 
@@ -269,5 +275,20 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		}
 
 		return new ResourceNameIterator(realPath, style, variation, locale, realExtension, strict);
+	}
+
+	/**
+	 * The list of prefixes that are added to a path when trying to find resources in the classpath.
+	 * By default, these are:
+	 * <ul>
+	 * <li><code>""</code> - no prefix</li>
+	 * <li><code>"META-INF/resources"</code> - for Servlet 3.0 compatibility.</li>
+	 * </ul>
+	 * 
+	 * @return
+	 */
+	public List<String> getClasspathLocationPrefixes()
+	{
+		return classpathLocationPrefixes;
 	}
 }
