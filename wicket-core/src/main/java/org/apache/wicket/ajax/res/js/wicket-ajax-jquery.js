@@ -455,22 +455,6 @@
 				headers["Wicket-FocusedElementId"] = Wicket.Focus.lastFocusId;
 			}
 
-			// collect the dynamic extra parameters
-			if (jQuery.isArray(attrs.dep)) {
-				var deps = attrs.dep;
-				for (var i = 0; i < deps.length; i++) {
-					var dep = deps[i],
-						extraParam;
-					if (jQuery.isFunction(dep)) {
-						extraParam = dep(attrs);
-					} else {
-						extraParam = new Function('attrs', dep)(attrs);
-					}
-					extraParam = this._asParamArray(extraParam);
-					data = data.concat(extraParam);
-				}
-			}
-
 			if (attrs.mp) { // multipart form. jQuery doesn't help here ...
 				// TODO Wicket.next - should we execute all handlers ?!
 				// Wicket 1.5 didn't support success/failure handlers for this, but we can do it
@@ -521,6 +505,29 @@
 								return false;
 							}
 						}
+					}
+
+					// collect the dynamic extra parameters
+					if (jQuery.isArray(attrs.dep)) {
+						var deps = attrs.dep,
+							params = [],
+							queryString,
+							separator;
+
+						for (var i = 0; i < deps.length; i++) {
+							var dep = deps[i],
+								extraParam;
+							if (jQuery.isFunction(dep)) {
+								extraParam = dep(attrs);
+							} else {
+								extraParam = new Function('attrs', dep)(attrs);
+							}
+							extraParam = this._asParamArray(extraParam);
+							params = params.concat(extraParam);
+						}
+						queryString = jQuery.param(params);
+						separator = settings.url.indexOf('?') > -1 ? '&' : '?';
+						settings.url = settings.url + separator + queryString;
 					}
 
 					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
@@ -602,8 +609,11 @@
 					// A file download popup will appear but the page in the browser won't change.
 					this.done();
 
+					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
+					    rhttps = /^https:\/\//; // checks whether the string starts with https://
+
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
-					if (redirectUrl.charAt(0) === ('/') || redirectUrl.match("^http://") === "http://" || redirectUrl.match("^https://") === "https://") {
+					if (redirectUrl.charAt(0)==('/') || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
 						window.location = redirectUrl;
 					}
 					else {
@@ -1902,7 +1912,7 @@
 			// also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 			// Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
 			addJavascript: function (content, id, fakeSrc) {
-				content = 'try{'+content+'}catch(e){Wicket.Ajax.DebugWindow.logError(e);}';
+				content = 'try{'+content+'}catch(e){Wicket.Log.error(e);}';
 				var script = Wicket.Head.createElement("script");
 				if (id) {
 					script.id = id;

@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
  * @author dashorst
@@ -31,7 +32,7 @@ public class LocalizedMessagePage extends WebPage
 	/** */
 	public Form<Void> form;
 	/** */
-	public TextField<Integer> integerField;
+	public TextField<Double> field;
 	/** */
 	public FeedbackPanel feedback;
 
@@ -42,9 +43,10 @@ public class LocalizedMessagePage extends WebPage
 	{
 		add(form = new Form<Void>("form"));
 
-		integerField = new TextField<Integer>("integer", Integer.class);
-		integerField.setLabel(Model.of("Number"));
-		form.add(integerField);
+		field = new TextField<Double>("field", Double.class);
+		field.setLabel(Model.of("Number"));
+		field.add(new RangeValidator<Double>(0.5d, 1.5d));
+		form.add(field);
 
 		form.add(feedback = new FeedbackPanel("feedback"));
 	}

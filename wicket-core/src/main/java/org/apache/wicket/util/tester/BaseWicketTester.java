@@ -724,13 +724,20 @@ public class BaseWicketTester
 	{
 		String originalHost = requestUrl.getHost();
 		String redirectHost = newUrl.getHost();
-		if (originalHost == redirectHost)
+		Integer originalPort = requestUrl.getPort();
+		Integer newPort = newUrl.getPort();
+
+		if (originalHost.equals(redirectHost))
 		{
 			return false; // identical or both null
 		}
 		else if (redirectHost == null)
 		{
 			return false; // no new host
+		}
+		else if (originalPort.equals(newPort) == false)
+		{
+			return true;
 		}
 		else
 		{

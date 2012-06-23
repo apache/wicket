@@ -56,10 +56,10 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 
 	/**
 	 * 
-	 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
+	 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmitBeforeForm(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
 	@Override
-	protected void onSubmit(final AjaxRequestTarget target)
+	protected void onSubmitBeforeForm(final AjaxRequestTarget target)
 	{
 		addFeedbackPanels(target);
 	}
@@ -114,24 +114,25 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	{
 		form.visitChildren(FormComponent.class, new FormValidateVisitor(form, event, throttleDelay));
 	}
-	
+
 	private static class FormValidateVisitor implements IVisitor<Component, Void>, IClusterable
 	{
 		private final Form<?> form;
 		private final String event;
 		private final Duration throttleDelay;
-		
+
 		private FormValidateVisitor(Form<?> form, String event, Duration throttleDelay)
 		{
 			this.form = form;
 			this.event = event;
 			this.throttleDelay = throttleDelay;
 		}
-		
+
 		@Override
 		public void component(final Component component, final IVisit<Void> visit)
 		{
-			final AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event) {
+			final AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event)
+			{
 				@Override
 				protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
 				{
@@ -140,7 +141,8 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 					if (throttleDelay != null)
 					{
 						String id = "throttle-" + component.getMarkupId();
-						ThrottlingSettings throttlingSettings = new ThrottlingSettings(id, throttleDelay);
+						ThrottlingSettings throttlingSettings = new ThrottlingSettings(id,
+							throttleDelay);
 						attributes.setThrottlingSettings(throttlingSettings);
 					}
 				}

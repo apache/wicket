@@ -183,7 +183,7 @@ public class VisitorTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3805
-	 *
+	 * 
 	 * Visit parents with arbitrary type
 	 */
 	public void testVisitParents()
@@ -193,11 +193,11 @@ public class VisitorTest extends WicketTestCase
 		{
 			public void component(MarkupContainer object, IVisit<MarkerInterface> visit)
 			{
-				visit.stop((MarkerInterface) object);
+				visit.stop((MarkerInterface)object);
 			}
 		};
 		MarkerInterface markedParent = testContainer.get("G:H").visitParents(MarkupContainer.class,
-			visitor, new ClassVisitFilter<MarkerInterface>(MarkerInterface.class));
+			visitor, new ClassVisitFilter(MarkerInterface.class));
 		assertEquals("G", markedParent.getId());
 	}
 
@@ -210,6 +210,8 @@ public class VisitorTest extends WicketTestCase
 		implements
 			MarkerInterface
 	{
+		private static final long serialVersionUID = 1L;
+
 		public MarkedWebMarkupContainer(String id)
 		{
 			super(id);

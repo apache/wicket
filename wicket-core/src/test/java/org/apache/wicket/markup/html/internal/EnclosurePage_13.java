@@ -36,7 +36,6 @@ public class EnclosurePage_13 extends WebPage
 	public EnclosurePage_13(final PageParameters parameters)
 	{
 		add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
-		// TODO Add your page's components here
 
 		// Here are two components.
 

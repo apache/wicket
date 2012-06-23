@@ -37,9 +37,6 @@ import org.apache.wicket.util.lang.Args;
  * TabbedPanel component represets a panel with tabs that are used to switch between different
  * content panels inside the TabbedPanel panel.
  * <p>
- * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of tabs,
- * the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
- * <p>
  * Example:
  * 
  * <pre>
@@ -93,7 +90,22 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	public TabbedPanel(final String id, final List<T> tabs)
 	{
-		super(id, new Model<Integer>(-1));
+		this(id, tabs, null);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 *            component id
+	 * @param tabs
+	 *            list of ITab objects used to represent tabs
+	 * @param model
+	 *            model holding the selected tab index OR {@code -1}
+	 */
+	public TabbedPanel(final String id, final List<T> tabs, IModel<Integer> model)
+	{
+		super(id, model);
 
 		this.tabs = Args.notNull(tabs, "tabs");
 
@@ -134,6 +146,61 @@ public class TabbedPanel<T extends ITab> extends Panel
 				return newTabContainer(iteration);
 			}
 		});
+	}
+
+	/**
+	 * Get the model.
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<Integer> getModel()
+	{
+		return (IModel<Integer>)getDefaultModel();
+	}
+
+	/**
+	 * Get the model object.
+	 * 
+	 * @return model object
+	 */
+	public final Integer getModelObject()
+	{
+		return getModel().getObject();
+	}
+
+	/**
+	 * Set the model.
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<Integer> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Set the model object.
+	 * 
+	 * @param object
+	 *            model object
+	 */
+	public final void setModelObject(Integer object)
+	{
+		setDefaultModelObject(object);
+	}
+
+	@Override
+	protected IModel<?> initModel()
+	{
+		IModel<?> model = super.initModel();
+
+		if (model == null)
+		{
+			model = new Model<Integer>(new Integer(-1));
+		}
+
+		return model;
 	}
 
 	/**
@@ -207,37 +274,36 @@ public class TabbedPanel<T extends ITab> extends Panel
 	@Override
 	protected void onBeforeRender()
 	{
-		if (tabs.size() == 0)
-		{
-			// force an empty container to be created every time if we have no tabs
-			setSelectedTab(0);
-		}
-		else if ((getSelectedTab() == -1) || (isTabVisible(getSelectedTab()) == false))
+		int index = getSelectedTab();
+
+		if (index == -1 || isTabVisible(index) == false)
 		{
 			// find first visible selected tab
-			int selected = 0;
+			index = 0;
 			for (int i = 0; i < tabs.size(); i++)
 			{
 				if (isTabVisible(i))
 				{
-					selected = i;
+					index = i;
 					break;
 				}
 			}
 
-			if (selected == tabs.size())
+			if (index == tabs.size())
 			{
 				/*
 				 * none of the tabs are selected...
-				 * 
-				 * we do not need to do anything special because the check in setSelectedTab() will
-				 * replace the current tab panel with an empty one
 				 */
-				selected = 0;
+				index = -1;
 			}
-
-			setSelectedTab(selected);
+			else
+			{
+				setModelObject(index);
+			}
 		}
+
+		// updating the tab will do no harm if the index hasn't changed
+		updateTab(index);
 
 		super.onBeforeRender();
 	}
@@ -331,18 +397,25 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 *            index of the tab to select
 	 * @return this for chaining
 	 */
-	public TabbedPanel setSelectedTab(final int index)
+	public TabbedPanel<T> setSelectedTab(int index)
 	{
-		if ((index < 0) || ((index >= tabs.size()) && (index > 0)))
+		if (index < 0 || index >= tabs.size())
 		{
 			throw new IndexOutOfBoundsException();
 		}
 
-		setDefaultModelObject(index);
+		setModelObject(index);
 
+		updateTab(index);
+
+		return this;
+	}
+
+	private void updateTab(int index)
+	{
 		final Component component;
 
-		if ((tabs.size() == 0) || !isTabVisible(index))
+		if (index == -1 || !isTabVisible(index))
 		{
 			// no tabs or the currently selected tab is not visible
 			component = new WebMarkupContainer(TAB_PANEL_ID);
@@ -350,12 +423,13 @@ public class TabbedPanel<T extends ITab> extends Panel
 		else
 		{
 			// show panel from selected tab
-			T tab = tabs.get(index);
+			ITab tab = tabs.get(index);
 			component = tab.getPanel(TAB_PANEL_ID);
 			if (component == null)
 			{
 				throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
 					getPath() + "] ITab index [" + index + "]");
+
 			}
 		}
 
@@ -369,8 +443,6 @@ public class TabbedPanel<T extends ITab> extends Panel
 		}
 
 		addOrReplace(component);
-
-		return this;
 	}
 
 	/**

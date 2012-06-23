@@ -1,0 +1,8 @@
+;(function(undefined) {
+	'use strict';
+
+	if (!Wicket.WebSocket.pageId) {
+		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId} });
+		Wicket.WebSocket.createDefaultConnection();
+	}
+})();

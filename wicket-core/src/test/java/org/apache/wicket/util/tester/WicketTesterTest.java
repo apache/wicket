@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.AssertionFailedError;
 
@@ -1265,5 +1266,27 @@ public class WicketTesterTest extends WicketTestCase
 		}
 		tester.startPage(new RedirectPage());
 		tester.assertRenderedPage(CreateBook.class);
+	}
+
+	public static class AlwaysRedirectPage extends WebPage
+	{
+		public AlwaysRedirectPage()
+		{
+			// redirects to another web server on the same computer
+			throw new RedirectToUrlException("http://localhost:4333/");
+		}
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4610
+	 */
+	@Test
+	public void redirectToAbsoluteUrlTest()
+	{
+		WicketTester tester = new WicketTester();
+		tester.setFollowRedirects(false);
+		tester.startPage(AlwaysRedirectPage.class);
+		tester.assertRedirectUrl("http://localhost:4333/");
+		assertEquals(HttpServletResponse.SC_FOUND, tester.getLastResponse().getStatus());
 	}
 }

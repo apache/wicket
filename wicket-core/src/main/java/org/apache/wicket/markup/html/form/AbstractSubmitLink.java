@@ -28,7 +28,7 @@ import org.apache.wicket.model.IModel;
 public abstract class AbstractSubmitLink extends AbstractLink implements IFormSubmittingComponent
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

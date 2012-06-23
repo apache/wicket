@@ -16,20 +16,20 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -53,7 +53,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 	/**
 	 * Creates the {@link CryptoMapper}
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -193,9 +193,11 @@ public class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	public void resourceReference()
 	{
-		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPISxb3xq2Cs66Z2lkUjUYqOQlzEia56fViCD0yNMzA9ySE9DRAA5J3OUWSCSO3B8FjFYPHWdkqgcHg/X5E87/kUj7f/B8F3f/yiSe2/UYq6c";
+		PackageResourceReference resource = new PackageResourceReference(getClass(),
+			"crypt/crypt.txt");
+		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
 
-		Request request = getRequest(Url.parse(encrypted));
+		Request request = getRequest(url);
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
@@ -210,12 +212,15 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Relative ResourceReferences, WICKET-3514
 	 */
 	@Test
-	@Ignore // TODO @svenmeier: How to regenerate the encrypted url ?
 	public void resourceReferenceWithModifiedSegments()
 	{
-		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/Juc97/modified-crypt.txt";
+		PackageResourceReference resource = new PackageResourceReference(getClass(),
+			"crypt/crypt.txt");
+		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
+		url.getSegments().remove(url.getSegments().size() - 1);
+		url.getSegments().add("modified-crypt.txt");
 
-		Request request = getRequest(Url.parse(encrypted));
+		Request request = getRequest(url);
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
@@ -230,12 +235,16 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Relative ResourceReferences, WICKET-3514
 	 */
 	@Test
-	@Ignore // TODO @svenmeier: How to regenerate the encrypted url ?
 	public void resourceReferenceWithMoreSegments()
 	{
-		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/Juc97/more/crypt.txt";
+		PackageResourceReference resource = new PackageResourceReference(getClass(),
+			"crypt/crypt.txt");
+		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
+		url.getSegments().remove(url.getSegments().size() - 1);
+		url.getSegments().add("more");
+		url.getSegments().add("more-crypt.txt");
 
-		Request request = getRequest(Url.parse(encrypted));
+		Request request = getRequest(url);
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
@@ -243,19 +252,23 @@ public class CryptoMapperTest extends AbstractMapperTest
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
-		assertEquals("crypt/more/crypt.txt", handler.getResourceReference().getName());
+		assertEquals("crypt/more/more-crypt.txt", handler.getResourceReference().getName());
 	}
 
 	/**
 	 * Relative ResourceReferences, WICKET-3514
 	 */
 	@Test
-	@Ignore // TODO @svenmeier: How to regenerate the encrypted url ?
 	public void resourceReferenceWithLessSegments()
 	{
-		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/less-crypt.txt";
+		PackageResourceReference resource = new PackageResourceReference(getClass(),
+			"crypt/crypt.txt");
+		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
+		url.getSegments().remove(url.getSegments().size() - 1);
+		url.getSegments().remove(url.getSegments().size() - 1);
+		url.getSegments().add("less-crypt.txt");
 
-		Request request = getRequest(Url.parse(encrypted));
+		Request request = getRequest(url);
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 

@@ -55,12 +55,12 @@ public class SecondPanel extends BreadCrumbPanel
 			add(new Button("nextButton")
 			{
 				@Override
-				public void onSubmit()
+				public void onSubmitBeforeForm()
 				{
 					activate(new IBreadCrumbPanelFactory()
 					{
 						public BreadCrumbPanel create(String componentId,
-								IBreadCrumbModel breadCrumbModel)
+							IBreadCrumbModel breadCrumbModel)
 						{
 							return new ResultPanel(componentId, breadCrumbModel, input);
 						}

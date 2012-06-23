@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * 
+ *
  */
 public class FormPage2 extends WebPage
 {
@@ -61,7 +61,7 @@ public class FormPage2 extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit()
+			public void onSubmitBeforeForm()
 			{
 				submitLinkSubmitted = true;
 			}

@@ -620,5 +620,33 @@ jQuery(document).ready(function() {
 			// fire all requests
 			$el.triggerHandler("event1");
 		});
+
+		asyncTest('Wicket.Ajax - verify dynamic parameters are appended to the Ajax call data (GET/POST params).', function () {
+
+			expect(5);
+
+			var attrs = {
+				u: 'data/ajax/nonExisting.json',
+				e: 'event1',
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				dep: [ function() {return { "one": 1, "two": 2 } } ]
+			};
+
+			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+				deepEqual(attrs, attributes, 'Before: attrs');
+				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				ok(settings.url.indexOf('one=1') > 0, 'Parameter "one" with value "1" is found');
+				ok(settings.url.indexOf('two=2') > 0, 'Parameter "two" with value "2" is found');
+				start();
+			});
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+
+		});
 	}
 });

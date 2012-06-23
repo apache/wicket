@@ -116,7 +116,7 @@ public class LinkPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form)
+			protected void onSubmitBeforeForm(final AjaxRequestTarget target, final Form<?> form)
 			{
 				getRequestCycle().setResponsePage(new ResultPage("A form label"));
 			}

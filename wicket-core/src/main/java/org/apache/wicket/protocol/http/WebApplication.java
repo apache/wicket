@@ -384,21 +384,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Partly unmounts/ignores a path that normally would map to another mount path. Like
-	 * mount("/mypage", MyPage.class); and then "/mypage/arealdir" should be ignored. This can be
-	 * done by calling unMount("/mypage/arealdir");
-	 * 
-	 * @param path
-	 *            the path that should be ignored.
-	 * 
-	 */
-	public final void addIgnoreMountPath(String path)
-	{
-		// WICKET-NG TODO how is this supposed to work :/
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * Registers a replacement resource for the given javascript resource. This replacement can be
 	 * another {@link JavaScriptResourceReference} for a packaged resource, but it can also be an
 	 * {@link ExternalUrlResourceReference} to replace the resource by a resource hosted on a CDN.

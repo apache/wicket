@@ -42,10 +42,16 @@ public interface IFormSubmitter
 	boolean getDefaultFormProcessing();
 
 	/**
-	 * Override this method to provide special submit handling in a multi-button form. It is called
-	 * whenever the user clicks this particular button.
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>before</em> the form's onSubmit method.
 	 */
-	void onSubmit();
+	void onSubmitBeforeForm();
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>after</em> the form's onSubmit method.
+	 */
+	void onSubmitAfterForm();
 
 	/**
 	 * Method that is invoked when form processing fails; for example, when there are validation

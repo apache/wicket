@@ -137,7 +137,7 @@ public class FormPage extends BasePage
 			SubmitLink removeLink = new SubmitLink("remove", form)
 			{
 				@Override
-				public void onSubmit()
+				public void onSubmitBeforeForm()
 				{
 					Contact contact = (Contact)ActionPanel.this.getDefaultModelObject();
 					info("Removed contact " + contact);

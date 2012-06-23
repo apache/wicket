@@ -58,14 +58,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 		add(new AjaxFormSubmitBehavior(form, "click")
 		{
-
 			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onSubmit(AjaxRequestTarget target)
-			{
-				AjaxSubmitLink.this.onSubmit(target, getForm());
-			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
@@ -101,8 +94,36 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 				super.updateAjaxAttributes(attributes);
 				AjaxSubmitLink.this.updateAjaxAttributes(attributes);
 			}
+
+			@Override
+			protected void onSubmitBeforeForm(AjaxRequestTarget target)
+			{
+				AjaxSubmitLink.this.onSubmitBeforeForm(target, getForm());
+			}
+
+			@Override
+			protected void onSubmitAfterForm(AjaxRequestTarget target)
+			{
+				AjaxSubmitLink.this.onSubmitAfterForm(target, getForm());
+			}
 		});
 
+	}
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>before</em> the form's onSubmit method.
+	 */
+	protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+	{
+	}
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>after</em> the form's onSubmit method.
+	 */
+	protected void onSubmitAfterForm(AjaxRequestTarget target, Form<?> form)
+	{
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
@@ -128,17 +149,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * Final implementation of the Button's onSubmit. AjaxSubmitLinks have there own onSubmit which
-	 * is called.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.Button#onSubmit()
-	 */
-	@Override
-	public final void onSubmit()
-	{
-	}
-
-	/**
 	 * Final implementation of the Button's onError. AjaxSubmitLinks have their own onError which is
 	 * called.
 	 * 
@@ -150,20 +160,31 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 	}
 
+
 	/**
-	 * Listener method invoked on form submit
+	 * Listener method invoked on form submit with errors. This method is called <em>before</em>
+	 * {@link Form#onError()}.
 	 * 
 	 * @param target
 	 * @param form
 	 */
-	protected abstract void onSubmit(AjaxRequestTarget target, Form<?> form);
+	protected void onError(AjaxRequestTarget target, Form<?> form)
+	{
+	}
 
 	/**
-	 * Listener method invoked on form submit with errors
-	 * 
-	 * @param target
-	 * @param form
+	 * Use {@link #onSubmitBeforeForm(AjaxRequestTarget, Form)} instead.
 	 */
-	protected abstract void onError(AjaxRequestTarget target, Form<?> form);
+	@Override
+	public final void onSubmitBeforeForm()
+	{
+	}
 
+	/**
+	 * Use {@link #onSubmitAfterForm(AjaxRequestTarget, Form)} instead.
+	 */
+	@Override
+	public final void onSubmitAfterForm()
+	{
+	}
 }

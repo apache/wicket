@@ -31,8 +31,6 @@ public class HomePage extends WebPage
 
 	private static final long serialVersionUID = 1L;
 
-	// TODO Add any page properties or variables here
-
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
 	 * 

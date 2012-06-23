@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.util.visit;
 
+import org.apache.wicket.util.lang.Args;
+
 /**
  * {@link IVisitFilter} that restricts visitors to only visiting objects of the specified class
  * 
  * @author igor.vaynberg
  */
-public class ClassVisitFilter<T> implements IVisitFilter
+public class ClassVisitFilter implements IVisitFilter
 {
-	private final Class<T> clazz;
+	private final Class<?> clazz;
 
 	/**
 	 * Constructor
@@ -31,8 +33,10 @@ public class ClassVisitFilter<T> implements IVisitFilter
 	 * @param clazz
 	 *            class of objects that visitors should be restricted to
 	 */
-	public ClassVisitFilter(final Class<T> clazz)
+	public ClassVisitFilter(final Class<?> clazz)
 	{
+		Args.notNull(clazz, "clazz");
+
 		this.clazz = clazz;
 	}
 
@@ -45,6 +49,6 @@ public class ClassVisitFilter<T> implements IVisitFilter
 	/** {@inheritDoc} */
 	public boolean visitObject(final Object object)
 	{
-		return clazz == null || clazz.isAssignableFrom(object.getClass());
+		return clazz.isAssignableFrom(object.getClass());
 	}
 }

@@ -161,33 +161,50 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			}
 
 			@Override
-			public void onSubmit()
-			{
-				AjaxFormSubmitBehavior.this.onSubmit(target);
-			}
-
-			@Override
 			public void onError()
 			{
 				AjaxFormSubmitBehavior.this.onError(target);
+			}
+
+			@Override
+			public void onSubmitBeforeForm()
+			{
+				AjaxFormSubmitBehavior.this.onSubmitBeforeForm(target);
+			}
+
+			@Override
+			public void onSubmitAfterForm()
+			{
+				AjaxFormSubmitBehavior.this.onSubmitAfterForm(target);
 			}
 		});
 	}
 
 	/**
-	 * Listener method that is invoked after the form has been submitted and processed without
-	 * errors
-	 * 
-	 * @param target
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>after</em> the form's onSubmit method.
 	 */
-	protected abstract void onSubmit(AjaxRequestTarget target);
+	protected void onSubmitAfterForm(AjaxRequestTarget target)
+	{
+	}
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. This method
+	 * will be called <em>before</em> the form's onSubmit method.
+	 */
+	protected void onSubmitBeforeForm(AjaxRequestTarget target)
+	{
+	}
+
 
 	/**
 	 * Listener method invoked when the form has been processed and errors occurred
 	 * 
 	 * @param target
 	 */
-	protected abstract void onError(AjaxRequestTarget target);
+	protected void onError(AjaxRequestTarget target)
+	{
+	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()

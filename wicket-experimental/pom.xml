@@ -29,5 +29,6 @@
 	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
 	<modules>
 		<module>wicket-atmosphere</module>
+		<module>wicket-native-websocket</module>
 	</modules>
 </project>

@@ -17,6 +17,7 @@
 package org.apache.wicket.request.resource;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
@@ -38,7 +39,7 @@ public class WriteCallbackTest extends Assert
 	/**
 	 */
 	@Test
-	public void writeStream()
+	public void writeStream() throws IOException
 	{
 		WriteCallback callback = new WriteCallback()
 		{

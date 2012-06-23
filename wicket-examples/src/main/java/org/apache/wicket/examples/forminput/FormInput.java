@@ -190,7 +190,7 @@ public class FormInput extends WicketExamplePage
 			add(new Button("resetButton")
 			{
 				@Override
-				public void onSubmit()
+				public void onSubmitBeforeForm()
 				{
 					// just set a new instance of the page
 					setResponsePage(FormInput.class);
@@ -306,7 +306,8 @@ public class FormInput extends WicketExamplePage
 	}
 
 	/** available sites for the multiple select. */
-	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby",
+		"Java.Net");
 
 	/** available numbers for the radio selection. */
 	static final List<String> NUMBERS = Arrays.asList("1", "2", "3");

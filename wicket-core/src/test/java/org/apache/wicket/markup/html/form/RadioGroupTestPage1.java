@@ -28,7 +28,6 @@ import org.apache.wicket.model.Model;
 public class RadioGroupTestPage1 extends WebPage
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 

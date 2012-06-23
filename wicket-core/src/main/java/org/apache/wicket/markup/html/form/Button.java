@@ -104,7 +104,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 	/**
 	 * Override to not throw exception if there is no parent form.
-	 *
+	 * 
 	 * @return the parent form or {@code null}
 	 */
 	@Override
@@ -213,20 +213,29 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	}
 
 	/**
-	 * Override this method to provide special submit handling in a multi-button form. It is called
-	 * whenever the user clicks this particular button, except if validation fails.
-	 */
-	@Override
-	public void onSubmit()
-	{
-	}
-
-	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()
 	 */
 	@Override
 	public void onError()
 	{
 
+	}
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. It is called
+	 * whenever the user clicks this particular button, except if validation fails. This method will
+	 * be called <em>before</em> {@link Form#onSubmit()}.
+	 */
+	public void onSubmitBeforeForm()
+	{
+	}
+
+	/**
+	 * Override this method to provide special submit handling in a multi-button form. It is called
+	 * whenever the user clicks this particular button, except if validation fails. This method will
+	 * be called <em>after</em> {@link Form#onSubmit()}.
+	 */
+	public void onSubmitAfterForm()
+	{
 	}
 }

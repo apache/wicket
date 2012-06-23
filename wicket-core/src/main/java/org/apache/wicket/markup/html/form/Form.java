@@ -748,10 +748,12 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 				// When processing was triggered by a Wicket IFormSubmittingComponent and that
 				// component indicates it wants to be called immediately
-				// (without processing), call IFormSubmittingComponent.onSubmit() right away.
+				// (without processing), call the IFormSubmittingComponent.onSubmit* methods right
+				// away.
 				if (submitter != null && !submitter.getDefaultFormProcessing())
 				{
-					submitter.onSubmit();
+					submitter.onSubmitBeforeForm();
+					submitter.onSubmitAfterForm();
 				}
 				else
 				{
@@ -1228,7 +1230,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		if (submittingComponent != null)
 		{
 			// invoke submit on component
-			submittingComponent.onSubmit();
+			submittingComponent.onSubmitBeforeForm();
 		}
 
 		// invoke Form#onSubmit(..) going from innermost to outermost
@@ -1239,11 +1241,15 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			{
 				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
-
 					form.onSubmit();
 				}
 			}
 		}, new ClassVisitFilter(Form.class));
+
+		if (submittingComponent != null)
+		{
+			submittingComponent.onSubmitAfterForm();
+		}
 	}
 
 	/**
@@ -2087,6 +2093,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * @author igor
 	 */
 	public static enum MethodMismatchResponse {
-		CONTINUE, ABORT;
+		/**
+		 * Continue processing.
+		 */
+		CONTINUE,
+
+		/**
+		 * Abort processing.
+		 */
+		ABORT;
 	}
 }

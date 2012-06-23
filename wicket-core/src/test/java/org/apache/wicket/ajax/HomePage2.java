@@ -30,7 +30,6 @@ public class HomePage2 extends WebPage
 
 	private static final long serialVersionUID = 1L;
 
-	// TODO Add any page properties or variables here
 	private String _message = "clicked";
 
 	/**

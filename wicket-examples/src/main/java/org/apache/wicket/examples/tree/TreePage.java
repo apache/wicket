@@ -150,7 +150,7 @@ public abstract class TreePage extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit()
+			public void onSubmitBeforeForm()
 			{
 			}
 		});

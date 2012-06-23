@@ -92,9 +92,15 @@ public abstract class AjaxButton extends Button
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onSubmit(target, AjaxButton.this.getForm());
+				AjaxButton.this.onSubmitBeforeForm(target, AjaxButton.this.getForm());
+			}
+
+			@Override
+			protected void onSubmitAfterForm(AjaxRequestTarget target)
+			{
+				AjaxButton.this.onSubmitAfterForm(target, AjaxButton.this.getForm());
 			}
 
 			@Override
@@ -158,12 +164,24 @@ public abstract class AjaxButton extends Button
 	}
 
 	/**
-	 * Listener method invoked on form submit with no errors
+	 * Listener method invoked on form submit with no errors, before {@link Form#onSubmit()}.
 	 * 
 	 * @param target
 	 * @param form
 	 */
-	protected abstract void onSubmit(AjaxRequestTarget target, Form<?> form);
+	protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+	{
+	}
+
+	/**
+	 * Listener method invoked on form submit with no errors, after {@link Form#onSubmit()}.
+	 * 
+	 * @param target
+	 * @param form
+	 */
+	protected void onSubmitAfterForm(AjaxRequestTarget target, Form<?> form)
+	{
+	}
 
 	/**
 	 * Listener method invoked on form submit with errors

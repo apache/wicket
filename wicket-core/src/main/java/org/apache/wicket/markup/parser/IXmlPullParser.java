@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 
 /**
@@ -111,10 +110,8 @@ public interface IXmlPullParser
 	 *            The markup to be parsed
 	 * @throws IOException
 	 *             Error while reading the resource
-	 * @throws ResourceStreamNotFoundException
-	 *             Resource not found
 	 */
-	void parse(final CharSequence string) throws IOException, ResourceStreamNotFoundException;
+	void parse(final CharSequence string) throws IOException;
 
 	/**
 	 * Reads and parses markup from an input stream, using UTF-8 encoding by default when not
@@ -124,10 +121,8 @@ public interface IXmlPullParser
 	 *            The input stream to read and parse
 	 * @throws IOException
 	 *             Error while reading the resource
-	 * @throws ResourceStreamNotFoundException
-	 *             Resource not found
 	 */
-	void parse(final InputStream inputStream) throws IOException, ResourceStreamNotFoundException;
+	void parse(final InputStream inputStream) throws IOException;
 
 	/**
 	 * Reads and parses markup from an input stream. Use nextTag() to access the tags contained, one

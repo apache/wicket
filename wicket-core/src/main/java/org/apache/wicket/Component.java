@@ -32,6 +32,11 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.PageAndComponentProvider;
+import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -70,24 +75,20 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.core.util.lang.WicketObjects;
-import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.apache.wicket.util.visit.ClassVisitFilter;
+import org.apache.wicket.util.visit.AllVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitFilter;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visit;
 import org.slf4j.Logger;
@@ -776,11 +777,9 @@ public abstract class Component
 	 * should be used to configure such things as visibility and enabled flags.
 	 * <p>
 	 * Overrides must call {@code super.onConfigure()}, usually before any other code
-	 * </p>
 	 * <p>
 	 * NOTE: Component hierarchy should not be modified inside this method, instead it should be
 	 * done in {@link #onBeforeRender()}
-	 * </p>
 	 * <p>
 	 * NOTE: Why this method is preferrable to directly overriding {@link #isVisible()} and
 	 * {@link #isEnabled()}? Because those methods are called multiple times even for processing of
@@ -788,46 +787,14 @@ public abstract class Component
 	 * entire page. Further, overriding those methods directly on form components may lead to
 	 * inconsistent or unexpected state depending on when those methods are called in the form
 	 * processing workflow. It is a better practice to push changes to state rather than pull.
-	 * </p>
 	 * <p>
 	 * NOTE: If component's visibility or another property depends on another component you may call
 	 * {@code other.configure()} followed by {@code other.isVisible()} as mentioned in
 	 * {@link #configure()} javadoc.
-	 * </p>
 	 * <p>
-	 * NOTE: Why should {@link #onBeforeRender()} not be used for this? Because if visibility of a
-	 * component is toggled inside {@link #onBeforeRender()} another method needs to be overridden
-	 * to make sure {@link #onBeforeRender()} will be invoked on invisible components:
-	 * 
-	 * <pre>
-	 * class MyComponent extends WebComponent
-	 * {
-	 * 	protected void onBeforeRender()
-	 * 	{
-	 * 		setVisible(Math.rand() &gt; 0.5f);
-	 * 		super.onBeforeRender();
-	 * 	}
-	 * 
-	 * 	// if this override is forgotten, once invisible component will never become visible
-	 * 	protected boolean callOnBeforeRenderIfNotVisible()
-	 * 	{
-	 * 		return true;
-	 * 	}
-	 * }
-	 * </pre>
-	 * 
-	 * VS
-	 * 
-	 * <pre>
-	 * class MyComponent extends WebComponent
-	 * {
-	 * 	protected void onConfigure()
-	 * 	{
-	 * 		super.onConfigure();
-	 * 		setVisible(Math.rand() &gt; 0.5f);
-	 * 	}
-	 * }
-	 * </pre>
+	 * NOTE: Why should {@link #onBeforeRender()} not be used for this? Because if a component's
+	 * visibility is controlled inside {@link #onBeforeRender()}, once invisible the component will
+	 * never become visible again.
 	 */
 	protected void onConfigure()
 	{
@@ -1503,8 +1470,10 @@ public abstract class Component
 		int generatedMarkupId = storedMarkupId instanceof Integer ? (Integer)storedMarkupId
 			: getSession().nextSequenceValue();
 
-		if (generatedMarkupId == 0xAD) {
-			// WICKET-4559 skip suffix 'ad' because some ad-blocking solutions may hide the component
+		if (generatedMarkupId == 0xAD)
+		{
+			// WICKET-4559 skip suffix 'ad' because some ad-blocking solutions may hide the
+// component
 			generatedMarkupId = getSession().nextSequenceValue();
 		}
 
@@ -2082,12 +2051,11 @@ public abstract class Component
 	public final boolean isStateless()
 	{
 		if (
-			// the component is either invisible or disabled
-			(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
+		// the component is either invisible or disabled
+		(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
 
-			// and it can't call listener interfaces
-			canCallListenerInterface(null) == false
-		)
+		// and it can't call listener interfaces
+			canCallListenerInterface(null) == false)
 		{
 			// then pretend the component is stateless
 			return true;
@@ -3422,46 +3390,42 @@ public abstract class Component
 	 * visit method at each one.
 	 * 
 	 * @param <R>
-	 *     the type of the result object
+	 *            the type of the result object
 	 * @param parentClass
 	 *            Class
 	 * @param visitor
 	 *            The visitor to call at each parent of the given type
 	 * @return First non-null value returned by visitor callback
 	 */
-	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass, final IVisitor<C, R> visitor)
+	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass,
+		final IVisitor<C, R> visitor)
 	{
-		return visitParents(parentClass, visitor, new ClassVisitFilter<R>(null) {
-			@Override
-			public boolean visitObject(Object object)
-			{
-				return true;
-			}
-		});
+		return visitParents(parentClass, visitor, new AllVisitFilter());
 	}
-
 
 	/**
 	 * Traverses all parent components of the given class in this parentClass, calling the visitor's
 	 * visit method at each one.
-	 *
+	 * 
 	 * @param <R>
-	 *     the type of the result object
+	 *            the type of the result object
 	 * @param parentClass
 	 *            the class of the parent component
 	 * @param visitor
 	 *            The visitor to call at each parent of the given type
 	 * @param filter
-	 *      a filter that adds an additional logic to the condition whether a parent container matches
+	 *            a filter that adds an additional logic to the condition whether a parent container
+	 *            matches
 	 * @return First non-null value returned by visitor callback
-	 * @see org.apache.wicket.util.visit.ClassVisitFilter
 	 */
-	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass, final IVisitor<C, R> visitor, ClassVisitFilter<R> filter)
+	@SuppressWarnings("unchecked")
+	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass,
+		final IVisitor<C, R> visitor, IVisitFilter filter)
 	{
 		Args.notNull(filter, "filter");
 
 		// Start here
-		C current = (C) getParent();
+		MarkupContainer current = getParent();
 
 		Visit<R> visit = new Visit<R>();
 
@@ -3471,7 +3435,7 @@ public abstract class Component
 			// Is current an instance of this class?
 			if (parentClass.isInstance(current) && filter.visitObject(current))
 			{
-				visitor.component(current, visit);
+				visitor.component((C)current, visit);
 				if (visit.isStopped())
 				{
 					return visit.getResult();
@@ -3479,7 +3443,7 @@ public abstract class Component
 			}
 
 			// Check parent
-			current = (C) current.getParent();
+			current = current.getParent();
 		}
 		return null;
 	}
@@ -4427,8 +4391,8 @@ public abstract class Component
 	 * </p>
 	 * 
 	 * @param method
-	 *            listener method about to be invoked on this component. Could be {@code null} - in this
-	 *            case it means <em>any</em> method.
+	 *            listener method about to be invoked on this component. Could be {@code null} - in
+	 *            this case it means <em>any</em> method.
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */

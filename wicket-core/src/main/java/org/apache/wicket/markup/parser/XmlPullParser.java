@@ -30,7 +30,6 @@ import org.apache.wicket.util.io.XmlReader;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -541,12 +540,9 @@ public final class XmlPullParser implements IXmlPullParser
 	 *            The input string
 	 * @throws IOException
 	 *             Error while reading the resource
-	 * @throws ResourceStreamNotFoundException
-	 *             Resource not found
 	 */
 	@Override
-	public void parse(final CharSequence string) throws IOException,
-		ResourceStreamNotFoundException
+	public void parse(final CharSequence string) throws IOException
 	{
 		parse(new ByteArrayInputStream(string.toString().getBytes()), null);
 	}
@@ -558,10 +554,9 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @param in
 	 *            The input stream to read and parse
 	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
 	 */
 	@Override
-	public void parse(final InputStream in) throws IOException, ResourceStreamNotFoundException
+	public void parse(final InputStream in) throws IOException
 	{
 		// When XML declaration does not specify encoding, it defaults to UTF-8
 		parse(in, "UTF-8");

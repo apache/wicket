@@ -242,8 +242,6 @@ public class RequestListenerInterface
 
 	private void internalInvoke(final Component component, final Object target)
 	{
-		Boolean frozen = null;
-
 		// save a reference to the page because the component can be removed
 		// during the invocation of the listener and thus lose its parent
 		Page page = component.getPage();
@@ -275,13 +273,6 @@ public class RequestListenerInterface
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
 				method.getDeclaringClass() + " targeted at " + target + " on component " +
 				component + " threw an exception", e);
-		}
-		finally
-		{
-			if (frozen != null)
-			{
-				page.setFreezePageId(frozen);
-			}
 		}
 	}
 
@@ -316,24 +307,27 @@ public class RequestListenerInterface
 	 * @param requestListenerInterface
 	 *            The request listener interface object
 	 */
-	private final void registerRequestListenerInterface(
-		final RequestListenerInterface requestListenerInterface)
+	private void registerRequestListenerInterface(final RequestListenerInterface requestListenerInterface)
 	{
 		// Check that a different interface method with the same name has not
 		// already been registered
 		final RequestListenerInterface existingInterface = RequestListenerInterface.forName(requestListenerInterface.getName());
-		if (existingInterface != null &&
-			existingInterface.getMethod() != requestListenerInterface.getMethod())
+		if (existingInterface != null)
 		{
-			throw new IllegalStateException("Cannot register listener interface " +
+			if (existingInterface.getMethod().equals(requestListenerInterface.getMethod()) == false)
+			{
+				throw new IllegalStateException("Cannot register listener interface " +
 				requestListenerInterface +
 				" because it conflicts with the already registered interface " + existingInterface);
+			}
 		}
+		else
+		{
+			// Save this interface method by the non-qualified class name
+			interfaces.put(requestListenerInterface.getName(), requestListenerInterface);
 
-		// Save this interface method by the non-qualified class name
-		interfaces.put(requestListenerInterface.getName(), requestListenerInterface);
-
-		log.info("registered listener interface " + this);
+			log.info("registered listener interface " + this);
+		}
 	}
 
 	/**

@@ -68,7 +68,7 @@ public class MockPageAjaxSubmitLinkSubmitsWholeForm extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				text = "Hello " + name;
 				target.add(label);
@@ -87,7 +87,7 @@ public class MockPageAjaxSubmitLinkSubmitsWholeForm extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				text = "Goodbye " + name;
 				target.add(label);

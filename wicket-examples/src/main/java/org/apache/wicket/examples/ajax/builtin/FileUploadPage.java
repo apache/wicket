@@ -83,7 +83,7 @@ public class FileUploadPage extends BasePage
 		form.add(new AjaxButton("ajaxSubmit")
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 			{
 				info("This request was processed using AJAX");
 

@@ -52,7 +52,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		addCssSwitchingLinks();
 
 		// create a list of ITab objects used to feed the tabbed panel
-		List<ITab> tabs = new ArrayList<ITab>();
+		final List<ITab> tabs = new ArrayList<ITab>();
 		tabs.add(new AbstractTab(new Model<String>("first tab"))
 		{
 			private static final long serialVersionUID = 1L;
@@ -91,9 +91,22 @@ public class TabbedPanelPage extends WicketExamplePage
 
 		// add the new tabbed panel, attribute modifier only used to switch
 		// between different css variations
-		add(new TabbedPanel("tabs", tabs).add(AttributeModifier.replace("class",
-			TabbedPanelPage.this.getDefaultModel())));
+		final TabbedPanel<ITab> tabbedPanel = new TabbedPanel<ITab>("tabs", tabs);
+		tabbedPanel.add(AttributeModifier.replace("class", TabbedPanelPage.this.getDefaultModel()));
+		add(tabbedPanel);
 
+		add(new Link<Void>("skip")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+				int index = tabbedPanel.getModelObject();
+
+				tabbedPanel.setModelObject((index + 1) % tabs.size());
+			}
+		});
 	}
 
 	private void addCssSwitchingLinks()

@@ -66,7 +66,7 @@ public class GoFilter extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit()
+			public void onSubmitBeforeForm()
 			{
 				onGoSubmit(this);
 			}

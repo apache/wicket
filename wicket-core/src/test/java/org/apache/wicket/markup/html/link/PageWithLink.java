@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Assert;
@@ -25,7 +27,7 @@ public class PageWithLink extends WebPage
 	public PageWithLink(PageParameters parameters)
 	{
 		super(parameters);
-		Assert.assertEquals("value", getPageParameters().get("param").toString());
+
 		add(new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
@@ -36,5 +38,14 @@ public class PageWithLink extends WebPage
 				Assert.assertEquals("value", getPageParameters().get("param").toString());
 			}
 		});
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		response.render(StringHeaderItem.forString("param=" + getPageParameters().get("param")));
+
 	}
 }

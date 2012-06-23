@@ -16,14 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.MockPage;
 import org.junit.Test;
 
 
@@ -36,158 +31,53 @@ import org.junit.Test;
 public class RadioGroupTest extends WicketTestCase
 {
 	/**
-	 * mock model object with an embedded property used to test compound property model
-	 * 
-	 * @author igor
-	 * 
-	 */
-	public static class MockModelObject implements Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private String prop1;
-		private String prop2;
-
-		/**
-		 * @return prop1
-		 */
-		public String getProp1()
-		{
-			return prop1;
-		}
-
-		/**
-		 * @param prop1
-		 */
-		public void setProp1(String prop1)
-		{
-			this.prop1 = prop1;
-		}
-
-		/**
-		 * @return prop2
-		 */
-		public String getProp2()
-		{
-			return prop2;
-		}
-
-		/**
-		 * @param prop2
-		 */
-		public void setProp2(String prop2)
-		{
-			this.prop2 = prop2;
-		}
-
-
-	}
-
-	/**
 	 * test component form processing
 	 */
-	// TODO (Eelco) This is an awful test. Why is 'mock page' (which isn't a
-	// real mock, but just some arbitrary page) used rather than a page with
-	// markup that corresponds to the component structure that is build up?
-	// Components and markup go together in Wicket, period.
 	@Test
 	public void formProcessing()
 	{
-		// setup some values we will use for testing as well as a test model
-		final String radio1 = "radio1-selection";
-		// object used to test compound property model
-		MockModelObject modelObject = new MockModelObject();
-
 		// object used to test regular model
 		Model<String> model = new Model<String>();
 
-		// set up necessary objects to emulate a form submission
+		RadioGroupProcessingTestPage page = new RadioGroupProcessingTestPage(model);
 
-		// this could have been any page it seems. see comment at method
-		MockPage page = new MockPage();
+		model.setObject("initial");
 
-		// create component hierarchy
+		tester.startPage(page);
 
-		final Form<MockModelObject> form = new Form<MockModelObject>("form",
-			new CompoundPropertyModel<MockModelObject>(modelObject))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getMarkupId()
-			{
-				// hack for the fact that this test doesn't relate to any markup
-				return "foo";
-			}
-		};
-
-		final RadioGroup<String> group = new RadioGroup<String>("prop1");
-
-		final WebMarkupContainer container = new WebMarkupContainer("container");
-
-		final Radio<String> choice1 = new Radio<String>("radio1", new Model<String>(radio1));
-		final Radio<String> choice2 = new Radio<String>("prop2");
-
-		final RadioGroup<String> group2 = new RadioGroup<String>("group2", model);
-
-		final Radio<String> choice3 = new Radio<String>("radio3", new Model<String>(radio1));
-
-		page.add(form);
-		form.add(group);
-		group.add(container);
-		container.add(choice1);
-		group.add(choice2);
-		form.add(group2);
-		group2.add(choice3);
-
-		// test mock form submissions
-
-		modelObject.setProp1(radio1);
-
-		form.onFormSubmitted();
+		tester.submitForm(page.form);
 		assertTrue("group: running with nothing selected - model must be set to null",
-			modelObject.getProp1() == null);
-		assertTrue("group2: running with nothing selected - model must be set to null",
 			model.getObject() == null);
 
 		tester.getRequest()
 			.getPostParameters()
-			.setParameterValue(group.getInputName(), choice1.getValue());
-		tester.getRequest()
-			.getPostParameters()
-			.setParameterValue(group2.getInputName(), choice3.getValue());
+			.setParameterValue(page.group.getInputName(), page.radio1.getValue());
+		tester.submitForm(page.form);
 
-		tester.applyRequest();
-
-		form.onFormSubmitted();
 		assertEquals("group: running with choice1 selected - model must be set to value of radio1",
-			modelObject.getProp1(), choice1.getDefaultModelObject());
-		assertEquals(
-			"group2: running with choice3 selected - model must be set to value of radio1",
-			model.getObject(), choice3.getDefaultModelObject());
+			model.getObject(), "radio1");
 
 		tester.getRequest()
 			.getPostParameters()
-			.setParameterValue(group.getInputName(), choice2.getValue());
-		tester.applyRequest();
-		form.onFormSubmitted();
+			.setParameterValue(page.group.getInputName(), page.radio2.getValue());
+		tester.submitForm(page.form);
+
 		assertEquals("group: running with choice2 selected - model must be set to value of radio2",
-			modelObject.getProp1(), choice2.getDefaultModelObject());
+			model.getObject(), "radio2");
 
 		tester.getRequest()
 			.getPostParameters()
-			.setParameterValue(group2.getInputName(), choice1.getValue());
-		tester.applyRequest();
+			.setParameterValue(page.group.getInputName(), "some weird choice uuid to test error");
+
 		try
 		{
-			form.onFormSubmitted();
-			fail("group2: ran with an invalid choice selected but did not fail");
+			tester.submitForm(page.form);
+			fail("group: ran with an invalid choice selected but did not fail");
 		}
 		catch (WicketRuntimeException e)
 		{
 
 		}
-
 	}
 
 	/**
