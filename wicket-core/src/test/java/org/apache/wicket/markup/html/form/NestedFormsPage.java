@@ -38,6 +38,10 @@ public class NestedFormsPage extends WebPage
 
 	private final FeedbackPanel feedback;
 
+	public String submitOrder = "";
+
+	public String errorOrder = "";
+
 	/**
 	 * Construct.
 	 */
@@ -116,6 +120,7 @@ public class NestedFormsPage extends WebPage
 			super.onSubmit();
 			onSubmitCalled = true;
 			logger.info(getId() + ".onSubmit");
+			submitOrder += getId();
 		}
 
 		@Override
@@ -124,6 +129,7 @@ public class NestedFormsPage extends WebPage
 			super.onError();
 			onErrorCalled = true;
 			logger.info(getId() + ".onError");
+			errorOrder += getId();
 		}
 	}
 

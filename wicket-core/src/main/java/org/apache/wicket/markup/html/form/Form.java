@@ -920,17 +920,18 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void callOnError(IFormSubmitter submitter)
 	{
+		final Form<?> processingForm = findFormToProcess(submitter);
+
 		if (submitter != null)
 		{
 			submitter.onError();
 		}
-		onError();
-		// call onError on nested forms
-		visitChildren(Form.class, new IVisitor<Component, Void>()
+
+		// invoke Form#onSubmit(..) going from innermost to outermost
+		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
 		{
-			public void component(final Component component, final IVisit<Void> visit)
+			public void component(Form<?> form, IVisit<Void> visit)
 			{
-				final Form<?> form = (Form<?>)component;
 				if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 				{
 					visit.dontGoDeeper();
@@ -941,7 +942,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					form.onError();
 				}
 			}
-		});
+		}, new ClassVisitFilter(Form.class));
 	}
 
 
