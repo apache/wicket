@@ -96,7 +96,7 @@ public class RepeatingView extends AbstractRepeater
 	public String newChildId()
 	{
 		childIdCounter++;
-		return String.valueOf(childIdCounter);
+		return String.valueOf(childIdCounter).intern();
 	}
 
 	/**
