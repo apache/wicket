@@ -77,7 +77,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 */
 	protected AjaxEventBehavior newAjaxEventBehavior(String event)
 	{
-		return new AjaxEventBehavior("onclick")
+		return new AjaxEventBehavior(event)
 		{
 			private static final long serialVersionUID = 1L;
 
