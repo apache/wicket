@@ -27,7 +27,7 @@
     <artifactId>wicket-native-websocket-tomcat</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
-    <name>Apache Wicket Native WebSocket Tomcat 7.x</name>
+    <name>Wicket Native WebSocket Tomcat 7.x</name>
     <description>Provides the code specific to integrate with Tomcat web container</description>
 
     <properties>

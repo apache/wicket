@@ -29,7 +29,7 @@
     <artifactId>wicket-native-websocket-core</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
-    <name>Apache Wicket Native WebSocket Core</name>
+    <name>Wicket Native WebSocket Core</name>
     <description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
 
     <dependencies>
