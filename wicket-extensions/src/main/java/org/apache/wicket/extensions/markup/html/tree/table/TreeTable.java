@@ -42,7 +42,8 @@ import org.apache.wicket.util.io.IClusterable;
 /**
  * TreeTable is a component that represents a grid with a tree. It's divided into columns. One of
  * the columns has to be column derived from {@link PropertyTreeColumn}.
- * 
+ *
+ * @deprecated Use {@link org.apache.wicket.extensions.markup.html.repeater.tree.TableTree} instead
  * @author Matej Knopp
  */
 @Deprecated

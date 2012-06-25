@@ -35,9 +35,9 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 
 	private final ITreeProvider<T> provider;
 
-	private Branch currentBranch;
+	private Branch<T> currentBranch;
 
-	private Branch previousBranch;
+	private Branch<T> previousBranch;
 
 	private int size = -1;
 
@@ -71,7 +71,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 
 	public Iterator<? extends T> iterator(long first, long count)
 	{
-		currentBranch = new Branch(null, provider.getRoots());
+		currentBranch = new Branch<T>(null, provider.getRoots());
 
 		Iterator<T> iterator = new Iterator<T>()
 		{
@@ -103,7 +103,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 
 				if (iterateChildren(next))
 				{
-					currentBranch = new Branch(previousBranch, provider.getChildren(next));
+					currentBranch = new Branch<T>(previousBranch, provider.getChildren(next));
 				}
 
 				return next;
@@ -145,13 +145,13 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 		size = -1;
 	}
 
-	private class Branch implements Iterator<T>
+	private static class Branch<T> implements Iterator<T>
 	{
-		private Branch parent;
+		private Branch<T> parent;
 
 		private Iterator<? extends T> children;
 
-		public Branch(Branch parent, Iterator<? extends T> children)
+		public Branch(Branch<T> parent, Iterator<? extends T> children)
 		{
 			this.parent = parent;
 			this.children = children;
@@ -161,7 +161,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 		{
 			boolean[] branches = new boolean[getDepth()];
 
-			Branch branch = this;
+			Branch<T> branch = this;
 			for (int c = branches.length - 1; c >= 0; c--)
 			{
 				branches[c] = branch.hasNext();

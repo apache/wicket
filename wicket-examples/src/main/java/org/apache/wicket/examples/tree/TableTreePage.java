@@ -45,14 +45,12 @@ public class TableTreePage extends TreePage
 
 	private static final long serialVersionUID = 1L;
 
-	private TableTree<Foo, String> tree;
-
 	@Override
 	protected AbstractTree<Foo> createTree(FooProvider provider, IModel<Set<Foo>> state)
 	{
 		List<IColumn<Foo, String>> columns = createColumns();
 
-		tree = new TableTree<Foo, String>("tree", columns, provider, Integer.MAX_VALUE, state)
+		final TableTree<Foo, String> tree = new TableTree<Foo, String>("tree", columns, provider, Integer.MAX_VALUE, state)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -68,7 +66,7 @@ public class TableTreePage extends TreePage
 				return new OddEvenItem<Foo>(id, index, model);
 			}
 		};
-		tree.getTable().addTopToolbar(new HeadersToolbar(tree.getTable(), null));
+		tree.getTable().addTopToolbar(new HeadersToolbar<String>(tree.getTable(), null));
 		tree.getTable().addBottomToolbar(new NoRecordsToolbar(tree.getTable()));
 		return tree;
 	}

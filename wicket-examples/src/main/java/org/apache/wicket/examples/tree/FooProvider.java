@@ -89,7 +89,7 @@ public class FooProvider implements ITreeProvider<Foo>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private String id;
+		private final String id;
 
 		public FooModel(Foo foo)
 		{
