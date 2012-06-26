@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.TagTester;
 import org.junit.Assert;
@@ -51,4 +54,35 @@ public class AbstractLinkTest extends WicketTestCase
 		Assert.assertEquals(linkBody, tagTester.getValue());
 	}
 
+	/**
+	 * Tests that the {@link AbstractLink} uses the {@link AbstractLink#getBody()} to get its body. This
+	 * method can be overridden to provide a dynamic model.
+	 */
+	@Test
+	public void testRenderUsingGetBody()
+	{
+		final AtomicInteger counter = new AtomicInteger(0);
+
+		MockPageWithLink mockPageWithLink = new MockPageWithLink();
+		AbstractLink link = new AbstractLink("link")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public IModel<?> getBody()
+			{
+				return Model.of(counter.getAndIncrement());
+			}
+		};
+		link.setMarkupId("link");
+		mockPageWithLink.add(link);
+
+		tester.startPage(mockPageWithLink);
+		TagTester tagTester = tester.getTagById("link");
+		Assert.assertEquals("0", tagTester.getValue());
+
+		tester.startPage(mockPageWithLink);
+		tagTester = tester.getTagById("link");
+		Assert.assertEquals("1", tagTester.getValue());
+	}
 }
