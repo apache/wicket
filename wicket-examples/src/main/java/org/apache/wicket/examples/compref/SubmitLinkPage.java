@@ -45,7 +45,7 @@ public class SubmitLinkPage extends WicketExamplePage
 		SubmitLink internal = new SubmitLink("internal")
 		{
 			@Override
-			public void onSubmitBeforeForm()
+			public void onSubmit()
 			{
 				info("internal onsubmit");
 			}
@@ -55,7 +55,7 @@ public class SubmitLinkPage extends WicketExamplePage
 		SubmitLink external = new SubmitLink("external", form)
 		{
 			@Override
-			public void onSubmitBeforeForm()
+			public void onSubmit()
 			{
 				info("external onsubmit");
 			}

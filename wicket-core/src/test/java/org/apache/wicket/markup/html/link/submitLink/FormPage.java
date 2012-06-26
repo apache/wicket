@@ -61,7 +61,7 @@ public class FormPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmitBeforeForm()
+			public void onSubmit()
 			{
 				submitLinkSubmitted = true;
 			}

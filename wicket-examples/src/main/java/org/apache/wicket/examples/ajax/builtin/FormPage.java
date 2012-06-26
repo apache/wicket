@@ -83,7 +83,7 @@ public class FormPage extends BasePage
 		form.add(new AjaxButton("ajax-button", form)
 		{
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				// repaint the feedback panel so that it is hidden
 				target.add(feedback);

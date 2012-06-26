@@ -66,7 +66,7 @@ public class HomePage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmitBeforeForm()
+			public void onSubmit()
 			{
 				submittedViaLinkBefore = true;
 				assertFalse("before must be the first!", submittedViaLinkAfter);
@@ -74,7 +74,7 @@ public class HomePage extends WebPage
 
 
 			@Override
-			public void onSubmitAfterForm()
+			public void onAfterSubmit()
 			{
 				assertTrue("before must have been called!", submittedViaLinkBefore);
 				submittedViaLinkAfter = true;

@@ -752,8 +752,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				// away.
 				if (submitter != null && !submitter.getDefaultFormProcessing())
 				{
-					submitter.onSubmitBeforeForm();
-					submitter.onSubmitAfterForm();
+					submitter.onSubmit();
+					submitter.onAfterSubmit();
 				}
 				else
 				{
@@ -1230,7 +1230,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		if (submittingComponent != null)
 		{
 			// invoke submit on component
-			submittingComponent.onSubmitBeforeForm();
+			submittingComponent.onSubmit();
 		}
 
 		// invoke Form#onSubmit(..) going from innermost to outermost
@@ -1248,7 +1248,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 		if (submittingComponent != null)
 		{
-			submittingComponent.onSubmitAfterForm();
+			submittingComponent.onAfterSubmit();
 		}
 	}
 

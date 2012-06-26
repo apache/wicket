@@ -99,7 +99,7 @@ public class NestedFormsPage extends WebPage
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+				protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 				{
 					target.add(feedback);
 				}

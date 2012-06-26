@@ -167,15 +167,15 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			}
 
 			@Override
-			public void onSubmitBeforeForm()
+			public void onSubmit()
 			{
-				AjaxFormSubmitBehavior.this.onSubmitBeforeForm(target);
+				AjaxFormSubmitBehavior.this.onSubmit(target);
 			}
 
 			@Override
-			public void onSubmitAfterForm()
+			public void onAfterSubmit()
 			{
-				AjaxFormSubmitBehavior.this.onSubmitAfterForm(target);
+				AjaxFormSubmitBehavior.this.onAfterSubmit(target);
 			}
 		});
 	}
@@ -184,7 +184,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
 	 */
-	protected void onSubmitAfterForm(AjaxRequestTarget target)
+	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
 	}
 
@@ -192,7 +192,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>before</em> the form's onSubmit method.
 	 */
-	protected void onSubmitBeforeForm(AjaxRequestTarget target)
+	protected void onSubmit(AjaxRequestTarget target)
 	{
 	}
 

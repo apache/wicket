@@ -96,15 +96,15 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			}
 
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onSubmitBeforeForm(target, getForm());
+				AjaxSubmitLink.this.onSubmit(target, getForm());
 			}
 
 			@Override
-			protected void onSubmitAfterForm(AjaxRequestTarget target)
+			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onSubmitAfterForm(target, getForm());
+				AjaxSubmitLink.this.onAfterSubmit(target, getForm());
 			}
 		});
 
@@ -114,7 +114,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>before</em> the form's onSubmit method.
 	 */
-	protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 	{
 	}
 
@@ -122,7 +122,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
 	 */
-	protected void onSubmitAfterForm(AjaxRequestTarget target, Form<?> form)
+	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
 	{
 	}
 
@@ -173,18 +173,18 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * Use {@link #onSubmitBeforeForm(AjaxRequestTarget, Form)} instead.
+	 * Use {@link #onSubmit(AjaxRequestTarget, Form)} instead.
 	 */
 	@Override
-	public final void onSubmitBeforeForm()
+	public final void onSubmit()
 	{
 	}
 
 	/**
-	 * Use {@link #onSubmitAfterForm(AjaxRequestTarget, Form)} instead.
+	 * Use {@link #onAfterSubmit(AjaxRequestTarget, Form)} instead.
 	 */
 	@Override
-	public final void onSubmitAfterForm()
+	public final void onAfterSubmit()
 	{
 	}
 }

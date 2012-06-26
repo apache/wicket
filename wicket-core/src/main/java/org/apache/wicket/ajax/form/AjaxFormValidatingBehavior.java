@@ -56,10 +56,10 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 
 	/**
 	 * 
-	 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmitBeforeForm(org.apache.wicket.ajax.AjaxRequestTarget)
+	 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
 	@Override
-	protected void onSubmitBeforeForm(final AjaxRequestTarget target)
+	protected void onSubmit(final AjaxRequestTarget target)
 	{
 		addFeedbackPanels(target);
 	}

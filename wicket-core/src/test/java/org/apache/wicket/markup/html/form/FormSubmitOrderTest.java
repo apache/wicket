@@ -41,16 +41,16 @@ public class FormSubmitOrderTest extends WicketTestCase
 			form.add(new Button("button")
 			{
 				@Override
-				public void onSubmitBeforeForm()
+				public void onSubmit()
 				{
-					super.onSubmitBeforeForm();
+					super.onSubmit();
 					result += "before";
 				}
 
 				@Override
-				public void onSubmitAfterForm()
+				public void onAfterSubmit()
 				{
-					super.onSubmitAfterForm();
+					super.onAfterSubmit();
 					result += "after";
 				}
 			});
