@@ -170,10 +170,13 @@ public abstract class AbstractLink extends WebMarkupContainer
 			getResponse().write(getBeforeDisabledLink());
 		}
 
-		if ((bodyModel != null) && (bodyModel.getObject() != null))
+		// Get a copy of the body model from the getBody() method. This method could be overridden.
+		IModel<?> tmpBodyModel = getBody();
+
+		if ((tmpBodyModel != null) && (tmpBodyModel.getObject() != null))
 		{
 			replaceComponentTagBody(markupStream, openTag,
-				getDefaultModelObjectAsString(bodyModel.getObject()));
+				getDefaultModelObjectAsString(tmpBodyModel.getObject()));
 		}
 		else
 		{
