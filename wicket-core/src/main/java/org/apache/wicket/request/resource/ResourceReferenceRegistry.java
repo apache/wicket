@@ -29,10 +29,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Allows to register and lookup {@link ResourceReference}s per Application.
- * 
+ *
  * @see org.apache.wicket.Application#getResourceReferenceRegistry()
  * @see org.apache.wicket.Application#newResourceReferenceRegistry()
- * 
+ *
  * @author Matej Knopp
  * @author Juergen Donnerstag
  */
@@ -80,7 +80,7 @@ public class ResourceReferenceRegistry
 	 * <p>
 	 * {@link ResourceReference#canBeRegistered()} must return <code>true</code>. Else, the resource
 	 * reference will not be registered.
-	 * 
+	 *
 	 * @param reference
 	 * @return True, if the resource was registered successfully or has been registered previously
 	 *         already.
@@ -95,7 +95,7 @@ public class ResourceReferenceRegistry
 	 * <p>
 	 * {@link ResourceReference#canBeRegistered()} must return <code>true</code>. Else, the resource
 	 * reference will not be registered.
-	 * 
+	 *
 	 * @param reference
 	 * @return True, if the resource was registered successfully or has been registered previously
 	 *         already.
@@ -117,7 +117,7 @@ public class ResourceReferenceRegistry
 
 	/**
 	 * Unregisters the given {@link ResourceReference}.
-	 * 
+	 *
 	 * @param key
 	 *            the {@link ResourceReference}'s identifier
 	 * @return Null, if the registry did not contain an entry for the resource reference.
@@ -145,10 +145,10 @@ public class ResourceReferenceRegistry
 	 * Part of the search is scanning the class (scope) and it's superclass for static
 	 * ResourceReference fields. Found fields get registered automatically (but are different from
 	 * auto-generated ResourceReferences).
-	 * 
+	 *
 	 * @see #createDefaultResourceReference(Class, String, Locale, String, String)
 	 * @see ClassScanner
-	 * 
+	 *
 	 * @param scope
 	 *            The scope of resource reference (e.g. the Component's class)
 	 * @param name
@@ -183,10 +183,10 @@ public class ResourceReferenceRegistry
 	 * Part of the search is scanning the class (scope) and it's superclass for static
 	 * ResourceReference fields. Found fields get registered automatically (but are different from
 	 * auto-generated ResourceReferences).
-	 * 
+	 *
 	 * @see #createDefaultResourceReference(Class, String, Locale, String, String)
 	 * @see ClassScanner
-	 * 
+	 *
 	 * @param key
 	 *            The data making up the resource reference
 	 * @param strict
@@ -229,7 +229,7 @@ public class ResourceReferenceRegistry
 
 	/**
 	 * Get a resource reference matching the parameters from the registry.
-	 * 
+	 *
 	 * @param scope
 	 *            The scope of resource reference (e.g. the Component's class)
 	 * @param name
@@ -287,7 +287,7 @@ public class ResourceReferenceRegistry
 
 	/**
 	 * Creates a default resource reference and registers it.
-	 * 
+	 *
 	 * @param key
 	 * @return The default resource created
 	 */
@@ -313,8 +313,7 @@ public class ResourceReferenceRegistry
 		}
 		else
 		{
-			log.warn("Asked to auto-create a ResourceReference, but ResourceReferenceRegistry.createDefaultResourceReference() return null. " +
-				" [" + key.toString() + "]");
+			log.warn("A ResourceReference wont be created for a resource with key [{}] because it cannot be located.", key);
 		}
 		return reference;
 	}
@@ -322,7 +321,7 @@ public class ResourceReferenceRegistry
 	/**
 	 * The Number of RRs which can be auto-added is restricted (cache size). Remove entries, and
 	 * unregister excessive ones, if needed.
-	 * 
+	 *
 	 * @param maxSize
 	 *            Remove all entries, head first, until auto-added cache is smaller than maxSize.
 	 */
@@ -346,7 +345,7 @@ public class ResourceReferenceRegistry
 	 * one.
 	 * <p>
 	 * A {@link PackageResourceReference} will be created by default
-	 * 
+	 *
 	 * @param key
 	 * @return The RR created or null if not successful
 	 */
@@ -365,7 +364,7 @@ public class ResourceReferenceRegistry
 
 	/**
 	 * Set the cache size in number of entries
-	 * 
+	 *
 	 * @param autoAddedCapacity
 	 *            A value < 0 will disable aging of auto-create resource references. They will be
 	 *            created, added to the registry and live their until manually removed or the
@@ -400,7 +399,7 @@ public class ResourceReferenceRegistry
 
 	/**
 	 * Gets cache size in number of entries
-	 * 
+	 *
 	 * @return capacity
 	 */
 	public final int getAutoAddedCapacity()
