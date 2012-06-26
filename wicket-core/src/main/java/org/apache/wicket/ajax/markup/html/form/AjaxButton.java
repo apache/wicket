@@ -23,7 +23,6 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -102,16 +101,6 @@ public abstract class AjaxButton extends Button
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				AjaxButton.this.onSubmit(target, AjaxButton.this.getForm());
-			}
-
-			/**
-			 * 
-			 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
-			 */
-			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target)
-			{
-				AjaxButton.this.onSubmitBeforeForm(target, AjaxButton.this.getForm());
 			}
 
 			/**
@@ -224,20 +213,8 @@ public abstract class AjaxButton extends Button
 	 * 
 	 * @param target
 	 * @param form
-	 * @deprecated see {@link IFormSubmitter#onSubmit()}
 	 */
-	@Deprecated
 	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-	{
-	}
-
-	/**
-	 * Listener method invoked on form submit with no errors
-	 * 
-	 * @param target
-	 * @param form
-	 */
-	protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
 	{
 	}
 

@@ -218,11 +218,7 @@ public class Button extends FormComponent<String>
 	 * Override this method to provide special submit handling in a multi-button form. It is called
 	 * whenever the user clicks this particular button, except if validation fails. This method will
 	 * be called <em>before</em> {@link Form#onSubmit()}.
-	 * 
-	 * @deprecated This method will be removed in 6.0. Use {@link #onSubmitBeforeForm()} and/or
-	 *             {@link #onSubmitAfterForm()} instead. See {@link IFormSubmitter#onSubmit()}.
 	 */
-	@Deprecated
 	public void onSubmit()
 	{
 	}
@@ -234,14 +230,6 @@ public class Button extends FormComponent<String>
 	{
 	}
 
-	/**
-	 * Override this method to provide special submit handling in a multi-button form. It is called
-	 * whenever the user clicks this particular button, except if validation fails. This method will
-	 * be called <em>before</em> {@link Form#onSubmit()}.
-	 */
-	public void onSubmitBeforeForm()
-	{
-	}
 
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. It is called

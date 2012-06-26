@@ -26,12 +26,6 @@ public interface IBeforeAndAfterFormSubmitter extends IFormSubmitter
 {
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
-	 * will be called <em>before</em> the form's onSubmit method.
-	 */
-	void onSubmitBeforeForm();
-
-	/**
-	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
 	 */
 	void onSubmitAfterForm();

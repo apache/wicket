@@ -29,8 +29,7 @@ import org.apache.wicket.model.PropertyModel;
 public class HomePage extends WebPage
 {
 	boolean submitted = false;
-	boolean submittedViaLinkDeprecated = false;
-	boolean submittedViaLinkBefore = false;
+	boolean submittedViaLink = false;
 	boolean submittedViaLinkAfter = false;
 	String text;
 	/**
@@ -66,30 +65,20 @@ public class HomePage extends WebPage
 			 */
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			public void onSubmitBeforeForm()
-			{
-				submittedViaLinkBefore = true;
-				assertFalse("before must be the first!", submittedViaLinkAfter);
-				assertFalse("before must be the first!", submittedViaLinkDeprecated);
-			}
 
 			@Override
 			public void onSubmit()
 			{
-				assertTrue("before must have been called!", submittedViaLinkBefore);
-				submittedViaLinkDeprecated = true;
+				submittedViaLink = true;
 				assertFalse("after must not yet have been called", submittedViaLinkAfter);
 			}
 
 			@Override
 			public void onSubmitAfterForm()
 			{
-				assertTrue("before must have been called!", submittedViaLinkBefore);
-				assertTrue("onsubmit must have been called!", submittedViaLinkDeprecated);
+				assertTrue("onsubmit must have been called!", submittedViaLink);
 				submittedViaLinkAfter = true;
 			}
-
 		});
 
 		add(form);
@@ -124,12 +113,7 @@ public class HomePage extends WebPage
 	 */
 	public boolean isSubmittedViaLink()
 	{
-		return submittedViaLinkDeprecated;
-	}
-
-	boolean isSubmittedViaLinkBefore()
-	{
-		return submittedViaLinkBefore;
+		return submittedViaLink;
 	}
 
 	boolean isSubmittedViaLinkAfter()

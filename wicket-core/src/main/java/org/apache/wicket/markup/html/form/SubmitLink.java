@@ -225,10 +225,8 @@ public class SubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * @deprecated
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
 	 */
-	@Deprecated
 	public void onSubmit()
 	{
 	}
@@ -245,14 +243,6 @@ public class SubmitLink extends AbstractSubmitLink
 	 * will be called <em>after</em> the form's onSubmit method.
 	 */
 	public void onSubmitAfterForm()
-	{
-	}
-
-	/**
-	 * Override this method to provide special submit handling in a multi-button form. This method
-	 * will be called <em>before</em> the form's onSubmit method.
-	 */
-	public void onSubmitBeforeForm()
 	{
 	}
 }

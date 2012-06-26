@@ -23,7 +23,6 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -75,13 +74,6 @@ public abstract class AjaxFallbackButton extends Button
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				AjaxFallbackButton.this.onSubmit(target, AjaxFallbackButton.this.getForm());
-			}
-
-			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target)
-			{
-				AjaxFallbackButton.this.onSubmitBeforeForm(target,
-					AjaxFallbackButton.this.getForm());
 			}
 
 			@Override
@@ -148,18 +140,6 @@ public abstract class AjaxFallbackButton extends Button
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
 	 */
 	@Override
-	public final void onSubmitBeforeForm()
-	{
-		if (AjaxRequestTarget.get() == null)
-		{
-			onSubmitBeforeForm(null, getForm());
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
-	 */
-	@Override
 	public final void onSubmitAfterForm()
 	{
 		if (AjaxRequestTarget.get() == null)
@@ -185,22 +165,8 @@ public abstract class AjaxFallbackButton extends Button
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
-	 * @deprecated see {@link IFormSubmitter#onSubmit()}
 	 */
-	@Deprecated
 	protected void onSubmit(final AjaxRequestTarget target, final Form<?> form)
-	{
-	}
-
-	/**
-	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
-	 * submission, the target argument will be null
-	 * 
-	 * @param target
-	 *            ajax target if this linked was invoked using ajax, null otherwise
-	 * @param form
-	 */
-	protected void onSubmitBeforeForm(final AjaxRequestTarget target, final Form<?> form)
 	{
 	}
 

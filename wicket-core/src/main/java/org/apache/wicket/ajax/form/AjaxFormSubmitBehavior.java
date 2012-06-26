@@ -177,10 +177,6 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 				AjaxFormSubmitBehavior.this.onError(target);
 			}
 
-			public void onSubmitBeforeForm()
-			{
-				AjaxFormSubmitBehavior.this.onSubmitBeforeForm(target);
-			}
 
 			public void onSubmitAfterForm()
 			{
@@ -197,23 +193,13 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	{
 	}
 
-	/**
-	 * Override this method to provide special submit handling in a multi-button form. This method
-	 * will be called <em>before</em> the form's onSubmit method.
-	 */
-	protected void onSubmitBeforeForm(AjaxRequestTarget target)
-	{
-	}
 
 	/**
 	 * Listener method that is invoked after the form has been submitted and processed without
 	 * errors
 	 * 
 	 * @param target
-	 * @deprecated Will be removed in 6.0. Use {@link #onSubmitBeforeForm(AjaxRequestTarget)} and/or
-	 *             link #onSubmitAfterForm(AjaxRequestTarget)} instead.
 	 */
-	@Deprecated
 	protected void onSubmit(AjaxRequestTarget target)
 	{
 	}
