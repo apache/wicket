@@ -18,7 +18,7 @@ package org.apache.wicket.request.cycle;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.core.request.handler.IPageRequestHandler;
+import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
