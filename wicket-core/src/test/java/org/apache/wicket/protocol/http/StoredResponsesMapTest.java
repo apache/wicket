@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -62,13 +62,15 @@ public class StoredResponsesMapTest extends Assert
 	@Test
 	public void getExpiredValue() throws Exception
 	{
-		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.milliseconds(50));
+		Time start = Time.now();
+		Duration timeout = Duration.milliseconds(50);
+		StoredResponsesMap map = new StoredResponsesMap(1000, timeout);
 		assertEquals(0, map.size());
 		map.put("1", new BufferedWebResponse(null));
 		assertEquals(1, map.size());
-		TimeUnit.MILLISECONDS.sleep(51);
+		TimeUnit.MILLISECONDS.sleep(timeout.getMilliseconds() * 2); // sleep for twice longer than the timeout
+		assertTrue("The timeout has passed.", Time.now().subtract(start).compareTo(timeout) == 1);
 		Object value = map.get("1");
-		// TODO This test sometimes fails on XP and java 1.6 (not reproduceable)
 		assertNull(value);
 	}
 
