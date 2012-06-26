@@ -62,7 +62,7 @@ jQuery(document).ready(function() {
 	// Ajax tests are executed only when run with Web Server
 	if ( !isLocal ) {
 
-		module('Wicket.Ajax.stateChangeCallback');
+		module('Wicket.Ajax');
 
 		asyncTest('Wicket.Ajax - processEvaluation with mock data.', function () {
 
@@ -621,13 +621,18 @@ jQuery(document).ready(function() {
 			$el.triggerHandler("event1");
 		});
 
-		asyncTest('Wicket.Ajax - verify dynamic parameters are appended to the Ajax call data (GET/POST params).', function () {
+		/**
+		 * When using GET method the parameters should be added to 'settings.url'
+		 * WICKET-4606
+		 */
+		asyncTest('Wicket.Ajax - verify dynamic parameters are appended to the Ajax GET params.', function () {
 
 			expect(5);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
 				e: 'event1',
+				m: 'get',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
 				dep: [ function() {return { "one": 1, "two": 2 } } ]
@@ -646,7 +651,43 @@ jQuery(document).ready(function() {
 			var target = jQuery(window);
 			target.triggerHandler("event1");
 			target.off("event1");
+			jQuery(document).off();
+		});
 
+		/**
+		 * When using POST method the parameters should be added to 'settings.data'
+		 * WICKET-4606
+		 */
+		asyncTest('Wicket.Ajax - verify dynamic parameters are appended to the Ajax POST params.', function () {
+
+			expect(7);
+
+			var attrs = {
+				u: 'data/ajax/nonExisting.json',
+				e: 'event1',
+				m: 'post',
+				ep: [ {name: 'one', value: 'static1'}, {name: 'one', value: 'static2'} ],
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				dep: [ function() {return [ {name: "one", value: 'dynamic1'}, {name: "one", value: 'dynamic2'} ] } ]
+			};
+
+			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+				deepEqual(attrs, attributes, 'Before: attrs');
+				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				ok(settings.data.indexOf('one=static1') > -1, 'Parameter "one" with value "static1" is found');
+				ok(settings.data.indexOf('one=static2') > -1, 'Parameter "one" with value "static2" is found');
+				ok(settings.data.indexOf('one=dynamic1') > -1, 'Parameter "one" with value "dynamic1" is found');
+				ok(settings.data.indexOf('one=dynamic2') > -1, 'Parameter "one" with value "dynamic2" is found');
+				start();
+			});
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+			jQuery(document).off();
 		});
 	}
 });
