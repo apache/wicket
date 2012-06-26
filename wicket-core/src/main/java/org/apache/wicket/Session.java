@@ -49,18 +49,9 @@ import org.slf4j.LoggerFactory;
  * Holds information about a user session, including some fixed number of most recent pages (and all
  * their nested component information).
  * <ul>
- * <li><b>Access via Component </b>- If a RequestCycle object is not available, the Session can be
- * retrieved for a Component by calling {@link Component#getSession()}. As currently implemented,
- * each Component does not itself have a reference to the session that contains it. However, the
- * Page component at the root of the containment hierarchy does have a reference to the Session that
- * holds the Page. So {@link Component#getSession()} traverses the component hierarchy to the root
- * Page and then calls {@link Page#getSession()}.
- * 
- * <li><b>Access via Thread Local </b>- In the odd case where neither a RequestCycle nor a Component
- * is available, the currently active Session for the calling thread can be retrieved by calling the
- * static method Session.get(). This last form should only be used if the first two forms cannot be
- * used since thread local access can involve a potentially more expensive hash map lookup.
- * 
+ * <li><b>Access</b> - the Session can be retrieved either by {@link Component#getSession()}
+ * or by directly calling the static method Session.get().
+ *
  * <li><b>Locale </b>- A session has a Locale property to support localization. The Locale for a
  * session can be set by calling {@link Session#setLocale(Locale)}. The Locale for a Session
  * determines how localized resources are found and loaded.
