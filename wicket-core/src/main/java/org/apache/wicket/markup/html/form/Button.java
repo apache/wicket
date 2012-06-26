@@ -52,7 +52,7 @@ public class Button extends FormComponent<String>
 	implements
 		IFormSubmitter,
 		IFormSubmittingComponent,
-		IBeforeAndAfterFormSubmitter
+		IAfterFormSubmitter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -236,7 +236,7 @@ public class Button extends FormComponent<String>
 	 * whenever the user clicks this particular button, except if validation fails. This method will
 	 * be called <em>after</em> {@link Form#onSubmit()}.
 	 */
-	public void onSubmitAfterForm()
+	public void onAfterSubmit()
 	{
 	}
 }

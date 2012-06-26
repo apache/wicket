@@ -1237,9 +1237,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 		if (submittingComponent != null)
 		{
-			if (submittingComponent instanceof IBeforeAndAfterFormSubmitter)
+			if (submittingComponent instanceof IAfterFormSubmitter)
 			{
-				((IBeforeAndAfterFormSubmitter)submittingComponent).onSubmitAfterForm();
+				((IAfterFormSubmitter)submittingComponent).onAfterSubmit();
 			}
 		}
 	}

@@ -242,7 +242,7 @@ public class SubmitLink extends AbstractSubmitLink
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
 	 */
-	public void onSubmitAfterForm()
+	public void onAfterSubmit()
 	{
 	}
 }

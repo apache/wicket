@@ -21,7 +21,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IBeforeAndAfterFormSubmitter;
+import org.apache.wicket.markup.html.form.IAfterFormSubmitter;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -155,7 +155,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected void onEvent(final AjaxRequestTarget target)
 	{
-		getForm().getRootForm().onFormSubmitted(new IBeforeAndAfterFormSubmitter()
+		getForm().getRootForm().onFormSubmitted(new IAfterFormSubmitter()
 		{
 			public Form<?> getForm()
 			{
@@ -178,9 +178,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			}
 
 
-			public void onSubmitAfterForm()
+			public void onAfterSubmit()
 			{
-				AjaxFormSubmitBehavior.this.onSubmitAfterForm(target);
+				AjaxFormSubmitBehavior.this.onAfterSubmit(target);
 			}
 		});
 	}
@@ -189,7 +189,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
 	 */
-	protected void onSubmitAfterForm(AjaxRequestTarget target)
+	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
 	}
 

@@ -108,9 +108,9 @@ public abstract class AjaxButton extends Button
 			 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
 			 */
 			@Override
-			protected void onSubmitAfterForm(AjaxRequestTarget target)
+			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onSubmitAfterForm(target, AjaxButton.this.getForm());
+				AjaxButton.this.onAfterSubmit(target, AjaxButton.this.getForm());
 			}
 
 			/**
@@ -224,7 +224,7 @@ public abstract class AjaxButton extends Button
 	 * @param target
 	 * @param form
 	 */
-	protected void onSubmitAfterForm(AjaxRequestTarget target, Form<?> form)
+	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
 	{
 	}
 

@@ -48,7 +48,7 @@ public class FormSubmitOrderTest extends WicketTestCase
 				}
 
 				@Override
-				public void onSubmitAfterForm()
+				public void onAfterSubmit()
 				{
 					super.onSubmit();
 					result += "after";

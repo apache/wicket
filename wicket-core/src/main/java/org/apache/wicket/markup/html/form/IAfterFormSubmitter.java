@@ -22,11 +22,11 @@ package org.apache.wicket.markup.html.form;
  * 
  * @author Carl-Eric Menzel
  */
-public interface IBeforeAndAfterFormSubmitter extends IFormSubmitter
+public interface IAfterFormSubmitter extends IFormSubmitter
 {
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
 	 */
-	void onSubmitAfterForm();
+	void onAfterSubmit();
 }

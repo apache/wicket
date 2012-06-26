@@ -77,9 +77,9 @@ public abstract class AjaxFallbackButton extends Button
 			}
 
 			@Override
-			protected void onSubmitAfterForm(AjaxRequestTarget target)
+			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmitAfterForm(target, AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onAfterSubmit(target, AjaxFallbackButton.this.getForm());
 			}
 
 			@Override
@@ -140,11 +140,11 @@ public abstract class AjaxFallbackButton extends Button
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
 	 */
 	@Override
-	public final void onSubmitAfterForm()
+	public final void onAfterSubmit()
 	{
 		if (AjaxRequestTarget.get() == null)
 		{
-			onSubmitAfterForm(null, getForm());
+			onAfterSubmit(null, getForm());
 		}
 	}
 
@@ -178,7 +178,7 @@ public abstract class AjaxFallbackButton extends Button
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
 	 */
-	protected void onSubmitAfterForm(final AjaxRequestTarget target, final Form<?> form)
+	protected void onAfterSubmit(final AjaxRequestTarget target, final Form<?> form)
 	{
 	}
 

@@ -74,7 +74,7 @@ public class HomePage extends WebPage
 			}
 
 			@Override
-			public void onSubmitAfterForm()
+			public void onAfterSubmit()
 			{
 				assertTrue("onsubmit must have been called!", submittedViaLink);
 				submittedViaLinkAfter = true;
