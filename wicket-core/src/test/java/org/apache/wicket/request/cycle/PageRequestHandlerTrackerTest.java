@@ -54,7 +54,6 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 			setResponsePage(new PageB());
 		}
 
-		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html/>");
@@ -80,7 +79,6 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 			assertEquals(PageB.class, lastHandler.getPageClass());
 		}
 
-		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html/>");
