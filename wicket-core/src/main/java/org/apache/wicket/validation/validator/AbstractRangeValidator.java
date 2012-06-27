@@ -110,8 +110,14 @@ public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializa
 		if ((min != null && value.compareTo(min) < 0) || (max != null && value.compareTo(max) > 0))
 		{
 			ValidationError error = new ValidationError(this, getMode().getVariation());
-			error.setVariable("minimum", min);
-			error.setVariable("maximum", max);
+			if (min != null)
+			{
+				error.setVariable("minimum", min);
+			}
+			if (max != null)
+			{
+				error.setVariable("maximum", max);
+			}
 			validatable.error(decorate(error, validatable));
 		}
 	}
