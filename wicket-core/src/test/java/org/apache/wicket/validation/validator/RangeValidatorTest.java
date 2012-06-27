@@ -17,7 +17,6 @@
 package org.apache.wicket.validation.validator;
 
 import junit.framework.TestCase;
-
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.Validatable;
 
@@ -82,6 +81,24 @@ public class RangeValidatorTest extends TestCase
 		assertEquals(0, validatable.getErrors().size());
 
 		validatable = new Validatable<Integer>(9);
+		validator.validate(validatable);
+		assertEquals(1, validatable.getErrors().size());
+	}
+
+	public void testOnlyMinValue()
+	{
+		IValidator<Integer> validator = new RangeValidator<Integer>(1, null);
+
+		Validatable<Integer> validatable = new Validatable<Integer>(0);
+		validator.validate(validatable);
+		assertEquals(1, validatable.getErrors().size());
+	}
+
+	public void testOnlyMaxValue()
+	{
+		IValidator<Integer> validator = new RangeValidator<Integer>(null, 1);
+
+		Validatable<Integer> validatable = new Validatable<Integer>(2);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 	}

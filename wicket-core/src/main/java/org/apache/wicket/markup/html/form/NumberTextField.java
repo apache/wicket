@@ -23,6 +23,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.AbstractDecimalConverter;
+import org.apache.wicket.util.lang.Numbers;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.validation.validator.RangeValidator;
 
@@ -30,14 +31,13 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * A {@link TextField} for HTML5 &lt;input&gt; with type <em>number</em>.
  * 
  * <p>
- * Automatically validates the input against the configured {@link #setMinimum(Number) min} and
- * {@link #setMaximum(Number) max} attributes. If any of them is <code>null</code> then
- * {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
- * 
- * Note: {@link #setType(Class)} must be called explicitly!
+ * Automatically validates the input against the configured {@link #setMinimum(N) min} and
+ * {@link #setMaximum(N) max} attributes. If any of them is <code>null</code> then respective
+ * MIN_VALUE or MAX_VALUE for the number type is used. If the number type has no minimum and/or maximum
+ * value then {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
  * 
  * @param <N>
- *            the number type
+ *            the type of the number
  */
 public class NumberTextField<N extends Number & Comparable<N>> extends TextField<N>
 {
@@ -135,8 +135,48 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 			remove(validator);
 		}
 
-		validator = new RangeValidator<N>(minimum, maximum);
+		validator = new RangeValidator<N>(getMinValue(), getMaxValue());
 		add(validator);
+	}
+
+	private N getMinValue()
+	{
+		N result;
+		if (minimum != null)
+		{
+			result = minimum;
+		}
+		else
+		{
+			Class<N> numberType = getNumberType();
+			result = (N) Numbers.getMinValue(numberType);
+		}
+		return result;
+	}
+
+	private N getMaxValue()
+	{
+		N result;
+		if (maximum != null)
+		{
+			result = maximum;
+		}
+		else
+		{
+			Class<N> numberType = getNumberType();
+			result = (N) Numbers.getMaxValue(numberType);
+		}
+		return result;
+	}
+
+	private Class<N> getNumberType()
+	{
+		Class<N> numberType = getType();
+		if (numberType == null && getModelObject() != null)
+		{
+			numberType = (Class<N>) getModelObject().getClass();
+		}
+		return numberType;
 	}
 
 	@Override
@@ -148,7 +188,8 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		if (minimum != null)
 		{
-			attributes.put("min", minimum);
+			IConverter<N> converter = getConverter(getNumberType());
+			attributes.put("min", converter.convertToString(minimum, HTML5_LOCALE));
 		}
 		else
 		{
@@ -157,7 +198,8 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		if (maximum != null)
 		{
-			attributes.put("max", maximum);
+			IConverter<N> converter = getConverter(getNumberType());
+			attributes.put("max", converter.convertToString(maximum, HTML5_LOCALE));
 		}
 		else
 		{
