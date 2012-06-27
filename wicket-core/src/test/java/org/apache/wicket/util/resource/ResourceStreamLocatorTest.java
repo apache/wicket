@@ -17,6 +17,7 @@
 package org.apache.wicket.util.resource;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -26,18 +27,17 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
-import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.string.Strings;
 import org.junit.Test;
 
 
 /**
- * Resources test.
+ * ResourceStreamLocator test. Tests construction of resource names with 
  * 
  * @author Juergen Donnerstag
  */
-public class ResourceTest extends WicketTestCase
+public class ResourceStreamLocatorTest extends WicketTestCase
 {
 	private final Locale locale_de = new Locale("de");
 	private final Locale locale_de_DE = new Locale("de", "DE");
@@ -111,7 +111,7 @@ public class ResourceTest extends WicketTestCase
 	 * Test locating a resource.
 	 */
 	@Test
-	public void locate()
+	public void locateInClasspath()
 	{
 		// Execute without source path
 		executeMultiple(new Path());
@@ -122,9 +122,6 @@ public class ResourceTest extends WicketTestCase
 			this.getClass().getName().replace('.', '/'), null, null, null, "txt", false);
 		String path = getPath(resource);
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
-
-		// and execute
-		executeMultiple(new Path(new Folder(path)));
 	}
 
 	/**
@@ -156,18 +153,41 @@ public class ResourceTest extends WicketTestCase
 	 *            the resource
 	 * @return the path of the resource as a string
 	 */
-	private String getPath(IResourceStream resource)
+	public static String getPath(IResourceStream resource)
 	{
-		try
+		if (resource instanceof UrlResourceStream)
 		{
-			URL url = ((UrlResourceStream)resource).getURL();
-			CharSequence path = new File(new URI(url.toString())).getPath();
-			path = Strings.replaceAll(path, "\\", "/");
-			return path.toString();
+			try
+			{
+				URL url = ((UrlResourceStream)resource).getURL();
+				CharSequence path = new File(new URI(url.toString())).getPath();
+				path = Strings.replaceAll(path, "\\", "/");
+				return path.toString();
+			}
+			catch (URISyntaxException e)
+			{
+				throw new RuntimeException(e);
+			}
 		}
-		catch (URISyntaxException e)
+		else if (resource instanceof FileResourceStream)
 		{
-			throw new RuntimeException(e);
+			try
+			{
+				return ((FileResourceStream)resource).getFile().getCanonicalPath();
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
 		}
+		else
+		{
+			return null;
+		}
+	}
+
+	public static String getFilename(IResourceStream resource)
+	{
+		return Strings.afterLast(getPath(resource), File.separatorChar);
 	}
 }

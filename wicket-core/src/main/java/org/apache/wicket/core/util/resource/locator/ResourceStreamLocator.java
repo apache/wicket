@@ -195,7 +195,8 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @param path
 	 * @return resource stream
 	 */
-	private IResourceStream getResourceStream(final ClassLoader classLoader, final String path)
+	/* package private for testing */IResourceStream getResourceStream(
+		final ClassLoader classLoader, final String path)
 	{
 		if (classLoader == null)
 		{
