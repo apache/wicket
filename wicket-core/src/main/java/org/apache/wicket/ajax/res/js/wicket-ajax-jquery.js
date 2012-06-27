@@ -526,8 +526,13 @@
 							params = params.concat(extraParam);
 						}
 						queryString = jQuery.param(params);
-						separator = settings.url.indexOf('?') > -1 ? '&' : '?';
-						settings.url = settings.url + separator + queryString;
+						if (settings.type.toLowerCase() === 'post') {
+							separator = settings.data.length > 0 ? '&' : '';
+							settings.data = settings.data + separator + queryString;
+						} else {
+							separator = settings.url.indexOf('?') > -1 ? '&' : '?';
+							settings.url = settings.url + separator + queryString;
+						}
 					}
 
 					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);

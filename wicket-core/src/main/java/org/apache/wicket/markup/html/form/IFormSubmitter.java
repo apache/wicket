@@ -45,13 +45,13 @@ public interface IFormSubmitter
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>before</em> the form's onSubmit method.
 	 */
-	void onSubmitBeforeForm();
+	void onSubmit();
 
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
 	 */
-	void onSubmitAfterForm();
+	void onAfterSubmit();
 
 	/**
 	 * Method that is invoked when form processing fails; for example, when there are validation

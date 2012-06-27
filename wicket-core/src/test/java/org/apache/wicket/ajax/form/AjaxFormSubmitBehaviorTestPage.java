@@ -70,7 +70,7 @@ class TestForm extends Form<Void>
 			}
 
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				submitedByAjaxBehavior = true;
 			}
@@ -81,7 +81,7 @@ class TestForm extends Form<Void>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmitBeforeForm()
+			public void onSubmit()
 			{
 				throw new IllegalStateException("Submit link hit!");
 			}
@@ -92,7 +92,7 @@ class TestForm extends Form<Void>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmitBeforeForm()
+			public void onSubmit()
 			{
 				throw new IllegalStateException("Submit button hit!");
 			}

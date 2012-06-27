@@ -93,7 +93,7 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				CharSequence pageHtml = renderPage(TemplateBasedOnPage.class);
 
@@ -113,7 +113,7 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				CharSequence panelHtml = renderPanel(new MailTemplatePanel(DummyPage.COMP_ID,
 					new PropertyModel<String>(MailTemplate.this, "name")));
@@ -134,7 +134,7 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 
 				CharSequence templateHtml = renderTemplate(new PackageTextTemplate(

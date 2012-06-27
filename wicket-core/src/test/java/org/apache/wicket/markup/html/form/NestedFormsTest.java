@@ -99,7 +99,7 @@ public class NestedFormsTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void onSubmitBeforeForm()
+				public void onSubmit()
 				{
 					submitSequence.add(this);
 				}
@@ -123,7 +123,7 @@ public class NestedFormsTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void onSubmitBeforeForm()
+				public void onSubmit()
 				{
 					submitSequence.add(this);
 				}

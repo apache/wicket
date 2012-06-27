@@ -316,8 +316,7 @@ public class ResourceReferenceRegistry
 		}
 		else
 		{
-			log.warn("Asked to auto-create a ResourceReference, but ResourceReferenceRegistry.createDefaultResourceReference() return null. [{}]",
-					key);
+			log.warn("A ResourceReference wont be created for a resource with key [{}] because it cannot be located.", key);
 		}
 		return reference;
 	}

@@ -179,7 +179,7 @@ public class Url implements Serializable
 	 *            absolute or relative url with query string
 	 * @return Url object
 	 */
-	public static Url parse(final String url)
+	public static Url parse(final CharSequence url)
 	{
 		return parse(url, null);
 	}
@@ -187,20 +187,21 @@ public class Url implements Serializable
 	/**
 	 * Parses the given URL string.
 	 * 
-	 * @param url
+	 * @param _url
 	 *            absolute or relative url with query string
 	 * @param charset
 	 * @return Url object
 	 */
-	public static Url parse(String url, Charset charset)
+	public static Url parse(CharSequence _url, Charset charset)
 	{
-		Args.notNull(url, "url");
+		Args.notNull(_url, "_url");
 
 		final Url result = new Url(charset);
 
 		// the url object resolved the charset, use that
 		charset = result.getCharset();
 
+		String url = _url.toString();
 		// extract query string part
 		final String queryString;
 		final String absoluteUrl;

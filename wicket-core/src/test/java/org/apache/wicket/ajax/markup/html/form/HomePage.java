@@ -63,7 +63,7 @@ class TestForm extends Form<Void>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmitBeforeForm()
+			public void onSubmit()
 			{
 				throw new IllegalStateException("CANCEL button hit!");
 			}
@@ -74,7 +74,7 @@ class TestForm extends Form<Void>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 			}
 

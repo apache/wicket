@@ -752,8 +752,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				// away.
 				if (submitter != null && !submitter.getDefaultFormProcessing())
 				{
-					submitter.onSubmitBeforeForm();
-					submitter.onSubmitAfterForm();
+					submitter.onSubmit();
+					submitter.onAfterSubmit();
 				}
 				else
 				{
@@ -928,18 +928,19 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void callOnError(IFormSubmitter submitter)
 	{
+		final Form<?> processingForm = findFormToProcess(submitter);
+
 		if (submitter != null)
 		{
 			submitter.onError();
 		}
-		onError();
-		// call onError on nested forms
-		visitChildren(Form.class, new IVisitor<Component, Void>()
+
+		// invoke Form#onSubmit(..) going from innermost to outermost
+		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
 		{
 			@Override
-			public void component(final Component component, final IVisit<Void> visit)
+			public void component(Form<?> form, IVisit<Void> visit)
 			{
-				final Form<?> form = (Form<?>)component;
 				if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 				{
 					visit.dontGoDeeper();
@@ -950,7 +951,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					form.onError();
 				}
 			}
-		});
+		}, new ClassVisitFilter(Form.class));
 	}
 
 
@@ -1208,8 +1209,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * processing to clients.
 	 * <p>
 	 * This implementation first finds out whether the form processing was triggered by a nested
-	 * IFormSubmittingComponent of this form. If that is the case, that component's onSubmit is
-	 * called first.
+	 * IFormSubmittingComponent of this form. If that is the case, that component's
+	 * onSubmitBefore/AfterForm methods are called appropriately..
 	 * </p>
 	 * <p>
 	 * Regardless of whether a submitting component was found, the form's onSubmit method is called
@@ -1225,12 +1226,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		final Form<?> processingForm = findFormToProcess(submittingComponent);
 
-
 		// process submitting component (if specified)
 		if (submittingComponent != null)
 		{
 			// invoke submit on component
-			submittingComponent.onSubmitBeforeForm();
+			submittingComponent.onSubmit();
 		}
 
 		// invoke Form#onSubmit(..) going from innermost to outermost
@@ -1248,7 +1248,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 		if (submittingComponent != null)
 		{
-			submittingComponent.onSubmitAfterForm();
+			submittingComponent.onAfterSubmit();
 		}
 	}
 

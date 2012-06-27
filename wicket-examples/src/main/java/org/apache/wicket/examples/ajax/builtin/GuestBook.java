@@ -94,7 +94,7 @@ public class GuestBook extends BasePage
 		commentForm.add(new AjaxFormSubmitBehavior(commentForm, "submit")
 		{
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				// add the list of components that need to be updated
 				target.add(comments);

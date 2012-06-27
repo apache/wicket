@@ -91,7 +91,7 @@ public class AutoCompletePage extends BasePage
 		field.add(new AjaxFormSubmitBehavior(form, "change")
 		{
 			@Override
-			protected void onSubmitBeforeForm(AjaxRequestTarget target)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				BookmarkablePageRequestHandler bookmarkablePageRequestHandler = new BookmarkablePageRequestHandler(
 					new PageProvider(Index.class));

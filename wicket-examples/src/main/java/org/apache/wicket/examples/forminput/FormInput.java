@@ -190,7 +190,7 @@ public class FormInput extends WicketExamplePage
 			add(new Button("resetButton")
 			{
 				@Override
-				public void onSubmitBeforeForm()
+				public void onSubmit()
 				{
 					// just set a new instance of the page
 					setResponsePage(FormInput.class);

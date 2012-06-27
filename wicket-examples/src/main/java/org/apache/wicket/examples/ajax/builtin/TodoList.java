@@ -256,7 +256,7 @@ public class TodoList extends BasePage
 				add(new AjaxButton("add", this)
 				{
 					@Override
-					protected void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+					protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 					{
 						// retrieve the todo item
 						TodoItem item = (TodoItem)getParent().getDefaultModelObject();
@@ -274,7 +274,7 @@ public class TodoList extends BasePage
 				add(new AjaxButton("cancel", this)
 				{
 					@Override
-					public void onSubmitBeforeForm(AjaxRequestTarget target, Form<?> form)
+					public void onSubmit(AjaxRequestTarget target, Form<?> form)
 					{
 						onCancelTodo(target);
 					}
