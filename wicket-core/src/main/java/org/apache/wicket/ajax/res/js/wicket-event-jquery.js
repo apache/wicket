@@ -145,8 +145,8 @@
 						el = Wicket.$(element); // Wicket.$() is wicket-ajax.js. Is this too bad ?
 					}
 					
-					if (!el) {
-						console.log('Cannot find element with id: ' + element);
+					if (!el && Wicket.Log) {
+						Wicket.Log.error('Cannot find element with id: ' + element);
 					}
 					
 					jQuery(el).on(type, data, fn);

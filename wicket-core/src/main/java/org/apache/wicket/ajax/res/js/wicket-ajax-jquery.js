@@ -16,7 +16,7 @@
  */
 
 /*jshint evil: true, nomen: false, onevar: false, regexp: false, strict: true, boss: true, undef: true, maxlen: 160, curly: true, eqeqeq: true */
-/*global document: false, jQuery:false, DOMParser: true, window: false, Wicket: true */
+/*global document: false, jQuery:false, DOMParser: true, window: false, Wicket: true, ActiveXObject: true */
 
 
 /*
@@ -343,7 +343,7 @@
 				attrs.dt = 'xml';
 			}
 
-			if (typeof(attrs.m) != 'string') {
+			if (typeof(attrs.m) !== 'string') {
 				attrs.m = 'GET';
 			}
 
@@ -618,7 +618,7 @@
 					    rhttps = /^https:\/\//; // checks whether the string starts with https://
 
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
-					if (redirectUrl.charAt(0)==('/') || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
+					if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
 						window.location = redirectUrl;
 					}
 					else {
@@ -775,7 +775,7 @@
 			try {
 				var root = envelope.getElementsByTagName("ajax-response")[0];
 
-				if (root == null && envelope.compatMode == 'BackCompat') {
+				if (root === null && envelope.compatMode === 'BackCompat') {
 					envelope = htmlToDomDocument(envelope);
 					root = envelope.getElementsByTagName("ajax-response")[0];
 				}
@@ -2344,7 +2344,7 @@
 
 					if (false === jQuery.event.special.inputchange.keyDownPressed) {
 						window.setTimeout(function() {
-							jQuery.event.special.inputchange.handler.apply(self, arguments)
+							jQuery.event.special.inputchange.handler.apply(self, arguments);
 						}, 10);
 					}
 				});
