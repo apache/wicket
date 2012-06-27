@@ -61,7 +61,7 @@ public final class Numbers
 			result = Short.MIN_VALUE;
 		}
 		else { // null of any other Number
-			LOG.debug("'{}' has no maximum value. Falling back to Double.MIN_VALUE.", numberType);
+			LOG.debug("'{}' has no minimum value. Falling back to Double.MIN_VALUE.", numberType);
 			result = Double.MIN_VALUE;
 		}
 
