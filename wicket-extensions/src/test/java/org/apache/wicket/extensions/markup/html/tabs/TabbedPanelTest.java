@@ -90,7 +90,7 @@ public class TabbedPanelTest extends WicketTestCase
 		tester.assertContainsNot("<span wicket:id=\"label\">default 2</span>");
 		tester.assertContains("<!-- no panel -->");
 
-		assertEquals(Integer.valueOf(-1), page.tabbedPanel.getModelObject());
+		assertEquals(Integer.valueOf(0), page.tabbedPanel.getDefaultModelObject());
 	}
 
 	@Test
@@ -101,12 +101,12 @@ public class TabbedPanelTest extends WicketTestCase
 		tester.assertContains("<span wicket:id=\"label\">default 1</span>");
 		tester.assertContains("<span wicket:id=\"title\">default 2</span></a>");
 
-		assertEquals(Integer.valueOf(0), page.tabbedPanel.getModelObject());
+		assertEquals(Integer.valueOf(0), page.tabbedPanel.getDefaultModelObject());
 
 		tester.clickLink("tabpanel:tabs-container:tabs:1:link");
 		tester.assertContains("<span wicket:id=\"label\">default 2</span>");
 
-		assertEquals(Integer.valueOf(1), page.tabbedPanel.getModelObject());
+		assertEquals(Integer.valueOf(1), page.tabbedPanel.getDefaultModelObject());
 	}
 
 	@Test
@@ -125,20 +125,20 @@ public class TabbedPanelTest extends WicketTestCase
 		tester.assertContainsNot("<span wicket:id=\"title\">added 1</span></a>");
 		tester.assertContainsNot("<span wicket:id=\"label\">added 1</span>");
 
-		assertEquals(Integer.valueOf(0), page.tabbedPanel.getModelObject());
+		assertEquals(Integer.valueOf(0), page.tabbedPanel.getDefaultModelObject());
 
 		// now its title is visible, but the contents not
 		tester.clickLink("tabpanel:tabs-container:tabs:1:link");
 		tester.assertContains("<span wicket:id=\"title\">added 1</span></a>");
 		tester.assertContainsNot("<span wicket:id=\"label\">added 1</span>");
 
-		assertEquals(Integer.valueOf(1), page.tabbedPanel.getModelObject());
+		assertEquals(Integer.valueOf(1), page.tabbedPanel.getDefaultModelObject());
 
 		// now the entire panel should be there
 		tester.clickLink("tabpanel:tabs-container:tabs:2:link");
 		tester.assertContains("<span wicket:id=\"title\">added 1</span></a>");
 		tester.assertContains("<span wicket:id=\"label\">added 1</span>");
 
-		assertEquals(Integer.valueOf(2), page.tabbedPanel.getModelObject());
+		assertEquals(Integer.valueOf(2), page.tabbedPanel.getDefaultModelObject());
 	}
 }
