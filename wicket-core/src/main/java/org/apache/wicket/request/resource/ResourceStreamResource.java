@@ -144,7 +144,7 @@ public class ResourceStreamResource extends AbstractResource
 		if (data.dataNeedsToBeWritten(attributes))
 		{
 			InputStream inputStream = null;
-			if (stream instanceof IResourceStreamWriter == false)
+			if (resourceStream instanceof IResourceStreamWriter == false)
 			{
 				try
 				{
