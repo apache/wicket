@@ -115,7 +115,10 @@
 			if (jQuery('#'+self.debugWindowId).css('display') === 'none') {
 				jQuery('#'+self.wicketDebugLink)
 					.css('backgroundColor', 'crimson')
-					.css('color', 'aliceBlue');
+					.css('color', 'aliceBlue')
+
+					// poor man's animation to get developer's attention
+					.hide(150).show(150).hide(150).show(150);
 			}
 
 			if (typeof(console) !== "undefined" && typeof(console.error) === 'function') {
