@@ -23,7 +23,22 @@ module.exports = function(grunt) {
 
 		jshint: {
 			options: {
-				smarttabs: true,
+				"boss": true,
+				"browser": true,
+				"curly": true,
+				"eqnull": true,
+				"eqeqeq": true,
+				"expr": true,
+				"jquery": true,
+				"latedef": true,
+				"noarg": true,
+				"onevar": true,
+				"smarttabs": true,
+				"trailing": true,
+				"undef": true,
+				"predef": [
+					"ActiveXObject"
+				]
 			}
 		},
 
