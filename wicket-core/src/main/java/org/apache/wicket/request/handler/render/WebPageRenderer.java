@@ -20,7 +20,6 @@ import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -91,10 +90,10 @@ public class WebPageRenderer extends PageRenderer
 		IRequestHandler scheduled = requestCycle.getRequestHandlerScheduledAfterCurrent();
 
 		// keep the original response
-		final Response originalResponse = requestCycle.getResponse();
+		final WebResponse originalResponse = (WebResponse) requestCycle.getResponse();
 
 		// buffered web response for page
-		BufferedWebResponse response = new BufferedWebResponse((WebResponse)originalResponse);
+		BufferedWebResponse response = new BufferedWebResponse(originalResponse);
 
 		// keep the original base URL
 		Url originalBaseUrl = requestCycle.getUrlRenderer().setBaseUrl(targetUrl);
@@ -106,9 +105,12 @@ public class WebPageRenderer extends PageRenderer
 
 			if (scheduled == null && requestCycle.getRequestHandlerScheduledAfterCurrent() != null)
 			{
-				// This is a special case. During page render another request handler got scheduled.
-				// The handler
-				// will want to overwrite the response, so we need to let it
+				// This is a special case.
+				// During page render another request handler got scheduled and will want to overwrite
+				// the response, so we need to let it.
+				// Just preserve the meta data headers
+				originalResponse.reset(); // clear the initial actions because they are already copied into the new response's actions
+				response.writeMetaData(originalResponse);
 				return null;
 			}
 			else

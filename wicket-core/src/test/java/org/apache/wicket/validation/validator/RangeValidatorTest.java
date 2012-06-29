@@ -117,7 +117,27 @@ public class RangeValidatorTest
 
 	}
 
-	private ValidationError getError(Validatable validatable)
+	@Test
+	public void onlyMinValue()
+	{
+		IValidator<Integer> validator = new RangeValidator<Integer>(1, null);
+
+		Validatable<Integer> validatable = new Validatable<Integer>(0);
+		validator.validate(validatable);
+		assertEquals(1, validatable.getErrors().size());
+	}
+
+	@Test
+	public void onlyMaxValue()
+	{
+		IValidator<Integer> validator = new RangeValidator<Integer>(null, 1);
+
+		Validatable<Integer> validatable = new Validatable<Integer>(2);
+		validator.validate(validatable);
+		assertEquals(1, validatable.getErrors().size());
+	}
+
+	private ValidationError getError(Validatable<?> validatable)
 	{
 		return (ValidationError)validatable.getErrors().get(0);
 	}

@@ -157,7 +157,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	@Override
 	public final void onError()
 	{
-
 	}
 
 

@@ -94,19 +94,6 @@ public class TabbedPanelPage extends WicketExamplePage
 		final TabbedPanel<ITab> tabbedPanel = new TabbedPanel<ITab>("tabs", tabs);
 		tabbedPanel.add(AttributeModifier.replace("class", TabbedPanelPage.this.getDefaultModel()));
 		add(tabbedPanel);
-
-		add(new Link<Void>("skip")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick()
-			{
-				int index = tabbedPanel.getModelObject();
-
-				tabbedPanel.setModelObject((index + 1) % tabs.size());
-			}
-		});
 	}
 
 	private void addCssSwitchingLinks()

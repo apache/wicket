@@ -218,7 +218,6 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	@Override
 	public void onError()
 	{
-
 	}
 
 	/**

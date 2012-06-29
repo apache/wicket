@@ -49,10 +49,20 @@ public class ResourceStreamResource extends AbstractResource
 
 	private Duration cacheDuration;
 
+
 	/**
-	 * Construct.
+	 * Constructor.
+	 */
+	public ResourceStreamResource()
+	{
+		this(null);
+	}
+
+	/**
+	 * Constructor.
 	 * 
 	 * @param stream
+	 *      the resource stream to read from
 	 */
 	public ResourceStreamResource(IResourceStream stream)
 	{
@@ -61,7 +71,7 @@ public class ResourceStreamResource extends AbstractResource
 
 	/**
 	 * @param fileName
-	 * @return this
+	 * @return this object, for chaining
 	 */
 	public ResourceStreamResource setFileName(String fileName)
 	{
@@ -71,7 +81,7 @@ public class ResourceStreamResource extends AbstractResource
 
 	/**
 	 * @param contentDisposition
-	 * @return thsi
+	 * @return this object, for chaining
 	 */
 	public ResourceStreamResource setContentDisposition(ContentDisposition contentDisposition)
 	{
@@ -81,7 +91,7 @@ public class ResourceStreamResource extends AbstractResource
 
 	/**
 	 * @param textEncoding
-	 * @return this
+	 * @return this object, for chaining
 	 */
 	public ResourceStreamResource setTextEncoding(String textEncoding)
 	{
@@ -100,7 +110,7 @@ public class ResourceStreamResource extends AbstractResource
 	/**
 	 * @param cacheDuration
 	 *            the duration for which the resource will be cached by the browser
-	 * @return this component
+	 * @return this object, for chaining
 	 */
 	public ResourceStreamResource setCacheDuration(Duration cacheDuration)
 	{
@@ -110,7 +120,7 @@ public class ResourceStreamResource extends AbstractResource
 
 	/**
 	 * Lazy or dynamic initialization of the wrapped IResourceStream(Writer)
-	 * @return the underlying IResourceStream
+	 * @return the underlying IResourceStream. May be {@code null}.
 	 */
 	protected IResourceStream getResourceStream()
 	{
@@ -144,7 +154,7 @@ public class ResourceStreamResource extends AbstractResource
 		if (data.dataNeedsToBeWritten(attributes))
 		{
 			InputStream inputStream = null;
-			if (stream instanceof IResourceStreamWriter == false)
+			if (resourceStream instanceof IResourceStreamWriter == false)
 			{
 				try
 				{
