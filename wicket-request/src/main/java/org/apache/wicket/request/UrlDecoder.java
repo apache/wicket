@@ -89,7 +89,6 @@ public class UrlDecoder
 			return null;
 		}
 
-		boolean needToChange = false;
 		int numChars = s.length();
 		StringBuilder sb = new StringBuilder(numChars > 500 ? numChars / 2 : numChars);
 		int i = 0;
@@ -110,7 +109,6 @@ public class UrlDecoder
 				case '+' :
 					sb.append(decodePlus ? ' ' : '+');
 					i++;
-					needToChange = true;
 					break;
 
 				case '%' :
@@ -163,7 +161,6 @@ public class UrlDecoder
 							"URLDecoder: Illegal hex characters in escape (%) pattern - " +
 								e.getMessage());
 					}
-					needToChange = true;
 					break;
 
 				default :
@@ -173,6 +170,8 @@ public class UrlDecoder
 			}
 		}
 
-		return (needToChange ? sb.toString() : s);
+		// no trying to filter out bad escapes beforehand, just kill all null bytes here at the end,
+		// that way none will come through
+		return sb.toString().replace("\0", "NULL");
 	}
 }
