@@ -6,26 +6,42 @@
  * 1) install node.js - http://nodejs.org/#download. This will install 'npm' (Node Package Manager) too
  * 2) install phantomjs - http://code.google.com/p/phantomjs/downloads/list
  * 3) install grunt - 'npm -g install grunt'
- * 4) run it: grunt lint[:all] qunit[:index] qunit:local
+ * 4) run it: grunt lint, grunt lint:core, grunt qunit, grunt qunit:local
  */
 
-module.exports = function(grunt) {
+ /*global module: true */
 
-	var lintCore = [
-		'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
-		'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
-		'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
-		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckGroupSelector.js",
-		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckboxMultipleChoiceSelector.js",
-		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/AbstractCheckSelector.js",
-		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
-		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckBoxSelector.js"
-	]
+module.exports = function(grunt) {
+	"use strict";
+
+	var
+		lintCore = [
+			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
+			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
+			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
+			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckGroupSelector.js",
+			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckboxMultipleChoiceSelector.js",
+			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/AbstractCheckSelector.js",
+			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
+			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckBoxSelector.js"
+		],
+		lintExtensions = [
+			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/progressbar.js"
+//			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
+//			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
+//			"wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
+//			"wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/tree/res/tree.js"
+		],
+		gruntJs = [
+			"grunt.js"
+		];
 
 	// Project configuration.
 	grunt.initConfig({
 		lint: {
-			all: lintCore
+			core: lintCore,
+			extensions: lintExtensions,
+			grunt: gruntJs
 		},
 
 		jshint: {
