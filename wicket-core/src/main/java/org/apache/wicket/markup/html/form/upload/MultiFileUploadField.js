@@ -19,16 +19,16 @@
  *
  *   You might (will) want to play around with the addListRow() method to make the output prettier.
  *
- *   You might also want to change the line 
+ *   You might also want to change the line
  *       element.name = 'file_' + this.count;
  *   ...to a naming convention that makes more sense to you.
- * 
+ *
  * Licence:
  *   Use this however/wherever you like, just don't blame me if it breaks anything.
  *
  * Credit:
  *   If you're nice, you'll leave this bit:
- *  
+ *
  *   Class by Stickman -- http://www.the-stickman.com
  *      with thanks to:
  *      [for Safari fixes]
@@ -39,6 +39,7 @@
  *         'neal'
  */
 function MultiSelector( eprefix, list_target,max, del_label ){
+	"use strict";
 
 	// Where to write the list
 	this.list_target = list_target;
@@ -51,9 +52,9 @@ function MultiSelector( eprefix, list_target,max, del_label ){
 		this.max = max;
 	} else {
 		this.max = -1;
-	};
+	}
 	
-	this.delete_label=del_label
+	this.delete_label=del_label;
 	this.element_name_prefix=eprefix;
 	
 	/**
@@ -62,7 +63,7 @@ function MultiSelector( eprefix, list_target,max, del_label ){
 	this.addElement = function( element ){
 
 		// Make sure it's a file input element
-		if( element.tagName.toLowerCase() == 'input' && element.type.toLowerCase() == 'file' ){
+		if( element.tagName.toLowerCase() === 'input' && element.type.toLowerCase() === 'file' ){
 
 			// Element name -- what number am I?
 			element.name = this.element_name_prefix + "_mf_"+this.id++;
@@ -92,19 +93,19 @@ function MultiSelector( eprefix, list_target,max, del_label ){
 
 			};
 			// If we've reached maximum number, disable input element
-			if( this.max != -1 && this.count >= this.max ){
+			if( this.max !== -1 && this.count >= this.max ){
 				element.disabled = true;
-			};
+			}
 
 			// File element counter
 			this.count++;
 			// Most recent element
 			this.current_element = element;
 			
-		} else {
+		} else if (Wicket && Wicket.Log) {
 			// This can only be applied to file input elements!
-			alert( 'Error: not a file input element' );
-		};
+			Wicket.Log.error( 'Error: not a file input element' );
+		}
 
 	};
 
@@ -156,4 +157,4 @@ function MultiSelector( eprefix, list_target,max, del_label ){
 		
 	};
 
-};
+}

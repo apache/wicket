@@ -15,23 +15,27 @@
  * limitations under the License.
  */
 // introduce a namespace, just to be nice
-if (typeof (Wicket.CheckboxSelector.Checkboxes) == "undefined") {
+if (typeof (Wicket.CheckboxSelector.Checkboxes) === "undefined") {
 	Wicket.CheckboxSelector.Checkboxes = {};
 	/**
 	 * Returns a closure that finds all checkboxes with the given IDs.
-	 * 
-	 * @param parentChoiceId
+	 *
+	 * @param checkBoxIDs
 	 *            An array containing the markup IDs of all checkboxes this
 	 *            selector should control.
 	 */
 	Wicket.CheckboxSelector.Checkboxes.findCheckboxesFunction = function(checkBoxIDs) {
+		"use strict";
+
 		return function() {
-			var result = new Array();
+			var i,
+				result = [];
+
 			for (i in checkBoxIDs) {
 				var checkBox = Wicket.$(checkBoxIDs[i]);
-				result.push(checkBox)
+				result.push(checkBox);
 			}
 			return result;
-		}
+		};
 	};
 }

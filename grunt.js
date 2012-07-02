@@ -11,14 +11,21 @@
 
 module.exports = function(grunt) {
 
+	var lintCore = [
+		'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
+		'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
+		'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
+		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckGroupSelector.js",
+		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckboxMultipleChoiceSelector.js",
+		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/AbstractCheckSelector.js",
+		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
+		"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckBoxSelector.js"
+	]
+
 	// Project configuration.
 	grunt.initConfig({
 		lint: {
-			all: [
-				'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
-				'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
-				'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js'
-			]
+			all: lintCore
 		},
 
 		jshint: {
