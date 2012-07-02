@@ -29,15 +29,17 @@ module.exports = function(grunt) {
 				"eqnull": true,
 				"eqeqeq": true,
 				"expr": true,
+				"evil": true,
 				"jquery": true,
 				"latedef": true,
 				"noarg": true,
-				"onevar": true,
+				"onevar": false,
 				"smarttabs": true,
 				"trailing": true,
 				"undef": true,
+				"strict": true,
 				"predef": [
-					"ActiveXObject"
+					"Wicket"
 				]
 			}
 		},

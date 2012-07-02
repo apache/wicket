@@ -15,10 +15,6 @@
  * limitations under the License.
  */
 
-/*jshint evil: true, nomen: false, onevar: false, regexp: false, strict: true, boss: true, undef: true, maxlen: 160, curly: true, eqeqeq: true */
-/*global jQuery: false, DOMParser: true, Wicket: true, window: false, document: false  */
-
-
 /*
  * Wicket Ajax Support
  *

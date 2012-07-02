@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
- /*jshint evil: true, nomen: false, onevar: false, regexp: false, strict: true, boss: true, undef: true, maxlen: 160, curly: true, eqeqeq: true */
-/*global document: false, jQuery:false, DOMParser: true, window: false, Wicket: true, console: true */
+/*jshint maxlen: 430 */
+/*global console: true */
 
 
 /*
@@ -83,7 +83,7 @@
 			var $log = jQuery('#'+self.debugWindowLogId);
 			var $child = jQuery("<div>");
 
-			msg = "" + msg;		
+			msg = "" + msg;
 			msg = msg.replace(/&/g, "&amp;");
 			msg = msg.replace(/</g, "&lt;");
 			msg = msg.replace(/>/g, "&gt;");
@@ -138,7 +138,7 @@
 			jQuery('#'+self.debugWindowLogId).empty();
 		},
 
-		init : function() {		
+		init : function() {
 
 			if ( Wicket.Ajax.DebugWindow.enabled) {
 				var self = Wicket.Ajax.DebugWindow;
@@ -153,11 +153,13 @@
 						"	<div style='border: 1px solid black; padding: 1px; background-color: #eee'>"+
 						"		<div style='overflow: auto; width: 100%'>"+
 						"			<div style='float: right; padding: 0.2em; padding-right: 1em; color: black;'>"+
-						"               <a href='javascript:Wicket.Ajax.DebugWindow.switchScrollLock()' id='"+self.debugWindowScrollLockLinkId+"' style='color:blue' onfocus='this.blur();'>scroll lock</a> |"+
+						"               <a href='javascript:Wicket.Ajax.DebugWindow.switchScrollLock()' id='"+self.debugWindowScrollLockLinkId+
+											"' style='color:blue' onfocus='this.blur();'>scroll lock</a> |"+
 						"				<a href='javascript:Wicket.Ajax.DebugWindow.clearLog()' style='color:blue'>clear</a> | "+
 						"				<a href='javascript:Wicket.Ajax.DebugWindow.hideDebugWindow()' style='color:blue'>close</a>"+
 						"			</div>"+
-						"			<div id='"+dwdhid+"' style='padding: 0.2em; background-color: gray; color: white; padding-left: 1em; margin-right: 14em; cursor: move;'>"+
+						"			<div id='"+dwdhid+
+										"' style='padding: 0.2em; background-color: gray; color: white; padding-left: 1em; margin-right: 14em; cursor: move;'>"+
 						"				Wicket Ajax Debug Window (drag me here)"+
 						"			</div>"+
 						"			<div id='"+self.debugWindowLogId+"' style='width: 100%; height: 200px; background-color: white; color: black; overflow: auto; white-space: nowrap; text-align:left;'>"+
@@ -173,12 +175,12 @@
 
 					// Special style for Internet 6 and 7 in quirks mode
 					if (Wicket.Browser.isIE() && (Wicket.Browser.isIEQuirks() || !Wicket.Browser.isIE7())) {
-						html +=	
+						html +=
 							"<a id='"+self.wicketDebugLink+"' style='position:absolute; right: 10px; bottom: 10px; z-index:1000000; padding-top: 0.3em; padding-bottom: 0.3em; line-height: normal ; _padding-top: 0em; width: 12em; border: 1px solid black; background-color: white; text-align: center; opacity: 0.7; filter: alpha(opacity=70); color: blue; " +
 							"                                  left: expression(-10 - wicketDebugLink.offsetWidth + eval(document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft) +(document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth));"+
 							"                                  top: expression(-10 - wicketDebugLink.offsetHeight + eval(document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + (document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight));'";
 					} else {
-						html += 
+						html +=
 							"<a id='"+self.wicketDebugLink+"' style='position:fixed; right: 10px; bottom: 10px; z-index:1000000; padding-top: 0.3em; padding-bottom: 0.3em; line-height: normal ; _padding-top: 0em; width: 12em; border: 1px solid black; background-color: white; text-align: center; opacity: 0.7;  color: blue;'";
 					}
 
