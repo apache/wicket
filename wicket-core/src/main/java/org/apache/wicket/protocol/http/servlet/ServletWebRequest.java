@@ -97,9 +97,9 @@ public class ServletWebRequest extends WebRequest
 
 		this.httpServletRequest = httpServletRequest;
 
-		errorAttributes = ErrorAttributes.of(httpServletRequest);
+		errorAttributes = ErrorAttributes.of(httpServletRequest, filterPrefix);
 
-		forwardAttributes = ForwardAttributes.of(httpServletRequest);
+		forwardAttributes = ForwardAttributes.of(httpServletRequest, filterPrefix);
 
 		if (forwardAttributes != null || errorAttributes != null)
 		{
