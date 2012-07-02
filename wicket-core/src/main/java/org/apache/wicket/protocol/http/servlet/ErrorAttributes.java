@@ -141,12 +141,12 @@ public class ErrorAttributes
 	 * @param request
 	 * @return instance of request contains error attributes or {@code null} if it does not.
 	 */
-	public static ErrorAttributes of(HttpServletRequest request)
+	public static ErrorAttributes of(HttpServletRequest request, String filterPrefix)
 	{
 		Args.notNull(request, "request");
 		Integer code = (Integer)request.getAttribute("javax.servlet.error.status_code");
 		String message = (String)request.getAttribute("javax.servlet.error.message");
-		String uri = (String)request.getAttribute("javax.servlet.error.request_uri");
+		String uri = DispatchedRequestUtils.getRequestUri(request, "javax.servlet.error.request_uri", filterPrefix);
 		String servlet = (String)request.getAttribute("javax.servlet.error.servlet_name");
 		@SuppressWarnings("unchecked")
 		Class<? extends Throwable> type = (Class<? extends Throwable>)request.getAttribute("javax.servlet.error.exception_type");
