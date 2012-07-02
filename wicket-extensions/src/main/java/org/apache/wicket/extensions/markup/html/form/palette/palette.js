@@ -19,7 +19,7 @@
 	'use strict';
 
 	if (typeof(Wicket) === "undefined") {
-		Wicket = { };
+		window.Wicket = { };
 	}
 
 	if (typeof(Wicket.Palette) === "undefined") {
