@@ -38,6 +38,9 @@ module.exports = function(grunt) {
 		nativeWebSocketJs = [
 		"wicket-experimental/wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
 		],
+		atmosphereJs = [
+			"wicket-experimental/wicket-atmosphere/src/main/java/org/apache/wicket/atmosphere/jquery.wicketatmosphere.js"
+		],
 		gruntJs = [
 			"grunt.js"
 		];
@@ -49,6 +52,7 @@ module.exports = function(grunt) {
 			extensions: extensionsJs,
 			datetime: datetimeJs,
 			nativeWebSocket: nativeWebSocketJs,
+			atmosphere: atmosphereJs,
 			grunt: gruntJs
 		},
 

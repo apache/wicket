@@ -1,21 +1,19 @@
-(function($) {
+;(function($) {
+	'use strict';
+
 	jQuery.fn.wicketAtmosphere = function(params) {
 		var callbackAdded = false;
 		var response;
 
 		// jquery.atmosphere.response
 		function callback(response) {
-			detectedTransport = response.transport;
-			if (response.transport != 'polling'
-					&& response.state == 'messageReceived') {
-				$.atmosphere.log('info', [ "response.responseBody: "
-						+ response.responseBody ]);
-				if (response.status == 200) {
-					(new Wicket.Ajax.Call()).loadedCallback($
-							.parseXML(response.responseBody), {});
-				}
-			} else if (response.state == "opening") {
 
+			if (response.transport !== 'polling' && response.state === 'messageReceived') {
+				$.atmosphere.log('info', [ "response.responseBody: " + response.responseBody ]);
+				if (response.status === 200) {
+					(new Wicket.Ajax.Call()).loadedCallback($.parseXML(response.responseBody), {});
+				}
+			} else if (response.state === "opening") {
 			}
 		}
 
@@ -34,5 +32,5 @@
 			callbackAdded = false;
 			$.atmosphere.unsubscribe();
 		});
-	}
+	};
 }(jQuery));
