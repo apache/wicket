@@ -46,4 +46,22 @@ public class WicketURLTest extends TestCase
 		assertEquals(" ", WicketURLDecoder.QUERY_INSTANCE.decode("+", "UTF-8"));
 		assertEquals("+", WicketURLDecoder.QUERY_INSTANCE.decode("%2B", "UTF-8"));
 	}
+
+
+	public void testMustNotEmitNullByteForPath() throws Exception
+	{
+		String evil = "http://www.devil.com/highway/to%00hell";
+		String decoded = WicketURLDecoder.PATH_INSTANCE.decode(evil, "UTF-8");
+		assertEquals(-1, decoded.indexOf('\0'));
+		assertEquals("http://www.devil.com/highway/toNULLhell", decoded);
+	}
+
+	public void testMustNotEmitNullByteForQuery() throws Exception
+	{
+		String evil = "http://www.devil.com/highway?destination=%00hell";
+		String decoded = WicketURLDecoder.QUERY_INSTANCE.decode(evil, "UTF-8");
+		assertEquals(-1, decoded.indexOf('\0'));
+		assertEquals("http://www.devil.com/highway?destination=NULLhell", decoded);
+	}
+
 }

@@ -106,7 +106,6 @@ public class WicketURLDecoder
 			return null;
 		}
 
-		boolean needToChange = false;
 		int numChars = s.length();
 		StringBuffer sb = new StringBuffer(numChars > 500 ? numChars / 2 : numChars);
 		int i = 0;
@@ -127,7 +126,6 @@ public class WicketURLDecoder
 				case '+' :
 					sb.append(decodePlus ? ' ' : '+');
 					i++;
-					needToChange = true;
 					break;
 
 				case '%' :
@@ -180,7 +178,6 @@ public class WicketURLDecoder
 							"URLDecoder: Illegal hex characters in escape (%) pattern - " +
 								e.getMessage());
 					}
-					needToChange = true;
 					break;
 
 				default :
@@ -190,6 +187,8 @@ public class WicketURLDecoder
 			}
 		}
 
-		return (needToChange ? sb.toString() : s);
+		// no trying to filter out bad escapes beforehand, just kill all null bytes here at the
+		// end, that way none will come through
+		return sb.toString().replace("\0", "NULL");
 	}
 }
