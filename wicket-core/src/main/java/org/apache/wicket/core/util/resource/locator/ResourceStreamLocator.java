@@ -20,11 +20,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
+import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.file.IResourceFinder;
+import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceUtils;
 import org.apache.wicket.util.resource.ResourceUtils.PathLocale;
@@ -55,6 +59,11 @@ import org.slf4j.LoggerFactory;
  * <li>&lt;language&gt;_&lt;country&gt;</li>
  * <li>&lt;language&gt;</li>
  * </ol>
+ * <p>
+ * Resources will be actually loaded by the {@link IResourceFinder}s defined in the resource
+ * settings. By default there are finders that look in the classpath and in the classpath in
+ * META-INF/resources. You can add more by adding {@link WebApplicationPath}s or {@link Path}s to
+ * {@link IResourceSettings#getResourceFinders()}.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -67,24 +76,36 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	private static final Iterable<String> NO_EXTENSIONS = new ArrayList<String>(0);
 
 	/** If null, the application registered finder will be used */
-	private IResourceFinder finder;
+	private List<IResourceFinder> finders;
 
 	/**
 	 * Constructor
 	 */
 	public ResourceStreamLocator()
 	{
+		this((List<IResourceFinder>)null);
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param finder
-	 *            resource finder
+	 * @param finders
+	 *            resource finders. These will be tried in the given order.
 	 */
-	public ResourceStreamLocator(final IResourceFinder finder)
+	public ResourceStreamLocator(final IResourceFinder... finders)
 	{
-		this.finder = finder;
+		this(Arrays.asList(finders));
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param finders
+	 *            resource finders. These will be tried in the given order.
+	 */
+	public ResourceStreamLocator(final List<IResourceFinder> finders)
+	{
+		this.finders = finders;
 	}
 
 	/**
@@ -97,19 +118,21 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	{
 		// First try with the resource finder registered with the application
 		// (allows for markup reloading)
-		IResourceStream stream = locateByResourceFinder(clazz, path);
-		if (stream != null)
+		if (finders == null)
 		{
-			return stream;
+			finders = Application.get().getResourceSettings().getResourceFinders();
 		}
 
-		// Then search the resource on the classpath
-		stream = locateByClassLoader(clazz, path);
-		if (stream != null)
+		IResourceStream result;
+		for (IResourceFinder finder : finders)
 		{
-			return stream;
+			log.debug("Attempting to locate resource '{}' using finder'{}'", path, finder);
+			result = finder.find(clazz, path);
+			if (result != null)
+			{
+				return result;
+			}
 		}
-
 		return null;
 	}
 
@@ -151,42 +174,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		return null;
 	}
 
-	/**
-	 * Search the the resource my means of the various classloaders available
-	 * 
-	 * @param clazz
-	 * @param path
-	 * @return resource stream
-	 */
-	protected IResourceStream locateByClassLoader(final Class<?> clazz, final String path)
-	{
-		IResourceStream resourceStream = null;
-
-		if (clazz != null)
-		{
-			resourceStream = getResourceStream(clazz.getClassLoader(), path);
-			if (resourceStream != null)
-			{
-				return resourceStream;
-			}
-		}
-
-		// use context classloader when no specific classloader is set
-		// (package resources for instance)
-		resourceStream = getResourceStream(Thread.currentThread().getContextClassLoader(), path);
-		if (resourceStream != null)
-		{
-			return resourceStream;
-		}
-
-		// use Wicket classloader when no specific classloader is set
-		resourceStream = getResourceStream(getClass().getClassLoader(), path);
-		if (resourceStream != null)
-		{
-			return resourceStream;
-		}
-		return null;
-	}
 
 	/**
 	 * Get the resource
@@ -222,30 +209,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			return new UrlResourceStream(url);
 		}
 		return null;
-	}
-
-	/**
-	 * Search the resource by means of the application registered resource finder
-	 * 
-	 * @param clazz
-	 * @param path
-	 * @return resource stream
-	 */
-	protected IResourceStream locateByResourceFinder(final Class<?> clazz, final String path)
-	{
-		if (finder == null)
-		{
-			finder = Application.get().getResourceSettings().getResourceFinder();
-		}
-
-		// Log attempt
-		if (log.isDebugEnabled())
-		{
-			log.debug("Attempting to locate resource '" + path + "' on path " + finder);
-		}
-
-		// Try to find file resource on the path supplied
-		return finder.find(clazz, path);
 	}
 
 	/**

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.settings.def;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.head.PriorityFirstComparator;
@@ -49,14 +53,9 @@ import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
-import org.apache.wicket.util.file.IResourcePath;
-import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
-import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
-import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
@@ -80,14 +79,14 @@ public class ResourceSettings implements IResourceSettings
 	private final Map<String, IResourceFactory> nameToResourceFactory = Generics.newHashMap();
 
 	/** The package resource guard. */
-	private IPackageResourceGuard packageResourceGuard =
-			new SecurePackageResourceGuard(new SecurePackageResourceGuard.SimpleCache(100));
+	private IPackageResourceGuard packageResourceGuard = new SecurePackageResourceGuard(
+		new SecurePackageResourceGuard.SimpleCache(100));
 
 	/** The factory to be used for the property files */
 	private org.apache.wicket.resource.IPropertiesFactory propertiesFactory;
 
 	/** Filesystem Path to search for resources */
-	private IResourceFinder resourceFinder = new Path();
+	private List<IResourceFinder> resourceFinders = new ArrayList<IResourceFinder>();
 
 	/** Frequency at which files should be polled */
 	private Duration resourcePollFrequency = null;
@@ -201,27 +200,6 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#addResourceFolder(java.lang.String)
-	 */
-	@Override
-	public void addResourceFolder(final String resourceFolder)
-	{
-		// Get resource finder
-		final IResourceFinder finder = getResourceFinder();
-
-		// Make sure it's a path
-		if (!(finder instanceof IResourcePath))
-		{
-			throw new IllegalArgumentException(
-				"To add a resource folder, the application's resource finder must be an instance of IResourcePath");
-		}
-
-		// Cast to resource path and add folder
-		final IResourcePath path = (IResourcePath)finder;
-		path.add(resourceFolder);
-	}
-
-	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#getLocalizer()
 	 */
 	@Override
@@ -266,12 +244,12 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#getResourceFinder()
+	 * @see org.apache.wicket.settings.IResourceSettings#getResourceFinders()
 	 */
 	@Override
-	public IResourceFinder getResourceFinder()
+	public List<IResourceFinder> getResourceFinders()
 	{
-		return resourceFinder;
+		return resourceFinders;
 	}
 
 	/**
@@ -293,7 +271,7 @@ public class ResourceSettings implements IResourceSettings
 		{
 			// Create compound resource locator using source path from
 			// application settings
-			resourceStreamLocator = new ResourceStreamLocator(getResourceFinder());
+			resourceStreamLocator = new ResourceStreamLocator(getResourceFinders());
 			resourceStreamLocator = new CachingResourceStreamLocator(resourceStreamLocator);
 		}
 		return resourceStreamLocator;
@@ -395,9 +373,10 @@ public class ResourceSettings implements IResourceSettings
 	 * @see org.apache.wicket.settings.IResourceSettings#setResourceFinder(org.apache.wicket.util.file.IResourceFinder)
 	 */
 	@Override
-	public void setResourceFinder(final IResourceFinder resourceFinder)
+	public void setResourceFinders(final List<IResourceFinder> resourceFinders)
 	{
-		this.resourceFinder = resourceFinder;
+		Args.notNull(resourceFinders, "resourceFinders");
+		this.resourceFinders = resourceFinders;
 
 		// Cause resource locator to get recreated
 		resourceStreamLocator = null;

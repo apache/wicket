@@ -30,13 +30,14 @@ import org.junit.Test;
 
 public class PathTest extends WicketTestCase
 {
+
 	@Test
 	public void loadFromRootUsingSubpathInFilename() throws Exception
 	{
 		final String contents = PathTest.class.getName() + ": loaded from root";
 		final File file = createTempFile(contents);
 		final File root = findRoot(file);
-		final Path path = new Path(new Folder(root.getCanonicalPath()));
+		final Path path = new Path(root.getCanonicalPath());
 		IResourceStream rs = path.find(PathTest.class, file.getCanonicalPath());
 		assertNotNull(rs);
 		assertContents(contents, rs);
@@ -69,7 +70,7 @@ public class PathTest extends WicketTestCase
 		final String contents = PathTest.class.getName() + ": loaded from prefix";
 		final File file = createTempFile(contents);
 		final File parent = file.getParentFile();
-		final Path path = new Path(new Folder(parent.getCanonicalPath()));
+		final Path path = new Path(parent.getCanonicalPath());
 		IResourceStream rs = path.find(PathTest.class, file.getName());
 		assertNotNull(rs);
 		assertContents(contents, rs);

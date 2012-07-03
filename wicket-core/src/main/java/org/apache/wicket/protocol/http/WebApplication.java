@@ -37,6 +37,7 @@ import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.request.mapper.PackageMapper;
 import org.apache.wicket.core.request.mapper.ResourceMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
+import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -74,7 +75,7 @@ import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
-import org.apache.wicket.util.file.IResourceFinder;
+import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
@@ -128,6 +129,8 @@ public abstract class WebApplication extends Application
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
+
+	public static final String META_INF_RESOURCES = "META-INF/resources";
 
 	private ServletContext servletContext;
 
@@ -614,6 +617,11 @@ public abstract class WebApplication extends Application
 	{
 		super.internalInit();
 
+		getResourceSettings().getResourceFinders().add(
+			new WebApplicationPath(getServletContext(), ""));
+		getResourceSettings().getResourceFinders().add(
+			new ClassPathResourceFinder(META_INF_RESOURCES));
+
 		// Set default error pages for HTML markup
 		getApplicationSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
 		getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
@@ -624,18 +632,17 @@ public abstract class WebApplication extends Application
 		getPageSettings().addComponentResolver(new AutoLabelResolver());
 		getPageSettings().addComponentResolver(new AutoLabelTextResolver());
 
-		// Set resource finder to web app path
-		getResourceSettings().setResourceFinder(getResourceFinder());
-
 		getResourceSettings().setFileCleaner(new FileCleaner());
 
-		// Add optional sourceFolder for resources.
-		String resourceFolder = getInitParameter("sourceFolder");
-		if (resourceFolder != null)
+		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
 		{
-			getResourceSettings().addResourceFolder(resourceFolder);
+			// Add optional sourceFolder for resources.
+			String resourceFolder = getInitParameter("sourceFolder");
+			if (resourceFolder != null)
+			{
+				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
+			}
 		}
-
 		setPageRendererProvider(new WebPageRendererProvider());
 		setSessionStoreProvider(new WebSessionStoreProvider());
 		setAjaxRequestTargetProvider(new DefaultAjaxRequestTargetProvider());
@@ -779,16 +786,6 @@ public abstract class WebApplication extends Application
 				response.write(" ?>");
 			}
 		}
-	}
-
-	/**
-	 * By default it return a WebApplicationPath
-	 * 
-	 * @return resource finder
-	 */
-	protected IResourceFinder getResourceFinder()
-	{
-		return new WebApplicationPath(getServletContext());
 	}
 
 	/**

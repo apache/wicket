@@ -55,7 +55,7 @@ public interface ResourceSettingsMBean
 	 * @return Returns the resourceFinder.
 	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
-	String getResourceFinder();
+	String getResourceFinders();
 
 	/**
 	 * @return Returns the resourcePollFrequency.

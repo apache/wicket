@@ -37,6 +37,7 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
@@ -587,7 +588,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Iterate initializers list, calling their {@link IInitializer#destroy(Application) destroy} methods.
+	 * Iterate initializers list, calling their {@link IInitializer#destroy(Application) destroy}
+	 * methods.
 	 */
 	private void destroyInitializers()
 	{
@@ -691,6 +693,8 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageSettings.addComponentResolver(new InlineEnclosureHandler());
 		pageSettings.addComponentResolver(new WicketMessageTagHandler());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
+
+		getResourceSettings().getResourceFinders().add(new ClassPathResourceFinder(""));
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
@@ -1322,7 +1326,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void checkSettingsAvailable()
 	{
@@ -1590,7 +1594,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static class DefaultRequestCycleProvider implements IRequestCycleProvider
 	{
