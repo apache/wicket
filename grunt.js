@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 	"use strict";
 
 	var
-		lintCore = [
+		coreJs = [
 			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
 			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
 			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
@@ -25,12 +25,15 @@ module.exports = function(grunt) {
 			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
 			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckBoxSelector.js"
 		],
-		lintExtensions = [
+		extensionsJs = [
 			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/progressbar.js",
 			"wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
 			"wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/tree/res/tree.js",
 			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
 			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js"
+		],
+		datetimeJs = [
+			"wicket-datetime/src/main/java/org/apache/wicket/extensions/yui/calendar/wicket-date.js"
 		],
 		gruntJs = [
 			"grunt.js"
@@ -39,8 +42,9 @@ module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		lint: {
-			core: lintCore,
-			extensions: lintExtensions,
+			core: coreJs,
+			extensions: extensionsJs,
+			datetime: datetimeJs,
 			grunt: gruntJs
 		},
 
