@@ -35,6 +35,9 @@ module.exports = function(grunt) {
 		datetimeJs = [
 			"wicket-datetime/src/main/java/org/apache/wicket/extensions/yui/calendar/wicket-date.js"
 		],
+		nativeWebSocketJs = [
+		"wicket-experimental/wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
+		],
 		gruntJs = [
 			"grunt.js"
 		];
@@ -45,6 +48,7 @@ module.exports = function(grunt) {
 			core: coreJs,
 			extensions: extensionsJs,
 			datetime: datetimeJs,
+			nativeWebSocket: nativeWebSocketJs,
 			grunt: gruntJs
 		},
 
