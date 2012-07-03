@@ -461,7 +461,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			if (curExtraParameter.getFunctionParameterName() != null)
 			{
 				if (!first)
-					sb.append(",");
+					sb.append(',');
 				else
 					first = false;
 				sb.append(curExtraParameter.getFunctionParameterName());
@@ -497,10 +497,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			if (curExtraParameter.getAjaxParameterName() != null)
 			{
 				if (!first)
-					sb.append(",");
+					sb.append(',');
 				else
 					first = false;
-				sb.append("'")
+				sb.append('\'')
 					.append(curExtraParameter.getAjaxParameterName())
 					.append("': ")
 					.append(curExtraParameter.getAjaxParameterCode());
