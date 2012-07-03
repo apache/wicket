@@ -64,9 +64,6 @@ public class WicketURLEncoder
 	// list of what not to decode
 	protected BitSet dontNeedEncoding;
 
-	// E.g. "?" for FULL_PATH encoding when querystring has already been encoded.
-	private final char stopChar;
-
 	// used in decoding
 	protected static final int caseDiff = ('a' - 'A');
 
@@ -76,7 +73,7 @@ public class WicketURLEncoder
 	 * 
 	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
 	 */
-	public static final WicketURLEncoder QUERY_INSTANCE = new WicketURLEncoder(Type.QUERY, '\0');
+	public static final WicketURLEncoder QUERY_INSTANCE = new WicketURLEncoder(Type.QUERY);
 
 	/**
 	 * Encoder used to encode components of a path.<br/>
@@ -84,7 +81,7 @@ public class WicketURLEncoder
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
-	public static final WicketURLEncoder PATH_INSTANCE = new WicketURLEncoder(Type.PATH, '\0');
+	public static final WicketURLEncoder PATH_INSTANCE = new WicketURLEncoder(Type.PATH);
 
 	/**
 	 * Encoder used to encode all path segments. Querystring will be excluded.<br/>
@@ -92,8 +89,9 @@ public class WicketURLEncoder
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
-	public static final WicketURLEncoder FULL_PATH_INSTANCE = new WicketURLEncoder(Type.FULL_PATH,
-		'?');
+	public static final WicketURLEncoder FULL_PATH_INSTANCE = new WicketURLEncoder(Type.FULL_PATH);
+
+	private final Type type;
 
 	/**
 	 * Allow subclass to call constructor.
@@ -103,9 +101,8 @@ public class WicketURLEncoder
 	 * @param stopChar
 	 *            stop encoding when stopChar found
 	 */
-	protected WicketURLEncoder(Type type, char stopChar)
+	protected WicketURLEncoder(Type type)
 	{
-		this.stopChar = stopChar;
 
 		/*
 		 * This note from java.net.URLEncoder ==================================
@@ -155,6 +152,7 @@ public class WicketURLEncoder
 		 * query =( pchar / "/" / "?" )
 		 */
 
+		this.type = type;
 		// unreserved
 		dontNeedEncoding = new BitSet(256);
 		int i;
@@ -195,7 +193,7 @@ public class WicketURLEncoder
 		// encoding type-specific
 		switch (type)
 		{
-			// this code consistent with java.net.URLEncoder version
+		// this code consistent with java.net.URLEncoder version
 			case QUERY :
 				dontNeedEncoding.set(' '); /*
 											 * encoding a space to a + is done in the encode()
@@ -261,9 +259,9 @@ public class WicketURLEncoder
 	 * @return encoded string
 	 * @see java.net.URLEncoder#encode(String, String)
 	 */
-	public String encode(String s, String enc)
+	public String encode(String unsafeInput, String enc)
 	{
-		boolean needToChange = false;
+		final String s = unsafeInput.replace("\0", "NULL");
 		StringBuffer out = new StringBuffer(s.length());
 		Charset charset;
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
@@ -291,7 +289,7 @@ public class WicketURLEncoder
 		{
 			int c = s.charAt(i);
 
-			if ((stopEncoding == false) && (c == stopChar))
+			if ((stopEncoding == false) && (c == '?' && type == Type.FULL_PATH))
 			{
 				stopEncoding = true;
 			}
@@ -302,7 +300,6 @@ public class WicketURLEncoder
 				if (c == ' ')
 				{
 					c = '+';
-					needToChange = true;
 				}
 				// System.out.println("Storing: " + c);
 				out.append((char)c);
@@ -376,10 +373,9 @@ public class WicketURLEncoder
 					out.append(ch);
 				}
 				charArrayWriter.reset();
-				needToChange = true;
 			}
 		}
 
-		return (needToChange ? out.toString() : s);
+		return out.toString();
 	}
 }

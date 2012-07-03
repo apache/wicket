@@ -64,4 +64,10 @@ public class WicketURLTest extends TestCase
 		assertEquals("http://www.devil.com/highway?destination=NULLhell", decoded);
 	}
 
+	public void testDontStopEncodingOnNullByte() throws Exception
+	{
+		assertEquals("someone's%20badNULL%20url",
+			WicketURLEncoder.FULL_PATH_INSTANCE.encode("someone's bad\0 url", "UTF-8"));
+	}
+
 }
