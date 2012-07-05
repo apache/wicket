@@ -12,19 +12,49 @@
  */
 package org.apache.wicket.ajax.json;
 
+import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
+
 /**
  * Represents a Json function. When written out these values are not escaped so its possible to write out raw
  * JavaScript.
  */
-public class JsonFunction implements JSONString {
+public class JsonFunction implements JSONString, CharSequence, IClusterable
+{
 	private final CharSequence value;
 
-	public JsonFunction(CharSequence value) {
-	this.value = value;
+	public JsonFunction(CharSequence value)
+	{
+		this.value = Args.notNull(value, "value");
 	}
 
 	@Override
-	public String toJSONString() {
+	public String toString()
+	{
+		return toJSONString();
+	}
+
+	@Override
+	public String toJSONString()
+	{
 		return value.toString();
+	}
+
+	@Override
+	public int length()
+	{
+		return value.length();
+	}
+
+	@Override
+	public char charAt(int index)
+	{
+		return value.charAt(index);
+	}
+
+	@Override
+	public CharSequence subSequence(int start, int end)
+	{
+		return value.subSequence(start, end);
 	}
 }
