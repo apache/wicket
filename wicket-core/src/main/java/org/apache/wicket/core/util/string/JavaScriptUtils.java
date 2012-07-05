@@ -78,8 +78,10 @@ public class JavaScriptUtils
 	/**
 	 * Escape single and double quotes so that they can be part of e.g. an alert call.
 	 *
+	 * Note: JSON values need to escape only the double quote, so this method wont help.
+	 *
 	 * @param input
-	 *            input
+	 *            the JavaScript which needs to be escaped
 	 * @return Escaped version of the input
 	 */
 	public static CharSequence escapeQuotes(final CharSequence input)
