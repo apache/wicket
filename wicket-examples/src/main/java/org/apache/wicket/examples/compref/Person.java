@@ -149,6 +149,7 @@ public class Person implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Person name=" + name + ", lastName=" + lastName + ", dateOfBirth=" + dateOfBirth +

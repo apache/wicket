@@ -87,6 +87,7 @@ public class Comment implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Comment date = " + date + ", text = " + text + "]";

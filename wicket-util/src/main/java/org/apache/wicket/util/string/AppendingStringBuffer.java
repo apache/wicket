@@ -97,6 +97,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * 
 	 * @return the length of the sequence of characters currently represented by this string buffer.
 	 */
+	@Override
 	public int length()
 	{
 		return count;
@@ -226,6 +227,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                <code>length()</code>.
 	 * @see java.lang.StringBuffer#length()
 	 */
+	@Override
 	public char charAt(final int index)
 	{
 		if ((index < 0) || (index >= count))
@@ -831,6 +833,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @since 1.4
 	 * @spec JSR-51
 	 */
+	@Override
 	public CharSequence subSequence(final int start, final int end)
 	{
 		return this.substring(start, end);

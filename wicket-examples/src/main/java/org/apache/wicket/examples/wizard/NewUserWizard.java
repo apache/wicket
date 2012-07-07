@@ -134,6 +134,7 @@ public class NewUserWizard extends Wizard
 			add(rolesSetNameField);
 			add(new AbstractFormValidator()
 			{
+				@Override
 				public FormComponent[] getDependentFormComponents()
 				{
 					// name and roles don't have anything to validate,
@@ -141,6 +142,7 @@ public class NewUserWizard extends Wizard
 					return null;
 				}
 
+				@Override
 				public void validate(Form<?> form)
 				{
 					String rolesInput = rolesChoiceField.getInput();
@@ -158,6 +160,7 @@ public class NewUserWizard extends Wizard
 		/**
 		 * @see org.apache.wicket.extensions.wizard.WizardModel.ICondition#evaluate()
 		 */
+		@Override
 		public boolean evaluate()
 		{
 			return assignRoles;

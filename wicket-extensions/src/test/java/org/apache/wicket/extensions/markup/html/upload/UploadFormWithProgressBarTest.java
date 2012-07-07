@@ -83,6 +83,7 @@ public class UploadFormWithProgressBarTest extends WicketTestCase
 			form.add(new UploadProgressBar("progress", form));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(final MarkupContainer container,
 			final Class<?> containerClass)
 		{

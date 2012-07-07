@@ -39,6 +39,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getAutomaticLinking()
 	 */
+	@Override
 	public boolean getAutomaticLinking()
 	{
 		return application.getMarkupSettings().getAutomaticLinking();
@@ -47,6 +48,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getCompressWhitespace()
 	 */
+	@Override
 	public boolean getCompressWhitespace()
 	{
 		return application.getMarkupSettings().getCompressWhitespace();
@@ -55,6 +57,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultAfterDisabledLink()
 	 */
+	@Override
 	public String getDefaultAfterDisabledLink()
 	{
 		return application.getMarkupSettings().getDefaultAfterDisabledLink();
@@ -63,6 +66,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultBeforeDisabledLink()
 	 */
+	@Override
 	public String getDefaultBeforeDisabledLink()
 	{
 		return application.getMarkupSettings().getDefaultBeforeDisabledLink();
@@ -71,6 +75,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultMarkupEncoding()
 	 */
+	@Override
 	public String getDefaultMarkupEncoding()
 	{
 		return application.getMarkupSettings().getDefaultMarkupEncoding();
@@ -79,6 +84,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getStripComments()
 	 */
+	@Override
 	public boolean getStripComments()
 	{
 		return application.getMarkupSettings().getStripComments();
@@ -87,6 +93,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getStripWicketTags()
 	 */
+	@Override
 	public boolean getStripWicketTags()
 	{
 		return application.getMarkupSettings().getStripWicketTags();
@@ -95,6 +102,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setAutomaticLinking(boolean)
 	 */
+	@Override
 	public void setAutomaticLinking(final boolean automaticLinking)
 	{
 		application.getMarkupSettings().setAutomaticLinking(automaticLinking);
@@ -103,6 +111,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setCompressWhitespace(boolean)
 	 */
+	@Override
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		application.getMarkupSettings().setCompressWhitespace(compressWhitespace);
@@ -111,6 +120,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultAfterDisabledLink(java.lang.String)
 	 */
+	@Override
 	public void setDefaultAfterDisabledLink(final String defaultAfterDisabledLink)
 	{
 		application.getMarkupSettings().setDefaultAfterDisabledLink(defaultAfterDisabledLink);
@@ -119,6 +129,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultBeforeDisabledLink(java.lang.String)
 	 */
+	@Override
 	public void setDefaultBeforeDisabledLink(final String defaultBeforeDisabledLink)
 	{
 		application.getMarkupSettings().setDefaultBeforeDisabledLink(defaultBeforeDisabledLink);
@@ -127,6 +138,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultMarkupEncoding(java.lang.String)
 	 */
+	@Override
 	public void setDefaultMarkupEncoding(final String encoding)
 	{
 		application.getMarkupSettings().setDefaultMarkupEncoding(encoding);
@@ -135,6 +147,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripComments(boolean)
 	 */
+	@Override
 	public void setStripComments(final boolean stripComments)
 	{
 		application.getMarkupSettings().setStripComments(stripComments);
@@ -143,6 +156,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripWicketTags(boolean)
 	 */
+	@Override
 	public void setStripWicketTags(final boolean stripWicketTags)
 	{
 		application.getMarkupSettings().setStripWicketTags(stripWicketTags);

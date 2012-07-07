@@ -91,6 +91,7 @@ public class DropDownChoicePage extends WicketExamplePage
 			 * 
 			 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
 			 */
+			@Override
 			public Object getDisplayValue(Integer value)
 			{
 				// Use an ugly switch statement. Usually you would hide this in
@@ -116,6 +117,7 @@ public class DropDownChoicePage extends WicketExamplePage
 			 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object,
 			 *      int)
 			 */
+			@Override
 			public String getIdValue(Integer object, int index)
 			{
 				// though we could do kind of the reverse of what we did in

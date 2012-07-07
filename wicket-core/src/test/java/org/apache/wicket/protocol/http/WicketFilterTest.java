@@ -376,6 +376,7 @@ public class WicketFilterTest extends Assert
 		HttpServletResponse response = mock(HttpServletResponse.class);
 		when(response.encodeRedirectURL(Matchers.anyString())).thenAnswer(new Answer<String>()
 		{
+			@Override
 			public String answer(InvocationOnMock invocation) throws Throwable
 			{
 				return (String)invocation.getArguments()[0];

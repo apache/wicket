@@ -124,6 +124,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	/**
 	 * @see IWebApplicationFactory#createApplication(WicketFilter)
 	 */
+	@Override
 	public WebApplication createApplication(final WicketFilter filter)
 	{
 		ServletContext sc = filter.getFilterConfig().getServletContext();
@@ -210,6 +211,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void destroy(final WicketFilter filter)
 	{
 		if (additionalContext != null)

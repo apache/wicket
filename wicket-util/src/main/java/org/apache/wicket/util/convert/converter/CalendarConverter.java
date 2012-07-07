@@ -57,6 +57,7 @@ public class CalendarConverter implements IConverter<Calendar>
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 	 *      java.util.Locale)
 	 */
+	@Override
 	public Calendar convertToObject(final String value, final Locale locale)
 	{
 		Date date = dateConverter.convertToObject(value, locale);
@@ -74,6 +75,7 @@ public class CalendarConverter implements IConverter<Calendar>
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 	 *      java.util.Locale)
 	 */
+	@Override
 	public String convertToString(final Calendar value, final Locale locale)
 	{
 		if (value == null)

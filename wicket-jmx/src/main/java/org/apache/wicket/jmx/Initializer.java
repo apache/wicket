@@ -65,6 +65,7 @@ public class Initializer implements IInitializer
 	/**
 	 * @see org.apache.wicket.IInitializer#destroy(org.apache.wicket.Application)
 	 */
+	@Override
 	public void destroy(final org.apache.wicket.Application application)
 	{
 		for (ObjectName objectName : registered)
@@ -87,6 +88,7 @@ public class Initializer implements IInitializer
 	/**
 	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 	 */
+	@Override
 	public void init(final org.apache.wicket.Application application)
 	{
 		try

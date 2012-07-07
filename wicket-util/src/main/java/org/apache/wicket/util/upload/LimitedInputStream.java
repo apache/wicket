@@ -150,6 +150,7 @@ public abstract class LimitedInputStream extends FilterInputStream implements Cl
 	 * @throws IOException
 	 *             An I/O error occurred.
 	 */
+	@Override
 	public boolean isClosed() throws IOException
 	{
 		return closed;

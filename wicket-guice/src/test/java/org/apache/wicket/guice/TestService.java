@@ -20,6 +20,7 @@ package org.apache.wicket.guice;
  */
 public class TestService implements ITestService
 {
+	@Override
 	public String getString()
 	{
 		return RESULT;

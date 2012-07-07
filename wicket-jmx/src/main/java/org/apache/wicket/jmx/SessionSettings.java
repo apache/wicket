@@ -38,6 +38,7 @@ public class SessionSettings implements SessionSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getPageFactory()
 	 */
+	@Override
 	public String getPageFactory()
 	{
 		return Stringz.className(application.getPageFactory());
@@ -46,6 +47,7 @@ public class SessionSettings implements SessionSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getSessionStore()
 	 */
+	@Override
 	public String getSessionStore()
 	{
 		return Stringz.className(application.getSessionStore());

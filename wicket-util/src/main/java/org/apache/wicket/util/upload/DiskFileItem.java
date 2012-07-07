@@ -212,6 +212,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @throws IOException
 	 *             if an error occurs.
 	 */
+	@Override
 	public InputStream getInputStream() throws IOException
 	{
 		if (!isInMemory())
@@ -231,6 +232,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * 
 	 * @return The content type passed by the agent or <code>null</code> if not defined.
 	 */
+	@Override
 	public String getContentType()
 	{
 		return contentType;
@@ -255,6 +257,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * 
 	 * @return The original filename in the client's filesystem.
 	 */
+	@Override
 	public String getName()
 	{
 		return fileName;
@@ -266,6 +269,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @return <code>true</code> if the file contents will be read from memory; <code>false</code>
 	 *         otherwise.
 	 */
+	@Override
 	public boolean isInMemory()
 	{
 		if (cachedContent != null)
@@ -280,6 +284,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * 
 	 * @return The size of the file, in bytes.
 	 */
+	@Override
 	public long getSize()
 	{
 		if (size >= 0)
@@ -306,6 +311,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * 
 	 * @return The contents of the file as an array of bytes.
 	 */
+	@Override
 	public byte[] get()
 	{
 		if (isInMemory())
@@ -343,6 +349,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @throws UnsupportedEncodingException
 	 *             if the requested character encoding is not available.
 	 */
+	@Override
 	public String getString(final String charset) throws UnsupportedEncodingException
 	{
 		return new String(get(), charset);
@@ -356,6 +363,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * 
 	 * @todo Consider making this method throw UnsupportedEncodingException.
 	 */
+	@Override
 	public String getString()
 	{
 		byte[] rawdata = get();
@@ -394,6 +402,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @throws Exception
 	 *             if an error occurs.
 	 */
+	@Override
 	public void write(final File file) throws IOException
 	{
 		if (isInMemory())
@@ -446,6 +455,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * instance is garbage collected, this method can be used to ensure that this is done at an
 	 * earlier time, thus preserving system resources.
 	 */
+	@Override
 	public void delete()
 	{
 		cachedContent = null;
@@ -468,6 +478,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @see #setFieldName(java.lang.String)
 	 * 
 	 */
+	@Override
 	public String getFieldName()
 	{
 		return fieldName;
@@ -482,6 +493,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @see #getFieldName()
 	 * 
 	 */
+	@Override
 	public void setFieldName(final String fieldName)
 	{
 		this.fieldName = fieldName;
@@ -496,6 +508,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @see #setFormField(boolean)
 	 * 
 	 */
+	@Override
 	public boolean isFormField()
 	{
 		return isFormField;
@@ -512,6 +525,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @see #isFormField()
 	 * 
 	 */
+	@Override
 	public void setFormField(final boolean state)
 	{
 		isFormField = state;
@@ -528,6 +542,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @throws IOException
 	 *             if an error occurs.
 	 */
+	@Override
 	public OutputStream getOutputStream() throws IOException
 	{
 		if (dfos == null)
@@ -535,6 +550,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 			dfos = new DeferredFileOutputStream(sizeThreshold,
 				new DeferredFileOutputStream.FileFactory()
 				{
+					@Override
 					public File createFile()
 					{
 						return getTempFile();
@@ -747,6 +763,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * 
 	 * @return The file items headers.
 	 */
+	@Override
 	public FileItemHeaders getHeaders()
 	{
 		return headers;
@@ -758,6 +775,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @param pHeaders
 	 *            The file items headers.
 	 */
+	@Override
 	public void setHeaders(final FileItemHeaders pHeaders)
 	{
 		headers = pHeaders;

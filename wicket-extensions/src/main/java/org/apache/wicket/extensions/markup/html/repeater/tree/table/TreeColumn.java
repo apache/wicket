@@ -65,6 +65,7 @@ public class TreeColumn<T, S> extends AbstractTreeColumn<T, S>
 		return "tree";
 	}
 
+	@Override
 	public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId,
 		IModel<T> rowModel)
 	{

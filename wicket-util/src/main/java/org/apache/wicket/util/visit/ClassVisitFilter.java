@@ -41,12 +41,14 @@ public class ClassVisitFilter implements IVisitFilter
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public boolean visitChildren(final Object object)
 	{
 		return true;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public boolean visitObject(final Object object)
 	{
 		return clazz.isAssignableFrom(object.getClass());

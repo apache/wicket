@@ -45,6 +45,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
+	@Override
 	public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 		final Class<T> componentClass)
 	{
@@ -78,6 +79,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
+	@Override
 	public boolean isActionAuthorized(final Component component, final Action action)
 	{
 		// Get component's class

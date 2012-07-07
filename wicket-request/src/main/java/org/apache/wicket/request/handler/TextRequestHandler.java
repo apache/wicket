@@ -80,6 +80,7 @@ public class TextRequestHandler implements IRequestHandler
 	 * 
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
+	@Override
 	public void respond(final IRequestCycle requestCycle)
 	{
 		String encoding = getEncoding(requestCycle);
@@ -120,6 +121,7 @@ public class TextRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void detach(final IRequestCycle requestCycle)
 	{
 	}

@@ -70,6 +70,7 @@ public class WizardModel extends AbstractWizardModel
 		 * 
 		 * @return True
 		 */
+		@Override
 		public boolean evaluate()
 		{
 			return true;
@@ -137,6 +138,7 @@ public class WizardModel extends AbstractWizardModel
 	 * 
 	 * @return the active step.
 	 */
+	@Override
 	public final IWizardStep getActiveStep()
 	{
 		return activeStep;
@@ -148,6 +150,7 @@ public class WizardModel extends AbstractWizardModel
 	 * @return <tt>true</tt> if the last button should be enabled, <tt>false</tt> otherwise.
 	 * @see IWizardModel#isLastVisible
 	 */
+	@Override
 	public boolean isLastAvailable()
 	{
 		return allStepsComplete() && !isLastStep(activeStep);
@@ -156,6 +159,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#isLastStep(org.apache.wicket.extensions.wizard.IWizardStep)
 	 */
+	@Override
 	public boolean isLastStep(final IWizardStep step)
 	{
 		return findLastStep().equals(step);
@@ -166,6 +170,7 @@ public class WizardModel extends AbstractWizardModel
 	 * 
 	 * @return <tt>true</tt> if the next button should be enabled, <tt>false</tt> otherwise.
 	 */
+	@Override
 	public boolean isNextAvailable()
 	{
 		return activeStep.isComplete() && !isLastStep(activeStep);
@@ -176,6 +181,7 @@ public class WizardModel extends AbstractWizardModel
 	 * 
 	 * @return <tt>true</tt> if the previous button should be enabled, <tt>false</tt> otherwise.
 	 */
+	@Override
 	public boolean isPreviousAvailable()
 	{
 		return !history.isEmpty();
@@ -184,6 +190,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#last()
 	 */
+	@Override
 	public void last()
 	{
 		history.push(getActiveStep());
@@ -194,6 +201,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#next()
 	 */
+	@Override
 	public void next()
 	{
 		history.push(getActiveStep());
@@ -204,6 +212,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#previous()
 	 */
+	@Override
 	public void previous()
 	{
 		IWizardStep step = history.pop();
@@ -213,6 +222,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#reset()
 	 */
+	@Override
 	public void reset()
 	{
 		history.clear();
@@ -247,6 +257,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * @see IWizardModel#stepIterator()
 	 */
+	@Override
 	public final Iterator<IWizardStep> stepIterator()
 	{
 		return steps.iterator();

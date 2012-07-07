@@ -38,6 +38,7 @@ public class ValueProvider<T> implements IProvider<T>
 		this.value = value;
 	}
 
+	@Override
 	public T get()
 	{
 		return value;

@@ -91,6 +91,7 @@ public class DatesPage extends WicketExamplePage
 					List<Locale> locales = new ArrayList<Locale>(LOCALES);
 					Collections.sort(locales, new Comparator<Locale>()
 					{
+						@Override
 						public int compare(Locale o1, Locale o2)
 						{
 							return o1.getDisplayName(selectedLocale).compareTo(

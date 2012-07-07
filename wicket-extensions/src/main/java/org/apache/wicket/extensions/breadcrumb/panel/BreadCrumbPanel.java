@@ -66,6 +66,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public String getTitle()
 		{
 			return BreadCrumbPanel.this.getTitle();
@@ -156,6 +157,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * 
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getComponent()
 	 */
+	@Override
 	public Component getComponent()
 	{
 		return decorated.getComponent();
@@ -164,6 +166,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#onActivate(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
+	@Override
 	public void onActivate(final IBreadCrumbParticipant previous)
 	{
 		decorated.onActivate(previous);

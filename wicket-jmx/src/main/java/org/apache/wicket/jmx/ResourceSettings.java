@@ -47,6 +47,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getLocalizer()
 	{
 		return Stringz.className(application.getResourceSettings().getLocalizer());
@@ -55,6 +56,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getPackageResourceGuard()
 	{
 		return Stringz.className(application.getResourceSettings().getPackageResourceGuard());
@@ -63,6 +65,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getPropertiesFactory()
 	{
 		ThreadContext.setApplication(application);
@@ -80,6 +83,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getResourceFinders()
 	{
 		StringBuilder builder = new StringBuilder();
@@ -93,6 +97,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getResourcePollFrequency()
 	{
 		Duration duration = application.getResourceSettings().getResourcePollFrequency();
@@ -102,6 +107,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getResourceStreamLocator()
 	{
 		return Stringz.className(application.getResourceSettings().getResourceStreamLocator());
@@ -110,6 +116,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] getStringResourceLoaders()
 	{
 		List<IStringResourceLoader> loaders = application.getResourceSettings()
@@ -129,6 +136,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean getThrowExceptionOnMissingResource()
 	{
 		return application.getResourceSettings().getThrowExceptionOnMissingResource();
@@ -137,6 +145,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean getUseDefaultOnMissingResource()
 	{
 		return application.getResourceSettings().getUseDefaultOnMissingResource();
@@ -145,6 +154,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource)
 	{
 		application.getResourceSettings().setThrowExceptionOnMissingResource(
@@ -154,6 +164,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
 	{
 		application.getResourceSettings().setUseDefaultOnMissingResource(

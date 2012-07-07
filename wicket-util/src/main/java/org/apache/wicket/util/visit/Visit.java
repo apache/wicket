@@ -34,12 +34,14 @@ public class Visit<R> implements IVisit<R>
 	private Action action = Action.CONTINUE;
 
 	/** {@inheritDoc} */
+	@Override
 	public void stop()
 	{
 		stop(null);
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void stop(final R result)
 	{
 		action = Action.STOP;
@@ -47,6 +49,7 @@ public class Visit<R> implements IVisit<R>
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void dontGoDeeper()
 	{
 		action = Action.CONTINUE_BUT_DONT_GO_DEEPER;

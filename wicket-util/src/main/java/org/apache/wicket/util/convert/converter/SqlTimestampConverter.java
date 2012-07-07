@@ -75,6 +75,7 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 	 *      java.util.Locale)
 	 */
+	@Override
 	public Timestamp convertToObject(final String value, Locale locale)
 	{
 		if (value == null)

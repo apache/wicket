@@ -58,6 +58,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 *            text to decrypt
 	 * @return the decrypted text
 	 */
+	@Override
 	public final String decryptUrlSafe(final String text)
 	{
 		try
@@ -79,6 +80,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 *            text to encrypt
 	 * @return encrypted string
 	 */
+	@Override
 	public final String encryptUrlSafe(final String plainText)
 	{
 		try
@@ -114,6 +116,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 * @param key
 	 *            private key to make de-/encryption unique
 	 */
+	@Override
 	public void setKey(final String key)
 	{
 		encryptionKey = key;

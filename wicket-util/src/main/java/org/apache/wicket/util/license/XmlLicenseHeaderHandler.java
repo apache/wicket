@@ -48,6 +48,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return "xmlLicense.txt";
 	}
 
+	@Override
 	public boolean checkLicenseHeader(final File file)
 	{
 		Revision revision = null;
@@ -87,6 +88,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return revision.size() == 0;
 	}
 
+	@Override
 	public List<String> getSuffixes()
 	{
 		return Arrays.asList("xml", "fml");

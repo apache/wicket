@@ -42,6 +42,7 @@ public class AnnotProxyFieldValueFactoryTest extends Assert
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public ApplicationContext getSpringContext()
 		{
 			ApplicationContextMock mock = new ApplicationContextMock();

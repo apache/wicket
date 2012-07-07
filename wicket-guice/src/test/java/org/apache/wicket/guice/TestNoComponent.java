@@ -44,6 +44,7 @@ public class TestNoComponent implements IClusterable, TestNoComponentInterface
 	/**
 	 * @return if injection works should return {@link ITestService#RESULT_RED}
 	 */
+	@Override
 	public String getString()
 	{
 		return testService.getString();

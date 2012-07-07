@@ -70,6 +70,7 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	 * 
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
+	@Override
 	public void respond(final IRequestCycle requestCycle)
 	{
 		WebResponse webResponse = (WebResponse)requestCycle.getResponse();
@@ -97,6 +98,7 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void detach(final IRequestCycle requestCycle)
 	{
 	}

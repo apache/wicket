@@ -341,6 +341,7 @@ public class FormInput extends WicketExamplePage
 	{
 		public static final URLConverter INSTANCE = new URLConverter();
 
+		@Override
 		public URL convertToObject(String value, Locale locale)
 		{
 			try
@@ -353,6 +354,7 @@ public class FormInput extends WicketExamplePage
 			}
 		}
 
+		@Override
 		public String convertToString(URL value, Locale locale)
 		{
 			return value != null ? value.toString() : null;

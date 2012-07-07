@@ -56,6 +56,7 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s value, or 1 if greater
 	 *         than given <code>Object</code>'s value
 	 */
+	@Override
 	public final int compareTo(final LongValue that)
 	{
 		if (value < that.value)

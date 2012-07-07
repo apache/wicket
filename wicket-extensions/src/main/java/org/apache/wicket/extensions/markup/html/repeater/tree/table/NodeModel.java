@@ -50,16 +50,19 @@ public class NodeModel<T> implements IModel<T>
 		return model;
 	}
 
+	@Override
 	public T getObject()
 	{
 		return model.getObject();
 	}
 
+	@Override
 	public void setObject(T object)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void detach()
 	{
 		model.detach();

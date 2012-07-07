@@ -73,6 +73,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	/**
 	 * @see IRoleCheckingStrategy#hasAnyRole(Roles)
 	 */
+	@Override
 	public final boolean hasAnyRole(final Roles roles)
 	{
 		final Roles sessionRoles = AbstractAuthenticatedWebSession.get().getRoles();
@@ -82,6 +83,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	/**
 	 * @see IUnauthorizedComponentInstantiationListener#onUnauthorizedInstantiation(Component)
 	 */
+	@Override
 	public final void onUnauthorizedInstantiation(final Component component)
 	{
 		// If there is a sign in page class declared, and the unauthorized

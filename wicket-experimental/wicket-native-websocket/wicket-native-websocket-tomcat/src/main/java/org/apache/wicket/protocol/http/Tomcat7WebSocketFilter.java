@@ -59,6 +59,7 @@ public class Tomcat7WebSocketFilter extends AbstractUpgradeFilter
 		}
 	}
 
+	@Override
 	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp, Application application)
 			throws ServletException, IOException
 	{

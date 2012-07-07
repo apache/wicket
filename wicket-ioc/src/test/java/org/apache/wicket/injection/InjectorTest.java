@@ -35,12 +35,13 @@ public class InjectorTest extends Assert
 
 	private static IFieldValueFactory factory = new IFieldValueFactory()
 	{
-
+		@Override
 		public Object getFieldValue(final Field field, final Object fieldOwner)
 		{
 			return dependency;
 		}
 
+		@Override
 		public boolean supportsField(final Field field)
 		{
 			return true;

@@ -76,6 +76,7 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return added;
 	}
 
+	@Override
 	public boolean checkLicenseHeader(final File file)
 	{
 		String header = extractLicenseHeader(file, 0, 16);
@@ -83,6 +84,7 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return getLicenseHeader().equals(header);
 	}
 
+	@Override
 	public List<String> getSuffixes()
 	{
 		return Arrays.asList("java");

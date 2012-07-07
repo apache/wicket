@@ -41,6 +41,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getAccessDeniedPage()
 	 */
+	@Override
 	public String getAccessDeniedPage()
 	{
 		return Classes.name(application.getApplicationSettings().getAccessDeniedPage());
@@ -49,11 +50,13 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getClassResolver()
 	 */
+	@Override
 	public String getClassResolver()
 	{
 		return Stringz.className(application.getApplicationSettings().getClassResolver());
 	}
 
+	@Override
 	public String getDefaultMaximumUploadSize()
 	{
 		return application.getApplicationSettings().getDefaultMaximumUploadSize().toString();
@@ -62,6 +65,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getInternalErrorPage()
 	 */
+	@Override
 	public String getInternalErrorPage()
 	{
 		return Classes.name(application.getApplicationSettings().getInternalErrorPage());
@@ -70,6 +74,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getPageExpiredErrorPage()
 	 */
+	@Override
 	public String getPageExpiredErrorPage()
 	{
 		return Classes.name(application.getApplicationSettings().getPageExpiredErrorPage());
@@ -78,6 +83,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getUnexpectedExceptionDisplay()
 	 */
+	@Override
 	public String getUnexpectedExceptionDisplay()
 	{
 		return application.getExceptionSettings().getUnexpectedExceptionDisplay().toString();
@@ -86,6 +92,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#setDefaultMaximumUploadSize(java.lang.String)
 	 */
+	@Override
 	public void setDefaultMaximumUploadSize(final String defaultUploadSize)
 	{
 		application.getApplicationSettings().setDefaultMaximumUploadSize(

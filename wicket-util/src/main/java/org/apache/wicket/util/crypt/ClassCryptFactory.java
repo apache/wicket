@@ -60,6 +60,7 @@ public class ClassCryptFactory implements ICryptFactory
 	/**
 	 * @see org.apache.wicket.util.crypt.ICryptFactory#newCrypt()
 	 */
+	@Override
 	public ICrypt newCrypt()
 	{
 		try

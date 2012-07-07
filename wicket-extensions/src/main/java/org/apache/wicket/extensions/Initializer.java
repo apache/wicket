@@ -31,6 +31,7 @@ public class Initializer implements IInitializer
 	/**
 	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 	 */
+	@Override
 	public void init(final Application application)
 	{
 		new UploadProgressBar.ComponentInitializer().init(application);
@@ -46,6 +47,7 @@ public class Initializer implements IInitializer
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void destroy(final Application application)
 	{
 	}

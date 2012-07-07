@@ -90,11 +90,13 @@ public class SelectPage extends WicketExamplePage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public String getDisplayValue(String object)
 			{
 				return object;
 			}
 
+			@Override
 			public IModel<String> getModel(String value)
 			{
 				return new Model<String>(value);

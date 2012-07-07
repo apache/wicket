@@ -191,6 +191,7 @@ public class VisitorTest extends WicketTestCase
 		TestContainer testContainer = new TestContainer();
 		IVisitor<MarkupContainer, MarkerInterface> visitor = new IVisitor<MarkupContainer, MarkerInterface>()
 		{
+			@Override
 			public void component(MarkupContainer object, IVisit<MarkerInterface> visit)
 			{
 				visit.stop((MarkerInterface)object);

@@ -89,6 +89,7 @@ public class PropertyColumn<T, S> extends AbstractColumn<T, S>
 	 * 
 	 * @see ICellPopulator#populateItem(Item, String, IModel)
 	 */
+	@Override
 	public void populateItem(final Item<ICellPopulator<T>> item, final String componentId,
 		final IModel<T> rowModel)
 	{

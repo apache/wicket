@@ -56,6 +56,7 @@ public class RequestLogger implements RequestLoggerMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getNumberOfCreatedSessions()
 	 */
+	@Override
 	public Integer getNumberOfCreatedSessions() throws IOException
 	{
 		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
@@ -69,6 +70,7 @@ public class RequestLogger implements RequestLoggerMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getNumberOfLiveSessions()
 	 */
+	@Override
 	public Integer getNumberOfLiveSessions() throws IOException
 	{
 		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
@@ -82,6 +84,7 @@ public class RequestLogger implements RequestLoggerMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getPeakNumberOfSessions()
 	 */
+	@Override
 	public Integer getPeakNumberOfSessions() throws IOException
 	{
 		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
@@ -95,6 +98,7 @@ public class RequestLogger implements RequestLoggerMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getNumberOfCurrentActiveRequests()
 	 */
+	@Override
 	public Integer getNumberOfCurrentActiveRequests() throws IOException
 	{
 		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
@@ -108,6 +112,7 @@ public class RequestLogger implements RequestLoggerMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getPeakNumberOfActiveRequests()
 	 */
+	@Override
 	public Integer getPeakNumberOfActiveRequests() throws IOException
 	{
 		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
@@ -121,6 +126,7 @@ public class RequestLogger implements RequestLoggerMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestLoggerMBean#restart()
 	 */
+	@Override
 	public void restart() throws IOException
 	{
 		if (webApplication != null)
@@ -134,6 +140,7 @@ public class RequestLogger implements RequestLoggerMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestLoggerMBean#stop()
 	 */
+	@Override
 	public void stop() throws IOException
 	{
 		if (webApplication != null)

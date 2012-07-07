@@ -30,6 +30,7 @@ public class MyService implements IMyService
 	/**
 	 * @see org.apache.wicket.examples.guice.service.IMyService#getHelloWorldText()
 	 */
+	@Override
 	public String getHelloWorldText()
 	{
 		return "Hello World";

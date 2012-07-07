@@ -42,6 +42,7 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Component createComponent(final String id, final DebugBar debugBar)
 		{
 			return new SessionSizeDebugPanel(id);

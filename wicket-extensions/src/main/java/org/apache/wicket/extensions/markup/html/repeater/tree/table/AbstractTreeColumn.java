@@ -42,6 +42,7 @@ public abstract class AbstractTreeColumn<T, S> extends AbstractColumn<T, S> impl
 		super(displayModel, sortProperty);
 	}
 
+	@Override
 	public void setTree(TableTree<T, S> tree)
 	{
 		this.tree = tree;

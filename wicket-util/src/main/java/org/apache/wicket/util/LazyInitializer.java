@@ -35,6 +35,7 @@ public abstract class LazyInitializer<T> implements IProvider<T>, IClusterable
 
 	private transient volatile T instance = null;
 
+	@Override
 	public T get()
 	{
 		if (instance == null)

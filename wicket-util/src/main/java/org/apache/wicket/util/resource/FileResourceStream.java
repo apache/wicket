@@ -75,6 +75,7 @@ public class FileResourceStream extends AbstractResourceStream
 	 * 
 	 * @throws IOException
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		if (inputStream != null)
@@ -109,6 +110,7 @@ public class FileResourceStream extends AbstractResourceStream
 	 * 
 	 * @throws ResourceStreamNotFoundException
 	 */
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		if (inputStream == null)
@@ -161,6 +163,7 @@ public class FileResourceStream extends AbstractResourceStream
 		return null;
 	}
 
+	@Override
 	public String locationAsString()
 	{
 		if (file != null)

@@ -39,6 +39,7 @@ public class IntegerConverter extends AbstractIntegerConverter<Integer>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
+	@Override
 	public Integer convertToObject(final String value, final Locale locale)
 	{
 		final Number number = parse(value, Integer.MIN_VALUE, Integer.MAX_VALUE, locale);
