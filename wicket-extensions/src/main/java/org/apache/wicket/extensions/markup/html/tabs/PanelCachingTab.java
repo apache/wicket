@@ -50,6 +50,7 @@ public class PanelCachingTab implements ITab
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IModel<String> getTitle()
 	{
 		return delegate.getTitle();
@@ -58,6 +59,7 @@ public class PanelCachingTab implements ITab
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public WebMarkupContainer getPanel(final String panelId)
 	{
 		if (panel == null)
@@ -70,6 +72,7 @@ public class PanelCachingTab implements ITab
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isVisible()
 	{
 		return delegate.isVisible();

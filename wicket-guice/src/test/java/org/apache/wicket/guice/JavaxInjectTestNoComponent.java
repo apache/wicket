@@ -45,6 +45,7 @@ public class JavaxInjectTestNoComponent implements IClusterable, TestNoComponent
 	/**
 	 * @return if injection works should return {@link ITestService#RESULT_RED}
 	 */
+	@Override
 	public String getString()
 	{
 		return testService.getString();

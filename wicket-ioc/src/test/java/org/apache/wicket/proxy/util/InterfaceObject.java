@@ -37,6 +37,7 @@ public class InterfaceObject implements IInterface
 	/**
 	 * @see org.apache.wicket.proxy.util.IInterface#getMessage()
 	 */
+	@Override
 	public String getMessage()
 	{
 		return message;

@@ -39,6 +39,7 @@ public class FloatConverter extends AbstractDecimalConverter<Float>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
+	@Override
 	public Float convertToObject(final String value, final Locale locale)
 	{
 		final Number number = parse(value, -Float.MAX_VALUE, Float.MAX_VALUE, locale);

@@ -64,6 +64,7 @@ public class ContactDaoImpl implements ContactDao
 	 * @param id
 	 * @return contact
 	 */
+	@Override
 	public Contact get(long id)
 	{
 		Contact c = map.get(id);
@@ -89,6 +90,7 @@ public class ContactDaoImpl implements ContactDao
 	 * 
 	 * @return list of contacts
 	 */
+	@Override
 	public Iterator<Contact> find(QueryParam qp)
 	{
 		List<Contact> sublist = getIndex(qp.getSort()).subList((int)qp.getFirst(),
@@ -116,6 +118,7 @@ public class ContactDaoImpl implements ContactDao
 	/**
 	 * @return number of contacts in the database
 	 */
+	@Override
 	public int count()
 	{
 		return fnameIdx.size();
@@ -162,6 +165,7 @@ public class ContactDaoImpl implements ContactDao
 	{
 		Collections.sort(fnameIdx, new Comparator<Contact>()
 		{
+			@Override
 			public int compare(Contact arg0, Contact arg1)
 			{
 				return (arg0).getFirstName().compareTo((arg1).getFirstName());
@@ -170,6 +174,7 @@ public class ContactDaoImpl implements ContactDao
 
 		Collections.sort(lnameIdx, new Comparator<Contact>()
 		{
+			@Override
 			public int compare(Contact arg0, Contact arg1)
 			{
 				return (arg0).getLastName().compareTo((arg1).getLastName());
@@ -178,6 +183,7 @@ public class ContactDaoImpl implements ContactDao
 
 		Collections.sort(fnameDescIdx, new Comparator<Contact>()
 		{
+			@Override
 			public int compare(Contact arg0, Contact arg1)
 			{
 				return (arg1).getFirstName().compareTo((arg0).getFirstName());
@@ -186,6 +192,7 @@ public class ContactDaoImpl implements ContactDao
 
 		Collections.sort(lnameDescIdx, new Comparator<Contact>()
 		{
+			@Override
 			public int compare(Contact arg0, Contact arg1)
 			{
 				return (arg1).getLastName().compareTo((arg0).getLastName());

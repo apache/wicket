@@ -80,6 +80,7 @@ public final class DurationTest
 	{
 		assertTrue(Duration.seconds(0.5).lessThan(Duration.benchmark(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				Duration.seconds(1.5).sleep();
@@ -88,6 +89,7 @@ public final class DurationTest
 
 		assertTrue(Duration.seconds(1).greaterThan(Duration.benchmark(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				Duration.hours(-1).sleep();

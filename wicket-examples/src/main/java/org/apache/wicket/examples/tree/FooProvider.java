@@ -50,20 +50,24 @@ public class FooProvider implements ITreeProvider<Foo>
 	/**
 	 * Nothing to do.
 	 */
+	@Override
 	public void detach()
 	{
 	}
 
+	@Override
 	public Iterator<Foo> getRoots()
 	{
 		return TreeApplication.get().foos.iterator();
 	}
 
+	@Override
 	public boolean hasChildren(Foo foo)
 	{
 		return foo.getParent() == null || !foo.getFoos().isEmpty();
 	}
 
+	@Override
 	public Iterator<Foo> getChildren(final Foo foo)
 	{
 		return foo.getFoos().iterator();
@@ -72,6 +76,7 @@ public class FooProvider implements ITreeProvider<Foo>
 	/**
 	 * Creates a {@link FooModel}.
 	 */
+	@Override
 	public IModel<Foo> model(Foo foo)
 	{
 		return new FooModel(foo);

@@ -561,11 +561,13 @@ public class ResourceSettings implements IResourceSettings
 		this.headerItemComparator = headerItemComparator;
 	}
 
+	@Override
 	public boolean isEncodeJSessionId()
 	{
 		return encodeJSessionId;
 	}
 
+	@Override
 	public void setEncodeJSessionId(boolean encodeJSessionId)
 	{
 		this.encodeJSessionId = encodeJSessionId;

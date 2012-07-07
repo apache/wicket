@@ -38,6 +38,7 @@ public class SecuritySettings implements SecuritySettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getAuthorizationStrategy()
 	 */
+	@Override
 	public String getAuthorizationStrategy()
 	{
 		return Stringz.className(application.getSecuritySettings().getAuthorizationStrategy());
@@ -46,6 +47,7 @@ public class SecuritySettings implements SecuritySettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getCryptFactory()
 	 */
+	@Override
 	public String getCryptFactory()
 	{
 		return Stringz.className(application.getSecuritySettings().getCryptFactory());
@@ -54,6 +56,7 @@ public class SecuritySettings implements SecuritySettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getUnauthorizedComponentInstantiationListener()
 	 */
+	@Override
 	public String getUnauthorizedComponentInstantiationListener()
 	{
 		return Stringz.className(application.getSecuritySettings()

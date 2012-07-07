@@ -155,7 +155,7 @@ public class AjaxEditableTest extends WicketTestCase
 	{
 		class IntegerModel extends Model<Integer> implements IObjectClassAwareModel<Integer>
 		{
-
+			@Override
 			public Class<Integer> getObjectClass()
 			{
 				return Integer.class;

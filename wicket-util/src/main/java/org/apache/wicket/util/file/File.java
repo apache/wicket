@@ -166,6 +166,7 @@ public class File extends java.io.File implements IModifiable
 	 * @return This file's lastModified() value as a Time object or <code>null</code> if
 	 * that information is not available
 	 */
+	@Override
 	public Time lastModifiedTime()
 	{
 		final long time = lastModified();

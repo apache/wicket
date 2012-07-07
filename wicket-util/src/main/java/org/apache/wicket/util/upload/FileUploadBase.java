@@ -668,6 +668,7 @@ public abstract class FileUploadBase
 			 * 
 			 * @return Content type, if known, or null.
 			 */
+			@Override
 			public String getContentType()
 			{
 				return contentType;
@@ -678,6 +679,7 @@ public abstract class FileUploadBase
 			 * 
 			 * @return Field name.
 			 */
+			@Override
 			public String getFieldName()
 			{
 				return fieldName;
@@ -688,6 +690,7 @@ public abstract class FileUploadBase
 			 * 
 			 * @return File name, if known, or null.
 			 */
+			@Override
 			public String getName()
 			{
 				return name;
@@ -698,6 +701,7 @@ public abstract class FileUploadBase
 			 * 
 			 * @return True, if the item is a form field, otherwise false.
 			 */
+			@Override
 			public boolean isFormField()
 			{
 				return formField;
@@ -710,6 +714,7 @@ public abstract class FileUploadBase
 			 * @throws IOException
 			 *             An I/O error occurred.
 			 */
+			@Override
 			public InputStream openStream() throws IOException
 			{
 				if (opened)
@@ -739,6 +744,7 @@ public abstract class FileUploadBase
 			 * 
 			 * @return The items header object
 			 */
+			@Override
 			public FileItemHeaders getHeaders()
 			{
 				return headers;
@@ -750,6 +756,7 @@ public abstract class FileUploadBase
 			 * @param pHeaders
 			 *            The items header object
 			 */
+			@Override
 			public void setHeaders(final FileItemHeaders pHeaders)
 			{
 				headers = pHeaders;
@@ -972,6 +979,7 @@ public abstract class FileUploadBase
 		 *             Reading the file item failed.
 		 * @return True, if one or more additional file items are available, otherwise false.
 		 */
+		@Override
 		public boolean hasNext() throws FileUploadException, IOException
 		{
 			if (eof)
@@ -997,6 +1005,7 @@ public abstract class FileUploadBase
 		 *             Reading the file item failed.
 		 * @return FileItemStream instance, which provides access to the next file item.
 		 */
+		@Override
 		public FileItemStream next() throws FileUploadException, IOException
 		{
 			if (eof || (!itemValid && !hasNext()))

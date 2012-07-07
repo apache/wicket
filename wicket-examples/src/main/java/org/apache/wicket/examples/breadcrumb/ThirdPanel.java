@@ -40,6 +40,7 @@ public class ThirdPanel extends BreadCrumbPanel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
 	 */
+	@Override
 	public String getTitle()
 	{
 		return "third";

@@ -32,6 +32,7 @@ public class SqlDateConverter extends AbstractConverter<Date>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
+	@Override
 	public Date convertToObject(final String value, final Locale locale)
 	{
 		if ((value == null) || Strings.isEmpty(value))

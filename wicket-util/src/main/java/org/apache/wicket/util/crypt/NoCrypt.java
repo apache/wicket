@@ -41,6 +41,7 @@ public class NoCrypt implements ICrypt
 	 *            text to decrypt
 	 * @return the decrypted text
 	 */
+	@Override
 	public final String decryptUrlSafe(final String text)
 	{
 		return text;
@@ -53,6 +54,7 @@ public class NoCrypt implements ICrypt
 	 *            text to encrypt
 	 * @return encrypted string
 	 */
+	@Override
 	public final String encryptUrlSafe(final String plainText)
 	{
 		return plainText;
@@ -64,6 +66,7 @@ public class NoCrypt implements ICrypt
 	 * @param key
 	 *            private key to make de-/encryption unique
 	 */
+	@Override
 	public void setKey(final String key)
 	{
 	}

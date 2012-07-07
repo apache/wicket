@@ -125,6 +125,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * @see org.apache.wicket.proxy.IProxyTargetLocator#locateProxyTarget()
 	 */
+	@Override
 	public Object locateProxyTarget()
 	{
 		final ApplicationContext context = getSpringContext();

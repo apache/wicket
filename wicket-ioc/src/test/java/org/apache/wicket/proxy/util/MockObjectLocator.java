@@ -40,6 +40,7 @@ public class MockObjectLocator implements IProxyTargetLocator
 	/**
 	 * @see org.apache.wicket.proxy.IProxyTargetLocator#locateProxyTarget()
 	 */
+	@Override
 	public Object locateProxyTarget()
 	{
 		return object;

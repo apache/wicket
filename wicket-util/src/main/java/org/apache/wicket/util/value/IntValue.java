@@ -52,6 +52,7 @@ public class IntValue implements Comparable<IntValue>, Serializable
 	 *            The object to compare with
 	 * @return 0 if equal, -1 if less than or 1 if greater than
 	 */
+	@Override
 	public final int compareTo(final IntValue that)
 	{
 		if (value < that.value)

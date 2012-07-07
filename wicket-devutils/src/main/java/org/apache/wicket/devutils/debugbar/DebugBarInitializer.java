@@ -29,6 +29,7 @@ public class DebugBarInitializer implements IInitializer
 {
 
 	/** {@inheritDoc} */
+	@Override
 	public void init(final Application application)
 	{
 		if (application.getDebugSettings().isDevelopmentUtilitiesEnabled())
@@ -48,6 +49,7 @@ public class DebugBarInitializer implements IInitializer
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void destroy(final Application application)
 	{
 	}

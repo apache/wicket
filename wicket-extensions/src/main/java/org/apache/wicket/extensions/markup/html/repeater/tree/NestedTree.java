@@ -96,6 +96,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 			final IModel<T> model = getProvider().model(t);
 			visitChildren(BranchItem.class, new IVisitor<BranchItem<T>, Void>()
 			{
+				@Override
 				public void component(BranchItem<T> branch, IVisit<Void> visit)
 				{
 					if (model.equals(branch.getModel()))

@@ -167,6 +167,7 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	 * 
 	 * @param target
 	 */
+	@Override
 	public abstract void onClick(AjaxRequestTarget target);
 
 }

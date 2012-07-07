@@ -44,6 +44,7 @@ public abstract class SortableDataProvider<T, S> implements ISortableDataProvide
 	/**
 	 * @see ISortableDataProvider#getSortState()
 	 */
+	@Override
 	public final ISortState<S> getSortState()
 	{
 		return state;
@@ -86,6 +87,7 @@ public abstract class SortableDataProvider<T, S> implements ISortableDataProvide
 	/**
 	 * @see ISortableDataProvider#detach()
 	 */
+	@Override
 	public void detach()
 	{
 	}

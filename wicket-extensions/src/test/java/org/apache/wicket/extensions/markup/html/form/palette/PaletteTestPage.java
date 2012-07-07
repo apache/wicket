@@ -45,11 +45,13 @@ public class PaletteTestPage extends WebPage
 
 		IChoiceRenderer<String> choiceRenderer = new IChoiceRenderer<String>()
 		{
+			@Override
 			public Object getDisplayValue(String s)
 			{
 				return s;
 			}
 
+			@Override
 			public String getIdValue(String s, int index)
 			{
 				return s;

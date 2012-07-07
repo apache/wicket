@@ -42,6 +42,7 @@ public class ClassProvider<T> implements IProvider<Class<T>>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Class<T> get()
 	{
 		return classRef.get();

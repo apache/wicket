@@ -286,6 +286,7 @@ public abstract class VelocityPanel extends Panel
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final IResourceStream getMarkupResourceStream(final MarkupContainer container,
 		final Class<?> containerClass)
 	{
@@ -306,6 +307,7 @@ public abstract class VelocityPanel extends Panel
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final String getCacheKey(final MarkupContainer container, final Class<?> containerClass)
 	{
 		// don't cache the evaluated template

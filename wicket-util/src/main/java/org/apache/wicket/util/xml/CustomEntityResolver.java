@@ -69,6 +69,7 @@ public class CustomEntityResolver implements EntityResolver
 		entities.put(key, locator);
 	}
 
+	@Override
 	public InputSource resolveEntity(final String id, final String url) throws SAXException,
 		IOException
 	{
@@ -164,6 +165,7 @@ public class CustomEntityResolver implements EntityResolver
 		 * 
 		 * @return input source
 		 */
+		@Override
 		public InputSource locateInputSource()
 		{
 			InputStream stream = Filter.class.getResourceAsStream("resources/" + name);

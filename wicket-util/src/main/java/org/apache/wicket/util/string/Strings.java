@@ -67,6 +67,7 @@ public final class Strings
 	{
 		LINE_SEPARATOR = AccessController.doPrivileged(new PrivilegedAction<String>()
 		{
+			@Override
 			public String run()
 			{
 				return System.getProperty("line.separator");

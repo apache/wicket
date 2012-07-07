@@ -321,6 +321,7 @@ public abstract class AbstractTree<T> extends Panel
 			final IModel<T> model = getProvider().model(node);
 			visitChildren(Node.class, new IVisitor<Node<T>, Void>()
 			{
+				@Override
 				public void component(Node<T> node, IVisit<Void> visit)
 				{
 					if (model.equals(node.getModel()))

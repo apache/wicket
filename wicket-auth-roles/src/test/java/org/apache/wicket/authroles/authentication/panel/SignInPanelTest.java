@@ -69,6 +69,7 @@ public class SignInPanelTest extends Assert
 			add(new SignInPanel("signInPanel"));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

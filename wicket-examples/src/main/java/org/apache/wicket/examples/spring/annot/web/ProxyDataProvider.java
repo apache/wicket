@@ -36,6 +36,7 @@ public class ProxyDataProvider extends ContactDataProvider
 		return dao;
 	}
 
+	@Override
 	public IModel<Contact> model(Contact contact)
 	{
 		return new ProxyModel(contact, dao);

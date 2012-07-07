@@ -32,6 +32,7 @@ public class VersionDebugContributor implements IDebugBarContributor
 	/** */
 	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new VersionDebugContributor();
 
+	@Override
 	public Component createComponent(final String id, final DebugBar debugBar)
 	{
 		Label label = new Label(id, new AbstractReadOnlyModel<String>()

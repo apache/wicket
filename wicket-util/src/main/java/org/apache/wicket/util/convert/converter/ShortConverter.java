@@ -39,6 +39,7 @@ public class ShortConverter extends AbstractIntegerConverter<Short>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
+	@Override
 	public Short convertToObject(final String value, final Locale locale)
 	{
 		final Number number = parse(value, Short.MIN_VALUE, Short.MAX_VALUE, locale);

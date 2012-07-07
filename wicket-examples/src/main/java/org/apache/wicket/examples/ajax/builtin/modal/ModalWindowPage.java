@@ -50,6 +50,7 @@ public class ModalWindowPage extends BasePage
 
 		modal1.setPageCreator(new ModalWindow.PageCreator()
 		{
+			@Override
 			public Page createPage()
 			{
 				return new ModalContent1Page(ModalWindowPage.this.getPageReference(), modal1);
@@ -57,6 +58,7 @@ public class ModalWindowPage extends BasePage
 		});
 		modal1.setWindowClosedCallback(new ModalWindow.WindowClosedCallback()
 		{
+			@Override
 			public void onClose(AjaxRequestTarget target)
 			{
 				target.add(result);
@@ -64,6 +66,7 @@ public class ModalWindowPage extends BasePage
 		});
 		modal1.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
 		{
+			@Override
 			public boolean onCloseButtonClicked(AjaxRequestTarget target)
 			{
 				setResult("Modal window 1 - close button");
@@ -93,6 +96,7 @@ public class ModalWindowPage extends BasePage
 
 		modal2.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
 		{
+			@Override
 			public boolean onCloseButtonClicked(AjaxRequestTarget target)
 			{
 				setResult("Modal window 2 - close button");
@@ -102,6 +106,7 @@ public class ModalWindowPage extends BasePage
 
 		modal2.setWindowClosedCallback(new ModalWindow.WindowClosedCallback()
 		{
+			@Override
 			public void onClose(AjaxRequestTarget target)
 			{
 				target.add(result);

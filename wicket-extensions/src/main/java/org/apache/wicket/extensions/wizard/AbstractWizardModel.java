@@ -58,6 +58,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * @param listener
 	 *            The listener to add
 	 */
+	@Override
 	public final void addListener(final IWizardModelListener listener)
 	{
 		wizardModelListeners.add(listener);
@@ -69,6 +70,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * 
 	 * @see IWizardModel#cancel()
 	 */
+	@Override
 	public void cancel()
 	{
 		fireWizardCancelled();
@@ -80,6 +82,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * 
 	 * @see IWizardModel#finish()
 	 */
+	@Override
 	public void finish()
 	{
 		fireWizardFinished();
@@ -90,6 +93,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * 
 	 * @return Whether cancel functionality is available
 	 */
+	@Override
 	public boolean isCancelVisible()
 	{
 		return cancelVisible;
@@ -102,6 +106,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * 
 	 * @return <tt>true</tt> if the previous last should be displayed, <tt>false</tt> otherwise.
 	 */
+	@Override
 	public boolean isLastVisible()
 	{
 		return lastVisible;
@@ -113,6 +118,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * @param listener
 	 *            The listener to remove
 	 */
+	@Override
 	public final void removeListener(final IWizardModelListener listener)
 	{
 		wizardModelListeners.remove(listener);

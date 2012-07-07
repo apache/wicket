@@ -58,16 +58,19 @@ public class NodeModelTest extends Assert
 			this.string = string;
 		}
 
+		@Override
 		public String getObject()
 		{
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public void setObject(String object)
 		{
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public void detach()
 		{
 		}

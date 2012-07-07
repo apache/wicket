@@ -37,16 +37,19 @@ public class FileCleaner implements IFileCleaner
 		cleaner = new FileCleaningTracker();
 	}
 
+	@Override
 	public void track(final File file, final Object marker)
 	{
 		cleaner.track(file, marker);
 	}
 
+	@Override
 	public void track(final File file, final Object marker, FileDeleteStrategy deleteStrategy)
 	{
 		cleaner.track(file, marker, deleteStrategy);
 	}
 
+	@Override
 	public void destroy()
 	{
 		cleaner.exitWhenFinished();

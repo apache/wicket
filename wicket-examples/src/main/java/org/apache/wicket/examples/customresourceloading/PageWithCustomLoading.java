@@ -58,6 +58,7 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
+	@Override
 	public IResourceStream getMarkupResourceStream(final MarkupContainer container,
 		final Class<?> containerClass)
 	{
@@ -82,6 +83,7 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class)
 	 */
+	@Override
 	public String getCacheKey(MarkupContainer container, Class<?> containerClass)
 	{
 		return null;

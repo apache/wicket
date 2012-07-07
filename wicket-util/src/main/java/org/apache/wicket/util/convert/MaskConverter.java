@@ -147,6 +147,7 @@ public class MaskConverter<C> implements IConverter<C>
 	/**
 	 * Converts a string to an object using {@link MaskFormatter#stringToValue(String)}.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public C convertToObject(final String value, final Locale locale)
 	{
@@ -163,6 +164,7 @@ public class MaskConverter<C> implements IConverter<C>
 	/**
 	 * Converts the value to a string using {@link MaskFormatter#valueToString(Object)}.
 	 */
+	@Override
 	public String convertToString(final C value, final Locale locale)
 	{
 		try

@@ -516,23 +516,26 @@ public class AjaxEditableLabel<T> extends Panel
 	 */
 	private class WrapperModel implements IModel<T>, IObjectClassAwareModel<T>
 	{
-
+		@Override
 		public T getObject()
 		{
 			return getParentModel().getObject();
 		}
 
+		@Override
 		public void setObject(final T object)
 		{
 			getParentModel().setObject(object);
 		}
 
+		@Override
 		public void detach()
 		{
 			getParentModel().detach();
 
 		}
 
+		@Override
 		public Class<T> getObjectClass()
 		{
 			if (getParentModel() instanceof IObjectClassAwareModel)

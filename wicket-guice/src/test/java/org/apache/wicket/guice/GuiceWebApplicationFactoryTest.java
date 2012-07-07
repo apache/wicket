@@ -71,6 +71,7 @@ public class GuiceWebApplicationFactoryTest
 
 				return new FilterConfig()
 				{
+					@Override
 					public String getInitParameter(final String param)
 					{
 						if ("module".equals(param))
@@ -80,16 +81,19 @@ public class GuiceWebApplicationFactoryTest
 						return null;
 					}
 
+					@Override
 					public ServletContext getServletContext()
 					{
 						return new MockServletContext(null, null);
 					}
 
+					@Override
 					public Enumeration<?> getInitParameterNames()
 					{
 						return null;
 					}
 
+					@Override
 					public String getFilterName()
 					{
 						return null;

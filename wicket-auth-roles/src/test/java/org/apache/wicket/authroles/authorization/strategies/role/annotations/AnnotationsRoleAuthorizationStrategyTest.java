@@ -38,6 +38,7 @@ public class AnnotationsRoleAuthorizationStrategyTest extends Assert
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()
 			{
+				@Override
 				public boolean hasAnyRole(Roles roles)
 				{
 					return roles.contains("role1");

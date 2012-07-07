@@ -52,6 +52,7 @@ public class CustomHomeMapper extends HomePageMapper
 	 *
 	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
 	 */
+	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		Url homeUrl = super.mapHandler(requestHandler);
@@ -70,6 +71,7 @@ public class CustomHomeMapper extends HomePageMapper
 	 *
 	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
 		IRequestHandler requestHandler = null;
@@ -99,6 +101,7 @@ public class CustomHomeMapper extends HomePageMapper
 	 *
 	 * @see org.apache.wicket.core.request.mapper.HomePageMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public int getCompatibilityScore(Request request)
 	{
 		return request.getUrl().getSegments().size() == 1 ? 1 : 0;

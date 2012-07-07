@@ -54,6 +54,7 @@ public class LinkParser implements ILinkParser
 	/**
 	 * @see ILinkParser#parse(String)
 	 */
+	@Override
 	public String parse(final String text)
 	{
 		if (Strings.isEmpty(text))

@@ -465,17 +465,20 @@ class Entities
 		private final IntHashMap<String> mapValueToName = new IntHashMap<String>();
 
 		// TODO not thread-safe as there is a window between changing the two maps
+		@Override
 		public void add(String name, int value)
 		{
 			mapNameToValue.put(name, Integer.valueOf(value));
 			mapValueToName.put(value, name);
 		}
 
+		@Override
 		public String name(int value)
 		{
 			return mapValueToName.get(value);
 		}
 
+		@Override
 		public int value(String name)
 		{
 			Integer value = mapNameToValue.get(name);
@@ -507,12 +510,14 @@ class Entities
 			mapValueToName = valueToName;
 		}
 
+		@Override
 		public void add(String name, int value)
 		{
 			mapNameToValue.put(name, new Integer(value));
 			mapValueToName.put(Integer.valueOf(value), name);
 		}
 
+		@Override
 		public String name(int value)
 		{
 			return mapValueToName.get(Integer.valueOf(value));
@@ -521,6 +526,7 @@ class Entities
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public int value(String name)
 		{
 			Integer value = mapNameToValue.get(name);
@@ -638,6 +644,7 @@ class Entities
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void add(String name, int value)
 		{
 			ensureCapacity(size + 1);
@@ -669,6 +676,7 @@ class Entities
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public String name(int value)
 		{
 			for (int i = 0; i < size; ++i)
@@ -684,6 +692,7 @@ class Entities
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public int value(String name)
 		{
 			for (int i = 0; i < size; ++i)

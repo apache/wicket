@@ -53,11 +53,13 @@ public class ComponentBehaviorOverComponentTagBehaviorTest extends WicketTestCas
 
 	private static class TestStringResourceLoader implements IStringResourceLoader
 	{
+		@Override
 		public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation)
 		{
 			return "markupTitle".equals(key) ? "ComponentTag behavior title" : null;
 		}
 
+		@Override
 		public String loadStringResource(Component component, String key, Locale locale, String style, String variation)
 		{
 			return loadStringResource(component.getClass(), key, locale, style, variation);
@@ -73,6 +75,7 @@ public class ComponentBehaviorOverComponentTagBehaviorTest extends WicketTestCas
 			add(label);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body>" +

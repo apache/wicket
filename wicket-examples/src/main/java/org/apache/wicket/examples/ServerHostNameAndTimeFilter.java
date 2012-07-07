@@ -79,6 +79,7 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 	/**
 	 * @see IResponseFilter#filter(AppendingStringBuffer)
 	 */
+	@Override
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		int index = responseBuffer.indexOf("<head>");

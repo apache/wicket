@@ -47,6 +47,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getFieldValue(final Field field, final Object fieldOwner)
 	{
 		Object target = null;
@@ -99,6 +100,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean supportsField(final Field field)
 	{
 		return field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(javax.inject.Inject.class);

@@ -55,6 +55,7 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getComponent()
 	 */
+	@Override
 	public Component getComponent()
 	{
 		return component;
@@ -66,6 +67,7 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 	 * 
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#onActivate(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
+	@Override
 	public void onActivate(final IBreadCrumbParticipant previous)
 	{
 		if (previous != null)
@@ -84,6 +86,7 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 					// NOTE unfortunately, we can't rely on the path pre 2.0
 					Component c = parent.visitChildren(new IVisitor<Component, Component>()
 					{
+						@Override
 						public void component(final Component component,
 							final IVisit<Component> visit)
 						{
@@ -99,6 +102,7 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 						c = parent.visitParents(MarkupContainer.class,
 							new IVisitor<MarkupContainer, Component>()
 							{
+								@Override
 								public void component(final MarkupContainer component,
 									final IVisit<Component> visit)
 								{

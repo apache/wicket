@@ -39,7 +39,7 @@ public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
 	{
 		notify(new INotifier<IChangeListener>()
 		{
-
+			@Override
 			public void notify(final IChangeListener object)
 			{
 				object.onChange();

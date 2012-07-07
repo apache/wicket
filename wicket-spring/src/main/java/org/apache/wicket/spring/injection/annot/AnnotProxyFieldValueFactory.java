@@ -105,6 +105,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		this.wrapInProxies = wrapInProxies;
 	}
 
+	@Override
 	public Object getFieldValue(final Field field, final Object fieldOwner)
 	{
 		if (supportsField(field))
@@ -289,6 +290,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	/**
 	 * @see org.apache.wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
 	 */
+	@Override
 	public boolean supportsField(final Field field)
 	{
 		return field.isAnnotationPresent(SpringBean.class) || field.isAnnotationPresent(Inject.class);

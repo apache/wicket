@@ -33,6 +33,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 {
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public final void render(final T object, final Response response, final String criteria)
 	{
 		String textValue = getTextValue(object);
@@ -55,11 +56,13 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		response.write("</li>");
 	}
 
+	@Override
 	public final void renderHeader(final Response response)
 	{
 		response.write("<ul>");
 	}
 
+	@Override
 	public final void renderFooter(final Response response, int count)
 	{
 		response.write("</ul>");

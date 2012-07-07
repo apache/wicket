@@ -25,6 +25,7 @@ package org.apache.wicket.util;
  */
 public class NullProvider<T> implements IProvider<T>
 {
+	@Override
 	public T get()
 	{
 		return null;

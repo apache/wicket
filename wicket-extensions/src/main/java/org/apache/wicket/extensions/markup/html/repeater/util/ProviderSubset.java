@@ -77,6 +77,7 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		}
 	}
 
+	@Override
 	public void detach()
 	{
 		for (IModel<T> model : models)
@@ -85,16 +86,19 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		}
 	}
 
+	@Override
 	public int size()
 	{
 		return models.size();
 	}
 
+	@Override
 	public boolean isEmpty()
 	{
 		return models.size() == 0;
 	}
 
+	@Override
 	public void clear()
 	{
 		detach();
@@ -102,6 +106,7 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		models.clear();
 	}
 
+	@Override
 	public boolean contains(Object o)
 	{
 		IModel<T> model = model(o);
@@ -113,11 +118,13 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		return contains;
 	}
 
+	@Override
 	public boolean add(T t)
 	{
 		return models.add(model(t));
 	}
 
+	@Override
 	public boolean remove(Object o)
 	{
 		IModel<T> model = model(o);
@@ -129,6 +136,7 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		return removed;
 	}
 
+	@Override
 	public Iterator<T> iterator()
 	{
 		return new Iterator<T>()
@@ -138,11 +146,13 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 
 			private IModel<T> current;
 
+			@Override
 			public boolean hasNext()
 			{
 				return iterator.hasNext();
 			}
 
+			@Override
 			public T next()
 			{
 				current = iterator.next();
@@ -150,6 +160,7 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 				return current.getObject();
 			}
 
+			@Override
 			public void remove()
 			{
 				iterator.remove();
@@ -160,6 +171,7 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		};
 	}
 
+	@Override
 	public boolean addAll(Collection<? extends T> ts)
 	{
 		boolean changed = false;
@@ -172,6 +184,7 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		return changed;
 	}
 
+	@Override
 	public boolean containsAll(Collection<?> cs)
 	{
 		for (Object c : cs)
@@ -184,6 +197,7 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		return true;
 	}
 
+	@Override
 	public boolean removeAll(Collection<?> cs)
 	{
 		boolean changed = false;
@@ -196,16 +210,19 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 		return changed;
 	}
 
+	@Override
 	public boolean retainAll(Collection<?> c)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Object[] toArray()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public <S> S[] toArray(S[] a)
 	{
 		throw new UnsupportedOperationException();

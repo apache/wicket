@@ -41,21 +41,25 @@ public class ReverseListIterator<E> implements Iterator<E>, Iterable<E>
 		this.delegateIterator = list.listIterator(start);
 	}
 
+	@Override
 	public boolean hasNext()
 	{
 		return delegateIterator.hasPrevious();
 	}
 
+	@Override
 	public E next()
 	{
 		return delegateIterator.previous();
 	}
 
+	@Override
 	public void remove()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Iterator<E> iterator()
 	{
 		return this;

@@ -54,6 +54,7 @@ public class HtmlHandlerTest extends WicketTestCase
 			add(new CustomMarkupLabel("label"));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body><span wicket:id='label'></span></body></html>");

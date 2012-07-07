@@ -59,7 +59,7 @@ public class GuiceInjectorTest extends Assert
 
 			GuiceComponentInjector injector = new GuiceComponentInjector(app, new Module()
 			{
-
+				@Override
 				public void configure(final Binder binder)
 				{
 					binder.bind(ITestService.class).to(TestService.class);
@@ -73,6 +73,7 @@ public class GuiceInjectorTest extends Assert
 					{
 					}).toProvider(new Provider<Map<String, String>>()
 					{
+						@Override
 						public Map<String, String> get()
 						{
 							Map<String, String> strings = new HashMap<String, String>();

@@ -1120,6 +1120,7 @@ public class MultipartFormInputStream
 		 * 
 		 * @return True, if the stream is closed, otherwise false.
 		 */
+		@Override
 		public boolean isClosed()
 		{
 			return closed;

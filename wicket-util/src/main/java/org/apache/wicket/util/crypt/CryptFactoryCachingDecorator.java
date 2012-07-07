@@ -45,6 +45,7 @@ public class CryptFactoryCachingDecorator implements ICryptFactory
 	/**
 	 * @see org.apache.wicket.util.crypt.ICryptFactory#newCrypt()
 	 */
+	@Override
 	public final ICrypt newCrypt()
 	{
 		if (cache == null)

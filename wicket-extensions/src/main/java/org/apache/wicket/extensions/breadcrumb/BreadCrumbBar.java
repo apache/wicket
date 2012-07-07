@@ -135,6 +135,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbActivated(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant,
 		 *      org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 		 */
+		@Override
 		public void breadCrumbActivated(final IBreadCrumbParticipant previousParticipant,
 			final IBreadCrumbParticipant breadCrumbParticipant)
 		{
@@ -144,6 +145,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbAdded(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 		 */
+		@Override
 		public void breadCrumbAdded(final IBreadCrumbParticipant breadCrumbParticipant)
 		{
 		}
@@ -151,6 +153,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbRemoved(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 		 */
+		@Override
 		public void breadCrumbRemoved(final IBreadCrumbParticipant breadCrumbParticipant)
 		{
 		}
@@ -214,6 +217,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#addListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
+	@Override
 	public void addListener(final IBreadCrumbModelListener listener)
 	{
 		decorated.addListener(listener);
@@ -222,6 +226,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#allBreadCrumbParticipants()
 	 */
+	@Override
 	public List<IBreadCrumbParticipant> allBreadCrumbParticipants()
 	{
 		return decorated.allBreadCrumbParticipants();
@@ -230,6 +235,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#getActive()
 	 */
+	@Override
 	public IBreadCrumbParticipant getActive()
 	{
 		return decorated.getActive();
@@ -238,6 +244,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#removeListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
+	@Override
 	public void removeListener(final IBreadCrumbModelListener listener)
 	{
 		decorated.removeListener(listener);
@@ -246,6 +253,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#setActive(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
+	@Override
 	public void setActive(final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		decorated.setActive(breadCrumbParticipant);
