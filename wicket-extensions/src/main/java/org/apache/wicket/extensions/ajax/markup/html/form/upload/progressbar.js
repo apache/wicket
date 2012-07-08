@@ -14,104 +14,111 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-if (typeof(Wicket) == "undefined") Wicket = { };
 
-Wicket.WUPB = Wicket.Class.create();
-Wicket.WUPB.prototype = {
-		
-	initialize : function(formid, statusid, barid, url, fileid, initialStatus) {
-		this.formid = formid;
-		this.statusid = statusid;
-		this.barid = barid;
-		this.url = url;
-		this.fileid = fileid;
-		this.initialStatus = initialStatus;
-	},
+;(function (undefined) {
+	'use strict';
 
-	bind : function(formid) {
-		formElement = Wicket.$(formid);
-		this.originalCallback = formElement.onsubmit;
-		formElement.onsubmit = Wicket.bind(this.submitCallback, this);
-	},
-
-	submitCallback : function() {
-		if (this.originalCallback && !this.originalCallback()) {
-			return false;
-		} else {
-			this.start();
-			return true;
-		}
-	},
-	
-	start : function(){
-		this.displayprogress = true;
-		if (this.fileid) {
-			var fileupload = Wicket.$(this.fileid);
-			this.displayprogress = fileupload && fileupload.value && fileupload.value != '';
-		}
-		if (this.displayprogress) {
-			this.setPercent(0);
-			this.setStatus(this.initialStatus);
-			Wicket.$(this.statusid).style.display='block';
-			Wicket.$(this.barid).style.display='block';
-			this.scheduleUpdate();
-		}
-	},
-	
-	setStatus : function(status){
-		var label = document.createElement("label");
-		label.innerHTML = status;
-		var oldLabel = Wicket.$(this.statusid).firstChild;
-		if( oldLabel != null){
-			Wicket.$(this.statusid).removeChild(oldLabel);
-		}
-		Wicket.$(this.statusid).appendChild(label);
-	},
-	
-	setPercent : function(progressPercent){
-		Wicket.$(this.barid).firstChild.firstChild.style.width = progressPercent + '%';
-	},
-	
-	scheduleUpdate : function(){
-		window.setTimeout(Wicket.bind(this.load, this), 1000);
-	},
-
-	load : function() {
-		var URL = this.url;
-		
-    	this.iframe = Wicket._createIFrame(""+Math.random());
-		
-    	document.body.appendChild(this.iframe);
-		
-		Wicket.Event.add(this.iframe, "load", Wicket.bind(this.update, this));
-		this.iframe.src = URL; 
-	},
-
-	update : function() {
-		var responseAsText;
-		if(this.iframe.contentDocument){
-			responseAsText = this.iframe.contentDocument.body.innerHTML;
-		}else{
-			// for IE 5.5, 6 and 7:
-			responseAsText = this.iframe.contentWindow.document.body.innerHTML
-		}
-		
-		var update = responseAsText.split('|');
-
-		var progressPercent = update[1];
-		var status = update[2];
-
-		this.setPercent(progressPercent);
-		this.setStatus( status );
-
-		this.iframe.parentNode.removeChild(this.iframe);
-		this.iframe = null;
-		
-		if (progressPercent == 100) {
-			wicketHide(this.statusid);
-			wicketHide(this.barid);
-		} else {
-			this.scheduleUpdate();
-		}
+	if (typeof(Wicket) === "undefined") {
+		Wicket = {};
 	}
-};
+
+	Wicket.WUPB = Wicket.Class.create();
+	Wicket.WUPB.prototype = {
+
+		initialize : function(formid, statusid, barid, url, fileid, initialStatus) {
+			this.formid = formid;
+			this.statusid = statusid;
+			this.barid = barid;
+			this.url = url;
+			this.fileid = fileid;
+			this.initialStatus = initialStatus;
+		},
+
+		bind : function(formid) {
+			var formElement = Wicket.$(formid);
+			this.originalCallback = formElement.onsubmit;
+			formElement.onsubmit = Wicket.bind(this.submitCallback, this);
+		},
+
+		submitCallback : function() {
+			if (this.originalCallback && !this.originalCallback()) {
+				return false;
+			} else {
+				this.start();
+				return true;
+			}
+		},
+
+		start : function(){
+			this.displayprogress = true;
+			if (this.fileid) {
+				var fileupload = Wicket.$(this.fileid);
+				this.displayprogress = fileupload && fileupload.value && fileupload.value !== '';
+			}
+			if (this.displayprogress) {
+				this.setPercent(0);
+				this.setStatus(this.initialStatus);
+				Wicket.$(this.statusid).style.display='block';
+				Wicket.$(this.barid).style.display='block';
+				this.scheduleUpdate();
+			}
+		},
+
+		setStatus : function(status){
+			var label = document.createElement("label");
+			label.innerHTML = status;
+			var oldLabel = Wicket.$(this.statusid).firstChild;
+			if( oldLabel != null){
+				Wicket.$(this.statusid).removeChild(oldLabel);
+			}
+			Wicket.$(this.statusid).appendChild(label);
+		},
+
+		setPercent : function(progressPercent){
+			Wicket.$(this.barid).firstChild.firstChild.style.width = progressPercent + '%';
+		},
+
+		scheduleUpdate : function(){
+			window.setTimeout(Wicket.bind(this.load, this), 1000);
+		},
+
+		load : function() {
+			var URL = this.url;
+
+	        this.iframe = Wicket._createIFrame(""+Math.random());
+
+	        document.body.appendChild(this.iframe);
+
+			Wicket.Event.add(this.iframe, "load", Wicket.bind(this.update, this));
+			this.iframe.src = URL;
+		},
+
+		update : function() {
+			var responseAsText;
+			if(this.iframe.contentDocument){
+				responseAsText = this.iframe.contentDocument.body.innerHTML;
+			}else{
+				// for IE 5.5, 6 and 7:
+				responseAsText = this.iframe.contentWindow.document.body.innerHTML;
+			}
+
+			var update = responseAsText.split('|');
+
+			var progressPercent = update[1];
+			var status = update[2];
+
+			this.setPercent(progressPercent);
+			this.setStatus( status );
+
+			this.iframe.parentNode.removeChild(this.iframe);
+			this.iframe = null;
+
+			if (progressPercent === 100) {
+				Wicket.DOM.hide(this.statusid);
+				Wicket.DOM.hide(this.barid);
+			} else {
+				this.scheduleUpdate();
+			}
+		}
+	};
+})();

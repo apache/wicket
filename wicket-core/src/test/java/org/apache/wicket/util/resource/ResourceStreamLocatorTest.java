@@ -24,16 +24,17 @@ import java.net.URL;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
-import org.apache.wicket.util.file.Path;
+import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.string.Strings;
 import org.junit.Test;
 
 
 /**
- * ResourceStreamLocator test. Tests construction of resource names with 
+ * ResourceStreamLocator test. Tests construction of resource names with
  * 
  * @author Juergen Donnerstag
  */
@@ -63,7 +64,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	 * @param locale
 	 * @param extension
 	 */
-	public void createAndTestResource(Path sourcePath, String style, String variation,
+	public void createAndTestResource(IResourceFinder sourcePath, String style, String variation,
 		Locale locale, String extension)
 	{
 		IResourceStreamLocator locator = new ResourceStreamLocator(sourcePath);
@@ -77,7 +78,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	 * 
 	 * @param sourcePath
 	 */
-	public void executeMultiple(Path sourcePath)
+	public void executeMultiple(IResourceFinder sourcePath)
 	{
 		createAndTestResource(sourcePath, null, null, null, "");
 		createAndTestResource(sourcePath, "style", null, null, "_style");
@@ -114,7 +115,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	public void locateInClasspath()
 	{
 		// Execute without source path
-		executeMultiple(new Path());
+		executeMultiple(new ClassPathResourceFinder(""));
 
 		// Determine source path
 		IResourceStreamLocator locator = new ResourceStreamLocator();

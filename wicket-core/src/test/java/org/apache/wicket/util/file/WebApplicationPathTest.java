@@ -24,6 +24,7 @@ import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 /**
@@ -37,9 +38,9 @@ public class WebApplicationPathTest extends Assert
 		URL webUrl = new URL("file://dummyFile");
 
 		ServletContext context = Mockito.mock(ServletContext.class);
-		Mockito.when(context.getResource(Mockito.any(String.class))).thenReturn(webUrl);
+		Mockito.when(context.getResource(Matchers.any(String.class))).thenReturn(webUrl);
 
-		WebApplicationPath path = new WebApplicationPath(context);
+		WebApplicationPath path = new WebApplicationPath(context, "");
 		IResourceStream resourceStream = path.find(String.class, "WEB-INF/web.xml");
 		assertNull(resourceStream);
 

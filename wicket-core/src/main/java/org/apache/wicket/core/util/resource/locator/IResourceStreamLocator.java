@@ -22,7 +22,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 
 
 /**
- * Interface for code that locates resources.
+ * Interface for code that locates resources, taking into account variations for locale and style.
  * 
  * @author Jonathan Locke
  */

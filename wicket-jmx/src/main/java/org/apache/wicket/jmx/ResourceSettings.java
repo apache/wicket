@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.time.Duration;
 
@@ -65,7 +66,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	public String getPropertiesFactory()
 	{
 		ThreadContext.setApplication(application);
-		
+
 		try
 		{
 			return Stringz.className(application.getResourceSettings().getPropertiesFactory());
@@ -79,9 +80,14 @@ public class ResourceSettings implements ResourceSettingsMBean
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getResourceFinder()
+	public String getResourceFinders()
 	{
-		return Stringz.className(application.getResourceSettings().getResourceFinder());
+		StringBuilder builder = new StringBuilder();
+		for (IResourceFinder rf : application.getResourceSettings().getResourceFinders())
+		{
+			builder.append(Stringz.className(rf));
+		}
+		return builder.toString();
 	}
 
 	/**

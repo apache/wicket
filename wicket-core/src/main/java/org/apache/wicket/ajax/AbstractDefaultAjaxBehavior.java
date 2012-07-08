@@ -64,7 +64,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	private static final String DYNAMIC_PARAMETER_FUNCTION_TEMPLATE = "function(attrs){%s}";
 	private static final String PRECONDITION_FUNCTION_TEMPLATE      = "function(attrs, jqXHR, settings){%s}";
 	private static final String COMPLETE_HANDLER_FUNCTION_TEMPLATE  = "function(attrs, jqXHR, textStatus){%s}";
-	private static final String FAILURE_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, errorMessage){%s}";
+	private static final String FAILURE_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, jqXHR, errorMessage, textStatus){%s}";
 	private static final String SUCCESS_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, jqXHR, data, textStatus){%s}";
 	private static final String AFTER_HANDLER_FUNCTION_TEMPLATE     = "function(attrs){%s}";
 	private static final String BEFORE_HANDLER_FUNCTION_TEMPLATE    = "function(attrs, jqXHR, settings){%s}";
@@ -249,52 +249,22 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				if (ajaxCallListener != null)
 				{
 					CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
-					if (Strings.isEmpty(beforeHandler) == false)
-					{
-						String func = String.format(BEFORE_HANDLER_FUNCTION_TEMPLATE, beforeHandler);
-						JsonFunction function = new JsonFunction(func);
-						attributesJson.append("bh", function);
-					}
+					appendListenerHandler(beforeHandler, attributesJson, "bh", BEFORE_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
-					if (Strings.isEmpty(afterHandler) == false)
-					{
-						String func = String.format(AFTER_HANDLER_FUNCTION_TEMPLATE, afterHandler);
-						JsonFunction function = new JsonFunction(func);
-						attributesJson.append("ah", function);
-					}
+					appendListenerHandler(afterHandler, attributesJson, "ah", AFTER_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
-					if (Strings.isEmpty(successHandler) == false)
-					{
-						String func = String.format(SUCCESS_HANDLER_FUNCTION_TEMPLATE, successHandler);
-						JsonFunction function = new JsonFunction(func);
-						attributesJson.append("sh", function);
-					}
+					appendListenerHandler(successHandler, attributesJson, "sh", SUCCESS_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
-					if (Strings.isEmpty(failureHandler) == false)
-					{
-						String func = String.format(FAILURE_HANDLER_FUNCTION_TEMPLATE, failureHandler);
-						JsonFunction function = new JsonFunction(func);
-						attributesJson.append("fh", function);
-					}
+					appendListenerHandler(failureHandler, attributesJson, "fh", FAILURE_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
-					if (Strings.isEmpty(completeHandler) == false)
-					{
-						String func = String.format(COMPLETE_HANDLER_FUNCTION_TEMPLATE, completeHandler);
-						JsonFunction function = new JsonFunction(func);
-						attributesJson.append("coh", function);
-					}
+					appendListenerHandler(completeHandler, attributesJson, "coh", COMPLETE_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence precondition = ajaxCallListener.getPrecondition(component);
-					if (Strings.isEmpty(precondition) == false)
-					{
-						String func = String.format(PRECONDITION_FUNCTION_TEMPLATE, precondition);
-						JsonFunction function = new JsonFunction(func);
-						attributesJson.append("pre", function);
-					}
+					appendListenerHandler(precondition, attributesJson, "pre", PRECONDITION_FUNCTION_TEMPLATE);
 				}
 			}
 
@@ -397,6 +367,26 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return attributesAsJson;
 	}
 
+	private void appendListenerHandler(final CharSequence handler, final JSONObject attributesJson,
+			final String propertyName, final String functionTemplate)
+		throws JSONException
+	{
+		if (Strings.isEmpty(handler) == false)
+		{
+			final JsonFunction function;
+			if (handler instanceof JsonFunction)
+			{
+				function = (JsonFunction) handler;
+			}
+			else
+			{
+				String func = String.format(functionTemplate, handler);
+				function = new JsonFunction(func);
+			}
+			attributesJson.append(propertyName, function);
+		}
+	}
+
 	/**
 	 * Gives a chance to modify the JSON attributesJson that is going to be used as attributes for
 	 * the Ajax call.
@@ -461,7 +451,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			if (curExtraParameter.getFunctionParameterName() != null)
 			{
 				if (!first)
-					sb.append(",");
+					sb.append(',');
 				else
 					first = false;
 				sb.append(curExtraParameter.getFunctionParameterName());
@@ -497,10 +487,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			if (curExtraParameter.getAjaxParameterName() != null)
 			{
 				if (!first)
-					sb.append(",");
+					sb.append(',');
 				else
 					first = false;
-				sb.append("'")
+				sb.append('\'')
 					.append(curExtraParameter.getAjaxParameterName())
 					.append("': ")
 					.append(curExtraParameter.getAjaxParameterCode());

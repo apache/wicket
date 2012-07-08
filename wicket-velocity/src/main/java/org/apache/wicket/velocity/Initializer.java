@@ -26,8 +26,8 @@ import org.apache.velocity.app.Velocity;
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.core.util.file.WebApplicationPath;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -89,8 +89,8 @@ public class Initializer implements IInitializer
 
 			if (null != propertiesFolder)
 			{
-				WebApplicationPath webPath = new WebApplicationPath(servletContext);
-				webPath.add(propertiesFolder);
+				WebApplicationPath webPath = new WebApplicationPath(servletContext,
+					propertiesFolder);
 				IResourceStream stream = webPath.find(Initializer.class, velocityPropertiesFile);
 				InputStream is = null;
 				try

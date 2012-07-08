@@ -17,128 +17,91 @@
 package org.apache.wicket.core.util.file;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.apache.wicket.util.file.Folder;
-import org.apache.wicket.util.file.Path;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
-import org.apache.wicket.util.string.StringList;
+import org.apache.wicket.util.file.IResourceFinder;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * Maintain a list of paths which might either be ordinary folders of the filesystem or relative
- * paths to the web application's servlet context.
- *
+ * An {@link IResourceFinder} that looks in a folder in the webapp context path. It will
+ * <em>not</em> load files inside WEB-INF.
+ * 
  * @author Johan Compagner
+ * @author Carl-Eric Menzel
  */
-public final class WebApplicationPath extends Path
+public final class WebApplicationPath implements IResourceFinder
 {
 	private final static Logger log = LoggerFactory.getLogger(WebApplicationPath.class);
 
 	private static final String WEB_INF = "WEB-INF/";
 
-	/** The list of urls in the path */
-	private final List<String> webappPaths = new ArrayList<String>();
-
 	/** The web apps servlet context */
 	private final ServletContext servletContext;
 
+	private final String path;
+
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param servletContext
 	 *            The webapplication context where the resources must be loaded from
+	 * @param path
+	 *            The path inside the app context where to look.
 	 */
-	public WebApplicationPath(final ServletContext servletContext)
+	public WebApplicationPath(final ServletContext servletContext, String path)
 	{
 		this.servletContext = servletContext;
-
-		// adding root so servlet context resources are always checked
-		webappPaths.add("/");
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
+		}
+		if (!path.endsWith("/"))
+		{
+			path += "/";
+		}
+		this.path = path;
 	}
 
-	/**
-	 * @param path
-	 *            add a path that is lookup through the servlet context
-	 */
-	@Override
-	public void add(String path)
-	{
-		final Folder folder = new Folder(path);
-		if (folder.exists())
-		{
-			log.debug("Added path '{}' as a folder.", path);
-			super.add(folder);
-		}
-		else
-		{
-			if (!path.startsWith("/"))
-			{
-				path = "/" + path;
-			}
-			if (!path.endsWith("/"))
-			{
-				path += "/";
-			}
-			log.debug("Added path '{}' as a web path.", path);
-			webappPaths.add(path);
-		}
-	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
 	@Override
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
-		if (pathname == null)
+		IResourceStream resourceStream = null;
+		if (pathname.startsWith(WEB_INF) == false)
 		{
-			return null;
-		}
-
-		IResourceStream resourceStream = super.find(clazz, pathname);
-
-		if (resourceStream == null && pathname.startsWith(WEB_INF) == false)
-		{
-			for (String path : webappPaths)
+			try
 			{
-				try
+				final URL url = servletContext.getResource(path + pathname);
+				if (url != null)
 				{
-					final URL url = servletContext.getResource(path + pathname);
-					if (url != null)
-					{
-						resourceStream = new UrlResourceStream(url);
-						break;
-					}
+					resourceStream = new UrlResourceStream(url);
 				}
-				catch (Exception ex)
-				{
-					// ignore, file couldn't be found
-				}
+			}
+			catch (Exception ex)
+			{
+				// ignore, file couldn't be found
 			}
 		}
 
 		return resourceStream;
 	}
 
-	public List<String> getWebappPaths()
-	{
-		return webappPaths;
-	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return "[folders = " + StringList.valueOf(getFolders()) + ", webapppaths: " +
-			StringList.valueOf(webappPaths) + "]";
+		return "[webapppath: " + path + "]";
 	}
 }

@@ -16,118 +16,64 @@
  */
 package org.apache.wicket.util.file;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.string.StringList;
 
 
 /**
- * Maintains a list of folders as a path.
+ * An {@link IResourceFinder} that looks for its resources in a filesystem path.
  * 
  * @author Jonathan Locke
+ * @author Carl-Eric Menzel
  */
-public class Path implements IResourcePath
+public class Path implements IResourceFinder
 {
-	/** The list of folders in the path */
-	private final List<Folder> folders = new ArrayList<Folder>();
+	private final Folder folder;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param folder
+	 *            The folder to look in
 	 */
-	public Path()
+	public Path(final String folder)
 	{
+		this(new Folder(folder));
 	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param folder
-	 *            A single folder to add to the path
+	 *            The folder to look in
 	 */
 	public Path(final Folder folder)
-	{
-		add(folder);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param folders
-	 *            An array of folders to add to the path
-	 */
-	public Path(final Folder[] folders)
-	{
-		if (folders != null)
-		{
-			for (Folder folder : folders)
-			{
-				add(folder);
-			}
-		}
-	}
-
-	/**
-	 * @param folder
-	 *            Folder to add to path
-	 */
-	public void add(final Folder folder)
 	{
 		if (!folder.exists())
 		{
 			throw new IllegalArgumentException("Folder " + folder + " does not exist");
 		}
-
-		folders.add(folder);
+		this.folder = folder;
 	}
 
 	/**
-	 * @param path
-	 *            Folder to add to path
-	 * @see org.apache.wicket.util.file.IResourcePath#add(java.lang.String)
-	 */
-	@Override
-	public void add(final String path)
-	{
-		add(new Folder(path));
-	}
-
-	/**
-	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
 	@Override
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
-		for (Folder folder : folders)
+		final File file = new File(folder, pathname);
+
+		if (file.exists())
 		{
-			final File file = new File(folder, pathname);
-
-			if (file.exists())
-			{
-				return new FileResourceStream(file);
-			}
+			return new FileResourceStream(file);
 		}
-
-		return null;
-	}
-
-	/**
-	 * @return Returns the folders.
-	 */
-	public List<Folder> getFolders()
-	{
-		return folders;
-	}
-
-	/**
-	 * @return Number of folders on the path.
-	 */
-	public int size()
-	{
-		return folders.size();
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -136,6 +82,13 @@ public class Path implements IResourcePath
 	@Override
 	public String toString()
 	{
-		return "[folders = " + StringList.valueOf(folders) + "]";
+		try
+		{
+			return "[Path: folder = " + folder.getCanonicalPath() + "]";
+		}
+		catch (IOException e)
+		{
+			return "[Path: exception while inspecting folder]";
+		}
 	}
 }

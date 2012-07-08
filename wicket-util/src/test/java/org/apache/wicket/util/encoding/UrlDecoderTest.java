@@ -14,28 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// introduce a namespace, just to be nice
-if (typeof (Wicket.CheckboxSelector.Checkboxes) === "undefined") {
-	Wicket.CheckboxSelector.Checkboxes = {};
-	/**
-	 * Returns a closure that finds all checkboxes with the given IDs.
-	 *
-	 * @param checkBoxIDs
-	 *            An array containing the markup IDs of all checkboxes this
-	 *            selector should control.
-	 */
-	Wicket.CheckboxSelector.Checkboxes.findCheckboxesFunction = function(checkBoxIDs) {
-		"use strict";
+package org.apache.wicket.util.encoding;
 
-		return function() {
-			var i,
-				result = [];
+import static org.junit.Assert.assertEquals;
 
-			for (i in checkBoxIDs) {
-				var checkBox = Wicket.$(checkBoxIDs[i]);
-				result.push(checkBox);
-			}
-			return result;
-		};
-	};
+import org.junit.Test;
+
+public class UrlDecoderTest
+{
+	@Test
+	public void mustNotEmitNullByteForPath() throws Exception
+	{
+		String evil = "http://www.devil.com/highway/to%00hell";
+		String decoded = UrlDecoder.PATH_INSTANCE.decode(evil, "UTF-8");
+		assertEquals(-1, decoded.indexOf('\0'));
+		assertEquals("http://www.devil.com/highway/toNULLhell", decoded);
+	}
+
+	@Test
+	public void mustNotEmitNullByteForQuery() throws Exception
+	{
+		String evil = "http://www.devil.com/highway?destination=%00hell";
+		String decoded = UrlDecoder.QUERY_INSTANCE.decode(evil, "UTF-8");
+		assertEquals(-1, decoded.indexOf('\0'));
+		assertEquals("http://www.devil.com/highway?destination=NULLhell", decoded);
+	}
 }

@@ -14,28 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// introduce a namespace, just to be nice
-if (typeof (Wicket.CheckboxSelector.Checkboxes) === "undefined") {
-	Wicket.CheckboxSelector.Checkboxes = {};
+package org.apache.wicket.markup.html.image;
+
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
+
+/**
+ * Demonstrates {@link NonCachingImage}.
+ * 
+ * @author svenmeier
+ */
+public final class NonCachingImagePage extends WebPage
+{
+	private static final long serialVersionUID = 1L;
+
 	/**
-	 * Returns a closure that finds all checkboxes with the given IDs.
-	 *
-	 * @param checkBoxIDs
-	 *            An array containing the markup IDs of all checkboxes this
-	 *            selector should control.
 	 */
-	Wicket.CheckboxSelector.Checkboxes.findCheckboxesFunction = function(checkBoxIDs) {
-		"use strict";
+	public NonCachingImage image;
 
-		return function() {
-			var i,
-				result = [];
-
-			for (i in checkBoxIDs) {
-				var checkBox = Wicket.$(checkBoxIDs[i]);
-				result.push(checkBox);
-			}
-			return result;
-		};
-	};
+	/**
+	 * Constructor
+	 * 
+	 * @param parameters
+	 *            Page parameters (ignored since this is the home page)
+	 */
+	public NonCachingImagePage(final PageParameters parameters)
+	{
+		image = new NonCachingImage("image", new PackageResourceReference(
+			NonCachingImagePage.class, "Beer.gif"));
+		image.setOutputMarkupId(true);
+		add(image);
+	}
 }

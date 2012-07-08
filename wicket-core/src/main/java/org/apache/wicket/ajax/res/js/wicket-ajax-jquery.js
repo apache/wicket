@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-/*jshint evil: true, nomen: false, onevar: false, regexp: false, strict: true, boss: true, undef: true, maxlen: 160, curly: true, eqeqeq: true */
-/*global document: false, jQuery:false, DOMParser: true, window: false, Wicket: true, ActiveXObject: true */
-
+/*global DOMParser: true, ActiveXObject: true */
 
 /*
  * Wicket Ajax Support
@@ -798,17 +796,17 @@
 
 				// go through the ajax response and execute all priority-invocations first
 				for (var i = 0; i < root.childNodes.length; ++i) {
-					var node = root.childNodes[i];
-					if (node.tagName === "priority-evaluate") {
-						this.processEvaluation(steps, node, attrs);
+					var childNode = root.childNodes[i];
+					if (childNode.tagName === "priority-evaluate") {
+						this.processEvaluation(steps, childNode, attrs);
 					}
 				}
 
 				// go through the ajax response and for every action (component, js evaluation, header contribution)
 				// ad the proper closure to steps
 				var stepIndexOfLastReplacedComponent = -1;
-				for (var i = 0; i < root.childNodes.length; ++i) {
-					var node = root.childNodes[i];
+				for (var c = 0; c < root.childNodes.length; ++c) {
+					var node = root.childNodes[c];
 
 					if (node.tagName === "component") {
 						if (stepIndexOfLastReplacedComponent === -1) {
@@ -912,7 +910,7 @@
 		 * @param node {XmlElement} - the <[priority-]evaluate> element with the script to evaluate
 		 * @param attrs {Object} - the attributes used for the Ajax request
 		 * @param event {jQuery.Event} - the event that caused this Ajax call
- 		 */
+		 */
 		processEvaluation: function (steps, node, attrs, event) {
 			steps.push(function (notify) {
 				// get the javascript body

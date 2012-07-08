@@ -14,166 +14,144 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+;(function (undefined) {
+	'use strict';
 
-if (typeof(Wicket) == "undefined")
-	Wicket = { };
+	if (typeof(Wicket) === "undefined") {
+		Wicket = {};
+	}
 
-Wicket.Tree = { };
+	Wicket.Tree = {};
 
-Wicket.Tree.askForReload = function()
-{
-   if (confirm("There was a problem updating the tree. It might be caused be the old page being cached by the browser. \n" +
-   "It is recommended to reload the page. Do you want to reload it?"))
-   {
-      window.location.reload();
-   }
-};
+	Wicket.Tree.askForReload = function() {
+		if (window.confirm("There was a problem updating the tree. It might be caused be the old page being cached by the browser. \n" +
+			"It is recommended to reload the page. Do you want to reload it?"))
+		{
+			window.location.reload();
+		}
+	};
 
-Wicket.Tree.removeNodes = function(prefix, nodeList)
-{
-   var problem = false;
-   for (var i = 0; i < nodeList.length; i++)
-   {
-      var e = document.getElementById(prefix + nodeList[i]);
-      if (e != null)
-      {
-         e.parentNode.removeChild(e);
-      }
-      else
-      {
-         // while developing alert a warning
-         problem = true;
-         Wicket.Log.error("Can't find node with id " + prefix + nodeList[i] +
-         ". This shouldn't happen - possible bug in tree?");
-      }
-   }
-   if (problem == true)
-   {
-      Wicket.Tree.askForReload();
-   }
-};
+	Wicket.Tree.removeNodes = function(prefix, nodeList) {
+		var problem = false;
+		for (var i = 0; i < nodeList.length; i++) {
+			var e = document.getElementById(prefix + nodeList[i]);
+			if (e != null) {
+				e.parentNode.removeChild(e);
+			}
+			else {
+				// while developing alert a warning
+				problem = true;
+				if (Wicket.Log) {
+					Wicket.Log.error("Can't find node with id " + prefix + nodeList[i] +
+						". This shouldn't happen - possible bug in tree?");
+				}
+			}
+		}
 
-Wicket.Tree.createElement = function(elementId, afterId)
-{
-   var existing = Wicket.$(elementId);
-   if (typeof(existing) != "undefined" && existing != null)
-   {
-      Wicket.Tree.askForReload();
-   }
+		if (problem === true) {
+			Wicket.Tree.askForReload();
+		}
+	};
 
-   var after = document.getElementById(afterId);
-   var newNode = document.createElement(after.tagName);
-   newNode.setAttribute("id", elementId);
+	Wicket.Tree.createElement = function(elementId, afterId) {
+		var existing = Wicket.$(elementId);
+		if (typeof(existing) !== "undefined" && existing !== null) {
+			Wicket.Tree.askForReload();
+		}
 
-   var p = after.parentNode;
+		var after = document.getElementById(afterId);
+		var newNode = document.createElement(after.tagName);
+		newNode.setAttribute("id", elementId);
 
-   for (var i = 0; i < p.childNodes.length; ++i)
-   {
-      if (after == p.childNodes[i])
-         break;
-   }
-   if (i == p.childNodes.length - 1)
-   {
-      p.appendChild(newNode);
-   }
-   else
-   {
-      p.insertBefore(newNode, p.childNodes[i + 1]);
-   }
-};
+		var p = after.parentNode;
 
-Wicket.TreeTable = { };
+		for (var i = 0; i < p.childNodes.length; ++i) {
+			if (after === p.childNodes[i]) {
+				break;
+			}
+		}
+		if (i === p.childNodes.length - 1) {
+			p.appendChild(newNode);
+		}
+		else {
+			p.insertBefore(newNode, p.childNodes[i + 1]);
+		}
+	};
 
-/* Javascript that resizes the tree table header so that it matches size of the content.
-   This is needed when the scrollbar next to content is show, so that the columns are 
-   properly aligned */
-Wicket.TreeTable.update = function(elementId)
-{
+	Wicket.TreeTable = {};
 
-   var element = document.getElementById(elementId);
+	/* Javascript that resizes the tree table header so that it matches size of the content.
+	   This is needed when the scrollbar next to content is show, so that the columns are
+	   properly aligned */
+	Wicket.TreeTable.update = function(elementId)
+	{
+		var element = document.getElementById(elementId);
 
-   if (element != null && typeof(element) != "undefined")
-   {
+		if (element !== null && typeof(element) !== "undefined")
+		{
+			try {
+				// find the div containing the inner header div
+				var headerParent = element.getElementsByTagName("div")[1];
 
-      try
-      {
+				// find the inner header div
+				var header = headerParent.getElementsByTagName("div")[0];
 
-         /// find the div containing the inner header div
-         var headerParent = element.getElementsByTagName("div")[1];
+				// body div should be next div after header parent
+				var body = headerParent.nextSibling;
 
-         // find the inner header div
-         var header = headerParent.getElementsByTagName("div")[0];
+				// interate until div is found
+				while (body.tagName !== "DIV") {
+					body = body.nextSibling;
+				}
 
-         // body div should be next div after header parent
-         var body = headerParent.nextSibling;
+				// last check to find out if we are updating the right component
+				if (body.className === "wicket-tree-table-body") {
+					// get the right padding from header - we need to substract it from new width
+					var padding;
+					if (document.defaultView && document.defaultView.getComputedStyle) {
+						padding = document.defaultView.getComputedStyle(headerParent, '').getPropertyValue("padding-right");
+					} else if (headerParent.currentStyle) {
+						padding = headerParent.currentStyle.paddingRight;
+					}
+					else {
+						padding = 6;
+					}
 
-         // interate until div is found
-         while (body.tagName != "DIV")
-         {
-            body = body.nextSibling;
-         }
+					padding = parseInt(padding, 10);
 
-         // last check to find out if we are updating the right component
-         if (body.className == "wicket-tree-table-body")
-         {
+					// set the new width
+					var w = (body.getElementsByTagName("div")[0].clientWidth - padding) + "px";
 
-            // get the right padding from header - we need to substract it from new width
-            var padding;
-            if (document.defaultView && document.defaultView.getComputedStyle)
-            {
-               padding = document.defaultView.getComputedStyle(headerParent, '').getPropertyValue("padding-right");
-            } else if (headerParent.currentStyle)
-            {
-               padding = headerParent.currentStyle.paddingRight;
-            }
-            else
-            {
-               padding = 6;
-            }
+					if (w === (-padding) + "px") {
+						// this can happen if the first row is hidden (e.g. rootless mode)
+						// try to get the width from second row
+						w = (body.getElementsByTagName("div")[1].clientWidth - padding) + "px";
+					}
 
-            padding = parseInt(padding, 10);
+					if (w !== "0px") {
+						header.style.width = w;
+					}
+				}
+			}
+			catch (ignore) {}
+		}
+	};
 
-            // set the new width
-            var w = (body.getElementsByTagName("div")[0].clientWidth - padding) + "px";
+	Wicket.TreeTable.attached = {};
 
-            if (w == (-padding) + "px")
-            { // this can happen if the first row is hidden (e.g. rootless mode)
-               // try to get the width from second row
-               w = (body.getElementsByTagName("div")[1].clientWidth - padding) + "px";
+	Wicket.TreeTable.attachUpdate = function(treeTableId) {
+		// get the object that contains ids of elements on which the update method was already attached
+		var attached = Wicket.TreeTable.attached;
 
-            }
+		// force updating the element
+		Wicket.TreeTable.update(treeTableId);
 
-            if (w != "0px")
-            {
-               header.style.width = w;
-            }
-
-         }
-      }
-      catch (ignore)
-      {
-      }
-   }
-};
-
-Wicket.TreeTable.attached = new Object();
-
-Wicket.TreeTable.attachUpdate = function(treeTableId)
-{
-   // get the object that contains ids of elements on which the update method was already attached
-   var attached = Wicket.TreeTable.attached;
-
-   // force updating the element
-   Wicket.TreeTable.update(treeTableId);
-
-   // if the update has not been attached to this tree table yet...
-   if (typeof(attached[treeTableId]) == "undefined")
-   {
-      // ... attach it
-      attached[treeTableId] = window.setInterval(function()
-      {
-         Wicket.TreeTable.update(treeTableId);
-      }, 100);
-   }
-};
-
+		// if the update has not been attached to this tree table yet...
+		if (typeof(attached[treeTableId]) === "undefined") {
+			// ... attach it
+			attached[treeTableId] = window.setInterval(function() {
+				Wicket.TreeTable.update(treeTableId);
+			}, 100);
+		}
+	};
+})();

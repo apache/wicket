@@ -59,10 +59,6 @@ public class UrlEncoder
 	// list of what not to decode
 	protected BitSet dontNeedEncoding;
 
-	// E.g. "?" for FULL_PATH encoding when querystring has already been
-	// encoded.
-	private final char stopChar;
-
 	// used in decoding
 	protected static final int caseDiff = ('a' - 'A');
 
@@ -72,7 +68,7 @@ public class UrlEncoder
 	 * 
 	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
 	 */
-	public static final UrlEncoder QUERY_INSTANCE = new UrlEncoder(Type.QUERY, '\0');
+	public static final UrlEncoder QUERY_INSTANCE = new UrlEncoder(Type.QUERY);
 
 	/**
 	 * Encoder used to encode components of a path.<br/>
@@ -80,7 +76,7 @@ public class UrlEncoder
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
-	public static final UrlEncoder PATH_INSTANCE = new UrlEncoder(Type.PATH, '\0');
+	public static final UrlEncoder PATH_INSTANCE = new UrlEncoder(Type.PATH);
 
 	/**
 	 * Encoder used to encode all path segments. Querystring will be excluded.<br/>
@@ -88,20 +84,18 @@ public class UrlEncoder
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
-	public static final UrlEncoder FULL_PATH_INSTANCE = new UrlEncoder(Type.FULL_PATH, '?');
+	public static final UrlEncoder FULL_PATH_INSTANCE = new UrlEncoder(Type.FULL_PATH);
+
+	private final Type type;
 
 	/**
 	 * Allow subclass to call constructor.
 	 * 
 	 * @param type
 	 *            encoder type
-	 * @param stopChar
-	 *            stop encoding when stopChar found
 	 */
-	protected UrlEncoder(final Type type, final char stopChar)
+	protected UrlEncoder(final Type type)
 	{
-		this.stopChar = stopChar;
-
 		/*
 		 * This note from java.net.URLEncoder ==================================
 		 * 
@@ -150,6 +144,7 @@ public class UrlEncoder
 		 * query =( pchar / "/" / "?" )
 		 */
 
+		this.type = type;
 		// unreserved
 		dontNeedEncoding = new BitSet(256);
 		int i;
@@ -191,7 +186,7 @@ public class UrlEncoder
 		// encoding type-specific
 		switch (type)
 		{
-			// this code consistent with java.net.URLEncoder version
+		// this code consistent with java.net.URLEncoder version
 			case QUERY :
 				// encoding a space to a + is done in the encode() method
 				dontNeedEncoding.set(' ');
@@ -257,9 +252,9 @@ public class UrlEncoder
 	 * @return encoded string
 	 * @see java.net.URLEncoder#encode(String, String)
 	 */
-	public String encode(final String s, final String charsetName)
+	public String encode(final String unsafeInput, final String charsetName)
 	{
-		boolean needToChange = false;
+		final String s = unsafeInput.replace("\0", "NULL");
 		StringBuilder out = new StringBuilder(s.length());
 		Charset charset;
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
@@ -284,7 +279,7 @@ public class UrlEncoder
 		{
 			int c = s.charAt(i);
 
-			if ((stopEncoding == false) && (c == stopChar))
+			if ((stopEncoding == false) && (c == '?' && type == Type.FULL_PATH))
 			{
 				stopEncoding = true;
 			}
@@ -295,7 +290,6 @@ public class UrlEncoder
 				if (c == ' ')
 				{
 					c = '+';
-					needToChange = true;
 				}
 				// System.out.println("Storing: " + c);
 				out.append((char)c);
@@ -361,10 +355,9 @@ public class UrlEncoder
 					out.append(ch);
 				}
 				charArrayWriter.reset();
-				needToChange = true;
 			}
 		}
 
-		return (needToChange ? out.toString() : s);
+		return out.toString();
 	}
 }

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.head.PriorityFirstComparator;
@@ -29,13 +30,13 @@ import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItem;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IPropertiesFactoryContext;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 
@@ -46,7 +47,7 @@ import org.apache.wicket.util.watch.IModificationWatcher;
  * <i>resourcePollFrequency </i> (defaults to no polling frequency) - Frequency at which resources
  * should be polled for changes.
  * <p>
- * <i>resourceFinder </i> (classpath) - Set this to alter the search path for resources.
+ * <i>resourceFinders</i> - Add/modify this to alter the search path for resources.
  * <p>
  * <i>useDefaultOnMissingResource </i> (defaults to true) - Set to true to return a default value if
  * available when a required string resource is not found. If set to false then the
@@ -92,16 +93,6 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	void addResourceFactory(final String name, final IResourceFactory resourceFactory);
 
 	/**
-	 * Convenience method that sets the resource search path to a single folder. use when searching
-	 * for resources. By default, the resources are located on the classpath. If you want to
-	 * configure other, additional, search paths, you can use this method
-	 * 
-	 * @param resourceFolder
-	 *            The resourceFolder to set
-	 */
-	void addResourceFolder(final String resourceFolder);
-
-	/**
 	 * Get the the default cache duration for resources.
 	 * <p/>
 	 * 
@@ -133,12 +124,15 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	IResourceFactory getResourceFactory(final String name);
 
 	/**
-	 * Gets the resource finder to use when searching for resources.
+	 * Gets the resource finders to use when searching for resources. By default, a finder that
+	 * looks in the classpath root is configured. {@link WebApplication} adds the classpath
+	 * directory META-INF/resources. To configure additional search paths or filesystem paths, add
+	 * to this list.
 	 * 
-	 * @return Returns the resourceFinder.
+	 * @return Returns the resourceFinders.
 	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
-	IResourceFinder getResourceFinder();
+	List<IResourceFinder> getResourceFinders();
 
 	/**
 	 * @return Returns the resourcePollFrequency.
@@ -199,14 +193,15 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	void setPropertiesFactory(IPropertiesFactory factory);
 
 	/**
-	 * Sets the finder to use when searching for resources. By default, the resources are located on
-	 * the classpath. If you want to configure other, additional, search paths, you can use this
-	 * method.
+	 * Sets the finders to use when searching for resources. By default, the resources are located
+	 * on the classpath. To add additional search paths, add to the list given by
+	 * {@link #getResourceFinders()}. Use this method if you want to completely exchange the list of
+	 * resource finders.
 	 * 
 	 * @param resourceFinder
 	 *            The resourceFinder to set
 	 */
-	void setResourceFinder(final IResourceFinder resourceFinder);
+	void setResourceFinders(final List<IResourceFinder> resourceFinder);
 
 	/**
 	 * Sets the resource polling frequency. This is the duration of time between checks of resource
@@ -385,22 +380,23 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	Comparator<? super RecordedHeaderItem> getHeaderItemComparator();
 
 	/**
-	 * A flag indicating whether static resources should have <tt>jsessionid</tt> encoded
-	 * in their url.
-	 *
-	 * @return {@code true} if the jsessionid should be encoded in the url for resources implementing
-	 * {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when the cookies
-	 * are disabled and there is an active http session.
+	 * A flag indicating whether static resources should have <tt>jsessionid</tt> encoded in their
+	 * url.
+	 * 
+	 * @return {@code true} if the jsessionid should be encoded in the url for resources
+	 *         implementing
+	 *         {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when the
+	 *         cookies are disabled and there is an active http session.
 	 */
 	boolean isEncodeJSessionId();
 
 	/**
-	 * Sets a flag indicating whether the jsessionid should be encoded in the url for resources implementing
-	 * {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when the cookies are
-	 * disabled and there is an active http session.
-	 *
+	 * Sets a flag indicating whether the jsessionid should be encoded in the url for resources
+	 * implementing {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when
+	 * the cookies are disabled and there is an active http session.
+	 * 
 	 * @param encodeJSessionId
-	 *      {@code true} when the jsessionid should be encoded, {@code false} - otherwise
+	 *            {@code true} when the jsessionid should be encoded, {@code false} - otherwise
 	 */
 	void setEncodeJSessionId(boolean encodeJSessionId);
 }

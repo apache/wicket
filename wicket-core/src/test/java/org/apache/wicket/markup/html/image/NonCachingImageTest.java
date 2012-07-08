@@ -14,18 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.file;
+package org.apache.wicket.markup.html.image;
+
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.TagTester;
 
 /**
- * Knows how to manage paths and folders, and how to find resources in them.
+ * Test for {@link NonCachingImage}.
  * 
- * @author jcompagner
+ * @author svenmeier
  */
-public interface IResourcePath extends IResourceFinder
+public class NonCachingImageTest extends WicketTestCase
 {
+
 	/**
-	 * @param folder
-	 *            Adds a folder to the path
+	 * {@link NonCachingImage} always adds anticache.
 	 */
-	void add(String folder);
+	public void test()
+	{
+		NonCachingImagePage page = tester.startPage(NonCachingImagePage.class);
+
+		TagTester tag = tester.getTagById(page.image.getMarkupId());
+
+		assertTrue(tag.getAttribute("src").contains("antiCache"));
+	}
 }
