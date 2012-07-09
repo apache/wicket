@@ -21,6 +21,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
@@ -31,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * {@link PageRenderer} for web applications.
- * 
+ *
  * @author Matej Knopp
  */
 public class WebPageRenderer extends PageRenderer
@@ -40,7 +41,7 @@ public class WebPageRenderer extends PageRenderer
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param renderPageRequestHandler
 	 */
 	public WebPageRenderer(RenderPageRequestHandler renderPageRequestHandler)
@@ -63,7 +64,7 @@ public class WebPageRenderer extends PageRenderer
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param response
 	 */
@@ -80,13 +81,17 @@ public class WebPageRenderer extends PageRenderer
 	/**
 	 * Renders page to a {@link BufferedWebResponse}. All URLs in page will be rendered relative to
 	 * <code>targetUrl</code>
-	 * 
+	 *
 	 * @param targetUrl
 	 * @param requestCycle
 	 * @return BufferedWebResponse containing page body
 	 */
 	protected BufferedWebResponse renderPage(Url targetUrl, RequestCycle requestCycle)
 	{
+		// get the page before checking for a scheduled request handler because
+		// the page may call setResponsePage in its constructor
+		IRequestablePage requestablePage = getPage();
+
 		IRequestHandler scheduled = requestCycle.getRequestHandlerScheduledAfterCurrent();
 
 		if (scheduled != null)
@@ -107,7 +112,7 @@ public class WebPageRenderer extends PageRenderer
 		try
 		{
 			requestCycle.setResponse(response);
-			getPage().renderPage();
+			requestablePage.renderPage();
 
 			if (scheduled == null && requestCycle.getRequestHandlerScheduledAfterCurrent() != null)
 			{
@@ -133,7 +138,7 @@ public class WebPageRenderer extends PageRenderer
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param requestCycle
 	 */
