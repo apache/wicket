@@ -527,6 +527,7 @@
 						if (settings.type.toLowerCase() === 'post') {
 							separator = settings.data.length > 0 ? '&' : '';
 							settings.data = settings.data + separator + queryString;
+							jqXHR.setRequestHeader("Content-Type", settings.contentType);
 						} else {
 							separator = settings.url.indexOf('?') > -1 ? '&' : '?';
 							settings.url = settings.url + separator + queryString;
