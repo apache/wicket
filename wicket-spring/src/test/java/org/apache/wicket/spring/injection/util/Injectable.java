@@ -37,6 +37,7 @@ public class Injectable implements InjectableInterface
 	/**
 	 * @return test bean
 	 */
+	@Override
 	public Bean getBeanByClass()
 	{
 		return beanByClass;
@@ -45,6 +46,7 @@ public class Injectable implements InjectableInterface
 	/**
 	 * @return test bean
 	 */
+	@Override
 	public Bean2 getBeanByName()
 	{
 		return beanByName;
@@ -53,6 +55,7 @@ public class Injectable implements InjectableInterface
 	/**
 	 * @return test bean
 	 */
+	@Override
 	public Bean getNobean()
 	{
 		return nobean;

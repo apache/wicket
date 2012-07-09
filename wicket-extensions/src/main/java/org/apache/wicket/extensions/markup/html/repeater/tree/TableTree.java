@@ -171,6 +171,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 			final IModel<T> model = getProvider().model(t);
 			visitChildren(Item.class, new IVisitor<Item<T>, Void>()
 			{
+				@Override
 				public void component(Item<T> item, IVisit<Void> visit)
 				{
 					NodeModel<T> nodeModel = (NodeModel<T>)item.getModel();

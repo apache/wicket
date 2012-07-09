@@ -124,6 +124,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	/**
 	 * @see org.apache.wicket.extensions.wizard.dynamic.IDynamicWizardStep#isLastAvailable()
 	 */
+	@Override
 	public boolean isLastAvailable()
 	{
 		return false;
@@ -132,6 +133,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	/**
 	 * @see org.apache.wicket.extensions.wizard.dynamic.IDynamicWizardStep#isNextAvailable()
 	 */
+	@Override
 	public boolean isNextAvailable()
 	{
 		return !isLastStep();
@@ -140,6 +142,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	/**
 	 * @see org.apache.wicket.extensions.wizard.dynamic.IDynamicWizardStep#isPreviousAvailable()
 	 */
+	@Override
 	public boolean isPreviousAvailable()
 	{
 		return (previousStep != null);
@@ -148,6 +151,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	/**
 	 * @see org.apache.wicket.extensions.wizard.dynamic.IDynamicWizardStep#last()
 	 */
+	@Override
 	public IDynamicWizardStep last()
 	{
 		throw new IllegalStateException("if the last button is available, this step "
@@ -157,6 +161,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	/**
 	 * @see org.apache.wicket.extensions.wizard.dynamic.IDynamicWizardStep#previous()
 	 */
+	@Override
 	public IDynamicWizardStep previous()
 	{
 		return previousStep;

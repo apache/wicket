@@ -37,6 +37,7 @@ public abstract class SortableTreeProvider<T, S> implements ISortableTreeProvide
 	 * @see ISortableDataProvider#getSortState()
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public final ISortState<S> getSortState()
 	{
 		return (ISortState<S>)state;

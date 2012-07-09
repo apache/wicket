@@ -83,6 +83,7 @@ public class MountMapper extends AbstractMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public int getCompatibilityScore(final Request request)
 	{
 		if (urlStartsWith(request.getUrl(), mountSegments))
@@ -112,6 +113,7 @@ public class MountMapper extends AbstractMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public final IRequestHandler mapRequest(final Request request)
 	{
 		final Url url = request.getUrl();
@@ -137,6 +139,7 @@ public class MountMapper extends AbstractMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
 	 */
+	@Override
 	public Url mapHandler(final IRequestHandler handler)
 	{
 		Mount mount = mapper.mapHandler(handler);

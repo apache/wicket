@@ -112,6 +112,7 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 	{
 		reversedNotify(new INotifier<T>()
 		{
+			@Override
 			public void notify(T listener)
 			{
 				try
@@ -192,6 +193,7 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 	 * 
 	 * @return an iterator that can iterate the listeners.
 	 */
+	@Override
 	public Iterator<T> iterator()
 	{
 		return listeners.iterator();

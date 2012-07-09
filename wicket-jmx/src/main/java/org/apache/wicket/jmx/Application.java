@@ -42,6 +42,7 @@ public class Application implements ApplicationMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationMBean#clearMarkupCache()
 	 */
+	@Override
 	public void clearMarkupCache() throws IOException
 	{
 		application.getMarkupSettings().getMarkupFactory().getMarkupCache().clear();
@@ -50,6 +51,7 @@ public class Application implements ApplicationMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationMBean#getApplicationClass()
 	 */
+	@Override
 	public String getApplicationClass() throws IOException
 	{
 		return application.getClass().getName();
@@ -58,6 +60,7 @@ public class Application implements ApplicationMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationMBean#getConfigurationType()
 	 */
+	@Override
 	public String getConfigurationType()
 	{
 		return application.getConfigurationType().name();
@@ -66,6 +69,7 @@ public class Application implements ApplicationMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationMBean#getHomePageClass()
 	 */
+	@Override
 	public String getHomePageClass() throws IOException
 	{
 		return application.getHomePage().getName();
@@ -74,6 +78,7 @@ public class Application implements ApplicationMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationMBean#getMarkupCacheSize()
 	 */
+	@Override
 	public int getMarkupCacheSize() throws IOException
 	{
 		ThreadContext.setApplication(application);
@@ -91,6 +96,7 @@ public class Application implements ApplicationMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationMBean#getWicketVersion()
 	 */
+	@Override
 	public String getWicketVersion() throws IOException
 	{
 		return application.getFrameworkSettings().getVersion();
@@ -99,6 +105,7 @@ public class Application implements ApplicationMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationMBean#clearLocalizerCache()
 	 */
+	@Override
 	public void clearLocalizerCache() throws IOException
 	{
 		application.getResourceSettings().getLocalizer().clearCache();

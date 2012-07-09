@@ -353,6 +353,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public void onClick(final AjaxRequestTarget target)
 				{
 					if (isNodeExpanded(node))
@@ -513,6 +514,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(final AjaxRequestTarget target)
 			{
 				getTreeState().selectNode(node, !getTreeState().isNodeSelected(node));

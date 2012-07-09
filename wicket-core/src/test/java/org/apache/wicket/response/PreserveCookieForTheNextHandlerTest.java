@@ -62,6 +62,7 @@ public class PreserveCookieForTheNextHandlerTest extends WicketTestCase
 			add(new BookmarkablePageLink<Void>("link", SetCookiePage.class));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body><a wicket:id='link'>Link</a></body></html>");
@@ -82,6 +83,7 @@ public class PreserveCookieForTheNextHandlerTest extends WicketTestCase
 			setResponsePage(StartPage.class);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html/>");

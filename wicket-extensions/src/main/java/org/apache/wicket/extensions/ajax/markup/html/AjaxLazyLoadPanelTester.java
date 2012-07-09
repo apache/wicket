@@ -54,6 +54,7 @@ public class AjaxLazyLoadPanelTester
 	{
 		container.visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel, Void>()
 		{
+			@Override
 			public void component(final AjaxLazyLoadPanel component, final IVisit<Void> visit)
 			{
 				// get the AbstractAjaxBehaviour which is responsible for

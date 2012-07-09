@@ -90,6 +90,7 @@ public class MyersDiff implements DiffAlgorithm
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Revision diff(final Object[] orig, final Object[] rev)
 		throws DifferentiationFailedException
 	{

@@ -377,6 +377,7 @@ public class HttpSessionStore implements ISessionStore
 	 * 
 	 * @param listener
 	 */
+	@Override
 	public void registerBindListener(BindListener listener)
 	{
 		bindListeners.add(listener);
@@ -387,6 +388,7 @@ public class HttpSessionStore implements ISessionStore
 	 * 
 	 * @param listener
 	 */
+	@Override
 	public void unregisterBindListener(BindListener listener)
 	{
 		bindListeners.remove(listener);
@@ -395,6 +397,7 @@ public class HttpSessionStore implements ISessionStore
 	/**
 	 * @return The list of registered bind listeners
 	 */
+	@Override
 	public Set<BindListener> getBindListeners()
 	{
 		return Collections.unmodifiableSet(bindListeners);

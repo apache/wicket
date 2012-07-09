@@ -48,12 +48,14 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 	 * @return String iterator
 	 * @see org.apache.wicket.util.string.IStringSequence#iterator()
 	 */
+	@Override
 	public abstract IStringIterator iterator();
 
 	/**
 	 * @return Number of strings in this string list
 	 * @see org.apache.wicket.util.string.IStringSequence#size()
 	 */
+	@Override
 	public abstract int size();
 
 	/**
@@ -62,6 +64,7 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 	 * @return The string at the given index
 	 * @see org.apache.wicket.util.string.IStringSequence#get(int)
 	 */
+	@Override
 	public abstract String get(int index);
 
 	/**

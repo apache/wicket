@@ -44,6 +44,7 @@ public class HtmlHeaderSectionHandlerTest extends WicketTestCase
 
 	private static class CustomMarkupPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

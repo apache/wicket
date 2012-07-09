@@ -38,16 +38,19 @@ public interface IObjectMethodTester
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	boolean equals(Object obj);
 
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	int hashCode();
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	String toString();
 
 }

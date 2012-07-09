@@ -49,6 +49,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 		fieldName = field.getName();
 	}
 
+	@Override
 	public Object locateProxyTarget()
 	{
 		final GuiceInjectorHolder holder = Application.get().getMetaData(

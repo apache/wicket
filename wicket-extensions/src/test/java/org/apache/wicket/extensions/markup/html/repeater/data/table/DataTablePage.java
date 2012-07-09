@@ -49,6 +49,7 @@ public class DataTablePage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void populateItem(final Item<ICellPopulator<Contact>> cellItem,
 				final String componentId, final IModel<Contact> rowModel)
 			{

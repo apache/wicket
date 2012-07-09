@@ -45,17 +45,20 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		this.ignoreFiles = ignoreFiles;
 	}
 
+	@Override
 	public List<String> getIgnoreFiles()
 	{
 		return ignoreFiles;
 	}
 
+	@Override
 	public boolean addLicenseHeader(final File file)
 	{
 		System.out.println("Not supported yet.");
 		return false;
 	}
 
+	@Override
 	public String getLicenseType(final File file)
 	{
 		return null;

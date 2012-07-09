@@ -88,6 +88,7 @@ public class UploadProgressBar extends Panel
 		/**
 		 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 		 */
+		@Override
 		public void init(final Application application)
 		{
 			// register the upload status resource
@@ -104,6 +105,7 @@ public class UploadProgressBar extends Panel
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void destroy(final Application application)
 		{
 		}
@@ -243,6 +245,7 @@ public class UploadProgressBar extends Panel
 		Boolean insideModal = form.visitParents(ModalWindow.class,
 			new IVisitor<ModalWindow, Boolean>()
 			{
+				@Override
 				public void component(final ModalWindow object, final IVisit<Boolean> visit)
 				{
 					visit.stop(true);

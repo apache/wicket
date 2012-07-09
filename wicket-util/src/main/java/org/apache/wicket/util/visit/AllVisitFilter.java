@@ -24,12 +24,14 @@ package org.apache.wicket.util.visit;
 public class AllVisitFilter implements IVisitFilter
 {
 	/** {@inheritDoc} */
+	@Override
 	public boolean visitChildren(final Object object)
 	{
 		return true;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public boolean visitObject(final Object object)
 	{
 		return true;

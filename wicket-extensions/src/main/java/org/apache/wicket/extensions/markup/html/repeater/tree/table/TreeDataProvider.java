@@ -52,6 +52,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 		this.provider = provider;
 	}
 
+	@Override
 	public long size()
 	{
 		if (size == -1)
@@ -69,13 +70,14 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 		return size;
 	}
 
+	@Override
 	public Iterator<? extends T> iterator(long first, long count)
 	{
 		currentBranch = new Branch<T>(null, provider.getRoots());
 
 		Iterator<T> iterator = new Iterator<T>()
 		{
-
+			@Override
 			public boolean hasNext()
 			{
 				while (currentBranch != null)
@@ -90,6 +92,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 				return false;
 			}
 
+			@Override
 			public T next()
 			{
 				if (!hasNext())
@@ -109,6 +112,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 				return next;
 			}
 
+			@Override
 			public void remove()
 			{
 				throw new UnsupportedOperationException();
@@ -133,11 +137,13 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 	 */
 	protected abstract boolean iterateChildren(T node);
 
+	@Override
 	public NodeModel<T> model(T object)
 	{
 		return previousBranch.wrapModel(provider.model(object));
 	}
 
+	@Override
 	public void detach()
 	{
 		currentBranch = null;
@@ -184,11 +190,13 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 			}
 		}
 
+		@Override
 		public boolean hasNext()
 		{
 			return children.hasNext();
 		}
 
+		@Override
 		public T next()
 		{
 			if (!hasNext())
@@ -199,6 +207,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 			return children.next();
 		}
 
+		@Override
 		public void remove()
 		{
 			throw new UnsupportedOperationException();

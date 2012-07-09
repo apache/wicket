@@ -42,6 +42,7 @@ class VelocityLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return "velocityLicense.txt";
 	}
 
+	@Override
 	public boolean checkLicenseHeader(final File file)
 	{
 		Revision revision = null;
@@ -60,6 +61,7 @@ class VelocityLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return revision.size() == 0;
 	}
 
+	@Override
 	public List<String> getSuffixes()
 	{
 		return Arrays.asList("vm");

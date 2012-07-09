@@ -60,6 +60,7 @@ public class ServletRequestContext implements RequestContext
 	 * 
 	 * @return The character encoding for the request.
 	 */
+	@Override
 	public String getCharacterEncoding()
 	{
 		return request.getCharacterEncoding();
@@ -70,6 +71,7 @@ public class ServletRequestContext implements RequestContext
 	 * 
 	 * @return The content type of the request.
 	 */
+	@Override
 	public String getContentType()
 	{
 		return request.getContentType();
@@ -80,6 +82,7 @@ public class ServletRequestContext implements RequestContext
 	 * 
 	 * @return The content length of the request.
 	 */
+	@Override
 	public int getContentLength()
 	{
 		return request.getContentLength();
@@ -93,6 +96,7 @@ public class ServletRequestContext implements RequestContext
 	 * @throws IOException
 	 *             if a problem occurs.
 	 */
+	@Override
 	public InputStream getInputStream() throws IOException
 	{
 		return request.getInputStream();

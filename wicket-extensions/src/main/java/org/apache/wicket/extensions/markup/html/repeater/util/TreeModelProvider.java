@@ -81,6 +81,7 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 		treeModel.addTreeModelListener(new Listener());
 	}
 
+	@Override
 	public Iterator<T> getRoots()
 	{
 		if (rootVisible)
@@ -89,17 +90,20 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 			{
 				boolean next = true;
 
+				@Override
 				public boolean hasNext()
 				{
 					return next;
 				}
 
+				@Override
 				public T next()
 				{
 					next = false;
 					return cast(treeModel.getRoot());
 				}
 
+				@Override
 				public void remove()
 				{
 					throw new UnsupportedOperationException();
@@ -112,11 +116,13 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 		}
 	}
 
+	@Override
 	public boolean hasChildren(T object)
 	{
 		return !treeModel.isLeaf(object);
 	}
 
+	@Override
 	public Iterator<T> getChildren(final T object)
 	{
 		return new Iterator<T>()
@@ -124,17 +130,20 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 			private int size = treeModel.getChildCount(object);
 			private int index = -1;
 
+			@Override
 			public boolean hasNext()
 			{
 				return index < size - 1;
 			}
 
+			@Override
 			public T next()
 			{
 				index++;
 				return cast(treeModel.getChild(object, index));
 			}
 
+			@Override
 			public void remove()
 			{
 				throw new UnsupportedOperationException();
@@ -148,8 +157,10 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 		return (T)object;
 	}
 
+	@Override
 	public abstract IModel<T> model(T object);
 
+	@Override
 	public void detach()
 	{
 		completeUpdate = false;
@@ -221,6 +232,7 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void treeNodesChanged(TreeModelEvent e)
 		{
 			if (e.getChildIndices() == null)
@@ -233,16 +245,19 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 			}
 		}
 
+		@Override
 		public void treeNodesInserted(TreeModelEvent e)
 		{
 			branchUpdate(e.getTreePath().getLastPathComponent());
 		}
 
+		@Override
 		public void treeNodesRemoved(TreeModelEvent e)
 		{
 			branchUpdate(e.getTreePath().getLastPathComponent());
 		}
 
+		@Override
 		public void treeStructureChanged(TreeModelEvent e)
 		{
 			if (e.getTreePath().getPathCount() == 1)

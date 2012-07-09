@@ -40,6 +40,7 @@ public class Visits
 			this.singleton = singleton;
 		}
 
+		@Override
 		public Iterator<T> iterator()
 		{
 			return Collections.singleton(singleton).iterator();

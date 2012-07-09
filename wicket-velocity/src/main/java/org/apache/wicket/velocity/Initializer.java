@@ -49,6 +49,7 @@ public class Initializer implements IInitializer
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void init(final Application application)
 	{
 		Properties props = getVelocityProperties(application);
@@ -150,6 +151,7 @@ public class Initializer implements IInitializer
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroy(final Application application)
 	{
 	}

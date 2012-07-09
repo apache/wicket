@@ -33,6 +33,7 @@ public class SqlTimeConverter extends AbstractConverter<Time>
 	private static final long serialVersionUID = 1L;
 
 	/** @see org.apache.wicket.util.convert.converter.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
+	@Override
 	public Time convertToObject(final String value, Locale locale)
 	{
 		if (value == null)

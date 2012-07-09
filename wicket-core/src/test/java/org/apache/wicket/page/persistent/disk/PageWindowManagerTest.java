@@ -238,6 +238,7 @@ public class PageWindowManagerTest extends Assert
 
 		protected abstract void r();
 
+		@Override
 		public void run()
 		{
 			try

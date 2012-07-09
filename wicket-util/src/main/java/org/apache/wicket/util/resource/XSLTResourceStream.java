@@ -106,6 +106,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#close()
 	 */
+	@Override
 	public void close() throws IOException
 	{
 	}
@@ -124,6 +125,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#getInputStream()
 	 */
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return new ByteArrayInputStream(out.toByteArray());

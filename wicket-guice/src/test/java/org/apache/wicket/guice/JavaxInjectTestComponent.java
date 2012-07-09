@@ -63,6 +63,7 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	/**
 	 * @return injectedField
 	 */
+	@Override
 	public ITestService getInjectedField()
 	{
 		return injectedField;
@@ -71,6 +72,7 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	/**
 	 * @return injectedFieldBlue
 	 */
+	@Override
 	public ITestService getInjectedFieldBlue()
 	{
 		return injectedFieldBlue;
@@ -79,6 +81,7 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	/**
 	 * @return injectedFieldRed
 	 */
+	@Override
 	public ITestService getInjectedFieldRed()
 	{
 		return injectedFieldRed;
@@ -87,6 +90,7 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	/**
 	 * @return injectedFieldProvider
 	 */
+	@Override
 	public Provider<ITestService> getInjectedFieldProvider()
 	{
 		return injectedFieldProvider;
@@ -97,6 +101,7 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	 * 
 	 * @return injectedOptionalField
 	 */
+	@Override
 	public String getInjectedOptionalField()
 	{
 		return null;
@@ -105,6 +110,7 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	/**
 	 * @return injectedTypeLiteralField
 	 */
+	@Override
 	public Map<String, String> getInjectedTypeLiteralField()
 	{
 		return injectedTypeLiteralField;

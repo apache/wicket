@@ -90,11 +90,13 @@ public class TreeDataProviderTest extends Assert
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Iterator<? extends String> getRoots()
 		{
 			return Arrays.asList("A", "B", "C").iterator();
 		}
 
+		@Override
 		public Iterator<? extends String> getChildren(String object)
 		{
 			List<String> children = new ArrayList<String>();
@@ -110,17 +112,19 @@ public class TreeDataProviderTest extends Assert
 			return children.iterator();
 		}
 
-
+		@Override
 		public boolean hasChildren(String object)
 		{
 			return object.length() < 3;
 		}
 
+		@Override
 		public IModel<String> model(String object)
 		{
 			return Model.of(object);
 		}
 
+		@Override
 		public void detach()
 		{
 		}

@@ -101,6 +101,7 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 			passwordTextField.add(validator);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body><form wicket:id='form'><input type='password' wicket:id='passwd' /></form></body></html>");
@@ -120,7 +121,7 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 
 	private static class InterfaceValidator implements IValidator<String>
 	{
-
+		@Override
 		public void validate(IValidatable<String> validatable)
 		{
 			ValidationError error = new ValidationError();

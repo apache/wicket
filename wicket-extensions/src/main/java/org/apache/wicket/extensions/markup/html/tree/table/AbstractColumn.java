@@ -73,6 +73,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see IColumn#getLocation()
 	 */
+	@Override
 	public ColumnLocation getLocation()
 	{
 		return location;
@@ -81,6 +82,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see IColumn#getSpan(TreeNode)
 	 */
+	@Override
 	public int getSpan(final TreeNode node)
 	{
 		return 0;
@@ -89,6 +91,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see IColumn#isVisible()
 	 */
+	@Override
 	public boolean isVisible()
 	{
 		return true;
@@ -97,6 +100,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see IColumn#newHeader(MarkupContainer, String)
 	 */
+	@Override
 	public Component newHeader(final MarkupContainer parent, final String id)
 	{
 		return new Label(id, header);
@@ -105,6 +109,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see IColumn#setTreeTable(TreeTable)
 	 */
+	@Override
 	public void setTreeTable(final TreeTable treeTable)
 	{
 		if ((this.treeTable != null) && (this.treeTable != treeTable))

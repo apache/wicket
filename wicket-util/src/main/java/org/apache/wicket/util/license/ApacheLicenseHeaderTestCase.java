@@ -70,6 +70,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 			this.ignoreFiles = ignoreFiles;
 		}
 
+		@Override
 		public boolean accept(final File pathname)
 		{
 			boolean accept = false;
@@ -152,6 +153,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 	{
 		private final String[] ignoreDirectory = new String[] { ".svn" };
 
+		@Override
 		public boolean accept(final File pathname)
 		{
 			boolean accept = false;
@@ -273,6 +275,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 			visitFiles(licenseHeaderHandler.getSuffixes(), licenseHeaderHandler.getIgnoreFiles(),
 				new FileVisitor()
 				{
+					@Override
 					public void visitFile(final File file)
 					{
 						if (licenseHeaderHandler.checkLicenseHeader(file) == false)

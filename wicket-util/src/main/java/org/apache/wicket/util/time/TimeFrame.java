@@ -75,6 +75,7 @@ public final class TimeFrame implements ITimeFrameSource
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public TimeFrame getTimeFrame()
 			{
 				return new TimeFrame(Time.valueOf(startTimeOfDay), Time.valueOf(endTimeOfDay));
@@ -200,6 +201,7 @@ public final class TimeFrame implements ITimeFrameSource
 	 * 
 	 * @return this <code>TimeFrame</code>
 	 */
+	@Override
 	public TimeFrame getTimeFrame()
 	{
 		return this;

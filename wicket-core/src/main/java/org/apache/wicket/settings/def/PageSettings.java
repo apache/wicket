@@ -79,11 +79,13 @@ public class PageSettings implements IPageSettings
 		versionPagesByDefault = pagesVersionedByDefault;
 	}
 
+	@Override
 	public boolean getRecreateMountedPagesAfterExpiry()
 	{
 		return recreateMountedPagesAfterExpiry;
 	}
 
+	@Override
 	public void setRecreateMountedPagesAfterExpiry(boolean recreateMountedPagesAfterExpiry)
 	{
 		this.recreateMountedPagesAfterExpiry = recreateMountedPagesAfterExpiry;

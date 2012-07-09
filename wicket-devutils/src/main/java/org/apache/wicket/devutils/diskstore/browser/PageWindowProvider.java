@@ -45,6 +45,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription,
 		this.sessionId = sessionId;
 	}
 
+	@Override
 	public Iterator<? extends PageWindowDescription> iterator(long first, long count)
 	{
 		List<PageWindow> lastPageWindows = getPageWindows();
@@ -71,6 +72,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription,
 		return lastPageWindows;
 	}
 
+	@Override
 	public long size()
 	{
 		return getPageWindows().size();
@@ -81,11 +83,13 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription,
 	 * 
 	 *            {@inheritDoc}
 	 */
+	@Override
 	public IModel<PageWindowDescription> model(PageWindowDescription description)
 	{
 		return new Model<PageWindowDescription>(description);
 	}
 
+	@Override
 	public void detach()
 	{
 		sessionId.detach();
@@ -95,6 +99,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription,
 	 * No sort state for now. The provider is ISortableDataProvider just because we use
 	 * DefaultDataTable
 	 */
+	@Override
 	public ISortState<String> getSortState()
 	{
 		return null;

@@ -47,6 +47,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#addListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
+	@Override
 	public final void addListener(final IBreadCrumbModelListener listener)
 	{
 		listenerSupport.addListener(listener);
@@ -55,6 +56,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#allBreadCrumbParticipants()
 	 */
+	@Override
 	public final List<IBreadCrumbParticipant> allBreadCrumbParticipants()
 	{
 		return crumbs;
@@ -63,6 +65,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#getActive()
 	 */
+	@Override
 	public IBreadCrumbParticipant getActive()
 	{
 		return activeParticipant;
@@ -71,6 +74,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#removeListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
+	@Override
 	public final void removeListener(final IBreadCrumbModelListener listener)
 	{
 		listenerSupport.removeListener(listener);
@@ -79,6 +83,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#setActive(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
+	@Override
 	public final void setActive(final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		// see if the bread crumb was already added, and if so,

@@ -36,6 +36,7 @@ public class WebSocketBinaryPayload extends WebSocketPayload<BinaryMessage>
 		this.binaryMessage = Args.notNull(binaryMessage, "binaryMessage");
 	}
 
+	@Override
 	public final BinaryMessage getMessage()
 	{
 		return binaryMessage;

@@ -225,6 +225,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 * whenever the user clicks this particular button, except if validation fails. This method will
 	 * be called <em>before</em> {@link Form#onSubmit()}.
 	 */
+	@Override
 	public void onSubmit()
 	{
 	}
@@ -234,6 +235,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 * whenever the user clicks this particular button, except if validation fails. This method will
 	 * be called <em>after</em> {@link Form#onSubmit()}.
 	 */
+	@Override
 	public void onAfterSubmit()
 	{
 	}

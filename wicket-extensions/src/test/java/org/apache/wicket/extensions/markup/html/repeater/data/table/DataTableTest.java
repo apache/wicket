@@ -182,10 +182,12 @@ public class DataTableTest extends Assert
 
 				private List<Integer> items = Arrays.asList(1, 3, 5);
 
+				@Override
 				public void detach()
 				{
 				}
 
+				@Override
 				public Iterator<? extends Number> iterator(long first, long count)
 				{
 					StringValue emptyValue = getPageParameters().get("empty");
@@ -193,12 +195,14 @@ public class DataTableTest extends Assert
 						: items.iterator();
 				}
 
+				@Override
 				public long size()
 				{
 					StringValue emptyValue = getPageParameters().get("empty");
 					return emptyValue.toBoolean() ? 0 : items.size();
 				}
 
+				@Override
 				public IModel<Number> model(Number object)
 				{
 					return Model.of(object);
@@ -214,6 +218,7 @@ public class DataTableTest extends Assert
 			add(table);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

@@ -239,6 +239,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider#getTextFormat()
 	 */
+	@Override
 	public final String getTextFormat()
 	{
 		return converter.getDatePattern(getLocale());

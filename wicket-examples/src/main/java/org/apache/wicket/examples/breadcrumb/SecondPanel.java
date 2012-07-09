@@ -59,6 +59,7 @@ public class SecondPanel extends BreadCrumbPanel
 				{
 					activate(new IBreadCrumbPanelFactory()
 					{
+						@Override
 						public BreadCrumbPanel create(String componentId,
 							IBreadCrumbModel breadCrumbModel)
 						{
@@ -110,6 +111,7 @@ public class SecondPanel extends BreadCrumbPanel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
 	 */
+	@Override
 	public String getTitle()
 	{
 		return "second";

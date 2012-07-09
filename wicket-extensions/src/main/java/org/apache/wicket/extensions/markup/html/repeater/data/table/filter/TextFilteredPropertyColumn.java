@@ -64,6 +64,7 @@ public class TextFilteredPropertyColumn<T, F, S> extends FilteredPropertyColumn<
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
+	@Override
 	public Component getFilter(final String componentId, final FilterForm<?> form)
 	{
 		return new TextFilter<F>(componentId, getFilterModel(form), form);

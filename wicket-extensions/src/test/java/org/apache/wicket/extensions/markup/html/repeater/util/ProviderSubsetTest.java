@@ -101,18 +101,21 @@ public class ProviderSubsetTest extends Assert
 			models.add(this);
 		}
 
+		@Override
 		public String getObject()
 		{
 			detached = false;
 			return string;
 		}
 
+		@Override
 		public void setObject(String string)
 		{
 			detached = false;
 			this.string = string;
 		}
 
+		@Override
 		public void detach()
 		{
 			detached = true;
@@ -143,26 +146,31 @@ public class ProviderSubsetTest extends Assert
 
 		private List<String> EMPTY = new ArrayList<String>();
 
+		@Override
 		public Iterator<String> getRoots()
 		{
 			return EMPTY.iterator();
 		}
 
+		@Override
 		public boolean hasChildren(String object)
 		{
 			return false;
 		}
 
+		@Override
 		public Iterator<String> getChildren(String string)
 		{
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public IModel<String> model(String string)
 		{
 			return new StringModel(string);
 		}
 
+		@Override
 		public void detach()
 		{
 		}

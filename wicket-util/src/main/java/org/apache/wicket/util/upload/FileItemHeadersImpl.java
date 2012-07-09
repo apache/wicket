@@ -45,6 +45,7 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable
 	 */
 	private final List<String> headerNameList = Generics.newArrayList();
 
+	@Override
 	public String getHeader(final String name)
 	{
 		String nameLower = name.toLowerCase();
@@ -56,11 +57,13 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable
 		return headerValueList.get(0);
 	}
 
+	@Override
 	public Iterator<String> getHeaderNames()
 	{
 		return headerNameList.iterator();
 	}
 
+	@Override
 	public Iterator<String> getHeaders(final String name)
 	{
 		String nameLower = name.toLowerCase();

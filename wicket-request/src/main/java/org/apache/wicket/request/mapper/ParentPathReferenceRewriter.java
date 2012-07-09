@@ -65,6 +65,7 @@ public class ParentPathReferenceRewriter implements IRequestMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public IRequestHandler mapRequest(final Request request)
 	{
 		Url url = request.getUrl();
@@ -84,6 +85,7 @@ public class ParentPathReferenceRewriter implements IRequestMapper
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Url mapHandler(final IRequestHandler requestHandler)
 	{
 		Url url = chain.mapHandler(requestHandler);
@@ -101,6 +103,7 @@ public class ParentPathReferenceRewriter implements IRequestMapper
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public int getCompatibilityScore(final Request request)
 	{
 		return chain.getCompatibilityScore(request);

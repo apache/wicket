@@ -228,6 +228,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getBoolean(String)
 	 */
+	@Override
 	public final boolean getBoolean(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toBoolean();
@@ -236,6 +237,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getDouble(String)
 	 */
+	@Override
 	public final double getDouble(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toDouble();
@@ -244,6 +246,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getDouble(String, double)
 	 */
+	@Override
 	public final double getDouble(final String key, final double defaultValue)
 	{
 		return getStringValue(key).toDouble(defaultValue);
@@ -252,6 +255,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getDuration(String)
 	 */
+	@Override
 	public final Duration getDuration(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toDuration();
@@ -260,6 +264,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getInt(String)
 	 */
+	@Override
 	public final int getInt(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toInt();
@@ -268,6 +273,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getInt(String, int)
 	 */
+	@Override
 	public final int getInt(final String key, final int defaultValue)
 	{
 		return getStringValue(key).toInt(defaultValue);
@@ -276,6 +282,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getLong(String)
 	 */
+	@Override
 	public final long getLong(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toLong();
@@ -284,6 +291,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getLong(String, long)
 	 */
+	@Override
 	public final long getLong(final String key, final long defaultValue)
 	{
 		return getStringValue(key).toLong(defaultValue);
@@ -292,6 +300,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getString(String, String)
 	 */
+	@Override
 	public final String getString(final String key, final String defaultValue)
 	{
 		final String value = getString(key);
@@ -301,6 +310,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getString(String)
 	 */
+	@Override
 	public final String getString(final String key)
 	{
 		final Object o = get(key);
@@ -331,6 +341,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getCharSequence(String)
 	 */
+	@Override
 	public final CharSequence getCharSequence(final String key)
 	{
 		final Object o = get(key);
@@ -369,6 +380,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getStringArray(String)
 	 */
+	@Override
 	public String[] getStringArray(final String key)
 	{
 		final Object o = get(key);
@@ -400,6 +412,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getStringValue(String)
 	 */
+	@Override
 	public StringValue getStringValue(final String key)
 	{
 		return StringValue.valueOf(getString(key));
@@ -408,6 +421,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getTime(String)
 	 */
+	@Override
 	public final Time getTime(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toTime();
@@ -416,6 +430,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#isImmutable()
 	 */
+	@Override
 	public final boolean isImmutable()
 	{
 		return immutable;
@@ -424,6 +439,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#makeImmutable()
 	 */
+	@Override
 	public final IValueMap makeImmutable()
 	{
 		immutable = true;
@@ -505,6 +521,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getKey(String)
 	 */
+	@Override
 	public String getKey(final String key)
 	{
 		for (String other : keySet())
@@ -576,6 +593,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see IValueMap#getAsBoolean(String)
 	 * 
 	 */
+	@Override
 	public Boolean getAsBoolean(final String key)
 	{
 		if (!containsKey(key))
@@ -597,6 +615,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see IValueMap#getAsBoolean(String, boolean)
 	 * 
 	 */
+	@Override
 	public boolean getAsBoolean(final String key, final boolean defaultValue)
 	{
 		if (!containsKey(key))
@@ -617,6 +636,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsInteger(String)
 	 */
+	@Override
 	public Integer getAsInteger(final String key)
 	{
 		if (!containsKey(key))
@@ -637,6 +657,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsInteger(String, int)
 	 */
+	@Override
 	public int getAsInteger(final String key, final int defaultValue)
 	{
 		return getInt(key, defaultValue);
@@ -645,6 +666,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsLong(String)
 	 */
+	@Override
 	public Long getAsLong(final String key)
 	{
 		if (!containsKey(key))
@@ -665,6 +687,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsLong(String, long)
 	 */
+	@Override
 	public long getAsLong(final String key, final long defaultValue)
 	{
 		return getLong(key, defaultValue);
@@ -673,6 +696,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsDouble(String)
 	 */
+	@Override
 	public Double getAsDouble(final String key)
 	{
 		if (!containsKey(key))
@@ -693,6 +717,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsDouble(String, double)
 	 */
+	@Override
 	public double getAsDouble(final String key, final double defaultValue)
 	{
 		return getDouble(key, defaultValue);
@@ -701,6 +726,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsDuration(String)
 	 */
+	@Override
 	public Duration getAsDuration(final String key)
 	{
 		return getAsDuration(key, null);
@@ -709,6 +735,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsDuration(String, Duration)
 	 */
+	@Override
 	public Duration getAsDuration(final String key, final Duration defaultValue)
 	{
 		if (!containsKey(key))
@@ -729,6 +756,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsTime(String)
 	 */
+	@Override
 	public Time getAsTime(final String key)
 	{
 		return getAsTime(key, null);
@@ -737,6 +765,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsTime(String, Time)
 	 */
+	@Override
 	public Time getAsTime(final String key, final Time defaultValue)
 	{
 		if (!containsKey(key))
@@ -757,6 +786,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see org.apache.wicket.util.value.IValueMap#getAsEnum(java.lang.String, java.lang.Class)
 	 */
+	@Override
 	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass)
 	{
 		return getEnumImpl(key, eClass, null);
@@ -765,6 +795,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see org.apache.wicket.util.value.IValueMap#getAsEnum(java.lang.String, java.lang.Enum)
 	 */
+	@Override
 	public <T extends Enum<T>> T getAsEnum(final String key, final T defaultValue)
 	{
 		if (defaultValue == null)
@@ -779,6 +810,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see org.apache.wicket.util.value.IValueMap#getAsEnum(java.lang.String, java.lang.Class,
 	 *      java.lang.Enum)
 	 */
+	@Override
 	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass,
 		final T defaultValue)
 	{

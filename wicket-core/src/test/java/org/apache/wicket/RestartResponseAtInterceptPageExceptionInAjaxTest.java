@@ -55,6 +55,7 @@ public class RestartResponseAtInterceptPageExceptionInAjaxTest extends WicketTes
 			new RestartResponseAtInterceptPageException(DummyHomePage.class);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body></body></html>");

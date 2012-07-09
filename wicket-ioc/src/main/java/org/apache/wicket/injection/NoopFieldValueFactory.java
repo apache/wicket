@@ -31,6 +31,7 @@ public class NoopFieldValueFactory implements IFieldValueFactory
 	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
 	 *      java.lang.Object)
 	 */
+	@Override
 	public Object getFieldValue(final Field field, final Object fieldOwner)
 	{
 		return null;
@@ -39,6 +40,7 @@ public class NoopFieldValueFactory implements IFieldValueFactory
 	/**
 	 * @see org.apache.wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
 	 */
+	@Override
 	public boolean supportsField(final Field field)
 	{
 		return false;

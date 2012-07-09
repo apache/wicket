@@ -45,12 +45,14 @@ public interface IVisitFilter
 	public static IVisitFilter ANY = new IVisitFilter()
 	{
 		/** {@inheritDoc} */
+		@Override
 		public boolean visitObject(final Object object)
 		{
 			return true;
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public boolean visitChildren(final Object object)
 		{
 			return true;

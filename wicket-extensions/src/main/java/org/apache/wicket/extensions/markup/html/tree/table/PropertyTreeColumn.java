@@ -72,6 +72,7 @@ public class PropertyTreeColumn<T> extends AbstractPropertyColumn<T>
 	/**
 	 * @see IColumn#newCell(MarkupContainer, String, TreeNode, int)
 	 */
+	@Override
 	public Component newCell(final MarkupContainer parent, final String id, final TreeNode node,
 		final int level)
 	{
@@ -79,6 +80,7 @@ public class PropertyTreeColumn<T> extends AbstractPropertyColumn<T>
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public String renderNode(final TreeNode node)
 			{
 				return PropertyTreeColumn.this.getNodeValue(node);
@@ -89,6 +91,7 @@ public class PropertyTreeColumn<T> extends AbstractPropertyColumn<T>
 	/**
 	 * @see IColumn#newCell(TreeNode, int)
 	 */
+	@Override
 	public IRenderable newCell(final TreeNode node, final int level)
 	{
 		return null;

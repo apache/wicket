@@ -52,6 +52,7 @@ public class CustomMarkupLabel
 		return new MyMarkupSourcingStrategy(this);
 	}
 	
+	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 	{
 		// the markup is loaded from database in our real application
@@ -60,6 +61,7 @@ public class CustomMarkupLabel
 		return res;
 	}
 
+	@Override
 	public String getCacheKey(MarkupContainer container, Class<?> containerClass)
 	{
 		return null;

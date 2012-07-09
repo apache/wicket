@@ -38,6 +38,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#getComponentUseCheck()
 	 */
+	@Override
 	public boolean getComponentUseCheck()
 	{
 		return application.getDebugSettings().getComponentUseCheck();
@@ -46,6 +47,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isAjaxDebugModeEnabled()
 	 */
+	@Override
 	public boolean isAjaxDebugModeEnabled()
 	{
 		return application.getDebugSettings().isAjaxDebugModeEnabled();
@@ -54,6 +56,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setAjaxDebugModeEnabled(boolean)
 	 */
+	@Override
 	public void setAjaxDebugModeEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setAjaxDebugModeEnabled(enable);
@@ -62,6 +65,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setComponentUseCheck(boolean)
 	 */
+	@Override
 	public void setComponentUseCheck(final boolean check)
 	{
 		application.getDebugSettings().setComponentUseCheck(check);
@@ -70,6 +74,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setOutputComponentPath(boolean)
 	 */
+	@Override
 	public void setOutputComponentPath(final boolean enabled)
 	{
 		application.getDebugSettings().setOutputComponentPath(enabled);
@@ -78,6 +83,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isOutputComponentPath()
 	 */
+	@Override
 	public boolean isOutputComponentPath()
 	{
 		return application.getDebugSettings().isOutputComponentPath();
@@ -87,6 +93,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setOutputMarkupContainerClassName(boolean)
 	 */
+	@Override
 	public void setOutputMarkupContainerClassName(final boolean enable)
 	{
 		application.getDebugSettings().setOutputMarkupContainerClassName(enable);
@@ -95,6 +102,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isOutputMarkupContainerClassName()
 	 */
+	@Override
 	public boolean isOutputMarkupContainerClassName()
 	{
 		return application.getDebugSettings().isOutputMarkupContainerClassName();
@@ -103,6 +111,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isLinePreciseReportingOnAddComponentEnabled()
 	 */
+	@Override
 	public boolean isLinePreciseReportingOnAddComponentEnabled()
 	{
 		return application.getDebugSettings().isLinePreciseReportingOnAddComponentEnabled();
@@ -111,6 +120,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setLinePreciseReportingOnAddComponentEnabled(boolean)
 	 */
+	@Override
 	public void setLinePreciseReportingOnAddComponentEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setLinePreciseReportingOnAddComponentEnabled(enable);
@@ -119,6 +129,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isLinePreciseReportingOnNewComponentEnabled()
 	 */
+	@Override
 	public boolean isLinePreciseReportingOnNewComponentEnabled()
 	{
 		return application.getDebugSettings().isLinePreciseReportingOnNewComponentEnabled();
@@ -127,6 +138,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setLinePreciseReportingOnNewComponentEnabled(boolean)
 	 */
+	@Override
 	public void setLinePreciseReportingOnNewComponentEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setLinePreciseReportingOnNewComponentEnabled(enable);
@@ -135,6 +147,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setDevelopmentUtilitiesEnabled(boolean)
 	 */
+	@Override
 	public void setDevelopmentUtilitiesEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setDevelopmentUtilitiesEnabled(enable);
@@ -143,6 +156,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isDevelopmentUtilitiesEnabled()
 	 */
+	@Override
 	public boolean isDevelopmentUtilitiesEnabled()
 	{
 		return application.getDebugSettings().isDevelopmentUtilitiesEnabled();

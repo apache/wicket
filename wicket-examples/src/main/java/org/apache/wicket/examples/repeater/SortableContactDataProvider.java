@@ -54,6 +54,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact, S
 	/**
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#size()
 	 */
+	@Override
 	public long size()
 	{
 		return getContactsDB().getCount();
@@ -62,6 +63,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact, S
 	/**
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
 	 */
+	@Override
 	public IModel<Contact> model(Contact object)
 	{
 		return new DetachableContactModel(object);

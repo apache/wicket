@@ -791,6 +791,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		/**
 		 * @see java.util.Iterator#hasNext()
 		 */
+		@Override
 		public boolean hasNext()
 		{
 			return next != null;
@@ -823,6 +824,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		/**
 		 * @see java.util.Iterator#remove()
 		 */
+		@Override
 		public void remove()
 		{
 			if (current == null)
@@ -846,6 +848,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		/**
 		 * @see java.util.Iterator#next()
 		 */
+		@Override
 		public V next()
 		{
 			return nextEntry().value;
@@ -857,6 +860,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		/**
 		 * @see java.util.Iterator#next()
 		 */
+		@Override
 		public Integer next()
 		{
 			return nextEntry().getKey();
@@ -868,6 +872,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		/**
 		 * @see java.util.Iterator#next()
 		 */
+		@Override
 		public Entry<V> next()
 		{
 			return nextEntry();

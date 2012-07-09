@@ -76,16 +76,19 @@ public class CheckedFolderContent extends Content
 				{
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					public Boolean getObject()
 					{
 						return isChecked(model.getObject());
 					}
 
+					@Override
 					public void setObject(Boolean object)
 					{
 						check(model.getObject(), object);
 					}
 
+					@Override
 					public void detach()
 					{
 					}

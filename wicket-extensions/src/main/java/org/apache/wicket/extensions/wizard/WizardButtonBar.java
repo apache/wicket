@@ -56,6 +56,7 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IDefaultButtonProvider#getDefaultButton(org.apache.wicket.extensions.wizard.IWizardModel)
 	 */
+	@Override
 	public IFormSubmittingComponent getDefaultButton(final IWizardModel model)
 	{
 		if (model.isNextAvailable())
