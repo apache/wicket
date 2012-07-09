@@ -79,7 +79,7 @@ public class EventBus implements UnboundListener
 		this.application = application;
 		application.setMetaData(EVENT_BUS_KEY, this);
 		application.mount(new AtmosphereRequestMapper());
-		application.getComponentPreOnBeforeRenderListeners().add(
+		application.getComponentPostOnBeforeRenderListeners().add(
 			new AtmosphereEventSubscriptionCollector(this));
 		application.getSessionStore().registerUnboundListener(this);
 		broadcaster = BroadcasterFactory.getDefault().lookup("/*");
