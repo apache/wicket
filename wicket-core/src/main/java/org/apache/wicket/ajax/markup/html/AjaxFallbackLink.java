@@ -33,7 +33,7 @@ import org.apache.wicket.model.IModel;
  * otherwise the 'href' attribute if the markup element is an &lt;a&gt;, &lt;area&gt; or &lt;link&gt;.
  * AjaxFallbackLink doesn't fallback if the markup element is none of the three above.
  * </p>
- * 
+ *
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
