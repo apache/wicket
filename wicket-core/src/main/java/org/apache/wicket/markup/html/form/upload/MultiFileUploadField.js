@@ -88,7 +88,7 @@ function MultiSelector( eprefix, list_target,max, del_label ){
 				this.multi_selector.addListRow( this );
 
 				// Hide this: we can't use display:none because Safari doesn't like it
-				this.style.position = 'absolute';
+				this.style.position = 'fixed';
 				this.style.left = '-1000px';
 
 			};
