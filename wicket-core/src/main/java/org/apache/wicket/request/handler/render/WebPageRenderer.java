@@ -89,6 +89,12 @@ public class WebPageRenderer extends PageRenderer
 	{
 		IRequestHandler scheduled = requestCycle.getRequestHandlerScheduledAfterCurrent();
 
+		if (scheduled != null)
+		{
+			// no need to render
+			return null;
+		}
+
 		// keep the original response
 		final WebResponse originalResponse = (WebResponse) requestCycle.getResponse();
 
