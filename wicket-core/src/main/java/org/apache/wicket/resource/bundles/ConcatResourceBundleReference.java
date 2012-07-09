@@ -54,7 +54,7 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 {
 	private static final long serialVersionUID = 1L;
 
-	private List<T> providedResources;
+	private final List<T> providedResources;
 
 	/**
 	 * Creates a new {@link ConcatResourceBundleReference} for the given resources.

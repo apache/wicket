@@ -370,7 +370,7 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setResourceFinder(org.apache.wicket.util.file.IResourceFinder)
+	 * @see org.apache.wicket.settings.IResourceSettings#setResourceFinders(java.util.List)
 	 */
 	@Override
 	public void setResourceFinders(final List<IResourceFinder> resourceFinders)
