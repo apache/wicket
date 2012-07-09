@@ -27,7 +27,12 @@ import org.apache.wicket.model.IModel;
 
 /**
  * An ajax link that will degrade to a normal request if ajax is not available or javascript is
- * disabled
+ * disabled.
+ * <p>
+ * If JavaScript is enabled then the registered JavaScript event 'click' handler will be used,
+ * otherwise the 'href' attribute if the markup element is an &lt;a&gt;, &lt;area&gt; or &lt;link&gt;.
+ * AjaxFallbackLink doesn't fallback if the markup element is none of the three above.
+ * </p>
  * 
  * @since 1.2
  * 
@@ -151,4 +156,21 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 */
 	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
+
+	/**
+	 * Removes any inline 'onclick' attributes set by Link#onComponentTag(ComponentTag).
+	 *
+	 * @param tag
+	 *            the component tag
+	 */
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		// Ajax links work with JavaScript Event registration
+		tag.remove("onclick");
+	}
+
+
 }
