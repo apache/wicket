@@ -689,5 +689,43 @@ jQuery(document).ready(function() {
 			target.off("event1");
 			jQuery(document).off();
 		});
+
+		/**
+		 * 'before' handlers are called even before preconditions
+		 * WICKET-4649
+		 */
+		asyncTest('before handler.', function () {
+
+			expect(3);
+
+			var attrs = {
+				u: 'data/ajax/nonExisting.json',
+				e: 'event1',
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				bh: [function(attributes) {
+					deepEqual(attrs, attributes, 'Before: attrs');
+				}],
+				pre: [function() {
+					ok(true, "Precondition is called!")
+					// do not allow calling of beforeSend handlers
+					return false;
+				}],
+				bsh: [function() {
+					ok(false, 'beforeSend handles should not be called');
+				}]
+			};
+
+			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes) {
+				deepEqual(attrs, attributes, 'Global before: attrs');
+				start();
+			});
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+			jQuery(document).off();
+		});
 	}
 });
