@@ -387,7 +387,9 @@ Wicket.replaceOuterHtml = function(element, text) {
     }
     
     var newElement = Wicket.$(element.id);
-    Wicket.Event.publish('/dom/node/added', newElement);
+    if (newElement) {
+        Wicket.Event.publish('/dom/node/added', newElement);
+    }
 }	
 
 /**
