@@ -1431,7 +1431,9 @@
 				}
 
 				var newElement = Wicket.$(element.id);
-				Wicket.Event.publish('/dom/node/added', newElement);
+				if (newElement) {
+					Wicket.Event.publish('/dom/node/added', newElement);
+				}
 			},
 
 			// Method for serializing DOM nodes to string
