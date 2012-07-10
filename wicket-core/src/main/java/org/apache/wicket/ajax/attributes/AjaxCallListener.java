@@ -31,6 +31,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	private StringBuilder success;
 	private StringBuilder failure;
 	private StringBuilder before;
+	private StringBuilder beforeSend;
 	private StringBuilder after;
 	private StringBuilder complete;
 	private StringBuilder precondition;
@@ -44,6 +45,19 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 				this.before = new StringBuilder();
 			}
 			this.before.append(before);
+		}
+		return this;
+	}
+
+	public AjaxCallListener onBeforeSend(final CharSequence beforeSend)
+	{
+		if (Strings.isEmpty(beforeSend) == false)
+		{
+			if (this.beforeSend == null)
+			{
+				this.beforeSend = new StringBuilder();
+			}
+			this.beforeSend.append(beforeSend);
 		}
 		return this;
 	}
@@ -130,6 +144,12 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	public CharSequence getBeforeHandler(Component component)
 	{
 		return before;
+	}
+
+	@Override
+	public CharSequence getBeforeSendHandler(Component component)
+	{
+		return beforeSend;
 	}
 
 	@Override

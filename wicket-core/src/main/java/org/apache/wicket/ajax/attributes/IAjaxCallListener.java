@@ -63,7 +63,22 @@ public interface IAjaxCallListener
 	CharSequence getFailureHandler(Component component);
 
 	/**
-	 * The JavaScript that will be executed before the Ajax call.
+	 * The JavaScript that will be executed before the Ajax call, as early as possible. Even before the preconditions.
+	 * The script will be executed in a function that receives the following parameters:
+	 * <ol>
+	 *     <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
+	 *
+	 * @param component
+	 *      the Component with the Ajax behavior
+	 * @return the JavaScript that will be executed before the Ajax call.
+	 */
+	CharSequence getBeforeHandler(Component component);
+
+
+	/**
+	 * The JavaScript that will be executed right before make of the the Ajax call,
+	 * only if all preconditions pass.
 	 * The script will be executed in a function that receives the following parameters:
 	 * <ol>
 	 *     <li>attrs - the AjaxRequestAttributes as JSON</li>
@@ -75,7 +90,7 @@ public interface IAjaxCallListener
 	 *      the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed before the Ajax call.
 	 */
-	CharSequence getBeforeHandler(Component component);
+	CharSequence getBeforeSendHandler(Component component);
 
 	/**
 	 * The JavaScript that will be executed after the Ajax call.

@@ -453,6 +453,9 @@
 				headers["Wicket-FocusedElementId"] = Wicket.Focus.lastFocusId;
 			}
 
+			Wicket.Event.publish('/ajax/call/before', attrs);
+			self._executeHandlers(attrs.bh, attrs);
+
 			if (attrs.mp) { // multipart form. jQuery doesn't help here ...
 				// TODO Wicket.next - should we execute all handlers ?!
 				// Wicket 1.5 didn't support success/failure handlers for this, but we can do it
@@ -534,8 +537,8 @@
 						}
 					}
 
-					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
-					self._executeHandlers(attrs.bh, attrs, jqXHR, settings);
+					Wicket.Event.publish('/ajax/call/beforeSend', attrs, jqXHR, settings);
+					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
 
 					if (attrs.i) {
 						// show the indicator

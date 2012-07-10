@@ -178,7 +178,7 @@ public class KittenCaptchaPanel extends Panel
 				super.updateAjaxAttributes(attributes);
 				IAjaxCallListener ajaxCallListener = new AjaxCallListener() {
 					@Override
-					public CharSequence getBeforeHandler(Component component)
+					public CharSequence getBeforeSendHandler(Component component)
 					{
 						return "showLoadingIndicator();";
 					}

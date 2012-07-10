@@ -150,7 +150,7 @@ public class LinksPage extends BasePage
 					}
 
 					@Override
-					public CharSequence getBeforeHandler(Component component)
+					public CharSequence getBeforeSendHandler(Component component)
 					{
 						return "alert('Before ajax call');";
 					}
