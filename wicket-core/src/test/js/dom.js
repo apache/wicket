@@ -180,5 +180,28 @@ jQuery(document).ready(function() {
 		var toReplace = Wicket.$('testDomEventNotifications');
 		var newElementMarkup = '<div id="testDomEventNotifications">New One</div>';
 		Wicket.DOM.replace(toReplace, newElementMarkup);
+		jQuery(document).off();
+	});
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4650
+	 */
+	test("replace - do not publish '/dom/node/added' event notification when removing a component", function() {
+
+		expect(1);
+
+		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
+			start();
+			equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
+		});
+
+		Wicket.Event.subscribe('/dom/node/added', function(jqEvent, addedElement) {
+			ok(false, "Event '/dom/node/added' should not be published when the new markup of the component is empty text!");
+		});
+
+		var toReplace = Wicket.$('testDomEventNotifications');
+		var newElementMarkup = '';
+		Wicket.DOM.replace(toReplace, newElementMarkup);
+		jQuery(document).off();
 	});
 });
