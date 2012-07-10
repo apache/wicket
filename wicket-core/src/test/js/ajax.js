@@ -317,7 +317,7 @@ jQuery(document).ready(function() {
 						ok(false, 'Should not be called');
 					}
 				],
-				bh: [
+				bsh: [
 					function(attributes, jqXHR, settings) {
 						deepEqual(attrs, attributes, 'Before: attributes deep equal');
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
@@ -365,7 +365,7 @@ jQuery(document).ready(function() {
 						deepEqual(attrs, attributes);
 					}
 				],
-				bh: [
+				bsh: [
 					function(attributes, jqXHR, settings) {
 						deepEqual(attrs, attributes);
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
@@ -465,7 +465,7 @@ jQuery(document).ready(function() {
 				ok(false, 'Failure handler should not be called');
 			});
 
-			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				deepEqual(attrs, attributes, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
@@ -514,7 +514,7 @@ jQuery(document).ready(function() {
 				deepEqual(attrs, attributes, 'Failure: attrs');
 			});
 
-			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				deepEqual(attrs, attributes, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
@@ -638,7 +638,7 @@ jQuery(document).ready(function() {
 				dep: [ function() {return { "one": 1, "two": 2 } } ]
 			};
 
-			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				deepEqual(attrs, attributes, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
@@ -672,7 +672,7 @@ jQuery(document).ready(function() {
 				dep: [ function() {return [ {name: "one", value: 'dynamic1'}, {name: "one", value: 'dynamic2'} ] } ]
 			};
 
-			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				deepEqual(attrs, attributes, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
