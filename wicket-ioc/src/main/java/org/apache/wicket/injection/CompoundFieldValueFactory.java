@@ -92,6 +92,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
 	 *      java.lang.Object)
 	 */
+	@Override
 	public Object getFieldValue(final Field field, final Object fieldOwner)
 	{
 		for (IFieldValueFactory factory : delegates)
@@ -108,6 +109,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	/**
 	 * @see org.apache.wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
 	 */
+	@Override
 	public boolean supportsField(final Field field)
 	{
 		for (IFieldValueFactory factory : delegates)

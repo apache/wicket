@@ -25,7 +25,7 @@ jQuery(document).ready(function() {
 		toBeReplacedByScriptId = 'toBeReplacedByScript',
 		toBeReplacedByDivWithChildrenId = 'toBeReplacedByDivWithChildren';
 
-	module("get");
+	module("Wicket.DOM");
 
 	test("Wicket.$ existing", function() {
 		var el = Wicket.$(existingId);
@@ -41,8 +41,6 @@ jQuery(document).ready(function() {
 		var el = Wicket.DOM.get(existingId);
 		equal( el, Wicket.$(existingId), "Wicket.$ is an alias of Wicket.DOM.get" );
 	});
-
-	module("inDoc");
 
 	test("Wicket.$$ looks for existing element in the current document", function() {
 		var el = Wicket.$(existingId);
@@ -61,22 +59,17 @@ jQuery(document).ready(function() {
 		equal( Wicket.$$(el), false, "Wicket.$$ should return false for elements created in different documents." );
 	});
 
-	module('containsElement');
-
-	test("Wicket.DOM.containsElement looks for an existing element", function() {
+	test("containsElement looks for an existing element", function() {
 		var el = jQuery('#'+existingId)[0];
 		equal( Wicket.DOM.containsElement(el), true, "Wicket.DOM.containsElement should return true for existing elements." );
 	});
 
-	test("Wicket.DOM.containsElement looks for an non-existing element", function() {
+	test("containsElement looks for an non-existing element", function() {
 		var el = document.createElement('span');
 		equal( Wicket.DOM.containsElement(el), false, "Wicket.DOM.containsElement should return true for existing elements." );
 	});
 
-
-	module('serializeNode');
-
-	test("Wicket.DOM.serializeNode a simple element", function() {
+	test("serializeNode a simple element", function() {
 		var el = Wicket.$(existingId);
 		var asString = Wicket.DOM.serializeNode(el);
 		var $deserialized = jQuery(asString);
@@ -84,7 +77,7 @@ jQuery(document).ready(function() {
 		equal($deserialized.prop('id') , existingId, "<span>'s must be "+existingId+"." );
 	});
 
-	test("Wicket.DOM.serializeNode(Children) a complex element", function() {
+	test("serializeNode(Children) a complex element", function() {
 		var el = Wicket.$(complexElementId);
 		var asString = Wicket.DOM.serializeNode(el);
 		var $deserialized = jQuery(asString);
@@ -94,27 +87,21 @@ jQuery(document).ready(function() {
 		equal(jQuery.trim($deserialized.text()), 'Link', 'The serialized element should have text "Link"');
 	});
 
-
-	module('show');
-
-	test("Wicket.DOM.show an element", function() {
+	test("show() an element", function() {
 		var el = Wicket.$(existingId);
 		Wicket.DOM.hide(el);
 		Wicket.DOM.show(el);
 		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
 	});
 
-	test("Wicket.DOM.show an element by id ", function() {
+	test("show() an element by id ", function() {
 		Wicket.DOM.hide(existingId);
 		Wicket.DOM.show(existingId);
 		var el = Wicket.$(existingId);
 		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
 	});
 
-
-	module('(show|hide)Incrementally');
-
-	test("Wicket.DOM.(show|hide)Incrementally an element", function() {
+	test("(show|hide)Incrementally() an element", function() {
 		var el = Wicket.$(existingId);
 		Wicket.DOM.hideIncrementally(el);
 		equal( el.style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
@@ -126,7 +113,7 @@ jQuery(document).ready(function() {
 		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
 	});
 
-	test("Wicket.DOM.(show|hide)Incrementally an element by id ", function() {
+	test("(show|hide)Incrementally() an element by id ", function() {
 		Wicket.DOM.hideIncrementally(existingId);
 		equal( Wicket.$(existingId).style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
 		Wicket.DOM.hideIncrementally(existingId);
@@ -137,34 +124,28 @@ jQuery(document).ready(function() {
 		equal( Wicket.$(existingId).style.display, '', "Wicket.DOM.show should set .style.display to ''." );
 	});
 
-
-	module('hide');
-
-	test("Wicket.DOM.hide an element", function() {
+	test("hide() an element", function() {
 		var el = Wicket.$(existingId);
 		Wicket.DOM.show(el);
 		Wicket.DOM.hide(el);
 		equal( el.style.display, 'none', "Wicket.DOM.node should set .style.display to 'none'." );
 	});
 
-	test("Wicket.DOM.hide an element by id ", function() {
+	test("hide() an element by id ", function() {
 		Wicket.DOM.show(existingId);
 		Wicket.DOM.hide(existingId);
 		var el = Wicket.$(existingId);
 		equal( el.style.display, 'none', "Wicket.DOM.hide should set .style.display to 'none'." );
 	});
 
-
-	module('replace');
-
-	test("Wicket.DOM.replace an element with a table", function() {
+	test("replace() an element with a table", function() {
 		var el = Wicket.$(toBeReplacedByTableId);
 		var tableMarkup = '<table id="'+toBeReplacedByTableId+'"><thead><tr><th>header</th></tr></thead><tbody><tr><td>data</td></tr></tbody><tfoot><tr><td>footer data</td></tr></tfoot></table>';
 		Wicket.DOM.replace(el, tableMarkup);
 		equal( Wicket.DOM.serializeNode(Wicket.$(toBeReplacedByTableId)).toLowerCase(), tableMarkup.toLowerCase(), "Wicket.DOM.replace replace the span with a table." );
 	});
 
-	test("Wicket.DOM.replace an element with a script", function() {
+	test("replace() an element with a script", function() {
 		var el = Wicket.$(toBeReplacedByScriptId);
 		var counter = 0;
 		Wicket.setCounter = function (newValue) { counter = newValue; };
@@ -177,14 +158,14 @@ jQuery(document).ready(function() {
 	});
 
 
-	test("Wicket.DOM.replace an element with a complex element", function() {
+	test("replace() an element with a complex element", function() {
 		var el = Wicket.$(toBeReplacedByDivWithChildrenId);
 		var complexElMarkup = '<div id="'+toBeReplacedByDivWithChildrenId+'"><div>inner div<span>inner span</span><a href="http://host/some/url">Link</a></div></div>';
 		Wicket.DOM.replace(el, complexElMarkup);
 		equal( Wicket.DOM.serializeNode(Wicket.$(toBeReplacedByDivWithChildrenId)).toLowerCase(), complexElMarkup.toLowerCase(), "Wicket.DOM.replace should replace the span with a complex element." );
 	});
 
-	test("Wicket.DOM.replace - test event notifications", function() {
+	test("replace - test event notifications", function() {
 
 		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
 			start();
@@ -199,5 +180,28 @@ jQuery(document).ready(function() {
 		var toReplace = Wicket.$('testDomEventNotifications');
 		var newElementMarkup = '<div id="testDomEventNotifications">New One</div>';
 		Wicket.DOM.replace(toReplace, newElementMarkup);
+		jQuery(document).off();
+	});
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4650
+	 */
+	test("replace - do not publish '/dom/node/added' event notification when removing a component", function() {
+
+		expect(1);
+
+		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
+			start();
+			equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
+		});
+
+		Wicket.Event.subscribe('/dom/node/added', function(jqEvent, addedElement) {
+			ok(false, "Event '/dom/node/added' should not be published when the new markup of the component is empty text!");
+		});
+
+		var toReplace = Wicket.$('testDomEventNotifications');
+		var newElementMarkup = '';
+		Wicket.DOM.replace(toReplace, newElementMarkup);
+		jQuery(document).off();
 	});
 });

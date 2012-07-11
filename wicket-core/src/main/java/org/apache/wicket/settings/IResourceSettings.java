@@ -130,7 +130,6 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 * to this list.
 	 * 
 	 * @return Returns the resourceFinders.
-	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
 	List<IResourceFinder> getResourceFinders();
 
@@ -212,7 +211,7 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 *            Frequency at which to poll resources or <code>null</code> if polling should be
 	 *            disabled
 	 * 
-	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
+	 * @see org.apache.wicket.settings.IResourceSettings#getResourceFinders()
 	 */
 	void setResourcePollFrequency(final Duration resourcePollFrequency);
 

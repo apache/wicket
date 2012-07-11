@@ -91,6 +91,7 @@ public abstract class AbstractConverter<C> implements IConverter<C>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
+	@Override
 	public String convertToString(final C value, final Locale locale)
 	{
 		if (value == null)

@@ -89,6 +89,7 @@ public class AnnotationsRoleTest extends TestCase
 		{
 			private boolean eventReceived = false;
 
+			@Override
 			public void onUnauthorizedInstantiation(Component component)
 			{
 				eventReceived = true;
@@ -136,6 +137,7 @@ public class AnnotationsRoleTest extends TestCase
 		/**
 		 * @see org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy#hasAnyRole(Roles)
 		 */
+		@Override
 		public boolean hasAnyRole(Roles roles)
 		{
 			return this.roles.hasAnyRole(roles);

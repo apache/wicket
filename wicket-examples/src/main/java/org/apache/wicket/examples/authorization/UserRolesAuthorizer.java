@@ -41,6 +41,7 @@ public class UserRolesAuthorizer implements IRoleCheckingStrategy
 	/**
 	 * @see org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy#hasAnyRole(Roles)
 	 */
+	@Override
 	public boolean hasAnyRole(Roles roles)
 	{
 		RolesSession authSession = (RolesSession)Session.get();

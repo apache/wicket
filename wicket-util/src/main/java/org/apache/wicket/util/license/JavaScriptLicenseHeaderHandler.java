@@ -38,6 +38,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return "javaScriptLicense.txt";
 	}
 
+	@Override
 	public boolean checkLicenseHeader(final File file)
 	{
 		String header = extractLicenseHeader(file, 0, 16);
@@ -45,6 +46,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return getLicenseHeader().equals(header);
 	}
 
+	@Override
 	public List<String> getSuffixes()
 	{
 		return Arrays.asList("js", "json");

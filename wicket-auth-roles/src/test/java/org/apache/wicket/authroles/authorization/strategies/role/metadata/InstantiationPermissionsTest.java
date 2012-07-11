@@ -86,7 +86,7 @@ public class InstantiationPermissionsTest extends TestCase
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()
 			{
-
+				@Override
 				public boolean hasAnyRole(Roles roles)
 				{
 					return false;
@@ -108,7 +108,7 @@ public class InstantiationPermissionsTest extends TestCase
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()
 			{
-
+				@Override
 				public boolean hasAnyRole(Roles roles)
 				{
 					return false;

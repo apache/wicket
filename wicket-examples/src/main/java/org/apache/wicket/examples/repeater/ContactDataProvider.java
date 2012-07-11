@@ -42,6 +42,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 * 
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int, int)
 	 */
+	@Override
 	public Iterator<Contact> iterator(long first, long count)
 	{
 		return getContactsDB().find(first, count, new SortParam<String>("firstName", true))
@@ -53,6 +54,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 * 
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#size()
 	 */
+	@Override
 	public long size()
 	{
 		return getContactsDB().getCount();
@@ -63,6 +65,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 * 
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
 	 */
+	@Override
 	public IModel<Contact> model(Contact object)
 	{
 		return new DetachableContactModel(object);
@@ -71,6 +74,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 	}

@@ -256,6 +256,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getCurrentPage()
 	 */
+	@Override
 	public final long getCurrentPage()
 	{
 		return datagrid.getCurrentPage();
@@ -264,6 +265,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getPageCount()
 	 */
+	@Override
 	public final long getPageCount()
 	{
 		return datagrid.getPageCount();
@@ -280,6 +282,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @return number of rows per page
 	 */
+	@Override
 	public final long getItemsPerPage()
 	{
 		return datagrid.getItemsPerPage();
@@ -288,6 +291,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#setCurrentPage(long)
 	 */
+	@Override
 	public final void setCurrentPage(final long page)
 	{
 		datagrid.setCurrentPage(page);
@@ -326,6 +330,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageableItems#getItemCount()
 	 */
+	@Override
 	public long getItemCount()
 	{
 		return datagrid.getItemCount();
@@ -438,6 +443,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 
 			Boolean visible = toolbars.visitChildren(new IVisitor<Component, Boolean>()
 			{
+				@Override
 				public void component(Component object, IVisit<Boolean> visit)
 				{
 					object.configure();

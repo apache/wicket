@@ -57,6 +57,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#clear()
 	 */
+	@Override
 	public void clear()
 	{
 		checkAndCopy();
@@ -79,6 +80,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#containsKey(Object)
 	 */
+	@Override
 	public boolean containsKey(final Object key)
 	{
 		return wrapped.containsKey(key);
@@ -87,6 +89,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#containsValue(Object)
 	 */
+	@Override
 	public boolean containsValue(final Object value)
 	{
 		return wrapped.containsValue(value);
@@ -95,6 +98,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#entrySet()
 	 */
+	@Override
 	public Set<Entry<String, Object>> entrySet()
 	{
 		checkAndCopy();
@@ -113,6 +117,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#get(Object)
 	 */
+	@Override
 	public Object get(final Object key)
 	{
 		return wrapped.get(key);
@@ -121,6 +126,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getBoolean(String)
 	 */
+	@Override
 	public boolean getBoolean(final String key) throws StringValueConversionException
 	{
 		return wrapped.getBoolean(key);
@@ -129,6 +135,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getCharSequence(String)
 	 */
+	@Override
 	public CharSequence getCharSequence(final String key)
 	{
 		return wrapped.getCharSequence(key);
@@ -137,6 +144,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getDouble(String)
 	 */
+	@Override
 	public double getDouble(final String key) throws StringValueConversionException
 	{
 		return wrapped.getDouble(key);
@@ -145,6 +153,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getDouble(String, double)
 	 */
+	@Override
 	public double getDouble(final String key, final double defaultValue)
 	{
 		return wrapped.getDouble(key, defaultValue);
@@ -153,6 +162,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getDuration(String)
 	 */
+	@Override
 	public Duration getDuration(final String key) throws StringValueConversionException
 	{
 		return wrapped.getDuration(key);
@@ -161,6 +171,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getInt(String, int)
 	 */
+	@Override
 	public int getInt(final String key, final int defaultValue)
 	{
 		return wrapped.getInt(key, defaultValue);
@@ -169,6 +180,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getInt(String)
 	 */
+	@Override
 	public int getInt(final String key) throws StringValueConversionException
 	{
 		return wrapped.getInt(key);
@@ -177,6 +189,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getKey(String)
 	 */
+	@Override
 	public String getKey(final String key)
 	{
 		return wrapped.getKey(key);
@@ -185,6 +198,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getLong(String, long)
 	 */
+	@Override
 	public long getLong(final String key, final long defaultValue)
 	{
 		return wrapped.getLong(key, defaultValue);
@@ -193,6 +207,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getLong(String)
 	 */
+	@Override
 	public long getLong(final String key) throws StringValueConversionException
 	{
 		return wrapped.getLong(key);
@@ -201,6 +216,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getString(String, String)
 	 */
+	@Override
 	public String getString(final String key, final String defaultValue)
 	{
 		return wrapped.getString(key, defaultValue);
@@ -209,6 +225,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getString(String)
 	 */
+	@Override
 	public String getString(final String key)
 	{
 		return wrapped.getString(key);
@@ -217,6 +234,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getStringArray(String)
 	 */
+	@Override
 	public String[] getStringArray(final String key)
 	{
 		return wrapped.getStringArray(key);
@@ -225,6 +243,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getStringValue(String)
 	 */
+	@Override
 	public StringValue getStringValue(final String key)
 	{
 		return wrapped.getStringValue(key);
@@ -233,6 +252,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getTime(String)
 	 */
+	@Override
 	public Time getTime(final String key) throws StringValueConversionException
 	{
 		return wrapped.getTime(key);
@@ -241,6 +261,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#isEmpty()
 	 */
+	@Override
 	public boolean isEmpty()
 	{
 		return wrapped.isEmpty();
@@ -249,6 +270,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#isImmutable()
 	 */
+	@Override
 	public boolean isImmutable()
 	{
 		return false;
@@ -257,6 +279,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#keySet()
 	 */
+	@Override
 	public Set<String> keySet()
 	{
 		checkAndCopy();
@@ -266,6 +289,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#makeImmutable()
 	 */
+	@Override
 	public IValueMap makeImmutable()
 	{
 		return wrapped.makeImmutable();
@@ -274,6 +298,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#put(Object, Object)
 	 */
+	@Override
 	public Object put(final String key, final Object value)
 	{
 		checkAndCopy();
@@ -283,6 +308,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#putAll(Map)
 	 */
+	@Override
 	public void putAll(final Map<? extends String, ?> map)
 	{
 		checkAndCopy();
@@ -292,6 +318,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#remove(Object)
 	 */
+	@Override
 	public Object remove(final Object key)
 	{
 		checkAndCopy();
@@ -301,6 +328,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#size()
 	 */
+	@Override
 	public int size()
 	{
 		return wrapped.size();
@@ -309,6 +337,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#values()
 	 */
+	@Override
 	public Collection<Object> values()
 	{
 		return wrapped.values();
@@ -331,6 +360,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	 * @see IValueMap#getAsBoolean(String)
 	 * 
 	 */
+	@Override
 	public Boolean getAsBoolean(final String key)
 	{
 		return wrapped.getAsBoolean(key);
@@ -340,6 +370,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	 * @see IValueMap#getAsBoolean(String, boolean)
 	 * 
 	 */
+	@Override
 	public boolean getAsBoolean(final String key, final boolean defaultValue)
 	{
 		return wrapped.getAsBoolean(key, defaultValue);
@@ -348,6 +379,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsInteger(String)
 	 */
+	@Override
 	public Integer getAsInteger(final String key)
 	{
 		return wrapped.getAsInteger(key);
@@ -356,6 +388,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsInteger(String, int)
 	 */
+	@Override
 	public int getAsInteger(final String key, final int defaultValue)
 	{
 		return wrapped.getAsInteger(key, defaultValue);
@@ -364,6 +397,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsLong(String)
 	 */
+	@Override
 	public Long getAsLong(final String key)
 	{
 		return wrapped.getAsLong(key);
@@ -372,6 +406,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsLong(String, long)
 	 */
+	@Override
 	public long getAsLong(final String key, final long defaultValue)
 	{
 		return wrapped.getAsLong(key, defaultValue);
@@ -380,6 +415,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsDouble(String)
 	 */
+	@Override
 	public Double getAsDouble(final String key)
 	{
 		return wrapped.getAsDouble(key);
@@ -388,6 +424,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsDouble(String, double)
 	 */
+	@Override
 	public double getAsDouble(final String key, final double defaultValue)
 	{
 		return wrapped.getAsDouble(key, defaultValue);
@@ -396,6 +433,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsDuration(String)
 	 */
+	@Override
 	public Duration getAsDuration(final String key)
 	{
 		return wrapped.getAsDuration(key);
@@ -404,6 +442,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsDuration(String, Duration)
 	 */
+	@Override
 	public Duration getAsDuration(final String key, final Duration defaultValue)
 	{
 		return wrapped.getAsDuration(key, defaultValue);
@@ -412,6 +451,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsTime(String)
 	 */
+	@Override
 	public Time getAsTime(final String key)
 	{
 		return wrapped.getAsTime(key);
@@ -420,6 +460,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsTime(String, Time)
 	 */
+	@Override
 	public Time getAsTime(final String key, final Time defaultValue)
 	{
 		return wrapped.getAsTime(key, defaultValue);
@@ -428,6 +469,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsEnum(String, Class)
 	 */
+	@Override
 	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass)
 	{
 		return wrapped.getAsEnum(key, eClass);
@@ -436,6 +478,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsEnum
 	 */
+	@Override
 	public <T extends Enum<T>> T getAsEnum(final String key, final T defaultValue)
 	{
 		return wrapped.getAsEnum(key, defaultValue);
@@ -444,6 +487,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see IValueMap#getAsEnum(String, Class, Enum)
 	 */
+	@Override
 	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass,
 		final T defaultValue)
 	{

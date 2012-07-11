@@ -281,6 +281,7 @@ public class LazyInitProxyFactory
 		 * @see net.sf.cglib.proxy.MethodInterceptor#intercept(java.lang.Object,
 		 *      java.lang.reflect.Method, java.lang.Object[], net.sf.cglib.proxy.MethodProxy)
 		 */
+		@Override
 		public Object intercept(final Object object, final Method method, final Object[] args,
 			final MethodProxy proxy) throws Throwable
 		{
@@ -320,6 +321,7 @@ public class LazyInitProxyFactory
 		/**
 		 * @see org.apache.wicket.proxy.ILazyInitProxy#getObjectLocator()
 		 */
+		@Override
 		public IProxyTargetLocator getObjectLocator()
 		{
 			return locator;
@@ -328,6 +330,7 @@ public class LazyInitProxyFactory
 		/**
 		 * @see org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace#writeReplace()
 		 */
+		@Override
 		public Object writeReplace() throws ObjectStreamException
 		{
 			return new ProxyReplacement(typeName, locator);
@@ -376,6 +379,7 @@ public class LazyInitProxyFactory
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 		 *      java.lang.reflect.Method, java.lang.Object[])
 		 */
+		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args)
 			throws Throwable
 		{
@@ -423,6 +427,7 @@ public class LazyInitProxyFactory
 		/**
 		 * @see org.apache.wicket.proxy.ILazyInitProxy#getObjectLocator()
 		 */
+		@Override
 		public IProxyTargetLocator getObjectLocator()
 		{
 			return locator;
@@ -431,6 +436,7 @@ public class LazyInitProxyFactory
 		/**
 		 * @see org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace#writeReplace()
 		 */
+		@Override
 		public Object writeReplace() throws ObjectStreamException
 		{
 			return new ProxyReplacement(typeName, locator);

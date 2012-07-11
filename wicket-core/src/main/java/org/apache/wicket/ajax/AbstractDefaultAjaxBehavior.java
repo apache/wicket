@@ -67,7 +67,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	private static final String FAILURE_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, jqXHR, errorMessage, textStatus){%s}";
 	private static final String SUCCESS_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, jqXHR, data, textStatus){%s}";
 	private static final String AFTER_HANDLER_FUNCTION_TEMPLATE     = "function(attrs){%s}";
-	private static final String BEFORE_HANDLER_FUNCTION_TEMPLATE    = "function(attrs, jqXHR, settings){%s}";
+	private static final String BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE    = "function(attrs, jqXHR, settings){%s}";
+	private static final String BEFORE_HANDLER_FUNCTION_TEMPLATE    = "function(attrs){%s}";
 
 	/**
 	 * Subclasses should call super.onBind()
@@ -250,6 +251,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				{
 					CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
 					appendListenerHandler(beforeHandler, attributesJson, "bh", BEFORE_HANDLER_FUNCTION_TEMPLATE);
+
+					CharSequence beforeSendHandler = ajaxCallListener.getBeforeSendHandler(component);
+					appendListenerHandler(beforeSendHandler, attributesJson, "bsh", BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
 					appendListenerHandler(afterHandler, attributesJson, "ah", AFTER_HANDLER_FUNCTION_TEMPLATE);

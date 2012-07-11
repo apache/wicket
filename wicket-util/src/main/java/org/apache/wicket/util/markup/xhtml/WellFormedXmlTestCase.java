@@ -102,7 +102,7 @@ public class WellFormedXmlTestCase
 
 	private static final FileFilter fileFilter = new FileFilter()
 	{
-
+		@Override
 		public boolean accept(File pathname)
 		{
 			String path = pathname.getAbsolutePath().replace('\\', '/');
@@ -114,16 +114,19 @@ public class WellFormedXmlTestCase
 
 	private static final ErrorHandler errorHandler = new ErrorHandler()
 	{
+		@Override
 		public void warning(SAXParseException exception) throws SAXException
 		{
 			throw exception;
 		}
 
+		@Override
 		public void error(SAXParseException exception) throws SAXException
 		{
 			throw exception;
 		}
 
+		@Override
 		public void fatalError(SAXParseException exception) throws SAXException
 		{
 			throw exception;
@@ -149,6 +152,7 @@ public class WellFormedXmlTestCase
 			systemIdToUri.put("http://www.w3.org/TR/html4/strict.dtd", "xhtml1-strict.dtd");
 		}
 
+		@Override
 		public InputSource resolveEntity(String publicId, String systemId) throws SAXException,
 			IOException
 		{

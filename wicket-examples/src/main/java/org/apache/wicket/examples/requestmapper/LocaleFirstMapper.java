@@ -51,6 +51,7 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public int getCompatibilityScore(Request request)
 	{
 		if (getLocaleFromUrl(request) != null)
@@ -87,6 +88,7 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
 		Locale locale = getLocaleFromUrl(request);
@@ -105,6 +107,7 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
 	 */
+	@Override
 	public Url mapHandler(IRequestHandler handler)
 	{
 

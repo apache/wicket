@@ -62,7 +62,7 @@ public class PackageResourceReference extends ResourceReference
 	 * 
 	 * @param key
 	 */
-	public PackageResourceReference(final Key key)
+	public PackageResourceReference(final ResourceReference.Key key)
 	{
 		super(key);
 	}
@@ -138,7 +138,7 @@ public class PackageResourceReference extends ResourceReference
 		return resource;
 	}
 
-	private UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
+	private ResourceReference.UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
 	{
 		IResourceStreamLocator locator = Application.get()
 			.getResourceSettings()
@@ -150,9 +150,9 @@ public class PackageResourceReference extends ResourceReference
 			null, false);
 
 		if (stream == null)
-			return new UrlAttributes(null, null, null);
+			return new ResourceReference.UrlAttributes(null, null, null);
 
-		return new UrlAttributes(stream.getLocale(), stream.getStyle(), stream.getVariation());
+		return new ResourceReference.UrlAttributes(stream.getLocale(), stream.getStyle(), stream.getVariation());
 	}
 
 	private Locale getCurrentLocale()
@@ -243,19 +243,19 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	@Override
-	public UrlAttributes getUrlAttributes()
+	public ResourceReference.UrlAttributes getUrlAttributes()
 	{
 		Locale locale = getCurrentLocale();
 		String style = getCurrentStyle();
 		String variation = getVariation();
 
-		UrlAttributes key = new UrlAttributes(locale, style, variation);
+		ResourceReference.UrlAttributes key = new ResourceReference.UrlAttributes(locale, style, variation);
 
 		if (urlAttributesCacheMap == null)
 		{
 			urlAttributesCacheMap = Generics.newConcurrentHashMap();
 		}
-		UrlAttributes value = urlAttributesCacheMap.get(key);
+		ResourceReference.UrlAttributes value = urlAttributesCacheMap.get(key);
 		if (value == null)
 		{
 			value = getUrlAttributes(locale, style, variation);

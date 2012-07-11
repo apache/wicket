@@ -16,14 +16,15 @@
  */
 package org.apache.wicket.request.handler.render;
 
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.slf4j.Logger;
@@ -87,7 +88,17 @@ public class WebPageRenderer extends PageRenderer
 	 */
 	protected BufferedWebResponse renderPage(Url targetUrl, RequestCycle requestCycle)
 	{
+		// get the page before checking for a scheduled request handler because
+		// the page may call setResponsePage in its constructor
+		IRequestablePage requestablePage = getPage();
+
 		IRequestHandler scheduled = requestCycle.getRequestHandlerScheduledAfterCurrent();
+
+		if (scheduled != null)
+		{
+			// no need to render
+			return null;
+		}
 
 		// keep the original response
 		final WebResponse originalResponse = (WebResponse) requestCycle.getResponse();
@@ -101,7 +112,7 @@ public class WebPageRenderer extends PageRenderer
 		try
 		{
 			requestCycle.setResponse(response);
-			getPage().renderPage();
+			requestablePage.renderPage();
 
 			if (scheduled == null && requestCycle.getRequestHandlerScheduledAfterCurrent() != null)
 			{

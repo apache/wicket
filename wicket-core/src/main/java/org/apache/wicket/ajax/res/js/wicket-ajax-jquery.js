@@ -453,6 +453,9 @@
 				headers["Wicket-FocusedElementId"] = Wicket.Focus.lastFocusId;
 			}
 
+			Wicket.Event.publish('/ajax/call/before', attrs);
+			self._executeHandlers(attrs.bh, attrs);
+
 			if (attrs.mp) { // multipart form. jQuery doesn't help here ...
 				// TODO Wicket.next - should we execute all handlers ?!
 				// Wicket 1.5 didn't support success/failure handlers for this, but we can do it
@@ -527,14 +530,15 @@
 						if (settings.type.toLowerCase() === 'post') {
 							separator = settings.data.length > 0 ? '&' : '';
 							settings.data = settings.data + separator + queryString;
+							jqXHR.setRequestHeader("Content-Type", settings.contentType);
 						} else {
 							separator = settings.url.indexOf('?') > -1 ? '&' : '?';
 							settings.url = settings.url + separator + queryString;
 						}
 					}
 
-					Wicket.Event.publish('/ajax/call/before', attrs, jqXHR, settings);
-					self._executeHandlers(attrs.bh, attrs, jqXHR, settings);
+					Wicket.Event.publish('/ajax/call/beforeSend', attrs, jqXHR, settings);
+					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
 
 					if (attrs.i) {
 						// show the indicator
@@ -1427,7 +1431,9 @@
 				}
 
 				var newElement = Wicket.$(element.id);
-				Wicket.Event.publish('/dom/node/added', newElement);
+				if (newElement) {
+					Wicket.Event.publish('/dom/node/added', newElement);
+				}
 			},
 
 			// Method for serializing DOM nodes to string

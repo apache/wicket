@@ -46,6 +46,7 @@ public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	/**
 	 * @return the actual {@link HeaderItem}
 	 */
+	@Override
 	public HeaderItem getWrapped()
 	{
 		return wrapped;

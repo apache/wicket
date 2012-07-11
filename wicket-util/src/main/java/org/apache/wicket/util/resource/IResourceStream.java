@@ -71,6 +71,7 @@ public interface IResourceStream extends IModifiable, IClusterable, Closeable
 	 * 
 	 * @throws IOException
 	 */
+	@Override
 	void close() throws IOException;
 
 	/**

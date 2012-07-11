@@ -45,6 +45,7 @@ public class SpringContextLocatorMock implements ISpringContextLocator
 	/**
 	 * @see org.apache.wicket.spring.ISpringContextLocator#getSpringContext()
 	 */
+	@Override
 	public ApplicationContext getSpringContext()
 	{
 		return context;

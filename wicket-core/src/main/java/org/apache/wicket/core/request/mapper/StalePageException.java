@@ -50,4 +50,16 @@ public class StalePageException extends WicketRuntimeException
 	{
 		return page;
 	}
+
+	/**
+	 * Suppress loading of the stacktrace because it is not needed.
+	 *
+	 * @see java.lang.Throwable#fillInStackTrace()
+	 */
+	@Override
+	public Throwable fillInStackTrace()
+	{
+		// don't do anything here
+		return null;
+	}
 }

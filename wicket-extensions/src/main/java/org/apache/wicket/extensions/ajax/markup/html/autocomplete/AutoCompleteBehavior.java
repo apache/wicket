@@ -100,6 +100,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	{
 		IRequestHandler target = new IRequestHandler()
 		{
+			@Override
 			public void respond(final IRequestCycle requestCycle)
 			{
 				WebResponse r = (WebResponse)requestCycle.getResponse();
@@ -124,6 +125,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 				renderer.renderFooter(r, count);
 			}
 
+			@Override
 			public void detach(final IRequestCycle requestCycle)
 			{
 			}

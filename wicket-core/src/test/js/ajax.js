@@ -64,7 +64,7 @@ jQuery(document).ready(function() {
 
 		module('Wicket.Ajax');
 
-		asyncTest('Wicket.Ajax - processEvaluation with mock data.', function () {
+		asyncTest('processEvaluation with mock data.', function () {
 
 			expect(2);
 
@@ -75,7 +75,7 @@ jQuery(document).ready(function() {
 			execute(attrs);
 		});
 
-		asyncTest('Wicket.Ajax - processEvaluation with mock data (priority-evaluate).', function () {
+		asyncTest('processEvaluation with mock data (priority-evaluate).', function () {
 
 			expect(2);
 
@@ -89,7 +89,7 @@ jQuery(document).ready(function() {
 		/**
 		 * Executes the second part of 'something|functionBody' by passing 'notify' function as parameter
 		 */
-		asyncTest('Wicket.Ajax - processEvaluation with identifier|code.', function () {
+		asyncTest('processEvaluation with identifier|code.', function () {
 
 			expect(2);
 
@@ -100,7 +100,7 @@ jQuery(document).ready(function() {
 			execute(attrs);
 		});
 
-		asyncTest('Wicket.Ajax - processComponent, normal case.', function () {
+		asyncTest('processComponent, normal case.', function () {
 
 			expect(2);
 
@@ -120,7 +120,7 @@ jQuery(document).ready(function() {
 		});
 
 
-		asyncTest('Wicket.Ajax - processComponent() but the old component doesn\'t exist.', function () {
+		asyncTest('processComponent() but the old component doesn\'t exist.', function () {
 
 			expect(2);
 
@@ -147,7 +147,7 @@ jQuery(document).ready(function() {
 			execute(attrs);
 		});
 
-		asyncTest('Wicket.Ajax - processComponent() replace a component with a table with scripts inside.', function () {
+		asyncTest('processComponent() replace a component with a table with scripts inside.', function () {
 
 			expect(4);
 
@@ -166,7 +166,7 @@ jQuery(document).ready(function() {
 		});
 
 
-		asyncTest('Wicket.Ajax - processComponent() replace title\'s text.', function () {
+		asyncTest('processComponent() replace title\'s text.', function () {
 
 			expect(1);
 
@@ -187,7 +187,7 @@ jQuery(document).ready(function() {
 			execute(attrs);
 		});
 
-		asyncTest('Wicket.Ajax - non-wicket response.', function () {
+		asyncTest('non-wicket response.', function () {
 
 			expect(2);
 
@@ -211,7 +211,7 @@ jQuery(document).ready(function() {
 			execute(attrs);
 		});
 
-		asyncTest('Wicket.Ajax - listen on several events.', function () {
+		asyncTest('listen on several events.', function () {
 
 			expect(4);
 
@@ -248,7 +248,7 @@ jQuery(document).ready(function() {
 		});
 
 
-		asyncTest('Wicket.Ajax - throttle execution.', function () {
+		asyncTest('throttle execution.', function () {
 
 			expect(2);
 
@@ -289,7 +289,7 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('Wicket.Ajax - verify arguments to IAjaxCallListener handlers. Success scenario.', function () {
+		asyncTest('verify arguments to IAjaxCallListener handlers. Success scenario.', function () {
 
 			expect(11);
 
@@ -317,7 +317,7 @@ jQuery(document).ready(function() {
 						ok(false, 'Should not be called');
 					}
 				],
-				bh: [
+				bsh: [
 					function(attributes, jqXHR, settings) {
 						deepEqual(attrs, attributes, 'Before: attributes deep equal');
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
@@ -345,7 +345,7 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('Wicket.Ajax - verify arguments to IAjaxCallListener handlers. Failure scenario.', function () {
+		asyncTest('verify arguments to IAjaxCallListener handlers. Failure scenario.', function () {
 
 			expect(8);
 
@@ -365,7 +365,7 @@ jQuery(document).ready(function() {
 						deepEqual(attrs, attributes);
 					}
 				],
-				bh: [
+				bsh: [
 					function(attributes, jqXHR, settings) {
 						deepEqual(attrs, attributes);
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
@@ -397,7 +397,7 @@ jQuery(document).ready(function() {
 		 * Only attributes with non-default values are transfered to the client side.
 		 * All defaults are initialized at the client side.
 		 */
-		asyncTest('Wicket.Ajax - verify default attributes.', function () {
+		asyncTest('verify default attributes.', function () {
 
 			expect(23);
 
@@ -437,7 +437,7 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 		});
 
-		asyncTest('Wicket.Ajax - verify arguments to global listeners. Success scenario.', function () {
+		asyncTest('verify arguments to global listeners. Success scenario.', function () {
 
 			expect(11);
 
@@ -465,7 +465,7 @@ jQuery(document).ready(function() {
 				ok(false, 'Failure handler should not be called');
 			});
 
-			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				deepEqual(attrs, attributes, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
@@ -491,7 +491,7 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('Wicket.Ajax - verify arguments to global listeners. Failure scenario.', function () {
+		asyncTest('verify arguments to global listeners. Failure scenario.', function () {
 
 			expect(11);
 
@@ -514,7 +514,7 @@ jQuery(document).ready(function() {
 				deepEqual(attrs, attributes, 'Failure: attrs');
 			});
 
-			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				deepEqual(attrs, attributes, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
@@ -625,7 +625,7 @@ jQuery(document).ready(function() {
 		 * When using GET method the parameters should be added to 'settings.url'
 		 * WICKET-4606
 		 */
-		asyncTest('Wicket.Ajax - verify dynamic parameters are appended to the Ajax GET params.', function () {
+		asyncTest('verify dynamic parameters are appended to the Ajax GET params.', function () {
 
 			expect(5);
 
@@ -638,7 +638,7 @@ jQuery(document).ready(function() {
 				dep: [ function() {return { "one": 1, "two": 2 } } ]
 			};
 
-			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				deepEqual(attrs, attributes, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
@@ -658,7 +658,7 @@ jQuery(document).ready(function() {
 		 * When using POST method the parameters should be added to 'settings.data'
 		 * WICKET-4606
 		 */
-		asyncTest('Wicket.Ajax - verify dynamic parameters are appended to the Ajax POST params.', function () {
+		asyncTest('verify dynamic parameters are appended to the Ajax POST params.', function () {
 
 			expect(7);
 
@@ -672,7 +672,7 @@ jQuery(document).ready(function() {
 				dep: [ function() {return [ {name: "one", value: 'dynamic1'}, {name: "one", value: 'dynamic2'} ] } ]
 			};
 
-			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes, jqXHR, settings) {
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				deepEqual(attrs, attributes, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
@@ -680,6 +680,44 @@ jQuery(document).ready(function() {
 				ok(settings.data.indexOf('one=static2') > -1, 'Parameter "one" with value "static2" is found');
 				ok(settings.data.indexOf('one=dynamic1') > -1, 'Parameter "one" with value "dynamic1" is found');
 				ok(settings.data.indexOf('one=dynamic2') > -1, 'Parameter "one" with value "dynamic2" is found');
+				start();
+			});
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+			jQuery(document).off();
+		});
+
+		/**
+		 * 'before' handlers are called even before preconditions
+		 * WICKET-4649
+		 */
+		asyncTest('before handler.', function () {
+
+			expect(3);
+
+			var attrs = {
+				u: 'data/ajax/nonExisting.json',
+				e: 'event1',
+				dt: 'json', // datatype
+				wr: false, // not Wicket's <ajax-response>
+				bh: [function(attributes) {
+					deepEqual(attrs, attributes, 'Before: attrs');
+				}],
+				pre: [function() {
+					ok(true, "Precondition is called!")
+					// do not allow calling of beforeSend handlers
+					return false;
+				}],
+				bsh: [function() {
+					ok(false, 'beforeSend handles should not be called');
+				}]
+			};
+
+			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes) {
+				deepEqual(attrs, attributes, 'Global before: attrs');
 				start();
 			});
 

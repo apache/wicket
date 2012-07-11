@@ -65,7 +65,7 @@ public class AbstractDefaultAjaxBehaviorTest extends Assert
 
 		CharSequence json = behavior.renderAjaxAttributes(component, attributes);
 
-		String expected = "{\"coh\":[function(attrs, jqXHR, textStatus){alert('Complete!');}],\"u\":\"some/url\",\"pre\":[function(attrs, jqXHR, settings){return somePrecondition();}],\"fh\":[function(attrs, jqXHR, errorMessage, textStatus){alert('Failure!');}],\"bh\":[function(attrs, jqXHR, settings){alert('Before!');}],\"sh\":[function(attrs, jqXHR, data, textStatus){alert('Success!');}],\"ah\":[function(attrs){alert('After!');}]}";
+		String expected = "{\"coh\":[function(attrs, jqXHR, textStatus){alert('Complete!');}],\"u\":\"some/url\",\"pre\":[function(attrs, jqXHR, settings){return somePrecondition();}],\"fh\":[function(attrs, jqXHR, errorMessage, textStatus){alert('Failure!');}],\"bh\":[function(attrs){alert('Before!');}],\"sh\":[function(attrs, jqXHR, data, textStatus){alert('Success!');}],\"ah\":[function(attrs){alert('After!');}]}";
 		assertEquals(expected, json);
 	}
 }

@@ -35,46 +35,55 @@ public abstract class AbstractResourceStream implements IResourceStream
 	private String style;
 	private String variation;
 
+	@Override
 	public Locale getLocale()
 	{
 		return locale;
 	}
 
+	@Override
 	public void setLocale(final Locale locale)
 	{
 		this.locale = locale;
 	}
 
+	@Override
 	public String getStyle()
 	{
 		return style;
 	}
 
+	@Override
 	public String getVariation()
 	{
 		return variation;
 	}
 
+	@Override
 	public void setStyle(final String style)
 	{
 		this.style = style;
 	}
 
+	@Override
 	public void setVariation(final String variation)
 	{
 		this.variation = variation;
 	}
 
+	@Override
 	public Bytes length()
 	{
 		return null;
 	}
 
+	@Override
 	public String getContentType()
 	{
 		return null;
 	}
 
+	@Override
 	public Time lastModifiedTime()
 	{
 		return null;

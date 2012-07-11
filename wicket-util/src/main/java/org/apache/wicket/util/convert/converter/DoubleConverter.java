@@ -39,6 +39,7 @@ public class DoubleConverter extends AbstractDecimalConverter<Double>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
 	 */
+	@Override
 	public Double convertToObject(final String value, final Locale locale)
 	{
 		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);

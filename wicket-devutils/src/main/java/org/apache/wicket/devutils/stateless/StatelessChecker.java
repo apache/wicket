@@ -54,12 +54,14 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	/**
 	 * @see org.apache.wicket.application.IComponentOnBeforeRenderListener#onBeforeRender(org.apache.wicket.Component)
 	 */
+	@Override
 	public void onBeforeRender(final Component component)
 	{
 		if (mustCheck(component))
 		{
 			final IVisitor<Component, Component> visitor = new IVisitor<Component, Component>()
 			{
+				@Override
 				public void component(final Component comp, final IVisit<Component> visit)
 				{
 					if ((component instanceof Page) && mustCheck(comp))

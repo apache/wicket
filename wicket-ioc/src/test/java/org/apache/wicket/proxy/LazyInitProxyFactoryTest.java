@@ -44,6 +44,7 @@ public class LazyInitProxyFactoryTest extends Assert
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Object locateProxyTarget()
 		{
 			return LazyInitProxyFactoryTest.interfaceObject;
@@ -54,6 +55,7 @@ public class LazyInitProxyFactoryTest extends Assert
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Object locateProxyTarget()
 		{
 			return LazyInitProxyFactoryTest.concreteObject;
@@ -64,6 +66,7 @@ public class LazyInitProxyFactoryTest extends Assert
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Object locateProxyTarget()
 		{
 			return "StringLiteral";
@@ -103,6 +106,7 @@ public class LazyInitProxyFactoryTest extends Assert
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Object locateProxyTarget()
 			{
 				return tester;
@@ -149,6 +153,7 @@ public class LazyInitProxyFactoryTest extends Assert
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Object locateProxyTarget()
 			{
 				return tester;

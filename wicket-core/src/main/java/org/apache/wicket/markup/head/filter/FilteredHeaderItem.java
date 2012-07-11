@@ -55,6 +55,7 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	/**
 	 * @return the actual {@link HeaderItem}
 	 */
+	@Override
 	public HeaderItem getWrapped()
 	{
 		return wrapped;

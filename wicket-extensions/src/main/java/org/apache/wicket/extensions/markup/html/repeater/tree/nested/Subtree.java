@@ -96,6 +96,7 @@ public class Subtree<T> extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public <S> Iterator<Item<S>> getItems(IItemFactory<S> factory,
 				Iterator<IModel<S>> newModels, Iterator<Item<S>> existingItems)
 			{
@@ -153,16 +154,19 @@ public class Subtree<T> extends Panel
 			}
 		}
 
+		@Override
 		public void remove()
 		{
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public boolean hasNext()
 		{
 			return children.hasNext();
 		}
 
+		@Override
 		public IModel<T> next()
 		{
 			return tree.getProvider().model(children.next());

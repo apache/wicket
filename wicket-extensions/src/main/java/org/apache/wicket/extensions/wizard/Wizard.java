@@ -205,6 +205,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizard#getWizardModel()
 	 */
+	@Override
 	public final IWizardModel getWizardModel()
 	{
 		return wizardModel;
@@ -226,6 +227,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModelListener#onActiveStepChanged(org.apache.wicket.extensions.wizard.IWizardStep)
 	 */
+	@Override
 	public void onActiveStepChanged(final IWizardStep newStep)
 	{
 		form.replace(newStep.getView(VIEW_ID, this, this));
@@ -235,6 +237,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * Called when the wizard is canceled.
 	 */
+	@Override
 	public void onCancel()
 	{
 	}
@@ -242,6 +245,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * Called when the wizard is finished.
 	 */
+	@Override
 	public void onFinish()
 	{
 	}

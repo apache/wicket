@@ -211,5 +211,6 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 	 *
 	 * @return page instance
 	 */
+	@Override
 	Page getPage();
 }

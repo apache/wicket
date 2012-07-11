@@ -14,44 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.crypt;
+package org.apache.wicket.request.handler.render;
 
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.SimplePage;
+import org.junit.Test;
 
 /**
- * {@link ICryptFactory} decorator that caches the call to {@link ICryptFactory#newCrypt()}
- * 
- * @author Igor Vaynberg (ivaynberg)
+ * Test if rendering phase is skipped if we invoke setResponsePage inside page constructor
+ *
+ * https://issues.apache.org/jira/browse/WICKET-4636
  */
-public class CryptFactoryCachingDecorator implements ICryptFactory
+public class SkipRenderWithSetResponsePageTest extends WicketTestCase
 {
-	private final ICryptFactory delegate;
-	private ICrypt cache;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param delegate
-	 *            the crypt factory whose {@link ICryptFactory#newCrypt()} call will be cached
-	 */
-	public CryptFactoryCachingDecorator(final ICryptFactory delegate)
+	@Test
+	public void setResponsePageInsideConstructor()
 	{
-		if (delegate == null)
-		{
-			throw new IllegalArgumentException("delegate cannot be null");
-		}
-		this.delegate = delegate;
+		tester.startPage(NotToRenderConstructorPage.class);
+		tester.assertRenderedPage(SimplePage.class);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.crypt.ICryptFactory#newCrypt()
-	 */
-	@Override
-	public final ICrypt newCrypt()
+	public static class NotToRenderConstructorPage extends WebPage
 	{
-		if (cache == null)
+		public NotToRenderConstructorPage()
 		{
-			cache = delegate.newCrypt();
+			setResponsePage(SimplePage.class);
 		}
-		return cache;
+
+		@Override
+		protected void onBeforeRender()
+		{
+			fail("Rendering phase should be skipped.");
+		}
 	}
 }

@@ -43,6 +43,7 @@ public class RenderPerformanceListener implements IComponentInstantiationListene
 {
 	private static final Logger log = LoggerFactory.getLogger(RenderPerformanceListener.class);
 
+	@Override
 	public void onInstantiation(final Component component)
 	{
 		if (accepts(component))

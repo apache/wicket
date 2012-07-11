@@ -89,6 +89,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#size()
 	 */
+	@Override
 	public int size()
 	{
 		return size;
@@ -97,6 +98,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#isEmpty()
 	 */
+	@Override
 	public boolean isEmpty()
 	{
 		return size == 0;
@@ -105,6 +107,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
+	@Override
 	public boolean containsKey(final Object key)
 	{
 		return findKey(0, key) != -1;
@@ -113,6 +116,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#containsValue(java.lang.Object)
 	 */
+	@Override
 	public boolean containsValue(final Object value)
 	{
 		return findValue(0, value) != -1;
@@ -121,6 +125,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
+	@Override
 	public V get(final Object key)
 	{
 		// Search for key
@@ -139,6 +144,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public V put(final K key, final V value)
 	{
 		// Search for key
@@ -174,6 +180,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
+	@Override
 	public V remove(final Object key)
 	{
 		// Search for key
@@ -197,6 +204,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
+	@Override
 	public void putAll(final Map<? extends K, ? extends V> map)
 	{
 		for (final Entry<? extends K, ? extends V> entry : map.entrySet())
@@ -208,6 +216,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#clear()
 	 */
+	@Override
 	public void clear()
 	{
 		for (int i = 0; i < keys.length; i++)
@@ -222,6 +231,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#keySet()
 	 */
+	@Override
 	public Set<K> keySet()
 	{
 		return new AbstractSet<K>()
@@ -231,11 +241,13 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 			{
 				return new Iterator<K>()
 				{
+					@Override
 					public boolean hasNext()
 					{
 						return i < size - 1;
 					}
 
+					@Override
 					public K next()
 					{
 						// Just in case... (WICKET-428)
@@ -251,6 +263,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 						return keys[i];
 					}
 
+					@Override
 					public void remove()
 					{
 						keys[i] = null;
@@ -273,6 +286,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#values()
 	 */
+	@Override
 	public Collection<V> values()
 	{
 		return new AbstractList<V>()
@@ -305,6 +319,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#entrySet()
 	 */
+	@Override
 	public Set<Entry<K, V>> entrySet()
 	{
 		return new AbstractSet<Entry<K, V>>()
@@ -314,11 +329,13 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 			{
 				return new Iterator<Entry<K, V>>()
 				{
+					@Override
 					public boolean hasNext()
 					{
 						return index < size;
 					}
 
+					@Override
 					public Entry<K, V> next()
 					{
 						if (!hasNext())
@@ -332,16 +349,19 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 
 						return new Map.Entry<K, V>()
 						{
+							@Override
 							public K getKey()
 							{
 								return keys[keyIndex];
 							}
 
+							@Override
 							public V getValue()
 							{
 								return values[keyIndex];
 							}
 
+							@Override
 							public V setValue(final V value)
 							{
 								final V oldValue = values[keyIndex];
@@ -353,6 +373,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 						};
 					}
 
+					@Override
 					public void remove()
 					{
 						keys[keyIndex] = null;

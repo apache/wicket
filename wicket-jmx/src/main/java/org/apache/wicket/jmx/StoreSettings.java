@@ -35,26 +35,31 @@ public class StoreSettings implements StoreSettingsMBean
 		this.application = application;
 	}
 
+	@Override
 	public int getInmemoryCacheSize()
 	{
 		return application.getStoreSettings().getInmemoryCacheSize();
 	}
 
+	@Override
 	public long getMaxSizePerSession()
 	{
 		return application.getStoreSettings().getMaxSizePerSession().bytes();
 	}
 
+	@Override
 	public String getFileStoreFolder()
 	{
 		return application.getStoreSettings().getFileStoreFolder().getAbsolutePath();
 	}
 
+	@Override
 	public int getAsynchronousQueueCapacity()
 	{
 		return application.getStoreSettings().getAsynchronousQueueCapacity();
 	}
 
+	@Override
 	public boolean isAsynchronous()
 	{
 		return application.getStoreSettings().isAsynchronous();

@@ -572,6 +572,7 @@ abstract class AbstractAjaxResponse
 			}
 		}
 
+		@Override
 		protected Response getRealResponse()
 		{
 			return RequestCycle.get().getResponse();

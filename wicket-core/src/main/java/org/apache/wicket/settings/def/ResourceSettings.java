@@ -370,7 +370,7 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setResourceFinder(org.apache.wicket.util.file.IResourceFinder)
+	 * @see org.apache.wicket.settings.IResourceSettings#setResourceFinders(java.util.List)
 	 */
 	@Override
 	public void setResourceFinders(final List<IResourceFinder> resourceFinders)
@@ -561,11 +561,13 @@ public class ResourceSettings implements IResourceSettings
 		this.headerItemComparator = headerItemComparator;
 	}
 
+	@Override
 	public boolean isEncodeJSessionId()
 	{
 		return encodeJSessionId;
 	}
 
+	@Override
 	public void setEncodeJSessionId(boolean encodeJSessionId)
 	{
 		this.encodeJSessionId = encodeJSessionId;

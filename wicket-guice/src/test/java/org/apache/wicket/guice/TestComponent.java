@@ -67,6 +67,7 @@ public class TestComponent extends Component implements TestComponentInterface
 	/**
 	 * @return injectedField
 	 */
+	@Override
 	public ITestService getInjectedField()
 	{
 		return injectedField;
@@ -75,6 +76,7 @@ public class TestComponent extends Component implements TestComponentInterface
 	/**
 	 * @return injectedFieldBlue
 	 */
+	@Override
 	public ITestService getInjectedFieldBlue()
 	{
 		return injectedFieldBlue;
@@ -83,6 +85,7 @@ public class TestComponent extends Component implements TestComponentInterface
 	/**
 	 * @return injectedFieldRed
 	 */
+	@Override
 	public ITestService getInjectedFieldRed()
 	{
 		return injectedFieldRed;
@@ -91,6 +94,7 @@ public class TestComponent extends Component implements TestComponentInterface
 	/**
 	 * @return injectedFieldProvider
 	 */
+	@Override
 	public Provider<ITestService> getInjectedFieldProvider()
 	{
 		return injectedFieldProvider;
@@ -101,6 +105,7 @@ public class TestComponent extends Component implements TestComponentInterface
 	 * 
 	 * @return injectedOptionalField
 	 */
+	@Override
 	public String getInjectedOptionalField()
 	{
 		return injectedOptionalField;
@@ -109,6 +114,7 @@ public class TestComponent extends Component implements TestComponentInterface
 	/**
 	 * @return injectedTypeLiteralField
 	 */
+	@Override
 	public Map<String, String> getInjectedTypeLiteralField()
 	{
 		return injectedTypeLiteralField;

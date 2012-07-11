@@ -59,6 +59,7 @@ public class PropertyPopulator<T> implements ICellPopulator<T>
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 	}
@@ -67,6 +68,7 @@ public class PropertyPopulator<T> implements ICellPopulator<T>
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator#populateItem(org.apache.wicket.markup.repeater.Item,
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
+	@Override
 	public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
 		final IModel<T> rowModel)
 	{

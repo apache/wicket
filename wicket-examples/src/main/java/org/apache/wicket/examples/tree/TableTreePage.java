@@ -83,6 +83,7 @@ public class TableTreePage extends TreePage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void populateItem(Item<ICellPopulator<Foo>> cellItem, String componentId,
 				IModel<Foo> rowModel)
 			{

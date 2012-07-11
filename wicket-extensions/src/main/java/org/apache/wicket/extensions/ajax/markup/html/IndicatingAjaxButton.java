@@ -89,6 +89,7 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 	 * @return the markup id of the ajax indicator
 	 * 
 	 */
+	@Override
 	public String getAjaxIndicatorMarkupId()
 	{
 		return indicatorAppender.getMarkupId();

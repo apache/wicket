@@ -81,11 +81,11 @@ public abstract class WebSocketBehavior extends Behavior
 		}
 	}
 
-	protected void onConnect(@SuppressWarnings("unused")ConnectedMessage message)
+	protected void onConnect(ConnectedMessage message)
 	{
 	}
 
-	protected void onClose(@SuppressWarnings("unused")ClosedMessage message)
+	protected void onClose(ClosedMessage message)
 	{
 	}
 

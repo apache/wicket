@@ -306,11 +306,13 @@ public final class StringList extends AbstractStringList
 		{
 			private final Iterator<String> iterator = strings.iterator();
 
+			@Override
 			public boolean hasNext()
 			{
 				return iterator.hasNext();
 			}
 
+			@Override
 			public String next()
 			{
 				return iterator.next();

@@ -79,6 +79,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	/**
 	 * @return This resource as a String.
 	 */
+	@Override
 	public String asString()
 	{
 		Reader reader = null;
@@ -124,6 +125,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 * @param charset
 	 *            Charset for component
 	 */
+	@Override
 	public void setCharset(final Charset charset)
 	{
 		// java.nio.Charset itself is not serializable so we can only store the name
@@ -133,6 +135,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#close()
 	 */
+	@Override
 	public void close() throws IOException
 	{
 	}
@@ -149,6 +152,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#getInputStream()
 	 */
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		final byte[] bytes;

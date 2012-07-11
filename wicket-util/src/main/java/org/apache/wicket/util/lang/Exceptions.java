@@ -55,6 +55,7 @@ public class Exceptions
 	{
 		return visit(throwable, new IThrowableVisitor<T>()
 		{
+			@Override
 			@SuppressWarnings("unchecked")
 			public void visit(final Throwable throwable, final Visit<T> visit)
 			{

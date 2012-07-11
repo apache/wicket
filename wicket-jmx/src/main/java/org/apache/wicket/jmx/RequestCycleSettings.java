@@ -41,6 +41,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#getBufferResponse()
 	 */
+	@Override
 	public boolean getBufferResponse()
 	{
 		return application.getRequestCycleSettings().getBufferResponse();
@@ -49,6 +50,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#getGatherExtendedBrowserInfo()
 	 */
+	@Override
 	public boolean getGatherExtendedBrowserInfo()
 	{
 		return application.getRequestCycleSettings().getGatherExtendedBrowserInfo();
@@ -57,6 +59,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#getResponseRequestEncoding()
 	 */
+	@Override
 	public String getResponseRequestEncoding()
 	{
 		return application.getRequestCycleSettings().getResponseRequestEncoding();
@@ -65,6 +68,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#getTimeout()
 	 */
+	@Override
 	public String getTimeout()
 	{
 		return application.getRequestCycleSettings().getTimeout().toString();
@@ -73,6 +77,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setBufferResponse(boolean)
 	 */
+	@Override
 	public void setBufferResponse(final boolean bufferResponse)
 	{
 		application.getRequestCycleSettings().setBufferResponse(bufferResponse);
@@ -81,6 +86,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setGatherExtendedBrowserInfo(boolean)
 	 */
+	@Override
 	public void setGatherExtendedBrowserInfo(final boolean gatherExtendedBrowserInfo)
 	{
 		application.getRequestCycleSettings().setGatherExtendedBrowserInfo(
@@ -90,6 +96,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setResponseRequestEncoding(java.lang.String)
 	 */
+	@Override
 	public void setResponseRequestEncoding(final String responseRequestEncoding)
 	{
 		application.getRequestCycleSettings().setResponseRequestEncoding(responseRequestEncoding);
@@ -98,6 +105,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setTimeout(java.lang.String)
 	 */
+	@Override
 	public void setTimeout(final String timeout)
 	{
 		application.getRequestCycleSettings().setTimeout(Duration.valueOf(timeout));

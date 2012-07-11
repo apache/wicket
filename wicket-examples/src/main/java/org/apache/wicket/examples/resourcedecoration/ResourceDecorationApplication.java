@@ -49,7 +49,7 @@ public class ResourceDecorationApplication extends WebApplication
 
 		setHeaderResponseDecorator(new IHeaderResponseDecorator()
 		{
-
+			@Override
 			public IHeaderResponse decorate(IHeaderResponse response)
 			{
 				// use this header resource decorator to load all JavaScript resources in the page

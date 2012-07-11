@@ -64,6 +64,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 * @see org.apache.wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory#create(java.lang.String,
 	 *      org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel)
 	 */
+	@Override
 	public final BreadCrumbPanel create(final String componentId,
 		final IBreadCrumbModel breadCrumbModel)
 	{

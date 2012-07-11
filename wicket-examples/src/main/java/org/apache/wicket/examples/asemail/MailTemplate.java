@@ -251,6 +251,7 @@ public class MailTemplate extends WicketExamplePage
 
 		private static final String COMP_ID = "dummy";
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

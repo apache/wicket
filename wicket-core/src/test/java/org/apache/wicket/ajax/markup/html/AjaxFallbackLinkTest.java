@@ -14,42 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.parser.filter;
+package org.apache.wicket.ajax.markup.html;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
-import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
 
-public class HtmlHeaderSectionHandlerTest extends WicketTestCase
+/**
+ * @since 6.0.0
+ */
+public class AjaxFallbackLinkTest extends WicketTestCase
 {
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-4511
+	 * Tests that AjaxFallbackLink doesn't produce onclick inline attribute for non-anchor markup elements
 	 *
-	 * Asserts that HtmlHeaderSectionHandler throws a MarkupException if a &lt;BODY&gt; tag is found
-	 * inside &lt;HEAD&gt;
-	 *
-	 * @throws Exception
+	 * https://issues.apache.org/jira/browse/WICKET-4644
 	 */
-	@Test(expected = MarkupException.class)
-	public void loadMarkupWithBodyInsideHead() throws Exception
+	@Test
+	public void noInlineOnClickAttribute()
 	{
-		CustomMarkupPage customMarkupPage = new CustomMarkupPage();
-		tester.startPage(customMarkupPage);
+		tester.startPage(new AjaxFallbackLinkPage());
+		tester.assertContainsNot("onclick=");
 	}
 
-	private static class CustomMarkupPage extends WebPage implements IMarkupResourceStreamProvider
+	private static class AjaxFallbackLinkPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+		private AjaxFallbackLinkPage()
 		{
-			// <head> is not closed before <body>
-			return new StringResourceStream("<html><head><body>bad markup!</body></head></html>");
+			add(new AjaxFallbackLink("l") {
+
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+				}
+			});
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body><bla wicket:id='l'>Ajax fallback link</bla></body></html>");
 		}
 	}
 }

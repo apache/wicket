@@ -110,6 +110,7 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 	 * 
 	 * @see org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable)
 	 */
+	@Override
 	public long sizeOf(Serializable obj)
 	{
 		if (obj == null)

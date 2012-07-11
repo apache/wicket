@@ -142,6 +142,7 @@ public class Select<T> extends FormComponent<T>
 				SelectOption<T> option = visitChildren(SelectOption.class,
 					new IVisitor<SelectOption<T>, SelectOption<T>>()
 					{
+						@Override
 						public void component(SelectOption<T> option, IVisit<SelectOption<T>> visit)
 						{
 							if (String.valueOf(option.getValue()).equals(value))

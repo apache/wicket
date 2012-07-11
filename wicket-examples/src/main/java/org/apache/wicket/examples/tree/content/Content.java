@@ -39,6 +39,7 @@ public abstract class Content implements IDetachable
 	public abstract Component newContentComponent(String id, AbstractTree<Foo> tree,
 		IModel<Foo> model);
 
+	@Override
 	public void detach()
 	{
 	}

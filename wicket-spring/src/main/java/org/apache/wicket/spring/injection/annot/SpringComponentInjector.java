@@ -151,6 +151,7 @@ public class SpringComponentInjector extends Injector
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public ApplicationContext getSpringContext()
 		{
 			if (context == null)

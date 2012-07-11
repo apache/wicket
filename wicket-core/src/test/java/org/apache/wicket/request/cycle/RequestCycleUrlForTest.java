@@ -183,6 +183,7 @@ public class RequestCycleUrlForTest extends Assert
 		}
 
 		@SuppressWarnings("unchecked")
+		@Override
 		public boolean matches(Object obj)
 		{
 			if (obj != null)
@@ -192,6 +193,7 @@ public class RequestCycleUrlForTest extends Assert
 			return false;
 		}
 
+		@Override
 		public void describeTo(Description desc)
 		{
 			desc.appendText("Matches a class or subclass");

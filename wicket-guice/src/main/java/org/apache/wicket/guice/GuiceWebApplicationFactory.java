@@ -94,6 +94,7 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 	/**
 	 * @see IWebApplicationFactory#createApplication(WicketFilter)
 	 */
+	@Override
 	public WebApplication createApplication(final WicketFilter filter)
 	{
 		Injector injector;
@@ -181,6 +182,7 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void destroy(final WicketFilter filter)
 	{
 	}

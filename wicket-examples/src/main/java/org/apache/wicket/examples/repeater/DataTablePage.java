@@ -47,6 +47,7 @@ public class DataTablePage extends BasePage
 
 		columns.add(new AbstractColumn<Contact, String>(new Model<String>("Actions"))
 		{
+			@Override
 			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
 				IModel<Contact> model)
 			{
