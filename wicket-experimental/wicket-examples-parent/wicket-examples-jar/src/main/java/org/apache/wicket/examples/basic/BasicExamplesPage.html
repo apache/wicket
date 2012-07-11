@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Apache Wicket Examples</title>
+</head>
+<body>
+	<div wicket:id="topnavbar">
+	</div>
+	<div class="container">
+		<div class="page-header">
+			<h1>Apache Wicket Examples <small>Basic examples</small></h1>
+		</div>
+		<section id="helloworld">
+			<div class="">
+				<h2>Hello, World! <small>Because every examples site needs one</small></h2>
+				<p>HelloWorld demonstrates the basic structure of a web application in Wicket. A Label component is used to display a message on the home page for the application.</p>
+			</div>
+			<div class="row">
+			<div class="span4">
+				<h2>Java code</h2>
+				<p>The 
+			</div>
+			<div class="span8">
+				<h2>Java code</h2>
+				<pre class="prettyprint linenums">package org.apache.wicket.examples.basic.helloworld;
+
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+
+public class HelloWorldPage extends WebPage {
+    private static final long serialVersionUID = 1L;
+
+    public HelloWorldPage() {
+        add(new Label("msg", "Hello, World!"));
+    }
+}</pre>
+			</div>
+			<div class="span8">
+				<h2>HTML Markup</h2>
+			<pre class="prettyprint linenums">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;title&gt;Hello, World!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1 wicket:id=&quot;msg&quot;&gt;text goes here&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+			</div>
+			<div class="span8">
+				<h2>Browser output</h2>
+				<div class="browser">
+					<div class="chrome">
+						<div class="window-controls">
+							<div class="close-window"><span>x</span></div>
+							<div class="minimize-window"><span>-</span></div>
+							<div class="expand-window"><span>+</span></div>
+						</div>
+						<div class="window-title">Safari</div>
+						<div class="interface">
+							<div class="back-forward">
+								<div class="button-back button">
+									<span>▲</span>
+								</div>
+								<div class="button-forward button disabled">
+									<span>▲</span>
+								</div>
+							</div>
+							<div class="bookmark button">+</div>
+							 <div class="reload">↻</div>
+							<input type="text" class="url" value="http://localhost/">
+							<input type="search" placeholder="Google">
+							<div class="bookmarks-bar">
+								<ul>
+									<li><a href="http://general-metrics.com/">General Metrics</a></li>
+									<li><a href="http://twitter.com/g_metrics">Twitter</a></li>
+									<li><a href="http://github.com/Jonesy/Safari-Clone">Source on Github</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="viewport">
+						<iframe src="/basic/helloworld"></iframe>
+					</div>
+				</div>
+			</div>
+			</div>
+		</section>
+		<section id="guestbook">
+			<div class="row">
+			<div class="span6">
+			<iframe src="/basic/guestbook"></iframe>
+			</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

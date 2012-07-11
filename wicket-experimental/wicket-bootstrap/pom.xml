@@ -19,43 +19,27 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-parent</artifactId>
+		<artifactId>wicket-experimental</artifactId>
 		<version>6.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-experimental</artifactId>
-	<packaging>pom</packaging>
-	<name>Wicket-Experimental</name>
-	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
-	<modules>
-		<module>wicket-atmosphere</module>
-		<module>wicket-native-websocket</module>
-		<module>wicket-bootstrap</module>
-		<module>wicket-examples-parent</module>
-	</modules>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-bootstrap</artifactId>
-				<version>0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.1-SNAPSHOT</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-war</artifactId>
-				<version>0.1-SNAPSHOT</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	<artifactId>wicket-bootstrap</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>Wicket Bootstrap</name>
+	<description>Wicket integration for Twitter's Bootstrap</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+		</dependency>
+	</dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

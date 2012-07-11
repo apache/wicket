@@ -19,43 +19,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-parent</artifactId>
+		<artifactId>wicket-experimental</artifactId>
 		<version>6.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-experimental</artifactId>
+	<artifactId>wicket-examples-parent</artifactId>
+	<version>0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Wicket-Experimental</name>
-	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
+	<name>Wicket Examples Parent</name>
+	<description>New examples structure for Apache Wicket</description>
 	<modules>
-		<module>wicket-atmosphere</module>
-		<module>wicket-native-websocket</module>
-		<module>wicket-bootstrap</module>
-		<module>wicket-examples-parent</module>
+		<module>wicket-examples-jar</module>
+		<module>wicket-examples-war</module>
 	</modules>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-bootstrap</artifactId>
-				<version>0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.1-SNAPSHOT</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-war</artifactId>
-				<version>0.1-SNAPSHOT</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>
