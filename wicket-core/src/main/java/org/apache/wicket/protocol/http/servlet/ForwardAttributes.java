@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Represents additional error parameters present in a {@link ServletRequest} when the servlet
@@ -107,6 +107,31 @@ public class ForwardAttributes
 	public String getQueryString()
 	{
 		return queryString;
+	}
+
+	/**
+	 * Factory for creating instances of this class.
+	 *
+	 * @param request
+	 * @return instance of request contains forward attributes or {@code null} if it does not.
+	 * @deprecated Use ForwardAttributes#of(HttpServletRequest, String) instead
+	 */
+	@Deprecated
+	public static ForwardAttributes of(HttpServletRequest request)
+	{
+		Args.notNull(request, "request");
+
+		final String requestUri = (String)request.getAttribute("javax.servlet.forward.request_uri");
+		final String servletPath = (String)request.getAttribute("javax.servlet.forward.servlet_path");
+		final String contextPath = (String)request.getAttribute("javax.servlet.forward.context_path");
+		final String queryString = (String)request.getAttribute("javax.servlet.forward.query_string");
+
+		if (!Strings.isEmpty(requestUri) || !Strings.isEmpty(servletPath) ||
+			!Strings.isEmpty(contextPath) || !Strings.isEmpty(queryString))
+		{
+			return new ForwardAttributes(requestUri, servletPath, contextPath, queryString);
+		}
+		return null;
 	}
 
 	/**
