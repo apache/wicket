@@ -14,20 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.atmosphere;
-
-import com.google.common.base.Predicate;
+package org.apache.wicket.util.license;
 
 /**
- * A filter that always returns true.
- * 
- * @author papegaaij
+ * Test that the license headers are in place in this project. The tests are run from
+ * {@link org.apache.wicket.util.license.ApacheLicenseHeaderTestCase}, but you can add project
+ * specific tests here if needed.
  */
-public class NoFilterPredicate implements Predicate<Object>
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
-	@Override
-	public boolean apply(Object input)
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenceHeaderTest()
 	{
-		return true;
+		// addHeaders = true;
+
+		javaScriptIgnore.add("src/main/java/org/apache/wicket/atmosphere/jquery.atmosphere.js");
 	}
 }
