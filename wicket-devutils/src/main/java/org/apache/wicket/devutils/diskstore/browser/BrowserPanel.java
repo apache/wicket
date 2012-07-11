@@ -86,7 +86,7 @@ public class BrowserPanel extends Panel
 		currentSessionLink.setOutputMarkupPlaceholderTag(true);
 		add(currentSessionLink);
 
-		sessionsSelector.add(new AjaxFormComponentUpdatingBehavior("onchange")
+		sessionsSelector.add(new AjaxFormComponentUpdatingBehavior("change")
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)

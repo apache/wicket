@@ -107,7 +107,7 @@ public class ChoicePage extends BasePage
 		form.add(makes);
 		form.add(models);
 
-		makes.add(new AjaxFormComponentUpdatingBehavior("onchange")
+		makes.add(new AjaxFormComponentUpdatingBehavior("change")
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)

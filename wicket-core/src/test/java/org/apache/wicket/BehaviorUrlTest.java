@@ -151,7 +151,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		tester.startPage(EscapeTestPage.class);
 
 		String response = tester.getLastResponseAsString();
-		System.err.println(response);
+//		System.err.println(response);
 		assertTrue(response.contains(EscapeTestPage.TEST_QUERY_STRING));
 
 		tester.executeAjaxEvent("form:textfield", "onchange");
