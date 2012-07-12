@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.Behavior;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
@@ -35,6 +36,8 @@ public class EventSubscription
 {
 	private String componentPath;
 
+	private Integer behaviorIndex;
+
 	private String methodName;
 
 	private Predicate<Object> filter;
@@ -43,11 +46,13 @@ public class EventSubscription
 	 * Construct.
 	 * 
 	 * @param component
+	 * @param behavior
 	 * @param method
 	 */
-	public EventSubscription(Component component, Method method)
+	public EventSubscription(Component component, Behavior behavior, Method method)
 	{
 		componentPath = component.getPageRelativePath();
+		behaviorIndex = behavior == null ? null : component.getBehaviorId(behavior);
 		Class<?> eventType = method.getParameterTypes()[1];
 		filter = Predicates.and(Predicates.instanceOf(eventType), createFilter(method));
 		methodName = method.getName();
@@ -80,6 +85,15 @@ public class EventSubscription
 	}
 
 	/**
+	 * @return The index of the subscribed behavior, or null if the subscription is for the
+	 *         component itself
+	 */
+	public Integer getBehaviorIndex()
+	{
+		return behaviorIndex;
+	}
+
+	/**
 	 * @return The filter on incomming events, a combination of the type and the
 	 *         {@link Subscribe#filter()} parameter.
 	 */
@@ -99,7 +113,7 @@ public class EventSubscription
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(componentPath, methodName);
+		return Objects.hashCode(componentPath, behaviorIndex, methodName);
 	}
 
 	@Override
@@ -109,6 +123,7 @@ public class EventSubscription
 		{
 			EventSubscription other = (EventSubscription)obj;
 			return Objects.equal(componentPath, other.getComponentPath()) &&
+				Objects.equal(behaviorIndex, other.getBehaviorIndex()) &&
 				Objects.equal(methodName, other.getMethodName());
 		}
 		return false;

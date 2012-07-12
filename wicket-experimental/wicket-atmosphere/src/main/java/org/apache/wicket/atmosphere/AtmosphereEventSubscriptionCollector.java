@@ -23,6 +23,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
+import org.apache.wicket.behavior.Behavior;
 
 /**
  * Collects {@linkplain Subscribe event subscriptions} on components. Subscriptions are refreshed on
@@ -53,19 +54,35 @@ public class AtmosphereEventSubscriptionCollector implements IComponentOnBeforeR
 		{
 			if (curMethod.isAnnotationPresent(Subscribe.class))
 			{
-				Class<?>[] params = curMethod.getParameterTypes();
-				if (params.length != 2 || !params[0].equals(AjaxRequestTarget.class))
-					throw new WicketRuntimeException("@Subscribe can only be used on " +
-						"methods with 2 params, of which the first is AjaxRequestTarget. " +
-						curMethod + " does conform to this signature.");
-				subscribeComponent(component, curMethod);
+				verifyMethodParameters(curMethod);
+				subscribeComponent(component, null, curMethod);
+			}
+		}
+		for (Behavior curBehavior : component.getBehaviors())
+		{
+			for (Method curMethod : curBehavior.getClass().getMethods())
+			{
+				if (curMethod.isAnnotationPresent(Subscribe.class))
+				{
+					verifyMethodParameters(curMethod);
+					subscribeComponent(component, curBehavior, curMethod);
+				}
 			}
 		}
 	}
 
-	private void subscribeComponent(Component component, Method method)
+	private void verifyMethodParameters(Method method)
 	{
-		EventSubscription subscription = new EventSubscription(component, method);
+		Class<?>[] params = method.getParameterTypes();
+		if (params.length != 2 || !params[0].equals(AjaxRequestTarget.class))
+			throw new WicketRuntimeException("@Subscribe can only be used on " +
+				"methods with 2 params, of which the first is AjaxRequestTarget. " + method +
+				" does conform to this signature.");
+	}
+
+	private void subscribeComponent(Component component, Behavior behavior, Method method)
+	{
+		EventSubscription subscription = new EventSubscription(component, behavior, method);
 		Page page = component.getPage();
 		eventBus.register(page, subscription);
 		if (page.getBehaviors(AtmosphereBehavior.class).isEmpty())

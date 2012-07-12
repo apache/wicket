@@ -138,8 +138,18 @@ public class EventBus implements UnboundListener
 	 */
 	public synchronized void register(Page page, EventSubscription subscription)
 	{
-		log.info("registering component for {} for session {}: {}", new Object[] {
-				page.getPageId(), Session.get().getId(), subscription.getComponentPath() });
+		if (log.isInfoEnabled())
+		{
+			log.info(
+				"registering {} for page {} for session {}: {}{}",
+				new Object[] {
+						subscription.getBehaviorIndex() == null ? "component" : "behavior",
+						page.getPageId(),
+						Session.get().getId(),
+						subscription.getComponentPath(),
+						subscription.getBehaviorIndex() == null ? "" : ":" +
+							subscription.getBehaviorIndex() });
+		}
 		subscriptions.put(new PageKey(page.getPageId(), Session.get().getId()), subscription);
 	}
 

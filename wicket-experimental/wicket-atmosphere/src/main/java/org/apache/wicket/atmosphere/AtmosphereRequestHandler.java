@@ -72,27 +72,37 @@ public class AtmosphereRequestHandler implements IRequestHandler
 		for (EventSubscription curSubscription : subscriptions)
 		{
 			Component component = page.get(curSubscription.getComponentPath());
-			for (Method curMethod : component.getClass().getMethods())
+			if (curSubscription.getBehaviorIndex() == null)
+				invokeMethod(target, curSubscription, component);
+			else
+				invokeMethod(target, curSubscription,
+					component.getBehaviorById(curSubscription.getBehaviorIndex()));
+		}
+	}
+
+	private void invokeMethod(AjaxRequestTarget target, EventSubscription subscription, Object base)
+	{
+		for (Method curMethod : base.getClass().getMethods())
+		{
+			if (curMethod.isAnnotationPresent(Subscribe.class) &&
+				curMethod.getName().equals(subscription.getMethodName()))
 			{
-				if (curMethod.isAnnotationPresent(Subscribe.class) &&
-					curMethod.getName().equals(curSubscription.getMethodName()))
+				try
 				{
-					try
-					{
-						curMethod.invoke(component, target, event);
-					}
-					catch (IllegalAccessException e)
-					{
-						throw new WicketRuntimeException(e);
-					}
-					catch (IllegalArgumentException e)
-					{
-						throw new WicketRuntimeException(e);
-					}
-					catch (InvocationTargetException e)
-					{
-						throw new WicketRuntimeException(e);
-					}
+					curMethod.setAccessible(true);
+					curMethod.invoke(base, target, event);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new WicketRuntimeException(e);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new WicketRuntimeException(e);
+				}
+				catch (InvocationTargetException e)
+				{
+					throw new WicketRuntimeException(e);
 				}
 			}
 		}
