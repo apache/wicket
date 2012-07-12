@@ -70,10 +70,10 @@
 	</dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>yuicompressor-maven-plugin</artifactId>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>net.alchim31.maven</groupId>-->
+                <!--<artifactId>yuicompressor-maven-plugin</artifactId>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 </project>
