@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-atmosphere</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<properties>
 		<atmosphere.version>1.0.0.beta5</atmosphere.version>

@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-bootstrap</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Wicket Bootstrap</name>
 	<description>Wicket integration for Twitter's Bootstrap</description>

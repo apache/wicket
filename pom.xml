@@ -161,7 +161,7 @@
 		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
 		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
 		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
-	  <tag>build/wicket-6.0.0-beta3</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<mailingLists>
 		<mailingList>

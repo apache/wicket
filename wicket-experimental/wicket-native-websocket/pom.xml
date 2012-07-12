@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-native-websocket</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Wicket Native WebSocket Parent</name>
 	<description>Wicket Native WebSocket provides native integration for WebSocket support with Servlet web containers.</description>
@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-native-websocket-core</artifactId>
-                <version>0.1-SNAPSHOT</version>
+                <version>0.2-SNAPSHOT</version>
                 <type>jar</type>
             </dependency>
         </dependencies>
