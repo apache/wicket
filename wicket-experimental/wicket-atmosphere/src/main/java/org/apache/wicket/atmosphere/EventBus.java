@@ -86,19 +86,31 @@ public class EventBus implements UnboundListener
 	private BiMap<String, PageKey> trackedPages = HashBiMap.create();
 
 	/**
-	 * Creates and registers an {@code EventBus} for the given application
+	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
+	 * returned by the {@code BroadcasterFactory} is used.
 	 * 
 	 * @param application
 	 */
 	public EventBus(WebApplication application)
 	{
+		this(application, BroadcasterFactory.getDefault().lookupAll().iterator().next());
+	}
+
+	/**
+	 * Creates and registers an {@code EventBus} for the given application and broadcaster
+	 * 
+	 * @param application
+	 * @param broadcaster
+	 */
+	public EventBus(WebApplication application, Broadcaster broadcaster)
+	{
 		this.application = application;
+		this.broadcaster = broadcaster;
 		application.setMetaData(EVENT_BUS_KEY, this);
 		application.mount(new AtmosphereRequestMapper());
 		application.getComponentPostOnBeforeRenderListeners().add(
 			new AtmosphereEventSubscriptionCollector(this));
 		application.getSessionStore().registerUnboundListener(this);
-		broadcaster = BroadcasterFactory.getDefault().lookup("/*");
 	}
 
 	/**
