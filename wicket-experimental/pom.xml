@@ -30,5 +30,32 @@
 	<modules>
 		<module>wicket-atmosphere</module>
 		<module>wicket-native-websocket</module>
+		<module>wicket-bootstrap</module>
+		<module>wicket-examples-parent</module>
 	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-bootstrap</artifactId>
+				<version>0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-examples-jar</artifactId>
+				<version>0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-examples-jar</artifactId>
+				<version>0.1-SNAPSHOT</version>
+				<classifier>sources</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-examples-war</artifactId>
+				<version>0.1-SNAPSHOT</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

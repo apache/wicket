@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.atmosphere;
 
 import java.util.Collection;
@@ -70,19 +86,31 @@ public class EventBus implements UnboundListener
 	private BiMap<String, PageKey> trackedPages = HashBiMap.create();
 
 	/**
-	 * Creates and registers an {@code EventBus} for the given application
+	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
+	 * returned by the {@code BroadcasterFactory} is used.
 	 * 
 	 * @param application
 	 */
 	public EventBus(WebApplication application)
 	{
+		this(application, BroadcasterFactory.getDefault().lookupAll().iterator().next());
+	}
+
+	/**
+	 * Creates and registers an {@code EventBus} for the given application and broadcaster
+	 * 
+	 * @param application
+	 * @param broadcaster
+	 */
+	public EventBus(WebApplication application, Broadcaster broadcaster)
+	{
 		this.application = application;
+		this.broadcaster = broadcaster;
 		application.setMetaData(EVENT_BUS_KEY, this);
 		application.mount(new AtmosphereRequestMapper());
 		application.getComponentPostOnBeforeRenderListeners().add(
 			new AtmosphereEventSubscriptionCollector(this));
 		application.getSessionStore().registerUnboundListener(this);
-		broadcaster = BroadcasterFactory.getDefault().lookup("/*");
 	}
 
 	/**
@@ -110,8 +138,18 @@ public class EventBus implements UnboundListener
 	 */
 	public synchronized void register(Page page, EventSubscription subscription)
 	{
-		log.info("registering component for {} for session {}: {}", new Object[] {
-				page.getPageId(), Session.get().getId(), subscription.getComponentPath() });
+		if (log.isInfoEnabled())
+		{
+			log.info(
+				"registering {} for page {} for session {}: {}{}",
+				new Object[] {
+						subscription.getBehaviorIndex() == null ? "component" : "behavior",
+						page.getPageId(),
+						Session.get().getId(),
+						subscription.getComponentPath(),
+						subscription.getBehaviorIndex() == null ? "" : ":" +
+							subscription.getBehaviorIndex() });
+		}
 		subscriptions.put(new PageKey(page.getPageId(), Session.get().getId()), subscription);
 	}
 

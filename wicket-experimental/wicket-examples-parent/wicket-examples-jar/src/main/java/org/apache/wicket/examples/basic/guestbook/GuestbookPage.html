@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Guest Book</title>
+</head>
+<body>
+	<h1>Guest Book</h1>
+	<blockquote wicket:id="comments">
+		<p wicket:id="comment"></p>
+		<small wicket:id="author"></small>
+	</blockquote>
+	<form class="well" wicket:id="form">
+		<div class="control-group">
+			<label class="control-label" for="comment">Add a comment</label>
+			<div class="controls">
+				<textarea id="comment" autofocus wicket:id="comment" cols="72" rows="6"></textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="author">Sign your comment</label>
+			<div class="controls">
+				<input type="text" id="author" wicket:id="author" />
+			</div>
+		</div>
+		<button type="submit" class="btn">Add entry</button>
+	</form>
+</body>
+</html>

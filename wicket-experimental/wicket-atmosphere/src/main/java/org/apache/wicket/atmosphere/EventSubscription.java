@@ -1,9 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.atmosphere;
 
 import java.lang.reflect.Method;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.Behavior;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
@@ -19,6 +36,8 @@ public class EventSubscription
 {
 	private String componentPath;
 
+	private Integer behaviorIndex;
+
 	private String methodName;
 
 	private Predicate<Object> filter;
@@ -27,11 +46,13 @@ public class EventSubscription
 	 * Construct.
 	 * 
 	 * @param component
+	 * @param behavior
 	 * @param method
 	 */
-	public EventSubscription(Component component, Method method)
+	public EventSubscription(Component component, Behavior behavior, Method method)
 	{
 		componentPath = component.getPageRelativePath();
+		behaviorIndex = behavior == null ? null : component.getBehaviorId(behavior);
 		Class<?> eventType = method.getParameterTypes()[1];
 		filter = Predicates.and(Predicates.instanceOf(eventType), createFilter(method));
 		methodName = method.getName();
@@ -64,6 +85,15 @@ public class EventSubscription
 	}
 
 	/**
+	 * @return The index of the subscribed behavior, or null if the subscription is for the
+	 *         component itself
+	 */
+	public Integer getBehaviorIndex()
+	{
+		return behaviorIndex;
+	}
+
+	/**
 	 * @return The filter on incomming events, a combination of the type and the
 	 *         {@link Subscribe#filter()} parameter.
 	 */
@@ -83,7 +113,7 @@ public class EventSubscription
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(componentPath, methodName);
+		return Objects.hashCode(componentPath, behaviorIndex, methodName);
 	}
 
 	@Override
@@ -93,6 +123,7 @@ public class EventSubscription
 		{
 			EventSubscription other = (EventSubscription)obj;
 			return Objects.equal(componentPath, other.getComponentPath()) &&
+				Objects.equal(behaviorIndex, other.getBehaviorIndex()) &&
 				Objects.equal(methodName, other.getMethodName());
 		}
 		return false;
