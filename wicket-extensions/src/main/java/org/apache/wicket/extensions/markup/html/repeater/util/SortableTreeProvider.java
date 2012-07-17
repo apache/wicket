@@ -26,37 +26,22 @@ import org.apache.wicket.extensions.markup.html.repeater.tree.ISortableTreeProvi
  * 
  * @author svenmeier
  * @param <T>
+ * @param <S>
+ *            the type of the sorting parameter
  */
 public abstract class SortableTreeProvider<T, S> implements ISortableTreeProvider<T, S>
 {
 	private static final long serialVersionUID = 1L;
 
-	private SingleSortState<S> state = new SingleSortState<S>();
+	private final SingleSortState<S> state = new SingleSortState<S>();
 
 	/**
 	 * @see ISortableDataProvider#getSortState()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public final ISortState<S> getSortState()
 	{
-		return (ISortState<S>)state;
-	}
-
-	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider#getSortState()
-	 * @param state
-	 */
-	@SuppressWarnings("unchecked")
-	public final void setSortState(ISortState<S> state)
-	{
-		if (!(state instanceof SingleSortState))
-		{
-			throw new IllegalArgumentException(
-				"argument [state] must be an instance of SingleSortState, but it is [" +
-					state.getClass().getName() + "]:[" + state.toString() + "]");
-		}
-		this.state = (SingleSortState<S>)state;
+		return state;
 	}
 
 	/**

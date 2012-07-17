@@ -39,7 +39,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            The model object type
  * @param <S>
- *      the type of the sorting parameter
+ *            the type of the sorting parameter
  */
 public class DefaultDataTable<T, S> extends DataTable<T, S>
 {
@@ -63,7 +63,7 @@ public class DefaultDataTable<T, S> extends DataTable<T, S>
 		super(id, columns, dataProvider, rowsPerPage);
 
 		addTopToolbar(new NavigationToolbar(this));
-		addTopToolbar(new HeadersToolbar(this, dataProvider));
+		addTopToolbar(new HeadersToolbar<S>(this, dataProvider));
 		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 

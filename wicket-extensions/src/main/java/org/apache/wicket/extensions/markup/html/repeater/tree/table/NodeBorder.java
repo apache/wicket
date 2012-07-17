@@ -38,6 +38,10 @@ public class NodeBorder extends Behavior
 
 	private boolean[] branches;
 
+	/**
+	 * @param branches
+	 *            branch
+	 */
 	public NodeBorder(boolean[] branches)
 	{
 		this.branches = branches;

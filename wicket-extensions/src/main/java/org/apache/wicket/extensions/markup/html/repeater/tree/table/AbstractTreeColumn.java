@@ -27,16 +27,32 @@ import org.apache.wicket.model.IModel;
  *            the type of the sort property
  * @author svenmeier
  */
-public abstract class AbstractTreeColumn<T, S> extends AbstractColumn<T, S> implements ITreeColumn<T, S>
+public abstract class AbstractTreeColumn<T, S> extends AbstractColumn<T, S>
+	implements
+		ITreeColumn<T, S>
 {
+
+	/**
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private TableTree<T, S> tree;
 
+	/**
+	 * @param displayModel
+	 *            model used to generate header text
+	 */
 	public AbstractTreeColumn(IModel<String> displayModel)
 	{
 		super(displayModel);
 	}
 
+	/**
+	 * @param displayModel
+	 *            model used to generate header text
+	 * @param sortProperty
+	 *            sort property this column represents
+	 */
 	public AbstractTreeColumn(IModel<String> displayModel, S sortProperty)
 	{
 		super(displayModel, sortProperty);
@@ -48,6 +64,11 @@ public abstract class AbstractTreeColumn<T, S> extends AbstractColumn<T, S> impl
 		this.tree = tree;
 	}
 
+	/**
+	 * Get the containing tree.
+	 * 
+	 * @return tree
+	 */
 	public TableTree<T, S> getTree()
 	{
 		return tree;

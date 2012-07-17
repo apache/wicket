@@ -38,7 +38,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            The node type
  * @param <S>
- *     the type of the sorting parameter
+ *            the type of the sorting parameter
  * @author svenmeier
  */
 public class DefaultTableTree<T, S> extends TableTree<T, S>
@@ -58,8 +58,8 @@ public class DefaultTableTree<T, S> extends TableTree<T, S>
 	 * @param rowsPerPage
 	 *            rows to show on each page
 	 */
-	public DefaultTableTree(String id, List<IColumn<T, S>> columns, ISortableTreeProvider<T, S> provider,
-		int rowsPerPage)
+	public DefaultTableTree(String id, List<IColumn<T, S>> columns,
+		ISortableTreeProvider<T, S> provider, int rowsPerPage)
 	{
 		this(id, columns, provider, rowsPerPage, null);
 	}
@@ -78,13 +78,13 @@ public class DefaultTableTree<T, S> extends TableTree<T, S>
 	 * @param state
 	 *            expansion state
 	 */
-	public DefaultTableTree(String id, List<IColumn<T, S>> columns, ISortableTreeProvider<T, S> provider,
-		int rowsPerPage, IModel<Set<T>> state)
+	public DefaultTableTree(String id, List<IColumn<T, S>> columns,
+		ISortableTreeProvider<T, S> provider, int rowsPerPage, IModel<Set<T>> state)
 	{
 		super(id, columns, provider, rowsPerPage, state);
 
 		getTable().addTopToolbar(new NavigationToolbar(getTable()));
-		getTable().addTopToolbar(new HeadersToolbar(getTable(), provider));
+		getTable().addTopToolbar(new HeadersToolbar<S>(getTable(), provider));
 		getTable().addBottomToolbar(new NoRecordsToolbar(getTable()));
 
 		add(new WindowsTheme());

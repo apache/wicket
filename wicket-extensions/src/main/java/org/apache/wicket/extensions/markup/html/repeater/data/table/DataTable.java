@@ -74,7 +74,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * @param <T>
  *            The model object type
  * @param <S>
- *      the type of the sorting parameter
+ *            the type of the sorting parameter
  * 
  */
 public class DataTable<T, S> extends Panel implements IPageableItems
@@ -471,6 +471,10 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 */
 	private static class Caption extends Label
 	{
+		/**
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * 

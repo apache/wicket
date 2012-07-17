@@ -26,8 +26,6 @@ import org.apache.wicket.markup.repeater.DefaultItemReuseStrategy;
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Abstract base class for {@link NestedTree} and {@link TableTree}. Uses its model for storing the
@@ -309,6 +307,8 @@ public abstract class AbstractTree<T> extends Panel
 	 * Convenience method to update a single node on an {@link AjaxRequestTarget}. Does nothing if
 	 * the given node is currently not visible or target is {@code null}.
 	 * 
+	 * This default implementation adds this whole component for rendering.
+	 * 
 	 * @param node
 	 *            node to update
 	 * @param target
@@ -318,21 +318,7 @@ public abstract class AbstractTree<T> extends Panel
 	{
 		if (target != null)
 		{
-			final IModel<T> model = getProvider().model(node);
-			visitChildren(Node.class, new IVisitor<Node<T>, Void>()
-			{
-				@Override
-				public void component(Node<T> node, IVisit<Void> visit)
-				{
-					if (model.equals(node.getModel()))
-					{
-						target.add(node);
-						visit.stop();
-					}
-					visit.dontGoDeeper();
-				}
-			});
-			model.detach();
+			target.add(this);
 		}
 	}
 

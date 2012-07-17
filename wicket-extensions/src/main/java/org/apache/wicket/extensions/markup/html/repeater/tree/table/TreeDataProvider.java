@@ -35,9 +35,9 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 
 	private final ITreeProvider<T> provider;
 
-	private Branch<T> currentBranch;
+	private transient Branch<T> currentBranch;
 
-	private Branch<T> previousBranch;
+	private transient Branch<T> previousBranch;
 
 	private int size = -1;
 

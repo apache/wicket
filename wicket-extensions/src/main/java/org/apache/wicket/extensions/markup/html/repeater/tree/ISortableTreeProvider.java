@@ -24,6 +24,8 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLoc
  * @author svenmeier
  * @param <T>
  *            node type
+ * @param <S>
+ *            the type of the sort property
  */
 public interface ISortableTreeProvider<T, S> extends ITreeProvider<T>, ISortStateLocator<S>
 {

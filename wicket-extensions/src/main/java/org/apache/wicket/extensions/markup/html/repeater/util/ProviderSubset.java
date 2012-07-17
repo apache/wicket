@@ -34,6 +34,8 @@ import org.apache.wicket.model.IModel;
  * @see ITreeProvider#model(Object)
  * 
  * @author svenmeier
+ * @param <T>
+ *            type of data
  */
 public class ProviderSubset<T> implements Set<T>, IDetachable
 {
@@ -243,6 +245,10 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 	{
 		return new AbstractReadOnlyModel<Set<T>>()
 		{
+			/**
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Set<T> getObject()
 			{

@@ -24,6 +24,8 @@ import org.apache.wicket.util.io.IClusterable;
  * version ISortState objects.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            the type of the sort property
  * 
  */
 public interface ISortStateLocator<T> extends IClusterable

@@ -180,6 +180,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 					{
 						target.add(item);
 						visit.stop();
+						return;
 					}
 					visit.dontGoDeeper();
 				}
