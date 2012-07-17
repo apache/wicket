@@ -16,6 +16,9 @@
  */
 package org.apache.wicket;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -23,6 +26,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -47,6 +51,19 @@ public class DefaultExceptionMapperTest extends WicketTestCase
 					IExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
 			}
 		};
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-4659">WICKET-4659</a>
+	 */
+	@Test
+	public void shouldDisableCaching()
+	{
+		WebResponse response = mock(WebResponse.class);
+		tester.getRequestCycle().setResponse(response);
+		new DefaultExceptionMapper().map(mock(Exception.class));
+		verify(response).disableCaching();
+		tester.destroy();
 	}
 
 	/**

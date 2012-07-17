@@ -34,7 +34,7 @@ import org.apache.wicket.util.lang.Args;
 
 
 /**
- * TabbedPanel component represets a panel with tabs that are used to switch between different
+ * TabbedPanel component represents a panel with tabs that are used to switch between different
  * content panels inside the TabbedPanel panel.
  * <p>
  * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of tabs,
@@ -81,6 +81,9 @@ public class TabbedPanel<T extends ITab> extends Panel
 
 	private final List<T> tabs;
 
+	/** the current tab */
+	private int currentTab = -1;
+
 	private transient Boolean[] tabsVisibilityCache;
 
 	/**
@@ -93,7 +96,22 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	public TabbedPanel(final String id, final List<T> tabs)
 	{
-		super(id, new Model<Integer>(-1));
+		this(id, tabs, null);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 *            component id
+	 * @param tabs
+	 *            list of ITab objects used to represent tabs
+	 * @param model
+	 *            model holding the index of the selected tab
+	 */
+	public TabbedPanel(final String id, final List<T> tabs, IModel<Integer> model)
+	{
+		super(id, model);
 
 		this.tabs = Args.notNull(tabs, "tabs");
 
@@ -134,6 +152,25 @@ public class TabbedPanel<T extends ITab> extends Panel
 				return newTabContainer(iteration);
 			}
 		});
+
+		add(newPanel());
+	}
+
+	/**
+	 * Initialize the component's model.
+	 * 
+	 * @return a new model containing {@code -1} if the super implementation doesn't supply one
+	 */
+	@Override
+	protected IModel<?> initModel()
+	{
+		IModel<?> model = super.initModel();
+		if (model == null)
+		{
+			model = new Model<Integer>(-1);
+		}
+
+		return model;
 	}
 
 	/**
@@ -207,37 +244,31 @@ public class TabbedPanel<T extends ITab> extends Panel
 	@Override
 	protected void onBeforeRender()
 	{
-		if (tabs.size() == 0)
+		int index = getSelectedTab();
+
+		if ((index == -1) || (isTabVisible(index) == false))
 		{
-			// force an empty container to be created every time if we have no tabs
-			setSelectedTab(0);
-		}
-		else if ((getSelectedTab() == -1) || (isTabVisible(getSelectedTab()) == false))
-		{
-			// find first visible selected tab
-			int selected = 0;
+			// find first visible tab
+			index = -1;
 			for (int i = 0; i < tabs.size(); i++)
 			{
 				if (isTabVisible(i))
 				{
-					selected = i;
+					index = i;
 					break;
 				}
 			}
 
-			if (selected == tabs.size())
+			if (index != -1)
 			{
 				/*
-				 * none of the tabs are selected...
-				 * 
-				 * we do not need to do anything special because the check in setSelectedTab() will
-				 * replace the current tab panel with an empty one
+				 * found a visible tab, so select it
 				 */
-				selected = 0;
+				setSelectedTab(index);
 			}
-
-			setSelectedTab(selected);
 		}
+
+		setCurrentTab(index);
 
 		super.onBeforeRender();
 	}
@@ -330,32 +361,50 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 * @param index
 	 *            index of the tab to select
 	 * @return this for chaining
+	 * @throws IndexOutOfBoundsException
+	 *             if index is not {@code -1} or in the range of available tabs
 	 */
-	public TabbedPanel setSelectedTab(final int index)
+	public TabbedPanel<T> setSelectedTab(final int index)
 	{
-		if ((index < 0) || ((index >= tabs.size()) && (index > 0)))
+		if ((index < 0) || (index >= tabs.size()))
 		{
 			throw new IndexOutOfBoundsException();
 		}
 
 		setDefaultModelObject(index);
 
+		// force the tab's component to be aquired again if already the current tab
+		currentTab = -1;
+		setCurrentTab(index);
+
+		return this;
+	}
+
+	private void setCurrentTab(int index)
+	{
+		if (this.currentTab == index)
+		{
+			// already current
+			return;
+		}
+		this.currentTab = index;
+
 		final Component component;
 
-		if ((tabs.size() == 0) || !isTabVisible(index))
+		if (currentTab == -1 || (tabs.size() == 0) || !isTabVisible(currentTab))
 		{
-			// no tabs or the currently selected tab is not visible
-			component = new WebMarkupContainer(TAB_PANEL_ID);
+			// no tabs or the current tab is not visible
+			component = newPanel();
 		}
 		else
 		{
 			// show panel from selected tab
-			T tab = tabs.get(index);
+			T tab = tabs.get(currentTab);
 			component = tab.getPanel(TAB_PANEL_ID);
 			if (component == null)
 			{
 				throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
-					getPath() + "] ITab index [" + index + "]");
+					getPath() + "] ITab index [" + currentTab + "]");
 			}
 		}
 
@@ -365,12 +414,15 @@ public class TabbedPanel<T extends ITab> extends Panel
 				"ITab.getPanel() returned a panel with invalid id [" +
 					component.getId() +
 					"]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel [" +
-					getPath() + "] ITab index [" + index + "]");
+					getPath() + "] ITab index [" + currentTab + "]");
 		}
 
 		addOrReplace(component);
+	}
 
-		return this;
+	private WebMarkupContainer newPanel()
+	{
+		return new WebMarkupContainer(TAB_PANEL_ID);
 	}
 
 	/**
