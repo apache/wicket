@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.core.util.string.interpolator;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.IConverterLocator;
-import org.apache.wicket.Session;
 import org.apache.wicket.core.util.lang.PropertyResolver;
-import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.VariableInterpolator;
 
 /**
@@ -38,13 +35,11 @@ import org.apache.wicket.util.string.interpolator.VariableInterpolator;
  * "$" is the escape char. Thus "$${text}" can be used to escape it (ignore interpretation). If
  * '$3.24' is needed then '$$${amount}' should be used. The first $ sign escapes the second, and the
  * third is used to interpolate the variable.
- *
+ * 
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public final class PropertyVariableInterpolator extends VariableInterpolator
-	implements
-		IConverterLocator
+public class PropertyVariableInterpolator extends VariableInterpolator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,48 +47,19 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	private final Object model;
 
 	/**
-	 * Private constructor to force use of static interpolate method.
-	 *
+	 * Constructor.
+	 * 
 	 * @param string
 	 *            a <code>String</code> to interpolate into
 	 * @param model
 	 *            the model to apply property expressions to
 	 */
-	private PropertyVariableInterpolator(final String string, final Object model)
+	public PropertyVariableInterpolator(final String string, final Object model)
 	{
 		super(string);
 		this.model = model;
 	}
 
-	/**
-	 * Interpolates the given <code>String</code>, substituting values for property expressions.
-	 *
-	 * @param string
-	 *            a <code>String</code> containing property expressions like <code>${xyz}</code>
-	 * @param object
-	 *            the <code>Object</code> to reflect on
-	 * @return the interpolated <code>String</code>
-	 */
-	public static String interpolate(final String string, final Object object)
-	{
-		// If there's any reason to go to the expense of property expressions
-		if (string.contains("${"))
-		{
-			// Do property expression interpolation
-			return new PropertyVariableInterpolator(string, object).toString();
-		}
-
-		// Return simple string
-		return string;
-	}
-
-	/**
-	 * Retrieves a value for a variable name during interpolation.
-	 *
-	 * @param variableName
-	 *            the variable name
-	 * @return the value
-	 */
 	@Override
 	protected String getValue(final String variableName)
 	{
@@ -101,29 +67,23 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 
 		if (value != null)
 		{
-			final IConverter converter = getConverter(value.getClass());
-			if (converter != null)
-			{
-				return converter.convertToString(value, Session.get().getLocale());
-			}
-			else
-			{
-				return value.toString();
-			}
+			return toString(value);
 		}
 		return null;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Convert the given value to a string for interpolation.
+	 * <p>
+	 * This default implementation delegates to {@link Strings#toString(Object)}.
+	 * 
+	 * @param value
+	 *            the value, never {@code null}
+	 * 
+	 * @return string representation
 	 */
-	@Override
-	public <C> IConverter<C> getConverter(Class<C> type)
+	protected String toString(Object value)
 	{
-		if (Application.exists())
-		{
-			return Application.get().getConverterLocator().getConverter(type);
-		}
-		return null;
+		return Strings.toString(value);
 	}
 }

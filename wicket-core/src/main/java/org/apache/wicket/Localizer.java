@@ -25,13 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -533,7 +534,26 @@ public class Localizer
 	{
 		if ((string != null) && (model != null))
 		{
-			return PropertyVariableInterpolator.interpolate(string, model.getObject());
+			return new PropertyVariableInterpolator(string, model.getObject())
+			{
+				@Override
+				protected String toString(Object value)
+				{
+					IConverter converter;
+					if (component == null)
+					{
+						converter = Application.get()
+							.getConverterLocator()
+							.getConverter(value.getClass());
+					}
+					else
+					{
+						converter = component.getConverter(value.getClass());
+					}
+
+					return converter.convertToString(value, Session.get().getLocale());
+				}
+			}.toString();
 		}
 		return string;
 	}

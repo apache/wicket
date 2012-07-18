@@ -167,10 +167,13 @@ public class LocalizerTest extends Assert
 	@Test
 	public void testGetStringPropertySubstitution()
 	{
+		Session.get().setLocale(Locale.GERMAN);
+
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
+		vm.put("rating", 4.5);
 		IModel<ValueMap> model = new Model<ValueMap>(vm);
-		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe",
+		Assert.assertEquals("Property substitution should occur", "John Doe gives 4,5 stars",
 			localizer.getString("test.substitute", null, model, null));
 	}
 
@@ -212,16 +215,19 @@ public class LocalizerTest extends Assert
 	@Test
 	public void testGetStringUseModel()
 	{
-		HashMap<String, String> model = new HashMap<String, String>();
-		model.put("user", "juergen");
+		Session.get().setLocale(Locale.GERMAN);
 
-		Assert.assertEquals("Expected string should be returned", "Welcome, juergen",
+		HashMap<String, Object> model = new HashMap<String, Object>();
+		model.put("user", "juergen");
+		model.put("rating", 4.5);
+
+		Assert.assertEquals("Expected string should be returned", "juergen gives 4,5 stars",
 			localizer.getString("test.substitute", null, new PropertyModel<String>(model, null),
 				"DEFAULT {user}"));
 
 		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen",
-			localizer.getString("test.substituteDoesNotExist", null, new PropertyModel<String>(
-				model, null), "DEFAULT ${user}"));
+			localizer.getString("test.substituteDoesNotExist", null,
+				new PropertyModel<HashMap<String, Object>>(model, null), "DEFAULT ${user}"));
 	}
 
 	/**

@@ -24,6 +24,7 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -98,6 +99,19 @@ public class StringResourceModelTest extends WicketTestCase
 			model.getString());
 		ws.setCurrentStatus("raining");
 		Assert.assertEquals("Text should be as expected", "It's raining, take an umbrella",
+			model.getString());
+	}
+
+	/** */
+	@Test
+	public void getSimpleResourceWithKeySubstitutionForNonString()
+	{
+		// German uses comma (,) as decimal separator
+		Session.get().setLocale(Locale.GERMAN);
+
+		StringResourceModel model = new StringResourceModel("weather.${currentTemperature}", page,
+			wsModel);
+		Assert.assertEquals("Text should be as expected", "Twenty-five dot seven",
 			model.getString());
 	}
 
