@@ -547,7 +547,15 @@ public class Localizer
 						converter = Application.get()
 							.getConverterLocator()
 							.getConverter(value.getClass());
-						locale = Session.get().getLocale();
+
+						if (Session.exists())
+						{
+							locale = Session.get().getLocale();
+						}
+						else
+						{
+							locale = Locale.getDefault();
+						}
 					}
 					else
 					{
