@@ -29,6 +29,7 @@ import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
@@ -533,7 +534,38 @@ public class Localizer
 	{
 		if ((string != null) && (model != null))
 		{
-			return PropertyVariableInterpolator.interpolate(string, model.getObject());
+			return new PropertyVariableInterpolator(string, model.getObject())
+			{
+				@SuppressWarnings({ "rawtypes", "unchecked" })
+				@Override
+				protected String toString(Object value)
+				{
+					IConverter converter;
+					Locale locale;
+					if (component == null)
+					{
+						converter = Application.get()
+							.getConverterLocator()
+							.getConverter(value.getClass());
+
+						if (Session.exists())
+						{
+							locale = Session.get().getLocale();
+						}
+						else
+						{
+							locale = Locale.getDefault();
+						}
+					}
+					else
+					{
+						converter = component.getConverter(value.getClass());
+						locale = component.getLocale();
+					}
+
+					return converter.convertToString(value, locale);
+				}
+			}.toString();
 		}
 		return string;
 	}

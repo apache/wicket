@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.util.string.interpolator;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.IConverterLocator;
-import org.apache.wicket.Session;
-import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Interpolates values into <code>String</code>s that are produced by interpreting property
@@ -41,9 +38,7 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public final class PropertyVariableInterpolator extends VariableInterpolator
-	implements
-		IConverterLocator
+public class PropertyVariableInterpolator extends VariableInterpolator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,14 +46,14 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	private final Object model;
 
 	/**
-	 * Private constructor to force use of static interpolate method.
+	 * Constructor.
 	 * 
 	 * @param string
 	 *            a <code>String</code> to interpolate into
 	 * @param model
 	 *            the model to apply property expressions to
 	 */
-	private PropertyVariableInterpolator(final String string, final Object model)
+	public PropertyVariableInterpolator(final String string, final Object model)
 	{
 		super(string);
 		this.model = model;
@@ -72,18 +67,14 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	 * @param object
 	 *            the <code>Object</code> to reflect on
 	 * @return the interpolated <code>String</code>
+	 * 
+	 * @deprecated
 	 */
+	@Deprecated
 	public static String interpolate(final String string, final Object object)
 	{
-		// If there's any reason to go to the expense of property expressions
-		if (string.contains("${"))
-		{
-			// Do property expression interpolation
-			return new PropertyVariableInterpolator(string, object).toString();
-		}
-
-		// Return simple string
-		return string;
+		// Do property expression interpolation
+		return new PropertyVariableInterpolator(string, object).toString();
 	}
 
 	/**
@@ -100,28 +91,23 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 
 		if (value != null)
 		{
-			final IConverter converter = getConverter(value.getClass());
-			if (converter != null)
-			{
-				return converter.convertToString(value, Session.get().getLocale());
-			}
-			else
-			{
-				return value.toString();
-			}
+			return toString(value);
 		}
 		return null;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Convert the given value to a string for interpolation.
+	 * <p>
+	 * This default implementation delegates to {@link Strings#toString(Object)}.
+	 * 
+	 * @param value
+	 *            the value, never {@code null}
+	 * 
+	 * @return string representation
 	 */
-	public <C> IConverter<C> getConverter(Class<C> type)
+	protected String toString(Object value)
 	{
-		if (Application.exists())
-		{
-			return Application.get().getConverterLocator().getConverter(type);
-		}
-		return null;
+		return Strings.toString(value);
 	}
 }

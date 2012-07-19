@@ -103,6 +103,12 @@ public abstract class VariableInterpolator
 	@Override
 	public String toString()
 	{
+		// If there's any reason to go to the expense of property expressions
+		if (!string.contains("${"))
+		{
+			return string;
+		}
+
 		// Result buffer
 		final StringBuilder buffer = new StringBuilder();
 

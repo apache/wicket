@@ -400,7 +400,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		return getString(component);
 	}
 
-	private String getString(Component component)
+	private String getString(final Component component)
 	{
 
 		final Localizer localizer = getLocalizer();
@@ -449,8 +449,8 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 					}
 					else if (model != null && parameters[i] instanceof String)
 					{
-						realParams[i] = PropertyVariableInterpolator.interpolate(
-							(String)parameters[i], model.getObject());
+						realParams[i] = localizer.substitutePropertyExpressions(component,
+							(String)parameters[i], model);
 					}
 					else
 					{
@@ -566,7 +566,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 		if (model != null)
 		{
-			return PropertyVariableInterpolator.interpolate(resourceKey, model.getObject());
+			return new PropertyVariableInterpolator(resourceKey, model.getObject()).toString();
 		}
 		else
 		{
