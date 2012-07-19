@@ -536,22 +536,26 @@ public class Localizer
 		{
 			return new PropertyVariableInterpolator(string, model.getObject())
 			{
+				@SuppressWarnings({ "rawtypes", "unchecked" })
 				@Override
 				protected String toString(Object value)
 				{
 					IConverter converter;
+					Locale locale;
 					if (component == null)
 					{
 						converter = Application.get()
 							.getConverterLocator()
 							.getConverter(value.getClass());
+						locale = Session.get().getLocale();
 					}
 					else
 					{
 						converter = component.getConverter(value.getClass());
+						locale = component.getLocale();
 					}
 
-					return converter.convertToString(value, Session.get().getLocale());
+					return converter.convertToString(value, locale);
 				}
 			}.toString();
 		}
