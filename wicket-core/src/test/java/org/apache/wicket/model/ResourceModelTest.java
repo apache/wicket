@@ -38,7 +38,10 @@ public class ResourceModelTest extends WicketTestCase
 		 */
 		public TestPage()
 		{
-			add(new Label("testlabel", new ResourceModel("test.label")));
+			add(new Label("testlabel", new ResourceModel("testlabel")));
+
+			// another label with a model explicitely assigned to the page
+			add(new Label("otherlabel", new ResourceModel("testlabel").wrapOnAssignment(this)));
 		}
 	}
 
@@ -51,5 +54,34 @@ public class ResourceModelTest extends WicketTestCase
 	public void resourceModel() throws Exception
 	{
 		executeTest(TestPage.class, "ResourceModelTest$TestPage_expected.html");
+	}
+
+	/**
+	 * Test forwarding of detach().
+	 */
+	@Test
+	public void detaching()
+	{
+
+		final boolean[] detached = { false };
+
+		ResourceModel model = new ResourceModel("test")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void detach()
+			{
+				super.detach();
+
+				detached[0] = true;
+			}
+		};
+
+		IModel<String> wrapped = model.wrapOnAssignment(null);
+
+		wrapped.detach();
+
+		assertTrue(null, detached[0]);
 	}
 }
