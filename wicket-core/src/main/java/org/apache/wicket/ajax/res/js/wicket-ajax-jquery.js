@@ -425,6 +425,9 @@
 		 */
 		doAjax: function (attrs) {
 
+			// keep channel for done()
+			this.channel = attrs.ch;
+
 			var
 				// the headers to use for each Ajax request
 				headers = {
