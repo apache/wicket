@@ -492,7 +492,8 @@
 				context: self,
 				beforeSend: function (jqXHR, settings) {
 
-					var preconditions = attrs.pre || defaultPrecondition;
+					var preconditions = attrs.pre || [];
+					preconditions = defaultPrecondition.concat(preconditions);
 					if (jQuery.isArray(preconditions)) {
 						for (var p = 0; p < preconditions.length; p++) {
 
