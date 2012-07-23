@@ -113,7 +113,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		private final Set<String> triedKeys = new LinkedHashSet<String>();
 
 		/**
-		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(java.lang.String)
+		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(String, java.util.Map)
 		 */
 		@Override
 		public String getMessage(String key, Map<String, Object> vars)
