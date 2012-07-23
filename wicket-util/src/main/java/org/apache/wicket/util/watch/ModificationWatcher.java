@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.watch;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,7 +42,7 @@ public class ModificationWatcher implements IModificationWatcher
 	private static final Logger log = LoggerFactory.getLogger(ModificationWatcher.class);
 
 	/** maps <code>IModifiable</code> objects to <code>Entry</code> objects */
-	private final Map<IModifiable, Entry> modifiableToEntry = new ConcurrentHashMap<IModifiable, Entry>();
+	private final ConcurrentHashMap<IModifiable, Entry> modifiableToEntry = new ConcurrentHashMap<IModifiable, Entry>();
 
 	/** the <code>Task</code> to run */
 	private Task task;
@@ -104,12 +103,12 @@ public class ModificationWatcher implements IModificationWatcher
 				newEntry.listeners.add(listener);
 
 				// Put in map
-				modifiableToEntry.put(modifiable, newEntry);
+				modifiableToEntry.putIfAbsent(modifiable, newEntry);
 			}
 			else
 			{
 				// The IModifiable is not returning a valid lastModifiedTime
-				log.info("Cannot track modifications to resource " + modifiable);
+				log.info("Cannot track modifications to resource '{}'", modifiable);
 			}
 
 			return true;

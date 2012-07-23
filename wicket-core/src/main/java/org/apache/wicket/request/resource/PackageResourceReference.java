@@ -153,7 +153,11 @@ public class PackageResourceReference extends ResourceReference
 		if (value == null)
 		{
 			value = getUrlAttributes(locale, style, variation);
-			urlAttributesCacheMap.put(key, value);
+			UrlAttributes tmpValue = urlAttributesCacheMap.putIfAbsent(key, value);
+			if (tmpValue != null)
+			{
+				value = tmpValue;
+			}
 		}
 
 		return value;

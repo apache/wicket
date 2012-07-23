@@ -28,7 +28,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.lang.PropertyResolver.IClassCache;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +70,7 @@ public final class PropertyResolver
 	private final static int CREATE_NEW_VALUE = 1;
 	private final static int RESOLVE_CLASS = 2;
 
-	private final static Map<Object, IClassCache> applicationToClassesToGetAndSetters = Generics.newConcurrentHashMap(2);
+	private final static ConcurrentHashMap<Object, IClassCache> applicationToClassesToGetAndSetters = Generics.newConcurrentHashMap(2);
 
 	private static final String GET = "get";
 	private static final String IS = "is";
@@ -1416,7 +1415,7 @@ public final class PropertyResolver
 
 	private static IClassCache getClassesToGetAndSetters()
 	{
-		Object key = null;
+		Object key;
 		if (Application.exists())
 		{
 			key = Application.get();
@@ -1428,7 +1427,11 @@ public final class PropertyResolver
 		IClassCache result = applicationToClassesToGetAndSetters.get(key);
 		if (result == null)
 		{
-			applicationToClassesToGetAndSetters.put(key, result = new DefaultClassCache());
+			IClassCache tmpResult = applicationToClassesToGetAndSetters.putIfAbsent(key, result = new DefaultClassCache());
+			if (tmpResult != null)
+			{
+				result = tmpResult;
+			}
 		}
 		return result;
 	}

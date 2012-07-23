@@ -18,7 +18,6 @@ package org.apache.wicket.session;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -50,7 +49,7 @@ public final class DefaultPageFactory implements IPageFactory
 	private static final Logger log = LoggerFactory.getLogger(DefaultPageFactory.class);
 
 	/** Map of Constructors for Page subclasses */
-	private final Map<Class<?>, Constructor<?>> constructorForClass = Generics.newConcurrentHashMap();
+	private final ConcurrentMap<Class<?>, Constructor<?>> constructorForClass = Generics.newConcurrentHashMap();
 
 	/**
 	 * {@link #isBookmarkable(Class)} is expensive, we cache the result here
@@ -113,7 +112,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final <C extends IRequestablePage> Constructor<?> constructor(final Class<C> pageClass,
+	private <C extends IRequestablePage> Constructor<?> constructor(final Class<C> pageClass,
 		final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
@@ -128,22 +127,20 @@ public final class DefaultPageFactory implements IPageFactory
 				constructor = pageClass.getConstructor(new Class[] { argumentType });
 
 				// Store it in the cache
-				constructorForClass.put(pageClass, constructor);
-
-				if (log.isDebugEnabled())
+				Constructor<?> tmpConstructor = constructorForClass.putIfAbsent(pageClass, constructor);
+				if (tmpConstructor != null)
 				{
-					log.debug("Found constructor for Page of type '{}' and argument of type '{}'.",
-						pageClass, argumentType);
+					constructor = tmpConstructor;
 				}
+
+				log.debug("Found constructor for Page of type '{}' and argument of type '{}'.",
+					pageClass, argumentType);
 			}
 			catch (NoSuchMethodException e)
 			{
-				if (log.isDebugEnabled())
-				{
-					log.debug(
-						"Page of type '{}' has not visible constructor with an argument of type '{}'.",
-						pageClass, argumentType);
-				}
+				log.debug(
+					"Page of type '{}' has not visible constructor with an argument of type '{}'.",
+					pageClass, argumentType);
 
 				return null;
 			}
@@ -164,7 +161,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given constructor and
 	 *             argument.
 	 */
-	private final Page newPage(final Constructor<?> constructor, final Object argument)
+	private Page newPage(final Constructor<?> constructor, final Object argument)
 	{
 		try
 		{
@@ -257,7 +254,11 @@ public final class DefaultPageFactory implements IPageFactory
 			{
 				bookmarkable = Boolean.FALSE;
 			}
-			pageToBookmarkableCache.put(pageClass.getName(), bookmarkable);
+			Boolean tmpBookmarkable = pageToBookmarkableCache.putIfAbsent(pageClass.getName(), bookmarkable);
+			if (tmpBookmarkable != null)
+			{
+				bookmarkable = tmpBookmarkable;
+			}
 		}
 
 		return bookmarkable;
