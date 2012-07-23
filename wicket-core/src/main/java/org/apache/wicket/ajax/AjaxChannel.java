@@ -20,7 +20,7 @@ import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A Channel that used to process Ajax requests.
+ * A Channel used to define how Ajax requests are processed at the client side.
  * 
  * Channels are either:
  * <ul>
