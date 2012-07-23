@@ -218,9 +218,9 @@
 	Wicket.Channel.prototype = {
 		initialize: function (name) {
 			name = name || '0|s';
-			var res = name.match(/^([^|]+)\|(d|s)$/);
+			var res = name.match(/^([^|]+)\|(d|s|a)$/);
 			if (isUndef(res)) {
-				this.name = '';
+				this.name = '0'; // '0' is the default channel name
 				this.type = 's'; // default to stack
 			}
 			else {
@@ -241,13 +241,17 @@
 					Wicket.Log.error("An error occurred while executing Ajax request:" + exception);
 				}
 			} else {
-				Wicket.Log.info("Channel busy - postponing...");
+				var busyChannel = "Channel '"+ this.name+"' is busy";
 				if (this.type === 's') { // stack
+					Wicket.Log.info(busyChannel + " - scheduling the callback to be executed when the previous request finish.");
 					this.callbacks.push(callback);
 				}
-				else { /* drop */
+				else if (this.type === 'd') { // drop
+					Wicket.Log.info(busyChannel + " - dropping all previous scheduled callbacks and scheduled a new one to be executed when the current request finish.");
 					this.callbacks = [];
 					this.callbacks[0] = callback;
+				} else if (this.type === 'a') { // active
+					Wicket.Log.info(busyChannel + " - ignoring the Ajax call because there is a running request.");
 				}
 				return null;
 			}
