@@ -1392,7 +1392,7 @@
 					element = Wicket.$(element);
 				}
 				if (isUndef(element) || isUndef(element.tagName)) {
-					return true;
+					return false;
 				}
 
 				var id = element.getAttribute('id');
