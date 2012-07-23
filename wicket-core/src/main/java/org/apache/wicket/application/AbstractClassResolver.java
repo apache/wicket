@@ -121,7 +121,7 @@ public abstract class AbstractClassResolver implements IClassResolver
 	 * 
 	 * @return the {@link ClassLoader} to be used for resolving classes
 	 */
-	protected abstract ClassLoader getClassLoader();
+	public abstract ClassLoader getClassLoader();
 
 	public Iterator<URL> getResources(final String name)
 	{
