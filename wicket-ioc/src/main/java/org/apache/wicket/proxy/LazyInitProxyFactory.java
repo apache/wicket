@@ -140,7 +140,7 @@ public class LazyInitProxyFactory
 				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 				if (Application.exists())
 				{
-					IClassResolver classResolver = (IClassResolver) Application.get()
+					IClassResolver classResolver = Application.get()
 							.getApplicationSettings()
 							.getClassResolver();
 
