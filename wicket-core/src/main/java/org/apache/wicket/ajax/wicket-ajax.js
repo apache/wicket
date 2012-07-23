@@ -649,7 +649,7 @@ Wicket.DOM.containsElement = function(element) {
 Wicket.Channel = Wicket.Class.create();
 Wicket.Channel.prototype = {
 	initialize: function(name) {
-		var res = name.match(/^([^|]+)\|(d|s)$/)
+		var res = name.match(/^([^|]+)\|(d|s|a)$/)
 		if (res == null) {
 			this.name = '';
 			this.type ='s'; // default to stack
@@ -672,15 +672,20 @@ Wicket.Channel.prototype = {
 				Wicket.Log.error("An error occurred while executing Ajax request:" + exception);
 			}
 		} else {
-			Wicket.Log.info("Channel busy - postponing...");
-			if (this.type == 's') { // stack 
+			var busyChannel = "Channel '"+ this.name+"' is busy";
+			if (this.type == 's') { // stack
+				Wicket.Log.info(busyChannel + " - scheduling the callback to be executed when the previous request finish.");
 				this.callbacks.push(callback);
 			}
-			else { // drop
+			else if (this.type === 'd') { // drop
+				Wicket.Log.info(busyChannel + " - dropping all previous scheduled callbacks and scheduled a new one to be executed when the current request finish.");
 				this.callbacks = [];
 				this.callbacks[0] = callback;
 			}
-			return null;				
+			else if (this.type === 'a') { // active
+				Wicket.Log.info(busyChannel + " - ignoring the Ajax call because there is a running request.");
+			}
+			return null;
 		}
 	},
 	
