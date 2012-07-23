@@ -442,12 +442,12 @@
 				self = this,
 
 				// the precondition to use if there are no explicit ones
-				defaultPrecondition = [ function () {
-					if (attrs.c) {
-						if (attrs.f) {
-							return Wicket.$$(attrs.c) && Wicket.$$(attrs.f);
+				defaultPrecondition = [ function (attributes, jqXHR, jqSettings) {
+					if (attributes.c) {
+						if (attributes.f) {
+							return Wicket.$$(attributes.c) && Wicket.$$(attributes.f);
 						} else {
-							return Wicket.$$(attrs.c);
+							return Wicket.$$(attributes.c);
 						}
 					}
 				}];
