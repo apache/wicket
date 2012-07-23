@@ -450,6 +450,7 @@
 							return Wicket.$$(attributes.c);
 						}
 					}
+					return true;
 				}];
 
 			if (Wicket.Focus.lastFocusId) {
@@ -1389,6 +1390,9 @@
 			 * if the argument is not element, function returns true
 			 */
 			inDoc: function (element) {
+				if (element === window) {
+					return true;
+				}
 				if (typeof(element) === "string") {
 					element = Wicket.$(element);
 				}
