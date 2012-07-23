@@ -109,6 +109,25 @@ public class CompoundClassResolver implements IClassResolver
 	}
 
 	/**
+	 * @return the class loader returned by the first registered IClassResolver. If there is no
+	 *  registered IClassResolver then the current thread's context class loader will be returned.
+	 */
+	@Override
+	public ClassLoader getClassLoader()
+	{
+		final ClassLoader classLoader;
+		if (resolvers.isEmpty() == false)
+		{
+			classLoader = resolvers.iterator().next().getClassLoader();
+		}
+		else
+		{
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+		return classLoader;
+	}
+
+	/**
 	 * Adds a resolver
 	 * 
 	 * @param resolver

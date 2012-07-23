@@ -30,10 +30,12 @@ import net.sf.cglib.core.Predicate;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A factory class that creates lazy init proxies given a type and a {@link IProxyTargetLocator}
@@ -135,7 +137,20 @@ public class LazyInitProxyFactory
 
 			try
 			{
-				return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+				if (Application.exists())
+				{
+					IClassResolver classResolver = (IClassResolver) Application.get()
+							.getApplicationSettings()
+							.getClassResolver();
+
+					if (classResolver != null)
+					{
+						classLoader = classResolver.getClassLoader();
+					}
+				}
+
+				return Proxy.newProxyInstance(classLoader,
 					new Class[] { type, Serializable.class, ILazyInitProxy.class,
 							IWriteReplace.class }, handler);
 			}

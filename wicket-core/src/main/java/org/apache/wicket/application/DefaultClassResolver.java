@@ -34,7 +34,7 @@ public final class DefaultClassResolver extends AbstractClassResolver
 	 *         {@link ClassLoader} that was used to load this class.
 	 */
 	@Override
-	protected ClassLoader getClassLoader()
+	public ClassLoader getClassLoader()
 	{
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		if (loader == null)
