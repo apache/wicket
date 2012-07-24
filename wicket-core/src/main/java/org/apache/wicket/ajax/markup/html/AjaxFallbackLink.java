@@ -25,11 +25,19 @@ import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An ajax link that will degrade to a normal request if ajax is not available or javascript is
  * disabled
- * 
+ *
+ *  <p>
+ * If JavaScript is enabled then the registered JavaScript event 'click' handler will be used,
+ * otherwise the 'href' attribute if the markup element is an &lt;a&gt;, &lt;area&gt; or &lt;link&gt;.
+ * AjaxFallbackLink doesn't fallback if the markup element is none of the three above.
+ * </p>
+ *
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -38,6 +46,8 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 {
+	private static final Logger LOG = LoggerFactory.getLogger(AjaxFallbackLink.class);
+
 	/** */
 	private static final long serialVersionUID = 1L;
 
@@ -160,4 +170,21 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 */
 	public abstract void onClick(final AjaxRequestTarget target);
+
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		String tagName = tag.getName();
+		if (
+			LOG.isWarnEnabled() &&
+			!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName))
+		)
+		{
+			LOG.warn("{} must be used only with <a>, <area> or <link> markup elements. The fallback functionality doesn't" +
+					" work for other markup elements. Component path: {}, markup element: <{}>.",
+					new Object[] {AjaxFallbackLink.class.getSimpleName(), getClassRelativePath(), tagName});
+		}
+	}
 }
