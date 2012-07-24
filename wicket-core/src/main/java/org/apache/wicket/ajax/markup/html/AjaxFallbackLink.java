@@ -24,11 +24,14 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An ajax link that will degrade to a normal request if ajax is not available or javascript is
  * disabled.
- * <p>
+ *
+ *  <p>
  * If JavaScript is enabled then the registered JavaScript event 'click' handler will be used,
  * otherwise the 'href' attribute if the markup element is an &lt;a&gt;, &lt;area&gt; or &lt;link&gt;.
  * AjaxFallbackLink doesn't fallback if the markup element is none of the three above.
@@ -42,6 +45,8 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 {
+	private static final Logger LOG = LoggerFactory.getLogger(AjaxFallbackLink.class);
+
 	/** */
 	private static final long serialVersionUID = 1L;
 
@@ -170,7 +175,18 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 
 		// Ajax links work with JavaScript Event registration
 		tag.remove("onclick");
+
+		String tagName = tag.getName();
+		if (
+			LOG.isWarnEnabled() &&
+			!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName))
+		)
+		{
+			String msg = String.format("%s must be used only with <a>, <area> or <link> markup elements. " +
+					"The fallback functionality doesn't work for other markup elements. " +
+					"Component path: %s, markup element: <%s>.",
+					AjaxFallbackLink.class.getSimpleName(), getClassRelativePath(), tagName);
+			findMarkupStream().throwMarkupException(msg);
+		}
 	}
-
-
 }
