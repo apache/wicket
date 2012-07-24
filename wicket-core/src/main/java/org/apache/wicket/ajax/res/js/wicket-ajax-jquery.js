@@ -304,6 +304,9 @@
 			var c = this.channels[parsed.name];
 			if (!isUndef(c)) {
 				c.done();
+				if (!c.busy) {
+					delete this.channels[parsed.name];
+				}
 			}
 		}
 	};
