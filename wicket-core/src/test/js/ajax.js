@@ -62,7 +62,12 @@ jQuery(document).ready(function() {
 	// Ajax tests are executed only when run with Web Server
 	if ( !isLocal ) {
 
-		module('Wicket.Ajax');
+		module('Wicket.Ajax', {
+			setup: function() {
+				// unsubscribe all global listeners
+				jQuery(document).off();
+			}
+		});
 
 		asyncTest('processEvaluation with mock data.', function () {
 
@@ -308,7 +313,7 @@ jQuery(document).ready(function() {
 						};
 						deepEqual(data, expected, 'Success: data deep equal');
 						equal('success', textStatus, 'Success: textStatus');
-						deepEqual(attrs, attributes, 'Success: attributes deep equal');
+						equal(attrs.u, attributes.u, 'Success: attributes equal');
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
 					}
 				],
@@ -319,21 +324,21 @@ jQuery(document).ready(function() {
 				],
 				bsh: [
 					function(attributes, jqXHR, settings) {
-						deepEqual(attrs, attributes, 'Before: attributes deep equal');
+						equal(attrs.u, attributes.u, 'Before: attributes equal');
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 						ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 					}
 				],
 				ah: [
 					function(attributes) {
-						deepEqual(attrs, attributes, 'After: attributes deep equal');
+						equal(attrs.u, attributes.u, 'After: attributes equal');
 					}
 				],
 				coh: [
 					function(attributes, jqXHR, textStatus) {
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 						equal('success', textStatus, 'Complete: textStatus');
-						deepEqual(attrs, attributes, 'Complete: attributes deep equal');
+						equal(attrs.u, attributes.u, 'Complete: attributes equal');
 					}
 				]
 			}
@@ -362,26 +367,26 @@ jQuery(document).ready(function() {
 				fh: [
 					function(attributes) {
 						start();
-						deepEqual(attrs, attributes);
+						equal(attrs.u, attributes.u);
 					}
 				],
 				bsh: [
 					function(attributes, jqXHR, settings) {
-						deepEqual(attrs, attributes);
+						equal(attrs.u, attributes.u);
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
 						ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
 					}
 				],
 				ah: [
 					function(attributes) {
-						deepEqual(attrs, attributes);
+						equal(attrs.u, attributes.u);
 					}
 				],
 				coh: [
 					function(attributes, jqXHR, textStatus) {
 						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
 						equal('error', textStatus);
-						deepEqual(attrs, attributes);
+						equal(attrs.u, attributes.u);
 					}
 				]
 			}
@@ -457,7 +462,7 @@ jQuery(document).ready(function() {
 				};
 				deepEqual(data, expected, 'Success: data');
 				equal('success', textStatus, 'Success: textStatus');
-				deepEqual(attrs, attributes, 'Success: attrs');
+				equal(attrs.u, attributes.u, 'Success: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
 			});
 
@@ -466,19 +471,19 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
-				deepEqual(attrs, attributes, 'Before: attrs');
+				equal(attrs.u, attributes.u, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
-				deepEqual(attrs, attributes, 'After: attrs');
+				equal(attrs.u, attributes.u, 'After: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				equal('success', textStatus, 'Complete: textStatus');
-				deepEqual(attrs, attributes, 'Complete: attrs');
+				equal(attrs.u, attributes.u, 'Complete: attrs');
 
 				// unregister all subscribers
 				jQuery(document).off();
@@ -511,23 +516,23 @@ jQuery(document).ready(function() {
 				equal('Not Found', errorThrown, 'Failure: errorThrown');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Failure: Assert that jqXHR is a XMLHttpRequest');
 				equal('error', textStatus, 'Failure: textStatus');
-				deepEqual(attrs, attributes, 'Failure: attrs');
+				equal(attrs.u, attributes.u, 'Failure: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
-				deepEqual(attrs, attributes, 'Before: attrs');
+				equal(attrs.u, attributes.u, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
-				deepEqual(attrs, attributes, 'After: attrs');
+				equal(attrs.u, attributes.u, 'After: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				equal('error', textStatus, 'Complete: textStatus');
-				deepEqual(attrs, attributes, 'Complete: attrs');
+				equal(attrs.u, attributes.u, 'Complete: attrs');
 
 				// unregister all subscribers
 				jQuery(document).off();
@@ -623,7 +628,7 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
-				deepEqual(attrs, attributes, 'Before: attrs');
+				equal(attrs.u, attributes.u, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 				ok(settings.url.indexOf('one=1') > 0, 'Parameter "one" with value "1" is found');
@@ -657,7 +662,7 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
-				deepEqual(attrs, attributes, 'Before: attrs');
+				equal(attrs.u, attributes.u, 'Before: attrs');
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
 				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 				ok(settings.data.indexOf('one=static1') > -1, 'Parameter "one" with value "static1" is found');
@@ -688,7 +693,7 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
 				bh: [function(attributes) {
-					deepEqual(attrs, attributes, 'Before: attrs');
+					equal(attrs.u, attributes.u, 'Before: attrs');
 				}],
 				pre: [function() {
 					ok(true, "Precondition is called!")
@@ -701,15 +706,204 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes) {
-				deepEqual(attrs, attributes, 'Global before: attrs');
+				equal(attrs.u, attributes.u, 'Global before: attrs');
 				start();
+			});
+
+			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes) {
+				jQuery(document).off();
 			});
 
 			Wicket.Ajax.ajax(attrs);
 			var target = jQuery(window);
 			target.triggerHandler("event1");
 			target.off("event1");
-			jQuery(document).off();
+		});
+
+		/**
+		 * Verifies the order of execution of the callbacks.
+		 * The order must be: before, beforeSend, after, success, complete.
+		 * Three consecutive executions are made on the same Ajax channel validating
+		 * that they do not overlap.
+		 */
+		asyncTest('callbacks order - success scenario.', function () {
+
+			expect(30);
+
+			var order = 0,
+
+				// calculates the offset for the order depending on the execution number
+				offset = function(round) {
+					return (round * 10) - 10;
+				};
+
+			var attrs = {
+				u: 'data/ajax/emptyAjaxResponse.xml',
+				e: 'event1',
+				bh: [
+					function(attrs) {
+						equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
+					}
+				],
+				bsh: [
+					function(attrs) {
+						equal((3 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
+					}
+				],
+				ah: [
+					function(attrs) {
+						equal((5 + offset(attrs.event.extraData)), ++order, "After handler");
+					}
+				],
+				sh: [
+					function(attrs) {
+						equal((7 + offset(attrs.event.extraData)), ++order, "Success handler");
+					}
+				],
+				fh: [
+					function() {
+						ok(false, 'Should not be called');
+					}
+				],
+				coh: [
+					function(attrs) {
+						start();
+						equal((9 + offset(attrs.event.extraData)), ++order, "Complete handler");
+					}
+				]
+			};
+
+
+			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attrs) {
+				equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attrs) {
+				equal((4 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attrs) {
+				equal((6 + offset(attrs.event.extraData)), ++order, "Global after handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attrs) {
+				equal((8 + offset(attrs.event.extraData)), ++order, "Global success handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/failure', function() {
+				ok(false, 'Global failure handler should not be called');
+			});
+
+			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
+				equal((10 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+
+				if (attrs.event.extraData == 3) {
+					// unregister all global subscribers
+					jQuery(document).off();
+				}
+			});
+
+			Wicket.Ajax.ajax(attrs);
+
+			var target = jQuery(window);
+			target.triggerHandler("event1", 1); // execution No1
+			target.triggerHandler("event1", 2); // execution No2
+			target.triggerHandler("event1", 3); // execution No3
+
+			target.off("event1");
+		});
+
+		/**
+		 * Verifies the order of execution of the callbacks.
+		 * The order must be: before, beforeSend, after, failure, complete.
+		 * Three consecutive executions are made on the same Ajax channel validating
+		 * that they do not overlap.
+		 */
+		asyncTest('callbacks order - failure scenario.', function () {
+
+			expect(30);
+
+			var order = 0,
+
+			// calculates the offset for the order depending on the execution number
+				offset = function(round) {
+					return (round * 10) - 10;
+				};
+
+			var attrs = {
+				u: 'data/ajax/nonExistingResponse.xml',
+				e: 'event1',
+				bh: [
+					function(attrs) {
+						equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
+					}
+				],
+				bsh: [
+					function(attrs) {
+						equal((3 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
+					}
+				],
+				ah: [
+					function(attrs) {
+						equal((5 + offset(attrs.event.extraData)), ++order, "After handler");
+					}
+				],
+				sh: [
+					function() {
+						ok(false, 'Should not be called');
+					}
+				],
+				fh: [
+					function(attrs) {
+						equal((7 + offset(attrs.event.extraData)), ++order, "Failure handler");
+					}
+				],
+				coh: [
+					function(attrs) {
+						start();
+						equal((9 + offset(attrs.event.extraData)), ++order, "Complete handler");
+					}
+				]
+			};
+
+
+			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attrs) {
+				equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attrs) {
+				equal((4 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attrs) {
+				equal((6 + offset(attrs.event.extraData)), ++order, "Global after handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/success', function() {
+				ok(false, 'Global failure handler should not be called');
+			});
+
+			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attrs) {
+				equal((8 + offset(attrs.event.extraData)), ++order, "Global failure handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
+				equal((10 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+
+				if (attrs.event.extraData == 3) {
+					// unregister all global subscribers
+					jQuery(document).off();
+				}
+			});
+
+			Wicket.Ajax.ajax(attrs);
+
+			var target = jQuery(window);
+			target.triggerHandler("event1", 1); // execution No1
+			target.triggerHandler("event1", 2); // execution No2
+			target.triggerHandler("event1", 3); // execution No3
+
+			target.off("event1");
 		});
 	}
 });
