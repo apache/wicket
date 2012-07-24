@@ -27,7 +27,7 @@ jQuery(document).ready(function() {
 	 */
 	test('queue', function () {
 	
-		var cm		= new Wicket.ChannelManager()
+		var cm		= new Wicket.ChannelManager(),
 			ch		= 'name|s',
 			i		= 0,
 			result	= '';

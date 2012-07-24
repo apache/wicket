@@ -71,7 +71,7 @@ jQuery(document).ready(function() {
 			var attrs = {
 				u: 'data/ajax/evaluationId.xml',
 				c: 'evaluationId'
-			}
+			};
 			execute(attrs);
 		});
 
@@ -82,7 +82,7 @@ jQuery(document).ready(function() {
 			var attrs = {
 				u: 'data/ajax/priorityEvaluationId.xml',
 				c: 'priorityEvaluationId'
-			}
+			};
 			execute(attrs);
 		});
 
@@ -587,7 +587,7 @@ jQuery(document).ready(function() {
 				pre: [
 					function () {
 						start();
-						ok(true, 'Request 3: Precondition called.')
+						ok(true, 'Request 3: Precondition called.');
 
 						var count = getCurrentCount();
 						equal(0, count, "'showIncrementallyCount' must be 0 after the executions but is: " + count);
