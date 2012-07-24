@@ -1553,23 +1553,27 @@
 				}
 
 				jQuery.each(attrs.e, function (idx, evt) {
-					Wicket.Event.add(attrs.c, evt, function (jqEvent) {
+					Wicket.Event.add(attrs.c, evt, function (jqEvent, data) {
 						var call = new Wicket.Ajax.Call();
-						attrs.event = Wicket.Event.fix(jqEvent);
+						var attributes = jQuery.extend({}, attrs);
+						attributes.event = Wicket.Event.fix(jqEvent);
+						if (data) {
+							attributes.event.extraData = data;
+						}
 
-						var throttlingSettings = attrs.tr;
+						var throttlingSettings = attributes.tr;
 						if (throttlingSettings) {
 							var postponeTimerOnUpdate = throttlingSettings.p || false;
 							var throttler = new Wicket.Throttler(postponeTimerOnUpdate);
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
-									call.ajax(attrs);
-									return attrs.ad;
+									call.ajax(attributes);
+									return attributes.ad;
 								}, this));
 						}
 						else {
-							call.ajax(attrs);
-							return attrs.ad;
+							call.ajax(attributes);
+							return attributes.ad;
 						}
 					});
 				});
