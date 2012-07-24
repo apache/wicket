@@ -117,8 +117,6 @@ jQuery(document).ready(function() {
 			cha     = name + '|a',					// the active channel
 			number  = 10,							// the number of requests to schedule while the active request is still running
 			i       = 0,							// the current iteration
-			j       = 0,							// the counter that decides when to release the test
-			result  = '',							// the container for the actual result
 			queueCallback = function() {
 
 				// run in a timeout to simulate long running request
@@ -143,5 +141,36 @@ jQuery(document).ready(function() {
 			});
 		}
 
+	});
+
+	/**
+	 * Asserts that the ChannelManager removes entries for done()-ed channels
+	 */
+	test('clean up', function () {
+
+		expect(11);
+
+		stop();
+
+		var cm      = Wicket.channelManager,		// the manager
+			name    = 'name',						// the channel name
+			cha     = name + '|s',					// the channel
+			number  = 10,							// the number of requests to schedule while the active request is still running
+			i       = 0,							// the current iteration
+			callback = function() {
+				window.setTimeout(function() {
+					cm.done(cha);
+				}, 0);
+			};
+
+		for (; i < number; i++) {
+			cm.schedule(cha, callback);
+			ok(cm.channels[name], "A channel exists.");
+		}
+
+		window.setTimeout(function() {
+			start();
+			equal(undefined, cm.channels[name]);
+		}, 100);
 	});
 });
