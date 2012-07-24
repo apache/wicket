@@ -24,8 +24,6 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An ajax link that will degrade to a normal request if ajax is not available or javascript is
@@ -45,8 +43,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 {
-	private static final Logger LOG = LoggerFactory.getLogger(AjaxFallbackLink.class);
-
 	/** */
 	private static final long serialVersionUID = 1L;
 
@@ -177,10 +173,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 		tag.remove("onclick");
 
 		String tagName = tag.getName();
-		if (
-			LOG.isWarnEnabled() &&
-			!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName))
-		)
+		if (!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName)))
 		{
 			String msg = String.format("%s must be used only with <a>, <area> or <link> markup elements. " +
 					"The fallback functionality doesn't work for other markup elements. " +
