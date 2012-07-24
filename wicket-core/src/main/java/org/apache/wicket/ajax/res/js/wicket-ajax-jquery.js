@@ -467,8 +467,8 @@
 				headers["Wicket-FocusedElementId"] = Wicket.Focus.lastFocusId;
 			}
 
-			Wicket.Event.publish('/ajax/call/before', attrs);
 			self._executeHandlers(attrs.bh, attrs);
+			Wicket.Event.publish('/ajax/call/before', attrs);
 
 			if (attrs.mp) { // multipart form. jQuery doesn't help here ...
 				// TODO Wicket.next - should we execute all handlers ?!
@@ -552,8 +552,8 @@
 						}
 					}
 
-					Wicket.Event.publish('/ajax/call/beforeSend', attrs, jqXHR, settings);
 					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
+					Wicket.Event.publish('/ajax/call/beforeSend', attrs, jqXHR, settings);
 
 					if (attrs.i) {
 						// show the indicator
@@ -567,7 +567,6 @@
 				cache: false,
 				headers: headers,
 				success: function(data, textStatus, jqXHR) {
-
 					if (attrs.wr) {
 						self.processAjaxResponse(data, textStatus, jqXHR, context);
 					} else {
@@ -589,6 +588,7 @@
 						Wicket.Event.publish('/ajax/call/complete', attrs, jqXHR, textStatus);
 
 						self.done();
+
 					}, self));
 
 					var executer = new FunctionsExecuter(context.steps);
