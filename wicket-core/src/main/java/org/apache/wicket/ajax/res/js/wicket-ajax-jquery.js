@@ -813,7 +813,9 @@
 				// go through the ajax response and execute all priority-invocations first
 				for (var i = 0; i < root.childNodes.length; ++i) {
 					var childNode = root.childNodes[i];
-					if (childNode.tagName === "priority-evaluate") {
+					if (childNode.tagName === "header-contribution") {
+						this.processHeaderContribution(context, childNode);
+					} else if (childNode.tagName === "priority-evaluate") {
 						this.processEvaluation(context, childNode);
 					}
 				}
@@ -832,8 +834,6 @@
 						this.processComponent(context, node);
 					} else if (node.tagName === "evaluate") {
 						this.processEvaluation(context, node);
-					} else if (node.tagName === "header-contribution") {
-						this.processHeaderContribution(context, node);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
 					}
