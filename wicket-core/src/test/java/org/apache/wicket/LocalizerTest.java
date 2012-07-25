@@ -273,7 +273,7 @@ public class LocalizerTest extends Assert
 		{
 			assertEquals(
 				ex.getMessage(),
-				"Unable to find property: 'dummy.null' for component: form:drop1 [class=org.apache.wicket.markup.html.form.DropDownChoice]");
+				"Unable to find property: 'dummy.null' for component: form:drop1 [class=org.apache.wicket.markup.html.form.DropDownChoice]. Locale: null, style: null");
 		}
 	}
 
