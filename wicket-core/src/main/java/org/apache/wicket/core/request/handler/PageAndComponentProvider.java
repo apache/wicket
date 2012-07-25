@@ -114,7 +114,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	 * @param renderCount
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(int pageId, Class<? extends IRequestablePage> pageClass,
+	public PageAndComponentProvider(Integer pageId, Class<? extends IRequestablePage> pageClass,
 		PageParameters pageParameters, Integer renderCount, String componentPath)
 	{
 		super(pageId, pageClass, pageParameters, renderCount);
@@ -122,7 +122,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Integer)
+	 * @see PageProvider#PageProvider(Integer, Integer)
 	 *
 	 * @param pageId
 	 * @param renderCount
