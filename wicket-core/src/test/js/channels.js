@@ -170,7 +170,7 @@ jQuery(document).ready(function() {
 
 		window.setTimeout(function() {
 			start();
-			equal(undefined, cm.channels[name]);
-		}, 100);
+			equal(undefined, cm.channels[name], "The channel should not be in the manager anymore");
+		}, 500);
 	});
 });

@@ -712,10 +712,6 @@ jQuery(document).ready(function() {
 				start();
 			});
 
-			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes) {
-				jQuery(document).off();
-			});
-
 			Wicket.Ajax.ajax(attrs);
 			var target = jQuery(window);
 			target.triggerHandler("event1");
@@ -769,7 +765,6 @@ jQuery(document).ready(function() {
 				],
 				coh: [
 					function(attrs) {
-						start();
 						equal((9 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
 				]
@@ -802,6 +797,8 @@ jQuery(document).ready(function() {
 				if (attrs.event.extraData == 3) {
 					// unregister all global subscribers
 					jQuery(document).off();
+
+					start();
 				}
 			});
 
@@ -862,7 +859,6 @@ jQuery(document).ready(function() {
 				],
 				coh: [
 					function(attrs) {
-						start();
 						equal((9 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
 				]
@@ -895,6 +891,8 @@ jQuery(document).ready(function() {
 				if (attrs.event.extraData == 3) {
 					// unregister all global subscribers
 					jQuery(document).off();
+
+					start();
 				}
 			});
 
