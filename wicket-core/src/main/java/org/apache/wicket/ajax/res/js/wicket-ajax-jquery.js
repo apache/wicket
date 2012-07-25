@@ -609,9 +609,24 @@
 
 			return jqXHR;
 		},
+		
+		/**
+		 * Method that processes a manually supplied <ajax-response>.
+		 * 
+		 * @param {XmlDocument} data - the <ajax-response> XML document
+		 */
+		process: function(data) {
+			var context =  {
+					attrs: {},
+					steps: []
+				};
+			this.loadedCallback(jQuery.parseXML(data), context);
+			var executer = new FunctionsExecuter(context.steps);
+			executer.start();
+		},
 
 		/**
-		 * Method that processes the <ajax-response>.
+		 * Method that processes the <ajax-response> in the context of an XMLHttpRequest.
 		 *
 		 * @param {XmlDocument} data - the <ajax-response> XML document
 		 * @param {String} textStatus - the response status as text (e.g. 'success', 'parsererror', etc.)
@@ -1580,6 +1595,11 @@
 						}
 					});
 				});
+			},
+			
+			process: function(data) {
+				var call = new Wicket.Ajax.Call();
+				call.process(data);
 			}
 		},
 

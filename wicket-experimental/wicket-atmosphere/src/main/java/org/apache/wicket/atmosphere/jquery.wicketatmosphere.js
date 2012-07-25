@@ -28,7 +28,7 @@
 			if (response.transport !== 'polling' && response.state === 'messageReceived') {
 				$.atmosphere.log('info', [ "response.responseBody: " + response.responseBody ]);
 				if (response.status === 200) {
-					(new Wicket.Ajax.Call()).loadedCallback($.parseXML(response.responseBody), {});
+					Wicket.Ajax.process(response.responseBody);
 				}
 			} else if (response.state === "opening") {
 			}
