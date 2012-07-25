@@ -41,6 +41,8 @@ public class FormParentDisabledRawInputTest extends WicketTestCase
 		 */
 		public TestPage()
 		{
+			setStatelessHint(false);
+
 			WebMarkupContainer container = new WebMarkupContainer("container")
 			{
 				private static final long serialVersionUID = 1L;
@@ -49,7 +51,7 @@ public class FormParentDisabledRawInputTest extends WicketTestCase
 				public boolean isEnabled()
 				{
 					return enabled;
-				};
+				}
 			};
 			Form<?> form = new Form<Void>("form");
 			container.add(form);

@@ -25,6 +25,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
@@ -274,7 +275,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			Class<? extends IRequestablePage> pageClass = urlInfo.getPageClass();
 			PageParameters pageParameters = urlInfo.getPageParameters();
 
-			if (info == null || info.getPageInfo().getPageId() == null)
+			if (info == null)
 			{
 				// if there are is no page instance information (only page map name - optionally)
 				// then this is a simple bookmarkable URL
@@ -292,6 +293,11 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				// with both page instance and component+listener this is a listener interface URL
 				return processListener(info, pageClass, pageParameters);
 			}
+			else if (info.getPageInfo().getPageId() == null)
+			{
+				return processBookmarkable(pageClass, pageParameters);
+			}
+
 		}
 		return null;
 	}
@@ -306,9 +312,6 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		// TODO see if we can refactor this to remove dependency on instanceof checks below and
@@ -361,11 +364,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			if (checkPageInstance(page) &&
 				(!pageMustHaveBeenCreatedBookmarkable() || page.wasCreatedBookmarkable()))
 			{
-				PageInfo info = null;
-				if (!page.isPageStateless())
-				{
-					info = new PageInfo(page.getPageId());
-				}
+				PageInfo info = getPageInfo(handler);
 				PageComponentInfo pageComponentInfo = info != null ? new PageComponentInfo(info,
 					null) : null;
 
@@ -396,7 +395,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				renderCount = handler.getRenderCount();
 			}
 
-			PageInfo pageInfo = new PageInfo(handler.getPageId());
+			PageInfo pageInfo = getPageInfo(handler);
 			ComponentInfo componentInfo = new ComponentInfo(renderCount,
 				requestListenerInterfaceToString(handler.getListenerInterface()),
 				handler.getComponentPath(), handler.getBehaviorIndex());
@@ -407,5 +406,23 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		}
 
 		return null;
+	}
+
+	protected final PageInfo getPageInfo(IPageRequestHandler handler)
+	{
+		Args.notNull(handler, "handler");
+
+		Integer pageId = null;
+		if (handler.isPageInstanceCreated())
+		{
+			IRequestablePage page = handler.getPage();
+
+			if (page.isPageStateless() == false)
+			{
+				pageId = page.getPageId();
+			}
+		}
+
+		return new PageInfo(pageId);
 	}
 }

@@ -153,4 +153,5 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 			urlCopy.getQueryParameters().remove(0);
 		}
 	}
+
 }

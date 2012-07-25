@@ -381,7 +381,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 					renderCount = page.getRenderCount();
 				}
 
-				PageInfo pageInfo = new PageInfo(page.getPageId());
+				PageInfo pageInfo = getPageInfo(handler);
 				ComponentInfo componentInfo = new ComponentInfo(renderCount,
 					requestListenerInterfaceToString(listenerInterface), componentPath,
 					handler.getBehaviorIndex());

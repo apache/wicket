@@ -91,14 +91,14 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Class, Integer)
+	 * @see PageProvider#PageProvider(Integer, Class, Integer)
 	 * 
 	 * @param pageId
 	 * @param pageClass
 	 * @param renderCount
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(int pageId, Class<? extends IRequestablePage> pageClass,
+	public PageAndComponentProvider(Integer pageId, Class<? extends IRequestablePage> pageClass,
 		Integer renderCount, String componentPath)
 	{
 		super(pageId, pageClass, renderCount);
@@ -106,7 +106,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Class, PageParameters, Integer)
+	 * @see PageProvider#PageProvider(Integer, Class, PageParameters, Integer)
 	 * 
 	 * @param pageId
 	 * @param pageClass
@@ -114,7 +114,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	 * @param renderCount
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(int pageId, Class<? extends IRequestablePage> pageClass,
+	public PageAndComponentProvider(Integer pageId, Class<? extends IRequestablePage> pageClass,
 		PageParameters pageParameters, Integer renderCount, String componentPath)
 	{
 		super(pageId, pageClass, pageParameters, renderCount);
@@ -122,13 +122,13 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Integer)
-	 * 
+	 * @see PageProvider#PageProvider(Integer, Integer)
+	 *
 	 * @param pageId
 	 * @param renderCount
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(int pageId, Integer renderCount, String componentPath)
+	public PageAndComponentProvider(Integer pageId, Integer renderCount, String componentPath)
 	{
 		super(pageId, renderCount);
 		setComponentPath(componentPath);
