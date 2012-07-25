@@ -634,13 +634,14 @@ jQuery(document).ready(function() {
 				ok(settings.url.indexOf('one=1') > 0, 'Parameter "one" with value "1" is found');
 				ok(settings.url.indexOf('two=2') > 0, 'Parameter "two" with value "2" is found');
 				start();
-			});
+
+				jQuery(document).off();
+		});
 
 			Wicket.Ajax.ajax(attrs);
 			var target = jQuery(window);
 			target.triggerHandler("event1");
 			target.off("event1");
-			jQuery(document).off();
 		});
 
 		/**
@@ -670,13 +671,14 @@ jQuery(document).ready(function() {
 				ok(settings.data.indexOf('one=dynamic1') > -1, 'Parameter "one" with value "dynamic1" is found');
 				ok(settings.data.indexOf('one=dynamic2') > -1, 'Parameter "one" with value "dynamic2" is found');
 				start();
+
+				jQuery(document).off();
 			});
 
 			Wicket.Ajax.ajax(attrs);
 			var target = jQuery(window);
 			target.triggerHandler("event1");
 			target.off("event1");
-			jQuery(document).off();
 		});
 
 		/**
