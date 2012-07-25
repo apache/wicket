@@ -236,6 +236,7 @@ public class Localizer
 				message.append(component.getPageRelativePath());
 				message.append(" [class=").append(component.getClass().getName()).append("]");
 			}
+			message.append(". Locale: ").append(locale).append(", style: ").append(style).append(", variation: ");
 
 			throw new MissingResourceException(message.toString(), (component != null
 				? component.getClass().getName() : ""), key);
