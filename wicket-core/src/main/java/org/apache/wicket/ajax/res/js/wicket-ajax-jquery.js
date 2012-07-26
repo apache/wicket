@@ -96,7 +96,7 @@
 	 * Helper method that serializes HtmlDocument to string and then
 	 * creates a DOMDocument by parsing this string.
 	 * It is used as a workaround for the problem described at https://issues.apache.org/jira/browse/WICKET-4332
-	 * @param envelope (DispHtmlDocument) the document object created by IE from the XML response in the iframe
+	 * @param htmlDocument (DispHtmlDocument) the document object created by IE from the XML response in the iframe
 	 */
 	htmlToDomDocument = function (htmlDocument) {
 		var xmlAsString = htmlDocument.body.outerText;
@@ -702,14 +702,27 @@
 		 * this function will post the form using an iframe instead of the regular ajax call
 		 * and bridge the output - transparently making this work  as if it was an ajax call.
 		 *
-		 * @param {Object} attrs - the ajax request attributes
+		 * @param {Object} context - the context for the ajax call (request attributes + steps)
 		 */
-		submitMultipartForm: function (attrs) {
+		submitMultipartForm: function (context) {
 
+			var attrs = context.attrs;
 			var form = Wicket.$(attrs.f);
 			if (!form) {
 				Wicket.Log.error("Wicket.Ajax.Call.submitForm: Trying to submit form with id '" + attrs.f + "' that is not in document.");
 				return;
+			}
+
+			// find root form
+			if (form.tagName.toLowerCase() !== "form") {
+				do {
+					form = form.parentNode;
+				} while(form.tagName.toLowerCase() != "form" && form !== document.body)
+			}
+
+			if (form.tagName.toLowerCase() !== "form") {
+				Wicket.Log.error("Cannot submit form with id " + attrs.f + " because there is no form element in the hierarchy.");
+				return false;
 			}
 
 			var submittingAttribute = 'data-wicket-submitting';
@@ -725,8 +738,6 @@
 					return;
 				}
 			}
-
-			var multipart = true;
 
 			var originalFormAction = form.action;
 			var originalFormTarget = form.target;
@@ -759,7 +770,7 @@
 
 			// install handler to deal with the ajax response
 			// ... we add the onload event after form submit because chrome fires it prematurely
-			Wicket.Event.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), attrs);
+			Wicket.Event.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), context);
 
 			// handled, restore state and return true
 			form.action = originalFormAction;
@@ -794,11 +805,16 @@
 			// remove the event
 			jQuery(iframe).off("load.handleMultipartComplete");
 
-			// remove the iframe and button elements
-			window.setTimeout(function () {
+			context.steps.push(function(notify) {
+				// remove the iframe and button elements
 				jQuery('#'+iframe.id + '-btn').remove();
 				jQuery(iframe).remove();
-			}, 1);
+			});
+
+			var executer = new FunctionsExecuter(context.steps);
+			executer.start();
+
+			this.done();
 		},
 
 		// Processes the response
@@ -819,7 +835,7 @@
 
 				// the root element must be <ajax-response
 				if (isUndef(root) || root.tagName !== "ajax-response") {
-					this.failure("Could not find root <ajax-response> element");
+					this.failure(context, null, "Could not find root <ajax-response> element", null);
 					return;
 				}
 
