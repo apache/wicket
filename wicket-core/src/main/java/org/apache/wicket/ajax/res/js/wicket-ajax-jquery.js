@@ -473,9 +473,27 @@
 			self._executeHandlers(attrs.bh, attrs);
 			Wicket.Event.publish('/ajax/call/before', attrs);
 
-			if (attrs.mp) { // multipart form. jQuery doesn't help here ...
-				// TODO Wicket.next - should we execute all handlers ?!
-				// Wicket 1.5 didn't support success/failure handlers for this, but we can do it
+			var preconditions = attrs.pre || [];
+			preconditions = defaultPrecondition.concat(preconditions);
+			if (jQuery.isArray(preconditions)) {
+				for (var p = 0; p < preconditions.length; p++) {
+
+					var precondition = preconditions[p];
+					var result;
+					if (jQuery.isFunction(precondition)) {
+						result = precondition(attrs);
+					} else {
+						result = new Function('attrs', precondition)(attrs);
+					}
+					if (result === false) {
+						Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
+						self.done();
+						return false;
+					}
+				}
+			}
+
+			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
 				return this.submitMultipartForm(context);
 			}
 
@@ -505,26 +523,6 @@
 				type: attrs.m,
 				context: self,
 				beforeSend: function (jqXHR, settings) {
-
-					var preconditions = attrs.pre || [];
-					preconditions = defaultPrecondition.concat(preconditions);
-					if (jQuery.isArray(preconditions)) {
-						for (var p = 0; p < preconditions.length; p++) {
-
-							var precondition = preconditions[p];
-							var result;
-							if (jQuery.isFunction(precondition)) {
-								result = precondition(attrs, jqXHR, settings);
-							} else {
-								result = new Function('attrs', 'jqXHR', 'settings', precondition)(attrs, jqXHR, settings);
-							}
-							if (result === false) {
-								Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
-								self.done();
-								return false;
-							}
-						}
-					}
 
 					// collect the dynamic extra parameters
 					if (jQuery.isArray(attrs.dep)) {
@@ -707,6 +705,15 @@
 		submitMultipartForm: function (context) {
 
 			var attrs = context.attrs;
+
+			this._executeHandlers(attrs.bsh, attrs, null, null);
+			Wicket.Event.publish('/ajax/call/beforeSend', attrs, null, null);
+
+			if (attrs.i) {
+				// show the indicator
+				Wicket.DOM.showIncrementally(attrs.i);
+			}
+
 			var form = Wicket.$(attrs.f);
 			if (!form) {
 				Wicket.Log.error("Wicket.Ajax.Call.submitForm: Trying to submit form with id '" + attrs.f + "' that is not in document.");
@@ -768,6 +775,9 @@
 			//submit the form into the iframe, response will be handled by the onload callback
 			form.submit();
 
+			this._executeHandlers(attrs.ah, attrs);
+			Wicket.Event.publish('/ajax/call/after', attrs);
+
 			// install handler to deal with the ajax response
 			// ... we add the onload event after form submit because chrome fires it prematurely
 			Wicket.Event.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), context);
@@ -809,6 +819,15 @@
 				// remove the iframe and button elements
 				jQuery('#'+iframe.id + '-btn').remove();
 				jQuery(iframe).remove();
+
+				var attrs = context.attrs;
+				if (attrs.i) {
+					// hide the indicator
+					Wicket.DOM.hideIncrementally(attrs.i);
+				}
+
+				this._executeHandlers(attrs.coh, attrs, null, null);
+				Wicket.Event.publish('/ajax/call/complete', attrs, null, null);
 
 				this.done();
 			}, this));

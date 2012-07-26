@@ -62,7 +62,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
 	private static final String DYNAMIC_PARAMETER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String PRECONDITION_FUNCTION_TEMPLATE      = "function(attrs, jqXHR, settings){%s}";
+	private static final String PRECONDITION_FUNCTION_TEMPLATE      = "function(attrs){%s}";
 	private static final String COMPLETE_HANDLER_FUNCTION_TEMPLATE  = "function(attrs, jqXHR, textStatus){%s}";
 	private static final String FAILURE_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, jqXHR, errorMessage, textStatus){%s}";
 	private static final String SUCCESS_HANDLER_FUNCTION_TEMPLATE   = "function(attrs, jqXHR, data, textStatus){%s}";

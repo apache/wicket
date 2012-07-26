@@ -128,8 +128,13 @@ public interface IAjaxCallListener
 	 * A JavaScript function that is invoked before the request executes.
 	 * If it returns {@code false} then the execution of the Ajax call will
 	 * be cancelled.
+	 * The script will be executed in a function that receives the following parameters:
+	 * <ol>
+	 *     <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
 	 *
-	 * @return
+	 * @return the JavaScript that should be used to decide whether the Ajax
+	 *      call should be made at all.
 	 */
 	CharSequence getPrecondition(Component component);
 }

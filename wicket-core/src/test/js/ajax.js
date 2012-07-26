@@ -929,5 +929,66 @@ jQuery(document).ready(function() {
 
 			jQuery('#'+ attrs.c).triggerHandler(attrs.e);
 		});
+
+
+		/**
+		 * Tests that Ajax call handlers are called when a (nested) multipart form
+		 * is submitted with Ajax.
+		 * The url points to Ajax response that contains an evaluation that starts the test.
+		 */
+		asyncTest('Submit nested form - success scenario.', function () {
+
+			expect(7);
+
+			var attrs = {
+				f:  "innerForm", // the id of the form to submit
+				mp: true,  // multipart
+				u:  "data/ajax/submitNestedForm.xml", // the mock response
+				e:  "nestedFormSubmit", // the event
+				c:  "innerSubmitButton", // the component that submits the form
+				m:  "POST", // submit method,
+				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
+				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
+				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { ok(true, "Success handler executed"); } ],
+				fh: [ function(attrs) { ok(false, "Failure handler should not be executed"); } ],
+				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#'+ attrs.c).triggerHandler(attrs.e);
+		});
+
+		/**
+		 * Tests that Ajax call handlers are called when a (nested) multipart form
+		 * is submitted with Ajax.
+		 * Since the url points to not existing resource the final result is a failure.
+		 */
+		asyncTest('Submit nested form - failure scenario.', function () {
+
+			expect(6);
+
+			var attrs = {
+				f:  "innerForm", // the id of the form to submit
+				mp: true,  // multipart
+				u:  "data/ajax/submitNestedForm-NotExist.xml", // the mock response
+				e:  "nestedFormSubmit", // the event
+				c:  "innerSubmitButton", // the component that submits the form
+				m:  "POST", // submit method,
+				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
+				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
+				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
+				fh: [ function(attrs) { ok(true, "Failure handler executed"); start() } ],
+				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#'+ attrs.c).triggerHandler(attrs.e);
+		});
 	}
 });
