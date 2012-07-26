@@ -905,5 +905,29 @@ jQuery(document).ready(function() {
 
 			target.off("event1");
 		});
+
+		/**
+		 * Submits a nested multipart form (represented with <div>).
+		 * The submit uses <iframe>.
+		 *
+		 * https://issues.apache.org/jira/browse/WICKET-4673
+		 */
+		asyncTest('Submit nested form.', function () {
+
+			expect(1);
+
+			var attrs = {
+				f:  "innerForm", // the id of the form to submit
+				mp: true,  // multipart
+				u:  "data/ajax/submitNestedForm.xml", // the mock response
+				e:  "nestedFormSubmit", // the event
+				c:  "innerSubmitButton", // the component that submits the form
+				m:  "POST" // submit method
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#'+ attrs.c).triggerHandler(attrs.e);
+		});
 	}
 });

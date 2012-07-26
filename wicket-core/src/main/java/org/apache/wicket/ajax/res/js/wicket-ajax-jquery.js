@@ -805,16 +805,16 @@
 			// remove the event
 			jQuery(iframe).off("load.handleMultipartComplete");
 
-			context.steps.push(function(notify) {
+			context.steps.push(jQuery.proxy(function(notify) {
 				// remove the iframe and button elements
 				jQuery('#'+iframe.id + '-btn').remove();
 				jQuery(iframe).remove();
-			});
+
+				this.done();
+			}, this));
 
 			var executer = new FunctionsExecuter(context.steps);
 			executer.start();
-
-			this.done();
 		},
 
 		// Processes the response
@@ -878,7 +878,7 @@
 				this.success(context);
 
 			} catch (exception) {
-				this.failure(context, null, exception);
+				this.failure(context, null, exception, null);
 			}
 		},
 

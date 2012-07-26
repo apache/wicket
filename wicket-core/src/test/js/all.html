@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:wicket="http://wicket.apache.org">
 
 <head>
 	<title id="titleId">All tests</title>
@@ -149,6 +149,15 @@
 
 			<textarea name="textArea">some text</textarea>
 
+		</form>
+
+		<!-- WICKET-4673 Ajax submit of nested form -->
+		<form id="outerForm" >
+			<button type="submit" id="submitButton">Outer Submit</button>
+			<div id="innerForm">
+				<input type="file" id="file"/>
+				<button type="submit" id="innerSubmitButton">Inner Submit</button>
+			</div>
 		</form>
 
 	</div>
