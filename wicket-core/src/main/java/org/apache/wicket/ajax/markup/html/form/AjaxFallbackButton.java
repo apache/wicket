@@ -21,10 +21,13 @@ import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An ajax submit button that will degrade to a normal request if ajax is not available or
@@ -40,6 +43,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 public abstract class AjaxFallbackButton extends Button
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(AjaxFallbackButton.class);
 
 	private final Form<?> mForm;
 
@@ -209,5 +214,21 @@ public abstract class AjaxFallbackButton extends Button
 	protected final boolean isButtonEnabled()
 	{
 		return isEnabledInHierarchy();
+	}
+
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		String tagName = tag.getName();
+		if (LOG.isWarnEnabled() && !("input".equalsIgnoreCase(tagName) || "button".equalsIgnoreCase(tagName)))
+		{
+			LOG.warn("{} must be used only with <input type=\"submit\"> or <input type=\"submit\"> markup elements. " +
+					"The fallback functionality doesn't work for other markup elements. " +
+					"Component path: {}, markup element: {}.",
+					new Object[] { AjaxFallbackButton.class. getSimpleName(),getClassRelativePath(), tagName });
+
+		}
+
+		super.onComponentTag(tag);
 	}
 }
