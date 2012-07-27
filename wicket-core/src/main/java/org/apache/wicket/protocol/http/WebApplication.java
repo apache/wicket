@@ -64,7 +64,6 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.ExternalUrlResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
@@ -389,7 +388,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * Registers a replacement resource for the given javascript resource. This replacement can be
 	 * another {@link JavaScriptResourceReference} for a packaged resource, but it can also be an
-	 * {@link ExternalUrlResourceReference} to replace the resource by a resource hosted on a CDN.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
 	 * Registering a replacement will cause the resource to replaced by the given resource
 	 * throughout the application: if {@code base} is added, {@code replacement} will be added
 	 * instead.
@@ -410,7 +409,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * Registers a replacement resource for the given CSS resource. This replacement can be another
 	 * {@link CssResourceReference} for a packaged resource, but it can also be an
-	 * {@link ExternalUrlResourceReference} to replace the resource by a resource hosted on a CDN.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
 	 * Registering a replacement will cause the resource to replaced by the given resource
 	 * throughout the application: if {@code base} is added, {@code replacement} will be added
 	 * instead.

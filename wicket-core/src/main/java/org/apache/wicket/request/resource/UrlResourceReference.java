@@ -16,44 +16,43 @@
  */
 package org.apache.wicket.request.resource;
 
+import org.apache.wicket.core.util.string.UrlUtils;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A ResourceReference that can be used to render a Url to a resource out of the
- * current application, for example to a resource residing in a CDN (Content Delivering Network).
+ * A ResourceReference that can be used to point to a resource by using an Url.
+ * For example to a resource residing in a CDN (Content Delivering Network) or
+ * context relative one.
  *
  * @since 6.0
  */
-public class ExternalUrlResourceReference extends ResourceReference
+public class UrlResourceReference extends ResourceReference
 {
 	/**
 	 * The url to the resource.
 	 */
-	private final Url externalUrl;
+	private final Url url;
+
+	private boolean contextRelative = false;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param externalUrl
+	 * @param url
 	 *      the url of the external resource
 	 */
-	public ExternalUrlResourceReference(final Url externalUrl)
+	public UrlResourceReference(final Url url)
 	{
-		super(asName(externalUrl));
+		super(asName(url));
 
-		if (externalUrl.isAbsolute() == false)
-		{
-			throw new IllegalArgumentException(ExternalUrlResourceReference.class.getSimpleName() +
-					" can be used only with absolute urls.");
-		}
-
-		this.externalUrl = externalUrl;
+		this.url = url;
 	}
 
 	private static String asName(Url externalUrl)
 	{
-		Args.notNull(externalUrl, "externalUrl");
+		Args.notNull(externalUrl, "url");
 		return externalUrl.toString();
 	}
 
@@ -62,7 +61,15 @@ public class ExternalUrlResourceReference extends ResourceReference
 	 */
 	public final Url getUrl()
 	{
-		return externalUrl;
+		Url _url = url;
+
+		if (contextRelative)
+		{
+			String contextRelative = UrlUtils.rewriteToContextRelative(url.toString(), RequestCycle.get());
+			_url = Url.parse(contextRelative, url.getCharset());
+		}
+
+		return _url;
 	}
 
 	/**
@@ -71,8 +78,23 @@ public class ExternalUrlResourceReference extends ResourceReference
 	 *  external url.
 	 */
 	@Override
-	public IResource getResource()
+	public final IResource getResource()
 	{
 		return null;
+	}
+
+	public UrlResourceReference setContextRelative(final boolean contextRelative)
+	{
+		if (contextRelative && url.isAbsolute())
+		{
+			throw new IllegalStateException("An absolute url '{}' cannot be rendered as context relative");
+		}
+		this.contextRelative = contextRelative;
+		return this;
+	}
+
+	public boolean isContextRelative()
+	{
+		return contextRelative;
 	}
 }
