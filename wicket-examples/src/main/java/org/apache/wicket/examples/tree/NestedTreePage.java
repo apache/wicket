@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
 /**
  * @author Sven Meier
  */
-public class NestedTreePage extends TreePage
+public class NestedTreePage extends AdvancedTreePage
 {
 
 	private static final long serialVersionUID = 1L;

@@ -27,31 +27,25 @@
 		</style>
     </head>
     <body>
-	    <span wicket:id = "mainNavigation"/>
-	    
-	    <h2>Welcome to Tree Examples</h2>
 
-		<wicket:link>
-			<a href="NestedTreePage.html">NestedTee</a>
-			<a href="TableTreePage.html">TableTree</a>
-		</wicket:link>
-			
-		<form wicket:id="form">
-			<p>
-				Content: <select wicket:id="content"></select>
-			</p>
-			<p>
-				Theme: <select wicket:id="theme"></select>
-			</p>
-			<p>
-				<a wicket:id="collapseAll">collapse all</a>  <a wicket:id="expandAll">expand all</a>
-			</p>
-			<p>
-				<wicket:child/>
-			</p>
-			
-			<input type="submit" wicket:id="submit" value="OK"/>
-		</form>
+		<wicket:extend>
+			<form wicket:id="form">
+				<p>
+					Content: <select wicket:id="content"></select>
+				</p>
+				<p>
+					Theme: <select wicket:id="theme"></select>
+				</p>
+				<p>
+					<a wicket:id="collapseAll">collapse all</a>  <a wicket:id="expandAll">expand all</a>
+				</p>
+				<p>
+					<wicket:child/>
+				</p>
+				
+				<input type="submit" wicket:id="submit" value="OK"/>
+			</form>
+		</wicket:extend>			
     </body>
 </html>
 

@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.tree.content.BookmarkableFolderContent;
 import org.apache.wicket.examples.tree.content.CheckedFolderContent;
 import org.apache.wicket.examples.tree.content.CheckedSelectableFolderContent;
@@ -52,7 +51,7 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * @author Sven Meier
  */
-public abstract class TreePage extends WicketExamplePage
+public abstract class AdvancedTreePage extends AbstractTreePage
 {
 
 	private static final long serialVersionUID = 1L;
@@ -72,7 +71,7 @@ public abstract class TreePage extends WicketExamplePage
 	/**
 	 * Construct.
 	 */
-	public TreePage()
+	public AdvancedTreePage()
 	{
 		content = new CheckedFolderContent(provider);
 

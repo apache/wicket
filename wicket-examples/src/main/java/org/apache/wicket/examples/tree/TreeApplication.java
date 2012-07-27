@@ -97,7 +97,7 @@ public class TreeApplication extends WebApplication
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
-		return NestedTreePage.class;
+		return BeginnersTreePage.class;
 	}
 
 	/**
