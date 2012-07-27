@@ -618,7 +618,8 @@
 					attrs: {},
 					steps: []
 				};
-			this.loadedCallback(jQuery.parseXML(data), context);
+			var xmlDocument = Wicket.Xml.parse(data);
+			this.loadedCallback(xmlDocument, context);
 			var executer = new FunctionsExecuter(context.steps);
 			executer.start();
 		},

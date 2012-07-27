@@ -49,17 +49,10 @@
 
 				self.ws.onmessage = function (event) {
 
-					var call = new Wicket.Ajax.Call();
-					var attrs = {};
-					call._initializeDefaults(attrs);
-					attrs.event = event;
-					var jqXHR = {
-						readyState : 4
-					};
 					var message = event.data;
 					if (message && message.indexOf('<ajax-response>') > -1) {
-						var xmlDocument = Wicket.Xml.parse(event.data);
-						call.processAjaxResponse(xmlDocument, "success", jqXHR, attrs);
+						var call = new Wicket.Ajax.Call();
+						call.process(event.data);
 					}
 					else {
 						Wicket.Event.publish('/websocket/message', message);
