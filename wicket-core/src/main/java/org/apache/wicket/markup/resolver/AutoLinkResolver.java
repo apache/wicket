@@ -98,7 +98,12 @@ public final class AutoLinkResolver implements IComponentResolver
 				// header has been added to (e.g. the Page). What we need
 				// however, is the component (e.g. a Panel) which
 				// contributed it.
-				MarkupStream markupStream = new MarkupStream(container.getMarkup());
+				IMarkupFragment markup = container.getAssociatedMarkup();
+				if (markup == null)
+				{
+					markup = container.getMarkup();
+				}
+				MarkupStream markupStream = new MarkupStream(markup);
 				Class<? extends Component> clazz = markupStream.getContainerClass();
 
 				// However if the markup stream is a merged markup stream (inheritance), than we
