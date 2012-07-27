@@ -209,9 +209,11 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * Map that contains additional (static) URL parameters. These will be appended to the request
-	 * URL. This is simpler alternative to {@link #getDynamicExtraParameters()}
-	 * 
+	 * URL. If you need more than one value for a key then use a java.util.List or an Object[] as
+	 * a value of that key.
+	 *
 	 * @return a map with additional URL arguments
+	 * @see #getDynamicExtraParameters()
 	 */
 	public Map<String, Object> getExtraParameters()
 	{
@@ -251,6 +253,7 @@ public final class AjaxRequestAttributes
 	 * </p>
 	 *
 	 * @return a list of functions that produce additional URL arguments.
+	 * @see #getExtraParameters()
 	 */
 	public List<CharSequence> getDynamicExtraParameters()
 	{

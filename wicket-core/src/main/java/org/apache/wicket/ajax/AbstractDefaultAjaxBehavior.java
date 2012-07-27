@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -29,9 +27,11 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.attributes.CallbackParameter;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
+import org.apache.wicket.ajax.json.JSONArray;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.ajax.json.JsonFunction;
+import org.apache.wicket.ajax.json.JsonUtils;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -272,17 +272,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				}
 			}
 
-			JSONObject extraParameters = new JSONObject();
-			Iterator<Entry<String, Object>> itor = attributes.getExtraParameters()
-				.entrySet()
-				.iterator();
-			while (itor.hasNext())
-			{
-				Entry<String, Object> entry = itor.next();
-				String name = entry.getKey();
-				Object value = entry.getValue();
-				extraParameters.accumulate(name, value);
-			}
+			JSONArray extraParameters = JsonUtils.asArray(attributes.getExtraParameters());
+
 			if (extraParameters.length() > 0)
 			{
 				attributesJson.put("ep", extraParameters);
