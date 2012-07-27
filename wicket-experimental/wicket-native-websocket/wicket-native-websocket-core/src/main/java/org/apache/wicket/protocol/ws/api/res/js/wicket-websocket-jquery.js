@@ -52,7 +52,7 @@
 					var message = event.data;
 					if (message && message.indexOf('<ajax-response>') > -1) {
 						var call = new Wicket.Ajax.Call();
-						call.process(event.data);
+						call.process(message);
 					}
 					else {
 						Wicket.Event.publish('/websocket/message', message);
