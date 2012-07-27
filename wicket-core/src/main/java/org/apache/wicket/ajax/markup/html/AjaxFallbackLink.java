@@ -28,13 +28,13 @@ import org.apache.wicket.model.IModel;
 /**
  * An ajax link that will degrade to a normal request if ajax is not available or javascript is
  * disabled.
- *
- *  <p>
+ * 
+ * <p>
  * If JavaScript is enabled then the registered JavaScript event 'click' handler will be used,
- * otherwise the 'href' attribute if the markup element is an &lt;a&gt;, &lt;area&gt; or &lt;link&gt;.
- * AjaxFallbackLink doesn't fallback if the markup element is none of the three above.
+ * otherwise the 'href' attribute if the markup element is an &lt;a&gt;, &lt;area&gt; or
+ * &lt;link&gt;. AjaxFallbackLink doesn't fallback if the markup element is none of the three above.
  * </p>
- *
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -160,7 +160,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 
 	/**
 	 * Removes any inline 'onclick' attributes set by Link#onComponentTag(ComponentTag).
-	 *
+	 * 
 	 * @param tag
 	 *            the component tag
 	 */
@@ -173,12 +173,14 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 		tag.remove("onclick");
 
 		String tagName = tag.getName();
-		if (!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName)))
+		if (isLinkEnabled() &&
+			!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName)))
 		{
-			String msg = String.format("%s must be used only with <a>, <area> or <link> markup elements. " +
-					"The fallback functionality doesn't work for other markup elements. " +
-					"Component path: %s, markup element: <%s>.",
-					AjaxFallbackLink.class.getSimpleName(), getClassRelativePath(), tagName);
+			String msg = String.format(
+				"%s must be used only with <a>, <area> or <link> markup elements. "
+					+ "The fallback functionality doesn't work for other markup elements. "
+					+ "Component path: %s, markup element: <%s>.",
+				AjaxFallbackLink.class.getSimpleName(), getClassRelativePath(), tagName);
 			findMarkupStream().throwMarkupException(msg);
 		}
 	}
