@@ -31,13 +31,13 @@ import org.slf4j.LoggerFactory;
 /**
  * An ajax link that will degrade to a normal request if ajax is not available or javascript is
  * disabled
- *
- *  <p>
+ * 
+ * <p>
  * If JavaScript is enabled then the registered JavaScript event 'click' handler will be used,
- * otherwise the 'href' attribute if the markup element is an &lt;a&gt;, &lt;area&gt; or &lt;link&gt;.
- * AjaxFallbackLink doesn't fallback if the markup element is none of the three above.
+ * otherwise the 'href' attribute if the markup element is an &lt;a&gt;, &lt;area&gt; or
+ * &lt;link&gt;. AjaxFallbackLink doesn't fallback if the markup element is none of the three above.
  * </p>
- *
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -177,14 +177,15 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 		super.onComponentTag(tag);
 
 		String tagName = tag.getName();
-		if (
+		if (isLinkEnabled() &&
 			LOG.isWarnEnabled() &&
-			!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName))
-		)
+			!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName)))
 		{
-			LOG.warn("{} must be used only with <a>, <area> or <link> markup elements. The fallback functionality doesn't" +
-					" work for other markup elements. Component path: {}, markup element: <{}>.",
-					new Object[] {AjaxFallbackLink.class.getSimpleName(), getClassRelativePath(), tagName});
+			LOG.warn(
+				"{} must be used only with <a>, <area> or <link> markup elements. The fallback functionality doesn't"
+					+ " work for other markup elements. Component path: {}, markup element: <{}>.",
+				new Object[] { AjaxFallbackLink.class.getSimpleName(), getClassRelativePath(),
+						tagName });
 		}
 	}
 }
