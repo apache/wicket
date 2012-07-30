@@ -65,7 +65,7 @@ public class AutoLinkInPanelsTest extends WicketTestCase
 	public void imgTagWorksInPanelWithExtraContainer() throws Exception
 	{
 		tester.startPage(TestPage.class);
-		tester.dumpPage();
+//		tester.dumpPage();
 		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo-ver-\\d+.png\"/>");
 	}
 
