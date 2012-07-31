@@ -99,10 +99,16 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 
 		this.table = newDataTable("table", columns, newDataProvider(provider), rowsPerPage);
 		add(table);
+
+		// see #updateBranch(Object, AjaxRequestTarget)
+		setOutputMarkupId(true);
 	}
 
 	/**
 	 * Factory method for the wrapped {@link DataTable}.
+	 * 
+	 * Note: If overwritten, the DataTable's row items have to output their markupId, or
+	 * {@link #updateNode(Object, AjaxRequestTarget)} will fail.
 	 * 
 	 * @param id
 	 * @param columns
@@ -161,7 +167,20 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	}
 
 	/**
-	 * Overriden to update the complete row item of the node.
+	 * For updating of a single branch the whole table is added to the ART.
+	 */
+	@Override
+	public void updateBranch(T node, AjaxRequestTarget target)
+	{
+		if (target != null)
+		{
+			// TableTree always outputs markupId
+			target.add(this);
+		}
+	}
+
+	/**
+	 * For an update of a node the complete row item is added to the ART.
 	 */
 	@Override
 	public void updateNode(T t, final AjaxRequestTarget target)
@@ -178,6 +197,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 
 					if (model.equals(nodeModel.getWrappedModel()))
 					{
+						// row items are configured to output their markupId
 						target.add(item);
 						visit.stop();
 						return;

@@ -102,7 +102,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	}
 
 	/**
-	 * Overridden to update the affected {@link BranchItem} only.
+	 * Overridden to update the corresponding {@link BranchItem} only.
 	 */
 	@Override
 	public void updateBranch(T t, final AjaxRequestTarget target)
@@ -117,6 +117,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 				{
 					if (model.equals(branch.getModel()))
 					{
+						// BranchItem always outputs its markupId
 						target.add(branch);
 						visit.stop();
 					}
@@ -127,7 +128,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	}
 
 	/**
-	 * Overridden to update the affected {@link Node} only.
+	 * Overridden to update the corresponding {@link Node} only.
 	 */
 	@Override
 	public void updateNode(T node, final AjaxRequestTarget target)
@@ -142,6 +143,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 				{
 					if (model.equals(node.getModel()))
 					{
+						// nodes are configured to output their markup id, see #newNodeComponent()
 						target.add(node);
 						visit.stop();
 					}

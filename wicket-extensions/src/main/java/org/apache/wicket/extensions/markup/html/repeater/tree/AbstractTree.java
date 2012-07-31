@@ -62,9 +62,6 @@ public abstract class AbstractTree<T> extends Panel
 			throw new IllegalArgumentException("argument [provider] cannot be null");
 		}
 		this.provider = provider;
-
-		// see #updateBranch(Object, AjaxRequestTarget)
-		setOutputMarkupId(true);
 	}
 
 	/**
@@ -288,39 +285,23 @@ public abstract class AbstractTree<T> extends Panel
 	 * Convenience method to update a single branch on an {@link AjaxRequestTarget}. Does nothing if
 	 * the given node is currently not visible or target is <code>null</code>.
 	 * 
-	 * This default implementation adds this whole component for rendering.
-	 * 
 	 * @param node
 	 *            node to update
 	 * @param target
 	 *            request target
 	 */
-	public void updateBranch(T node, final AjaxRequestTarget target)
-	{
-		if (target != null)
-		{
-			target.add(this);
-		}
-	}
+	public abstract void updateBranch(T node, final AjaxRequestTarget target);
 
 	/**
 	 * Convenience method to update a single node on an {@link AjaxRequestTarget}. Does nothing if
 	 * the given node is currently not visible or target is {@code null}.
-	 * 
-	 * This default implementation adds this whole component for rendering.
 	 * 
 	 * @param node
 	 *            node to update
 	 * @param target
 	 *            request target or {@code null}
 	 */
-	public void updateNode(T node, final AjaxRequestTarget target)
-	{
-		if (target != null)
-		{
-			target.add(this);
-		}
-	}
+	public abstract void updateNode(T node, final AjaxRequestTarget target);
 
 	/**
 	 * The state of a node.
