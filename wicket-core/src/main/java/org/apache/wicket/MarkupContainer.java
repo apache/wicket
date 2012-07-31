@@ -43,6 +43,7 @@ import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
@@ -151,7 +152,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					if (child instanceof Border.BorderBodyContainer)
 					{
 						msg += ". Please consider using Border.addToBorder(new " +
-							this.getClass().getSimpleName() + "(\"" + this.getId() +
+								Classes.simpleName(this.getClass()) + "(\"" + this.getId() +
 							"\", ...) instead of add(...)";
 					}
 
@@ -818,7 +819,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	public String toString(final boolean detailed)
 	{
 		final StringBuilder buffer = new StringBuilder();
-		buffer.append('[').append(this.getClass().getSimpleName()).append(' ');
+		buffer.append('[').append(Classes.simpleName(this.getClass())).append(' ');
 		buffer.append(super.toString(detailed));
 		if (detailed && children_size() != 0)
 		{

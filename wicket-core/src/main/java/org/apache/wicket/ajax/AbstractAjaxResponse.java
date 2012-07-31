@@ -40,6 +40,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -729,7 +730,7 @@ abstract class AbstractAjaxResponse
 	{
 		if (frozen)
 		{
-			throw new IllegalStateException(clazz.getSimpleName() + "s can no " +
+			throw new IllegalStateException(Classes.simpleName(clazz) + "s can no " +
 					" longer be added");
 		}
 	}

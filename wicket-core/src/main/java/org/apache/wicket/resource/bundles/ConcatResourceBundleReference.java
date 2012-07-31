@@ -32,6 +32,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * A resource bundle that automatically concatenates the given resources. These resources should all
@@ -126,7 +127,7 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 				throw new IllegalArgumentException(
 					"ConcatResourceBundleReference only works with CssResourceReference and JavaScriptResourceReference, " +
 						curProvidedResource + " provides a " +
-						reference.getClass().getSimpleName());
+						Classes.simpleName(reference.getClass()));
 			}
 		}
 	}

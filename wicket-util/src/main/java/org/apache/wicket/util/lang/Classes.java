@@ -40,6 +40,35 @@ public final class Classes
 	}
 
 	/**
+	 * Gets the simple name (without the package) of the given class or null if the class is null.
+	 *
+	 * @param c
+	 *            The class
+	 * @return The class simple name
+	 */
+	public static String simpleName(final Class<?> c)
+	{
+		String simpleName;
+		if (c != null)
+		{
+			if (c.isAnonymousClass())
+			{
+				simpleName = c.getSuperclass().getSimpleName();
+			}
+			else
+			{
+				simpleName = c.getSimpleName();
+			}
+		}
+		else
+		{
+			simpleName = null;
+		}
+
+		return simpleName;
+	}
+
+	/**
 	 * Takes a Class and a relative path to a class and returns any class at that relative path. For
 	 * example, if the given Class was java.lang.System and the relative path was "../util/List",
 	 * then the java.util.List class would be returned.

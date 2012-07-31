@@ -32,6 +32,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.resource.CircularDependencyException;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * {@code ResourceAggregator} implements resource dependencies, resource bundles and sorting of
@@ -101,7 +102,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		@Override
 		public String toString()
 		{
-			return (renderBase == null ? "null" : renderBase.getClass().getSimpleName()) + "@" +
+			return (renderBase == null ? "null" : Classes.simpleName(renderBase.getClass())) + '@' +
 				indexInRenderBase;
 		}
 	}

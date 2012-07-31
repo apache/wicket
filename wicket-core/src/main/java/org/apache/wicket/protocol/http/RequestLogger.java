@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -114,9 +115,10 @@ public class RequestLogger extends AbstractRequestLogger
 		AppendingStringBuffer sb = new AppendingStringBuffer(128);
 		if (handler != null)
 		{
+			Class<? extends IRequestHandler> handlerClass = handler.getClass();
 			sb.append("handler=");
-			sb.append(handler.getClass().isAnonymousClass() ? handler.getClass().getName()
-				: handler.getClass().getSimpleName());
+			sb.append(handlerClass.isAnonymousClass() ? handlerClass.getName()
+					: Classes.simpleName(handlerClass));
 			if (handler instanceof ILoggableRequestHandler)
 			{
 				sb.append(",data=");

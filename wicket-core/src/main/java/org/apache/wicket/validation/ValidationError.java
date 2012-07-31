@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.markup.html.form.ValidationErrorFeedback;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -155,7 +156,7 @@ public final class ValidationError implements IValidationError
 	public ValidationError addKey(IValidator<?> validator)
 	{
 		Args.notNull(validator, "validator");
-		addKey(validator.getClass().getSimpleName());
+		addKey(Classes.simpleName(validator.getClass()));
 		return this;
 	}
 
@@ -175,7 +176,7 @@ public final class ValidationError implements IValidationError
 	public ValidationError addKey(IValidator<?> validator, String variation)
 	{
 		Args.notNull(validator, "validator");
-		String key = validator.getClass().getSimpleName();
+		String key = Classes.simpleName(validator.getClass());
 		if (!Strings.isEmpty(variation))
 		{
 			key = key + "." + variation.trim();
@@ -322,7 +323,7 @@ public final class ValidationError implements IValidationError
 	public String toString()
 	{
 		StringBuilder tostring = new StringBuilder();
-		tostring.append("[").append(getClass().getSimpleName());
+		tostring.append('[').append(Classes.simpleName(getClass()));
 
 		tostring.append(" message=[").append(message);
 

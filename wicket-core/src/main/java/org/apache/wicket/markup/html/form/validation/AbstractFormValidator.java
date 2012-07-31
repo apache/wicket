@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.validation.ValidationError;
 
 
@@ -109,7 +110,7 @@ public abstract class AbstractFormValidator extends Behavior implements IFormVal
 
 
 		ValidationError error = new ValidationError().addKey(resourceKey);
-		final String defaultKey = getClass().getSimpleName();
+		final String defaultKey = Classes.simpleName(getClass());
 		if (!resourceKey.equals(defaultKey))
 		{
 			error.addKey(defaultKey);
@@ -173,6 +174,6 @@ public abstract class AbstractFormValidator extends Behavior implements IFormVal
 	 */
 	protected String resourceKey()
 	{
-		return getClass().getSimpleName();
+		return Classes.simpleName(getClass());
 	}
 }
