@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -75,7 +74,9 @@ public final class EnhancedPageView extends GenericPanel<Page>
 	private ExpandState expandState;
 	private boolean showStatefulAndParentsOnly;
 	private boolean showBehaviors;
-	private Set<VisibleColumns> visibleColumns;
+
+	private List<IColumn<TreeNode, Void>> allColumns;
+	private List<IColumn<TreeNode, Void>> visibleColumns;
 
 	private AbstractTree<TreeNode> componentTree;
 
@@ -124,7 +125,8 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		expandState.expandAll();
 		showStatefulAndParentsOnly = false;
 		showBehaviors = true;
-		visibleColumns = EnumSet.allOf(VisibleColumns.class);
+		allColumns = allColumns();
+		visibleColumns = new ArrayList<IColumn<TreeNode, Void>>(allColumns);
 
 		// Name of page
 		add(new Label("info", new Model<String>()
@@ -165,22 +167,116 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		add(componentTree);
 	}
 
-	private enum VisibleColumns {
-		PATH("Path"), STATELESS("Stateless"), RENDER_TIME("Render Time"), SIZE("Size"), TYPE("Type"), MODEL(
-			"Model Object");
+	private List<IColumn<TreeNode, Void>> allColumns()
+	{
+		List<IColumn<TreeNode, Void>> columns = new ArrayList<IColumn<TreeNode, Void>>();
 
-		public final String name;
-
-		private VisibleColumns(String name)
+		columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Path"), "path")
 		{
-			this.name = name;
-		}
+			private static final long serialVersionUID = 1L;
 
-		@Override
-		public String toString()
+			@Override
+			public String getCssClass()
+			{
+				return "col_path";
+			}
+
+			@Override
+			public String toString()
+			{
+				return getDisplayModel().getObject();
+			}
+		});
+
+		columns.add(new TreeColumn<TreeNode, Void>(Model.of("Tree"))
 		{
-			return name;
-		}
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String toString()
+			{
+				return getDisplayModel().getObject();
+			}
+		});
+
+		columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Stateless"), "stateless")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String getCssClass()
+			{
+				return "col_stateless";
+			}
+
+			@Override
+			public String toString()
+			{
+				return getDisplayModel().getObject();
+			}
+		});
+		columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Render time (ms)"), "renderTime")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String getCssClass()
+			{
+				return "col_renderTime";
+			}
+
+			@Override
+			public String toString()
+			{
+				return getDisplayModel().getObject();
+			}
+		});
+		columns.add(new AbstractColumn<TreeNode, Void>(Model.of("Size"))
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void populateItem(Item<ICellPopulator<TreeNode>> item, String componentId,
+				IModel<TreeNode> rowModel)
+			{
+				item.add(new Label(componentId, Bytes.bytes(rowModel.getObject().getSize())
+					.toString()));
+			}
+
+			@Override
+			public String getCssClass()
+			{
+				return "col_size";
+			}
+
+			@Override
+			public String toString()
+			{
+				return getDisplayModel().getObject();
+			}
+		});
+		columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Type"), "type")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String toString()
+			{
+				return getDisplayModel().getObject();
+			}
+		});
+		columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Model Object"), "model")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String toString()
+			{
+				return getDisplayModel().getObject();
+			}
+		});
+
+		return columns;
 	}
 
 	private void addTreeControls()
@@ -190,9 +286,8 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		form.add(new CheckBox("showStateless", new PropertyModel<Boolean>(this,
 			"showStatefulAndParentsOnly")));
 		form.add(new CheckBox("showBehaviors", new PropertyModel<Boolean>(this, "showBehaviors")));
-		form.add(new CheckBoxMultipleChoice<VisibleColumns>("visibleColumns",
-			new PropertyModel<Set<VisibleColumns>>(this, "visibleColumns"),
-			Arrays.asList(VisibleColumns.values())).setSuffix(" "));
+		form.add(new CheckBoxMultipleChoice<IColumn<TreeNode, Void>>("visibleColumns",
+			new PropertyModel<List<IColumn<TreeNode, Void>>>(this, "visibleColumns"), allColumns).setSuffix(" "));
 		form.add(new AjaxFallbackButton("submit", form)
 		{
 			private static final long serialVersionUID = 1L;
@@ -200,11 +295,10 @@ public final class EnhancedPageView extends GenericPanel<Page>
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				AbstractTree<TreeNode> newTree = newTree();
-				componentTree.replaceWith(newTree);
-				componentTree = newTree;
 				if (target != null)
+				{
 					target.add(componentTree);
+				}
 			}
 		});
 
@@ -237,78 +331,6 @@ public final class EnhancedPageView extends GenericPanel<Page>
 
 	private AbstractTree<TreeNode> newTree()
 	{
-		List<IColumn<TreeNode, Void>> columns = new ArrayList<IColumn<TreeNode, Void>>();
-		if (visibleColumns.contains(VisibleColumns.PATH))
-		{
-			columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Path"), "path")
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String getCssClass()
-				{
-					return "col_path";
-				}
-			});
-		}
-		columns.add(new TreeColumn<TreeNode, Void>(Model.of("Tree")));
-		if (visibleColumns.contains(VisibleColumns.STATELESS))
-		{
-			columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Stateless"), "stateless")
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String getCssClass()
-				{
-					return "col_stateless";
-				}
-			});
-		}
-		if (visibleColumns.contains(VisibleColumns.RENDER_TIME))
-		{
-			columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Render time (ms)"),
-				"renderTime")
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String getCssClass()
-				{
-					return "col_renderTime";
-				}
-			});
-		}
-		if (visibleColumns.contains(VisibleColumns.SIZE))
-		{
-			columns.add(new AbstractColumn<TreeNode, Void>(Model.of("Size"))
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void populateItem(Item<ICellPopulator<TreeNode>> item, String componentId,
-					IModel<TreeNode> rowModel)
-				{
-					item.add(new Label(componentId, Bytes.bytes(rowModel.getObject().getSize())
-						.toString()));
-				}
-
-				@Override
-				public String getCssClass()
-				{
-					return "col_size";
-				}
-			});
-		}
-		if (visibleColumns.contains(VisibleColumns.TYPE))
-		{
-			columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Type"), "type"));
-		}
-		if (visibleColumns.contains(VisibleColumns.MODEL))
-		{
-			columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Model Object"), "model"));
-		}
-
 		TreeProvider provider = new TreeProvider();
 		IModel<Set<TreeNode>> expandStateModel = new LoadableDetachableModel<Set<TreeNode>>()
 		{
@@ -320,7 +342,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 				return expandState;
 			}
 		};
-		AbstractTree<TreeNode> tree = new DefaultTableTree<TreeNode, Void>("tree", columns,
+		AbstractTree<TreeNode> tree = new DefaultTableTree<TreeNode, Void>("tree", visibleColumns,
 			provider, Integer.MAX_VALUE, expandStateModel)
 		{
 			private static final long serialVersionUID = 1L;
