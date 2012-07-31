@@ -438,7 +438,15 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		{
 			if (node instanceof Component)
 			{
-				String model = ((Component)node).getDefaultModelObjectAsString();
+				String model;
+				try
+				{
+					model = ((Component)node).getDefaultModelObjectAsString();
+				}
+				catch (Exception e)
+				{
+					model = e.getMessage();
+				}
 				return model;
 			}
 			return null;
