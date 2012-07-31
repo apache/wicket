@@ -123,6 +123,11 @@ public abstract class AbstractTree<T> extends Panel
 
 	/**
 	 * Factory method for a model, by default creates a model containing a {@link ProviderSubset}.
+	 * Depending on your {@link ITreeProvider}'s model you might consider to provide a custom
+	 * {@link Set} implementation.
+	 * <p>
+	 * Note: The contained {@link Set} has at least to implement {@link Set#add(Object)},
+	 * {@link Set#remove(Object)} and {@link Set#contains(Object)}.
 	 * 
 	 * @return model for this tree
 	 */
