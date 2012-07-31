@@ -83,6 +83,7 @@ import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -3239,7 +3240,7 @@ public abstract class Component
 					buffer.append(", page = <No Page>, path = ")
 						.append(getPath())
 						.append('.')
-						.append(getClass().getSimpleName());
+						.append(Classes.simpleName(getClass()));
 				}
 				else
 				{
@@ -3248,7 +3249,7 @@ public abstract class Component
 						.append(", path = ")
 						.append(getPath())
 						.append('.')
-						.append(getClass().getSimpleName())
+						.append(Classes.simpleName(getClass()))
 						.append(", isVisible = ")
 						.append((determineVisibility()))
 						.append(", isVersioned = ")
