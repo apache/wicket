@@ -55,20 +55,20 @@ public final class DefaultPageFactory implements IPageFactory
 	private final ConcurrentMap<String, Boolean> pageToBookmarkableCache = Generics.newConcurrentHashMap();
 
 	@Override
-	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass)
+	public final <C extends IRequestablePage> C newPage(final Class<C> pageClass)
 	{
 		try
 		{
 			// throw an exception in case default constructor is missing
 			// => improved error message
-			Constructor<? extends IRequestablePage> constructor = pageClass.getConstructor((Class<?>[])null);
+			Constructor<C> constructor = pageClass.getConstructor((Class<?>[])null);
 
 			return processPage(newPage(constructor, null), null);
 		}
 		catch (NoSuchMethodException e)
 		{
 			// a bit of a hack here..
-			Constructor<?> constructor = constructor(pageClass, PageParameters.class);
+			Constructor<C> constructor = constructor(pageClass, PageParameters.class);
 			if (constructor != null)
 			{
 				PageParameters pp = new PageParameters();
@@ -83,11 +83,11 @@ public final class DefaultPageFactory implements IPageFactory
 	}
 
 	@Override
-	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass,
+	public final <C extends IRequestablePage> C newPage(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
 		// Try to get constructor that takes PageParameters
-		Constructor<?> constructor = constructor(pageClass, PageParameters.class);
+		Constructor<C> constructor = constructor(pageClass, PageParameters.class);
 
 		// If we got a PageParameters constructor
 		if (constructor != null)
@@ -112,11 +112,11 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private <C extends IRequestablePage> Constructor<?> constructor(final Class<C> pageClass,
+	private <C extends IRequestablePage> Constructor<C> constructor(final Class<C> pageClass,
 		final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
-		Constructor<?> constructor = constructorForClass.get(pageClass);
+		Constructor<C> constructor = (Constructor<C>) constructorForClass.get(pageClass);
 
 		// Need to look up?
 		if (constructor == null)
@@ -127,7 +127,7 @@ public final class DefaultPageFactory implements IPageFactory
 				constructor = pageClass.getConstructor(new Class[] { argumentType });
 
 				// Store it in the cache
-				Constructor<?> tmpConstructor = constructorForClass.putIfAbsent(pageClass, constructor);
+				Constructor<C> tmpConstructor = (Constructor<C>) constructorForClass.putIfAbsent(pageClass, constructor);
 				if (tmpConstructor != null)
 				{
 					constructor = tmpConstructor;
@@ -161,17 +161,17 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given constructor and
 	 *             argument.
 	 */
-	private Page newPage(final Constructor<?> constructor, final Object argument)
+	private <C extends IRequestablePage> C newPage(final Constructor<C> constructor, final PageParameters argument)
 	{
 		try
 		{
 			if (argument != null)
 			{
-				return (Page)constructor.newInstance(argument);
+				return constructor.newInstance(argument);
 			}
 			else
 			{
-				return (Page)constructor.newInstance();
+				return constructor.newInstance();
 			}
 		}
 		catch (InstantiationException e)
@@ -194,7 +194,7 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 	}
 
-	private Page processPage(final Page page, final PageParameters pageParameters)
+	private <C extends IRequestablePage> C processPage(final C page, final PageParameters pageParameters)
 	{
 		// the page might have not propagate page parameters from constructor. if that's the case
 		// we force the parameters
@@ -203,7 +203,7 @@ public final class DefaultPageFactory implements IPageFactory
 			page.getPageParameters().overwriteWith(pageParameters);
 		}
 
-		page.setWasCreatedBookmarkable(true);
+		((Page)page).setWasCreatedBookmarkable(true);
 
 		return page;
 	}
