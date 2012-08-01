@@ -988,7 +988,34 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#'+ attrs.c).triggerHandler(attrs.e);
+			jQuery('#'+ attrs.c).triggerHandler("nestedFormSubmit");
+		});
+
+		/**
+		 * Tests that a huge response with more than 1000 evaluations is properly executed.
+		 * FunctionsExecuter can execute at most 1000 functions in one go, the rest are executed
+		 * in setTimeout() to prevent stack size exceeds.
+		 * WICKET-4675
+		 */
+		asyncTest('Process response with 2k+ evaluations.', function () {
+
+			expect(2133);
+
+			var attrs = {
+				u:  "data/ajax/manyEvaluationsResponse.xml", // the mock response
+				e:  "manyEvaluations", // the event
+				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
+				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
+				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { ok(true, "Success handler executed"); } ],
+				fh: [ function(attrs) { ok(false, "Failure handler should not be executed"); } ],
+				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery(window).triggerHandler("manyEvaluations");
 		});
 	}
 });

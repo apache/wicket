@@ -109,10 +109,11 @@
 	/**
 	 * Functions executer takes array of functions and executes them. Each function gets
 	 * the notify object, which needs to be called for the next function to be executed.
-	 * This way the functions can be executed synchronously. Each function has to call
-	 * the notify object at some point, otherwise the functions after it wont be executed.
-	 * After the FunctionExecuter is initiatialized, the start methods triggers the
-	 * first function.
+	 * This way the functions can be executed synchronously.
+	 * This is needed because header contributions need to do asynchronous download of JS and/or CSS
+	 * and they have to let next function to run only after the download.
+	 * Each function has to call the notify object at some point, otherwise the functions after it wont be executed.
+	 * After the FunctionsExecuter is initiatialized, the start methods triggers the first function.
 	 */
 	var FunctionsExecuter = function (functions) {
 
@@ -139,9 +140,8 @@
 				run = jQuery.proxy(run, this);
 				this.current++;
 
-				if (this.depth > 50 || Wicket.Browser.isKHTML() || Wicket.Browser.isSafari()) {
-					// to prevent khtml bug that crashes entire browser
-					// or to prevent stack overflow (safari has small call stack)
+				if (this.depth > 1000) {
+					// to prevent stack overflow (see WICKET-4675)
 					this.depth = 0;
 					window.setTimeout(run, 1);
 				} else {
