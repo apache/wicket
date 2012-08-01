@@ -927,7 +927,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#'+ attrs.c).triggerHandler(attrs.e);
+			jQuery('#'+ attrs.c).triggerHandler("nestedFormSubmit");
 		});
 
 
@@ -958,7 +958,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#'+ attrs.c).triggerHandler(attrs.e);
+			jQuery('#'+ attrs.c).triggerHandler("nestedFormSubmit");
 		});
 
 		/**
