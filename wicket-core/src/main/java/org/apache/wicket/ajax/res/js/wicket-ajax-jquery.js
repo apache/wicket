@@ -799,22 +799,33 @@
 		 */
 		handleMultipartComplete: function (event) {
 
-			var iframe = event.target;
-
-			var envelope = iframe.contentWindow.document;
-			if (envelope.XMLDocument) {
-				envelope = envelope.XMLDocument;
-			}
-
-			// process the response
-			var context = event.data;
-			this.loadedCallback(envelope, context);
+			var context = event.data,
+				iframe = event.target,
+				envelope;
 
 			// stop the event
 			event.stopPropagation();
 
 			// remove the event
 			jQuery(iframe).off("load.handleMultipartComplete");
+
+			try {
+				envelope = iframe.contentWindow.document;
+			} catch (e) {
+				Wicket.Log.error("Cannot read Ajax response for multipart form submit: " + e);
+			}
+
+			if (typeof(envelope) === 'undefined') {
+				this.failure(context, null, "No XML response in the IFrame document", "Failure");
+			}
+			else {
+				if (envelope.XMLDocument) {
+					envelope = envelope.XMLDocument;
+				}
+
+				// process the response
+				this.loadedCallback(envelope, context);
+			}
 
 			context.steps.push(jQuery.proxy(function(notify) {
 				// remove the iframe and button elements
