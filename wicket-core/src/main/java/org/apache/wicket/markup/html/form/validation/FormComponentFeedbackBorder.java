@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.border.Border;
  * asterisk.
  * <p>
  * <strong>Note: </strong> Since this border checks its children do not use
- * setTransparentResolver(true) and add the children directly into the border
+ * TransparentWebMarkupContainer and add the children directly into the border
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius

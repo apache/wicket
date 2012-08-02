@@ -2239,7 +2239,9 @@ public abstract class Component
 			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 			if (feedbacks != null)
 			{
-				for (Component feedback : feedbacks)
+				// iterate over a copy because a IFeedback may add more IFeedback children (WICKET-4687)
+				Component[] feedbacksCopy = feedbacks.toArray(new Component[feedbacks.size()]);
+				for (Component feedback : feedbacksCopy)
 				{
 					feedback.internalBeforeRender();
 				}
