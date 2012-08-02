@@ -657,7 +657,7 @@
 
 				var mouseOverFunc = function(event) {
 					setSelected(getElementIndex(this));
-					render(false, false); // don't scroll - breaks mouse weel scrolling
+					render(false, false); // don't scroll - breaks mouse wheel scrolling
 					showAutoComplete();
 				};
 				for(var i = 0;i < elementCount; i++) {
@@ -681,7 +681,7 @@
 						} else {
 							value=attr.value;
 						}
-						if (stripHTML(value) === input.value)
+						if (value === input.value)
 						{
 							selectedIndex = ec;
 							break;
@@ -728,7 +728,7 @@
 				} else {
 				value=attr.value;
 			}
-			return stripHTML(value);
+			return value;
 		}
 
 		function getElementIndex(element) {
@@ -740,10 +740,6 @@
 				}
 			}
 			return -1;
-		}
-
-		function stripHTML(str) {
-			return str.replace(/<[^>]+>/g,"");
 		}
 
 		function adjustScrollOffset(menu, item) { // this should consider margins/paddings; now it is not exact

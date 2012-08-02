@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Base for text renderers that simply want to show a string
@@ -33,6 +34,8 @@ public abstract class AbstractAutoCompleteTextRenderer<T> extends AbstractAutoCo
 	@Override
 	protected void renderChoice(final T object, final Response response, final String criteria)
 	{
-		response.write(getTextValue(object));
+		String textValue = getTextValue(object);
+		textValue = Strings.escapeMarkup(textValue).toString();
+		response.write(textValue);
 	}
 }
