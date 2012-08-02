@@ -1426,7 +1426,7 @@ public class BaseWicketTester
 	 */
 	public static class StartComponentInPage extends WebPage
 	{
-		private IMarkupFragment pageMarkup = null;
+		private transient IMarkupFragment pageMarkup = null;
 
 		/**
 		 * Construct.
