@@ -610,7 +610,7 @@
 		
 		/**
 		 * Method that processes a manually supplied <ajax-response>.
-		 * 
+		 *
 		 * @param {XmlDocument} data - the <ajax-response> XML document
 		 */
 		process: function(data) {
@@ -725,7 +725,7 @@
 			if (form.tagName.toLowerCase() !== "form") {
 				do {
 					form = form.parentNode;
-				} while(form.tagName.toLowerCase() != "form" && form !== document.body)
+				} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
 			}
 
 			if (form.tagName.toLowerCase() !== "form") {
