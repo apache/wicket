@@ -58,7 +58,8 @@ public class DataTableTest extends WicketTestCase
 	@Test
 	public void test_1() throws Exception
 	{
-		executeTest(DataTablePage.class, "DataTablePage_ExpectedResult.html");
+		tester.startPage(DataTablePage.class);
+		tester.assertRenderedPage(DataTablePage.class);
 
 		String document = tester.getLastResponseAsString();
 		int index = document.indexOf("<thead");
