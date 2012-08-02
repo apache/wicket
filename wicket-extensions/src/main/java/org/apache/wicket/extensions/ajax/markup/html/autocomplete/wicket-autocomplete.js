@@ -628,7 +628,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			
             var mouseOverFunc = function(event) {
                 setSelected(getElementIndex(this));
-                render(false, false); // don't scroll - breaks mouse weel scrolling
+                render(false, false); // don't scroll - breaks mouse wheel scrolling
                 showAutoComplete();
             };
             for(var i = 0;i < elementCount; i++) {
@@ -652,7 +652,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             		} else {
             			value=attr.value;
         			}
-        			if (stripHTML(value) == input.value)
+        			if (value == input.value)
         			{
         				selectedIndex = i;
         				break;
@@ -700,7 +700,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             } else {
             value=attr.value;
         }
-        return stripHTML(value);
+        return value;
     }
 
     function getElementIndex(element) {
@@ -710,10 +710,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			if(node==element)return i;
 		}
 		return -1;
-    }
-
-    function stripHTML(str) {
-        return str.replace(/<[^>]+>/g,"");
     }
     
     function adjustScrollOffset(menu, item) { // this should consider margins/paddings; now it is not exact
