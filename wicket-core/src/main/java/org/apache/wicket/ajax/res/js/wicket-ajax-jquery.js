@@ -2485,4 +2485,14 @@
 
 	Wicket.Event.add(window, 'domready', Wicket.Focus.attachFocusEvent);
 
+	/**
+	 * Remove any scheduled timers on the removed element.
+	 */
+	Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, element) {
+		var id = element.id;
+		if (Wicket.TimerHandles && Wicket.TimerHandles[id]) {
+			window.clearTimeout(Wicket.TimerHandles[id]);
+		}
+	});
+
 })();
