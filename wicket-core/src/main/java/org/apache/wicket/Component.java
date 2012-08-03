@@ -952,11 +952,7 @@ public abstract class Component
 	 */
 	public final void beforeRender()
 	{
-		if (!(this instanceof IFeedback))
-		{
-			internalBeforeRender();
-		}
-		else
+		if (this instanceof IFeedback)
 		{
 			// this component is a feedback. Feedback must be initialized last, so that
 			// they can collect messages from other components
@@ -984,6 +980,10 @@ public abstract class Component
 			{
 				feedbacks.add(this);
 			}
+		}
+		else
+		{
+			internalBeforeRender();
 		}
 	}
 
@@ -2210,7 +2210,8 @@ public abstract class Component
 			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 			if (feedbacks != null)
 			{
-				// iterate over a copy because a IFeedback may add more IFeedback children (WICKET-4687)
+				// iterate over a copy because a IFeedback may add more IFeedback children
+// (WICKET-4687)
 				Component[] feedbacksCopy = feedbacks.toArray(new Component[feedbacks.size()]);
 				for (Component feedback : feedbacksCopy)
 				{
