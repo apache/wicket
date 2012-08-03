@@ -969,9 +969,13 @@ public abstract class Component
 					new IVisitor<Component, Void>()
 					{
 						@Override
-						public void component(Component component, IVisit<Void> visit)
+						public void component(Component feedback, IVisit<Void> visit)
 						{
-							component.beforeRender();
+							feedback.beforeRender();
+
+							// don't need to go deeper,
+							// as the feedback will visit its children on its own
+							visit.dontGoDeeper();
 						}
 					});
 			}
