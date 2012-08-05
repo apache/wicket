@@ -29,14 +29,17 @@ public final class Numbers
 	/**
 	 * Prevent instantiation.
 	 */
-	private Numbers() {}
+	private Numbers()
+	{
+	}
 
 	/**
 	 * Returns the minimum value for the numberType's type
+	 * 
 	 * @param numberType
-	 *      the type of the number for which the minimum value will be returned
-	 * * @return the minimum value of the numberType or {@value Double#MIN_VALUE}
-	 * if the numberType itself is either {@code null} or has no minimum value
+	 *            the type of the number for which the minimum value will be returned
+	 * @return the minimum value of the numberType or {@value Double#MIN_VALUE} if the numberType
+	 *         itself is either {@code null} or has no minimum value
 	 */
 	public static Number getMinValue(Class<? extends Number> numberType)
 	{
@@ -45,22 +48,28 @@ public final class Numbers
 		{
 			result = Integer.MIN_VALUE;
 		}
-		else if (Long.class == numberType || long.class == numberType) {
+		else if (Long.class == numberType || long.class == numberType)
+		{
 			result = Long.MIN_VALUE;
 		}
-		else if (Float.class == numberType || float.class == numberType) {
+		else if (Float.class == numberType || float.class == numberType)
+		{
 			result = Float.MIN_VALUE;
 		}
-		else if (Double.class == numberType || double.class == numberType) {
+		else if (Double.class == numberType || double.class == numberType)
+		{
 			result = Double.MIN_VALUE;
 		}
-		else if (Byte.class == numberType || byte.class == numberType) {
+		else if (Byte.class == numberType || byte.class == numberType)
+		{
 			result = Byte.MIN_VALUE;
 		}
-		else if (Short.class == numberType || short.class == numberType) {
+		else if (Short.class == numberType || short.class == numberType)
+		{
 			result = Short.MIN_VALUE;
 		}
-		else { // null of any other Number
+		else
+		{ // null of any other Number
 			LOG.debug("'{}' has no minimum value. Falling back to Double.MIN_VALUE.", numberType);
 			result = Double.MIN_VALUE;
 		}
@@ -71,10 +80,11 @@ public final class Numbers
 
 	/**
 	 * Returns the maximum value for the numberType's type
+	 * 
 	 * @param numberType
-	 *      the type of the number for which the maximum value will be returned
-	 * @return the maximum value of the numberType or {@value Double#MAX_VALUE}
-	 * if the numberType itself is either {@code null} or has no maximum value
+	 *            the type of the number for which the maximum value will be returned
+	 * @return the maximum value of the numberType or {@value Double#MAX_VALUE} if the numberType
+	 *         itself is either {@code null} or has no maximum value
 	 */
 	public static Number getMaxValue(Class<? extends Number> numberType)
 	{
@@ -83,22 +93,28 @@ public final class Numbers
 		{
 			result = Integer.MAX_VALUE;
 		}
-		else if (Long.class == numberType || long.class == numberType) {
+		else if (Long.class == numberType || long.class == numberType)
+		{
 			result = Long.MAX_VALUE;
 		}
-		else if (Float.class == numberType || float.class == numberType) {
+		else if (Float.class == numberType || float.class == numberType)
+		{
 			result = Float.MAX_VALUE;
 		}
-		else if (Double.class == numberType || double.class == numberType) {
+		else if (Double.class == numberType || double.class == numberType)
+		{
 			result = Double.MAX_VALUE;
 		}
-		else if (Byte.class == numberType || byte.class == numberType) {
+		else if (Byte.class == numberType || byte.class == numberType)
+		{
 			result = Byte.MAX_VALUE;
 		}
-		else if (Short.class == numberType || short.class == numberType) {
+		else if (Short.class == numberType || short.class == numberType)
+		{
 			result = Short.MAX_VALUE;
 		}
-		else { // null of any other Number
+		else
+		{ // null of any other Number
 			LOG.debug("'{}' has no maximum value. Falling back to Double.MAX_VALUE.");
 			result = Double.MAX_VALUE;
 		}
