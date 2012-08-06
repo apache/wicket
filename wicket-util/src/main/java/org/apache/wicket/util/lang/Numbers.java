@@ -37,9 +37,9 @@ public final class Numbers
 	 * Returns the minimum value for the numberType's type
 	 * 
 	 * @param numberType
-	 *            the type of the number for which the minimum value will be returned * @return the
-	 *            minimum value of the numberType or {@value Double#MIN_VALUE} if the numberType
-	 *            itself is either {@code null} or has no minimum value
+	 *            the type of the number for which the minimum value will be returned
+	 * @return the minimum value of the numberType or Double if the numberType itself is either
+	 *         {@code null} or has no minimum value
 	 */
 	public static Number getMinValue(Class<? extends Number> numberType)
 	{
@@ -54,11 +54,11 @@ public final class Numbers
 		}
 		else if (Float.class == numberType || float.class == numberType)
 		{
-			result = Float.MIN_VALUE;
+			result = -Float.MAX_VALUE;
 		}
 		else if (Double.class == numberType || double.class == numberType)
 		{
-			result = Double.MIN_VALUE;
+			result = -Double.MAX_VALUE;
 		}
 		else if (Byte.class == numberType || byte.class == numberType)
 		{
@@ -70,8 +70,8 @@ public final class Numbers
 		}
 		else
 		{ // null of any other Number
-			LOG.debug("'{}' has no minimum value. Falling back to Double.MIN_VALUE.", numberType);
-			result = Double.MIN_VALUE;
+			LOG.debug("'{}' has no minimum value. Falling back to Double.", numberType);
+			result = -Double.MAX_VALUE;
 		}
 
 		return result;
