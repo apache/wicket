@@ -257,7 +257,7 @@
 			win = window.parent.Wicket.Window;
 		} catch (ignore) {}
 
-		if (typeof(win) !== "undefined" && typeof(win.current) !== "undefined") {
+		if (win && win.current) {
 			// we can't call close directly, because it will delete our window,
 			// so we will schedule it as timeout for parent's window
 			window.parent.setTimeout(function() {
