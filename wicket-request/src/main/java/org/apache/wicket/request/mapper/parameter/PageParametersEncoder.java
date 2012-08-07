@@ -33,9 +33,6 @@ public class PageParametersEncoder implements IPageParametersEncoder
 	{
 	}
 
-	/**
-	 * @see IPageParametersEncoder#decodePageParameters(org.apache.wicket.request.Url)
-	 */
 	@Override
 	public PageParameters decodePageParameters(final Url url)
 	{
@@ -56,9 +53,6 @@ public class PageParametersEncoder implements IPageParametersEncoder
 		return parameters.isEmpty() ? null : parameters;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.IPageParametersEncoder#encodePageParameters(org.apache.wicket.request.mapper.parameter.PageParameters)
-	 */
 	@Override
 	public Url encodePageParameters(final PageParameters pageParameters)
 	{

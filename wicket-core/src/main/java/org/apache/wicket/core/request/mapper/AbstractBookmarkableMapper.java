@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
@@ -34,7 +37,9 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
+import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,11 +138,27 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		}
 	}
 
+	private final List<MountPathSegment> pathSegments;
+
+	protected final String[] mountSegments;
+
+	protected final IPageParametersEncoder pageParametersEncoder;
+
 	/**
 	 * Construct.
 	 */
 	public AbstractBookmarkableMapper()
 	{
+		this("notUsed", new PageParametersEncoder());
+	}
+
+	public AbstractBookmarkableMapper(String mountPath, IPageParametersEncoder pageParametersEncoder)
+	{
+		Args.notEmpty(mountPath, "mountPath");
+
+		this.pageParametersEncoder = Args.notNull(pageParametersEncoder, "pageParametersEncoder");
+		mountSegments = getMountSegments(mountPath);
+		pathSegments = getPathSegments(mountSegments);
 	}
 
 	/**
@@ -427,5 +448,214 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		}
 
 		return new PageInfo(pageId);
+	}
+
+	protected static class MountPathSegment
+	{
+		private int segmentIndex;
+		private String fixedPart;
+		private int minParameters;
+		private int optionalParameters;
+
+		public MountPathSegment(int segmentIndex)
+		{
+			this.segmentIndex = segmentIndex;
+		}
+
+		public void setFixedPart(String fixedPart)
+		{
+			this.fixedPart = fixedPart;
+		}
+
+		public void addRequiredParameter()
+		{
+			minParameters++;
+		}
+
+		public void addOptionalParameter()
+		{
+			optionalParameters++;
+		}
+
+		public int getSegmentIndex()
+		{
+			return segmentIndex;
+		}
+
+		public String getFixedPart()
+		{
+			return fixedPart;
+		}
+
+		public int getMinParameters()
+		{
+			return minParameters;
+		}
+
+		public int getOptionalParameters()
+		{
+			return optionalParameters;
+		}
+
+		public int getMaxParameters()
+		{
+			return getOptionalParameters() + getMinParameters();
+		}
+
+		public int getFixedPartSize()
+		{
+			return getFixedPart() == null ? 0 : 1;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "(" + getSegmentIndex() + ") " + getMinParameters() + '-' + getMaxParameters() +
+					' ' + (getFixedPart() == null ? "(end)" : getFixedPart());
+		}
+	}
+
+	protected List<MountPathSegment> getPathSegments(String[] segments)
+	{
+		List<MountPathSegment> ret = new ArrayList<MountPathSegment>();
+		int segmentIndex = 0;
+		MountPathSegment curPathSegment = new MountPathSegment(segmentIndex);
+		ret.add(curPathSegment);
+		for (String curSegment : segments)
+		{
+			if (isFixedSegment(curSegment))
+			{
+				curPathSegment.setFixedPart(curSegment);
+				curPathSegment = new MountPathSegment(segmentIndex + 1);
+				ret.add(curPathSegment);
+			}
+			else if (getPlaceholder(curSegment) != null)
+			{
+				curPathSegment.addRequiredParameter();
+			}
+			else
+			{
+				curPathSegment.addOptionalParameter();
+			}
+			segmentIndex++;
+		}
+		return ret;
+	}
+
+	protected boolean isFixedSegment(String segment)
+	{
+		return getOptionalPlaceholder(segment) == null && getPlaceholder(segment) == null;
+	}
+
+
+	/**
+	 * Extracts the PageParameters from URL if there are any
+	 */
+	protected PageParameters extractPageParameters(Request request, Url url)
+	{
+		int[] matchedParameters = getMatchedSegmentSizes(url);
+		int total = 0;
+		for (int curMatchSize : matchedParameters)
+			total += curMatchSize;
+		PageParameters pageParameters = extractPageParameters(request, total, pageParametersEncoder);
+
+		int skippedParameters = 0;
+		for (int pathSegmentIndex = 0; pathSegmentIndex < pathSegments.size(); pathSegmentIndex++)
+		{
+			MountPathSegment curPathSegment = pathSegments.get(pathSegmentIndex);
+			int matchSize = matchedParameters[pathSegmentIndex] - curPathSegment.getFixedPartSize();
+			int optionalParameterMatch = matchSize - curPathSegment.getMinParameters();
+			for (int matchSegment = 0; matchSegment < matchSize; matchSegment++)
+			{
+				if (pageParameters == null)
+				{
+					pageParameters = new PageParameters();
+				}
+
+				int curSegmentIndex = matchSegment + curPathSegment.getSegmentIndex();
+				String curSegment = mountSegments[curSegmentIndex];
+				String placeholder = getPlaceholder(curSegment);
+				String optionalPlaceholder = getOptionalPlaceholder(curSegment);
+				// extract the parameter from URL
+				if (placeholder != null)
+				{
+					pageParameters.add(placeholder,
+							url.getSegments().get(curSegmentIndex - skippedParameters));
+				}
+				else if (optionalPlaceholder != null && optionalParameterMatch > 0)
+				{
+					pageParameters.add(optionalPlaceholder,
+							url.getSegments().get(curSegmentIndex - skippedParameters));
+					optionalParameterMatch--;
+				}
+			}
+			skippedParameters += curPathSegment.getMaxParameters() - matchSize;
+		}
+		return pageParameters;
+	}
+
+	protected int[] getMatchedSegmentSizes(Url url)
+	{
+		int[] ret = new int[pathSegments.size()];
+		int segmentIndex = 0;
+		int pathSegmentIndex = 0;
+		for (MountPathSegment curPathSegment : pathSegments.subList(0, pathSegments.size() - 1))
+		{
+			boolean foundFixedPart = false;
+			segmentIndex += curPathSegment.getMinParameters();
+			int max = Math.min(curPathSegment.getOptionalParameters() + 1,
+					url.getSegments().size() - segmentIndex);
+
+			for (int count = max - 1; count >= 0; count--)
+			{
+				if (url.getSegments()
+						.get(segmentIndex + count)
+						.equals(curPathSegment.getFixedPart()))
+				{
+					foundFixedPart = true;
+					segmentIndex += count + 1;
+					ret[pathSegmentIndex] = count + curPathSegment.getMinParameters() + 1;
+					break;
+				}
+			}
+			if (!foundFixedPart)
+				return null;
+			pathSegmentIndex++;
+		}
+		MountPathSegment lastSegment = pathSegments.get(pathSegments.size() - 1);
+		segmentIndex += lastSegment.getMinParameters();
+		if (segmentIndex > url.getSegments().size())
+			return null;
+		ret[pathSegmentIndex] = Math.min(lastSegment.getMaxParameters(), url.getSegments().size() -
+				segmentIndex + lastSegment.getMinParameters());
+		return ret;
+	}
+
+	protected void setPlaceholders(PageParameters parameters, Url url)
+	{
+		int dropped = 0;
+		for (int i = 0; i < mountSegments.length; ++i)
+		{
+			String placeholder = getPlaceholder(mountSegments[i]);
+			String optionalPlaceholder = getOptionalPlaceholder(mountSegments[i]);
+			if (placeholder != null)
+			{
+				url.getSegments().set(i - dropped, parameters.get(placeholder).toString(""));
+				parameters.remove(placeholder);
+			}
+			else if (optionalPlaceholder != null)
+			{
+				if (parameters.getNamedKeys().contains(optionalPlaceholder))
+				{
+					url.getSegments().set(i - dropped, parameters.get(optionalPlaceholder).toString(""));
+					parameters.remove(optionalPlaceholder);
+				}
+				else
+				{
+					url.getSegments().remove(i - dropped);
+					dropped++;
+				}
+			}
+		}
 	}
 }

@@ -24,7 +24,6 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Decodes and encodes the following URLs:
@@ -47,20 +46,6 @@ import org.apache.wicket.util.lang.Args;
  */
 public class BookmarkableMapper extends AbstractBookmarkableMapper
 {
-	private final IPageParametersEncoder pageParametersEncoder;
-
-	/**
-	 * Construct.
-	 *
-	 * @param pageParametersEncoder
-	 */
-	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder)
-	{
-		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
-
-		this.pageParametersEncoder = pageParametersEncoder;
-	}
-
 	/**
 	 * Construct.
 	 */
@@ -70,8 +55,15 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * @see AbstractBookmarkableMapper#buildUrl(AbstractBookmarkableMapper.UrlInfo)
+	 * Construct.
+	 *
+	 * @param pageParametersEncoder
 	 */
+	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder)
+	{
+		super("notUsed", pageParametersEncoder);
+	}
+
 	@Override
 	protected Url buildUrl(UrlInfo info)
 	{
@@ -85,9 +77,6 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);
 	}
 
-	/**
-	 * @see AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
-	 */
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
@@ -122,18 +111,12 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		return null;
 	}
 
-	/**
-	 * @see AbstractBookmarkableMapper#pageMustHaveBeenCreatedBookmarkable()
-	 */
 	@Override
 	protected boolean pageMustHaveBeenCreatedBookmarkable()
 	{
 		return true;
 	}
 
-	/**
-	 * @see AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
 	@Override
 	public int getCompatibilityScore(Request request)
 	{

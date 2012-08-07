@@ -35,24 +35,19 @@ class UnmountedRequestHandlerAdapter implements IMountedRequestMapper
 	 * Construct.
 	 * 
 	 * @param handler
+	 *      the request handler to adapt
 	 */
 	public UnmountedRequestHandlerAdapter(final IRequestHandler handler)
 	{
 		this.handler = handler;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
 	@Override
 	public int getCompatibilityScore(final Request request)
 	{
 		return 0;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
-	 */
 	@Override
 	public Mount mapHandler(final IRequestHandler requestHandler)
 	{
@@ -63,10 +58,6 @@ class UnmountedRequestHandlerAdapter implements IMountedRequestMapper
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapRequest(org.apache.wicket.request.Request,
-	 *      org.apache.wicket.request.mapper.mount.MountParameters)
-	 */
 	@Override
 	public IRequestHandler mapRequest(final Request request, final MountParameters mountParams)
 	{

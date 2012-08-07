@@ -62,7 +62,6 @@ import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.render.WebPageRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -366,9 +365,8 @@ public abstract class WebApplication extends Application
 	 */
 	public final <P extends Page> void mountPackage(final String path, final Class<P> pageClass)
 	{
-		PackageMapper packageMapper = new PackageMapper(PackageName.forClass(pageClass));
-		MountMapper mountMapper = new MountMapper(path, packageMapper);
-		mount(mountMapper);
+		PackageMapper packageMapper = new PackageMapper(path, PackageName.forClass(pageClass));
+		mount(packageMapper);
 	}
 
 	/**

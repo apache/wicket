@@ -88,7 +88,8 @@ public class MountMapper extends AbstractMapper
 	{
 		if (urlStartsWith(request.getUrl(), mountSegments))
 		{
-			return mountSegments.length + mapper.getCompatibilityScore(dismountRequest(request));
+			Request dismountedRequest = dismountRequest(request);
+			return mountSegments.length + mapper.getCompatibilityScore(dismountedRequest);
 		}
 		else
 		{
@@ -118,7 +119,7 @@ public class MountMapper extends AbstractMapper
 	{
 		final Url url = request.getUrl();
 
-		if ((url.getSegments().size() >= mountSegments.length) && urlStartsWith(url, mountSegments))
+		if (urlStartsWith(url, mountSegments))
 		{
 			MountParameters params = new MountParameters();
 			for (int i = 0; i < mountSegments.length; i++)

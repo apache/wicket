@@ -20,6 +20,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Adapts a {@link IRequestMapper} to be used as a {@link IMountedRequestMapper}
@@ -36,25 +37,20 @@ class UnmountedMapperAdapter implements IMountedRequestMapper
 	 * Construct.
 	 * 
 	 * @param mapper
+	 *      the request mapper to adapt
 	 */
 	public UnmountedMapperAdapter(final IRequestMapper mapper)
 	{
 		super();
-		this.mapper = mapper;
+		this.mapper = Args.notNull(mapper, "mapper");
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
 	@Override
 	public int getCompatibilityScore(final Request request)
 	{
 		return mapper.getCompatibilityScore(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
-	 */
 	@Override
 	public Mount mapHandler(final IRequestHandler requestHandler)
 	{
@@ -66,10 +62,6 @@ class UnmountedMapperAdapter implements IMountedRequestMapper
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapRequest(org.apache.wicket.request.Request,
-	 *      org.apache.wicket.request.mapper.mount.MountParameters)
-	 */
 	@Override
 	public IRequestHandler mapRequest(final Request request, final MountParameters mountParams)
 	{
