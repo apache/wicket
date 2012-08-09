@@ -221,11 +221,11 @@ public class TabbedPanel<T extends ITab> extends Panel
 
 				if (getIndex() == getSelectedTab())
 				{
-					cssClass += " selected";
+					cssClass += ' ' + getSelectedTabCssClass();
 				}
 				if (getIndex() == getTabs().size() - 1)
 				{
-					cssClass += " last";
+					cssClass += ' ' + getLastTabCssClass();
 				}
 				tag.put("class", cssClass.trim());
 			}
@@ -238,9 +238,6 @@ public class TabbedPanel<T extends ITab> extends Panel
 		};
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -280,6 +277,24 @@ public class TabbedPanel<T extends ITab> extends Panel
 	protected String getTabContainerCssClass()
 	{
 		return "tab-row";
+	}
+
+	/**
+	 * @return the value of css class attribute that will be added to last tab. The
+	 *         default value is <code>last</code>
+	 */
+	protected String getLastTabCssClass()
+	{
+		return "last";
+	}
+
+	/**
+	 * @return the value of css class attribute that will be added to selected tab. The
+	 *         default value is <code>selected</code>
+	 */
+	protected String getSelectedTabCssClass()
+	{
+		return "selected";
 	}
 
 	/**
