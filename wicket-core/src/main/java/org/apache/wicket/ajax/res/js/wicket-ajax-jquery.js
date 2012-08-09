@@ -68,16 +68,8 @@
 	 * @param {String} the value of the iframe's name attribute
 	 */
 	createIFrame = function (iframeName) {
-		var $iframe = jQuery('<iframe>', {
-			name: iframeName,
-			id: iframeName,
-			css: {
-				position: 'absolute',
-				top: '-9999px',
-				left: '-9999px'
-			},
-			src: 'about:blank'
-		});
+		var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
+			'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;">');
 		return $iframe[0];
 	};
 
@@ -815,7 +807,7 @@
 				Wicket.Log.error("Cannot read Ajax response for multipart form submit: " + e);
 			}
 
-			if (typeof(envelope) === 'undefined') {
+			if (isUndef(envelope)) {
 				this.failure(context, null, "No XML response in the IFrame document", "Failure");
 			}
 			else {
@@ -859,7 +851,7 @@
 			try {
 				var root = envelope.getElementsByTagName("ajax-response")[0];
 
-				if (root === null && envelope.compatMode === 'BackCompat') {
+				if (isUndef(root) && envelope.compatMode === 'BackCompat') {
 					envelope = htmlToDomDocument(envelope);
 					root = envelope.getElementsByTagName("ajax-response")[0];
 				}
