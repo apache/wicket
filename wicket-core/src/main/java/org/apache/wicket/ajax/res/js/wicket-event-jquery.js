@@ -25,7 +25,7 @@
 ;(function (undefined) {
 	'use strict';
 
-	if (typeof(Wicket) === 'object') {
+	if (typeof(Wicket) === 'object' && typeof(Wicket.Event) === 'object') {
 		return;
 	}
 

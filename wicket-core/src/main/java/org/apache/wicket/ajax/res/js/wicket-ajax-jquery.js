@@ -28,7 +28,7 @@
 
 	'use strict';
 
-	if (typeof(Wicket) === 'object' && typeof(Wicket.Ajax) === 'object') {
+	if (typeof(Wicket) === 'object' && typeof(Wicket.Head) === 'object') {
 		return;
 	}
 
