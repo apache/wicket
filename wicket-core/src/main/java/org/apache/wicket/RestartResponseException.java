@@ -29,6 +29,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * page.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @see NonResettingRestartException
  */
 public class RestartResponseException extends ResetResponseException
 {
