@@ -177,8 +177,10 @@
 							hidingAutocomplete = 1;
 							if(value) {
 								obj.value = value;
-								if(typeof objonchange==="function") {
-									objonchange.apply(this,[event]);
+								if (typeof(objonchange) === "function") {
+									objonchange.apply(this,[jqEvent]);
+								} else {
+									jQuery(obj).triggerHandler('change');
 								}
 							}
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
@@ -644,15 +646,16 @@
 					var value = getSelectedValue();
 					var input = Wicket.$(elementId);
 					value = handleSelection(value);
-					if(value) {
-						input.value = value;
-						jQuery(input).trigger('change');
-					}
 					hideAutoComplete();
+					if (value) {
+						input.value = value;
+						jQuery(input).triggerHandler('change');
+					}
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
 						input.focus();
 					}
+					return true;
 				};
 
 				var mouseOverFunc = function(event) {
