@@ -23,8 +23,12 @@
 ;(function (undefined) {
 	'use strict';
 
-	if (typeof(Wicket) === "undefined") {
-		Wicket = {};
+	if (!window.Wicket) {
+		window.Wicket = {};
+	}
+
+	if (Wicket.AutoComplete) {
+		return;
 	}
 
 	Wicket.AutoCompleteSettings = {
@@ -101,40 +105,39 @@
 
 			objonchange=obj.onchange;
 
-			Wicket.Event.add(obj, 'blur', function (event) {
-				if(mouseactive===1){
+			Wicket.Event.add(obj, 'blur', function (jqEvent) {
+				if (mouseactive === 1) {
 					ignoreOneFocusGain = true;
 					Wicket.$(elementId).focus();
-					return killEvent(event);
+					return jqEvent.stopPropagation();
 				}
 
-				window.setTimeout( hideAutoComplete, 500);
+				window.setTimeout(hideAutoComplete, 500);
 			});
 
-			Wicket.Event.add(obj, 'focus', function (event) {
-				event = Wicket.Event.fix(event);
-				if (mouseactive===1) {
+			Wicket.Event.add(obj, 'focus', function (jqEvent) {
+				if (mouseactive === 1) {
 					ignoreOneFocusGain = false;
-					return killEvent(event);
+					return jqEvent.stopPropagation();
 				}
-				var input = event.target ? event.target : event.srcElement;
+				var input = jqEvent.target;
 				if (!ignoreOneFocusGain && (cfg.showListOnFocusGain || (cfg.showListOnEmptyInput && (!input.value))) && visible === 0) {
 					getAutocompleteMenu().showingAutocomplete = true;
 					if (cfg.showCompleteListOnFocusGain) {
 						updateChoices(true);
 					} else {
-					updateChoices();
+						updateChoices();
 					}
 				}
 				ignoreOneFocusGain = false;
 
 				if(typeof objonfocus==="function") {
-					return objonfocus.apply(this,[event]);
+					return objonfocus.apply(this,[jqEvent]);
 				}
 			});
 
-			Wicket.Event.add(obj, 'keydown', function(event) {
-				switch(Wicket.Event.keyCode(event)){
+			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
+				switch(Wicket.Event.keyCode(jqEvent)){
 					case KEY_UP:
 						if (selected>-1) {
 							setSelected(selected-1);
@@ -145,11 +148,11 @@
 							render(true, false);
 						}
 						if (Wicket.Browser.isSafari()) {
-							return killEvent(event);
+							return jqEvent.stopPropagation();
 						}
 						break;
 					case KEY_DOWN:
-						if(selected<elementCount-1){
+						if (selected < elementCount-1) {
 							setSelected(selected+1);
 						}
 						if (visible===0) {
@@ -159,13 +162,13 @@
 							showAutoComplete();
 						}
 						if(Wicket.Browser.isSafari()) {
-							return killEvent(event);
+							return jqEvent.stopPropagation();
 						}
 						break;
 					case KEY_ESC:
 						if (visible === 1) {
 							hideAutoComplete();
-							return killEvent(event);
+							return jqEvent.stopPropagation();
 						}
 						break;
 					case KEY_TAB:
@@ -189,7 +192,7 @@
 						}
 						mouseactive = 0;
 						if (typeof objonkeydown === "function") {
-							return objonkeydown.apply(this,[event]);
+							return objonkeydown.apply(this,[jqEvent]);
 						}
 						return true;
 
@@ -197,12 +200,12 @@
 				}
 			});
 
-			Wicket.Event.add(obj, 'inputchange', function (event) {
-				var kc = Wicket.Event.keyCode(event);
+			Wicket.Event.add(obj, 'inputchange', function (jqEvent) {
+				var kc = Wicket.Event.keyCode(jqEvent);
 				switch(kc) {
 					case KEY_TAB:
 					case KEY_ENTER:
-						return killEvent(event);
+						return jqEvent.stopPropagation();
 					case KEY_UP:
 					case KEY_DOWN:
 					case KEY_ESC:
@@ -216,19 +219,19 @@
 						updateChoices();
 				}
 				if(typeof objonkeyup === "function") {
-					return objonkeyup.apply(this,[event]);
+					return objonkeyup.apply(this,[jqEvent]);
 				}
 			});
 
-			Wicket.Event.add(obj, 'keypress', function (event) {
-				if(Wicket.Event.keyCode(event) === KEY_ENTER){
+			Wicket.Event.add(obj, 'keypress', function (jqEvent) {
+				if(Wicket.Event.keyCode(jqEvent) === KEY_ENTER){
 					if(selected>-1 || hidingAutocomplete === 1){
 						hidingAutocomplete=0;
-						return killEvent(event);
+						return jqEvent.stopPropagation();
 					}
 				}
 				if(typeof objonkeypress==="function") {
-					return objonkeypress.apply(this,[event]);
+					return objonkeypress.apply(this,[jqEvent]);
 				}
 			});
 
@@ -300,9 +303,9 @@
 						selectableInd++;
 					}
 				}
-			} else {
-				return firstChild.childNodes[selected];
 			}
+
+			return firstChild.childNodes[selected];
 		}
 
 		function getMenuId() {
@@ -347,28 +350,6 @@
 			var node=getAutocompleteMenu().parentNode;
 
 			return node;
-		}
-
-		function killEvent(event){
-			if (!event) {
-				event = window.event;
-			}
-			if (!event) {
-				return false;
-			}
-			if(event.cancelBubble){
-				event.cancelBubble=true;
-			}
-			if(event.returnValue){
-				event.returnValue=false;
-			}
-			if(event.stopPropagation){
-				event.stopPropagation();
-			}
-			if(event.preventDefault){
-				event.preventDefault();
-			}
-			return false;
 		}
 
 		function updateChoices(showAll){
@@ -722,13 +703,13 @@
 		}
 
 		function getSelectedValue(){
-			var element=getAutocompleteMenu();
+			getAutocompleteMenu();
 			var selectableElement = getSelectableElement(selected);
 			var attr=selectableElement.attributes.textvalue;
 			var value;
-			if (attr=== undefined || attr === null) {
+			if (!attr) {
 				value=selectableElement.innerHTML;
-				} else {
+			} else {
 				value=attr.value;
 			}
 			return value;
