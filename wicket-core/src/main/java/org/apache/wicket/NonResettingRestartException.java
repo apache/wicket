@@ -42,13 +42,10 @@ public class NonResettingRestartException extends RequestHandlerStack.ReplaceHan
 	 *      the class of the new page that should be rendered
 	 * @param params
 	 *      the page parameters to use for the new page
-	 * @param cycle
-	 *      the request cycle to use to find the Response`s
 	 */
-	public NonResettingRestartException(final Class<? extends Page> pageClass,
-			final PageParameters params, final RequestCycle cycle)
+	public NonResettingRestartException(final Class<? extends Page> pageClass, final PageParameters params)
 	{
-		this(pageClass, params, cycle, RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT);
+		this(pageClass, params, RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT);
 	}
 
 	/**
@@ -58,16 +55,15 @@ public class NonResettingRestartException extends RequestHandlerStack.ReplaceHan
 	 *      the class of the new page that should be rendered
 	 * @param params
 	 *      the page parameters to use for the new page
-	 * @param cycle
-	 *      the request cycle to use to find the Response`s
 	 * @param redirectPolicy
 	 *      the policy that mandates whether to do a redirect
 	 */
 	public NonResettingRestartException(final Class<? extends Page> pageClass,
-		final PageParameters params, final RequestCycle cycle, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
+		final PageParameters params, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
 	{
 		super(createRequestHandler(pageClass, params, redirectPolicy), true);
 
+		RequestCycle cycle = RequestCycle.get();
 		Response response = cycle.getResponse();
 		if (response instanceof IMetaDataBufferingWebResponse)
 		{
