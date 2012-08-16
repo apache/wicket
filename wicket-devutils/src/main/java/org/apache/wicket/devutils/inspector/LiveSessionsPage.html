@@ -17,22 +17,13 @@
 -->
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
-<style type="text/css">
-body {margin-left : 2em;font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';font-size: 9pt;line-height: 1.8em;}
-h1,h2,h3,h4,h5,h6,h7,h8 {color: #E9601A;font-size : -1;}
-pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
-h2 {font-size : 1.2em;}
-pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
-pre { border : 1px solid #ddd; margin-left : 2em; }
-.resource { color : blue; }
-.tablestyle { margin-left : 2em; border : 1px solid #bbb; }
-</style>
+<wicket:head>
 <title>Live Sessions Page</title>
+</wicket:head>
 </head>
 <body>
   <wicket:extend>
-  <p>
-  <h1><img valign="center" border="0" wicket:id="bug" src="bug.png"/> Wicket Sessions Inspector</h1>
+  <h1><img border="0" wicket:id="bug" src="bug.png"/> Wicket Sessions Inspector</h1>
 	<a href="javascript:history.go(-1)">Go Back</a>
 
     <span wicket:id="application">Application view here</span>
@@ -50,7 +41,7 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 			<th>Session Id</th>
 			<th>Last Request Time</th>
 			<th>Request Count</th>
-			<th>Total Request Time (s)</th>
+			<th>Total Request Time (ms)</th>
 			<th>Session size (B)</th>
 		</tr>
 		<tr wicket:id="sessions">
@@ -62,8 +53,6 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 		</tr>
 	</table>
 	<span wicket:id="navigator"/>
-  <br/>
-  </p>
   </wicket:extend>
 </body>
 </html>

@@ -74,6 +74,8 @@ public class RenderPerformanceListener implements IComponentInstantiationListene
 	 */
 	private static class RenderMeasuringBehavior extends Behavior
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void beforeRender(final Component component)
 		{
