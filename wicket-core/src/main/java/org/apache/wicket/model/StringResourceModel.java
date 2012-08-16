@@ -575,7 +575,13 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	}
 
 	/**
-	 * Gets the string that this string resource model currently represents.
+	 * Gets the string that this model currently represents.
+	 * <p>
+	 * Note: This method is used only if this model is used directly without assignment to a
+	 * component, it is not called by the assignment wrapper returned from
+	 * {@link #wrapOnAssignment(Component)}.
+	 * 
+	 * @see #getString()
 	 */
 	@Override
 	protected String load()
