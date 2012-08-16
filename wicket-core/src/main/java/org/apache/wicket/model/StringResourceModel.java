@@ -389,7 +389,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		return Application.get().getResourceSettings().getLocalizer();
 	}
 
-
 	/**
 	 * Gets the string currently represented by this model. The string that is returned may vary for
 	 * each call to this method depending on the values contained in the model and an the parameters
@@ -578,9 +577,13 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 
 	/**
 	 * Gets the string that this string resource model currently represents.
+	 * <p>
+	 * Note: This method is used only if this model is used directly without assignment to a
+	 * component, it is not called by the assignment wrapper returned from
+	 * {@link #wrapOnAssignment(Component)}.
 	 */
 	@Override
-	protected String load()
+	protected final String load()
 	{
 		return getString();
 	}
