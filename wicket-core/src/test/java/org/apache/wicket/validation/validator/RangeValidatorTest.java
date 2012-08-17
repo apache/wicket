@@ -137,6 +137,22 @@ public class RangeValidatorTest
 		assertEquals(1, validatable.getErrors().size());
 	}
 
+	/**
+	 * WICKET-4717
+	 */
+	@Test
+	public void exact()
+	{
+		IValidator<Integer> validator = new RangeValidator<Integer>(1, 1);
+
+		Validatable<Integer> validatable = new Validatable<Integer>(2);
+		validator.validate(validatable);
+		assertEquals(1, validatable.getErrors().size());
+
+		ValidationError error = (ValidationError)validatable.getErrors().get(0);
+		assertEquals(1, error.getVariables().get("exact"));
+	}
+
 	private ValidationError getError(Validatable<?> validatable)
 	{
 		return (ValidationError)validatable.getErrors().get(0);
