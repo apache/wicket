@@ -11,18 +11,18 @@
 		<div class="page-header">
 			<h1>Apache Wicket Examples <small>Basic examples</small></h1>
 		</div>
-		<section id="helloworld">
+		<article id="helloworld">
 			<div class="">
 				<h2>Hello, World! <small>Because every examples site needs one</small></h2>
 				<p>HelloWorld demonstrates the basic structure of a web application in Wicket. A Label component is used to display a message on the home page for the application.</p>
 			</div>
 			<div class="row">
-			<div class="span4">
-				<h2>Java code</h2>
-				<p>The 
+			<div class="span12"><h3>Java code</h3></div>
+			<div class="span6">
+				<p>The page extends <code>WebPage</code>, making it a component with associated markup: next to the class file, Wicket expects a markup file. In this case, Wicket will look for a file named HelloWorldPage.html, on the class path in the same Java package as the class: <code>org.apache.wicket.examples.basic.helloworld</code>.</p>
+				<p>In the constructor of the page, you add a label component to the component hierarchy. The component expects a component identifier and a text to display. In this case, the component identifier is <tt>msg</tt> and the display text is <tt>Hello, World!</tt>.</p>
 			</div>
-			<div class="span8">
-				<h2>Java code</h2>
+			<div class="span6">
 				<pre class="prettyprint linenums">package org.apache.wicket.examples.basic.helloworld;
 
 import org.apache.wicket.markup.html.WebPage;
@@ -36,8 +36,10 @@ public class HelloWorldPage extends WebPage {
     }
 }</pre>
 			</div>
-			<div class="span8">
-				<h2>HTML Markup</h2>
+			<div class="span12">
+				<h3>HTML Markup</h3>
+			</div>
+			<div class="span5">
 			<pre class="prettyprint linenums">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -49,6 +51,14 @@ public class HelloWorldPage extends WebPage {
 &lt;/body&gt;
 &lt;/html&gt;</pre>
 			</div>
+			<div class="span7">
+				<p>This is a plain HTML 5 web page, with a <tt>h1</tt> tag where the Hello, World! message should be rendered. By adding the <code>wicket:id</code> attribute to this <tt>h1</tt> tag you tell Wicket where to let the label component do its work. In this case: replace the text between the tags with Hello, World!</p>
+				<p>The HTML file must have the same name as the Java class. So if our Java class is called <tt>HelloWorldPage</tt> then our markup file must be named <tt>HelloWorldPage.html</tt>, and reside in the same package as the Java class.
+				<div class="alert alert-info">
+					<h3>Tip: properly case your file name</h3>
+					<p>As Java is case-sensitive you have to name your markup file in the exact same case. You might not notice it on case-insensitive file systems used by e.g. Windows, but when deployed in a WAR, case matters.</p>
+				</div>
+			</div>
 			<div class="span8">
 				<h2>Browser output</h2>
 				<div class="browser">
@@ -59,27 +69,6 @@ public class HelloWorldPage extends WebPage {
 							<div class="expand-window"><span>+</span></div>
 						</div>
 						<div class="window-title">Safari</div>
-						<div class="interface">
-							<div class="back-forward">
-								<div class="button-back button">
-									<span>▲</span>
-								</div>
-								<div class="button-forward button disabled">
-									<span>▲</span>
-								</div>
-							</div>
-							<div class="bookmark button">+</div>
-							 <div class="reload">↻</div>
-							<input type="text" class="url" value="http://localhost/">
-							<input type="search" placeholder="Google">
-							<div class="bookmarks-bar">
-								<ul>
-									<li><a href="http://general-metrics.com/">General Metrics</a></li>
-									<li><a href="http://twitter.com/g_metrics">Twitter</a></li>
-									<li><a href="http://github.com/Jonesy/Safari-Clone">Source on Github</a></li>
-								</ul>
-							</div>
-						</div>
 					</div>
 					<div class="viewport">
 						<iframe src="/basic/helloworld"></iframe>
@@ -87,14 +76,14 @@ public class HelloWorldPage extends WebPage {
 				</div>
 			</div>
 			</div>
-		</section>
-		<section id="guestbook">
+		</article>
+		<article id="guestbook">
 			<div class="row">
 			<div class="span6">
 			<iframe src="/basic/guestbook"></iframe>
 			</div>
 			</div>
-		</section>
+		</article>
 	</div>
 </body>
 </html>
