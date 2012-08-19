@@ -1,5 +1,62 @@
 This file contains all changes done on the 6.0 version.
 
+Release Notes - Wicket - Version 6.0.0
+
+** Sub-task
+    * [WICKET-4672] - Do not render pageId for the action links for stateless pages
+
+** Bug
+    * [WICKET-3753] - PropertyVariableInterpolator add support for IConverterLocator (patch included)
+    * [WICKET-4641] - AjaxFallbackLink and log a warning when there are several ajax event behaviors on the same event
+    * [WICKET-4646] - atomicity violation bugs of using concurrent collections
+    * [WICKET-4651] - Null BroadCaster in EventBus
+    * [WICKET-4652] - AbstractAjaxTimerBehavior throws ComponentNotFoundException when its component is replaced in PageMap.
+    * [WICKET-4659] - The default exception mapper is replying cacheable exceptional responses
+    * [WICKET-4661] - Ajax channel busy flag not properly cleared upon SUCCESSFUL callback executions
+    * [WICKET-4662] - StringResourceModel interpolation in resource key is broken
+    * [WICKET-4663] - LazyInitProxyFactory uses wrong ClassLoader in OSGi environment
+    * [WICKET-4665] - Add a new AjaxChannel that discards any Ajax requests if there is a running request in the same channel
+    * [WICKET-4668] - Ajax responses for QUEUE and DROP type channels are not guaranteed to be processed in the order of the requests
+    * [WICKET-4669] - Resources for Fragment in ModalWindow are not added to the page head
+    * [WICKET-4673] - JavaScript error when submitting nested multipart form
+    * [WICKET-4679] - XmlPullParser doesn't parse correctly attributes with complex namespace
+    * [WICKET-4682] - html forms always submitted with "GET" method (by querystring)
+    * [WICKET-4683] - <script> tag broken in certain situations when <script src="..."></script> reference added in page header section
+    * [WICKET-4684] - NotSerializableException of the field "pageMarkup" in BaseWicketTester$StartComponentInPage
+    * [WICKET-4685] - ValidationError addKey fails with error abort
+    * [WICKET-4687] - ConcurrentModificationException with IFeedback instances that contain other IFeedback instances
+    * [WICKET-4689] - Javascript timers not removed when a Component is replaced by ajax
+    * [WICKET-4690] - DataTable - use <div> for the content
+    * [WICKET-4691] - Unescaped html in autocomplete
+    * [WICKET-4694] - ClassCastException in SqlDateConverter
+    * [WICKET-4695] - Javascript error when closing a ModalWindow with IE 8
+    * [WICKET-4696] - NumberTextField doesn't accept values <=0 for Double and Float
+    * [WICKET-4701] - 6.0.0-beta3: Ajax upload file is not working in IE
+    * [WICKET-4702] - TypeError: Wicket.Event is undefined
+    * [WICKET-4717] - StringValidator.exactLength has wrong variable in ErrorMessage
+
+** Improvement
+    * [WICKET-4065] - Improve behavior#getStatelessHint() by accounting for the common cases when behaviors are not stateless
+    * [WICKET-4254] - IE allows only 31 stylesheet objects on a page
+    * [WICKET-4471] - Generic registry of javascript/css resource references
+    * [WICKET-4593] - TabbedPanel bi-directional model
+    * [WICKET-4648] - Upgrade Atmosphere to 1.0-beta
+    * [WICKET-4653] - Subscribing behaviors for push events
+    * [WICKET-4666] - ResourceModel once assigned should not re-assign
+    * [WICKET-4674] - Add support for Ajax call listsners for multipart form submittion
+    * [WICKET-4675] - Process Ajax responses in one go
+    * [WICKET-4676] - Relax restrictions on url of ExternalUrlResourceReference and rename it to UrlResourceReference
+    * [WICKET-4677] - Improve AjaxRequestAttributes' ExtraParameters to accept more than one value for a key 
+    * [WICKET-4688] - Make use of the generic type passed to IPageFactory#newPage() and return the typed Page
+    * [WICKET-4704] - Allow using custom CSS classes for the selected and last TabbedPanel tabs
+
+** New Feature
+    * [WICKET-4244] - Add EnhancedPageView to ease debugging with the InspectorPage
+    * [WICKET-4699] - Add NonResettingRestartException
+
+** Task
+    * [WICKET-4613] - Add Apache licence check tests for Atmoshpere module
+
 Release Notes - Wicket - Version 6.0.0-beta3
 
 ** Bug
