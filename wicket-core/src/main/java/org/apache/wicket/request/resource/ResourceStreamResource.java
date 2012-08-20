@@ -50,12 +50,6 @@ public class ResourceStreamResource extends AbstractResource
 	private Duration cacheDuration;
 
 	/**
-	 * The stream that is returned by #getResourceStream() and is cached only for the request lifecycle.
-	 * This way it is possible to create a new instance of IResourceStream for each request and close it at the end.
-	 */
-	private transient IResourceStream requestScopedStream = null;
-
-	/**
 	 * Constructor.
 	 */
 	public ResourceStreamResource()
@@ -134,11 +128,9 @@ public class ResourceStreamResource extends AbstractResource
 
 	private IResourceStream internalGetResourceStream()
 	{
-		if (requestScopedStream == null) {
-			requestScopedStream = getResourceStream();
-			Checks.notNull(requestScopedStream, "%s#getResourceStream() should not return null!", getClass().getName());
-		}
-		return requestScopedStream;
+		final IResourceStream resourceStream = getResourceStream();
+		Checks.notNull(resourceStream, "%s#getResourceStream() should not return null!", getClass().getName());
+		return resourceStream;
 	}
 
 	@Override
