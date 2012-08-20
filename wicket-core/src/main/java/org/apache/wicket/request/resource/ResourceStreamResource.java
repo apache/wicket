@@ -49,6 +49,11 @@ public class ResourceStreamResource extends AbstractResource
 
 	private Duration cacheDuration;
 
+	/**
+	 * The stream that is returned by #getResourceStream() and is cached only for the request lifecycle.
+	 * This way it is possible to create a new instance of IResourceStream for each request and close it at the end.
+	 */
+	private transient IResourceStream requestScopedStream = null;
 
 	/**
 	 * Constructor.
@@ -129,9 +134,11 @@ public class ResourceStreamResource extends AbstractResource
 
 	private IResourceStream internalGetResourceStream()
 	{
-		final IResourceStream resourceStream = getResourceStream();
-		Checks.notNull(resourceStream, "%s#getResourceStream() should not return null!", ResourceStreamResource.class.getName());
-		return resourceStream;
+		if (requestScopedStream == null) {
+			requestScopedStream = getResourceStream();
+			Checks.notNull(requestScopedStream, "%s#getResourceStream() should not return null!", getClass().getName());
+		}
+		return requestScopedStream;
 	}
 
 	@Override
@@ -163,7 +170,7 @@ public class ResourceStreamResource extends AbstractResource
 				catch (ResourceStreamNotFoundException e)
 				{
 					data.setError(HttpServletResponse.SC_NOT_FOUND);
-					close();
+					close(resourceStream);
 				}
 			}
 
@@ -191,7 +198,7 @@ public class ResourceStreamResource extends AbstractResource
 					public void writeData(Attributes attributes) throws IOException
 					{
 						((IResourceStreamWriter)resourceStream).write(attributes.getResponse().getOutputStream());
-						close();
+						close(resourceStream);
 					}
 				});
 			}
@@ -209,7 +216,7 @@ public class ResourceStreamResource extends AbstractResource
 						}
 						finally
 						{
-							close();
+							close(resourceStream);
 						}
 					}
 				});
@@ -219,11 +226,11 @@ public class ResourceStreamResource extends AbstractResource
 		return data;
 	}
 
-	private void close()
+	private void close(IResourceStream stream)
 	{
 		try
 		{
-			internalGetResourceStream().close();
+			stream.close();
 		}
 		catch (IOException e)
 		{
