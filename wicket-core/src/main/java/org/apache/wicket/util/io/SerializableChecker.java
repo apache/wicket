@@ -333,6 +333,15 @@ public final class SerializableChecker extends ObjectOutputStream
 		writeObjectMethodMissing.clear();
 	}
 
+	@Override
+	public void close() throws IOException
+	{
+		// do not call super.close() because SerializableChecker uses ObjectOutputStream's no-arg constructor
+
+		// just null-ify the declared members
+		reset();
+	}
+
 	private void check(Object obj)
 	{
 		if (obj == null)
