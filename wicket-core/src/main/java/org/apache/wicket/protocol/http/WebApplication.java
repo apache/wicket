@@ -44,6 +44,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.AutoLabelResolver;
 import org.apache.wicket.markup.html.form.AutoLabelTextResolver;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
@@ -79,6 +80,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -485,6 +487,23 @@ public abstract class WebApplication extends Application
 		}
 
 		WebRequest webRequest = newWebRequest(servletRequest, filterPath);
+
+		String contentType = servletRequest.getContentType();
+		String method = servletRequest.getMethod();
+
+		if (webRequest instanceof ServletWebRequest && Form.METHOD_POST.equalsIgnoreCase(method) &&
+				Strings.isEmpty(contentType) == false && contentType.toLowerCase().startsWith(Form.ENCTYPE_MULTIPART_FORM_DATA))
+		{
+			try
+			{
+				return ((ServletWebRequest)webRequest).newMultipartWebRequest(
+					getApplicationSettings().getDefaultMaximumUploadSize(), "externalForm");
+			}
+			catch (FileUploadException e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
 
 		return webRequest;
 	}
