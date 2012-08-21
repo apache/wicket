@@ -99,6 +99,12 @@ public class SignInPanelTest extends Assert
 		{
 			return null;
 		}
+
+		@Override
+		public boolean authenticate(String username, String password)
+		{
+			return false;
+		}
 	}
 
 	private static class TestApplication extends AuthenticatedWebApplication
