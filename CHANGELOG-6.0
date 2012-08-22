@@ -7,6 +7,7 @@ Release Notes - Wicket - Version 6.0.0
 
 ** Bug
     * [WICKET-3753] - PropertyVariableInterpolator add support for IConverterLocator (patch included)
+    * [WICKET-4626] - WicketFilter unify the filterPath
     * [WICKET-4641] - AjaxFallbackLink and log a warning when there are several ajax event behaviors on the same event
     * [WICKET-4646] - atomicity violation bugs of using concurrent collections
     * [WICKET-4651] - Null BroadCaster in EventBus
@@ -33,7 +34,11 @@ Release Notes - Wicket - Version 6.0.0
     * [WICKET-4696] - NumberTextField doesn't accept values <=0 for Double and Float
     * [WICKET-4701] - 6.0.0-beta3: Ajax upload file is not working in IE
     * [WICKET-4702] - TypeError: Wicket.Event is undefined
+    * [WICKET-4706] - SerializableChecker.close throws NPE
+    * [WICKET-4715] - WebApplication doesn't recognize if an incoming request is multipart.
     * [WICKET-4717] - StringValidator.exactLength has wrong variable in ErrorMessage
+    * [WICKET-4718] - ResourceStreamResource#getResourceStream() is called multiple times
+    * [WICKET-4725] - DatePicker doesn't send 'change' event to the input field
 
 ** Improvement
     * [WICKET-4065] - Improve behavior#getStatelessHint() by accounting for the common cases when behaviors are not stateless
@@ -49,6 +54,11 @@ Release Notes - Wicket - Version 6.0.0
     * [WICKET-4677] - Improve AjaxRequestAttributes' ExtraParameters to accept more than one value for a key 
     * [WICKET-4688] - Make use of the generic type passed to IPageFactory#newPage() and return the typed Page
     * [WICKET-4704] - Allow using custom CSS classes for the selected and last TabbedPanel tabs
+    * [WICKET-4719] - Allow a list of a subclass of IColumn in DataTable constructor
+    * [WICKET-4720] - WebSession#authenticate() is superfluous
+    * [WICKET-4721] - ConcatBundleResource is unnecessarily limited to accepting PackageResourceReference
+    * [WICKET-4722] - Don't set ADDED_AT and CONSTRUCTED_AT keys if components use checking is not enabled
+    * [WICKET-4726] - Do not try to show the date picker if it is already shown
 
 ** New Feature
     * [WICKET-4244] - Add EnhancedPageView to ease debugging with the InspectorPage
