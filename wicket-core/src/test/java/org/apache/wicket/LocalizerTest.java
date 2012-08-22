@@ -242,7 +242,7 @@ public class LocalizerTest extends Assert
 		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(false);
 
 		String option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, "default");
-		assertEquals(option, "default");
+		assertEquals("default", option);
 
 		option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, null);
 		assertNull(option);
@@ -250,7 +250,7 @@ public class LocalizerTest extends Assert
 		{
 			option = localizer.getString("null", page.drop1, "CHOOSE_ONE");
 		}
-		assertEquals(option, "value 1");
+		assertEquals("value 1", option);
 
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(false);
@@ -262,7 +262,7 @@ public class LocalizerTest extends Assert
 		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(true);
 
 		option = localizer.getString("dummy.null", page.drop1, null, "default");
-		assertEquals(option, "default");
+		assertEquals("default", option);
 
 		try
 		{
@@ -272,8 +272,8 @@ public class LocalizerTest extends Assert
 		catch (MissingResourceException ex)
 		{
 			assertEquals(
-				ex.getMessage(),
-				"Unable to find property: 'dummy.null' for component: form:drop1 [class=org.apache.wicket.markup.html.form.DropDownChoice]. Locale: null, style: null");
+				"Unable to find property: 'dummy.null' for component: form:drop1 [class=org.apache.wicket.markup.html.form.DropDownChoice]. Locale: null, style: null",
+				ex.getMessage());
 		}
 	}
 
