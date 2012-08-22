@@ -140,7 +140,12 @@ public interface IRequestCycleSettings
 	void addResponseFilter(IResponseFilter responseFilter);
 
 	/**
-	 * @return True if this application buffers its responses
+	 * Decides whether to buffer the response's headers until the end of the request processing.
+	 * The buffering is needed if the application makes use of
+	 * {@link org.apache.wicket.Component#setResponsePage(org.apache.wicket.Page)} or
+	 * {@link org.apache.wicket.request.flow.ResetResponseException}
+	 *
+	 * @return {@code true} if the application should buffer the response's headers.
 	 */
 	boolean getBufferResponse();
 
@@ -196,8 +201,13 @@ public interface IRequestCycleSettings
 	Duration getTimeout();
 
 	/**
+	 * Sets a flag whether the application should buffer the response's headers until the end
+	 * of the request processing. The buffering is needed if the application makes use of
+	 * {@link org.apache.wicket.Component#setResponsePage(org.apache.wicket.Page)} or
+	 * {@link org.apache.wicket.request.flow.ResetResponseException}
+	 *
 	 * @param bufferResponse
-	 *            True if this application should buffer responses.
+	 *            {@code true} if the application should buffer response's headers.
 	 */
 	void setBufferResponse(boolean bufferResponse);
 
