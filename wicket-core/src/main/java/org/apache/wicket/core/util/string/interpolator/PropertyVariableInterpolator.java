@@ -22,15 +22,14 @@ import org.apache.wicket.util.string.interpolator.VariableInterpolator;
 
 /**
  * Interpolates values into <code>String</code>s that are produced by interpreting property
- * expressions against a beans model.
+ * expressions against an object.
  * <p>
- * The <code>interpolate(String string, Object model)</code> method takes a string such as "
- * <code>My name is ${name}</code>" and a beans model such as a <code>Person</code>, and reflects on
- * the object using any property expressions found inside <code>${}</code> markers in the
- * <code>String</code>. In this case, if the <code>Person</code> model has a <code>getName()</code>
- * method. The results of calling that method would be substituted for <code>${name}</code>. If
- * <code>getName()</code> returned <code>"Jonathan"</code>, then <code>interpolate()</code> would
- * return <code>"My name is Jonathan"</code>.
+ * Takes a string such as "<code>My name is ${name}</code>" and a bean such as a <code>Person</code>
+ * , and reflects on the object using any property expressions found inside <code>${}</code> markers
+ * in the <code>String</code>. In this case, if the <code>Person</code> model has a
+ * <code>getName()</code> method. The results of calling that method would be substituted for
+ * <code>${name}</code>. If <code>getName()</code> returned <code>"Jonathan"</code>, then the result
+ * would return <code>"My name is Jonathan"</code>.
  * <p>
  * "$" is the escape char. Thus "$${text}" can be used to escape it (ignore interpretation). If
  * '$3.24' is needed then '$$${amount}' should be used. The first $ sign escapes the second, and the
@@ -43,27 +42,27 @@ public class PropertyVariableInterpolator extends VariableInterpolator
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The model to introspect on */
-	private final Object model;
+	/** The object to introspect on */
+	private final Object oject;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param string
 	 *            a <code>String</code> to interpolate into
-	 * @param model
+	 * @param object
 	 *            the model to apply property expressions to
 	 */
-	public PropertyVariableInterpolator(final String string, final Object model)
+	public PropertyVariableInterpolator(final String string, final Object object)
 	{
 		super(string);
-		this.model = model;
+		oject = object;
 	}
 
 	@Override
 	protected String getValue(final String variableName)
 	{
-		Object value = PropertyResolver.getValue(variableName, model);
+		Object value = PropertyResolver.getValue(variableName, oject);
 
 		if (value != null)
 		{

@@ -25,12 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
+import org.apache.wicket.core.util.string.interpolator.ConvertingPropertyVariableInterpolator;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
@@ -516,11 +515,11 @@ public class Localizer
 		}
 	}
 
-	/**
+/**
 	 * Helper method to handle property variable substitution in strings.
 	 * 
 	 * @param component
-	 *            The component requesting a model value
+	 *            The component requesting a model value or {@code null]
 	 * @param string
 	 *            The string to substitute into
 	 * @param model
@@ -532,38 +531,29 @@ public class Localizer
 	{
 		if ((string != null) && (model != null))
 		{
-			return new PropertyVariableInterpolator(string, model.getObject())
+			final IConverterLocator locator;
+			final Locale locale;
+			if (component == null)
 			{
-				@SuppressWarnings({ "rawtypes", "unchecked" })
-				@Override
-				protected String toString(Object value)
+				locator = Application.get().getConverterLocator();
+
+				if (Session.exists())
 				{
-					IConverter converter;
-					Locale locale;
-					if (component == null)
-					{
-						converter = Application.get()
-							.getConverterLocator()
-							.getConverter(value.getClass());
-
-						if (Session.exists())
-						{
-							locale = Session.get().getLocale();
-						}
-						else
-						{
-							locale = Locale.getDefault();
-						}
-					}
-					else
-					{
-						converter = component.getConverter(value.getClass());
-						locale = component.getLocale();
-					}
-
-					return converter.convertToString(value, locale);
+					locale = Session.get().getLocale();
 				}
-			}.toString();
+				else
+				{
+					locale = Locale.getDefault();
+				}
+			}
+			else
+			{
+				locator = component;
+				locale = component.getLocale();
+			}
+
+			return new ConvertingPropertyVariableInterpolator(string, model.getObject(), locator,
+				locale).toString();
 		}
 		return string;
 	}
