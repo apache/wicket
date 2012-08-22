@@ -121,7 +121,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * @param itemsPerPage
 	 *            the maximum number of rows on each page.
 	 */
-	public final void setItemsPerPage(int itemsPerPage)
+	public final void setItemsPerPage(long itemsPerPage)
 	{
 		if (itemsPerPage < 0)
 		{

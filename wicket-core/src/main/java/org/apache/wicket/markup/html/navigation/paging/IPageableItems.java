@@ -36,4 +36,11 @@ public interface IPageableItems extends IPageable
 	 */
 	long getItemsPerPage();
 
+	/**
+	 * set the maximum number of visible items per page
+	 * 
+	 * @param itemsPerPage
+	 */
+	void setItemsPerPage(long itemsPerPage);
+
 }
