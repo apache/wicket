@@ -289,7 +289,7 @@
 					if (field.onchange) {
 						field.onchange();
 					}
-					jQuery('#'+cfg.componentId).trigger('change'); // TODO find YUI2 API for that
+					Wicket.Event.fire(Wicket.$(cfg.componentId), 'change');
 				}
 			}
 		}
