@@ -58,7 +58,7 @@ public class DefaultTableTree<T, S> extends TableTree<T, S>
 	 * @param rowsPerPage
 	 *            rows to show on each page
 	 */
-	public DefaultTableTree(String id, List<IColumn<T, S>> columns,
+	public DefaultTableTree(String id, List<? extends IColumn<T, S>> columns,
 		ISortableTreeProvider<T, S> provider, int rowsPerPage)
 	{
 		this(id, columns, provider, rowsPerPage, null);
@@ -78,7 +78,7 @@ public class DefaultTableTree<T, S> extends TableTree<T, S>
 	 * @param state
 	 *            expansion state
 	 */
-	public DefaultTableTree(String id, List<IColumn<T, S>> columns,
+	public DefaultTableTree(String id, List<? extends IColumn<T, S>> columns,
 		ISortableTreeProvider<T, S> provider, int rowsPerPage, IModel<Set<T>> state)
 	{
 		super(id, columns, provider, rowsPerPage, state);

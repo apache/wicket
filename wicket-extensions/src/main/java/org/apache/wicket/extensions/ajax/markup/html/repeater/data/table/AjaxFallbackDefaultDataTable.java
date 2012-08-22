@@ -65,7 +65,7 @@ public class AjaxFallbackDefaultDataTable<T, S> extends DataTable<T, S>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public AjaxFallbackDefaultDataTable(final String id, final List<IColumn<T, S>> columns,
+	public AjaxFallbackDefaultDataTable(final String id, final List<? extends IColumn<T, S>> columns,
 		final ISortableDataProvider<T, S> dataProvider, final int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);
