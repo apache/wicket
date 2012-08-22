@@ -919,7 +919,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		child.setParent(this);
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled() && debugSettings.getComponentUseCheck())
+		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
 			child.setMetaData(ADDED_AT_KEY,
 				ComponentStrings.toString(child, new MarkupException("added")));
