@@ -683,7 +683,7 @@ public abstract class Component
 		getApplication().getComponentInstantiationListeners().onInstantiation(this);
 
 		final IDebugSettings debugSettings = getApplication().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
+		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
 				ComponentStrings.toString(this, new MarkupException("constructed")));
