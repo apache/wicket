@@ -404,4 +404,62 @@ public class WicketFilterTest extends Assert
 		// the request is processed so the chain is not executed
 		verify(chain, Mockito.times(3)).doFilter(request, response);
 	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-4626">WICKET-4626</a>
+	 * <p>
+	 * Test method WicketFilter#canonicaliseFilterPath(String)
+	 * </p>
+	 */
+	@Test
+	public void canonicaliseFilterPath()
+	{
+		String s;
+
+		s = WicketFilter.canonicaliseFilterPath("");
+		assertEquals("", s);
+
+		s = WicketFilter.canonicaliseFilterPath("/");
+		assertEquals("", s);
+
+		s = WicketFilter.canonicaliseFilterPath("//");
+		assertEquals("", s);
+
+		s = WicketFilter.canonicaliseFilterPath("///");
+		assertEquals("", s);
+
+		s = WicketFilter.canonicaliseFilterPath("/wicket");
+		assertEquals("wicket/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("/wicket/");
+		assertEquals("wicket/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("wicket/");
+		assertEquals("wicket/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("wicket");
+		assertEquals("wicket/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("///wicket");
+		assertEquals("wicket/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("///wicket///");
+		assertEquals("wicket/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("wicket///");
+		assertEquals("wicket/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("/wicket/foobar");
+		assertEquals("wicket/foobar/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("/wicket/foobar/");
+		assertEquals("wicket/foobar/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("wicket/foobar/");
+		assertEquals("wicket/foobar/", s);
+
+		s = WicketFilter.canonicaliseFilterPath("/wicket///foobar/");
+		assertEquals("wicket///foobar/", s); // ok we're not perfect!
+	}
+
 }
