@@ -615,7 +615,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 							buffer.append(Integer.toString(unrenderedComponents.size()))
 								.append(". ")
 								.append(component)
-								.append("\n");
+								.append('\n');
 							String metadata = component.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{
