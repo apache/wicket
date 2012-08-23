@@ -35,10 +35,12 @@ Release Notes - Wicket - Version 6.0.0
     * [WICKET-4701] - 6.0.0-beta3: Ajax upload file is not working in IE
     * [WICKET-4702] - TypeError: Wicket.Event is undefined
     * [WICKET-4706] - SerializableChecker.close throws NPE
+    * [WICKET-4710] - DataTable - Headers with OrderByBorder have invalid HTML markup
     * [WICKET-4715] - WebApplication doesn't recognize if an incoming request is multipart.
     * [WICKET-4717] - StringValidator.exactLength has wrong variable in ErrorMessage
     * [WICKET-4718] - ResourceStreamResource#getResourceStream() is called multiple times
     * [WICKET-4725] - DatePicker doesn't send 'change' event to the input field
+    * [WICKET-4727] - ThreadContext should be detached before each subscribed page gets notified
 
 ** Improvement
     * [WICKET-4065] - Improve behavior#getStatelessHint() by accounting for the common cases when behaviors are not stateless
@@ -59,6 +61,7 @@ Release Notes - Wicket - Version 6.0.0
     * [WICKET-4721] - ConcatBundleResource is unnecessarily limited to accepting PackageResourceReference
     * [WICKET-4722] - Don't set ADDED_AT and CONSTRUCTED_AT keys if components use checking is not enabled
     * [WICKET-4726] - Do not try to show the date picker if it is already shown
+    * [WICKET-4728] - Use IModel for the bread crumb participant's title
 
 ** New Feature
     * [WICKET-4244] - Add EnhancedPageView to ease debugging with the InspectorPage
