@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.breadcrumb;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.io.IClusterable;
 
 
@@ -50,7 +51,7 @@ public interface IBreadCrumbParticipant extends IClusterable
 	 * 
 	 * @return The title of the bread crumb
 	 */
-	String getTitle();
+	IModel<String> getTitle();
 
 	/**
 	 * Called when the corresponding bread crumb is activated.

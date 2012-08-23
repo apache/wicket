@@ -67,7 +67,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public String getTitle()
+		public IModel<String> getTitle()
 		{
 			return BreadCrumbPanel.this.getTitle();
 		}

@@ -19,6 +19,8 @@ package org.apache.wicket.examples.breadcrumb;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 
 /**
@@ -52,8 +54,8 @@ public class ResultPanel extends BreadCrumbPanel
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
 	 */
 	@Override
-	public String getTitle()
+	public IModel<String> getTitle()
 	{
-		return "result";
+		return Model.of("result");
 	}
 }
