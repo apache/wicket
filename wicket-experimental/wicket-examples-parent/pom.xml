@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-examples-parent</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Wicket Examples Parent</name>
 	<description>New examples structure for Apache Wicket</description>

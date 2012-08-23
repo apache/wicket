@@ -38,23 +38,23 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bootstrap</artifactId>
-				<version>0.2-SNAPSHOT</version>
+				<version>0.3-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.2-SNAPSHOT</version>
+				<version>0.3-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.2-SNAPSHOT</version>
+				<version>0.3-SNAPSHOT</version>
 				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-examples-war</artifactId>
-				<version>0.2-SNAPSHOT</version>
+				<version>0.3-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
