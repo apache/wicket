@@ -31,7 +31,7 @@ import org.apache.wicket.util.io.IClusterable;
  * </pre>
  * 
  * In a {@link BreadCrumbPanel panel based implementation}, <tt>Home</tt>,
- * <tt>Products &amp; Solutions</tt> etc would be seperate panels that all are bread crumb
+ * <tt>Products &amp; Solutions</tt> etc would be separate panels that all are bread crumb
  * participants: for instance the <tt>Home</tt> participant's {@link #getTitle() title} would return
  * 'Home', and {@link #getComponent() the component} would be the corresponding panel.
  * 
