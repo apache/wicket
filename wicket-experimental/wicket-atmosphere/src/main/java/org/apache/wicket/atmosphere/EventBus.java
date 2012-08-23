@@ -165,10 +165,10 @@ public class EventBus implements UnboundListener
 		ThreadContext oldContext = ThreadContext.get(false);
 		try
 		{
-			ThreadContext.restore(null);
-			ThreadContext.setApplication(application);
 			for (AtmosphereResource resource : broadcaster.getAtmosphereResources())
 			{
+				ThreadContext.detach();
+				ThreadContext.setApplication(application);
 				PageKey key;
 				Collection<EventSubscription> subscriptionsForPage;
 				synchronized (this)
@@ -186,9 +186,7 @@ public class EventBus implements UnboundListener
 		}
 		finally
 		{
-			ThreadContext.detach();
-			if (oldContext != null)
-				ThreadContext.restore(oldContext);
+			ThreadContext.restore(oldContext);
 		}
 	}
 
