@@ -25,11 +25,13 @@
 ;(function (undefined) {
 	'use strict';
 
-	if (typeof(Wicket) === 'object' && typeof(Wicket.Event) === 'object') {
-		return;
+	if (typeof(Wicket) === 'undefined') {
+		window.Wicket = {};
 	}
 
-	window.Wicket = {};
+	if (typeof(Wicket.Event) === 'object') {
+		return;
+	}
 
 	jQuery.extend(true, Wicket, {
 
