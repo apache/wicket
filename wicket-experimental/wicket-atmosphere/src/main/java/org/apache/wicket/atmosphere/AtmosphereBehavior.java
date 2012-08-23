@@ -32,6 +32,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListener;
@@ -203,9 +204,15 @@ public class AtmosphereBehavior extends Behavior
 	 */
 	public static String getUUID(AtmosphereResource resource)
 	{
-		String trackingId = resource.getRequest().getHeader(HeaderConfig.X_ATMOSPHERE_TRACKING_ID);
-		if (trackingId != null)
-			return trackingId;
+		Object trackingId = resource.getRequest().getHeader(HeaderConfig.X_ATMOSPHERE_TRACKING_ID);
+		if (trackingId != null && !trackingId.equals("0"))
+			return trackingId.toString();
+
+		trackingId = resource.getRequest().getAttribute(
+			ApplicationConfig.SUSPENDED_ATMOSPHERE_RESOURCE_UUID);
+		if (trackingId != null && !trackingId.equals("0"))
+			return trackingId.toString();
+
 		return resource.getRequest().getHeader("Sec-WebSocket-Key");
 	}
 }
