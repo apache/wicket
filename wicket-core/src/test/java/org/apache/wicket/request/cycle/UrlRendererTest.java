@@ -262,4 +262,28 @@ public class UrlRendererTest extends Assert
 		fullUrl = renderer.renderUrl(newUrl);
 		assertEquals("http://www.example.com:8888/four", fullUrl);
 	}
+
+	@Test
+	public void renderFullUrlAsRelativeToAnotherBaseUrl()
+	{
+		Url baseUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b/c/d");
+		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b;jsessionid=123456");
+
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		String encodedRelativeUrl = renderer.renderRelativeUrl(encodedFullUrl);
+
+		assertEquals("../../b;jsessionid=123456", encodedRelativeUrl);
+	}
+
+	@Test
+	public void renderFullUrlAsRelativeToAnotherBaseUrl_2()
+	{
+		Url baseUrl = Url.parse("/contextPath/filterPath/a/b/c/d");
+		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b;jsessionid=123456");
+
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		String encodedRelativeUrl = renderer.renderRelativeUrl(encodedFullUrl);
+
+		assertEquals("../../b;jsessionid=123456", encodedRelativeUrl);
+	}
 }

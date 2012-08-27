@@ -199,7 +199,7 @@ public class UrlRenderer
 	 * This method is only intended for Wicket URLs, because the {@link Url} object represents part
 	 * of URL after Wicket Filter.
 	 * 
-	 * For general URLs within context use {@link #renderContextPathRelativeUrl(String)}
+	 * For general URLs within context use {@link #renderContextRelativeUrl(String)}
 	 * 
 	 * @param url
 	 * @return Url rendered as string
@@ -208,68 +208,61 @@ public class UrlRenderer
 	{
 		Args.notNull(url, "url");
 
-		if (url.isAbsolute())
+		List<String> baseUrlSegments = getBaseUrl().getSegments();
+		List<String> urlSegments = new ArrayList<String>(url.getSegments());
+
+		List<String> newSegments = new ArrayList<String>();
+
+		int common = 0;
+
+		String last = null;
+
+		for (String s : baseUrlSegments)
 		{
-			return url.toString();
-		}
-		else
-		{
-			List<String> baseUrlSegments = getBaseUrl().getSegments();
-			List<String> urlSegments = new ArrayList<String>(url.getSegments());
-
-			List<String> newSegments = new ArrayList<String>();
-
-			int common = 0;
-
-			String last = null;
-
-			for (String s : baseUrlSegments)
+			if (!urlSegments.isEmpty() && s.equals(urlSegments.get(0)))
 			{
-				if (!urlSegments.isEmpty() && s.equals(urlSegments.get(0)))
-				{
-					++common;
-					last = urlSegments.remove(0);
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			// we want the new URL to have at least one segment (other than possible ../)
-			if ((last != null) && (urlSegments.isEmpty() || (baseUrlSegments.size() == common)))
-			{
-				--common;
-				urlSegments.add(0, last);
-			}
-
-			int baseUrlSize = baseUrlSegments.size();
-			if (common + 1 == baseUrlSize && urlSegments.isEmpty())
-			{
-				newSegments.add(".");
+				++common;
+				last = urlSegments.remove(0);
 			}
 			else
 			{
-				for (int i = common + 1; i < baseUrlSize; ++i)
-				{
-					newSegments.add("..");
-				}
+				break;
 			}
-			newSegments.addAll(urlSegments);
-
-			String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
-			if (!renderedUrl.startsWith(".."))
-			{
-				// WICKET-4260
-				renderedUrl = "./" + renderedUrl;
-			}
-			if (renderedUrl.endsWith(".."))
-			{
-				// WICKET-4401
-				renderedUrl = renderedUrl + '/';
-			}
-			return renderedUrl;
 		}
+
+		// we want the new URL to have at least one segment (other than possible ../)
+		if ((last != null) && (urlSegments.isEmpty() || (baseUrlSegments.size() == common)))
+		{
+			--common;
+			urlSegments.add(0, last);
+		}
+
+		int baseUrlSize = baseUrlSegments.size();
+		if (common + 1 == baseUrlSize && urlSegments.isEmpty())
+		{
+			newSegments.add(".");
+		}
+		else
+		{
+			for (int i = common + 1; i < baseUrlSize; ++i)
+			{
+				newSegments.add("..");
+			}
+		}
+		newSegments.addAll(urlSegments);
+
+		String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
+		if (!renderedUrl.startsWith(".."))
+		{
+			// WICKET-4260
+			renderedUrl = "./" + renderedUrl;
+		}
+		if (renderedUrl.endsWith(".."))
+		{
+			// WICKET-4401
+			renderedUrl = renderedUrl + '/';
+		}
+		return renderedUrl;
 	}
 
 	/**

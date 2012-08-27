@@ -665,7 +665,7 @@ public class Url implements Serializable
 
 			if (!path.startsWith("/"))
 			{
-				result.append("/");
+				result.append('/');
 			}
 
 		}
