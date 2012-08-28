@@ -69,9 +69,7 @@ public class Button extends FormComponent<String>
 	 */
 	public Button(String id)
 	{
-		super(id);
-		setVersioned(true);
-		setOutputMarkupId(true);
+		this(id, null);
 	}
 
 	/**
@@ -92,6 +90,9 @@ public class Button extends FormComponent<String>
 		super(id, model);
 		setVersioned(true);
 		setOutputMarkupId(true);
+
+		// don't double encode the value. it is encoded by ComponentTag.writeOutput()
+		setEscapeModelStrings(false);
 	}
 
 	/**
