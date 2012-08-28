@@ -24,6 +24,8 @@ import java.util.Map;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Takes care of rendering URLs.
@@ -37,6 +39,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class UrlRenderer
 {
+	private static final Logger LOG = LoggerFactory.getLogger(UrlRenderer.class);
+
 	private static final Map<String, Integer> PROTO_TO_PORT = new HashMap<String, Integer>();
 	static
 	{
@@ -208,6 +212,9 @@ public class UrlRenderer
 		List<String> baseUrlSegments = getBaseUrl().getSegments();
 		List<String> urlSegments = new ArrayList<String>(url.getSegments());
 
+		removeCommonPrefixes(request, baseUrlSegments);
+		removeCommonPrefixes(request, urlSegments);
+
 		List<String> newSegments = new ArrayList<String>();
 
 		int common = 0;
@@ -260,6 +267,51 @@ public class UrlRenderer
 			renderedUrl = renderedUrl + '/';
 		}
 		return renderedUrl;
+	}
+
+	/**
+	 * Removes common prefixes like empty first segment, context path and filter path
+	 *
+	 * @param request
+	 *      the current web request
+	 * @param segments
+	 *      the segments to clean
+	 */
+	private void removeCommonPrefixes(Request request, List<String> segments)
+	{
+		if (segments.isEmpty())
+		{
+			return;
+		}
+
+		if ("".equals(segments.get(0)))
+		{
+			LOG.debug("Removing an empty first segment from '{}'", segments);
+			segments.remove(0);
+		}
+
+		String contextPath = request.getContextPath();
+		if (contextPath != null)
+		{
+			if (segments.isEmpty() == false)
+			{
+				if (contextPath.equals(UrlUtils.normalizePath(segments.get(0))))
+				{
+					LOG.debug("Removing the context path '{}' from '{}'", contextPath, segments);
+					segments.remove(0);
+				}
+			}
+		}
+
+		String filterPath = request.getFilterPath();
+		if (filterPath != null && segments.isEmpty() == false)
+		{
+			if (filterPath.equals(UrlUtils.normalizePath(segments.get(0))))
+			{
+				LOG.debug("Removing the filter path '{}' from '{}'", filterPath, segments);
+				segments.remove(0);
+			}
+		}
 	}
 
 	/**
