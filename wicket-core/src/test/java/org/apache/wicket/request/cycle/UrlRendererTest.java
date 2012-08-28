@@ -264,7 +264,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToAnotherBaseUrl()
+	public void renderFullUrlAsRelativeToAnAbsoluteBaseUrl()
 	{
 		Url baseUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b/c/d");
 		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b;jsessionid=123456");
@@ -276,12 +276,57 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToAnotherBaseUrl_2()
+	public void renderFullUrlAsRelativeToBaseUrlWithoutSchemeHostnameAndPort()
 	{
 		Url baseUrl = Url.parse("/contextPath/filterPath/a/b/c/d");
 		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b;jsessionid=123456");
 
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		String encodedRelativeUrl = renderer.renderRelativeUrl(encodedFullUrl);
+
+		assertEquals("../../b;jsessionid=123456", encodedRelativeUrl);
+	}
+
+	@Test
+	public void renderFullUrlAsRelativeToBaseUrlWithoutContextAndFilterPaths()
+	{
+		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
+		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b;jsessionid=123456");
+
+		MockWebRequest request = new MockWebRequest(baseUrl);
+		request.setContextPath("contextPath");
+		request.setFilterPath("filterPath");
+		UrlRenderer renderer = new UrlRenderer(request);
+		String encodedRelativeUrl = renderer.renderRelativeUrl(encodedFullUrl);
+
+		assertEquals("../../b;jsessionid=123456", encodedRelativeUrl);
+	}
+
+	@Test
+	public void renderFullUrlAsRelativeToBaseUrlWithoutContextPath()
+	{
+		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
+		Url encodedFullUrl = Url.parse("http://host:8080/filterPath/a/b;jsessionid=123456");
+
+		MockWebRequest request = new MockWebRequest(baseUrl);
+		request.setContextPath("contextPath");
+		request.setFilterPath("filterPath");
+		UrlRenderer renderer = new UrlRenderer(request);
+		String encodedRelativeUrl = renderer.renderRelativeUrl(encodedFullUrl);
+
+		assertEquals("../../b;jsessionid=123456", encodedRelativeUrl);
+	}
+
+	@Test
+	public void renderFullUrlAsRelativeToBaseUrlWithoutFilterPath()
+	{
+		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
+		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/a/b;jsessionid=123456");
+
+		MockWebRequest request = new MockWebRequest(baseUrl);
+		request.setContextPath("contextPath");
+		request.setFilterPath("filterPath");
+		UrlRenderer renderer = new UrlRenderer(request);
 		String encodedRelativeUrl = renderer.renderRelativeUrl(encodedFullUrl);
 
 		assertEquals("../../b;jsessionid=123456", encodedRelativeUrl);
