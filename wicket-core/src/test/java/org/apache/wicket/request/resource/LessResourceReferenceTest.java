@@ -21,7 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.mock.MockApplication;
@@ -81,7 +82,7 @@ public class LessResourceReferenceTest extends WicketTestCase
 		public void renderHead(IHeaderResponse response)
 		{
 			super.renderHead(response);
-			response.renderCSSReference(resourceReference);
+			response.render(CssHeaderItem.forReference(resourceReference));
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
