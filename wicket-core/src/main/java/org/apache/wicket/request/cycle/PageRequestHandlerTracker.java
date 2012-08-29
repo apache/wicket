@@ -24,6 +24,12 @@ import org.apache.wicket.request.IRequestHandler;
  * Registers and retrieves first and last IPageRequestHandler in a request cycle.
  * Can be used to find out what is the requested page and what is the actual response page.
  *
+ * <p>To use it an application needs to register it with:
+ *     <pre><code>
+ *          application.getRequestCycleListeners().add(new PageRequestHandlerTracker());
+ *     </code></pre>
+ * </p>
+ *
  * @since 1.5.8
  */
 public class PageRequestHandlerTracker extends AbstractRequestCycleListener
