@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>1.4-SNAPSHOT</version>
+		<version>1.4.21</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-examples</artifactId>
