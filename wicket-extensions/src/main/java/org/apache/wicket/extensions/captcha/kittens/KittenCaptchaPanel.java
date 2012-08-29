@@ -185,7 +185,7 @@ public class KittenCaptchaPanel extends Panel
 				};
 				attributes.getAjaxCallListeners().add(ajaxCallListener);
 				List<CharSequence> dynamicExtraParameters = attributes.getDynamicExtraParameters();
-				dynamicExtraParameters.add("return { x: getEventX(this, event), y: getEventY(this, event)}");
+				dynamicExtraParameters.add("return { x: getEventX(Wicket.$(attrs.c), attrs.event), y: getEventY(Wicket.$(attrs.c), attrs.event)}");
 			}
 
 			@Override
