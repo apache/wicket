@@ -1,5 +1,5 @@
 Apache Wicket
-Copyright 2008 The Apache Software Foundation
+Copyright 2006-2012 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -12,7 +12,16 @@ NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
     AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
 
 ---------------------------------------------------------------------------
-src/./wicket-jmx
+src/./wicket-auth-roles
+---------------------------------------------------------------------------
+   Apache Wicket Auth Roles
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+---------------------------------------------------------------------------
+src/./wicket-spring
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -32,24 +41,6 @@ src/./wicket-guice
    This product includes Guice, developed at Google, and licensed
    under the Apache License 2.0. (http://code.google.com/p/google-guice/).
 ---------------------------------------------------------------------------
-src/./wicket-spring
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
----------------------------------------------------------------------------
-src/./wicket-quickstart/NOTICE
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
----------------------------------------------------------------------------
 src/./wicket-ioc
 ---------------------------------------------------------------------------
    Apache Wicket
@@ -57,66 +48,6 @@ src/./wicket-ioc
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
-
----------------------------------------------------------------------------
-src/./wicket-datetime
----------------------------------------------------------------------------
-   Apache Wicket Date Time
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-   
-   Contains code of the Yahoo User Interface library (version: 0.12.2),
-   released under the BSD License:
-   http://developer.yahoo.net/yui/license.txt
-   Copyright (c) 2006, Yahoo!
-
-   This product includes software developed by
-   Joda.org (http://www.joda.org/).
-   
----------------------------------------------------------------------------
-src/./wicket-examples
----------------------------------------------------------------------------
-   Apache Wicket Examples
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-   
-   Contains Script.aculo.us javascript library released under a MIT license.
-   Copyright (c) 2005 Thomas Fuchs
-   
-   Contains prototype.js javascript library released under a MIT style license.
-   (c) 2005 Sam Stephenson
-   
-   Contains behaviour.js javascript library released under BSD license.
-   Behaviour v1.1 by Ben Nolan, June 2005. Based largely on the work
-   of Simon Willison
-   
-   com.meterware.httpunit.ParsedHTML is taken from HttpUnit, released
-   under a MIT style license.
-   Copyright (c) 2000-2004, Russell Gold
-   
-   Contains software developed by the Dojo foundation.
-   The dojo javascript is dual licensed under the AFL and BSD license.
-   Included in this software under the BSD license.
-   Copyright (c) 2004-2005, The Dojo Foundation
-
-   This product includes software developed by the Spring Framework Project
-   (http://www.springframework.org).
-
-   This product includes software developed by the CGLib Project
-   (http://cglib.sourceforge.net).
-
-   This product includes ASM, released under a BSD style license (http://asm.objectweb.org).
-   Copyright (c) 2000-2005 INRIA, France Telecom
-
-   This product includes software developed by
-   Joda.org (http://www.joda.org/).
-
-   This product includes jhighlight (https://jhighlight.dev.java.net/)
-   which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
 
 ---------------------------------------------------------------------------
 src/./wicket-extensions
@@ -130,16 +61,6 @@ src/./wicket-extensions
    Contains software developed in Apache Turbine, released
    under the Apache Software License, Version 2.0. 
    (c) 2001-2005
-
----------------------------------------------------------------------------
-src/./wicket-objectssizeof-agent
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
 
 ---------------------------------------------------------------------------
 src/./wicket
@@ -206,9 +127,79 @@ src/./wicket
    [1]: http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
 
 ---------------------------------------------------------------------------
-src/./wicket-auth-roles
+src/./wicket-datetime
 ---------------------------------------------------------------------------
-   Apache Wicket Auth Roles
+   Apache Wicket Date Time
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+   
+   Contains code of the Yahoo User Interface library (version: 0.12.2),
+   released under the BSD License:
+   http://developer.yahoo.net/yui/license.txt
+   Copyright (c) 2006, Yahoo!
+
+   This product includes software developed by
+   Joda.org (http://www.joda.org/).
+   
+---------------------------------------------------------------------------
+src/./wicket-examples
+---------------------------------------------------------------------------
+   Apache Wicket Examples
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+   
+   Contains Script.aculo.us javascript library released under a MIT license.
+   Copyright (c) 2005 Thomas Fuchs
+   
+   Contains prototype.js javascript library released under a MIT style license.
+   (c) 2005 Sam Stephenson
+   
+   Contains behaviour.js javascript library released under BSD license.
+   Behaviour v1.1 by Ben Nolan, June 2005. Based largely on the work
+   of Simon Willison
+   
+   com.meterware.httpunit.ParsedHTML is taken from HttpUnit, released
+   under a MIT style license.
+   Copyright (c) 2000-2004, Russell Gold
+   
+   Contains software developed by the Dojo foundation.
+   The dojo javascript is dual licensed under the AFL and BSD license.
+   Included in this software under the BSD license.
+   Copyright (c) 2004-2005, The Dojo Foundation
+
+   This product includes software developed by the Spring Framework Project
+   (http://www.springframework.org).
+
+   This product includes software developed by the CGLib Project
+   (http://cglib.sourceforge.net).
+
+   This product includes ASM, released under a BSD style license (http://asm.objectweb.org).
+   Copyright (c) 2000-2005 INRIA, France Telecom
+
+   This product includes software developed by
+   Joda.org (http://www.joda.org/).
+
+   This product includes jhighlight (https://jhighlight.dev.java.net/)
+   which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
+
+---------------------------------------------------------------------------
+src/./wicket-objectssizeof-agent
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+
+---------------------------------------------------------------------------
+src/./wicket-jmx
+---------------------------------------------------------------------------
+   Apache Wicket
    Copyright 2007 The Apache Software Foundation
 
    This product includes software developed at
