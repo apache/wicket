@@ -26,6 +26,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
@@ -190,6 +191,12 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				UrlResourceReference urlReference = (UrlResourceReference)reference;
 				url = urlReference.getUrl();
 				return url;
+			}
+
+			if (reference.canBeRegistered())
+			{
+				ResourceReferenceRegistry resourceReferenceRegistry = getContext().getResourceReferenceRegistry();
+				resourceReferenceRegistry.registerResourceReference(reference);
 			}
 
 			url = new Url();
