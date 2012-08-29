@@ -677,7 +677,7 @@
 				else {
 					// no redirect, just regular response
 					if (Wicket.Log.enabled()) {
-						var responseAsText = jQuery(data).text();
+						var responseAsText = jqXHR.responseText;
 						Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
 						Wicket.Log.info("\n" + responseAsText);
 					}
