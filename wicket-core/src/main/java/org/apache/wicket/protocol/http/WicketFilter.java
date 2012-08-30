@@ -348,26 +348,26 @@ public class WicketFilter implements Filter
 		if (configureFilterPath == null)
 		{
 			configureFilterPath = getFilterPathFromConfig(filterConfig);
-		}
 
-		if (configureFilterPath == null)
-		{
-			configureFilterPath = getFilterPathFromWebXml(isServlet, filterConfig);
-		}
+			if (configureFilterPath == null)
+			{
+				configureFilterPath = getFilterPathFromWebXml(isServlet, filterConfig);
 
-		if (configureFilterPath == null)
-		{
-			configureFilterPath = getFilterPathFromAnnotation(isServlet);
-		}
+				if (configureFilterPath == null)
+				{
+					configureFilterPath = getFilterPathFromAnnotation(isServlet);
+				}
+			}
 
-		if (configureFilterPath != null)
-		{
-			setFilterPath(configureFilterPath);
+			if (configureFilterPath != null)
+			{
+				setFilterPath(configureFilterPath);
+			}
 		}
 
 		if (getFilterPath() == null)
 		{
-			log.warn("Unable to determine filter path from filter init-parm, web.xml, "
+			log.warn("Unable to determine filter path from filter init-param, web.xml, "
 				+ "or servlet 3.0 annotations. Assuming user will set filter path "
 				+ "manually by calling setFilterPath(String)");
 		}
