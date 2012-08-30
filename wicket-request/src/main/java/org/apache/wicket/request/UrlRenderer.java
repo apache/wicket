@@ -291,28 +291,30 @@ public class UrlRenderer
 		{
 			LOG.debug("Removing an empty first segment from '{}'", segments);
 			segments.remove(0);
-		}
 
-		String contextPath = request.getContextPath();
-		if (contextPath != null)
-		{
-			if (segments.isEmpty() == false)
+			// try to remove context/filter path only if the Url starts with '/',
+			//  i.e. has an empty segment in the beginning
+			String contextPath = request.getContextPath();
+			if (contextPath != null)
 			{
-				if (contextPath.equals(UrlUtils.normalizePath(segments.get(0))))
+				if (segments.isEmpty() == false)
 				{
-					LOG.debug("Removing the context path '{}' from '{}'", contextPath, segments);
-					segments.remove(0);
+					if (contextPath.equals(UrlUtils.normalizePath(segments.get(0))))
+					{
+						LOG.debug("Removing the context path '{}' from '{}'", contextPath, segments);
+						segments.remove(0);
+					}
 				}
 			}
-		}
 
-		String filterPath = request.getFilterPath();
-		if (filterPath != null && segments.isEmpty() == false)
-		{
-			if (filterPath.equals(UrlUtils.normalizePath(segments.get(0))))
+			String filterPath = request.getFilterPath();
+			if (filterPath != null && segments.isEmpty() == false)
 			{
-				LOG.debug("Removing the filter path '{}' from '{}'", filterPath, segments);
-				segments.remove(0);
+				if (filterPath.equals(UrlUtils.normalizePath(segments.get(0))))
+				{
+					LOG.debug("Removing the filter path '{}' from '{}'", filterPath, segments);
+					segments.remove(0);
+				}
 			}
 		}
 	}
