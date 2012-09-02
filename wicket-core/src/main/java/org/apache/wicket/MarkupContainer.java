@@ -42,6 +42,7 @@ import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
