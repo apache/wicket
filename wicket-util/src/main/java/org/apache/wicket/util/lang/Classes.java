@@ -22,7 +22,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Utilities for dealing with classes.
- * 
+ *
  * @author Jonathan Locke
  */
 public final class Classes
@@ -30,21 +30,53 @@ public final class Classes
 
 	/**
 	 * Gets the name of the given class or null if the class is null.
-	 * 
+	 *
 	 * @param c
 	 *            The class
 	 * @return The class name
 	 */
-	public static String name(final Class<?> c)
+	public static String name(Class<?> c)
 	{
-		return (c != null) ? c.getName() : null;
+		String name = null;
+		if (c != null)
+		{
+			while (c.isAnonymousClass())
+			{
+				c = c.getSuperclass();
+			}
+			name = c.getName();
+		}
+
+		return name;
+	}
+
+	/**
+	 * Gets the simple name (without the package) of the given class or null if the class is null.
+	 *
+	 * @param c
+	 *            The class
+	 * @return The class simple name
+	 */
+	public static String simpleName(Class<?> c)
+	{
+		String simpleName = null;
+		if (c != null)
+		{
+			while (c.isAnonymousClass())
+			{
+				c = c.getSuperclass();
+			}
+			simpleName = c.getSimpleName();
+		}
+
+		return simpleName;
 	}
 
 	/**
 	 * Takes a Class and a relative path to a class and returns any class at that relative path. For
 	 * example, if the given Class was java.lang.System and the relative path was "../util/List",
 	 * then the java.util.List class would be returned.
-	 * 
+	 *
 	 * @param scope
 	 *            The package to start at
 	 * @param path
@@ -61,9 +93,9 @@ public final class Classes
 
 	/**
 	 * Gets the name of a given class without the prefixed package path
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @param c
 	 *            The class
 	 * @return The class name
