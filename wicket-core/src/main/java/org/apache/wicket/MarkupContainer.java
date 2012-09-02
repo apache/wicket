@@ -679,12 +679,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				.isOutputMarkupContainerClassName();
 			if (outputClassName)
 			{
-				Class<?> klass = getClass();
-				while (klass.isAnonymousClass())
-				{
-					klass = klass.getSuperclass();
-				}
-				className = klass.getName();
+				className = Classes.name(getClass());
 				getResponse().write("<!-- MARKUP FOR ");
 				getResponse().write(className);
 				getResponse().write(" BEGIN -->");
