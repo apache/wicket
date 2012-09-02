@@ -292,15 +292,12 @@ public class UrlRenderer
 			// try to remove context/filter path only if the Url starts with '/',
 			//  i.e. has an empty segment in the beginning
 			String contextPath = request.getContextPath();
-			if (contextPath != null)
+			if (contextPath != null && segments.isEmpty() == false)
 			{
-				if (segments.isEmpty() == false)
+				if (contextPath.equals(UrlUtils.normalizePath(segments.get(0))))
 				{
-					if (contextPath.equals(UrlUtils.normalizePath(segments.get(0))))
-					{
-						LOG.debug("Removing the context path '{}' from '{}'", contextPath, segments);
-						segments.remove(0);
-					}
+					LOG.debug("Removing the context path '{}' from '{}'", contextPath, segments);
+					segments.remove(0);
 				}
 			}
 
