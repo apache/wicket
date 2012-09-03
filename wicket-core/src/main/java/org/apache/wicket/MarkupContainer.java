@@ -233,10 +233,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public final boolean autoAdd(final Component component, MarkupStream markupStream)
 	{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("argument component may not be null");
-		}
+		Args.notNull(component, "component");
 
 		// Replace strategy
 		component.setAuto(true);
@@ -900,7 +897,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 *            Component being added
 	 */
-	private final void addedComponent(final Component child)
+	private void addedComponent(final Component child)
 	{
 		// Check for degenerate case
 		Args.notNull(child, "child");
@@ -968,7 +965,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 *            Child to add
 	 */
-	private final void children_add(final Component child)
+	private void children_add(final Component child)
 	{
 		if (children == null)
 		{
@@ -1002,7 +999,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param index
 	 * @return The child component
 	 */
-	private final Component children_get(int index)
+	private Component children_get(int index)
 	{
 		return (Component)children_get(index, true);
 	}
@@ -1013,7 +1010,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param reconstruct
 	 * @return the child component
 	 */
-	private final Object children_get(int index, boolean reconstruct)
+	private Object children_get(int index, boolean reconstruct)
 	{
 		Object component = null;
 		if (children != null)
@@ -1056,7 +1053,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param object
 	 * @return The id of the object (object can be component)
 	 */
-	private final String getId(Object object)
+	private String getId(Object object)
 	{
 		if (object instanceof Component)
 		{
@@ -1073,7 +1070,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param id
 	 * @return The child component
 	 */
-	private final Component children_get(final String id)
+	private Component children_get(final String id)
 	{
 		if (children == null)
 		{
@@ -1118,7 +1115,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 * @return The index of the given child component
 	 */
-	private final int children_indexOf(Component child)
+	private int children_indexOf(Component child)
 	{
 		if (children == null)
 		{
@@ -1162,7 +1159,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param component
 	 * @return The component that is removed.
 	 */
-	private final Component children_remove(Component component)
+	private Component children_remove(Component component)
 	{
 		int index = children_indexOf(component);
 		if (index != -1)
@@ -1177,7 +1174,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param index
 	 * @return The component that is removed
 	 */
-	private final Component children_remove(int index)
+	private Component children_remove(int index)
 	{
 		if (children == null)
 		{
@@ -1239,7 +1236,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param reconstruct
 	 * @return The replaced child
 	 */
-	private final Object children_set(int index, Object child, boolean reconstruct)
+	private Object children_set(int index, Object child, boolean reconstruct)
 	{
 		Object replaced;
 		if (index >= 0 && index < children_size())
@@ -1276,7 +1273,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 * @return The component that is replaced
 	 */
-	private final Component children_set(int index, Component child)
+	private Component children_set(int index, Component child)
 	{
 		return (Component)children_set(index, child, true);
 	}
@@ -1285,7 +1282,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @return The size of the children
 	 */
-	private final int children_size()
+	private int children_size()
 	{
 		if (children == null)
 		{
@@ -1312,7 +1309,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            The child to put into the map
 	 * @return Any component that was replaced
 	 */
-	private final Component put(final Component child)
+	private Component put(final Component child)
 	{
 		int index = children_indexOf(child);
 		if (index == -1)
@@ -1330,7 +1327,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param component
 	 *            Component being removed
 	 */
-	private final void removedComponent(final Component component)
+	private void removedComponent(final Component component)
 	{
 		// Notify Page that component is being removed
 		final Page page = component.findPage();
@@ -1504,7 +1501,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param openTag
 	 *            The open tag
 	 */
-	private final void renderComponentTagBody(final MarkupStream markupStream,
+	private void renderComponentTagBody(final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
 		if ((markupStream != null) && (markupStream.getCurrentIndex() > 0))
@@ -1612,7 +1609,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// they don't need to be removed anymore.
 				if (component.isAuto() && !(component instanceof InlineEnclosure))
 				{
-					children_remove(i);
+//					children_remove(i);
+					System.err.println("Will not remove: " + component);
 				}
 			}
 		}
