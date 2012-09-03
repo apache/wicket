@@ -38,6 +38,7 @@ public class TimeField extends DateTimeField
 	 * Construct.
 	 * 
 	 * @param id
+	 *      the component id
 	 */
 	public TimeField(String id)
 	{
@@ -48,7 +49,9 @@ public class TimeField extends DateTimeField
 	 * Construct.
 	 * 
 	 * @param id
+	 *      the component id
 	 * @param model
+	 *      the component's model
 	 */
 	public TimeField(String id, IModel<Date> model)
 	{
@@ -61,7 +64,7 @@ public class TimeField extends DateTimeField
 	protected void convertInput()
 	{
 		Date modelObject = (Date)getDefaultModelObject();
-		getDateTextField().setConvertedInput(modelObject != null ? modelObject : new Date());
+		getDateTextField().setConvertedInput(modelObject != null ? modelObject : newDateInstance());
 		super.convertInput();
 	}
 

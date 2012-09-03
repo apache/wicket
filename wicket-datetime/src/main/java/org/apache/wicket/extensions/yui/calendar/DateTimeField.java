@@ -368,13 +368,35 @@ public class DateTimeField extends FormComponentPanel<Date>
 			}
 
 			// The date will be in the server's timezone
-			setConvertedInput(new Date(date.getMillis()));
+			setConvertedInput(newDateInstance(date.getMillis()));
 		}
 		catch (RuntimeException e)
 		{
 			DateTimeField.this.error(e.getMessage());
 			invalid();
 		}
+	}
+
+	/**
+	 * A factory method for the DateTextField's model object.
+	 *
+	 * @return any specialization of java.util.Date
+	 */
+	protected Date newDateInstance()
+	{
+		return new Date();
+	}
+
+	/**
+	 * A factory method for the DateTextField's model object.
+	 *
+	 * @param time
+	 *      the time in milliseconds
+	 * @return any specialization of java.util.Date
+	 */
+	protected Date newDateInstance(long time)
+	{
+		return new Date(time);
 	}
 
 	/**
