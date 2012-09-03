@@ -47,21 +47,21 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends
 		setFilters(createFilters(footerBucketName));
 	}
 
-	protected IHeaderResponseFilter[] createFilters(String footerBucketName)
+	private IHeaderResponseFilter[] createFilters(String footerBucketName)
 	{
-		IHeaderResponseFilter header = createHeaderFilter(HEADER_FILTER_NAME);
 		IHeaderResponseFilter footer = createFooterFilter(footerBucketName);
+		IHeaderResponseFilter header = createHeaderFilter(HEADER_FILTER_NAME, footer);
 		return new IHeaderResponseFilter[] { header, footer };
 	}
 
-	protected JavaScriptAcceptingHeaderResponseFilter createFooterFilter(String footerBucketName)
+	private IHeaderResponseFilter createFooterFilter(String footerBucketName)
 	{
 		return new JavaScriptAcceptingHeaderResponseFilter(footerBucketName);
 	}
 
-	protected CssAcceptingHeaderResponseFilter createHeaderFilter(String headerFilterName)
+	private IHeaderResponseFilter createHeaderFilter(String headerFilterName, IHeaderResponseFilter footerFilter)
 	{
-		return new CssAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
+		return new OppositeHeaderResponseFilter(headerFilterName, footerFilter);
 	}
 
 }
