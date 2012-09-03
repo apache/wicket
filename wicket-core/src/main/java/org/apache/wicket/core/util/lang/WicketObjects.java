@@ -31,6 +31,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.serialize.ISerializer;
+import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
 import org.apache.wicket.util.lang.Generics;
@@ -110,9 +112,6 @@ public class WicketObjects
 	 */
 	public static final class SerializingObjectSizeOfStrategy implements IObjectSizeOfStrategy
 	{
-		/**
-		 * @see org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable)
-		 */
 		@Override
 		public long sizeOf(Serializable object)
 		{
@@ -120,21 +119,18 @@ public class WicketObjects
 			{
 				return 0;
 			}
-			try
+
+			ISerializer serializer;
+			if (Application.exists())
 			{
-				final ByteCountingOutputStream out = new ByteCountingOutputStream();
-				new ObjectOutputStream(out).writeObject(object);
-				out.close();
-				return out.size();
+				serializer = Application.get().getFrameworkSettings().getSerializer();
 			}
-			catch (IOException e)
+			else
 			{
-				if (log.isWarnEnabled())
-				{
-					log.warn("Unable to determine object size: " + object.toString(), e);
-				}
-				return -1;
+				serializer = new JavaSerializer("SerializingObjectSizeOfStrategy");
 			}
+			byte[] serialized = serializer.serialize(object);
+			return serialized.length;
 		}
 
 	}
