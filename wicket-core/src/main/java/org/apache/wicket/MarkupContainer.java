@@ -1609,8 +1609,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// they don't need to be removed anymore.
 				if (component.isAuto() && !(component instanceof InlineEnclosure))
 				{
-//					children_remove(i);
-					System.err.println("Will not remove: " + component);
+					children_remove(i);
 				}
 			}
 		}
