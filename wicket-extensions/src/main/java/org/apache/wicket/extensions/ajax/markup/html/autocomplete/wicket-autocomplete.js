@@ -99,12 +99,14 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         // WICKET-1280
         objonchangeoriginal=obj.onchange; 
         obj.onchange=function(event){
+        	event = Wicket.fixEvent(event);
       		if(mouseactive==1)return false;
       		if(typeof objonchangeoriginal=="function") return objonchangeoriginal.apply(this,[event]);
       	}
         objonchange=obj.onchange;
         
         Wicket.Event.add(obj,'blur',function(event){      		
+        	event = Wicket.fixEvent(event);
     		if(mouseactive==1){
                 ignoreOneFocusGain = true;
     			Wicket.$(elementId).focus();
@@ -114,6 +116,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         });	 
                 
       	obj.onfocus=function(event){
+        	event = Wicket.fixEvent(event);
             if (mouseactive==1) {
                 ignoreOneFocusGain = false;
                 return killEvent(event);
@@ -132,7 +135,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
 
         obj.onkeydown=function(event){
-            switch(wicketKeyCode(Wicket.fixEvent(event))){
+        	event = Wicket.fixEvent(event);
+            switch(wicketKeyCode(event)){
                 case KEY_UP:
         	        if(selected>-1) setSelected(selected-1);
             	    if(selected==-1){
@@ -184,7 +188,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
 
         obj.onkeyup=function(event){
-            switch(wicketKeyCode(Wicket.fixEvent(event))){
+        	event = Wicket.fixEvent(event);
+            switch(wicketKeyCode(event)){
                 case KEY_TAB:
                 case KEY_ENTER:
 	                return killEvent(event);
@@ -204,7 +209,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
 
         obj.onkeypress=function(event){
-            if(wicketKeyCode(Wicket.fixEvent(event))==KEY_ENTER){
+        	event = Wicket.fixEvent(event);
+            if(wicketKeyCode(event)==KEY_ENTER){
                 if(selected>-1 || hidingAutocomplete==1){
 			        hidingAutocomplete=0;
 			        return killEvent(event);
@@ -611,6 +617,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 		    elementCount=selectableElements.length;
 
             var clickFunc = function(event) {
+	        	event = Wicket.fixEvent(event);
                 mouseactive = 0;
                 var value = getSelectedValue();
                 var input = wicketGet(elementId);
@@ -626,6 +633,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             };
 			
             var mouseOverFunc = function(event) {
+	        	event = Wicket.fixEvent(event);
                 setSelected(getElementIndex(this));
                 render(false, false); // don't scroll - breaks mouse weel scrolling
                 showAutoComplete();
