@@ -23,10 +23,12 @@ import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -65,12 +67,33 @@ public class DebugBar extends DevUtilsPanel
 		private static final long serialVersionUID = 1L;
 	};
 
+	
+	/**
+	 * Construct.
+	 * <p/>
+	 * Create debug bar (initially expanded)
+	 * 
+	 * @param id
+	 *         component id
+	 *         
+	 * @see #DebugBar(String, boolean) 
+	 */
+	public DebugBar(final String id)
+	{
+		this(id, true);
+	}
+	
 	/**
 	 * Construct.
 	 * 
 	 * @param id
+	 *         component id
+	 * @param initiallyExpanded
+	 *         {@code true} to show debug bar initially expanded
+	 *         
+	 * @see #DebugBar(String) 
 	 */
-	public DebugBar(final String id)
+	public DebugBar(final String id, boolean initiallyExpanded)
 	{
 		super(id);
 		setMarkupId("wicketDebugBar");
@@ -87,10 +110,21 @@ public class DebugBar extends DevUtilsPanel
 		}));
 
 		add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));
-		add(new Image("removeImg", new PackageResourceReference(DebugBar.class, "remove.png")));
+		
+		add(contentSection("content", initiallyExpanded));
+	}
+
+	private Component contentSection(final String id, boolean initiallyExpanded)
+	{
+		WebMarkupContainer section = new WebMarkupContainer(id);
+		if (!initiallyExpanded)
+		{
+			section.add(AttributeModifier.append("style", "display:none").setSeparator(";"));
+		}
+
 		List<IDebugBarContributor> contributors = getContributors();
 
-		add(new ListView<IDebugBarContributor>("contributors", contributors)
+		section.add(new ListView<IDebugBarContributor>("contributors", contributors)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -111,6 +145,10 @@ public class DebugBar extends DevUtilsPanel
 				}
 			}
 		});
+
+		section.add(new Image("removeImg", new PackageResourceReference(DebugBar.class, "remove.png")));
+
+		return section;
 	}
 
 	@Override
