@@ -506,7 +506,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<comparisonVersion>6.0.0-beta1</comparisonVersion>
+					<comparisonVersion>6.0.0</comparisonVersion>
 					<failOnError>false</failOnError>
 					<logResults>true</logResults>
 					<!-- disabled until we start the release candidates -->
