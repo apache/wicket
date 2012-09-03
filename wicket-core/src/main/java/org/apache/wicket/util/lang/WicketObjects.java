@@ -130,7 +130,12 @@ public class WicketObjects
 				serializer = new JavaSerializer("SerializingObjectSizeOfStrategy");
 			}
 			byte[] serialized = serializer.serialize(object);
-			return serialized.length;
+			int size = -1;
+			if (serialized != null)
+			{
+				size = serialized.length;
+			}
+			return size;
 		}
 
 	}
