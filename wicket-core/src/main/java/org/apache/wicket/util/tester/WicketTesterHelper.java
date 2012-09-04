@@ -180,13 +180,17 @@ public class WicketTesterHelper
 			if (behavior instanceof AjaxEventBehavior)
 			{
 				String behaviorEvent = ((AjaxEventBehavior)behavior).getEvent();
-				if (behaviorEvent.startsWith("on"))
+				String[] eventNames = Strings.split(behaviorEvent, ' ');
+				for (String eventName : eventNames)
 				{
-					behaviorEvent = behaviorEvent.substring(2);
-				}
-				if (event.equalsIgnoreCase(behaviorEvent))
-				{
-					return (AjaxEventBehavior)behavior;
+					if (eventName.startsWith("on"))
+					{
+						eventName = eventName.substring(2);
+					}
+					if (event.equalsIgnoreCase(eventName))
+					{
+						return (AjaxEventBehavior)behavior;
+					}
 				}
 			}
 		}
