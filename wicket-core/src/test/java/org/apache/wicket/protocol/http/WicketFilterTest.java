@@ -373,6 +373,7 @@ public class WicketFilterTest extends Assert
 			.thenReturn("/contextPath/images/bla.img")
 			.thenReturn("/contextPath/servlet/wicket/bookmarkable/" + DummyHomePage.class.getName());
 		when(request.getContextPath()).thenReturn("/contextPath");
+		when(request.getMethod()).thenReturn("POST");
 		HttpServletResponse response = mock(HttpServletResponse.class);
 		when(response.encodeRedirectURL(Matchers.anyString())).thenAnswer(new Answer<String>()
 		{
