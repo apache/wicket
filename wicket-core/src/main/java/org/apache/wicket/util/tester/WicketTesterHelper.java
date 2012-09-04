@@ -27,6 +27,7 @@ import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -170,33 +171,32 @@ public class WicketTesterHelper
 	 */
 	public static AjaxEventBehavior findAjaxEventBehavior(Component component, String event)
 	{
-		if (event.startsWith("on"))
+		Args.notEmpty(event, "event");
+		String[] eventNames = Strings.split(event, ' ');
+		for (String eventName : eventNames)
 		{
-			event = event.substring(2);
-		}
-
-		for (Behavior behavior : component.getBehaviors())
-		{
-			if (behavior instanceof AjaxEventBehavior)
+			if (eventName.startsWith("on"))
 			{
-				String behaviorEvent = ((AjaxEventBehavior)behavior).getEvent();
-				String[] eventNames = Strings.split(behaviorEvent, ' ');
-				for (String eventName : eventNames)
-				{
-					if (eventName.startsWith("on"))
-					{
-						eventName = eventName.substring(2);
-					}
-					if (event.equalsIgnoreCase(eventName))
-					{
-						return (AjaxEventBehavior)behavior;
-					}
-				}
+				eventName = eventName.substring(2);
+			}
 
-				// a compound event name can be used as a parameter to AjaxEventBehavior's constructor
-				if (event.equals(behaviorEvent))
+			for (Behavior behavior : component.getBehaviors())
+			{
+				if (behavior instanceof AjaxEventBehavior)
 				{
-					return (AjaxEventBehavior) behavior;
+					String behaviorEvent = ((AjaxEventBehavior)behavior).getEvent();
+					String[] behaviorEventNames = Strings.split(behaviorEvent, ' ');
+					for (String behaviorEventName : behaviorEventNames)
+					{
+						if (behaviorEventName.startsWith("on"))
+						{
+							behaviorEventName = behaviorEventName.substring(2);
+						}
+						if (eventName.equalsIgnoreCase(behaviorEventName))
+						{
+							return (AjaxEventBehavior)behavior;
+						}
+					}
 				}
 			}
 		}
