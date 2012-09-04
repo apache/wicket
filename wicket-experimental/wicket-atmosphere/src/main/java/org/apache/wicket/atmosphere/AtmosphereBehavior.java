@@ -18,9 +18,11 @@ package org.apache.wicket.atmosphere;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
@@ -66,13 +68,25 @@ public class AtmosphereBehavior extends Behavior
 
 	private static final long serialVersionUID = 1L;
 
+	private String applicationKey;
+
+	private String sessionId;
+
 	private Component component;
+
 
 	/**
 	 * Construct.
 	 */
 	public AtmosphereBehavior()
 	{
+		applicationKey = Application.get().getApplicationKey();
+		sessionId = Session.get().getId();
+	}
+
+	private EventBus findEventBus()
+	{
+		return EventBus.get(Application.get(applicationKey));
 	}
 
 	@Override
@@ -97,7 +111,7 @@ public class AtmosphereBehavior extends Behavior
 		Meteor meteor = Meteor.build(request.getContainerRequest());
 		String uuid = getUUID(meteor.getAtmosphereResource());
 		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
-		EventBus.get().registerPage(uuid, component.getPage());
+		findEventBus().registerPage(uuid, component.getPage());
 
 		// Add us to the listener list.
 		meteor.addListener(this);
@@ -169,6 +183,7 @@ public class AtmosphereBehavior extends Behavior
 			log.info(String.format("%s connection dropped from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
+		findEventBus().unregisterConnection(getUUID(event.getResource()));
 	}
 
 	@Override
