@@ -130,3 +130,4 @@ svn export http://svn.apache.org/repos/asf/wicket/common/KEYS target/dist/KEYS
 ssh mgrigorov@people.apache.org mkdir -p dist/wicket-$version public_html/wicket-$version
 scp -r target/dist mgrigorov@people.apache.org:dist/wicket-$version
 scp -r $gitarchive* mgrigorov@people.apache.org:public_html/wicket-$version
+
