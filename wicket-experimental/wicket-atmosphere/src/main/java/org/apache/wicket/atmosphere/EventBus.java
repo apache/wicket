@@ -195,10 +195,6 @@ public class EventBus implements UnboundListener
 		{
 			for (AtmosphereResource resource : broadcaster.getAtmosphereResources())
 			{
-				if (resource.isCancelled())
-				{
-					System.out.println("cancelled");
-				}
 				ThreadContext.detach();
 				ThreadContext.setApplication(application);
 				PageKey key;
