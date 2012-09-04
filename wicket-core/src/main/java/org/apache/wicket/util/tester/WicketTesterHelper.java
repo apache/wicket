@@ -192,6 +192,12 @@ public class WicketTesterHelper
 						return (AjaxEventBehavior)behavior;
 					}
 				}
+
+				// a compound event name can be used as a parameter to AjaxEventBehavior's constructor
+				if (event.equals(behaviorEvent))
+				{
+					return (AjaxEventBehavior) behavior;
+				}
 			}
 		}
 		return null;
