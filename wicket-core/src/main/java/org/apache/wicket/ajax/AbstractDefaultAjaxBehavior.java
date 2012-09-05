@@ -470,6 +470,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	public CharSequence getCallbackFunctionBody(CallbackParameter... extraParameters)
 	{
 		AjaxRequestAttributes attributes = getAttributes();
+		attributes.setEventNames();
 		CharSequence attrsJson = renderAjaxAttributes(getComponent(), attributes);
 		StringBuilder sb = new StringBuilder();
 		sb.append("var attrs = ");
