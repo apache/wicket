@@ -22,7 +22,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
@@ -70,8 +69,6 @@ public class AtmosphereBehavior extends Behavior
 
 	private String applicationKey;
 
-	private String sessionId;
-
 	private Component component;
 
 
@@ -81,7 +78,6 @@ public class AtmosphereBehavior extends Behavior
 	public AtmosphereBehavior()
 	{
 		applicationKey = Application.get().getApplicationKey();
-		sessionId = Session.get().getId();
 	}
 
 	private EventBus findEventBus()
