@@ -126,7 +126,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		public RecordedHeaderItem(HeaderItem item)
 		{
 			this.item = item;
-			this.locations = new ArrayList<RecordedHeaderItemLocation>();
+			locations = new ArrayList<RecordedHeaderItemLocation>();
 		}
 
 		/**
@@ -186,9 +186,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		super(real);
 
-		this.itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
-		this.domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
-		this.loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
+		itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
+		domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
+		loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
 	}
 
 	@Override
@@ -375,6 +375,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private HeaderItem getItemToBeRendered(HeaderItem item)
 	{
+		while (item instanceof IWrappedHeaderItem)
+		{
+			item = ((IWrappedHeaderItem)item).getWrapped();
+		}
 		if (getRealResponse().wasRendered(item))
 		{
 			return NoHeaderItem.get();
