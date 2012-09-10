@@ -44,6 +44,7 @@
 		<module>wicket-devutils</module>
 		<module>wicket-extensions</module>
 		<module>wicket-ioc</module>
+		<module>wicket-cdi</module>
 		<module>wicket-spring</module>
 		<module>wicket-velocity</module>
 		<module>wicket-auth-roles</module>
@@ -206,6 +207,12 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
+				<version>6.0-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-cdi</artifactId>
 				<version>6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
