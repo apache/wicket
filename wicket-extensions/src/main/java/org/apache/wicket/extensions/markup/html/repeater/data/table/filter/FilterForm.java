@@ -104,9 +104,15 @@ public class FilterForm<T> extends Form<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			public void onConfigure(Component component)
+			{
+				super.onConfigure(component);
+				component.setOutputMarkupId(true);
+			}
+
+			@Override
 			public void onComponentTag(final Component component, final ComponentTag tag)
 			{
-				component.setOutputMarkupId(true);
 				tag.put("onfocus", getFocusTrackingHandler(component));
 				super.onComponentTag(component, tag);
 			}
