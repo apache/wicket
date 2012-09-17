@@ -37,8 +37,7 @@ public class WicketTesterScope implements TestRule
 			@Override
 			public void evaluate() throws Throwable
 			{
-				tester = new WicketTester();
-				setup(tester);
+				tester = create();
 				try
 				{
 					base.evaluate();
@@ -55,11 +54,11 @@ public class WicketTesterScope implements TestRule
 	/**
 	 * Allows setup of the tester instance
 	 * 
-	 * @param tester
+	 * @return tester
 	 */
-	protected void setup(WicketTester tester)
+	protected WicketTester create()
 	{
-
+		return new WicketTester();
 	}
 
 	/**
