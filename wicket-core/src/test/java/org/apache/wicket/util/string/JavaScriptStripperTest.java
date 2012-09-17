@@ -32,7 +32,7 @@ public class JavaScriptStripperTest extends Assert
 	public void unixWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
-		assertEquals("  if ( !t.indexOf(\"//\") ) {", s);
+		assertEquals(" \n if ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	/**	 */
@@ -40,7 +40,7 @@ public class JavaScriptStripperTest extends Assert
 	public void dosWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
-		assertEquals(" \nif ( !t.indexOf(\"//\") ) {", s);
+		assertEquals(" \r\nif ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	/**	 */
@@ -48,7 +48,7 @@ public class JavaScriptStripperTest extends Assert
 	public void macWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
-		assertEquals("  if ( !t.indexOf(\"//\") ) {", s);
+		assertEquals(" \r if ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	/**	 */
@@ -64,7 +64,7 @@ public class JavaScriptStripperTest extends Assert
 	public void regexp2()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
-		assertEquals("foo.replace(/\"/, \"\"); doFoo();", s);
+		assertEquals("foo.replace(/\"/, \"\"); \rdoFoo();", s);
 	}
 
 	/**	 */
@@ -82,7 +82,7 @@ public class JavaScriptStripperTest extends Assert
 	{
 		String before = " attr: /**/ //xyz\n /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/    after     regex";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
-		String expected = " attr:   /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/ after regex";
+		String expected = " attr:  \n /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/ after regex";
 		assertEquals(expected, after);
 		System.out.println(after);
 	}
@@ -128,7 +128,17 @@ public class JavaScriptStripperTest extends Assert
 		assertEquals(expected, after);
 	}
 
-	/**	 */
+	/**     */
+	@Test
+	public void WICKET4760()
+	{
+		String before = "x++ //\nx++";
+		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
+		String expected = "x++ \nx++";
+		assertEquals(expected, after);
+	}
+
+	/**     */
 	// @formatter:off
 	public static String TESTSTRING2 =
          "   var test = function () {\n" +

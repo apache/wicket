@@ -173,6 +173,7 @@ public class JavaScriptStripper
 				if (c == '\n' || c == '\r')
 				{
 					state = REGULAR_TEXT;
+					result.append(c);
 					continue;
 				}
 			}
