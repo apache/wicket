@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
 import org.junit.Test;
 
@@ -190,5 +189,32 @@ public class ComponentTest extends WicketTestCase
 
 		link.setVisible(false);
 		assertFalse(link.isStateless());
+	}
+
+	@Test
+	public void pageIsInitiallyStateless()
+	{
+		FlagReserved5Component component = new FlagReserved5Component("test");
+		assertTrue(component.getFlagReserved5());
+	}
+
+	/**
+	 * Component#FLAG_RESERVED5 (Page's STATELESS_HINT) must be initially set to true
+	 */
+	private static class FlagReserved5Component extends Component
+	{
+
+		public FlagReserved5Component(final String id) {
+			super(id);
+		}
+
+		private boolean getFlagReserved5()
+		{
+			return getFlag(FLAG_RESERVED5);
+		}
+
+		@Override
+		protected void onRender() {
+		}
 	}
 }

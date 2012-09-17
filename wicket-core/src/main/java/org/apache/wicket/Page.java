@@ -728,9 +728,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private void init()
 	{
-		if (isBookmarkable())
+		if (isBookmarkable() == false)
 		{
-			setStatelessHint(true);
+			setStatelessHint(false);
 		}
 
 		// Set versioning of page based on default

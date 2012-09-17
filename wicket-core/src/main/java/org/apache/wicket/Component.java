@@ -433,7 +433,7 @@ public abstract class Component
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
-		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED;
+		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED | FLAG_RESERVED5 /* page's stateless hint */;
 
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE = 0x1;
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET = 0x2;
