@@ -581,6 +581,13 @@
 						</descriptors>
 						<finalName>apache-wicket-${project.version}</finalName>
 					</configuration>
+					<dependencies>
+						<dependency> <!-- remove me when maven-resources-plugin upgrades to plexus-utils:3.0.7 -->
+						  <groupId>org.codehaus.plexus</groupId>
+						  <artifactId>plexus-utils</artifactId>
+						  <version>3.0.7</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<inherited>true</inherited>
