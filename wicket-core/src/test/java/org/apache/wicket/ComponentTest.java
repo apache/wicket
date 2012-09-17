@@ -235,4 +235,31 @@ public class ComponentTest extends WicketTestCase
 		assertFalse(modelChanging.get());
 		assertFalse(modelChanged.get());
 	}
+
+	@Test
+	public void pageIsInitiallyStateless()
+	{
+		FlagReserved5Component component = new FlagReserved5Component("test");
+		assertTrue(component.getFlagReserved5());
+	}
+
+	/**
+	 * Component#FLAG_RESERVED5 (Page's STATELESS_HINT) must be initially set to true
+	 */
+	private static class FlagReserved5Component extends Component
+	{
+
+		public FlagReserved5Component(final String id) {
+			super(id);
+		}
+
+		private boolean getFlagReserved5()
+		{
+			return getFlag(FLAG_RESERVED5);
+		}
+
+		@Override
+		protected void onRender() {
+		}
+	}
 }
