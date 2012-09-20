@@ -105,16 +105,19 @@ public class ConverterLocator implements IConverterLocator
 				{
 					return converted;
 				}
-				else
+
+				if (theType.isInstance(value))
 				{
-					throw new ConversionException("Could not convert value: " + value +
-						" to type: " + theType.getName() + ". Could not find compatible converter.").setSourceValue(value);
+					return theType.cast(value);
 				}
 			}
 			catch (Exception e)
 			{
 				throw new ConversionException(e.getMessage(), e).setSourceValue(value);
 			}
+
+			throw new ConversionException("Could not convert value: " + value + " to type: " +
+				theType.getName() + ". Could not find compatible converter.").setSourceValue(value);
 		}
 
 		/**
