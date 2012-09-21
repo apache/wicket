@@ -456,9 +456,20 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		if (this != other)
 		{
 			for (int index = 0; index < other.getIndexedCount(); index++)
-				set(index, other.get(index));
+			{
+				if (!other.get(index).isNull())
+				{
+					set(index, other.get(index));
+				}
+			}
+			for (String name : other.getNamedKeys())
+			{
+				remove(name);
+			}
 			for (NamedPair curNamed : other.getAllNamed())
-				set(curNamed.getKey(), curNamed.getValue());
+			{
+				add(curNamed.getKey(), curNamed.getValue());
+			}
 		}
 		return this;
 	}
