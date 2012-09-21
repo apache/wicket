@@ -30,12 +30,10 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.PageHeaderItem;
-import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.StringResponse;
 
 
@@ -227,7 +225,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			CharSequence bodyOutput = getCleanResponse(bodyResponse);
 			if (bodyOutput.length() > 0)
 			{
-				getHeaderResponse().render(StringHeaderItem.forString(bodyOutput));
+				getHeaderResponse().render(new PageHeaderItem(bodyOutput));
 			}
 		}
 		finally
@@ -352,32 +350,6 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			headerResponse = getApplication().decorateHeaderResponse(newHeaderResponse());
 		}
 		return headerResponse;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
-	 * Temporarily replaces the response with a StringResponse to capture the header output for this
-	 * part of the stream and pass it to {@link IHeaderResponse}.
-	 * 
-	 * @see org.apache.wicket.MarkupContainer#renderNext(org.apache.wicket.markup.MarkupStream)
-	 */
-	@Override
-	protected final boolean renderNext(MarkupStream markupStream)
-	{
-		StringResponse markupHeaderResponse = new StringResponse();
-		Response oldResponse = getResponse();
-		RequestCycle.get().setResponse(markupHeaderResponse);
-		try
-		{
-			boolean ret = super.renderNext(markupStream);
-			getHeaderResponse().render(new PageHeaderItem(markupHeaderResponse.getBuffer()));
-			return ret;
-		}
-		finally
-		{
-			RequestCycle.get().setResponse(oldResponse);
-		}
 	}
 
 	@Override
