@@ -517,7 +517,7 @@
 					<failOnError>false</failOnError>
 					<logResults>true</logResults>
 					<!-- disabled until we start the release candidates -->
-					<skip>true</skip>
+					<skip>false</skip>
 				</configuration>
 			</plugin>
 			<plugin>
