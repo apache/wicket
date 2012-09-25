@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,10 +23,10 @@ import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.RefreshingView;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 
 /**
@@ -67,27 +66,31 @@ public class FilterToolbar extends AbstractToolbar
 		{
 			throw new IllegalArgumentException("argument [stateLocator] cannot be null");
 		}
-
-		// populate the toolbar with components provided by filtered columns
-		RefreshingView<IColumn<T, S>> filters = new RefreshingView<IColumn<T, S>>("filters")
-		{
+		
+		IModel<List<IColumn<T, S>>> model = new AbstractReadOnlyModel<List<IColumn<T,S>>>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Iterator<IModel<IColumn<T, S>>> getItemModels()
-			{
-				List<IModel<IColumn<T, S>>> columnsModels = new LinkedList<IModel<IColumn<T, S>>>();
+			public List<IColumn<T, S>> getObject() {
+				List<IColumn<T, S>> columnsModels = new LinkedList<IColumn<T, S>>();
 
 				for (IColumn<T, S> column : table.getColumns())
 				{
-					columnsModels.add(Model.of(column));
+					columnsModels.add(column);
 				}
-
-				return columnsModels.iterator();
+				return columnsModels;
 			}
+		};
+		
+
+		// populate the toolbar with components provided by filtered columns
+		ListView<IColumn<T, S>> filters = new ListView<IColumn<T, S>>("filters", model)
+		{
+			private static final long serialVersionUID = 1L;
+
 
 			@Override
-			protected void populateItem(Item<IColumn<T, S>> item)
+			protected void populateItem(ListItem<IColumn<T, S>> item)
 			{
 				final IColumn<T, S> col = item.getModelObject();
 				item.setRenderBodyOnly(true);
@@ -120,8 +123,8 @@ public class FilterToolbar extends AbstractToolbar
 				item.add(filter);
 			}
 		};
+		filters.setReuseItems(true);
 
-		filters.setRenderBodyOnly(true);
 		add(filters);
 	}
 
