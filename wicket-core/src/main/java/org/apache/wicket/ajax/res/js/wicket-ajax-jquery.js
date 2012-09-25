@@ -2102,38 +2102,32 @@
 
 				var element = this;
 
-				// HACK - for safari stopPropagation doesn't work well because
-				// it also prevents scrollbars and form components getting the
-				// event. Therefore for safari the 'ignore' flag is set on event.
-				if (typeof(e.ignore) === "undefined") {
+				Wicket.Event.stop(e);
 
-					Wicket.Event.stop(e);
-
-					if (e.preventDefault) {
-						e.preventDefault();
-					}
-
-					element.wicketOnDragBegin(element);
-
-					element.lastMouseX = e.clientX;
-					element.lastMouseY = e.clientY;
-
-					element.old_onmousemove = document.onmousemove;
-					element.old_onmouseup = document.onmouseup;
-					element.old_onselectstart = document.onselectstart;
-					element.old_onmouseout = document.onmouseout;
-
-					document.onselectstart = function () {
-						return false;
-					};
-					document.onmousemove = Wicket.Drag.mouseMove;
-					document.onmouseup = Wicket.Drag.mouseUp;
-					document.onmouseout = Wicket.Drag.mouseOut;
-
-					Wicket.Drag.current = element;
-
-					return false;
+				if (e.preventDefault) {
+					e.preventDefault();
 				}
+
+				element.wicketOnDragBegin(element);
+
+				element.lastMouseX = e.clientX;
+				element.lastMouseY = e.clientY;
+
+				element.old_onmousemove = document.onmousemove;
+				element.old_onmouseup = document.onmouseup;
+				element.old_onselectstart = document.onselectstart;
+				element.old_onmouseout = document.onmouseout;
+
+				document.onselectstart = function () {
+					return false;
+				};
+				document.onmousemove = Wicket.Drag.mouseMove;
+				document.onmouseup = Wicket.Drag.mouseUp;
+				document.onmouseout = Wicket.Drag.mouseOut;
+
+				Wicket.Drag.current = element;
+
+				return false;
 			},
 
 			/**
