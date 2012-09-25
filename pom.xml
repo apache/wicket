@@ -517,7 +517,7 @@
 					<failOnError>false</failOnError>
 					<logResults>true</logResults>
 					<!-- disabled until we start the release candidates -->
-					<skip>false</skip>
+					<skip>true</skip>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -570,7 +570,6 @@
 					<version>2.3.2</version>
 					<inherited>true</inherited>
 					<configuration>
-						<localCheckout>true</localCheckout>
 						<pushChanges>false</pushChanges>
 						<tagNameFormat>wicket-@{project.version}</tagNameFormat>
 					</configuration>
