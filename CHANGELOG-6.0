@@ -1,4 +1,60 @@
-This file contains all changes done on the 6.0 version.
+This file contains all changes done in releases for Apache Wicket 6.x.
+
+=============================================================================
+
+Release Notes - Wicket - Version 6.1.0
+
+** Sub-task
+    * [WICKET-4752] - Revert Wicket-4715 -Read multipart request params in WebApplication
+    * [WICKET-4783] - Fix WICKET-4758 in 6.1.x
+
+** Bug
+    * [WICKET-4645] - encodeURL broken on Tomcat 7.0.28
+    * [WICKET-4656] - Atmosphere example doesn't work due to missing 'page' when creating AjaxRequestTarget
+    * [WICKET-4729] - atmosphere example will stop working if opening the same url in a different tab in the same browser
+    * [WICKET-4732] - CssPackageResource doesn't work if the extension isn't css
+    * [WICKET-4734] - Button value is double escaped
+    * [WICKET-4735] - KittenCaptchaPanel is broken
+    * [WICKET-4737] - IllegalStateException on WicketFilter.init() after calling setFilterPath()
+    * [WICKET-4738] - DownloadLink doesn't wrap the String model used for file name nor does it detach
+    * [WICKET-4741] - Only complete handler (no success or failure handler) is called when Ajax link produces an exception
+    * [WICKET-4742] - Wicket 6 and Atmospher Integration:  AtmosphereServlet does not delegate WicketFilter for Error Pages .
+    * [WICKET-4743] - SerializingObjectSizeOfStrategy do not use framework serializer
+    * [WICKET-4749] - TabbedPanel - IModel<?> initModel()
+    * [WICKET-4750] - AbstractDefaultAjaxBehavior.getCallbackFunction should not add the event attribute
+    * [WICKET-4751] - UploadProgressBar regression
+    * [WICKET-4753] - Resource bundles are not resolved on PriorityHeaderItems
+    * [WICKET-4755] - "'NEW VALUE' is not a valid Serializable" error during ajax form submission
+    * [WICKET-4757] - FormComponents remain invalid forever if there is no feedback panel
+    * [WICKET-4758] - DOM ids change of the input fields of FilterToolbar
+    * [WICKET-4760] - JavaScriptStripper fails with single line comments
+    * [WICKET-4761] - ModalWindow.closeCurrent Javascript error
+    * [WICKET-4763] - Page's stateless hint is initially set to 'false'
+    * [WICKET-4766] - multiple <style> tags in header are rendered incorrectly
+    * [WICKET-4768] - Whitespace in TabbedPanel markup causes layout issues
+    * [WICKET-4769] - Clicking on Label of Radio doesn't update component with Ajax update
+    * [WICKET-4770] - Wicket 6: modal windows in Safari are always in drag or resize mode
+    * [WICKET-4773] - ComponentFeedbackPanel broken under Wicket 6.0.0 when RenderStrategy.REDIRECT_TO_RENDER
+    * [WICKET-4775] - PageParameters#mergeWith may loose values of the 'other' PP
+    * [WICKET-4776] - Problems with switching between HTTP/HTTPS
+    * [WICKET-4777] - JavaScriptReference escapes given URL
+    * [WICKET-4780] - Using both MountedMapper and CryptoMapper causes warning
+
+** Improvement
+    * [WICKET-4730] -  Filter component does not clear filter fields
+    * [WICKET-4731] - TimeField not able to work with a java.sql.Time
+    * [WICKET-4736] - JavaScriptFilteredIntoFooterHeaderResponse should reverse filter logic
+    * [WICKET-4745] - Allow to set initial state of DebugBar to expanded / collapsed
+    * [WICKET-4746] - Wizard component translation for pt_BR
+    * [WICKET-4748] - Improve WicketTester to be able to find AjaxBehaviors on second/third/... event name
+
+** New Feature
+    * [WICKET-3969] - Add CDI integration
+
+** Task
+    * [WICKET-4781] - Downgrade the warning that a rendering falls back to redirect_to_buffer to a DEBUG
+
+=============================================================================
 
 Release Notes - Wicket - Version 6.0.0
 
@@ -69,6 +125,8 @@ Release Notes - Wicket - Version 6.0.0
 
 ** Task
     * [WICKET-4613] - Add Apache licence check tests for Atmoshpere module
+
+=============================================================================
 
 Release Notes - Wicket - Version 6.0.0-beta3
 
@@ -141,6 +199,8 @@ Release Notes - Wicket - Version 6.0.0-beta3
 
 ** Wish
     * [WICKET-4611] - Provide native integration with web containers' websocket support
+
+=============================================================================
 
 Release Notes - Wicket - Version 6.0.0-beta2
 
@@ -218,6 +278,8 @@ Release Notes - Wicket - Version 6.0.0-beta2
     * [WICKET-4308] - onNewBrowserWindow wanted
     * [WICKET-4498] - Ignore Netbeans XML configuration files in Apache License Header Test Case
 
+=============================================================================
+
 Release Notes - Wicket - Version 6.0.0-beta1
 
 ** Sub-task
@@ -231,8 +293,6 @@ Release Notes - Wicket - Version 6.0.0-beta1
     * [WICKET-4422] - Minimize Wicket's Ajax JavaScript files at build time
     * [WICKET-4439] - Move classes around so that there are no two packages with the same name in different modules
     * [WICKET-4447] - Upgrade maven-bundle-plugin to 2.3.7
-
-
 
 ** Bug
     * [WICKET-2705] - Feedback messages get cleaned up in AJAX request, thus never rendered and never visible to user
@@ -323,8 +383,6 @@ Release Notes - Wicket - Version 6.0.0-beta1
     * [WICKET-4460] - Wrong string encoding in JavaScriptPackageResource
     * [WICKET-4465] - Autocomplete IE javascript error: 'target' is null or not an object
 
-
-
 ** Improvement
     * [WICKET-499] - Investigate whether we can use component meta data for the storage of feedback messages
     * [WICKET-1033] - Allow Grace Period for AJAX Busy Indication
@@ -404,12 +462,6 @@ Release Notes - Wicket - Version 6.0.0-beta1
     * [WICKET-4307] - Support javax.inject.Inject annotation in Guice and Spring integration
     * [WICKET-4419] - Option to deflate serialized pages on the fly
 
-
-
-
-
-
-
 ** Task
     * [WICKET-3068] - remove application settings which are no longer needed
     * [WICKET-4211] - package.properties should be prefixed with "wicket-" namespace
@@ -420,10 +472,5 @@ Release Notes - Wicket - Version 6.0.0-beta1
     * [WICKET-4399] - Remove IRequestCycleSettings#(s|g)etUnexpectedExceptionDisplay in favour of IExceptionSettings
     * [WICKET-4461] - Make all Session methods which deal with attributes public
 
-
-
-
 ** Wish
     * [WICKET-757] - FormComponent.rawInput needs a better name
-
-
