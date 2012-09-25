@@ -16,14 +16,17 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 
 /**
@@ -64,48 +67,63 @@ public class FilterToolbar extends AbstractToolbar
 			throw new IllegalArgumentException("argument [stateLocator] cannot be null");
 		}
 
-		// populate the toolbar with components provided by filtered columns
+		IModel<List<IColumn<T>>> model = new AbstractReadOnlyModel<List<IColumn<T>>>() {
+			private static final long serialVersionUID = 1L;
 
-		RepeatingView filters = new RepeatingView("filters");
-		filters.setRenderBodyOnly(true);
-		add(filters);
+			@Override
+			public List<IColumn<T>> getObject() {
+				List<IColumn<T>> columnsModels = new LinkedList<IColumn<T>>();
 
-		List<IColumn<T>> cols = table.getColumns();
-		for (IColumn<T> col : cols)
-		{
-			WebMarkupContainer item = new WebMarkupContainer(filters.newChildId());
-			item.setRenderBodyOnly(true);
-
-			Component filter = null;
-
-			if (col instanceof IFilteredColumn)
-			{
-				IFilteredColumn<?> filteredCol = (IFilteredColumn<?>)col;
-				filter = filteredCol.getFilter(FILTER_ID, form);
-			}
-
-			if (filter == null)
-			{
-				filter = new NoFilter(FILTER_ID);
-			}
-			else
-			{
-				if (!filter.getId().equals(FILTER_ID))
+				for (IColumn<T> column : table.getColumns())
 				{
-					throw new IllegalStateException(
-						"filter component returned  with an invalid component id. invalid component id [" +
-							filter.getId() +
-							"] required component id [" +
-							getId() +
-							"] generating column [" + col.toString() + "] ");
+					columnsModels.add(column);
 				}
+				return columnsModels;
 			}
+		};
 
-			item.add(filter);
+		// populate the toolbar with components provided by filtered columns
+		ListView<IColumn<T>> filters = new ListView<IColumn<T>>("filters", model)
+		{
+			private static final long serialVersionUID = 1L;
 
-			filters.add(item);
-		}
+			@Override
+			protected void populateItem(ListItem<IColumn<T>> item)
+			{
+				final IColumn<T> col = item.getModelObject();
+				item.setRenderBodyOnly(true);
 
+				Component filter = null;
+
+				if (col instanceof IFilteredColumn)
+				{
+					IFilteredColumn<T> filteredCol = (IFilteredColumn<T>)col;
+					filter = filteredCol.getFilter(FILTER_ID, form);
+				}
+
+				if (filter == null)
+				{
+					filter = new NoFilter(FILTER_ID);
+				}
+				else
+				{
+					if (!filter.getId().equals(FILTER_ID))
+					{
+						throw new IllegalStateException(
+								"filter component returned  with an invalid component id. invalid component id [" +
+										filter.getId() +
+										"] required component id [" +
+										getId() +
+										"] generating column [" + col.toString() + "] ");
+					}
+				}
+
+				item.add(filter);
+			}
+		};
+		filters.setReuseItems(true);
+
+		add(filters);
 	}
 
 	@Override
