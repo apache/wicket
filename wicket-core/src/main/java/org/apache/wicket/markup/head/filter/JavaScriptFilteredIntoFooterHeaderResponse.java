@@ -51,8 +51,9 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 		setFilters(createFilters(footerBucketName));
 	}
 
-	private Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
+	protected Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
 	{
+		// TODO: make private method in wicket 7.x
 		IHeaderResponseFilter footer = createFooterFilter(footerBucketName);
 		IHeaderResponseFilter header = createHeaderFilter(HEADER_FILTER_NAME, footer);
 		return Arrays.asList(header, footer);
@@ -68,4 +69,31 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 		return new OppositeHeaderResponseFilter(headerFilterName, footerFilter);
 	}
 
+	/**
+	 * see WICKET-4736 JavaScriptFilteredIntoFooterHeaderResponse should reverse filter logic
+	 * 
+	 * @param footerBucketName
+	 * @param header
+	 * @return the correct header response filter, but a different one
+	 * @deprecated no longer part of the API
+	 */
+	@Deprecated
+	protected IHeaderResponseFilter createFooterFilter(String footerBucketName,
+		IHeaderResponseFilter header)
+	{
+		return new OppositeHeaderResponseFilter(footerBucketName, header);
+	}
+
+	/**
+	 * see WICKET-4736 JavaScriptFilteredIntoFooterHeaderResponse should reverse filter logic
+	 * 
+	 * @param headerFilterName
+	 * @return the wrong header response filter
+	 * @deprecated no longer part of the API
+	 */
+	@Deprecated
+	protected IHeaderResponseFilter createHeaderFilter(String headerFilterName)
+	{
+		return new CssAndPageAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
+	}
 }
