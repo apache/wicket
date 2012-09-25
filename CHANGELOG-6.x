@@ -36,8 +36,6 @@ Release Notes - Wicket - Version 6.1.0
     * [WICKET-4770] - Wicket 6: modal windows in Safari are always in drag or resize mode
     * [WICKET-4773] - ComponentFeedbackPanel broken under Wicket 6.0.0 when RenderStrategy.REDIRECT_TO_RENDER
     * [WICKET-4775] - PageParameters#mergeWith may loose values of the 'other' PP
-    * [WICKET-4776] - Problems with switching between HTTP/HTTPS
-    * [WICKET-4777] - JavaScriptReference escapes given URL
     * [WICKET-4780] - Using both MountedMapper and CryptoMapper causes warning
 
 ** Improvement
