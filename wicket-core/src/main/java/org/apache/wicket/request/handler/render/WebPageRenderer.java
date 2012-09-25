@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.request.handler.render;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
@@ -228,9 +231,15 @@ public class WebPageRenderer extends PageRenderer
 		}
 		else
 		{
-			if (isRedirectToBuffer() == false && logger.isWarnEnabled())
+			if (isRedirectToBuffer() == false && logger.isDebugEnabled())
 			{
-				logger.debug("Falling back to Redirect_To_Buffer render strategy because none of the conditions matched.");
+				String details = String.format("redirect strategy: '%s', isAjax: '%s', redirect policy: '%s', " +
+						"current url: '%s', target url: '%s', is new: '%s', is stateless: '%s', is temporary: '%s'",
+						Application.get().getRequestCycleSettings().getRenderStrategy(),
+						isAjax, getRedirectPolicy(), currentUrl, targetUrl, getPageProvider().isNewPageInstance(),
+						getPage().isPageStateless(), isSessionTemporary());
+				logger.debug("Falling back to Redirect_To_Buffer render strategy because none of the conditions " +
+						"matched. Details: " + details);
 			}
 
 			// redirect to buffer
