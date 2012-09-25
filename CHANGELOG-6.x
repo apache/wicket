@@ -4,10 +4,6 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 Release Notes - Wicket - Version 6.1.0
 
-** Sub-task
-    * [WICKET-4752] - Revert Wicket-4715 -Read multipart request params in WebApplication
-    * [WICKET-4783] - Fix WICKET-4758 in 6.1.x
-
 ** Bug
     * [WICKET-4645] - encodeURL broken on Tomcat 7.0.28
     * [WICKET-4656] - Atmosphere example doesn't work due to missing 'page' when creating AjaxRequestTarget
@@ -32,7 +28,6 @@ Release Notes - Wicket - Version 6.1.0
     * [WICKET-4763] - Page's stateless hint is initially set to 'false'
     * [WICKET-4766] - multiple <style> tags in header are rendered incorrectly
     * [WICKET-4768] - Whitespace in TabbedPanel markup causes layout issues
-    * [WICKET-4769] - Clicking on Label of Radio doesn't update component with Ajax update
     * [WICKET-4770] - Wicket 6: modal windows in Safari are always in drag or resize mode
     * [WICKET-4773] - ComponentFeedbackPanel broken under Wicket 6.0.0 when RenderStrategy.REDIRECT_TO_RENDER
     * [WICKET-4775] - PageParameters#mergeWith may loose values of the 'other' PP
