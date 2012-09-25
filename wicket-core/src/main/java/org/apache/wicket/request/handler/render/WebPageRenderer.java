@@ -230,7 +230,7 @@ public class WebPageRenderer extends PageRenderer
 		{
 			if (isRedirectToBuffer() == false && logger.isWarnEnabled())
 			{
-				logger.warn("Falling back to Redirect_To_Buffer render strategy because none of the conditions matched.");
+				logger.debug("Falling back to Redirect_To_Buffer render strategy because none of the conditions matched.");
 			}
 
 			// redirect to buffer
