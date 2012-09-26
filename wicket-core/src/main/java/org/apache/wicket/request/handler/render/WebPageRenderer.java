@@ -182,6 +182,7 @@ public class WebPageRenderer extends PageRenderer
 
 			boolean onePassRender = isOnePassRender();
 			boolean isRedirectToRender = isRedirectToRender();
+			boolean redirectToBuffer = isRedirectToBuffer();
 
 			boolean targetEqualsCurrentUrl = targetUrl.equals(currentUrl);
 			boolean isNewPageInstance = getPageProvider().isNewPageInstance();
@@ -195,76 +196,79 @@ public class WebPageRenderer extends PageRenderer
 					response.writeTo((WebResponse)requestCycle.getResponse());
 				}
 			}
-			else if (shouldRedirectToTargetUrl(isAjax, redirectPolicy, isRedirectToRender, targetEqualsCurrentUrl, isNewPageInstance, isPageStateless))
-			{
-				redirectTo(targetUrl, requestCycle);
-			}
-			else
-			{
-				if (isRedirectToBuffer() == false && logger.isDebugEnabled())
+			else {
+				boolean sessionTemporary = isSessionTemporary();
+				if (shouldRedirectToTargetUrl(isAjax, redirectPolicy, isRedirectToRender, targetEqualsCurrentUrl, isNewPageInstance, isPageStateless, sessionTemporary))
 				{
-					String details = String.format("redirect strategy: '%s', isAjax: '%s', redirect policy: '%s', " +
-							"current url: '%s', target url: '%s', is new: '%s', is stateless: '%s', is temporary: '%s'",
-							Application.get().getRequestCycleSettings().getRenderStrategy(),
-							isAjax, redirectPolicy, currentUrl, targetUrl, isNewPageInstance,
-									isPageStateless, isSessionTemporary());
-					logger.debug("Falling back to Redirect_To_Buffer render strategy because none of the conditions " +
-							"matched. Details: " + details);
-				}
-
-				// redirect to buffer
-				BufferedWebResponse response = renderPage(targetUrl, requestCycle);
-
-				if (response == null)
-				{
-					return;
-				}
-
-				// check if the url hasn't changed after page has been rendered
-				// (i.e. the stateless flag might have changed which could result in different page url)
-				Url targetUrl2 = requestCycle.mapUrlFor(getRenderPageRequestHandler());
-
-				if (targetUrl.getSegments().equals(targetUrl2.getSegments()) == false)
-				{
-					// the amount of segments is different - generated relative URLs will not work, we
-					// need to rerender the page. This shouldn't happen, but in theory it can - with
-					// RequestHandlerEncoders that produce different URLs with different amount of
-					// segments for stateless and stateful pages
-					response = renderPage(targetUrl2, requestCycle);
-				}
-
-				if (currentUrl.equals(targetUrl2))
-				{
-					// no need to redirect when both urls are exactly the same
-					response.writeTo((WebResponse)requestCycle.getResponse());
-				}
-				// if page is still stateless after render
-				else if (isPageStateless && !enableRedirectForStatelessPage())
-				{
-					// we don't want the redirect to happen for stateless page
-					// example:
-					// when a normal mounted stateful page is hit at /mount/point
-					// wicket renders the page to buffer and redirects to /mount/point?12
-					// but for stateless page the redirect is not necessary
-					// also for listener interface on stateful page we want to redirect
-					// after the listener is invoked, but on stateless page the user
-					// must ask for redirect explicitly
-					response.writeTo((WebResponse)requestCycle.getResponse());
+					redirectTo(targetUrl, requestCycle);
 				}
 				else
 				{
-					storeBufferedResponse(targetUrl2, response);
+					if (redirectToBuffer == false && logger.isDebugEnabled())
+					{
+						String details = String.format("redirect strategy: '%s', isAjax: '%s', redirect policy: '%s', " +
+								"current url: '%s', target url: '%s', is new: '%s', is stateless: '%s', is temporary: '%s'",
+								Application.get().getRequestCycleSettings().getRenderStrategy(),
+								isAjax, redirectPolicy, currentUrl, targetUrl, isNewPageInstance,
+										isPageStateless, sessionTemporary);
+						logger.debug("Falling back to Redirect_To_Buffer render strategy because none of the conditions " +
+								"matched. Details: " + details);
+					}
 
-					redirectTo(targetUrl2, requestCycle);
+					// redirect to buffer
+					BufferedWebResponse response = renderPage(targetUrl, requestCycle);
+
+					if (response == null)
+					{
+						return;
+					}
+
+					// check if the url hasn't changed after page has been rendered
+					// (i.e. the stateless flag might have changed which could result in different page url)
+					Url targetUrl2 = requestCycle.mapUrlFor(getRenderPageRequestHandler());
+
+					if (targetUrl.getSegments().equals(targetUrl2.getSegments()) == false)
+					{
+						// the amount of segments is different - generated relative URLs will not work, we
+						// need to rerender the page. This shouldn't happen, but in theory it can - with
+						// RequestHandlerEncoders that produce different URLs with different amount of
+						// segments for stateless and stateful pages
+						response = renderPage(targetUrl2, requestCycle);
+					}
+
+					if (currentUrl.equals(targetUrl2))
+					{
+						// no need to redirect when both urls are exactly the same
+						response.writeTo((WebResponse)requestCycle.getResponse());
+					}
+					// if page is still stateless after render
+					else if (isPageStateless && !enableRedirectForStatelessPage())
+					{
+						// we don't want the redirect to happen for stateless page
+						// example:
+						// when a normal mounted stateful page is hit at /mount/point
+						// wicket renders the page to buffer and redirects to /mount/point?12
+						// but for stateless page the redirect is not necessary
+						// also for listener interface on stateful page we want to redirect
+						// after the listener is invoked, but on stateless page the user
+						// must ask for redirect explicitly
+						response.writeTo((WebResponse)requestCycle.getResponse());
+					}
+					else
+					{
+						storeBufferedResponse(targetUrl2, response);
+
+						redirectTo(targetUrl2, requestCycle);
+					}
 				}
 			}
 		}
 	}
 
-	protected boolean shouldRedirectToTargetUrl(boolean ajax, RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless) {
+	protected static boolean shouldRedirectToTargetUrl(boolean ajax, RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless,boolean sessionTemporary) {
 		return shouldRedirectToTargetUrlConditionA(ajax, redirectPolicy, redirectToRender, targetEqualsCurrentUrl)
 			||
-						shouldAlsoRedirectToTargetUrlConditionB(targetEqualsCurrentUrl, newPageInstance, pageStateless);
+						shouldAlsoRedirectToTargetUrlConditionB(targetEqualsCurrentUrl, newPageInstance, pageStateless,sessionTemporary);
 	}
 
 	// if
@@ -274,7 +278,7 @@ public class WebPageRenderer extends PageRenderer
 	//	or
 	//		its ajax and the targetUrl matches current url
 	// just redirect
-	protected static boolean shouldRedirectToTargetUrlConditionA(boolean ajax, RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl) {
+	private static boolean shouldRedirectToTargetUrlConditionA(boolean ajax, RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl) {
 		return alwaysRedirect(redirectPolicy) //
 						||
 						redirectToRender //
@@ -295,10 +299,10 @@ public class WebPageRenderer extends PageRenderer
 	// *before* page is rendered, render the page, get URL after render and if the URL is
 	// different (meaning page is not stateless), save the buffer and redirect again (which
 	// is pretty much what the next step does)
-	private boolean shouldAlsoRedirectToTargetUrlConditionB(boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless) {
+	private static  boolean shouldAlsoRedirectToTargetUrlConditionB(boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless, boolean sessionTemporary) {
 		return !targetEqualsCurrentUrl //
 			&&
-			(newPageInstance || (isSessionTemporary() && pageStateless));
+			(newPageInstance || (sessionTemporary && pageStateless));
 	}
 
 
