@@ -195,32 +195,8 @@ public class WebPageRenderer extends PageRenderer
 					response.writeTo((WebResponse)requestCycle.getResponse());
 				}
 			}
-			else if (redirectPolicy == RedirectPolicy.ALWAYS_REDIRECT //
-				||
-							isRedirectToRender //
-				|| (isAjax && targetEqualsCurrentUrl))
+			else if (shouldRedirectToTargetUrl(isAjax, redirectPolicy, isRedirectToRender, targetEqualsCurrentUrl, isNewPageInstance, isPageStateless))
 			{
-				// if target URL is different
-				// and render policy is always-redirect or it's redirect-to-render
-				redirectTo(targetUrl, requestCycle);
-			}
-			else if (!targetEqualsCurrentUrl //
-				&&
-				(isNewPageInstance || (isSessionTemporary() && isPageStateless)))
-			{
-				// if target URL is different and session is temporary and page is stateless
-				// this is special case when page is stateless but there is no session so we can't
-				// render it to buffer
-
-				// alternatively if URLs are different and we have a page class and not an instance we
-				// can redirect to the url which will instantiate the instance of us
-
-				// note: if we had session here we would render the page to buffer and then redirect to
-				// URL generated *after* page has been rendered (the statelessness may change during
-				// render). this would save one redirect because now we have to render to URL generated
-				// *before* page is rendered, render the page, get URL after render and if the URL is
-				// different (meaning page is not stateless), save the buffer and redirect again (which
-				// is pretty much what the next step does)
 				redirectTo(targetUrl, requestCycle);
 			}
 			else
@@ -285,21 +261,88 @@ public class WebPageRenderer extends PageRenderer
 		}
 	}
 
-	// if the policy is never to redirect
-	// or one pass render mode is on
-	// or the targetUrl matches current url and the page is not stateless
-	// or the targetUrl matches current url, page is stateless but it's redirect-to-render
-	// or the request determines that the current url should be preserved
-	// just render the page
-	protected static boolean shouldRenderPageAndWriteResponse(boolean ajax, boolean onePassRender, boolean redirectToRender, RedirectPolicy redirectPolicy, boolean shouldPreserveClientUrl, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless) {
-		return redirectPolicy == RedirectPolicy.NEVER_REDIRECT ||
-			(onePassRender && ajax == false && redirectPolicy != RedirectPolicy.ALWAYS_REDIRECT) //
+	protected boolean shouldRedirectToTargetUrl(boolean ajax, RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless) {
+		return shouldRedirectToTargetUrlConditionA(ajax, redirectPolicy, redirectToRender, targetEqualsCurrentUrl)
 			||
-			(!ajax //
-				&&
-				(targetEqualsCurrentUrl && !newPageInstance && !pageStateless) //
-			|| (targetEqualsCurrentUrl && redirectToRender) //
-			) //
-			|| shouldPreserveClientUrl;
+						shouldAlsoRedirectToTargetUrlConditionB(targetEqualsCurrentUrl, newPageInstance, pageStateless);
 	}
+
+	// if
+	//		render policy is always-redirect
+	//	or
+	//		it's redirect-to-render
+	//	or
+	//		its ajax and the targetUrl matches current url
+	// just redirect
+	protected static boolean shouldRedirectToTargetUrlConditionA(boolean ajax, RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl) {
+		return alwaysRedirect(redirectPolicy) //
+						||
+						redirectToRender //
+						||
+						(ajax && targetEqualsCurrentUrl);
+	}
+
+	// if target URL is different and session is temporary and page is stateless
+	// this is special case when page is stateless but there is no session so we can't
+	// render it to buffer
+
+	// alternatively if URLs are different and we have a page class and not an instance we
+	// can redirect to the url which will instantiate the instance of us
+
+	// note: if we had session here we would render the page to buffer and then redirect to
+	// URL generated *after* page has been rendered (the statelessness may change during
+	// render). this would save one redirect because now we have to render to URL generated
+	// *before* page is rendered, render the page, get URL after render and if the URL is
+	// different (meaning page is not stateless), save the buffer and redirect again (which
+	// is pretty much what the next step does)
+	private boolean shouldAlsoRedirectToTargetUrlConditionB(boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless) {
+		return !targetEqualsCurrentUrl //
+			&&
+			(newPageInstance || (isSessionTemporary() && pageStateless));
+	}
+
+
+	// if
+	// 		the policy is never to redirect
+	// 	or
+	//		its NOT ajax and
+	//				one pass render mode is on and NOT forced to redirect
+	//			or
+	//				the targetUrl matches current url and page is NOT stateless and NOT a new instance
+	//	or
+	//		the targetUrl matches current url and it's redirect-to-render
+	//	or
+	//  	the request determines that the current url should be preserved
+	//	just render the page
+	protected static boolean shouldRenderPageAndWriteResponse(boolean ajax, boolean onePassRender, boolean redirectToRender, RedirectPolicy redirectPolicy, boolean shouldPreserveClientUrl, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless) {
+		return neverRedirect(redirectPolicy)
+			||
+			(!ajax &&
+				(
+					(onePassRender && notForcedRedirect(redirectPolicy))
+					||
+					(targetEqualsCurrentUrl && notNewAndNotStatelessPage(newPageInstance, pageStateless)))
+				)
+			||
+			(targetEqualsCurrentUrl && redirectToRender)
+			||
+			shouldPreserveClientUrl;
+	}
+
+	private static boolean notNewAndNotStatelessPage(boolean newPageInstance, boolean pageStateless) {
+		return !newPageInstance && !pageStateless;
+	}
+
+	private static boolean neverRedirect(RedirectPolicy redirectPolicy) {
+		return redirectPolicy == RedirectPolicy.NEVER_REDIRECT;
+	}
+
+	private static boolean alwaysRedirect(RedirectPolicy redirectPolicy) {
+		return redirectPolicy == RedirectPolicy.ALWAYS_REDIRECT;
+	}
+
+	private static boolean notForcedRedirect(RedirectPolicy redirectPolicy) {
+		return !alwaysRedirect(redirectPolicy);
+	}
+
 }
