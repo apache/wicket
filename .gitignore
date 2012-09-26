@@ -3,3 +3,6 @@ velocity.log
 .project
 .classpath
 *velocity.log*
+*.idea/
+*.iml
+*~
