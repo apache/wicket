@@ -803,8 +803,7 @@ public class WebPageRendererTest
 
 		ShouldRenderPageAndWriteResponseVariations variations=new ShouldRenderPageAndWriteResponseVariations();
 		while (variations.hasNextVariation()) {
-			char c = variations.getResult() ? 'X' : ' ';
-			Assert.assertEquals(match.charAt(idx),c);
+			Assert.assertEquals(variations.toString(), match.charAt(idx) == 'X',variations.getResult());
 			variations.nextVariation();
 			idx++;
 		}

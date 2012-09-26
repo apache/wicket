@@ -42,4 +42,21 @@ public class ShouldRenderPageAndWriteResponseVariations {
 	public void nextVariation() {
 		last.nextVariation();
 	}
+
+	public String toString() {
+		StringBuilder sb=new StringBuilder();
+		toString(sb,"ajax",ajax);
+		toString(sb,"onePassRender",onePassRender);
+		toString(sb,"redirectToRender",redirectToRender);
+		toString(sb,"redirectPolicy",redirectPolicy);
+		toString(sb,"shouldPreserveClientUrl",shouldPreserveClientUrl);
+		toString(sb,"targetEqualsCurrentUrl",targetEqualsCurrentUrl);
+		toString(sb,"newPageInstance",newPageInstance);
+		toString(sb,"pageStateless",pageStateless);
+		return sb.toString();
+	}
+
+	static void toString(StringBuilder sb,String label, VariationIterator<?> iterator) {
+		sb.append(label).append("=").append(iterator.value()).append(",");
+	}
 }
