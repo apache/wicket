@@ -759,10 +759,63 @@ public class WebPageRendererTest
 		Assert.assertFalse(WebPageRenderer.shouldRenderPageAndWriteResponse(ajax, onePassRender, redirectToRender, redirectPolicy, shouldPreserveClientUrl, targetEqualsCurrentUrl, newPageInstance, pageStateless));
 	}
 
+	@Test
+	public void testShouldRenderPageAndWriteResponseVariationIntegrity() {
+		int count=1;
+		ShouldRenderPageAndWriteResponseVariations variations=new ShouldRenderPageAndWriteResponseVariations();
+		while (variations.hasNextVariation()) {
+			count++;
+			variations.nextVariation();
+		}
+		Assert.assertEquals(2*2*2*2*2*2*2*3,count);
+	}
+
+	@Test
+	public void testShouldRenderPageAndWriteResponseVariation() {
+
+		int idx=0;
+
+		String match =
+						"    X   XXXXXXXX" +
+						"    XXXXXXXXXXXX" +
+						"    X   XXXXXXXX" +
+						"    XXXXXXXXXXXX" +
+						"        XXXXXXXX" +
+						"    XXXXXXXXXXXX" +
+						"        XXXXXXXX" +
+						"    XXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"    X   XXXXXXXX" +
+						"    XXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"XXXXXXXXXXXXXXXX" +
+						"        XXXXXXXX" +
+						"    XXXXXXXXXXXX" +
+						"        XXXXXXXX" +
+						"    XXXXXXXXXXX";
+
+		ShouldRenderPageAndWriteResponseVariations variations=new ShouldRenderPageAndWriteResponseVariations();
+		while (variations.hasNextVariation()) {
+			char c = variations.getResult() ? 'X' : ' ';
+			Assert.assertEquals(match.charAt(idx),c);
+			variations.nextVariation();
+			idx++;
+		}
+
+
+	}
+
 	/**
-	 * Tests that when the page is stateful and the urls are the same then the response is written
-	 * directly
-	 */
+			 * Tests that when the page is stateful and the urls are the same then the response is written
+			 * directly
+			 */
 	@Test
 	public void testRedirectToBufferStatefulPageAndSameUrls()
 	{
