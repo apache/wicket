@@ -77,7 +77,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append("  }\n");  // for
 		asb.append("  return result;\n");
 		asb.append(" }\n"); // function getInputValues()
-		asb.append(" attrs.dep = [ function() { var deps = getInputValues(markupId); return deps; } ];\n");
+		asb.append(" attrs.dep = (attrs.dep || []).concat([ function() { var deps = getInputValues(markupId); return deps; } ]);\n");
 		asb.append(" Wicket.Ajax.post(attrs);\n");
 		asb.append("}\n"); // function attachChoiceHandlers()
 
