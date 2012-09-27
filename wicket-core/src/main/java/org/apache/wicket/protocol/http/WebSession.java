@@ -19,7 +19,6 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebPage;
@@ -107,22 +106,6 @@ public class WebSession extends Session
 
 			super.invalidate();
 		}
-	}
-
-	/**
-	 * Note: You must subclass WebSession and implement your own. We didn't want to make it abstract
-	 * to force every application to implement it. Instead we throw an exception.
-	 * 
-	 * @param username
-	 *            The username
-	 * @param password
-	 *            The password
-	 * @return True if the user was authenticated successfully
-	 */
-	public boolean authenticate(final String username, final String password)
-	{
-		throw new WicketRuntimeException(
-			"You must subclass WebSession and implement your own authentication method for all Wicket applications using authentication.");
 	}
 
 	/**

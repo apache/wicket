@@ -19,6 +19,8 @@ package org.apache.wicket.examples.breadcrumb;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanelLink;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 /**
  * Test bread crumb enabled panel.
@@ -43,8 +45,8 @@ public class FirstPanel extends BreadCrumbPanel
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
 	 */
 	@Override
-	public String getTitle()
+	public IModel<String> getTitle()
 	{
-		return "first";
+		return Model.of("first");
 	}
 }

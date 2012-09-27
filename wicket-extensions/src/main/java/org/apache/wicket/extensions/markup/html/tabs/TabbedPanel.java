@@ -157,20 +157,15 @@ public class TabbedPanel<T extends ITab> extends Panel
 	}
 
 	/**
-	 * Initialize the component's model.
+	 * Override of the default initModel behaviour. This component <strong>will not</strong> use any
+	 * compound model of a parent.
 	 * 
-	 * @return a new model containing {@code -1} if the super implementation doesn't supply one
+	 * @see org.apache.wicket.Component#initModel()
 	 */
 	@Override
 	protected IModel<?> initModel()
 	{
-		IModel<?> model = super.initModel();
-		if (model == null)
-		{
-			model = new Model<Integer>(-1);
-		}
-
-		return model;
+		return new Model<Integer>(-1);
 	}
 
 	/**
@@ -221,11 +216,11 @@ public class TabbedPanel<T extends ITab> extends Panel
 
 				if (getIndex() == getSelectedTab())
 				{
-					cssClass += " selected";
+					cssClass += ' ' + getSelectedTabCssClass();
 				}
 				if (getIndex() == getTabs().size() - 1)
 				{
-					cssClass += " last";
+					cssClass += ' ' + getLastTabCssClass();
 				}
 				tag.put("class", cssClass.trim());
 			}
@@ -238,9 +233,6 @@ public class TabbedPanel<T extends ITab> extends Panel
 		};
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -280,6 +272,24 @@ public class TabbedPanel<T extends ITab> extends Panel
 	protected String getTabContainerCssClass()
 	{
 		return "tab-row";
+	}
+
+	/**
+	 * @return the value of css class attribute that will be added to last tab. The default value is
+	 *         <code>last</code>
+	 */
+	protected String getLastTabCssClass()
+	{
+		return "last";
+	}
+
+	/**
+	 * @return the value of css class attribute that will be added to selected tab. The default
+	 *         value is <code>selected</code>
+	 */
+	protected String getSelectedTabCssClass()
+	{
+		return "selected";
 	}
 
 	/**

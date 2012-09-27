@@ -18,6 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
@@ -25,7 +26,6 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.AbstractMapper;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -154,4 +154,5 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 			urlCopy.getQueryParameters().remove(0);
 		}
 	}
+
 }

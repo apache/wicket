@@ -18,6 +18,7 @@ package org.apache.wicket.atmosphere;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MetaDataKey;
@@ -32,6 +33,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListener;
@@ -65,13 +67,22 @@ public class AtmosphereBehavior extends Behavior
 
 	private static final long serialVersionUID = 1L;
 
+	private String applicationKey;
+
 	private Component component;
+
 
 	/**
 	 * Construct.
 	 */
 	public AtmosphereBehavior()
 	{
+		applicationKey = Application.get().getApplicationKey();
+	}
+
+	private EventBus findEventBus()
+	{
+		return EventBus.get(Application.get(applicationKey));
 	}
 
 	@Override
@@ -96,7 +107,7 @@ public class AtmosphereBehavior extends Behavior
 		Meteor meteor = Meteor.build(request.getContainerRequest());
 		String uuid = getUUID(meteor.getAtmosphereResource());
 		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
-		EventBus.get().registerPage(uuid, component.getPage());
+		findEventBus().registerPage(uuid, component.getPage());
 
 		// Add us to the listener list.
 		meteor.addListener(this);
@@ -168,6 +179,7 @@ public class AtmosphereBehavior extends Behavior
 			log.info(String.format("%s connection dropped from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
+		findEventBus().unregisterConnection(getUUID(event.getResource()));
 	}
 
 	@Override
@@ -203,9 +215,15 @@ public class AtmosphereBehavior extends Behavior
 	 */
 	public static String getUUID(AtmosphereResource resource)
 	{
-		String trackingId = resource.getRequest().getHeader(HeaderConfig.X_ATMOSPHERE_TRACKING_ID);
-		if (trackingId != null)
-			return trackingId;
+		Object trackingId = resource.getRequest().getHeader(HeaderConfig.X_ATMOSPHERE_TRACKING_ID);
+		if (trackingId != null && !trackingId.equals("0"))
+			return trackingId.toString();
+
+		trackingId = resource.getRequest().getAttribute(
+			ApplicationConfig.SUSPENDED_ATMOSPHERE_RESOURCE_UUID);
+		if (trackingId != null && !trackingId.equals("0"))
+			return trackingId.toString();
+
 		return resource.getRequest().getHeader("Sec-WebSocket-Key");
 	}
 }

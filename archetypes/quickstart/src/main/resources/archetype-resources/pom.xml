@@ -42,7 +42,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>6.0-SNAPSHOT</wicket.version>
+		<wicket.version>6.1.0-SNAPSHOT</wicket.version>
 		<jetty.version>7.6.3.v20120416</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.2</version>
+			<version>1.6.4</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -77,7 +77,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
+			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
 

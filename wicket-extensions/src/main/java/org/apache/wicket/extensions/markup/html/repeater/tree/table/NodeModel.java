@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWrapModel;
 
 /**
  * A model wrapping the actual node model, carrying additional information about the parental
@@ -29,8 +30,10 @@ import org.apache.wicket.model.IModel;
  * @see ITreeProvider#model(Object)
  * 
  * @author svenmeier
+ * @param <T>
+ *            type of nodes
  */
-public class NodeModel<T> implements IModel<T>
+public class NodeModel<T> implements IWrapModel<T>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -39,12 +42,25 @@ public class NodeModel<T> implements IModel<T>
 
 	private boolean[] branches;
 
+	/**
+	 * Wrap the given model.
+	 * 
+	 * @param model
+	 *            model to wrap
+	 * @param branches
+	 */
 	public NodeModel(IModel<T> model, boolean[] branches)
 	{
 		this.model = model;
 		this.branches = branches;
 	}
 
+	/**
+	 * Get the wrapped model.
+	 * 
+	 * @return wrapped model
+	 */
+	@Override
 	public IModel<T> getWrappedModel()
 	{
 		return model;

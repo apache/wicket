@@ -19,6 +19,7 @@ package org.apache.wicket.atmosphere;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -38,11 +39,10 @@ import org.atmosphere.cpr.BroadcasterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
 /**
@@ -74,7 +74,16 @@ public class EventBus implements UnboundListener
 	 */
 	public static EventBus get()
 	{
-		return Application.get().getMetaData(EVENT_BUS_KEY);
+		return get(Application.get());
+	}
+
+	/**
+	 * @param application
+	 * @return the {@code EventBus} registered for the given Wicket application.
+	 */
+	public static EventBus get(Application application)
+	{
+		return application.getMetaData(EVENT_BUS_KEY);
 	}
 
 	private WebApplication application;
@@ -83,7 +92,7 @@ public class EventBus implements UnboundListener
 
 	private Multimap<PageKey, EventSubscription> subscriptions = HashMultimap.create();
 
-	private BiMap<String, PageKey> trackedPages = HashBiMap.create();
+	private Map<String, PageKey> trackedPages = Maps.newHashMap();
 
 	/**
 	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
@@ -125,7 +134,7 @@ public class EventBus implements UnboundListener
 		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
 		if (oldPage != null && !oldPage.equals(pageKey))
 			subscriptions.removeAll(oldPage);
-		trackedPages.forcePut(trackingId, pageKey);
+		trackedPages.put(trackingId, pageKey);
 		log.info("registered page {} for session {}",
 			new Object[] { pageKey.getPageId(), pageKey.getSessionId() });
 	}
@@ -150,7 +159,26 @@ public class EventBus implements UnboundListener
 						subscription.getBehaviorIndex() == null ? "" : ":" +
 							subscription.getBehaviorIndex() });
 		}
-		subscriptions.put(new PageKey(page.getPageId(), Session.get().getId()), subscription);
+		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
+		if (!subscriptions.containsEntry(pageKey, subscription))
+		{
+			subscriptions.put(pageKey, subscription);
+		}
+	}
+
+	/**
+	 * Unregisters all subscriptions for the given tracking id.
+	 * 
+	 * @param trackingId
+	 */
+	public synchronized void unregisterConnection(String trackingId)
+	{
+		PageKey pageKey = trackedPages.remove(trackingId);
+		if (log.isInfoEnabled() && pageKey != null)
+		{
+			log.info("unregistering page {} for session {}", new Object[] { pageKey.getPageId(),
+					pageKey.getSessionId() });
+		}
 	}
 
 	/**
@@ -165,10 +193,10 @@ public class EventBus implements UnboundListener
 		ThreadContext oldContext = ThreadContext.get(false);
 		try
 		{
-			ThreadContext.restore(null);
-			ThreadContext.setApplication(application);
 			for (AtmosphereResource resource : broadcaster.getAtmosphereResources())
 			{
+				ThreadContext.detach();
+				ThreadContext.setApplication(application);
 				PageKey key;
 				Collection<EventSubscription> subscriptionsForPage;
 				synchronized (this)
@@ -186,9 +214,7 @@ public class EventBus implements UnboundListener
 		}
 		finally
 		{
-			ThreadContext.detach();
-			if (oldContext != null)
-				ThreadContext.restore(oldContext);
+			ThreadContext.restore(oldContext);
 		}
 	}
 

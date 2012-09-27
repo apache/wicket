@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
@@ -43,8 +42,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A {@linkplain IResource resource} that concatenates several resources into one download. This
- * resource can only bundle {@link PackageResource}s. The content type of the resource will be that
- * of the first resource that specifies its content type.
+ * resource can only bundle {@link IStaticCacheableResource}s. The content type of the resource will
+ * be that of the first resource that specifies its content type.
  * 
  * @author papegaaij
  */
@@ -64,7 +63,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	public ConcatBundleResource(List<? extends IReferenceHeaderItem> providedResources)
 	{
 		this.providedResources = Args.notNull(providedResources, "providedResources");
-		this.cachingEnabled = true;
+		cachingEnabled = true;
 	}
 
 	@Override
@@ -125,7 +124,8 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		List<IResourceStream> ret = new ArrayList<IResourceStream>(providedResources.size());
 		for (IReferenceHeaderItem curItem : providedResources)
 		{
-			IResourceStream stream = ((PackageResource)curItem.getReference().getResource()).getResourceStream();
+			IResourceStream stream = ((IStaticCacheableResource)curItem.getReference()
+				.getResource()).getCacheableResourceStream();
 			if (stream == null)
 				return null;
 
@@ -182,7 +182,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 
 	public void setCachingEnabled(final boolean enabled)
 	{
-		this.cachingEnabled = enabled;
+		cachingEnabled = enabled;
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		ArrayList<Serializable> key = new ArrayList<Serializable>(providedResources.size());
 		for (IReferenceHeaderItem curItem : providedResources)
 		{
-			Serializable curKey = ((PackageResource)curItem.getReference().getResource()).getCacheKey();
+			Serializable curKey = ((IStaticCacheableResource)curItem.getReference().getResource()).getCacheKey();
 			if (curKey == null)
 				return null;
 			key.add(curKey);

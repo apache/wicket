@@ -23,6 +23,7 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.html.debug.PageView;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +74,8 @@ public class RenderPerformanceListener implements IComponentInstantiationListene
 	 */
 	private static class RenderMeasuringBehavior extends Behavior
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void beforeRender(final Component component)
 		{
@@ -97,8 +100,8 @@ public class RenderPerformanceListener implements IComponentInstantiationListene
 
 				if (log.isDebugEnabled())
 				{
-					String componentPath = (component instanceof Page) ? component.getClass()
-						.getSimpleName() + " page" : component.getPageRelativePath();
+					String componentPath = (component instanceof Page) ? Classes.simpleName(component.getClass())
+							+ " page" : component.getPageRelativePath();
 					log.debug("rendered '{}' for {}ms", componentPath, duration);
 				}
 			}

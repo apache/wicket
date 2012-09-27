@@ -26,15 +26,12 @@
 	Wicket.WUPB.prototype = {
 
 		initialize : function(formid, statusid, barid, url, fileid, initialStatus) {
-			this.formid = formid;
 			this.statusid = statusid;
 			this.barid = barid;
 			this.url = url;
 			this.fileid = fileid;
 			this.initialStatus = initialStatus;
-		},
 
-		bind : function(formid) {
 			var formElement = Wicket.$(formid);
 			this.originalCallback = formElement.onsubmit;
 			formElement.onsubmit = Wicket.bind(this.submitCallback, this);

@@ -48,7 +48,11 @@ jQuery(document).ready(function() {
 	});
 
 	test("Wicket.$$ looks for non existing element", function() {
-		equal( Wicket.$$(nonExistingId), true, "Wicket.$$ should return true for non existing elements." );
+		equal( Wicket.$$(nonExistingId), false, "Wicket.$$ should return 'false' for non existing elements." );
+	});
+
+	test("Wicket.$$ looks for 'window'", function() {
+		equal( Wicket.$$(window), true, "Wicket.$$ should return 'true' for 'window'." );
 	});
 
 	test("Wicket.$$ looks for element in iframe", function() {

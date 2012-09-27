@@ -24,9 +24,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.Session;
+import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
 
 
 /**
@@ -389,7 +389,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		return Application.get().getResourceSettings().getLocalizer();
 	}
 
-
 	/**
 	 * Gets the string currently represented by this model. The string that is returned may vary for
 	 * each call to this method depending on the values contained in the model and an the parameters
@@ -402,7 +401,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		return getString(component);
 	}
 
-	private String getString(Component component)
+	private String getString(final Component component)
 	{
 
 		final Localizer localizer = getLocalizer();
@@ -451,8 +450,8 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 					}
 					else if (model != null && parameters[i] instanceof String)
 					{
-						realParams[i] = PropertyVariableInterpolator.interpolate(
-							(String)parameters[i], model.getObject());
+						realParams[i] = localizer.substitutePropertyExpressions(component,
+							(String)parameters[i], model);
 					}
 					else
 					{
@@ -568,7 +567,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 		if (model != null)
 		{
-			return PropertyVariableInterpolator.interpolate(resourceKey, model.getObject());
+			return new PropertyVariableInterpolator(resourceKey, model.getObject()).toString();
 		}
 		else
 		{
@@ -578,9 +577,13 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 
 	/**
 	 * Gets the string that this string resource model currently represents.
+	 * <p>
+	 * Note: This method is used only if this model is used directly without assignment to a
+	 * component, it is not called by the assignment wrapper returned from
+	 * {@link #wrapOnAssignment(Component)}.
 	 */
 	@Override
-	protected String load()
+	protected final String load()
 	{
 		return getString();
 	}

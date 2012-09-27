@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -32,25 +33,16 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
  */
-public class DataTableTest extends Assert
+public class DataTableTest extends WicketTestCase
 {
-	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(DataTableTest.class);
-
-	private WicketTester tester;
-
 	/**
 	 * 
 	 */
@@ -58,15 +50,6 @@ public class DataTableTest extends Assert
 	public void before()
 	{
 		tester = new WicketTester(new RepeaterApplication());
-	}
-
-	/**
-	 * 
-	 */
-	@After
-	public void after()
-	{
-		tester.destroy();
 	}
 
 	/**
@@ -91,27 +74,6 @@ public class DataTableTest extends Assert
 
 		index = document.indexOf("<caption", index + 1);
 		assertTrue("There must be not be <caption>", index == -1);
-
-// log.error(document);
-// log.error("==============================================");
-// log.error("==============================================");
-// log.error(removeFillers(document));
-
-		DiffUtil.validatePage(removeFillers(document), getClass(),
-			"DataTablePage_ExpectedResult.html", true);
-	}
-
-	private String removeFillers(String doc)
-	{
-		doc = doc.replaceAll("<wicket:container .*?>.*?</wicket:container>", "<x/>");
-		doc = doc.replaceAll("(?s)<span .*?>.*?</span>", "<x/>");
-		doc = doc.replaceAll("(?s)<div .*?>.*?</div>", "<x/>");
-		doc = doc.replaceAll("(?s)<a .*?>.*?</a>", "<x/>");
-		doc = doc.replaceAll("(?s)>\\s*?[\\n\\r]+\\s*?</", "><x/></");
-		doc = doc.replaceAll("(?s)[\\n\\r]+\\s*?([\\n\\r]+)", "\r\n");
-		doc = doc.replaceAll("(<x/>)+", "<x/>");
-
-		return doc;
 	}
 
 	/**

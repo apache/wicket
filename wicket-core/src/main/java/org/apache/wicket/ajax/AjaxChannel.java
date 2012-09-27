@@ -20,13 +20,14 @@ import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A Channel that used to process Ajax requests.
+ * A Channel used to define how Ajax requests are processed at the client side.
  * 
  * Channels are either:
  * <ul>
  * <li>queueing - Ajax requests are kept in a Queue at the client side and processed one at a time.
  * Default.</li>
- * <li>dropping - only the last Ajax request is processed, the others are discarded</li>
+ * <li>dropping - only the last Ajax request is processed, all previously scheduled requests are discarded</li>
+ * <li>active - discards any Ajax requests if there is a running Ajax request on the same channel</li>
  * </ul>
  * 
  * @author Martin Dilger
@@ -48,7 +49,12 @@ public class AjaxChannel implements IClusterable
 		/**
 		 * dropping - only the last Ajax request is processed, the others are discarded
 		 */
-		DROP;
+		DROP,
+
+		/**
+		 * the ajax call will discarded if there is an active/running request on the same channel
+		 */
+		ACTIVE
 	}
 
 	private final String name;
@@ -110,8 +116,26 @@ public class AjaxChannel implements IClusterable
 	@Override
 	public String toString()
 	{
-		// 's' comes from 'stack', but it really acts as a queue.
-		// TODO Wicket 1.6 - consider renaming it to 'q'
-		return String.format("%s|%s", name, type == Type.QUEUE ? "s" : "d");
+		return String.format("%s|%s", name, getShortType(type));
+	}
+
+	private String getShortType(Type t)
+	{
+		String shortType;
+		switch (t)
+		{
+			case DROP:
+				shortType = "d";
+				break;
+			case ACTIVE:
+				shortType = "a";
+				break;
+			case QUEUE:
+			default:
+				// 's' comes from 'stack', but it really acts as a queue.
+				// TODO Wicket 1.6 - consider renaming it to 'q'
+				shortType = "s";
+		}
+		return shortType;
 	}
 }

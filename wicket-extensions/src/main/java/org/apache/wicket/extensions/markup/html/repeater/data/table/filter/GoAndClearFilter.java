@@ -42,7 +42,8 @@ public class GoAndClearFilter extends GoFilter
 	/**
 	 * Constructor
 	 * 
-	 * This constructor will use default models for the 'clear' and 'go' button labels
+	 * This constructor will use default models for the 'clear' and 'go' button labels.
+	 * Uses the form's model object as an original state
 	 * 
 	 * @param id
 	 *            component id
@@ -55,7 +56,8 @@ public class GoAndClearFilter extends GoFilter
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
+	 * Uses the form's model object as an original state
 	 * 
 	 * @param id
 	 *            component id
@@ -69,9 +71,27 @@ public class GoAndClearFilter extends GoFilter
 	public GoAndClearFilter(final String id, final FilterForm<?> form,
 		final IModel<String> goModel, final IModel<String> clearModel)
 	{
+		this(id, goModel, clearModel, WicketObjects.cloneModel(form.getDefaultModelObject()));
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param id
+	 *            component id
+	 * @param goModel
+	 *            model for the label of the 'go' button
+	 * @param clearModel
+	 *            model for the label of the 'clear' button
+	 * @param originalState
+	 *            the object to use as original state
+	 */
+	public GoAndClearFilter(final String id, final IModel<String> goModel,
+			final IModel<String> clearModel, Object originalState)
+	{
 		super(id, goModel);
 
-		originalState = WicketObjects.cloneModel(form.getDefaultModelObject());
+		this.originalState = originalState;
 
 		clear = new Button("clear", clearModel)
 		{

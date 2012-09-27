@@ -27,9 +27,9 @@ import org.apache.wicket.util.string.Strings;
 /**
  * A component that represents a sort header. When the link is clicked it will toggle the state of a
  * sortable property within the sort state object.
- *
+ * 
  * @param <S>
- *      the type of the sorting parameter
+ *            the type of the sorting parameter
  * @author Phil Kulak
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -49,14 +49,15 @@ public class OrderByLink<S> extends Link<Void>
 	 * @param id
 	 *            the component id of the link
 	 * @param sortProperty
-	 *            the name of the sortable sortProperty this link represents. this value will be used as
-	 *            parameter for sort state object methods. sort state object will be located via the
-	 *            stateLocator argument.
+	 *            the name of the sortable sortProperty this link represents. this value will be
+	 *            used as parameter for sort state object methods. sort state object will be located
+	 *            via the stateLocator argument.
 	 * @param stateLocator
 	 *            locator used to locate sort state object that this will use to read/write state of
 	 *            sorted properties
 	 */
-	public OrderByLink(final String id, final S sortProperty, final ISortStateLocator<S> stateLocator)
+	public OrderByLink(final String id, final S sortProperty,
+		final ISortStateLocator<S> stateLocator)
 	{
 		this(id, sortProperty, stateLocator, new DefaultCssProvider<S>());
 	}
@@ -77,7 +78,7 @@ public class OrderByLink<S> extends Link<Void>
 	 *            CSS provider that will be used generate the value of class attribute for this link
 	 * 
 	 * @see OrderByLink.ICssProvider
-	 *
+	 * 
 	 */
 	public OrderByLink(final String id, final S property, final ISortStateLocator<S> stateLocator,
 		final ICssProvider<S> cssProvider)
@@ -157,8 +158,9 @@ public class OrderByLink<S> extends Link<Void>
 	/**
 	 * Uses the specified ICssProvider to add css class attributes to the link.
 	 * 
+	 * @param <S>
+	 *            type of sort property
 	 * @author Igor Vaynberg ( ivaynberg )
-	 * 
 	 */
 	public static class CssModifier<S> extends Behavior
 	{
@@ -219,8 +221,10 @@ public class OrderByLink<S> extends Link<Void>
 	/**
 	 * Easily constructible implementation of ICSSProvider
 	 * 
+	 * @param <S>
+	 *            the type of the sort property
+	 * 
 	 * @author Igor Vaynberg (ivaynberg)
-	 *
 	 */
 	public static class CssProvider<S> implements ICssProvider<S>
 	{
@@ -270,13 +274,18 @@ public class OrderByLink<S> extends Link<Void>
 	/**
 	 * Convenience implementation of ICssProvider that always returns a null and so never adds a
 	 * class attribute
-	 *
+	 * 
+	 * @param <S>
+	 *            the type of the sort property
 	 * @author Igor Vaynberg ( ivaynberg )
 	 */
 	public static class VoidCssProvider<S> extends CssProvider<S>
 	{
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Construct.
+		 */
 		public VoidCssProvider()
 		{
 			super("", "", "");
@@ -285,13 +294,19 @@ public class OrderByLink<S> extends Link<Void>
 
 	/**
 	 * Default implementation of ICssProvider
-	 *
+	 * 
+	 * @param <S>
+	 *            the type of the sort property
+	 * 
 	 * @author Igor Vaynberg ( ivaynberg )
 	 */
 	public static class DefaultCssProvider<S> extends CssProvider<S>
 	{
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Construct.
+		 */
 		public DefaultCssProvider()
 		{
 			super("wicket_orderUp", "wicket_orderDown", "wicket_orderNone");

@@ -27,43 +27,46 @@ import org.junit.Test;
  */
 public class NumbersTest extends Assert
 {
+	/**
+	 * See WICKET-4696 for Float and Double minimum value
+	 */
 	@Test
 	public void getMinValue()
 	{
-		assertEquals((Object) Integer.MIN_VALUE, Numbers.getMinValue(Integer.class));
-		assertEquals((Object) Integer.MIN_VALUE, Numbers.getMinValue(int.class));
-		assertEquals((Object) Long.MIN_VALUE, Numbers.getMinValue(Long.class));
-		assertEquals((Object) Long.MIN_VALUE, Numbers.getMinValue(long.class));
-		assertEquals((Object) Float.MIN_VALUE, Numbers.getMinValue(Float.class));
-		assertEquals((Object) Float.MIN_VALUE, Numbers.getMinValue(float.class));
-		assertEquals((Object) Double.MIN_VALUE, Numbers.getMinValue(Double.class));
-		assertEquals((Object) Double.MIN_VALUE, Numbers.getMinValue(double.class));
-		assertEquals((Object) Byte.MIN_VALUE, Numbers.getMinValue(Byte.class));
-		assertEquals((Object) Byte.MIN_VALUE, Numbers.getMinValue(byte.class));
-		assertEquals((Object) Short.MIN_VALUE, Numbers.getMinValue(Short.class));
-		assertEquals((Object) Short.MIN_VALUE, Numbers.getMinValue(short.class));
-		assertEquals((Object) Double.MIN_VALUE, Numbers.getMinValue(BigDecimal.class));
-		assertEquals((Object) Double.MIN_VALUE, Numbers.getMinValue(BigInteger.class));
-		assertEquals((Object) Double.MIN_VALUE, Numbers.getMinValue(null));
+		assertEquals(Integer.MIN_VALUE, Numbers.getMinValue(Integer.class));
+		assertEquals(Integer.MIN_VALUE, Numbers.getMinValue(int.class));
+		assertEquals(Long.MIN_VALUE, Numbers.getMinValue(Long.class));
+		assertEquals(Long.MIN_VALUE, Numbers.getMinValue(long.class));
+		assertEquals(-Float.MAX_VALUE, Numbers.getMinValue(Float.class));
+		assertEquals(-Float.MAX_VALUE, Numbers.getMinValue(float.class));
+		assertEquals(-Double.MAX_VALUE, Numbers.getMinValue(Double.class));
+		assertEquals(-Double.MAX_VALUE, Numbers.getMinValue(double.class));
+		assertEquals(Byte.MIN_VALUE, Numbers.getMinValue(Byte.class));
+		assertEquals(Byte.MIN_VALUE, Numbers.getMinValue(byte.class));
+		assertEquals(Short.MIN_VALUE, Numbers.getMinValue(Short.class));
+		assertEquals(Short.MIN_VALUE, Numbers.getMinValue(short.class));
+		assertEquals(-Double.MAX_VALUE, Numbers.getMinValue(BigDecimal.class));
+		assertEquals(-Double.MAX_VALUE, Numbers.getMinValue(BigInteger.class));
+		assertEquals(-Double.MAX_VALUE, Numbers.getMinValue(null));
 	}
 
 	@Test
 	public void getMaxValue()
 	{
-		assertEquals((Object) Integer.MAX_VALUE, Numbers.getMaxValue(Integer.class));
-		assertEquals((Object) Integer.MAX_VALUE, Numbers.getMaxValue(int.class));
-		assertEquals((Object) Long.MAX_VALUE, Numbers.getMaxValue(Long.class));
-		assertEquals((Object) Long.MAX_VALUE, Numbers.getMaxValue(long.class));
-		assertEquals((Object) Float.MAX_VALUE, Numbers.getMaxValue(Float.class));
-		assertEquals((Object) Float.MAX_VALUE, Numbers.getMaxValue(float.class));
-		assertEquals((Object) Double.MAX_VALUE, Numbers.getMaxValue(Double.class));
-		assertEquals((Object) Double.MAX_VALUE, Numbers.getMaxValue(double.class));
-		assertEquals((Object) Byte.MAX_VALUE, Numbers.getMaxValue(Byte.class));
-		assertEquals((Object) Byte.MAX_VALUE, Numbers.getMaxValue(byte.class));
-		assertEquals((Object) Short.MAX_VALUE, Numbers.getMaxValue(Short.class));
-		assertEquals((Object) Short.MAX_VALUE, Numbers.getMaxValue(short.class));
-		assertEquals((Object) Double.MAX_VALUE, Numbers.getMaxValue(BigDecimal.class));
-		assertEquals((Object) Double.MAX_VALUE, Numbers.getMaxValue(BigInteger.class));
-		assertEquals((Object) Double.MAX_VALUE, Numbers.getMaxValue(null));
+		assertEquals(Integer.MAX_VALUE, Numbers.getMaxValue(Integer.class));
+		assertEquals(Integer.MAX_VALUE, Numbers.getMaxValue(int.class));
+		assertEquals(Long.MAX_VALUE, Numbers.getMaxValue(Long.class));
+		assertEquals(Long.MAX_VALUE, Numbers.getMaxValue(long.class));
+		assertEquals(Float.MAX_VALUE, Numbers.getMaxValue(Float.class));
+		assertEquals(Float.MAX_VALUE, Numbers.getMaxValue(float.class));
+		assertEquals(Double.MAX_VALUE, Numbers.getMaxValue(Double.class));
+		assertEquals(Double.MAX_VALUE, Numbers.getMaxValue(double.class));
+		assertEquals(Byte.MAX_VALUE, Numbers.getMaxValue(Byte.class));
+		assertEquals(Byte.MAX_VALUE, Numbers.getMaxValue(byte.class));
+		assertEquals(Short.MAX_VALUE, Numbers.getMaxValue(Short.class));
+		assertEquals(Short.MAX_VALUE, Numbers.getMaxValue(short.class));
+		assertEquals(Double.MAX_VALUE, Numbers.getMaxValue(BigDecimal.class));
+		assertEquals(Double.MAX_VALUE, Numbers.getMaxValue(BigInteger.class));
+		assertEquals(Double.MAX_VALUE, Numbers.getMaxValue(null));
 	}
 }

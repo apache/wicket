@@ -81,6 +81,7 @@ public class RequestCycleUrlForTest extends Assert
 		RequestCycleContext context = new RequestCycleContext(request, response, mapper, exceptionMapper);
 
 		requestCycle = new RequestCycle(context);
+		requestCycle.getUrlRenderer().setBaseUrl(Url.parse("http://dummy-host"));
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class RequestCycleUrlForTest extends Assert
 	public void urlForClass() throws Exception
 	{
 		CharSequence url = requestCycle.urlFor(MockHomePage.class, new PageParameters());
-		assertEquals("/bookmarkablePage"+JSESSIONID, url);
+		assertEquals("./bookmarkablePage"+JSESSIONID, url);
 	}
 
 	/**
@@ -114,7 +115,7 @@ public class RequestCycleUrlForTest extends Assert
 		}; 
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals(RES_REF_URL, url);
+		assertEquals('.'+RES_REF_URL, url);
 	}
 
 	/**
@@ -136,7 +137,7 @@ public class RequestCycleUrlForTest extends Assert
 		};
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals(RES_REF_URL+JSESSIONID, url);
+		assertEquals('.'+RES_REF_URL+JSESSIONID, url);
 	}
 
 	/**
@@ -150,7 +151,7 @@ public class RequestCycleUrlForTest extends Assert
 		IStaticCacheableResource resource = mock(IStaticCacheableResource.class);
 		ResourceRequestHandler handler = new ResourceRequestHandler(resource, new PageParameters());
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals(RESOURCE_URL, url);
+		assertEquals('.'+RESOURCE_URL, url);
 	}
 
 	/**
@@ -164,7 +165,7 @@ public class RequestCycleUrlForTest extends Assert
 		ByteArrayResource resource = new ByteArrayResource(null, new byte[] {1, 2}, "test.bin");
 		ResourceRequestHandler handler = new ResourceRequestHandler(resource, new PageParameters());
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals(RESOURCE_URL + JSESSIONID, url);
+		assertEquals('.'+RESOURCE_URL + JSESSIONID, url);
 	}
 
 	/**

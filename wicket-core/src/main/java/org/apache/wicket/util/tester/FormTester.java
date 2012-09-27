@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
@@ -355,6 +356,8 @@ public class FormTester
 
 	/** <code>FormComponent</code> to be tested */
 	private final Form<?> workingForm;
+
+	private boolean clearFeedbackMessagesBeforeSubmit = true;
 
 	/**
 	 * @see WicketTester#newFormTester(String)
@@ -753,7 +756,10 @@ public class FormTester
 		checkClosed();
 		try
 		{
-			tester.clearFeedbackMessages();
+			if (clearFeedbackMessagesBeforeSubmit)
+			{
+				tester.clearFeedbackMessages();
+			}
 			tester.getRequest().setUseMultiPartContentType(workingForm.isMultiPart());
 			tester.submitForm(path);
 		}
@@ -762,6 +768,17 @@ public class FormTester
 			closed = true;
 		}
 
+		return this;
+	}
+
+	public boolean isClearFeedbackMessagesBeforeSubmit()
+	{
+		return clearFeedbackMessagesBeforeSubmit;
+	}
+
+	public FormTester setClearFeedbackMessagesBeforeSubmit(boolean clearFeedbackMessagesBeforeSubmit)
+	{
+		this.clearFeedbackMessagesBeforeSubmit = clearFeedbackMessagesBeforeSubmit;
 		return this;
 	}
 

@@ -109,7 +109,8 @@ public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializa
 		final R max = getMaximum();
 		if ((min != null && value.compareTo(min) < 0) || (max != null && value.compareTo(max) > 0))
 		{
-			ValidationError error = new ValidationError(this, getMode().getVariation());
+			Mode mode = getMode();
+			ValidationError error = new ValidationError(this, mode.getVariation());
 			if (min != null)
 			{
 				error.setVariable("minimum", min);
@@ -117,6 +118,10 @@ public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializa
 			if (max != null)
 			{
 				error.setVariable("maximum", max);
+			}
+			if (mode == Mode.EXACT)
+			{
+				error.setVariable("exact", max);
 			}
 			validatable.error(decorate(error, validatable));
 		}

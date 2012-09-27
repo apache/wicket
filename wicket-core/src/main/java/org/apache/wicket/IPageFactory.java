@@ -28,7 +28,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * {@link org.apache.wicket.request.flow.ResetResponseException} thrown from the constructing page's
  * constructor bubble up.
  * 
- * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(IPageFactory)
+ * @see org.apache.wicket.Application#newPageFactory()
  * @see Session#getPageFactory()
  * 
  * @author Juergen Donnerstag
@@ -40,14 +40,14 @@ public interface IPageFactory
 	 * Creates a new page using a page class.
 	 * 
 	 * @param <C>
-	 * 
+	 *          the type of the page class
 	 * @param pageClass
 	 *            The page class to instantiate
 	 * @return The page
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	<C extends IRequestablePage> IRequestablePage newPage(final Class<C> pageClass);
+	<C extends IRequestablePage> C newPage(final Class<C> pageClass);
 
 	/**
 	 * Creates a new Page, passing PageParameters to the Page constructor if such a constructor
@@ -55,7 +55,7 @@ public interface IPageFactory
 	 * available default constructor will be used.
 	 * 
 	 * @param <C>
-	 * 
+	 *          the type of the page class
 	 * @param pageClass
 	 *            The class of Page to create
 	 * @param parameters
@@ -64,13 +64,12 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	<C extends IRequestablePage> IRequestablePage newPage(final Class<C> pageClass,
-		final PageParameters parameters);
+	<C extends IRequestablePage> C newPage(final Class<C> pageClass, final PageParameters parameters);
 
 	/**
 	 * Checks whether a page can be instantiated using a bookmarkable URL.
 	 * 
-	 * @param C
+	 * @param <C>
 	 *            the type of the page class
 	 * @param pageClass
 	 *            The class of page to check for bookmarkability

@@ -2,7 +2,6 @@ target
 velocity.log
 .project
 .classpath
-
 *velocity.log*
 
 wicket.sublime-workspace

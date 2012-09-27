@@ -25,6 +25,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * Implements boilerplate as needed by many markup sourcing strategies.
@@ -108,9 +109,9 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 					"Close tag not found for tag: " +
 						openTag.toString() +
 						". For " +
-						component.getClass().getSimpleName() +
-						" Components only raw markup is allow in between the tags but not other Wicket Component." +
-						". Component: " + component.toString());
+							Classes.simpleName(component.getClass()) +
+								" Components only raw markup is allow in between the tags but not other Wicket Component." +
+								". Component: " + component.toString());
 			}
 		}
 	}

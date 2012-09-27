@@ -505,7 +505,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			{
 				ResourceReferenceRequestHandler rrrh = (ResourceReferenceRequestHandler)handler;
 				IResource resource = rrrh.getResource();
-				if (!(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
+				if (resource != null && !(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
 				{
 					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
 				}
@@ -514,7 +514,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			{
 				ResourceRequestHandler rrh = (ResourceRequestHandler)handler;
 				IResource resource = rrh.getResource();
-				if (!(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
+				if (resource != null && !(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
 				{
 					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
 				}

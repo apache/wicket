@@ -40,7 +40,7 @@ import org.apache.wicket.model.Model;
 /**
  * @author Sven Meier
  */
-public class TableTreePage extends TreePage
+public class TableTreePage extends AdvancedTreePage
 {
 
 	private static final long serialVersionUID = 1L;

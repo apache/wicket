@@ -31,7 +31,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
  * @author Igor Vaynberg (ivaynberg at apache dot org)
  * @param <T>
  * @param <S>
- *     the type of the sorting parameter
+ *            the type of the sorting parameter
  */
 public abstract class SortableDataProvider<T, S> implements ISortableDataProvider<T, S>
 {
@@ -39,7 +39,8 @@ public abstract class SortableDataProvider<T, S> implements ISortableDataProvide
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private SingleSortState<S> state = new SingleSortState<S>();
+
+	private final SingleSortState<S> state = new SingleSortState<S>();
 
 	/**
 	 * @see ISortableDataProvider#getSortState()

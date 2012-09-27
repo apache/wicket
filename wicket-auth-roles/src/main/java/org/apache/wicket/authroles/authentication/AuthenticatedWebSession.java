@@ -71,12 +71,24 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	}
 
 	/**
+	 * Actual authentication check, has to be implemented by subclasses.
+	 * 
+	 * @param username
+	 *            The username
+	 * @param password
+	 *            The password
+	 * @return True if the user was authenticated successfully
+	 */
+	public abstract boolean authenticate(final String username, final String password);
+
+	/**
 	 * Cookie based logins (remember me) may not rely on putting username and password into the
 	 * cookie but something else that safely identifies the user. This method is meant to support
 	 * these use cases.
 	 * 
 	 * It is protected (and not public) to enforce that cookie based authentication gets implemented
-	 * in a subclass (like you need to subclass authenticate() for 'normal' authentication).
+	 * in a subclass (like you need to implement {@link #authenticate(String, String)} for 'normal'
+	 * authentication).
 	 * 
 	 * @see #authenticate(String, String)
 	 * 

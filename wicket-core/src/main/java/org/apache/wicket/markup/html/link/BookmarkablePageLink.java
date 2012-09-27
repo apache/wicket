@@ -98,7 +98,7 @@ public class BookmarkablePageLink<T> extends Link<T>
 	}
 
 	/**
-	 * Get tge page class registered with the link
+	 * Get the page class registered with the link
 	 * 
 	 * @return Page class
 	 */

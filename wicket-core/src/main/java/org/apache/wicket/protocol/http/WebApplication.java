@@ -64,7 +64,6 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.ExternalUrlResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
@@ -80,6 +79,8 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.upload.FileUploadException;
+import org.apache.wicket.util.upload.ServletFileUpload;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -389,7 +390,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * Registers a replacement resource for the given javascript resource. This replacement can be
 	 * another {@link JavaScriptResourceReference} for a packaged resource, but it can also be an
-	 * {@link ExternalUrlResourceReference} to replace the resource by a resource hosted on a CDN.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
 	 * Registering a replacement will cause the resource to replaced by the given resource
 	 * throughout the application: if {@code base} is added, {@code replacement} will be added
 	 * instead.
@@ -410,7 +411,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * Registers a replacement resource for the given CSS resource. This replacement can be another
 	 * {@link CssResourceReference} for a packaged resource, but it can also be an
-	 * {@link ExternalUrlResourceReference} to replace the resource by a resource hosted on a CDN.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
 	 * Registering a replacement will cause the resource to replaced by the given resource
 	 * throughout the application: if {@code base} is added, {@code replacement} will be added
 	 * instead.
@@ -486,6 +487,19 @@ public abstract class WebApplication extends Application
 		}
 
 		WebRequest webRequest = newWebRequest(servletRequest, filterPath);
+
+		if (ServletFileUpload.isMultipartContent(servletRequest))
+		{
+			try
+			{
+				return ((ServletWebRequest)webRequest).newMultipartWebRequest(
+					getApplicationSettings().getDefaultMaximumUploadSize(), "externalForm");
+			}
+			catch (FileUploadException e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
 
 		return webRequest;
 	}

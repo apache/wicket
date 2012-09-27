@@ -217,16 +217,16 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		}
 		else
 		{
+			updateScript = updateScript.replaceAll("]", "]^");
 			validateTimerScript(document, updateScript);
 		}
 
-
 		tester.executeBehavior(timer);
-
 
 		if (inBodyOnLoad)
 		{
 			updateScript = timer.getUpdateScript();
+			updateScript = updateScript.replaceAll("]", "]^");
 		}
 
 		// Validate the document

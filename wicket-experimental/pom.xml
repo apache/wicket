@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>6.0-SNAPSHOT</version>
+		<version>6.2.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-experimental</artifactId>
@@ -38,24 +38,37 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bootstrap</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.3-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.3-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.3-SNAPSHOT</version>
 				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-examples-war</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.3-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>clirr-maven-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

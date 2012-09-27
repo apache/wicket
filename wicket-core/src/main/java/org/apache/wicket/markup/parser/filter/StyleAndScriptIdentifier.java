@@ -54,10 +54,12 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 			return tag;
 		}
 
-		if (XmlPullParser.SCRIPT.equalsIgnoreCase(tag.getName()) ||
-			(XmlPullParser.STYLE.equalsIgnoreCase(tag.getName())))
+		String tagName = tag.getName();
+		boolean isScript = XmlPullParser.SCRIPT.equalsIgnoreCase(tagName);
+		boolean isStyle = XmlPullParser.STYLE.equalsIgnoreCase(tagName);
+		if (isScript || isStyle)
 		{
-			if (tag.isOpen() && (tag.getId() == null))
+			if (tag.isOpen() && tag.getId() == null && ((isScript && tag.getAttribute("src") == null) || isStyle))
 			{
 				// Not needed, but must not be null
 				tag.setId("_ScriptStyle");

@@ -204,16 +204,16 @@ jQuery(document).ready(function() {
 
 	test('Wicket.Head.Contributor.parse - parse head element with three script elements inside', function() {
 		
-		var xmlDocument = Wicket.Xml.parse('<header-contribution encoding="wicket1"><![CDATA[<head xmlns:wicket="http://wicket.apache.org"><script type="text/javascript" src="data/test.js"></script><script type="text/javascript" id="wicket-ajax-debug-enable">/*<![CDATA[*/wicketAjaxDebugEnable=true;/*]^]^>*/</script><script type="text/javascript" id="wicket-ajax-base-url">/*<![CDATA[*/Wicket.Ajax.baseUrl="clock";/*]^]^>*/</script></head>]]></header-contribution>');
+		var xmlDocument = Wicket.Xml.parse('<header-contribution encoding="wicket1"><![CDATA[<head><script type="text/javascript" src="data/test.js"></script><script type="text/javascript" id="wicket-ajax-debug-enable">/*<![CDATA[*/wicketAjaxDebugEnable=true;/*]^]^>*/</script><script type="text/javascript" id="wicket-ajax-base-url">/*<![CDATA[*/Wicket.Ajax.baseUrl="clock";/*]^]^>*/</script></head>]]></header-contribution>');
 		var xmlRootElement = xmlDocument.documentElement;
 		var xmlElement   = Wicket.Head.Contributor.parse(xmlRootElement);
 		var isXml = jQuery.isXMLDoc(xmlElement);
 
 		ok(isXml, 'The result must be XML document');
-		equal(3, xmlElement.documentElement.childNodes.length);
+		equal(xmlElement.documentElement.childNodes.length, 3, "There must be 3 children nodes.");
 		var baseUrlElement = xmlElement.documentElement.childNodes.item(2);
 		var baseUrlText = baseUrlElement.text || baseUrlElement.textContent;
-		equal(baseUrlText, '/**/Wicket.Ajax.baseUrl=\"clock\";/**/');
+		equal(baseUrlText, '/**/Wicket.Ajax.baseUrl=\"clock\";/**/', "Wicket.Ajax.baseUrl must be the third item's content");
 	});
 
 	/**

@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:wicket="http://wicket.apache.org">
 
 <head>
 	<title id="titleId">All tests</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="qunit/qunit-1.9.0.css" type="text/css" media="screen" />
 	<script src="../../main/java/org/apache/wicket/resource/jquery/jquery.js"></script>
 	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js"></script>
 	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js"></script>
 	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js"></script>
-	<script type="text/javascript" src="qunit/qunit.js"></script>
+	<script type="text/javascript" src="qunit/qunit-1.9.0.js"></script>
 
 	<!-- the module under test -->
-	<script type="text/javascript" src="ajax.js"></script>
+	<script type="text/javascript" src="channels.js"></script>
 	<script type="text/javascript" src="dom.js"></script>
 	<script type="text/javascript" src="event.js"></script>
 	<script type="text/javascript" src="form.js"></script>
 	<script type="text/javascript" src="head.js"></script>
-	<script type="text/javascript" src="channels.js"></script>
+	<script type="text/javascript" src="ajax.js"></script>
 </head>
 
 <body>
@@ -38,6 +38,10 @@
 		<!--
 			AJAX
 		-->
+
+		<div id="evaluationId"></div>
+		<div id="priorityEvaluationId"></div>
+		<div id="evaluationIdentifierAndCodeId"></div>
 
 		<div id="componentToReplace">old body</div>
 
@@ -145,6 +149,15 @@
 
 			<textarea name="textArea">some text</textarea>
 
+		</form>
+
+		<!-- WICKET-4673 Ajax submit of nested form -->
+		<form id="outerForm" >
+			<button type="submit" id="submitButton">Outer Submit</button>
+			<div id="innerForm">
+				<input type="file" id="file"/>
+				<button type="submit" id="innerSubmitButton">Inner Submit</button>
+			</div>
 		</form>
 
 	</div>

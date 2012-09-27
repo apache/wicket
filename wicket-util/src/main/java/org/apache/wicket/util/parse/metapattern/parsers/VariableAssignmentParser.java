@@ -29,11 +29,11 @@ import org.apache.wicket.util.parse.metapattern.OptionalMetaPattern;
  */
 public final class VariableAssignmentParser extends MetaPatternParser
 {
-	/** The optional namespace like "namespace:*" */
+	/** The optional namespace like "namespace:*[:*]" */
 	private static final MetaPattern namespace = new OptionalMetaPattern(new MetaPattern[] {
-			MetaPattern.VARIABLE_NAME, MetaPattern.COLON });
+			MetaPattern.VARIABLE_NAME, MetaPattern.COLON, new OptionalMetaPattern(new MetaPattern[] {MetaPattern.VARIABLE_NAME, MetaPattern.COLON })});
 
-	/** The key (lvalue) like "name" or "namespace:name" */
+	/** The key (lvalue) like "name" or "namespace:name" or "namespace:name:subname" */
 	private final Group key = new Group(new MetaPattern(namespace, MetaPattern.XML_ATTRIBUTE_NAME));
 
 	/** The rvalue of the assignment */

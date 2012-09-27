@@ -20,6 +20,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -31,20 +32,19 @@ import org.junit.Test;
 public class AjaxFallbackLinkTest extends WicketTestCase
 {
 	/**
-	 * Tests that AjaxFallbackLink doesn't produce onclick inline attribute for non-anchor markup elements
+	 * https://issues.apache.org/jira/browse/WICKET-4641
 	 *
-	 * https://issues.apache.org/jira/browse/WICKET-4644
+	 * AjaxFallbackLink can be used only with <a>, <area> or <link> markup elements
 	 */
-	@Test
-	public void noInlineOnClickAttribute()
+	@Test(expected = MarkupException.class)
+	public void onlyAnchorAreaAndLink()
 	{
-		tester.startPage(new AjaxFallbackLinkPage());
-		tester.assertContainsNot("onclick=");
+		tester.startPage(new OnlyAnchorAreaAndLinkPage());
 	}
 
-	private static class AjaxFallbackLinkPage extends WebPage implements IMarkupResourceStreamProvider
+	private static class OnlyAnchorAreaAndLinkPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		private AjaxFallbackLinkPage()
+		private OnlyAnchorAreaAndLinkPage()
 		{
 			add(new AjaxFallbackLink("l") {
 
@@ -61,4 +61,5 @@ public class AjaxFallbackLinkTest extends WicketTestCase
 			return new StringResourceStream("<html><body><bla wicket:id='l'>Ajax fallback link</bla></body></html>");
 		}
 	}
+
 }

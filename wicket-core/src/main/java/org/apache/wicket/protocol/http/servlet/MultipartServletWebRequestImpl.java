@@ -35,6 +35,7 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
 import org.apache.wicket.util.upload.FileItemFactory;
+import org.apache.wicket.util.upload.FileUploadBase;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.ServletFileUpload;
 import org.apache.wicket.util.upload.ServletRequestContext;
@@ -402,6 +403,21 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
 		throws FileUploadException
 	{
+		for (Map.Entry<String, List<FileItem>> entry : files.entrySet())
+		{
+			List<FileItem> fileItems = entry.getValue();
+			for (FileItem fileItem : fileItems)
+			{
+				if (fileItem.getSize() > maxSize.bytes())
+				{
+					String fieldName = entry.getKey();
+					FileUploadException fslex = new FileUploadBase.FileSizeLimitExceededException("The field " +
+							fieldName + " exceeds its maximum permitted " + " size of " +
+							maxSize + " characters.", fileItem.getSize(), maxSize.bytes());
+					throw fslex;
+				}
+			}
+		}
 		return this;
 	}
 

@@ -74,7 +74,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * @param <T>
  *            The model object type
  * @param <S>
- *      the type of the sorting parameter
+ *            the type of the sorting parameter
  * 
  */
 public class DataTable<T, S> extends Panel implements IPageableItems
@@ -105,7 +105,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 
 	private final WebMarkupContainer body;
 
-	private final List<IColumn<T, S>> columns;
+	private final List<? extends IColumn<T, S>> columns;
 
 	private final ToolbarsContainer topToolbars;
 
@@ -125,7 +125,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(final String id, final List<IColumn<T, S>> columns,
+	public DataTable(final String id, final List<? extends IColumn<T, S>> columns,
 		final IDataProvider<T> dataProvider, final long rowsPerPage)
 	{
 		super(id);
@@ -248,7 +248,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @return array of column objects this table displays
 	 */
-	public final List<IColumn<T, S>> getColumns()
+	public final List<? extends IColumn<T, S>> getColumns()
 	{
 		return columns;
 	}
@@ -471,6 +471,10 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 */
 	private static class Caption extends Label
 	{
+		/**
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * 

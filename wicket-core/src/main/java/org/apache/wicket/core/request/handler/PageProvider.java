@@ -68,7 +68,7 @@ public class PageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public PageProvider(final int pageId, final Integer renderCount)
+	public PageProvider(final Integer pageId, final Integer renderCount)
 	{
 		this.pageId = pageId;
 		this.renderCount = renderCount;
@@ -84,7 +84,7 @@ public class PageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public PageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
+	public PageProvider(final Integer pageId, final Class<? extends IRequestablePage> pageClass,
 		Integer renderCount)
 	{
 		this(pageId, pageClass, new PageParameters(), renderCount);
@@ -101,7 +101,7 @@ public class PageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public PageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
+	public PageProvider(final Integer pageId, final Class<? extends IRequestablePage> pageClass,
 		final PageParameters pageParameters, final Integer renderCount)
 	{
 		this.pageId = pageId;

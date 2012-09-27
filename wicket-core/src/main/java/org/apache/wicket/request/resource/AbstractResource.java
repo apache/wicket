@@ -34,6 +34,7 @@ import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 
@@ -528,7 +529,7 @@ public abstract class AbstractResource implements IResource
 		{
 			throw new IllegalArgumentException("you are not allowed to directly access header [" +
 				name + "], " + "use one of the other specialized methods of " +
-				getClass().getSimpleName() + " to get or modify its value");
+					Classes.simpleName(getClass()) + " to get or modify its value");
 		}
 	}
 

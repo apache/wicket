@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
@@ -512,7 +513,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	{
 		final StringBuilder result = new StringBuilder();
 		result.append('[')
-			.append(getClass().getSimpleName())
+			.append(Classes.simpleName(getClass()))
 			.append(' ')
 			.append("name = ")
 			.append(path)

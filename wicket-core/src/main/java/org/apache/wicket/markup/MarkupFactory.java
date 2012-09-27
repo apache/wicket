@@ -48,15 +48,15 @@ public class MarkupFactory
 	private static final Logger log = LoggerFactory.getLogger(MarkupFactory.class);
 
 	/** A markup cache */
-	private IMarkupCache markupCache;
+	private IMarkupCache markupCache = null;
 
 	/** The markup resource stream provider used by MarkupCache */
-	private IMarkupResourceStreamProvider markupResourceStreamProvider;
+	private IMarkupResourceStreamProvider markupResourceStreamProvider = null;
 
 	/**
 	 * @return Gets the markup factory registered with the Wicket application
 	 */
-	public final static MarkupFactory get()
+	public static MarkupFactory get()
 	{
 		return Application.get().getMarkupSettings().getMarkupFactory();
 	}
@@ -250,18 +250,14 @@ public class MarkupFactory
 	 * indicator, that the component or any of its parents, has not yet been added.
 	 * 
 	 * @param container
+	 *          The MarkupContainer which markup type has to checked
 	 * @return true, if container.getMarkupType() != null
 	 */
 	protected final boolean checkMarkupType(final MarkupContainer container)
 	{
 		if (container.getMarkupType() == null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Markup file not loaded, since the markup type is not yet available: " +
-					container.toString());
-			}
-
+			log.debug("Markup file not loaded, since the markup type is not yet available: {}", container);
 			return false;
 		}
 
@@ -345,6 +341,7 @@ public class MarkupFactory
 	 * Gets and checks the container class
 	 * 
 	 * @param container
+	 *            The MarkupContainer which requests to load the Markup resource stream
 	 * @param clazz
 	 *            Either null, or a super class of container
 	 * @return The container class to be used

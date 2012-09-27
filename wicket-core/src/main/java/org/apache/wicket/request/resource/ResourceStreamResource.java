@@ -49,7 +49,6 @@ public class ResourceStreamResource extends AbstractResource
 
 	private Duration cacheDuration;
 
-
 	/**
 	 * Constructor.
 	 */
@@ -130,7 +129,7 @@ public class ResourceStreamResource extends AbstractResource
 	private IResourceStream internalGetResourceStream()
 	{
 		final IResourceStream resourceStream = getResourceStream();
-		Checks.notNull(resourceStream, "%s#getResourceStream() should not return null!", ResourceStreamResource.class.getName());
+		Checks.notNull(resourceStream, "%s#getResourceStream() should not return null!", getClass().getName());
 		return resourceStream;
 	}
 
@@ -163,7 +162,7 @@ public class ResourceStreamResource extends AbstractResource
 				catch (ResourceStreamNotFoundException e)
 				{
 					data.setError(HttpServletResponse.SC_NOT_FOUND);
-					close();
+					close(resourceStream);
 				}
 			}
 
@@ -191,7 +190,7 @@ public class ResourceStreamResource extends AbstractResource
 					public void writeData(Attributes attributes) throws IOException
 					{
 						((IResourceStreamWriter)resourceStream).write(attributes.getResponse().getOutputStream());
-						close();
+						close(resourceStream);
 					}
 				});
 			}
@@ -209,7 +208,7 @@ public class ResourceStreamResource extends AbstractResource
 						}
 						finally
 						{
-							close();
+							close(resourceStream);
 						}
 					}
 				});
@@ -219,11 +218,11 @@ public class ResourceStreamResource extends AbstractResource
 		return data;
 	}
 
-	private void close()
+	private void close(IResourceStream stream)
 	{
 		try
 		{
-			internalGetResourceStream().close();
+			stream.close();
 		}
 		catch (IOException e)
 		{

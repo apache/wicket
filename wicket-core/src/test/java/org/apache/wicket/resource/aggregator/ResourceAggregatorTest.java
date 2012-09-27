@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
@@ -189,6 +190,25 @@ public class ResourceAggregatorTest extends WicketTestCase
 			.getResourceBundles()
 			.addJavaScriptBundle(Application.class, "cd.js", new ResourceReferenceC(),
 				new ResourceReferenceD());
+		aggregator.render(forReference(new ResourceReferenceD()));
+		assertItems(bundleAB, bundleCD);
+	}
+
+	/**
+	 * bundle {a, b->a} and {c->a, d->c->a}, render [priority(b), d], should render [ab, cd]
+	 */
+	@Test
+	public void testTwoBundlesWithDependenciesAndPriority()
+	{
+		HeaderItem bundleAB = Application.get()
+			.getResourceBundles()
+			.addJavaScriptBundle(Application.class, "ab.js", new ResourceReferenceA(),
+				new ResourceReferenceB());
+		HeaderItem bundleCD = Application.get()
+			.getResourceBundles()
+			.addJavaScriptBundle(Application.class, "cd.js", new ResourceReferenceC(),
+				new ResourceReferenceD());
+		aggregator.render(new PriorityHeaderItem(forReference(new ResourceReferenceB())));
 		aggregator.render(forReference(new ResourceReferenceD()));
 		assertItems(bundleAB, bundleCD);
 	}

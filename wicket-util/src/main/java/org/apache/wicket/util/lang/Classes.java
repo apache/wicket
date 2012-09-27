@@ -34,9 +34,41 @@ public final class Classes
 	 *            The class
 	 * @return The class name
 	 */
-	public static String name(final Class<?> c)
+	public static String name(Class<?> c)
 	{
-		return (c != null) ? c.getName() : null;
+		String name = null;
+		if (c != null)
+		{
+			while (c.isAnonymousClass())
+			{
+				c = c.getSuperclass();
+			}
+			name = c.getName();
+		}
+
+		return name;
+	}
+
+	/**
+	 * Gets the simple name (without the package) of the given class or null if the class is null.
+	 *
+	 * @param c
+	 *            The class
+	 * @return The class simple name
+	 */
+	public static String simpleName(Class<?> c)
+	{
+		String simpleName = null;
+		if (c != null)
+		{
+			while (c.isAnonymousClass())
+			{
+				c = c.getSuperclass();
+			}
+			simpleName = c.getSimpleName();
+		}
+
+		return simpleName;
 	}
 
 	/**

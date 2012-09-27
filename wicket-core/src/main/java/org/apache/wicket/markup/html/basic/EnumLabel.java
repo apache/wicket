@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * A Label component that is used to render an enum value. The value renderered will be the result
@@ -100,7 +101,7 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent
 	 */
 	protected String resourceKey(T value)
 	{
-		return value.getDeclaringClass().getSimpleName() + "." + value.name();
+		return Classes.simpleName(value.getDeclaringClass()) + '.' + value.name();
 	}
 
 	/**

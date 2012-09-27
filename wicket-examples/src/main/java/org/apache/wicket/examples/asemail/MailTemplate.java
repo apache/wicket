@@ -41,6 +41,7 @@ import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -193,19 +194,24 @@ public class MailTemplate extends WicketExamplePage
 
 		final PageRenderer pageRenderer = getApplication().getPageRendererProvider().get(handler);
 
-		RequestCycle requestCycle = getRequestCycle();
+		RequestCycle originalRequestCycle = getRequestCycle();
 
-		final Response oldResponse = requestCycle.getResponse();
 		BufferedWebResponse tempResponse = new BufferedWebResponse(null);
+
+		RequestCycleContext requestCycleContext = new RequestCycleContext(originalRequestCycle.getRequest(),
+				tempResponse, getApplication().getRootRequestMapper(), getApplication().getExceptionMapperProvider().get());
+		RequestCycle tempRequestCycle = new RequestCycle(requestCycleContext);
+
+		final Response oldResponse = originalRequestCycle.getResponse();
 
 		try
 		{
-			requestCycle.setResponse(tempResponse);
-			pageRenderer.respond(requestCycle);
+			originalRequestCycle.setResponse(tempResponse);
+			pageRenderer.respond(tempRequestCycle);
 		}
 		finally
 		{
-			requestCycle.setResponse(oldResponse);
+			originalRequestCycle.setResponse(oldResponse);
 		}
 
 		return tempResponse.getText();

@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.breadcrumb;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.io.IClusterable;
 
 
@@ -30,7 +31,7 @@ import org.apache.wicket.util.io.IClusterable;
  * </pre>
  * 
  * In a {@link BreadCrumbPanel panel based implementation}, <tt>Home</tt>,
- * <tt>Products &amp; Solutions</tt> etc would be seperate panels that all are bread crumb
+ * <tt>Products &amp; Solutions</tt> etc would be separate panels that all are bread crumb
  * participants: for instance the <tt>Home</tt> participant's {@link #getTitle() title} would return
  * 'Home', and {@link #getComponent() the component} would be the corresponding panel.
  * 
@@ -50,7 +51,7 @@ public interface IBreadCrumbParticipant extends IClusterable
 	 * 
 	 * @return The title of the bread crumb
 	 */
-	String getTitle();
+	IModel<String> getTitle();
 
 	/**
 	 * Called when the corresponding bread crumb is activated.

@@ -47,4 +47,10 @@ public interface IClassResolver
 	 */
 	Iterator<URL> getResources(String name);
 
+	/**
+	 * Returns the {@link ClassLoader} to be used for resolving classes
+	 *
+	 * @return the {@link ClassLoader} to be used for resolving classes
+	 */
+	ClassLoader getClassLoader();
 }

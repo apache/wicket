@@ -73,9 +73,11 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	public String getObject()
 	{
 		// this shouldn't be called always wrapped!
-		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey, null, defaultValue);
+		return Application.get()
+			.getResourceSettings()
+			.getLocalizer()
+			.getString(resourceKey, null, defaultValue);
 	}
-
 
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
@@ -83,13 +85,15 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	@Override
 	public IWrapModel<String> wrapOnAssignment(final Component component)
 	{
-		return new AssignmentWrapper(resourceKey, defaultValue, component);
+		return new AssignmentWrapper(component);
 	}
 
 	/**
 	 * 
 	 */
-	private class AssignmentWrapper extends ResourceModel implements IWrapModel<String>
+	private class AssignmentWrapper extends LoadableDetachableModel<String>
+		implements
+			IWrapModel<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -98,13 +102,10 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		/**
 		 * Construct.
 		 * 
-		 * @param resourceKey
-		 * @param defaultValue
 		 * @param component
 		 */
-		public AssignmentWrapper(String resourceKey, String defaultValue, Component component)
+		public AssignmentWrapper(Component component)
 		{
-			super(resourceKey, defaultValue);
 			this.component = component;
 		}
 
@@ -117,20 +118,18 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 			return ResourceModel.this;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
-		 */
 		@Override
-		public String getObject()
+		protected String load()
 		{
-			return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-				component, defaultValue);
+			return Application.get()
+				.getResourceSettings()
+				.getLocalizer()
+				.getString(resourceKey, component, defaultValue);
 		}
 
 		@Override
-		public void detach()
+		protected void onDetach()
 		{
-			super.detach();
 			ResourceModel.this.detach();
 		}
 

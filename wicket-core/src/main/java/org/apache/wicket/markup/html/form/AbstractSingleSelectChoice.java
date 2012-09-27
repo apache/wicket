@@ -227,8 +227,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-	 * /** Determines whether or not the null value should be included in the list of choices when
-	 * the field's model value is nonnull, and whether or not the null_valid string property (e.g.
+	 * Determines whether or not the null value should be included in the list of choices when the
+	 * field's model value is nonnull, and whether or not the null_valid string property (e.g.
 	 * "Choose One") should be displayed until a nonnull value is selected.
 	 * 
 	 * If set to false, then "Choose One" will be displayed when the value is null. After a value is

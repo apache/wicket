@@ -167,10 +167,13 @@ public class LocalizerTest extends Assert
 	@Test
 	public void testGetStringPropertySubstitution()
 	{
+		Session.get().setLocale(Locale.GERMAN);
+
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
+		vm.put("rating", 4.5);
 		IModel<ValueMap> model = new Model<ValueMap>(vm);
-		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe",
+		Assert.assertEquals("Property substitution should occur", "John Doe gives 4,5 stars",
 			localizer.getString("test.substitute", null, model, null));
 	}
 
@@ -212,16 +215,19 @@ public class LocalizerTest extends Assert
 	@Test
 	public void testGetStringUseModel()
 	{
-		HashMap<String, String> model = new HashMap<String, String>();
-		model.put("user", "juergen");
+		Session.get().setLocale(Locale.GERMAN);
 
-		Assert.assertEquals("Expected string should be returned", "Welcome, juergen",
+		HashMap<String, Object> model = new HashMap<String, Object>();
+		model.put("user", "juergen");
+		model.put("rating", 4.5);
+
+		Assert.assertEquals("Expected string should be returned", "juergen gives 4,5 stars",
 			localizer.getString("test.substitute", null, new PropertyModel<String>(model, null),
 				"DEFAULT {user}"));
 
 		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen",
-			localizer.getString("test.substituteDoesNotExist", null, new PropertyModel<String>(
-				model, null), "DEFAULT ${user}"));
+			localizer.getString("test.substituteDoesNotExist", null,
+				new PropertyModel<HashMap<String, Object>>(model, null), "DEFAULT ${user}"));
 	}
 
 	/**
@@ -236,7 +242,7 @@ public class LocalizerTest extends Assert
 		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(false);
 
 		String option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, "default");
-		assertEquals(option, "default");
+		assertEquals("default", option);
 
 		option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, null);
 		assertNull(option);
@@ -244,7 +250,7 @@ public class LocalizerTest extends Assert
 		{
 			option = localizer.getString("null", page.drop1, "CHOOSE_ONE");
 		}
-		assertEquals(option, "value 1");
+		assertEquals("value 1", option);
 
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(false);
@@ -256,7 +262,7 @@ public class LocalizerTest extends Assert
 		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(true);
 
 		option = localizer.getString("dummy.null", page.drop1, null, "default");
-		assertEquals(option, "default");
+		assertEquals("default", option);
 
 		try
 		{
@@ -266,8 +272,8 @@ public class LocalizerTest extends Assert
 		catch (MissingResourceException ex)
 		{
 			assertEquals(
-				ex.getMessage(),
-				"Unable to find property: 'dummy.null' for component: form:drop1 [class=org.apache.wicket.markup.html.form.DropDownChoice]");
+				"Unable to find property: 'dummy.null' for component: form:drop1 [class=org.apache.wicket.markup.html.form.DropDownChoice]. Locale: null, style: null",
+				ex.getMessage());
 		}
 	}
 

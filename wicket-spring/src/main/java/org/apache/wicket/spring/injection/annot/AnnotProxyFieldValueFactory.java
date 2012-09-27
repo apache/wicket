@@ -127,7 +127,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				return cachedValue;
 			}
 
-			final Object target;
+			Object target;
 			if (wrapInProxies)
 			{
 				target = LazyInitProxyFactory.createProxy(field.getType(), locator);
@@ -140,7 +140,11 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			// only put the proxy into the cache if the bean is a singleton
 			if (locator.isSingletonBean())
 			{
-				cache.put(locator, target);
+				Object tmpTarget = cache.putIfAbsent(locator, target);
+				if (tmpTarget != null)
+				{
+					target = tmpTarget;
+				}
 			}
 			return target;
 		}
@@ -176,7 +180,11 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 				if (name != null)
 				{
-					beanNameCache.put(field.getType(), name);
+					String tmpName = beanNameCache.putIfAbsent(field.getType(), name);
+					if (tmpName != null)
+					{
+						name = tmpName;
+					}
 				}
 			}
 		}

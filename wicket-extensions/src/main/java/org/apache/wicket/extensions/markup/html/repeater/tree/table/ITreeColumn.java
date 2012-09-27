@@ -21,12 +21,18 @@ import org.apache.wicket.extensions.markup.html.repeater.tree.TableTree;
 
 /**
  * @param <T>
- *     the type of the model object
+ *            the type of the model object
  * @param <S>
- *     the type of the sorting parameter
+ *            the type of the sorting parameter
  * @author svenmeier
  */
 public interface ITreeColumn<T, S> extends IColumn<T, S>
 {
+	/**
+	 * Set the containing tree.
+	 * 
+	 * @param t
+	 *            tree
+	 */
 	public void setTree(TableTree<T, S> t);
 }

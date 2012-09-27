@@ -63,7 +63,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public TableTree(final String id, final List<IColumn<T, S>> columns,
+	public TableTree(final String id, final List<? extends IColumn<T, S>> columns,
 		final ITreeProvider<T> dataProvider, final long rowsPerPage)
 	{
 		this(id, columns, dataProvider, rowsPerPage, null);
@@ -83,7 +83,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * @param state
 	 *            the expansion state
 	 */
-	public TableTree(final String id, final List<IColumn<T, S>> columns,
+	public TableTree(final String id, final List<? extends IColumn<T, S>> columns,
 		final ITreeProvider<T> provider, final long rowsPerPage, IModel<Set<T>> state)
 	{
 		super(id, provider, state);
@@ -99,10 +99,16 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 
 		this.table = newDataTable("table", columns, newDataProvider(provider), rowsPerPage);
 		add(table);
+
+		// see #updateBranch(Object, AjaxRequestTarget)
+		setOutputMarkupId(true);
 	}
 
 	/**
 	 * Factory method for the wrapped {@link DataTable}.
+	 * 
+	 * Note: If overwritten, the DataTable's row items have to output their markupId, or
+	 * {@link #updateNode(Object, AjaxRequestTarget)} will fail.
 	 * 
 	 * @param id
 	 * @param columns
@@ -110,7 +116,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * @param rowsPerPage
 	 * @return nested data table
 	 */
-	protected DataTable<T, S> newDataTable(String id, List<IColumn<T, S>> columns,
+	protected DataTable<T, S> newDataTable(String id, List<? extends IColumn<T, S>> columns,
 		IDataProvider<T> dataProvider, long rowsPerPage)
 	{
 		return new DataTable<T, S>(id, columns, dataProvider, rowsPerPage)
@@ -161,7 +167,20 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	}
 
 	/**
-	 * Overriden to update the complete row item of the node.
+	 * For updating of a single branch the whole table is added to the ART.
+	 */
+	@Override
+	public void updateBranch(T node, AjaxRequestTarget target)
+	{
+		if (target != null)
+		{
+			// TableTree always outputs markupId
+			target.add(this);
+		}
+	}
+
+	/**
+	 * For an update of a node the complete row item is added to the ART.
 	 */
 	@Override
 	public void updateNode(T t, final AjaxRequestTarget target)
@@ -178,8 +197,10 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 
 					if (model.equals(nodeModel.getWrappedModel()))
 					{
+						// row items are configured to output their markupId
 						target.add(item);
 						visit.stop();
+						return;
 					}
 					visit.dontGoDeeper();
 				}

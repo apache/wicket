@@ -90,7 +90,7 @@ import java.util.ResourceBundle;
  * </ul>
  *
  * @author JSON.org
- * @version 2012-04-20
+ * @version 2012-07-02
  */
 public class JSONObject {
 
@@ -374,7 +374,8 @@ public class JSONObject {
     public JSONObject accumulate(
         String key,
         Object value
-    ) throws JSONException {
+    ) throws JSONException
+    {
         testValidity(value);
         Object object = this.opt(key);
         if (object == null) {
@@ -1450,7 +1451,7 @@ public class JSONObject {
                      object instanceof Short  || object instanceof Integer    ||
                      object instanceof Long   || object instanceof Boolean    ||
                      object instanceof Float  || object instanceof Double     ||
-                     object instanceof String) {
+                     object instanceof String || object instanceof Enum) {
                  return object;
              }
 
@@ -1497,7 +1498,9 @@ public class JSONObject {
 
     static final Writer writeValue(Writer writer, Object value,
             int indentFactor, int indent) throws JSONException, IOException {
-        if (value instanceof JSONObject) {
+        if (value == null || value.equals(null)) {
+            writer.write("null");
+        } else if (value instanceof JSONObject) {
             ((JSONObject) value).write(writer, indentFactor, indent);
         } else if (value instanceof JSONArray) {
             ((JSONArray) value).write(writer, indentFactor, indent);
@@ -1520,8 +1523,6 @@ public class JSONObject {
                 throw new JSONException(e);
             }
             writer.write(o != null ? o.toString() : quote(value.toString()));
-        } else if (value == null || value.equals(null)) {
-            writer.write("null");
         } else {
             quote(value.toString(), writer);
         }

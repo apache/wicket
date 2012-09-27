@@ -66,11 +66,12 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public final void add(FeedbackMessage message)
 	{
-		if (log.isDebugEnabled())
+		log.debug("Adding feedback message '{}'", message);
+
+		synchronized (messages)
 		{
-			log.debug("Adding feedback message " + message);
+			messages.add(message);
 		}
-		messages.add(message);
 	}
 
 	/**
@@ -195,9 +196,13 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 			message.detach();
 		}
 
-		messages.removeAll(toDelete);
-
-		return toDelete.size();
+		synchronized(messages)
+		{
+			int sizeBefore = messages.size();
+			messages.removeAll(toDelete);
+			int sizeAfter = messages.size();
+			return sizeAfter - sizeBefore;
+		}
 	}
 
 	/**

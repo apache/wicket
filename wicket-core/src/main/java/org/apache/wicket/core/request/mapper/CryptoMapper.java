@@ -84,7 +84,7 @@ public class CryptoMapper implements IRequestMapper
 	@Override
 	public int getCompatibilityScore(final Request request)
 	{
-		return 0;
+		return wrappedMapper.getCompatibilityScore(request);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class CryptoMapper implements IRequestMapper
 
 		if (url == null)
 		{
-			return null;
+			return wrappedMapper.mapRequest(request);
 		}
 
 		return wrappedMapper.mapRequest(request.cloneWithUrl(url));

@@ -127,7 +127,14 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 		Form<?> form = getForm();
 		attributes.setFormId(form.getMarkupId());
-		if (form.isMultiPart())
+
+		String formMethod = form.getMarkupAttributes().getString("method");
+		if (formMethod == null || "POST".equalsIgnoreCase(formMethod))
+		{
+			attributes.setMethod(Method.POST);
+		}
+
+		if (form.getRootForm().isMultiPart())
 		{
 			attributes.setMultipart(true);
 			attributes.setMethod(Method.POST);

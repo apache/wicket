@@ -27,6 +27,7 @@ import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -170,23 +171,32 @@ public class WicketTesterHelper
 	 */
 	public static AjaxEventBehavior findAjaxEventBehavior(Component component, String event)
 	{
-		if (event.startsWith("on"))
+		Args.notEmpty(event, "event");
+		String[] eventNames = Strings.split(event, ' ');
+		for (String eventName : eventNames)
 		{
-			event = event.substring(2);
-		}
-
-		for (Behavior behavior : component.getBehaviors())
-		{
-			if (behavior instanceof AjaxEventBehavior)
+			if (eventName.startsWith("on"))
 			{
-				String behaviorEvent = ((AjaxEventBehavior)behavior).getEvent();
-				if (behaviorEvent.startsWith("on"))
+				eventName = eventName.substring(2);
+			}
+
+			for (Behavior behavior : component.getBehaviors())
+			{
+				if (behavior instanceof AjaxEventBehavior)
 				{
-					behaviorEvent = behaviorEvent.substring(2);
-				}
-				if (event.equalsIgnoreCase(behaviorEvent))
-				{
-					return (AjaxEventBehavior)behavior;
+					String behaviorEvent = ((AjaxEventBehavior)behavior).getEvent();
+					String[] behaviorEventNames = Strings.split(behaviorEvent, ' ');
+					for (String behaviorEventName : behaviorEventNames)
+					{
+						if (behaviorEventName.startsWith("on"))
+						{
+							behaviorEventName = behaviorEventName.substring(2);
+						}
+						if (eventName.equalsIgnoreCase(behaviorEventName))
+						{
+							return (AjaxEventBehavior)behavior;
+						}
+					}
 				}
 			}
 		}

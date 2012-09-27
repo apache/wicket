@@ -18,14 +18,20 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 import java.util.Iterator;
 
+import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
-
+import org.apache.wicket.util.convert.IConverter;
 
 /**
  * An implementation of a textfield with the autoassist ajax behavior {@link AutoCompleteBehavior}.
- * 
+ * <p>
+ * An {@link IAutoCompleteRenderer} is used for rendering of choices. To convert input back into a
+ * non-String type you will have to provide a custom {@link IConverter}, either by overriding
+ * {@link #getConverter(Class)} or by setting a suitable {@link IConverter} on the application's
+ * {@link ConverterLocator}.
+ * <p>
  * Note that you must add your own CSS to make the suggestion display properly, see
  * {@link DefaultCssAutoCompleteTextField} for an example.
  * 
@@ -265,8 +271,8 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	protected abstract Iterator<T> getChoices(String input);
 
 	/**
-	 * @return The {@link IAutoCompleteRenderer} used to generate
-	 *      html output for the {@link AutoCompleteBehavior}.
+	 * @return The {@link IAutoCompleteRenderer} used to generate html output for the
+	 *         {@link AutoCompleteBehavior}.
 	 */
 	public final IAutoCompleteRenderer<T> getChoiceRenderer()
 	{

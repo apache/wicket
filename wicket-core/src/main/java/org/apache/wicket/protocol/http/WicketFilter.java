@@ -343,24 +343,31 @@ public class WicketFilter implements Filter
 		application.setWicketFilter(this);
 
 		// Allow the filterPath to be preset via setFilterPath()
-		if (filterPath == null)
+		String configureFilterPath = getFilterPath();
+
+		if (configureFilterPath == null)
 		{
-			filterPath = getFilterPathFromConfig(filterConfig);
+			configureFilterPath = getFilterPathFromConfig(filterConfig);
+
+			if (configureFilterPath == null)
+			{
+				configureFilterPath = getFilterPathFromWebXml(isServlet, filterConfig);
+
+				if (configureFilterPath == null)
+				{
+					configureFilterPath = getFilterPathFromAnnotation(isServlet);
+				}
+			}
+
+			if (configureFilterPath != null)
+			{
+				setFilterPath(configureFilterPath);
+			}
 		}
 
-		if (filterPath == null)
+		if (getFilterPath() == null)
 		{
-			filterPath = getFilterPathFromWebXml(isServlet, filterConfig);
-		}
-
-		if (filterPath == null)
-		{
-			filterPath = getFilterPathFromAnnotation(isServlet);
-		}
-
-		if (filterPath == null)
-		{
-			log.warn("Unable to determine filter path from filter init-parm, web.xml, "
+			log.warn("Unable to determine filter path from filter init-param, web.xml, "
 				+ "or servlet 3.0 annotations. Assuming user will set filter path "
 				+ "manually by calling setFilterPath(String)");
 		}
@@ -471,6 +478,15 @@ public class WicketFilter implements Filter
 	}
 
 	/**
+	 * Provide a standard getter for filterPath.
+	 * @return The configured filterPath.
+	 */
+	protected String getFilterPath()
+	{
+		return filterPath;
+	}
+
+	/**
 	 * 
 	 * @param filterConfig
 	 * @return filter path
@@ -482,7 +498,7 @@ public class WicketFilter implements Filter
 		{
 			if (result.equals("/*"))
 			{
-				filterPath = "";
+				result = "";
 			}
 			else if (!result.startsWith("/") || !result.endsWith("/*"))
 			{
@@ -492,10 +508,10 @@ public class WicketFilter implements Filter
 			else
 			{
 				// remove leading "/" and trailing "*"
-				filterPath = result.substring(1, result.length() - 1);
+				result = result.substring(1, result.length() - 1);
 			}
 		}
-		return filterPath;
+		return result;
 	}
 
 	/**
@@ -551,19 +567,6 @@ public class WicketFilter implements Filter
 			uriLength = requestURI.length();
 		}
 
-		// We only need to determine it once. It'll not change.
-		if (filterPathLength == -1)
-		{
-			if (filterPath.endsWith("/"))
-			{
-				filterPathLength = filterPath.length() - 1;
-			}
-			else
-			{
-				filterPathLength = filterPath.length();
-			}
-		}
-
 		// request.getContextPath() + "/" + filterPath. But without any trailing "/".
 		int homePathLength = contextPath.length() +
 			(filterPathLength > 0 ? 1 + filterPathLength : 0);
@@ -578,7 +581,7 @@ public class WicketFilter implements Filter
 		String uri = Strings.stripJSessionId(requestURI);
 
 		// home page without trailing slash URI
-		String homePageUri = contextPath + "/" + filterPath;
+		String homePageUri = contextPath + '/' + getFilterPath();
 		if (homePageUri.endsWith("/"))
 		{
 			homePageUri = homePageUri.substring(0, homePageUri.length() - 1);
@@ -603,14 +606,27 @@ public class WicketFilter implements Filter
 	 * 
 	 * @param filterPath
 	 */
-	public final void setFilterPath(final String filterPath)
+	public final void setFilterPath(String filterPath)
 	{
 		// see https://issues.apache.org/jira/browse/WICKET-701
 		if (this.filterPath != null)
 		{
 			throw new IllegalStateException(
-				"Filter path is write-once. You can not change it. Current value='" + filterPath +
-					"'");
+				"Filter path is write-once. You can not change it. Current value='" + filterPath + '\'');
+		}
+		if (filterPath != null)
+		{
+			filterPath = canonicaliseFilterPath(filterPath);
+
+			// We only need to determine it once. It'll not change.
+			if (filterPath.endsWith("/"))
+			{
+				filterPathLength = filterPath.length() - 1;
+			}
+			else
+			{
+				filterPathLength = filterPath.length();
+			}
 		}
 		this.filterPath = filterPath;
 	}
@@ -642,6 +658,7 @@ public class WicketFilter implements Filter
 		// We should always be under the rootPath, except
 		// for the special case of someone landing on the
 		// home page without a trailing slash.
+		String filterPath = getFilterPath();
 		if (!path.startsWith(filterPath))
 		{
 			if (filterPath.equals(path + "/"))
@@ -713,5 +730,60 @@ public class WicketFilter implements Filter
 				ignorePaths.add(path);
 			}
 		}
+	}
+
+	/**
+	 * A filterPath should have all leading slashes removed and exactly one trailing slash. A
+	 * wildcard asterisk character has no special meaning. If your intention is to mean the top
+	 * level "/" then an empty string should be used instead.
+	 *
+	 * @param filterPath
+	 * @return
+	 */
+	static String canonicaliseFilterPath(String filterPath)
+	{
+		if (Strings.isEmpty(filterPath))
+		{
+			return filterPath;
+		}
+
+		int beginIndex = 0;
+		int endIndex = filterPath.length();
+		while (beginIndex < endIndex)
+		{
+			char c = filterPath.charAt(beginIndex);
+			if (c != '/')
+			{
+				break;
+			}
+			beginIndex++;
+		}
+		int o;
+		int i = o = beginIndex;
+		while (i < endIndex)
+		{
+			char c = filterPath.charAt(i);
+			i++;
+			if (c != '/')
+			{
+				o = i;
+			}
+		}
+		if (o < endIndex)
+		{
+			o++; // include exactly one trailing slash
+			filterPath = filterPath.substring(beginIndex, o);
+		}
+		else
+		{
+			// ensure to append trailing slash
+			filterPath = filterPath.substring(beginIndex) + '/';
+		}
+
+		if (filterPath.equals("/"))
+		{
+			return "";
+		}
+		return filterPath;
 	}
 }

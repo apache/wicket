@@ -27,13 +27,14 @@ import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 
 /**
- * A subset of a {@link ITreeProvider}'s tree offering automatic detachment.
- * 
- * Make sure that the containing model calls {@link IDetachable#detach()} on its model object.
- * 
- * @see ITreeProvider#model(Object)
+ * A {@link Set} implementation utilizing a {@link ITreeProvider}'s models to keep containing
+ * elements.
  * 
  * @author svenmeier
+ * @param <T>
+ *            type of data
+ * 
+ * @see ITreeProvider#model(Object)
  */
 public class ProviderSubset<T> implements Set<T>, IDetachable
 {
@@ -243,6 +244,10 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 	{
 		return new AbstractReadOnlyModel<Set<T>>()
 		{
+			/**
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Set<T> getObject()
 			{

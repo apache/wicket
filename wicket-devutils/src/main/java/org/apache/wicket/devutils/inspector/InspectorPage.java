@@ -21,13 +21,13 @@ import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValueConversionException;
+
 
 /**
  * A page that shows interesting attributes of the Wicket environment, including the current session
@@ -63,7 +63,7 @@ public final class InspectorPage extends DevUtilsPage
 		{
 			// Ignore
 		}
-		add(new PageView("page", (Page)page));
+		add(new EnhancedPageView("page", (Page)page));
 		add(new Image("bug", new PackageResourceReference(InspectorPage.class, "bug.png")));
 		add(new BookmarkablePageLink<Void>("allsessions", LiveSessionsPage.class));
 		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));

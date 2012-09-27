@@ -86,16 +86,6 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 			}
 
 			@Override
-			protected void onComponentTag(ComponentTag tag)
-			{
-				// add the onclick handler only if link is enabled
-				if (isLinkEnabled())
-				{
-					super.onComponentTag(tag);
-				}
-			}
-
-			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);

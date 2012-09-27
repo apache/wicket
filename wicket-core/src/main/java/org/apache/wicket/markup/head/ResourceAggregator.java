@@ -32,6 +32,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.resource.CircularDependencyException;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * {@code ResourceAggregator} implements resource dependencies, resource bundles and sorting of
@@ -101,7 +102,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		@Override
 		public String toString()
 		{
-			return (renderBase == null ? "null" : renderBase.getClass().getSimpleName()) + "@" +
+			return (renderBase == null ? "null" : Classes.simpleName(renderBase.getClass())) + '@' +
 				indexInRenderBase;
 		}
 	}
@@ -125,7 +126,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		public RecordedHeaderItem(HeaderItem item)
 		{
 			this.item = item;
-			this.locations = new ArrayList<RecordedHeaderItemLocation>();
+			locations = new ArrayList<RecordedHeaderItemLocation>();
 		}
 
 		/**
@@ -185,9 +186,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		super(real);
 
-		this.itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
-		this.domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
-		this.loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
+		itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
+		domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
+		loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
 	}
 
 	@Override
@@ -374,6 +375,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private HeaderItem getItemToBeRendered(HeaderItem item)
 	{
+		while (item instanceof IWrappedHeaderItem)
+		{
+			item = ((IWrappedHeaderItem)item).getWrapped();
+		}
 		if (getRealResponse().wasRendered(item))
 		{
 			return NoHeaderItem.get();

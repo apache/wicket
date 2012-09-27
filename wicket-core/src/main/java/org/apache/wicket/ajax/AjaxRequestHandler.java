@@ -44,6 +44,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
@@ -472,8 +473,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	{
 		if (frozen)
 		{
-			throw new IllegalStateException(clazz.getSimpleName() + "s can no " +
-				" longer be added");
+			throw new IllegalStateException(Classes.simpleName(clazz) + "s can no longer be added");
 		}
 	}
 

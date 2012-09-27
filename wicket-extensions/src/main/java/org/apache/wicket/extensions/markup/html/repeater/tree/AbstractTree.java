@@ -26,8 +26,6 @@ import org.apache.wicket.markup.repeater.DefaultItemReuseStrategy;
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Abstract base class for {@link NestedTree} and {@link TableTree}. Uses its model for storing the
@@ -64,9 +62,6 @@ public abstract class AbstractTree<T> extends Panel
 			throw new IllegalArgumentException("argument [provider] cannot be null");
 		}
 		this.provider = provider;
-
-		// see #updateBranch(Object, AjaxRequestTarget)
-		setOutputMarkupId(true);
 	}
 
 	/**
@@ -128,6 +123,11 @@ public abstract class AbstractTree<T> extends Panel
 
 	/**
 	 * Factory method for a model, by default creates a model containing a {@link ProviderSubset}.
+	 * Depending on your {@link ITreeProvider}'s model you might consider to provide a custom
+	 * {@link Set} implementation.
+	 * <p>
+	 * Note: The contained {@link Set} has at least to implement {@link Set#add(Object)},
+	 * {@link Set#remove(Object)} and {@link Set#contains(Object)}.
 	 * 
 	 * @return model for this tree
 	 */
@@ -290,20 +290,12 @@ public abstract class AbstractTree<T> extends Panel
 	 * Convenience method to update a single branch on an {@link AjaxRequestTarget}. Does nothing if
 	 * the given node is currently not visible or target is <code>null</code>.
 	 * 
-	 * This default implementation adds this whole component for rendering.
-	 * 
 	 * @param node
 	 *            node to update
 	 * @param target
 	 *            request target
 	 */
-	public void updateBranch(T node, final AjaxRequestTarget target)
-	{
-		if (target != null)
-		{
-			target.add(this);
-		}
-	}
+	public abstract void updateBranch(T node, final AjaxRequestTarget target);
 
 	/**
 	 * Convenience method to update a single node on an {@link AjaxRequestTarget}. Does nothing if
@@ -314,27 +306,7 @@ public abstract class AbstractTree<T> extends Panel
 	 * @param target
 	 *            request target or {@code null}
 	 */
-	public void updateNode(T node, final AjaxRequestTarget target)
-	{
-		if (target != null)
-		{
-			final IModel<T> model = getProvider().model(node);
-			visitChildren(Node.class, new IVisitor<Node<T>, Void>()
-			{
-				@Override
-				public void component(Node<T> node, IVisit<Void> visit)
-				{
-					if (model.equals(node.getModel()))
-					{
-						target.add(node);
-						visit.stop();
-					}
-					visit.dontGoDeeper();
-				}
-			});
-			model.detach();
-		}
-	}
+	public abstract void updateNode(T node, final AjaxRequestTarget target);
 
 	/**
 	 * The state of a node.

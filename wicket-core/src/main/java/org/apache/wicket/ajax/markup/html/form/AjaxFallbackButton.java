@@ -21,6 +21,7 @@ import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
@@ -203,5 +204,21 @@ public abstract class AjaxFallbackButton extends Button
 	protected final boolean isButtonEnabled()
 	{
 		return isEnabledInHierarchy();
+	}
+
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		String tagName = tag.getName();
+		if (!("input".equalsIgnoreCase(tagName) || "button".equalsIgnoreCase(tagName)))
+		{
+			String msg = String.format("%s must be used only with <input type=\"submit\"> or <input type=\"submit\"> markup elements. " +
+					"The fallback functionality doesn't work for other markup elements. " +
+					"Component path: %s, markup element: <%s>.",
+					AjaxFallbackButton.class.getSimpleName(), getClassRelativePath(), tagName);
+			findMarkupStream().throwMarkupException(msg);
+		}
+
+		super.onComponentTag(tag);
 	}
 }
