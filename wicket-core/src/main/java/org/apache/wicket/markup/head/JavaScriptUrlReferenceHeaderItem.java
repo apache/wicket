@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.core.util.string.UrlUtils;
 
 /**
  * {@link HeaderItem} for script tags that are rendered using a fixed URL, for example resources
@@ -53,7 +53,8 @@ public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 	 * @param condition
 	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	public JavaScriptUrlReferenceHeaderItem(String url, String id, boolean defer, String charset, String condition)
+	public JavaScriptUrlReferenceHeaderItem(String url, String id, boolean defer, String charset,
+		String condition)
 	{
 		super(condition);
 		this.url = url;
