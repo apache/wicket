@@ -114,7 +114,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public String toString()
 	{
-		return "CSSReferenceHeaderItem(" + getUrl() + ")";
+		return "CSSReferenceHeaderItem(" + getReference() + ", " + getPageParameters() + ")";
 	}
 
 	private String getUrl()

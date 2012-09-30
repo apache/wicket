@@ -132,7 +132,8 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	@Override
 	public void render(Response response)
 	{
-		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset(), getCondition());
+		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset(),
+			getCondition());
 	}
 
 	@Override
@@ -148,7 +149,7 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	@Override
 	public String toString()
 	{
-		return "JavaScriptReferenceHeaderItem(" + getUrl() + ')';
+		return "JavaScriptReferenceHeaderItem(" + getReference() + ", " + getPageParameters() + ')';
 	}
 
 	private String getUrl()
