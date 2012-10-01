@@ -103,6 +103,8 @@ public class UrlRenderer
 			{
 				String relativeUrl = renderRelativeUrl(url);
 				Url relative = Url.parse(relativeUrl, url.getCharset());
+				relative.setPort(url.getPort());
+				relative.setProtocol(url.getProtocol());
 				renderedUrl = renderFullUrl(relative);
 			}
 			else
