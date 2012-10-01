@@ -222,32 +222,32 @@ public class UrlRendererTest extends Assert
 		Url newUrl = Url.parse("four");
 		newUrl.setProtocol("https");
 		String fullUrl = renderer.renderUrl(newUrl);
-		assertEquals("http://www.example.com:8888/four", fullUrl);
+		assertEquals("https://www.example.com:8888/four", fullUrl);
 
 		newUrl = Url.parse("./four");
 		newUrl.setProtocol("https");
 		fullUrl = renderer.renderUrl(newUrl);
-		assertEquals("http://www.example.com:8888/four", fullUrl);
+		assertEquals("https://www.example.com:8888/four", fullUrl);
 
 		newUrl = Url.parse("./././four");
 		newUrl.setProtocol("https");
 		fullUrl = renderer.renderUrl(newUrl);
-		assertEquals("http://www.example.com:8888/four", fullUrl);
+		assertEquals("https://www.example.com:8888/four", fullUrl);
 
 		newUrl = Url.parse("../four");
 		newUrl.setProtocol("https");
 		fullUrl = renderer.renderUrl(newUrl);
-		assertEquals("http://www.example.com:8888/four", fullUrl);
+		assertEquals("https://www.example.com:8888/four", fullUrl);
 
 		newUrl = Url.parse(".././four");
 		newUrl.setProtocol("https");
 		fullUrl = renderer.renderUrl(newUrl);
-		assertEquals("http://www.example.com:8888/four", fullUrl);
+		assertEquals("https://www.example.com:8888/four", fullUrl);
 
 		newUrl = Url.parse("../../../../four");
 		newUrl.setProtocol("https");
 		fullUrl = renderer.renderUrl(newUrl);
-		assertEquals("http://www.example.com:8888/four", fullUrl);
+		assertEquals("https://www.example.com:8888/four", fullUrl);
 	}
 
 	@Test
