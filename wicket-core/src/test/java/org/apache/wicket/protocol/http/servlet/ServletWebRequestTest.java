@@ -22,8 +22,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.protocol.http.MultiPartTestApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.Url;
@@ -134,26 +132,6 @@ public class ServletWebRequestTest extends Assert
 		WicketTester tester = new WicketTester(application);
 		tester.startPage(new CustomRequestPage());
 	}
-
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-4715
-	 */
-	@Test
-	public void multiPartWebRequest()
-	{
-		MultiPartTestApplication application = new MultiPartTestApplication();
-		new WicketTester(application); // inits the app
-
-		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
-		httpRequest.setURL("/");
-		httpRequest.setParameter("some", "parameter");
-		httpRequest.setMethod(Form.METHOD_POST);
-		httpRequest.setUseMultiPartContentType(true);
-
-		WebRequest webRequest = application.createWebRequest(httpRequest, "/");
-		assertTrue(webRequest instanceof MultipartServletWebRequest);
-	}
-
 
 	private static class CustomRequestPage extends WebPage implements IMarkupResourceStreamProvider
 	{

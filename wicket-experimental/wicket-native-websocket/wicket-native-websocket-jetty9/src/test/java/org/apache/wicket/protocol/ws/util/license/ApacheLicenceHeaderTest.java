@@ -14,36 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.protocol.ws.util.license;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.wicket.Page;
-import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.util.tester.DummyHomePage;
+import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 
 /**
- * An extension of WebApplication just to make its #createWebRequest() public
+ * Test that the license headers are in place in this project. The tests are run from
+ * {@link org.apache.wicket.util.license.ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
  */
-public class MultiPartTestApplication extends WebApplication
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
-	 * Extend #createWebRequest() just to make it public
-	 * @param servletRequest
-	 *            the current HTTP Sservlet request
-	 * @param filterPath
-	 *            the filter mapping read from web.xml
-	 * @return
+	 * Construct.
 	 */
-	@Override
-	public WebRequest createWebRequest(HttpServletRequest servletRequest, String filterPath)
+	public ApacheLicenceHeaderTest()
 	{
-		return super.createWebRequest(servletRequest, filterPath);
+		// addHeaders = true;
 	}
-
-	@Override
-	public Class<? extends Page> getHomePage()
-	{
-		return DummyHomePage.class;
-	}
-};
+}

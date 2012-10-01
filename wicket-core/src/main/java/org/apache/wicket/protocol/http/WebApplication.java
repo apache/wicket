@@ -79,8 +79,6 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.upload.FileUploadException;
-import org.apache.wicket.util.upload.ServletFileUpload;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -487,19 +485,6 @@ public abstract class WebApplication extends Application
 		}
 
 		WebRequest webRequest = newWebRequest(servletRequest, filterPath);
-
-		if (ServletFileUpload.isMultipartContent(servletRequest))
-		{
-			try
-			{
-				return ((ServletWebRequest)webRequest).newMultipartWebRequest(
-					getApplicationSettings().getDefaultMaximumUploadSize(), "externalForm");
-			}
-			catch (FileUploadException e)
-			{
-				throw new RuntimeException(e);
-			}
-		}
 
 		return webRequest;
 	}
