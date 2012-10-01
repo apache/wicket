@@ -1,7 +1,8 @@
-target
+**target*
 velocity.log
-.project
-.classpath
+**.project
+**.classpath
+**.settings
 *velocity.log*
 *.idea/
 *.iml
