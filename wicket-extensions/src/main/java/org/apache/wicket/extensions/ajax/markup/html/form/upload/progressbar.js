@@ -79,10 +79,16 @@
 			window.setTimeout(Wicket.bind(this.load, this), 1000);
 		},
 
+		_createIFrame : function (iframeName) {
+			var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
+				'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;">');
+			return $iframe[0];
+		},
+
 		load : function() {
 			var URL = this.url;
 
-	        this.iframe = Wicket._createIFrame(""+Math.random());
+	        this.iframe = this._createIFrame(""+Math.random());
 
 	        document.body.appendChild(this.iframe);
 
