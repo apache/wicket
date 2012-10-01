@@ -147,11 +147,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
 
 	/**
-	 * The value of HTMLFormElement's <code>enctype</code> attribute needed for file uploading.
-	 */
-	public static final String ENCTYPE_MULTIPART_FORM_DATA = "multipart/form-data";
-
-	/**
 	 * Visitor used for validation
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
@@ -1544,7 +1539,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					tag.put("method", METHOD_POST.toLowerCase(Locale.ENGLISH));
 				}
 
-				tag.put("enctype", ENCTYPE_MULTIPART_FORM_DATA);
+				tag.put("enctype", "multipart/form-data");
 				//
 				// require the application-encoding for multipart/form-data to be sure to
 				// get multipart-uploaded characters with the proper encoding on the following
@@ -1559,7 +1554,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			{
 				// sanity check
 				String enctype = (String)tag.getAttributes().get("enctype");
-				if (ENCTYPE_MULTIPART_FORM_DATA.equalsIgnoreCase(enctype))
+				if ("multipart/form-data".equalsIgnoreCase(enctype))
 				{
 					// though not set explicitly in Java, this is a multipart
 					// form
