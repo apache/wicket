@@ -86,6 +86,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append("   if (!(inputNode.className.indexOf('wicket-'+markupId)>=0)&&!(inputNode.id.indexOf(markupId+'-')>=0)) return;\n");
 		asb.append("   var inputType = inputNode.type.toLowerCase();\n");
 		asb.append("   if (inputType === 'checkbox' || inputType === 'radio') {\n");
+		asb.append("    attributes.ad = false;\n"); // do not click the connected input
 		asb.append("    var name = inputNode.name, value = inputNode.value;\n");
 		asb.append("    result.push({ name: name, value: value });\n");
 		asb.append("   }\n"); // if (checkbox or radio)
