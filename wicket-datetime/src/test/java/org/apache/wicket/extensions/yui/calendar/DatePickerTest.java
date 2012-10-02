@@ -746,14 +746,15 @@ public class DatePickerTest extends WicketTestCase
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
-		tester.getSession().setLocale(Locale.GERMAN);
+		tester.getSession().setLocale(Locale.ITALIAN);
 		tester.startPage(pageClass);
 		tester.assertRenderedPage(pageClass);
 
 		String document = tester.getLastResponseAsString();
 		document = document.replaceAll("\\d\\d\\.\\d\\d\\.\\d\\d", "xx.xx.xx");
-		document = document.replaceAll("\\d\\d/\\d\\d/\\d\\d\\d\\d", "xx.xx.xxxx");
-		document = document.replaceAll("\\d\\d/\\d\\d\\d\\d", "xx.xxxx");
+		document = document.replaceAll("\\d\\d/\\d\\d/\\d\\d\\d\\d", "xx/xx/xxxx");
+		document = document.replaceAll("\\d\\d/\\d\\d/\\d\\d", "xx/xx/xx");
+		document = document.replaceAll("\\d\\d/\\d\\d\\d\\d", "xx/xxxx");
 
 		DiffUtil.validatePage(document, pageClass, filename, true);
 	}
