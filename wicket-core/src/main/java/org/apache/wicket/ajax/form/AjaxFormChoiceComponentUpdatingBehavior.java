@@ -64,36 +64,19 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append(" function getInputValues(groupId, attributes) {\n");
 		asb.append("  var result = [], srcElement = attributes.event.target;\n");
 
-		asb.append("  if (srcElement) {\n");
-		asb.append("   if (srcElement.tagName.toLowerCase() === 'input') {\n");
-		asb.append("    var inputNode = srcElement;\n");
-		asb.append("    if (!inputNode.checked) return;\n");
-		asb.append("    if (!inputNode.type) return;\n");
-		asb.append("    if (!(inputNode.className.indexOf('wicket-'+markupId)>=0)&&!(inputNode.id.indexOf(markupId+'-')>=0)) return;\n");
-		asb.append("    var inputType = inputNode.type.toLowerCase();\n");
-		asb.append("    if (inputType === 'checkbox' || inputType === 'radio') {\n");
-		asb.append("     var name = inputNode.name, value = inputNode.value;\n");
-		asb.append("     result.push({ name: name, value: value });\n");
-		asb.append("    }\n"); // if (checkbox or radio)
-		asb.append("   }\n");  // if (tagName == 'input')
-
-		// inputs' labels
-		asb.append("  else if (srcElement.tagName.toLowerCase() === 'label') {\n");
-		asb.append("   var labelNode = srcElement;\n");
-		asb.append("   if (!labelNode.htmlFor) return;\n");
-		asb.append("   var inputNode = Wicket.$(labelNode.htmlFor);\n");
-		asb.append("   if (!inputNode) return;\n");
-		asb.append("   if (!(inputNode.className.indexOf('wicket-'+markupId)>=0)&&!(inputNode.id.indexOf(markupId+'-')>=0)) return;\n");
-		asb.append("   var inputType = inputNode.type.toLowerCase();\n");
-		asb.append("   if (inputType === 'checkbox' || inputType === 'radio') {\n");
-		asb.append("    var name = inputNode.name, value = inputNode.value;\n");
-		asb.append("    result.push({ name: name, value: value });\n");
-		asb.append("   }\n"); // if (checkbox or radio)
-		asb.append("  }\n");  // else if (tagName == 'label')
-		asb.append(" }\n");  // if (srcElement)
+		asb.append("  var inputNode = srcElement;\n");
+		asb.append("  if (!inputNode.checked) return;\n");
+		asb.append("  if (!inputNode.type) return;\n");
+		asb.append("  if (!(inputNode.className.indexOf('wicket-'+markupId)>=0)&&!(inputNode.id.indexOf(markupId+'-')>=0)) return;\n");
+		asb.append("  var inputType = inputNode.type.toLowerCase();\n");
+		asb.append("  if (inputType === 'checkbox' || inputType === 'radio') {\n");
+		asb.append("   var name = inputNode.name, value = inputNode.value;\n");
+		asb.append("   result.push({ name: name, value: value });\n");
+		asb.append("  }\n"); // if (checkbox or radio)
 
 		asb.append("  return result;\n");
 		asb.append(" }\n"); // function getInputValues()
+		asb.append(" attrs.pre = (attrs.pre || []).concat([ function(attributes) { return attributes.event.target.tagName.toLowerCase() === 'input'; } ]);\n");
 		asb.append(" attrs.dep = (attrs.dep || []).concat([ function(attributes) { var deps = getInputValues(markupId, attributes); return deps; } ]);\n");
 		asb.append(" Wicket.Ajax.post(attrs);\n");
 		asb.append("}\n"); // function attachChoiceHandlers()
