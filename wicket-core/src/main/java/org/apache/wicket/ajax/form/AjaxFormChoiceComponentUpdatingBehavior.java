@@ -29,17 +29,14 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * This is a Ajax Component Update Behavior that is meant for choices/groups that are not one
  * component in the html but many.
  * <p>
- * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component
- * fields
- * <p>
- * In order to be supported by this behavior the group components must output children with markup
- * id in format of 'groupId-childId'
+ * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component fields
  * 
  * @author jcompagner
  * 
@@ -50,6 +47,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDefaultAjaxBehavior
 {
+	private static final ResourceReference CHOICE_JS = new JavaScriptResourceReference(
+		AjaxFormChoiceComponentUpdatingBehavior.class, "AjaxFormChoiceComponentUpdatingBehavior.js");
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -57,36 +57,12 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	{
 		super.renderHead(component, response);
 
-		// a function that registers a click listener which dynamically
-		// extracts the currently selected checkboxes/radios on every click
-		AppendingStringBuffer asb = new AppendingStringBuffer();
-		asb.append("function attachChoiceHandlers(markupId, attrs) {\n");
-		asb.append(" function getInputValues(groupId, attributes) {\n");
-		asb.append("  var result = [], srcElement = attributes.event.target;\n");
+		response.render(JavaScriptHeaderItem.forReference(CHOICE_JS));
 
-		asb.append("  var inputNode = srcElement;\n");
-		asb.append("  if (!inputNode.checked) return;\n");
-		asb.append("  if (!inputNode.type) return;\n");
-		asb.append("  if (!(inputNode.className.indexOf('wicket-'+markupId)>=0)&&!(inputNode.id.indexOf(markupId+'-')>=0)) return;\n");
-		asb.append("  var inputType = inputNode.type.toLowerCase();\n");
-		asb.append("  if (inputType === 'checkbox' || inputType === 'radio') {\n");
-		asb.append("   var name = inputNode.name, value = inputNode.value;\n");
-		asb.append("   result.push({ name: name, value: value });\n");
-		asb.append("  }\n"); // if (checkbox or radio)
-
-		asb.append("  return result;\n");
-		asb.append(" }\n"); // function getInputValues()
-		asb.append(" attrs.pre = (attrs.pre || []).concat([ function(attributes) { return attributes.event.target.tagName.toLowerCase() === 'input'; } ]);\n");
-		asb.append(" attrs.dep = (attrs.dep || []).concat([ function(attributes) { var deps = getInputValues(markupId, attributes); return deps; } ]);\n");
-		asb.append(" Wicket.Ajax.post(attrs);\n");
-		asb.append("}\n"); // function attachChoiceHandlers()
-
-		response.render(JavaScriptHeaderItem.forScript(asb, "attachChoice-" + component.getMarkupId()));
-
-		String onLoadScript = String.format("attachChoiceHandlers('%s', %s)",
-				component.getMarkupId(), renderAjaxAttributes(component));
+		String onLoadScript = String.format("Wicket.Choice.attach('%s', '%s', %s)",
+			component.getMarkupId(), getFormComponent().getInputName(),
+			renderAjaxAttributes(component));
 		response.render(OnLoadHeaderItem.forScript(onLoadScript));
-
 	}
 
 	@Override
@@ -102,7 +78,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 * has been updated.
 	 * 
 	 * @param target
-	 *      the current request handler
+	 *            the current request handler
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
@@ -114,9 +90,9 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 * FormComponent
 	 * 
 	 * @param target
-	 *      the current request handler
+	 *            the current request handler
 	 * @param e
-	 *      the error that occurred while updating the component
+	 *            the error that occurred while updating the component
 	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{
@@ -191,7 +167,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 	/**
 	 * @param component
-	 *      the component to check
+	 *            the component to check
 	 * @return if the component applies to the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 */
 	static boolean appliesTo(Component component)
