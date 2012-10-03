@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.markup.head;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -36,7 +36,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 * {@code null} or empty string for no condition.
 	 */
 	private final String condition;
-	
+
 	protected JavaScriptHeaderItem(String condition)
 	{
 		this.condition = condition;
@@ -119,6 +119,41 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	/**
 	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
 	 * 
+	 * @param reference
+	 *            resource reference pointing to the JavaScript resource
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
+	 */
+	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
+		String id, boolean defer)
+	{
+		return forReference(reference, null, id, defer, null);
+	}
+
+	/**
+	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
+	 *
+	 * @param reference
+	 *            resource reference pointing to the JavaScript resource
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
+	 */
+	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
+		boolean defer)
+	{
+		return forReference(reference, null, null, defer, null);
+	}
+
+	/**
+	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
+	 *
 	 * @param reference
 	 *            resource reference pointing to the javascript resource
 	 * @param pageParameters
@@ -288,17 +323,17 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		String id, boolean defer, String charset, String condition)
 	{
 		Args.notEmpty(url, "url");
-		
-		boolean hasCondition = Strings.isEmpty(condition) == false; 
+
+		boolean hasCondition = Strings.isEmpty(condition) == false;
 		if (hasCondition)
 		{
 			response.write("<!--[if ");
 			response.write(condition);
 			response.write("]>");
 		}
-		
+
 		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset);
-		
+
 		if (hasCondition)
 		{
 			response.write("<![endif]-->\n");
