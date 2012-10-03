@@ -112,9 +112,9 @@ public class FilterForm<T> extends Form<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onConfigure(Component component)
+			public void bind(Component component)
 			{
-				super.onConfigure(component);
+				super.bind(component);
 				component.setOutputMarkupId(true);
 			}
 
