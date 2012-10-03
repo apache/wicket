@@ -14,72 +14,72 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /*
  * Wicket Choice Ajax updates.
  *
  * @author svenmeier
  */
 
+;(function (undefined) {
+	"use strict";
 
-// introduce a namespace
-if (typeof (Wicket.Choice) === "undefined") {
-	Wicket.Choice = {};
+	// introduce a namespace
+	if (typeof (Wicket.Choice) === "undefined") {
+		Wicket.Choice = {};
 
-	/**
-         * Is a change accepted.
-         *
-         * @param name input name of choice
-         * @param attrs ajax attributes
-	 */
-	Wicket.Choice.acceptInput = function(name, attrs) {
-		"use strict";
+		/**
+		 * Is a change accepted.
+		 *
+		 * @param name input name of choice
+		 * @param attrs ajax attributes
+		 */
+		Wicket.Choice.acceptInput = function(name, attrs) {
 
-		var srcElement = attrs.event.target;
+			var srcElement = attrs.event.target;
 
-		return srcElement.name === name;
-	};
+			return srcElement.name === name;
+		};
 
-	/**
-         * Get all checked input values.
-         *
-         * @param markupId markup id of choice
-         * @param name input name of choice
-         * @param attrs ajax attributes
-	 */
-	Wicket.Choice.getInputValues = function(markupId, name, attrs) {
-		"use strict";
-		var result = [], srcElement = attrs.event.target;
+		/**
+		 * Get all checked input values.
+		 *
+		 * @param markupId markup id of choice
+		 * @param name input name of choice
+		 * @param attrs ajax attributes
+		 */
+		Wicket.Choice.getInputValues = function(markupId, name, attrs) {
+			var result = [], srcElement = attrs.event.target;
 
-		var inputNodes = Wicket.$(markupId).getElementsByTagName("input");
-		for (var i = 0 ; i < inputNodes.length ; i ++) {
-			var inputNode = inputNodes[i];
+			var inputNodes = Wicket.$(markupId).getElementsByTagName("input");
+			for (var i = 0 ; i < inputNodes.length ; i ++) {
+				var inputNode = inputNodes[i];
 
-			if (inputNode.name !== name) {
-				continue;
+				if (inputNode.name !== name) {
+					continue;
+				}
+				if (!inputNode.checked) {
+					continue;
+				}
+
+				var value = inputNode.value;
+				result.push({ name: name, value: value });
 			}
-			if (!inputNode.checked) {
-				continue;
-			}
 
-			var value = inputNode.value;
-			result.push({ name: name, value: value });
-		}
+			return result;
+		};
 
-		return result;
-	};
-
-	/**
-         * Attach to a choice.
-         *
-         * @param markupId markup id of choice
-         * @param input name of choice
-         * @attrs ajax attributes
-	 */
-	Wicket.Choice.attach = function(markupId, name, attrs) {
-		"use strict";
-
-		attrs.pre = (attrs.pre || []).concat([ function(attributes) { var pre = Wicket.Choice.acceptInput(name, attributes); return pre; } ]);
-		attrs.dep = (attrs.dep || []).concat([ function(attributes) { var deps = Wicket.Choice.getInputValues(markupId, name, attributes); return deps; } ]);
-		Wicket.Ajax.post(attrs);
-	};
-}
+		/**
+		 * Attach to a choice.
+		 *
+		 * @param markupId markup id of choice
+		 * @param input name of choice
+		 * @attrs ajax attributes
+		 */
+		Wicket.Choice.attach = function(markupId, name, attrs) {
+			attrs.pre = (attrs.pre || []).concat([ function(attributes) { var pre = Wicket.Choice.acceptInput(name, attributes); return pre; } ]);
+			attrs.dep = (attrs.dep || []).concat([ function(attributes) { var deps = Wicket.Choice.getInputValues(markupId, name, attributes); return deps; } ]);
+			Wicket.Ajax.post(attrs);
+		};
+	}
+})();
