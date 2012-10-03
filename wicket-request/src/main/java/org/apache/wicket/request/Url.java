@@ -79,14 +79,15 @@ public class Url implements Serializable
 	 * 
 	 * @author igor
 	 */
-	public static enum StringMode {
+	public static enum StringMode
+    {
 		/** local urls are rendered without the host name */
 		LOCAL,
 		/**
 		 * full urls are written with hostname. if the hostname is not set or one of segments is
 		 * {@literal ..} an {@link IllegalStateException} is thrown.
 		 */
-		FULL;
+		FULL
 	}
 
 	/**
@@ -982,7 +983,7 @@ public class Url implements Serializable
 	{
 		if (getSegments().size() > 0)
 		{
-			// strip the first non-folder segment
+			// strip the first non-folder segment (if it is not empty)
 			getSegments().remove(getSegments().size() - 1);
 		}
 
@@ -1010,6 +1011,11 @@ public class Url implements Serializable
 			{
 				break;
 			}
+		}
+
+		if (!getSegments().isEmpty() && relative.getSegments().isEmpty())
+		{
+			getSegments().add("");
 		}
 
 		// append the remaining relative segments
