@@ -1476,6 +1476,7 @@ public class BaseWicketTester
 	 */
 	public Component startComponent(final Component component)
 	{
+		component.internalInitialize();
 		if (component instanceof FormComponent)
 		{
 			((FormComponent<?>)component).processInput();
