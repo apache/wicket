@@ -27,7 +27,7 @@ if (typeof (Wicket.Choice) === "undefined") {
 
 	/**
          * Is a change accepted.
-         * 
+         *
          * @param name input name of choice
          * @param attrs ajax attributes
 	 */
@@ -36,25 +36,30 @@ if (typeof (Wicket.Choice) === "undefined") {
 
 		var srcElement = attrs.event.target;
 
-		return srcElement.name == name;
+		return srcElement.name === name;
 	};
 
 	/**
          * Get all checked input values.
-         * 
+         *
          * @param markupId markup id of choice
          * @param name input name of choice
          * @param attrs ajax attributes
 	 */
 	Wicket.Choice.getInputValues = function(markupId, name, attrs) {
+		"use strict";
 		var result = [], srcElement = attrs.event.target;
 
 		var inputNodes = Wicket.$(markupId).getElementsByTagName("input");
 		for (var i = 0 ; i < inputNodes.length ; i ++) {
 			var inputNode = inputNodes[i];
 
-			if (inputNode.name != name) continue;
-			if (!inputNode.checked) continue;
+			if (inputNode.name !== name) {
+				continue;
+			}
+			if (!inputNode.checked) {
+				continue;
+			}
 
 			var value = inputNode.value;
 			result.push({ name: name, value: value });
