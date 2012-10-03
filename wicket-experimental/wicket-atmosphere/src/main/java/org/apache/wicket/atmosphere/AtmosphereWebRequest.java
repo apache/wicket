@@ -121,4 +121,10 @@ class AtmosphereWebRequest extends WebRequest
 	{
 		return wrappedRequest.getContainerRequest();
 	}
+
+	@Override
+	public boolean isAjax()
+	{
+		return true;
+	}
 }
