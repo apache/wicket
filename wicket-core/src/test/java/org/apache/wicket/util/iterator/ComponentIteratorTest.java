@@ -235,7 +235,7 @@ public class ComponentIteratorTest extends WicketTestCase
 		iter.addFilter(new IteratorFilter<Component>()
 		{
 			@Override
-			boolean onFilter(Component component)
+			protected boolean onFilter(Component component)
 			{
 				return component.getId().endsWith("2");
 			}
@@ -271,7 +271,7 @@ public class ComponentIteratorTest extends WicketTestCase
 		iter.addFilter(new IteratorFilter<Component>()
 		{
 			@Override
-			boolean onFilter(Component component)
+			protected boolean onFilter(Component component)
 			{
 				return component.getId().endsWith("x");
 			}
@@ -304,7 +304,7 @@ public class ComponentIteratorTest extends WicketTestCase
 		iter.getFilters().add(new IteratorFilter<Component>()
 		{
 			@Override
-			boolean onFilter(Component component)
+			protected boolean onFilter(Component component)
 			{
 				return component.getId().endsWith("2");
 			}
@@ -398,7 +398,7 @@ public class ComponentIteratorTest extends WicketTestCase
 		iter.getFilters().add(new IteratorFilter<Component>()
 		{
 			@Override
-			boolean onFilter(Component component)
+			protected boolean onFilter(Component component)
 			{
 				if ("b1".equals(component.getId()))
 				{
@@ -441,7 +441,7 @@ public class ComponentIteratorTest extends WicketTestCase
 		iter.getFilters().add(new IteratorFilter<Component>()
 		{
 			@Override
-			boolean onFilter(Component component)
+			protected boolean onFilter(Component component)
 			{
 				if ("b1".equals(component.getId()))
 				{
