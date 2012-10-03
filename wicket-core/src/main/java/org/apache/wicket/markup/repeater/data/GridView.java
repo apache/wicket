@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.markup.repeater.data;
 
-import java.util.Iterator;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
+
+import java.util.Iterator;
 
 
 /**
@@ -262,7 +263,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 	 * @param <T>
 	 * 
 	 */
-	private static class ItemsIterator<T> implements Iterator<Item<T>>
+	public static class ItemsIterator<T> implements Iterator<Item<T>>
 	{
 		private final Iterator<MarkupContainer> rows;
 		private Iterator<Item<T>> cells;
@@ -275,7 +276,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		 */
 		public ItemsIterator(Iterator<MarkupContainer> rows)
 		{
-			this.rows = rows;
+			this.rows = Args.notNull(rows, "rows");
 			findNext();
 		}
 
