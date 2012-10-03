@@ -28,6 +28,14 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * A form with filter-related special functionality for its form components.
+ *
+ * <p>
+ * This form uses an invisible button to be able to submit when the user presses
+ * the <em>ENTER</em> key. If there is a need to add an explicit
+ * {@link org.apache.wicket.markup.html.form.IFormSubmittingComponent} to this form
+ * then {@link Form#setDefaultButton(org.apache.wicket.markup.html.form.IFormSubmittingComponent)}
+ * should be used to specify this custom submitting component.
+ * </p>
  * 
  * @param <T>
  *            type of filter state object
@@ -70,7 +78,7 @@ public class FilterForm<T> extends Form<T>
 		String value = getRequest().getPostParameters().getParameterValue(id).toString("");
 		getResponse().write(
 			String.format(
-				"<div style='display:inline'><input type=\"hidden\" name=\"%s\" id=\"%s\" value=\"%s\"/></div>",
+				"<div style='position: absolute; left: -9999px; width: 1px; height: 1px;'><input type='hidden' name='%s' id='%s' value='%s'/><input type='submit'/></div>",
 				id, id, value));
 	}
 
