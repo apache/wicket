@@ -2,6 +2,14 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.1.1
+
+** Bug
+    * [WICKET-4759] - FilterForm/FilterToolbar don't work when there's more than one IColumn to be filtered
+    * [WICKET-4789] - URL rendering regression
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.1.0
 
 ** Bug
