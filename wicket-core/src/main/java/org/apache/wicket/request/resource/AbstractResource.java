@@ -90,6 +90,7 @@ public abstract class AbstractResource implements IResource
 	public static class ResourceResponse
 	{
 		private Integer errorCode;
+		private Integer statusCode;
 		private String errorMessage;
 		private String fileName = null;
 		private ContentDisposition contentDisposition = ContentDisposition.INLINE;
@@ -149,6 +150,25 @@ public abstract class AbstractResource implements IResource
 		public Integer getErrorCode()
 		{
 			return errorCode;
+		}
+
+		/**
+		 * Sets the status code for resource.
+		 *
+		 * @param statusCode
+		 *            status code
+		 */
+		public void setStatusCode(Integer statusCode)
+		{
+			this.statusCode = statusCode;
+		}
+
+		/**
+		 * @return status code or <code>null</code>
+		 */
+		public Integer getStatusCode()
+		{
+			return statusCode;
 		}
 
 		/**
@@ -484,7 +504,7 @@ public abstract class AbstractResource implements IResource
 		// set response header
 		setResponseHeaders(data, attributes);
 
-		if (!data.dataNeedsToBeWritten(attributes) || data.getErrorCode() != null)
+		if (!data.dataNeedsToBeWritten(attributes) || data.getErrorCode() != null || data.getStatusCode() != null)
 		{
 			return;
 		}
@@ -548,6 +568,12 @@ public abstract class AbstractResource implements IResource
 			if (data.getErrorCode() != null)
 			{
 				webResponse.sendError(data.getErrorCode(), data.getErrorMessage());
+				return;
+			}
+
+			if (data.getStatusCode() != null)
+			{
+				webResponse.setStatus(data.getStatusCode());
 				return;
 			}
 
