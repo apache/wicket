@@ -45,7 +45,7 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 		"title",
 		"div",
 
-		// tags from pre 1.5 days, shouldnt really be here but make this release more backwards
+		// tags from pre 1.5 days, shouldn't really be here but make this release more backwards
 		// compatible
 		"span", "p",
 		"strong",
@@ -54,7 +54,7 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 		"select",
 		"col",
 
-		// New HTML5 elements (exlucding: open-close tags:
+		// New HTML5 elements (excluding: open-close tags:
 		// wbr, source, time, embed, keygen
 		// @TODO by now an exclude list is probably shorter
 		"article", "aside", "command", "details", "summary", "figure", "figcaption", "footer",
