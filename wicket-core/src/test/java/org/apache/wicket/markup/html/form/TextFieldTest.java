@@ -26,6 +26,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.junit.Test;
 
 /**
@@ -58,6 +59,24 @@ public class TextFieldTest extends WicketTestCase
 		testPage.textModel.setObject(text);
 		tester.startPage(testPage);
 		assertTrue(tester.getLastResponseAsString().contains(Strings.escapeMarkup(text)));
+	}
+
+	/**
+	 * Assert that null input is not validated.
+	 */
+	@Test
+	public void nullIsNotValidated()
+	{
+		TestPage testPage = new TestPage();
+		testPage.textField.setType(String.class);
+		testPage.textField.setRequired(false);
+		testPage.textField.add(StringValidator.minimumLength(2));
+		tester.startPage(testPage);
+		FormTester formTester = tester.newFormTester(testPage.form.getId());
+		formTester.setValue(testPage.textField.getId(), "");
+		formTester.submit();
+		assertEquals(null, testPage.textField.getDefaultModelObject());
+		assertTrue(testPage.textField.isValid());
 	}
 
 	/** */
