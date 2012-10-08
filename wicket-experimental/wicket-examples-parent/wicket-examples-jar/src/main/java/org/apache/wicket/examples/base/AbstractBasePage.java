@@ -37,11 +37,13 @@ public abstract class AbstractBasePage extends WebPage
 		Bootstrap.renderHead(response);
 		Prettify.renderHead(response);
 
-		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
-			AbstractBasePage.class, "examples.js")));
 		response.render(CssHeaderItem.forReference(new CssResourceReference(AbstractBasePage.class,
 			"docs.css")));
 		response.render(CssHeaderItem.forCSS("body { padding-top: 60px; padding-bottom: 40px; }",
 			"custom-wicket-examples"));
+
+		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
+			AbstractBasePage.class, "examples.js")));
+
 	}
 }
