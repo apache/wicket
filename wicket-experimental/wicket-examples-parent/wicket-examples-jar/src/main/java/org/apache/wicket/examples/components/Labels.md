@@ -83,7 +83,7 @@ By default, Wicket escapes all rendered text, preventing JavaScript
 injection attacks:
 
 {% highlight java %}
-    add(new Label("bad",  "<a onclick=\"alert('Booh')\">Click me</a>"));
+    add(new Label("bad",  "&lt;a onclick=\"alert('Booh')\"&gt;Click me&lt;/a&gt;"));
 {% endhighlight %}
 					
 Will render safely as the following markup:

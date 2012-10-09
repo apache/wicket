@@ -22,8 +22,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 
-import com.petebevin.markdown.MarkdownProcessor;
-
 public class MarkdownLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
@@ -48,43 +46,9 @@ public class MarkdownLabel extends Label
 	@Override
 	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		String article = getModelObjectAsUnescapedString();
-
-		MarkdownProcessor processor = new MarkdownProcessor();
-		String markup;
-		String text = processor.markdown(article);
-
-		text = processLiquidTags(text);
-
-		replaceComponentTagBody(markupStream, openTag, text);
-	}
-
-	private String processLiquidTags(String text)
-	{
-		String markup;
-		StringBuilder sb = new StringBuilder();
-
-		int previousStart = 0;
-		int start = text.indexOf("{% highlight");
-		while (start > 0)
-		{
-			int end = text.indexOf("{% endhighlight %}", start) + 18;
-			sb.append(text.substring(previousStart, start));
-
-			String codeblock = text.substring(start, end);
-
-			codeblock = escapeTags(codeblock);
-			sb.append(codeblock);
-			sb.append("\n");
-
-			previousStart = end;
-			start = text.indexOf("{% highlight", end);
-		}
-		if (previousStart < text.length())
-			sb.append(text.substring(previousStart));
-
-		markup = sb.toString();
-		return markup;
+		String markdown = getModelObjectAsUnescapedString();
+		String html = Markdown.markdownToHtml(markdown);
+		replaceComponentTagBody(markupStream, openTag, html);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -104,24 +68,5 @@ public class MarkdownLabel extends Label
 			return modelString;
 		}
 		return null;
-	}
-
-	private String escapeTags(String codeblock)
-	{
-		codeblock = codeblock.replaceAll("\\{\\% highlight (.+) \\%\\}",
-			"<pre class=\"prettyprint linenums\" lang=\"$1\">");
-		codeblock = codeblock.replaceAll("\\{\\% endhighlight \\%\\}", "</pre>");
-
-		int start = codeblock.indexOf(">") + 1;
-		int end = codeblock.indexOf("</pre>");
-		String result = codeblock.substring(start, end);
-		result = result.replaceAll("\n\\ {4}", "\n");
-		if (!codeblock.contains("\"java\""))
-		{
-			result = result.replaceAll("&", "&amp;");
-			result = result.replaceAll("<", "&lt;");
-			result = result.replaceAll(">", "&gt;");
-		}
-		return codeblock.substring(0, start) + result + "</pre>";
 	}
 }
