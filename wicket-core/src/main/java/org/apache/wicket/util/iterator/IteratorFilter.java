@@ -30,5 +30,5 @@ public abstract class IteratorFilter<S>
 	 * @param node
 	 * @return false, to filter the component. True, to continue processing the node.
 	 */
-	abstract boolean onFilter(S node);
+	abstract protected boolean onFilter(S node);
 }

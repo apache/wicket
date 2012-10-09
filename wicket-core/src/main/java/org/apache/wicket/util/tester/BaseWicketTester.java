@@ -1476,6 +1476,7 @@ public class BaseWicketTester
 	 */
 	public Component startComponent(final Component component)
 	{
+		component.internalInitialize();
 		if (component instanceof FormComponent)
 		{
 			((FormComponent<?>)component).processInput();
@@ -1801,14 +1802,22 @@ public class BaseWicketTester
 					"not be invoked when AJAX (javascript) is disabled.");
 			}
 
-			executeBehavior(WicketTesterHelper.findAjaxEventBehavior(linkComponent, "onclick"));
+			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(linkComponent, "onclick");
+			for (AjaxEventBehavior behavior : behaviors)
+			{
+				executeBehavior(behavior);
+			}
 		}
 		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
 		// If it's not handling of the linkComponent is passed through to the
 		// Link.
 		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
 		{
-			executeBehavior(WicketTesterHelper.findAjaxEventBehavior(linkComponent, "onclick"));
+			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(linkComponent, "onclick");
+			for (AjaxEventBehavior behavior : behaviors)
+			{
+				executeBehavior(behavior);
+			}
 		}
 		// if the link is an AjaxSubmitLink, we need to find the form
 		// from it using reflection so we know what to submit.
@@ -2252,9 +2261,12 @@ public class BaseWicketTester
 
 		checkUsability(component, true);
 
-		AjaxEventBehavior ajaxEventBehavior = WicketTesterHelper.findAjaxEventBehavior(component,
-			event);
-		executeBehavior(ajaxEventBehavior);
+		List<AjaxEventBehavior> ajaxEventBehaviors = WicketTesterHelper.findAjaxEventBehaviors(component,
+				event);
+		for (AjaxEventBehavior ajaxEventBehavior : ajaxEventBehaviors)
+		{
+			executeBehavior(ajaxEventBehavior);
+		}
 	}
 
 	/**
