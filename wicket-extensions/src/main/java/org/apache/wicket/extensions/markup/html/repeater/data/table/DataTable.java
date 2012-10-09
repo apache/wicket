@@ -238,6 +238,38 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	}
 
 	/**
+	 * @return the container with the toolbars at the top
+	 */
+	public final ToolbarsContainer getTopToolbars()
+	{
+		return topToolbars;
+	}
+
+	/**
+	 * @return the container with the toolbars at the bottom
+	 */
+	public final ToolbarsContainer getBottomToolbars()
+	{
+		return bottomToolbars;
+	}
+
+	/**
+	 * @return the container used for the table body
+	 */
+	public final WebMarkupContainer getBody()
+	{
+		return body;
+	}
+
+	/**
+	 * @return the component used for the table caption
+	 */
+	public final Caption getCaption()
+	{
+		return caption;
+	}
+
+	/**
 	 * @return dataprovider
 	 */
 	public final IDataProvider<T> getDataProvider()

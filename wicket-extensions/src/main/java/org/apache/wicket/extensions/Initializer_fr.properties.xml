@@ -19,4 +19,5 @@
 <properties>
 	<entry key="NavigatorLabel">Affichage de ${from} à ${to} sur ${of}</entry>
 	<entry key="datatable.no-records-found">Aucun résultat</entry>
+    <entry key="RfcCompliantEmailAddressValidator">'${label}' n'est pas une adresse e-mail valide.</entry>
 </properties>

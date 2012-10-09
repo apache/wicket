@@ -76,7 +76,7 @@ Wicket.DateTimeInit.YuiLoader.addModule({
 });
 Wicket.DateTimeInit.YuiLoader.insert();
 ;
-Wicket.DateTimeInit.CalendarI18n["de"]={MONTHS_SHORT:["Jan","Feb","Mrz","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],MONTHS_LONG:["Januar","Februar","M\u00E4rz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],WEEKDAYS_MEDIUM:["So","Mo","Di","Mi","Do","Fr","Sa"],WEEKDAYS_LONG:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],START_WEEKDAY:1,WEEKDAYS_1CHAR:["S","M","D","M","D","F","S"],WEEKDAYS_SHORT:["So","Mo","Di","Mi","Do","Fr","Sa"]};;
+Wicket.DateTimeInit.CalendarI18n["it"]={MONTHS_SHORT:["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"],MONTHS_LONG:["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"],WEEKDAYS_MEDIUM:["dom","lun","mar","mer","gio","ven","sab"],WEEKDAYS_LONG:["domenica","luned\u00EC","marted\u00EC","mercoled\u00EC","gioved\u00EC","venerd\u00EC","sabato"],START_WEEKDAY:1,WEEKDAYS_1CHAR:["d","l","m","m","g","v","s"],WEEKDAYS_SHORT:["do","lu","ma","me","gi","ve","sa"]};;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -94,8 +94,8 @@ Wicket.DateTimeInit.CalendarI18n["de"]={MONTHS_SHORT:["Jan","Feb","Mrz","Apr","M
  * limitations under the License.
  */
 Wicket.DateTimeInit.CalendarAdd(function() {
-	Wicket.DateTime.init2("dateTextField1", "dateTextField1", {close:true,selected:"xx.xx.xxxx",pagedate:"xx.xxxx"}, "dd.MM.yy",
-			true, true, true, false, Wicket.DateTimeInit.CalendarI18n["de"], false);
+	Wicket.DateTime.init2("dateTextField1", "dateTextField1", {close:true,selected:"xx/xx/xxxx",pagedate:"xx/xxxx"}, "dd/MM/yy",
+			true, true, true, false, Wicket.DateTimeInit.CalendarI18n["it"], false);
 	
 });
 ;
@@ -106,30 +106,30 @@ Wicket.DateTimeInit.CalendarAdd(function() {
 <body>
 <form wicket:id="localeForm" id="localeForm2" method="post" action="../page?0-1.IFormSubmitListener-localeForm"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="localeForm2_hf_0" id="localeForm2_hf_0" /></div>
 <p><select wicket:id="localeSelect" onchange="document.getElementById(&#039;localeForm2_hf_0&#039;).value=&#039;./page?0-1.IOnChangeListener-localeForm-localeSelect&#039;;document.getElementById(&#039;localeForm2&#039;).submit();" name="localeSelect">
-<option value="0">Chinesisch (China) (Chinese (China))</option>
-<option value="1">Chinesisch (China) (Chinese (China))</option>
-<option value="2">Chinesisch (China) (Chinese (China))</option>
-<option value="3">Chinesisch (Taiwan) (Chinese (Taiwan))</option>
-<option value="4">Chinesisch (Taiwan) (Chinese (Taiwan))</option>
-<option selected="selected" value="5">Deutsch (German)</option>
-<option value="6">Deutsch (Deutschland) (German (Germany))</option>
-<option value="7">Englisch (English)</option>
-<option value="8">Englisch (Kanada) (English (Canada))</option>
-<option value="9">Englisch (Vereinigte Staaten von Amerika) (English (United States))</option>
-<option value="10">Englisch (Vereinigtes Königreich) (English (United Kingdom))</option>
-<option value="11">Französisch (French)</option>
-<option value="12">Französisch (Frankreich) (French (France))</option>
-<option value="13">Französisch (Kanada) (French (Canada))</option>
-<option value="14">Italienisch (Italian)</option>
-<option value="15">Italienisch (Italien) (Italian (Italy))</option>
-<option value="16">Japanisch (Japanese)</option>
-<option value="17">Japanisch (Japan) (Japanese (Japan))</option>
-<option value="18">Koreanisch (Korean)</option>
-<option value="19">Koreanisch (Südkorea) (Korean (South Korea))</option>
+<option value="0">cinese (Cina) (Chinese (China))</option>
+<option value="1">cinese (Cina) (Chinese (China))</option>
+<option value="2">cinese (Cina) (Chinese (China))</option>
+<option value="3">cinese (Taiwan) (Chinese (Taiwan))</option>
+<option value="4">cinese (Taiwan) (Chinese (Taiwan))</option>
+<option value="5">coreano (Korean)</option>
+<option value="6">coreano (Corea del Sud) (Korean (South Korea))</option>
+<option value="7">francese (French)</option>
+<option value="8">francese (Canada) (French (Canada))</option>
+<option value="9">francese (Francia) (French (France))</option>
+<option value="10">giapponese (Japanese)</option>
+<option value="11">giapponese (Giappone) (Japanese (Japan))</option>
+<option value="12">inglese (English)</option>
+<option value="13">inglese (Canada) (English (Canada))</option>
+<option value="14">inglese (Regno Unito) (English (United Kingdom))</option>
+<option value="15">inglese (Stati Uniti) (English (United States))</option>
+<option selected="selected" value="16">italiano (Italian)</option>
+<option value="17">italiano (Italia) (Italian (Italy))</option>
+<option value="18">tedesco (German)</option>
+<option value="19">tedesco (Germania) (German (Germany))</option>
 </select> [<a href="../page?0-1.ILinkListener-localeForm-localeUSLink" wicket:id="localeUSLink">set to english</a>]</p>
 </form>
 <p>
-<form wicket:id="form" id="form3" method="post" action="../page?0-1.IFormSubmitListener-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form3_hf_0" id="form3_hf_0" /></div><input type="text" wicket:id="dateTextField" value="xx.xx.xx" name="dateTextField" id="dateTextField1"/>
+<form wicket:id="form" id="form3" method="post" action="../page?0-1.IFormSubmitListener-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form3_hf_0" id="form3_hf_0" /></div><input type="text" wicket:id="dateTextField" value="xx/xx/xx" name="dateTextField" id="dateTextField1"/>
 <span class="yui-skin-sam">&nbsp;<span style="display:none;position:absolute;z-index: 99999;" id="dateTextField1Dp"></span><img style="cursor: pointer; border: none;" id="dateTextField1Icon" src="../resource/org.apache.wicket.extensions.yui.calendar.DatePicker/icon1.gif" alt="" title=""/></span> <input type="submit" value="submit" /></form>
 </p>
 <p>

@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -208,10 +209,29 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				attributes.setEventNames("change");
-				attributes.getExtraParameters().put("save", "true");
-				List<CharSequence> dynamicParameters = attributes.getDynamicExtraParameters();
-				dynamicParameters.add("return Wicket.Form.serializeElement(attrs.c)");
+				attributes.setEventNames("change", "blur", "keyup");
+
+				CharSequence dynamicExtraParameters = "var result = [], "
+						+ "kc=Wicket.Event.keyCode(attrs.event),"
+						+ "evtType=attrs.event.type;console.log(evtType);"
+						+ "if (evtType === 'blur' || (evtType === 'keyup' && kc===27)) {"
+						+ "  result.push( { name: 'save', value: false } );"
+						+ "}"
+						+ "else {"
+						+ "  result = Wicket.Form.serializeElement(attrs.c);"
+						+ "  result.push( { name: 'save', value: true } );"
+						+ "}"
+						+ "return result;";
+				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
+
+				CharSequence precondition = "var kc=Wicket.Event.keyCode(attrs.event),"
+						+ "evtType=attrs.event.type,"
+						+ "ret=false;"
+						+ "if(evtType==='blur' || evtType==='change' || (evtType==='keyup' && kc===27)) ret = true;"
+						+ "return ret;";
+				AjaxCallListener ajaxCallListener = new AjaxCallListener();
+				ajaxCallListener.onPrecondition(precondition);
+				attributes.getAjaxCallListeners().add(ajaxCallListener);
 			}
 		});
 		return editor;

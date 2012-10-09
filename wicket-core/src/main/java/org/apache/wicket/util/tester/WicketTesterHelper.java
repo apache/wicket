@@ -165,13 +165,36 @@ public class WicketTesterHelper
 	}
 
 	/**
+	 * Finds the first AjaxEventBehavior attached to the specified component with the
+	 * specified event.
+	 *
 	 * @param component
 	 * @param event
-	 * @return AjaxEventBehavior or null
+	 * @return the first behavior for this event, or {@code null}
 	 */
 	public static AjaxEventBehavior findAjaxEventBehavior(Component component, String event)
 	{
+		List<AjaxEventBehavior> behaviors = findAjaxEventBehaviors(component, event);
+		AjaxEventBehavior behavior = null;
+		if (behaviors != null)
+		{
+			behavior = behaviors.get(0);
+		}
+		return behavior;
+	}
+
+	/**
+	 * Finds all AjaxEventBehavior's attached  to the specified component with
+	 * the specified event.
+	 *
+	 * @param component
+	 * @param event
+	 * @return a list of all found AjaxEventBehavior or an empty list
+	 */
+	public static List<AjaxEventBehavior> findAjaxEventBehaviors(Component component, String event)
+	{
 		Args.notEmpty(event, "event");
+		List<AjaxEventBehavior> behaviors = new ArrayList<AjaxEventBehavior>();
 		String[] eventNames = Strings.split(event, ' ');
 		for (String eventName : eventNames)
 		{
@@ -194,13 +217,13 @@ public class WicketTesterHelper
 						}
 						if (eventName.equalsIgnoreCase(behaviorEventName))
 						{
-							return (AjaxEventBehavior)behavior;
+							behaviors.add((AjaxEventBehavior)behavior);
 						}
 					}
 				}
 			}
 		}
-		return null;
+		return behaviors;
 	}
 
 	/**

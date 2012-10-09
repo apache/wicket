@@ -122,7 +122,7 @@ public class ComponentHierarchyIterator extends
 		getFilters().add(new IteratorFilter<Component>()
 		{
 			@Override
-			boolean onFilter(final Component component)
+			protected boolean onFilter(final Component component)
 			{
 				if (component instanceof MarkupContainer)
 				{
@@ -148,7 +148,7 @@ public class ComponentHierarchyIterator extends
 			getFilters().add(new IteratorFilter<Component>()
 			{
 				@Override
-				boolean onFilter(Component component)
+				protected boolean onFilter(Component component)
 				{
 					return clazz.isInstance(component);
 				}

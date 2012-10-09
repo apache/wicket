@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -43,10 +44,7 @@ public final class BreadCrumbModelListenerSupport implements IClusterable
 	 */
 	public final void addListener(final IBreadCrumbModelListener listener)
 	{
-		if (listener == null)
-		{
-			throw new IllegalArgumentException("argument listener must be not null");
-		}
+		Args.notNull(listener, "listener");
 		listeners.add(listener);
 	}
 
@@ -62,9 +60,9 @@ public final class BreadCrumbModelListenerSupport implements IClusterable
 	public final void fireBreadCrumbActivated(final IBreadCrumbParticipant previousParticipant,
 		final IBreadCrumbParticipant breadCrumbParticipant)
 	{
-		for (IBreadCrumbModelListener listener1 : listeners)
+		for (IBreadCrumbModelListener listener : listeners)
 		{
-			listener1.breadCrumbActivated(previousParticipant, breadCrumbParticipant);
+			listener.breadCrumbActivated(previousParticipant, breadCrumbParticipant);
 		}
 	}
 

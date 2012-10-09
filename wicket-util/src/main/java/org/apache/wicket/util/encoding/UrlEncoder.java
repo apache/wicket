@@ -245,7 +245,7 @@ public class UrlEncoder
 	}
 
 	/**
-	 * @param s
+	 * @param unsafeInput
 	 *            string to encode
 	 * @param charsetName
 	 *            encoding to use
