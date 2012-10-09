@@ -1249,7 +1249,7 @@
 				if (select) {
 					var $select = jQuery(select);
 					if ($select.length > 0 && $select.prop('disabled') === false) {
-						var name = $select.attr('name');
+						var name = $select.prop('name');
 						var values = $select.val();
 						if (jQuery.isArray(values)) {
 							for (var v = 0; v < values.length; v++) {
