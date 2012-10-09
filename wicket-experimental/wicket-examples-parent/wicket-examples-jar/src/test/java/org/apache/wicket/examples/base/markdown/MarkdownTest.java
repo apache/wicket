@@ -31,7 +31,7 @@ public class MarkdownTest
 	public void testAlert()
 	{
 		String html = Markdown.markdownToHtml("{% alert %}Boo{% endalert %}");
-		Assert.assertEquals("<p><div class=\"alert alert-info\">\nBoo\n</div>\n</p>\n", html);
+		Assert.assertEquals("<p><div class=\"alert alert-info\">Boo</div>\n</p>\n", html);
 	}
 
 	@Test
@@ -43,11 +43,11 @@ public class MarkdownTest
 			+ "sole parameter—otherwise Wicket will not be able to create an\n"
 			+ "instance of your page.\n" + "{% endalert %}\n");
 
-		Assert.assertEquals("<p><div class=\"alert alert-info\">\n\n"
+		Assert.assertEquals("<p><div class=\"alert alert-info\">\n"
 			+ "The constructor of the page you are linking to needs to be either a\n"
 			+ "default constructor or a constructor taking <code>PageParameters</code> as the\n"
 			+ "sole parameter—otherwise Wicket will not be able to create an\n"
-			+ "instance of your page.\n\n" + "</div>\n</p>\n", html);
+			+ "instance of your page.\n" + "</div>\n</p>\n", html);
 	}
 
 	@Test
