@@ -289,7 +289,7 @@ public class ObjectChecker extends ObjectOutputStream
 	private final Map<Object, Object> checked = new IdentityHashMap<Object, Object>();
 
 	/** string stack with current names pushed. */
-	private final LinkedList<String> nameStack = new LinkedList<String>();
+	private final LinkedList<CharSequence> nameStack = new LinkedList<CharSequence>();
 
 	/** root object being analyzed. */
 	private Object root;
@@ -298,7 +298,7 @@ public class ObjectChecker extends ObjectOutputStream
 	private final Set<Class<?>> writeObjectMethodMissing = new HashSet<Class<?>>();
 
 	/** current simple field name. */
-	private String simpleName = "";
+	private CharSequence simpleName = "";
 
 	/** current full field description. */
 	private String fieldDescription;
@@ -308,6 +308,8 @@ public class ObjectChecker extends ObjectOutputStream
 	/**
 	 * Constructor.
 	 *
+	 * @param checkers
+	 *      the {@link IObjectChecker checkers} that will actually check the objects
 	 * @throws IOException
 	 * @throws SecurityException
 	 */
@@ -332,8 +334,8 @@ public class ObjectChecker extends ObjectOutputStream
 		}
 		catch (RuntimeException e)
 		{
-			log.warn("Wasn't possible to check the object " + obj.getClass() +
-					" possible due an problematic implementation of equals method");
+			log.warn("Wasn't possible to check the object '{}' possible due an problematic " +
+					"implementation of equals method", obj.getClass());
 			/*
 			 * Can't check if this obj were in stack, giving up because we don't want to throw an
 			 * invaluable exception to user. The main goal of this checker is to find non
@@ -422,7 +424,7 @@ public class ObjectChecker extends ObjectOutputStream
 				Object[] objs = (Object[])obj;
 				for (int i = 0; i < objs.length; i++)
 				{
-					String arrayPos = "[" + i + "]";
+					CharSequence arrayPos = new StringBuilder(4).append('[').append(i).append(']');
 					simpleName = arrayPos;
 					fieldDescription += arrayPos;
 					check(objs[i]);
@@ -448,7 +450,7 @@ public class ObjectChecker extends ObjectOutputStream
 						}
 
 						checked.put(streamObj, null);
-						String arrayPos = "[write:" + count++ + "]";
+						CharSequence arrayPos = new StringBuilder(10).append("[write:").append(count++).append(']');
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
 
@@ -462,8 +464,7 @@ public class ObjectChecker extends ObjectOutputStream
 				{
 					throw (WicketNotSerializableException)e;
 				}
-				log.warn("error delegating to Externalizable : " + e.getMessage() + ", path: " +
-						currentPath());
+				log.warn("error delegating to Externalizable : {}, path: {}", e.getMessage(), currentPath());
 			}
 		}
 		else
@@ -517,7 +518,7 @@ public class ObjectChecker extends ObjectOutputStream
 						}
 
 						checked.put(streamObj, null);
-						String arrayPos = "[write:" + counter + "]";
+						CharSequence arrayPos = new StringBuilder(10).append("[write:").append(counter).append(']');
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
 						check(streamObj);
@@ -535,8 +536,7 @@ public class ObjectChecker extends ObjectOutputStream
 					{
 						throw (WicketNotSerializableException)e;
 					}
-					log.warn("error delegating to writeObject : " + e.getMessage() + ", path: " +
-							currentPath());
+					log.warn("error delegating to writeObject : {}, path: {}", e.getMessage(), currentPath());
 				}
 			}
 			else
@@ -638,7 +638,6 @@ public class ObjectChecker extends ObjectOutputStream
 					throw new RuntimeException(e);
 				}
 
-				field.getName();
 				simpleName = field.getName();
 				fieldDescription = field.toString();
 				check(objVals[i]);
@@ -652,7 +651,7 @@ public class ObjectChecker extends ObjectOutputStream
 	private StringBuilder currentPath()
 	{
 		StringBuilder b = new StringBuilder();
-		for (Iterator<String> it = nameStack.iterator(); it.hasNext();)
+		for (Iterator<CharSequence> it = nameStack.iterator(); it.hasNext();)
 		{
 			b.append(it.next());
 			if (it.hasNext())
@@ -679,15 +678,15 @@ public class ObjectChecker extends ObjectOutputStream
 		result.append("\nField hierarchy is:");
 		for (TraceSlot slot : traceStack)
 		{
-			spaces.append("  ");
-			result.append("\n").append(spaces).append(slot.fieldDescription);
+			spaces.append(' ').append(' ');
+			result.append('\n').append(spaces).append(slot.fieldDescription);
 			result.append(" [class=").append(slot.object.getClass().getName());
 			if (slot.object instanceof Component)
 			{
 				Component component = (Component)slot.object;
 				result.append(", path=").append(component.getPath());
 			}
-			result.append("]");
+			result.append(']');
 		}
 		result.append(" <----- field that is causing the problem");
 		return result.toString();
