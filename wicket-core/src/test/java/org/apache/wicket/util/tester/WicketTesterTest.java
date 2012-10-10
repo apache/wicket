@@ -59,7 +59,9 @@ import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
@@ -1172,13 +1174,41 @@ public class WicketTesterTest extends WicketTestCase
 	 * Clicking on ResourceLink should deliver the resource content
 	 */
 	@Test
-	public void clickResourceLink()
+	public void clickResourceLinkWithResource()
 	{
 		MockPageWithLink page = new MockPageWithLink();
 		String content = "content";
 		ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
 			"fileName.txt");
 		ResourceLink<Void> link = new ResourceLink<Void>(MockPageWithLink.LINK_ID, resource);
+		page.add(link);
+		tester.startPage(page);
+		tester.clickLink(MockPageWithLink.LINK_ID, false);
+		assertEquals(tester.getContentTypeFromResponseHeader(), "text/plain");
+		assertEquals(content, tester.getLastResponseAsString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4810
+	 *
+	 * Clicking on ResourceLink should deliver the resource reference's content
+	 */
+	@Test
+	public void clickResourceLinkWithResourceReference()
+	{
+		MockPageWithLink page = new MockPageWithLink();
+		String content = "content";
+		final ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
+				"fileName.txt");
+		ResourceReference reference = new ResourceReference(WicketTesterTest.class, "resourceLinkWithResourceReferenceTest")
+		{
+			@Override
+			public IResource getResource()
+			{
+				return resource;
+			}
+		};
+		ResourceLink<Void> link = new ResourceLink<Void>(MockPageWithLink.LINK_ID, reference);
 		page.add(link);
 		tester.startPage(page);
 		tester.clickLink(MockPageWithLink.LINK_ID, false);
