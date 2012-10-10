@@ -41,14 +41,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.IRequestListener;
-import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
@@ -1941,7 +1939,6 @@ public class BaseWicketTester
 				BookmarkablePageLink<?> bookmarkablePageLink = (BookmarkablePageLink<?>)link;
 				try
 				{
-					BookmarkablePageLink.class.getDeclaredField("parameters");
 					Method getParametersMethod = BookmarkablePageLink.class.getDeclaredMethod(
 						"getPageParameters", (Class<?>[])null);
 					getParametersMethod.setAccessible(true);
@@ -1959,7 +1956,17 @@ public class BaseWicketTester
 			}
 			else if (link instanceof ResourceLink)
 			{
-				executeListener(link, IResourceListener.INTERFACE);
+				try
+				{
+					Method getURL = ResourceLink.class.getDeclaredMethod("getURL", new Class[0]);
+					getURL.setAccessible(true);
+					CharSequence url = (CharSequence) getURL.invoke(link);
+					executeUrl(url.toString());
+				}
+				catch (Exception x)
+				{
+					throw new RuntimeException("An error occurred while clicking on a ResourceLink", x);
+				}
 			}
 			else
 			{
