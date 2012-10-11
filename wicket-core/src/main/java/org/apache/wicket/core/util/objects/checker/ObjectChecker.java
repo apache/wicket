@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.core.util.objects.checker;
 
 import java.io.Externalizable;
@@ -42,25 +58,7 @@ public class ObjectChecker extends ObjectOutputStream
 
 	public static class ObjectCheckException extends WicketRuntimeException
 	{
-		public ObjectCheckException(String message)
-		{
-			super(message);
-		}
-
 		public ObjectCheckException(String message, Throwable cause)
-		{
-			super(message, cause);
-		}
-	}
-
-	/**
-	 * Exception that is thrown when a non-serializable object was found.
-	 */
-	public static class WicketNotSerializableException extends WicketRuntimeException
-	{
-		private static final long serialVersionUID = 1L;
-
-		protected WicketNotSerializableException(String message, Throwable cause)
 		{
 			super(message, cause);
 		}
@@ -190,7 +188,6 @@ public class ObjectChecker extends ObjectOutputStream
 
 		TraceSlot(Object object, String fieldDescription)
 		{
-			super();
 			this.object = object;
 			this.fieldDescription = fieldDescription;
 		}
@@ -282,7 +279,7 @@ public class ObjectChecker extends ObjectOutputStream
 		return available;
 	}
 
-	/** object stack that with the trace path. */
+	/** object stack with the trace path. */
 	private final LinkedList<TraceSlot> traceStack = new LinkedList<TraceSlot>();
 
 	/** set for checking circular references. */
@@ -371,18 +368,9 @@ public class ObjectChecker extends ObjectOutputStream
 			IObjectChecker.Result result = checker.check(obj);
 			if (result.status == IObjectChecker.Result.Status.FAILURE)
 			{
-				ObjectCheckException ocx;
 				String prettyPrintMessage = toPrettyPrintedStack(Classes.name(cls));
 				String exceptionMessage = result.reason + '\n' + prettyPrintMessage;
-				if (result.cause != null)
-				{
-					ocx = new ObjectCheckException(exceptionMessage, result.cause);
-				}
-				else
-				{
-					ocx = new ObjectCheckException(exceptionMessage);
-				}
-				throw ocx;
+				throw new ObjectCheckException(exceptionMessage, result.cause);
 			}
 		}
 
@@ -460,11 +448,11 @@ public class ObjectChecker extends ObjectOutputStream
 			}
 			catch (Exception e)
 			{
-				if (e instanceof WicketNotSerializableException)
+				if (e instanceof ObjectCheckException)
 				{
-					throw (WicketNotSerializableException)e;
+					throw (ObjectCheckException)e;
 				}
-				log.warn("error delegating to Externalizable : {}, path: {}", e.getMessage(), currentPath());
+				log.warn("Error delegating to Externalizable : {}, path: {}", e.getMessage(), currentPath());
 			}
 		}
 		else
@@ -532,9 +520,9 @@ public class ObjectChecker extends ObjectOutputStream
 				}
 				catch (Exception e)
 				{
-					if (e instanceof WicketNotSerializableException)
+					if (e instanceof ObjectCheckException)
 					{
-						throw (WicketNotSerializableException)e;
+						throw (ObjectCheckException)e;
 					}
 					log.warn("error delegating to writeObject : {}, path: {}", e.getMessage(), currentPath());
 				}
@@ -671,8 +659,8 @@ public class ObjectChecker extends ObjectOutputStream
 	 */
 	protected final String toPrettyPrintedStack(String type)
 	{
-		StringBuilder result = new StringBuilder();
-		StringBuilder spaces = new StringBuilder();
+		StringBuilder result = new StringBuilder(512);
+		StringBuilder spaces = new StringBuilder(32);
 		result.append("A problem occurred while checking object with type: ");
 		result.append(type);
 		result.append("\nField hierarchy is:");
@@ -680,7 +668,7 @@ public class ObjectChecker extends ObjectOutputStream
 		{
 			spaces.append(' ').append(' ');
 			result.append('\n').append(spaces).append(slot.fieldDescription);
-			result.append(" [class=").append(slot.object.getClass().getName());
+			result.append(" [class=").append(Classes.name(slot.object.getClass()));
 			if (slot.object instanceof Component)
 			{
 				Component component = (Component)slot.object;

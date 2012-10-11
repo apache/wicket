@@ -39,15 +39,12 @@ public class SerializableChecker extends ObjectChecker
 {
 	/**
 	 * Exception that is thrown when a non-serializable object was found.
-	 * @deprecated Use ObjectChecker.WicketNotSerializableException instead
 	 */
-	// TODO Wicket 7.0 - remove this class. It is here only for backward binary compatibility
-	@Deprecated
-	public static final class WicketNotSerializableException extends ObjectChecker.WicketNotSerializableException
+	public static final class WicketNotSerializableException extends ObjectCheckException
 	{
 		private static final long serialVersionUID = 1L;
 
-		WicketNotSerializableException(String message, Throwable cause)
+		private WicketNotSerializableException(String message, Throwable cause)
 		{
 			super(message, cause);
 		}
