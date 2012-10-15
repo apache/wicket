@@ -32,6 +32,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Tests the WebClientInfo class
@@ -39,6 +40,8 @@ import org.junit.Test;
 public class WebClientInfoTest
 {
 	private RequestCycle requestCycleMock;
+	private ServletWebRequest webRequest;
+	private HttpServletRequest servletRequest;
 
 	/**
 	 * Prepare RequestCycle to be able to extract the remote address of the client
@@ -48,10 +51,10 @@ public class WebClientInfoTest
 	{
 		requestCycleMock = mock(RequestCycle.class);
 
-		ServletWebRequest webRequest = mock(ServletWebRequest.class);
+		webRequest = mock(ServletWebRequest.class);
 		when(requestCycleMock.getRequest()).thenReturn(webRequest);
 
-		HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+		servletRequest = mock(HttpServletRequest.class);
 		when(webRequest.getContainerRequest()).thenReturn(servletRequest);
 	}
 
@@ -729,4 +732,73 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 		}
 	}
+
+	/**
+	 * Test X-Forwarded-For ip address extraction.
+	 */
+	@Test
+	public void testExtractFromXForwardedForHeader()
+	{
+		String expected = "127.0.0.1";
+		when(webRequest.getHeader("X-Forwarded-For")).thenReturn(expected);
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+		Mockito.verifyZeroInteractions(servletRequest);
+	}
+
+	/**
+	 * Test X-Forwarded-For ip address extraction with fallback when no ip is contained.
+	 */
+	@Test
+	public void testExtractFromContainerRequestUnknownXForwardedFor()
+	{
+		String expected = "10.17.37.8";
+		when(servletRequest.getRemoteAddr()).thenReturn(expected);
+		when(webRequest.getHeader("X-Forwarded-For")).thenReturn("unknown");
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	/**
+	 * Test default ip address extraction for container request.
+	 */
+	@Test
+	public void testExtractFromContainerRequestNoXForwardedFor()
+	{
+		String expected = "10.17.37.8";
+		when(servletRequest.getRemoteAddr()).thenReturn(expected);
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	/**
+	 * Test X-Forwarded-For ip address extraction when proxy chain is given.
+	 */
+	@Test
+	public void testExtractFromXForwardedForHeaderChainedIps()
+	{
+		String expected = "10.17.37.156";
+		when(servletRequest.getRemoteAddr()).thenReturn("10.17.1.1");
+		when(webRequest.getHeader("X-Forwarded-For")).thenReturn(expected + ", 10.17.37.1");
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	/**
+	 * Test X-Forwarded-For ipv6 address extraction.
+	 */
+	@Test
+	public void testExtractFromXForwardedForHeaderIPv6()
+	{
+		String expected = "2001:db8::1428:57";
+		when(webRequest.getHeader("X-Forwarded-For")).thenReturn("2001:db8::1428:57");
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+	}
+
 }
