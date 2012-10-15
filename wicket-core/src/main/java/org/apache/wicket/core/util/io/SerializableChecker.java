@@ -21,6 +21,7 @@ import java.io.NotSerializableException;
 import java.io.Serializable;
 import java.lang.reflect.Proxy;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.objects.checker.AbstractObjectChecker;
 import org.apache.wicket.core.util.objects.checker.ObjectChecker;
 
@@ -42,7 +43,7 @@ public class SerializableChecker extends ObjectChecker
 	 * @deprecated ObjectCheckException is thrown instead
 	 */
 	@Deprecated
-	public static final class WicketNotSerializableException extends ObjectCheckException
+	public static final class WicketNotSerializableException extends WicketRuntimeException
 	{
 		private static final long serialVersionUID = 1L;
 
