@@ -99,6 +99,15 @@ public interface IObjectChecker
 			this.reason = reason;
 			this.cause = cause;
 		}
+
+		@Override
+		public String toString()
+		{
+			return "Result{" +
+					"reason='" + reason + '\'' +
+					", status=" + status +
+					'}';
+		}
 	}
 
 	/**

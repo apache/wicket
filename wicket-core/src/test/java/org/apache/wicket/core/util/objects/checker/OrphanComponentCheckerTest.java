@@ -16,32 +16,29 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Assert;
+import org.apache.wicket.TestPage_1;
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebPage;
 import org.junit.Test;
 
 /**
- * Tests for AbstractObjectChecker
+ * Tests for OrphanComponentChecker
  */
-public class AbstractObjectCheckerTest extends Assert
+public class OrphanComponentCheckerTest extends WicketTestCase
 {
 	@Test
-	public void doCheckIsNotCalledForExcludedTypes()
+	public void checkOrphanComponent()
 	{
-		List exclusions = Arrays.asList(CharSequence.class);
+		WebComponent component = new WebComponent("a");
+		IObjectChecker checker = new OrphanComponentChecker();
+		IObjectChecker.Result result = checker.check(component);
+		assertEquals(IObjectChecker.Result.Status.FAILURE, result.status);
+		assertEquals("A component without a parent is detected.", result.reason);
 
-		IObjectChecker checker = new AbstractObjectChecker(exclusions)
-		{
-			@Override
-			protected Result doCheck(Object object)
-			{
-				throw new AssertionError("Must not be called");
-			}
-		};
-
-		IObjectChecker.Result result = checker.check("A String. It's type is excluded by CharSequence");
-		assertEquals(IObjectChecker.Result.SUCCESS, result);
+		WebPage parent = new TestPage_1();
+		parent.add(component);
+		IObjectChecker.Result result2 = checker.check(component);
+		assertEquals(IObjectChecker.Result.SUCCESS, result2);
 	}
 }
