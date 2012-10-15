@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.request.IRequestHandler;
@@ -239,7 +240,11 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 			if (token1Unused && token2Unused)
 			{
-				JavaScriptUtils.writeJavaScriptUrl(getResponse(), url, id, defer,
+				boolean isAjax = AjaxRequestTarget.get() != null;
+				// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
+				CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
+
+				JavaScriptUtils.writeJavaScriptUrl(getResponse(), escapedUrl, id, defer,
 					charset);
 				markRendered(token1);
 				if (token2 != null)
