@@ -512,21 +512,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>clirr-maven-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<comparisonVersion>6.0.0</comparisonVersion>
-					<failOnError>true</failOnError>
-					<logResults>true</logResults>
-				</configuration>
-				<executions>
-					<execution>
-						<id>clirr-check</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -787,6 +772,25 @@
 						<execution>
 							<goals>
 								<goal>compress</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>clirr-maven-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<comparisonVersion>6.0.0</comparisonVersion>
+						<failOnError>true</failOnError>
+						<logResults>true</logResults>
+					</configuration>
+					<executions>
+						<execution>
+							<id>clirr-check</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>check</goal>
 							</goals>
 						</execution>
 					</executions>
