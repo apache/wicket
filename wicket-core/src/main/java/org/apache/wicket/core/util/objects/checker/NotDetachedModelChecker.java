@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
+import java.util.List;
+
 import org.apache.wicket.model.LoadableDetachableModel;
 
 /**
@@ -23,10 +25,33 @@ import org.apache.wicket.model.LoadableDetachableModel;
  * result when the checked object is a {@link LoadableDetachableModel}
  * and it is model object is still attached.
  */
-public class NotDetachedModelChecker implements IObjectChecker
+public class NotDetachedModelChecker extends AbstractObjectChecker
 {
+	/**
+	 * Constructor.
+	 *
+	 * Checks all passed objects.
+	 */
+	public NotDetachedModelChecker()
+	{
+		super();
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * Checks objects which types are not excluded.
+	 *
+	 * @param exclusions
+	 *      a list of types which should not be checked
+	 */
+	public NotDetachedModelChecker(List<Class<?>> exclusions)
+	{
+		super(exclusions);
+	}
+
 	@Override
-	public Result check(Object obj)
+	public Result doCheck(Object obj)
 	{
 		Result result = Result.SUCCESS;
 

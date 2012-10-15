@@ -21,7 +21,7 @@ import java.io.NotSerializableException;
 import java.io.Serializable;
 import java.lang.reflect.Proxy;
 
-import org.apache.wicket.core.util.objects.checker.IObjectChecker;
+import org.apache.wicket.core.util.objects.checker.AbstractObjectChecker;
 import org.apache.wicket.core.util.objects.checker.ObjectChecker;
 
 
@@ -39,7 +39,9 @@ public class SerializableChecker extends ObjectChecker
 {
 	/**
 	 * Exception that is thrown when a non-serializable object was found.
+	 * @deprecated ObjectCheckException is thrown instead
 	 */
+	@Deprecated
 	public static final class WicketNotSerializableException extends ObjectCheckException
 	{
 		private static final long serialVersionUID = 1L;
@@ -54,7 +56,7 @@ public class SerializableChecker extends ObjectChecker
 	 * An implementation of IObjectChecker that checks whether the object
 	 * implements {@link Serializable} interface
 	 */
-	public static class ObjectSerializationChecker implements IObjectChecker
+	public static class ObjectSerializationChecker extends AbstractObjectChecker
 	{
 		/** Exception that should be set as the cause when throwing a new exception. */
 		private final NotSerializableException cause;
@@ -80,6 +82,12 @@ public class SerializableChecker extends ObjectChecker
 			this.cause = cause;
 		}
 
+		/**
+		 * Makes the check for all objects. Exclusions by type is not supported.
+		 * @param object
+		 *      the object to check
+		 * @return the {@link Result#SUCCESS} if the object can be serialized.
+		 */
 		@Override
 		public Result check(Object object)
 		{

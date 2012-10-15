@@ -98,4 +98,18 @@ public class JavaSerializerTest extends WicketTestCase
 	}
 
 	private static class NotSerializableObject {}
+
+	@Test
+	public void normal()
+	{
+		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest-normal") {
+			@Override
+			protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
+			{
+				return new ObjectCheckerObjectOutputStream(out);
+			}
+		};
+		byte[] bytes = serializer.serialize("Something to serialize");
+		System.err.println("bytes: " + bytes.length);
+	}
 }

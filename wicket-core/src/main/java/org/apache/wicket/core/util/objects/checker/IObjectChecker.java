@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
+import java.util.List;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -107,4 +109,9 @@ public interface IObjectChecker
 	 * @return a Result object describing whether the check is successful or not
 	 */
 	Result check(Object object);
+
+	/**
+	 * @return A list of types which should not be checked by this checker
+	 */
+	List<Class<?>> getExclusions();
 }
