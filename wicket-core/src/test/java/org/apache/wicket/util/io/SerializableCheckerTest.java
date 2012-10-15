@@ -24,7 +24,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.wicket.core.util.io.SerializableChecker;
-import org.apache.wicket.core.util.io.SerializableChecker.WicketNotSerializableException;
+import org.apache.wicket.core.util.objects.checker.ObjectChecker;
 import org.apache.wicket.util.Log4jEventHistory;
 import org.apache.wicket.util.value.ValueMap;
 import org.junit.Assert;
@@ -58,7 +58,7 @@ public class SerializableCheckerTest extends Assert
 	@Test
 	public void runtimeExceptionTolerance() throws IOException
 	{
-		Logger logger = LogManager.getLogger(SerializableChecker.class);
+		Logger logger = LogManager.getLogger(ObjectChecker.class);
 		logger.setLevel(Level.WARN);
 		Log4jEventHistory logHistory = new Log4jEventHistory();
 		logger.addAppender(logHistory);
@@ -67,33 +67,13 @@ public class SerializableCheckerTest extends Assert
 		try
 		{
 			serializableChecker.writeObject(new TestType1());
-			String expectedMessage = "Wasn't possible to check the object class org.apache.wicket.util.io.SerializableCheckerTest$ProblematicType possible due an problematic implementation of equals method";
+			String expectedMessage = "Wasn't possible to check the object 'class org.apache.wicket.util.io.SerializableCheckerTest$ProblematicType' possible due an problematic implementation of equals method";
 			assertTrue(logHistory.contains(Level.WARN, expectedMessage));
 		}
 		catch (TestException notMeaningfulException)
 		{
 			fail("Should have just logged on console, the checker is after another problem");
 		}
-	}
-
-	/**
-	 * @throws IOException
-	 */
-	@Test
-	public void nonSerializableTypeDetection() throws IOException
-	{
-		SerializableChecker serializableChecker = new SerializableChecker(
-			new NotSerializableException());
-		String exceptionMessage = null;
-		try
-		{
-			serializableChecker.writeObject(new TestType2());
-		}
-		catch (WicketNotSerializableException e)
-		{
-			exceptionMessage = e.getMessage();
-		}
-		assertTrue(exceptionMessage.contains(NonSerializableType.class.getName()));
 	}
 
 	private static class TestType1 implements Serializable

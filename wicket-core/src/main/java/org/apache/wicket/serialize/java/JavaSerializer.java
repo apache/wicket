@@ -31,6 +31,8 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.core.util.io.SerializableChecker;
+import org.apache.wicket.core.util.objects.checker.IObjectChecker;
+import org.apache.wicket.core.util.objects.checker.ObjectChecker;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.io.IOUtils;
@@ -172,7 +174,7 @@ public class JavaSerializer implements ISerializer
 	 */
 	protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 	{
-		return new CheckerObjectOutputStream(out);
+		return new SerializationCheckerObjectOutputStream(out);
 	}
 
 	/**
@@ -234,11 +236,11 @@ public class JavaSerializer implements ISerializer
 	 * Write objects to the wrapped output stream and log a meaningful message for serialization
 	 * problems
 	 */
-	private static class CheckerObjectOutputStream extends ObjectOutputStream
+	private static class SerializationCheckerObjectOutputStream extends ObjectOutputStream
 	{
 		private final ObjectOutputStream oos;
 
-		public CheckerObjectOutputStream(OutputStream out) throws IOException
+		public SerializationCheckerObjectOutputStream(OutputStream out) throws IOException
 		{
 			oos = new ObjectOutputStream(out);
 		}
@@ -252,7 +254,7 @@ public class JavaSerializer implements ISerializer
 			}
 			catch (NotSerializableException nsx)
 			{
-				if (SerializableChecker.isAvailable())
+				if (ObjectChecker.isAvailable())
 				{
 					// trigger serialization again, but this time gather
 					// some more info
@@ -262,6 +264,60 @@ public class JavaSerializer implements ISerializer
 					throw nsx;
 				}
 				throw nsx;
+			}
+			catch (Exception e)
+			{
+				log.error("error writing object " + obj + ": " + e.getMessage(), e);
+				throw new WicketRuntimeException(e);
+			}
+		}
+
+		@Override
+		public void flush() throws IOException
+		{
+			oos.flush();
+		}
+
+		@Override
+		public void close() throws IOException
+		{
+			oos.close();
+		}
+	}
+
+	/**
+	 * An ObjectOutputStream that uses {@link IObjectChecker IObjectChecker}s to check the
+	 * state of the object before serializing it. If the checker returns
+	 * {@link org.apache.wicket.core.util.objects.checker.IObjectChecker.Result.Status#FAILURE}
+	 * then the serialization process is stopped and the error is logged.
+	 */
+	public static class ObjectCheckerObjectOutputStream extends ObjectOutputStream
+	{
+		private final ObjectOutputStream oos;
+
+		/**
+		 * The {@link IObjectChecker checkers} to use during the serialization
+		 */
+		private final IObjectChecker[] checkers;
+
+		public ObjectCheckerObjectOutputStream(OutputStream out, IObjectChecker... checkers) throws IOException
+		{
+			oos = new ObjectOutputStream(out);
+			this.checkers = checkers;
+		}
+
+		@Override
+		protected final void writeObjectOverride(Object obj) throws IOException
+		{
+			try
+			{
+				if (ObjectChecker.isAvailable())
+				{
+					ObjectChecker checker = new ObjectChecker(checkers);
+					checker.writeObject(obj);
+				}
+
+				oos.writeObject(obj);
 			}
 			catch (Exception e)
 			{
