@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
@@ -45,7 +46,7 @@ import org.apache.wicket.model.PropertyModel;
  * @param <S>
  *            the type of the sort property
  */
-public class PropertyColumn<T, S> extends AbstractColumn<T, S>
+public class PropertyColumn<T, S> extends AbstractColumn<T, S> implements IExportableColumn<T, S, Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -102,12 +103,13 @@ public class PropertyColumn<T, S> extends AbstractColumn<T, S>
 	 * 
 	 * @param rowModel
 	 * @return model
+	 * @deprecated
+	 *	since 6.2.0, scheduled for removal in 7.0.0. Please use {@link #getDataModel(org.apache.wicket.model.IModel)}
+	 *	instead.
 	 */
 	protected IModel<?> createLabelModel(final IModel<T> rowModel)
 	{
-		@SuppressWarnings("rawtypes")
-		PropertyModel<?> propertyModel = new PropertyModel(rowModel, propertyExpression);
-		return propertyModel;
+		return getDataModel(rowModel);
 	}
 
 	/**
@@ -118,4 +120,17 @@ public class PropertyColumn<T, S> extends AbstractColumn<T, S>
 		return propertyExpression;
 	}
 
+	/**
+	 * Factory method for generating a model that will generated the displayed value. Typically the
+	 * model is a property model using the {@link #propertyExpression} specified in the constructor.
+	 *
+	 * @param rowModel
+	 * @return model
+	 */
+	@Override
+	public IModel<Object> getDataModel(IModel<T> rowModel)
+	{
+		PropertyModel<Object> propertyModel = new PropertyModel<Object>(rowModel, propertyExpression);
+		return propertyModel;
+	}
 }
