@@ -76,6 +76,26 @@ public class SerializableCheckerTest extends Assert
 		}
 	}
 
+	/**
+	 * @throws IOException
+	 */
+	@Test
+	public void nonSerializableTypeDetection() throws IOException
+	{
+		SerializableChecker serializableChecker = new SerializableChecker(
+				new NotSerializableException());
+		String exceptionMessage = null;
+		try
+		{
+			serializableChecker.writeObject(new TestType2());
+		}
+		catch (ObjectChecker.ObjectCheckException e)
+		{
+			exceptionMessage = e.getMessage();
+		}
+		assertTrue(exceptionMessage.contains(NonSerializableType.class.getName()));
+	}
+
 	private static class TestType1 implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
