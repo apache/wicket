@@ -44,7 +44,7 @@ public class FileUploadPage extends BasePage
 	{
 
 		// create a feedback panel
-		final Component feedback = new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true);
+		final Component feedback = new FeedbackPanel("feedback").setOutputMarkupId(true);
 		add(feedback);
 
 		// create the form
