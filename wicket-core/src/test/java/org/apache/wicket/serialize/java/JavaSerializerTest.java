@@ -21,6 +21,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.IObjectChecker;
 import org.apache.wicket.core.util.objects.checker.NotDetachedModelChecker;
 import org.apache.wicket.markup.html.WebComponent;
@@ -49,7 +50,7 @@ public class JavaSerializerTest extends WicketTestCase
 			protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 			{
 				IObjectChecker checker = new NotDetachedModelChecker();
-				return new ObjectCheckerObjectOutputStream(out, checker);
+				return new CheckingObjectOutputStream(out, checker);
 			}
 		};
 
@@ -106,10 +107,10 @@ public class JavaSerializerTest extends WicketTestCase
 			@Override
 			protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 			{
-				return new ObjectCheckerObjectOutputStream(out);
+				return new CheckingObjectOutputStream(out);
 			}
 		};
 		byte[] bytes = serializer.serialize("Something to serialize");
-		System.err.println("bytes: " + bytes.length);
+		assertEquals(57, bytes.length);
 	}
 }

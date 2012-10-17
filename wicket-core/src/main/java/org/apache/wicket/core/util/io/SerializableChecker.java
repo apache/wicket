@@ -18,25 +18,27 @@ package org.apache.wicket.core.util.io;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Proxy;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.objects.checker.AbstractObjectChecker;
-import org.apache.wicket.core.util.objects.checker.ObjectChecker;
+import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
+import org.apache.wicket.util.io.ByteArrayOutputStream;
 
 
 /**
  * Utility class that analyzes objects for non-serializable nodes. Construct, then call
  * {@link #writeObject(Object)} with the object you want to check. When a non-serializable object is
- * found, a {@link WicketNotSerializableException} is thrown with a message that shows the trace up
+ * found, a {@link ObjectCheckException} is thrown with a message that shows the trace up
  * to the not-serializable object. The exception is thrown for the first non-serializable instance
  * it encounters, so multiple problems will not be shown.
  *
  * @author eelcohillenius
  * @author Al Maw
  */
-public class SerializableChecker extends ObjectChecker
+public class SerializableChecker extends CheckingObjectOutputStream
 {
 	/**
 	 * Exception that is thrown when a non-serializable object was found.
@@ -112,7 +114,22 @@ public class SerializableChecker extends ObjectChecker
 	 */
 	public SerializableChecker(NotSerializableException exception) throws IOException
 	{
-		super(new ObjectSerializationChecker(exception));
+		this(new ByteArrayOutputStream(), exception);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param exception
+	 *      exception that should be set as the cause when throwing a new exception
+	 * @param outputStream
+	 *      the output stream where the serialized object will be written upon successful check
+	 *
+	 * @throws IOException
+	 */
+	public SerializableChecker(final OutputStream outputStream, NotSerializableException exception) throws IOException
+	{
+		super(outputStream, new ObjectSerializationChecker(exception));
 	}
 
 	/**
@@ -125,6 +142,6 @@ public class SerializableChecker extends ObjectChecker
 	@Deprecated
 	public static boolean isAvailable()
 	{
-		return ObjectChecker.isAvailable();
+		return CheckingObjectOutputStream.isAvailable();
 	}
 }
