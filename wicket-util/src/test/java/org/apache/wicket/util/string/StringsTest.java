@@ -77,6 +77,12 @@ public class StringsTest extends Assert
 		assertEquals(url + "?param", Strings.stripJSessionId(url + ";jsessionid=12345?param"));
 		assertEquals(url + "?param=a;b",
 			Strings.stripJSessionId(url + ";jsessionid=12345?param=a;b"));
+
+		// WICKET-4816
+		assertEquals(url + ";a=b;c=d",
+				Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345"));
+		assertEquals(url + ";a=b;c=d?param=a;b",
+				Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345?param=a;b"));
 	}
 
 	/**

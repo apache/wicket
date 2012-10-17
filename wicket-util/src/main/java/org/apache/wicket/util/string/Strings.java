@@ -22,6 +22,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -906,19 +907,19 @@ public final class Strings
 	 */
 	public static String stripJSessionId(final String url)
 	{
-		if (url == null)
+		if (Strings.isEmpty(url))
 		{
-			return null;
+			return url;
 		}
 
 		// http://.../abc;jsessionid=...?param=...
-		int ixSemiColon = url.indexOf(";");
+		int ixSemiColon = url.toLowerCase(Locale.ENGLISH).indexOf(";jsessionid=");
 		if (ixSemiColon == -1)
 		{
 			return url;
 		}
 
-		int ixQuestionMark = url.indexOf("?");
+		int ixQuestionMark = url.indexOf('?');
 		if (ixQuestionMark == -1)
 		{
 			// no query paramaters; cut off at ";"
