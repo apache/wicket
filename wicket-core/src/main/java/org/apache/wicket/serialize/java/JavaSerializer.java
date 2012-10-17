@@ -233,7 +233,12 @@ public class JavaSerializer implements ISerializer
 	}
 	/**
 	 * Write objects to the wrapped output stream and log a meaningful message for serialization
-	 * problems
+	 * problems.
+	 *
+	 *  <p>
+	 *     Note: the checking functionality is used only if the serialization fails with NotSerializableException.
+	 *     This is done so to save some CPU time to make the checks for no reason.
+	 * </p>
 	 */
 	private static class SerializationCheckerObjectOutputStream extends ObjectOutputStream
 	{
