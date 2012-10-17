@@ -304,38 +304,41 @@ public class ServletWebRequest extends WebRequest
 			final String name = param.getKey();
 			final String[] values = param.getValue();
 
-			// build a mutable list of query params that have the same name as the post param
-			List<StringValue> queryValues = queryParams.getParameterValues(name);
-			if (queryValues == null)
+			if (name != null && values != null)
 			{
-				queryValues = Collections.emptyList();
-			}
-			else
-			{
-				queryValues = new ArrayList<StringValue>(queryValues);
-			}
-
-			// the list that will contain accepted post param values
-			List<StringValue> postValues = new ArrayList<StringValue>();
-
-			for (String value : values)
-			{
-				StringValue val = StringValue.valueOf(value);
-				if (queryValues.contains(val))
+				// build a mutable list of query params that have the same name as the post param
+				List<StringValue> queryValues = queryParams.getParameterValues(name);
+				if (queryValues == null)
 				{
-					// if a query param with this value exists remove it and continue
-					queryValues.remove(val);
+					queryValues = Collections.emptyList();
 				}
 				else
 				{
-					// there is no query param with this value, assume post
-					postValues.add(val);
+					queryValues = new ArrayList<StringValue>(queryValues);
 				}
-			}
 
-			if (!postValues.isEmpty())
-			{
-				postParameters.put(name, postValues);
+				// the list that will contain accepted post param values
+				List<StringValue> postValues = new ArrayList<StringValue>();
+
+				for (String value : values)
+				{
+					StringValue val = StringValue.valueOf(value);
+					if (queryValues.contains(val))
+					{
+						// if a query param with this value exists remove it and continue
+						queryValues.remove(val);
+					}
+					else
+					{
+						// there is no query param with this value, assume post
+						postValues.add(val);
+					}
+				}
+
+				if (!postValues.isEmpty())
+				{
+					postParameters.put(name, postValues);
+				}
 			}
 		}
 		return postParameters;
