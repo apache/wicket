@@ -49,12 +49,18 @@ import org.slf4j.LoggerFactory;
  * As this class depends heavily on JDK's serialization internals using introspection, analyzing may
  * not be possible, for instance when the runtime environment does not have sufficient rights to set
  * fields accessible that would otherwise be hidden. You should call
- * {@link ObjectChecker#isAvailable()} to see whether this class can operate properly.
+ * {@link CheckingObjectOutputStream#isAvailable()} to see whether this class can operate properly.
+ *
+ *
+ * An ObjectOutputStream that uses {@link IObjectChecker IObjectChecker}s to check the
+ * state of the object before serializing it. If the checker returns
+ * {@link org.apache.wicket.util.objects.checker.IObjectChecker.Result.Status#FAILURE}
+ * then the serialization process is stopped and the error is logged.
  * </p>
  */
-public class ObjectChecker extends ObjectOutputStream
+public class CheckingObjectOutputStream extends ObjectOutputStream
 {
-	private static final Logger log = LoggerFactory.getLogger(ObjectChecker.class);
+	private static final Logger log = LoggerFactory.getLogger(CheckingObjectOutputStream.class);
 
 	public static class ObjectCheckException extends WicketRuntimeException
 	{
@@ -97,7 +103,6 @@ public class ObjectChecker extends ObjectOutputStream
 
 	private static abstract class ObjectOutputAdaptor implements ObjectOutput
 	{
-
 		public void close() throws IOException
 		{
 		}
@@ -263,6 +268,11 @@ public class ObjectChecker extends ObjectOutputStream
 		return available;
 	}
 
+	/**
+	 * The output stream where the serialized object will be written upon successful check
+	 */
+	private final ObjectOutputStream out;
+
 	/** object stack with the trace path. */
 	private final LinkedList<TraceSlot> traceStack = new LinkedList<TraceSlot>();
 
@@ -289,13 +299,16 @@ public class ObjectChecker extends ObjectOutputStream
 	/**
 	 * Constructor.
 	 *
+	 * @param outputStream
+	 *      the output stream where the serialized object will be written upon successful check
 	 * @param checkers
 	 *      the {@link IObjectChecker checkers} that will actually check the objects
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 * @throws SecurityException
 	 */
-	public ObjectChecker(final IObjectChecker... checkers) throws IOException, SecurityException
+	public CheckingObjectOutputStream(final OutputStream outputStream, final IObjectChecker... checkers) throws IOException, SecurityException
 	{
+		this.out = new ObjectOutputStream(outputStream);
 		this.checkers = checkers;
 	}
 
@@ -680,6 +693,7 @@ public class ObjectChecker extends ObjectOutputStream
 		}
 
 		check(root);
+		out.writeObject(obj);
 	}
 
 	/**

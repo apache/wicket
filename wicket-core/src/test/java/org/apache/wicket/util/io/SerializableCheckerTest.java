@@ -24,7 +24,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.wicket.util.Log4jEventHistory;
-import org.apache.wicket.util.objects.checker.ObjectChecker;
+import org.apache.wicket.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.util.value.ValueMap;
 import org.junit.Assert;
 import org.junit.Test;
@@ -57,7 +57,7 @@ public class SerializableCheckerTest extends Assert
 	@Test
 	public void runtimeExceptionTolerance() throws IOException
 	{
-		Logger logger = LogManager.getLogger(ObjectChecker.class);
+		Logger logger = LogManager.getLogger(CheckingObjectOutputStream.class);
 		logger.setLevel(Level.WARN);
 		Log4jEventHistory logHistory = new Log4jEventHistory();
 		logger.addAppender(logHistory);
@@ -88,7 +88,7 @@ public class SerializableCheckerTest extends Assert
 		{
 			serializableChecker.writeObject(new TestType2());
 		}
-		catch (ObjectChecker.ObjectCheckException e)
+		catch (CheckingObjectOutputStream.ObjectCheckException e)
 		{
 			exceptionMessage = e.getMessage();
 		}
