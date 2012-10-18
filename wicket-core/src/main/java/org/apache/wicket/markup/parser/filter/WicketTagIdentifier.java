@@ -85,8 +85,12 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			{
 				// Make it a Wicket component. Otherwise it would be RawMarkup
 				tag.setId(namespace + "_" + tag.getName());
-				tag.setAutoComponentTag(true);
 				tag.setModified(true);
+
+				if (tag.isClose() == false)
+				{
+					tag.setAutoComponentTag(true);
+				}
 			}
 
 			// If the tag is not a well-known wicket namespace tag
