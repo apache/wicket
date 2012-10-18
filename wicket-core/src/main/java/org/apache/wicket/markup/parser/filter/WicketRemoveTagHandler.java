@@ -53,7 +53,7 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	@Override
 	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
-		// If it is not a remove tag, than we are finished
+		// If it is not a remove tag then we are finished
 		if (!(tag instanceof WicketTag) || !((WicketTag)tag).isRemoveTag())
 		{
 			return tag;
