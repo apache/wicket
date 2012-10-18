@@ -140,7 +140,7 @@
 					
 					var el = element;
 					if (typeof(element) === 'string') {
-						el = Wicket.$(element); // Wicket.$() is wicket-ajax.js. Is this too bad ?
+						el = document.getElementById(element);
 					}
 					
 					if (!el && Wicket.Log) {
