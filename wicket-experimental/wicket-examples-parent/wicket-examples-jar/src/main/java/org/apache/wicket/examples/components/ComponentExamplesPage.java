@@ -1,13 +1,16 @@
 package org.apache.wicket.examples.components;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.examples.base.AbstractBasePage;
 import org.apache.wicket.examples.base.MarkdownArticleModel;
+import org.apache.wicket.examples.base.annot.ExamplePage;
 import org.apache.wicket.examples.base.components.AnchorLink;
 import org.apache.wicket.examples.base.markdown.MarkdownLabel;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RepeatingView;
 
+@ExamplePage(title = "Component reference")
 public class ComponentExamplesPage extends AbstractBasePage
 {
 	private static final long serialVersionUID = 1L;
@@ -17,6 +20,9 @@ public class ComponentExamplesPage extends AbstractBasePage
 
 	public ComponentExamplesPage()
 	{
+		getBody().add(AttributeModifier.replace("data-spy", "scroll"));
+		getBody().add(AttributeModifier.replace("data-target", ".aw-docs-sidebar"));
+
 		add(articles);
 		add(menuitems);
 

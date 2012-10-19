@@ -28,6 +28,9 @@ public class Examples extends JavaScriptResourceReference {
 
 	@Override
 	public Iterable<? extends HeaderItem> getDependencies() {
-		return Arrays.asList(JavaScriptHeaderItem.forReference(Bootstrap.get()), JavaScriptHeaderItem.forReference(Prettify.get()));
+		HeaderItem bootstrap = JavaScriptHeaderItem.forReference(Bootstrap
+				.responsive());
+		HeaderItem prettify = JavaScriptHeaderItem.forReference(Prettify.get());
+		return Arrays.asList(bootstrap, prettify);
 	}
 }
