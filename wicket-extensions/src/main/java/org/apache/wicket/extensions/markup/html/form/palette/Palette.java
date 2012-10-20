@@ -612,6 +612,8 @@ public class Palette<T> extends Panel
 		@Override
 		protected void onComponentTag(final ComponentTag tag)
 		{
+			super.onComponentTag(tag);
+
 			if (!isPaletteEnabled())
 			{
 				tag.getAttributes().put("disabled", "disabled");
