@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.markup.head;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
@@ -332,7 +334,11 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset);
+		boolean isAjax = RequestCycle.get().find(AjaxRequestTarget.class) != null;
+		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
+		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
+
+		JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset);
 
 		if (hasCondition)
 		{

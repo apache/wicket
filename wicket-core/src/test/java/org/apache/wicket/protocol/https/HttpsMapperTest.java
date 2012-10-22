@@ -28,13 +28,13 @@ import static org.mockito.Mockito.when;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.https.HttpsMapper.RedirectHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.junit.Test;
 
 public class HttpsMapperTest
@@ -118,6 +118,7 @@ public class HttpsMapperTest
 		when(req.getScheme()).thenReturn("http");
 		mapper.mapHandler(handler, request);
 		assertThat(url.getProtocol(), is("https"));
+		assertThat(url.getPort(), is(443));
 
 		// render url to http page on http, ignore protocol
 		handler = new RenderPageRequestHandler(new PageProvider(InsecurePage.class));
@@ -136,6 +137,7 @@ public class HttpsMapperTest
 		when(req.getScheme()).thenReturn("https");
 		mapper.mapHandler(handler, request);
 		assertThat(url.getProtocol(), is("http"));
+		assertThat(url.getPort(), is(80));
 	}
 
 

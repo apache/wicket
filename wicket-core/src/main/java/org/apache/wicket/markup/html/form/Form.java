@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
@@ -142,9 +143,11 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
+public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, IGenericComponent<T>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
+
+	public static final String ENCTYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 
 	/**
 	 * Visitor used for validation
@@ -1539,7 +1542,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					tag.put("method", METHOD_POST.toLowerCase(Locale.ENGLISH));
 				}
 
-				tag.put("enctype", "multipart/form-data");
+				tag.put("enctype", ENCTYPE_MULTIPART_FORM_DATA);
 				//
 				// require the application-encoding for multipart/form-data to be sure to
 				// get multipart-uploaded characters with the proper encoding on the following
@@ -1554,7 +1557,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			{
 				// sanity check
 				String enctype = (String)tag.getAttributes().get("enctype");
-				if ("multipart/form-data".equalsIgnoreCase(enctype))
+				if (ENCTYPE_MULTIPART_FORM_DATA.equalsIgnoreCase(enctype))
 				{
 					// though not set explicitly in Java, this is a multipart
 					// form
@@ -1970,43 +1973,27 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		return "";
 	}
 
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
+	@Override
 	public final void setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
 	}
 
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
+	@Override
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);

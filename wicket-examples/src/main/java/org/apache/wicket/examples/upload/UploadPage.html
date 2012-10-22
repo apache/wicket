@@ -16,8 +16,8 @@
 	 <fieldset>
 	  <legend>Upload form</legend>
     	<p>
-	    <label for="upload">File</label>
-	    <input wicket:id="fileInput" type="file" />
+	    <label for="simpleUpload">File</label>
+	    <input wicket:id="fileInput" type="file" id="simpleUpload"/>
 	    </p>
 	    <input type="submit" value="Upload!"/>
 	 </fieldset>
@@ -27,8 +27,8 @@
 	 <fieldset>
 	  <legend>Upload form with progress bar</legend>
     	<p>
-	    <label for="upload">File</label>
-	    <input wicket:id="fileInput" type="file"/>
+	    <label for="uploadWithProgress">File</label>
+	    <input wicket:id="fileInput" type="file" id="uploadWithProgress"/>
 	    </p>
 	    <input type="submit" value="Upload!"/>
 	    <span wicket:id="progress">[[upload progressbar]]</span>
@@ -40,8 +40,8 @@
 	  <legend>Upload form that uses HTML5 &lt;input type="file" <strong>multiple</strong> /&gt;, so it can upload
 		more than one file in browsers which support <em>multiple</em> attribute</legend>
     	<p>
-	    <label>File</label>
-	    <input wicket:id="fileInput" type="file" multiple="multiple" />
+	    <label for="multiUpload">File</label>
+	    <input wicket:id="fileInput" type="file" multiple="multiple" id="multiUpload"/>
 	    </p>
 	    <input type="submit" value="Upload!"/>
 	 </fieldset>

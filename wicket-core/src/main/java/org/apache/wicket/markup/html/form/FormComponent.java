@@ -33,6 +33,7 @@ import java.util.Set;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IConverterLocator;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
@@ -100,7 +101,8 @@ import org.slf4j.LoggerFactory;
 public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	implements
 		IFormVisitorParticipant,
-		IFormModelUpdateListener
+		IFormModelUpdateListener,
+		IGenericComponent<T>
 {
 	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
 
@@ -1502,43 +1504,27 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		return new ValidatableAdapter();
 	}
 
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
+	@Override
 	public final void setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
 	}
 
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
+	@Override
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);

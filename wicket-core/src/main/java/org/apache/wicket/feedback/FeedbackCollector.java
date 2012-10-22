@@ -72,7 +72,7 @@ public final class FeedbackCollector
 	}
 
 	/**
-	 * Controls whether or not feedback will be collected recursively from the decendants of the
+	 * Controls whether or not feedback will be collected recursively from the descendants of the
 	 * specified component.
 	 * 
 	 * @param value

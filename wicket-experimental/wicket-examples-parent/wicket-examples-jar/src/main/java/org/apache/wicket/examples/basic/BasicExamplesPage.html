@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:wicket>
 <head>
 	<meta charset="utf-8" />
 	<title>Apache Wicket Examples</title>
 </head>
 <body>
-	<div wicket:id="topnavbar">
-	</div>
-	<div class="container">
-		<div class="page-header">
-			<h1>Apache Wicket Examples <small>Basic examples</small></h1>
+	<wicket:extend>
+	<header class="jumbotron subhead">
+		<div class="container">
+			<h1>Apache Wicket Examples</h1>
+			<p class="lead">Basic examples</p>
 		</div>
+	</header>
+	<div class="container">
 		<article id="helloworld">
 			<div class="">
 				<h2>Hello, World! <small>Because every examples site needs one</small></h2>
@@ -85,5 +87,6 @@ public class HelloWorldPage extends WebPage {
 			</div>
 		</article>
 	</div>
+	</wicket:extend>
 </body>
 </html>

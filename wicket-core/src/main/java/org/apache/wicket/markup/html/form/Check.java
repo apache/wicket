@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.util.Collection;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -51,7 +52,7 @@ import org.apache.wicket.util.string.Strings;
  * @param <T>
  *            The model object type
  */
-public class Check<T> extends LabeledWebMarkupContainer
+public class Check<T> extends LabeledWebMarkupContainer implements IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -247,43 +248,27 @@ public class Check<T> extends LabeledWebMarkupContainer
 		return this;
 	}
 
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
+	@Override
 	public final void setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
 	}
 
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
+	@Override
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);

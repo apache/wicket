@@ -19,6 +19,8 @@ package org.apache.wicket.util.encoding;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+import org.apache.wicket.util.string.Strings;
+
 /**
  * Adapted from java.net.URLDecoder, but defines instances for query string decoding versus URL path
  * component decoding.
@@ -84,9 +86,9 @@ public class UrlDecoder
 	 */
 	public String decode(final String s, final String enc)
 	{
-		if (s == null)
+		if (Strings.isEmpty(s))
 		{
-			return null;
+			return s;
 		}
 
 		int numChars = s.length();

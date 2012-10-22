@@ -2,10 +2,10 @@
 <html xmlns:wicket>
 <head>
 	<meta charset="utf-8" />
-	<title>Apache Wicket Examples</title>
+	<title>Components&mdash;Apache Wicket Examples</title>
 </head>
-<body data-spy="scroll" data-target=".bs-docs-sidebar">
-	<div wicket:id="topnavbar"></div>
+<body data-spy="scroll" data-target=".aw-docs-sidebar">
+	<wicket:extend>
 	<header class="jumbotron subhead">
 		<div class="container">
 			<h1>Component Reference</h1>
@@ -14,8 +14,8 @@
 	</header>
 	<div class="container">
 		<div class="row">
-			<div class="span3 bs-docs-sidebar">
-				<ul class="nav nav-list bs-docs-sidenav affix-top">
+			<div class="span3 aw-docs-sidebar">
+				<ul class="nav nav-list aw-docs-sidenav affix-top">
 					<li wicket:id="menuitems"><a wicket:id="menuitem" href="#Labels">Labels</a></li>
 				</ul>
 			</div>
@@ -24,5 +24,6 @@
 			</div>
 		</div>
 	</div>
+	</wicket:extend>
 </body>
 </html>
