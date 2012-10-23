@@ -116,7 +116,7 @@
 			this.iframe.parentNode.removeChild(this.iframe);
 			this.iframe = null;
 
-			if (progressPercent === 100) {
+			if (progressPercent === '100') {
 				Wicket.DOM.hide(this.statusid);
 				Wicket.DOM.hide(this.barid);
 			} else {
