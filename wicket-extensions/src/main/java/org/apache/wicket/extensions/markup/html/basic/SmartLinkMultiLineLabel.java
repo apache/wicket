@@ -67,8 +67,8 @@ public class SmartLinkMultiLineLabel extends MultiLineLabel
 	@Override
 	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		final CharSequence body = Strings.toMultilineMarkup(getDefaultModelObjectAsString());
-		replaceComponentTagBody(markupStream, openTag, getSmartLink(body));
+		final CharSequence body = getSmartLink(getDefaultModelObjectAsString());
+		replaceComponentTagBody(markupStream, openTag, Strings.toMultilineMarkup(body));
 	}
 
 	/**
