@@ -372,8 +372,14 @@ public abstract class WebApplication extends Application
 	 * @param path
 	 *            the path to unmount
 	 */
-	public final void unmount(final String path)
+	public final void unmount(String path)
 	{
+		Args.notNull(path, "path");
+
+		if (path.charAt(0) == '/')
+		{
+			path = path.substring(1);
+		}
 		getRootRequestMapperAsCompound().unmount(path);
 	}
 
