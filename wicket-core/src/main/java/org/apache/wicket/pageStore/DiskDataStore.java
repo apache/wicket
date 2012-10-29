@@ -545,7 +545,7 @@ public class DiskDataStore implements IDataStore
 
 	/**
 	 * creates a three-level path from the sessionId in the format 0000/0000/<sessionId>. The two
-	 * prefixing directories are created from the sesionId's hascode and thus, should be well
+	 * prefixing directories are created from the sessionId's hashcode and thus, should be well
 	 * distributed.
 	 *
 	 * This is used to avoid problems with Filesystems allowing no more than 32k entries in a
