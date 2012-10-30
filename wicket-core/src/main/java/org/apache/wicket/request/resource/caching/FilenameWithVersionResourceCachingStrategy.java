@@ -22,13 +22,13 @@ import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * resource caching strategy that adds a version for the 
+ * Resource caching strategy that adds a version for the
  * requested resource to the filename.
  * <p/>
  * versioned_filename := [basename][version-prefix][version](.extension)
  * <p/>
- * the <code>version</code> must not contain the <code>version-prefix</code> so
- * please use an unambigous value for the <code>version-prefix</code>. The default
+ * The <code>version</code> must not contain the <code>version-prefix</code> so
+ * please use an unambiguous value for the <code>version-prefix</code>. The default
  * <code>version-prefix</code> is <code>{@value #DEFAULT_VERSION_PREFIX}</code>.
  * <p/> 
  * Since browsers and proxies use the versioned filename of the resource 
