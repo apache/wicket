@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * @author igor.vaynberg
  * @author Peter Ertl
  */
-class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
+public class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
 	private static final Logger log = LoggerFactory.getLogger(BasicResourceReferenceMapper.class);
 
