@@ -85,13 +85,15 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 
 		if (canBeHandled(url))
 		{
+			final int segmentsSize = url.getSegments().size();
+
 			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(request, url.getSegments().size(),
+			PageParameters pageParameters = extractPageParameters(request, segmentsSize,
 					pageParametersEncoder);
 
 			String className = url.getSegments().get(2);
-			StringBuilder name = new StringBuilder();
-			int segmentsSize = url.getSegments().size();
+			StringBuilder name = new StringBuilder(segmentsSize * 2);
+
 			for (int i = 3; i < segmentsSize; ++i)
 			{
 				String segment = url.getSegments().get(i);
