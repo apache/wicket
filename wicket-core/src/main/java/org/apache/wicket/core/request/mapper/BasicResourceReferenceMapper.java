@@ -103,8 +103,8 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 			{
 				String segment = url.getSegments().get(i);
 
-				// skip possibly malicious segments
-				if (segment.contains("/"))
+				// ignore invalid segments
+				if (segment.indexOf('/') > -1)
 				{
 					return null;
 				}
@@ -122,7 +122,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 				}
 				if (name.length() > 0)
 				{
-					name.append("/");
+					name.append('/');
 				}
 				name.append(segment);
 			}
