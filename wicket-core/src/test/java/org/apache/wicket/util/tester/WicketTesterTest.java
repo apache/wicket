@@ -1085,14 +1085,14 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests that setting a cookie with age < 0 will not be stored after the request cycle.
+	 * Tests that setting a cookie with age == 0 will not be stored after the request cycle.
 	 */
 	@Test
 	public void dontTransferCookiesWithNegativeAge()
 	{
 		String cookieName = "wicket4289Name";
 		String cookieValue = "wicket4289Value";
-		int cookieAge = -1; // age < 0 => do not store it
+		int cookieAge = 0; // age = 0 => do not store it
 
 		Cookie cookie = new Cookie(cookieName, cookieValue);
 		cookie.setMaxAge(cookieAge);
