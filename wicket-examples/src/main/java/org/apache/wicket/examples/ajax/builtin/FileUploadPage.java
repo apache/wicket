@@ -19,11 +19,14 @@ package org.apache.wicket.examples.ajax.builtin;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Bytes;
 
@@ -48,7 +51,7 @@ public class FileUploadPage extends BasePage
 		add(feedback);
 
 		// create the form
-		Form<?> form = new Form<Void>("form")
+		final Form<?> form = new Form<Void>("form")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
@@ -78,6 +81,19 @@ public class FileUploadPage extends BasePage
 
 		// create the file upload field
 		form.add(file = new FileUploadField("file"));
+
+		form.add(new Label("max", new AbstractReadOnlyModel<String>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String getObject()
+			{
+				return form.getMaxSize().toString();
+			}
+		}));
+
+		form.add(new UploadProgressBar("progress", form, file));
 
 		// create the ajax button used to submit the form
 		form.add(new AjaxButton("ajaxSubmit")

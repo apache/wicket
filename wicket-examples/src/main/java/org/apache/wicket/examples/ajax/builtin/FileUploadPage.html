@@ -8,7 +8,8 @@ Demonstrates Wicket's ability to transparently handle multipart forms via AJAX.<
 
 <form wicket:id="form">
 	Text field: <input wicket:id="text" type="text"/><br/>
-	File field: <input wicket:id="file" type="file"/> (1MB max)<br/><br/>
+	File field: <input wicket:id="file" type="file"/> (<span wicket:id="max"></span> max)<br/><br/>
+	<div wicket:id="progress"></div>
 	<input type="submit" value="Regular Submit"/> <input wicket:id="ajaxSubmit" type="button" value="Ajax Submit"/>
 </form>
 
