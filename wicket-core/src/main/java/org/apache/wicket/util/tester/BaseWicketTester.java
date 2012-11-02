@@ -401,7 +401,10 @@ public class BaseWicketTester
 			{
 				for (Cookie cookie : cookies)
 				{
-					if (cookie.getMaxAge() > 0)
+					// maxAge == -1 -> means session cookie
+					// maxAge == 0 -> delete the cookie
+					// maxAge > 0 -> the cookie will expire after this age
+					if (cookie.getMaxAge() != 0)
 					{
 						request.addCookie(cookie);
 					}
