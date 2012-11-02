@@ -120,11 +120,6 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * @return Usually the same as the tag attribute
 	 * @throws ParseException
 	 */
-// Not yet used
-// protected MarkupElement onWicketTag(final WicketTag tag) throws ParseException
-// {
-// return onComponentTag(tag);
-// }
 
 	/**
 	 * Invoked when a tags (e.g. DOCTYPE, PROCESSING_INSTRUCTIION, etc. which have been identified
@@ -136,21 +131,8 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 */
 	protected MarkupElement onSpecialTag(final HtmlSpecialTag tag) throws ParseException
 	{
-		// log.error(tag.toString());
 		return tag;
 	}
-
-// /**
-// * Invoked if current element is raw markup
-// *
-// * @param rawMarkup
-// * @return Usually the same as the tag attribute
-// */
-// Not yet used
-// protected MarkupElement onRawMarkup(final MarkupElement rawMarkup)
-// {
-// return rawMarkup;
-// }
 
 	@Override
 	public void postProcess(final Markup markup)
