@@ -32,6 +32,23 @@ import org.apache.wicket.util.string.Strings;
  */
 public class AutoLabelTagHandler extends AbstractMarkupFilter
 {
+
+	/**
+	 * Constructor.
+	 *
+	 * @deprecated Use #AutoLabelResolver(MarkupResourceStream) instead
+	 */
+	@Deprecated
+	public AutoLabelTagHandler()
+	{
+		this(null);
+	}
+
+	public AutoLabelTagHandler(MarkupResourceStream resourceStream)
+	{
+		super(resourceStream);
+	}
+
 	@Override
 	protected MarkupElement onComponentTag(final ComponentTag tag) throws ParseException
 	{
@@ -40,7 +57,7 @@ public class AutoLabelTagHandler extends AbstractMarkupFilter
 			return tag;
 		}
 
-		String related = tag.getAttribute(AutoLabelResolver.WICKET_FOR);
+		String related = tag.getAttribute(getWicketNamespace() + AutoLabelResolver.WICKET_FOR);
 		if (related == null)
 		{
 			return tag;
