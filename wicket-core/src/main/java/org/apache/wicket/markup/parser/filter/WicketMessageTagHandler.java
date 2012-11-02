@@ -91,7 +91,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				// if this is a raw tag we need to set the id to something so
 				// that wicket will not merge this as raw markup and instead
 				// pass it on to a resolver
-				tag.setId(getWicketMessageIdPrefix());
+				tag.setId(getWicketMessageIdPrefix(null));
 				tag.setAutoComponentTag(true);
 				tag.setModified(true);
 			}
@@ -163,11 +163,11 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		// localize any raw markup that has wicket:message attrs
-		if ((tag != null) && (tag.getId().startsWith(getWicketMessageIdPrefix())))
+		if ((tag != null) && (tag.getId().startsWith(getWicketMessageIdPrefix(markupStream))))
 		{
 			Component wc;
 			int autoIndex = container.getPage().getAutoIndex();
-			String id = getWicketMessageIdPrefix() + autoIndex;
+			String id = getWicketMessageIdPrefix(markupStream) + autoIndex;
 
 			if (tag.isOpenClose())
 			{
@@ -189,8 +189,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		return wicketNamespace + ':' + "message";
 	}
 
-	private String getWicketMessageIdPrefix()
+	private String getWicketMessageIdPrefix(final MarkupStream markupStream)
 	{
-		return getWicketNamespace() + WICKET_MESSAGE_CONTAINER_ID;
+		return getWicketNamespace(markupStream) + WICKET_MESSAGE_CONTAINER_ID;
 	}
 }

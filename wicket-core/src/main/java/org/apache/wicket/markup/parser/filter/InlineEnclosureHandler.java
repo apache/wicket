@@ -185,7 +185,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		if (Strings.isEmpty(inlineEnclosureChildId) == false)
 		{
 			String id = tag.getId();
-			if (id.startsWith(getWicketNamespace()))
+			if (id.startsWith(getWicketNamespace(markupStream)))
 			{
 				id = id + container.getPage().getAutoIndex();
 			}
