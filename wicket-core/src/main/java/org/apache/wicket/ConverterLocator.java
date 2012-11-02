@@ -173,11 +173,6 @@ public class ConverterLocator implements IConverterLocator
 		set(Long.class, LongConverter.INSTANCE);
 		set(Short.TYPE, ShortConverter.INSTANCE);
 		set(Short.class, ShortConverter.INSTANCE);
-		set(Date.class, new DateConverter());
-		set(Calendar.class, new CalendarConverter());
-		set(java.sql.Date.class, new SqlDateConverter());
-		set(java.sql.Time.class, new SqlTimeConverter());
-		set(java.sql.Timestamp.class, new SqlTimestampConverter());
 		set(BigDecimal.class, new BigDecimalConverter());
 	}
 
@@ -194,7 +189,34 @@ public class ConverterLocator implements IConverterLocator
 	public final <C> IConverter<C> get(Class<C> c)
 	{
 		@SuppressWarnings("unchecked")
-		IConverter<C> converter = (IConverter<C>)classToConverter.get(c.getName());
+		final IConverter<C> converter;
+
+		// Date based converters work with thread unsafe DateFormats and
+		// a new instance should be created for each usage
+		if (Date.class.equals(c))
+		{
+			converter = (IConverter<C>) new DateConverter();
+		}
+		else if  (java.sql.Date.class.equals(c))
+		{
+			converter = (IConverter<C>) new SqlDateConverter();
+		}
+		else if (java.sql.Time.class.equals(c))
+		{
+			converter = (IConverter<C>) new SqlTimeConverter();
+		}
+		else if (java.sql.Timestamp.class.equals(c))
+		{
+			converter = (IConverter<C>) new SqlTimestampConverter();
+		}
+		else if (Calendar.class.equals(c))
+		{
+			converter = (IConverter<C>) new CalendarConverter();
+		}
+		else
+		{
+			converter = (IConverter<C>)classToConverter.get(c.getName());
+		}
 		return converter;
 	}
 
