@@ -28,6 +28,8 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -40,6 +42,8 @@ import org.apache.wicket.request.Url;
  */
 public class CompoundRequestMapper implements ICompoundRequestMapper
 {
+	private static final Logger LOG = LoggerFactory.getLogger(CompoundRequestMapper.class);
+
 	/**
 	 * 
 	 */
@@ -137,6 +141,11 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 
 		Collections.sort(list);
 
+		if (LOG.isDebugEnabled())
+		{
+			logMappers(list, request.getUrl().toString());
+		}
+
 		for (MapperWithScore mapperWithScore : list)
 		{
 			IRequestMapper mapper = mapperWithScore.getMapper();
@@ -148,6 +157,42 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 		}
 
 		return null;
+	}
+
+	/**
+	 * Logs all mappers with a positive compatibility score
+	 *
+	 * @param mappersWithScores
+	 *      the list of all mappers
+	 * @param url
+	 *      the url to match by these mappers
+	 */
+	private void logMappers(final List<MapperWithScore> mappersWithScores, final String url)
+	{
+		final List<MapperWithScore> compatibleMappers = new ArrayList<MapperWithScore>();
+		for (MapperWithScore mapperWithScore : mappersWithScores)
+		{
+			if (mapperWithScore.compatibilityScore > 0)
+			{
+				compatibleMappers.add(mapperWithScore);
+			}
+		}
+		if (compatibleMappers.size() == 0)
+		{
+			LOG.debug("No compatible mapper found for URL '{}'", url);
+		}
+		else if (compatibleMappers.size() == 1)
+		{
+			LOG.debug("One compatible mapper found for URL '{}' -> '{}'", url, compatibleMappers.get(0));
+		}
+		else
+		{
+			LOG.debug("Multiple compatible mappers found for URL '{}'", url);
+			for (MapperWithScore compatibleMapper : compatibleMappers)
+			{
+		        LOG.debug(" * {}", compatibleMapper);
+			}
+		}
 	}
 
 	/**
