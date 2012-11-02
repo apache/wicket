@@ -108,9 +108,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 	 */
 	public AbstractRequestLogger()
 	{
-		int requestsWindowSize = Application.get()
-			.getRequestLoggerSettings()
-			.getRequestsWindowSize();
+		int requestsWindowSize = getRequestsWindowSize();
 		requestWindow = new RequestData[requestsWindowSize];
 		liveSessions = new ConcurrentHashMap<String, SessionData>();
 	}
@@ -216,7 +214,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 			requestdata.setSessionInfo(sessionInfo);
 
 			long sizeInBytes = -1;
-			if (Application.get().getRequestLoggerSettings().getRecordSessionSize())
+			if (Application.exists() && Application.get().getRequestLoggerSettings().getRecordSessionSize())
 			{
 				try
 				{
@@ -419,7 +417,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 	 */
 	private void resizeBuffer()
 	{
-		int newCapacity = Application.get().getRequestLoggerSettings().getRequestsWindowSize();
+		int newCapacity = getRequestsWindowSize();
 
 		// do nothing if the capacity requirement hasn't changed
 		if (newCapacity == requestWindow.length)
@@ -507,5 +505,17 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		buf.append(String.format("%03d", millis));
 
 		return buf.toString();
+	}
+
+	private int getRequestsWindowSize()
+	{
+		int requestsWindowSize = 0;
+		if (Application.exists())
+		{
+			requestsWindowSize = Application.get()
+					.getRequestLoggerSettings()
+					.getRequestsWindowSize();
+		}
+		return requestsWindowSize;
 	}
 }
