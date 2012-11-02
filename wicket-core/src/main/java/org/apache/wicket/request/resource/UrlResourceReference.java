@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
-import org.apache.wicket.core.util.string.UrlUtils;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 

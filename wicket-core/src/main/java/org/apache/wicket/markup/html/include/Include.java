@@ -23,14 +23,14 @@ import java.nio.charset.Charset;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.resource.ResourceUtil;
-import org.apache.wicket.core.util.resource.UrlResourceStream;
-import org.apache.wicket.core.util.string.UrlUtils;
 
 
 /**
