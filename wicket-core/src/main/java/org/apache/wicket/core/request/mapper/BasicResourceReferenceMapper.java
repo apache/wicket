@@ -31,11 +31,15 @@ import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,10 +65,10 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 {
 	private static final Logger log = LoggerFactory.getLogger(BasicResourceReferenceMapper.class);
 
-	private final IPageParametersEncoder pageParametersEncoder;
+	protected final IPageParametersEncoder pageParametersEncoder;
 
 	/** resource caching strategy */
-	private final IProvider<? extends IResourceCachingStrategy> cachingStrategy;
+	protected final IProvider<? extends IResourceCachingStrategy> cachingStrategy;
 
 	/**
 	 * Construct.
@@ -75,7 +79,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
 		IProvider<? extends IResourceCachingStrategy> cachingStrategy)
 	{
-		this.pageParametersEncoder = pageParametersEncoder;
+		this.pageParametersEncoder = Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 		this.cachingStrategy = cachingStrategy;
 	}
 
@@ -145,7 +149,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 		return null;
 	}
 
-	private IResourceCachingStrategy getCachingStrategy()
+	protected final IResourceCachingStrategy getCachingStrategy()
 	{
 		return cachingStrategy.get();
 	}
@@ -246,11 +250,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 							getCachingStrategy().decorateUrl(resourceUrl, cacheable);
 							token = resourceUrl.getFileName();
 	
-							if (Strings.isEmpty(token))
-							{
-								throw new IllegalStateException(
-									"caching strategy returned empty name for " + resource);
-							}
+						  Checks.notEmpty(token, "Caching strategy returned empty name for '%s'", resource);
 						}
 					}
 				}
