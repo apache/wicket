@@ -88,8 +88,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	{
 		Url url = request.getUrl();
 
-		if (url.getSegments().size() >= 4 &&
-			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
+		if (canBeHandled(url))
 		{
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(request, url.getSegments().size(),
@@ -273,12 +272,25 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 		Url url = request.getUrl();
 
 		int score = -1;
-		if (url.getSegments().size() >= 4 &&
-			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
+		if (canBeHandled(url))
 		{
 			score = 1;
 		}
 
 		return score;
+	}
+
+	/**
+	 * Checks whether the passed Url can be handled by this mapper
+	 *
+	 * @param url
+	 *      the Url to check
+	 * @return {@code true} - if the Url can be handled, {@code false} - otherwise
+	 */
+	protected boolean canBeHandled(final Url url)
+	{
+		return (url.getSegments().size() >= 4 &&
+				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()));
+
 	}
 }
