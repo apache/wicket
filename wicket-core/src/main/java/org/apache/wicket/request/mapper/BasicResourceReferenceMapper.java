@@ -113,10 +113,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 					getCachingStrategy().undecorateUrl(resourceUrl);
 					segment = resourceUrl.getFileName();
 
-					if (Strings.isEmpty(segment))
-					{
-						throw new IllegalStateException("caching strategy returned empty name for " + resourceUrl);
-					}
+					Checks.notEmpty(segment, "Caching strategy returned empty name for '%s'", resourceUrl);
 				}
 				if (name.length() > 0)
 				{
