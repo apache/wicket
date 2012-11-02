@@ -115,7 +115,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 			final FeedbackMessage message = listItem.getModelObject();
 			message.markRendered();
 			final Component label = newMessageDisplayComponent("message", message);
-			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
+			final AttributeModifier levelModifier = AttributeModifier.append("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
 			listItem.add(label);
