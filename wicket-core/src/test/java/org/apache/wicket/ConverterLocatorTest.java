@@ -17,8 +17,11 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Locale;
 
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.convert.converter.DateConverter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,10 +32,7 @@ import org.junit.Test;
  */
 public final class ConverterLocatorTest extends Assert
 {
-	/** Dutch locale for localized testing. */
-	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
-
-	private final IConverterLocator locator = new ConverterLocator();
+	private final ConverterLocator locator = new ConverterLocator();
 
 	/**
 	 * Test generalized conversion
@@ -56,5 +56,43 @@ public final class ConverterLocatorTest extends Assert
 		assertEquals("test",
 			locator.getConverter(Serializable.class).convertToObject("test", Locale.US));
 		assertEquals("test", locator.getConverter(Object.class).convertToObject("test", Locale.US));
+	}
+
+	/**
+	 * Verifies that a new instance of date converter is returned
+	 * if there is no custom converter registered.
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-4839
+	 */
+	@Test
+	public void customDateConverter()
+	{
+
+		/**
+		 * A custom converter that can override the default
+		 * registered DateConverter
+		 */
+		class CustomDateConverter extends DateConverter
+		{
+		}
+
+		IConverter<Date> dateConverter = locator.getConverter(Date.class);
+
+		// assert that a DateConverter is returned
+		assertSame(DateConverter.class, dateConverter.getClass());
+		assertNotSame(CustomDateConverter.class, dateConverter.getClass());
+
+		IConverter<Date> secondDateConverter = locator.getConverter(Date.class);
+
+		// assert that a new instance of DateConverter is returned
+		assertNotSame(dateConverter, secondDateConverter);
+
+		locator.set(Date.class, new CustomDateConverter());
+		dateConverter = locator.getConverter(Date.class);
+
+		// assert that the CustomDateConverter is returned
+		assertNotSame(DateConverter.class, dateConverter.getClass());
+		assertSame(CustomDateConverter.class, dateConverter.getClass());
+
 	}
 }
