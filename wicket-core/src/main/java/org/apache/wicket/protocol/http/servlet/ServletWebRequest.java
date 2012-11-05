@@ -30,6 +30,7 @@ import java.util.Set;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestParameters;
@@ -37,9 +38,9 @@ import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
@@ -168,7 +169,11 @@ public class ServletWebRequest extends WebRequest
 				base = getRequestParameters().getParameterValue(PARAM_AJAX_BASE_URL).toString(null);
 			}
 
-			Checks.notNull(base, "Current ajax request is missing the base url header or parameter");
+			if (base == null)
+			{
+				throw new AbortWithHttpErrorCodeException(HttpServletResponse.SC_BAD_REQUEST,
+					"Current ajax request is missing the base url header or parameter");
+			}
 
 			return setParameters(Url.parse(base, getCharset()));
 		}
