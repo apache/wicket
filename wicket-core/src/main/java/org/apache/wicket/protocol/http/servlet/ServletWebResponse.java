@@ -209,7 +209,7 @@ public class ServletWebResponse extends WebResponse
 		  the base url properly
 		 */
 		UrlRenderer urlRenderer = new UrlRenderer(webRequest);
-		Url relativeUrl = Url.parse(url);
+		Url relativeUrl = Url.parse(url.toString());
 		String fullUrl = urlRenderer.renderFullUrl(relativeUrl);
 		String encodedFullUrl = httpServletResponse.encodeRedirectURL(fullUrl);
 		final String encodedRelativeUrl;
