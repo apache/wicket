@@ -24,7 +24,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
@@ -1313,7 +1312,6 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void redirectToAbsoluteUrlTest()
 	{
-		WicketTester tester = new WicketTester();
 		tester.setFollowRedirects(false);
 		tester.startPage(AlwaysRedirectPage.class);
 		tester.assertRedirectUrl("http://localhost:4333/");
