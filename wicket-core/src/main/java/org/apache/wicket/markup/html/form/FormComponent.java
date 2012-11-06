@@ -1439,7 +1439,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	/**
 	 * Reports required error against this component
 	 */
-	private void reportRequiredError()
+	protected void reportRequiredError()
 	{
 		error(new ValidationError().addKey("Required"));
 	}
