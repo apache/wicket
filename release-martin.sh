@@ -117,7 +117,7 @@ echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $filename.asc --deta
 echo "Creating Git archive..."
 mkdir -p target/git
 gitarchive="target/git/apache-wicket-$version-git.tgz"
-git archive --format=tgz -o $gitarchive build/wicket-$version
+git archive --format=tgz  --prefix=apache-wicket-$version/ -o $gitarchive build/wicket-$version
 gpg --print-md MD5 $gitarchive > $gitarchive.md5
 gpg --print-md SHA1 $gitarchive > $gitarchive.sha
 echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $gitarchive.asc --detach-sig $gitarchive
