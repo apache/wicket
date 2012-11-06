@@ -25,7 +25,7 @@
 
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.5.9</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
