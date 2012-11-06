@@ -1,5 +1,63 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5.9
+
+** Sub-task
+    * [WICKET-4752] - Revert Wicket-4715 -Read multipart request params in WebApplication
+    * [WICKET-4854] - Pass an absolute url to encodeRedirectUrl() to make it easier for the web container
+
+** Bug
+    * [WICKET-4623] - UploadProgressBar does not show up if the form submitted by AjaxButton or AjaxLink
+    * [WICKET-4645] - encodeURL broken on Tomcat 7.0.28
+    * [WICKET-4732] - CssPackageResource doesn't work if the extension isn't css
+    * [WICKET-4734] - Button value is double escaped
+    * [WICKET-4738] - DownloadLink doesn't wrap the String model used for file name nor does it detach
+    * [WICKET-4743] - SerializingObjectSizeOfStrategy do not use framework serializer
+    * [WICKET-4760] - JavaScriptStripper fails with single line comments
+    * [WICKET-4761] - ModalWindow.closeCurrent Javascript error
+    * [WICKET-4763] - Page's stateless hint is initially set to 'false'
+    * [WICKET-4776] - Problems with switching between HTTP/HTTPS
+    * [WICKET-4777] - JavaScriptReference escapes given URL
+    * [WICKET-4780] - Using both MountedMapper and CryptoMapper causes warning
+    * [WICKET-4784] - DOM ids change of the input fields of FilterToolbar
+    * [WICKET-4789] - URL rendering regression
+    * [WICKET-4791] - UploadProgressBar hides immediately after being shown.
+    * [WICKET-4792] - wickettester#startcomponent(component) doesn't call oninitialize
+    * [WICKET-4794] - RfcCompliantEmailAddressValidator error message not defined
+    * [WICKET-4810] - CLONE - BaseWicketTester.clickLink() does not work with a ResourceLink with ResourceReference
+    * [WICKET-4816] - Handling of semicolons in form action URLs
+    * [WICKET-4818] - NullPointerException while reading the POST parameters
+    * [WICKET-4820] - Race condition in ResourceSettings: getResourceWatcher() is not thread safe
+    * [WICKET-4826] - PaletteButton#onComponentTag(ComponentTag) does not call super
+    * [WICKET-4836] - Unmount a page does not work if the path starts with /
+    * [WICKET-4837] - SmartLinkMultiLineLabel does not display email addresses or web URLs as hyperlinks
+    * [WICKET-4839] - Date converters should use a new instance of DateFormat to be thread safe
+    * [WICKET-4841] - Return error code 400 when an Ajax request has no base url set in header/request parameters.
+    * [WICKET-4842] - WicketRuntimeException when Tomcat cleans up a session later on
+    * [WICKET-4844] - AbstractResourceReferenceMapper doesn't escape separators in style/variation names
+    * [WICKET-4850] - BaseWicketTester discards cookies with MaxAge = -1 when processing a new request
+
+** Improvement
+    * [WICKET-4722] - Don't set ADDED_AT and CONSTRUCTED_AT keys if components use checking is not enabled
+    * [WICKET-4726] - Do not try to show the date picker if it is already shown
+    * [WICKET-4731] - TimeField not able to work with a java.sql.Time
+    * [WICKET-4736] - JavaScriptFilteredIntoFooterHeaderResponse should reverse filter logic
+    * [WICKET-4745] - Allow to set initial state of DebugBar to expanded / collapsed
+    * [WICKET-4746] - Wizard component translation for pt_BR
+    * [WICKET-4798] - Make IteratorFilter.onFilter protected
+    * [WICKET-4804] - Add #setStatus(int) in AbstractResource.ResourceResponse
+    * [WICKET-4808] - WebClientInfo.getRemoteAddr() handling "Forwarded-For" value tokens not being ip addresses
+    * [WICKET-4812] - Make SerializationChecker easier for extending so custom checks can be added to it
+    * [WICKET-4831] - Append the feedback message CSS class instead of overriding it
+    * [WICKET-4835] - Add debug log messages in CompoundRequestMapper#mapRequest
+    * [WICKET-4845] - Make BasicResourceReferenceMapper public so it is easy to extend it
+    * [WICKET-4853] - Change FormComponent#reportRequiredError() from private to protected
+    * [WICKET-4856] - Support SVG extension in SecurePackageResourceGuard
+
+** Task
+    * [WICKET-4781] - Downgrade the warning that a rendering falls back to redirect_to_buffer to a DEBUG
+
+
 
 Release Notes - Wicket - Version 1.5.8
 
