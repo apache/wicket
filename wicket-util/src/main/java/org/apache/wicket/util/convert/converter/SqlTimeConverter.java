@@ -43,7 +43,7 @@ public class SqlTimeConverter extends AbstractConverter<Time>
 		{
 			locale = Locale.getDefault();
 		}
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		DateFormat format = (DateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, locale).clone();
 		try
 		{
 			Date date = format.parse(value);
@@ -70,7 +70,7 @@ public class SqlTimeConverter extends AbstractConverter<Time>
 		{
 			locale = Locale.getDefault();
 		}
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		DateFormat format = (DateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, locale).clone();
 		return format.format(time);
 	}
 

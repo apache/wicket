@@ -87,7 +87,7 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 			locale = Locale.getDefault();
 		}
 
-		DateFormat format = DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale);
+		DateFormat format = (DateFormat) DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale).clone();
 		try
 		{
 			Date date = format.parse(value);
@@ -118,7 +118,7 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 			locale = Locale.getDefault();
 		}
 
-		DateFormat format = DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale);
+		DateFormat format = (DateFormat) DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale).clone();
 		return format.format(timestamp);
 	}
 

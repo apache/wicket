@@ -72,7 +72,7 @@ public class DateConverter extends AbstractConverter<Date>
 			locale = Locale.getDefault();
 		}
 
-		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
+		return (DateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale).clone();
 	}
 
 	/**
