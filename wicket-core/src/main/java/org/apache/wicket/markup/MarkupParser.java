@@ -148,9 +148,9 @@ public class MarkupParser extends AbstractMarkupParser
 
 		filters.add(new WicketTagIdentifier(markupResourceStream));
 		filters.add(new HtmlHandler());
-		filters.add(new WicketRemoveTagHandler());
-		filters.add(new WicketLinkTagHandler());
-		filters.add(new AutoLabelTagHandler());
+		filters.add(new WicketRemoveTagHandler(markupResourceStream));
+		filters.add(new WicketLinkTagHandler(markupResourceStream));
+		filters.add(new AutoLabelTagHandler(markupResourceStream));
 		filters.add(new WicketNamespaceHandler(markupResourceStream));
 		filters.add(new WicketMessageTagHandler(markupResourceStream));
 
@@ -172,13 +172,13 @@ public class MarkupParser extends AbstractMarkupParser
 
 		filters.add(new OpenCloseTagExpander());
 		filters.add(new RelativePathPrefixHandler(markupResourceStream));
-		filters.add(new EnclosureHandler());
-		filters.add(new InlineEnclosureHandler());
+		filters.add(new EnclosureHandler(markupResourceStream));
+		filters.add(new InlineEnclosureHandler(markupResourceStream));
 
 		// Append it. See WICKET-4390
 		filters.add(new StyleAndScriptIdentifier(), StyleAndScriptIdentifier.class);
 		filters.add(new ConditionalCommentFilter());
-		filters.add(new WicketContainerTagHandler(Application.get().usesDevelopmentConfig()));
+		filters.add(new WicketContainerTagHandler(markupResourceStream, Application.get().usesDevelopmentConfig()));
 
 		return filters;
 	}

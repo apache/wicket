@@ -24,6 +24,7 @@ import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
+import org.apache.wicket.markup.MarkupStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,11 +121,6 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * @return Usually the same as the tag attribute
 	 * @throws ParseException
 	 */
-// Not yet used
-// protected MarkupElement onWicketTag(final WicketTag tag) throws ParseException
-// {
-// return onComponentTag(tag);
-// }
 
 	/**
 	 * Invoked when a tags (e.g. DOCTYPE, PROCESSING_INSTRUCTIION, etc. which have been identified
@@ -136,21 +132,8 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 */
 	protected MarkupElement onSpecialTag(final HtmlSpecialTag tag) throws ParseException
 	{
-		// log.error(tag.toString());
 		return tag;
 	}
-
-// /**
-// * Invoked if current element is raw markup
-// *
-// * @param rawMarkup
-// * @return Usually the same as the tag attribute
-// */
-// Not yet used
-// protected MarkupElement onRawMarkup(final MarkupElement rawMarkup)
-// {
-// return rawMarkup;
-// }
 
 	@Override
 	public void postProcess(final Markup markup)
@@ -162,17 +145,48 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	}
 
 	/**
+	 * Extracts the markup namespace from the MarkupResourceStream
+	 * passed at creation time.
+	 *
+	 * <p>
+	 *     There are two versions of this method because most IMarkupFilter's
+	 *     have dual personality - {@link IMarkupFilter} (one instance per MarkupParser)
+	 *     and {@link org.apache.wicket.markup.resolver.IComponentResolver} (one
+	 *     instance per application).
+	 * </p>
+	 *
 	 * @return the namespace of the loaded markup
 	 */
 	protected String getWicketNamespace()
 	{
-		String wicketNamespace;
-		if (markupResourceStream != null)
+		return getWicketNamespace(null);
+	}
+
+	/**
+	 * Extracts the markup namespace from the passed MarkupStream if available,
+	 * or from the MarkupResourceStream passed at creation time.
+	 *
+	 * <p>
+	 *     There are two versions of this method because most IMarkupFilter's
+	 *     have dual personality - {@link IMarkupFilter} (one instance per MarkupParser)
+	 *     and {@link org.apache.wicket.markup.resolver.IComponentResolver} (one
+	 *     instance per application).
+	 * </p>
+	 *
+	 * @param markupStream
+	 *      the markup stream
+	 * @return namespace extracted from the markup
+	 */
+	protected String getWicketNamespace(final MarkupStream markupStream)
+	{
+		String wicketNamespace = MarkupParser.WICKET;
+		if (markupStream != null)
+		{
+			wicketNamespace = markupStream.getWicketNamespace();
+		}
+		else if (markupResourceStream != null)
 		{
 			wicketNamespace = markupResourceStream.getWicketNamespace();
-		}
-		else {
-			wicketNamespace = MarkupParser.WICKET;
 		}
 		return wicketNamespace;
 	}

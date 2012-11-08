@@ -60,9 +60,9 @@ public class AutoLabelResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
+	private static final Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
 
-	static final String WICKET_FOR = "wicket:for";
+	static final String WICKET_FOR = ":for";
 
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
@@ -73,7 +73,7 @@ public class AutoLabelResolver implements IComponentResolver
 			return null;
 		}
 
-		final String id = tag.getAttribute(WICKET_FOR).trim();
+		final String id = tag.getAttribute(getWicketNamespace(markupStream) + WICKET_FOR).trim();
 
 		Component component = findRelatedComponent(container, id);
 		if (component == null)
@@ -100,6 +100,11 @@ public class AutoLabelResolver implements IComponentResolver
 		}
 
 		return new AutoLabel("label" + container.getPage().getAutoIndex(), component);
+	}
+
+	private String getWicketNamespace(MarkupStream markupStream)
+	{
+		return markupStream.getWicketNamespace();
 	}
 
 	/**

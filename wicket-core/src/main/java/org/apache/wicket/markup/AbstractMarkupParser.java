@@ -108,7 +108,7 @@ public abstract class AbstractMarkupParser
 		markup = new Markup(resource);
 
 		// The root of all filters is the xml parser
-		markupFilterChain = new RootMarkupFilter(xmlParser);
+		markupFilterChain = new RootMarkupFilter(xmlParser, resource);
 
 		// Initialize the markup filter chain
 		filters = initializeMarkupFilters(markup);
@@ -162,7 +162,7 @@ public abstract class AbstractMarkupParser
 	public final Markup parse() throws IOException, ResourceStreamNotFoundException
 	{
 		// The root of all markup filters is the xml parser
-		markupFilterChain = new RootMarkupFilter(xmlParser);
+		markupFilterChain = new RootMarkupFilter(xmlParser,markup.getMarkupResourceStream());
 
 		// Convert the list of markup filters into a chain
 		for (IMarkupFilter filter : getMarkupFilters())

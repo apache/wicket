@@ -79,10 +79,9 @@ public class StringsTest extends Assert
 			Strings.stripJSessionId(url + ";jsessionid=12345?param=a;b"));
 
 		// WICKET-4816
-		assertEquals(url + ";a=b;c=d",
-				Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345"));
+		assertEquals(url + ";a=b;c=d", Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345"));
 		assertEquals(url + ";a=b;c=d?param=a;b",
-				Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345?param=a;b"));
+			Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345?param=a;b"));
 	}
 
 	/**
@@ -501,6 +500,13 @@ public class StringsTest extends Assert
 		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\r\ndef").toString());
 		assertEquals("<p>abc<br/>def<br/>ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi")
 			.toString());
+
+		// WICKET-4837
+		assertEquals(
+			"<p><a href=\"mailto:john@doe.com\">john@doe.com</a><br/><a href=\"http://apache.wicket.org\">http://apache.wicket.org</a></p>",
+			Strings.toMultilineMarkup(
+				"<a href=\"mailto:john@doe.com\">john@doe.com</a>\n<a href=\"http://apache.wicket.org\">http://apache.wicket.org</a>")
+				.toString());
 
 		assertEquals("<p>abc</p><p>def</p><p>ghi</p>",
 			Strings.toMultilineMarkup("abc\n\ndef\n\nghi").toString());

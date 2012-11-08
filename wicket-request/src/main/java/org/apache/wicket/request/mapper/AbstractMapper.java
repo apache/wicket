@@ -213,7 +213,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 */
 	protected String[] getMountSegments(String mountPath)
 	{
-		if (mountPath.startsWith("/"))
+		if (mountPath.charAt(0) == '/')
 		{
 			mountPath = mountPath.substring(1);
 		}

@@ -45,6 +45,8 @@ public class AjaxApplication extends WicketExampleApplication
 	{
 		super.init();
 
+		getApplicationSettings().setUploadProgressUpdatesEnabled(true);
+
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
