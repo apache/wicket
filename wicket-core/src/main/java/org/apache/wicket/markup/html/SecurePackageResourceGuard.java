@@ -112,6 +112,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.jpeg");
 		addPattern("+*.gif");
 		addPattern("+*.ico");
+		addPattern("+*.cur");
 
 		// WICKET-208 non page templates may be served
 		addPattern("+*.html");
