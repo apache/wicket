@@ -121,7 +121,8 @@
 			 * If no event is given as argument (IE), window.event is returned.
 			 */
 			fix: function (evt) {
-				return jQuery.event.fix(evt);
+				var evnt = evt || window.event;
+				return jQuery.event.fix(evnt);
 			},
 
 			fire: function (element, event) {
