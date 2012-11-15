@@ -31,6 +31,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.settings.IApplicationSettings;
@@ -416,6 +417,15 @@ public class WicketObjects
 	 */
 	public static long sizeof(final Serializable object)
 	{
+		if (object instanceof Component)
+		{
+			((Component) object).detach();
+		}
+		else if (object instanceof IDetachable)
+		{
+			((IDetachable) object).detach();
+		}
+
 		return objectSizeOfStrategy.sizeOf(object);
 	}
 }
