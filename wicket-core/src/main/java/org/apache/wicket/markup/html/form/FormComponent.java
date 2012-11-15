@@ -1167,17 +1167,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			}
 			catch (ConversionException e)
 			{
-				ValidationError error = new ValidationError();
-				if (e.getResourceKey() != null)
-				{
-					error.addKey(e.getResourceKey());
-				}
-				if (e.getTargetType() != null)
-				{
-					error.addKey("ConversionError." + Classes.simpleName(e.getTargetType()));
-				}
-				error.addKey("ConversionError");
-				reportValidationError(e, error);
+				error(newValidationError(e));
 			}
 		}
 		else
@@ -1190,46 +1180,80 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			}
 			catch (ConversionException e)
 			{
-				ValidationError error = new ValidationError();
-				if (e.getResourceKey() != null)
-				{
-					error.addKey(e.getResourceKey());
-				}
-				String simpleName = Classes.simpleName(getType());
-				error.addKey("IConverter." + simpleName);
-				error.addKey("IConverter");
-				error.setVariable("type", simpleName);
-				reportValidationError(e, error);
+				error(newValidationError(e));
 			}
 		}
 	}
 
 	/**
+	 * This method is called, when the validation triggered by {@link FormComponent#convertInput()}
+	 * failed with a {@link ConversionException}, to construct a {@link ValidationError} based on
+	 * the exception.
+	 * <p>
+	 * Override this method to modify the ValidationError object, e.g. add a custom variable for
+	 * message substitution:
+	 * <p>
+	 *
+	 * <pre>
+	 * new FormComponent&lt;T&gt;(id)
+	 * {
+	 * 	protected ValidationError newValidationError(ConversionException cause)
+	 * 	{
+	 * 		return super.newValidationError(cause).setVariable(&quot;foo&quot;, foovalue);
+	 * 	}
+	 * };
+	 * </pre>
 	 * 
-	 * @param e
-	 * @param error
+	 * @param cause
+	 *            the original cause
+	 * @return {@link ValidationError}
 	 */
-	private void reportValidationError(ConversionException e, ValidationError error)
+	protected ValidationError newValidationError(ConversionException cause)
 	{
-		final Locale locale = e.getLocale();
+		ValidationError error = new ValidationError();
+
+		if (cause.getResourceKey() != null)
+		{
+			error.addKey(cause.getResourceKey());
+		}
+
+		if (typeName == null)
+		{
+			if (cause.getTargetType() != null)
+			{
+				error.addKey("ConversionError." + Classes.simpleName(cause.getTargetType()));
+			}
+			error.addKey("ConversionError");
+		}
+		else
+		{
+			String simpleName = Classes.simpleName(getType());
+			error.addKey("IConverter." + simpleName);
+			error.addKey("IConverter");
+			error.setVariable("type", simpleName);
+		}
+
+		final Locale locale = cause.getLocale();
 		if (locale != null)
 		{
 			error.setVariable("locale", locale);
 		}
-		error.setVariable("exception", e);
-		Format format = e.getFormat();
+
+		error.setVariable("exception", cause);
+
+		Format format = cause.getFormat();
 		if (format instanceof SimpleDateFormat)
 		{
 			error.setVariable("format", ((SimpleDateFormat)format).toLocalizedPattern());
 		}
 
-		Map<String, Object> variables = e.getVariables();
+		Map<String, Object> variables = cause.getVariables();
 		if (variables != null)
 		{
 			error.getVariables().putAll(variables);
 		}
 
-		error(error);
+		return error;
 	}
 
 	/**
