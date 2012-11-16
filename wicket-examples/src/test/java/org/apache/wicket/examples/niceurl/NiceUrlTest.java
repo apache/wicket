@@ -90,7 +90,7 @@ public class NiceUrlTest extends Assert
 	@Test
 	public void testPage2QP()
 	{
-		tester.clickLink("page2LinkQP");
+		tester.clickLink("page2LinkSegments");
 		tester.assertRenderedPage(Page2QP.class);
 		tester.clickLink("refreshLink");
 		tester.assertRenderedPage(Page2QP.class);
