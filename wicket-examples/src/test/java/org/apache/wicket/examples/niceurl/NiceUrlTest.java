@@ -88,12 +88,26 @@ public class NiceUrlTest extends Assert
 	 * Test page.
 	 */
 	@Test
-	public void testPage2QP()
+	public void testPage2PP()
 	{
-		tester.clickLink("page2LinkSegments");
-		tester.assertRenderedPage(Page2QP.class);
+		tester.clickLink("page2LinkPp");
+		tester.assertRenderedPage(Page2PP.class);
 		tester.clickLink("refreshLink");
-		tester.assertRenderedPage(Page2QP.class);
+		tester.assertRenderedPage(Page2PP.class);
+		tester.clickLink("homeLink");
+		tester.assertRenderedPage(Home.class);
+	}
+
+	/**
+	 * Test page.
+	 */
+	@Test
+	public void testPage2UP()
+	{
+		tester.clickLink("page2LinkUp");
+		tester.assertRenderedPage(Page2UP.class);
+		tester.clickLink("refreshLink");
+		tester.assertRenderedPage(Page2UP.class);
 		tester.clickLink("homeLink");
 		tester.assertRenderedPage(Home.class);
 	}

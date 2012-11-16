@@ -20,11 +20,12 @@
 				Click this BookmarkablePageLink to go to Page 2
 			</a>
 			&#160;After Page 2 is displayed click refresh link to see url parameters in action <br />
-            <a wicket:id="page2LinkSegments">
-                Same as page 2, but now the url parameters are encoded in the segments
+            <a wicket:id="page2LinkPp">
+                Same as page 2, but now the url parameters are encoded with placeholders in the segments
+            </a> <br />
+            <a wicket:id="page2LinkUp">
+                Same as page 2, but now the url parameters are encoded in the segments in Wicket 1.4 style
             </a>
-            <br />
-
 		</p>
 		<p>
 			These links refere to pages that were mounted as a whole package <br />

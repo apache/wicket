@@ -16,23 +16,24 @@
  */
 package org.apache.wicket.examples.niceurl;
 
+import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * Simple bookmarkable page that displays page parameters which is mounted with another parameter
- * encoder.
+ * Simple bookmarkable page that displays page parameters which is mounted with parameter
+ * placeholders.
  * 
- * @see QueryStringUrlCodingStrategy
+ * @see MountedMapper
  * @author Eelco Hillenius
  */
-public class Page2QP extends Page2
+public class Page2PP extends Page2
 {
 	/**
 	 * Constructor
 	 * 
 	 * @param parameters
 	 */
-	public Page2QP(PageParameters parameters)
+	public Page2PP(PageParameters parameters)
 	{
 		super(parameters);
 	}

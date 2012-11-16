@@ -17,8 +17,10 @@
 package org.apache.wicket.examples.niceurl;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.niceurl.mounted.Page3;
+import org.apache.wicket.request.mapper.parameter.UrlPathPageParametersEncoder;
 
 
 /**
@@ -57,7 +59,9 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mountPage("/the/homepage/path", Home.class);
 		mountPage("/a/nice/path/to/the/first/page", Page1.class);
 		mountPage("/path/to/page2", Page2.class);
-		mountPage("/path/to/page2segments/#{param1}/#{param2}", Page2QP.class);
+		mountPage("/path/to/page2pp/#{param1}/#{param2}", Page2PP.class);
+		mount(new MountedMapper("/path/to/page2up", Page2UP.class,
+			new UrlPathPageParametersEncoder()));
 
 		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url
