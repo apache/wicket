@@ -1,6 +1,38 @@
 This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
+Release Notes - Wicket - Version 6.3.0
+
+** Bug
+    * [WICKET-4623] - UploadProgressBar does not show up if the form submitted by AjaxButton or AjaxLink
+    * [WICKET-4826] - PaletteButton#onComponentTag(ComponentTag) does not call super
+    * [WICKET-4829] - ComponentResolvers created in app init ignore markup's namespace
+    * [WICKET-4836] - Unmount a page does not work if the path starts with /
+    * [WICKET-4837] - SmartLinkMultiLineLabel does not display email addresses or web URLs as hyperlinks
+    * [WICKET-4841] - Return error code 400 when an Ajax request has no base url set in header/request parameters.
+    * [WICKET-4842] - WicketRuntimeException when Tomcat cleans up a session later on
+    * [WICKET-4844] - AbstractResourceReferenceMapper doesn't escape separators in style/variation names
+    * [WICKET-4848] - Reporter of FeedbackMessage should not be set to 'null' on detach
+    * [WICKET-4850] - BaseWicketTester discards cookies with MaxAge = -1 when processing a new request
+    * [WICKET-4851] - IE8, IE7 javascript errors with Wicket 6
+    * [WICKET-4857] - AutoCompleteTextFields submits Form if a choice is selected via enter-key
+    * [WICKET-4859] - Integer overflow in AbstractToolbar
+    * [WICKET-4864] - 'format' not set in ConversionException
+    * [WICKET-4865] - Page parameters not working with CryptoMapper
+
+** Improvement
+    * [WICKET-4831] - Append the feedback message CSS class instead of overriding it
+    * [WICKET-4835] - Add debug log messages in CompoundRequestMapper#mapRequest
+    * [WICKET-4845] - Make BasicResourceReferenceMapper public so it is easy to extend it
+    * [WICKET-4853] - Change FormComponent#reportRequiredError() from private to protected
+    * [WICKET-4856] - Support SVG extension in SecurePackageResourceGuard
+    * [WICKET-4863] - Customize ValidationError creation by FormComponent
+    * [WICKET-4867] - Detach the object before calculating its size
+
+** Task
+    * [WICKET-4855] - Upgrade JQuery to 1.8.2
+
+=============================================================================
 
 Release Notes - Wicket - Version 6.2.0
 
