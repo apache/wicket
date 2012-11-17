@@ -85,6 +85,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	private int currentTab = -1;
 
 	private transient Boolean[] tabsVisibilityCache;
+    private transient int lastVisibleTabIndex;
 
 	/**
 	 * Constructor
@@ -218,7 +219,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 				{
 					cssClass += ' ' + getSelectedTabCssClass();
 				}
-				if (getIndex() == getTabs().size() - 1)
+				if (getIndex() == lastVisibleTabIndex)
 				{
 					cssClass += ' ' + getLastTabCssClass();
 				}
@@ -260,7 +261,16 @@ public class TabbedPanel<T extends ITab> extends Panel
 			}
 		}
 
-		setCurrentTab(index);
+        lastVisibleTabIndex = -1;
+        for (int i = 0; i < tabs.size(); i++)
+        {
+            if (isTabVisible(i))
+            {
+                lastVisibleTabIndex = i;
+            }
+        }
+
+        setCurrentTab(index);
 
 		super.onBeforeRender();
 	}
