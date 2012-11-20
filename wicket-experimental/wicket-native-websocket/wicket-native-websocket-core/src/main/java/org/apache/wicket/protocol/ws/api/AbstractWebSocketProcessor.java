@@ -29,11 +29,13 @@ import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
+import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
@@ -129,7 +131,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * @param message
 	 *      the message to broadcast
 	 */
-	protected final void broadcastMessage(final IWebSocketMessage message)
+	public final void broadcastMessage(final IWebSocketMessage message)
 	{
 		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, pageId);
 
@@ -243,11 +245,14 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		{
 			payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
 		}
+		else if (message instanceof IWebSocketPushMessage)
+		{
+			payload = new WebSocketPushPayload((IWebSocketPushMessage) message, handler);
+		}
 		else
 		{
 			throw new IllegalArgumentException("Unsupported message type: " + message.getClass().getName());
 		}
 		return payload;
 	}
-
 }

@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.wicket.protocol.ws.api.AbstractWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.util.lang.Args;
 import org.eclipse.jetty.util.Callback;
@@ -27,11 +29,11 @@ import org.eclipse.jetty.util.FutureCallback;
 import org.eclipse.jetty.websocket.core.api.WebSocketConnection;
 
 /**
- * A wrapper around Jetty9's native WebSocket.Connection
+ * A wrapper around Jetty9's native WebSocketConnection.
  *
  * @since 6.2
  */
-public class Jetty9WebSocketConnection implements IWebSocketConnection
+public class Jetty9WebSocketConnection extends AbstractWebSocketConnection
 {
 	private final WebSocketConnection connection;
 
@@ -41,8 +43,9 @@ public class Jetty9WebSocketConnection implements IWebSocketConnection
 	 * @param connection
 	 *            the jetty websocket connection
 	 */
-	public Jetty9WebSocketConnection(WebSocketConnection connection)
+	public Jetty9WebSocketConnection(WebSocketConnection connection, AbstractWebSocketProcessor webSocketProcessor)
 	{
+		super(webSocketProcessor);
 		this.connection = Args.notNull(connection, "connection");
 	}
 
