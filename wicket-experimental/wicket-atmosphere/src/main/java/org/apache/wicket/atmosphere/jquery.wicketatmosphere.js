@@ -40,6 +40,8 @@
 					transport : "websocket",
 					// transport : "streaming",
 					// transport : "long-polling",
+					trackMessageLength : true,
+					messageDelimiter: "<|msg|>",
 					maxRequests : 100000
 				});
 		callbackAdded = true;
