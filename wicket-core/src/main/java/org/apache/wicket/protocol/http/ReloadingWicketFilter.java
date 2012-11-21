@@ -96,11 +96,9 @@ import org.apache.wicket.util.listener.IChangeListener;
  * </p>
  * 
  * <p>
- * When using Spring, the application must not be a Spring bean itself, otherwise the reloading
- * mechanism won't be able to reload the application. In particular, make sure <b>not</b> to use
- * org.apache.wicket.spring.SpringWebApplicationFactory in web.xml. If you really need to inject
- * dependencies in your application, use DefaultListableBeanFactory.autowireBeanProperties() in the
- * init() method.
+ * When using org.apache.wicket.spring.SpringWebApplicationFactory, the application must be a bean
+ * with "prototype" scope and the "applicationBean" init parameter must be explicitly set, otherwise
+ * the reloading mechanism won't be able to recreate the application.
  * </p>
  * 
  * <p>
@@ -153,6 +151,8 @@ public class ReloadingWicketFilter extends WicketFilter
 		{
 			public void onChange()
 			{
+				destroy();
+
 				// Remove the ModificationWatcher from the current reloading class loader
 				reloadingClassLoader.destroy();
 
