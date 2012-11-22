@@ -224,6 +224,18 @@ public class UrlTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4877
+	 */
+	@Test
+	public void testParse15()
+	{
+		String s = "http://localhost:56704;jsessionid=8kxeo3reannw1qjtxgkju8yiu";
+		Url url = Url.parse(s);
+		assertEquals(Integer.valueOf(56704), url.getPort());
+		checkSegments(url, ";jsessionid=8kxeo3reannw1qjtxgkju8yiu");
+	}
+
+	/**
 	 * 
 	 */
 	@Test
@@ -764,9 +776,8 @@ public class UrlTest extends Assert
 	}
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-4387
-	 * Parse uri with '://' in it should consider it as absolute only if there are
-	 * no slashes earlier in the string.
+	 * https://issues.apache.org/jira/browse/WICKET-4387 Parse uri with '://' in it should consider
+	 * it as absolute only if there are no slashes earlier in the string.
 	 */
 	@Test
 	public void parseHttpSlashSlashColon()
