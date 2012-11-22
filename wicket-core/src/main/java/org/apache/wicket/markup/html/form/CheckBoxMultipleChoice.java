@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
@@ -26,6 +27,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.IValueMap;
 
 
 /**
@@ -408,7 +410,37 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			buffer.append(id);
 			buffer.append("\" id=\"");
 			buffer.append(idAttr);
-			buffer.append("\"/>");
+			buffer.append("\"");
+
+			// Allows user to add attributes to the <input..> tag
+			{
+				IValueMap attrs = getAdditionalAttributes(index, choice);
+				if (attrs != null)
+				{
+					for (Map.Entry<String, Object> attr : attrs.entrySet())
+					{
+						buffer.append(" ")
+							.append(attr.getKey())
+							.append("=\"")
+							.append(attr.getValue())
+							.append("\"");
+					}
+				}
+			}
+
+			if (getApplication().getDebugSettings().isOutputComponentPath())
+			{
+				String path = getPageRelativePath();
+				path = path.replace("_", "__");
+				path = path.replace(":", "_");
+				buffer.append(" wicketpath=\"")
+					.append(path)
+					.append("_input_")
+					.append(index)
+					.append("\"");
+			}
+
+			buffer.append("/>");
 
 			// Add label for checkbox
 			String display = label;
@@ -429,6 +461,17 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		}
 	}
 
+	/**
+	 * You may subclass this method to provide additional attributes to the &lt;input ..&gt; tag.
+	 * 
+	 * @param index
+	 * @param choice
+	 * @return tag attribute name/value pairs.
+	 */
+	protected IValueMap getAdditionalAttributes(final int index, final T choice)
+	{
+		return null;
+	}
 
 	/**
 	 * Creates markup id for the input tag used to generate the checkbox for the element with the
