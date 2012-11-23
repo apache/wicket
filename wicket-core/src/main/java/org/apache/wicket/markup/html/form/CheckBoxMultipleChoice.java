@@ -396,7 +396,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			// Add checkbox element
 			buffer.append("<input name=\"");
 			buffer.append(getInputName());
-			buffer.append("\"");
+			buffer.append('"');
 			buffer.append(" type=\"checkbox\"");
 			if (isSelected(choice, index, selected))
 			{
@@ -410,7 +410,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			buffer.append(id);
 			buffer.append("\" id=\"");
 			buffer.append(idAttr);
-			buffer.append("\"");
+			buffer.append('"');
 
 			// Allows user to add attributes to the <input..> tag
 			{
@@ -419,25 +419,25 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				{
 					for (Map.Entry<String, Object> attr : attrs.entrySet())
 					{
-						buffer.append(" ")
+						buffer.append(' ')
 							.append(attr.getKey())
 							.append("=\"")
 							.append(attr.getValue())
-							.append("\"");
+							.append('"');
 					}
 				}
 			}
 
 			if (getApplication().getDebugSettings().isOutputComponentPath())
 			{
-				String path = getPageRelativePath();
-				path = path.replace("_", "__");
-				path = path.replace(":", "_");
+				CharSequence path = getPageRelativePath();
+				path = Strings.replaceAll(path, "_", "__");
+				path = Strings.replaceAll(path, ":", "_");
 				buffer.append(" wicketpath=\"")
 					.append(path)
 					.append("_input_")
 					.append(index)
-					.append("\"");
+					.append('"');
 			}
 
 			buffer.append("/>");
@@ -477,7 +477,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * Creates markup id for the input tag used to generate the checkbox for the element with the
 	 * specified {@code id}.
 	 * <p>
-	 * NOTE It is useful to override this method if the contract for the genreated ids should be
+	 * NOTE It is useful to override this method if the contract for the generated ids should be
 	 * fixed, for example in cases when the id generation pattern in this method is used to predict
 	 * ids by some external javascript. If the contract is fixed in the user's code then upgrading
 	 * wicket versions will guarantee not to break it should the default contract be changed at a
@@ -489,6 +489,6 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 */
 	protected String getCheckBoxMarkupId(String id)
 	{
-		return getMarkupId() + "-" + getInputName() + "_" + id;
+		return getMarkupId() + '-' + getInputName() + '_' + id;
 	}
 }

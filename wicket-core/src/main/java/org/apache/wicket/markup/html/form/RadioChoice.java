@@ -440,7 +440,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 			// Add radio tag
 			buffer.append("<input name=\"")
 				.append(getInputName())
-				.append("\"")
+				.append('"')
 				.append(" type=\"radio\"")
 				.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
 				.append((enabled ? "" : " disabled=\"disabled\""))
@@ -448,7 +448,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				.append(id)
 				.append("\" id=\"")
 				.append(idAttr)
-				.append("\"");
+				.append('"');
 
 			// Should a roundtrip be made (have onSelectionChanged called)
 			// when the option is clicked?
@@ -469,8 +469,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					// invalid JavaScript
 					buffer.append(" onclick=\"window.location.href='")
 						.append(url)
-						.append((url.toString().indexOf('?') > -1 ? "&" : "?") + getInputName())
-						.append("=")
+						.append((url.toString().indexOf('?') > -1 ? '&' : '?') + getInputName())
+						.append('=')
 						.append(id)
 						.append("';\"");
 				}
@@ -483,25 +483,25 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				{
 					for (Map.Entry<String, Object> attr : attrs.entrySet())
 					{
-						buffer.append(" ")
+						buffer.append(' ')
 							.append(attr.getKey())
 							.append("=\"")
 							.append(attr.getValue())
-							.append("\"");
+							.append('"');
 					}
 				}
 			}
 
 			if (getApplication().getDebugSettings().isOutputComponentPath())
 			{
-				String path = getPageRelativePath();
-				path = path.replace("_", "__");
-				path = path.replace(":", "_");
+				CharSequence path = getPageRelativePath();
+				path = Strings.replaceAll(path, "_", "__");
+				path = Strings.replaceAll(path, ":", "_");
 				buffer.append(" wicketpath=\"")
 					.append(path)
 					.append("_input_")
 					.append(index)
-					.append("\"");
+					.append('"');
 			}
 
 			buffer.append("/>");
