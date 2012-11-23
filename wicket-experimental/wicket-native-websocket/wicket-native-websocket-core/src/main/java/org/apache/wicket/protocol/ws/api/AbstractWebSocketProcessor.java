@@ -145,7 +145,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			try
 			{
 				RequestCycle requestCycle;
-				if (oldRequestCycle == null)
+				if (oldRequestCycle == null || message instanceof IWebSocketPushMessage)
 				{
 					RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
 							application.getRootRequestMapper(), application.getExceptionMapperProvider().get());
@@ -161,7 +161,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				ThreadContext.setApplication(application);
 
 				Session session;
-				if (oldSession == null)
+				if (oldSession == null || message instanceof IWebSocketPushMessage)
 				{
 					ISessionStore sessionStore = application.getSessionStore();
 					session = sessionStore.lookup(webRequest);
