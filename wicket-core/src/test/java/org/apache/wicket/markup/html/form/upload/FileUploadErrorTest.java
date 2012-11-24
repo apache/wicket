@@ -56,7 +56,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	public void testSubmit_NoInput()
 	{
 		formTester.submit();
-		tester.assertErrorMessages("Field 'textField' is required.");
+		tester.assertErrorMessages("'textField' is required.");
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class FileUploadErrorTest extends WicketTestCase
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
 		formTester.submit();
 
-		tester.assertErrorMessages("Field 'textField' is required.");
+		tester.assertErrorMessages("'textField' is required.");
 	}
 
 	/**
@@ -159,6 +159,6 @@ public class FileUploadErrorTest extends WicketTestCase
 		formTester.setValue(textFieldId, "test value");
 
 		formTester.submit();
-		tester.assertErrorMessages("Field 'fileUpload' is required.");
+		tester.assertErrorMessages("'fileUpload' is required.");
 	}
 }
