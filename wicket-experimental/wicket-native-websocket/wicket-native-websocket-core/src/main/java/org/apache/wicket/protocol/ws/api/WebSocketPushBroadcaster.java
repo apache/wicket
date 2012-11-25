@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import static java.util.Collections.singletonList;
+
 import java.util.Collection;
+import java.util.concurrent.Executor;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -27,11 +30,29 @@ import org.apache.wicket.util.lang.Args;
  * Allows pushing events for processing to Pages that have active websockets.
  *
  * @since 6.4
+ * @author Mikko Tiihonen
  */
 public class WebSocketPushBroadcaster
 {
 	private final IWebSocketConnectionRegistry registry = new SimpleWebSocketConnectionRegistry();
 
+	/**
+	 * Processes the given message in the page and session identified by the given websocket connection.
+	 * The message is sent as an event to the Page and components of the session allowing the components
+	 * to be updated.
+	 *
+	 * This method can be invoked from any thread, even a non-wicket thread. By default all processing
+	 * is done in the caller thread. Use
+	 * {@link org.apache.wicket.settings.IRequestCycleSettings#setWebSocketPushMessageExecutor} to move
+	 * processing to background threads.
+	 *
+	 * If the given connection is no longer open then the broadcast is silently ignored.
+	 *
+	 * @param connection
+	 *			The websocket connection that identifies the page and session
+	 * @param message
+	 *			The push message event
+	 */
 	public void broadcast(ConnectedMessage connection, IWebSocketPushMessage message)
 	{
 		Args.notNull(connection, "connection");
@@ -42,9 +63,26 @@ public class WebSocketPushBroadcaster
 		{
 			return;
 		}
-		wsConnection.sendMessage(message);
+		process(connection.getApplication(), singletonList(wsConnection), message);
 	}
 
+	/**
+	 * Processes the given message in all pages that have active websocket connections.
+	 * The message is sent as an event to the Page and components of the session allowing the components
+	 * to be updated.
+	 *
+	 * This method can be invoked from any thread, even a non-wicket thread. By default all processing
+	 * is done in the caller thread. Use
+	 * {@link org.apache.wicket.settings.IRequestCycleSettings#setWebSocketPushMessageExecutor} to move
+	 * processing to background threads.
+	 *
+	 * If some connections are not in valid state they are silently ignored.
+	 *
+	 * @param application
+	 *			The wicket application
+	 * @param message
+	 *			The push message event
+	 */
 	public void broadcastAll(Application application, IWebSocketPushMessage message)
 	{
 		Args.notNull(application, "application");
@@ -55,9 +93,22 @@ public class WebSocketPushBroadcaster
 		{
 			return;
 		}
-		for (IWebSocketConnection wsConnection : wsConnections)
+		process(application, wsConnections, message);
+	}
+
+	private void process(Application application, Collection<IWebSocketConnection> wsConnections, final IWebSocketPushMessage message)
+	{
+		Executor executor = application.getWebSocketSettings().getWebSocketPushMessageExecutor();
+		for (final IWebSocketConnection wsConnection : wsConnections)
 		{
-			wsConnection.sendMessage(message);
+			executor.execute(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					wsConnection.sendMessage(message);
+				}
+			});
 		}
 	}
 }

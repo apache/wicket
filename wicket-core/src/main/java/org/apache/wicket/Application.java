@@ -96,6 +96,7 @@ import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.IStoreSettings;
+import org.apache.wicket.settings.IWebSocketSettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
@@ -108,6 +109,7 @@ import org.apache.wicket.settings.def.RequestLoggerSettings;
 import org.apache.wicket.settings.def.ResourceSettings;
 import org.apache.wicket.settings.def.SecuritySettings;
 import org.apache.wicket.settings.def.StoreSettings;
+import org.apache.wicket.settings.def.WebSocketSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
@@ -1043,6 +1045,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** The Request Cycle Settings */
 	private IRequestCycleSettings requestCycleSettings;
 
+	/** The WebSocket Settings */
+	private IWebSocketSettings webSocketSettings;
+
 	/** The Request Logger Settings */
 	private IRequestLoggerSettings requestLoggerSettings;
 
@@ -1213,6 +1218,28 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final void setRequestCycleSettings(final IRequestCycleSettings requestCycleSettings)
 	{
 		this.requestCycleSettings = requestCycleSettings;
+	}
+
+	/**
+	 * @return Application's websocket related settings
+	 */
+	public final IWebSocketSettings getWebSocketSettings()
+	{
+		checkSettingsAvailable();
+		if (webSocketSettings == null)
+		{
+			webSocketSettings = new WebSocketSettings();
+		}
+		return webSocketSettings;
+	}
+
+	/**
+	 *
+	 * @param webSocketSettings
+	 */
+	public final void setWebSocketSettings(final IWebSocketSettings webSocketSettings)
+	{
+		this.webSocketSettings = webSocketSettings;
 	}
 
 	/**
