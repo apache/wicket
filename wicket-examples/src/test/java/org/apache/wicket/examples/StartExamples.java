@@ -59,6 +59,9 @@ public class StartExamples
 		bb.setContextPath("/");
 		bb.setWar("src/main/webapp");
 
+		// uncomment next line if you want to test with JSESSIONID encoded in the urls
+		// ((AbstractSessionManager) bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
+
 		server.setHandler(bb);
 
 		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
