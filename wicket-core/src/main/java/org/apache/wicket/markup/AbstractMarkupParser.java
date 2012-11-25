@@ -56,6 +56,8 @@ public abstract class AbstractMarkupParser
 	/** Opening a conditional comment section, which is NOT treated as a comment section */
 	public static final Pattern CONDITIONAL_COMMENT_OPENING = Pattern.compile("(s?)^[^>]*?<!--\\[if.*?\\]>(-->)?(<!.*?-->)?");
 
+	private static final Pattern PRE_BLOCK = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
+
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
 
@@ -370,9 +372,7 @@ public abstract class AbstractMarkupParser
 		// - Append with compression everything between the two matches.
 		// - Repeat until no match, then special-case the fragment after the
 		// last <pre>.
-
-		Pattern preBlock = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
-		Matcher m = preBlock.matcher(rawMarkup);
+		Matcher m = PRE_BLOCK.matcher(rawMarkup);
 		int lastend = 0;
 		StringBuilder sb = null;
 		while (true)
