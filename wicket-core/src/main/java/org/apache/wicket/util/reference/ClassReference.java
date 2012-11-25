@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.util.IProvider;
 
 /**
  * A serialization-safe reference to a {@link Class}
@@ -29,9 +30,11 @@ import org.apache.wicket.Application;
  * @param <T>
  *            type of class
  */
-public class ClassReference<T> implements Serializable
+public class ClassReference<T> implements Serializable, IProvider<Class<T>>
 {
-	private transient WeakReference<Class<? extends T>> cache;
+	private static final long serialVersionUID = 1L;
+
+	private transient WeakReference<Class<T>> cache;
 	private final String name;
 
 	/**
@@ -39,7 +42,7 @@ public class ClassReference<T> implements Serializable
 	 * 
 	 * @param clazz
 	 */
-	public ClassReference(Class<? extends T> clazz)
+	public ClassReference(Class<T> clazz)
 	{
 		name = clazz.getName();
 		cache(clazz);
@@ -49,14 +52,14 @@ public class ClassReference<T> implements Serializable
 	 * @return the {@link Class} stored in this reference
 	 */
 	@SuppressWarnings("unchecked")
-	public Class<? extends T> get()
+	public Class<T> get()
 	{
-		Class<? extends T> clazz = cache != null ? cache.get() : null;
+		Class<T> clazz = cache != null ? cache.get() : null;
 		if (clazz == null)
 		{
 			try
 			{
-				clazz = (Class<? extends T>)Application.get()
+				clazz = (Class<T>)Application.get()
 					.getApplicationSettings()
 					.getClassResolver()
 					.resolveClass(name);
@@ -70,9 +73,9 @@ public class ClassReference<T> implements Serializable
 		return clazz;
 	}
 
-	private void cache(Class<? extends T> clazz)
+	private void cache(Class<T> clazz)
 	{
-		cache = new WeakReference<Class<? extends T>>(clazz);
+		cache = new WeakReference<Class<T>>(clazz);
 	}
 
 	/**
