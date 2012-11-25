@@ -13,9 +13,9 @@ import org.apache.wicket.util.reference.ClassReference;
  */
 public class GroupsModel extends LoadableDetachableModel<Class<?>[]>
 {
-	private static Class<?>[] EMPTY = new Class<?>[0];
+	private static final Class<?>[] EMPTY = new Class<?>[0];
 
-	private ArrayList<ClassReference<?>> groups = null;
+	private final ArrayList<ClassReference<?>> groups;
 
 	/**
 	 * Constructor
