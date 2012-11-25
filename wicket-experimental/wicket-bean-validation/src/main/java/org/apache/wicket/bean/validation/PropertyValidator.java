@@ -29,14 +29,14 @@ import org.apache.wicket.validation.IValidator;
  * </p>
  * 
  * <p>
- * The validator will set the reqiured flag on the form component it is attached to based on the
+ * The validator will set the required flag on the form component it is attached to based on the
  * presence of the @NotNull annotation. Notice, the required flag will only be set to {@code true},
  * components with the required flag already set to {@code true} will not have the flag set to
  * {@code false} by this validator.
  * </p>
  * 
  * <p>
- * The validator will allow {@link ITagModifier}s condigured in {@link BeanValidationConfiguration}
+ * The validator will allow {@link ITagModifier}s configured in {@link BeanValidationConfiguration}
  * to mutate the markup tag of the component it is attached to.
  * </p>
  * 
@@ -55,8 +55,11 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 	private static final Class<?>[] EMPTY = new Class<?>[0];
 
 	private FormComponent<T> component;
-	private Property property;
-	private final IModel<Class<?>[]> groups;
+
+	// the trailing underscore means that these members should not be used
+	// directly. ALWAYS use the respective getter instead.
+	private Property property_;
+	private final IModel<Class<?>[]> groups_;
 
 	public PropertyValidator(Class<?>... groups)
 	{
@@ -75,16 +78,16 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 
 	public PropertyValidator(Property property, IModel<Class<?>[]> groups)
 	{
-		this.property = property;
-		this.groups = groups;
+		this.property_ = property;
+		this.groups_ = groups;
 	}
 
 	private Property getProperty()
 	{
-		if (property == null)
+		if (property_ == null)
 		{
-			property = BeanValidationConfiguration.get().resolveProperty(component);
-			if (property == null)
+			property_ = BeanValidationConfiguration.get().resolveProperty(component);
+			if (property_ == null)
 			{
 				throw new IllegalStateException(
 					"Could not resolve Property from component: " +
@@ -94,16 +97,16 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 						" to resolve the Property automatically");
 			}
 		}
-		return property;
+		return property_;
 	}
 
 	private Class<?>[] getGroups()
 	{
-		if (groups == null)
+		if (groups_ == null)
 		{
 			return EMPTY;
 		}
-		return groups.getObject();
+		return groups_.getObject();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -136,9 +139,9 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 	public void detach(Component component)
 	{
 		super.detach(component);
-		if (groups != null)
+		if (groups_ != null)
 		{
-			groups.detach();
+			groups_.detach();
 		}
 	}
 
