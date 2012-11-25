@@ -5,6 +5,7 @@ import java.util.Locale;
 import javax.validation.MessageInterpolator;
 
 import org.apache.wicket.Session;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * {@link MessageInterpolator} that adapts another to a locale from Wicket's {@link Session}
@@ -19,22 +20,20 @@ public class SessionLocaleInterpolator implements MessageInterpolator
 	 * Constructor
 	 * 
 	 * @param delegate
+	 *      the MessageInterpolator to delegate to
 	 */
 	public SessionLocaleInterpolator(MessageInterpolator delegate)
 	{
-		if (delegate == null)
-		{
-			throw new IllegalArgumentException("delegate cannot be null");
-		}
+		Args.notNull(delegate, "delegate");
 		this.delegate = delegate;
 	}
 
-	public String interpolate(String messageTemplate, Context context)
+	public String interpolate(final String messageTemplate, final MessageInterpolator.Context context)
 	{
 		final Locale locale = getLocale();
 		if (locale != null)
 		{
-			return delegate.interpolate(messageTemplate, context, locale);
+			return interpolate(messageTemplate, context, locale);
 		}
 		else
 		{
@@ -42,7 +41,7 @@ public class SessionLocaleInterpolator implements MessageInterpolator
 		}
 	}
 
-	public String interpolate(final String message, final Context context, final Locale locale)
+	public String interpolate(final String message, final MessageInterpolator.Context context, final Locale locale)
 	{
 		return delegate.interpolate(message, context, locale);
 	}
