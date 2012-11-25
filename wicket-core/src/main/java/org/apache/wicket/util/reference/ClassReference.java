@@ -19,7 +19,7 @@ package org.apache.wicket.util.reference;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
-import org.apache.wicket.Application;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.IProvider;
 
 /**
@@ -51,22 +51,15 @@ public class ClassReference<T> implements Serializable, IProvider<Class<T>>
 	/**
 	 * @return the {@link Class} stored in this reference
 	 */
-	@SuppressWarnings("unchecked")
 	public Class<T> get()
 	{
 		Class<T> clazz = cache != null ? cache.get() : null;
 		if (clazz == null)
 		{
-			try
+			clazz = WicketObjects.resolveClass(name);
+			if (clazz == null)
 			{
-				clazz = (Class<T>)Application.get()
-					.getApplicationSettings()
-					.getClassResolver()
-					.resolveClass(name);
-			}
-			catch (ClassNotFoundException e)
-			{
-				throw new RuntimeException("Could not resolve class: " + name, e);
+				throw new RuntimeException("Could not resolve class: " + name);
 			}
 			cache(clazz);
 		}
