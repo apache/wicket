@@ -24,19 +24,18 @@ public interface BeanValidationContext extends IPropertyResolver
 	 * @param annotationType
 	 * @return tag modifier or {@code null} if none
 	 */
-	public abstract <T extends Annotation> ITagModifier<T> getTagModifier(Class<T> annotationType);
+	<T extends Annotation> ITagModifier<T> getTagModifier(Class<T> annotationType);
 
 	/**
 	 * @return the validator
 	 */
-	public abstract Validator getValidator();
+	Validator getValidator();
 
 	/**
 	 * @return the violation translator
 	 */
-	public abstract IViolationTranslator getViolationTranslator();
+	IViolationTranslator getViolationTranslator();
 
 	@Override
-	public abstract Property resolveProperty(FormComponent<?> component);
-
+	Property resolveProperty(FormComponent<?> component);
 }
