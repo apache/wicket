@@ -32,6 +32,7 @@
 		<module>wicket-native-websocket</module>
 		<module>wicket-bootstrap</module>
 		<module>wicket-examples-parent</module>
+		<module>wicket-bean-validation</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

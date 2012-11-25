@@ -14,8 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache</groupId>
@@ -56,7 +55,7 @@
 		<module>wicket-experimental</module>
 		<module>archetypes/quickstart</module>
 		<module>testing/wicket-common-tests</module>
-	</modules>
+  </modules>
 	<profiles>
 		<profile>
 			<id>release</id>
@@ -217,6 +216,12 @@
 				<version>6.4.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
+                        <dependency>
+                                <groupId>org.apache.wicket</groupId>
+                                <artifactId>wicket-bean-validation</artifactId>
+                                <version>0.5-SNAPSHOT</version>
+                                <type>jar</type>
+                        </dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>

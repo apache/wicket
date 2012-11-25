@@ -70,7 +70,7 @@
 		  <param-value>org.apache.wicket.examples.ajax.prototype.PrototypeApplication</param-value>
 		</init-param>
 	</filter>
-
+	
 	<filter>
 		<filter-name>AjaxApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -769,6 +769,20 @@
         <filter-name>CdiApplication</filter-name>
         <url-pattern>/cdi/*</url-pattern>
     </filter-mapping>
+
+	<!-- CDI EXAMPLE APPLICATION -->
+	<filter>
+		<filter-name>BeanValidation</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.bean.validation.BeanValidationApplication</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+        <filter-name>BeanValidation</filter-name>
+        <url-pattern>/bean-validation/*</url-pattern>
+    </filter-mapping>
 	
 	<listener>
 		<!-- initialize Weld in servlet environment -->
@@ -819,9 +833,9 @@
 			<param-name>org.atmosphere.useWebSocket</param-name>
 			<param-value>true</param-value>
 		</init-param>
+			<param-value>true</param-value>
 		<init-param>
 			<param-name>org.atmosphere.useNative</param-name>
-			<param-value>true</param-value>
 		</init-param>
 		<init-param>
 			<param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name>
