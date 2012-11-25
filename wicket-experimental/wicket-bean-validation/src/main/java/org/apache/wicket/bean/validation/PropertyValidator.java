@@ -52,11 +52,11 @@ import org.apache.wicket.validation.IValidator;
  */
 public class PropertyValidator<T> extends Behavior implements IValidator<T>
 {
-	private static Class<?>[] EMPTY = new Class<?>[0];
+	private static final Class<?>[] EMPTY = new Class<?>[0];
 
 	private FormComponent<T> component;
-	private Property property_;
-	private IModel<Class<?>[]> groups_;
+	private Property property;
+	private final IModel<Class<?>[]> groups;
 
 	public PropertyValidator(Class<?>... groups)
 	{
@@ -75,16 +75,16 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 
 	public PropertyValidator(Property property, IModel<Class<?>[]> groups)
 	{
-		this.property_ = property;
-		this.groups_ = groups;
+		this.property = property;
+		this.groups = groups;
 	}
 
 	private Property getProperty()
 	{
-		if (property_ == null)
+		if (property == null)
 		{
-			property_ = BeanValidationConfiguration.get().resolveProperty(component);
-			if (property_ == null)
+			property = BeanValidationConfiguration.get().resolveProperty(component);
+			if (property == null)
 			{
 				throw new IllegalStateException(
 					"Could not resolve Property from component: " +
@@ -94,16 +94,16 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 						" to resolve the Property automatically");
 			}
 		}
-		return property_;
+		return property;
 	}
 
 	private Class<?>[] getGroups()
 	{
-		if (groups_ == null)
+		if (groups == null)
 		{
 			return EMPTY;
 		}
-		return groups_.getObject();
+		return groups.getObject();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -123,7 +123,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 				" can only be added to FormComponents");
 		}
 
-		// TODO add a validation key that appends the type so we can have differnet messages for
+		// TODO add a validation key that appends the type so we can have different messages for
 		// @Size on String vs Collection - done but need to add a key for each superclass/interface
 
 		this.component = (FormComponent<T>)component;
@@ -136,9 +136,9 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 	public void detach(Component component)
 	{
 		super.detach(component);
-		if (groups_ != null)
+		if (groups != null)
 		{
-			groups_.detach();
+			groups.detach();
 		}
 	}
 
