@@ -42,6 +42,8 @@ public class EventSubscription
 
 	private Predicate<Object> filter;
 
+	private Predicate<Object> contextAwareFilter;
+
 	/**
 	 * Construct.
 	 * 
@@ -54,17 +56,18 @@ public class EventSubscription
 		componentPath = component.getPageRelativePath();
 		behaviorIndex = behavior == null ? null : component.getBehaviorId(behavior);
 		Class<?> eventType = method.getParameterTypes()[1];
-		filter = Predicates.and(Predicates.instanceOf(eventType), createFilter(method));
+		Subscribe subscribe = method.getAnnotation(Subscribe.class);
+		filter = Predicates.and(Predicates.instanceOf(eventType), createFilter(subscribe.filter()));
+		contextAwareFilter = createFilter(subscribe.contextAwareFilter());
 		methodName = method.getName();
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Predicate<Object> createFilter(Method method)
+	private static Predicate<Object> createFilter(Class<? extends Predicate<?>> filterClass)
 	{
-		Subscribe subscribe = method.getAnnotation(Subscribe.class);
 		try
 		{
-			return (Predicate<Object>)subscribe.filter().newInstance();
+			return (Predicate<Object>)filterClass.newInstance();
 		}
 		catch (InstantiationException e)
 		{
@@ -100,6 +103,15 @@ public class EventSubscription
 	public Predicate<Object> getFilter()
 	{
 		return filter;
+	}
+
+	/**
+	 * @return The context ware filter on incomming events, constructed from the
+	 *         {@link Subscribe#contextAwareFilter()} parameter.
+	 */
+	public Predicate<Object> getContextAwareFilter()
+	{
+		return contextAwareFilter;
 	}
 
 	/**
