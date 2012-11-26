@@ -103,7 +103,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 		if (messages == null)
 		{
 			// Get filtered messages from page where component lives
-			messages = new FeedbackCollector(pageResolvingComponent.getPage()).collect(filter);
+			messages = collectMessages(pageResolvingComponent, filter);
 
 			// Sort the list before returning it
 			if (sortingComparator != null)
@@ -119,6 +119,19 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 			messages = processMessages(messages);
 		}
 		return messages;
+	}
+
+	/**
+	 * Collects feedback messages
+	 * 
+	 * @param pageResolvingComponent
+	 * @param filter
+	 * @return list of feedback messages
+	 */
+	protected List<FeedbackMessage> collectMessages(Component pageResolvingComponent,
+		IFeedbackMessageFilter filter)
+	{
+		return new FeedbackCollector(pageResolvingComponent.getPage()).collect(filter);
 	}
 
 	/**
