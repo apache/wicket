@@ -79,7 +79,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 {
 	private static final long serialVersionUID = 1L;
 
-	private static MetaDataKey<Integer> FENCE_KEY = new MetaDataKey<Integer>()
+	private static final MetaDataKey<Integer> FENCE_KEY = new MetaDataKey<Integer>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
