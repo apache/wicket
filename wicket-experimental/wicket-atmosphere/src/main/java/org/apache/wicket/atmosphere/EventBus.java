@@ -34,6 +34,7 @@ import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.AtmosphereResourceFactory;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.slf4j.Logger;
@@ -182,6 +183,40 @@ public class EventBus implements UnboundListener
 	}
 
 	/**
+	 * Post an event to a single resource. This will invoke the event handlers on all components on
+	 * the page with the suspended connection. The resulting AJAX update (if any) is pushed to the
+	 * client. You can find the UUID via {@link AtmosphereBehavior#getUUID(Page)}.
+	 * 
+	 * @param event
+	 * @param resourceUuid
+	 */
+	public void post(Object event, String resourceUuid)
+	{
+		post(event, AtmosphereResourceFactory.getDefault().find(resourceUuid));
+	}
+
+	/**
+	 * Post an event to a single resource. This will invoke the event handlers on all components on
+	 * the page with the suspended connection. The resulting AJAX update (if any) is pushed to the
+	 * client.
+	 * 
+	 * @param event
+	 * @param resource
+	 */
+	public void post(Object event, AtmosphereResource resource)
+	{
+		ThreadContext oldContext = ThreadContext.get(false);
+		try
+		{
+			postToSingleResource(event, resource);
+		}
+		finally
+		{
+			ThreadContext.restore(oldContext);
+		}
+	}
+
+	/**
 	 * Post an event to all pages that have a suspended connection. This will invoke the event
 	 * handlers on components, annotated with {@link Subscribe}. The resulting AJAX updates are
 	 * pushed to the clients.
@@ -195,27 +230,31 @@ public class EventBus implements UnboundListener
 		{
 			for (AtmosphereResource resource : broadcaster.getAtmosphereResources())
 			{
-				ThreadContext.detach();
-				ThreadContext.setApplication(application);
-				PageKey key;
-				Collection<EventSubscription> subscriptionsForPage;
-				synchronized (this)
-				{
-					key = trackedPages.get(AtmosphereBehavior.getUUID(resource));
-					subscriptionsForPage = Collections2.filter(
-						Collections.unmodifiableCollection(subscriptions.get(key)),
-						new EventFilter(event));
-				}
-				if (key == null)
-					broadcaster.removeAtmosphereResource(resource);
-				else
-					post(resource, key, subscriptionsForPage, event);
+				postToSingleResource(event, resource);
 			}
 		}
 		finally
 		{
 			ThreadContext.restore(oldContext);
 		}
+	}
+
+	private void postToSingleResource(Object event, AtmosphereResource resource)
+	{
+		ThreadContext.detach();
+		ThreadContext.setApplication(application);
+		PageKey key;
+		Collection<EventSubscription> subscriptionsForPage;
+		synchronized (this)
+		{
+			key = trackedPages.get(resource.uuid());
+			subscriptionsForPage = Collections2.filter(
+				Collections.unmodifiableCollection(subscriptions.get(key)), new EventFilter(event));
+		}
+		if (key == null)
+			broadcaster.removeAtmosphereResource(resource);
+		else
+			post(resource, key, subscriptionsForPage, event);
 	}
 
 	private void post(AtmosphereResource resource, PageKey pageKey,
