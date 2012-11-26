@@ -185,14 +185,19 @@ public class EventBus implements UnboundListener
 	/**
 	 * Post an event to a single resource. This will invoke the event handlers on all components on
 	 * the page with the suspended connection. The resulting AJAX update (if any) is pushed to the
-	 * client. You can find the UUID via {@link AtmosphereBehavior#getUUID(Page)}.
+	 * client. You can find the UUID via {@link AtmosphereBehavior#getUUID(Page)}. If no resource
+	 * exists with the given UUID, no post is performed.
 	 * 
 	 * @param event
 	 * @param resourceUuid
 	 */
 	public void post(Object event, String resourceUuid)
 	{
-		post(event, AtmosphereResourceFactory.getDefault().find(resourceUuid));
+		AtmosphereResource resource = AtmosphereResourceFactory.getDefault().find(resourceUuid);
+		if (resource != null)
+		{
+			post(event, resource);
+		}
 	}
 
 	/**
