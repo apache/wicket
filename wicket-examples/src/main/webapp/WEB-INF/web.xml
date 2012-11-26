@@ -838,6 +838,10 @@
 			<param-value>true</param-value>
 		</init-param>
 		<init-param>
+			<param-name>org.atmosphere.cpr.sessionSupport</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
 			<param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name>
 			<param-value>30000</param-value>
 		</init-param>
@@ -848,6 +852,10 @@
 		<init-param>
 			<param-name>org.atmosphere.websocket.WebSocketProtocol</param-name>
 			<param-value>org.atmosphere.websocket.protocol.EchoProtocol</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.cpr.broadcastFilterClasses</param-name>
+			<param-value>org.apache.wicket.atmosphere.TrackMessageSizeFilter</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
