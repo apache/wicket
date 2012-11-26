@@ -91,6 +91,7 @@ public class Label extends WebComponent
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
+	// TODO Wicket 7 remove this constructor. The one with Serializable is the replacement
 	public Label(final String id, String label)
 	{
 		this(id, new Model<String>(label));
@@ -102,7 +103,7 @@ public class Label extends WebComponent
 	 * @param id
 	 *            See Component
 	 * @param label
-	 *            The label text or object, converted to a string via the {@link IConverter}.
+	 *            The label text or object, converted to a string via the {@link org.apache.wicket.util.convert.IConverter}.
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
