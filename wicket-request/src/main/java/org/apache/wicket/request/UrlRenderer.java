@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request;
 
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -296,25 +297,45 @@ public class UrlRenderer
 
 			// try to remove context/filter path only if the Url starts with '/',
 			//  i.e. has an empty segment in the beginning
-			String contextPath = request.getContextPath();
+			String contextPath = UrlUtils.normalizePath(request.getContextPath());
 			if (contextPath != null && segments.isEmpty() == false)
 			{
-				if (contextPath.equals(UrlUtils.normalizePath(segments.get(0))))
+                String contextSegments[] = Strings.split(contextPath, '/');
+
+                StringBuilder segmentPath = new StringBuilder();
+                for (int i=0; i < (contextSegments.length - 1); i++) {
+                    segmentPath.append('/' + segments.get(i));
+                }
+
+				if (contextPath.equals(UrlUtils.normalizePath(segmentPath.toString())))
 				{
 					LOG.debug("Removing the context path '{}' from '{}'", contextPath, segments);
-					segments.remove(0);
+
+                    for (int i=0; i < (contextSegments.length - 1); i++) {
+                        segments.remove(0);
+                    }
 				}
 			}
 
-			String filterPath = request.getFilterPath();
+			String filterPath = UrlUtils.normalizePath(request.getFilterPath());
 			if (filterPath != null && segments.isEmpty() == false)
 			{
-				if (filterPath.equals(UrlUtils.normalizePath(segments.get(0))))
-				{
-					LOG.debug("Removing the filter path '{}' from '{}'", filterPath, segments);
-					segments.remove(0);
-				}
-			}
+                String filterSegments[] = Strings.split(filterPath, '/');
+
+                StringBuilder segmentPath = new StringBuilder();
+                for (int i=0; i < (filterSegments.length - 1); i++) {
+                    segmentPath.append('/' + segments.get(i));
+                }
+
+                if (filterPath.equals(UrlUtils.normalizePath(segmentPath.toString())))
+                {
+                    LOG.debug("Removing the filter path '{}' from '{}'", filterPath, segments);
+
+                    for (int i=0; i < (filterSegments.length - 1); i++) {
+                        segments.remove(0);
+                    }
+                }
+            }
 		}
 	}
 
