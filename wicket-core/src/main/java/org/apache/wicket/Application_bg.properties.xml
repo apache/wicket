@@ -18,31 +18,31 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<entry key="Required">Полето '${label}' е задължително.</entry>
-	<entry key="IConverter">'${input}' не е валиден ${type}.</entry>
-	<entry key="RangeValidator.range">${input} трябва да бъде между ${minimum} и ${maximum}.</entry>
-	<entry key="RangeValidator.exact">${input} трябва да бъде точно ${minimum}.</entry>
-	<entry key="RangeValidator.minimum">'${input}' трябва да бъде най-малко ${minimum}.</entry>
-	<entry key="RangeValidator.maximum">'${input}' трябва да бъде най-много ${maximum}.</entry>
+	<entry key="IConverter">'${label}' не е валиден ${type}.</entry>
+	<entry key="RangeValidator.range">${label} трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="RangeValidator.exact">${label} трябва да бъде точно ${minimum}.</entry>
+	<entry key="RangeValidator.minimum">'${label}' трябва да бъде най-малко ${minimum}.</entry>
+	<entry key="RangeValidator.maximum">'${label}' трябва да бъде най-много ${maximum}.</entry>
 
-	<entry key="StringValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum} символа.</entry>
-	<entry key="StringValidator.minimum">'${input}' трябва да бъде поне ${minimum} символа.</entry>
-	<entry key="StringValidator.maximum">'${input}' трябва да бъде най-много ${maximum} символа.</entry>
-	<entry key="StringValidator.exact">'${input}' трябва да бъде точно ${exact} символа.</entry>
+	<entry key="StringValidator.range">'${label}' трябва да бъде между ${minimum} и ${maximum} символа.</entry>
+	<entry key="StringValidator.minimum">'${label}' трябва да бъде поне ${minimum} символа.</entry>
+	<entry key="StringValidator.maximum">'${label}' трябва да бъде най-много ${maximum} символа.</entry>
+	<entry key="StringValidator.exact">'${label}' трябва да бъде точно ${exact} символа.</entry>
 
-	<entry key="DateValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum}.</entry>
-	<entry key="DateValidator.minimum">'${input}' не трябва да бъде преди ${minimum}.</entry>
-	<entry key="DateValidator.maximum">'${input}' не трябва да бъде след ${maximum}.</entry>
+	<entry key="DateValidator.range">'${label}' трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="DateValidator.minimum">'${label}' не трябва да бъде преди ${minimum}.</entry>
+	<entry key="DateValidator.maximum">'${label}' не трябва да бъде след ${maximum}.</entry>
 
-	<entry key="NumberValidator.positive">'${input}' трябва да е положително число.</entry>
-	<entry key="NumberValidator.negative">'${input}' трябва да е отрицателно число.</entry>
-	<entry key="NumberValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum}.</entry>
-	<entry key="NumberValidator.minimum">'${input}' трябва да бъде най-малко ${minimum}.</entry>
-	<entry key="NumberValidator.maximum">'${input}' трябва да бъде най-много ${maximum}.</entry>
+	<entry key="NumberValidator.positive">'${label}' трябва да е положително число.</entry>
+	<entry key="NumberValidator.negative">'${label}' трябва да е отрицателно число.</entry>
+	<entry key="NumberValidator.range">'${label}' трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="NumberValidator.minimum">'${label}' трябва да бъде най-малко ${minimum}.</entry>
+	<entry key="NumberValidator.maximum">'${label}' трябва да бъде най-много ${maximum}.</entry>
 
-	<entry key="PatternValidator">'${input}' не отговаря на шаблона '${pattern}'.</entry>
-	<entry key="EmailAddressValidator">'${input}' не е валиден адрес на електронна поща.</entry>
+	<entry key="PatternValidator">'${label}' не отговаря на шаблона '${pattern}'.</entry>
+	<entry key="EmailAddressValidator">'${label}' не е валиден адрес на електронна поща.</entry>
 	<entry key="CreditCardValidator">Номерът на кредитната карта не е валиден.</entry>
-	<entry key="UrlValidator">'${input}' не е валиден уеб адрес.</entry>
+	<entry key="UrlValidator">'${label}' не е валиден уеб адрес.</entry>
 
 	<entry key="EqualInputValidator">'${input0}' от ${label0} и '${input1}' от ${label1} трябва да бъдат еднакви.</entry>
 	<entry key="EqualPasswordInputValidator">${label0} и ${label1} трябва да съвпадат.</entry>
