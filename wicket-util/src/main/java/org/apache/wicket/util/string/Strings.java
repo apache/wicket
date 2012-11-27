@@ -64,6 +64,20 @@ public final class Strings
 	
 	private static final String[] NO_STRINGS = new String[0];
 
+	/**
+	 * The name of the parameter used to keep the session id.
+	 * The Servlet specification mandates <em>jsessionid</em> but the web containers
+	 * provide ways to set a custom one, e.g. <em>sid</em>.
+	 * Since Wicket doesn't have access to the web container internals the name should be set explicitly.
+	 */
+	public static final String SESSION_ID_PARAM_NAME = System.getProperty("wicket.jsessionid.name", "jsessionid");
+
+	/**
+	 * Constructs something like <em>;jsessionid=</em>. This is what {@linkplain Strings#stripJSessionId(String)}
+	 * actually uses.
+	 */
+	private static final String SESSION_ID_PARAM = ';' + SESSION_ID_PARAM_NAME + '=';
+
 	static
 	{
 		LINE_SEPARATOR = AccessController.doPrivileged(new PrivilegedAction<String>()
@@ -913,7 +927,7 @@ public final class Strings
 		}
 
 		// http://.../abc;jsessionid=...?param=...
-		int ixSemiColon = url.toLowerCase(Locale.ENGLISH).indexOf(";jsessionid=");
+		int ixSemiColon = url.toLowerCase(Locale.ENGLISH).indexOf(SESSION_ID_PARAM);
 		if (ixSemiColon == -1)
 		{
 			return url;
