@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -55,10 +56,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	 */
 	public FeedbackMessagesModel(Component pageResolvingComponent)
 	{
-		if (pageResolvingComponent == null)
-		{
-			throw new IllegalArgumentException("Argument 'pageResolvingComponent' cannot be null");
-		}
+		Args.notNull(pageResolvingComponent, "pageResolvingComponent");
 		this.pageResolvingComponent = pageResolvingComponent;
 	}
 
