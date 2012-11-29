@@ -78,8 +78,8 @@ public class FileUploadErrorTest extends WicketTestCase
 		formTester.setValue(textFieldId, "te");
 		formTester.submit();
 
-		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
-			textFieldId));
+		tester.assertErrorMessages(String.format(
+			"The value of '%1$s' is not between 3 and 10 characters long.", textFieldId));
 	}
 
 	/**
@@ -90,8 +90,8 @@ public class FileUploadErrorTest extends WicketTestCase
 		formTester.setValue(textFieldId, "12345678901");
 		formTester.submit();
 
-		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
-			textFieldId));
+		tester.assertErrorMessages(String.format(
+			"The value of '%1$s' is not between 3 and 10 characters long.", textFieldId));
 	}
 
 	/**
@@ -103,8 +103,8 @@ public class FileUploadErrorTest extends WicketTestCase
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
 		formTester.submit();
 
-		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
-			textFieldId));
+		tester.assertErrorMessages(String.format(
+			"The value of '%1$s' is not between 3 and 10 characters long.", textFieldId));
 	}
 
 	/**
