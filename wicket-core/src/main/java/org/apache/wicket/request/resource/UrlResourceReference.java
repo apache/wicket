@@ -97,4 +97,13 @@ public class UrlResourceReference extends ResourceReference
 	{
 		return contextRelative;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "UrlResourceReference{" +
+				"url=" + url.toString(Url.StringMode.FULL) +
+				", contextRelative=" + contextRelative +
+				'}';
+	}
 }
