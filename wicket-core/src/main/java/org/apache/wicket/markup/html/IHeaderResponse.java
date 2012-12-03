@@ -224,7 +224,20 @@ public interface IHeaderResponse extends Closeable
 	/**
 	 * Writes a conditional IE comment with a CSS reference with query parameters, if the specified
 	 * reference hasn't been rendered yet.
-	 * 
+	 *
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
+	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
+	 * at the server side:
+	 * <code><pre>
+	 * public void renderHead(IHeaderResponse response) {
+	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+	 *   ClientProperties properties = clientInfo.getProperties();
+	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
+	 *   }
+	 * }
+	 * </pre></code>
+	 *
 	 * @param reference
 	 *            resource reference pointing to the CSS resource
 	 * @param pageParameters
@@ -250,6 +263,19 @@ public interface IHeaderResponse extends Closeable
 	/**
 	 * Writes a conditional IE comment for a link to a CSS resource, if the specified url hasn't
 	 * been rendered yet.
+	 *
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
+	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
+	 * at the server side:
+	 * <code><pre>
+	 * public void renderHead(IHeaderResponse response) {
+	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+	 *   ClientProperties properties = clientInfo.getProperties();
+	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
+	 *   }
+	 * }
+	 * </pre></code>
 	 * 
 	 * @param url
 	 *            context-relative url of the CSS resource

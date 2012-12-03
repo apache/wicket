@@ -35,6 +35,8 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.CssUtils;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,6 +47,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class HeaderResponse implements IHeaderResponse
 {
+	private static final Logger logger = LoggerFactory.getLogger(HeaderResponse.class);
+
 	private final Set<Object> rendered = new HashSet<Object>();
 
 	private boolean closed;
@@ -138,6 +142,13 @@ public abstract class HeaderResponse implements IHeaderResponse
 			{
 				if (Strings.isEmpty(condition) == false)
 				{
+					if (AjaxRequestTarget.get() != null)
+					{
+						// WICKET-4894
+						logger.warn("IE CSS engine doesn't support dynamically injected links in " +
+								"conditional comments. See the javadoc of IHeaderResponse for alternative solution.");
+					}
+
 					getResponse().write("<!--[if ");
 					getResponse().write(condition);
 					getResponse().write("]>");
