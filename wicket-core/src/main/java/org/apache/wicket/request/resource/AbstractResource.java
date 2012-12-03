@@ -504,7 +504,8 @@ public abstract class AbstractResource implements IResource
 		// set response header
 		setResponseHeaders(data, attributes);
 
-		if (!data.dataNeedsToBeWritten(attributes) || data.getErrorCode() != null || data.getStatusCode() != null)
+		if (!data.dataNeedsToBeWritten(attributes) || data.getErrorCode() != null
+				|| needsBody(data.getStatusCode()) == false)
 		{
 			return;
 		}
@@ -515,6 +516,22 @@ public abstract class AbstractResource implements IResource
 		}
 
 		data.getWriteCallback().writeData(attributes);
+	}
+
+	/**
+	 * Decides whether a response body should be written back to the client depending
+	 * on the set status code
+	 *
+	 * @param statusCode
+	 *      the status code set by the application
+	 * @return {@code true} if the status code allows response body, {@code false} - otherwise
+	 */
+	private boolean needsBody(Integer statusCode)
+	{
+		return statusCode == null ||
+					(statusCode < 300 &&
+					statusCode != HttpServletResponse.SC_NO_CONTENT &&
+					statusCode != HttpServletResponse.SC_RESET_CONTENT);
 	}
 
 	/**
