@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.css.ICssCompressor;
+import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
@@ -87,8 +89,14 @@ public class ResourceBundles
 		{
 			items.add(JavaScriptHeaderItem.forReference(curReference));
 		}
-		return addBundle(JavaScriptHeaderItem.forReference(new ConcatResourceBundleReference<JavaScriptReferenceHeaderItem>(
-				scope, name, items)));
+		ConcatResourceBundleReference<JavaScriptReferenceHeaderItem> bundleReference =
+				new ConcatResourceBundleReference<JavaScriptReferenceHeaderItem>(scope, name, items);
+		if (Application.exists())
+		{
+			IJavaScriptCompressor javaScriptCompressor = Application.get().getResourceSettings().getJavaScriptCompressor();
+			bundleReference.setCompressor(javaScriptCompressor);
+		}
+		return addBundle(JavaScriptHeaderItem.forReference(bundleReference));
 	}
 
 
@@ -117,8 +125,14 @@ public class ResourceBundles
 		{
 			items.add(CssHeaderItem.forReference(curReference));
 		}
-		return addBundle(CssHeaderItem.forReference(new ConcatResourceBundleReference<CssReferenceHeaderItem>(
-			scope, name, items)));
+		ConcatResourceBundleReference<CssReferenceHeaderItem> bundleReference =
+				new ConcatResourceBundleReference<CssReferenceHeaderItem>(scope, name, items);
+		if (Application.exists())
+		{
+			ICssCompressor cssCompressor = Application.get().getResourceSettings().getCssCompressor();
+			bundleReference.setCompressor(cssCompressor);
+		}
+		return addBundle(CssHeaderItem.forReference(bundleReference));
 	}
 
 	/**
