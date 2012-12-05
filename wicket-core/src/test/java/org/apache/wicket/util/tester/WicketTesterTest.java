@@ -850,7 +850,7 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/test.html";
 		tester.executeUrl(url);
-		assertEquals("This is a test!\n", tester.getLastResponseAsString());
+		assertEquals("This is a test!", tester.getLastResponseAsString());
 	}
 
 	/**
