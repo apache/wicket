@@ -51,7 +51,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * <p>
  * <strong>Ajaxifying the palette</strong>: The palette itself cannot be ajaxified because it is a
  * panel and therefore does not receive any javascript events. Instead ajax behaviors can be
- * attached to the recorder component which supports the javascript <code>onchange</code> event. The
+ * attached to the recorder component which supports the javascript <code>change</code> event. The
  * behavior should be attached by overriding {@link #newRecorderComponent()}
  * 
  * Example:
@@ -62,7 +62,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  *    protected Recorder newRecorderComponent()
  *    {
  *      Recorder recorder=super.newRecorderComponent();     
- *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {...});
  *      return recorder;
  *    }
  *  }
