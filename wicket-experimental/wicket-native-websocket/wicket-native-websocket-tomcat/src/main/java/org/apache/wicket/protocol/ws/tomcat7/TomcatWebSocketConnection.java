@@ -21,6 +21,8 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 
 import org.apache.catalina.websocket.WsOutbound;
+import org.apache.wicket.protocol.ws.api.AbstractWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
@@ -31,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0
  */
-public class TomcatWebSocketConnection implements IWebSocketConnection
+public class TomcatWebSocketConnection extends AbstractWebSocketConnection
 {
 	private static final Logger LOG = LoggerFactory.getLogger(TomcatWebSocketConnection.class);
 	
@@ -39,8 +41,9 @@ public class TomcatWebSocketConnection implements IWebSocketConnection
 
 	private boolean closed = false;
 
-	public TomcatWebSocketConnection(final WsOutbound connection)
+	public TomcatWebSocketConnection(final WsOutbound connection, final AbstractWebSocketProcessor webSocketProcessor)
 	{
+		super(webSocketProcessor);
 		this.connection = Args.notNull(connection, "connection");
 	}
 

@@ -24,6 +24,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpSession;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -82,6 +83,12 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 			protected void onOutMessage(byte[] message, int offset, int length)
 			{
 				TestWebSocketProcessor.this.onOutMessage(message, offset, length);
+			}
+
+			@Override
+			public void sendMessage(IWebSocketPushMessage message)
+			{
+				// FIXME
 			}
 		});
 	}
