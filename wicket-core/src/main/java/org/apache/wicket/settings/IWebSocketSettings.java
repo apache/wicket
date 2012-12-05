@@ -36,8 +36,6 @@ public interface IWebSocketSettings
 {
 	/**
 	 * The executor for processing websocket push messages broadcasted to all sessions.
-	 * Default executor does all the processing in the caller thread. For applications sending push events
-	 * from ajax calls to large number of websocket sessions moving the processing to thread pool is adviced.
 	 *
 	 * @return
 	 *            The executor used for processing push messages.
@@ -46,8 +44,8 @@ public interface IWebSocketSettings
 
 	/**
 	 * Set the executor for processing websocket push messages broadcasted to all sessions.
-	 * Default executor does all the processing in the caller thread. For applications sending push events
-	 * from ajax calls to large number of websocket sessions moving the processing to thread pool is adviced.
+	 * Default executor does all the processing in the caller thread. Using a proper thread pool is adviced
+     * for applications that send push events from ajax calls to avoid page level deadlocks.
 	 *
 	 * @param executorService
 	 *            The executor used for processing push messages.
