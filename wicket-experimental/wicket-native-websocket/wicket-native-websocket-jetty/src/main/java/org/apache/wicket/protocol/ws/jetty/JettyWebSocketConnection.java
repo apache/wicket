@@ -18,6 +18,8 @@ package org.apache.wicket.protocol.ws.jetty;
 
 import java.io.IOException;
 
+import org.apache.wicket.protocol.ws.api.AbstractWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.util.lang.Args;
 import org.eclipse.jetty.websocket.WebSocket;
@@ -27,12 +29,13 @@ import org.eclipse.jetty.websocket.WebSocket;
  *
  * @since 6.0
  */
-public class JettyWebSocketConnection implements IWebSocketConnection
+public class JettyWebSocketConnection extends AbstractWebSocketConnection
 {
 	private WebSocket.Connection connection;
 
-	public JettyWebSocketConnection(final WebSocket.Connection connection)
+	public JettyWebSocketConnection(final WebSocket.Connection connection, final AbstractWebSocketProcessor webSocketProcessor)
 	{
+		super(webSocketProcessor);
 		this.connection = Args.notNull(connection, "connection");
 	}
 

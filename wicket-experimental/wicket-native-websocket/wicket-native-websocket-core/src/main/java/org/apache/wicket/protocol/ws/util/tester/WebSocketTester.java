@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.ws.util.tester;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.ws.api.IWebSocketProcessor;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -42,6 +43,12 @@ public class WebSocketTester
 		Args.notNull(page, "page");
 
 		socketProcessor = new TestWebSocketProcessor(page) {
+
+			@Override
+			protected void onPushMessage(IWebSocketPushMessage message)
+			{
+				WebSocketTester.this.onPushMessage(message);
+			}
 
 			@Override
 			protected void onOutMessage(String message)
@@ -110,6 +117,16 @@ public class WebSocketTester
 	 *      the length of bytes to read from the binary message
 	 */
 	protected void onOutMessage(byte[] message, int offset, int length)
+	{
+	}
+
+	/**
+	 * A callback method which may be overritten to receive messages pushed by WebSocketPushBroadcaster
+	 *
+	 * @param message
+	 *      the pushed message to the page
+	 */
+	public void onPushMessage(IWebSocketPushMessage message)
 	{
 	}
 }
