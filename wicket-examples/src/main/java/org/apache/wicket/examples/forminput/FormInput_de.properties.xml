@@ -17,8 +17,8 @@
 -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<entry key="inputForm.urlProperty.IConverter">'${input}' ist keine gültige URL</entry>
-	<entry key="inputForm.phoneNumberUS.IConverter">'${input}' nicht ist keine gültige US Telefonnummerุ</entry>
+	<entry key="inputForm.urlProperty.IConverter">'${label}' ist keine gültige URL</entry>
+	<entry key="inputForm.phoneNumberUS.IConverter">'${label}' nicht ist keine gültige US Telefonnummerุ</entry>
 	<entry key="use.locale">Locale:</entry>
 	<entry key="default">standard</entry>
 	<entry key="input">input</entry>

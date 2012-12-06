@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 
 /**
  * Common interface for native WebSocket connections
@@ -64,4 +65,15 @@ public interface IWebSocketConnection
 	 * @throws IOException when an IO error occurs during the write to the client
 	 */
 	IWebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException;
+
+	/**
+	 * Broadcasts a push message to the wicket page (and it's components) associated with this
+	 * connection. The components can then send messages or component updates to client by adding
+	 * them to the target.
+	 *
+	 * @param message
+	 *     the push message to send
+	 * @since 6.4
+	 */
+	void sendMessage(IWebSocketPushMessage message);
 }

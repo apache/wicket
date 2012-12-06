@@ -232,8 +232,11 @@ public class Url implements Serializable
 			final String afterProto = absoluteUrl.substring(protocolAt + 3);
 			final String hostAndPort;
 
-			final int relativeAt = afterProto.indexOf('/');
-
+			int relativeAt = afterProto.indexOf('/');
+			if (relativeAt == -1)
+			{
+				relativeAt = afterProto.indexOf(';');
+			}
 			if (relativeAt == -1)
 			{
 				relativeUrl = "";

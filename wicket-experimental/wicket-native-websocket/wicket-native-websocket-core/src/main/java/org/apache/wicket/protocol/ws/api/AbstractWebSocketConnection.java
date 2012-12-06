@@ -14,26 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.niceurl;
+package org.apache.wicket.protocol.ws.api;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.util.lang.Args;
 
 /**
- * Simple bookmarkable page that displays page parameters which is mounted with another parameter
- * encoder.
- * 
- * @see QueryStringUrlCodingStrategy
- * @author Eelco Hillenius
+ * Abstract class handling the Web Socket broadcast messages.
  */
-public class Page2QP extends Page2
+public abstract class AbstractWebSocketConnection implements IWebSocketConnection
 {
+	private final AbstractWebSocketProcessor webSocketProcessor;
+
 	/**
-	 * Constructor
-	 * 
-	 * @param parameters
+	 * Constructor.
+	 *
+	 * @param webSocketProcessor
+	 *      the web socket processor to delegate to
 	 */
-	public Page2QP(PageParameters parameters)
+	public AbstractWebSocketConnection(AbstractWebSocketProcessor webSocketProcessor)
 	{
-		super(parameters);
+		this.webSocketProcessor = Args.notNull(webSocketProcessor, "webSocketProcessor");
+	}
+
+	@Override
+	public void sendMessage(IWebSocketPushMessage message)
+	{
+		webSocketProcessor.broadcastMessage(message);
 	}
 }

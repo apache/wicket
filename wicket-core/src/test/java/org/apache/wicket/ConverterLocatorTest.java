@@ -29,10 +29,7 @@ import org.junit.Test;
  */
 public final class ConverterLocatorTest extends Assert
 {
-	/** Dutch locale for localized testing. */
-	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
-
-	private final IConverterLocator locator = new ConverterLocator();
+	private final ConverterLocator locator = new ConverterLocator();
 
 	/**
 	 * Test generalized conversion
@@ -57,4 +54,5 @@ public final class ConverterLocatorTest extends Assert
 			locator.getConverter(Serializable.class).convertToObject("test", Locale.US));
 		assertEquals("test", locator.getConverter(Object.class).convertToObject("test", Locale.US));
 	}
+
 }

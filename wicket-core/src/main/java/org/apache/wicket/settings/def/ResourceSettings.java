@@ -285,10 +285,16 @@ public class ResourceSettings implements IResourceSettings
 	{
 		if (resourceWatcher == null && start)
 		{
-			final Duration pollFrequency = getResourcePollFrequency();
-			if (pollFrequency != null)
+			synchronized (this)
 			{
-				resourceWatcher = new ModificationWatcher(pollFrequency);
+				if (resourceWatcher == null)
+				{
+					final Duration pollFrequency = getResourcePollFrequency();
+					if (pollFrequency != null)
+					{
+						resourceWatcher = new ModificationWatcher(pollFrequency);
+					}
+				}
 			}
 		}
 		return resourceWatcher;

@@ -31,6 +31,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.resource.ITextResourceCompressor;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -55,6 +56,11 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 	private static final long serialVersionUID = 1L;
 
 	private final List<T> providedResources;
+
+	/**
+	 * An optional compressor that will be used to compress the bundle resources
+	 */
+	private ITextResourceCompressor compressor;
 
 	/**
 	 * Creates a new {@link ConcatResourceBundleReference} for the given resources.
@@ -117,7 +123,12 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 	@Override
 	public IResource getResource()
 	{
-		return new ConcatBundleResource(providedResources);
+		ConcatBundleResource bundleResource = new ConcatBundleResource(providedResources);
+		if (getCompressor() != null)
+		{
+			bundleResource.setCompressor(getCompressor());
+		}
+		return bundleResource;
 	}
 
 	@Override
@@ -140,5 +151,15 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 			ret.remove(curProvided);
 		}
 		return ret;
+	}
+
+	public void setCompressor(ITextResourceCompressor compressor)
+	{
+		this.compressor = compressor;
+	}
+
+	public ITextResourceCompressor getCompressor()
+	{
+		return compressor;
 	}
 }

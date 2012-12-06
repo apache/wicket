@@ -77,7 +77,7 @@ public class TomcatWebSocketProcessor extends AbstractWebSocketProcessor
 			throw new IllegalArgumentException(TomcatWebSocketProcessor.class.getName() +
 					" can work only with " + WsOutbound.class.getName());
 		}
-		onConnect(new TomcatWebSocketConnection((WsOutbound) containerConnection));
+		onConnect(new TomcatWebSocketConnection((WsOutbound) containerConnection, this));
 	}
 
 }

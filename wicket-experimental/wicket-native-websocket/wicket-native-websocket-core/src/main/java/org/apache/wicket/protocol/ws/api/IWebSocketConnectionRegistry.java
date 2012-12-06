@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import java.util.Collection;
 import org.apache.wicket.Application;
 
 /**
@@ -35,6 +36,13 @@ public interface IWebSocketConnectionRegistry
 	 * @return the web socket connection used by a client from the specified coordinates
 	 */
 	IWebSocketConnection getConnection(Application application, String sessionId, Integer pageId);
+
+	/**
+	 * @param application
+	 *            the web application to look in
+	 * @return collection of web socket connection used by any client connected to specified application
+	 */
+	Collection<IWebSocketConnection> getConnections(Application application);
 
 	/**
 	 * Adds a new connection into the registry at the specified coordinates (application+session+page)

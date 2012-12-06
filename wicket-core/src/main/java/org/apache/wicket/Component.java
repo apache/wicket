@@ -2219,7 +2219,11 @@ public abstract class Component
 				Component[] feedbacksCopy = feedbacks.toArray(new Component[feedbacks.size()]);
 				for (Component feedback : feedbacksCopy)
 				{
-					feedback.internalBeforeRender();
+					// render it only if it is still in the page hierarchy (WICKET-4895)
+					if (feedback.findPage() != null)
+					{
+						feedback.internalBeforeRender();
+					}
 				}
 			}
 			getRequestCycle().setMetaData(FEEDBACK_LIST, null);

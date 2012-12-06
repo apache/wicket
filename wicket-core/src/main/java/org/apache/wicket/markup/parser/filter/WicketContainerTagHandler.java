@@ -18,9 +18,9 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.util.value.IValueMap;
@@ -44,6 +44,12 @@ public class WicketContainerTagHandler extends AbstractMarkupFilter
 
 	public WicketContainerTagHandler(boolean usesDevelopmentConfig)
 	{
+		this(null, usesDevelopmentConfig);
+	}
+
+	public WicketContainerTagHandler(MarkupResourceStream resourceStream, boolean usesDevelopmentConfig)
+	{
+		super(resourceStream);
 		this.usesDevelopmentConfig = usesDevelopmentConfig;
 	}
 

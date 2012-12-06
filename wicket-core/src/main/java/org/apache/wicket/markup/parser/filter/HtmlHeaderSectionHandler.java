@@ -65,6 +65,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 */
 	public HtmlHeaderSectionHandler(final Markup markup)
 	{
+		super(markup.getMarkupResourceStream());
 		this.markup = markup;
 	}
 

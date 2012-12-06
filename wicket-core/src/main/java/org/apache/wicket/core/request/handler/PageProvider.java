@@ -423,4 +423,17 @@ public class PageProvider implements IPageProvider
 		}
 		return pageInstanceIsFresh;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "PageProvider{" +
+				"renderCount=" + renderCount +
+				", pageId=" + pageId +
+				", pageInstanceIsFresh=" + pageInstanceIsFresh +
+				", pageClass=" + pageClass +
+				", pageParameters=" + pageParameters +
+				", pageInstance=" + pageInstance +
+				'}';
+	}
 }

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.list;
 
+import java.util.Locale;
+
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.DiffUtil;
@@ -36,6 +38,7 @@ public class PagedTableNavigatorWithMarginTest extends WicketTestCase
 	@Test
 	public void pagedTable() throws Exception
 	{
+		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(PagedTableNavigatorWithMarginPage.class);
 		PagedTableNavigatorWithMarginPage page = (PagedTableNavigatorWithMarginPage)tester.getLastRenderedPage();
 		String document = tester.getLastResponseAsString();

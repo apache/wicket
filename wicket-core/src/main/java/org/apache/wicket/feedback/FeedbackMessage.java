@@ -267,9 +267,6 @@ public class FeedbackMessage implements IDetachable
 	@Override
 	public void detach()
 	{
-		if (rendered)
-		{
-			reporter = null;
-		}
+		// no-op
 	}
 }

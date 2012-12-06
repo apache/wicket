@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
-import org.apache.wicket.core.util.string.UrlUtils;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 
@@ -96,5 +96,14 @@ public class UrlResourceReference extends ResourceReference
 	public boolean isContextRelative()
 	{
 		return contextRelative;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "UrlResourceReference{" +
+				"url=" + url.toString(Url.StringMode.FULL) +
+				", contextRelative=" + contextRelative +
+				'}';
 	}
 }

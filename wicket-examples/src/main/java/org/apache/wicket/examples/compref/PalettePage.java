@@ -36,6 +36,8 @@ import org.apache.wicket.model.util.ListModel;
  */
 public class PalettePage extends WicketExamplePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 */
@@ -48,12 +50,17 @@ public class PalettePage extends WicketExamplePage
 			new ArrayList<Person>()), new CollectionModel<Person>(persons), renderer, 10, true);
 
 
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit()
 			{
-				info("selected person(s): " + palette.getDefaultModelObjectAsString());
+				for (Person person : palette.getModelObject())
+				{
+					info("selected person: " + person);
+				}
 			}
 		};
 

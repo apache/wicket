@@ -168,19 +168,19 @@ mvn -q clean -Pall
 
 # package and assemble the release
 echo "Prepare the release"
-mvn --batch-mode release:prepare -DupdateWorkingCopyVersions=false -DpreparationGoals="clean" -Dtag=$tag
+mvn --batch-mode release:prepare -DpreparationGoals="clean" -Dtag=$tag
 if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:prepare was not successful"
 fi
 
 # this needs to be done before signing the tag otherwise the snapshot version
 # is tagged
-echo "Rollback the last commit of the release plugin"
-git reset HEAD^ --hard >> $log
+#echo "Rollback the last commit of the release plugin"
+#git reset HEAD^ --hard >> $log
 
-echo "Sign the tag"
+#echo "Sign the tag"
 # TODO the git tag --sign doesn't utilize the gpg-agent for some reason
-git tag --sign --force --message "Signed release tag for Apache Wicket $version" $tag >> $log
+#git tag --sign --force --message "Signed release tag for Apache Wicket $version" $tag >> $log
 
 echo "Performing the release using Maven"
 mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag
@@ -249,6 +249,13 @@ echo ""
 echo "To push the release branch to ASF git servers"
 echo ""
 echo "    git push origin $branch:refs/heads/$branch"
+echo ""
+
+echo "To sign the release tag issue the following three commands: "
+echo ""
+echo "    git checkout $tag"
+echo "    git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log"
+echo "    git checkout $branch"
 echo ""
 
 mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"

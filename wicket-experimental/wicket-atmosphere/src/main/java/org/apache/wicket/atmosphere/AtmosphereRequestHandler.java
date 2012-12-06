@@ -28,6 +28,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the
@@ -42,6 +43,8 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	private Object event;
 
 	private Collection<EventSubscription> subscriptions;
+
+	private boolean ajaxRequestScheduled = false;
 
 	/**
 	 * Construct.
@@ -63,7 +66,6 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	{
 		Page page = (Page)Application.get().getMapperContext().getPageInstance(pageKey.getPageId());
 		AjaxRequestTarget target = WebApplication.get().newAjaxRequestTarget(page);
-		requestCycle.scheduleRequestHandlerAfterCurrent(target);
 		executeHandlers(target, page);
 	}
 
@@ -71,12 +73,15 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	{
 		for (EventSubscription curSubscription : subscriptions)
 		{
-			Component component = page.get(curSubscription.getComponentPath());
-			if (curSubscription.getBehaviorIndex() == null)
-				invokeMethod(target, curSubscription, component);
-			else
-				invokeMethod(target, curSubscription,
-					component.getBehaviorById(curSubscription.getBehaviorIndex()));
+			if (curSubscription.getContextAwareFilter().apply(event))
+			{
+				Component component = page.get(curSubscription.getComponentPath());
+				if (curSubscription.getBehaviorIndex() == null)
+					invokeMethod(target, curSubscription, component);
+				else
+					invokeMethod(target, curSubscription,
+						component.getBehaviorById(curSubscription.getBehaviorIndex()));
+			}
 		}
 	}
 
@@ -89,6 +94,11 @@ public class AtmosphereRequestHandler implements IRequestHandler
 			{
 				try
 				{
+					if (!ajaxRequestScheduled)
+					{
+						ajaxRequestScheduled = true;
+						RequestCycle.get().scheduleRequestHandlerAfterCurrent(target);
+					}
 					curMethod.setAccessible(true);
 					curMethod.invoke(base, target, event);
 				}

@@ -22,6 +22,11 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.core.request.handler.IPageProvider;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.protocol.http.IRequestLogger;
@@ -35,10 +40,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -394,8 +395,14 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	/**
 	 * Returns URL for the request handler or <code>null</code> if the handler couldn't have been
 	 * encoded.
+	 * <p>
+	 *     <strong>Note</strong>: The produced URL is relative to the filter path. Application code
+	 *     most probably need URL relative to the currently used page, for this use
+	 *     {@linkplain #urlFor(org.apache.wicket.request.IRequestHandler)}
+	 * </p>
 	 * 
 	 * @param handler
+	 *      the {@link IRequestHandler request handler} for which to create a callback url
 	 * @return Url instance or <code>null</code>
 	 */
 	public Url mapUrlFor(IRequestHandler handler)
@@ -407,7 +414,12 @@ public class RequestCycle implements IRequestCycle, IEventSink
 
 	/**
 	 * Returns a {@link Url} for the resource reference
-	 * 
+	 * <p>
+	 *     <strong>Note</strong>: The produced URL is relative to the filter path. Application code
+	 *     most probably need URL relative to the currently used page, for this use
+	 *     {@linkplain #urlFor(org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.PageParameters)}
+	 * </p>
+	 *
 	 * @param reference
 	 *            resource reference
 	 * @param params
@@ -423,9 +435,14 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * Returns a bookmarkable URL that references a given page class using a given set of page
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
-	 * 
+	 * <p>
+	 *     <strong>Note</strong>: The produced URL is relative to the filter path. Application code
+	 *     most probably need URL relative to the currently used page, for this use
+	 *     {@linkplain #urlFor(Class, org.apache.wicket.request.mapper.parameter.PageParameters)}
+	 * </p>
+	 *
 	 * @param <C>
-	 * 
+	 *            The type of the page
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -488,9 +505,18 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public CharSequence urlFor(IRequestHandler handler)
 	{
-		Url mappedUrl = mapUrlFor(handler);
-		CharSequence url = renderUrl(mappedUrl, handler);
-		return url;
+		try
+		{
+			Url mappedUrl = mapUrlFor(handler);
+			CharSequence url = renderUrl(mappedUrl, handler);
+			return url;
+		}
+		catch (Exception x)
+		{
+			throw new WicketRuntimeException(
+					String.format("An error occurred while generating an Url for handler '%s'", handler), x);
+		}
+
 	}
 
 	private String renderUrl(Url url, IRequestHandler handler)

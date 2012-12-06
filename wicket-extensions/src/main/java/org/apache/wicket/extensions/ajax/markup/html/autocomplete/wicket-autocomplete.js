@@ -227,7 +227,8 @@
 				if(Wicket.Event.keyCode(jqEvent) === KEY_ENTER){
 					if(selected>-1 || hidingAutocomplete === 1){
 						hidingAutocomplete=0;
-						return jqEvent.stopPropagation();
+						jqEvent.stopPropagation();
+						return false;
 					}
 				}
 				if(typeof objonkeypress==="function") {

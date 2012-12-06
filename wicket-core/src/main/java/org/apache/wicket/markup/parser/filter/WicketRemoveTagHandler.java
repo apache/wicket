@@ -20,6 +20,7 @@ import java.text.ParseException;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
@@ -48,12 +49,18 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	 */
 	public WicketRemoveTagHandler()
 	{
+		this(null);
+	}
+
+	public WicketRemoveTagHandler(MarkupResourceStream resourceStream)
+	{
+		super(resourceStream);
 	}
 
 	@Override
 	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
-		// If it is not a remove tag, than we are finished
+		// If it is not a remove tag then we are finished
 		if (!(tag instanceof WicketTag) || !((WicketTag)tag).isRemoveTag())
 		{
 			return tag;

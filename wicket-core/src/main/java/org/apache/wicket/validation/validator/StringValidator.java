@@ -34,13 +34,11 @@ import org.apache.wicket.validation.ValidationError;
  * <p>
  * Resource keys:
  * <ul>
- * <li>{@code RangeValidator.exact} if min==max ({@link #exactLength(int)})</li>
- * <li>{@code RangeValidator.range} if both min and max are not {@code null}</li>
- * <li>{@code RangeValidator.minimum} if max is {@code null} ({@link #minimumLength(int)})</li>
- * <li>{@code RangeValidator.maximum} if min is {@code null} ({@link #maximumLength(int)})</li>
+ * <li>{@code StringValidator.exact} if min==max ({@link #exactLength(int)})</li>
+ * <li>{@code StringValidator.range} if both min and max are not {@code null}</li>
+ * <li>{@code StringValidator.minimum} if max is {@code null} ({@link #minimumLength(int)})</li>
+ * <li>{@code StringValidator.maximum} if min is {@code null} ({@link #maximumLength(int)})</li>
  * </ul>
- * (for backwards compatibility reasons resource keys of form {@code StringValidator.*} are still
- * checked)
  * </p>
  * 
  * <p>

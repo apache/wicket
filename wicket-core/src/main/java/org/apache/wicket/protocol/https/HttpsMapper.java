@@ -170,10 +170,7 @@ public class HttpsMapper implements IRequestMapper
 			// the generated url does not have the correct scheme, set it (which in turn will cause
 			// the url to be rendered in its full representation)
 			url.setProtocol(desired.urlName());
-			if (url.getPort() != null || !desired.usesStandardPort(config))
-			{
-				url.setPort(desired.getPort(config));
-			}
+			url.setPort(desired.getPort(config));
 		}
 		return url;
 	}

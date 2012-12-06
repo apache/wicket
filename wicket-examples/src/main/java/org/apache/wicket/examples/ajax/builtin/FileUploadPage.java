@@ -19,13 +19,17 @@ package org.apache.wicket.examples.ajax.builtin;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.validation.validator.StringValidator;
 
 /**
  * Demos ajax handling of a multipart form
@@ -34,6 +38,8 @@ import org.apache.wicket.util.lang.Bytes;
  */
 public class FileUploadPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
+
 	private final FileUploadField file;
 	private final TextField<String> text;
 
@@ -44,12 +50,14 @@ public class FileUploadPage extends BasePage
 	{
 
 		// create a feedback panel
-		final Component feedback = new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true);
+		final Component feedback = new FeedbackPanel("feedback").setOutputMarkupId(true);
 		add(feedback);
 
 		// create the form
-		Form<?> form = new Form<Void>("form")
+		final Form<?> form = new Form<Void>("form")
 		{
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 			 */
@@ -75,13 +83,29 @@ public class FileUploadPage extends BasePage
 
 		// create a textfield to demo non-file content
 		form.add(text = new TextField<String>("text", new Model<String>()));
+		text.add(StringValidator.minimumLength(2));
 
 		// create the file upload field
 		form.add(file = new FileUploadField("file"));
 
+		form.add(new Label("max", new AbstractReadOnlyModel<String>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String getObject()
+			{
+				return form.getMaxSize().toString();
+			}
+		}));
+
+		form.add(new UploadProgressBar("progress", form, file));
+
 		// create the ajax button used to submit the form
 		form.add(new AjaxButton("ajaxSubmit")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{

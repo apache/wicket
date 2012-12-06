@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
@@ -73,6 +74,12 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	 */
 	public EnclosureHandler()
 	{
+		this(null);
+	}
+
+	public EnclosureHandler(MarkupResourceStream resourceStream)
+	{
+		super(resourceStream);
 	}
 
 	@Override

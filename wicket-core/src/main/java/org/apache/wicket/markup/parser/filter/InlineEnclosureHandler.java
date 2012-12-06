@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
@@ -68,6 +69,12 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 	 */
 	public InlineEnclosureHandler()
 	{
+		this(null);
+	}
+
+	public InlineEnclosureHandler(MarkupResourceStream resourceStream)
+	{
+		super(resourceStream);
 	}
 
 	@Override
@@ -178,7 +185,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		if (Strings.isEmpty(inlineEnclosureChildId) == false)
 		{
 			String id = tag.getId();
-			if (id.startsWith(getWicketNamespace()))
+			if (id.startsWith(getWicketNamespace(markupStream)))
 			{
 				id = id + container.getPage().getAutoIndex();
 			}

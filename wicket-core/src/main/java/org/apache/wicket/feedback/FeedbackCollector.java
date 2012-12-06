@@ -30,7 +30,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * 
  * @author igor
  */
-public final class FeedbackCollector
+public class FeedbackCollector
 {
 	private final Component component;
 	private boolean includeSession = true;
@@ -65,20 +65,20 @@ public final class FeedbackCollector
 	 * @param value
 	 * @return {@code this} for chaining
 	 */
-	public FeedbackCollector setIncludeSession(boolean value)
+	public final FeedbackCollector setIncludeSession(boolean value)
 	{
 		includeSession = value;
 		return this;
 	}
 
 	/**
-	 * Controls whether or not feedback will be collected recursively from the decendants of the
+	 * Controls whether or not feedback will be collected recursively from the descendants of the
 	 * specified component.
 	 * 
 	 * @param value
 	 * @return {@code this} for chaining
 	 */
-	public FeedbackCollector setRecursive(boolean value)
+	public final FeedbackCollector setRecursive(boolean value)
 	{
 		recursive = value;
 		return this;
@@ -89,7 +89,7 @@ public final class FeedbackCollector
 	 * 
 	 * @return a {@link List} of collected messages
 	 */
-	public List<FeedbackMessage> collect()
+	public final List<FeedbackMessage> collect()
 	{
 		return collect(IFeedbackMessageFilter.ALL);
 	}
@@ -100,7 +100,7 @@ public final class FeedbackCollector
 	 * @param filter
 	 * @return a {@link List} of collected messages
 	 */
-	public List<FeedbackMessage> collect(final IFeedbackMessageFilter filter)
+	public final List<FeedbackMessage> collect(final IFeedbackMessageFilter filter)
 	{
 		final List<FeedbackMessage> messages = new ArrayList<FeedbackMessage>();
 
@@ -122,6 +122,12 @@ public final class FeedbackCollector
 				@Override
 				public void component(Component object, IVisit<Void> visit)
 				{
+					if (!shouldRecurseInto(object))
+					{
+						visit.dontGoDeeper();
+						return;
+					}
+
 					if (object.hasFeedbackMessage())
 					{
 						messages.addAll(object.getFeedbackMessages().messages(filter));
@@ -131,5 +137,18 @@ public final class FeedbackCollector
 		}
 
 		return messages;
+	}
+
+	/**
+	 * Determines whether or not recursive message collection should continue into the specified
+	 * component. If returning {@code false} feedback messages from the specified component nor any
+	 * of its children will be included.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	protected boolean shouldRecurseInto(Component component)
+	{
+		return true;
 	}
 }

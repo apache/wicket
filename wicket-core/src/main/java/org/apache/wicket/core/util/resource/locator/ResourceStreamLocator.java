@@ -146,7 +146,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	public IResourceStream locate(final Class<?> clazz, String path, final String style,
 		final String variation, Locale locale, final String extension, final boolean strict)
 	{
-		// If path contains a locale, than it'll replace the locale provided to this method
+		// If path contains a locale, then it'll replace the locale provided to this method
 		PathLocale data = ResourceUtils.getLocaleFromFilename(path);
 		if ((data != null) && (data.locale != null))
 		{

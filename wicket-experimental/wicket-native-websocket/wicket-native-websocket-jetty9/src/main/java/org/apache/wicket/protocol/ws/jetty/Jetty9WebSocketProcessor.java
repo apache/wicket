@@ -62,7 +62,7 @@ public class Jetty9WebSocketProcessor extends AbstractWebSocketProcessor
 	@Override
 	public void onWebSocketConnect(WebSocketConnection connection)
 	{
-		onConnect(new Jetty9WebSocketConnection(connection));
+		onConnect(new Jetty9WebSocketConnection(connection, this));
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class StartExamples
 		bb.setWar("src/main/webapp");
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
-//		((AbstractSessionManager) bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
+		// ((AbstractSessionManager) bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
 
 		server.setHandler(bb);
 

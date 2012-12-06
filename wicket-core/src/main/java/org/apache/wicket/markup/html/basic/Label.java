@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import java.io.Serializable;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
@@ -89,9 +91,25 @@ public class Label extends WebComponent
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
+	// TODO Wicket 7 remove this constructor. The one with Serializable is the replacement
 	public Label(final String id, String label)
 	{
 		this(id, new Model<String>(label));
+	}
+
+	/**
+	 * Convenience constructor. Same as Label(String, Model.of(Serializable))
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param label
+	 *            The label text or object, converted to a string via the {@link org.apache.wicket.util.convert.IConverter}.
+	 * 
+	 * @see org.apache.wicket.Component#Component(String, IModel)
+	 */
+	public Label(final String id, Serializable label)
+	{
+		this(id, Model.of(label));
 	}
 
 	/**

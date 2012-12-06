@@ -73,7 +73,7 @@ public class InnerFeedbackTest extends WicketTestCase
 
 		// feedback message for LocalizedFeedbackBorder
 		// without the fix the same error message was reported for the page's feedback panel too
-		tester.assertErrorMessages("Field 'field' is required.");
+		tester.assertErrorMessages("'field' is required.");
 
 		// page's feedback
 		tester.assertInfoMessages("page onbeforerender");
