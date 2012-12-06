@@ -35,6 +35,11 @@ import org.junit.Assert;
  */
 class WebSocketTestPage extends WebPage implements IMarkupResourceStreamProvider
 {
+	WebSocketTestPage()
+	{
+		add(new WebSocketBehavior() {});
+	}
+
 	WebSocketTestPage(final String expectedMessage)
 	{
 		add(new WebSocketBehavior()

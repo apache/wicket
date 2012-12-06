@@ -45,7 +45,7 @@ public class WebSocketPushBroadcaster
 	}
 
 	/**
-	 * Processes the given message in the page and session identified by the given websocket connection.
+	 * Processes the given message in the page and session identified by the given Web Socket connection.
 	 * The message is sent as an event to the Page and components of the session allowing the components
 	 * to be updated.
 	 *
@@ -66,13 +66,15 @@ public class WebSocketPushBroadcaster
 		Args.notNull(connection, "connection");
 		Args.notNull(message, "message");
 
-		IWebSocketConnection wsConnection = registry.getConnection(connection.getApplication(),
-			connection.getSessionId(), connection.getPageId());
+		Application application = connection.getApplication();
+		String sessionId = connection.getSessionId();
+		Integer pageId = connection.getPageId();
+		IWebSocketConnection wsConnection = registry.getConnection(application, sessionId, pageId);
 		if (wsConnection == null)
 		{
 			return;
 		}
-		process(connection.getApplication(), singletonList(wsConnection), message);
+		process(application, singletonList(wsConnection), message);
 	}
 
 	/**
