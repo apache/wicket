@@ -52,7 +52,7 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 			MinifiedAwareResourceReferenceTest.class, "b.js");
 		assertEquals("b.min.js", reference.getName());
 		String fileContent = renderResource(reference);
-		assertEquals("//minified-b\n", fileContent);
+		assertEquals("//minified-b", fileContent);
 	}
 
 	/**
@@ -66,6 +66,6 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 			MinifiedAwareResourceReferenceTest.class, "a.js");
 		assertEquals("a.js", reference.getName());
 		String fileContent = renderResource(reference);
-		assertEquals("//a\n", fileContent);
+		assertEquals("//a", fileContent);
 	}
 }

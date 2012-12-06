@@ -124,7 +124,7 @@
 			}
 		}
 
-		if (recorder.onchange!=null) { recorder.onchange(); }
+		jQuery(recorder).triggerHandler('change');
 	};
 
 	Wicket.Palette.clearSelectionHelper=function(box) {

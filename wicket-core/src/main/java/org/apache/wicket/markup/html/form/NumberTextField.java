@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.text.NumberFormat;
 import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.converter.AbstractDecimalConverter;
 import org.apache.wicket.util.lang.Numbers;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.validation.validator.RangeValidator;
 
@@ -33,8 +33,8 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * <p>
  * Automatically validates the input against the configured {@link #setMinimum(N) min} and
  * {@link #setMaximum(N) max} attributes. If any of them is <code>null</code> then respective
- * MIN_VALUE or MAX_VALUE for the number type is used. If the number type has no minimum and/or maximum
- * value then {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
+ * MIN_VALUE or MAX_VALUE for the number type is used. If the number type has no minimum and/or
+ * maximum value then {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
  * 
  * @param <N>
  *            the type of the number
@@ -42,13 +42,6 @@ import org.apache.wicket.validation.validator.RangeValidator;
 public class NumberTextField<N extends Number & Comparable<N>> extends TextField<N>
 {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * A special locale which is used to render decimal number formats that are HTML5 compliant.
-	 *
-	 * See <a href="http://dev.w3.org/html5/markup/datatypes.html#common.data.float">HTML5 number format</a>
-	 */
-	private static final Locale HTML5_LOCALE = new Locale("en", "", "wicket-html5");
 
 	private RangeValidator<N> validator;
 
@@ -149,7 +142,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		else
 		{
 			Class<N> numberType = getNumberType();
-			result = (N) Numbers.getMinValue(numberType);
+			result = (N)Numbers.getMinValue(numberType);
 		}
 		return result;
 	}
@@ -164,7 +157,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		else
 		{
 			Class<N> numberType = getNumberType();
-			result = (N) Numbers.getMaxValue(numberType);
+			result = (N)Numbers.getMaxValue(numberType);
 		}
 		return result;
 	}
@@ -174,7 +167,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		Class<N> numberType = getType();
 		if (numberType == null && getModelObject() != null)
 		{
-			numberType = (Class<N>) getModelObject().getClass();
+			numberType = (Class<N>)getModelObject().getClass();
 		}
 		return numberType;
 	}
@@ -188,8 +181,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		if (minimum != null)
 		{
-			IConverter<N> converter = getConverter(getNumberType());
-			attributes.put("min", converter.convertToString(minimum, HTML5_LOCALE));
+			attributes.put("min", Objects.stringValue(minimum));
 		}
 		else
 		{
@@ -198,8 +190,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		if (maximum != null)
 		{
-			IConverter<N> converter = getConverter(getNumberType());
-			attributes.put("max", converter.convertToString(maximum, HTML5_LOCALE));
+			attributes.put("max", Objects.stringValue(maximum));
 		}
 		else
 		{
@@ -214,34 +205,40 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * The formatting for {@link Locale#ENGLISH} might not be compatible with HTML (e.g. group
+	 * digits), thus use {@link Objects#stringValue(Object)} instead.
 	 * 
-	 * WICKET-3591 Browsers support only formatting in English
+	 * @return value
 	 */
 	@Override
-	public Locale getLocale()
+	protected String getModelValue()
 	{
-		return HTML5_LOCALE;
+		N value = getModelObject();
+		if (value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return Objects.stringValue(value);
+		}
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
-	 * WICKET-4501 NumberTextField&lt;BigDecimal> renders its value in unsupported number format
+	 * Always use {@link Locale#ENGLISH} to parse the input.
 	 */
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> type)
+	protected void convertInput()
 	{
-		IConverter<C> converter = super.getConverter(type);
-		if (converter instanceof AbstractDecimalConverter<?>)
+		IConverter<N> converter = getConverter(getNumberType());
+
+		try
 		{
-			AbstractDecimalConverter<?> adc = (AbstractDecimalConverter<?>)converter;
-			NumberFormat numberFormat = adc.getNumberFormat(HTML5_LOCALE);
-			// do not use grouping for HTML5 number/range fields because
-			// it is not supported by browsers
-			numberFormat.setGroupingUsed(false);
-			adc.setNumberFormat(HTML5_LOCALE, numberFormat);
+			setConvertedInput(converter.convertToObject(getInput(), Locale.ENGLISH));
 		}
-		return converter;
+		catch (ConversionException e)
+		{
+			error(newValidationError(e));
+		}
 	}
 }

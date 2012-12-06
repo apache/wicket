@@ -238,7 +238,7 @@ public class HtmlDocumentParser
 		else if (part.matches("<[^/>]+.*>.*"))
 		{
 			// This is an opening tag
-			if (part.matches("<([a-zA-Z]+:)?[a-zA-Z]*>.*"))
+			if (part.matches("<([a-zA-Z]+:)?[a-zA-Z0-9]*>.*"))
 			{
 				// No attributes
 				tag = part.substring(1, part.indexOf('>')).toLowerCase();

@@ -5,9 +5,9 @@
     var $window = $(window)
 
     // side bar
-    $('.bs-docs-sidenav').affix({
+    $('.aw-docs-sidenav').affix({
       offset: {
-        top: function () { return $window.width() <= 980 ? 290 : 210 }
+        top: 170
       , bottom: 270
       }
     });

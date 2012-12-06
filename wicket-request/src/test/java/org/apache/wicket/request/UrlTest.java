@@ -223,6 +223,18 @@ public class UrlTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4877
+	 */
+	@Test
+	public void testParse15()
+	{
+		String s = "http://localhost:56704;jsessionid=8kxeo3reannw1qjtxgkju8yiu";
+		Url url = Url.parse(s);
+		assertEquals(Integer.valueOf(56704), url.getPort());
+		checkSegments(url, ";jsessionid=8kxeo3reannw1qjtxgkju8yiu");
+	}
+
+	/**
 	 * 
 	 */
 	@Test

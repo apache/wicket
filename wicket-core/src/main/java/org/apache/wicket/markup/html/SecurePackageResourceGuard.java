@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.collections.ReverseListIterator;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +112,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.jpeg");
 		addPattern("+*.gif");
 		addPattern("+*.ico");
+		addPattern("+*.cur");
 
 		// WICKET-208 non page templates may be served
 		addPattern("+*.html");
@@ -120,6 +120,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.txt");
 		addPattern("+*.swf");
 		addPattern("+*.bmp");
+		addPattern("+*.svg");
 	}
 
 	/**

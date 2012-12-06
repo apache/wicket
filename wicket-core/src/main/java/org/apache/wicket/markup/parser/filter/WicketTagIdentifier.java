@@ -17,8 +17,9 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
@@ -43,7 +44,7 @@ import org.apache.wicket.util.string.Strings;
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
 	/** List of well known wicket tag names */
-	private static List<String> wellKnownTagNames;
+	private static Set<String> wellKnownTagNames;
 
 	/**
 	 * Construct.
@@ -85,8 +86,12 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			{
 				// Make it a Wicket component. Otherwise it would be RawMarkup
 				tag.setId(namespace + "_" + tag.getName());
-				tag.setAutoComponentTag(true);
 				tag.setModified(true);
+
+				if (tag.isClose() == false)
+				{
+					tag.setAutoComponentTag(true);
+				}
 			}
 
 			// If the tag is not a well-known wicket namespace tag
@@ -123,13 +128,11 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	{
 		if (wellKnownTagNames == null)
 		{
-			wellKnownTagNames = new ArrayList<String>();
+			wellKnownTagNames = new HashSet<String>();
 		}
 
-		if (wellKnownTagNames.contains(name) == false)
-		{
-			wellKnownTagNames.add(name);
-		}
+		String lowerCaseName = name.toLowerCase(Locale.ENGLISH);
+		wellKnownTagNames.add(lowerCaseName);
 	}
 
 	/**
@@ -139,13 +142,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 */
 	private boolean isWellKnown(final ComponentTag tag)
 	{
-		for (String name : wellKnownTagNames)
-		{
-			if (tag.getName().equalsIgnoreCase(name))
-			{
-				return true;
-			}
-		}
-		return false;
+		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ENGLISH);
+		return wellKnownTagNames.contains(lowerCaseTagName);
 	}
 }

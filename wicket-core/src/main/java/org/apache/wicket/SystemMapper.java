@@ -16,16 +16,15 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.core.request.mapper.BookmarkableMapper;
 import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
-import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.core.request.mapper.HomePageMapper;
 import org.apache.wicket.core.request.mapper.PageInstanceMapper;
 import org.apache.wicket.core.request.mapper.ResourceReferenceMapper;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
-import org.apache.wicket.util.ClassProvider;
 import org.apache.wicket.util.IProvider;
 
 /**
@@ -48,7 +47,7 @@ public class SystemMapper extends CompoundRequestMapper
 		this.application = application;
 		add(new PageInstanceMapper());
 		add(new BookmarkableMapper());
-		add(new HomePageMapper(new HomePageProvider<Page>(application)));
+		add(new HomePageMapper(new HomePageProvider(application)));
 		add(new ResourceReferenceMapper(new PageParametersEncoder(),
 			new ParentFolderPlaceholderProvider(application), getResourceCachingStrategy()));
 		add(RestartResponseAtInterceptPageException.MAPPER);
@@ -83,23 +82,19 @@ public class SystemMapper extends CompoundRequestMapper
 		}
 	}
 
-	private static class HomePageProvider<C extends IRequestablePage> extends ClassProvider<C>
+	private static class HomePageProvider<C extends IRequestablePage> implements IProvider<Class<C>>
 	{
-
 		private final Application application;
 
 		private HomePageProvider(final Application application)
 		{
-			super(null);
 			this.application = application;
 		}
 
 		@Override
 		public Class<C> get()
 		{
-			@SuppressWarnings("unchecked")
-			Class<C> homePage = (Class<C>)application.getHomePage();
-			return homePage;
+			return (Class<C>) application.getHomePage();
 		}
 	}
 }

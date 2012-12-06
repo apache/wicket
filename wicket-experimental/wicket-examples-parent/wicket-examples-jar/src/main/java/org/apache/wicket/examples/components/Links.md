@@ -228,3 +228,7 @@ serverside event: the user is taken directly to the external site.
 {% highlight java %}
 	add(new ExternalLink("google", "http://google.com"));
 {% endhighlight %}
+
+The external link also has a constructor taking an IModel, enabling
+you to retrieve URLs from a database or other persistent storage.
+

@@ -2,8 +2,8 @@
 	<h2>Labels <small>Displaying text using labels, MultiLineLabels and escaping markup</small></h2>
 </div>
 
-With `Label` components you can display dynamic text in
-your pages and components.
+With [Label](http://ci.apache.org/projects/wicket/apidocs/6.0.x/org/apache/wicket/markup/html/basic/Label.html)
+components you can display dynamic text in your pages and components.
 
 {% highlight java %}
     add(new Label<String>("text", "Hello, World!"));

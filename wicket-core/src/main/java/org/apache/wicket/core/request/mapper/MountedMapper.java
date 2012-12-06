@@ -33,7 +33,9 @@ import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.ClassProvider;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.reference.ClassReference;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -137,7 +139,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	private final String[] mountSegments;
 
 	/** bookmarkable page class. */
-	private final ClassProvider<? extends IRequestablePage> pageClassProvider;
+	private final IProvider<Class<? extends IRequestablePage>> pageClassProvider;
 
 	/**
 	 * Construct.
@@ -156,8 +158,21 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * @param mountPath
 	 * @param pageClassProvider
 	 */
+	@Deprecated
 	public MountedMapper(String mountPath,
-		ClassProvider<? extends IRequestablePage> pageClassProvider)
+	                     ClassProvider<? extends IRequestablePage> pageClassProvider)
+	{
+		this(mountPath, new ClassReference(pageClassProvider.get()), new PageParametersEncoder());
+	}
+
+	/**
+	 * Construct.
+	 *
+	 * @param mountPath
+	 * @param pageClassProvider
+	 */
+	public MountedMapper(String mountPath,
+	                     IProvider<Class<? extends IRequestablePage>> pageClassProvider)
 	{
 		this(mountPath, pageClassProvider, new PageParametersEncoder());
 	}
@@ -172,7 +187,23 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	public MountedMapper(String mountPath, Class<? extends IRequestablePage> pageClass,
 		IPageParametersEncoder pageParametersEncoder)
 	{
-		this(mountPath, ClassProvider.of(pageClass), pageParametersEncoder);
+		this(mountPath, new ClassReference(pageClass), pageParametersEncoder);
+	}
+
+	/**
+	 * Construct.
+	 *
+	 * @param mountPath
+	 * @param pageClassProvider
+	 * @param pageParametersEncoder
+	 */
+	@Deprecated
+	public MountedMapper(String mountPath,
+		ClassProvider<? extends IRequestablePage> pageClassProvider,
+		IPageParametersEncoder pageParametersEncoder)
+	{
+		this(mountPath, new ClassReference(pageClassProvider.get()),
+				pageParametersEncoder);
 	}
 
 	/**
@@ -183,8 +214,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * @param pageParametersEncoder
 	 */
 	public MountedMapper(String mountPath,
-		ClassProvider<? extends IRequestablePage> pageClassProvider,
-		IPageParametersEncoder pageParametersEncoder)
+	                     IProvider<Class<? extends IRequestablePage>> pageClassProvider,
+	                     IPageParametersEncoder pageParametersEncoder)
 	{
 		Args.notEmpty(mountPath, "mountPath");
 		Args.notNull(pageClassProvider, "pageClassProvider");

@@ -1,6 +1,86 @@
 This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
+Release Notes - Wicket - Version 6.3.0
+
+** Bug
+    * [WICKET-4623] - UploadProgressBar does not show up if the form submitted by AjaxButton or AjaxLink
+    * [WICKET-4826] - PaletteButton#onComponentTag(ComponentTag) does not call super
+    * [WICKET-4829] - ComponentResolvers created in app init ignore markup's namespace
+    * [WICKET-4836] - Unmount a page does not work if the path starts with /
+    * [WICKET-4837] - SmartLinkMultiLineLabel does not display email addresses or web URLs as hyperlinks
+    * [WICKET-4841] - Return error code 400 when an Ajax request has no base url set in header/request parameters.
+    * [WICKET-4842] - WicketRuntimeException when Tomcat cleans up a session later on
+    * [WICKET-4844] - AbstractResourceReferenceMapper doesn't escape separators in style/variation names
+    * [WICKET-4848] - Reporter of FeedbackMessage should not be set to 'null' on detach
+    * [WICKET-4850] - BaseWicketTester discards cookies with MaxAge = -1 when processing a new request
+    * [WICKET-4851] - IE8, IE7 javascript errors with Wicket 6
+    * [WICKET-4857] - AutoCompleteTextFields submits Form if a choice is selected via enter-key
+    * [WICKET-4859] - Integer overflow in AbstractToolbar
+    * [WICKET-4864] - 'format' not set in ConversionException
+    * [WICKET-4865] - Page parameters not working with CryptoMapper
+
+** Improvement
+    * [WICKET-4831] - Append the feedback message CSS class instead of overriding it
+    * [WICKET-4835] - Add debug log messages in CompoundRequestMapper#mapRequest
+    * [WICKET-4845] - Make BasicResourceReferenceMapper public so it is easy to extend it
+    * [WICKET-4853] - Change FormComponent#reportRequiredError() from private to protected
+    * [WICKET-4856] - Support SVG extension in SecurePackageResourceGuard
+    * [WICKET-4863] - Customize ValidationError creation by FormComponent
+    * [WICKET-4867] - Detach the object before calculating its size
+
+** Task
+    * [WICKET-4855] - Upgrade JQuery to 1.8.2
+
+=============================================================================
+
+Release Notes - Wicket - Version 6.2.0
+
+** Sub-task
+    * [WICKET-4752] - Revert Wicket-4715 -Read multipart request params in WebApplication
+
+** Bug
+    * [WICKET-4587] - URLRenderer renderFullUrl
+    * [WICKET-4589] - Closing </wicket:container> tag is incorrectly setup as autocomponent
+    * [WICKET-4756] - AtmosphereWebRequest should return true on calls to #isAjax()
+    * [WICKET-4759] - FilterForm/FilterToolbar don't work when there's more than one IColumn to be filtered
+    * [WICKET-4769] - Clicking on Label of Radio doesn't update component with Ajax update
+    * [WICKET-4771] - Submitting value filled in DropDownChoice fails when tinymce textarea is on the page
+    * [WICKET-4776] - Problems with switching between HTTP/HTTPS
+    * [WICKET-4777] - JavaScriptReference escapes given URL
+    * [WICKET-4786] - AjaxTabbedPanel doesn't include constructor with model
+    * [WICKET-4787] - Registering resource bundles with duplicate resource references gives an NPE
+    * [WICKET-4788] - FilteringHeaderResponse does not unwrap PriorityHeaderItems for filtering
+    * [WICKET-4789] - URL rendering regression
+    * [WICKET-4791] - UploadProgressBar hides immediately after being shown.
+    * [WICKET-4792] - wickettester#startcomponent(component) doesn't call oninitialize
+    * [WICKET-4794] - RfcCompliantEmailAddressValidator error message not defined
+    * [WICKET-4796] - DatePickerTest fails because of java inconsistensy on localizing March german shortname Mrz vs Mär
+    * [WICKET-4797] - CheckBoxMultipleChoice loses state
+    * [WICKET-4801] - BaseWicketTester.executeAjaxEvent only fires one of multiple behaviors bound to a given event
+    * [WICKET-4806] - AjaxEditableChoiceLabel won't close select onblur
+    * [WICKET-4810] - CLONE - BaseWicketTester.clickLink() does not work with a ResourceLink with ResourceReference
+    * [WICKET-4816] - Handling of semicolons in form action URLs
+    * [WICKET-4818] - NullPointerException while reading the POST parameters
+    * [WICKET-4820] - Race condition in ResourceSettings: getResourceWatcher() is not thread safe
+    * [WICKET-4822] - Wicket.Event.add requires Wicket.$, but wicket-ajax-jquery is not listed as a dependency
+    * [WICKET-4824] - Redirect to HTTPS is using wrong port 80 if HttpsConfig with default ports 80/443 is used
+
+** Improvement
+    * [WICKET-4160] - Make AbstractAutoCompleteRenderer.renderHeader() and .renderFooter() non-final
+    * [WICKET-4772] - DataTable API and handling of AbstractToolbar
+    * [WICKET-4778] - Add factory methods to JavaScriptHeaderItem to create a deferred JavaScript header item.
+    * [WICKET-4798] - Make IteratorFilter.onFilter protected
+    * [WICKET-4804] - Add #setStatus(int) in AbstractResource.ResourceResponse
+    * [WICKET-4808] - WebClientInfo.getRemoteAddr() handling "Forwarded-For" value tokens not being ip addresses
+    * [WICKET-4812] - Make SerializationChecker easier for extending so custom checks can be added to it
+
+** New Feature
+    * [WICKET-4793] - Support Jetty 9.x websocket implementation
+    * [WICKET-4802] - Add functionality to be able to export DataTable content
+    * [WICKET-4815] - Interface to mark components with type safe models
+
+=============================================================================
 
 Release Notes - Wicket - Version 6.1.1
 

@@ -21,6 +21,7 @@ import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.time.Duration;
 
@@ -127,13 +128,23 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		if (!isStopped() && isEnabled(getComponent()))
+		if (shouldTrigger())
 		{
 			onTimer(target);
 
-			target.getHeaderResponse().render(
-			OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+			if (shouldTrigger())
+			{
+				target.getHeaderResponse().render(
+					OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+			}
 		}
+	}
+
+	private boolean shouldTrigger()
+	{
+		return isStopped() == false &&
+				isEnabled(getComponent()) &&
+				getComponent().findParent(WebPage.class) != null;
 	}
 
 	/**

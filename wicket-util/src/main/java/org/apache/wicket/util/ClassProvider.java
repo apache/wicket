@@ -24,7 +24,9 @@ import java.lang.ref.WeakReference;
  * 
  * @param <T>
  *            the type of the class
+ * @deprecated Use org.apache.wicket.util.reference.ClassReference instead
  */
+@Deprecated
 public class ClassProvider<T> implements IProvider<Class<T>>
 {
 	private final WeakReference<Class<T>> classRef;

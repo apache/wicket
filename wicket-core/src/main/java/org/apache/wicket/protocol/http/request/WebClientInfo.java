@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.protocol.http.request;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -117,25 +119,22 @@ public class WebClientInfo extends ClientInfo
 	 * server places it in the <a
 	 * href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#x-headers">X-Forwarded-For</a>
 	 * Header.
-	 * 
-	 * @author Ryan Gravener (rgravener)
-	 * 
+	 *
+	 * Proxies may also mask the original client IP with tokens like "hidden" or "unknown".
+	 * If so, the last proxy ip address is returned.
+	 *
 	 * @param requestCycle
 	 *            the request cycle
 	 * @return remoteAddr IP address of the client, using the X-Forwarded-For header and defaulting
 	 *         to: getHttpServletRequest().getRemoteAddr()
-	 * 
 	 */
 	protected String getRemoteAddr(RequestCycle requestCycle)
 	{
 		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
 		HttpServletRequest req = request.getContainerRequest();
 		String remoteAddr = request.getHeader("X-Forwarded-For");
-		if (remoteAddr == null)
-		{
-			remoteAddr = req.getRemoteAddr();
-		}
-		else
+
+		if (remoteAddr != null)
 		{
 			if (remoteAddr.contains(","))
 			{
@@ -143,6 +142,19 @@ public class WebClientInfo extends ClientInfo
 				// we just want the client
 				remoteAddr = Strings.split(remoteAddr, ',')[0].trim();
 			}
+			try
+			{
+				// If ip4/6 address string handed over, simply does pattern validation.
+				InetAddress.getByName(remoteAddr);
+			}
+			catch (UnknownHostException e)
+			{
+				remoteAddr = req.getRemoteAddr();
+			}
+		}
+		else
+		{
+			remoteAddr = req.getRemoteAddr();
 		}
 		return remoteAddr;
 	}
@@ -150,7 +162,7 @@ public class WebClientInfo extends ClientInfo
 	/**
 	 * Initialize the client properties object
 	 */
-	private final void init()
+	private void init()
 	{
 		setInternetExplorerProperties();
 		setOperaProperties();

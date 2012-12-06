@@ -78,6 +78,6 @@ public class JettyWebSocketProcessor extends AbstractWebSocketProcessor
 		{
 			throw new IllegalArgumentException(JettyWebSocketProcessor.class.getName() + " can work only with " + WebSocket.Connection.class.getName());
 		}
-		onConnect(new JettyWebSocketConnection((WebSocket.Connection) connection));
+		onConnect(new JettyWebSocketConnection((WebSocket.Connection) connection, this));
 	}
 }

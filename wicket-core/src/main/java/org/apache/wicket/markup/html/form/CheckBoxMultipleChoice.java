@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
@@ -26,6 +27,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.IValueMap;
 
 
 /**
@@ -394,7 +396,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			// Add checkbox element
 			buffer.append("<input name=\"");
 			buffer.append(getInputName());
-			buffer.append("\"");
+			buffer.append('"');
 			buffer.append(" type=\"checkbox\"");
 			if (isSelected(choice, index, selected))
 			{
@@ -408,7 +410,37 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			buffer.append(id);
 			buffer.append("\" id=\"");
 			buffer.append(idAttr);
-			buffer.append("\"/>");
+			buffer.append('"');
+
+			// Allows user to add attributes to the <input..> tag
+			{
+				IValueMap attrs = getAdditionalAttributes(index, choice);
+				if (attrs != null)
+				{
+					for (Map.Entry<String, Object> attr : attrs.entrySet())
+					{
+						buffer.append(' ')
+							.append(attr.getKey())
+							.append("=\"")
+							.append(attr.getValue())
+							.append('"');
+					}
+				}
+			}
+
+			if (getApplication().getDebugSettings().isOutputComponentPath())
+			{
+				CharSequence path = getPageRelativePath();
+				path = Strings.replaceAll(path, "_", "__");
+				path = Strings.replaceAll(path, ":", "_");
+				buffer.append(" wicketpath=\"")
+					.append(path)
+					.append("_input_")
+					.append(index)
+					.append('"');
+			}
+
+			buffer.append("/>");
 
 			// Add label for checkbox
 			String display = label;
@@ -429,12 +461,23 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		}
 	}
 
+	/**
+	 * You may subclass this method to provide additional attributes to the &lt;input ..&gt; tag.
+	 * 
+	 * @param index
+	 * @param choice
+	 * @return tag attribute name/value pairs.
+	 */
+	protected IValueMap getAdditionalAttributes(final int index, final T choice)
+	{
+		return null;
+	}
 
 	/**
 	 * Creates markup id for the input tag used to generate the checkbox for the element with the
 	 * specified {@code id}.
 	 * <p>
-	 * NOTE It is useful to override this method if the contract for the genreated ids should be
+	 * NOTE It is useful to override this method if the contract for the generated ids should be
 	 * fixed, for example in cases when the id generation pattern in this method is used to predict
 	 * ids by some external javascript. If the contract is fixed in the user's code then upgrading
 	 * wicket versions will guarantee not to break it should the default contract be changed at a
@@ -446,6 +489,6 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 */
 	protected String getCheckBoxMarkupId(String id)
 	{
-		return getMarkupId() + "-" + getInputName() + "_" + id;
+		return getMarkupId() + '-' + getInputName() + '_' + id;
 	}
 }

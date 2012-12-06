@@ -18,30 +18,30 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<entry key="Required">Поле '${label}' обязательно для ввода.</entry>
-	<entry key="IConverter">'${input}' должно соответствовать типу ${type}.</entry>
-	<entry key="RangeValidator.range">'${input}' не находится между ${minimum} и ${maximum}.</entry>
-	<entry key="RangeValidator.minimum">'${input}' меньше минимального значения ${minimum}.</entry>
-	<entry key="RangeValidator.maximum">'${input}' больше максимального значения ${maximum}.</entry>
+	<entry key="IConverter">'${label}' должно соответствовать типу ${type}.</entry>
+	<entry key="RangeValidator.range">'${label}' не находится между ${minimum} и ${maximum}.</entry>
+	<entry key="RangeValidator.minimum">'${label}' меньше минимального значения ${minimum}.</entry>
+	<entry key="RangeValidator.maximum">'${label}' больше максимального значения ${maximum}.</entry>
 
-	<entry key="StringValidator.range">Количество символов в '${input}' не между ${minimum} и ${maximum}.</entry>
-	<entry key="StringValidator.minimum">Количество символов в '${input}' меньше ${minimum}.</entry>
-	<entry key="StringValidator.maximum">Количество символов в '${input}' больше ${maximum}.</entry>
-	<entry key="StringValidator.exact">Количество символов в '${input}' не равно ${exact}.</entry>
+	<entry key="StringValidator.range">Количество символов в '${label}' не между ${minimum} и ${maximum}.</entry>
+	<entry key="StringValidator.minimum">Количество символов в '${label}' меньше ${minimum}.</entry>
+	<entry key="StringValidator.maximum">Количество символов в '${label}' больше ${maximum}.</entry>
+	<entry key="StringValidator.exact">Количество символов в '${label}' не равно ${exact}.</entry>
 
-	<entry key="DateValidator.range">'${input}' не находится между ${minimum} и ${maximum}.</entry>
-	<entry key="DateValidator.minimum">'${input}' меньше минимального значения ${minimum}.</entry>
-	<entry key="DateValidator.maximum">'${input}' больше максимального значения ${maximum}.</entry>
+	<entry key="DateValidator.range">'${label}' не находится между ${minimum} и ${maximum}.</entry>
+	<entry key="DateValidator.minimum">'${label}' меньше минимального значения ${minimum}.</entry>
+	<entry key="DateValidator.maximum">'${label}' больше максимального значения ${maximum}.</entry>
 
-	<entry key="NumberValidator.positive">'${input}' не является положительным числом.</entry>
-	<entry key="NumberValidator.negative">'${input}' не является отрицательным числом.</entry>
-	<entry key="NumberValidator.range">'${input}' не находится между ${minimum} и ${maximum}.</entry>
-	<entry key="NumberValidator.minimum">'${input}' меньше минимального значения ${minimum}.</entry>
-	<entry key="NumberValidator.maximum">'${input}' больше максимального значения ${maximum}.</entry>
+	<entry key="NumberValidator.positive">'${label}' не является положительным числом.</entry>
+	<entry key="NumberValidator.negative">'${label}' не является отрицательным числом.</entry>
+	<entry key="NumberValidator.range">'${label}' не находится между ${minimum} и ${maximum}.</entry>
+	<entry key="NumberValidator.minimum">'${label}' меньше минимального значения ${minimum}.</entry>
+	<entry key="NumberValidator.maximum">'${label}' больше максимального значения ${maximum}.</entry>
 
-	<entry key="PatternValidator">'${input}' не соответствует шаблону '${pattern}'.</entry>
-	<entry key="EmailAddressValidator">'${input}' не является правильным адресом e-mail.</entry>
+	<entry key="PatternValidator">'${label}' не соответствует шаблону '${pattern}'.</entry>
+	<entry key="EmailAddressValidator">'${label}' не является правильным адресом e-mail.</entry>
 	<entry key="CreditCardValidator">Неправильный номер пластиковой карты.</entry>
-	<entry key="UrlValidator">'${input}' не является правильным адресом URL.</entry>
+	<entry key="UrlValidator">'${label}' не является правильным адресом URL.</entry>
 
 	<entry key="EqualInputValidator">'${input0}' из поля ${label0} и '${input1}' из поля ${label1} не совпадают.</entry>
 	<entry key="EqualPasswordInputValidator">Значения в полях ${label0} и ${label1} не совпадают.</entry>

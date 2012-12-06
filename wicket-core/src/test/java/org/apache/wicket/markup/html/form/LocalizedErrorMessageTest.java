@@ -53,7 +53,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 
 		tester.submitForm(page.form);
 
-		tester.assertErrorMessages("'Number' is not a valid Double.");
+		tester.assertErrorMessages("The value of 'Number' is not a valid Double.");
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		tester.submitForm(page.form);
 
 		// decimal separator is ',' in German
-		tester.assertErrorMessages("Number muss zwischen 0,5 und 1,5 liegen.");
+		tester.assertErrorMessages("Der Wert von 'Number' muss zwischen 0,5 und 1,5 liegen.");
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 
 		tester.submitForm(page.form);
 
-		tester.assertErrorMessages("'Number' ist kein g\u00FCltiger Wert f\u00FCr 'Double'.");
+		tester.assertErrorMessages("Der Wert von 'Number' ist kein g\u00FCltiger Wert f\u00FCr 'Double'.");
 		tester.getSession().setLocale(new Locale("pl"));
 
 		tester.clearFeedbackMessages();

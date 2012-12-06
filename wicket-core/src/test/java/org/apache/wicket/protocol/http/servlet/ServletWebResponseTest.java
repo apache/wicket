@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.request.Url;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -51,13 +52,18 @@ public class ServletWebResponseTest extends Assert
 
 		ServletWebRequest webRequest = mock(ServletWebRequest.class);
 		when(webRequest.isAjax()).thenReturn(Boolean.TRUE);
+		Url baseUrl = Url.parse("./baseUrl");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("someHost");
+		baseUrl.setPort(80);
+		when(webRequest.getClientUrl()).thenReturn(baseUrl);
 
 		HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
 		when(webRequest.getContainerRequest()).thenReturn(httpServletRequest);
 		when(httpServletRequest.getCharacterEncoding()).thenReturn("UTF-8");
 
 		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
-		when(httpServletResponse.encodeRedirectURL(Matchers.eq(url))).thenReturn(url);
+		when(httpServletResponse.encodeRedirectURL(Matchers.anyString())).thenReturn(url);
 		StringWriter writer = new StringWriter();
 		when(httpServletResponse.getWriter()).thenReturn(new PrintWriter(writer));
 
@@ -92,9 +98,14 @@ public class ServletWebResponseTest extends Assert
 
 		ServletWebRequest webRequest = mock(ServletWebRequest.class);
 		when(webRequest.isAjax()).thenReturn(Boolean.FALSE);
+		Url baseUrl = Url.parse("./baseUrl");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("someHost");
+		baseUrl.setPort(80);
+		when(webRequest.getClientUrl()).thenReturn(baseUrl);
 
 		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
-		when(httpServletResponse.encodeRedirectURL(Matchers.eq(url))).thenReturn(url);
+		when(httpServletResponse.encodeRedirectURL(Matchers.anyString())).thenReturn(url);
 
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		webResponse.sendRedirect(url);

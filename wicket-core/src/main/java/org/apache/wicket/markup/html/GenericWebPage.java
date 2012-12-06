@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -26,7 +27,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @param <T>
  *            the type of the page's model object
  */
-public class GenericWebPage<T> extends WebPage
+public class GenericWebPage<T> extends WebPage implements IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -69,45 +70,27 @@ public class GenericWebPage<T> extends WebPage
 		super(parameters);
 	}
 
-	/**
-	 * Typesafe getter for the model's object
-	 * 
-	 * @return the model object
-	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Typesafe setter for the model object
-	 * 
-	 * @param modelObject
-	 *            the new model object
-	 */
+	@Override
 	public final void setModelObject(final T modelObject)
 	{
 		setDefaultModelObject(modelObject);
 	}
 
-	/**
-	 * Typesafe getter for the page's model
-	 * 
-	 * @return the model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Typesafe setter for the model
-	 * 
-	 * @param model
-	 *            the new model
-	 */
+	@Override
 	public final void setModel(final IModel<T> model)
 	{
 		setDefaultModel(model);

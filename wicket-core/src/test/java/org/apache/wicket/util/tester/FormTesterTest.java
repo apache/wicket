@@ -24,13 +24,13 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -188,7 +188,7 @@ public class FormTesterTest extends WicketTestCase
 		formTester.submit();
 		assertNull(page.getFileUpload());
 
-		tester.assertErrorMessages("Field 'file' is required.");
+		tester.assertErrorMessages("'file' is required.");
 	}
 
 	/**

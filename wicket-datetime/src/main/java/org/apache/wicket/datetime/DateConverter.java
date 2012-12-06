@@ -98,7 +98,7 @@ public abstract class DateConverter implements IConverter<Date>
 			}
 			catch (RuntimeException e)
 			{
-				throw new ConversionException(e);
+				throw newConversionException(e, locale);
 			}
 			// apply the server time zone to the parsed value
 			if (zone != null)
@@ -117,9 +117,24 @@ public abstract class DateConverter implements IConverter<Date>
 			}
 			catch (RuntimeException e)
 			{
-				throw new ConversionException(e);
+				throw newConversionException(e, locale);
 			}
 		}
+	}
+
+	/**
+	 * Creates a ConversionException and sets additional context information to it.
+	 *
+	 * @param cause
+	 *            - {@link RuntimeException} cause
+	 * @param locale
+	 *            - {@link Locale} used to set 'format' variable with localized pattern
+	 * @return {@link ConversionException}
+	 */
+	private ConversionException newConversionException(RuntimeException cause, Locale locale)
+	{
+		return new ConversionException(cause)
+				.setVariable("format", getDatePattern(locale));
 	}
 
 	/**

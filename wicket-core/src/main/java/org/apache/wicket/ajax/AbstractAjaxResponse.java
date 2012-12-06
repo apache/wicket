@@ -569,7 +569,7 @@ abstract class AbstractAjaxResponse
 			}
 			else
 			{
-				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavaScript and renderOnDomReadyJavaScript");
+				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are #render(OnLoadHeaderItem) and #render(OnDomReadyHeaderItem)");
 			}
 		}
 

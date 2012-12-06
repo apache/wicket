@@ -25,15 +25,18 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.ajax.WebSocketRequestHandler;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.protocol.ws.IWebSocketSettings;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
+import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
@@ -80,7 +83,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request));
 
 		this.application = Args.notNull(application, "application");
-		this.connectionRegistry = new SimpleWebSocketConnectionRegistry();
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.HOLDER.get(application);
+		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 	}
 
 	@Override
@@ -129,7 +133,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * @param message
 	 *      the message to broadcast
 	 */
-	protected final void broadcastMessage(final IWebSocketMessage message)
+	public final void broadcastMessage(final IWebSocketMessage message)
 	{
 		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, pageId);
 
@@ -143,7 +147,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			try
 			{
 				RequestCycle requestCycle;
-				if (oldRequestCycle == null)
+				if (oldRequestCycle == null || message instanceof IWebSocketPushMessage)
 				{
 					RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
 							application.getRootRequestMapper(), application.getExceptionMapperProvider().get());
@@ -159,7 +163,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				ThreadContext.setApplication(application);
 
 				Session session;
-				if (oldSession == null)
+				if (oldSession == null || message instanceof IWebSocketPushMessage)
 				{
 					ISessionStore sessionStore = application.getSessionStore();
 					session = sessionStore.lookup(webRequest);
@@ -174,15 +178,15 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				try
 				{
 					Page page = (Page) pageManager.getPage(pageId);
-					WebSocketRequestHandler target = new WebSocketRequestHandler(page, connection);
+					WebSocketRequestHandler requestHandler = new WebSocketRequestHandler(page, connection);
 
-					WebSocketPayload payload = createEventPayload(message, target);
+					WebSocketPayload payload = createEventPayload(message, requestHandler);
 
 					page.send(application, Broadcast.BREADTH, payload);
 
 					if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage))
 					{
-						target.respond(requestCycle);
+						requestHandler.respond(requestCycle);
 					}
 				}
 				finally
@@ -243,11 +247,14 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		{
 			payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
 		}
+		else if (message instanceof IWebSocketPushMessage)
+		{
+			payload = new WebSocketPushPayload((IWebSocketPushMessage) message, handler);
+		}
 		else
 		{
 			throw new IllegalArgumentException("Unsupported message type: " + message.getClass().getName());
 		}
 		return payload;
 	}
-
 }

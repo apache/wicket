@@ -33,7 +33,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -51,7 +51,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * <p>
  * <strong>Ajaxifying the palette</strong>: The palette itself cannot be ajaxified because it is a
  * panel and therefore does not receive any javascript events. Instead ajax behaviors can be
- * attached to the recorder component which supports the javascript <code>onchange</code> event. The
+ * attached to the recorder component which supports the javascript <code>change</code> event. The
  * behavior should be attached by overriding {@link #newRecorderComponent()}
  * 
  * Example:
@@ -62,7 +62,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  *    protected Recorder newRecorderComponent()
  *    {
  *      Recorder recorder=super.newRecorderComponent();     
- *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {...});
  *      return recorder;
  *    }
  *  }
@@ -74,7 +74,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  *            Type of model object
  * 
  */
-public class Palette<T> extends Panel
+public class Palette<T> extends GenericPanel<Collection<? extends T>>
 {
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
@@ -155,11 +155,12 @@ public class Palette<T> extends Panel
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
+	@SuppressWarnings("unchecked")
 	public Palette(final String id, final IModel<? extends List<? extends T>> model,
 		final IModel<? extends Collection<? extends T>> choicesModel,
 		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
-		super(id, model);
+		super(id, (IModel<Collection<? extends T>>)(IModel<?>)model);
 
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
@@ -612,6 +613,8 @@ public class Palette<T> extends Panel
 		@Override
 		protected void onComponentTag(final ComponentTag tag)
 		{
+			super.onComponentTag(tag);
+
 			if (!isPaletteEnabled())
 			{
 				tag.getAttributes().put("disabled", "disabled");

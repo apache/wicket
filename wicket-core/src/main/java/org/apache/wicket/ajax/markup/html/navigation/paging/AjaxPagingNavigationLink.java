@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.markup.html.navigation.paging;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigationLink;
@@ -67,7 +68,19 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink<Void> impleme
 	protected AjaxPagingNavigationBehavior newAjaxPagingNavigationBehavior(IPageable pageable,
 		String event)
 	{
-		return new AjaxPagingNavigationBehavior(this, pageable, event);
+		return new AjaxPagingNavigationBehavior(this, pageable, event)
+		{
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+				AjaxPagingNavigationLink.this.updateAjaxAttributes(attributes);
+			}
+		};
+	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**

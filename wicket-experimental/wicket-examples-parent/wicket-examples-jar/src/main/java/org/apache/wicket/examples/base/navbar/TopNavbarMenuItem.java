@@ -24,12 +24,42 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+/**
+ * Menu item for top navigation menu.
+ */
 public class TopNavbarMenuItem extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
 	private BookmarkablePageLink<Void> link;
 
+	/**
+	 * Constructs a menu item linking to the page.
+	 * 
+	 * @param id
+	 *            component identifier
+	 * @param label
+	 *            the contents of the menu item
+	 * @param page
+	 *            the page that is linked to using a bookmarkable link
+	 */
+	public TopNavbarMenuItem(String id, String label, Class<? extends WebPage> page)
+	{
+		this(id, label, page, null);
+	}
+
+	/**
+	 * Constructs a menu item linking to the page.
+	 * 
+	 * @param id
+	 *            component identifier
+	 * @param label
+	 *            the contents of the menu item
+	 * @param page
+	 *            the page that is linked to using a bookmarkable link
+	 * @param parameters
+	 *            the page parameters (optional) used with the link
+	 */
 	public TopNavbarMenuItem(String id, String label, Class<? extends WebPage> page,
 		PageParameters parameters)
 	{

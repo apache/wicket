@@ -24,7 +24,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
@@ -59,7 +58,9 @@ import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
@@ -849,7 +850,7 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/test.html";
 		tester.executeUrl(url);
-		assertEquals("This is a test!\n", tester.getLastResponseAsString());
+		assertEquals("This is a test!", tester.getLastResponseAsString());
 	}
 
 	/**
@@ -1083,14 +1084,14 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests that setting a cookie with age < 0 will not be stored after the request cycle.
+	 * Tests that setting a cookie with age == 0 will not be stored after the request cycle.
 	 */
 	@Test
 	public void dontTransferCookiesWithNegativeAge()
 	{
 		String cookieName = "wicket4289Name";
 		String cookieValue = "wicket4289Value";
-		int cookieAge = -1; // age < 0 => do not store it
+		int cookieAge = 0; // age = 0 => do not store it
 
 		Cookie cookie = new Cookie(cookieName, cookieValue);
 		cookie.setMaxAge(cookieAge);
@@ -1172,13 +1173,41 @@ public class WicketTesterTest extends WicketTestCase
 	 * Clicking on ResourceLink should deliver the resource content
 	 */
 	@Test
-	public void clickResourceLink()
+	public void clickResourceLinkWithResource()
 	{
 		MockPageWithLink page = new MockPageWithLink();
 		String content = "content";
 		ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
 			"fileName.txt");
 		ResourceLink<Void> link = new ResourceLink<Void>(MockPageWithLink.LINK_ID, resource);
+		page.add(link);
+		tester.startPage(page);
+		tester.clickLink(MockPageWithLink.LINK_ID, false);
+		assertEquals(tester.getContentTypeFromResponseHeader(), "text/plain");
+		assertEquals(content, tester.getLastResponseAsString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4810
+	 *
+	 * Clicking on ResourceLink should deliver the resource reference's content
+	 */
+	@Test
+	public void clickResourceLinkWithResourceReference()
+	{
+		MockPageWithLink page = new MockPageWithLink();
+		String content = "content";
+		final ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
+				"fileName.txt");
+		ResourceReference reference = new ResourceReference(WicketTesterTest.class, "resourceLinkWithResourceReferenceTest")
+		{
+			@Override
+			public IResource getResource()
+			{
+				return resource;
+			}
+		};
+		ResourceLink<Void> link = new ResourceLink<Void>(MockPageWithLink.LINK_ID, reference);
 		page.add(link);
 		tester.startPage(page);
 		tester.clickLink(MockPageWithLink.LINK_ID, false);
@@ -1283,7 +1312,6 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void redirectToAbsoluteUrlTest()
 	{
-		WicketTester tester = new WicketTester();
 		tester.setFollowRedirects(false);
 		tester.startPage(AlwaysRedirectPage.class);
 		tester.assertRedirectUrl("http://localhost:4333/");

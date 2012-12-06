@@ -22,6 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
@@ -33,7 +34,6 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.CoreLibrariesContributor;
-import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListener;
@@ -105,7 +105,7 @@ public class AtmosphereBehavior extends Behavior
 
 		// Grab a Meteor
 		Meteor meteor = Meteor.build(request.getContainerRequest());
-		String uuid = getUUID(meteor.getAtmosphereResource());
+		String uuid = meteor.getAtmosphereResource().uuid();
 		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
 		findEventBus().registerPage(uuid, component.getPage());
 
@@ -179,7 +179,7 @@ public class AtmosphereBehavior extends Behavior
 			log.info(String.format("%s connection dropped from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
-		findEventBus().unregisterConnection(getUUID(event.getResource()));
+		findEventBus().unregisterConnection(event.getResource().uuid());
 	}
 
 	@Override
@@ -210,20 +210,25 @@ public class AtmosphereBehavior extends Behavior
 	}
 
 	/**
+	 * Find the Atmosphere UUID for the suspended connection for the given page (if any).
+	 * 
+	 * @param page
+	 * @return The UUID of the Atmosphere Resource, or null if no resource is suspended for the
+	 *         page.
+	 */
+	public static String getUUID(Page page)
+	{
+		return page.getMetaData(ATMOSPHERE_UUID);
+	}
+
+	/**
 	 * @param resource
 	 * @return the unique id for the given suspended connection
+	 * @deprecated use {@link AtmosphereResource#uuid()}
 	 */
+	@Deprecated
 	public static String getUUID(AtmosphereResource resource)
 	{
-		Object trackingId = resource.getRequest().getHeader(HeaderConfig.X_ATMOSPHERE_TRACKING_ID);
-		if (trackingId != null && !trackingId.equals("0"))
-			return trackingId.toString();
-
-		trackingId = resource.getRequest().getAttribute(
-			ApplicationConfig.SUSPENDED_ATMOSPHERE_RESOURCE_UUID);
-		if (trackingId != null && !trackingId.equals("0"))
-			return trackingId.toString();
-
-		return resource.getRequest().getHeader("Sec-WebSocket-Key");
+		return resource.uuid();
 	}
 }
