@@ -110,7 +110,7 @@ public class WebSocketPushBroadcaster
 	private void process(final Application application, final Collection<IWebSocketConnection> wsConnections,
 	                     final IWebSocketPushMessage message)
 	{
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.HOLDER.get(application);
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
 		Executor executor = webSocketSettings.getWebSocketPushMessageExecutor();
 		for (final IWebSocketConnection wsConnection : wsConnections)
 		{
