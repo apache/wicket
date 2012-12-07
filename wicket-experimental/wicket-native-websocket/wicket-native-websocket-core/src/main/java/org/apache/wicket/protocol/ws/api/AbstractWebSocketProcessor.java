@@ -83,7 +83,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request));
 
 		this.application = Args.notNull(application, "application");
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.HOLDER.get(application);
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 	}
 

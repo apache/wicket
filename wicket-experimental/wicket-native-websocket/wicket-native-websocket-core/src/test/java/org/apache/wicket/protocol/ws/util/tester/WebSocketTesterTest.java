@@ -150,7 +150,7 @@ public class WebSocketTesterTest extends Assert
 		tester.getSession().bind();
 
 		new WebSocketTester(tester, page);
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.HOLDER.get(tester.getApplication());
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(tester.getApplication());
 		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
 		ConnectedMessage wsMessage = new ConnectedMessage(tester.getApplication(),
 				tester.getHttpSession().getId(), page.getPageId());

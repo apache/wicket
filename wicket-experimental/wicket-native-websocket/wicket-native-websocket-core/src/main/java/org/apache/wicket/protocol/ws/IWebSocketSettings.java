@@ -41,7 +41,7 @@ public interface IWebSocketSettings
 	 */
 	public static final class Holder
 	{
-		public IWebSocketSettings get(Application application)
+		public static IWebSocketSettings get(Application application)
 		{
 			IWebSocketSettings settings = application.getMetaData(KEY);
 			if (settings == null)
@@ -58,13 +58,11 @@ public interface IWebSocketSettings
 			return settings;
 		}
 
-		public void set(Application application, IWebSocketSettings settings)
+		public static void set(Application application, IWebSocketSettings settings)
 		{
 			application.setMetaData(KEY, settings);
 		}
 	}
-
-	public static final Holder HOLDER = new Holder();
 
 	/**
 	 * The executor for processing websocket push messages broadcasted to all sessions.
