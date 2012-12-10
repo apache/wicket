@@ -276,6 +276,11 @@ public abstract class AbstractTree extends Panel
 					@Override
 					public void visitItem(TreeItem item)
 					{
+						if (item.isVisible())
+						{
+							item.renderHead(container);
+						}
+
 						// write header contributions from the children of item
 						item.visitChildren(new IVisitor<Component, Void>()
 						{
