@@ -21,8 +21,7 @@ import org.apache.wicket.WicketTestCase;
 import org.junit.Test;
 
 /**
- * WICKET-2035 Change naming convention for xml properties files to *.properties.xml instead of
- * *.xml
+ * Test {@link UtfPropertiesFilePropertiesLoader}.
  */
 public class UtfPropertiesFilePropertiesLoaderTest extends WicketTestCase
 {

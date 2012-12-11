@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import org.apache.wicket.util.tester.DummyHomePage;
 
 /**
- * Test page for WICKET-2035
+ * Test page for UtfPropertiesFilePropertiesLoader.
  */
 public class PageWithUTF8Properties extends DummyHomePage
 {
@@ -31,6 +31,6 @@ public class PageWithUTF8Properties extends DummyHomePage
 	public PageWithUTF8Properties()
 	{
 		String actual = getString("testProperty");
-		assertEquals("encöding", actual);
+		assertEquals("enc\u00f6ding", actual);
 	}
 }
