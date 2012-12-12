@@ -213,7 +213,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 
 				CharSequence dynamicExtraParameters = "var result = [], "
 						+ "kc=Wicket.Event.keyCode(attrs.event),"
-						+ "evtType=attrs.event.type;console.log(evtType);"
+						+ "evtType=attrs.event.type;"
 						+ "if (evtType === 'blur' || (evtType === 'keyup' && kc===27)) {"
 						+ "  result.push( { name: 'save', value: false } );"
 						+ "}"
