@@ -417,6 +417,12 @@ public class ServletWebRequest extends WebRequest
 		return new ServletWebRequest(httpServletRequest, filterPrefix, url)
 		{
 			@Override
+			public Url getOriginalUrl()
+			{
+			    return ServletWebRequest.this.getOriginalUrl();
+			}
+
+			@Override
 			public IRequestParameters getPostParameters()
 			{
 				// don't parse post parameters again
