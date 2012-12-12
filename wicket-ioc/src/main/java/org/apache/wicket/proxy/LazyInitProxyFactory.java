@@ -203,7 +203,7 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	protected static interface IWriteReplace
+	public static interface IWriteReplace
 	{
 		/**
 		 * write replace method as defined by Serializable
