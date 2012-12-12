@@ -37,10 +37,19 @@
 			if (('WebSocket' in window)) {
 
 				var self = this,
-					url;
+					url,
+					hashIdx,
+					delim;
 
-				url = document.location.toString().replace('http://', 'ws://');
-				url += '&pageId=' + Wicket.WebSocket.pageId;
+				url = document.location.toString()
+					.replace('http://', 'ws://')
+					.replace('https://', 'wss://');
+				hashIdx = url.indexOf('#');
+				if (hashIdx > -1) {
+					url = url.substring(0, hashIdx);
+				}
+				delim = url.indexOf('?') > -1 ? '&' : '?';
+				url += delim + 'pageId=' + Wicket.WebSocket.pageId;
 				self.ws = new WebSocket(url);
 
 				self.ws.onopen = function () {
