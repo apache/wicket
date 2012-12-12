@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax;
+package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,9 +22,11 @@ import java.util.Collection;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AbstractAjaxResponse;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.XmlAjaxResponse;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Response;
@@ -45,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * @since 6.0
  */
 public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketRequestHandler
-{                                                  
+{
 	private static final Logger LOG = LoggerFactory.getLogger(WebSocketRequestHandler.class);
 
 	private final Page page;
@@ -113,7 +115,7 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 			LOG.warn("The websocket connection is already closed. Cannot push the binary message '{}'", message);
 		}
 	}
-	
+
 	@Override
 	public void add(Component component, String markupId)
 	{
@@ -264,7 +266,7 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 		{
 			logData = new PageLogData(page);
 		}
-		
+
 		ajaxResponse.detach(requestCycle);
 	}
 }

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax;
+package org.apache.wicket.protocol.ws.api;
 
 /**
  * An interface for outbound communication with web socket clients

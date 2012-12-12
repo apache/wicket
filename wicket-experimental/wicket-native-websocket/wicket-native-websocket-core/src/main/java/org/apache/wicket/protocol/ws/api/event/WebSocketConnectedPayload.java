@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.protocol.ws.api.event;
 
-import org.apache.wicket.ajax.WebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 
 /**

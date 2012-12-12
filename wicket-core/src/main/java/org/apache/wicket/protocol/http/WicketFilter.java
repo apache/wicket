@@ -185,18 +185,7 @@ public class WicketFilter implements Filter
 					httpServletResponse);
 
 				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
-				if (!requestCycle.processRequestAndDetach())
-				{
-					if (chain != null)
-					{
-						chain.doFilter(request, response);
-					}
-					res = false;
-				}
-				else
-				{
-					webResponse.flush();
-				}
+				res = processRequestCycle(requestCycle, webResponse, httpServletRequest, httpServletResponse, chain);
 			}
 			else
 			{
@@ -230,6 +219,39 @@ public class WicketFilter implements Filter
 			{
 				response.flushBuffer();
 			}
+		}
+		return res;
+	}
+
+	/**
+	 * Process the request cycle
+	 *
+	 * @param requestCycle
+	 * @param webResponse
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param chain
+	 * @return false, if the request could not be processed
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	protected boolean processRequestCycle(RequestCycle requestCycle, WebResponse webResponse,
+	    HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+		final FilterChain chain) throws IOException, ServletException {
+		// Assume we are able to handle the request
+		boolean res = true;
+
+		if (!requestCycle.processRequestAndDetach())
+		{
+			if (chain != null)
+			{
+				chain.doFilter(httpServletRequest, httpServletResponse);
+			}
+			res = false;
+		}
+		else
+		{
+			webResponse.flush();
 		}
 		return res;
 	}

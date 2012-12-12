@@ -39,11 +39,11 @@ import org.slf4j.LoggerFactory;
  *     </ul>
  * </p>
  */
-abstract class XmlAjaxResponse extends AbstractAjaxResponse
+public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlAjaxResponse.class);
 
-	XmlAjaxResponse(final Page page)
+	public XmlAjaxResponse(final Page page)
 	{
 		super(page);
 	}

@@ -17,7 +17,7 @@
 package org.apache.wicket.protocol.ws.util.tester;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.WebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
