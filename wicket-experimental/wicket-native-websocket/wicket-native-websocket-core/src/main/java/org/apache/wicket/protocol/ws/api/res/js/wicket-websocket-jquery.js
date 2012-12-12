@@ -52,8 +52,8 @@
 				url += delim + 'pageId=' + Wicket.WebSocket.pageId;
 				self.ws = new WebSocket(url);
 
-				self.ws.onopen = function () {
-					Wicket.Event.publish('/websocket/open');
+				self.ws.onopen = function (evt) {
+					Wicket.Event.publish('/websocket/open', evt);
 				};
 
 				self.ws.onmessage = function (event) {
@@ -68,19 +68,19 @@
 					}
 				};
 
-				self.ws.onclose = function (event) {
+				self.ws.onclose = function (evt) {
 					if (self.ws) {
 						self.ws.close();
 						self.ws = null;
-						Wicket.Event.publish('/websocket/closed');
+						Wicket.Event.publish('/websocket/closed', evt);
 					}
 				};
 
-				self.ws.onerror = function (e) {
+				self.ws.onerror = function (evt) {
 					if (self.ws) {
 						self.ws.close();
 						self.ws = null;
-						Wicket.Event.publish('/websocket/error');
+						Wicket.Event.publish('/websocket/error', evt);
 					}
 				};
 			} else {
