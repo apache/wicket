@@ -192,9 +192,14 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 
 	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
 	{
-		for (CharSequence script : scripts)
+		if (scripts.size() > 0)
 		{
-			writeEvaluation(elementName, response, script);
+			StringBuilder combinedScript = new StringBuilder(1024);
+			for (CharSequence script : scripts)
+			{
+				combinedScript.append("(function(){").append(script).append("})();");
+			}
+			writeEvaluation(elementName, response, combinedScript);
 		}
 	}
 
