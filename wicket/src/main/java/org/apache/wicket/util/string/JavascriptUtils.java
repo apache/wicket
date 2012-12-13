@@ -18,7 +18,6 @@ package org.apache.wicket.util.string;
 
 import org.apache.wicket.Response;
 
-
 /**
  * Provide some helpers to write javascript related tags to the response object.
  * 
@@ -27,24 +26,24 @@ import org.apache.wicket.Response;
 public class JavascriptUtils
 {
 
-	/** Script open tag */
-	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\"><!--/*--><![CDATA[/*><!--*/\n";
-
-	/** Script close tag */
-	public final static String SCRIPT_CLOSE_TAG = "\n/*-->]]>*/</script>\n";
-
 	/**
-	 * Script open tag. If this tag is changed, also update Wicket.Head.Contributor.processScript()
-	 * function from wicket-ajax.js
+	 * Prefix for JavaScript CDATA content. If this is changed, also update
+	 * Wicket.Head.Contributor.processScript() function from wicket-ajax.js
 	 */
 	public final static String SCRIPT_CONTENT_PREFIX = "<!--/*--><![CDATA[/*><!--*/\n";
 
 	/**
-	 * Script close tag. If this tag is changed, also update Wicket.Head.Contributor.processScript()
-	 * function from wicket-ajax.js
+	 * Suffix for JavaScript CDATA content. If this is changed, also update
+	 * Wicket.Head.Contributor.processScript() function from wicket-ajax.js
 	 */
 	public final static String SCRIPT_CONTENT_SUFFIX = "\n/*-->]]>*/";
 
+	/** Script open tag including content prefix */
+	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\">" +
+		SCRIPT_CONTENT_PREFIX;
+
+	/** Script close tag including content suffix */
+	public final static String SCRIPT_CLOSE_TAG = SCRIPT_CONTENT_SUFFIX + "</script>\n";
 
 	/** The response object */
 	private final Response response;
@@ -142,7 +141,7 @@ public class JavascriptUtils
 	public static void writeJavascript(final Response response, final CharSequence text, String id)
 	{
 		writeOpenTag(response, id);
-		response.write(text);
+		response.write(Strings.replaceAll(text, "</", "<\\/"));
 		writeCloseTag(response);
 	}
 
