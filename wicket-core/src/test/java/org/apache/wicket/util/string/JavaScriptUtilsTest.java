@@ -27,6 +27,7 @@ public class JavaScriptUtilsTest extends Assert
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4546
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -39,6 +40,34 @@ public class JavaScriptUtilsTest extends Assert
 		String charset = "some&bad%%charset";
 		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset);
 
-		assertEquals("<script type=\"text/javascript\" id=\"some&amp;bad%id\" defer=\"defer\" charset=\"some&amp;bad%%charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n", response.toString());
+		assertEquals(
+			"<script type=\"text/javascript\" id=\"some&amp;bad%id\" defer=\"defer\" charset=\"some&amp;bad%%charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
+			response.toString());
+	}
+
+	/**
+	 */
+	@Test
+	public void writeJavaScript()
+	{
+		StringResponse response = new StringResponse();
+		JavaScriptUtils.writeJavaScript(response,
+			"var message = 'Scripts are written to the <script></script> tag'");
+
+		assertEquals("<script type=\"text/javascript\" >\n" //
+			+ "/*<![CDATA[*/\n" //
+			+ "var message = 'Scripts are written to the <script><\\/script> tag'\n" //
+			+ "/*]]>*/\n"//
+			+ "</script>\n", response.toString());
+	}
+
+	/**
+	 */
+	@Test
+	public void scriptTag()
+	{
+		assertEquals("<script type=\"text/javascript\">\n/*<![CDATA[*/\n",
+			JavaScriptUtils.SCRIPT_OPEN_TAG);
+		assertEquals("\n/*]]>*/\n</script>\n", JavaScriptUtils.SCRIPT_CLOSE_TAG);
 	}
 }
