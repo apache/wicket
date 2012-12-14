@@ -40,7 +40,7 @@ import org.junit.Test;
 /**
  * @author Pedro Santos
  */
-public class HeaderBufferingWebResponseTest extends Assert
+public class ResponseIOExceptionTest extends Assert
 {
 	private WicketTester tester;
 
@@ -55,8 +55,7 @@ public class HeaderBufferingWebResponseTest extends Assert
 			@Override
 			protected Response newServletWebResponse(ServletWebRequest servletWebRequest)
 			{
-				return new HeaderBufferingWebResponse(new ProblematicResponse(servletWebRequest,
-					getResponse()));
+				return new ProblematicResponse(servletWebRequest, getResponse());
 			}
 		};
 		tester.setExposeExceptions(false);
