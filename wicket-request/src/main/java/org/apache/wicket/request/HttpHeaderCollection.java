@@ -32,9 +32,9 @@ import org.apache.wicket.util.time.Time;
 /**
  * a multivalue map of headers names and header values suitable for 
  * processing http request and response headers.
- *
+ * 
  * @author Peter Ertl
- *
+ * 
  * @since 1.5
  */
 public class HttpHeaderCollection
@@ -51,11 +51,11 @@ public class HttpHeaderCollection
 
 	/**
 	 * internally add new object to header values
-	 *
+	 * 
 	 * @param name
-	 *          header name
+	 *            header name
 	 * @param object
-	 *          header value (can be a string or a {@link Time} object
+	 *            header value (can be a string or a {@link Time} object
 	 */
 	private void internalAdd(String name, Object object)
 	{
@@ -73,11 +73,11 @@ public class HttpHeaderCollection
 
 	/**
 	 * set header value (and remove previous values)
-	 *
+	 * 
 	 * @param name
-	 *          header name
+	 *            header name
 	 * @param value
-	 *          header value
+	 *            header value
 	 */
 	public void setHeader(String name, String value)
 	{
@@ -90,11 +90,11 @@ public class HttpHeaderCollection
 
 	/**
 	 * add header value
-	 *
+	 * 
 	 * @param name
-	 *          header name
+	 *            header name
 	 * @param value
-	 *          header value
+	 *            header value
 	 */
 	public void addHeader(String name, String value)
 	{
@@ -106,11 +106,11 @@ public class HttpHeaderCollection
 
 	/**
 	 * add date header value
-	 *
+	 * 
 	 * @param name
-	 *          header name
+	 *            header name
 	 * @param time
-	 *          timestamp
+	 *            timestamp
 	 */
 	public void addDateHeader(String name, Time time)
 	{
@@ -119,11 +119,11 @@ public class HttpHeaderCollection
 
 	/**
 	 * add date header value
-	 *
+	 * 
 	 * @param name
-	 *          header name
+	 *            header name
 	 * @param time
-	 *          timestamp
+	 *            timestamp
 	 */
 	public void setDateHeader(String name, Time time)
 	{
@@ -136,9 +136,9 @@ public class HttpHeaderCollection
 
 	/**
 	 * remove header values for header name
-	 *
+	 * 
 	 * @param name
-	 *          header name
+	 *            header name
 	 */
 	public void removeHeader(String name)
 	{
@@ -170,9 +170,9 @@ public class HttpHeaderCollection
 
 	/**
 	 * check if header is defined
-	 *
+	 * 
 	 * @param name
-	 *        header name
+	 *            header name
 	 * @return <code>true</code> if header has one or more values
 	 */
 	public boolean containsHeader(String name)
@@ -192,7 +192,7 @@ public class HttpHeaderCollection
 
 	/**
 	 * returns names of headers
-	 *
+	 * 
 	 * @return set of header names
 	 */
 	public Set<String> getHeaderNames()
@@ -213,10 +213,10 @@ public class HttpHeaderCollection
 
 	/**
 	 * get header values (dates will be converted into strings)
-	 *
+	 * 
 	 * @param name
-	 *          header name
-	 *
+	 *            header name
+	 * 
 	 * @return array of header values or empty array if not found
 	 */
 	public String[] getHeaderValues(String name)
@@ -241,7 +241,7 @@ public class HttpHeaderCollection
 	{
 		final List<Object> objects = headers.get(new HeaderKey(name));
 
-		if (objects.isEmpty())
+		if (objects == null || objects.isEmpty())
 		{
 			return null;
 		}
@@ -267,7 +267,7 @@ public class HttpHeaderCollection
 
 	/**
 	 * check if collection is empty
-	 *
+	 * 
 	 * @return <code>true</code> if collection is empty, <code>false</code> otherwise
 	 */
 	public boolean isEmpty()
@@ -277,7 +277,7 @@ public class HttpHeaderCollection
 
 	/**
 	 * get number of headers
-	 *
+	 * 
 	 * @return count
 	 */
 	public int getCount()
