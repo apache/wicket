@@ -1,6 +1,58 @@
 This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
+
+Release Notes - Wicket - Version 6.4.0
+
+** Sub-task
+    * [WICKET-4880] - Make it possible to override the Ajax behavior of AjaxSubmitLink and AjaxButton
+
+** Bug
+    * [WICKET-4869] - Wicket-Atmosphere track message length
+    * [WICKET-4872] - IllegalArgumentException on ReloadingWicketFilter and inheritance markup
+    * [WICKET-4877] - encodeUrl fails parsing jsessionid when using root context
+    * [WICKET-4878] - Rendering of feedback messages fails with DebugBar in page
+    * [WICKET-4881] - IE 8 : error when handling Wicket Ajax Response
+    * [WICKET-4884] - ValidationError messages for NumberTextFields with minimum/maximum are always English
+    * [WICKET-4886] - Do not register Ajax timer if the component is removed
+    * [WICKET-4890] - Bad validation messages after WICKET-2128
+    * [WICKET-4891] - UrlRenderer.renderRelativeUrl misbehavior if the filterPath is composed.
+    * [WICKET-4894] - Internet Explorer fails fails to properly include conditional stylesheet links added via AjaxRequestTarget
+    * [WICKET-4895] - WicketRuntimeException: addOrReplace for feedback panel does not clear Component.FEEDBACK_LIST - feedback from replaced component causes error.
+    * [WICKET-4899] - autocomplete shows strings with quotes strings as string2 with &quot;quote&quot;
+    * [WICKET-4900] - Setting a status code on an AbstractResource results in no HTTP body
+    * [WICKET-4908] - Wrong charset or screwed up characters in Norwegian properties-file
+    * [WICKET-4911] - Palette Ajax update does not work
+    * [WICKET-4913] - HtmlDocumentParser does not support tags containing number (e.g. h1-h6)
+    * [WICKET-4915] - org.apache.wicket.util.resource.Patht#find fails on Windows
+    * [WICKET-4916] - AbstractTree$TreeItem renderHead does not call renderHead for child TreeItems.
+    * [WICKET-4917] - Websockets are not working if URL has a hash in it
+    * [WICKET-4918] - LazyInitProxyFactory prevents using package private interfaces
+    * [WICKET-4920] - Rendered Url on root context with cookies disabled might result in double slash //
+    * [WICKET-4922] - Cloned ServletWebRequest returns wrong OriginalUrl
+    * [WICKET-4923] - CryptoMapper ignores original queryString parameters
+
+** Improvement
+    * [WICKET-4873] - Support different session id parameter
+    * [WICKET-4876] - CheckBoxMultipleChoice should implement getAdditionalAttributes as RadioChoice
+    * [WICKET-4887] - Use a Set to keep the supported wicket elements in WicketTagIdentifier
+    * [WICKET-4889] - Label constructor should accept Serializable as label
+    * [WICKET-4892] - Provide helpful exception message in RequestCycle#urlFor()
+    * [WICKET-4901] - AjaxPagingNaviagtionLink should provide updateAjaxAttributes like AjaxLink
+    * [WICKET-4902] - ConcatBundleResource should use the respective ITextResourceCompressor
+    * [WICKET-4924] - Websocket broadcast support does not work with OSGi
+
+** New Feature
+    * [WICKET-4832] - Websocket broadcast support
+    * [WICKET-4879] - Implementing channels in wicket-atmosphere
+    * [WICKET-4883] - Out of the box bean-validation (JSR 303) integration
+    * [WICKET-4888] - Introduce a hierarchical feedback panel (FencedFeedbackPanel)
+
+** Task
+    * [WICKET-4885] - Upgrade jQuery to its latest stable version (1.8.3)
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.3.0
 
 ** Bug
