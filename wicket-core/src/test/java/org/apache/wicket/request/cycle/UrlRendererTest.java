@@ -174,6 +174,19 @@ public class UrlRendererTest extends Assert
 	}
 
 	/**
+	 * WICKET-4920 prevent double slash
+	 */
+	@Test
+	public void test14()
+	{
+		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(new Url()));
+
+		assertEquals(
+			"./;jsessionid=1p87c5424zjuvd57kljcu2bwa?0-1.IBehaviorListener.1-component",
+			r1.renderRelativeUrl(Url.parse("http://localhost:8080/;jsessionid=1p87c5424zjuvd57kljcu2bwa?0-1.IBehaviorListener.1-component")));
+	}
+
+	/**
 	 * Verify that absolute urls are rendered as is, ignoring the current client url and base url
 	 * completely.
 	 * 

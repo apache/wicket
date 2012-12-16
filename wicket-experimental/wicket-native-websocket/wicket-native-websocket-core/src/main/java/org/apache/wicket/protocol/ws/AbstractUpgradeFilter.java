@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.protocol.ws;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,15 +24,12 @@ import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 
 /**
@@ -44,97 +41,38 @@ import org.apache.wicket.request.http.WebResponse;
  */
 public class AbstractUpgradeFilter extends WicketFilter
 {
-	/**
-	 * This is Wicket's main method to execute a request
-	 *
-	 * @param request
-	 *      the http request
-	 * @param response
-	 *      the http response
-	 * @param chain
-	 *      the filter chain
-	 * @return false, if the request could not be processed
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	// TODO improve WicketFilter#processRequest() to provide a hook instead of copy/pasting its whole code
-	@Override
-	boolean processRequest(ServletRequest request, final ServletResponse response,
-	                       final FilterChain chain) throws IOException, ServletException
-	{
-		final ThreadContext previousThreadContext = ThreadContext.detach();
+
+	protected boolean processRequestCycle(final RequestCycle requestCycle, final WebResponse webResponse,
+			final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+			final FilterChain chain)
+		throws IOException, ServletException {
 
 		// Assume we are able to handle the request
 		boolean res = true;
 
-		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
-		final ClassLoader newClassLoader = getClassLoader();
+		ThreadContext.setRequestCycle(requestCycle);
 
-		try
+		if (acceptWebSocket(httpServletRequest, httpServletResponse) || httpServletResponse.isCommitted())
 		{
-			if (previousClassLoader != newClassLoader)
-			{
-				Thread.currentThread().setContextClassLoader(newClassLoader);
-			}
-
-			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-
-			// Make sure getFilterPath() gets called before checkIfRedirectRequired()
-			String filterPath = getFilterPath(httpServletRequest);
-
-			if (filterPath == null)
-			{
-				throw new IllegalStateException("filter path was not configured");
-			}
-
-			WebApplication application = getApplication();
-			// No redirect; process the request
-			ThreadContext.setApplication(application);
-
-			WebRequest webRequest = application.createWebRequest(httpServletRequest, filterPath);
-			WebResponse webResponse = application.createWebResponse(webRequest,
-					httpServletResponse);
-
-			RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
-			ThreadContext.setRequestCycle(requestCycle);
-
-			if (acceptWebSocket(httpServletRequest, httpServletResponse, application) || httpServletResponse.isCommitted())
-			{
-				res = true;
-			}
-			else if (!requestCycle.processRequestAndDetach() && !httpServletResponse.isCommitted())
-			{
-				if (chain != null)
-				{
-					chain.doFilter(request, response);
-				}
-				res = false;
-			}
-			else
-			{
-				webResponse.flush();
-			}
-
+			res = true;
 		}
-		finally
+		else if (!requestCycle.processRequestAndDetach() && !httpServletResponse.isCommitted())
 		{
-			ThreadContext.restore(previousThreadContext);
-
-			if (newClassLoader != previousClassLoader)
+			if (chain != null)
 			{
-				Thread.currentThread().setContextClassLoader(previousClassLoader);
+				chain.doFilter(httpServletRequest, httpServletResponse);
 			}
-
-			if (response.isCommitted())
-			{
-				response.flushBuffer();
-			}
+			res = false;
 		}
+		else
+		{
+			webResponse.flush();
+		}
+
 		return res;
 	}
 
-	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp, Application application)
+	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException
 	{
 		// Information required to send the server handshake message
@@ -183,6 +121,7 @@ public class AbstractUpgradeFilter extends WicketFilter
 		if (subProtocol != null) {
 			resp.setHeader("Sec-WebSocket-Protocol", subProtocol);
 		}
+
 
 		return true;
 	}

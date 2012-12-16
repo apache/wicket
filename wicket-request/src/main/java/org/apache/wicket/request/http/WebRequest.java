@@ -154,6 +154,12 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
+			public Url getOriginalUrl()
+			{
+				return WebRequest.this.getOriginalUrl();
+			}
+
+			@Override
 			public IRequestParameters getPostParameters()
 			{
 				return WebRequest.this.getPostParameters();

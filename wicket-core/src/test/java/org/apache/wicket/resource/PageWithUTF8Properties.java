@@ -14,32 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax;
+package org.apache.wicket.resource;
+
+import static org.junit.Assert.assertEquals;
+
+import org.apache.wicket.util.tester.DummyHomePage;
 
 /**
- * An interface for outbound communication with web socket clients
- *
- * @since 6.0
+ * Test page for UtfPropertiesFilePropertiesLoader.
  */
-public interface IWebSocketRequestHandler
+public class PageWithUTF8Properties extends DummyHomePage
 {
-	/**
-	 * Pushes a text message to the client.
-	 *
-	 * @param message
-	 *      the text message to push to the client if the web socket connection is open
-	 */
-	void push(CharSequence message);
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Pushes a binary message to the client.
-	 *
-	 * @param message
-	 *      the binary message to push to the client if the web socket connection is open
-	 * @param offset
-	 *      the offset to start to read from the message
-	 * @param length
-	 *      how many bytes to read from the message
-	 */
-	void push(byte[] message, int offset, int length);
+	/***/
+	public PageWithUTF8Properties()
+	{
+		String actual = getString("testProperty");
+		assertEquals("enc\u00f6ding", actual);
+	}
 }

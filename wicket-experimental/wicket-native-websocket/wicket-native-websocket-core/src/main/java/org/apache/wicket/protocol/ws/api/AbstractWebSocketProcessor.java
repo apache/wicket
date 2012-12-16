@@ -22,7 +22,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.ajax.WebSocketRequestHandler;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.ws.IWebSocketSettings;
@@ -83,7 +82,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request));
 
 		this.application = Args.notNull(application, "application");
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.HOLDER.get(application);
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 	}
 

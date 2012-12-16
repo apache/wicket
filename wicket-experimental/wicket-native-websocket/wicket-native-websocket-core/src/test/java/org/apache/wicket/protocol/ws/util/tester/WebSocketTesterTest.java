@@ -17,7 +17,14 @@
 package org.apache.wicket.protocol.ws.util.tester;
 
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.protocol.ws.IWebSocketSettings;
+import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
+import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
@@ -59,7 +66,7 @@ public class WebSocketTesterTest extends Assert
 		WebSocketTestPage page = new WebSocketTestPage(expectedMessage);
 		tester.startPage(page);
 
-		WebSocketTester webSocketTester = new WebSocketTester(page) {
+		WebSocketTester webSocketTester = new WebSocketTester(tester, page) {
 			@Override
 			protected void onOutMessage(String message)
 			{
@@ -86,7 +93,7 @@ public class WebSocketTesterTest extends Assert
 		WebSocketTestPage page = new WebSocketTestPage(expectedMessage, offset, length);
 		tester.startPage(page);
 
-		WebSocketTester webSocketTester = new WebSocketTester(page) {
+		WebSocketTester webSocketTester = new WebSocketTester(tester, page) {
 			@Override
 			protected void onOutMessage(byte[] message, int off, int len)
 			{
@@ -108,5 +115,62 @@ public class WebSocketTesterTest extends Assert
 
 		webSocketTester.sendMessage(expectedMessage, offset, length);
 		webSocketTester.destroy();
+	}
+
+	@Test
+	public void serverSideBroadcast()
+	{
+		final String message = "Broadcasted Message";
+
+		final AtomicBoolean messageReceived = new AtomicBoolean(false);
+
+		WebSocketTestPage page = new WebSocketTestPage()
+		{
+			@Override
+			public void onEvent(IEvent<?> event)
+			{
+				super.onEvent(event);
+
+				if (event.getPayload() instanceof WebSocketPushPayload)
+				{
+					WebSocketPushPayload payload = (WebSocketPushPayload) event.getPayload();
+
+					if (payload.getMessage() instanceof BroadcastMessage)
+					{
+						BroadcastMessage broadcastMessage = (BroadcastMessage) payload.getMessage();
+						if (message.equals(broadcastMessage.getText()))
+						{
+							messageReceived.set(true);
+						}
+					}
+				}
+			}
+		};
+		tester.startPage(page);
+		tester.getSession().bind();
+
+		new WebSocketTester(tester, page);
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(tester.getApplication());
+		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
+		ConnectedMessage wsMessage = new ConnectedMessage(tester.getApplication(),
+				tester.getHttpSession().getId(), page.getPageId());
+		broadcaster.broadcast(wsMessage, new BroadcastMessage(message));
+
+		assertEquals(true, messageReceived.get());
+	}
+
+	private static class BroadcastMessage implements IWebSocketPushMessage
+	{
+		private final String message;
+
+		private BroadcastMessage(String message)
+		{
+			this.message = message;
+		}
+
+		public String getText()
+		{
+			return message;
+		}
 	}
 }

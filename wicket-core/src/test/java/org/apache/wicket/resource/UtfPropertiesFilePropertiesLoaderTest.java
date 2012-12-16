@@ -14,30 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.api.event;
+package org.apache.wicket.resource;
 
-import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
-import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+
+import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
- * * Payload for event broadcasting when the client has opened a WebSocket connection
- *
- * @since 6.0
+ * Test {@link UtfPropertiesFilePropertiesLoader}.
  */
-public class WebSocketConnectedPayload extends WebSocketPayload<ConnectedMessage>
+public class UtfPropertiesFilePropertiesLoaderTest extends WicketTestCase
 {
-	private final ConnectedMessage message;
-
-	public WebSocketConnectedPayload(ConnectedMessage message, WebSocketRequestHandler handler)
+	/**
+	 * Test encoding.
+	 */
+	@Test
+	public void encoding()
 	{
-		super(handler);
-
-		this.message = message;
-	}
-
-	@Override
-	public final ConnectedMessage getMessage()
-	{
-		return message;
+		tester.startPage(PageWithUTF8Properties.class);
 	}
 }

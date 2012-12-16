@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.file.Path;
 import org.junit.Test;
 
@@ -38,7 +37,8 @@ public class PathTest extends WicketTestCase
 		final File file = createTempFile(contents);
 		final File root = findRoot(file);
 		final Path path = new Path(root.getCanonicalPath());
-		IResourceStream rs = path.find(PathTest.class, file.getCanonicalPath());
+		String relative = root.toURI().relativize(file.toURI()).getPath();
+		IResourceStream rs = path.find(PathTest.class, relative);
 		assertNotNull(rs);
 		assertContents(contents, rs);
 	}
