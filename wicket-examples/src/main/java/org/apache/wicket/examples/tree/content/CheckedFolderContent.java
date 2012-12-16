@@ -23,6 +23,7 @@ import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
 import org.apache.wicket.extensions.markup.html.repeater.tree.content.CheckedFolder;
 import org.apache.wicket.extensions.markup.html.repeater.util.ProviderSubset;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 
 /**
  * @author Sven Meier
@@ -72,7 +73,7 @@ public class CheckedFolderContent extends Content
 			@Override
 			protected IModel<Boolean> newCheckBoxModel(final IModel<Foo> model)
 			{
-				return new IModel<Boolean>()
+				return new IWriteableModel<Boolean>()
 				{
 					private static final long serialVersionUID = 1L;
 

@@ -17,7 +17,8 @@
 package org.apache.wicket.extensions.markup.html.repeater.tree.table;
 
 import junit.framework.Assert;
-import org.apache.wicket.model.IModel;
+
+import org.apache.wicket.model.IWriteableModel;
 import org.junit.Test;
 
 /**
@@ -46,7 +47,7 @@ public class NodeModelTest extends Assert
 				false })));
 	}
 
-	private class StringModel implements IModel<String>
+	private class StringModel implements IWriteableModel<String>
 	{
 
 		private static final long serialVersionUID = 1L;

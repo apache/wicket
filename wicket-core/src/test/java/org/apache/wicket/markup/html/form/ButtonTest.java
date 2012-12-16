@@ -20,7 +20,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -52,7 +52,7 @@ public class ButtonTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 		Form<Void> form;
 		Button button;
-		IModel<String> buttonModel = Model.of((String)null);
+		IWriteableModel<String> buttonModel = Model.of((String)null);
 
 		/** */
 		public TestPage()

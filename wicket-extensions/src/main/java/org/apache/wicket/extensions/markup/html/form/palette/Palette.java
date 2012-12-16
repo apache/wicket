@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -511,7 +512,7 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 		modelChanged();
 
 		@SuppressWarnings("unchecked")
-		IModel<Object> defaultModel = (IModel<Object>)getDefaultModel();
+		IWriteableModel<Object> defaultModel = (IWriteableModel<Object>)getDefaultModel();
 		defaultModel.setObject(collection);
 	}
 

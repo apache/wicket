@@ -36,6 +36,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.validation.IValidator;
@@ -454,8 +455,9 @@ public class AjaxEditableLabel<T> extends Panel
 		label.setVisible(false);
 		editor.setVisible(true);
 		target.add(AjaxEditableLabel.this);
-		String selectScript = String.format("(function(){var el = Wicket.$('%s'); if (el.select) el.select();})()",
-				editor.getMarkupId());
+		String selectScript = String.format(
+			"(function(){var el = Wicket.$('%s'); if (el.select) el.select();})()",
+			editor.getMarkupId());
 		target.appendJavaScript(selectScript);
 		target.focusComponent(editor);
 	}
@@ -474,8 +476,9 @@ public class AjaxEditableLabel<T> extends Panel
 			target.appendJavaScript("window.status='" +
 				JavaScriptUtils.escapeQuotes(errorMessage.toString()) + "';");
 		}
-		String selectAndFocusScript = String.format("(function(){var el=Wicket.$('%s'); if (el.select) el.select(); el.focus();})()",
-				editor.getMarkupId());
+		String selectAndFocusScript = String.format(
+			"(function(){var el=Wicket.$('%s'); if (el.select) el.select(); el.focus();})()",
+			editor.getMarkupId());
 		target.appendJavaScript(selectAndFocusScript);
 	}
 
@@ -514,7 +517,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * Model that accesses the parent model lazily. this is required since we eventually request the
 	 * parents model before the component is added to the parent.
 	 */
-	private class WrapperModel implements IModel<T>, IObjectClassAwareModel<T>
+	private class WrapperModel implements IModel<T>, IWriteableModel<T>, IObjectClassAwareModel<T>
 	{
 		@Override
 		public T getObject()
@@ -553,13 +556,13 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @return Gets the parent model in case no explicit model was specified.
 	 */
 	@SuppressWarnings("unchecked")
-	private IModel<T> getParentModel()
+	private IWriteableModel<T> getParentModel()
 	{
 		// the #getModel() call below will resolve and assign any inheritable
 		// model this component can use. Set that directly to the label and
 		// editor so that those components work like this enclosing panel
 		// does not exist (must have that e.g. with CompoundPropertyModels)
-		IModel<T> m = (IModel<T>)getDefaultModel();
+		IWriteableModel<T> m = (IWriteableModel<T>)getDefaultModel();
 
 		// check that a model was found
 		if (m == null)

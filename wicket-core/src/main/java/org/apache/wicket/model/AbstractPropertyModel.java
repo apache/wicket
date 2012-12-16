@@ -46,7 +46,8 @@ import org.apache.wicket.util.string.Strings;
 public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 	implements
 		IObjectClassAwareModel<T>,
-		IPropertyReflectionAwareModel<T>
+		IPropertyReflectionAwareModel<T>,
+		IWriteableModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -72,7 +73,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			return (T) getInnermostModelOrObject();
+			return (T)getInnermostModelOrObject();
 		}
 		else if (expression.startsWith("."))
 		{
@@ -117,7 +118,15 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 			Object target = getTarget();
 			if (target instanceof IModel)
 			{
-				((IModel<T>)target).setObject(object);
+				if (target instanceof IWriteableModel)
+				{
+					((IWriteableModel<T>)target).setObject(object);
+				}
+				else
+				{
+					throw new UnsupportedOperationException("Model " + getClass() +
+						" does not support setObject(Object)");
+				}
 			}
 			else
 			{
@@ -164,7 +173,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		{
 			try
 			{
-				Class<?> targetClass = ((IObjectClassAwareModel<?>) getTarget()).getObjectClass();
+				Class<?> targetClass = ((IObjectClassAwareModel<?>)getTarget()).getObjectClass();
 				if (targetClass != null)
 				{
 					return PropertyResolver.getPropertyClass(expression, targetClass);

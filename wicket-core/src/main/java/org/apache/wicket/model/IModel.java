@@ -62,12 +62,4 @@ public interface IModel<T> extends IDetachable
 	 * @return The model object
 	 */
 	T getObject();
-
-	/**
-	 * Sets the model object.
-	 * 
-	 * @param object
-	 *            The model object
-	 */
-	void setObject(final T object);
 }

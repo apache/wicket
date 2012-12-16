@@ -68,6 +68,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -683,7 +684,8 @@ public abstract class Component
 		getApplication().getComponentInstantiationListeners().onInstantiation(this);
 
 		final IDebugSettings debugSettings = getApplication().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
+		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() &&
+			debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
 				ComponentStrings.toString(this, new MarkupException("constructed")));
@@ -3038,7 +3040,7 @@ public abstract class Component
 	@SuppressWarnings("unchecked")
 	public final Component setDefaultModelObject(final Object object)
 	{
-		final IModel<Object> model = (IModel<Object>)getDefaultModel();
+		final IWriteableModel<Object> model = (IWriteableModel<Object>)getDefaultModel();
 
 		// Check whether anything can be set at all
 		if (model == null)

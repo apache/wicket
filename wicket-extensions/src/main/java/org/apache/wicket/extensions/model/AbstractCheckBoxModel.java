@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.model;
 
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 
 /**
  * Model adapter that makes working with models for checkboxes easier.
@@ -24,14 +24,14 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AbstractCheckBoxModel implements IModel<Boolean>
+public abstract class AbstractCheckBoxModel implements IWriteableModel<Boolean>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Detach model.
 	 */
-        @Override
+	@Override
 	public void detach()
 	{
 	}
@@ -57,7 +57,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	 * 
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-        @Override
+	@Override
 	public final Boolean getObject()
 	{
 		return isSelected();
@@ -66,7 +66,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
-        @Override
+	@Override
 	public final void setObject(final Boolean object)
 	{
 		if (Boolean.TRUE.equals(object))

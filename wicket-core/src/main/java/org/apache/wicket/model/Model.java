@@ -43,7 +43,7 @@ import org.apache.wicket.util.lang.Objects;
  * @param <T>
  *            The type of the Model Object
  */
-public class Model<T extends Serializable> implements IModel<T>
+public class Model<T extends Serializable> implements IWriteableModel<T>
 {
 	private static final long serialVersionUID = 1L;
 

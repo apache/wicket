@@ -73,12 +73,6 @@ public class NodeModel<T> implements IWrapModel<T>
 	}
 
 	@Override
-	public void setObject(T object)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void detach()
 	{
 		model.detach();

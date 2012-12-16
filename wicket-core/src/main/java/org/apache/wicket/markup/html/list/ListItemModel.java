@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 
 /**
  * Model for list items.
@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
  *            Model object type
  * 
  */
-public class ListItemModel<T> implements IModel<T>
+public class ListItemModel<T> implements IWriteableModel<T>
 {
 	private static final long serialVersionUID = 1L;
 

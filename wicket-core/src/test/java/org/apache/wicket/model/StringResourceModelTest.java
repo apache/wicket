@@ -233,7 +233,7 @@ public class StringResourceModelTest extends WicketTestCase
 	@Test
 	public void detachSubstituteModelFromAssignmentWrapper()
 	{
-		IModel<WeatherStation> nullOnDetachModel = new Model<WeatherStation>()
+		IWriteableModel<WeatherStation> nullOnDetachModel = new Model<WeatherStation>()
 		{
 			private static final long serialVersionUID = 1L;
 

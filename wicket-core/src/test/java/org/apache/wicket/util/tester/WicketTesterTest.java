@@ -24,6 +24,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
@@ -49,7 +50,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestParameters;
@@ -507,7 +508,7 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void assertComponentOnAjaxResponse_encoding()
 	{
-		final IModel<String> labelModel = new IModel<String>()
+		final IWriteableModel<String> labelModel = new IWriteableModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -1189,7 +1190,7 @@ public class WicketTesterTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4810
-	 *
+	 * 
 	 * Clicking on ResourceLink should deliver the resource reference's content
 	 */
 	@Test
@@ -1198,8 +1199,9 @@ public class WicketTesterTest extends WicketTestCase
 		MockPageWithLink page = new MockPageWithLink();
 		String content = "content";
 		final ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
-				"fileName.txt");
-		ResourceReference reference = new ResourceReference(WicketTesterTest.class, "resourceLinkWithResourceReferenceTest")
+			"fileName.txt");
+		ResourceReference reference = new ResourceReference(WicketTesterTest.class,
+			"resourceLinkWithResourceReferenceTest")
 		{
 			@Override
 			public IResource getResource()

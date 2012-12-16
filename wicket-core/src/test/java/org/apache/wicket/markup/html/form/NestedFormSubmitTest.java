@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.After;
@@ -30,11 +30,11 @@ public class NestedFormSubmitTest extends WicketTestCase
 
 	public class TestForm<S> extends Form<S>
 	{
-		private final IModel<Boolean> submitted;
+		private final IWriteableModel<Boolean> submitted;
 		private final Button submit;
 		private final boolean wantInclusion;
 
-		TestForm(String id, IModel<Boolean> submitted, boolean wantInclusion)
+		TestForm(String id, IWriteableModel<Boolean> submitted, boolean wantInclusion)
 		{
 			super(id);
 			this.submitted = submitted;
@@ -63,9 +63,9 @@ public class NestedFormSubmitTest extends WicketTestCase
 		private final TestForm middle;
 		private final TestForm inner;
 
-		public TestPage(IModel<Boolean> submittedOuter, boolean outerWantsInclusion,
-			IModel<Boolean> submittedMiddle, boolean middleWantsInclusion,
-			IModel<Boolean> submittedInner)
+		public TestPage(IWriteableModel<Boolean> submittedOuter, boolean outerWantsInclusion,
+			IWriteableModel<Boolean> submittedMiddle, boolean middleWantsInclusion,
+			IWriteableModel<Boolean> submittedInner)
 		{
 			outer = new TestForm("outer", submittedOuter, outerWantsInclusion);
 			this.add(outer);
@@ -181,7 +181,7 @@ public class NestedFormSubmitTest extends WicketTestCase
 
 	private void startPage(boolean outerWantsInclusion, boolean middleWantsInclusion)
 	{
-		page = (TestPage)tester.startPage(new TestPage(submittedOuter, outerWantsInclusion,
-			submittedMiddle, middleWantsInclusion, submittedInner));
+		page = tester.startPage(new TestPage(submittedOuter, outerWantsInclusion, submittedMiddle,
+			middleWantsInclusion, submittedInner));
 	}
 }

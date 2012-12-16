@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Model that makes working with detachable models a breeze. LoadableDetachableModel holds a
- * temporary, transient model object, that is set when {@link #getObject()} is called by
- * calling abstract method 'load', and that will be reset/ set to null on {@link #detach()}.
+ * temporary, transient model object, that is set when {@link #getObject()} is called by calling
+ * abstract method 'load', and that will be reset/ set to null on {@link #detach()}.
  * 
  * A usage example:
  * 
@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The Model Object type
  */
-public abstract class LoadableDetachableModel<T> implements IModel<T>
+public abstract class LoadableDetachableModel<T> implements IModel<T>, IWriteableModel<T>
 {
 	/**
 	 * 
@@ -147,9 +147,12 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	@Override
 	public String toString()
 	{
-	 StringBuilder sb = new StringBuilder(super.toString());
-		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
-			this.transientModelObject).append("]");
+		StringBuilder sb = new StringBuilder(super.toString());
+		sb.append(":attached=")
+			.append(attached)
+			.append(":tempModelObject=[")
+			.append(this.transientModelObject)
+			.append("]");
 		return sb.toString();
 	}
 

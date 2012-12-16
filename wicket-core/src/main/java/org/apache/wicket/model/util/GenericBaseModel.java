@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.apache.wicket.util.lang.Objects;
 
 /**
@@ -32,7 +33,7 @@ import org.apache.wicket.util.lang.Objects;
  * @param <T>
  *            type of model object
  */
-public abstract class GenericBaseModel<T> implements IModel<T>
+public abstract class GenericBaseModel<T> implements IModel<T>, IWriteableModel<T>
 {
 	private static final long serialVersionUID = 1L;
 	/** model object */
@@ -90,7 +91,7 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 	@Override
 	public String toString()
 	{
-	 StringBuilder sb = new StringBuilder("Model:classname=[");
+		StringBuilder sb = new StringBuilder("Model:classname=[");
 		sb.append(getClass().getName()).append("]");
 		sb.append(":object=[").append(object).append("]");
 		return sb.toString();
