@@ -24,7 +24,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWriteableModel;
-import org.apache.wicket.model.Refactor;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.util.convert.ConversionException;
@@ -204,7 +203,6 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
 	@Override
-	@Refactor("hmm.. default model updates")
 	protected void onDetach()
 	{
 		if ((fileUploads != null) && forceCloseStreamsOnDetach())

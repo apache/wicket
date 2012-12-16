@@ -30,7 +30,6 @@ package org.apache.wicket.model;
  * @param <T>
  *            The model object type
  */
-@Refactor("kommt da ein model oder ein writeable model raus?")
 public interface IWrapModel<T> extends IModel<T>
 {
 	/**
