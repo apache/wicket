@@ -18,5 +18,11 @@ package org.apache.wicket.model;
 
 public interface IWriteableModel<T> extends IModel<T>
 {
-
+	/**
+	 * Sets the model object.
+	 * 
+	 * @param object
+	 *            The model object
+	 */
+	void setObject(final T object);
 }
