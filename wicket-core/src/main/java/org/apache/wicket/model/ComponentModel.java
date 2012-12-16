@@ -43,15 +43,6 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
-	@Override
-	public final void setObject(Object object)
-	{
-		throw new RuntimeException("set object call not expected on a IComponentAssignedModel");
-	}
-
-	/**
 	 * Returns the object from the model with the use of the component where it is attached to.
 	 * 
 	 * @param component
@@ -92,7 +83,7 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 		return new WrapModel(comp);
 	}
 
-	private class WrapModel implements IWrapModel<T>
+	private class WrapModel implements IWrapModel<T>, IWriteableModel<T>
 	{
 		private static final long serialVersionUID = 1L;
 

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 
 /**
  * Model that wraps filter state locator to make its use transparent to wicket components.
@@ -35,7 +35,7 @@ import org.apache.wicket.model.IModel;
  *            type of filter state object
  * @author Igor Vaynberg (ivaynberg)
  */
-class FilterStateModel<T> implements IModel<T>
+class FilterStateModel<T> implements IWriteableModel<T>
 {
 	private static final long serialVersionUID = 1L;
 

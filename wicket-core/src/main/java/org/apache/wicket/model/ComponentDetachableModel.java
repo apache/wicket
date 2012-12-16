@@ -50,15 +50,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	}
 
 	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
-	@Override
-	public final void setObject(T object)
-	{
-		throw new RuntimeException("set object call not expected on a IComponentAssignedModel");
-	}
-
-	/**
 	 * Gets whether this model has been attached to the current session.
 	 * 
 	 * @return whether this model has been attached to the current session
@@ -130,7 +121,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 		return new WrapModel<T>(comp);
 	}
 
-	private class WrapModel<P> implements IWrapModel<T>
+	private class WrapModel<P> implements IWrapModel<T>, IWriteableModel<T>
 	{
 		private static final long serialVersionUID = 1L;
 

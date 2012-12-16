@@ -37,22 +37,6 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 	public abstract T getObject();
 
 	/**
-	 * This default implementation of setObject unconditionally throws an
-	 * UnsupportedOperationException. Since the method is final, any subclass is effectively a
-	 * read-only model.
-	 * 
-	 * @param object
-	 *            The object to set into the model
-	 * @throws UnsupportedOperationException
-	 */
-	@Override
-	public final void setObject(final T object)
-	{
-		throw new UnsupportedOperationException("Model " + getClass() +
-			" does not support setObject(Object)");
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override

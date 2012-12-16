@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -86,7 +87,7 @@ public class ProviderSubsetTest extends Assert
 		assertTrue(subset.contains("AAA"));
 	}
 
-	private class StringModel implements IModel<String>
+	private class StringModel implements IWriteableModel<String>
 	{
 
 		private static final long serialVersionUID = 1L;

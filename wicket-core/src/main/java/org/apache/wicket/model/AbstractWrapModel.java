@@ -28,7 +28,7 @@ package org.apache.wicket.model;
  * @param <T>
  *            The Model object type
  */
-public abstract class AbstractWrapModel<T> implements IWrapModel<T>
+public abstract class AbstractWrapModel<T> implements IWrapModel<T>, IWriteableModel<T>
 {
 	/**
 	 * 

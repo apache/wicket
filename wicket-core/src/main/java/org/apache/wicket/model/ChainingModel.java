@@ -23,16 +23,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of IChainingModel
- *
+ * 
  * @param <T>
  *            The Model object type
- *
+ * 
  * @see CompoundPropertyModel
  * @see AbstractPropertyModel
- *
+ * 
  * @since 6.0.0
  */
-public abstract class ChainingModel<T> implements IChainingModel<T>
+public abstract class ChainingModel<T> implements IChainingModel<T>, IWriteableModel<T>
 {
 	private static final Logger LOG = LoggerFactory.getLogger(ChainingModel.class);
 
@@ -46,9 +46,9 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		if (modelObject instanceof Session)
 		{
 			LOG.warn("It is not a good idea to reference the Session instance "
-					+ "in models directly as it may lead to serialization problems. "
-					+ "If you need to access a property of the session via the model use the "
-					+ "page instance as the model object and 'session.attribute' as the path.");
+				+ "in models directly as it may lead to serialization problems. "
+				+ "If you need to access a property of the session via the model use the "
+				+ "page instance as the model object and 'session.attribute' as the path.");
 		}
 
 		target = modelObject;
@@ -56,7 +56,7 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 
 	/**
 	 * Unsets this property model's instance variables and detaches the model.
-	 *
+	 * 
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
 	@Override
@@ -78,7 +78,15 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 	{
 		if (target instanceof IModel)
 		{
-			((IModel<T>)target).setObject(object);
+			if (target instanceof IWriteableModel)
+			{
+				((IWriteableModel<T>)target).setObject(object);
+			}
+			else
+			{
+				throw new UnsupportedOperationException("Model " + getClass() +
+					" does not support setObject(Object)");
+			}
 		}
 		else
 		{
@@ -132,6 +140,7 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 
 	/**
 	 * Sets a new target - object or model
+	 * 
 	 * @return this object
 	 */
 	protected final ChainingModel<T> setTarget(final Object modelObject)

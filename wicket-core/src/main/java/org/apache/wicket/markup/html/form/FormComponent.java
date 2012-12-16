@@ -41,6 +41,7 @@ import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
+import org.apache.wicket.model.IWriteableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
@@ -1193,7 +1194,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * Override this method to modify the ValidationError object, e.g. add a custom variable for
 	 * message substitution:
 	 * <p>
-	 *
+	 * 
 	 * <pre>
 	 * new FormComponent&lt;T&gt;(id)
 	 * {
@@ -1530,9 +1531,9 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
+	public final IWriteableModel<T> getModel()
 	{
-		return (IModel<T>)getDefaultModel();
+		return (IWriteableModel<T>)getDefaultModel();
 	}
 
 	@Override
