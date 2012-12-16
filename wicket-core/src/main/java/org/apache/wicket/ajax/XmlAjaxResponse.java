@@ -39,11 +39,11 @@ import org.slf4j.LoggerFactory;
  *     </ul>
  * </p>
  */
-abstract class XmlAjaxResponse extends AbstractAjaxResponse
+public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlAjaxResponse.class);
 
-	XmlAjaxResponse(final Page page)
+	public XmlAjaxResponse(final Page page)
 	{
 		super(page);
 	}
@@ -192,9 +192,14 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 
 	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
 	{
-		for (CharSequence script : scripts)
+		if (scripts.size() > 0)
 		{
-			writeEvaluation(elementName, response, script);
+			StringBuilder combinedScript = new StringBuilder(1024);
+			for (CharSequence script : scripts)
+			{
+				combinedScript.append("(function(){").append(script).append("})();");
+			}
+			writeEvaluation(elementName, response, combinedScript);
 		}
 	}
 

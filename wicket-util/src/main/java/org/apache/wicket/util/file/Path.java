@@ -59,6 +59,12 @@ public class Path implements IResourceFinder
 	}
 
 	/**
+	 * Looks for {@code pathname} in the provided {@code folder}.
+	 *
+	 * @param clazz
+	 *      The class requesting the resource stream
+	 * @param pathname
+	 *      the path to the needed resource. Must be relative to {@code folder}
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
 	@Override

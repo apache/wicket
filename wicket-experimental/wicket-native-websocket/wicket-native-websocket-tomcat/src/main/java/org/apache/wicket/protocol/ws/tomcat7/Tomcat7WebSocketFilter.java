@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.protocol.ws.tomcat7;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -29,7 +29,7 @@ import org.apache.catalina.connector.RequestFacade;
 import org.apache.catalina.util.Base64;
 import org.apache.tomcat.util.buf.B2CConverter;
 import org.apache.wicket.Application;
-import org.apache.wicket.protocol.ws.tomcat7.TomcatWebSocketProcessor;
+import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
 
 /**
  * An upgrade filter that uses code borrowed from Tomcat's WebSocketServlet
@@ -60,10 +60,10 @@ public class Tomcat7WebSocketFilter extends AbstractUpgradeFilter
 	}
 
 	@Override
-	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp, Application application)
+	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException
 	{
-		if (!super.acceptWebSocket(req, resp, application))
+		if (!super.acceptWebSocket(req, resp))
 		{
 			return false;
 		}
@@ -71,6 +71,7 @@ public class Tomcat7WebSocketFilter extends AbstractUpgradeFilter
 		String key = req.getHeader("Sec-WebSocket-Key");
 		resp.setHeader("Sec-WebSocket-Accept", getWebSocketAccept(key));
 
+		Application application = getApplication();
 		// Small hack until the Servlet API provides a way to do this.
 		TomcatWebSocketProcessor webSocketHandler = new TomcatWebSocketProcessor(req, application);
 		TomcatWebSocketProcessor.TomcatWebSocket tomcatWebSocket = webSocketHandler.new TomcatWebSocket();

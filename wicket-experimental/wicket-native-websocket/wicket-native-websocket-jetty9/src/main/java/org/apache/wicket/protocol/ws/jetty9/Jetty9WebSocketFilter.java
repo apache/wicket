@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.protocol.ws.jetty9;
 
 import java.io.IOException;
 
@@ -23,8 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.protocol.ws.jetty.Jetty9WebSocketProcessor;
+import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
 import org.eclipse.jetty.websocket.core.api.UpgradeRequest;
 import org.eclipse.jetty.websocket.core.api.UpgradeResponse;
 import org.eclipse.jetty.websocket.core.api.WebSocketPolicy;
@@ -91,10 +90,9 @@ public class Jetty9WebSocketFilter extends AbstractUpgradeFilter
 	}
 
 	@Override
-	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp,
-		Application application) throws ServletException, IOException
+	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		return super.acceptWebSocket(req, resp, application) &&
+		return super.acceptWebSocket(req, resp) &&
 			_webSocketFactory.acceptWebSocket(req, resp);
 	}
 

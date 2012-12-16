@@ -14,30 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.api.event;
-
-import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
-import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+package org.apache.wicket.protocol.ws.api;
 
 /**
- * * Payload for event broadcasting when the client has opened a WebSocket connection
+ * An interface for outbound communication with web socket clients
  *
  * @since 6.0
  */
-public class WebSocketConnectedPayload extends WebSocketPayload<ConnectedMessage>
+public interface IWebSocketRequestHandler
 {
-	private final ConnectedMessage message;
+	/**
+	 * Pushes a text message to the client.
+	 *
+	 * @param message
+	 *      the text message to push to the client if the web socket connection is open
+	 */
+	void push(CharSequence message);
 
-	public WebSocketConnectedPayload(ConnectedMessage message, WebSocketRequestHandler handler)
-	{
-		super(handler);
-
-		this.message = message;
-	}
-
-	@Override
-	public final ConnectedMessage getMessage()
-	{
-		return message;
-	}
+	/**
+	 * Pushes a binary message to the client.
+	 *
+	 * @param message
+	 *      the binary message to push to the client if the web socket connection is open
+	 * @param offset
+	 *      the offset to start to read from the message
+	 * @param length
+	 *      how many bytes to read from the message
+	 */
+	void push(byte[] message, int offset, int length);
 }

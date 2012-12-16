@@ -19,7 +19,6 @@ package org.apache.wicket.protocol.ws.api;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.WebSocketRequestHandler;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;

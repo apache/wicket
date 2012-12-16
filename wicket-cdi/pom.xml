@@ -53,4 +53,33 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>clirr-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>clirr-check</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+							<configuration>
+								<comparisonVersion>6.1.0</comparisonVersion>
+								<failOnError>true</failOnError>
+								<logResults>true</logResults>
+							</configuration>
+						</execution>
+					</executions>
+					<configuration>
+						<comparisonVersion>6.1.0</comparisonVersion>
+						<failOnError>true</failOnError>
+						<logResults>true</logResults>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

@@ -18,8 +18,8 @@ package org.apache.wicket.protocol.ws.util.tester;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.ws.api.IWebSocketProcessor;
-import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * A helper class to test WebSocket related operations.
@@ -38,17 +38,12 @@ public class WebSocketTester
 	 * @param page
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 */
-	public WebSocketTester(final Page page)
+	public WebSocketTester(final WicketTester wicketTester, final Page page)
 	{
+		Args.notNull(wicketTester, "wicketTester");
 		Args.notNull(page, "page");
 
-		socketProcessor = new TestWebSocketProcessor(page) {
-
-			@Override
-			protected void onPushMessage(IWebSocketPushMessage message)
-			{
-				WebSocketTester.this.onPushMessage(message);
-			}
+		socketProcessor = new TestWebSocketProcessor(wicketTester, page) {
 
 			@Override
 			protected void onOutMessage(String message)
@@ -117,16 +112,6 @@ public class WebSocketTester
 	 *      the length of bytes to read from the binary message
 	 */
 	protected void onOutMessage(byte[] message, int offset, int length)
-	{
-	}
-
-	/**
-	 * A callback method which may be overritten to receive messages pushed by WebSocketPushBroadcaster
-	 *
-	 * @param message
-	 *      the pushed message to the page
-	 */
-	public void onPushMessage(IWebSocketPushMessage message)
 	{
 	}
 }
