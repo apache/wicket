@@ -34,12 +34,4 @@
 		<module>wicket-native-websocket-jetty9</module>
 		<module>wicket-native-websocket-tomcat</module>
 	</modules>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-native-websocket-core</artifactId>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 </project>
