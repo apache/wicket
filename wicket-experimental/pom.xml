@@ -34,31 +34,6 @@
 		<module>wicket-examples-parent</module>
 		<module>wicket-bean-validation</module>
 	</modules>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-bootstrap</artifactId>
-				<version>0.5-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.5-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.5-SNAPSHOT</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-war</artifactId>
-				<version>0.5-SNAPSHOT</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<build>
 		<pluginManagement>
 			<plugins>
