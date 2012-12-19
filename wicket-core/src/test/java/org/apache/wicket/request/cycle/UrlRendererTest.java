@@ -187,6 +187,31 @@ public class UrlRendererTest extends Assert
 	}
 
 	/**
+	 * WICKET-4935 prevent another double slash
+	 */
+	@Test
+	public void test15()
+	{
+		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("private/AdminPage")));
+
+		assertEquals("../signIn;jsessionid=16k3wqa9c4sgq1cnp7fisa20u",
+			r1.renderRelativeUrl(Url.parse("/signIn;jsessionid=16k3wqa9c4sgq1cnp7fisa20u")));
+	}
+
+	/**
+	 * prevent another double slash when common prefix is present
+	 */
+	@Test
+	public void test16()
+	{
+		UrlRenderer r1 = new UrlRenderer(
+			new MockWebRequest(Url.parse("private/AdminPage")).setContextPath("context"));
+
+		assertEquals("../signIn;jsessionid=16k3wqa9c4sgq1cnp7fisa20u",
+			r1.renderRelativeUrl(Url.parse("/context/signIn;jsessionid=16k3wqa9c4sgq1cnp7fisa20u")));
+	}
+
+	/**
 	 * Verify that absolute urls are rendered as is, ignoring the current client url and base url
 	 * completely.
 	 * 
