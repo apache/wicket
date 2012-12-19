@@ -174,6 +174,31 @@ public class UrlRendererTest extends Assert
 	}
 
 	/**
+	 * WICKET-4935 prevent another double slash
+	 */
+	@Test
+	public void test15()
+	{
+		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("private/AdminPage")));
+
+		assertEquals("../signIn;jsessionid=16k3wqa9c4sgq1cnp7fisa20u",
+			r1.renderRelativeUrl(Url.parse("/signIn;jsessionid=16k3wqa9c4sgq1cnp7fisa20u")));
+	}
+
+	/**
+	 * prevent another double slash when common prefix is present
+	 */
+	@Test
+	public void test16()
+	{
+		UrlRenderer r1 = new UrlRenderer(
+			new MockWebRequest(Url.parse("private/AdminPage")).setContextPath("context"));
+
+		assertEquals("../signIn;jsessionid=16k3wqa9c4sgq1cnp7fisa20u",
+			r1.renderRelativeUrl(Url.parse("/context/signIn;jsessionid=16k3wqa9c4sgq1cnp7fisa20u")));
+	}
+
+	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4514
 	 */
 	@Test
@@ -201,7 +226,8 @@ public class UrlRendererTest extends Assert
 		baseUrl.setPort(8888);
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
 		renderer.setBaseUrl(baseUrl); // this is needed because MockWebRequest cuts data
-		String fullUrl = renderer.renderFullUrl(Url.parse("/four")); // url starting with slash is considered absolute
+		String fullUrl = renderer.renderFullUrl(Url.parse("/four")); // url starting with slash is
+// considered absolute
 		assertEquals("http://www.example.com:8888/four", fullUrl);
 	}
 
