@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.response.filter;
 
+import org.apache.wicket.ajax.XmlAjaxResponse;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +70,7 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 		// <?xml version="1.0" encoding="UTF-8" standalone="yes"?><ajax-response>
 		int min = Math.min(150, responseBuffer.length());
 		String firstNChars = responseBuffer.substring(0, min);
-		return firstNChars.contains("<ajax-response>");
+		return firstNChars.contains(XmlAjaxResponse.START_ROOT_ELEMENT);
 	}
 
 	/**

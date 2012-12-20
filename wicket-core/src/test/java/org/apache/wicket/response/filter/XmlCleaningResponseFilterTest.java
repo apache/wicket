@@ -16,17 +16,18 @@
  */
 package org.apache.wicket.response.filter;
 
+import static org.apache.wicket.ajax.XmlAjaxResponse.END_ROOT_ELEMENT;
+import static org.apache.wicket.ajax.XmlAjaxResponse.START_ROOT_ELEMENT;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.junit.Assert;
 import org.junit.Test;
+
+
 
 /**
  * Tests for XmlCleaningResponseFilter
  */
 public class XmlCleaningResponseFilterTest extends Assert {
-
-	public static final String AJAX_RESPONSE_START = "<ajax-response>b";
-	public static final String AJAX_RESPONSE_END = "b</ajax-response>";
 
 	/**
 	 * Tests that invalid XML characters are removed
@@ -44,7 +45,7 @@ public class XmlCleaningResponseFilterTest extends Assert {
 
 			AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
 			assertEquals(String.format("checking Unicode codepoint 0x%X:", invalidChar),
-					AJAX_RESPONSE_START+AJAX_RESPONSE_END, filtered.toString());
+					START_ROOT_ELEMENT+END_ROOT_ELEMENT, filtered.toString());
 		}
 	}
 
@@ -73,9 +74,9 @@ public class XmlCleaningResponseFilterTest extends Assert {
 	{
 		String character = new String(new int[] {ch}, 0, 1);
 		return new StringBuilder()
-				.append(AJAX_RESPONSE_START)
+				.append(START_ROOT_ELEMENT)
 				.append(character)
-				.append(AJAX_RESPONSE_END);
+				.append(END_ROOT_ELEMENT);
 	}
 
 	/**

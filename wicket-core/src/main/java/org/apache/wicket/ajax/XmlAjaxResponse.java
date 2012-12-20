@@ -43,6 +43,12 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlAjaxResponse.class);
 
+	/**
+	 * The name of the root element in the produced XML document.
+	 */
+	public static final String START_ROOT_ELEMENT = "<ajax-response>";
+	public static final String END_ROOT_ELEMENT = "</ajax-response>";
+
 	public XmlAjaxResponse(final Page page)
 	{
 		super(page);
@@ -60,7 +66,7 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 		response.write("<?xml version=\"1.0\" encoding=\"");
 		response.write(encoding);
 		response.write("\"?>");
-		response.write("<ajax-response>");
+		response.write(START_ROOT_ELEMENT);
 	}
 
 	@Override
@@ -151,7 +157,7 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	@Override
 	protected void writeFooter(Response response, String encoding)
 	{
-		response.write("</ajax-response>");
+		response.write(END_ROOT_ELEMENT);
 	}
 
 	@Override
