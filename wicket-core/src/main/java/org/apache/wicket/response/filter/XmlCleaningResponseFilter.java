@@ -17,6 +17,8 @@
 package org.apache.wicket.response.filter;
 
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An IResponseFilter that removes all invalid XML characters.
@@ -41,6 +43,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class XmlCleaningResponseFilter implements IResponseFilter
 {
+	private static final Logger LOG = LoggerFactory.getLogger(XmlCleaningResponseFilter.class);
+
 	@Override
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
@@ -83,6 +87,7 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 	{
 		char[] chars = input.getValue();
 		AppendingStringBuffer out = null;
+		boolean isDebugEnabled = LOG.isDebugEnabled();
 
 		int codePoint;
 
@@ -98,10 +103,21 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 				{
 					out = new AppendingStringBuffer(chars.length);
 					out.append(input.subSequence(0, i));
+
+					if (isDebugEnabled)
+					{
+						LOG.debug("An invalid character '{}' found at position '{}' in '{}'",
+								new Object[] {String.format("0x%X", codePoint), i, new String(chars)});
+					}
 				}
 				else
 				{
 					out.append(Character.toChars(codePoint));
+					if (isDebugEnabled)
+					{
+						LOG.debug(String.format("Dropping character for codePoint '0x%X' at position '%d'",
+								codePoint, i));
+					}
 				}
 			}
 			else if (out != null)
