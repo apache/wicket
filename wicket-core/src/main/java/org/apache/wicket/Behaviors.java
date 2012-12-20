@@ -42,17 +42,11 @@ final class Behaviors implements IDetachable
 
 	public void add(Behavior... behaviors)
 	{
-		if (behaviors == null)
-		{
-			throw new IllegalArgumentException("Argument may not be null");
-		}
+		Args.notNull(behaviors, "behaviors");
 
 		for (Behavior behavior : behaviors)
 		{
-			if (behavior == null)
-			{
-				throw new IllegalArgumentException("Argument may not be null");
-			}
+			Args.notNull(behavior, "behavior");
 
 			internalAdd(behavior);
 
@@ -103,10 +97,7 @@ final class Behaviors implements IDetachable
 
 	public void remove(Behavior behavior)
 	{
-		if (behavior == null)
-		{
-			throw new IllegalArgumentException("Argument `behavior` cannot be null");
-		}
+		Args.notNull(behavior, "behavior");
 
 		if (internalRemove(behavior))
 		{
