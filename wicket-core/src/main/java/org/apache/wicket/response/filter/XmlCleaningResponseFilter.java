@@ -25,7 +25,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class XmlCleaningResponseFilter implements IResponseFilter
 {
-	@Override
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		AppendingStringBuffer result = responseBuffer;
