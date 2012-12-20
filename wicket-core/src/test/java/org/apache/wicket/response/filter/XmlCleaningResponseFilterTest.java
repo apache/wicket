@@ -43,7 +43,8 @@ public class XmlCleaningResponseFilterTest extends Assert {
 			CharSequence text = createText(invalidChar);
 
 			AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
-			assertEquals(String.format("checking Unicode codepoint 0x%X:", invalidChar), AJAX_RESPONSE_START+AJAX_RESPONSE_END, filtered.toString());
+			assertEquals(String.format("checking Unicode codepoint 0x%X:", invalidChar),
+					AJAX_RESPONSE_START+AJAX_RESPONSE_END, filtered.toString());
 		}
 	}
 
@@ -62,7 +63,8 @@ public class XmlCleaningResponseFilterTest extends Assert {
 			CharSequence text = createText(validChar);
 
 			AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
-			assertEquals(String.format("checking Unicode codepoint 0x%X:", validChar), text.toString(), filtered.toString());
+			assertEquals(String.format("checking Unicode codepoint 0x%X:", validChar),
+					text.toString(), filtered.toString());
 		}
 	}
 
