@@ -111,14 +111,10 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 								new Object[] {String.format("0x%X", codePoint), i, new String(chars)});
 					}
 				}
-				else
+				else if (isDebugEnabled)
 				{
-					out.append(Character.toChars(codePoint));
-					if (isDebugEnabled)
-					{
-						LOG.debug(String.format("Dropping character for codePoint '0x%X' at position '%d'",
-								codePoint, i));
-					}
+					LOG.debug(String.format("Dropping character for codePoint '0x%X' at position '%d'",
+							codePoint, i));
 				}
 			}
 			else if (out != null)

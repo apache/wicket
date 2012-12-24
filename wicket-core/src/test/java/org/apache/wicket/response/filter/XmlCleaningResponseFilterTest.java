@@ -50,6 +50,27 @@ public class XmlCleaningResponseFilterTest extends Assert {
 	}
 
 	/**
+	 * Tests that invalid XML characters are removed
+	 * @throws Exception
+	 */
+	@Test
+	public void filterMultipleInvalid() throws Exception
+	{
+		XmlCleaningResponseFilter filter = new XmlCleaningResponseFilter();
+		CharSequence text = new StringBuilder()
+			.append(START_ROOT_ELEMENT)
+			.append(new String(new int[]{0x0008}, 0, 1))
+			.append("a")
+			.append(new String(new int[]{0x0010}, 0, 1))
+			.append("b")
+			.append(new String(new int[]{0xD800}, 0, 1))
+			.append(END_ROOT_ELEMENT);
+
+		AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
+		assertEquals(START_ROOT_ELEMENT+"ab"+END_ROOT_ELEMENT, filtered.toString());
+	}
+
+	/**
 	 * Tests that valid XML characters are preserved
 	 * @throws Exception
 	 */
