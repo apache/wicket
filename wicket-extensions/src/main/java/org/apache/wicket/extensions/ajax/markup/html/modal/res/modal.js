@@ -116,7 +116,7 @@ Wicket.Iframe = {
 				
 				var dx = 0;
 				var dy = 0;				
-				if (Wicket.Browser.isIE() || Wicket.Browser.isGecko) {
+				if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
 					dx = Wicket.Window.getScrollX();
 					dy = Wicket.Window.getScrollY();
 				}
@@ -133,7 +133,7 @@ Wicket.Iframe = {
 
 				var dx = 0;
 				var dy = 0;				
-				if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+				if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
 					dx = Wicket.Window.getScrollX();
 					dy = Wicket.Window.getScrollY();
 				}
@@ -483,7 +483,7 @@ Wicket.Window.prototype = {
 		var scTop = 0;
 		var scLeft = 0;
 
-		if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) 	{
+		if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) 	{
 			scLeft = Wicket.Window.getScrollX();
 			scTop = Wicket.Window.getScrollY();
 		}
@@ -505,6 +505,7 @@ Wicket.Window.prototype = {
 		
 		var left = (width / 2) - (modalWidth / 2) + scLeft;
 		var top = (height / 2) - (modalHeight / 2) + scTop;
+		
 		if (left < 0) left = 0;
 		if (top < 0) top = 0;
 		
