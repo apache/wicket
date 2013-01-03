@@ -220,6 +220,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 					{
 						return null;
 					}
+					else if (value instanceof String)
+					{
+						// small optimization - no need to bother with conversion
+						// for String vars, e.g. {label}
+						return (String)value;
+					}
 					else
 					{
 						IConverter converter = getConverter(value.getClass());
@@ -1193,7 +1199,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * Override this method to modify the ValidationError object, e.g. add a custom variable for
 	 * message substitution:
 	 * <p>
-	 *
+	 * 
 	 * <pre>
 	 * new FormComponent&lt;T&gt;(id)
 	 * {
