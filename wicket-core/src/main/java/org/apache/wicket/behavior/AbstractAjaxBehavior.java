@@ -154,4 +154,21 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 	{
 		return false;
 	}
+
+	@Override
+	public final void unbind(Component component)
+	{
+		onUnbind();
+		component = null;
+		super.unbind(component);
+	}
+
+	/**
+	 * Called when the behavior is removed from its component. The bound host component is
+	 * still available through {@linkplain #getComponent()}. The relation to it will be removed
+	 * right after the finish of the execution of this method.
+	 */
+	protected void onUnbind()
+	{
+	}
 }
