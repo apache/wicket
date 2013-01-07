@@ -123,7 +123,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	public void onClose(int closeCode, String message)
 	{
 		broadcastMessage(new ClosedMessage(getApplication(), getSessionId(), pageId));
-		connectionRegistry.removeConnection(application, sessionId, pageId);
+		connectionRegistry.removeConnection(getApplication(), getSessionId(), pageId);
 	}
 
 	/**
