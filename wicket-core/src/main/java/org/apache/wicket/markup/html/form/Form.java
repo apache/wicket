@@ -1068,7 +1068,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 *            The visitor interface to call
 	 * @return user provided in callback
 	 */
-	public final <R> R visitFormComponents(final IVisitor<? extends FormComponent<?>, R> visitor)
+	public final <R> R visitFormComponents(final IVisitor<FormComponent<?>, R> visitor)
 	{
 		return visitChildren(FormComponent.class, visitor);
 	}
