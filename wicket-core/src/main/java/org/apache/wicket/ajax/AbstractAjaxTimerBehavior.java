@@ -17,11 +17,11 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.time.Duration;
 
@@ -140,11 +140,18 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		}
 	}
 
-	private boolean shouldTrigger()
+	/**
+	 * Decides whether the timer behavior should render its JavaScript to re-trigger
+	 * it after the update interval.
+	 *
+	 * @return {@code true} if the behavior is not stopped, it is enabled and still attached to
+	 *      any component in the page or to the page itself
+	 */
+	protected boolean shouldTrigger()
 	{
 		return isStopped() == false &&
 				isEnabled(getComponent()) &&
-				getComponent().findParent(WebPage.class) != null;
+				(getComponent() instanceof Page || getComponent().findParent(Page.class) != null);
 	}
 
 	/**
