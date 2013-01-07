@@ -349,7 +349,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 	}
 
-	private int[] getMatchedSegmentSizes(Url url)
+	protected int[] getMatchedSegmentSizes(Url url)
 	{
 		int[] ret = new int[pathSegments.size()];
 		int segmentIndex = 0;
