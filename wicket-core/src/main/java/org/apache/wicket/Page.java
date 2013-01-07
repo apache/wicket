@@ -846,13 +846,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 		{
-			Class<?> klass = getClass();
-			while (klass.isAnonymousClass())
-			{
-				klass = klass.getSuperclass();
-			}
+			String className = Classes.name(getClass());
 			getResponse().write("<!-- Page Class ");
-			getResponse().write(klass.getName());
+			getResponse().write(className);
 			getResponse().write(" END -->\n");
 		}
 	}
