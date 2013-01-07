@@ -50,6 +50,7 @@
 				}
 				delim = url.indexOf('?') > -1 ? '&' : '?';
 				url += delim + 'pageId=' + Wicket.WebSocket.pageId;
+				url += '&wicket-ajax-baseurl=' + Wicket.WebSocket.baseUrl;
 				self.ws = new WebSocket(url);
 
 				self.ws.onopen = function (evt) {

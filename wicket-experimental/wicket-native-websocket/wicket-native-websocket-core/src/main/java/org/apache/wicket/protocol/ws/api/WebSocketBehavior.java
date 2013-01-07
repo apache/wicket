@@ -33,7 +33,9 @@ import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.template.PackageTextTemplate;
 
 /**
@@ -108,6 +110,10 @@ public abstract class WebSocketBehavior extends Behavior
 		Map<String, Object> variables = Generics.newHashMap();
 		int pageId = component.getPage().getPageId();
 		variables.put("pageId", Integer.valueOf(pageId));
+
+		Url baseUrl = component.getRequestCycle().getUrlRenderer().getBaseUrl();
+		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
+		variables.put("baseUrl", ajaxBaseUrl);
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
 
 		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));

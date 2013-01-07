@@ -37,6 +37,7 @@ import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.http.WebRequest;
@@ -58,6 +59,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 	private final WebRequest webRequest;
 	private final int pageId;
+	private final Url baseUrl;
 	private final Application application;
 	private final String sessionId;
 	private final IWebSocketConnectionRegistry connectionRegistry;
@@ -78,6 +80,10 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		String pageId = request.getParameter("pageId");
 		Checks.notEmpty(pageId, "Request parameter 'pageId' is required!");
 		this.pageId = Integer.parseInt(pageId, 10);
+
+		String baseUrl = request.getParameter(WebRequest.PARAM_AJAX_BASE_URL);
+		Checks.notNull(baseUrl, String.format("Request parameter '%s' is required!", WebRequest.PARAM_AJAX_BASE_URL));
+		this.baseUrl = Url.parse(baseUrl);
 
 		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request));
 
@@ -152,6 +158,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 							application.getRootRequestMapper(), application.getExceptionMapperProvider().get());
 
 					requestCycle = application.getRequestCycleProvider().get(context);
+					requestCycle.getUrlRenderer().setBaseUrl(baseUrl);
 					ThreadContext.setRequestCycle(requestCycle);
 				}
 				else
