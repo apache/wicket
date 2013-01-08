@@ -124,7 +124,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		public int compareTo(Action o)
 		{
 			// write first in response
-			return Integer.MIN_VALUE;
+			return -1;
 		}
 	}
 
@@ -165,7 +165,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		public int compareTo(Action o)
 		{
 			// needs to be invoked after set header actions
-			return Integer.MAX_VALUE;
+			return 1;
 		}
 	}
 
@@ -212,7 +212,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		public int compareTo(Action o)
 		{
 			// needs to be invoked after set header actions
-			return Integer.MAX_VALUE;
+			return 1;
 		}
 	}
 
