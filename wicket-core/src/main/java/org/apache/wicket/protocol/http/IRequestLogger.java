@@ -279,16 +279,15 @@ public interface IRequestLogger
 		@Override
 		public int compareTo(SessionData sd)
 		{
-			int result = 0;
-			if (sd.lastActive > lastActive)
+			if (sd.startDate > startDate)
 			{
-				result = 1;
+				return 1;
 			}
-			else if (sd.lastActive < lastActive)
+			else if (sd.startDate < startDate)
 			{
-				result = -1;
+				return -1;
 			}
-			return result;
+			return 0;
 		}
 	}
 
