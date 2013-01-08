@@ -168,9 +168,14 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			totalBytes = request.getContentLength();
 
 			onUploadStarted(totalBytes);
-			items = fileUpload.parseRequest(ctx);
-			onUploadCompleted();
-
+			try
+			{
+				items = fileUpload.parseRequest(ctx);
+			}
+			finally
+			{
+				onUploadCompleted();
+			}
 		}
 		else
 		{
