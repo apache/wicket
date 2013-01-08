@@ -104,14 +104,23 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 	}
 
+	private enum ActionType {
+		HEADER, NORMAL, DATA;
+	}
+
 	private static abstract class Action implements Comparable<Action>
 	{
 		protected abstract void invoke(WebResponse response);
 
-		@Override
-		public int compareTo(Action o)
+		protected ActionType getType()
 		{
-			return 0;
+			return ActionType.NORMAL;
+		}
+
+		@Override
+		public final int compareTo(Action o)
+		{
+			return getType().ordinal() - o.getType().ordinal();
 		}
 	}
 
@@ -123,10 +132,9 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	private static abstract class MetaDataAction extends Action
 	{
 		@Override
-		public int compareTo(Action o)
+		protected ActionType getType()
 		{
-			// write first in response
-			return -1;
+			return ActionType.HEADER;
 		}
 	}
 
@@ -164,10 +172,9 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 
 		@Override
-		public int compareTo(Action o)
+		protected ActionType getType()
 		{
-			// needs to be invoked after set header actions
-			return 1;
+			return ActionType.DATA;
 		}
 	}
 
@@ -211,10 +218,9 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 
 		@Override
-		public int compareTo(Action o)
+		protected ActionType getType()
 		{
-			// needs to be invoked after set header actions
-			return 1;
+			return ActionType.DATA;
 		}
 	}
 
