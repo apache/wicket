@@ -273,7 +273,16 @@ public interface IRequestLogger
 
 		public int compareTo(SessionData sd)
 		{
-			return (int)(sd.lastActive - lastActive);
+			int result = 0;
+			if (sd.lastActive > lastActive)
+			{
+				result = 1;
+			}
+			else if (sd.lastActive < lastActive)
+			{
+				result = -1;
+			}
+			return result;
 		}
 	}
 
