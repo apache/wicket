@@ -52,6 +52,12 @@ public class PackageMapperTest extends AbstractMapperTest
 		{
 			return context;
 		}
+
+		@Override
+		protected boolean checkPageClass(java.lang.Class<? extends IRequestablePage> pageClass)
+		{
+			return true;
+		}
 	};
 
 	private static final String PAGE_CLASS_NAME = MockPage.class.getSimpleName();

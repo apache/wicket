@@ -333,7 +333,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
-		return true;
+		return Application.get().getPageFactory().isBookmarkable(pageClass);
 	}
 
 	public Url mapHandler(IRequestHandler requestHandler)
