@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.request.mapper;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.IRequestMapper;
@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 {
 	private static Logger logger = LoggerFactory.getLogger(AbstractBookmarkableMapper.class);
-	private IPageSettings settings;
+	private final IPageSettings settings;
 
 	/**
 	 * Represents information stored in URL.
@@ -142,7 +142,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 */
 	public AbstractBookmarkableMapper()
 	{
-		this(WebApplication.get().getPageSettings());
+		this(Application.get().getPageSettings());
 	}
 
 	/**
@@ -224,7 +224,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		provider.setPageSource(getContext());
 		if (provider.isNewPageInstance() && !settings.getRecreateMountedPagesAfterExpiry())
 		{
-			throw new PageExpiredException(String.format("Bookmarkable page id '%d' has expired.",
+			throw new PageExpiredException(String.format("Page with id '%s' has expired",
 				pageInfo.getPageId()));
 		}
 		else
