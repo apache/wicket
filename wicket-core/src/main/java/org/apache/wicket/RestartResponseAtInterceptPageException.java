@@ -143,7 +143,11 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 
 		public static InterceptData get()
 		{
-			return Session.get().getMetaData(key);
+			if (Session.exists())
+			{
+				return Session.get().getMetaData(key);
+			}
+			return null;
 		}
 
 		public static void clear()

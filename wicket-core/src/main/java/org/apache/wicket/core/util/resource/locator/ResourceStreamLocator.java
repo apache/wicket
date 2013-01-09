@@ -251,6 +251,13 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			}
 		}
 
-		return new ResourceNameIterator(realPath, style, variation, locale, extensions, strict);
+		return newResourceNameIterator(realPath, locale, style, variation, extensions, strict);
+	}
+
+	// TODO Wicket 7 Add this method to IResourceStreamLocator interface.
+	public IResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
+		final String style, final String variation, final Iterable<String> extensions, final boolean strict)
+	{
+		return new ResourceNameIterator(path, style, variation, locale, extensions, strict);
 	}
 }

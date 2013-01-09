@@ -2,7 +2,7 @@
 	'use strict';
 
 	if (!Wicket.WebSocket.pageId) {
-		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId} });
+		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId}, baseUrl: '${baseUrl}' });
 		Wicket.WebSocket.createDefaultConnection();
 	}
 })();

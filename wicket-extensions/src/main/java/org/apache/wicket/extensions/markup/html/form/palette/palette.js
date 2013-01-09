@@ -61,7 +61,7 @@
 	Wicket.Palette.moveHelper=function(source, dest) {
 		var dirty=false;
 		for (var i=0;i<source.options.length;i++) {
-			if (source.options[i].selected) {
+			if (source.options[i].selected && !source.options[i].disabled) {
 				dest.appendChild(source.options[i]);
 				i--;
 				dirty=true;

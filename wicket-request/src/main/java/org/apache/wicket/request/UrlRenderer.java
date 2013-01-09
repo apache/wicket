@@ -112,7 +112,7 @@ public class UrlRenderer
 				renderedUrl = renderFullUrl(url);
 			}
 		}
-		else 
+		else
 		{
 			renderedUrl = renderRelativeUrl(url);
 		}
@@ -260,14 +260,10 @@ public class UrlRenderer
 		}
 		newSegments.addAll(urlSegments);
 
-		// sanitize start
 		String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
-		if (renderedUrl.startsWith("/"))
-		{
-			// WICKET-4920
-			renderedUrl = "." + renderedUrl;
-		}
-		else if (!renderedUrl.startsWith(".."))
+
+		// sanitize start
+		if (!renderedUrl.startsWith(".."))
 		{
 			// WICKET-4260
 			renderedUrl = "./" + renderedUrl;
@@ -279,6 +275,7 @@ public class UrlRenderer
 			// WICKET-4401
 			renderedUrl = renderedUrl + '/';
 		}
+
 		return renderedUrl;
 	}
 
@@ -300,12 +297,19 @@ public class UrlRenderer
 		}
 
 		Url commonPrefix = Url.parse(request.getContextPath() + request.getFilterPath());
+		// if both context and filter path are empty, common prefixes are empty too
+		if (commonPrefix.getSegments().isEmpty())
+		{
+			// WICKET-4920 and WICKET-4935
+			commonPrefix.getSegments().add("");
+		}
 
 		for (int i = 0; i < commonPrefix.getSegments().size() && i < segments.size(); i++)
 		{
 			if (commonPrefix.getSegments().get(i).equals(segments.get(i)) == false)
 			{
-				LOG.debug("Segments '{}' do not start with common prefix '{}'", segments, commonPrefix);
+				LOG.debug("Segments '{}' do not start with common prefix '{}'", segments,
+					commonPrefix);
 				return;
 			}
 		}

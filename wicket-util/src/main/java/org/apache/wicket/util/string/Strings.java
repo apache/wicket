@@ -127,8 +127,8 @@ public final class Strings
 	 * Gets everything after the first path component of a path using a given separator. If the
 	 * separator cannot be found, an empty String is returned.
 	 * <p>
-	 * For example, afterFirstPathComponent("foo.bar.baz", '.') would return "bar.baz" and
-	 * afterFirstPathComponent("foo", '.') would return "".
+	 * For example, afterFirstPathComponent("foo:bar:baz", ':') would return "bar:baz" and
+	 * afterFirstPathComponent("foo", ':') would return "".
 	 * 
 	 * @param path
 	 *            The path to parse

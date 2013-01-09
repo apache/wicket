@@ -24,6 +24,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -59,6 +60,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 		HttpSession httpSession = wicketTester.getHttpSession();
 		MockHttpServletRequest request = new MockHttpServletRequest(application, httpSession, null);
 		request.addParameter("pageId", page.getId());
+		request.addParameter(WebRequest.PARAM_AJAX_BASE_URL, ".");
 		return request;
 	}
 
