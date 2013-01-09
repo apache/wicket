@@ -20,18 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
-import org.apache.wicket.request.mapper.info.PageInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.ClassProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
@@ -186,6 +182,24 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		ClassProvider<? extends IRequestablePage> pageClassProvider,
 		IPageParametersEncoder pageParametersEncoder)
 	{
+		this(mountPath, pageClassProvider, pageParametersEncoder, Application.get()
+			.getPageSettings());
+
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param pageClassProvider
+	 * @param pageParametersEncoder
+	 * @param settings
+	 */
+	public MountedMapper(String mountPath,
+		ClassProvider<? extends IRequestablePage> pageClassProvider,
+		IPageParametersEncoder pageParametersEncoder, IPageSettings settings)
+	{
+		super(settings);
 		Args.notEmpty(mountPath, "mountPath");
 		Args.notNull(pageClassProvider, "pageClassProvider");
 		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
@@ -360,46 +374,6 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		return new PageParameters();
 	}
 
-	@Override
-	public Url mapHandler(IRequestHandler requestHandler)
-	{
-		Url url = super.mapHandler(requestHandler);
-
-		if (url == null && requestHandler instanceof ListenerInterfaceRequestHandler &&
-			getRecreateMountedPagesAfterExpiry())
-		{
-			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
-			IRequestablePage page = handler.getPage();
-			if (checkPageInstance(page))
-			{
-				String componentPath = handler.getComponentPath();
-				RequestListenerInterface listenerInterface = handler.getListenerInterface();
-
-				Integer renderCount = null;
-				if (listenerInterface.isIncludeRenderCount())
-				{
-					renderCount = page.getRenderCount();
-				}
-
-				PageInfo pageInfo = getPageInfo(handler);
-				ComponentInfo componentInfo = new ComponentInfo(renderCount,
-					requestListenerInterfaceToString(listenerInterface), componentPath,
-					handler.getBehaviorIndex());
-				PageComponentInfo pageComponentInfo = new PageComponentInfo(pageInfo, componentInfo);
-				PageParameters parameters = new PageParameters(page.getPageParameters());
-				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(),
-					parameters.mergeWith(handler.getPageParameters()));
-				url = buildUrl(urlInfo);
-			}
-		}
-
-		return url;
-	}
-
-	boolean getRecreateMountedPagesAfterExpiry()
-	{
-		return Application.get().getPageSettings().getRecreateMountedPagesAfterExpiry();
-	}
 
 	/**
 	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#buildUrl(org.apache.wicket.request.mapper.AbstractBookmarkableMapper.UrlInfo)

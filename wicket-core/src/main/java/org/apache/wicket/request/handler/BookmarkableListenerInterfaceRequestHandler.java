@@ -171,4 +171,12 @@ public class BookmarkableListenerInterfaceRequestHandler
 	{
 		return pageComponentProvider.getRenderCount();
 	}
+
+	public static BookmarkableListenerInterfaceRequestHandler wrap(
+		ListenerInterfaceRequestHandler handler)
+	{
+		return new BookmarkableListenerInterfaceRequestHandler(new PageAndComponentProvider(
+			handler.getPage(), handler.getComponent()), handler.getListenerInterface(),
+			handler.getBehaviorIndex());
+	}
 }

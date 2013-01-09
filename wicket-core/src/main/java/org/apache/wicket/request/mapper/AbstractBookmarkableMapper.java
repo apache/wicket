@@ -17,6 +17,8 @@
 package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.IRequestMapper;
@@ -35,6 +37,7 @@ import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +50,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 {
 	private static Logger logger = LoggerFactory.getLogger(AbstractBookmarkableMapper.class);
+	private IPageSettings settings;
 
 	/**
 	 * Represents information stored in URL.
@@ -138,6 +142,17 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 */
 	public AbstractBookmarkableMapper()
 	{
+		this(WebApplication.get().getPageSettings());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param settings
+	 */
+	public AbstractBookmarkableMapper(IPageSettings settings)
+	{
+		this.settings = settings;
 	}
 
 	/**
@@ -207,7 +222,15 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		PageProvider provider = new PageProvider(pageInfo.getPageId(), pageClass, pageParameters,
 			renderCount);
 		provider.setPageSource(getContext());
-		return new RenderPageRequestHandler(provider);
+		if (provider.isNewPageInstance() && !settings.getRecreateMountedPagesAfterExpiry())
+		{
+			throw new PageExpiredException(String.format("Bookmarkable page id '%d' has expired.",
+				pageInfo.getPageId()));
+		}
+		else
+		{
+			return new RenderPageRequestHandler(provider);
+		}
 	}
 
 	/**
@@ -302,6 +325,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		return null;
 	}
 
+// TODO remove since we are duplicating an API here
 	protected boolean checkPageInstance(IRequestablePage page)
 	{
 		return page != null && checkPageClass(page.getClass());
@@ -382,30 +406,43 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		{
 			// listener interface URL with page class information
 			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
-			Class<? extends IRequestablePage> pageClass = handler.getPageClass();
-
-			if (!checkPageClass(pageClass))
+			if (checkPageClass(handler.getPageClass()))
 			{
-				return null;
+				return mapBookmarkableHandler(handler);
 			}
-
-			Integer renderCount = null;
-			if (handler.getListenerInterface().isIncludeRenderCount())
+		}
+		else if (requestHandler instanceof ListenerInterfaceRequestHandler &&
+			settings.getRecreateMountedPagesAfterExpiry())
+		{
+			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
+			if (checkPageClass(handler.getPageClass()))
 			{
-				renderCount = handler.getRenderCount();
+				return mapBookmarkableHandler(BookmarkableListenerInterfaceRequestHandler.wrap(handler));
 			}
+		}
+		return null;
+	}
 
-			PageInfo pageInfo = getPageInfo(handler);
-			ComponentInfo componentInfo = new ComponentInfo(renderCount,
-				requestListenerInterfaceToString(handler.getListenerInterface()),
-				handler.getComponentPath(), handler.getBehaviorIndex());
+	protected Url mapBookmarkableHandler(BookmarkableListenerInterfaceRequestHandler handler)
+	{
+		String componentPath = handler.getComponentPath();
+		RequestListenerInterface listenerInterface = handler.getListenerInterface();
 
-			UrlInfo urlInfo = new UrlInfo(new PageComponentInfo(pageInfo, componentInfo),
-				pageClass, handler.getPageParameters());
-			return buildUrl(urlInfo);
+		Integer renderCount = null;
+		if (listenerInterface.isIncludeRenderCount())
+		{
+			renderCount = handler.getRenderCount();
 		}
 
-		return null;
+		PageInfo pageInfo = getPageInfo(handler);
+		ComponentInfo componentInfo = new ComponentInfo(renderCount,
+			requestListenerInterfaceToString(listenerInterface), componentPath,
+			handler.getBehaviorIndex());
+		PageComponentInfo pageComponentInfo = new PageComponentInfo(pageInfo, componentInfo);
+		PageParameters parameters = new PageParameters(handler.getPageParameters());
+		UrlInfo urlInfo = new UrlInfo(pageComponentInfo, handler.getPageClass(),
+			parameters.mergeWith(handler.getPageParameters()));
+		return buildUrl(urlInfo);
 	}
 
 	protected final PageInfo getPageInfo(IPageRequestHandler handler)

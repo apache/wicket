@@ -18,6 +18,7 @@ package org.apache.wicket.request.mapper;
 
 import java.lang.reflect.Modifier;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -26,6 +27,7 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 
@@ -88,6 +90,20 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	public PackageMapper(final PackageName packageName,
 		final IPageParametersEncoder pageParametersEncoder)
 	{
+		this(packageName, pageParametersEncoder, Application.get().getPageSettings());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param packageName
+	 * @param pageParametersEncoder
+	 * @param settigns
+	 */
+	public PackageMapper(final PackageName packageName,
+		final IPageParametersEncoder pageParametersEncoder, IPageSettings settigns)
+	{
+		super(settigns);
 		Args.notNull(packageName, "packageName");
 		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 
@@ -137,7 +153,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 
 			// load the page class
 			String className = url.getSegments().get(0);
-			
+
 			if (isValidClassName(className) == false)
 			{
 				return null;
@@ -161,13 +177,13 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * filter out invalid class names for package mapper. getting trash for class names
-	 * can e.g. happen when the home page is in the same package that is mounted by package mapper
-	 * but the request was previously mapped by e.g. {@link HomePageMapper}. We then get some 
-	 * strange url like '/example/..' and wicket tries to look up class name '..'.
+	 * filter out invalid class names for package mapper. getting trash for class names can e.g.
+	 * happen when the home page is in the same package that is mounted by package mapper but the
+	 * request was previously mapped by e.g. {@link HomePageMapper}. We then get some strange url
+	 * like '/example/..' and wicket tries to look up class name '..'.
 	 * <p/>
-	 *  @see <a href="https://issues.apache.org/jira/browse/WICKET-4303">WICKET-4303</a>
-	 *  <p/>
+	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4303">WICKET-4303</a> <p/>
 	 */
 	private boolean isValidClassName(String className)
 	{

@@ -24,6 +24,8 @@ import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.settings.IPageSettings;
+import org.apache.wicket.settings.def.PageSettings;
 import org.junit.Assert;
 import org.junit.Before;
 
@@ -37,9 +39,11 @@ public abstract class AbstractMapperTest extends Assert
 	 */
 	public AbstractMapperTest()
 	{
+		settings.setRecreateMountedPagesAfterExpiry(true);
 	}
 
 	protected TestMapperContext context = new TestMapperContext();
+	protected IPageSettings settings = new PageSettings();
 
 	/**
 	 * @throws Exception

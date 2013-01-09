@@ -216,8 +216,13 @@ public class TestMapperContext implements IMapperContext
 
 	public TestMapperContext setCurrentPageParameters(PageParameters parameters)
 	{
-		this.currentPageParameters = parameters;
+		currentPageParameters = parameters;
 		return this;
+	}
+
+	public void setCreateMockPageIfInstanceNotFound(boolean createMockPageIfInstanceNotFound)
+	{
+		this.createMockPageIfInstanceNotFound = createMockPageIfInstanceNotFound;
 	}
 
 	/**

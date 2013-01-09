@@ -24,6 +24,7 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -53,12 +54,24 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	 * Construct.
 	 * 
 	 * @param pageParametersEncoder
+	 * @param settings
 	 */
-	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder)
+	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder, IPageSettings settings)
 	{
+		super(settings);
 		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 
 		this.pageParametersEncoder = pageParametersEncoder;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pageParametersEncoder
+	 */
+	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder)
+	{
+		this(pageParametersEncoder, Application.get().getPageSettings());
 	}
 
 	/**

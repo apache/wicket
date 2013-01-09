@@ -33,6 +33,8 @@ import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.util.ClassProvider;
 import org.junit.Test;
 
 /**
@@ -48,7 +50,8 @@ public class MountedMapperTest extends AbstractMapperTest
 	{
 	}
 
-	private final MountedMapper encoder = new MountedMapper("/some/mount/path", MockPage.class)
+	private final MountedMapper encoder = new MountedMapper("/some/mount/path",
+		ClassProvider.of(MockPage.class), new PageParametersEncoder(), settings)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -56,15 +59,11 @@ public class MountedMapperTest extends AbstractMapperTest
 			return context;
 		}
 
-		@Override
-		boolean getRecreateMountedPagesAfterExpiry()
-		{
-			return true;
-		}
 	};
 
 	private final MountedMapper placeholderEncoder = new MountedMapper(
-		"/some/${param1}/path/${param2}", MockPage.class)
+		"/some/${param1}/path/${param2}", ClassProvider.of(MockPage.class),
+		new PageParametersEncoder(), settings)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -72,26 +71,16 @@ public class MountedMapperTest extends AbstractMapperTest
 			return context;
 		}
 
-		@Override
-		boolean getRecreateMountedPagesAfterExpiry()
-		{
-			return true;
-		}
 	};
 
 	private final MountedMapper optionPlaceholderEncoder = new MountedMapper(
-		"/some/#{param1}/path/${param2}/#{param3}", MockPage.class)
+		"/some/#{param1}/path/${param2}/#{param3}", ClassProvider.of(MockPage.class),
+		new PageParametersEncoder(), settings)
 	{
 		@Override
 		protected IMapperContext getContext()
 		{
 			return context;
-		}
-
-		@Override
-		boolean getRecreateMountedPagesAfterExpiry()
-		{
-			return true;
 		}
 	};
 
@@ -156,14 +145,13 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
-		context.setCurrentPageParameters(((RenderPageRequestHandler)handler).getPageParameters());
-		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
-		checkPage(page, 15);
+		PageParameters pageParameters = ((RenderPageRequestHandler)handler).getPageParameters();
 
-		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedCount());
+		checkPage(((RenderPageRequestHandler)handler).getPage(), 15);
 
-		assertEquals(2, p.getNamedKeys().size());
+		assertEquals(2, pageParameters.getIndexedCount());
+
+		assertEquals(2, pageParameters.getNamedKeys().size());
 	}
 
 	/**
@@ -533,7 +521,8 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test(expected = IllegalArgumentException.class)
 	public void construct1()
 	{
-		IRequestMapper e = new MountedMapper("", MockPage.class);
+		IRequestMapper e = new MountedMapper("", ClassProvider.of(MockPage.class),
+			new PageParametersEncoder(), settings);
 	}
 
 	/**
@@ -542,7 +531,8 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void construct2()
 	{
-		IRequestMapper homePageMapper = new MountedMapper("/", MockPage.class);
+		IRequestMapper homePageMapper = new MountedMapper("/", ClassProvider.of(MockPage.class),
+			new PageParametersEncoder(), settings);
 		assertNotNull(homePageMapper);
 	}
 

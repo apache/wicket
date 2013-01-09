@@ -32,6 +32,7 @@ import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.PackageMapperTest.OuterPage.InnerPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.lang.PackageName;
 import org.junit.Test;
 
@@ -43,7 +44,8 @@ public class PackageMapperTest extends AbstractMapperTest
 
 	private static final String ALIAS = "alias";
 
-	private final PackageMapper encoder = new PackageMapper(PackageName.forClass(MockPage.class))
+	private final PackageMapper encoder = new PackageMapper(PackageName.forClass(MockPage.class),
+		new PageParametersEncoder(), settings)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -55,7 +57,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	private static final String PAGE_CLASS_NAME = MockPage.class.getSimpleName();
 
 	private final PackageMapper aliasEncoder = new PackageMapper(
-		PackageName.forClass(MockPage.class))
+		PackageName.forClass(MockPage.class), new PageParametersEncoder(), settings)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -157,14 +159,12 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
 
-		context.setCurrentPageParameters(((RenderPageRequestHandler)handler).getPageParameters());
-		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
-		checkPage(page, 15);
+		PageParameters pageParameters = ((RenderPageRequestHandler)handler).getPageParameters();
+		checkPage(((RenderPageRequestHandler)handler).getPage(), 15);
 
-		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedCount());
+		assertEquals(2, pageParameters.getIndexedCount());
 
-		assertEquals(2, p.getNamedKeys().size());
+		assertEquals(2, pageParameters.getNamedKeys().size());
 	}
 
 	/**
@@ -454,7 +454,7 @@ public class PackageMapperTest extends AbstractMapperTest
 
 
 	private final PackageMapper innerClassEncoder = new PackageMapper(
-		PackageName.forClass(OuterPage.class))
+		PackageName.forClass(OuterPage.class), new PageParametersEncoder(), settings)
 	{
 		@Override
 		protected IMapperContext getContext()

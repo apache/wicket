@@ -31,6 +31,7 @@ import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.junit.Test;
 
 /**
@@ -39,7 +40,8 @@ import org.junit.Test;
 public class BookmarkableMapperTest extends AbstractMapperTest
 {
 
-	private final BookmarkableMapper encoder = new BookmarkableMapper()
+	private final BookmarkableMapper encoder = new BookmarkableMapper(new PageParametersEncoder(),
+		settings)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -112,14 +114,12 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
-		context.setCurrentPageParameters(((RenderPageRequestHandler)handler).getPageParameters());
-		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
-		checkPage(page, 15);
+		PageParameters pageParameters = ((RenderPageRequestHandler)handler).getPageParameters();
+		checkPage(((RenderPageRequestHandler)handler).getPage(), 15);
 
-		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedCount());
+		assertEquals(2, pageParameters.getIndexedCount());
 
-		assertEquals(2, p.getNamedKeys().size());
+		assertEquals(2, pageParameters.getNamedKeys().size());
 	}
 
 	/**
