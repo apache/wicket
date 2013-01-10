@@ -38,20 +38,19 @@
 
 			var srcElement = attrs.event.target;
 
-			return srcElement.name === name;
+			return (srcElement.name === name);
 		};
 
 		/**
 		 * Get all checked input values.
 		 *
-		 * @param markupId markup id of choice
 		 * @param name input name of choice
 		 * @param attrs ajax attributes
 		 */
-		Wicket.Choice.getInputValues = function(markupId, name, attrs) {
+		Wicket.Choice.getInputValues = function(name, attrs) {
 			var result = [], srcElement = attrs.event.target;
 
-			var inputNodes = Wicket.$(markupId).getElementsByTagName("input");
+			var inputNodes = Wicket.$(attrs.c).getElementsByTagName("input");
 			for (var i = 0 ; i < inputNodes.length ; i ++) {
 				var inputNode = inputNodes[i];
 
@@ -67,19 +66,6 @@
 			}
 
 			return result;
-		};
-
-		/**
-		 * Attach to a choice.
-		 *
-		 * @param markupId markup id of choice
-		 * @param input name of choice
-		 * @attrs ajax attributes
-		 */
-		Wicket.Choice.attach = function(markupId, name, attrs) {
-			attrs.pre = (attrs.pre || []).concat([ function(attributes) { var pre = Wicket.Choice.acceptInput(name, attributes); return pre; } ]);
-			attrs.dep = (attrs.dep || []).concat([ function(attributes) { var deps = Wicket.Choice.getInputValues(markupId, name, attributes); return deps; } ]);
-			Wicket.Ajax.post(attrs);
 		};
 	}
 })();
