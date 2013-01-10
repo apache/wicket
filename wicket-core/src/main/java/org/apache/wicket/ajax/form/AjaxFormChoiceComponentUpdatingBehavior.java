@@ -18,12 +18,10 @@ package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -45,12 +43,21 @@ import org.apache.wicket.request.resource.ResourceReference;
  * @see RadioGroup
  * @see CheckGroup
  */
-public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDefaultAjaxBehavior
+public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
+	AjaxFormComponentUpdatingBehavior
 {
 	private static final ResourceReference CHOICE_JS = new JavaScriptResourceReference(
 		AjaxFormChoiceComponentUpdatingBehavior.class, "AjaxFormChoiceComponentUpdatingBehavior.js");
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 */
+	public AjaxFormChoiceComponentUpdatingBehavior()
+	{
+		super("click");
+	}
 
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
@@ -58,48 +65,28 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		super.renderHead(component, response);
 
 		response.render(JavaScriptHeaderItem.forReference(CHOICE_JS));
-
-		String onLoadScript = String.format("Wicket.Choice.attach('%s', '%s', %s)",
-			component.getMarkupId(), getFormComponent().getInputName(),
-			renderAjaxAttributes(component));
-		response.render(OnLoadHeaderItem.forScript(onLoadScript));
 	}
 
 	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
 		super.updateAjaxAttributes(attributes);
-		attributes.setEventNames("click");
-		attributes.setAllowDefault(true);
-	}
 
-	/**
-	 * Listener invoked on the ajax request. This listener is invoked after the component's model
-	 * has been updated.
-	 * 
-	 * @param target
-	 *            the current request handler
-	 */
-	protected abstract void onUpdate(AjaxRequestTarget target);
-
-	/**
-	 * Called to handle any error resulting from updating form component. Errors thrown from
-	 * {@link #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)} will not be caught here.
-	 * 
-	 * The RuntimeException will be null if it was just a validation or conversion error of the
-	 * FormComponent
-	 * 
-	 * @param target
-	 *            the current request handler
-	 * @param e
-	 *            the error that occurred while updating the component
-	 */
-	protected void onError(AjaxRequestTarget target, RuntimeException e)
-	{
-		if (e != null)
+		attributes.getAjaxCallListeners().add(new AjaxCallListener()
 		{
-			throw e;
-		}
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public CharSequence getPrecondition(Component component)
+			{
+				return String.format("return Wicket.Choice.acceptInput('%s', attrs)",
+					getFormComponent().getInputName());
+			}
+		});
+
+		attributes.getDynamicExtraParameters().add(
+			String.format("return Wicket.Choice.getInputValues('%s', attrs)",
+				getFormComponent().getInputName()));
 	}
 
 	/**
@@ -111,57 +98,19 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	{
 		super.onBind();
 
-		if (!AjaxFormChoiceComponentUpdatingBehavior.appliesTo(getComponent()))
-		{
-			throw new WicketRuntimeException("Behavior " + getClass().getName() +
-				" can only be added to an instance of a RadioChoice/CheckboxChoice/RadioGroup/CheckGroup");
-		}
-
 		if (getComponent() instanceof RadioGroup || getComponent() instanceof CheckGroup)
 		{
 			getComponent().setRenderBodyOnly(false);
 		}
 	}
 
-	/**
-	 * 
-	 * @return FormComponent
-	 */
-	protected final FormComponent<?> getFormComponent()
-	{
-		return (FormComponent<?>)getComponent();
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
-	 */
 	@Override
-	protected final void respond(final AjaxRequestTarget target)
+	protected void checkComponent(FormComponent<?> component)
 	{
-		final FormComponent<?> formComponent = getFormComponent();
-
-		try
+		if (!AjaxFormChoiceComponentUpdatingBehavior.appliesTo(getComponent()))
 		{
-			formComponent.inputChanged();
-			formComponent.validate();
-			if (formComponent.hasErrorMessage())
-			{
-				formComponent.invalid();
-
-				onError(target, null);
-			}
-			else
-			{
-				formComponent.valid();
-				formComponent.updateModel();
-				onUpdate(target);
-			}
-		}
-		catch (RuntimeException e)
-		{
-			onError(target, e);
-
+			throw new WicketRuntimeException("Behavior " + getClass().getName() +
+				" can only be added to an instance of a RadioChoice/CheckboxChoice/RadioGroup/CheckGroup");
 		}
 	}
 
