@@ -27,7 +27,6 @@ import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.mapper.info.PageInfo;
@@ -132,12 +131,6 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 		public int getCompatibilityScore(Request request)
 		{
 			return 0;
-		}
-
-		@Override
-		protected Url mapBookmarkableHandler(BookmarkableListenerInterfaceRequestHandler handler)
-		{
-			return super.mapBookmarkableHandler(handler);
 		}
 
 	}
