@@ -65,7 +65,7 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void itDoenstEndodesBookmarkableInfoForCallbacksInNonBookmarkablePages()
+	public void itDoenstEncodesBookmarkableInfoForCallbacksInNonBookmarkablePages()
 	{
 		assertThat(mapper.mapHandler(anInterfaceHandlerFor(new NonBookmarkablePage(1))),
 			nullValue());
@@ -80,7 +80,7 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 	}
 
 	/**
-	 * An non bookmarkable page since there's no default constructor
+	 * A non bookmarkable page since there's no default constructor
 	 */
 	public static class NonBookmarkablePage extends MockPage
 	{
@@ -96,7 +96,7 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 	}
 
 	/**
-	 * An bookmarkable page since there's a default constructor
+	 * A bookmarkable page since there's a default constructor
 	 */
 	public static class BookmarkablePage extends MockPage
 	{
