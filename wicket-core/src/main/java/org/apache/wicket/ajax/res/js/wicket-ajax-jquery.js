@@ -1328,6 +1328,10 @@
 					if (form.tagName.toLowerCase() === 'form') {
 						elements = form.elements;
 					} else {
+						do {
+							form = form.parentNode;
+						} while(form.tagName.toLowerCase() != "form" && element.tagName.toLowerCase() != "body")
+
 						elements = nodeListToArray(form.getElementsByTagName("input"));
 						elements = elements.concat(nodeListToArray(form.getElementsByTagName("select")));
 						elements = elements.concat(nodeListToArray(form.getElementsByTagName("textarea")));
