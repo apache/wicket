@@ -179,7 +179,12 @@ public class AtmosphereBehavior extends Behavior
 			log.info(String.format("%s connection dropped from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
-		findEventBus().unregisterConnection(event.getResource().uuid());
+		// It is possible that the application has already been destroyed, in which case
+		// unregistration is no longer needed
+		if (Application.get(applicationKey) != null)
+		{
+			findEventBus().unregisterConnection(event.getResource().uuid());
+		}
 	}
 
 	@Override
