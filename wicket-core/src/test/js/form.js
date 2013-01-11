@@ -178,8 +178,8 @@ jQuery(document).ready(function() {
 
 		var $nestedForm = jQuery(
 			"<form>" +
+				"<input type='text' name='textInput' value='textInputValue'/>" +
 				"<div id='nestedForm'>" +
-					"<input type='text' name='textInput' value='textInputValue'/>" +
 					"<input type='checkbox' name='checkboxInput' value='checkboxInputValue' checked/>" +
 					"<input type='checkbox' name='checkboxInput' value='checkboxInputValue' checked/>" + // second time
 					"<input type='radio' name='radioInput' value='radioInputValue' checked/>" +
