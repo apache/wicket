@@ -66,7 +66,6 @@ public class AtmosphereEventSubscriptionCollector implements IComponentOnBeforeR
 		{
 			for (Method curMethod : findSubscribedMethods(curBehavior.getClass()))
 			{
-				verifyMethodParameters(curMethod);
 				subscribeComponent(component, curBehavior, curMethod);
 			}
 		}
