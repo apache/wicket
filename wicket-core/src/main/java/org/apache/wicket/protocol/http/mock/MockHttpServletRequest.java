@@ -70,7 +70,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Chris Turner
  */
-public class MockHttpServletRequest implements HttpServletRequest
+public class MockHttpServletRequest
+	implements
+		HttpServletRequest,
+		ICookieSource,
+		ICookieDestination
 {
 	/**
 	 * A holder class for an uploaded file.
@@ -223,6 +227,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @param cookies
 	 */
+	@Override
 	public void addCookies(Iterable<Cookie> cookies)
 	{
 		for (Cookie cookie : cookies)
@@ -477,6 +482,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 		Cookie[] result = new Cookie[cookies.size()];
 		return Cookies.copyOf(cookies.toArray(result));
+	}
+
+	@Override
+	public List<Cookie> getCookiesAsList()
+	{
+		return Cookies.copyOf(cookies);
 	}
 
 
