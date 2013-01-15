@@ -25,7 +25,6 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,43 +128,4 @@ public class Cookies
 	{
 		destination.addCookies(source.getCookiesAsList());
 	}
-
-	public static void logCookies(String message, ICookieSource source)
-	{
-		// if (log.isDebugEnabled())
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.append(message).append(" -> ");
-			if (source != null)
-			{
-				for (Cookie cookie : source.getCookiesAsList())
-				{
-					sb.append(cookieToDebugString(cookie));
-					sb.append(",");
-				}
-			}
-			else
-			{
-				sb.append("--not-set--");
-			}
-			log.error(sb.toString());
-		}
-	}
-
-
-	/**
-	 * Gets debug info as a string for the given cookie.
-	 * 
-	 * @param cookie
-	 *            the cookie to debug.
-	 * @return a string that represents the internals of the cookie.
-	 */
-	private static String cookieToDebugString(final Cookie cookie)
-	{
-		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
-			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
-			Time.millis(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
-	}
-
-
 }

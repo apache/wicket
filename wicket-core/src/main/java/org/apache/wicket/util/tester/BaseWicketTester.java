@@ -369,13 +369,8 @@ public class BaseWicketTester
 			request.setServerPort(lastRequest.getServerPort());
 		}
 
-		Cookies.logCookies("2.lastResponse", lastResponse);
-		Cookies.logCookies("2.request", request);
-
 		Cookies.set(Cookies.notExpiredCookies(Cookies.lastValue(Cookies.allOf(getLastRequest(),
 			getLastResponse()))), request);
-
-// Cookies.set(Cookies.notExpiredCookies(lastResponse), request);
 
 		response = new MockHttpServletResponse(request);
 
@@ -608,11 +603,6 @@ public class BaseWicketTester
 
 		try
 		{
-			Cookies.logCookies("1.lastRequest", getLastRequest());
-			Cookies.logCookies("1.lastResponse", getLastResponse());
-
-			Cookies.logCookies("1.request", request);
-
 			applyRequest();
 			requestCycle.scheduleRequestHandlerAfterCurrent(null);
 
