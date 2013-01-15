@@ -1477,12 +1477,20 @@ public class BaseWicketTester
 	 */
 	public Component startComponent(final Component component)
 	{
-		component.internalInitialize();
-		if (component instanceof FormComponent)
+		try
 		{
-			((FormComponent<?>)component).processInput();
+			component.internalInitialize();
+			if (component instanceof FormComponent)
+			{
+				((FormComponent<?>)component).processInput();
+			}
+			component.beforeRender();
 		}
-		component.beforeRender();
+		finally
+		{
+			getRequestCycle().detach();
+			component.detach();
+		}
 
 		return component;
 	}
