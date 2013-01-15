@@ -1,4 +1,11 @@
+#Mon Oct 10 10:40:56 EEST 2011
 eclipse.preferences.version=1
+encoding//.deprecations/DEPRECATE_wicket.markup.html.form.FormComponent.inputAsStringArray().xml=utf-8
+encoding//.deprecations/DEPRECATE_wicket.markup.html.list.ListView.setOptimizeItemRemoval(boolean).xml=utf-8
+encoding//.deprecations/DEPRECATE_wicket.markup.html.tree.Tree$TreePathsListView.getOptimizeItemRemoval().xml=utf-8
+encoding//src/java/wicket/Application_bg.properties=UTF-8
 encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8
+instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
