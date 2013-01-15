@@ -32,11 +32,23 @@ public class Cookies
 {
 	private final static Logger log = LoggerFactory.getLogger(CookieUtils.class);
 
+	/**
+	 * make a copy
+	 * 
+	 * @param source
+	 * @return exact copy
+	 */
 	public static Cookie copyOf(Cookie source)
 	{
 		return (Cookie)source.clone();
 	}
 
+	/**
+	 * make a copy
+	 * 
+	 * @param source
+	 * @return exact copy
+	 */
 	public static List<Cookie> copyOf(List<Cookie> source)
 	{
 		List<Cookie> cloned = Generics.newArrayList();
@@ -47,6 +59,12 @@ public class Cookies
 		return cloned;
 	}
 
+	/**
+	 * make a copy
+	 * 
+	 * @param source
+	 * @return exact copy
+	 */
 	public static Cookie[] copyOf(Cookie[] source)
 	{
 		Cookie[] cloned = new Cookie[source.length];
@@ -73,6 +91,12 @@ public class Cookies
 		return stillLeft;
 	}
 
+	/**
+	 * create a cookie source which filters expired cookies
+	 * 
+	 * @param source
+	 * @return filtered cookie source
+	 */
 	public static ICookieSource notExpiredCookies(final ICookieSource source)
 	{
 		return new ICookieSource()
@@ -86,6 +110,12 @@ public class Cookies
 		};
 	}
 
+	/**
+	 * creates a cookie source which joins the result of other cookie sources
+	 * 
+	 * @param source
+	 * @return joined sources
+	 */
 	public static ICookieSource allOf(final ICookieSource... source)
 	{
 		return new ICookieSource()
@@ -104,6 +134,13 @@ public class Cookies
 		};
 	}
 
+	/**
+	 * creates a cookie source which filters a source by name and take the last value in resulting
+	 * list
+	 * 
+	 * @param source
+	 * @return filtered cookie source
+	 */
 	public static ICookieSource lastValue(final ICookieSource source)
 	{
 		return new ICookieSource()
@@ -124,6 +161,12 @@ public class Cookies
 	}
 
 
+	/**
+	 * set result from cookie source to cookie destination
+	 * 
+	 * @param source
+	 * @param destination
+	 */
 	public static void set(ICookieSource source, ICookieDestination destination)
 	{
 		destination.addCookies(source.getCookiesAsList());

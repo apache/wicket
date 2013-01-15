@@ -20,6 +20,11 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
+/**
+ * a cookie source
+ * 
+ * @author mosmann
+ */
 public interface ICookieSource
 {
 	List<Cookie> getCookiesAsList();

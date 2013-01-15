@@ -18,6 +18,11 @@ package org.apache.wicket.protocol.http.mock;
 
 import javax.servlet.http.Cookie;
 
+/**
+ * a cookie destination
+ * 
+ * @author mosmann
+ */
 public interface ICookieDestination
 {
 	void addCookies(Iterable<Cookie> cookies);
