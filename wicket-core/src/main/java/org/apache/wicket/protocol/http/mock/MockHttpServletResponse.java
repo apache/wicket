@@ -48,7 +48,12 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Chris Turner
  */
-public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBufferingWebResponse
+public class MockHttpServletResponse
+	implements
+		HttpServletResponse,
+		IMetaDataBufferingWebResponse,
+		ICookieSource,
+		ICookieDestination
 {
 	private static final int MODE_BINARY = 1;
 
@@ -115,7 +120,16 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 				iterator.remove();
 			}
 		}
-		cookies.add(cookie);
+		cookies.add(Cookies.copyOf(cookie));
+	}
+
+	@Override
+	public void addCookies(Iterable<Cookie> cookies)
+	{
+		for (Cookie cookie : cookies)
+		{
+			addCookie(cookie);
+		}
 	}
 
 	/**
@@ -296,7 +310,13 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 */
 	public List<Cookie> getCookies()
 	{
-		return cookies;
+		return Cookies.copyOf(cookies);
+	}
+
+	@Override
+	public List<Cookie> getCookiesAsList()
+	{
+		return getCookies();
 	}
 
 	/**
@@ -875,7 +895,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	{
 		for (Cookie cookie : cookies)
 		{
-			webResponse.addCookie(cookie);
+			webResponse.addCookie(Cookies.copyOf(cookie));
 		}
 		for (String name : headers.keySet())
 		{

@@ -24,6 +24,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
@@ -933,23 +934,32 @@ public class WicketTesterTest extends WicketTestCase
 		// Test that maxAge == -1 (Default) works properly
 		tester.startPage(CreateBook.class);
 		Cookie cookie = new Cookie("name", "value");
-		tester.getLastResponse().addCookie(cookie);
+		tester.getRequest().addCookie(cookie);
 		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
+		assertEquals("value", tester.getLastRequest()
+			.getCookiesAsList()
+			.iterator()
+			.next()
+			.getValue(), "value");
 
 		tester.startPage(CreateBook.class);
 		cookie = new Cookie("name", "value");
 		cookie.setMaxAge(60);
 		tester.getLastResponse().addCookie(cookie);
 		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
+		assertEquals("value", tester.getLastRequest()
+			.getCookiesAsList()
+			.iterator()
+			.next()
+			.getValue(), "value");
 
 		// Should copy persisted cookie from browser
 		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
+		assertEquals("value", tester.getLastRequest()
+			.getCookiesAsList()
+			.iterator()
+			.next()
+			.getValue(), "value");
 	}
 
 	/**
@@ -1071,8 +1081,8 @@ public class WicketTesterTest extends WicketTestCase
 
 		tester.startPage(page);
 
-		// assert that the cookie was in the response
-		List<Cookie> cookies = tester.getLastResponse().getCookies();
+		// assert that the cookie is in the next request
+		List<Cookie> cookies = tester.getRequest().getCookiesAsList();
 		assertEquals(1, cookies.size());
 		Cookie cookie2 = cookies.get(0);
 		assertEquals(cookieName, cookie2.getName());
@@ -1189,7 +1199,7 @@ public class WicketTesterTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4810
-	 *
+	 * 
 	 * Clicking on ResourceLink should deliver the resource reference's content
 	 */
 	@Test
@@ -1198,8 +1208,9 @@ public class WicketTesterTest extends WicketTestCase
 		MockPageWithLink page = new MockPageWithLink();
 		String content = "content";
 		final ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
-				"fileName.txt");
-		ResourceReference reference = new ResourceReference(WicketTesterTest.class, "resourceLinkWithResourceReferenceTest")
+			"fileName.txt");
+		ResourceReference reference = new ResourceReference(WicketTesterTest.class,
+			"resourceLinkWithResourceReferenceTest")
 		{
 			@Override
 			public IResource getResource()

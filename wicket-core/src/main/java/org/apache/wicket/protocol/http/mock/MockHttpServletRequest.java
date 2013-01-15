@@ -70,7 +70,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Chris Turner
  */
-public class MockHttpServletRequest implements HttpServletRequest
+public class MockHttpServletRequest
+	implements
+		HttpServletRequest,
+		ICookieSource,
+		ICookieDestination
 {
 	/**
 	 * A holder class for an uploaded file.
@@ -217,12 +221,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addCookie(final Cookie cookie)
 	{
-		cookies.add(cookie);
+		cookies.add(Cookies.copyOf(cookie));
 	}
 
 	/**
 	 * @param cookies
 	 */
+	@Override
 	public void addCookies(Iterable<Cookie> cookies)
 	{
 		for (Cookie cookie : cookies)
@@ -295,7 +300,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Sets a header to the request. Overrides any previous value of this header.
-	 *
+	 * 
 	 * @param name
 	 *            The name of the header to add
 	 * @param value
@@ -383,7 +388,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		return Charset.forName(characterEncoding);
 	}
-	
+
 	/**
 	 * true will force Request generate multiPart ContentType and ContentLength
 	 * 
@@ -476,8 +481,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 			return null;
 		}
 		Cookie[] result = new Cookie[cookies.size()];
-		return cookies.toArray(result);
+		return Cookies.copyOf(cookies.toArray(result));
 	}
+
+	@Override
+	public List<Cookie> getCookiesAsList()
+	{
+		return Cookies.copyOf(cookies);
+	}
+
 
 	/**
 	 * Get the given header as a date.
@@ -1016,18 +1028,18 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Sets the scheme of this request
 	 * <p/>
-	 * set the <code>secure</code> flag accordingly 
-	 * (<code>true</code> for 'https', <code>false</code> otherwise) 
+	 * set the <code>secure</code> flag accordingly (<code>true</code> for 'https',
+	 * <code>false</code> otherwise)
 	 * 
 	 * @param scheme
-	 *          protocol scheme (e.g. https, http, ftp)
+	 *            protocol scheme (e.g. https, http, ftp)
 	 * 
-	 * @see #isSecure() 
+	 * @see #isSecure()
 	 */
 	public void setScheme(String scheme)
 	{
 		this.scheme = scheme;
-		this.secure = "https".equalsIgnoreCase(scheme);
+		secure = "https".equalsIgnoreCase(scheme);
 	}
 
 	/**
@@ -1107,7 +1119,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		HttpSession sess = null;
 		if (session instanceof MockHttpSession)
 		{
-			MockHttpSession mockHttpSession = (MockHttpSession) session;
+			MockHttpSession mockHttpSession = (MockHttpSession)session;
 			if (b)
 			{
 				mockHttpSession.setTemporary(false);
@@ -1308,7 +1320,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setCookies(final Cookie[] theCookies)
 	{
 		cookies.clear();
-		cookies.addAll(Arrays.asList(theCookies));
+		cookies.addAll(Arrays.asList(Cookies.copyOf(theCookies)));
 	}
 
 	/**
@@ -1739,7 +1751,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			path = getContextPath() + getServletPath() + '/' + path;
 		}
 		this.url = path;
-		
+
 		if (path.startsWith(getContextPath()))
 		{
 			path = path.substring(getContextPath().length());
@@ -1752,12 +1764,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 		setPath(path);
 
 		//
-		// We can't clear the parameters here because users may have set custom 
-		// parameters in request. An better place to clear they is when tester 
+		// We can't clear the parameters here because users may have set custom
+		// parameters in request. An better place to clear they is when tester
 		// setups the next request cycle
 		//
 		// parameters.clear();
-		
+
 		for (QueryParameter parameter : url.getQueryParameters())
 		{
 			addParameter(parameter.getName(), parameter.getValue());
