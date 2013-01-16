@@ -53,7 +53,7 @@ public class JavaScriptResourceReference extends PackageResourceReference
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param scope
 	 *            mandatory parameter
 	 * @param name
@@ -62,6 +62,17 @@ public class JavaScriptResourceReference extends PackageResourceReference
 	public JavaScriptResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
+	}
+
+	/**
+	 * Construct.
+	 *
+	 * @param key
+	 *            mandatory parameter
+	 */
+	public JavaScriptResourceReference(Key key)
+	{
+		super(key);
 	}
 
 	@Override

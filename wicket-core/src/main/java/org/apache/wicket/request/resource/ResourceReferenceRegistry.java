@@ -67,10 +67,50 @@ public class ResourceReferenceRegistry
 	private int autoAddedCapacity = 1000;
 
 	/**
-	 * Construct.
+	 * A simple implementation of {@link IResourceReferenceFactory} that creates
+	 * {@link PackageResourceReference}
+	 */
+	public static class DefaultResourceReferenceFactory implements IResourceReferenceFactory
+	{
+		@Override
+		public ResourceReference create(Key key)
+		{
+			ResourceReference result = null;
+			if (PackageResource.exists(key))
+			{
+				result = new PackageResourceReference(key);
+			}
+			return result;
+		}
+	}
+
+	/**
+	 * The factory to use when a ResourceReference is not previously
+	 * registered and a new instance should be create
+	 */
+	private final IResourceReferenceFactory resourceReferenceFactory;
+
+	/**
+	 * Constructor.
+	 *
+	 * <p>Uses DefaultResourceReferenceFactory to create ResourceReference when there is
+	 * no registered one for the requested attributes</p>
 	 */
 	public ResourceReferenceRegistry()
 	{
+		this(new DefaultResourceReferenceFactory());
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param resourceReferenceFactory
+	 *      The factory that will create ResourceReference by Key when there is no registered one
+	 */
+	public ResourceReferenceRegistry(IResourceReferenceFactory resourceReferenceFactory)
+	{
+		this.resourceReferenceFactory = Args.notNull(resourceReferenceFactory, "resourceReferenceFactory");
+
 		// Initial the auto-add list for a maximum of 1000 entries
 		setAutoAddedCapacity(autoAddedCapacity);
 	}
@@ -355,15 +395,7 @@ public class ResourceReferenceRegistry
 	 */
 	protected ResourceReference createDefaultResourceReference(final Key key)
 	{
-		if (PackageResource.exists(key.getScopeClass(), key.getName(), key.getLocale(),
-			key.getStyle(), key.getVariation()))
-		{
-			return new PackageResourceReference(key);
-		}
-		else
-		{
-			return null;
-		}
+		return resourceReferenceFactory.create(key);
 	}
 
 	/**
