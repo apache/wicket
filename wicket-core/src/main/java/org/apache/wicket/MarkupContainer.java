@@ -710,12 +710,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public MarkupContainer replace(final Component child)
 	{
-		checkHierarchyChange(child);
+		Args.notNull(child, "child");
 
-		if (child == null)
-		{
-			throw new IllegalArgumentException("argument child must be not null");
-		}
+		checkHierarchyChange(child);
 
 		if (log.isDebugEnabled())
 		{
