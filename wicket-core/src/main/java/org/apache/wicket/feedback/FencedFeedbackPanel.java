@@ -152,7 +152,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 			// decrement the fence count
 
 			Integer count = fence.getMetaData(FENCE_KEY);
-			count = count == 1 ? null : count - 1;
+			count = (count == null || count == 1) ? null : count - 1;
 			fence.setMetaData(FENCE_KEY, count);
 		}
 	}
