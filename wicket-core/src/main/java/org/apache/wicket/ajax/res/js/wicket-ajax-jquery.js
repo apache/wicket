@@ -1335,7 +1335,7 @@
 					} else {
 						do {
 							form = form.parentNode;
-						} while(form.tagName.toLowerCase() != "form" && element.tagName.toLowerCase() != "body")
+						} while (form.tagName.toLowerCase() !== "form" && form.tagName.toLowerCase() !== "body");
 
 						elements = nodeListToArray(form.getElementsByTagName("input"));
 						elements = elements.concat(nodeListToArray(form.getElementsByTagName("select")));
