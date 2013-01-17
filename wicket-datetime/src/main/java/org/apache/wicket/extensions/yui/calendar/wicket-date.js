@@ -329,6 +329,12 @@
 		if (Wicket.DateTime.isDestroying) {
 			return;
 		}
+
+		// avoids creation of a function inside a loop (JSLint warning)
+		function scheduleDestroy(toDestroy2) {
+			window.setTimeout(function(){destroyInternal(toDestroy2);}, 5);
+		}
+
 		if (toDestroy && toDestroy.length > 1) {
 			var i = 0;
 			while (toDestroy.length > 0) {
@@ -346,7 +352,7 @@
 				}
 				i++;
 				if (i === 20) {
-					setTimeout(function(){destroyInternal(toDestroy);}, 5);
+					scheduleDestroy(toDestroy);
 					break;
 				}
 			}
