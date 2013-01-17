@@ -1442,7 +1442,7 @@
 				if (arguments.length > 1) {
 					var e = [];
 					for (var i = 0; i < arguments.length; i++) {
-						e.push(Wicket.$(arguments[i]));
+						e.push(Wicket.DOM.get(arguments[i]));
 					}
 					return e;
 				} else if (typeof arg === 'string') {
