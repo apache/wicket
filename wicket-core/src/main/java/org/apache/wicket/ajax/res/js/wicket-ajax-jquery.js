@@ -594,7 +594,12 @@
 			Wicket.Event.publish('/ajax/call/after', attrs);
 
 			if (!attrs.ad && attrs.event) {
-				attrs.event.preventDefault();
+				try {
+					attrs.event.preventDefault();
+				} catch (ignore) {
+					// WICKET-4986
+					// jquery fails 'member not found' with calls on busy channel
+				}
 			}
 
 			return jqXHR;
