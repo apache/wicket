@@ -312,6 +312,81 @@
 	    YAHOO.wicket[cfg.dpJs].render();
 	};
 
+	/**
+	 * Checks that `str` ends with `suffix`
+	 * @param str The string to check
+	 * @param suffix The suffix with which the `srt` must end
+	 * @return {boolean} true if the `str` ends with `suffix`
+	 */
+	var endsWith = function(str, suffix) {
+	    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+	};
+
+	/**
+	 * @param toDestroy An array of Wicket DateTime objects to destroy
+	 */
+	var destroyInternal = function (toDestroy) {
+		if (Wicket.DateTime.isDestroying) {
+			return;
+		}
+		if (toDestroy && toDestroy.length > 1) {
+			var i = 0;
+			while (toDestroy.length > 0) {
+				var name = toDestroy.pop();
+				try {
+					if (YAHOO.wicket[name]) {
+						// this is expensive.
+						YAHOO.wicket[name].destroy();
+						delete YAHOO.wicket[name];
+					}
+				} catch (e) {
+					if (Wicket.Log) {
+						Wicket.Log.error(e);
+					}
+				}
+				i++;
+				if (i === 20) {
+					setTimeout(function(){destroyInternal(toDestroy);}, 5);
+					break;
+				}
+			}
+		}
+	};
+
+	/**
+	 * Schedules all YAHOO.wicket.** objects for destroy if their host HTML element
+	 * is no more in the DOM document.
+	 */
+	var destroy = function() {
+		if (!YAHOO.wicket) {
+			return;
+		}
+		var deleted = 0;
+		var available = 0;
+		var toDestroy = [];
+		for(var propertyName in YAHOO.wicket) {
+			if (endsWith(propertyName, "DpJs")) {
+				var id = propertyName.substring(0, propertyName.length - 4);
+				var e = Wicket.$(id);
+				available++;
+				if (e === null) {
+					try {
+						deleted++;
+						toDestroy.push(propertyName);
+					} catch (ex) {
+						if (Wicket.Log) {
+							Wicket.Log.error(ex);
+						}
+					}
+				}
+			}
+		}
+		if (Wicket.Log) {
+			Wicket.Log.info("Date pickers to delete="+deleted+", available="+available);
+		}
+		setTimeout(function(){destroyInternal(toDestroy);}, 5);
+	};
+
 	// init method variant that needs less character to invoke
 	Wicket.DateTime.init2 = function(widgetId, componentId, calendarInit, datePattern,
 			alignWithIcon, fireChangeEvent, hideOnSelect, showOnFieldClick, i18n, autoHide) {
@@ -336,5 +411,10 @@
 		});
 	};
 
-	YAHOO.register("wicket-date", Wicket.DateTime, {version: "6.0.0", build: "1"});
+	YAHOO.register("wicket-date", Wicket.DateTime, {version: "6.5.0", build: "1"});
+
+	// register a listener to clean up YAHOO.wicket cache.
+	Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {
+		window.setTimeout(function(){destroy();}, 10);
+	});
 })();
