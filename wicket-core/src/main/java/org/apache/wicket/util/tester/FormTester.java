@@ -28,6 +28,7 @@ import junit.framework.Assert;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.html.form.AbstractSingleSelectChoice;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -297,8 +298,8 @@ public class FormTester
 				fail("Trying to select on null component.");
 			}
 
-			if (formComponent instanceof RadioGroup || formComponent instanceof DropDownChoice ||
-				formComponent instanceof RadioChoice)
+			if (formComponent instanceof RadioGroup ||
+				formComponent instanceof AbstractSingleSelectChoice)
 			{
 				return new SingleChoiceSelector(formComponent);
 			}
