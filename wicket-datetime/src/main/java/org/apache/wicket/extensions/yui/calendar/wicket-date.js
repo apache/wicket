@@ -326,10 +326,7 @@
 	 * @param toDestroy An array of Wicket DateTime objects to destroy
 	 */
 	var destroyInternal = function (toDestroy) {
-		if (Wicket.DateTime.isDestroying) {
-			return;
-		}
-
+	
 		// avoids creation of a function inside a loop (JSLint warning)
 		function scheduleDestroy(toDestroy2) {
 			window.setTimeout(function(){destroyInternal(toDestroy2);}, 5);
