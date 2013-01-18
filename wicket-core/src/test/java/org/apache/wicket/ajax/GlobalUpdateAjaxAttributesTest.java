@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  *
  */
-public class GlobalUpdateAjaxAttributes extends WicketTestCase
+public class GlobalUpdateAjaxAttributesTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
