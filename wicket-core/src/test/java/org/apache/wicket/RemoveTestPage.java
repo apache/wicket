@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 
@@ -34,6 +35,7 @@ public class RemoveTestPage extends WebPage
 
 	private int componentOnRemovalFromHierarchyCalls = 0;
 	private int linkOnRemovalFromHierarchyCalls = 0;
+	private int behaviorOnRemovalCalls = 0;
 
 	/**
 	 * Construct.
@@ -51,6 +53,15 @@ public class RemoveTestPage extends WebPage
 				super.onRemove();
 			}
 		};
+		_1.add(new Behavior()
+		{
+			@Override
+			public void onRemove(Component component)
+			{
+				behaviorOnRemovalCalls++;
+				super.onRemove(component);
+			}
+		});
 		_1.add(new Link<Void>(LINK)
 		{
 			private static final long serialVersionUID = 1L;
@@ -110,5 +121,14 @@ public class RemoveTestPage extends WebPage
 	public int getLinkOnRemovalFromHierarchyCalls()
 	{
 		return linkOnRemovalFromHierarchyCalls;
+	}
+
+
+	/**
+	 * @return behaviorOnRemovalCalls
+	 */
+	public int getBehaviorOnRemovalCalls()
+	{
+		return behaviorOnRemovalCalls;
 	}
 }

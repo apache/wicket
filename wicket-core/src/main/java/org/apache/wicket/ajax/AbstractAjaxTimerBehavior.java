@@ -196,7 +196,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	@Override
-	public void detach(Component component)
+	public void onRemove(Component component)
 	{
 		AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
 		if (target != null)

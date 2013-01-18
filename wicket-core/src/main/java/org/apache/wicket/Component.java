@@ -1107,6 +1107,7 @@ public abstract class Component
 				getClass().getName() +
 				" has not called super.onRemove() in the override of onRemove() method");
 		}
+		new Behaviors(this).onRemove(this);
 		removeChildren();
 	}
 

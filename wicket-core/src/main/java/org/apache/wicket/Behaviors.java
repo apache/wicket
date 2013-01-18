@@ -215,6 +215,28 @@ final class Behaviors implements IDetachable
 		return null;
 	}
 
+	/**
+	 * Called when the component is going to be removed. Notifies all
+	 * behaviors assigned to this component.
+	 *
+	 * @param component
+	 *      the component that will be removed from its parent
+	 */
+	public void onRemove(Component component)
+	{
+		final int len = component.data_length();
+		for (int i = component.data_start(); i < len; i++)
+		{
+			Object obj = component.data_get(i);
+			if (obj != null && obj instanceof Behavior)
+			{
+				final Behavior behavior = (Behavior)obj;
+
+				behavior.onRemove(component);
+			}
+		}
+	}
+
 	private static class BehaviorIdList extends ArrayList<Behavior>
 	{
 		private static final long serialVersionUID = 1L;
