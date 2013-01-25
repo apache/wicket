@@ -53,6 +53,7 @@
 		<module>wicket-objectssizeof-agent</module>
 		<module>wicket-examples</module>
 		<module>wicket-experimental</module>
+		<module>wicket-reference-guide</module>
 		<module>archetypes/quickstart</module>
 		<module>testing/wicket-common-tests</module>
   </modules>
