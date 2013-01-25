@@ -21,18 +21,9 @@ import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
  * Application class for hello world example.
- * 
- * @author Jonathan Locke
  */
 public class HelloWorldApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public HelloWorldApplication()
-	{
-	}
-
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */

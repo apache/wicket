@@ -22,14 +22,9 @@ import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * Everybody's favorite example!
- * 
- * @author Jonathan Locke
  */
 public class HelloWorld extends WicketExamplePage
 {
-	/**
-	 * Constructor
-	 */
 	public HelloWorld()
 	{
 		add(new Label("message", "Hello World!"));
