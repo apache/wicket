@@ -15,14 +15,14 @@ HelloWorldApplication.java
 
 Each Wicket application is defined by an `Application <http://ci.apache.org/projects/wicket/apidocs/6.0.x/org/apache/wicket/Application.html>`_ object. This object defines what the home page is, and allows for some configuration.
 
-.. includecode:: ../../../helloworld/src/main/java/org/apache/wicket/reference/helloworld/HelloWorldApplication.java
+.. includecode:: ../../../helloworld/src/main/java/org/apache/wicket/reference/helloworld/HelloWorldApplication.java#docu
 
 Here you can see that we define org.apache.wicket.examples.helloworld.HelloWorld to be our home page. When the base URL (the context root) of our application is requested, the markup rendered by the HelloWorld page is returned.
 
 HelloWorld.java
 ---------------
 
-.. includecode:: ../../../helloworld/src/main/java/org/apache/wicket/reference/helloworld/HelloWorld.java
+.. includecode:: ../../../helloworld/src/main/java/org/apache/wicket/reference/helloworld/HelloWorld.java#docu
 
 The Label is constructed using two parameters:
 
