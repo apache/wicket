@@ -237,6 +237,9 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		};
 	}
 
+	/**
+	 * Initializes the {@link AutoCompleteBehavior} if it is not already there.
+	 */
 	@Override
 	protected void onInitialize()
 	{
@@ -245,16 +248,26 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		initializeAutoCompleteBehavior();
 	}
 
+	/**
+	 * The {@link AutoCompleteBehavior} is added lazily instead from the constructor to support an
+	 * overridable factory method.
+	 * 
+	 * @see #onInitialize()
+	 * @see #add(Behavior...)
+	 * @see #newAutoCompleteBehavior(IAutoCompleteRenderer, AutoCompleteSettings)
+	 */
 	private void initializeAutoCompleteBehavior()
 	{
 		// add auto complete behavior to this component if its not already there
 		if (behavior == null)
 		{
-			// we do this here instead of constructor so we can have an overridable factory method
-			add(behavior = newAutoCompleteBehavior(renderer, settings));
+			super.add(behavior = newAutoCompleteBehavior(renderer, settings));
 		}
 	}
 
+	/**
+	 * Initializes the {@link AutoCompleteBehavior} if it is not already there.
+	 */
 	@Override
 	public Component add(Behavior... behaviors)
 	{
