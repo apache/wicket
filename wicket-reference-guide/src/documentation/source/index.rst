@@ -17,6 +17,7 @@ Contents:
    models
    behaviors
    ajax
+   events
    stateless
    ioc
    websockets

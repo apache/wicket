@@ -39,7 +39,7 @@ then the value of *counter* field will always be *0* because a new instance of S
 Keeping it stateless
 --------------------
 
-To make sure that a page is stateless and there is no stateful component/behavior added to it by accident `StatelessChecker <http://ci.apache.org/projects/wicket/apidocs/6.0.x/org/apache/wicket/devutils/stateless/StatelessChecker.html>`_ can be used. If there is a stateful component or behavior then this checker will throw an exception which message explains where is the problem.
+To make sure that a page is stateless and there is no stateful component/behavior added to it by accident `StatelessChecker <http://ci.apache.org/projects/wicket/apidocs/6.0.x/org/apache/wicket/devutils/stateless/StatelessChecker.html>`_ can be used. If there is a stateful component or behavior then this checker will throw an exception with a message explaining where is the problem.
 
 1. Add dependency to `wicket-devutils` 
 
