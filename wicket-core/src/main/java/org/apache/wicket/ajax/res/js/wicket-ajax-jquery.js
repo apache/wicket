@@ -1505,7 +1505,13 @@
 					document.title = titleText;
 					return;
 				} else {
-					var $newElement = jQuery(text);
+					// jQuery 1.9+ doesn't allow new line in the text
+					var cleanedText = text.replace(/\n|\r/g, '');
+
+					// jQuery 1.9+ expects '<' as the very first character in text
+					cleanedText = jQuery.trim(cleanedText);
+
+					var $newElement = jQuery(cleanedText);
 					// WICKET-4236
 					jQuery(element).after($newElement).remove();
 				}
