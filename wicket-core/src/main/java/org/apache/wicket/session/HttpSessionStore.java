@@ -116,7 +116,7 @@ public class HttpSessionStore implements ISessionStore
 				// register an unbinding listener for cleaning up
 				String applicationKey = Application.get().getName();
 				httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
-					new SessionBindingListener(applicationKey, httpSession.getId()));
+					new SessionBindingListener(applicationKey, newSession));
 
 				// register the session object itself
 				setAttribute(request, Session.SESSION_ATTRIBUTE_NAME, newSession);
@@ -400,21 +400,23 @@ public class HttpSessionStore implements ISessionStore
 		/** The unique key of the application within this web application. */
 		private final String applicationKey;
 
-		/** Session id. */
-		private final String sessionId;
+		/**
+ 		 * The Wicket Session associated with the expiring HttpSession
+ 		 */
+		private final Session wicketSession;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param applicationKey
 		 *            The unique key of the application within this web application
-		 * @param sessionId
-		 *            The session's id
+		 * @param wicketSession
+		 *            The Wicket Session associated with the expiring http session
 		 */
-		public SessionBindingListener(final String applicationKey, final String sessionId)
+		public SessionBindingListener(final String applicationKey, final Session wicketSession)
 		{
 			this.applicationKey = applicationKey;
-			this.sessionId = sessionId;
+			this.wicketSession = wicketSession;
 		}
 
 		/**
@@ -429,10 +431,14 @@ public class HttpSessionStore implements ISessionStore
 		 */
 		public void valueUnbound(final HttpSessionBindingEvent evt)
 		{
+			String sessionId = evt.getSession().getId();
+
 			if (log.isDebugEnabled())
 			{
 				log.debug("Session unbound: " + sessionId);
 			}
+
+			wicketSession.onInvalidate();
 
 			Application application = Application.get(applicationKey);
 			if (application == null)

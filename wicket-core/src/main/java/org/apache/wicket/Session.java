@@ -843,6 +843,20 @@ public abstract class Session implements IClusterable, IEventSink
 	{
 	}
 
+	/**
+	 * A callback method that is executed when the user session is invalidated
+	 * either by explicit call to {@link org.apache.wicket.Session#invalidate()}
+	 * or due to HttpSession expiration.
+	 *
+	 * <p>In case of session expiration this method is called in a non-worker thread, i.e.
+	 * there are no thread locals exported for the Application, RequestCycle and Session.
+	 * The Session is the current instance. The Application can be found by using
+	 * {@link Application#get(String)}. There is no way to get a reference to a RequestCycle</p>
+	 */
+	public void onInvalidate()
+	{
+	}
+
 	private static final class PageAccessSynchronizerProvider extends
 		LazyInitializer<PageAccessSynchronizer>
 	{
