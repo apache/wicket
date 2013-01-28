@@ -311,12 +311,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			String option = getLocalizer().getStringIgnoreSettings(getNullValidKey(), this, null,
-				null);
-			if (Strings.isEmpty(option))
-			{
-				option = getLocalizer().getString("nullValid", this, "");
-			}
+			String option = getNullValidDisplayValue();
 
 			// The <option> tag buffer
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(64 + option.length());
@@ -340,18 +335,27 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			if ("".equals(selectedValue))
 			{
 				// Force the user to pick a non-null value
-				String option = getLocalizer().getStringIgnoreSettings(getNullKey(), this, null,
-					null);
-
-				if (Strings.isEmpty(option))
-				{
-					option = getLocalizer().getString("null", this, CHOOSE_ONE);
-				}
-
+				String option = getNullKeyDisplayValue();
 				return "\n<option selected=\"selected\" value=\"\">" + option + "</option>";
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * Returns the display value for the null value. The default behavior is to look the value up by
+	 * using the key from <code>getNullValidKey()</code>.
+	 *
+	 * @return The value to display for null
+	 */
+	protected String getNullValidDisplayValue()
+	{
+		String option = getLocalizer().getStringIgnoreSettings(getNullValidKey(), this, null, null);
+		if (Strings.isEmpty(option))
+		{
+			option = getLocalizer().getString("nullValid", this, "");
+		}
+		return option;
 	}
 
 	/**
@@ -362,6 +366,23 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	protected String getNullValidKey()
 	{
 		return getId() + ".nullValid";
+	}
+
+	/**
+	 * Returns the display value if null is not valid but is selected. The default behavior is to
+	 * look the value up by using the key from <code>getNullKey()</code>.
+	 *
+	 * @return The value to display if null is not value but selected, e.g. "Choose One"
+	 */
+	protected String getNullKeyDisplayValue()
+	{
+		String option = getLocalizer().getStringIgnoreSettings(getNullKey(), this, null, null);
+
+		if (Strings.isEmpty(option))
+		{
+			option = getLocalizer().getString("null", this, CHOOSE_ONE);
+		}
+		return option;
 	}
 
 	/**
