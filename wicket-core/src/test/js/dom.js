@@ -172,12 +172,10 @@ jQuery(document).ready(function() {
 	test("replace - test event notifications", function() {
 
 		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
-			start();
 			equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
 		});
 
 		Wicket.Event.subscribe('/dom/node/added', function(jqEvent, addedElement) {
-			start();
 			equal(jQuery(addedElement).text(), "New One", "The added element text match!");
 		});
 
@@ -195,7 +193,6 @@ jQuery(document).ready(function() {
 		expect(1);
 
 		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
-			start();
 			equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
 		});
 

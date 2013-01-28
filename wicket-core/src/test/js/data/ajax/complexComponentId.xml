@@ -20,7 +20,7 @@
     <table id="componentToReplace">
         <thead>
             <tr>
-                <th><div><script>start(); ok(true, 'script in thead > td has to be executed')</script></div>
+                <th><div><script>ok(true, 'script in thead > td has to be executed')</script></div>
                 </th>
                 <th>header 2</th>
             </tr>
@@ -28,7 +28,7 @@
         <tbody>
             <tr>
                 <td>data 1
-<script>start(); ok(true, 'script in tbody > td has to be executed')</script>
+<script>ok(true, 'script in tbody > td has to be executed')</script>
                 </td>
                 <td>data 2</td>
             </tr>
@@ -37,7 +37,7 @@
             <tr>
                 <td>footer 1</td>
                 <td>footer 2
-                    <script>start(); ok(true, 'script in tfoot > td has to be executed')</script>
+                    <script>ok(true, 'script in tfoot > td has to be executed')</script>
                 </td>
             </tr>
         </tfoot>
