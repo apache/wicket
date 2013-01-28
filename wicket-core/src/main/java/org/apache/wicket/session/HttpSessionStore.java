@@ -422,10 +422,25 @@ public class HttpSessionStore implements ISessionStore
 		private final Session wicketSession;
 
 		/**
+		 * Constructor.
+		 *
+		 * @param applicationKey
+		 *          The unique key of the application within this web application
+		 * @deprecated Use #SessionBindingListener(String, Session) instead
+		 */
+		@Deprecated
+		public SessionBindingListener(final String applicationKey)
+		{
+			this(applicationKey, Session.get());
+		}
+
+		/**
 		 * Construct.
 		 * 
 		 * @param applicationKey
 		 *            The unique key of the application within this web application
+		 * @param wicketSession
+		 *            The Wicket Session associated with the expiring http session
 		 */
 		public SessionBindingListener(final String applicationKey, final Session wicketSession)
 		{
