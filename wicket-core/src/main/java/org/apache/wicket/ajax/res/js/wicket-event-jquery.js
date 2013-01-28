@@ -110,10 +110,17 @@
 
 			/**
 			 * Prevent event from bubbling up in the element hierarchy.
+			 * @param evt {Event} - the event to stop
+			 * @param immediate {Boolean} - true if the event should not be handled by other listeners registered
+			 *      on the same HTML element. Optional
 			 */
-			stop: function (evt) {
+			stop: function (evt, immediate) {
 				evt = Wicket.Event.fix(evt);
-				evt.stopPropagation();
+				if (immediate) {
+					evt.stopImmediatePropagation();
+				} else {
+					evt.stopPropagation();
+				}
 				return evt;
 			},
 
