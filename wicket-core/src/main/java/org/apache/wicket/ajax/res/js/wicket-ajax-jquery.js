@@ -2246,9 +2246,7 @@
 			setFocus: function (event) {
 				event = Wicket.Event.fix(event);
 
-				// IE doesn't have the property "target".
-				// Use "srcElement" instead.
-				var target = event.target ? event.target : event.srcElement;
+				var target = event.target;
 				if (target) {
 					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
 					Wicket.Focus.lastFocusId = target.id;
@@ -2259,9 +2257,7 @@
 			blur: function (event) {
 				event = Wicket.Event.fix(event);
 
-				// IE doesn't have the property "target".
-				// Use "srcElement" instead.
-				var target = event.target ? event.target : event.srcElement;
+				var target = event.target;
 				if (target && Wicket.Focus.lastFocusId === target.id) {
 					if (Wicket.Focus.refocusLastFocusedComponentAfterResponse) {
 						// replaced components seem to blur when replaced only on Safari - so do not modify lastFocusId so it gets refocused
