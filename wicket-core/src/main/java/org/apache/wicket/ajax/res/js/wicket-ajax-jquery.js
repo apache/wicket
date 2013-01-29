@@ -1270,7 +1270,11 @@
 			},
 
 			/**
-			 * Serializes a form element to a key=value string in URL encoded notation.
+			 * Serializes a form element to an array with a single element - an object
+			 * with two keys - <em>name</em> and <em>value</em>.
+			 *
+			 * Example: [{"name": "searchTerm", "value": "abc"}].
+			 *
 			 * Note: this function intentionally ignores image and submit inputs.
 			 *
 			 * @param {HtmlFormElement} input - the form element to serialize
@@ -1285,11 +1289,24 @@
 				return result;
 			},
 
-			//list of item to exclude from serialization
+			/**
+			 * A hash of HTML form element to exclude from serialization
+			 * As key the element's id is being used.
+			 * As value - the string "true".
+			 */
 			excludeFromAjaxSerialization: {
 			},
 
-			// Returns url/post-body fragment representing element (e)
+			/**
+			 * Serializes a form element by checking its type and delegating the work to
+			 * a more specific function.
+			 *
+			 * The form element will be ignored if it is registered as excluded in
+			 * <em>Wicket.Form.excludeFromAjaxSerialization</em>
+			 *
+			 * @param element {HTMLFormElement} - the form element to serialize. E.g. HTMLInputElement
+			 * @return An array with a single element - an object with two keys - <em>name</em> and <em>value</em>.
+			 */
 			serializeElement: function(element) {
 
 				if (!element) {
