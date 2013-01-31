@@ -417,19 +417,25 @@ public class WicketObjects
 	 */
 	public static long sizeof(final Serializable object)
 	{
+		Serializable target = object;
+
 		if (object instanceof Component)
 		{
 			// clone to not detach the original component (WICKET-5013, 5014)
 			Component clone = (Component) cloneObject(object);
 			clone.detach();
+
+			target = clone;
 		}
 		else if (object instanceof IDetachable)
 		{
 			// clone to not detach the original IDetachable (WICKET-5013, 5014)
 			IDetachable clone = (IDetachable) cloneObject(object);
 			clone.detach();
+
+			target = clone;
 		}
 
-		return objectSizeOfStrategy.sizeOf(object);
+		return objectSizeOfStrategy.sizeOf(target);
 	}
 }
