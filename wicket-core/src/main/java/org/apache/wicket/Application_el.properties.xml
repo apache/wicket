@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="Required">Το πεδίο '${label}' είναι υποχρεωτικό.</entry>
+	<entry key="IConverter">Η τιμή του '${label}' δεν είναι έγκυρο ${type}.</entry>
+	<entry key="RangeValidator.range">Η τιμή του '${label}' πρέπει να είναι μεταξύ ${minimum} και ${maximum}.</entry>
+	<entry key="RangeValidator.exact">Η τιμή του '${label}' πρέπει να είναι ακριβώς ${minimum}.</entry>
+	<entry key="RangeValidator.minimum">Η τιμή του '${label}' πρέπει να είναι τουλάχιστον ${minimum}.</entry>
+	<entry key="RangeValidator.maximum">Η τιμή του '${label}' πρέπει να είναι το πολύ ${maximum}.</entry>
+
+<!-- deprecated, use RangeValidator.minimum -->
+	<entry key="MinimumValidator">Η τιμή του '${label}' πρέπει να είναι τουλάχιστον ${minimum}.</entry>
+<!-- deprecated, use RangeValidator.maximum -->
+	<entry key="MaximumValidator">Η τιμή του '${label}' πρέπει να είναι το πολύ ${maximum}.</entry>
+
+<!-- replaced with RangeValidator -->
+	<entry key="NumberValidator.positive">Η τιμή του '${label}' πρέπει να είναι θετική.</entry>
+<!-- replaced with RangeValidator -->
+	<entry key="NumberValidator.negative">Η τιμή του '${label}' πρέπει να είναι αρνητική.</entry>
+
+	<entry key="StringValidator.range">Το μήκος του '${label}' πρέπει να είναι μεταξύ ${minimum} και ${maximum} χαρακτήρες.</entry>
+	<entry key="StringValidator.minimum">Το μήκος του '${label}' πρέπει να είναι τουλάχιστον ${minimum} χαρακτήρες.</entry>
+	<entry key="StringValidator.maximum">Το μήκος του '${label}' πρέπει να είναι το πολύ ${maximum} χαρακτήρες.</entry>
+	<entry key="StringValidator.exact">Το μήκος του '${label}' πρέπει να είναι ακριβώς ${exact} χαρακτήρες.</entry>
+
+	<entry key="DateValidator.range">Η '${label}' πρέπει να είναι μεταξύ ${minimum} και ${maximum}.</entry>
+	<entry key="DateValidator.minimum">Η '${label}' πρέπει να είναι μετά την ${minimum}.</entry>
+	<entry key="DateValidator.maximum">Η '${label}' πρέπει να είναι πριν την ${maximum}.</entry>
+
+	<entry key="PatternValidator">Η τιμή του '${label}' δεν συμφωνεί με το μοτίβο '${pattern}'.</entry>
+	<entry key="EmailAddressValidator">Το '${label}' δεν περιέχει έγκυρη διεύθυνση ηλ. ταχυδρομείου.</entry>
+	<entry key="CreditCardValidator">Ο αριθμός πιστωτικής δεν είναι έγκυρος.</entry>
+	<entry key="UrlValidator">Το '${label}' δεν περιέχει έγκυρο URL.</entry>
+
+	<entry key="EqualInputValidator">Οι τιμές '${input0}' του ${label0} και '${input1}' του ${label1} πρέπει να είναι ίσες.</entry>
+	<entry key="EqualPasswordInputValidator">Οι τιμές των ${label0} και ${label1} πρέπει να είναι ίδιες.</entry>
+
+	<entry key="null">Επιλέξτε</entry>
+	<entry key="nullValid"></entry>
+
+	<entry key="PagingNavigator.first">Πρώτη σελίδα</entry>
+	<entry key="PagingNavigator.previous">Προηγούμενη σελίδα</entry>
+	<entry key="PagingNavigator.next">Επόμενη σελίδα</entry>
+	<entry key="PagingNavigator.last">Τελευταία σελίδα</entry>
+	<entry key="PagingNavigation.page">Μετάβαση στη σελίδα ${page}</entry>
+
+	<entry key="org.apache.wicket.mfu.caption.unlimited">Αρχεία:</entry>
+	<entry key="org.apache.wicket.mfu.caption.limited">Αρχεία (το πολύ ${max}):</entry>
+	<entry key="org.apache.wicket.mfu.delete">Διαγραφή</entry>
+
+</properties>
