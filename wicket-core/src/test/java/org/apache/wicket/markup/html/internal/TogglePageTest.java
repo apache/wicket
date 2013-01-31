@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 
 
 /**
@@ -29,6 +31,20 @@ import org.apache.wicket.markup.html.basic.Label;
 public class TogglePageTest extends WicketTestCase
 {
 
+	@Override
+	protected WebApplication newApplication()
+	{
+		WebApplication webApplication = new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				super.init();
+				getMarkupSettings().setStripWicketTags(true);
+			}
+		};
+		return webApplication;
+	}
 
 	/**
 	 * 
