@@ -419,11 +419,15 @@ public class WicketObjects
 	{
 		if (object instanceof Component)
 		{
-			((Component) object).detach();
+			// clone to not detach the original component (WICKET-5013, 5014)
+			Component clone = (Component) cloneObject(object);
+			clone.detach();
 		}
 		else if (object instanceof IDetachable)
 		{
-			((IDetachable) object).detach();
+			// clone to not detach the original IDetachable (WICKET-5013, 5014)
+			IDetachable clone = (IDetachable) cloneObject(object);
+			clone.detach();
 		}
 
 		return objectSizeOfStrategy.sizeOf(object);
