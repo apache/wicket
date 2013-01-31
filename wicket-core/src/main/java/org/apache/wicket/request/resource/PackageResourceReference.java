@@ -173,7 +173,7 @@ public class PackageResourceReference extends ResourceReference
 	private String internalGetMinifiedName()
 	{
 		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
-		if (minifiedName != null && minifiedName != NO_MINIFIED_NAME)
+		if (minifiedName != null)
 		{
 			return minifiedName;
 		}
