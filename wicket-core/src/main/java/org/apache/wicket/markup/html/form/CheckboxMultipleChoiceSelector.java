@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 
 /**
@@ -33,9 +30,6 @@ public class CheckboxMultipleChoiceSelector extends AbstractCheckSelector
 {
 	private static final long serialVersionUID = 1L;
 
-	private final static ResourceReference JS = new PackageResourceReference(
-		CheckboxMultipleChoiceSelector.class, "CheckboxMultipleChoiceSelector.js");
-
 	private final CheckBoxMultipleChoice<?> choiceComponent;
 
 	/**
@@ -47,22 +41,15 @@ public class CheckboxMultipleChoiceSelector extends AbstractCheckSelector
 	public CheckboxMultipleChoiceSelector(String id, CheckBoxMultipleChoice<?> choiceComponent)
 	{
 		super(id);
+
 		this.choiceComponent = choiceComponent;
 		choiceComponent.setOutputMarkupId(true);
-		setOutputMarkupId(true);
-	}
-
-	@Override
-	public void renderHead(IHeaderResponse response)
-	{
-		super.renderHead(response);
-		response.renderJavaScriptReference(JS);
 	}
 
 	@Override
 	protected CharSequence getFindCheckboxesFunction()
 	{
-		return "Wicket.CheckboxSelector.Choice.findCheckboxesFunction('" +
-			choiceComponent.getMarkupId() + "')";
+		return String.format("Wicket.CheckboxSelector.findCheckboxesFunction('%s', '%s')",
+			choiceComponent.getMarkupId(), choiceComponent.getInputName());
 	}
 }

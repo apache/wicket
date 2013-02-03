@@ -19,9 +19,6 @@ package org.apache.wicket.markup.html.form;
 import java.util.Arrays;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 
 /**
@@ -35,9 +32,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 public class CheckBoxSelector extends AbstractCheckSelector
 {
 	private static final long serialVersionUID = 1L;
-
-	private final static ResourceReference JS = new PackageResourceReference(
-		CheckBoxSelector.class, "CheckBoxSelector.js");
 
 	/**
 	 * Javascript array literal containing the markup IDs of the checkboxes we want to
@@ -55,24 +49,16 @@ public class CheckBoxSelector extends AbstractCheckSelector
 	public CheckBoxSelector(String id, CheckBox... boxes)
 	{
 		super(id);
-		setOutputMarkupId(true);
+
 		checkBoxIdArrayLiteral = buildMarkupIdJSArrayLiteral(Arrays.asList(boxes));
 	}
 
 	@Override
 	protected CharSequence getFindCheckboxesFunction()
 	{
-		return "Wicket.CheckboxSelector.Checkboxes.findCheckboxesFunction(" +
-			checkBoxIdArrayLiteral + ")";
+		return String.format("Wicket.CheckboxSelector.getCheckboxesFunction(%s)",
+			checkBoxIdArrayLiteral);
 	}
-
-	@Override
-	public void renderHead(IHeaderResponse response)
-	{
-		super.renderHead(response);
-		response.renderJavaScriptReference(JS);
-	}
-
 
 	/**
 	 * Builds a JavaScript array literal containing the markup IDs of the given components. Example:
