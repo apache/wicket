@@ -38,9 +38,8 @@
 		 */
 		updateAllCheckboxes: function(newCheckedState, findCheckboxes) {
 	
-			var i,
-				checkboxes = findCheckboxes();
-			for (i in checkboxes) {
+			var checkboxes = findCheckboxes();
+			for (var i = 0; i < checkboxes.length; i++) {
 				var checkbox = checkboxes[i];
 				if (checkbox.checked !== newCheckedState) {
 					checkbox.click();
@@ -61,13 +60,10 @@
 		 *            associated checkboxes
 		 */
 		updateSelectorState: function(selectorId, findCheckboxes) {
-			"use strict";
-	
-			var i,
-				checkboxes = findCheckboxes(),
+			var checkboxes = findCheckboxes(),
 				allChecked = true;
 	
-			for (i in checkboxes) {
+			for (var i = 0; i < checkboxes.length; i++) {
 				if (!(checkboxes[i].checked)) {
 					allChecked = false;
 					break;
@@ -88,15 +84,12 @@
 		 *            associated checkboxes
 		 */
 		attachUpdateHandlers: function(selectorId, findCheckboxes) {
-			"use strict";
-	
-			var i,
-				checkboxes = findCheckboxes(),
+			var checkboxes = findCheckboxes(),
 				clickHandler = function() {
 					Wicket.CheckboxSelector.updateSelectorState(selectorId, findCheckboxes);
 				};
 	
-			for (i in checkboxes) {
+			for (var i = 0; i < checkboxes.length; i++) {
 				Wicket.Event.add(checkboxes[i], 'click', clickHandler);
 			}
 			// update selector state once to get the right initial state
@@ -112,8 +105,6 @@
 		 *            associated checkboxes
 		 */
 		initializeSelector: function(selectorId, findCheckboxes) {
-			"use strict";
-	
 			var selector = document.getElementById(selectorId);
 			Wicket.Event.add(selector, 'click', function() {
 				Wicket.CheckboxSelector.updateAllCheckboxes(selector.checked, findCheckboxes);
@@ -128,8 +119,6 @@
 		 *            The markup ID of the containing form component
 		 */
 		findCheckboxesFunction: function(parentId, name) {
-			"use strict";
-	
 			return function() {
 				var result = [];
 				var inputNodes = document.getElementById(parentId).getElementsByTagName('input');
@@ -151,13 +140,10 @@
 		 *            selector should control.
 		 */
 		getCheckboxesFunction: function(checkBoxIDs) {
-			"use strict";
-	
 			return function() {
-				var i,
-					result = [];
+				var result = [];
 	
-				for (i in checkBoxIDs) {
+				for (var i = 0; i < checkBoxIDs.length; i++) {
 					var checkBox = document.getElementById(checkBoxIDs[i]);
 					result.push(checkBox);
 				}
