@@ -32,6 +32,7 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.atmosphere.config.AtmosphereParameters;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.Response;
@@ -99,6 +100,8 @@ public class EventBus implements UnboundListener
 
 	private List<ResourceRegistrationListener> registrationListeners = new CopyOnWriteArrayList<ResourceRegistrationListener>();
 
+	private AtmosphereParameters parameters = new AtmosphereParameters();
+
 	/**
 	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
 	 * returned by the {@code BroadcasterFactory} is used.
@@ -133,6 +136,17 @@ public class EventBus implements UnboundListener
 	public Broadcaster getBroadcaster()
 	{
 		return broadcaster;
+	}
+
+	/**
+	 * Returns the {@linkplain AtmosphereParameters paramters} that will be passed to the Atmosphere
+	 * JQuery plugin. You can change these parameters, for example to disable WebSockets.
+	 * 
+	 * @return The parameters.
+	 */
+	public AtmosphereParameters getParameters()
+	{
+		return parameters;
 	}
 
 	/**
