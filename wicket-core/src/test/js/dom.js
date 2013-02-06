@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
+/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
+
 jQuery(document).ready(function() {
+	"use strict";
 
 	var existingId = 'testElement',
 		nonExistingId = 'nonExistingElement',
@@ -56,9 +60,11 @@ jQuery(document).ready(function() {
 	});
 
 	test("Wicket.$$ looks for element in iframe", function() {
-		var iframeEl = Wicket.$(iframeId); 
+		var iframeEl = Wicket.$(iframeId);
 		var iframeDocument = (iframeEl.contentWindow || iframeEl.contentDocument);
-		if (iframeDocument.document) iframeDocument = iframeDocument.document;
+		if (iframeDocument.document) {
+			iframeDocument = iframeDocument.document;
+		}
 		var el = iframeDocument.createElement('span');
 		equal( Wicket.$$(el), false, "Wicket.$$ should return false for elements created in different documents." );
 	});
