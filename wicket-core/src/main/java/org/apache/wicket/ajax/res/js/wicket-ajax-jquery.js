@@ -65,7 +65,7 @@
 	 * Creates an iframe that can be used to load data asynchronously or as a
 	 * target for Ajax form submit.
 	 *
-	 * @param {String} the value of the iframe's name attribute
+	 * @param iframeName {String} the value of the iframe's name attribute
 	 */
 	createIFrame = function (iframeName) {
 		var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
@@ -359,7 +359,7 @@
 		/**
 		 * A helper function that executes an array of handlers (before, success, failure)
 		 *
-		 * @param {Array[FunctionBody]} handlers - the handlers to execute
+		 * @param handlers {Array[FunctionBody]} - the handlers to execute
 		 */
 		_executeHandlers: function (handlers) {
 			if (jQuery.isArray(handlers)) {
@@ -388,13 +388,15 @@
 		 * @see jQuery.serializeArray
 		 */
 		_asParamArray: function(parameters) {
-			var result = [];
+			var result = [],
+				value,
+				name;
 			if (jQuery.isArray(parameters)) {
 				result = parameters;
 			}
 			else if (jQuery.isPlainObject(parameters)) {
-				for (var name in parameters) {
-					var value = parameters[name];
+				for (name in parameters) {
+					value = parameters[name];
 					result.push({name: name, value: value});
 				}
 			}
@@ -610,7 +612,7 @@
 		/**
 		 * Method that processes a manually supplied <ajax-response>.
 		 *
-		 * @param {XmlDocument} data - the <ajax-response> XML document
+		 * @param data {XmlDocument} - the <ajax-response> XML document
 		 */
 		process: function(data) {
 			var context =  {
@@ -626,10 +628,10 @@
 		/**
 		 * Method that processes the <ajax-response> in the context of an XMLHttpRequest.
 		 *
-		 * @param {XmlDocument} data - the <ajax-response> XML document
-		 * @param {String} textStatus - the response status as text (e.g. 'success', 'parsererror', etc.)
-		 * @param {Object} jqXHR - the jQuery wrapper around XMLHttpRequest
-		 * @param {Object} context - the request context with the Ajax request attributes and the FunctionExecuter's steps
+		 * @param data {XmlDocument} - the <ajax-response> XML document
+		 * @param textStatus {String} - the response status as text (e.g. 'success', 'parsererror', etc.)
+		 * @param jqXHR {Object} - the jQuery wrapper around XMLHttpRequest
+		 * @param context {Object} - the request context with the Ajax request attributes and the FunctionExecuter's steps
 		 */
 		processAjaxResponse: function (data, textStatus, jqXHR, context) {
 
@@ -985,10 +987,8 @@
 
 		/**
 		 * Adds a closure that evaluates javascript code.
-		 * @param steps {Array} - the steps for FunctionExecutor
+		 * @param context {Object} - the object that brings the executer's steps and the attributes
 		 * @param node {XmlElement} - the <[priority-]evaluate> element with the script to evaluate
-		 * @param attrs {Object} - the attributes used for the Ajax request
-		 * @param event {jQuery.Event} - the event that caused this Ajax call
 		 */
 		processEvaluation: function (context, node) {
 			context.steps.push(function (notify) {
@@ -1247,7 +1247,7 @@
 			/**
 			 * Serializes HTMLFormSelectElement to URL encoded key=value string.
 			 *
-			 * @param {HTMLFormSelectElement} select - the form element to serialize
+			 * @param select {HTMLFormSelectElement} - the form element to serialize
 			 * @return an object of key -> value pair where 'value' can be an array of Strings if the select is .multiple,
 			 *		or empty object if the form element is disabled.
 			 */
@@ -1279,7 +1279,7 @@
 			 *
 			 * Note: this function intentionally ignores image and submit inputs.
 			 *
-			 * @param {HtmlFormElement} input - the form element to serialize
+			 * @param input {HtmlFormElement} - the form element to serialize
 			 * @return the URL encoded key=value pair or empty string if the form element is disabled.
 			 */
 			serializeInput: function (input) {
@@ -2209,14 +2209,11 @@
 			/**
 			 * Called when the mouse button is released.
 			 * Cleans all temporary variables and callback methods.
-			 *
-			 * @param {Event} e
 			 */
-			mouseUp: function (e) {
-				e = Wicket.Event.fix(e);
+			mouseUp: function () {
 				var o = Wicket.Drag.current;
 
-				if (o !== null && typeof(o) !== "undefined") {
+				if (o) {
 					o.wicketOnDragEnd(o);
 
 					o.lastMouseX = null;
@@ -2294,7 +2291,6 @@
 					Wicket.Log.info("returned focused element: " + Wicket.$(Wicket.Focus.lastFocusId));
 					return Wicket.$(Wicket.Focus.lastFocusId);
 				}
-				return;
 			},
 
 			setFocusOnId: function (id) {

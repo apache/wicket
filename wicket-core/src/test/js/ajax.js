@@ -101,7 +101,7 @@ jQuery(document).ready(function() {
 			var attrs = {
 				u: 'data/ajax/evaluationIdentifierAndCodeId.xml',
 				c: 'evaluationIdentifierAndCodeId'
-			}
+			};
 			execute(attrs);
 		});
 
@@ -120,7 +120,7 @@ jQuery(document).ready(function() {
 						equal(jQuery('#componentToReplace').text(), 'new body', 'The component must be replaced');
 					}
 				]
-			}
+			};
 			execute(attrs);
 		});
 
@@ -147,7 +147,7 @@ jQuery(document).ready(function() {
 						equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
 					}
 				]
-			}
+			};
 			execute(attrs);
 		});
 
@@ -164,7 +164,7 @@ jQuery(document).ready(function() {
 						equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
 					}
 				]
-			}
+			};
 			execute(attrs);
 
 		});
@@ -187,7 +187,7 @@ jQuery(document).ready(function() {
 						$title.text(oldTitle);
 					}
 				]
-			}
+			};
 			execute(attrs);
 		});
 
@@ -211,7 +211,7 @@ jQuery(document).ready(function() {
 						equal('success', textStatus);
 					}
 				]
-			}
+			};
 			execute(attrs);
 		});
 
@@ -242,7 +242,7 @@ jQuery(document).ready(function() {
 						}
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 
@@ -278,7 +278,7 @@ jQuery(document).ready(function() {
 						equal('success', textStatus);
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 
@@ -340,7 +340,7 @@ jQuery(document).ready(function() {
 						equal(attrs.u, attributes.u, 'Complete: attributes equal');
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 
@@ -388,7 +388,7 @@ jQuery(document).ready(function() {
 						equal(attrs.u, attributes.u);
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 
@@ -410,7 +410,7 @@ jQuery(document).ready(function() {
 				coh: [
 					function(attributes, jqXHR, textStatus) {
 						start();
-						equal(textStatus, "parsererror", "textStatus")
+						equal(textStatus, "parsererror", "textStatus");
 						equal(attributes.u, attrs.u, "url");
 						deepEqual(attributes.e, [ "domready" ], "events");
 						equal(attributes.ch, '0|s', 'channel');
@@ -436,7 +436,7 @@ jQuery(document).ready(function() {
 
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 		});
@@ -697,7 +697,7 @@ jQuery(document).ready(function() {
 					equal(attrs.u, attributes.u, 'Before: attrs');
 				}],
 				pre: [function() {
-					ok(true, "Precondition is called!")
+					ok(true, "Precondition is called!");
 					// do not allow calling of beforeSend handlers
 					return false;
 				}],
