@@ -719,20 +719,23 @@ jQuery(document).ready(function() {
 
 		/**
 		 * Verifies the order of execution of the callbacks.
-		 * The order must be: before, beforeSend, after, success, complete.
+		 * The order must be: before, precondition, beforeSend, after, success, complete.
 		 * Three consecutive executions are made on the same Ajax channel validating
 		 * that they do not overlap.
 		 */
 		asyncTest('callbacks order - success scenario.', function () {
 
-			expect(30);
+			expect(36);
 
 			var order = 0,
 
-				// calculates the offset for the order depending on the execution number
-				offset = function(round) {
-					return (round * 10) - 10;
-				};
+			// the number of assertions per iteration
+			numberOfTests = 12,
+
+			// calculates the offset for the order depending on the execution number
+			offset = function(extraData) {
+				return numberOfTests * extraData.round;
+			};
 
 			var attrs = {
 				u: 'data/ajax/emptyAjaxResponse.xml',
@@ -742,19 +745,25 @@ jQuery(document).ready(function() {
 						equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
 					}
 				],
+				pre: [
+					function(attrs) {
+						equal((3 + offset(attrs.event.extraData)), ++order, "Precondition");
+						return true;
+					}
+				],
 				bsh: [
 					function(attrs) {
-						equal((3 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
+						equal((5 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
 					}
 				],
 				ah: [
 					function(attrs) {
-						equal((5 + offset(attrs.event.extraData)), ++order, "After handler");
+						equal((7 + offset(attrs.event.extraData)), ++order, "After handler");
 					}
 				],
 				sh: [
 					function(attrs) {
-						equal((7 + offset(attrs.event.extraData)), ++order, "Success handler");
+						equal((9 + offset(attrs.event.extraData)), ++order, "Success handler");
 					}
 				],
 				fh: [
@@ -764,7 +773,7 @@ jQuery(document).ready(function() {
 				],
 				coh: [
 					function(attrs) {
-						equal((9 + offset(attrs.event.extraData)), ++order, "Complete handler");
+						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
 				]
 			};
@@ -774,16 +783,21 @@ jQuery(document).ready(function() {
 				equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
 			});
 
+			Wicket.Event.subscribe('/ajax/call/precondition', function(jqEvent, attrs) {
+				equal((4 + offset(attrs.event.extraData)), ++order, "Global precondition");
+				return true;
+			});
+
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attrs) {
-				equal((4 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
+				equal((6 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attrs) {
-				equal((6 + offset(attrs.event.extraData)), ++order, "Global after handler");
+				equal((8 + offset(attrs.event.extraData)), ++order, "Global after handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attrs) {
-				equal((8 + offset(attrs.event.extraData)), ++order, "Global success handler");
+				equal((10 + offset(attrs.event.extraData)), ++order, "Global success handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function() {
@@ -791,11 +805,12 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
-				equal((10 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
 
-				if (attrs.event.extraData == 3) {
+				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
 					jQuery(document).off();
+					jQuery(window).off("event1");
 
 					start();
 				}
@@ -804,11 +819,15 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 
 			var target = jQuery(window);
-			target.triggerHandler("event1", 1); // execution No1
-			target.triggerHandler("event1", 2); // execution No2
-			target.triggerHandler("event1", 3); // execution No3
+			console.log('Iteration 1', order);
+			target.triggerHandler("event1", {"round": 0}); // execution No1
 
-			target.off("event1");
+			console.log('Iteration 2', order);
+			target.triggerHandler("event1", {"round": 1}); // execution No2
+
+			console.log('Iteration 3', order);
+			target.triggerHandler("event1", {"round": 2}); // execution No3
+
 		});
 
 		/**
@@ -819,14 +838,17 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('callbacks order - failure scenario.', function () {
 
-			expect(30);
+			expect(36);
 
 			var order = 0,
 
+			// the number of assertions per iteration
+			numberOfTests = 12,
+
 			// calculates the offset for the order depending on the execution number
-				offset = function(round) {
-					return (round * 10) - 10;
-				};
+			offset = function(extraData) {
+				return numberOfTests * extraData.round;
+			};
 
 			var attrs = {
 				u: 'data/ajax/nonExistingResponse.xml',
@@ -836,14 +858,20 @@ jQuery(document).ready(function() {
 						equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
 					}
 				],
+				pre: [
+					function(attrs) {
+						equal((3 + offset(attrs.event.extraData)), ++order, "Precondition");
+						return true;
+					}
+				],
 				bsh: [
 					function(attrs) {
-						equal((3 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
+						equal((5 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
 					}
 				],
 				ah: [
 					function(attrs) {
-						equal((5 + offset(attrs.event.extraData)), ++order, "After handler");
+						equal((7 + offset(attrs.event.extraData)), ++order, "After handler");
 					}
 				],
 				sh: [
@@ -853,12 +881,12 @@ jQuery(document).ready(function() {
 				],
 				fh: [
 					function(attrs) {
-						equal((7 + offset(attrs.event.extraData)), ++order, "Failure handler");
+						equal((9 + offset(attrs.event.extraData)), ++order, "Failure handler");
 					}
 				],
 				coh: [
 					function(attrs) {
-						equal((9 + offset(attrs.event.extraData)), ++order, "Complete handler");
+						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
 				]
 			};
@@ -868,12 +896,17 @@ jQuery(document).ready(function() {
 				equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
 			});
 
+			Wicket.Event.subscribe('/ajax/call/precondition', function(jqEvent, attrs) {
+				equal((4 + offset(attrs.event.extraData)), ++order, "Global precondition");
+				return true;
+			});
+
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attrs) {
-				equal((4 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
+				equal((6 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attrs) {
-				equal((6 + offset(attrs.event.extraData)), ++order, "Global after handler");
+				equal((8 + offset(attrs.event.extraData)), ++order, "Global after handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function() {
@@ -881,15 +914,17 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attrs) {
-				equal((8 + offset(attrs.event.extraData)), ++order, "Global failure handler");
+				equal((10 + offset(attrs.event.extraData)), ++order, "Global failure handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
-				equal((10 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
 
-				if (attrs.event.extraData == 3) {
+				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
 					jQuery(document).off();
+
+					jQuery(window).off("event1");
 
 					start();
 				}
@@ -898,11 +933,9 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 
 			var target = jQuery(window);
-			target.triggerHandler("event1", 1); // execution No1
-			target.triggerHandler("event1", 2); // execution No2
-			target.triggerHandler("event1", 3); // execution No3
-
-			target.off("event1");
+			target.triggerHandler("event1", {"round": 0}); // execution No1
+			target.triggerHandler("event1", {"round": 1}); // execution No2
+			target.triggerHandler("event1", {"round": 2}); // execution No3
 		});
 
 		/**

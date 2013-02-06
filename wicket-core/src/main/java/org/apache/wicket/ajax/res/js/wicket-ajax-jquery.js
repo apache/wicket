@@ -485,6 +485,8 @@
 				}
 			}
 
+			Wicket.Event.publish('/ajax/call/precondition', attrs);
+
 			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
 				return this.submitMultipartForm(context);
 			}
