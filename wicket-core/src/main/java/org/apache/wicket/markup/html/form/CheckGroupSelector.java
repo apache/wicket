@@ -17,10 +17,6 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Selects and deselects all Check components under the same CheckGroup as itself. Selection
@@ -40,9 +36,6 @@ public class CheckGroupSelector extends AbstractCheckSelector
 	/** */
 	private static final long serialVersionUID = 1L;
 
-	private final static ResourceReference JS = new JavaScriptResourceReference(
-		CheckGroupSelector.class, "CheckGroupSelector.js");
-
 	private CheckGroup<?> group;
 
 	/**
@@ -56,13 +49,6 @@ public class CheckGroupSelector extends AbstractCheckSelector
 		this(id, null);
 	}
 
-	@Override
-	public void renderHead(IHeaderResponse response)
-	{
-		super.renderHead(response);
-		response.render(JavaScriptHeaderItem.forReference(JS));
-	}
-
 	/**
 	 * A Selector that will work with the given group.
 	 * 
@@ -74,8 +60,8 @@ public class CheckGroupSelector extends AbstractCheckSelector
 	public CheckGroupSelector(String id, CheckGroup<?> group)
 	{
 		super(id);
+
 		this.group = group;
-		setOutputMarkupId(true);
 	}
 
 	private CheckGroup<?> getGroup()
@@ -90,19 +76,14 @@ public class CheckGroupSelector extends AbstractCheckSelector
 	}
 
 	@Override
-	protected void onInitialize()
+	protected void onBeforeRender()
 	{
-		// try and make sure the form we need outputs its markup id.
-		super.onInitialize();
+		super.onBeforeRender();
+
 		CheckGroup<?> group = getGroup();
-		if (group != null)
-		{
-			Form<?> form = group.getForm();
-			if (form != null)
-			{
-				form.setOutputMarkupId(true);
-			}
-		}
+
+		// make sure the form we need outputs its markup id.
+		group.getForm().setOutputMarkupId(true);
 	}
 
 	@Override
@@ -119,6 +100,10 @@ public class CheckGroupSelector extends AbstractCheckSelector
 		}
 	}
 
+	/**
+	 * Find all checkboxes in the containing form with the same input name as the {@link CheckGroup}
+	 * .
+	 */
 	@Override
 	protected CharSequence getFindCheckboxesFunction()
 	{
@@ -130,7 +115,10 @@ public class CheckGroupSelector extends AbstractCheckSelector
 					getPath() +
 					"] cannot find its parent CheckGroup. All CheckGroupSelector components must be a child of or below in the hierarchy of a CheckGroup component.");
 		}
-		return "Wicket.CheckboxSelector.Group.findCheckboxesFunction('" +
-			group.getForm().getRootForm().getMarkupId() + "','" + group.getInputName() + "')";
+
+		// we search the complete form because the CheckGroup might not output its markup tag or be
+		// located on a <wicket:container>
+		return String.format("Wicket.CheckboxSelector.findCheckboxesFunction('%s','%s')",
+			group.getForm().getMarkupId(), group.getInputName());
 	}
 }

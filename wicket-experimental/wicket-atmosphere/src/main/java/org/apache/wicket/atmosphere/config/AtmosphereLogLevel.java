@@ -14,28 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// introduce a namespace, just to be nice
-if (typeof (Wicket.CheckboxSelector.Checkboxes) === "undefined") {
-	Wicket.CheckboxSelector.Checkboxes = {};
-	/**
-	 * Returns a closure that finds all checkboxes with the given IDs.
-	 *
-	 * @param checkBoxIDs
-	 *            An array containing the markup IDs of all checkboxes this
-	 *            selector should control.
-	 */
-	Wicket.CheckboxSelector.Checkboxes.findCheckboxesFunction = function(checkBoxIDs) {
-		"use strict";
+package org.apache.wicket.atmosphere.config;
 
-		return function() {
-			var i,
-				result = [];
+public enum AtmosphereLogLevel {
+	DEBUG("debug"), INFO("info"), ERROR("error");
 
-			for (i in checkBoxIDs) {
-				var checkBox = Wicket.$(checkBoxIDs[i]);
-				result.push(checkBox);
-			}
-			return result;
-		};
-	};
+	private String name;
+
+	AtmosphereLogLevel(String name)
+	{
+		this.name = name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 }

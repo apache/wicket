@@ -247,7 +247,19 @@ public class Select<T> extends FormComponent<T>
 			return false;
 		}
 
-		return compareModels(getDefaultModelObject(), option.getDefaultModelObject());
+		return isSelected(option.getDefaultModel());
+	}
+
+	/**
+	 * Does the given model contain a selected value.
+	 * 
+	 * @param model
+	 *            model to test on selection
+	 * @return selected
+	 */
+	protected boolean isSelected(IModel<?> model)
+	{
+		return compareModels(getDefaultModelObject(), model.getObject());
 	}
 
 	private boolean compareModels(final Object selected, final Object value)

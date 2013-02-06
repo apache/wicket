@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.atmosphere.EventBus;
+import org.apache.wicket.atmosphere.config.AtmosphereLogLevel;
+import org.apache.wicket.atmosphere.config.AtmosphereTransport;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -54,6 +56,8 @@ public class AtmosphereApplication extends WebApplication
 	{
 		super.init();
 		eventBus = new EventBus(this);
+		eventBus.getParameters().setTransport(AtmosphereTransport.STREAMING);
+		eventBus.getParameters().setLogLevel(AtmosphereLogLevel.DEBUG);
 
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 		final Runnable beeper = new Runnable()

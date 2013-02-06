@@ -110,10 +110,17 @@
 
 			/**
 			 * Prevent event from bubbling up in the element hierarchy.
+			 * @param evt {Event} - the event to stop
+			 * @param immediate {Boolean} - true if the event should not be handled by other listeners registered
+			 *      on the same HTML element. Optional
 			 */
-			stop: function (evt) {
+			stop: function (evt, immediate) {
 				evt = Wicket.Event.fix(evt);
-				evt.stopPropagation();
+				if (immediate) {
+					evt.stopImmediatePropagation();
+				} else {
+					evt.stopPropagation();
+				}
 				return evt;
 			},
 
@@ -156,9 +163,9 @@
 			/**
 			* Adds a subscriber for the passed topic.
 			*
-			* @param String topic - the channel name for which this subscriber will be notified
+			* @param topic {String} - the channel name for which this subscriber will be notified
 			*        If '*' then it will be notified for all topics
-			* @param Function subscriber - the callback to call when an event with this type is published
+			* @param subscriber {Function} - the callback to call when an event with this type is published
 			*/
 			subscribe: function (topic, subscriber) {
 				
@@ -173,7 +180,7 @@
 			* otherwise the topic is not passed to subscribers which listen for specific
 			* event types.
 			*
-			* @param String topic - the channel name for which all subscribers will be notified.
+			* @param topic {String} - the channel name for which all subscribers will be notified.
 			*/
 			publish: function (topic) {
 				if (topic) {

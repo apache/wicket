@@ -19,12 +19,18 @@ package org.apache.wicket.ajax.attributes;
 import org.apache.wicket.Component;
 
 /**
- * Interface used to listen at the most important points when Wicket performs an Ajax callback. <br/>
- * Ajax call listeners are potential contributors to the page header by implementing
+ * Interface used to listen at the most important points when Wicket performs an Ajax callback.
+ *
+ * <p>Each method can return JavaScript that will be used as a body of a function that is executed
+ * at the appropriate time. If the method returns {@code null} or an empty string then it is ignored
+ * and no function will be executed for this listener. Each JavaScript function receives arguments
+ * in the exact order as specified in the method's javadoc.</p>
+ *
+ *  <p>Ajax call listeners are potential contributors to the page header by implementing
  * {@link org.apache.wicket.markup.html.IComponentAwareHeaderContributor}. E.g. the JavaScript used
  * by the listener may depend on some JavaScript library, by implementing
  * {@link org.apache.wicket.markup.html.IComponentAwareHeaderContributor} interface they can assure
- * it will be loaded.
+ * it will be loaded.</p>
  * 
  * @since 6.0
  */
@@ -45,7 +51,7 @@ public interface IAjaxCallListener
 	CharSequence getBeforeHandler(Component component);
 
 	/**
-	 * A JavaScript function that is invoked before the request executes. If it returns
+	 * A JavaScript function that is invoked before the request is being executed. If it returns
 	 * {@code false} then the execution of the Ajax call will be cancelled. The script will be
 	 * executed in a function that receives the following parameters:
 	 * <ol>
@@ -60,7 +66,7 @@ public interface IAjaxCallListener
 	CharSequence getPrecondition(Component component);
 
 	/**
-	 * The JavaScript that will be executed right before make of the the Ajax call, only if all
+	 * The JavaScript that will be executed right before the execution of the the Ajax call, only if all
 	 * preconditions pass. The script will be executed in a function that receives the following
 	 * parameters:
 	 * <ol>
@@ -83,7 +89,8 @@ public interface IAjaxCallListener
 	 * </ol>
 	 * <strong>Note</strong>: if the Ajax call is synchronous (see
 	 * {@link AjaxRequestAttributes#setAsynchronous(boolean)}) then this JavaScript will be executed
-	 * after the {@linkplain #getCompleteHandler(org.apache.wicket.Component) complete handler}.
+	 * after the {@linkplain #getCompleteHandler(org.apache.wicket.Component) complete handler},
+	 * otherwise it is executed right after the execution of the Ajax request.
 	 * 
 	 * @param component
 	 *            the Component with the Ajax behavior
@@ -96,10 +103,10 @@ public interface IAjaxCallListener
 	 * The JavaScript that will be executed after successful return of the Ajax call. The script
 	 * will be executed in a function that receives the following parameters:
 	 * <ol>
+	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
 	 * <li>data - the Ajax response. Its type depends on {@link AjaxRequestAttributes#dataType}</li>
 	 * <li>textStatus - the status as text</li>
-	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
-	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
 	 * </ol>
 	 * 
 	 * @param component
@@ -125,9 +132,9 @@ public interface IAjaxCallListener
 	 * The JavaScript that will be executed after both successful and unsuccessful return of the
 	 * Ajax call. The script will be executed in a function that receives the following parameters:
 	 * <ol>
+	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
 	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
 	 * <li>textStatus - the status as text</li>
-	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
 	 * </ol>
 	 * 
 	 * @param component

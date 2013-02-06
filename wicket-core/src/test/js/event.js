@@ -61,10 +61,17 @@ jQuery(document).ready(function() {
 		var evt = jQuery.Event("keydown", { keyCode: 123 });
 
 		equal(evt.isPropagationStopped(), false);
+		equal(evt.isImmediatePropagationStopped(), false);
 
 		Wicket.Event.stop(evt);
 
 		equal(evt.isPropagationStopped(), true);
+		equal(evt.isImmediatePropagationStopped(), false);
+
+		Wicket.Event.stop(evt, true);
+
+		equal(evt.isPropagationStopped(), true);
+		equal(evt.isImmediatePropagationStopped(), true);
 	});
 
 
@@ -207,7 +214,6 @@ jQuery(document).ready(function() {
 		Wicket.Event.publish('topicName');
 	});
 
-	
 	test('all topics', function() {
 		expect(8);
 

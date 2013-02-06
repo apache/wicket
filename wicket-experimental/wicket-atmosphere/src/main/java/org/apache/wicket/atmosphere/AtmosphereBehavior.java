@@ -201,7 +201,7 @@ public class AtmosphereBehavior extends Behavior
 			CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
 
 			response.render(JavaScriptHeaderItem.forReference(JQueryWicketAtmosphereResourceReference.get()));
-			JSONObject options = new JSONObject();
+			JSONObject options = findEventBus().getParameters().toJSON();
 			options.put("url",
 				component.urlFor(this, IResourceListener.INTERFACE, new PageParameters())
 					.toString());

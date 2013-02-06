@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.markup.html.form.select;
 
 import org.apache.wicket.WicketTestCase;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -25,15 +24,6 @@ import org.junit.Test;
  */
 public class SelectTest extends WicketTestCase
 {
-
-	private SelectTestPage page;
-
-	@Before
-	public void setUp() throws Exception
-	{
-		page = new SelectTestPage();
-		tester.startPage(page);
-	}
 
 	/**
 	 * WICKET-4276
@@ -43,6 +33,10 @@ public class SelectTest extends WicketTestCase
 	@Test
 	public void rawInputKeepsSelectionOnError() throws Exception
 	{
+		SelectTestPage page = new SelectTestPage();
+
+		tester.startPage(page);
+
 		tester.getRequest().setParameter("select", page.option1.getValue());
 
 		page.form.onFormSubmitted();
@@ -53,5 +47,14 @@ public class SelectTest extends WicketTestCase
 
 		// ... but option1 is selected anyway through rawInput
 		assertTrue(page.select.isSelected(page.option1));
+	}
+
+	@Test
+	public void selectionWithouEquals()
+	{
+
+		SelectTestPage2 page = new SelectTestPage2();
+
+		assertTrue(page.select.isSelected(page.option0));
 	}
 }

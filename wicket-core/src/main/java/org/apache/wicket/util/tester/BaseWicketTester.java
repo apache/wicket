@@ -1857,6 +1857,7 @@ public class BaseWicketTester
 			String pageRelativePath = submitLink.getInputName();
 			request.getPostParameters().setParameterValue(pageRelativePath, "x");
 
+			serializeFormToRequest(submitLink.getForm());
 			submitForm(submitLink.getForm().getPageRelativePath());
 		}
 		// if the link is a normal link (or ResourceLink)
@@ -1914,8 +1915,12 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * Submit the given form in the last rendered {@link Page}
+	 * <p>
+	 * <strong>Note</strong>: Form request parameters have to be set explicitely.
 	 * 
 	 * @param form
+	 *            path to component
 	 */
 	public void submitForm(Form<?> form)
 	{
@@ -1923,10 +1928,12 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Submits the <code>Form</code> in the last rendered <code>Page</code>.
+	 * Submits the {@link Form} in the last rendered {@link Page}.
+	 * <p>
+	 * <strong>Note</strong>: Form request parameters have to be set explicitely.
 	 * 
 	 * @param path
-	 *            path to <code>Form</code> component
+	 *            path to component
 	 */
 	public void submitForm(String path)
 	{
