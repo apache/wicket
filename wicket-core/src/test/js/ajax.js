@@ -35,9 +35,13 @@
 
  */
 
-jQuery(document).ready(function() {
+/*global ok: true, start: true, asyncTest: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
 
-	execute = function (attributes) {
+jQuery(document).ready(function() {
+	"use strict";
+
+	var execute = function (attributes) {
 
 		var defaults = {
 				fh: [
@@ -623,7 +627,7 @@ jQuery(document).ready(function() {
 				m: 'get',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
-				dep: [ function() {return { "one": 1, "two": 2 } } ]
+				dep: [ function() {return { "one": 1, "two": 2 }; } ]
 			};
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
@@ -658,7 +662,7 @@ jQuery(document).ready(function() {
 				ep: [ {name: 'one', value: 'static1'}, {name: 'one', value: 'static2'} ],
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
-				dep: [ function() {return [ {name: "one", value: 'dynamic1'}, {name: "one", value: 'dynamic2'} ] } ]
+				dep: [ function() {return [ {name: "one", value: 'dynamic1'}, {name: "one", value: 'dynamic2'} ]; } ]
 			};
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
@@ -1008,7 +1012,7 @@ jQuery(document).ready(function() {
 				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
-				fh: [ function(attrs) { ok(true, "Failure handler executed"); start() } ],
+				fh: [ function(attrs) { ok(true, "Failure handler executed"); start(); } ],
 				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
 			};
 
