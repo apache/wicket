@@ -73,9 +73,8 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 		}
 
 		// Load the properties associated with the path
-		IPropertiesFactory propertiesFactory = Application.get()
-			.getResourceSettings()
-			.getPropertiesFactory();
+		IPropertiesFactory propertiesFactory = getPropertiesFactory();
+
 
 		while (true)
 		{
