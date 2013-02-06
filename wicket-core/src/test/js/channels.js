@@ -30,21 +30,32 @@ jQuery(document).ready(function() {
 	 * Verifies that the final result contains all values of the counter.
 	 */
 	test('queue', function () {
-	
+
+		stop();
+
 		var cm		= new Wicket.ChannelManager(),
 			ch		= 'name|s',
 			i		= 0,
 			result	= '',
+			iterations = 10,
 			toExecute = function (j) {
-				result += j;
-				cm.done(ch);
+				return function() {
+					window.setTimeout(function() {
+						result += j;
+						cm.done(ch);
+
+						if (j === iterations - 1) {
+							start();
+
+							equal(result, '0123456789');
+						}
+					}, 1);
+				};
 			};
 
-		for (; i < 10; i++) {
+		for (; i < iterations; i++) {
 			cm.schedule(ch, toExecute(i));
 		}
-		
-		equal(result, '0123456789');
 	});
 
 	/**
