@@ -819,15 +819,9 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 
 			var target = jQuery(window);
-			console.log('Iteration 1', order);
 			target.triggerHandler("event1", {"round": 0}); // execution No1
-
-			console.log('Iteration 2', order);
 			target.triggerHandler("event1", {"round": 1}); // execution No2
-
-			console.log('Iteration 3', order);
 			target.triggerHandler("event1", {"round": 2}); // execution No3
-
 		});
 
 		/**
