@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
+/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true, stop: true */
+
 jQuery(document).ready(function() {
+	"use strict";
 
 	module('Wicket.ChannelManager');
 
@@ -30,13 +34,14 @@ jQuery(document).ready(function() {
 		var cm		= new Wicket.ChannelManager(),
 			ch		= 'name|s',
 			i		= 0,
-			result	= '';
+			result	= '',
+			toExecute = function (j) {
+				result += j;
+				cm.done(ch);
+			};
 
 		for (; i < 10; i++) {
-			cm.schedule(ch, function () {
-				result += i;
-				cm.done(ch);
-			});
+			cm.schedule(ch, toExecute(i));
 		}
 		
 		equal(result, '0123456789');
@@ -49,10 +54,10 @@ jQuery(document).ready(function() {
 	 * The execution starts with 0 but the DROP callback (for 5) drops the callbacks for
 	 * 1, 2, 3 and 4, so they are missed. '5' registers a '!drop!' and then all following
 	 * queueing callbacks are executed.
-	 * The final result is "0!drop!10101010"
+	 * The final result must be "0!drop!6789"
 	 * - 0 for the first queueing callback
 	 * - !drop! for the 5th
-	 * - a '10' for 6, 7, 8 and 9 (because I didn't find a way to pass the current value of 'i')
+	 * - 6, 7, 8 and 9
 	 */
 	test('drop', function () {
 
@@ -66,39 +71,35 @@ jQuery(document).ready(function() {
 			chd		= name + '|d',					// the channel to drop
 			number	= 10,							// the number of channels to schedule
 			i		= 0,							// the current iteration
-			j 		= 0,							// the counter that decides when to release the test
 			result	= '',							// the container for the actual result
 			queueCallback = function(k) {
 				result += k;
 				cm.done(chq);
 
-				if (++j === (number / 2)) {
+				if (k === (number - 1)) {
 					start();
 
-					//equal(result, '0!drop!6789'); // desired check, but cannot find how to pass 
-													// the current value to the channel's callback
-
-					equal(result, '0!drop!10101010'); // one '10' for 6,7,8,9
+					equal(result, '0!drop!6789');
 				}
+			},
+			toExecuteQueued = function (y) {
+				return function() {
+					window.setTimeout(function() {queueCallback(y);}, 1);
+				};
+			},
+			toExecuteDropped = function() {
+				result += '!drop!';
+				cm.done(chd);
 			};
 
 		for (; i < number; i++) {
 
-			cm.schedule(chq, function () {
+			cm.schedule(chq, toExecuteQueued(i));
 
-				// TODO: how to pass the current value of 'i' ?!
-				setTimeout(queueCallback, 1, i);
-
-			});
-
-			if (i === number / 2) {
-				cm.schedule(chd, function() {
-					result += '!drop!';
-					cm.done(chd);
-				});
+			if (i === (number / 2)) {
+				cm.schedule(chd, toExecuteDropped);
 			}
 		}
-		
 	});
 
 	/**
@@ -127,7 +128,10 @@ jQuery(document).ready(function() {
 					// mark the channel non-busy
 					cm.done(cha);
 				}, 100);
-			}
+			},
+			toExecute = function () {
+				ok(false, "Requests in the active channel should not be executed.");
+			};
 
 		// schedule the long running callback (the active one)
 		cm.schedule(cha, queueCallback);
@@ -136,9 +140,7 @@ jQuery(document).ready(function() {
 		// they will be disacarded because the channel is busy
 		for (; i < number; i++) {
 
-			cm.schedule(cha, function () {
-				ok(false, "Requests in the active channel should not be executed.")
-			});
+			cm.schedule(cha, toExecute);
 		}
 
 	});
