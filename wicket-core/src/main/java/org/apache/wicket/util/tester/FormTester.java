@@ -20,7 +20,6 @@ package org.apache.wicket.util.tester;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -31,9 +30,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.AbstractSingleSelectChoice;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.CheckGroup;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -41,13 +38,13 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
@@ -418,77 +415,21 @@ public class FormTester
 	 */
 	public static String[] getInputValue(FormComponent<?> formComponent)
 	{
-		// do nothing for invisible or disabled component -- the browser would not send any
-		// parameter for a disabled component
-		if (!(formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy()))
+		// the browser sends parameters for visible and enabled components only
+		if (formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy())
 		{
-			return new String[] { };
-		}
-
-		// if component is text field and do not have exist value, fill
-		// blank String if required
-		if (formComponent instanceof AbstractTextComponent)
-		{
-			return new String[] { getFormComponentValue(formComponent) };
-		}
-		else if ((formComponent instanceof DropDownChoice) ||
-			(formComponent instanceof RadioChoice) || (formComponent instanceof CheckBox))
-		{
-			return new String[] { getFormComponentValue(formComponent) };
-		}
-		else if (formComponent instanceof ListMultipleChoice)
-		{
-			return getFormComponentValue(formComponent).split(FormComponent.VALUE_SEPARATOR);
-		}
-		else if (formComponent instanceof CheckGroup)
-		{
-			final Collection<?> checkGroupValues = (Collection<?>)formComponent.getDefaultModelObject();
-			final List<String> result = new ArrayList<String>();
-			formComponent.visitChildren(Check.class, new IVisitor<Component, Void>()
+			// TODO are text components the only ones with an inherent single value
+			if (formComponent instanceof AbstractTextComponent)
 			{
-				@Override
-				public void component(final Component component, final IVisit<Void> visit)
-				{
-					if (checkGroupValues.contains(component.getDefaultModelObject()))
-					{
-						result.add(getFormComponentValue((Check<?>)component));
-					}
-				}
-			});
-			return result.toArray(new String[result.size()]);
-		}
-		else if (formComponent instanceof RadioGroup)
-		{
-			// TODO 1.5: see if all these transformations can be factored out into
-			// checkgroup/radiogroup by them implementing some sort of interface {
-			// getValue(); } otherwise all these implementation details leak into the tester
-			final Object value = formComponent.getDefaultModelObject();
-			String result = null;
-			if (value != null)
-			{
-				result = formComponent.visitChildren(Radio.class, new IVisitor<Component, String>()
-				{
-					@Override
-					public void component(final Component component, final IVisit<String> visit)
-					{
-						if (value.equals(component.getDefaultModelObject()))
-						{
-							visit.stop(getFormComponentValue((Radio<?>)component));
-						}
-						else
-						{
-							visit.dontGoDeeper();
-						}
-					}
-				});
-			}
-			if (result == null)
-			{
-				return new String[] { };
+				return new String[] { getFormComponentValue(formComponent) };
 			}
 			else
 			{
-				return new String[] { result };
+				String value = getFormComponentValue(formComponent);
+				if (!Strings.isEmpty(value))
+				{
+					return value.split(FormComponent.VALUE_SEPARATOR);
+				}
 			}
 		}
 		return new String[] { };
@@ -496,24 +437,6 @@ public class FormTester
 
 
 	private static String getFormComponentValue(final FormComponent<?> formComponent)
-	{
-		boolean oldEscape = formComponent.getEscapeModelStrings();
-		formComponent.setEscapeModelStrings(false);
-		String val = formComponent.getValue();
-		formComponent.setEscapeModelStrings(oldEscape);
-		return val;
-	}
-
-	private static String getFormComponentValue(final Check<?> formComponent)
-	{
-		boolean oldEscape = formComponent.getEscapeModelStrings();
-		formComponent.setEscapeModelStrings(false);
-		String val = formComponent.getValue();
-		formComponent.setEscapeModelStrings(oldEscape);
-		return val;
-	}
-
-	private static String getFormComponentValue(final Radio<?> formComponent)
 	{
 		boolean oldEscape = formComponent.getEscapeModelStrings();
 		formComponent.setEscapeModelStrings(false);
