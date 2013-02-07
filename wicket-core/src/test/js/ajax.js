@@ -1047,5 +1047,71 @@ jQuery(document).ready(function() {
 
 			jQuery(window).triggerHandler("manyEvaluations");
 		});
+
+		/**
+		 * The DOM elememt of the HTML element is used as a context (this)
+		 * in the callbacks.
+		 * https://issues.apache.org/jira/browse/WICKET-5025
+		 */
+		asyncTest('The HTML DOM element should be the context in the callbacks - success case.', function () {
+
+			expect(6);
+
+			var attrs = {
+				u: 'data/ajax/emptyAjaxResponse.xml',
+				c: 'usedAsContextWicket5025',
+				e: 'asContextSuccess',
+				bh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Before handler executed"); } ],
+				pre: [ function() { equal(this.id, 'usedAsContextWicket5025', "Precondition executed"); return true; } ],
+				bsh: [ function() { equal(this.id, 'usedAsContextWicket5025', "BeforeSend handler executed"); } ],
+				ah: [ function() { equal(this.id, 'usedAsContextWicket5025', "After handler executed"); } ],
+				sh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Success handler executed"); } ],
+				fh: [ function() { ok(false, "Failure handler should not be executed"); } ],
+				coh: [
+					function() {
+						equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
+						jQuery('#usedAsContextWicket5025').off();
+						start();
+					}
+				]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#usedAsContextWicket5025').triggerHandler("asContextSuccess");
+		});
+
+		/**
+		 * The DOM elememt of the HTML element is used as a context (this)
+		 * in the callbacks.
+		 * https://issues.apache.org/jira/browse/WICKET-5025
+		 */
+		asyncTest('The HTML DOM element should be the context in the callbacks - failure case.', function () {
+
+			expect(6);
+
+			var attrs = {
+				u: 'data/ajax/nonExisting.xml',
+				c: 'usedAsContextWicket5025',
+				e: 'asContextFailure',
+				bh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Before handler executed"); } ],
+				pre: [ function() { equal(this.id, 'usedAsContextWicket5025', "Precondition executed"); return true; } ],
+				bsh: [ function() { equal(this.id, 'usedAsContextWicket5025', "BeforeSend handler executed"); } ],
+				ah: [ function() { equal(this.id, 'usedAsContextWicket5025', "After handler executed"); } ],
+				sh: [ function() { ok(false, "Success handler should not be executed"); } ],
+				fh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Failure handler should not be executed"); } ],
+				coh: [
+					function() {
+						equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
+						jQuery('#usedAsContextWicket5025').off();
+						start();
+					}
+				]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#usedAsContextWicket5025').triggerHandler("asContextFailure");
+		});
 	}
 });
