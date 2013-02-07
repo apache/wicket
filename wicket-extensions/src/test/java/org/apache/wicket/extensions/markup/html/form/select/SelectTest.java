@@ -39,16 +39,31 @@ public class SelectTest extends WicketTestCase
 
 		tester.getRequest().setParameter("select", page.option1.getValue());
 
-		page.form.onFormSubmitted();
+		tester.submitForm(page.form);
 
 		// form has error ...
-		boolean hasError = page.form.hasError();
-		assertTrue(hasError);
+		assertTrue(page.form.hasError());
 
 		// ... but option1 is selected anyway through rawInput
 		assertTrue(page.select.isSelected(page.option1));
+
+		tester.startPage(page);
+
+		// ... even after re-render
+		assertTrue(page.select.isSelected(page.option1));
+
+		tester.getRequest().setParameter("select", page.option1.getValue());
+		tester.getRequest().setParameter("text", "text is required");
+		tester.submitForm(page.form);
+
+		// ... until successful submit without rawInput
+		assertFalse(page.select.hasRawInput());
+		assertTrue(page.select.isSelected(page.option1));
 	}
 
+	/**
+	 * WICKET-5011 custom equality
+	 */
 	@Test
 	public void selectionWithouEquals()
 	{
