@@ -19,37 +19,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-parent</artifactId>
+		<artifactId>wicket-reference-guide</artifactId>
 		<version>6.6.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-reference-guide</artifactId>
-	<packaging>pom</packaging>
-	<name>Wicket Reference guide</name>
-	<description>Wicket Reference guide contains the official documentation for Apache Wicket with code samples.</description>
-
-	<modules>
-		<module>models</module>
-		<module>helloworld</module>
-        <module>stateless</module>
-	</modules>
-
+	<artifactId>wicket-reference-guide-models</artifactId>
+	<packaging>jar</packaging>
+	<name>Wicket Reference guide - Models</name>
+	<description>Models application for Wicket Reference guide.</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
 	</dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <!-- Do not deploy the mini applications for the reference guide to Maven repos -->
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>
