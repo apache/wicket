@@ -322,6 +322,14 @@
 
 		initialize: jQuery.noop,
 
+		/**
+		 * Initializes the default values for Ajax request attributes.
+		 * The defaults are not set at the server side to save some bytes
+		 * for the network transfer
+		 *
+		 * @param attrs {Object} - the ajax request attributes to enrich
+		 * @private
+		 */
 		_initializeDefaults: function (attrs) {
 
 			// (ajax channel)
@@ -359,7 +367,8 @@
 		/**
 		 * A helper function that executes an array of handlers (before, success, failure)
 		 *
-		 * @param handlers {Array[FunctionBody]} - the handlers to execute
+		 * @param handlers {Array[Function]} - the handlers to execute
+		 * @private
 		 */
 		_executeHandlers: function (handlers) {
 			if (jQuery.isArray(handlers)) {
@@ -386,6 +395,7 @@
 		 *      name -> value pairs.
 		 * @see jQuery.param
 		 * @see jQuery.serializeArray
+		 * @private
 		 */
 		_asParamArray: function(parameters) {
 			var result = [],
@@ -441,7 +451,7 @@
 				self = this,
 
 				// the precondition to use if there are no explicit ones
-				defaultPrecondition = [ function (attributes, jqXHR, jqSettings) {
+				defaultPrecondition = [ function (attributes) {
 					if (attributes.c) {
 						if (attributes.f) {
 							return Wicket.$$(attributes.c) && Wicket.$$(attributes.f);
