@@ -2,4 +2,6 @@ target
 velocity.log
 .project
 .classpath
+.settings
 *velocity.log*
+*~
