@@ -57,7 +57,7 @@ public class ResourceReferenceRegistry
 	// The Map (registry) maintaining the resource references
 	private final ConcurrentHashMap<Key, ResourceReference> map = Generics.newConcurrentHashMap();
 
-	// If combinations of paramaters (Key) have no registered resource reference yet, a default
+	// If combinations of parameters (Key) have no registered resource reference yet, a default
 	// resource reference can be created and added to the registry. The following list keeps track
 	// of all auto added references.
 	private Queue<Key> autoAddedQueue;
@@ -67,10 +67,50 @@ public class ResourceReferenceRegistry
 	private int autoAddedCapacity = 1000;
 
 	/**
-	 * Construct.
+	 * A simple implementation of {@link IResourceReferenceFactory} that creates
+	 * {@link PackageResourceReference}
+	 */
+	public static class DefaultResourceReferenceFactory implements IResourceReferenceFactory
+	{
+		@Override
+		public ResourceReference create(Key key)
+		{
+			ResourceReference result = null;
+			if (PackageResource.exists(key))
+			{
+				result = new PackageResourceReference(key);
+			}
+			return result;
+		}
+	}
+
+	/**
+	 * The factory to use when a ResourceReference is not previously
+	 * registered and a new instance should be create
+	 */
+	private final IResourceReferenceFactory resourceReferenceFactory;
+
+	/**
+	 * Constructor.
+	 *
+	 * <p>Uses DefaultResourceReferenceFactory to create ResourceReference when there is
+	 * no registered one for the requested attributes</p>
 	 */
 	public ResourceReferenceRegistry()
 	{
+		this(new DefaultResourceReferenceFactory());
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param resourceReferenceFactory
+	 *      The factory that will create ResourceReference by Key when there is no registered one
+	 */
+	public ResourceReferenceRegistry(IResourceReferenceFactory resourceReferenceFactory)
+	{
+		this.resourceReferenceFactory = Args.notNull(resourceReferenceFactory, "resourceReferenceFactory");
+
 		// Initial the auto-add list for a maximum of 1000 entries
 		setAutoAddedCapacity(autoAddedCapacity);
 	}
@@ -83,7 +123,7 @@ public class ResourceReferenceRegistry
 	 * 
 	 * @param reference
 	 *      the reference to register
-	 * @return True, if the resource was registered successfully or has been registered previously
+	 * @return {@code true} if the resource was registered successfully or has been registered previously
 	 *         already.
 	 */
 	public final boolean registerResourceReference(final ResourceReference reference)
@@ -99,7 +139,7 @@ public class ResourceReferenceRegistry
 	 * 
 	 * @param reference
 	 *      the reference to register
-	 * @return True, if the resource was registered successfully or has been registered previously
+	 * @return {@code true} if the resource was registered successfully or has been registered previously
 	 *         already.
 	 */
 	private Key _registerResourceReference(final ResourceReference reference)
@@ -118,11 +158,11 @@ public class ResourceReferenceRegistry
 	}
 
 	/**
-	 * Unregisters the given {@link ResourceReference}.
+	 * Unregisters a {@link ResourceReference} by its identifier.
 	 * 
 	 * @param key
 	 *            the {@link ResourceReference}'s identifier
-	 * @return Null, if the registry did not contain an entry for the resource reference.
+	 * @return The removed ResourceReference or {@code null} if the registry did not contain an entry for this key.
 	 */
 	public final ResourceReference unregisterResourceReference(final Key key)
 	{
@@ -322,7 +362,7 @@ public class ResourceReferenceRegistry
 	}
 
 	/**
-	 * The Number of RRs which can be auto-added is restricted (cache size). Remove entries, and
+	 * The number of {@link ResourceReference}s which can be auto-added is restricted (cache size). Remove entries, and
 	 * unregister excessive ones, if needed.
 	 * 
 	 * @param maxSize
@@ -351,19 +391,11 @@ public class ResourceReferenceRegistry
 	 * 
 	 * @param key
 	 *      the data making up the resource reference
-	 * @return The RR created or null if not successful
+	 * @return The {@link ResourceReference} created or {@code null} if not successful
 	 */
 	protected ResourceReference createDefaultResourceReference(final Key key)
 	{
-		if (PackageResource.exists(key.getScopeClass(), key.getName(), key.getLocale(),
-			key.getStyle(), key.getVariation()))
-		{
-			return new PackageResourceReference(key);
-		}
-		else
-		{
-			return null;
-		}
+		return resourceReferenceFactory.create(key);
 	}
 
 	/**

@@ -2,6 +2,51 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.5.0
+
+** Sub-task
+
+    * [WICKET-4976] - WicketTester#startComponent(Component) doesn't detach the component and request cycle
+
+** Bug
+
+    * [WICKET-4906] - Form#visitFormComponents can cause ClassCastException
+    * [WICKET-4925] - AbstractAjaxBehavior should clean stored reference to a component on unbind
+    * [WICKET-4927] - Header can not be set from IRequestCycleListener#onEndRequest()
+    * [WICKET-4928] - Error adding links to WebSocketRequestHandler
+    * [WICKET-4935] - Rendered URL is resulting with double slash when using AuthenticatedWebApplication
+    * [WICKET-4939] - AbstractAjaxTimerBehavior never triggers if attached to WebPage
+    * [WICKET-4948] - Modal window does not center correctly when window is scrolled in safari
+    * [WICKET-4950] - ResourceStreamLocator#newResourceNameIterator isn't a factory method anymore
+    * [WICKET-4953] - RangeValidator#decorate mixes error keys
+    * [WICKET-4954] - Issue with file upload with progress bar via AJAX and Firefox
+    * [WICKET-4955] - SessionData violates comparison contract
+    * [WICKET-4956] - compareTo methods of Actions in BufferedWebResponse violate Comparable contract
+    * [WICKET-4959] - Notify behaviors when a component is removed from the tree
+    * [WICKET-4961] - wicket ajax submit does not serialize elements of parental forms
+    * [WICKET-4962] - AjaxFormChoiceComponentUpdatingBehavior cannot be triggered with BaseWicketTester#executeAjaxEvent()
+    * [WICKET-4965] - NPE when stopping Tomcat
+    * [WICKET-4968] - NPE in FencedFeedbackPanel#onRemove
+    * [WICKET-4971] - AtmosphereEventSubscriptionCollector is slow
+    * [WICKET-4973] - AbstractRequestLogger - infinite ArrayIndexOutOfBoundsException when requestWindow size is 0
+    * [WICKET-4975] - client side memory leak on  date picker
+    * [WICKET-4986] - wicket-ajax-jquery.js fails with 'member not found' on IE for delayed ajax requests
+
+** Improvement
+
+    * [WICKET-4919] - AjaxLazyLoadPanel needs a method to add components to the AjaxRequestTarget when the component is rendered
+    * [WICKET-4933] - Palette does not handle disabled choices correctly
+    * [WICKET-4937] - Add IResponseFilter that can filter out invalid XML characters
+    * [WICKET-4940] - Make MountedMapper#getMatchedSegmentSizes(url) protected
+    * [WICKET-4957] - Listener needed for registration and removal of pages
+    * [WICKET-4958] - It should be possible to manipulate AjaxRequestAttributes globally
+    * [WICKET-4963] - ComponentModel "setObject" methods should take generic "T" type instead of "Object"
+    * [WICKET-4970] - Move the logic for creating the proper PackageResource from PackageResourceReference to ResourceReferenceRegistry
+    * [WICKET-4982] - StatelessChecker: add helpful information to find stateful behavior (patch included)
+    * [WICKET-4983] - extra recursion on Wicket.DOM.get
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.4.0
 
 ** Sub-task

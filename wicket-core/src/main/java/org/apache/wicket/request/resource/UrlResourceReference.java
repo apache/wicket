@@ -87,7 +87,8 @@ public class UrlResourceReference extends ResourceReference
 	{
 		if (contextRelative && url.isAbsolute())
 		{
-			throw new IllegalStateException("An absolute url '{}' cannot be rendered as context relative");
+			throw new IllegalStateException(
+					String.format("An absolute url '%s' cannot be rendered as context relative", url));
 		}
 		this.contextRelative = contextRelative;
 		return this;

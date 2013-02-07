@@ -102,7 +102,10 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 	private final int max;
 
+	private final boolean useMultipleAttr;
+
 	private transient String[] inputArrayCache = null;
+
 
 	/**
 	 * Constructor
@@ -144,14 +147,33 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	 * @param model
 	 * @param max
 	 *            max number of files a user can upload
+	 */
+	public MultiFileUploadField(String id, IModel<? extends Collection<FileUpload>> model, int max)
+	{
+		this(id, model, max, false);
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param id
+	 * @param model
+	 * @param max
+	 *            max number of files a user can upload
+	 * @param useMultipleAttr
+	 *            true in order to use the new HTML5 "multiple" &lt;input&gt; attribute. It will allow
+	 *            the users to select multiple files at once for multiple times if the browser
+	 *            supports it, otherwise it will work just as before - one file multiple times.
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	public MultiFileUploadField(String id, IModel<? extends Collection<FileUpload>> model, int max)
+	public MultiFileUploadField(String id, IModel<? extends Collection<FileUpload>> model, int max,
+		boolean useMultipleAttr)
 	{
 		super(id, (IModel<Collection<FileUpload>>)model);
 
 		this.max = max;
+		this.useMultipleAttr = useMultipleAttr;
 
 		upload = new WebComponent("upload");
 		upload.setOutputMarkupId(true);
@@ -207,9 +229,9 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		// initialize the javascript library
 		response.render(JavaScriptHeaderItem.forReference(JS));
 		response.render(OnDomReadyHeaderItem.forScript("new MultiSelector('" + getInputName() +
-			"', document.getElementById('" + container.getMarkupId() + "'), " + max + ",'" +
-			getString("org.apache.wicket.mfu.delete") + "').addElement(document.getElementById('" +
-			upload.getMarkupId() + "'));"));
+			"', document.getElementById('" + container.getMarkupId() + "'), " + max + ", " +
+			useMultipleAttr + ", '" + getString("org.apache.wicket.mfu.delete") +
+			"').addElement(document.getElementById('" + upload.getMarkupId() + "'));"));
 	}
 
 	/**

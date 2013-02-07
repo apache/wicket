@@ -19,11 +19,8 @@ module.exports = function(grunt) {
 			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
 			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
 			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
-			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckGroupSelector.js",
-			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckboxMultipleChoiceSelector.js",
-			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/AbstractCheckSelector.js",
+			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
 			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
-			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckBoxSelector.js",
 			"wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormChoiceComponentUpdatingBehavior.js"
 		],
 		extensionsJs = [
@@ -42,6 +39,14 @@ module.exports = function(grunt) {
 		atmosphereJs = [
 			"wicket-experimental/wicket-atmosphere/src/main/java/org/apache/wicket/atmosphere/jquery.wicketatmosphere.js"
 		],
+		testsJs = [
+			"./wicket-core/src/test/js/ajax.js",
+			"./wicket-core/src/test/js/head.js",
+			"./wicket-core/src/test/js/form.js",
+			"./wicket-core/src/test/js/dom.js",
+			"./wicket-core/src/test/js/channels.js",
+			"./wicket-core/src/test/js/event.js"
+		],
 		gruntJs = [
 			"grunt.js"
 		];
@@ -54,6 +59,7 @@ module.exports = function(grunt) {
 			datetime: datetimeJs,
 			nativeWebSocket: nativeWebSocketJs,
 			atmosphere: atmosphereJs,
+			testsJs: testsJs,
 			grunt: gruntJs
 		},
 

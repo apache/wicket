@@ -35,9 +35,13 @@
 
  */
 
-jQuery(document).ready(function() {
+/*global ok: true, start: true, asyncTest: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
 
-	execute = function (attributes) {
+jQuery(document).ready(function() {
+	"use strict";
+
+	var execute = function (attributes) {
 
 		var defaults = {
 				fh: [
@@ -60,7 +64,7 @@ jQuery(document).ready(function() {
 	};
 
 	// Ajax tests are executed only when run with Web Server
-	if ( !isLocal ) {
+	if ( !QUnit.isLocal ) {
 
 		module('Wicket.Ajax', {
 			setup: function() {
@@ -101,7 +105,7 @@ jQuery(document).ready(function() {
 			var attrs = {
 				u: 'data/ajax/evaluationIdentifierAndCodeId.xml',
 				c: 'evaluationIdentifierAndCodeId'
-			}
+			};
 			execute(attrs);
 		});
 
@@ -120,7 +124,7 @@ jQuery(document).ready(function() {
 						equal(jQuery('#componentToReplace').text(), 'new body', 'The component must be replaced');
 					}
 				]
-			}
+			};
 			execute(attrs);
 		});
 
@@ -132,7 +136,6 @@ jQuery(document).ready(function() {
 			var oldWicketLogError = Wicket.Log.error;
 
 			Wicket.Log.error = function(msg) {
-				start();
 				equal(msg, 'Wicket.Ajax.Call.processComponent: Component with id [[componentToReplaceDoesNotExist]] was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.');
 
 				// restore the original method
@@ -148,7 +151,7 @@ jQuery(document).ready(function() {
 						equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
 					}
 				]
-			}
+			};
 			execute(attrs);
 		});
 
@@ -165,7 +168,7 @@ jQuery(document).ready(function() {
 						equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
 					}
 				]
-			}
+			};
 			execute(attrs);
 
 		});
@@ -188,7 +191,7 @@ jQuery(document).ready(function() {
 						$title.text(oldTitle);
 					}
 				]
-			}
+			};
 			execute(attrs);
 		});
 
@@ -212,7 +215,7 @@ jQuery(document).ready(function() {
 						equal('success', textStatus);
 					}
 				]
-			}
+			};
 			execute(attrs);
 		});
 
@@ -243,7 +246,7 @@ jQuery(document).ready(function() {
 						}
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 
@@ -279,7 +282,7 @@ jQuery(document).ready(function() {
 						equal('success', textStatus);
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 
@@ -341,7 +344,7 @@ jQuery(document).ready(function() {
 						equal(attrs.u, attributes.u, 'Complete: attributes equal');
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 
@@ -389,7 +392,7 @@ jQuery(document).ready(function() {
 						equal(attrs.u, attributes.u);
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 
@@ -411,7 +414,7 @@ jQuery(document).ready(function() {
 				coh: [
 					function(attributes, jqXHR, textStatus) {
 						start();
-						equal(textStatus, "parsererror", "textStatus")
+						equal(textStatus, "parsererror", "textStatus");
 						equal(attributes.u, attrs.u, "url");
 						deepEqual(attributes.e, [ "domready" ], "events");
 						equal(attributes.ch, '0|s', 'channel');
@@ -437,7 +440,7 @@ jQuery(document).ready(function() {
 
 					}
 				]
-			}
+			};
 
 			Wicket.Ajax.ajax(attrs);
 		});
@@ -624,7 +627,7 @@ jQuery(document).ready(function() {
 				m: 'get',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
-				dep: [ function() {return { "one": 1, "two": 2 } } ]
+				dep: [ function() {return { "one": 1, "two": 2 }; } ]
 			};
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
@@ -659,7 +662,7 @@ jQuery(document).ready(function() {
 				ep: [ {name: 'one', value: 'static1'}, {name: 'one', value: 'static2'} ],
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
-				dep: [ function() {return [ {name: "one", value: 'dynamic1'}, {name: "one", value: 'dynamic2'} ] } ]
+				dep: [ function() {return [ {name: "one", value: 'dynamic1'}, {name: "one", value: 'dynamic2'} ]; } ]
 			};
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
@@ -698,7 +701,7 @@ jQuery(document).ready(function() {
 					equal(attrs.u, attributes.u, 'Before: attrs');
 				}],
 				pre: [function() {
-					ok(true, "Precondition is called!")
+					ok(true, "Precondition is called!");
 					// do not allow calling of beforeSend handlers
 					return false;
 				}],
@@ -720,20 +723,23 @@ jQuery(document).ready(function() {
 
 		/**
 		 * Verifies the order of execution of the callbacks.
-		 * The order must be: before, beforeSend, after, success, complete.
+		 * The order must be: before, precondition, beforeSend, after, success, complete.
 		 * Three consecutive executions are made on the same Ajax channel validating
 		 * that they do not overlap.
 		 */
 		asyncTest('callbacks order - success scenario.', function () {
 
-			expect(30);
+			expect(36);
 
 			var order = 0,
 
-				// calculates the offset for the order depending on the execution number
-				offset = function(round) {
-					return (round * 10) - 10;
-				};
+			// the number of assertions per iteration
+			numberOfTests = 12,
+
+			// calculates the offset for the order depending on the execution number
+			offset = function(extraData) {
+				return numberOfTests * extraData.round;
+			};
 
 			var attrs = {
 				u: 'data/ajax/emptyAjaxResponse.xml',
@@ -743,19 +749,25 @@ jQuery(document).ready(function() {
 						equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
 					}
 				],
+				pre: [
+					function(attrs) {
+						equal((3 + offset(attrs.event.extraData)), ++order, "Precondition");
+						return true;
+					}
+				],
 				bsh: [
 					function(attrs) {
-						equal((3 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
+						equal((5 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
 					}
 				],
 				ah: [
 					function(attrs) {
-						equal((5 + offset(attrs.event.extraData)), ++order, "After handler");
+						equal((7 + offset(attrs.event.extraData)), ++order, "After handler");
 					}
 				],
 				sh: [
 					function(attrs) {
-						equal((7 + offset(attrs.event.extraData)), ++order, "Success handler");
+						equal((9 + offset(attrs.event.extraData)), ++order, "Success handler");
 					}
 				],
 				fh: [
@@ -765,7 +777,7 @@ jQuery(document).ready(function() {
 				],
 				coh: [
 					function(attrs) {
-						equal((9 + offset(attrs.event.extraData)), ++order, "Complete handler");
+						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
 				]
 			};
@@ -775,16 +787,21 @@ jQuery(document).ready(function() {
 				equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
 			});
 
+			Wicket.Event.subscribe('/ajax/call/precondition', function(jqEvent, attrs) {
+				equal((4 + offset(attrs.event.extraData)), ++order, "Global precondition");
+				return true;
+			});
+
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attrs) {
-				equal((4 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
+				equal((6 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attrs) {
-				equal((6 + offset(attrs.event.extraData)), ++order, "Global after handler");
+				equal((8 + offset(attrs.event.extraData)), ++order, "Global after handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attrs) {
-				equal((8 + offset(attrs.event.extraData)), ++order, "Global success handler");
+				equal((10 + offset(attrs.event.extraData)), ++order, "Global success handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function() {
@@ -792,11 +809,12 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
-				equal((10 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
 
-				if (attrs.event.extraData == 3) {
+				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
 					jQuery(document).off();
+					jQuery(window).off("event1");
 
 					start();
 				}
@@ -805,11 +823,9 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 
 			var target = jQuery(window);
-			target.triggerHandler("event1", 1); // execution No1
-			target.triggerHandler("event1", 2); // execution No2
-			target.triggerHandler("event1", 3); // execution No3
-
-			target.off("event1");
+			target.triggerHandler("event1", {"round": 0}); // execution No1
+			target.triggerHandler("event1", {"round": 1}); // execution No2
+			target.triggerHandler("event1", {"round": 2}); // execution No3
 		});
 
 		/**
@@ -820,14 +836,17 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('callbacks order - failure scenario.', function () {
 
-			expect(30);
+			expect(36);
 
 			var order = 0,
 
+			// the number of assertions per iteration
+			numberOfTests = 12,
+
 			// calculates the offset for the order depending on the execution number
-				offset = function(round) {
-					return (round * 10) - 10;
-				};
+			offset = function(extraData) {
+				return numberOfTests * extraData.round;
+			};
 
 			var attrs = {
 				u: 'data/ajax/nonExistingResponse.xml',
@@ -837,14 +856,20 @@ jQuery(document).ready(function() {
 						equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
 					}
 				],
+				pre: [
+					function(attrs) {
+						equal((3 + offset(attrs.event.extraData)), ++order, "Precondition");
+						return true;
+					}
+				],
 				bsh: [
 					function(attrs) {
-						equal((3 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
+						equal((5 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
 					}
 				],
 				ah: [
 					function(attrs) {
-						equal((5 + offset(attrs.event.extraData)), ++order, "After handler");
+						equal((7 + offset(attrs.event.extraData)), ++order, "After handler");
 					}
 				],
 				sh: [
@@ -854,12 +879,12 @@ jQuery(document).ready(function() {
 				],
 				fh: [
 					function(attrs) {
-						equal((7 + offset(attrs.event.extraData)), ++order, "Failure handler");
+						equal((9 + offset(attrs.event.extraData)), ++order, "Failure handler");
 					}
 				],
 				coh: [
 					function(attrs) {
-						equal((9 + offset(attrs.event.extraData)), ++order, "Complete handler");
+						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
 				]
 			};
@@ -869,12 +894,17 @@ jQuery(document).ready(function() {
 				equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
 			});
 
+			Wicket.Event.subscribe('/ajax/call/precondition', function(jqEvent, attrs) {
+				equal((4 + offset(attrs.event.extraData)), ++order, "Global precondition");
+				return true;
+			});
+
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attrs) {
-				equal((4 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
+				equal((6 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attrs) {
-				equal((6 + offset(attrs.event.extraData)), ++order, "Global after handler");
+				equal((8 + offset(attrs.event.extraData)), ++order, "Global after handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function() {
@@ -882,15 +912,17 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attrs) {
-				equal((8 + offset(attrs.event.extraData)), ++order, "Global failure handler");
+				equal((10 + offset(attrs.event.extraData)), ++order, "Global failure handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
-				equal((10 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
 
-				if (attrs.event.extraData == 3) {
+				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
 					jQuery(document).off();
+
+					jQuery(window).off("event1");
 
 					start();
 				}
@@ -899,11 +931,9 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 
 			var target = jQuery(window);
-			target.triggerHandler("event1", 1); // execution No1
-			target.triggerHandler("event1", 2); // execution No2
-			target.triggerHandler("event1", 3); // execution No3
-
-			target.off("event1");
+			target.triggerHandler("event1", {"round": 0}); // execution No1
+			target.triggerHandler("event1", {"round": 1}); // execution No2
+			target.triggerHandler("event1", {"round": 2}); // execution No3
 		});
 
 		/**
@@ -982,7 +1012,7 @@ jQuery(document).ready(function() {
 				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
-				fh: [ function(attrs) { ok(true, "Failure handler executed"); start() } ],
+				fh: [ function(attrs) { ok(true, "Failure handler executed"); start(); } ],
 				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
 			};
 
@@ -1016,6 +1046,72 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 
 			jQuery(window).triggerHandler("manyEvaluations");
+		});
+
+		/**
+		 * The DOM elememt of the HTML element is used as a context (this)
+		 * in the callbacks.
+		 * https://issues.apache.org/jira/browse/WICKET-5025
+		 */
+		asyncTest('The HTML DOM element should be the context in the callbacks - success case.', function () {
+
+			expect(6);
+
+			var attrs = {
+				u: 'data/ajax/emptyAjaxResponse.xml',
+				c: 'usedAsContextWicket5025',
+				e: 'asContextSuccess',
+				bh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Before handler executed"); } ],
+				pre: [ function() { equal(this.id, 'usedAsContextWicket5025', "Precondition executed"); return true; } ],
+				bsh: [ function() { equal(this.id, 'usedAsContextWicket5025', "BeforeSend handler executed"); } ],
+				ah: [ function() { equal(this.id, 'usedAsContextWicket5025', "After handler executed"); } ],
+				sh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Success handler executed"); } ],
+				fh: [ function() { ok(false, "Failure handler should not be executed"); } ],
+				coh: [
+					function() {
+						equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
+						jQuery('#usedAsContextWicket5025').off();
+						start();
+					}
+				]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#usedAsContextWicket5025').triggerHandler("asContextSuccess");
+		});
+
+		/**
+		 * The DOM elememt of the HTML element is used as a context (this)
+		 * in the callbacks.
+		 * https://issues.apache.org/jira/browse/WICKET-5025
+		 */
+		asyncTest('The HTML DOM element should be the context in the callbacks - failure case.', function () {
+
+			expect(6);
+
+			var attrs = {
+				u: 'data/ajax/nonExisting.xml',
+				c: 'usedAsContextWicket5025',
+				e: 'asContextFailure',
+				bh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Before handler executed"); } ],
+				pre: [ function() { equal(this.id, 'usedAsContextWicket5025', "Precondition executed"); return true; } ],
+				bsh: [ function() { equal(this.id, 'usedAsContextWicket5025', "BeforeSend handler executed"); } ],
+				ah: [ function() { equal(this.id, 'usedAsContextWicket5025', "After handler executed"); } ],
+				sh: [ function() { ok(false, "Success handler should not be executed"); } ],
+				fh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Failure handler should not be executed"); } ],
+				coh: [
+					function() {
+						equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
+						jQuery('#usedAsContextWicket5025').off();
+						start();
+					}
+				]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#usedAsContextWicket5025').triggerHandler("asContextFailure");
 		});
 	}
 });

@@ -18,7 +18,6 @@ package org.apache.wicket.resource.loader;
 
 import java.util.Locale;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.core.util.resource.locator.IResourceNameIterator;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
@@ -73,9 +72,7 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 		}
 
 		// Load the properties associated with the path
-		IPropertiesFactory propertiesFactory = Application.get()
-			.getResourceSettings()
-			.getPropertiesFactory();
+		IPropertiesFactory propertiesFactory = getPropertiesFactory();
 
 		while (true)
 		{

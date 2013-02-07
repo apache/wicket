@@ -25,17 +25,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Packages;
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -479,10 +479,22 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			.getPackageResourceGuard();
 
 		return guard.accept(scope, path);
-}
+	}
 
 	/**
-	 * Gets whether a resource for a given set of criteria exists.
+	 * Checks whether a resource for a given set of criteria exists.
+	 *
+	 * @param key
+	 *            The key that contains all attributes about the requested resource
+	 * @return {@code true} if there is a package resource with the given attributes
+	 */
+	public static boolean exists(final ResourceReference.Key key)
+	{
+		return exists(key.getScopeClass(), key.getName(), key.getLocale(), key.getStyle(), key.getVariation());
+	}
+
+	/**
+	 * Checks whether a resource for a given set of criteria exists.
 	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
@@ -496,7 +508,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
 	 * @param variation
 	 *            The component's variation (of the style)
-	 * @return true if a resource could be loaded, false otherwise
+	 * @return {@code true} if a resource could be loaded, {@code false} otherwise
 	 */
 	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation)

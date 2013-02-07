@@ -63,6 +63,16 @@ public class CssResourceReference extends PackageResourceReference
 		super(scope, name);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param key
+	 */
+	public CssResourceReference(Key key)
+	{
+		super(key);
+	}
+
 	@Override
 	public CssPackageResource getResource()
 	{

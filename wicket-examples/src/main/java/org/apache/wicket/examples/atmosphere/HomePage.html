@@ -7,14 +7,18 @@
 <body>
 	<span wicket:id="mainNavigation"></span>
 	<p>
-		The current time is: <span wicket:id="time"></span>
+		The current time is (updated every 2 seconds from the server using push): <span wicket:id="time"></span>
 	</p>
+	<p>This page also shows a very simple 'chat' client. Type a message in the
+	second input field and send it to everyone. To send a private message, paste
+	the session id (you can find this in the session cookie) of the receiver in
+	the first input field and send a message.</p>
 	<p>
 		Message received: <span wicket:id="message"></span>
 	</p>
 	<form wicket:id="form">
 		<div>Session id of receiver: <input wicket:id="receiver" /></div>
-		<input wicket:id="input" /> <a href="#" wicket:id="send">Send
+		Message: <input wicket:id="input" /> <a href="#" wicket:id="send">Send
 			message</a>
 	</form>
 </body>

@@ -194,4 +194,15 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		String timeoutHandle = getTimeoutHandle();
 		target.prependJavaScript("clearTimeout("+timeoutHandle+"); delete "+timeoutHandle+";");
 	}
+
+	@Override
+	public void onRemove(Component component)
+	{
+		AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
+		if (target != null)
+		{
+			stop(target);
+		}
+		super.detach(component);
+	}
 }

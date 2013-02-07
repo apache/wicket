@@ -53,13 +53,6 @@
 		var mouseactive=0;	// is mouse selection active
 		var	hidingAutocomplete=0;		// are we hiding the autocomplete list
 
-		// pointers of the browser events
-		var objonkeydown;
-		var objonkeyup;
-		var objonkeypress;
-		var objonchange;
-		var objonchangeoriginal;
-		var objonfocus;
 		var initialElement;
 
 		// holds the eventual margins, padding, etc. of the menu container.
@@ -98,13 +91,6 @@
 			var obj = Wicket.$(elementId);
 			initialElement = obj;
 
-			objonkeydown=obj.onkeydown;
-			objonkeyup=obj.onkeyup;
-			objonkeypress=obj.onkeypress;
-			objonfocus=obj.onfocus;
-
-			objonchange=obj.onchange;
-
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
 				if (mouseactive === 1) {
 					ignoreOneFocusGain = true;
@@ -130,10 +116,6 @@
 					}
 				}
 				ignoreOneFocusGain = false;
-
-				if(typeof objonfocus==="function") {
-					return objonfocus.apply(this,[jqEvent]);
-				}
 			});
 
 			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
@@ -180,23 +162,24 @@
 							hidingAutocomplete = 1;
 							if(value) {
 								obj.value = value;
-								if (typeof(objonchange) === "function") {
-									objonchange.apply(this,[jqEvent]);
-								} else {
-									jQuery(obj).triggerHandler('change');
-								}
+								jQuery(obj).triggerHandler('change');
 							}
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
 							hideAutoComplete();
 							hidingAutocomplete = 1;
 						}
 						mouseactive = 0;
-						if (typeof objonkeydown === "function") {
-							return objonkeydown.apply(this,[jqEvent]);
-						}
+
 						return true;
 
 					default:
+				}
+			});
+
+			Wicket.Event.add(obj, 'change', function (jqEvent) {
+				if (mouseactive) {
+					// don't let any other change handler get this
+					jqEvent.stopImmediatePropagation();
 				}
 			});
 
@@ -205,7 +188,7 @@
 				switch(kc) {
 					case KEY_TAB:
 					case KEY_ENTER:
-						return jqEvent.stopPropagation();
+						return jqEvent.stopImmediatePropagation();
 					case KEY_UP:
 					case KEY_DOWN:
 					case KEY_ESC:
@@ -218,21 +201,15 @@
 					default:
 						updateChoices();
 				}
-				if(typeof objonkeyup === "function") {
-					return objonkeyup.apply(this,[jqEvent]);
-				}
 			});
 
 			Wicket.Event.add(obj, 'keypress', function (jqEvent) {
 				if(Wicket.Event.keyCode(jqEvent) === KEY_ENTER){
 					if(selected>-1 || hidingAutocomplete === 1){
 						hidingAutocomplete=0;
-						jqEvent.stopPropagation();
+						jqEvent.stopImmediatePropagation();
 						return false;
 					}
-				}
-				if(typeof objonkeypress==="function") {
-					return objonkeypress.apply(this,[jqEvent]);
 				}
 			});
 

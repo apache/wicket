@@ -65,7 +65,7 @@
 	 * Creates an iframe that can be used to load data asynchronously or as a
 	 * target for Ajax form submit.
 	 *
-	 * @param {String} the value of the iframe's name attribute
+	 * @param iframeName {String} the value of the iframe's name attribute
 	 */
 	createIFrame = function (iframeName) {
 		var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
@@ -322,6 +322,14 @@
 
 		initialize: jQuery.noop,
 
+		/**
+		 * Initializes the default values for Ajax request attributes.
+		 * The defaults are not set at the server side to save some bytes
+		 * for the network transfer
+		 *
+		 * @param attrs {Object} - the ajax request attributes to enrich
+		 * @private
+		 */
 		_initializeDefaults: function (attrs) {
 
 			// (ajax channel)
@@ -357,9 +365,31 @@
 		},
 
 		/**
+		 * Extracts the HTML element that "caused" this Ajax call.
+		 * An Ajax call is usually caused by JavaScript event but maybe be also
+		 * caused by manual usage of the JS API..
+		 *
+		 * @param attrs {Object} - the ajax request attributes
+		 * @return {HTMLElement} - the DOM element
+		 * @private
+		 */
+		_getTarget: function (attrs) {
+			var target;
+			if (attrs.event) {
+				target = attrs.event.target;
+			} else if (!jQuery.isWindow(attrs.c)) {
+				target = Wicket.$(attrs.c);
+			} else {
+				target = window;
+			}
+			return target;
+		},
+
+		/**
 		 * A helper function that executes an array of handlers (before, success, failure)
 		 *
-		 * @param {Array[FunctionBody]} handlers - the handlers to execute
+		 * @param handlers {Array[Function]} - the handlers to execute
+		 * @private
 		 */
 		_executeHandlers: function (handlers) {
 			if (jQuery.isArray(handlers)) {
@@ -367,12 +397,16 @@
 				// cut the handlers argument
 				var args = Array.prototype.slice.call(arguments).slice(1);
 
+				// assumes that the Ajax attributes is always the first argument
+				var attrs = args[0];
+				var that = this._getTarget(attrs);
+
 				for (var i = 0; i < handlers.length; i++) {
 					var handler = handlers[i];
 					if (jQuery.isFunction(handler)) {
-						handler.apply(this, args);
+						handler.apply(that, args);
 					} else {
-						new Function(handler).apply(this, args);
+						new Function(handler).apply(that, args);
 					}
 				}
 			}
@@ -386,15 +420,18 @@
 		 *      name -> value pairs.
 		 * @see jQuery.param
 		 * @see jQuery.serializeArray
+		 * @private
 		 */
 		_asParamArray: function(parameters) {
-			var result = [];
+			var result = [],
+				value,
+				name;
 			if (jQuery.isArray(parameters)) {
 				result = parameters;
 			}
 			else if (jQuery.isPlainObject(parameters)) {
-				for (var name in parameters) {
-					var value = parameters[name];
+				for (name in parameters) {
+					value = parameters[name];
 					result.push({name: name, value: value});
 				}
 			}
@@ -439,7 +476,7 @@
 				self = this,
 
 				// the precondition to use if there are no explicit ones
-				defaultPrecondition = [ function (attributes, jqXHR, jqSettings) {
+				defaultPrecondition = [ function (attributes) {
 					if (attributes.c) {
 						if (attributes.f) {
 							return Wicket.$$(attributes.c) && Wicket.$$(attributes.f);
@@ -468,14 +505,17 @@
 			var preconditions = attrs.pre || [];
 			preconditions = defaultPrecondition.concat(preconditions);
 			if (jQuery.isArray(preconditions)) {
+
+				var that = this._getTarget(attrs);
+
 				for (var p = 0; p < preconditions.length; p++) {
 
 					var precondition = preconditions[p];
 					var result;
 					if (jQuery.isFunction(precondition)) {
-						result = precondition(attrs);
+						result = precondition.call(that, attrs);
 					} else {
-						result = new Function('attrs', precondition)(attrs);
+						result = new Function(precondition).call(that, attrs);
 					}
 					if (result === false) {
 						Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
@@ -484,6 +524,8 @@
 					}
 				}
 			}
+
+			Wicket.Event.publish('/ajax/call/precondition', attrs);
 
 			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
 				return this.submitMultipartForm(context);
@@ -594,7 +636,12 @@
 			Wicket.Event.publish('/ajax/call/after', attrs);
 
 			if (!attrs.ad && attrs.event) {
-				attrs.event.preventDefault();
+				try {
+					attrs.event.preventDefault();
+				} catch (ignore) {
+					// WICKET-4986
+					// jquery fails 'member not found' with calls on busy channel
+				}
 			}
 
 			return jqXHR;
@@ -603,7 +650,7 @@
 		/**
 		 * Method that processes a manually supplied <ajax-response>.
 		 *
-		 * @param {XmlDocument} data - the <ajax-response> XML document
+		 * @param data {XmlDocument} - the <ajax-response> XML document
 		 */
 		process: function(data) {
 			var context =  {
@@ -619,10 +666,10 @@
 		/**
 		 * Method that processes the <ajax-response> in the context of an XMLHttpRequest.
 		 *
-		 * @param {XmlDocument} data - the <ajax-response> XML document
-		 * @param {String} textStatus - the response status as text (e.g. 'success', 'parsererror', etc.)
-		 * @param {Object} jqXHR - the jQuery wrapper around XMLHttpRequest
-		 * @param {Object} context - the request context with the Ajax request attributes and the FunctionExecuter's steps
+		 * @param data {XmlDocument} - the <ajax-response> XML document
+		 * @param textStatus {String} - the response status as text (e.g. 'success', 'parsererror', etc.)
+		 * @param jqXHR {Object} - the jQuery wrapper around XMLHttpRequest
+		 * @param context {Object} - the request context with the Ajax request attributes and the FunctionExecuter's steps
 		 */
 		processAjaxResponse: function (data, textStatus, jqXHR, context) {
 
@@ -978,10 +1025,8 @@
 
 		/**
 		 * Adds a closure that evaluates javascript code.
-		 * @param steps {Array} - the steps for FunctionExecutor
+		 * @param context {Object} - the object that brings the executer's steps and the attributes
 		 * @param node {XmlElement} - the <[priority-]evaluate> element with the script to evaluate
-		 * @param attrs {Object} - the attributes used for the Ajax request
-		 * @param event {jQuery.Event} - the event that caused this Ajax call
 		 */
 		processEvaluation: function (context, node) {
 			context.steps.push(function (notify) {
@@ -1240,7 +1285,7 @@
 			/**
 			 * Serializes HTMLFormSelectElement to URL encoded key=value string.
 			 *
-			 * @param {HTMLFormSelectElement} select - the form element to serialize
+			 * @param select {HTMLFormSelectElement} - the form element to serialize
 			 * @return an object of key -> value pair where 'value' can be an array of Strings if the select is .multiple,
 			 *		or empty object if the form element is disabled.
 			 */
@@ -1265,10 +1310,14 @@
 			},
 
 			/**
-			 * Serializes a form element to a key=value string in URL encoded notation.
+			 * Serializes a form element to an array with a single element - an object
+			 * with two keys - <em>name</em> and <em>value</em>.
+			 *
+			 * Example: [{"name": "searchTerm", "value": "abc"}].
+			 *
 			 * Note: this function intentionally ignores image and submit inputs.
 			 *
-			 * @param {HtmlFormElement} input - the form element to serialize
+			 * @param input {HtmlFormElement} - the form element to serialize
 			 * @return the URL encoded key=value pair or empty string if the form element is disabled.
 			 */
 			serializeInput: function (input) {
@@ -1280,11 +1329,24 @@
 				return result;
 			},
 
-			//list of item to exclude from serialization
+			/**
+			 * A hash of HTML form element to exclude from serialization
+			 * As key the element's id is being used.
+			 * As value - the string "true".
+			 */
 			excludeFromAjaxSerialization: {
 			},
 
-			// Returns url/post-body fragment representing element (e)
+			/**
+			 * Serializes a form element by checking its type and delegating the work to
+			 * a more specific function.
+			 *
+			 * The form element will be ignored if it is registered as excluded in
+			 * <em>Wicket.Form.excludeFromAjaxSerialization</em>
+			 *
+			 * @param element {HTMLFormElement} - the form element to serialize. E.g. HTMLInputElement
+			 * @return An array with a single element - an object with two keys - <em>name</em> and <em>value</em>.
+			 */
 			serializeElement: function(element) {
 
 				if (!element) {
@@ -1328,6 +1390,10 @@
 					if (form.tagName.toLowerCase() === 'form') {
 						elements = form.elements;
 					} else {
+						do {
+							form = form.parentNode;
+						} while (form.tagName.toLowerCase() !== "form" && form.tagName.toLowerCase() !== "body");
+
 						elements = nodeListToArray(form.getElementsByTagName("input"));
 						elements = elements.concat(nodeListToArray(form.getElementsByTagName("select")));
 						elements = elements.concat(nodeListToArray(form.getElementsByTagName("textarea")));
@@ -1438,7 +1504,7 @@
 				if (arguments.length > 1) {
 					var e = [];
 					for (var i = 0; i < arguments.length; i++) {
-						e.push(Wicket.$(arguments[i]));
+						e.push(Wicket.DOM.get(arguments[i]));
 					}
 					return e;
 				} else if (typeof arg === 'string') {
@@ -1496,7 +1562,10 @@
 					document.title = titleText;
 					return;
 				} else {
-					var $newElement = jQuery(text);
+					// jQuery 1.9+ expects '<' as the very first character in text
+					var cleanedText = jQuery.trim(text);
+
+					var $newElement = jQuery(cleanedText);
 					// WICKET-4236
 					jQuery(element).after($newElement).remove();
 				}
@@ -2178,14 +2247,11 @@
 			/**
 			 * Called when the mouse button is released.
 			 * Cleans all temporary variables and callback methods.
-			 *
-			 * @param {Event} e
 			 */
-			mouseUp: function (e) {
-				e = Wicket.Event.fix(e);
+			mouseUp: function () {
 				var o = Wicket.Drag.current;
 
-				if (o !== null && typeof(o) !== "undefined") {
+				if (o) {
 					o.wicketOnDragEnd(o);
 
 					o.lastMouseX = null;
@@ -2234,9 +2300,7 @@
 			setFocus: function (event) {
 				event = Wicket.Event.fix(event);
 
-				// IE doesn't have the property "target".
-				// Use "srcElement" instead.
-				var target = event.target ? event.target : event.srcElement;
+				var target = event.target;
 				if (target) {
 					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
 					Wicket.Focus.lastFocusId = target.id;
@@ -2247,9 +2311,7 @@
 			blur: function (event) {
 				event = Wicket.Event.fix(event);
 
-				// IE doesn't have the property "target".
-				// Use "srcElement" instead.
-				var target = event.target ? event.target : event.srcElement;
+				var target = event.target;
 				if (target && Wicket.Focus.lastFocusId === target.id) {
 					if (Wicket.Focus.refocusLastFocusedComponentAfterResponse) {
 						// replaced components seem to blur when replaced only on Safari - so do not modify lastFocusId so it gets refocused
@@ -2267,7 +2329,6 @@
 					Wicket.Log.info("returned focused element: " + Wicket.$(Wicket.Focus.lastFocusId));
 					return Wicket.$(Wicket.Focus.lastFocusId);
 				}
-				return;
 			},
 
 			setFocusOnId: function (id) {

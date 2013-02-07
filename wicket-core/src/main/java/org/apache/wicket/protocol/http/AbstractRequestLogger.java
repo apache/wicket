@@ -182,7 +182,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 */
 	private boolean hasBufferRolledOver()
 	{
-		return requestWindow[requestWindow.length - 1] != null;
+		return requestWindow.length > 0 && requestWindow[requestWindow.length - 1] != null;
 	}
 
 	@Override
@@ -224,7 +224,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			requestdata.setSessionInfo(sessionInfo);
 
 			long sizeInBytes = -1;
-			if (Application.exists() && Application.get().getRequestLoggerSettings().getRecordSessionSize())
+			if (Application.exists() &&
+				Application.get().getRequestLoggerSettings().getRecordSessionSize())
 			{
 				try
 				{
@@ -531,8 +532,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 		if (Application.exists())
 		{
 			requestsWindowSize = Application.get()
-					.getRequestLoggerSettings()
-					.getRequestsWindowSize();
+				.getRequestLoggerSettings()
+				.getRequestsWindowSize();
 		}
 		return requestsWindowSize;
 	}

@@ -25,6 +25,7 @@ import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.slf4j.Logger;
@@ -52,10 +53,7 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 	 */
 	public ContextRelativeResource(String pathRelativeToContextRoot)
 	{
-		if (pathRelativeToContextRoot == null)
-		{
-			throw new IllegalArgumentException("Cannot have null path for ContextRelativeResource.");
-		}
+		Args.notNull(pathRelativeToContextRoot, "pathRelativeToContextRoot");
 
 		// Make sure there is a leading '/'.
 		if (!pathRelativeToContextRoot.startsWith("/"))
