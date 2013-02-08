@@ -29,6 +29,7 @@ import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.resource.ITextResourceCompressor;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
@@ -52,8 +53,15 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	private static final Logger log = LoggerFactory.getLogger(ConcatBundleResource.class);
 
 	private static final long serialVersionUID = 1L;
-	private List<? extends IReferenceHeaderItem> providedResources;
+
+	private final List<? extends IReferenceHeaderItem> providedResources;
+
 	private boolean cachingEnabled;
+
+	/**
+	 * An optional compressor that will be used to compress the bundle resources
+	 */
+	private ITextResourceCompressor compressor;
 
 	/**
 	 * Construct.
@@ -160,7 +168,16 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		for (IResourceStream curStream : resources)
 			IOUtils.copy(curStream.getInputStream(), output);
-		return output.toByteArray();
+
+		byte[] bytes = output.toByteArray();
+
+		if (getCompressor() != null)
+		{
+			String nonCompressed = new String(bytes, "UTF-8");
+			bytes = getCompressor().compress(nonCompressed).getBytes("UTF-8");
+		}
+
+		return bytes;
 	}
 
 	private ResourceResponse sendResourceError(ResourceResponse resourceResponse, int errorCode,
@@ -256,5 +273,15 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 			}
 		};
 		return ret;
+	}
+
+	public void setCompressor(ITextResourceCompressor compressor)
+	{
+		this.compressor = compressor;
+	}
+
+	public ITextResourceCompressor getCompressor()
+	{
+		return compressor;
 	}
 }

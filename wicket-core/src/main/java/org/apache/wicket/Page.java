@@ -120,11 +120,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private final PageParameters pageParameters;
 
 	/**
-	 * The purpose of render count is to detect stale listener interface links. For example: there
-	 * is a page A rendered in tab 1. Then page A is opened also in tab 2. During render page state
-	 * changes (i.e. some repeater gets rebuilt). This makes all links on tab 1 stale - because they
-	 * no longer match the actual page state. This is done by incrementing render count. When link
-	 * is clicked Wicket checks if it's render count matches the render count value of page
+	 * @see IRequestablePage#getRenderCount()
 	 */
 	private int renderCount = 0;
 
@@ -846,13 +842,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 		{
-			Class<?> klass = getClass();
-			while (klass.isAnonymousClass())
-			{
-				klass = klass.getSuperclass();
-			}
+			String className = Classes.name(getClass());
 			getResponse().write("<!-- Page Class ");
-			getResponse().write(klass.getName());
+			getResponse().write(className);
 			getResponse().write(" END -->\n");
 		}
 	}
@@ -976,9 +968,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return numericId;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.component.IRequestablePage#getRenderCount()
-	 */
 	@Override
 	public int getRenderCount()
 	{

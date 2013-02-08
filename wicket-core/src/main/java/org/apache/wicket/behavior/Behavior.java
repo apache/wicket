@@ -254,4 +254,12 @@ public abstract class Behavior
 	{
 	}
 
+	/**
+	 * Called to notify that the component is being removed from its parent
+	 * @param component
+	 *      the removed component
+	 */
+	public void onRemove(Component component)
+	{
+	}
 }

@@ -16,120 +16,67 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.net.SocketException;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.wicket.protocol.http.servlet.ResponseIOException;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.EmptyRequestHandler;
-import org.apache.wicket.request.resource.ResourceStreamResource;
-import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
+import org.apache.wicket.mock.MockWebResponse;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 
 /**
- * @author Pedro Santos
+ * Test for {@link HeaderBufferingWebResponse}.
+ * 
+ * @author svenmeier
  */
 public class HeaderBufferingWebResponseTest extends Assert
 {
-	private WicketTester tester;
 
 	/**
-	 * @throws Exception
-	 */
-	@Before
-	public void before() throws Exception
-	{
-		tester = new WicketTester()
-		{
-			@Override
-			protected Response newServletWebResponse(ServletWebRequest servletWebRequest)
-			{
-				return new HeaderBufferingWebResponse(new ProblematicResponse(servletWebRequest,
-					getResponse()));
-			}
-		};
-		tester.setExposeExceptions(false);
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	@After
-	public void after() throws Exception
-	{
-		tester.destroy();
-	}
-
-	/**
-	 * WICKET-3570
+	 * WICKET-4927
 	 */
 	@Test
-	public void giveUpRespondingOnIOExceptions()
+	public void additionalHeaderAfterWrittenContent()
 	{
-		TestRequestCycleListener testRequestCycleListener = new TestRequestCycleListener();
-		tester.getApplication().getRequestCycleListeners().add(testRequestCycleListener);
-		tester.startResource(new ResourceStreamResource(new StringResourceStream("asdf")));
-		assertTrue(testRequestCycleListener.lastExceptionRquestHandlerResolved instanceof EmptyRequestHandler);
+		MockWebResponse originalResponse = new MockWebResponse();
+
+		HeaderBufferingWebResponse response = new HeaderBufferingWebResponse(originalResponse);
+
+		response.addHeader("key1", "value1");
+
+		assertNull(originalResponse.getHeader("key1"));
+
+		response.write("written");
+
+		assertEquals("value1", originalResponse.getHeader("key1"));
+
+		response.addHeader("key2", "value2");
+
+		assertEquals("value2", originalResponse.getHeader("key2"));
 	}
 
-	class TestRequestCycleListener extends AbstractRequestCycleListener
-	{
-		IRequestHandler lastExceptionRquestHandlerResolved;
-
-		@Override
-		public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
-			Exception exception)
-		{
-			lastExceptionRquestHandlerResolved = handler;
-		}
-
-	}
 	/**
-	 * Mock response simulating connection lost problems.
 	 */
-	public static class ProblematicResponse extends ServletWebResponse
+	@Test
+	public void resetAfterWrittenContent()
 	{
+		MockWebResponse originalResponse = new MockWebResponse();
 
-		/**
-		 * @param webRequest
-		 * @param httpServletResponse
-		 */
-		public ProblematicResponse(ServletWebRequest webRequest,
-			HttpServletResponse httpServletResponse)
+		HeaderBufferingWebResponse response = new HeaderBufferingWebResponse(originalResponse);
+
+		response.addHeader("key1", "value1");
+
+		assertNull(originalResponse.getHeader("key1"));
+
+		response.reset();
+
+		response.write("written");
+
+		try
 		{
-			super(webRequest, httpServletResponse);
+			response.reset();
+
+			fail();
 		}
-
-		@Override
-		public void flush()
+		catch (IllegalStateException expected)
 		{
-			throw new ResponseIOException(new SocketException(
-				"Connection reset by peer: socket write error"));
-		}
-
-		@Override
-		public void write(byte[] array)
-		{
-			throw new ResponseIOException(new SocketException(
-				"Connection reset by peer: socket write error"));
-		}
-
-		@Override
-		public void write(CharSequence sequence)
-		{
-			throw new ResponseIOException(new SocketException(
-				"Connection reset by peer: socket write error"));
 		}
 	}
 }

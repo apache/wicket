@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.ws.util.tester;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.ws.api.IWebSocketProcessor;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * A helper class to test WebSocket related operations.
@@ -37,11 +38,12 @@ public class WebSocketTester
 	 * @param page
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 */
-	public WebSocketTester(final Page page)
+	public WebSocketTester(final WicketTester wicketTester, final Page page)
 	{
+		Args.notNull(wicketTester, "wicketTester");
 		Args.notNull(page, "page");
 
-		socketProcessor = new TestWebSocketProcessor(page) {
+		socketProcessor = new TestWebSocketProcessor(wicketTester, page) {
 
 			@Override
 			protected void onOutMessage(String message)

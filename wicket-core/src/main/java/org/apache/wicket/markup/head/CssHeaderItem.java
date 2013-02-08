@@ -16,12 +16,16 @@
  */
 package org.apache.wicket.markup.head;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for all {@link HeaderItem}s that represent stylesheets. This class mainly contains
@@ -31,9 +35,24 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class CssHeaderItem extends HeaderItem
 {
+	private static final Logger logger = LoggerFactory.getLogger(CssHeaderItem.class);
+
 	/**
 	 * The condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 * {@code null} or empty string for no condition.
+	 *
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
+	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
+	 * at the server side:
+	 * <code><pre>
+	 * public void renderHead(IHeaderResponse response) {
+	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+	 *   ClientProperties properties = clientInfo.getProperties();
+	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
+	 *   }
+	 * }
+	 * </pre></code>
 	 */
 	private final String condition;
 	
@@ -95,7 +114,20 @@ public abstract class CssHeaderItem extends HeaderItem
 
 	/**
 	 * Creates a {@link CssReferenceHeaderItem} for the given reference.
-	 * 
+	 *
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
+	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
+	 * at the server side:
+	 * <code><pre>
+	 * public void renderHead(IHeaderResponse response) {
+	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+	 *   ClientProperties properties = clientInfo.getProperties();
+	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
+	 *   }
+	 * }
+	 * </pre></code>
+	 *
 	 * @param reference
 	 *            a reference to a CSS resource
 	 * @param pageParameters
@@ -130,6 +162,19 @@ public abstract class CssHeaderItem extends HeaderItem
 
 	/**
 	 * Creates a {@link CssContentHeaderItem} for the given content.
+	 *
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
+	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
+	 * at the server side:
+	 * <code><pre>
+	 * public void renderHead(IHeaderResponse response) {
+	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+	 *   ClientProperties properties = clientInfo.getProperties();
+	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
+	 *   }
+	 * }
+	 * </pre></code>
 	 *
 	 * @param css
 	 *            css content to be rendered.
@@ -173,7 +218,20 @@ public abstract class CssHeaderItem extends HeaderItem
 
 	/**
 	 * Creates a {@link CssUrlReferenceHeaderItem} for the given url.
-	 * 
+	 *
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
+	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
+	 * at the server side:
+	 * <code><pre>
+	 * public void renderHead(IHeaderResponse response) {
+	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+	 *   ClientProperties properties = clientInfo.getProperties();
+	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
+	 *   }
+	 * }
+	 * </pre></code>
+	 *
 	 * @param url
 	 *            context-relative url of the CSS resource
 	 * @param media
@@ -195,6 +253,14 @@ public abstract class CssHeaderItem extends HeaderItem
 		boolean hasCondition = Strings.isEmpty(condition) == false; 
 		if (hasCondition)
 		{
+			if (RequestCycle.get().find(AjaxRequestTarget.class) != null)
+			{
+				// WICKET-4894
+				logger.warn("IE CSS engine doesn't support dynamically injected links in " +
+						"conditional comments. See the javadoc of IHeaderResponse for alternative solution.");
+			}
+
+
 			response.write("<!--[if ");
 			response.write(condition);
 			response.write("]>");

@@ -86,8 +86,19 @@ public abstract class AjaxButton extends Button
 	{
 		super(id, model);
 		this.form = form;
+	}
 
-		add(new AjaxFormSubmitBehavior(form, "click")
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		add(newAjaxFormSubmitBehavior("click"));
+	}
+
+	protected AjaxFormSubmitBehavior newAjaxFormSubmitBehavior(String event)
+	{
+		return new AjaxFormSubmitBehavior(form, event)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -127,7 +138,7 @@ public abstract class AjaxButton extends Button
 			{
 				return AjaxButton.this.getDefaultFormProcessing();
 			}
-		});
+		};
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)

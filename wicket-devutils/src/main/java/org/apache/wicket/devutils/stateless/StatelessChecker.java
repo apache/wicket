@@ -20,6 +20,9 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
@@ -89,10 +92,26 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 			};
 
 			final String msg = "'" + component + "' claims to be stateless but isn't.";
-			if (!component.isStateless())
+			if (component.isStateless() == false)
 			{
-				throw new IllegalArgumentException(msg +
-					" Possible reasons: no stateless hint, statefull behaviors");
+				StringList statefulBehaviors = new StringList();
+				for (Behavior b : component.getBehaviors())
+				{
+					if (b.getStatelessHint(component) == false)
+					{
+						statefulBehaviors.add(Classes.name(b.getClass()));
+					}
+				}
+				String reason;
+				if (statefulBehaviors.size() == 0)
+				{
+				    reason = " Possible reason: no stateless hint";
+				}
+				else
+				{
+				    reason = " Stateful behaviors: " + statefulBehaviors.join();
+				}
+				throw new IllegalStateException(msg + reason);
 			}
 
 			if (component instanceof MarkupContainer)

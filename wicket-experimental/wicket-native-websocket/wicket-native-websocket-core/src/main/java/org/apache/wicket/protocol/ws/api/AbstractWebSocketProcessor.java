@@ -22,19 +22,22 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.ajax.WebSocketRequestHandler;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.protocol.ws.IWebSocketSettings;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
+import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.http.WebRequest;
@@ -56,6 +59,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 	private final WebRequest webRequest;
 	private final int pageId;
+	private final Url baseUrl;
 	private final Application application;
 	private final String sessionId;
 	private final IWebSocketConnectionRegistry connectionRegistry;
@@ -77,10 +81,15 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		Checks.notEmpty(pageId, "Request parameter 'pageId' is required!");
 		this.pageId = Integer.parseInt(pageId, 10);
 
+		String baseUrl = request.getParameter(WebRequest.PARAM_AJAX_BASE_URL);
+		Checks.notNull(baseUrl, String.format("Request parameter '%s' is required!", WebRequest.PARAM_AJAX_BASE_URL));
+		this.baseUrl = Url.parse(baseUrl);
+
 		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request));
 
 		this.application = Args.notNull(application, "application");
-		this.connectionRegistry = new SimpleWebSocketConnectionRegistry();
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
+		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 	}
 
 	@Override
@@ -114,7 +123,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	public void onClose(int closeCode, String message)
 	{
 		broadcastMessage(new ClosedMessage(getApplication(), getSessionId(), pageId));
-		connectionRegistry.removeConnection(application, sessionId, pageId);
+		connectionRegistry.removeConnection(getApplication(), getSessionId(), pageId);
 	}
 
 	/**
@@ -129,7 +138,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * @param message
 	 *      the message to broadcast
 	 */
-	protected final void broadcastMessage(final IWebSocketMessage message)
+	public final void broadcastMessage(final IWebSocketMessage message)
 	{
 		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, pageId);
 
@@ -143,12 +152,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			try
 			{
 				RequestCycle requestCycle;
-				if (oldRequestCycle == null)
+				if (oldRequestCycle == null || message instanceof IWebSocketPushMessage)
 				{
 					RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
 							application.getRootRequestMapper(), application.getExceptionMapperProvider().get());
 
 					requestCycle = application.getRequestCycleProvider().get(context);
+					requestCycle.getUrlRenderer().setBaseUrl(baseUrl);
 					ThreadContext.setRequestCycle(requestCycle);
 				}
 				else
@@ -159,7 +169,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				ThreadContext.setApplication(application);
 
 				Session session;
-				if (oldSession == null)
+				if (oldSession == null || message instanceof IWebSocketPushMessage)
 				{
 					ISessionStore sessionStore = application.getSessionStore();
 					session = sessionStore.lookup(webRequest);
@@ -174,15 +184,15 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				try
 				{
 					Page page = (Page) pageManager.getPage(pageId);
-					WebSocketRequestHandler target = new WebSocketRequestHandler(page, connection);
+					WebSocketRequestHandler requestHandler = new WebSocketRequestHandler(page, connection);
 
-					WebSocketPayload payload = createEventPayload(message, target);
+					WebSocketPayload payload = createEventPayload(message, requestHandler);
 
 					page.send(application, Broadcast.BREADTH, payload);
 
 					if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage))
 					{
-						target.respond(requestCycle);
+						requestHandler.respond(requestCycle);
 					}
 				}
 				finally
@@ -243,11 +253,14 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		{
 			payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
 		}
+		else if (message instanceof IWebSocketPushMessage)
+		{
+			payload = new WebSocketPushPayload((IWebSocketPushMessage) message, handler);
+		}
 		else
 		{
 			throw new IllegalArgumentException("Unsupported message type: " + message.getClass().getName());
 		}
 		return payload;
 	}
-
 }

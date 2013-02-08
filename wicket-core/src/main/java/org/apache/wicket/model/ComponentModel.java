@@ -46,7 +46,7 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
 	@Override
-	public final void setObject(Object object)
+	public final void setObject(T object)
 	{
 		throw new RuntimeException("set object call not expected on a IComponentAssignedModel");
 	}
@@ -71,7 +71,7 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 	 * @param object
 	 *            The object that will be set in the model.
 	 */
-	protected void setObject(Component component, Object object)
+	protected void setObject(Component component, T object)
 	{
 	}
 
@@ -128,7 +128,7 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 		 */
 		@Override
-		public void setObject(Object object)
+		public void setObject(T object)
 		{
 			ComponentModel.this.setObject(component, object);
 		}

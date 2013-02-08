@@ -22,6 +22,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Test;
 
 
@@ -38,7 +40,21 @@ public class AjaxEnclosureTest extends WicketTestCase
 	private final String inlineEnclosureVisiblePattern = "<div id=\"" + inlineEnclosureIdPrefix +
 		"1\">";
 
-
+	@Override
+	protected WebApplication newApplication()
+	{
+		WebApplication webApplication = new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				super.init();
+				getMarkupSettings().setStripWicketTags(true);
+			}
+		};
+		return webApplication;
+	}
+	
 	/**
 	 * Test toggling the controlling child inside the inline enclosure
 	 */

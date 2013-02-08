@@ -226,10 +226,11 @@ popd
 
 echo "Uploading release"
 pushd target/dist
-svn export http://svn.apache.org/repos/asf/wicket/common/KEYS KEYS
+svn mkdir https://dist.apache.org/repos/dist/dev/wicket/wicket-$version -m "Create $version release staging area"
+svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/wicket-$version .
 cp ../../CHANGELOG* .
-ssh people.apache.org mkdir -p public_html/wicket-$version
-scp -r * people.apache.org:public_html/wicket-$version/
+svn add .
+svn commit -m "Upload wicket-$version to staging area"
 popd
 
 
@@ -249,6 +250,11 @@ echo ""
 echo "To push the release branch to ASF git servers"
 echo ""
 echo "    git push origin $branch:refs/heads/$branch"
+echo ""
+
+echo "To move the release from staging to the mirrors:"
+echo ""
+echo "    svn mv https://dist.apache.org/repos/dist/dev/wicket/wicket-$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\""
 echo ""
 
 echo "To sign the release tag issue the following three commands: "

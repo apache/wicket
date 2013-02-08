@@ -17,6 +17,8 @@
 package org.apache.wicket;
 
 
+import org.junit.Test;
+
 /**
  * Test the {@link Component#onRemove()}. Test if it gets called and propagated to the Components
  * children.
@@ -30,24 +32,28 @@ public class RemoveTest extends WicketTestCase
 	/**
 	 * The test
 	 */
-	public void testOnRemovalFromHierarchy()
+	@Test
+	public void onRemovalFromHierarchy()
 	{
-		Session session = tester.getSession();
 		final RemoveTestPage page = new RemoveTestPage();
 		tester.startPage(page);
 		// on initial load of the page no calls should have occurred.
-		assertEquals("OnRemovalFromHierarchy was called.", 0,
+		assertEquals("componentOnRemovalFromHierarchy was called.", 0,
 			page.getComponentOnRemovalFromHierarchyCalls());
-		assertEquals("OnRemovalFromHierarchy was called.", 0,
+		assertEquals("linkOnRemovalFromHierarchy was called.", 0,
 			page.getLinkOnRemovalFromHierarchyCalls());
+		assertEquals("behaviorOnRemovalFromHierarchy was called.", 0,
+			page.getBehaviorOnRemovalCalls());
 
 		tester.clickLink(PATH);
 		// first click provoked a remove, so one call.
-		assertEquals("OnRemovalFromHierarchy wasn't called.", 1,
+		assertEquals("componentOnRemovalFromHierarchy wasn't called.", 1,
 			page.getComponentOnRemovalFromHierarchyCalls());
 		// test if it got propagated to the children.
-		assertEquals("OnRemovalFromHierarchy wasn't called.", 1,
+		assertEquals("linkOnRemovalFromHierarchy wasn't called.", 1,
 			page.getLinkOnRemovalFromHierarchyCalls());
+		assertEquals("behaviorOnRemovalFromHierarchy wasn't called.", 1,
+			page.getBehaviorOnRemovalCalls());
 
 		try
 		{

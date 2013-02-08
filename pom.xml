@@ -14,8 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache</groupId>
@@ -24,7 +23,7 @@
 	</parent>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>6.3.0-SNAPSHOT</version>
+	<version>6.6.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
@@ -56,7 +55,7 @@
 		<module>wicket-experimental</module>
 		<module>archetypes/quickstart</module>
 		<module>testing/wicket-common-tests</module>
-	</modules>
+  </modules>
 	<profiles>
 		<profile>
 			<id>release</id>
@@ -199,89 +198,147 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<!-- It seems there is a bug in Maven (2.2.1 & 3.0.1) and
-                type 'pom' is not properly inherited. I.e. the
-                dependency management doesn't work -->
+				type 'pom' is not properly inherited. I.e. the
+				dependency management doesn't work -->
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-request</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-extensions</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-util</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-ioc</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-jmx</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-auth-roles</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-datetime</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-velocity</artifactId>
-				<version>6.3.0-SNAPSHOT</version>
+				<version>6.6.0-SNAPSHOT</version>
 				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-bean-validation</artifactId>
+				<version>0.7-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-native-websocket-core</artifactId>
+				<version>0.7-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-native-websocket-jetty</artifactId>
+				<version>0.7-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-native-websocket-jetty9</artifactId>
+				<version>0.7-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-native-websocket-tomcat</artifactId>
+				<version>0.7-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-atmosphere</artifactId>
+				<version>0.8-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-bootstrap</artifactId>
+				<version>0.7-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-examples-jar</artifactId>
+				<version>0.7-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-examples-jar</artifactId>
+				<version>0.7-SNAPSHOT</version>
+				<classifier>sources</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-examples-war</artifactId>
+				<version>0.7-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -637,7 +694,7 @@
 								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							</manifest>
 							<manifestEntries>
-                            </manifestEntries>
+							</manifestEntries>
 						</archive>
 					</configuration>
 				</plugin>
@@ -784,6 +841,14 @@
 						<comparisonVersion>6.0.0</comparisonVersion>
 						<failOnError>true</failOnError>
 						<logResults>true</logResults>
+						<ignored>
+							<difference>
+								<!-- FeedbackCollector used to be final. Now it is non-final and so all existing methods were made final to keep them non-overridable. However, clirr does not take into account the class going from final to non-finall and thinks overridable methods were made final. We ignore this change to silence it. -->
+								<className>org${file.separator}apache${file.separator}wicket${file.separator}feedback${file.separator}FeedbackCollector</className>
+								<method>*</method>
+								<differenceType>7014</differenceType>
+							</difference>
+						</ignored>
 					</configuration>
 					<executions>
 						<execution>

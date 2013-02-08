@@ -22,6 +22,11 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.core.request.handler.IPageProvider;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.protocol.http.IRequestLogger;
@@ -35,10 +40,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -504,9 +505,18 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public CharSequence urlFor(IRequestHandler handler)
 	{
-		Url mappedUrl = mapUrlFor(handler);
-		CharSequence url = renderUrl(mappedUrl, handler);
-		return url;
+		try
+		{
+			Url mappedUrl = mapUrlFor(handler);
+			CharSequence url = renderUrl(mappedUrl, handler);
+			return url;
+		}
+		catch (Exception x)
+		{
+			throw new WicketRuntimeException(
+					String.format("An error occurred while generating an Url for handler '%s'", handler), x);
+		}
+
 	}
 
 	private String renderUrl(Url url, IRequestHandler handler)

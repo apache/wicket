@@ -185,18 +185,7 @@ public class WicketFilter implements Filter
 					httpServletResponse);
 
 				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
-				if (!requestCycle.processRequestAndDetach())
-				{
-					if (chain != null)
-					{
-						chain.doFilter(request, response);
-					}
-					res = false;
-				}
-				else
-				{
-					webResponse.flush();
-				}
+				res = processRequestCycle(requestCycle, webResponse, httpServletRequest, httpServletResponse, chain);
 			}
 			else
 			{
@@ -230,6 +219,39 @@ public class WicketFilter implements Filter
 			{
 				response.flushBuffer();
 			}
+		}
+		return res;
+	}
+
+	/**
+	 * Process the request cycle
+	 *
+	 * @param requestCycle
+	 * @param webResponse
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param chain
+	 * @return false, if the request could not be processed
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	protected boolean processRequestCycle(RequestCycle requestCycle, WebResponse webResponse,
+	    HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+		final FilterChain chain) throws IOException, ServletException {
+		// Assume we are able to handle the request
+		boolean res = true;
+
+		if (!requestCycle.processRequestAndDetach())
+		{
+			if (chain != null)
+			{
+				chain.doFilter(httpServletRequest, httpServletResponse);
+			}
+			res = false;
+		}
+		else
+		{
+			webResponse.flush();
 		}
 		return res;
 	}
@@ -332,50 +354,8 @@ public class WicketFilter implements Filter
 		this.isServlet = isServlet;
 		initIgnorePaths(filterConfig);
 
-		// locate application instance unless it was already specified during construction
-		if (application == null)
-		{
-			applicationFactory = getApplicationFactory();
-			application = applicationFactory.createApplication(this);
-		}
-
-		application.setName(filterConfig.getFilterName());
-		application.setWicketFilter(this);
-
-		// Allow the filterPath to be preset via setFilterPath()
-		String configureFilterPath = getFilterPath();
-
-		if (configureFilterPath == null)
-		{
-			configureFilterPath = getFilterPathFromConfig(filterConfig);
-
-			if (configureFilterPath == null)
-			{
-				configureFilterPath = getFilterPathFromWebXml(isServlet, filterConfig);
-
-				if (configureFilterPath == null)
-				{
-					configureFilterPath = getFilterPathFromAnnotation(isServlet);
-				}
-			}
-
-			if (configureFilterPath != null)
-			{
-				setFilterPath(configureFilterPath);
-			}
-		}
-
-		if (getFilterPath() == null)
-		{
-			log.warn("Unable to determine filter path from filter init-param, web.xml, "
-				+ "or servlet 3.0 annotations. Assuming user will set filter path "
-				+ "manually by calling setFilterPath(String)");
-		}
-
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		final ClassLoader newClassLoader = getClassLoader();
-
-		ThreadContext.setApplication(application);
 		try
 		{
 			if (previousClassLoader != newClassLoader)
@@ -383,15 +363,61 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(newClassLoader);
 			}
 
-			application.initApplication();
+			// locate application instance unless it was already specified during construction
+			if (application == null)
+			{
+				applicationFactory = getApplicationFactory();
+				application = applicationFactory.createApplication(this);
+			}
 
-			// Give the application the option to log that it is started
-			application.logStarted();
+			application.setName(filterConfig.getFilterName());
+			application.setWicketFilter(this);
+
+			// Allow the filterPath to be preset via setFilterPath()
+			String configureFilterPath = getFilterPath();
+
+			if (configureFilterPath == null)
+			{
+				configureFilterPath = getFilterPathFromConfig(filterConfig);
+
+				if (configureFilterPath == null)
+				{
+					configureFilterPath = getFilterPathFromWebXml(isServlet, filterConfig);
+
+					if (configureFilterPath == null)
+					{
+						configureFilterPath = getFilterPathFromAnnotation(isServlet);
+					}
+				}
+
+				if (configureFilterPath != null)
+				{
+					setFilterPath(configureFilterPath);
+				}
+			}
+
+			if (getFilterPath() == null)
+			{
+				log.warn("Unable to determine filter path from filter init-param, web.xml, "
+					+ "or servlet 3.0 annotations. Assuming user will set filter path "
+					+ "manually by calling setFilterPath(String)");
+			}
+
+			ThreadContext.setApplication(application);
+			try
+			{
+				application.initApplication();
+
+				// Give the application the option to log that it is started
+				application.logStarted();
+			}
+			finally
+			{
+				ThreadContext.detach();
+			}
 		}
 		finally
 		{
-			ThreadContext.detach();
-
 			if (newClassLoader != previousClassLoader)
 			{
 				Thread.currentThread().setContextClassLoader(previousClassLoader);

@@ -35,13 +35,7 @@
 		}
 
 		var connectedEndpoint = $.atmosphere.subscribe(params.url,
-				!callbackAdded ? callback : null, $.atmosphere.request = {
-					logLevel : "debug",
-					transport : "websocket",
-					// transport : "streaming",
-					// transport : "long-polling",
-					maxRequests : 100000
-				});
+				!callbackAdded ? callback : null, $.atmosphere.request = params);
 		callbackAdded = true;
 		response = $.atmosphere.response;
 

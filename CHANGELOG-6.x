@@ -2,6 +2,135 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.5.0
+
+** Sub-task
+
+    * [WICKET-4976] - WicketTester#startComponent(Component) doesn't detach the component and request cycle
+
+** Bug
+
+    * [WICKET-4906] - Form#visitFormComponents can cause ClassCastException
+    * [WICKET-4925] - AbstractAjaxBehavior should clean stored reference to a component on unbind
+    * [WICKET-4927] - Header can not be set from IRequestCycleListener#onEndRequest()
+    * [WICKET-4928] - Error adding links to WebSocketRequestHandler
+    * [WICKET-4935] - Rendered URL is resulting with double slash when using AuthenticatedWebApplication
+    * [WICKET-4939] - AbstractAjaxTimerBehavior never triggers if attached to WebPage
+    * [WICKET-4948] - Modal window does not center correctly when window is scrolled in safari
+    * [WICKET-4950] - ResourceStreamLocator#newResourceNameIterator isn't a factory method anymore
+    * [WICKET-4953] - RangeValidator#decorate mixes error keys
+    * [WICKET-4954] - Issue with file upload with progress bar via AJAX and Firefox
+    * [WICKET-4955] - SessionData violates comparison contract
+    * [WICKET-4956] - compareTo methods of Actions in BufferedWebResponse violate Comparable contract
+    * [WICKET-4959] - Notify behaviors when a component is removed from the tree
+    * [WICKET-4961] - wicket ajax submit does not serialize elements of parental forms
+    * [WICKET-4962] - AjaxFormChoiceComponentUpdatingBehavior cannot be triggered with BaseWicketTester#executeAjaxEvent()
+    * [WICKET-4965] - NPE when stopping Tomcat
+    * [WICKET-4968] - NPE in FencedFeedbackPanel#onRemove
+    * [WICKET-4971] - AtmosphereEventSubscriptionCollector is slow
+    * [WICKET-4973] - AbstractRequestLogger - infinite ArrayIndexOutOfBoundsException when requestWindow size is 0
+    * [WICKET-4975] - client side memory leak on  date picker
+    * [WICKET-4986] - wicket-ajax-jquery.js fails with 'member not found' on IE for delayed ajax requests
+
+** Improvement
+
+    * [WICKET-4919] - AjaxLazyLoadPanel needs a method to add components to the AjaxRequestTarget when the component is rendered
+    * [WICKET-4933] - Palette does not handle disabled choices correctly
+    * [WICKET-4937] - Add IResponseFilter that can filter out invalid XML characters
+    * [WICKET-4940] - Make MountedMapper#getMatchedSegmentSizes(url) protected
+    * [WICKET-4957] - Listener needed for registration and removal of pages
+    * [WICKET-4958] - It should be possible to manipulate AjaxRequestAttributes globally
+    * [WICKET-4963] - ComponentModel "setObject" methods should take generic "T" type instead of "Object"
+    * [WICKET-4970] - Move the logic for creating the proper PackageResource from PackageResourceReference to ResourceReferenceRegistry
+    * [WICKET-4982] - StatelessChecker: add helpful information to find stateful behavior (patch included)
+    * [WICKET-4983] - extra recursion on Wicket.DOM.get
+
+=============================================================================
+
+Release Notes - Wicket - Version 6.4.0
+
+** Sub-task
+    * [WICKET-4880] - Make it possible to override the Ajax behavior of AjaxSubmitLink and AjaxButton
+
+** Bug
+    * [WICKET-4869] - Wicket-Atmosphere track message length
+    * [WICKET-4872] - IllegalArgumentException on ReloadingWicketFilter and inheritance markup
+    * [WICKET-4877] - encodeUrl fails parsing jsessionid when using root context
+    * [WICKET-4878] - Rendering of feedback messages fails with DebugBar in page
+    * [WICKET-4881] - IE 8 : error when handling Wicket Ajax Response
+    * [WICKET-4884] - ValidationError messages for NumberTextFields with minimum/maximum are always English
+    * [WICKET-4886] - Do not register Ajax timer if the component is removed
+    * [WICKET-4890] - Bad validation messages after WICKET-2128
+    * [WICKET-4891] - UrlRenderer.renderRelativeUrl misbehavior if the filterPath is composed.
+    * [WICKET-4894] - Internet Explorer fails fails to properly include conditional stylesheet links added via AjaxRequestTarget
+    * [WICKET-4895] - WicketRuntimeException: addOrReplace for feedback panel does not clear Component.FEEDBACK_LIST - feedback from replaced component causes error.
+    * [WICKET-4899] - autocomplete shows strings with quotes strings as string2 with &quot;quote&quot;
+    * [WICKET-4900] - Setting a status code on an AbstractResource results in no HTTP body
+    * [WICKET-4908] - Wrong charset or screwed up characters in Norwegian properties-file
+    * [WICKET-4911] - Palette Ajax update does not work
+    * [WICKET-4913] - HtmlDocumentParser does not support tags containing number (e.g. h1-h6)
+    * [WICKET-4915] - org.apache.wicket.util.resource.Patht#find fails on Windows
+    * [WICKET-4916] - AbstractTree$TreeItem renderHead does not call renderHead for child TreeItems.
+    * [WICKET-4917] - Websockets are not working if URL has a hash in it
+    * [WICKET-4918] - LazyInitProxyFactory prevents using package private interfaces
+    * [WICKET-4920] - Rendered Url on root context with cookies disabled might result in double slash //
+    * [WICKET-4922] - Cloned ServletWebRequest returns wrong OriginalUrl
+    * [WICKET-4923] - CryptoMapper ignores original queryString parameters
+
+** Improvement
+    * [WICKET-4873] - Support different session id parameter
+    * [WICKET-4876] - CheckBoxMultipleChoice should implement getAdditionalAttributes as RadioChoice
+    * [WICKET-4887] - Use a Set to keep the supported wicket elements in WicketTagIdentifier
+    * [WICKET-4889] - Label constructor should accept Serializable as label
+    * [WICKET-4892] - Provide helpful exception message in RequestCycle#urlFor()
+    * [WICKET-4901] - AjaxPagingNaviagtionLink should provide updateAjaxAttributes like AjaxLink
+    * [WICKET-4902] - ConcatBundleResource should use the respective ITextResourceCompressor
+    * [WICKET-4924] - Websocket broadcast support does not work with OSGi
+
+** New Feature
+    * [WICKET-4832] - Websocket broadcast support
+    * [WICKET-4879] - Implementing channels in wicket-atmosphere
+    * [WICKET-4883] - Out of the box bean-validation (JSR 303) integration
+    * [WICKET-4888] - Introduce a hierarchical feedback panel (FencedFeedbackPanel)
+
+** Task
+    * [WICKET-4885] - Upgrade jQuery to its latest stable version (1.8.3)
+
+=============================================================================
+
+Release Notes - Wicket - Version 6.3.0
+
+** Bug
+    * [WICKET-4623] - UploadProgressBar does not show up if the form submitted by AjaxButton or AjaxLink
+    * [WICKET-4826] - PaletteButton#onComponentTag(ComponentTag) does not call super
+    * [WICKET-4829] - ComponentResolvers created in app init ignore markup's namespace
+    * [WICKET-4836] - Unmount a page does not work if the path starts with /
+    * [WICKET-4837] - SmartLinkMultiLineLabel does not display email addresses or web URLs as hyperlinks
+    * [WICKET-4841] - Return error code 400 when an Ajax request has no base url set in header/request parameters.
+    * [WICKET-4842] - WicketRuntimeException when Tomcat cleans up a session later on
+    * [WICKET-4844] - AbstractResourceReferenceMapper doesn't escape separators in style/variation names
+    * [WICKET-4848] - Reporter of FeedbackMessage should not be set to 'null' on detach
+    * [WICKET-4850] - BaseWicketTester discards cookies with MaxAge = -1 when processing a new request
+    * [WICKET-4851] - IE8, IE7 javascript errors with Wicket 6
+    * [WICKET-4857] - AutoCompleteTextFields submits Form if a choice is selected via enter-key
+    * [WICKET-4859] - Integer overflow in AbstractToolbar
+    * [WICKET-4864] - 'format' not set in ConversionException
+    * [WICKET-4865] - Page parameters not working with CryptoMapper
+
+** Improvement
+    * [WICKET-4831] - Append the feedback message CSS class instead of overriding it
+    * [WICKET-4835] - Add debug log messages in CompoundRequestMapper#mapRequest
+    * [WICKET-4845] - Make BasicResourceReferenceMapper public so it is easy to extend it
+    * [WICKET-4853] - Change FormComponent#reportRequiredError() from private to protected
+    * [WICKET-4856] - Support SVG extension in SecurePackageResourceGuard
+    * [WICKET-4863] - Customize ValidationError creation by FormComponent
+    * [WICKET-4867] - Detach the object before calculating its size
+
+** Task
+    * [WICKET-4855] - Upgrade JQuery to 1.8.2
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.2.0
 
 ** Sub-task

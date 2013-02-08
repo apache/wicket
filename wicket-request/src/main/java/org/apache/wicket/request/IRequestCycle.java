@@ -29,7 +29,7 @@ public interface IRequestCycle
 	Response getResponse();
 
 	/**
-	 * Replaces current {@link Response} with new {@link Response} instance. The original response
+	 * Replaces the current {@link Response} with new {@link Response} instance. The original response
 	 * is always restored after the {@link IRequestHandler#respond(IRequestCycle)} method is
 	 * finished.
 	 * 
@@ -37,6 +37,15 @@ public interface IRequestCycle
 	 * @return Response being replaced.
 	 */
 	Response setResponse(Response response);
+
+	/**
+	 * TODO Wicket 7
+	 * Add the following method to the API:
+	 *
+	 * Replaces the current {@link Request} with a new one.
+	 * @return the previous request
+	 */
+//	Request setRequest(Request request);
 
 	/**
 	 * @return the request that originated this cycle

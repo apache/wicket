@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -65,6 +66,28 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 		 *            response object that can be used to output javascript
 		 */
 		void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response);
+	}
+
+	/**
+	 * Empty implementation of an {@link IListener} useful as a starting point for your own
+	 * custom listener.
+	 */
+	class AbstractListener implements IListener
+	{
+		// TODO Wicket 7.0 Move in IListener
+		public void updateAjaxAttributes(AjaxRequestAttributes attributes)
+		{
+		}
+
+		@Override
+		public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
+		{
+		}
+
+		@Override
+		public void onAfterRespond(Map<String, Component> map, IJavaScriptResponse response)
+		{
+		}
 	}
 
 	/**

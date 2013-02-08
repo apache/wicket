@@ -56,6 +56,8 @@ public abstract class AbstractMarkupParser
 	/** Opening a conditional comment section, which is NOT treated as a comment section */
 	public static final Pattern CONDITIONAL_COMMENT_OPENING = Pattern.compile("(s?)^[^>]*?<!--\\[if.*?\\]>(-->)?(<!.*?-->)?");
 
+	private static final Pattern PRE_BLOCK = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
+
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
 
@@ -162,7 +164,7 @@ public abstract class AbstractMarkupParser
 	public final Markup parse() throws IOException, ResourceStreamNotFoundException
 	{
 		// The root of all markup filters is the xml parser
-		markupFilterChain = new RootMarkupFilter(xmlParser,markup.getMarkupResourceStream());
+		markupFilterChain = new RootMarkupFilter(xmlParser, markup.getMarkupResourceStream());
 
 		// Convert the list of markup filters into a chain
 		for (IMarkupFilter filter : getMarkupFilters())
@@ -194,8 +196,8 @@ public abstract class AbstractMarkupParser
 			}
 			else
 			{
-				log.debug(a + ":" + markupResourceStream.getResource() +
-					". It is more save to use it" + b);
+				log.debug(a + ":" + markupResourceStream.getResource() + ". It is safer to use it" +
+					b);
 			}
 		}
 
@@ -370,9 +372,7 @@ public abstract class AbstractMarkupParser
 		// - Append with compression everything between the two matches.
 		// - Repeat until no match, then special-case the fragment after the
 		// last <pre>.
-
-		Pattern preBlock = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
-		Matcher m = preBlock.matcher(rawMarkup);
+		Matcher m = PRE_BLOCK.matcher(rawMarkup);
 		int lastend = 0;
 		StringBuilder sb = null;
 		while (true)

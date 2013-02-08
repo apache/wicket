@@ -22,9 +22,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.mock.MockHttpSession;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * An {@link org.apache.wicket.protocol.ws.api.IWebSocketProcessor} used by {@link WebSocketTester}
@@ -39,9 +41,9 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 * @param page
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 */
-	public TestWebSocketProcessor(final Page page)
+	public TestWebSocketProcessor(final WicketTester wicketTester, final Page page)
 	{
-		super(createRequest(page), page.getApplication());
+		super(createRequest(wicketTester, page), page.getApplication());
 	}
 
 	/**
@@ -51,13 +53,14 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 * @return a mock http request
 	 */
-	private static HttpServletRequest createRequest(final Page page)
+	private static HttpServletRequest createRequest(final WicketTester wicketTester, final Page page)
 	{
 		Args.notNull(page, "page");
 		Application application = page.getApplication();
-		HttpSession httpSession = new MockHttpSession(null);
+		HttpSession httpSession = wicketTester.getHttpSession();
 		MockHttpServletRequest request = new MockHttpServletRequest(application, httpSession, null);
 		request.addParameter("pageId", page.getId());
+		request.addParameter(WebRequest.PARAM_AJAX_BASE_URL, ".");
 		return request;
 	}
 
@@ -82,6 +85,12 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 			protected void onOutMessage(byte[] message, int offset, int length)
 			{
 				TestWebSocketProcessor.this.onOutMessage(message, offset, length);
+			}
+
+			@Override
+			public void sendMessage(IWebSocketPushMessage message)
+			{
+				TestWebSocketProcessor.this.broadcastMessage(message);
 			}
 		});
 	}

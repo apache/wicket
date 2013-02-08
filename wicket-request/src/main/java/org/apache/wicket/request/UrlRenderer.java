@@ -112,7 +112,7 @@ public class UrlRenderer
 				renderedUrl = renderFullUrl(url);
 			}
 		}
-		else 
+		else
 		{
 			renderedUrl = renderRelativeUrl(url);
 		}
@@ -261,60 +261,62 @@ public class UrlRenderer
 		newSegments.addAll(urlSegments);
 
 		String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
+
+		// sanitize start
 		if (!renderedUrl.startsWith(".."))
 		{
 			// WICKET-4260
 			renderedUrl = "./" + renderedUrl;
 		}
+
+		// sanitize end
 		if (renderedUrl.endsWith(".."))
 		{
 			// WICKET-4401
 			renderedUrl = renderedUrl + '/';
 		}
+
 		return renderedUrl;
 	}
 
 	/**
-	 * Removes common prefixes like empty first segment, context path and filter path
-	 *
+	 * Removes common prefixes like empty first segment, context path and filter path.
+	 * 
 	 * @param request
-	 *      the current web request
+	 *            the current web request
 	 * @param segments
-	 *      the segments to clean
+	 *            the segments to clean
 	 */
 	private void removeCommonPrefixes(Request request, List<String> segments)
 	{
-		if (segments.isEmpty())
+		// try to remove context/filter path only if the Url starts with '/',
+		// i.e. has an empty segment in the beginning
+		if (segments.isEmpty() || "".equals(segments.get(0)) == false)
 		{
 			return;
 		}
 
-		if ("".equals(segments.get(0)))
+		Url commonPrefix = Url.parse(request.getContextPath() + request.getFilterPath());
+		// if both context and filter path are empty, common prefixes are empty too
+		if (commonPrefix.getSegments().isEmpty())
 		{
-			LOG.debug("Removing an empty first segment from '{}'", segments);
+			// WICKET-4920 and WICKET-4935
+			commonPrefix.getSegments().add("");
+		}
+
+		for (int i = 0; i < commonPrefix.getSegments().size() && i < segments.size(); i++)
+		{
+			if (commonPrefix.getSegments().get(i).equals(segments.get(i)) == false)
+			{
+				LOG.debug("Segments '{}' do not start with common prefix '{}'", segments,
+					commonPrefix);
+				return;
+			}
+		}
+
+		for (int i = 0; i < commonPrefix.getSegments().size(); i++)
+		{
 			segments.remove(0);
-
-			// try to remove context/filter path only if the Url starts with '/',
-			//  i.e. has an empty segment in the beginning
-			String contextPath = request.getContextPath();
-			if (contextPath != null && segments.isEmpty() == false)
-			{
-				if (contextPath.equals(UrlUtils.normalizePath(segments.get(0))))
-				{
-					LOG.debug("Removing the context path '{}' from '{}'", contextPath, segments);
-					segments.remove(0);
-				}
-			}
-
-			String filterPath = request.getFilterPath();
-			if (filterPath != null && segments.isEmpty() == false)
-			{
-				if (filterPath.equals(UrlUtils.normalizePath(segments.get(0))))
-				{
-					LOG.debug("Removing the filter path '{}' from '{}'", filterPath, segments);
-					segments.remove(0);
-				}
-			}
 		}
 	}
 

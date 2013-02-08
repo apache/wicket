@@ -39,11 +39,17 @@ import org.slf4j.LoggerFactory;
  *     </ul>
  * </p>
  */
-abstract class XmlAjaxResponse extends AbstractAjaxResponse
+public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlAjaxResponse.class);
 
-	XmlAjaxResponse(final Page page)
+	/**
+	 * The name of the root element in the produced XML document.
+	 */
+	public static final String START_ROOT_ELEMENT = "<ajax-response>";
+	public static final String END_ROOT_ELEMENT = "</ajax-response>";
+
+	public XmlAjaxResponse(final Page page)
 	{
 		super(page);
 	}
@@ -60,7 +66,7 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 		response.write("<?xml version=\"1.0\" encoding=\"");
 		response.write(encoding);
 		response.write("\"?>");
-		response.write("<ajax-response>");
+		response.write(START_ROOT_ELEMENT);
 	}
 
 	@Override
@@ -151,7 +157,7 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	@Override
 	protected void writeFooter(Response response, String encoding)
 	{
-		response.write("</ajax-response>");
+		response.write(END_ROOT_ELEMENT);
 	}
 
 	@Override
@@ -192,9 +198,14 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 
 	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
 	{
-		for (CharSequence script : scripts)
+		if (scripts.size() > 0)
 		{
-			writeEvaluation(elementName, response, script);
+			StringBuilder combinedScript = new StringBuilder(1024);
+			for (CharSequence script : scripts)
+			{
+				combinedScript.append("(function(){").append(script).append("})();");
+			}
+			writeEvaluation(elementName, response, combinedScript);
 		}
 	}
 

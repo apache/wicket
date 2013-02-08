@@ -176,7 +176,7 @@ public class WicketTesterHelper
 	{
 		List<AjaxEventBehavior> behaviors = findAjaxEventBehaviors(component, event);
 		AjaxEventBehavior behavior = null;
-		if (behaviors != null)
+		if (behaviors != null && behaviors.isEmpty() == false)
 		{
 			behavior = behaviors.get(0);
 		}

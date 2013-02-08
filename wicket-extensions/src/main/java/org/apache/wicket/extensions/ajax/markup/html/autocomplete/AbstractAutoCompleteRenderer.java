@@ -44,7 +44,6 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 				"A call to textValue(Object) returned an illegal value: null for object: " +
 					object.toString());
 		}
-		textValue = textValue.replaceAll("\\\"", "&quot;");
 		textValue = Strings.escapeMarkup(textValue).toString();
 
 		response.write("<li textvalue=\"" + textValue + "\"");

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wicket.apache.org"
-	xmlns:wicket="http://wicket.apache.org" elementFormDefault="qualified"
+	xmlns:wicket="http://wicket.apache.org"
+	xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.w3.org/1999/xhtml http://www.w3.org/MarkUp/SCHEMA/xhtml-basic10.xsd"
+	elementFormDefault="qualified"
 	version="1.5">
 
 	<!-- types -->
@@ -75,6 +79,27 @@
 			<documentation>The wicket component id. Used on any element to which
 				you want to add a component.</documentation>
 		</annotation>
+	</attribute>
+
+	<redefine schemaLocation="http://www.w3.org/MarkUp/SCHEMA/xhtml-basic10.xsd">
+		<attributeGroup name="xhtml.label.attlist">
+			<attributeGroup ref="xhtml.label:attlist"/>
+			<attribute ref="wicket:for"/>
+		</attributeGroup>
+	</redefine>
+
+	<attribute name="for" type="wicket:notEmptyToken">
+		<annotation>
+			<documentation>Can be used in HTML <![CDATA[<label]]> element to automatically link it
+				to a form element. The value of this attribute must have the same value of
+				the form component's wicket:id attribute.
+			</documentation>
+		</annotation>
+		<simpleType>
+			<restriction base="wicket:token">
+				<pattern value="([^:]+(:[^:]+)*)?" />
+			</restriction>
+		</simpleType>
 	</attribute>
 
 	<attribute name="message">

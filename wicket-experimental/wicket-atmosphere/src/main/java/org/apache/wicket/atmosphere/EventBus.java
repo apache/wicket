@@ -19,7 +19,10 @@ package org.apache.wicket.atmosphere;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -29,11 +32,13 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.atmosphere.config.AtmosphereParameters;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.AtmosphereResourceFactory;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.slf4j.Logger;
@@ -41,7 +46,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
@@ -94,6 +98,10 @@ public class EventBus implements UnboundListener
 
 	private Map<String, PageKey> trackedPages = Maps.newHashMap();
 
+	private List<ResourceRegistrationListener> registrationListeners = new CopyOnWriteArrayList<ResourceRegistrationListener>();
+
+	private AtmosphereParameters parameters = new AtmosphereParameters();
+
 	/**
 	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
 	 * returned by the {@code BroadcasterFactory} is used.
@@ -123,6 +131,25 @@ public class EventBus implements UnboundListener
 	}
 
 	/**
+	 * @return The {@link Broadcaster} used by the {@code EventBus} to broadcast messages to.
+	 */
+	public Broadcaster getBroadcaster()
+	{
+		return broadcaster;
+	}
+
+	/**
+	 * Returns the {@linkplain AtmosphereParameters paramters} that will be passed to the Atmosphere
+	 * JQuery plugin. You can change these parameters, for example to disable WebSockets.
+	 * 
+	 * @return The parameters.
+	 */
+	public AtmosphereParameters getParameters()
+	{
+		return parameters;
+	}
+
+	/**
 	 * Registers a page for the given tracking-id in the {@code EventBus}.
 	 * 
 	 * @param trackingId
@@ -133,8 +160,12 @@ public class EventBus implements UnboundListener
 		PageKey oldPage = trackedPages.remove(trackingId);
 		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
 		if (oldPage != null && !oldPage.equals(pageKey))
+		{
 			subscriptions.removeAll(oldPage);
+			fireUnregistration(trackingId);
+		}
 		trackedPages.put(trackingId, pageKey);
+		fireRegistration(trackingId, page);
 		log.info("registered page {} for session {}",
 			new Object[] { pageKey.getPageId(), pageKey.getSessionId() });
 	}
@@ -174,10 +205,53 @@ public class EventBus implements UnboundListener
 	public synchronized void unregisterConnection(String trackingId)
 	{
 		PageKey pageKey = trackedPages.remove(trackingId);
-		if (log.isInfoEnabled() && pageKey != null)
+		if (pageKey != null)
 		{
-			log.info("unregistering page {} for session {}", new Object[] { pageKey.getPageId(),
-					pageKey.getSessionId() });
+			fireUnregistration(trackingId);
+			if (log.isInfoEnabled())
+			{
+				log.info("unregistering page {} for session {}", new Object[] {
+						pageKey.getPageId(), pageKey.getSessionId() });
+			}
+		}
+	}
+
+	/**
+	 * Post an event to a single resource. This will invoke the event handlers on all components on
+	 * the page with the suspended connection. The resulting AJAX update (if any) is pushed to the
+	 * client. You can find the UUID via {@link AtmosphereBehavior#getUUID(Page)}. If no resource
+	 * exists with the given UUID, no post is performed.
+	 * 
+	 * @param event
+	 * @param resourceUuid
+	 */
+	public void post(Object event, String resourceUuid)
+	{
+		AtmosphereResource resource = AtmosphereResourceFactory.getDefault().find(resourceUuid);
+		if (resource != null)
+		{
+			post(event, resource);
+		}
+	}
+
+	/**
+	 * Post an event to a single resource. This will invoke the event handlers on all components on
+	 * the page with the suspended connection. The resulting AJAX update (if any) is pushed to the
+	 * client.
+	 * 
+	 * @param event
+	 * @param resource
+	 */
+	public void post(Object event, AtmosphereResource resource)
+	{
+		ThreadContext oldContext = ThreadContext.get(false);
+		try
+		{
+			postToSingleResource(event, resource);
+		}
+		finally
+		{
+			ThreadContext.restore(oldContext);
 		}
 	}
 
@@ -195,27 +269,31 @@ public class EventBus implements UnboundListener
 		{
 			for (AtmosphereResource resource : broadcaster.getAtmosphereResources())
 			{
-				ThreadContext.detach();
-				ThreadContext.setApplication(application);
-				PageKey key;
-				Collection<EventSubscription> subscriptionsForPage;
-				synchronized (this)
-				{
-					key = trackedPages.get(AtmosphereBehavior.getUUID(resource));
-					subscriptionsForPage = Collections2.filter(
-						Collections.unmodifiableCollection(subscriptions.get(key)),
-						new EventFilter(event));
-				}
-				if (key == null)
-					broadcaster.removeAtmosphereResource(resource);
-				else
-					post(resource, key, subscriptionsForPage, event);
+				postToSingleResource(event, resource);
 			}
 		}
 		finally
 		{
 			ThreadContext.restore(oldContext);
 		}
+	}
+
+	private void postToSingleResource(Object event, AtmosphereResource resource)
+	{
+		ThreadContext.detach();
+		ThreadContext.setApplication(application);
+		PageKey key;
+		Collection<EventSubscription> subscriptionsForPage;
+		synchronized (this)
+		{
+			key = trackedPages.get(resource.uuid());
+			subscriptionsForPage = Collections2.filter(
+				Collections.unmodifiableCollection(subscriptions.get(key)), new EventFilter(event));
+		}
+		if (key == null)
+			broadcaster.removeAtmosphereResource(resource);
+		else
+			post(resource, key, subscriptionsForPage, event);
 	}
 
 	private void post(AtmosphereResource resource, PageKey pageKey,
@@ -246,10 +324,56 @@ public class EventBus implements UnboundListener
 	public synchronized void sessionUnbound(String sessionId)
 	{
 		log.info("Session unbound {}", sessionId);
-		Iterator<PageKey> it = Iterators.concat(trackedPages.values().iterator(),
-			subscriptions.keySet().iterator());
-		while (it.hasNext())
-			if (it.next().isForSession(sessionId))
-				it.remove();
+		Iterator<Entry<String, PageKey>> pageIt = trackedPages.entrySet().iterator();
+		while (pageIt.hasNext())
+		{
+			Entry<String, PageKey> curEntry = pageIt.next();
+			if (curEntry.getValue().isForSession(sessionId))
+			{
+				pageIt.remove();
+				fireUnregistration(curEntry.getKey());
+			}
+		}
+		Iterator<PageKey> subscriptionIt = subscriptions.keySet().iterator();
+		while (subscriptionIt.hasNext())
+			if (subscriptionIt.next().isForSession(sessionId))
+				subscriptionIt.remove();
+	}
+
+	/**
+	 * Add a new {@link ResourceRegistrationListener} to the {@code EventBus}. This listener will be
+	 * notified on all Atmosphere resource registrations and unregistrations.
+	 * 
+	 * @param listener
+	 */
+	public void addRegistrationListener(ResourceRegistrationListener listener)
+	{
+		registrationListeners.add(listener);
+	}
+
+	/**
+	 * Removes a previously added {@link ResourceRegistrationListener}.
+	 * 
+	 * @param listener
+	 */
+	public void removeRegistrationListener(ResourceRegistrationListener listener)
+	{
+		registrationListeners.add(listener);
+	}
+
+	private void fireRegistration(String uuid, Page page)
+	{
+		for (ResourceRegistrationListener curListener : registrationListeners)
+		{
+			curListener.resourceRegistered(uuid, page);
+		}
+	}
+
+	private void fireUnregistration(String uuid)
+	{
+		for (ResourceRegistrationListener curListener : registrationListeners)
+		{
+			curListener.resourceUnregistered(uuid);
+		}
 	}
 }

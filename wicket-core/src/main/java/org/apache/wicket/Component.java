@@ -1107,6 +1107,7 @@ public abstract class Component
 				getClass().getName() +
 				" has not called super.onRemove() in the override of onRemove() method");
 		}
+		new Behaviors(this).onRemove(this);
 		removeChildren();
 	}
 
@@ -1729,7 +1730,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the path to this component relative to its containing page, i.e. without trailing page
+	 * Gets the path to this component relative to its containing page, i.e. without leading page
 	 * id.
 	 * 
 	 * @return The path to this component relative to the page it is in
@@ -2219,7 +2220,11 @@ public abstract class Component
 				Component[] feedbacksCopy = feedbacks.toArray(new Component[feedbacks.size()]);
 				for (Component feedback : feedbacksCopy)
 				{
-					feedback.internalBeforeRender();
+					// render it only if it is still in the page hierarchy (WICKET-4895)
+					if (feedback.findPage() != null)
+					{
+						feedback.internalBeforeRender();
+					}
 				}
 			}
 			getRequestCycle().setMetaData(FEEDBACK_LIST, null);

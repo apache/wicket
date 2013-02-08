@@ -133,6 +133,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	protected final AjaxRequestAttributes getAttributes()
 	{
 		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
+		WebApplication application = (WebApplication) getComponent().getApplication();
+		AjaxRequestTargetListenerCollection ajaxRequestTargetListeners = application.getAjaxRequestTargetListeners();
+		for (AjaxRequestTarget.IListener listener : ajaxRequestTargetListeners)
+		{
+			if (listener instanceof AjaxRequestTarget.AbstractListener)
+			{
+				((AjaxRequestTarget.AbstractListener) listener).updateAjaxAttributes(attributes);
+			}
+		}
 		updateAjaxAttributesBackwardCompatibility(attributes);
 		updateAjaxAttributes(attributes);
 		return attributes;

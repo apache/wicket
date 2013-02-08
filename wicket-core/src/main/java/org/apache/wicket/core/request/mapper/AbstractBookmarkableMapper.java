@@ -24,6 +24,8 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.IRequestMapper;
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract encoder for Bookmarkable, Hybrid and BookmarkableListenerInterface URLs.
- *
+ * 
  * @author Matej Knopp
  */
 public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
@@ -50,7 +52,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 	/**
 	 * Represents information stored in URL.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	protected static final class UrlInfo
@@ -61,7 +63,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param pageComponentInfo
 		 *            optional parameter providing the page instance and component information
 		 * @param pageClass
@@ -82,7 +84,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 		/**
 		 * Cleans the original parameters from entries used by Wicket internals.
-		 *
+		 * 
 		 * @param originalParameters
 		 *            the current request's non-modified parameters
 		 * @return all parameters but Wicket internal ones
@@ -142,7 +144,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 	/**
 	 * Parse the given request to an {@link UrlInfo} instance.
-	 *
+	 * 
 	 * @param request
 	 * @return UrlInfo instance or <code>null</code> if this encoder can not handle the request
 	 */
@@ -151,7 +153,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	/**
 	 * Builds URL for the given {@link UrlInfo} instance. The URL this method produces must be
 	 * parseable by the {@link #parseRequest(Request)} method.
-	 *
+	 * 
 	 * @param info
 	 * @return Url result URL
 	 */
@@ -163,7 +165,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 * <p>
 	 * For generic bookmarkable encoders this method should return <code>true</code>. For explicit
 	 * (mounted) encoders this method should return <code>false</code>
-	 *
+	 * 
 	 * @return <code>true</code> if hybrid URL requires page created bookmarkable,
 	 *         <code>false</code> otherwise.
 	 */
@@ -177,7 +179,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 	/**
 	 * Creates a {@code IRequestHandler} that processes a bookmarkable request.
-	 *
+	 * 
 	 * @param pageClass
 	 * @param pageParameters
 	 * @return a {@code IRequestHandler} capable of processing the bookmarkable request.
@@ -194,7 +196,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 * Creates a {@code IRequestHandler} that processes a hybrid request. When the page identified
 	 * by {@code pageInfo} was not available, the request should be treated as a bookmarkable
 	 * request.
-	 *
+	 * 
 	 * @param pageInfo
 	 * @param pageClass
 	 * @param pageParameters
@@ -208,12 +210,21 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		PageProvider provider = new PageProvider(pageInfo.getPageId(), pageClass, pageParameters,
 			renderCount);
 		provider.setPageSource(getContext());
-		return new RenderPageRequestHandler(provider);
+		if (provider.isNewPageInstance() &&
+			!WebApplication.get().getPageSettings().getRecreateMountedPagesAfterExpiry())
+		{
+			throw new PageExpiredException(String.format("Bookmarkable page id '%d' has expired.",
+				pageInfo.getPageId()));
+		}
+		else
+		{
+			return new RenderPageRequestHandler(provider);
+		}
 	}
 
 	/**
 	 * Creates a {@code IRequestHandler} that processes a listener request.
-	 *
+	 * 
 	 * @param pageComponentInfo
 	 * @param pageClass
 	 * @param pageParameters

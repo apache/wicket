@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * A POJO-like that collects the data for the Ajax response written to the client
  * and serializes it to specific String-based format (XML, JSON, ...).
  */
-abstract class AbstractAjaxResponse
+public abstract class AbstractAjaxResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractAjaxResponse.class);
 
@@ -134,7 +134,7 @@ abstract class AbstractAjaxResponse
 	 * @param encoding
 	 *      the encoding for the response
 	 */
-	void writeTo(final Response response, final String encoding)
+	public void writeTo(final Response response, final String encoding)
 	{
 		writeHeader(response, encoding);
 
@@ -300,7 +300,7 @@ abstract class AbstractAjaxResponse
 	 * @param javascript
 	 *      the javascript to execute
 	 */
-	final void appendJavaScript(final CharSequence javascript)
+	public final void appendJavaScript(final CharSequence javascript)
 	{
 		Args.notNull(javascript, "javascript");
 
@@ -313,7 +313,7 @@ abstract class AbstractAjaxResponse
 	 * @param javascript
 	 *      the javascript to execute
 	 */
-	final void prependJavaScript(CharSequence javascript)
+	public final void prependJavaScript(CharSequence javascript)
 	{
 		Args.notNull(javascript, "javascript");
 
@@ -332,7 +332,7 @@ abstract class AbstractAjaxResponse
 	 * @throws IllegalStateException
 	 *      thrown when components no more can be added for replacement.
 	 */
-	final void add(final Component component, final String markupId)
+	public final void add(final Component component, final String markupId)
 			throws IllegalArgumentException, IllegalStateException
 	{
 		Args.notEmpty(markupId, "markupId");
@@ -363,7 +363,7 @@ abstract class AbstractAjaxResponse
 	/**
 	 * @return a read-only collection of all components which have been added for replacement so far.
 	 */
-	final Collection<? extends Component> getComponents()
+	public final Collection<? extends Component> getComponents()
 	{
 		return Collections.unmodifiableCollection(markupIdToComponent.values());
 	}
@@ -374,7 +374,7 @@ abstract class AbstractAjaxResponse
 	 * @param requestCycle
 	 *      the current request cycle
 	 */
-	void detach(IRequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 		Iterator<Component> iterator = markupIdToComponent.values().iterator();
 		while (iterator.hasNext())
@@ -423,7 +423,7 @@ abstract class AbstractAjaxResponse
 	 *
 	 * @return IHeaderResponse instance to use for the header contributions.
 	 */
-	IHeaderResponse getHeaderResponse()
+	public IHeaderResponse getHeaderResponse()
 	{
 		if (headerResponse == null)
 		{
@@ -569,7 +569,7 @@ abstract class AbstractAjaxResponse
 			}
 			else
 			{
-				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavaScript and renderOnDomReadyJavaScript");
+				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are #render(OnLoadHeaderItem) and #render(OnDomReadyHeaderItem)");
 			}
 		}
 

@@ -27,69 +27,69 @@ import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
- * Resources for <a href="http://twitter.github.com/bootstrap">Twitter
- * Bootstrap</a>. This class exposes a {@linkplain #plain() plain} and a
- * {@linkplain #responsive() responsive} bootstrap resource reference.
+ * Resources for <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a>. This class
+ * exposes a {@linkplain #plain() plain} and a {@linkplain #responsive() responsive} bootstrap
+ * resource reference.
  * 
- * The resource references have the correct dependencies: jquery, bootstrap
- * (responsive) stylesheet and javascript. They will use the minified variants
- * when running in deployment mode.
+ * The resource references have the correct dependencies: jquery, bootstrap (responsive) stylesheet
+ * and javascript. They will use the minified variants when running in deployment mode.
  * 
- * For your convenience you can also use
- * {@link #renderHeadPlain(IHeaderResponse)} and
- * {@link #renderHeadResponsive(IHeaderResponse)} to write these references to
- * the header.
+ * For your convenience you can also use {@link #renderHeadPlain(IHeaderResponse)} and
+ * {@link #renderHeadResponsive(IHeaderResponse)} to write these references to the header.
  * 
  * <h3>Example</h3>
  * 
  * <pre>
- * {@code
- * public class BootstrapPage extends WebPage {
- *     public void renderHead(IHeaderResponse response) {
- *         Bootstrap.renderHeadResponsive(response);
- *     }
+ * public class BootstrapPage extends WebPage
+ * {
+ * 	public void renderHead(IHeaderResponse response)
+ * 	{
+ * 		Bootstrap.renderHeadResponsive(response);
+ * 	}
  * }
  * </pre>
  */
-public class Bootstrap {
+public class Bootstrap
+{
 	/**
-	 * Defines a resource reference for plain, non-responsive bootstrap. This
-	 * resource reference depends on jquery, bootstrap.css and bootstrap.js
+	 * Defines a resource reference for plain, non-responsive bootstrap. This resource reference
+	 * depends on jquery, bootstrap.css and bootstrap.js
 	 * 
-	 * @return a bootstrap resource reference that includes everything necessary
-	 *         for bootstrap
+	 * @return a bootstrap resource reference that includes everything necessary for bootstrap
 	 */
-	public static JavaScriptResourceReference plain() {
+	public static JavaScriptResourceReference plain()
+	{
 		return bootstrapPlain;
 	}
 
 	/**
-	 * Defines a resource reference for responsive bootstrap. This resource
-	 * reference depends on jquery, bootstrap.css, bootstrap-responsive.css and
-	 * bootstrap.js
+	 * Defines a resource reference for responsive bootstrap. This resource reference depends on
+	 * jquery, bootstrap.css, bootstrap-responsive.css and bootstrap.js
 	 * 
-	 * @return a bootstrap resource reference that includes everything necessary
-	 *         for responsive bootstrap
+	 * @return a bootstrap resource reference that includes everything necessary for responsive
+	 *         bootstrap
 	 */
-	public static JavaScriptResourceReference responsive() {
+	public static JavaScriptResourceReference responsive()
+	{
 		return bootstrapResponsive;
 	}
 
 	/**
-	 * Convenience method for rendering a dependency on bootstrap (without
-	 * responsive layout) in your header.
+	 * Convenience method for rendering a dependency on bootstrap (without responsive layout) in
+	 * your header.
 	 */
-	public static void renderHeadPlain(IHeaderResponse response) {
+	public static void renderHeadPlain(IHeaderResponse response)
+	{
 		response.render(JavaScriptHeaderItem.forReference(Bootstrap.plain()));
 	}
 
 	/**
-	 * Convenience method for rendering a dependency on bootstrap (with
-	 * responsive layout) in your header.
+	 * Convenience method for rendering a dependency on bootstrap (with responsive layout) in your
+	 * header.
 	 */
-	public static void renderHeadResponsive(IHeaderResponse response) {
-		response.render(JavaScriptHeaderItem.forReference(Bootstrap
-				.responsive()));
+	public static void renderHeadResponsive(IHeaderResponse response)
+	{
+		response.render(JavaScriptHeaderItem.forReference(Bootstrap.responsive()));
 	}
 
 	private static final BootstrapResourceReference bootstrapPlain = new BootstrapResourceReference();
@@ -97,47 +97,49 @@ public class Bootstrap {
 	private static final BootstrapResponsiveResourceReference bootstrapResponsive = new BootstrapResponsiveResourceReference();
 
 	private static final CssResourceReference bootstrapCss = new CssResourceReference(
-			Bootstrap.class, "css/bootstrap.css");
+		Bootstrap.class, "css/bootstrap.css");
 
 	private static final CssResourceReference bootstrapResponsiveCss = new CssResourceReference(
-			Bootstrap.class, "css/bootstrap-responsive.css");
+		Bootstrap.class, "css/bootstrap-responsive.css");
 
-	private Bootstrap() {
+	private Bootstrap()
+	{
 	}
 
-	private static class BootstrapResourceReference extends
-			JavaScriptResourceReference {
+	private static class BootstrapResourceReference extends JavaScriptResourceReference
+	{
 		private static final long serialVersionUID = 1L;
 
-		public BootstrapResourceReference() {
+		public BootstrapResourceReference()
+		{
 			super(Bootstrap.class, "js/bootstrap.js");
 		}
 
 		@Override
-		public Iterable<? extends HeaderItem> getDependencies() {
-			HeaderItem jquery = JavaScriptHeaderItem
-					.forReference(WicketEventJQueryResourceReference.get());
+		public Iterable<? extends HeaderItem> getDependencies()
+		{
+			HeaderItem jquery = JavaScriptHeaderItem.forReference(WicketEventJQueryResourceReference.get());
 			HeaderItem stylesheet = CssHeaderItem.forReference(bootstrapCss);
 
 			return asList(jquery, stylesheet);
 		}
 	}
 
-	private static class BootstrapResponsiveResourceReference extends
-			JavaScriptResourceReference {
+	private static class BootstrapResponsiveResourceReference extends JavaScriptResourceReference
+	{
 		private static final long serialVersionUID = 1L;
 
-		public BootstrapResponsiveResourceReference() {
+		public BootstrapResponsiveResourceReference()
+		{
 			super(Bootstrap.class, "js/bootstrap.js");
 		}
 
 		@Override
-		public Iterable<? extends HeaderItem> getDependencies() {
-			HeaderItem jquery = JavaScriptHeaderItem
-					.forReference(WicketEventJQueryResourceReference.get());
+		public Iterable<? extends HeaderItem> getDependencies()
+		{
+			HeaderItem jquery = JavaScriptHeaderItem.forReference(WicketEventJQueryResourceReference.get());
 			HeaderItem stylesheet = CssHeaderItem.forReference(bootstrapCss);
-			HeaderItem responsive = CssHeaderItem
-					.forReference(bootstrapResponsiveCss);
+			HeaderItem responsive = CssHeaderItem.forReference(bootstrapResponsiveCss);
 			return asList(jquery, stylesheet, responsive);
 		}
 	}

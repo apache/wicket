@@ -75,7 +75,7 @@ public class SqlDateConverter extends AbstractConverter<Date>
 			locale = Locale.getDefault();
 		}
 
-		return (DateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale).clone();
+		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
 	}
 
 	@Override

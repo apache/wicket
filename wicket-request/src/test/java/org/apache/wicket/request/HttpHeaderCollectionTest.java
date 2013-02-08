@@ -19,6 +19,7 @@ package org.apache.wicket.request;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -39,14 +40,14 @@ public class HttpHeaderCollectionTest
 
 		headers.addHeader("X-Test", "foo");
 		headers.addHeader("X-Test", "bar");
-		assertArrayEquals(new String[]{"foo", "bar"}, headers.getHeaderValues("X-Test"));
+		assertArrayEquals(new String[] { "foo", "bar" }, headers.getHeaderValues("X-Test"));
 
 		headers.removeHeader("x-test");
 		assertTrue(headers.isEmpty());
 
 		headers.addHeader("   X-Image    ", "    jpeg     ");
 		headers.addHeader("X-Image    ", "    gif     ");
-		assertArrayEquals(new String[]{"jpeg", "gif"}, headers.getHeaderValues("X-IMAGE"));
+		assertArrayEquals(new String[] { "jpeg", "gif" }, headers.getHeaderValues("X-IMAGE"));
 		assertEquals(1, headers.getCount());
 
 		headers.addHeader("X-Test", "123");
@@ -62,7 +63,7 @@ public class HttpHeaderCollectionTest
 		// empty header values are valid (RFC2616)
 		headers.setHeader("foobaz", "     ");
 		assertEquals("", headers.getHeader("foobaz"));
-		
+
 	}
 
 	@Test
@@ -78,6 +79,8 @@ public class HttpHeaderCollectionTest
 		assertTrue(names.contains("key1"));
 		assertFalse(names.contains("Key1"));
 		assertTrue(names.contains("key2"));
+
+		assertNull(headers.getHeader("key3"));
 	}
 
 	@Test
@@ -117,9 +120,9 @@ public class HttpHeaderCollectionTest
 			TimeZone.setDefault(defaultLocaleefaultTimezone);
 		}
 
-		assertArrayEquals(new String[]{"Thu, 01 Jan 1970 00:16:40 GMT", "Thu, 01 Jan 1970 00:33:20 GMT", "not-a-date"},
-		                  headers.getHeaderValues("date"));
-		
+		assertArrayEquals(new String[] { "Thu, 01 Jan 1970 00:16:40 GMT",
+				"Thu, 01 Jan 1970 00:33:20 GMT", "not-a-date" }, headers.getHeaderValues("date"));
+
 		headers.setHeader("date", "foobar");
 		try
 		{

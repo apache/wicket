@@ -122,10 +122,10 @@ public class RangeValidator<Z extends Comparable<Z> & Serializable> extends
 		switch (getMode())
 		{
 			case MINIMUM :
-				error.addKey("MaximumValidator");
+				error.addKey("MinimumValidator");
 				break;
 			case MAXIMUM :
-				error.addKey("MinimumValidator");
+				error.addKey("MaximumValidator");
 				break;
 		}
 		return error;

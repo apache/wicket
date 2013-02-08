@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
+/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
+
 jQuery(document).ready(function() {
+	"use strict";
 
 	module("addElement");
 
@@ -98,7 +102,7 @@ jQuery(document).ready(function() {
 		// add <script src_="..."/>
 		Wicket.Head.addElement(script);
 
-		script.src = script['src_'];
+		script.src = script.src_;
 		// check for existence by 'src' attribute
 		ok(Wicket.Head.containsElement(script, 'src'), 'There should be an element for wicket-ajax-debug.js');
 	});

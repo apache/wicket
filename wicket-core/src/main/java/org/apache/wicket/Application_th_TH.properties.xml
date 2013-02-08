@@ -19,19 +19,19 @@
 <properties>
 	<!-- have to confirm whether this is really ok -->
 	<entry key="Required">ข้อมูลใน ${label} เป็นที่ต้องการ.</entry>
-	<entry key="IConverter">ไม่ใช่ '${input}' ที่ใช้งานได้จริง ${type}.</entry>
-	<entry key="RangeValidator.range">${input} ต้องอยู่ระหว่าง ${minimum} และ ${maximum}.</entry>
-	<entry key="RangeValidator.minimum">'${input}' ต้องมากกว่า ${minimum}.</entry>
-	<entry key="RangeValidator.maximum">'${input}' ต้องน้อยกว่า ${maximum}.</entry>
-	<entry key="StringValidator.range">'${input}' ต้องอยู่ระหว่าง ${minimum} และ ${maximum} chars.</entry>
-	<entry key="StringValidator.minimum">'${input}' ต้องมีอย่างน้อย ${minimum} ตัวอักษร.</entry>
-	<entry key="StringValidator.maximum">'${input}' ต้องมีไม่เกิน ${maximum} ตัวอักษร.</entry>
-	<entry key="StringValidator.exact">'${input}' ต้องมี ${exact} ความยาวตัวอักษร.</entry>
-	<entry key="DateValidator.range">'${input}' must be between ${minimum} and ${maximum}.</entry>
-	<entry key="DateValidator.minimum">'${input}' must be greater than ${minimum}.</entry>
-	<entry key="DateValidator.maximum">'${input}' must be smaller than ${maximum}.</entry>
-	<entry key="PatternValidator">'${input}' ไม่ตรงกับรูปแบบ '${pattern}'</entry>
-	<entry key="EmailAddressValidator">'${input}' ไม่ใช่อีเมลที่ใช้งานได้จริง.</entry>
+	<entry key="IConverter">ไม่ใช่ '${label}' ที่ใช้งานได้จริง ${type}.</entry>
+	<entry key="RangeValidator.range">${label} ต้องอยู่ระหว่าง ${minimum} และ ${maximum}.</entry>
+	<entry key="RangeValidator.minimum">'${label}' ต้องมากกว่า ${minimum}.</entry>
+	<entry key="RangeValidator.maximum">'${label}' ต้องน้อยกว่า ${maximum}.</entry>
+	<entry key="StringValidator.range">'${label}' ต้องอยู่ระหว่าง ${minimum} และ ${maximum} chars.</entry>
+	<entry key="StringValidator.minimum">'${label}' ต้องมีอย่างน้อย ${minimum} ตัวอักษร.</entry>
+	<entry key="StringValidator.maximum">'${label}' ต้องมีไม่เกิน ${maximum} ตัวอักษร.</entry>
+	<entry key="StringValidator.exact">'${label}' ต้องมี ${exact} ความยาวตัวอักษร.</entry>
+	<entry key="DateValidator.range">'${label}' must be between ${minimum} and ${maximum}.</entry>
+	<entry key="DateValidator.minimum">'${label}' must be greater than ${minimum}.</entry>
+	<entry key="DateValidator.maximum">'${label}' must be smaller than ${maximum}.</entry>
+	<entry key="PatternValidator">'${label}' ไม่ตรงกับรูปแบบ '${pattern}'</entry>
+	<entry key="EmailAddressValidator">'${label}' ไม่ใช่อีเมลที่ใช้งานได้จริง.</entry>
 	<entry key="EqualInputValidator">'${input0}' จาก ${label0} และ '${input1}' จาก ${label1} ต้องเท่ากัน.</entry>
 	<entry key="EqualPasswordInputValidator">${label0} และ ${label1} ต้องเท่ากัน.</entry>
 	<entry key="null">เลือกหนึ่งอย่าง</entry>

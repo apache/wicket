@@ -117,7 +117,7 @@ public class PagingNavigationIncrementLink<T> extends Link<T>
 	 * @param page
 	 *            ignored
 	 * @return True if this link links to the given page
-	 * @see org.apache.wicket.markup.html.link.PageLink#linksTo(org.apache.wicket.Page)
+	 * @see org.apache.wicket.markup.html.link.BookmarkablePageLink#linksTo(org.apache.wicket.Page)
 	 */
 	@Override
 	public boolean linksTo(final Page page)

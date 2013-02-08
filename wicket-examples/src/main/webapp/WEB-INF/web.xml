@@ -16,12 +16,12 @@
    limitations under the License.
 -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+		 version="2.5">
 
 	<display-name>Wicket Examples</display-name>
-	
+
 	<!-- only available with servlet spec. 2.4 
 	<locale-encoding-mapping-list>
 		<locale-encoding-mapping>
@@ -30,25 +30,25 @@
 		</locale-encoding-mapping>
 	</locale-encoding-mapping-list>
 	-->	  
-  
+
 <!--  
-      There are three means to configure Wickets configuration mode and they are
-      tested in the order given. 
-      1) A system property: -Dwicket.configuration
-      2) servlet specific <init-param>
-      3) context specific <context-param>
-      The value might be either "development" (reloading when templates change)
-      or "deployment". If no configuration is found, "deployment" is the default.
+	  There are three means to configure Wickets configuration mode and they are
+	  tested in the order given.
+	  1) A system property: -Dwicket.configuration
+	  2) servlet specific <init-param>
+	  3) context specific <context-param>
+	  The value might be either "development" (reloading when templates change)
+	  or "deployment". If no configuration is found, "deployment" is the default.
 -->
 	<context-param>
 		<param-name>configuration</param-name>
 		<param-value>deployment</param-value>
 	</context-param>
 
-    <!--
-     Parameter used by Spring to locate its context configuration used for creating
-     a WebApplicationContext.
-    --> 
+	<!--
+	 Parameter used by Spring to locate its context configuration used for creating
+	 a WebApplicationContext.
+	-->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:applicationContext.xml</param-value>
@@ -116,15 +116,15 @@
 		</init-param>
 	</filter>
 
-    <filter>
-        <filter-name>StockQuoteApplication</filter-name>
-        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-        <init-param>
-            <param-name>applicationClassName</param-name>
-            <param-value>org.apache.wicket.examples.stockquote.StockQuoteApplication</param-value>
-        </init-param>
-    </filter>
-    
+	<filter>
+		<filter-name>StockQuoteApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.stockquote.StockQuoteApplication</param-value>
+		</init-param>
+	</filter>
+
 	<filter>
 		<filter-name>HangmanApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -277,7 +277,7 @@
 		  <param-value>org.apache.wicket.examples.frames.FramesApplication</param-value>
 		</init-param>
 	</filter>
-	
+
 	<filter>
 		<filter-name>CustomResourceLoadingApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -305,14 +305,14 @@
 		</init-param>
 	</filter>
 
-    <filter>
-        <filter-name>KittenCaptcha</filter-name>
-        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-        <init-param>
-          <param-name>applicationClassName</param-name>
-          <param-value>org.apache.wicket.examples.kittenCaptcha.WicketApplication</param-value>
-        </init-param>
-    </filter>
+	<filter>
+		<filter-name>KittenCaptcha</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.kittenCaptcha.WicketApplication</param-value>
+		</init-param>
+	</filter>
 	<filter>
 		<filter-name>BreadCrumbApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -371,8 +371,8 @@
 		<filter-name>SpringExample</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
-            <param-name>applicationFactoryClassName</param-name>
-            <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
+			<param-name>applicationFactoryClassName</param-name>
+			<param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
 		</init-param>
 	</filter>
 
@@ -380,8 +380,8 @@
 		<filter-name>GuiceApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
-            <param-name>applicationClassName</param-name>
-            <param-value>org.apache.wicket.examples.guice.GuiceApplication</param-value>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.guice.GuiceApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -389,8 +389,8 @@
 		<filter-name>VelocityTemplateApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
-            <param-name>applicationClassName</param-name>
-            <param-value>org.apache.wicket.examples.velocity.VelocityTemplateApplication</param-value>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.velocity.VelocityTemplateApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -398,8 +398,8 @@
 		<filter-name>DatesApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
-            <param-name>applicationClassName</param-name>
-            <param-value>org.apache.wicket.examples.dates.DatesApplication</param-value>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.dates.DatesApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -408,9 +408,9 @@
 		<filter-name>WicketSessionFilter</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.servlet.WicketSessionFilter</filter-class>
 		<init-param>
-            <param-name>filterName</param-name>
-            <!-- expose the session of the input example app -->
-            <param-value>FormInputApplication</param-value>
+			<param-name>filterName</param-name>
+			<!-- expose the session of the input example app -->
+			<param-value>FormInputApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -418,47 +418,47 @@
 		<filter-name>RequestMapperApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
-            <param-name>applicationClassName</param-name>
-            <param-value>org.apache.wicket.examples.requestmapper.RequestMapperApplication</param-value>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.requestmapper.RequestMapperApplication</param-value>
 		</init-param>
 	</filter>
-	
+
 	<filter>
 		<filter-name>wicket.resourceaggregation</filter-name>
- 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>org.apache.wicket.examples.resourcedecoration.ResourceDecorationApplication</param-value>
- 		</init-param>
- 	</filter>
+		</init-param>
+	</filter>
 
-    <filter>
-        <filter-name>wicket.mail-template</filter-name>
-        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-        <init-param>
-            <param-name>applicationClassName</param-name>
-            <param-value>org.apache.wicket.examples.asemail.MailTemplateApplication</param-value>
-        </init-param>
-    </filter>
+	<filter>
+		<filter-name>wicket.mail-template</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.asemail.MailTemplateApplication</param-value>
+		</init-param>
+	</filter>
 	<!-- couple the session filter to the helloworld servlet -->
 
 
 
-	
+
 
 
 	<filter-mapping>
 		<filter-name>WicketSessionFilter</filter-name>
 		<url-pattern>/helloworldservlet/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>AjaxApplication</filter-name>
 		<url-pattern>/ajax/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
@@ -469,262 +469,262 @@
 	<filter-mapping>
 		<filter-name>RepeaterExamplesApplication</filter-name>
 		<url-pattern>/repeater/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>TreeApplication</filter-name>
 		<url-pattern>/tree/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>NiceUrlApplication</filter-name>
 		<url-pattern>/niceurl/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>	
 
-    <filter-mapping>
-        <filter-name>StockQuoteApplication</filter-name>
-        <url-pattern>/stock/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-    </filter-mapping>
+	<filter-mapping>
+		<filter-name>StockQuoteApplication</filter-name>
+		<url-pattern>/stock/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>HangmanApplication</filter-name>
 		<url-pattern>/hangman/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>PubApplication</filter-name>
 		<url-pattern>/pub/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>PubApplication2</filter-name>
 		<url-pattern>/pub2/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>NavomaticApplication</filter-name>
 		<url-pattern>/navomatic/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>LinkomaticApplication</filter-name>
 		<url-pattern>/linkomatic/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>LibraryApplication</filter-name>
 		<url-pattern>/library/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>ImagesApplication</filter-name>
 		<url-pattern>/images/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>HelloWorldApplication</filter-name>
 		<url-pattern>/helloworld/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>EchoApplication</filter-name>
 		<url-pattern>/echo/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>UnicodeConverterApplication</filter-name>
 		<url-pattern>/unicodeconverter/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
-	
+
 	<filter-mapping>
 		<filter-name>HelloBrowserApplication</filter-name>
 		<url-pattern>/hellobrowser/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>FormInputApplication</filter-name>
 		<url-pattern>/forminput/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>GuestBookApplication</filter-name>
 		<url-pattern>/guestbook/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>UploadApplication</filter-name>
 		<url-pattern>/upload/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>EncodingsApplication</filter-name>
 		<url-pattern>/encodings/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>TemplateApplication</filter-name>
 		<url-pattern>/template/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>ComponentReferenceApplication</filter-name>
 		<url-pattern>/compref/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>FramesApplication</filter-name>
 		<url-pattern>/frames/*</url-pattern>
 	</filter-mapping>
-	
+
 	<filter-mapping>
 		<filter-name>CustomResourceLoadingApplication</filter-name>
 		<url-pattern>/customresourceloading/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>WizardApplication</filter-name>
 		<url-pattern>/wizard/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>CaptchaApplication</filter-name>
 		<url-pattern>/captcha/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
-    <filter-mapping>
-        <filter-name>KittenCaptcha</filter-name>
-        <url-pattern>/kitten-captcha/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-    </filter-mapping>
-  
+	<filter-mapping>
+		<filter-name>KittenCaptcha</filter-name>
+		<url-pattern>/kitten-captcha/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
 	<filter-mapping>
 		<filter-name>BreadCrumbApplication</filter-name>
 		<url-pattern>/breadcrumb/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>StatelessApplication</filter-name>
 		<url-pattern>/stateless/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>SignInApplication</filter-name>
 		<url-pattern>/authentication1/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
-    
+
 	<filter-mapping>
 		<filter-name>SignIn2Application</filter-name>
 		<url-pattern>/authentication2/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>MyAuthenticatedWebApplication</filter-name>
 		<url-pattern>/authentication3/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>RolesAuthApplication</filter-name>
 		<url-pattern>/authorization/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>SpringExample</filter-name>
-        <url-pattern>/spring/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<url-pattern>/spring/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>GuiceApplication</filter-name>
-        <url-pattern>/guice/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<url-pattern>/guice/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>VelocityTemplateApplication</filter-name>
-        <url-pattern>/velocity/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<url-pattern>/velocity/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>	
 
 	<filter-mapping>
 		<filter-name>DatesApplication</filter-name>
-        <url-pattern>/dates/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<url-pattern>/dates/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>RequestMapperApplication</filter-name>
-        <url-pattern>/mappers/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
+		<url-pattern>/mappers/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
- 		<filter-name>wicket.resourceaggregation</filter-name>
+		<filter-name>wicket.resourceaggregation</filter-name>
 		<url-pattern>/resourceaggregation/*</url-pattern>
 	</filter-mapping>
 
@@ -737,10 +737,10 @@
 		  <param-value>org.apache.wicket.examples.events.EventsApplication</param-value>
 		</init-param>
 	</filter>
-	
+
 	<filter-mapping>
 		<filter-name>EventsApplication</filter-name>
-        <url-pattern>/events/*</url-pattern>
+		<url-pattern>/events/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
@@ -749,11 +749,11 @@
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
-     
-    <filter-mapping>
-        <filter-name>wicket.mail-template</filter-name>
-        <url-pattern>/mailtemplate/*</url-pattern>
-    </filter-mapping>
+
+	<filter-mapping>
+		<filter-name>wicket.mail-template</filter-name>
+		<url-pattern>/mailtemplate/*</url-pattern>
+	</filter-mapping>
 
 
 	<!-- CDI EXAMPLE APPLICATION -->
@@ -766,22 +766,36 @@
 		</init-param>
 	</filter>
 	<filter-mapping>
-        <filter-name>CdiApplication</filter-name>
-        <url-pattern>/cdi/*</url-pattern>
-    </filter-mapping>
-	
+		<filter-name>CdiApplication</filter-name>
+		<url-pattern>/cdi/*</url-pattern>
+	</filter-mapping>
+
+	<!-- CDI EXAMPLE APPLICATION -->
+	<filter>
+		<filter-name>BeanValidation</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.bean.validation.BeanValidationApplication</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>BeanValidation</filter-name>
+		<url-pattern>/bean-validation/*</url-pattern>
+	</filter-mapping>
+
 	<listener>
 		<!-- initialize Weld in servlet environment -->
 		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
 	</listener>
 	<!-- END CDI EXAMPLE APPLICATION -->
- 
-	
+
+
 	<!-- LISTENER -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
+
 	<!-- SERVLET -->
 	<servlet>
 		<servlet-name>HelloWorldServlet</servlet-name>
@@ -789,19 +803,19 @@
 	</servlet>
 
 	<servlet-mapping>
-        <servlet-name>HelloWorldServlet</servlet-name>
-        <url-pattern>/helloworldservlet/*</url-pattern>
-    </servlet-mapping>
+		<servlet-name>HelloWorldServlet</servlet-name>
+		<url-pattern>/helloworldservlet/*</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
-   		<servlet-name>ServletTest</servlet-name>
-   		<servlet-class>org.apache.wicket.protocol.http.WicketServlet</servlet-class>
-   		<init-param>
-     		<param-name>applicationClassName</param-name>
-     		<param-value>org.apache.wicket.examples.helloworld.HelloWorldApplication</param-value>
-   		</init-param>
-   		<load-on-startup>0</load-on-startup>
- 	</servlet>
+		<servlet-name>ServletTest</servlet-name>
+		<servlet-class>org.apache.wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.helloworld.HelloWorldApplication</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>ServletTest</servlet-name>
@@ -824,6 +838,10 @@
 			<param-value>true</param-value>
 		</init-param>
 		<init-param>
+			<param-name>org.atmosphere.cpr.sessionSupport</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
 			<param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name>
 			<param-value>30000</param-value>
 		</init-param>
@@ -835,6 +853,10 @@
 			<param-name>org.atmosphere.websocket.WebSocketProtocol</param-name>
 			<param-value>org.atmosphere.websocket.protocol.EchoProtocol</param-value>
 		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.cpr.broadcastFilterClasses</param-name>
+			<param-value>org.apache.wicket.atmosphere.TrackMessageSizeFilter</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
@@ -842,9 +864,9 @@
 		<servlet-name>AtmosphereApplication</servlet-name>
 		<url-pattern>/atmosphere/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<session-config>
 		<session-timeout>5</session-timeout>
 	</session-config>
-	
+
 </web-app>

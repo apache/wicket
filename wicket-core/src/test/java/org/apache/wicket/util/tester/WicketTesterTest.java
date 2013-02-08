@@ -850,7 +850,7 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/test.html";
 		tester.executeUrl(url);
-		assertEquals("This is a test!\n", tester.getLastResponseAsString());
+		assertEquals("This is a test!", tester.getLastResponseAsString());
 	}
 
 	/**
@@ -1316,5 +1316,32 @@ public class WicketTesterTest extends WicketTestCase
 		tester.startPage(AlwaysRedirectPage.class);
 		tester.assertRedirectUrl("http://localhost:4333/");
 		assertEquals(HttpServletResponse.SC_FOUND, tester.getLastResponse().getStatus());
+	}
+
+	/**
+	 * WICKET-5017
+	 */
+	@Test
+	public void formSubmitSendsFormInputInRequest()
+	{
+		MockFormSubmitsPage page = new MockFormSubmitsPage();
+
+		tester.startPage(page);
+
+		tester.newFormTester("form").submit();
+		assertEquals("a text value", page.text);
+
+		tester.executeAjaxEvent(page.get("form:ajaxButton"), "click");
+		assertEquals("a text value", page.text);
+
+		tester.clickLink("form:ajaxlink");
+		assertEquals("a text value", page.text);
+
+		tester.clickLink("form:link");
+		assertEquals("a text value", page.text);
+
+		// this one doesn't
+		tester.submitForm(page.form);
+		assertEquals(null, page.text);
 	}
 }

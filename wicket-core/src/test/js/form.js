@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
+/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
+
 jQuery(document).ready(function() {
+	"use strict";
 
 	module("encode");
 
@@ -178,8 +182,8 @@ jQuery(document).ready(function() {
 
 		var $nestedForm = jQuery(
 			"<form>" +
+				"<input type='text' name='textInput' value='textInputValue'/>" +
 				"<div id='nestedForm'>" +
-					"<input type='text' name='textInput' value='textInputValue'/>" +
 					"<input type='checkbox' name='checkboxInput' value='checkboxInputValue' checked/>" +
 					"<input type='checkbox' name='checkboxInput' value='checkboxInputValue' checked/>" + // second time
 					"<input type='radio' name='radioInput' value='radioInputValue' checked/>" +
