@@ -73,6 +73,8 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		Iterator<T> options = getOptionsIterator();
 		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 
+		boolean localizeDisplayValues = localizeDisplayValues();
+
 		while (options.hasNext())
 		{
 			final T choice = options.next();
@@ -99,7 +101,10 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 				@SuppressWarnings("unchecked")
 				IConverter<Object> converter = (IConverter<Object>)getConverter(displayClass);
 				String displayString = converter.convertToString(displayValue, getLocale());
-				displayString = getLocalizer().getString(displayString, this, displayString);
+				if (localizeDisplayValues)
+				{
+					displayString = getLocalizer().getString(displayString, this, displayString);
+				}
 
 				if (getEscapeModelStrings())
 				{
@@ -132,6 +137,16 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		buffer.append("\n");
 
 		replaceComponentTagBody(markupStream, openTag, buffer);
+	}
+
+	/**
+	 * Should display values be localized.
+	 * 
+	 * @return default {@code true}
+	 */
+	protected boolean localizeDisplayValues()
+	{
+		return true;
 	}
 
 	/**
