@@ -47,7 +47,7 @@ public class FormTesterTest extends WicketTestCase
 		books = new Book[] { new Book("1", "book1"), new Book("2", "book2"),
 				new Book("3", "book3"), new Book("4", "book4") };
 
-		choicePage = (ChoicePage)tester.startPage(new ChoicePage(Arrays.asList(books)));
+		choicePage = tester.startPage(new ChoicePage(Arrays.asList(books)));
 		formTester = tester.newFormTester("choiceForm");
 	}
 
@@ -169,10 +169,14 @@ public class FormTesterTest extends WicketTestCase
 	public void multipleButtonSubmit() throws Exception
 	{
 		formTester.submit();
+
+		assertFalse(choicePage.buttonPressed);
 		assertFalse(choicePage.anotherButtonPressed);
 
 		formTester = tester.newFormTester("choiceForm");
 		formTester.submit("anotherButton");
+
+		assertFalse(choicePage.buttonPressed);
 		assertTrue(choicePage.anotherButtonPressed);
 	}
 
