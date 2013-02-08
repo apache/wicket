@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Component used to connect instances of Radio components into a group. Instances of Radio have to
@@ -88,6 +89,28 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 		return super.getStatelessHint();
 	}
 
+	@Override
+	protected String getModelValue()
+	{
+		final StringBuilder builder = new StringBuilder();
+
+		final T t = getModelObject();
+
+		visitChildren(Radio.class, new IVisitor<Radio<T>, Void>()
+		{
+			@Override
+			public void component(Radio<T> radio, IVisit<Void> visit)
+			{
+				if (getModelComparator().compare(RadioGroup.this, radio.getDefaultModelObject()))
+				{
+					builder.append(radio.getValue());
+					visit.stop();
+				}
+			}
+		});
+
+		return builder.toString();
+	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])

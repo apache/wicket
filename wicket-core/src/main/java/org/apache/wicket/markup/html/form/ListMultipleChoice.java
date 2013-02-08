@@ -198,18 +198,23 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	@Override
 	public final String getModelValue()
 	{
-		final Collection<T> selectedValues = getModelObject();
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
+
+		final Collection<T> selectedValues = getModelObject();
 		if (selectedValues != null)
 		{
 			final List<? extends T> choices = getChoices();
 			for (T object : selectedValues)
 			{
+				if (buffer.length() > 0)
+				{
+					buffer.append(VALUE_SEPARATOR);
+				}
 				int index = choices.indexOf(object);
 				buffer.append(getChoiceRenderer().getIdValue(object, index));
-				buffer.append(VALUE_SEPARATOR);
 			}
 		}
+
 		return buffer.toString();
 	}
 

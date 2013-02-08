@@ -28,6 +28,7 @@ import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +100,32 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	{
 		super(id, (IModel<Collection<T>>)model);
 		setRenderBodyOnly(true);
+	}
+
+	@Override
+	protected String getModelValue()
+	{
+		final StringBuilder builder = new StringBuilder();
+
+		final Collection<T> ts = getModelObject();
+
+		visitChildren(Check.class, new IVisitor<Check<T>, Void>()
+		{
+			@Override
+			public void component(Check<T> check, IVisit<Void> visit)
+			{
+				if (ts.contains(check.getModelObject()))
+				{
+					if (builder.length() > 0)
+					{
+						builder.append(VALUE_SEPARATOR);
+					}
+					builder.append(check.getValue());
+				}
+			}
+		});
+
+		return builder.toString();
 	}
 
 	@Override

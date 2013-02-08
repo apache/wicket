@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
+/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
+
 jQuery(document).ready(function() {
+	"use strict";
 
 	module("encode");
 
