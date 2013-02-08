@@ -10,6 +10,8 @@ Contents:
    application
    components
    models
+   converter
+   requestcycle
    behaviors
    ajax
    events
