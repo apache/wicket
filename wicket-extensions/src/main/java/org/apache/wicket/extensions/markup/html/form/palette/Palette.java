@@ -387,6 +387,12 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 			{
 				return Palette.this.getAdditionalAttributesForSelection(choice);
 			}
+
+			@Override
+			protected boolean localizeDisplayValues()
+			{
+				return Palette.this.localizeDisplayValues();
+			}
 		};
 	}
 
@@ -416,7 +422,24 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 			{
 				return Palette.this.getAdditionalAttributesForChoices(choice);
 			}
+
+			@Override
+			protected boolean localizeDisplayValues()
+			{
+				return Palette.this.localizeDisplayValues();
+			}
 		};
+	}
+
+	/**
+	 * Override this method if you do <strong>not</strong> want to localize the display values of
+	 * the generated options. By default true is returned.
+	 * 
+	 * @return true If you want to localize the display values, default == true
+	 */
+	protected boolean localizeDisplayValues()
+	{
+		return true;
 	}
 
 	/**
