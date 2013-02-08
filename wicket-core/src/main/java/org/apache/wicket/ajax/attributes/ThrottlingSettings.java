@@ -30,13 +30,6 @@ public class ThrottlingSettings implements IClusterable
 
 	private final Duration delay;
 	private final String id;
-
-	/**
-	 * If it is set to true, then the timer is reset each time the throttle function
-	 * gets called. Use this behaviour if you want something to happen at X milliseconds
-	 * after the *last* call to throttle. If the parameter is not set, or set to false,
-	 * then the timer is not reset.
-	 */
 	private final boolean postponeTimerOnUpdate;
 
 	/**
@@ -81,7 +74,10 @@ public class ThrottlingSettings implements IClusterable
 	}
 
 	/**
-	 * @return
+	 * If it is set to true, then the timer is reset each time the throttle function
+	 * gets called. Use this behaviour if you want something to happen at X milliseconds
+	 * after the *last* call to throttle. If the parameter is not set, or set to false,
+	 * then the timer is not reset.
 	 */
 	public boolean getPostponeTimerOnUpdate() {
 		return postponeTimerOnUpdate;

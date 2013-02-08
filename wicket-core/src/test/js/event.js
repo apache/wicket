@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
+/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
+
 jQuery(document).ready(function() {
+	"use strict";
 
 	module('Wicket.Event.getId');
 
@@ -83,7 +87,7 @@ jQuery(document).ready(function() {
 
 		var evt = jQuery.Event("keydown", { keyCode: 123 });
 		jQuery(document)
-			.bind('keydown', function(event) {				
+			.bind('keydown', function(event) {
 				var fixedEvt = Wicket.Event.fix(event);
 				deepEqual(fixedEvt, evt);
 			})
@@ -178,7 +182,7 @@ jQuery(document).ready(function() {
 		};
 
 		var handler = function(jqEvent) {
-			deepEqual(jqEvent.data, expectedData, "Wicket.Event.add should be able to pass data to the event.")
+			deepEqual(jqEvent.data, expectedData, "Wicket.Event.add should be able to pass data to the event.");
 		};
 
 		Wicket.Event.add($el[0], 'dummy', handler, expectedData);

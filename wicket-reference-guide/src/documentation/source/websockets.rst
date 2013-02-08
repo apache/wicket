@@ -51,9 +51,11 @@ See the demo application at [martin-g's GitHub|https://github.com/martin-g/wicke
 
 h5. Client side APIs
 
-By adding a _WebSocketBehavior_ to your component(s) Wicket will contribute _wicket-websocket-jquery.js_ library which provides some helper functions to write your client side code. There is a default websocket connection per Wicket Page opened for you which you can use like _Wicket.WebSocket.send('\{msg: "my message"\}')_.
+By adding a *WebSocketBehavior* to your component(s) Wicket will contribute *wicket-websocket-jquery.js* library which provides some helper functions to write your client side code. There is a default websocket connection per Wicket Page opened for you which you can use like _Wicket.WebSocket.send('\{msg: "my message"\}')_.
 
-If you need more WebSocket connections then you can do: _var ws = new Wicket.WebSocket(); ws.send('message');_
+If you need more WebSocket connections then you can do::
+
+    var ws = new Wicket.WebSocket(); ws.send('message');
 
 To close a connection: _Wicket.WebSocket.close()_ or _ws.close()_.
 

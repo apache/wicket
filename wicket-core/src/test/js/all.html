@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
+<html>
 
 <head>
 	<title id="titleId">All tests</title>
@@ -12,6 +12,10 @@
 	<script type="text/javascript" src="qunit/qunit.js"></script>
 
 	<!-- the module under test -->
+    <script>
+        // uncomment for error reporting from the tests
+//        Wicket.Ajax.DebugWindow.enabled = true;
+    </script>
 	<script type="text/javascript" src="channels.js"></script>
 	<script type="text/javascript" src="dom.js"></script>
 	<script type="text/javascript" src="event.js"></script>
@@ -159,6 +163,8 @@
 				<button type="submit" id="innerSubmitButton">Inner Submit</button>
 			</div>
 		</form>
+
+        <div id="usedAsContextWicket5025"></div>
 
 	</div>
 </body>
