@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.list;
 import java.util.Iterator;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -164,15 +163,5 @@ public abstract class Loop extends AbstractRepeater
 	protected void renderItem(final LoopItem item)
 	{
 		item.render();
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#getMarkup(org.apache.wicket.Component)
-	 */
-	@Override
-	public IMarkupFragment getMarkup(Component child)
-	{
-		// The childs markup is always equal to the parents markup.
-		return getMarkup();
 	}
 }
