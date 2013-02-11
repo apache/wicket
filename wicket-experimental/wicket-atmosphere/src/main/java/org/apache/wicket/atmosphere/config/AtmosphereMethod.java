@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.atmosphere.config;
 
+/**
+ * The HTTP method to be used by Atmosphere to setup the connection
+ * 
+ * @author papegaaij
+ */
+@SuppressWarnings("javadoc")
 public enum AtmosphereMethod {
 	GET, PUT, POST, DELETE;
 }

@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.atmosphere.config;
 
+/**
+ * The transport to be used by Atmosphere to setup the persistent connection.
+ * 
+ * @author papegaaij
+ */
+@SuppressWarnings("javadoc")
 public enum AtmosphereTransport {
 	POLLING("polling"), LONG_POLLING("long-polling"), STREAMING("streaming"), JSONP("jsonp"), SSE(
 		"sse"), WEBSOCKET("websocket");

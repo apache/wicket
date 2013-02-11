@@ -14,28 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.atmosphere;
+package org.apache.wicket.atmosphere;
 
-import org.apache.wicket.Session;
-import org.apache.wicket.atmosphere.AtmosphereEvent;
+import org.atmosphere.cpr.AtmosphereResource;
 
-import com.google.common.base.Predicate;
-
-public class ReceiverFilter implements Predicate<AtmosphereEvent>
+/**
+ * The event fired by {@link EventBus}, containing the payload and the {@code AtmosphereResource} it
+ * is targeted at.
+ * 
+ * @author papegaaij
+ */
+public class AtmosphereEvent
 {
-	public ReceiverFilter()
+	private final Object payload;
+
+	private final AtmosphereResource resource;
+
+	AtmosphereEvent(Object payload, AtmosphereResource resource)
 	{
+		this.payload = payload;
+		this.resource = resource;
 	}
 
-	@Override
-	public boolean apply(AtmosphereEvent input)
+	/**
+	 * @return The payload of the event, as posted on the {@link EventBus}.
+	 */
+	public Object getPayload()
 	{
-		if (input.getPayload() instanceof ChatMessage)
-		{
-			ChatMessage msg = (ChatMessage)input.getPayload();
-			return msg.getReceiver() == null || msg.getReceiver().isEmpty() ||
-				msg.getReceiver().equals(Session.get().getId());
-		}
-		return false;
+		return payload;
+	}
+
+	/**
+	 * @return The resource this event is targeted at.
+	 */
+	public AtmosphereResource getResource()
+	{
+		return resource;
 	}
 }
