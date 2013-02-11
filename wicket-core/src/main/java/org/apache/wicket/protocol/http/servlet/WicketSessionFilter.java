@@ -76,10 +76,13 @@ import org.slf4j.LoggerFactory;
  * After that, you can get to the Wicket session in the usual fashion:
  * 
  * <pre>
- * Session wicketSession = Session.get();
+ * if (Session.exists())
+ * {
+ * 	Session wicketSession = Session.get();
+ * }
  * </pre>
  * 
- * like the HelloWorldServlet does:
+ * Make sure to test for session existence first, like the HelloWorldServlet does:
  * 
  * <pre>
  * public class HelloWorldServlet extends HttpServlet
