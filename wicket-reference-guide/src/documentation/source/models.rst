@@ -42,7 +42,7 @@ The constructor for this page constructs a Label component. The first parameter 
 
 .. includecode:: ../../../helloworld/src/main/java/org/apache/wicket/reference/helloworld/HelloWorld.html
 	
-The second parameter to the Label component's constructor is the model data for the Label, providing content that replaces any text inside the <span> tag to which the Label is associated. The model data passed to the Label constructor above is apparently a String. Internally Label creates a Model for the String. :ref:`Model<_models--model-label>` is a simple default implementation of IModel.
+The second parameter to the Label component's constructor is the model data for the Label, providing content that replaces any text inside the <span> tag to which the Label is associated. The model data passed to the Label constructor above is apparently a String. Internally Label creates a Model for the String. :ref:`Model<models--model-label>` is a simple default implementation of IModel.
 
 
 .. todo:: replace with real code
@@ -73,7 +73,7 @@ The data we gave to the model in the previous example, the string "Hello World",
 	
 The model data is still a String, the value of person.getName() is set at the time the model is created. Recall that Java strings are immutable: this string will never change. Even if person.getName() would later return a different value, the model data is unchanged. So the page will still display the old value to the user even if it is reloaded. Models like this, whose values never change, are known as static models.
 
-In many cases the underlying data can change, and you want the user to see those changes. For example, the user might use a form to change a person's name. Models which can automatically reflect change are known as dynamic models. While the :ref:`Model<_models--model-label>` class is static, most of the other core Wicket model classes are dynamic.
+In many cases the underlying data can change, and you want the user to see those changes. For example, the user might use a form to change a person's name. Models which can automatically reflect change are known as dynamic models. While the :ref:`Model<models--model-label>` class is static, most of the other core Wicket model classes are dynamic.
 
 
 .. todo:: replace with real code
@@ -82,7 +82,9 @@ It's instructive to see how to make a dynamic model by subclassing Model.
 
 .. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/dynamic/CustomModelFormPage.java#customModel
 
-It would be inconvenient to have to do this for every component that needs a dynamic model. Instead, you can use the PropertyModel class or one of the other classes described below.
+It would be inconvenient to have to do this for every component that needs a dynamic model. Instead, you can use the :ref:`PropertyModel<models--propertymodel-label>` class or one of the other classes described below.
+
+.. _models--propertymodel-label:
 
 
 
