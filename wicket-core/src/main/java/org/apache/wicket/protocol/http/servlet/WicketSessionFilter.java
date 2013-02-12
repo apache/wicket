@@ -31,14 +31,13 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WicketFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>
  * This filter can be used to make the Wicket {@link org.apache.wicket.protocol.http.WebSession}
  * instances available to non-wicket servlets.
- * </p>
  * <p>
  * The following example shows how this filter is setup to for a servlet. You can find the example
  * in the wicket-examples project.
@@ -73,6 +72,10 @@ import org.slf4j.LoggerFactory;
  *  &lt;/servlet-mapping&gt;
  * </pre>
  * 
+ * Note: If both {@link WicketFilter} and {@link WicketSessionFilter} are mapped to the same url
+ * pattern, make sure to have the {@code <filter-mapping>} for {@link WicketFilter} first in your
+ * {@code web.xml}.
+ * <p>
  * After that, you can get to the Wicket session in the usual fashion:
  * 
  * <pre>
