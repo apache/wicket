@@ -38,9 +38,9 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IApplicationSettings;
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.time.Duration;
@@ -125,17 +125,33 @@ public abstract class Session implements IClusterable, IEventSink
 	private final IProvider<PageAccessSynchronizer> pageAccessSynchronizer;
 
 	/**
-	 * Checks if the <code>Session</code> threadlocal is set in this thread
+	 * Checks existence of a <code>Session</code> associated with the current thread.
 	 * 
-	 * @return true if {@link Session#get()} can return the instance of session, false otherwise
+	 * @return {@code true} if {@link Session#get()} can return the instance of session,
+	 *         {@code false} otherwise
 	 */
 	public static boolean exists()
 	{
-		return ThreadContext.getSession() != null;
+		Session session = ThreadContext.getSession();
+
+		if (session == null)
+		{
+			// no session is available via ThreadContext, so lookup in session store
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle != null)
+			{
+				session = Application.get().getSessionStore().lookup(requestCycle.getRequest());
+				if (session != null)
+				{
+					ThreadContext.setSession(session);
+				}
+			}
+		}
+		return session != null;
 	}
 
 	/**
-	 * Returns session associated to current thread. Should always return a session during a request
+	 * Returns session associated to current thread. Always returns a session during a request
 	 * cycle, even though the session might be temporary
 	 * 
 	 * @return session.
