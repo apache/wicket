@@ -2,6 +2,45 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.6.0
+
+** Bug
+
+    * [WICKET-4723] - tracking id retrieved in AtmosphereBehavior#onRequest() is always 0
+    * [WICKET-4724] - the option name "maxRequests" is wrong in jquery.wicketatmosphere.js
+    * [WICKET-4926] - CheckGroupSelector does not work in nested forms in modal windows
+    * [WICKET-4984] - Update quickstart info for changed workflow in IntelliJ idea
+    * [WICKET-4990] - Problem using AutoCompleteBehavior with AjaxFormComponentUpdatingBehavior("onchange")
+    * [WICKET-4998] - AjaxFormComponentUpdatingBehavior("onkeypress") is triggered when Enter is used on autocomplete list
+    * [WICKET-5011] - Allow Select to work with non-equals objects
+    * [WICKET-5013] - Wicket Enclosure fails with more than one component
+    * [WICKET-5014] - Changes in WicketObjects.sizeof(final Serializable object) clashes with <header-contribution> in AjaxResponse
+    * [WICKET-5019] - Handling of NO_MINIFIED_NAME in PackageResourceReference#internalGetMinifiedName()   
+    * [WICKET-5020] - InlineEnclosureHandler always uses "wicket" namespace
+    * [WICKET-5024] - Global ajax event for precondition is not called
+    * [WICKET-5027] - FormTester#getInputValue() does not support Select/SelectOption nor other custom components
+    * [WICKET-5029] - Palette does not allow to turn off localization
+    * [WICKET-5031] - Upgrade bootstrap to 2.3
+    * [WICKET-5035] - script tag with wicket:id does not throw exception if it was not added in the code
+    * [WICKET-5036] - Post Parameters are lost when continueToOriginalDestination() is called
+    * [WICKET-5040] - Session.exists() returns false when ThreadContext#session is not set to current session
+
+** Improvement
+
+    * [WICKET-4444] - Add a callback to the Session which is called when the HttpSession is invalidated
+    * [WICKET-4861] - Making MultiFileUploadField use HTML5 multiple attr & remove confusing fakepath
+    * [WICKET-4945] - Wicket-atmosphere filters should be functions on AtmosphereResource
+    * [WICKET-4946] - Allow passing parameters to atmosphere JS
+    * [WICKET-5003] - Add wicket:for attribute in wicket.xsd
+    * [WICKET-5006] - Improve null display value in AbstractSingleSelectChoice
+    * [WICKET-5010] - Improve wicket-ajax.js to be able to work with jQuery 1.9+
+    * [WICKET-5016] - Updated Application_el.properties for 6.x
+    * [WICKET-5017] - BaseWicketTester#clickLink() doesn not serialize form to request for SubmitLink but does for AjaxSubmitLink
+    * [WICKET-5022] - Improve Application_es.properties
+    * [WICKET-5025] - Set the component as a context to the ajax listeners
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.5.0
 
 ** Sub-task
