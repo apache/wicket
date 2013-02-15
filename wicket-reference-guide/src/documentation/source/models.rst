@@ -7,16 +7,9 @@ In Wicket, a model holds a value for a component to display and/or edit. How exa
 
 .. _models--imodel-label:
 
-.. todo:: replace with real code
-
-IModel.java::
-
-	public interface IModel<T> ...
-	{
-	  T getObject();
-		
-	  void setObject(final T object);
-	}
+.. literalinclude:: ../../../../wicket-core/src/main/java/org/apache/wicket/model/IModel.java
+	:start-after: */
+	:lines: 40-
 
 The IModel interface defines a simple contract for getting and setting a value. The nature of the Object retrieved or set will depend on the component referencing the model. For a Label component, the value must be something which can be converted to a String (see :doc:`converter`) which will be displayed when the label is rendered. For a ListView, it must be a java.util.List containing the values to be displayed as a list.
 
@@ -66,18 +59,13 @@ The Label constructor that takes a String is simply a convenience.
 Dynamic Models
 --------------
 
-The data we gave to the model in the previous example, the string "Hello World", is constant. No matter how many times Wicket asks for the model data, it will get the same thing. Now consider a slightly more complex example:
-
-.. todo:: replace with real code
+The data we gave to the model in the previous example, the string "Hello World", is constant. No matter how many times Wicket asks for the model data, it will get the same thing. Now consider a slightly more complex example::
 
 	Label name = new Label ("name", Model.of(person.getName()));
 	
-The model data is still a String, the value of person.getName() is set at the time the model is created. Recall that Java strings are immutable: this string will never change. Even if person.getName() would later return a different value, the model data is unchanged. So the page will still display the old value to the user even if it is reloaded. Models like this, whose values never change, are known as static models.
+The model data is still a String, the value of ``person.getName()`` is set at the time the model is created. Recall that Java strings are immutable: this string will never change. Even if ``person.getName()`` would later return a different value, the model data is unchanged. So the page will still display the old value to the user even if it is reloaded. Models like this, whose values never change, are known as *static models*.
 
-In many cases the underlying data can change, and you want the user to see those changes. For example, the user might use a form to change a person's name. Models which can automatically reflect change are known as dynamic models. While the :ref:`Model<models--model-label>` class is static, most of the other core Wicket model classes are dynamic.
-
-
-.. todo:: replace with real code
+In many cases the underlying data can change, and you want the user to see those changes. For example, the user might use a form to change a person's name. Models which can automatically reflect change are known as *dynamic models*. While the :ref:`Model<models--model-label>` class is static, most of the other core Wicket model classes are dynamic.
 
 It's instructive to see how to make a dynamic model by subclassing Model.
 
@@ -86,6 +74,52 @@ It's instructive to see how to make a dynamic model by subclassing Model.
 It would be inconvenient to have to do this for every component that needs a dynamic model. Instead, you can use the :ref:`PropertyModel<models--propertymodel-label>` class or one of the other classes described below.
 
 .. _models--propertymodel-label:
+
+Property Models
+---------------
+
+The PropertyModel class allows you to create a model that accesses a particular property of its associated model object at runtime. This property is accessed using a simple expression language with a dot notation (e.g. 'name' means property 'name', and 'person.name' means property name of object person). The simplest PropertyModel constructor is:
+
+.. literalinclude:: ../../../../wicket-core/src/main/java/org/apache/wicket/model/PropertyModel.java
+	:start-after: */
+	:end-before: {
+	:lines: 90-
+		
+which takes a model object and a property expression. When the property model is asked for its value by the framework, it will use the property expression to access the model object's property. For example, if we have a Java Bean or "POJO" (Plain Old Java Object) like this:
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/dynamic/PersonBean.java#classOnly
+
+then the property expression "name" can be used to access the "name" property of any Person object via the ``getName()`` getter method.
+
+::
+
+	personForm.add(new RequiredTextField("personName", new PropertyModel(person, "name")));
+
+Nested property expressions are possible as well. You can access sub-properties via reflection using a dotted path notation, which means the property expression "person.name" is equivalent to calling ``getPerson().getName()`` on the given model object.
+
+There are three principal reasons why you might use PropertyModel instead of Model:
+
+* PropertyModel instances are dynamic
+* the property expression language is more compact than the analogous Java code
+* it's much simpler to create a property model than to subclass Model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

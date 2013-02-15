@@ -2,6 +2,7 @@ package org.apache.wicket.reference.models.dynamic;
 
 import java.io.Serializable;
 
+//#classOnly
 public class PersonBean implements Serializable
 {
 	String name;
@@ -16,3 +17,4 @@ public class PersonBean implements Serializable
 		this.name = name;
 	}
 }
+//#classOnly
