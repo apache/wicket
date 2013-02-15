@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 import java.util.Iterator;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -263,18 +262,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		{
 			super.add(behavior = newAutoCompleteBehavior(renderer, settings));
 		}
-	}
-
-	/**
-	 * Initializes the {@link AutoCompleteBehavior} if it is not already there.
-	 */
-	@Override
-	public Component add(Behavior... behaviors)
-	{
-		// the AutoCompleteBehavior must be bound first, see wicket-autocomplete.js
-		initializeAutoCompleteBehavior();
-
-		return super.add(behaviors);
 	}
 
 	@Override
