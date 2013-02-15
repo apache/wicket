@@ -26,6 +26,7 @@ class IncludeCode(Directive):
         'encoding':     directives.encoding,
         'prepend':      directives.unchanged_required,
         'append':       directives.unchanged_required,
+        'tabsize':      directives.unchanged_required,
     }
 
     def run(self):
@@ -82,7 +83,11 @@ class IncludeCode(Directive):
         within = set()
         res = []
         excluding = False
+        tabReplacement='';
+        for i in range(0,int(self.options.get('tabsize',2))):
+        	tabReplacement = tabReplacement + ' ';
         for line in lines:
+            line = line.replace('\t', tabReplacement)
             index = line.find(marker)
             if index >= 0:
                 section_name = line[index+lenm:].strip()

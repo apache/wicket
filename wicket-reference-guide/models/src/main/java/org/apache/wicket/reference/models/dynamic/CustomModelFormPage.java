@@ -13,22 +13,22 @@ public class CustomModelFormPage extends WebPage
 
 		Form<Void> personForm = new Form<Void>("form");
 
-//#customModel
-personForm.add(new RequiredTextField<String>("personName", new Model<String>()
-{
-	@Override
-	public String getObject()
-	{
-		return person.getName();
-	}
+		//#customModel
+		personForm.add(new RequiredTextField<String>("personName", new Model<String>()
+		{
+			@Override
+			public String getObject()
+			{
+				return person.getName();
+			}
 
-	@Override
-	public void setObject(String object)
-	{
-		person.setName(object);
-	}
-}));
-//#customModel
+			@Override
+			public void setObject(String object)
+			{
+				person.setName(object);
+			}
+		}));
+		//#customModel
 
 		add(personForm);
 	}

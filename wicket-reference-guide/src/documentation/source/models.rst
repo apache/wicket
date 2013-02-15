@@ -37,6 +37,7 @@ Simple Models
 The HelloWorld example program demonstrates the simplest model type in Wicket:
 
 .. includecode:: ../../../helloworld/src/main/java/org/apache/wicket/reference/helloworld/HelloWorld.java#docu
+	:tabsize: 2
 
 The constructor for this page constructs a Label component. The first parameter to the Label component's constructor is the Wicket id, which associates the Label with a tag in the HelloWorld.html markup file:
 
