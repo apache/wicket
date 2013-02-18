@@ -87,7 +87,7 @@ The PropertyModel class allows you to create a model that accesses a particular 
 		
 which takes a model object and a property expression. When the property model is asked for its value by the framework, it will use the property expression to access the model object's property. For example, if we have a Java Bean or "POJO" (Plain Old Java Object) like this:
 
-.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/dynamic/PersonBean.java#classOnly
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/dynamic/Person.java#classOnly
 
 then the property expression "name" can be used to access the "name" property of any Person object via the ``getName()`` getter method.
 
@@ -109,6 +109,64 @@ There are three principal reasons why you might use PropertyModel instead of Mod
 * the property expression language is more compact than the analogous Java code
 * it's much simpler to create a property model than to subclass Model
 
+
+
+
+
+
+
+
+
+
+
+
+Compound Property Models
+------------------------
+
+Compound models allow containers to share models with their children. This saves memory, but more importantly, it makes replication of models much cheaper in a clustered environment. The basic idea is that the contained components usually want model data that can be easily derived at runtime from the model of their container. So, give the contained components no explicit model, and when a model is needed, Wicket will search up the containment hierarchy for a compound model. The compound model can retrieve model data for any of its contained components.
+
+``CompoundPropertyModel`` is the most commonly used compound model. An instance of this class uses the name of the contained component as a property expression to retrieve data from its own model data.
+
+To use a ``CompoundPropertyModel``, simply set one as the model for a container, such as a Form or a Page. Create the contained components with no model of their own. Insure that the component identifier names match the appropriate property names.
+
+Here's a simple example using a ``CompoundPropertyModel``. Suppose we have a Person class, with two properties: Name and Age. We want a simple form for the user to edit a Person.
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/compound/CompoundModelPanel.java#form
+
+.. note::
+
+	A complete working example would require a save button and so forth but the use of a compound model doesn't change those.
+
+The component name can in fact be a more complicated property expression. Suppose for example that the Person class also has an address property, of class Address, and that class in turn has a city property. To define this field in the form we can do this:
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/compound/CompoundModelPanel.java#addressCity
+
+The corresponding input field in the html must have a wicket id of ``'address.city'``. This works, but it does expose the internal structure of the model data in the html. ``CompoundPropertyModel`` has a method that can be used to rectify this.
+
+The model associates a different property expression with the component being bound.
+
+.. todo:: replace with real code
+
+::
+
+	public <S> IModel<S> bind(String property)
+	
+With this association in place the child component can have whatever name we like, rather than having the match the property expression.
+
+To use ``CompoundPropertyModel.bind`` for the city field discussed above we might do something like this:
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/compound/CompoundModelBindPanel.java#bind
+	
+Also, note that if you are using a component that you do not want to reference the compound property model, but is a child of the form, that you define a model for that component. For example:
+
+.. todo:: replace with real code
+
+::
+
+	// throws exception
+	personForm.add(new Label("non-compound-model-reference"));
+	// does not throw an exception
+	personForm.add(new Label("non-compound-model-reference", new Model<String>()));
 
 
 

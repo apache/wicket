@@ -9,7 +9,8 @@ public class CustomModelFormPage extends WebPage
 {
 	public CustomModelFormPage()
 	{
-		final PersonBean person = new PersonBean();
+		final Person person = new Person();
+		person.setName("Klaus");
 
 		Form<Void> personForm = new Form<Void>("form");
 

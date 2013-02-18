@@ -3,7 +3,7 @@ package org.apache.wicket.reference.models.dynamic;
 import java.io.Serializable;
 
 //#classOnly
-public class PersonBean implements Serializable
+public class Person implements Serializable
 {
 	String name;
 

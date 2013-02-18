@@ -15,15 +15,16 @@
  * limitations under the License.
  */
 package org.apache.wicket.reference.models;
-//#docu
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.reference.models.compound.CompoundModelFormPage;
+import org.apache.wicket.reference.models.dynamic.CustomModelFormPage;
 
 public class Start extends WebPage
 {
 	public Start()
 	{
-		add(new Label("message", "Hello World!"));
+		add(new BookmarkablePageLink<CustomModelFormPage>("dynamic", CustomModelFormPage.class));
+		add(new BookmarkablePageLink<CompoundModelFormPage>("compound", CompoundModelFormPage.class));
 	}
 }
-//#docu
