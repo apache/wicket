@@ -35,6 +35,7 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.atmosphere.config.AtmosphereParameters;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.atmosphere.cpr.AtmosphereResource;
@@ -314,8 +315,9 @@ public class EventBus implements UnboundListener
 				return ret == null ? "" : ret;
 			}
 		};
-		AtmosphereWebRequest request = new AtmosphereWebRequest(application.newWebRequest(
-			httpRequest, filterPath), pageKey, subscriptionsForPage, event);
+		AtmosphereWebRequest request = new AtmosphereWebRequest(
+			(ServletWebRequest)application.newWebRequest(httpRequest, filterPath), pageKey,
+			subscriptionsForPage, event);
 		Response response = new AtmosphereWebResponse(resource.getResponse());
 		if (application.createRequestCycle(request, response).processRequestAndDetach())
 			broadcaster.broadcast(response.toString(), resource);
