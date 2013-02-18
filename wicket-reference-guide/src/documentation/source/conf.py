@@ -88,6 +88,13 @@ pygments_style = 'sphinx'
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
 
+# -- Special Options
+def setup(app):
+	from sphinx.highlighting import lexers
+	from pygments.lexers.compiled import JavaLexer
+	
+	lexers['java'] = JavaLexer(tabsize=2)
+
 
 # -- Options for HTML output ---------------------------------------------------
 
@@ -244,3 +251,4 @@ texinfo_documents = [
 #texinfo_show_urls = 'footnote'
 
 highlight_language = 'java'
+

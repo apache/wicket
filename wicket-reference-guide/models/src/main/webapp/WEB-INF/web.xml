@@ -31,7 +31,7 @@
 
 	<filter-mapping>
 		<filter-name>ModelsApplication</filter-name>
-		<url-pattern>/models/*</url-pattern>
+		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
         <dispatcher>ERROR</dispatcher>

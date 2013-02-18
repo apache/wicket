@@ -11,11 +11,11 @@ public class SerializableModelPage extends WebPage
 {
 	public SerializableModelPage()
 	{
-//#docu
-IModel<String> message = Model.of("any message");
-message.setObject("current time: " + new Date());
-
-add(new Label("message", message));
-//#docu
+		//#docu
+		IModel<String> message = Model.of("any message");
+		message.setObject("current time: " + new Date());
+		
+		add(new Label("message", message));
+		//#docu
 	}
 }

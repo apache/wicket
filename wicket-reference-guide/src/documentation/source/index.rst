@@ -9,7 +9,7 @@ Contents:
    helloworld
    application
    components
-   models
+   All about Models <models>
    converter
    requestcycle
    behaviors

@@ -1,0 +1,1147 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+  <HEAD>
+    <LINK type="text/css" rel="stylesheet" href="resources/space.css">
+    <STYLE type="text/css">
+      .footer {
+        background-image:      url('https://cwiki.apache.org/confluence/images/border/border_bottom.gif');
+        background-repeat:     repeat-x;
+        background-position:   left top;
+        padding-top:           4px;
+        color:                 #666;
+      }
+    </STYLE>
+    <SCRIPT type="text/javascript" language="javascript">
+      var hide = null;
+      var show = null;
+      var children = null;
+
+      function init() {
+        /* Search form initialization */
+        var form = document.forms['search'];
+        if (form != null) {
+          form.elements['domains'].value = location.hostname;
+          form.elements['sitesearch'].value = location.hostname;
+        }
+
+        /* Children initialization */
+        hide = document.getElementById('hide');
+        show = document.getElementById('show');
+        children = document.all != null ?
+                   document.all['children'] :
+                   document.getElementById('children');
+        if (children != null) {
+          children.style.display = 'none';
+          show.style.display = 'inline';
+          hide.style.display = 'none';
+        }
+      }
+
+      function showChildren() {
+        children.style.display = 'block';
+        show.style.display = 'none';
+        hide.style.display = 'inline';
+      }
+
+      function hideChildren() {
+        children.style.display = 'none';
+        show.style.display = 'inline';
+        hide.style.display = 'none';
+      }
+    </SCRIPT>
+    <TITLE>Working with Wicket models</TITLE>
+  <META http-equiv="Content-Type" content="text/html;charset=UTF-8"></HEAD>
+  <BODY onload="init()">
+    <TABLE border="0" cellpadding="2" cellspacing="0" width="100%">
+      <TR class="topBar">
+        <TD align="left" valign="middle" class="topBarDiv" align="left" nowrap="">
+          &nbsp;<A href="index.html" title="Apache Wicket">Apache Wicket</A>&nbsp;&gt;&nbsp;<A href="framework-documentation.html" title="Framework Documentation">Framework Documentation</A>&nbsp;&gt;&nbsp;<A href="reference-library.html" title="Reference library">Reference library</A>&nbsp;&gt;&nbsp;<A href="how-to-do-things-in-wicket.html" title="How to do things in Wicket">How to do things in Wicket</A>&nbsp;&gt;&nbsp;<A href="models-and-binding.html" title="Models and binding">Models and binding</A>&nbsp;&gt;&nbsp;<A href="" title="Working with Wicket models">Working with Wicket models</A>
+        </TD>
+        <TD align="right" valign="middle" nowrap="">
+          <FORM name="search" action="http://www.google.com/search" method="get">
+            <INPUT type="hidden" name="ie" value="UTF-8">
+            <INPUT type="hidden" name="oe" value="UTF-8">
+            <INPUT type="hidden" name="domains" value="">
+            <INPUT type="hidden" name="sitesearch" value="">
+            <INPUT type="text" name="q" maxlength="255" value="">        
+            <INPUT type="submit" name="btnG" value="Google Search">
+          </FORM>
+        </TD>
+      </TR> 
+    </TABLE>
+
+    <DIV id="PageContent">
+      <DIV class="pageheader" style="padding: 6px 0px 0px 0px;">
+        <!-- We'll enable this once we figure out how to access (and save) the logo resource -->
+        <!--img src="/wiki/images/confluence_logo.gif" style="float: left; margin: 4px 4px 4px 10px;" border="0"-->
+        <DIV style="margin: 0px 10px 0px 10px" class="smalltext">Apache Wicket</DIV>
+        <DIV style="margin: 0px 10px 8px 10px" class="pagetitle">Working with Wicket models</DIV>
+
+        <DIV class="greynavbar" align="right" style="padding: 2px 10px; margin: 0px;">
+          <A href="https://cwiki.apache.org/confluence/pages/editpage.action?pageId=27742">
+            <IMG src="https://cwiki.apache.org/confluence/images/icons/notep_16.gif" height="16" width="16" border="0" align="absmiddle" title="Edit Page"></A>
+            <A href="https://cwiki.apache.org/confluence/pages/editpage.action?pageId=27742">Edit Page</A>
+          &nbsp;
+          <A href="https://cwiki.apache.org/confluence/pages/listpages.action?key=WICKET">
+            <IMG src="https://cwiki.apache.org/confluence/images/icons/browse_space.gif" height="16" width="16" border="0" align="absmiddle" title="Browse Space"></A>
+            <A href="https://cwiki.apache.org/confluence/pages/listpages.action?key=WICKET">Browse Space</A>
+          &nbsp;
+          <A href="https://cwiki.apache.org/confluence/pages/createpage.action?spaceKey=WICKET&fromPageId=27742">
+            <IMG src="https://cwiki.apache.org/confluence/images/icons/add_page_16.gif" height="16" width="16" border="0" align="absmiddle" title="Add Page"></A>
+          <A href="https://cwiki.apache.org/confluence/pages/createpage.action?spaceKey=WICKET&fromPageId=27742">Add Page</A>
+          &nbsp;
+          <A href="https://cwiki.apache.org/confluence/pages/createblogpost.action?spaceKey=WICKET&fromPageId=27742">
+            <IMG src="https://cwiki.apache.org/confluence/images/icons/add_blogentry_16.gif" height="16" width="16" border="0" align="absmiddle" title="Add News"></A>
+          <A href="https://cwiki.apache.org/confluence/pages/createblogpost.action?spaceKey=WICKET&fromPageId=27742">Add News</A>
+        </DIV>
+      </DIV>
+      <DIV class="pagesubheading" style="margin: 0px 10px 0px 10px;">
+        #editReport()
+      </DIV>
+
+      <DIV class="pagecontent">
+        <DIV class="wiki-content">
+          <DIV class="panel" style="border-style: solid;border-width: 1px;"><DIV class="panelHeader" style="border-bottom-width: 1px;border-bottom-style: solid;"><B>Table of contents</B></DIV><DIV class="panelContent">
+<DIV>
+<UL>
+    <LI><A href="#WorkingwithWicketmodels-WhatareWicketModels%253F">What are Wicket Models?</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-SimpleModels">Simple Models</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-DynamicModels">Dynamic Models</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-PropertyModels">Property Models</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-CompoundPropertyModels">Compound Property Models</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-WrappedObjectModels">Wrapped Object Models</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-ResourceModels">Resource Models</A></LI>
+<UL>
+    <LI><A href="#WorkingwithWicketmodels-ResourceModel">ResourceModel</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-StringResourceModel">StringResourceModel</A></LI>
+</UL>
+    <LI><A href="#WorkingwithWicketmodels-DetachableModels">Detachable Models</A></LI>
+<UL>
+    <LI><A href="#WorkingwithWicketmodels-ManagingthelifecycleofnondefaultdetachableIModel%2527s">Managing the lifecycle of non default detachable IModel's</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-AbstractReadOnlyModel">AbstractReadOnlyModel</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-LoadableDetachableModel">LoadableDetachableModel</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-Read%252FWriteDetachableModel">Read/Write Detachable Model</A></LI>
+</UL>
+    <LI><A href="#WorkingwithWicketmodels-Chainingmodels">Chaining models</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-MoreabouttheIModelinterface">More about the IModel interface</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-RefactorSafePropertyModels">Refactor Safe Property Models</A></LI>
+<UL>
+    <LI><A href="#WorkingwithWicketmodels-Annotationprocessors">Annotation processors</A></LI>
+    <LI><A href="#WorkingwithWicketmodels-LambdaJ">LambdaJ</A></LI>
+</UL>
+</UL></DIV>
+</DIV></DIV>
+<DIV class="panel" style="border-width: 1px;"><DIV class="panelContent">
+<P>NOTE: this page is about models like they exist for Wicket 1.x. The IModel interface is slightly changed in Wicket 2.x. Most of what is written on this page applies to Wicket 2.x as well, but where it doesn't there will be notes.</P>
+</DIV></DIV>
+
+<H2><A name="WorkingwithWicketmodels-WhatareWicketModels%3F"></A>What are Wicket Models?</H2>
+
+<P>In Wicket, a model holds a value for a component to display and/or edit.  How exactly this value is held is determined by a given model's  implementation of the <TT>wicket.model.IModel</TT> interface.  The IModel interface decouples a component from the <EM>model object</EM> which forms its value.  This in turn decouples the whole Wicket framework from any and all details of model storage, such as the details of a given persistence technology.  As far as Wicket itself is concerned, a model is anything that implements the IModel interface, no matter how it might do that.  Although there are some refinements described below, conceptually, IModel looks like this:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> <SPAN class="code-keyword">interface</SPAN> IModel
+{
+	<SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">Object</SPAN> getObject();
+	<SPAN class="code-keyword">public</SPAN> void setObject(<SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">Object</SPAN> object);
+}
+</PRE>
+</DIV></DIV>
+<P>The IModel interface defines a simple contract for getting and setting a value.  The nature of the Object retrieved or set will depend on the component referencing the model.  For a <TT>Label</TT> component, the value must be something which can be converted to a <TT>String</TT> which will be displayed when the label is rendered.  For a <TT>ListView</TT>, it must be a <TT>java.util.List</TT> containing the values to be displayed as a list.</P>
+
+<P>Different frameworks implement the model concept differently.  Swing has a number of component-specific model interfaces.  Struts requires that the model be a Java Bean and there is no explicit model interface.  The IModel interface in Wicket allows models to be generic (as in Struts) but it can do things that would not be possible if components accessed their model directly (as in Swing).  For example, Wicket applications can use or provide IModel implementations that read a model value from a resource file or retrieve a model value from a database only when needed.</P>
+
+<P>The use of a single model interface (as compared to having multiple interfaces, or having no model interface at all) has a number of advantages:</P>
+<UL>
+	<LI>Wicket provides <TT>IModel</TT> implementations you can use with any component. These models can do things such as retrieve the value from a resource file, or read and write the value from a Java Bean property.</LI>
+	<LI>Wicket also provides <TT>IModel</TT> implementations that defer retrieving the value until it is actually needed, and remove it from the servlet Session when the request is complete. This reduces session memory consumption and is particularly useful with large values such as lists.</LI>
+	<LI>Unlike Swing, you do not have to implement an extra interface or helper class for each different component. Especially for the most often used components such as Labels and TextFields you can easily bind to a bean property.</LI>
+	<LI>In many cases you can provide the required value directly to the component and it will wrap a default model implementation around it for you.</LI>
+	<LI>And while you do not have to use beans as your models as you must with Struts, you may still easily use beans if you wish. Wicket provides the appropriate model implementations.</LI>
+</UL>
+
+
+<H2><A name="WorkingwithWicketmodels-SimpleModels"></A>Simple Models</H2>
+
+<P>The HelloWorld example program demonstrates the simplest model type in Wicket:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> class HelloWorld <SPAN class="code-keyword">extends</SPAN> WicketExamplePage
+{
+	<SPAN class="code-keyword">public</SPAN> HelloWorld()
+	{
+		add(<SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;message&quot;</SPAN>, <SPAN class="code-quote">&quot;Hello World!&quot;</SPAN>));
+	}
+}
+</PRE>
+</DIV></DIV>
+<P>The constructor for this page constructs a Label component. The first parameter to the Label component's constructor is the Wicket id, which associates the Label with a tag in the HelloWorld.html markup file:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+&lt;?xml version=<SPAN class="code-quote">&quot;1.0&quot;</SPAN> encoding=<SPAN class="code-quote">&quot;UTF-8&quot;</SPAN>?&gt;
+&lt;html xmlns:wicket='http:<SPAN class="code-comment">//wicket.sourceforge.net/wicket'&gt;
+</SPAN>&lt;head&gt;
+	&lt;title&gt;Wicket Examples - helloworld&lt;/title&gt;
+	&lt;link rel=<SPAN class="code-quote">&quot;stylesheet&quot;</SPAN> type=<SPAN class="code-quote">&quot;text/css&quot;</SPAN> href=<SPAN class="code-quote">&quot;style.css&quot;</SPAN>/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;span wicket:id=<SPAN class="code-quote">&quot;mainNavigation&quot;</SPAN>/&gt;
+	&lt;span wicket:id=<SPAN class="code-quote">&quot;message&quot;</SPAN>&gt;Message goes here&lt;/span&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+</DIV></DIV>
+<P>The second parameter to the Label component's constructor is the model data for the Label, providing content that replaces any text inside the <TT>&lt;span&gt;</TT> tag to which the Label is associated.  The model data passed to the Label constructor above is apparently a String. Internally Label creates a <TT>Model</TT> for the String. <TT>Model</TT> is a simple default implementation of <TT>IModel</TT>.</P>
+
+<P>Thus instead we could have created our label this way:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+add(<SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;message&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> Model(<SPAN class="code-quote">&quot;Hello World!&quot;</SPAN>)));
+</PRE>
+</DIV></DIV>
+<P>The Label constructor that takes a String is simply a convenience.</P>
+
+<H2><A name="WorkingwithWicketmodels-DynamicModels"></A>Dynamic Models</H2>
+
+<P>The data we gave to the model in the previous example, the string &quot;Hello World&quot;, is constant. No matter how many times Wicket asks for the model data, it will get the same thing. Now consider a slightly more complex example:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+Label name = <SPAN class="code-keyword">new</SPAN> Label (<SPAN class="code-quote">&quot;name&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> Model(person.getName()));
+</PRE>
+</DIV></DIV>
+<P>The model data is still a String, the value of <TT>person.getName()</TT> is set at the time the model is created. Recall that Java strings are immutable: this string will never change. Even if person.getName() would later return a different value, the model data is unchanged. So the page will still display the old value to the user even if it is reloaded. Models like this, whose values never change, are known as <EM>static</EM> models.</P>
+
+<P>In many cases the underlying data can change, and you want the user to see those changes. For example, the user might use a form to change a person's name. Models which can automatically reflect change are known as <EM>dynamic</EM> models. While the <TT>Model</TT> class is static, most of the other core Wicket model classes are dynamic.</P>
+
+<P>It's instructive to see how to make a dynamic model by subclassing <TT>Model</TT>.</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+personForm.add(<SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;personName&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> Model() {
+	@Override
+	<SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">Object</SPAN> getObject() {
+		<SPAN class="code-keyword">return</SPAN> person.getName();
+	}
+
+	@Override
+	<SPAN class="code-keyword">public</SPAN> void setObject(Serializable object) {
+		person.setName((<SPAN class="code-object">String</SPAN>) object);
+	}
+}));
+</PRE>
+</DIV></DIV>
+<P>It would be inconvenient to have to do this for every component that needs a dynamic model. Instead, you can use the <TT>PropertyModel</TT> class or one of the other classes described below.</P>
+
+<H2><A name="WorkingwithWicketmodels-PropertyModels"></A>Property Models</H2>
+
+<P>The PropertyModel class allows you to create a model that accesses a particular property of its associated model object at runtime. This property is accessed using a simple expression language with a dot notation (e.g. <TT>'name'</TT> means property <TT>'name'</TT>, and <TT>'person.name'</TT> means property <TT>name</TT> of object <TT>person</TT>).  The simplest PropertyModel constructor is:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> PropertyModel(<SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">Object</SPAN> modelObject, <SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">String</SPAN> expression)
+</PRE>
+</DIV></DIV>
+<P>which takes a model object and a property expression.  When the property model is asked for its value by the framework, it will use the property expression to access the model object's property.  For example, if we have a Java Bean or &quot;POJO&quot; (Plain Old Java Object) like this:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+class Person
+{
+  <SPAN class="code-keyword">private</SPAN> <SPAN class="code-object">String</SPAN> name;
+
+  Person(<SPAN class="code-object">String</SPAN> name)
+  {
+    <SPAN class="code-keyword">this</SPAN>.name = name;
+  }
+
+  <SPAN class="code-object">String</SPAN> getName()
+  {
+    <SPAN class="code-keyword">return</SPAN> name;
+  }
+}
+</PRE>
+</DIV></DIV>
+<P>then the property expression &quot;<TT>name</TT>&quot; can be used to access the &quot;<TT>name</TT>&quot; property of any Person object via the <TT>getName()</TT> getter method.</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+personForm.add(<SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;personName&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> PropertyModel(person, <SPAN class="code-quote">&quot;name&quot;</SPAN>)));
+</PRE>
+</DIV></DIV>
+<P>Nested property expressions are possible as well. You can access sub-properties via reflection using a dotted path notation, which means the property expression <TT>&quot;person.name&quot;</TT> is equivalent to calling <TT>getPerson().getName()</TT> on the given model object.</P>
+
+<P>A second constructor on PropertyModel is available for models that wish to access properties involving type conversions:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> PropertyModel(<SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">Object</SPAN> modelObject, <SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">String</SPAN> expression, <SPAN class="code-object">Class</SPAN> propertyType)
+</PRE>
+</DIV></DIV>
+<P>Although the property models will do automatic type conversions for you, it may not always do the kind of conversion you desire.  This alternative constructor creates a property model that forces a particular conversion to occur.  For example, you may wish to access a String or Object property of something as an Integer.  Constructing a PropertyModel with <TT>new PropertyModel(object, &quot;myString&quot;, Integer.class)</TT> would force the property to be converted to and from an Integer on get/set operations.</P>
+
+<P>There are three principal reasons why you might use PropertyModel instead of Model:</P>
+<UL>
+	<LI>PropertyModel instances are dynamic</LI>
+	<LI>the property expression language is more compact than the analogous Java code</LI>
+	<LI>it's much simpler to create a property model than to subclass <TT>Model</TT></LI>
+</UL>
+
+
+<H2><A name="WorkingwithWicketmodels-CompoundPropertyModels"></A>Compound Property Models</H2>
+
+<P>Compound models allow containers to share models with their children. This saves memory, but more importantly, it makes replication of models much cheaper in a clustered environment. The basic idea is that the contained components usually want model data that can be easily derived at runtime from the model of their container. So, give the contained components no explicit model, and when a model is needed, Wicket will search up the containment hierarchy for a compound model. The compound model can retrieve model data for any of its contained components.</P>
+
+<P>CompoundPropertyModel is the most commonly used compound model. An instance of this class uses the name of the contained component as a property expression to retrieve data from its own model data.</P>
+
+<P>To use a <TT>CompoundPropertyModel</TT>, simply set one as the model for a container, such as a Form or a Page. Create the contained components with no model of their own. Insure that the component identifier names match the appropriate property names.</P>
+
+<P>Here's a simple example using a CompoundPropertyModel. Suppose we have a Person class, with two properties: Name and Age. We want a simple form for the user to edit a Person.</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+Form personForm = <SPAN class="code-keyword">new</SPAN> Form(<SPAN class="code-quote">&quot;aPersonForm&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> CompoundPropertyModel(person));
+personForm.add(<SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;name&quot;</SPAN>));
+personForm.add(<SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;age&quot;</SPAN>, <SPAN class="code-object">Integer</SPAN>.class));
+</PRE>
+</DIV></DIV>
+<P>(A complete working example would require a save button and so forth but the use of a compound model doesn't change those.)</P>
+
+<P>The component name can in fact be a more complicated property expression. Suppose for example that the Person class also has an address property, of class <TT>Address</TT>, and that class in turn has a city property. To define this field in the form we can do this:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+personForm.add(<SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;address.city&quot;</SPAN>));
+</PRE>
+</DIV></DIV>
+<P>The corresponding input field in the html must have a wicket id of &quot;address.city&quot;. This works, but it does expose the internal structure of the model data in the html. <TT>CompoundPropertyModel</TT> has a method that can be used to rectify this.</P>
+
+<P>The model associates a different property expression with the component being bound.</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> &lt;S&gt; IModel&lt;S&gt; bind(<SPAN class="code-object">String</SPAN> property)
+</PRE>
+</DIV></DIV>
+<P>With this association in place the child component can have whatever name we like, rather than having the match the property expression.</P>
+
+<P>To use <TT>CompoundPropertyModel.bind</TT> for the city field discussed above we might do something like this:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+CompoundPropertyModel personModel = <SPAN class="code-keyword">new</SPAN> CompoundPropertyModel(person);
+Form personForm = <SPAN class="code-keyword">new</SPAN> Form(<SPAN class="code-quote">&quot;aPersonForm&quot;</SPAN>, personModel);
+TextField cityField = <SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;city&quot;</SPAN>, personModel.bind(<SPAN class="code-quote">&quot;address.city&quot;</SPAN>));
+personForm.add(cityField);
+</PRE>
+</DIV></DIV>
+<P>Also, note that if you are using a component that you do not want to reference the compound property model, but is a child of the form, that you define a model for that component. For example:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-comment">// <SPAN class="code-keyword">throws</SPAN> exception
+</SPAN>personForm.add(<SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;non-compound-model-reference&quot;</SPAN>));
+<SPAN class="code-comment">// does not <SPAN class="code-keyword">throw</SPAN> an exception
+</SPAN>personForm.add(<SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;non-compound-model-reference&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> Model()));
+</PRE>
+</DIV></DIV>
+
+<H2><A name="WorkingwithWicketmodels-WrappedObjectModels"></A>Wrapped Object Models</H2>
+
+<P>It is possible to create Models that explicitly define in normal java code what is to be returned as the model object for each property within the object being wrapped.  So instead of specifying via a string the name of the property to fetch the value you from the specification is done in Java.</P>
+
+<P>While creating Model's in this pattern takes longer (more classes) than using Reflection based PropertyModels it prevents the problems that can occur when critical functionality is defined in String based context that most IDE's do not refactor properly.</P>
+
+<P>It also helps with readability when the models are added to components to be able to easily see the types involved.</P>
+
+<P>These are the Address and Person classes used in the previous examples:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> class Address
+  <SPAN class="code-keyword">implements</SPAN> Serializable
+{
+
+  <SPAN class="code-keyword">private</SPAN> <SPAN class="code-object">String</SPAN> city;
+
+  <SPAN class="code-keyword">public</SPAN> Address()
+  {
+    <SPAN class="code-keyword">super</SPAN>();
+  }
+
+  <SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">String</SPAN> getCity()
+  {
+    <SPAN class="code-keyword">return</SPAN> city;
+  }
+
+  <SPAN class="code-keyword">public</SPAN> void setCity(<SPAN class="code-object">String</SPAN> city)
+  {
+    <SPAN class="code-keyword">this</SPAN>.city = city;
+  }
+
+}
+
+
+<SPAN class="code-keyword">public</SPAN> class Person
+  <SPAN class="code-keyword">implements</SPAN> Serializable
+{
+
+  <SPAN class="code-keyword">private</SPAN> <SPAN class="code-object">String</SPAN> name;
+  <SPAN class="code-keyword">private</SPAN> <SPAN class="code-object">int</SPAN> age;
+
+  <SPAN class="code-keyword">private</SPAN> Address address;
+
+  <SPAN class="code-keyword">public</SPAN> Person()
+  {
+    <SPAN class="code-keyword">super</SPAN>();
+  }
+
+  <SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">String</SPAN> getName()
+  {
+    <SPAN class="code-keyword">return</SPAN> name;
+  }
+
+  <SPAN class="code-keyword">public</SPAN> void setName(<SPAN class="code-object">String</SPAN> name)
+  {
+    <SPAN class="code-keyword">this</SPAN>.name = name;
+  }
+
+  <SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">int</SPAN> getAge()
+  {
+    <SPAN class="code-keyword">return</SPAN> age;
+  }
+
+  <SPAN class="code-keyword">public</SPAN> void setAge(<SPAN class="code-object">int</SPAN> age)
+  {
+    <SPAN class="code-keyword">this</SPAN>.age = age;
+  }
+
+  <SPAN class="code-keyword">public</SPAN> Address getAddress()
+  {
+    <SPAN class="code-keyword">return</SPAN> address;
+  }
+
+  <SPAN class="code-keyword">public</SPAN> void setAddress(Address address)
+  {
+    <SPAN class="code-keyword">this</SPAN>.address = address;
+  }
+
+}
+</PRE>
+</DIV></DIV>
+<P>The first step is to create a <EM>Wrapped Object Model</EM> for the Address and Person classes:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> class AddressModel
+  <SPAN class="code-keyword">implements</SPAN> IModel
+{
+
+  <SPAN class="code-keyword">private</SPAN> IModel addressContainingModel;
+
+  <SPAN class="code-keyword">private</SPAN> AddressModelType type;
+
+  <SPAN class="code-keyword">public</SPAN> <SPAN class="code-keyword">enum</SPAN> AddressModelType
+  {
+    CITY_MODEL;
+  };
+
+  <SPAN class="code-keyword">public</SPAN> AddressModel(IModel addressContainingModel, AddressModelType type)
+  {
+    <SPAN class="code-keyword">this</SPAN>.addressContainingModel = addressContainingModel;
+    <SPAN class="code-keyword">this</SPAN>.type = type;
+  }
+
+  @Override
+  <SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">Object</SPAN> getObject()
+  {
+
+    Address address = (Address) addressContainingModel.getObject();
+
+    <SPAN class="code-keyword">switch</SPAN> (type)
+    {
+
+      <SPAN class="code-keyword">case</SPAN> CITY_MODEL:
+
+        <SPAN class="code-keyword">return</SPAN> address.getCity();
+    }
+
+    <SPAN class="code-keyword">throw</SPAN> <SPAN class="code-keyword">new</SPAN> UnsupportedOperationException(<SPAN class="code-quote">&quot;invalid AddressModelType = &quot;</SPAN>
+                                            + type.name());
+  }
+
+  @Override
+  <SPAN class="code-keyword">public</SPAN> void setObject(<SPAN class="code-object">Object</SPAN> object)
+  {
+
+    Address address = (Address) addressContainingModel.getObject();
+
+    <SPAN class="code-keyword">switch</SPAN> (type)
+    {
+
+      <SPAN class="code-keyword">case</SPAN> CITY_MODEL:
+
+        address.setCity((<SPAN class="code-object">String</SPAN>) object);
+        <SPAN class="code-keyword">break</SPAN>;
+      <SPAN class="code-keyword">default</SPAN>:
+        <SPAN class="code-keyword">throw</SPAN> <SPAN class="code-keyword">new</SPAN> UnsupportedOperationException(<SPAN class="code-quote">&quot;invalid AddressModelType = &quot;</SPAN>
+                                                + type.name());
+    }
+
+  }
+
+  @Override
+  <SPAN class="code-keyword">public</SPAN> void detach()
+  {
+
+    addressContainingModel.detach();
+
+  }
+
+}
+
+
+<SPAN class="code-keyword">public</SPAN> class PersonModel
+  <SPAN class="code-keyword">implements</SPAN> IModel
+{
+
+  <SPAN class="code-keyword">private</SPAN> IModel personContainingModel;
+  <SPAN class="code-keyword">private</SPAN> PersonModelType type;
+
+  <SPAN class="code-keyword">public</SPAN> <SPAN class="code-keyword">enum</SPAN> PersonModelType
+  {
+    NAME_MODEL, AGE_MODEL, ADDRESS_MODEL;
+  }
+
+  <SPAN class="code-keyword">public</SPAN> PersonModel(IModel personContainingModel, PersonModelType type)
+  {
+    <SPAN class="code-keyword">this</SPAN>.personContainingModel = personContainingModel;
+    <SPAN class="code-keyword">this</SPAN>.type = type;
+  }
+
+  @Override
+  <SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">Object</SPAN> getObject()
+  {
+    Person person = (Person) personContainingModel.getObject();
+
+    <SPAN class="code-keyword">switch</SPAN> (type)
+    {
+
+      <SPAN class="code-keyword">case</SPAN> NAME_MODEL:
+
+        <SPAN class="code-keyword">return</SPAN> person.getName();
+
+      <SPAN class="code-keyword">case</SPAN> AGE_MODEL:
+        <SPAN class="code-keyword">return</SPAN> <SPAN class="code-keyword">new</SPAN> <SPAN class="code-object">Integer</SPAN>(person.getAge());
+
+      <SPAN class="code-keyword">case</SPAN> ADDRESS_MODEL:
+        <SPAN class="code-keyword">return</SPAN> person.getAddress();
+
+    }
+
+    <SPAN class="code-keyword">throw</SPAN> <SPAN class="code-keyword">new</SPAN> UnsupportedOperationException(<SPAN class="code-quote">&quot;invalid PersonModelType = &quot;</SPAN>
+                                            + type.name());
+  }
+
+  @Override
+  <SPAN class="code-keyword">public</SPAN> void setObject(<SPAN class="code-object">Object</SPAN> object)
+  {
+
+    Person person = (Person) personContainingModel.getObject();
+
+    <SPAN class="code-keyword">switch</SPAN> (type)
+    {
+
+      <SPAN class="code-keyword">case</SPAN> NAME_MODEL:
+
+        person.setName((<SPAN class="code-object">String</SPAN>) object);
+        <SPAN class="code-keyword">break</SPAN>;
+
+      <SPAN class="code-keyword">case</SPAN> AGE_MODEL:
+        person.setAge((<SPAN class="code-object">Integer</SPAN>) object);
+        <SPAN class="code-keyword">break</SPAN>;
+
+      <SPAN class="code-keyword">case</SPAN> ADDRESS_MODEL:
+        person.setAddress((Address) object);
+        <SPAN class="code-keyword">break</SPAN>;
+
+      <SPAN class="code-keyword">default</SPAN>:
+        <SPAN class="code-keyword">throw</SPAN> <SPAN class="code-keyword">new</SPAN> UnsupportedOperationException(<SPAN class="code-quote">&quot;invalid PersonModelType = &quot;</SPAN>
+                                                + type.name());
+    }
+
+  }
+
+  @Override
+  <SPAN class="code-keyword">public</SPAN> void detach()
+  {
+    personContainingModel.detach();
+  }
+
+}
+</PRE>
+</DIV></DIV>
+<P>Notice how each wrapped model contains an inner model that contains the actual pojo instance.  This allows for the wrapped model to be a plain Model or a LoadableDetachableModel, or even another wrapped model where its .getObject() results in a suitably typed input value (see the &quot;address.city&quot; field in the example below).</P>
+
+<P>At this point to create a form using our wrapped object models looks like:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+Person p = <SPAN class="code-keyword">new</SPAN> Person ();
+
+Form personForm = <SPAN class="code-keyword">new</SPAN> Form(<SPAN class="code-quote">&quot;aPersonForm&quot;</SPAN>);
+personForm.add(<SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;name&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> PersonModel (<SPAN class="code-keyword">new</SPAN> Model (p), PersonModelType.NAME_MODEL)));
+personForm.add(<SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;age&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> PersonModel (<SPAN class="code-keyword">new</SPAN> Model (p), PersonModelType.AGE_MODEL), <SPAN class="code-object">Integer</SPAN>.class));
+personForm.add(<SPAN class="code-keyword">new</SPAN> RequiredTextField(<SPAN class="code-quote">&quot;address.city&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> AddressModel (<SPAN class="code-keyword">new</SPAN> PersonModel (<SPAN class="code-keyword">new</SPAN> Model (p),
+                                        PersonModelType.ADDRESS_MODEL), AddressModelType.CITY_MODEL)));
+add(personForm);
+</PRE>
+</DIV></DIV>
+<P>A wrapped object model also makes working with DataTables's easier as one IColumn implementation can be written for each object class which makes the declaration of the table much simpler.</P>
+
+<P>e.g.</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> class PersonTableColumn
+  <SPAN class="code-keyword">extends</SPAN> AbstractColumn
+{
+  <SPAN class="code-keyword">private</SPAN> <SPAN class="code-keyword">final</SPAN> PersonModelType type;
+
+  <SPAN class="code-keyword">public</SPAN> PersonTableColumn(<SPAN class="code-object">String</SPAN> columnName, PersonModelType type)
+  {
+    <SPAN class="code-keyword">super</SPAN>(<SPAN class="code-keyword">new</SPAN> Model(columnName));
+    <SPAN class="code-keyword">this</SPAN>.type = type;
+  }
+
+  <SPAN class="code-keyword">public</SPAN> void populateItem(Item cellItem, <SPAN class="code-object">String</SPAN> componentId, IModel rowModel)
+  {
+
+    <SPAN class="code-keyword">switch</SPAN> (type)
+    {
+      <SPAN class="code-comment">// <SPAN class="code-keyword">this</SPAN> needs to be handled seperately due to it being an Address
+</SPAN>      <SPAN class="code-comment">// instance from the Person object.
+</SPAN>      <SPAN class="code-keyword">case</SPAN> ADDRESS_MODEL:
+        cellItem
+          .add(<SPAN class="code-keyword">new</SPAN> Label(componentId,
+                         <SPAN class="code-keyword">new</SPAN> AddressModel(<SPAN class="code-keyword">new</SPAN> PersonModel(rowModel,
+                                                          PersonModelType.ADDRESS_MODEL),
+                                          AddressModelType.CITY_MODEL)));
+        <SPAN class="code-keyword">break</SPAN>;
+
+      <SPAN class="code-keyword">default</SPAN>:
+        cellItem.add(<SPAN class="code-keyword">new</SPAN> Label(componentId, <SPAN class="code-keyword">new</SPAN> PersonModel(rowModel, type)));
+    }
+  }
+}
+</PRE>
+</DIV></DIV>
+<P>So the table could be declared like:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+DataTable table = <SPAN class="code-keyword">new</SPAN> DataTable(<SPAN class="code-quote">&quot;datatable&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> IColumn[] {
+      <SPAN class="code-keyword">new</SPAN> PersonTableColumn(<SPAN class="code-quote">&quot;Name&quot;</SPAN>, PersonModelType.NAME_MODEL),
+      <SPAN class="code-keyword">new</SPAN> PersonTableColumn(<SPAN class="code-quote">&quot;Age&quot;</SPAN>, PersonModelType.AGE_MODEL),
+      <SPAN class="code-keyword">new</SPAN> PersonTableColumn(<SPAN class="code-quote">&quot;City&quot;</SPAN>, PersonModelType.ADDRESS_MODEL)
+  }, <SPAN class="code-keyword">new</SPAN> PersonProvider(), 10);
+</PRE>
+</DIV></DIV>
+<P>Another option with the complex object is to create a custom IConverter that will take in this case the Address instance from the PersonModel and render the string value as the city name.</P>
+
+<P>e.g.</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> class CustomLabel <SPAN class="code-keyword">extends</SPAN> Label {
+
+	<SPAN class="code-keyword">private</SPAN> <SPAN class="code-keyword">final</SPAN> IConverter converter;
+
+	/**
+	 * @param id
+	 * @param label
+	 */
+	<SPAN class="code-keyword">public</SPAN> CustomLabel(<SPAN class="code-object">String</SPAN> id, IModel labelModel, IConverter converter) {
+		<SPAN class="code-keyword">super</SPAN>(id, labelModel);
+		<SPAN class="code-keyword">this</SPAN>.converter = converter;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.wicket.Component#getConverter(java.lang.<SPAN class="code-object">Class</SPAN>)
+	 */
+	@Override
+	<SPAN class="code-keyword">public</SPAN> IConverter getConverter(<SPAN class="code-object">Class</SPAN> type) {
+
+		<SPAN class="code-keyword">return</SPAN> <SPAN class="code-keyword">this</SPAN>.converter;
+	}
+
+
+}
+</PRE>
+</DIV></DIV>
+<P>With the populate from above as:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+  <SPAN class="code-keyword">public</SPAN> void populateItem(Item cellItem, <SPAN class="code-object">String</SPAN> componentId, IModel rowModel)
+  {
+
+    <SPAN class="code-keyword">switch</SPAN> (type)
+    {
+
+      <SPAN class="code-keyword">case</SPAN> ADDRESS_MODEL:
+        cellItem
+          .add(<SPAN class="code-keyword">new</SPAN> CustomLabel(componentId,
+                               <SPAN class="code-keyword">new</SPAN> PersonModel(rowModel,
+                                               PersonModelType.ADDRESS_MODEL),
+                               <SPAN class="code-keyword">new</SPAN> IConverter()
+                               {
+                                 <SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">Object</SPAN> convertToObject(<SPAN class="code-object">String</SPAN> arg0,
+                                                               Locale arg1)
+                                 {
+                                   <SPAN class="code-keyword">throw</SPAN> <SPAN class="code-keyword">new</SPAN> UnsupportedOperationException(<SPAN class="code-quote">&quot;converter is readonly.&quot;</SPAN>);
+                                 }
+
+                                 <SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">String</SPAN> convertToString(<SPAN class="code-object">Object</SPAN> object,
+                                                               Locale locale)
+                                 {
+                                   Address address = (Address) object;
+                                   <SPAN class="code-keyword">return</SPAN> address.getCity();
+                                 }
+                               }));
+        <SPAN class="code-keyword">break</SPAN>;
+
+      <SPAN class="code-keyword">default</SPAN>:
+        cellItem.add(<SPAN class="code-keyword">new</SPAN> Label(componentId, <SPAN class="code-keyword">new</SPAN> PersonModel(rowModel, type)));
+    }
+
+  }
+</PRE>
+</DIV></DIV>
+
+<H2><A name="WorkingwithWicketmodels-ResourceModels"></A>Resource Models</H2>
+
+<H3><A name="WorkingwithWicketmodels-ResourceModel"></A>ResourceModel</H3>
+
+<P>Localization of resources in Wicket is supported by the <TT>Localizer</TT> class. This provides a very convenient way to retrieve and format application-wide or component-specific resources according to the Locale that the user's Session is running under. You can retrieve a <TT>String</TT> using <TT>Localizer</TT> and use the result as a model object, but it is usually more convenient to use one of Wicket's resource model classes.</P>
+
+<P><TT>ResourceModel</TT> is the simplest of these. It simply takes a resource key and uses it to determine the model object (by looking for the resource in a property file). Thus for a example a label can be created this way:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+add(<SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;greetings&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> ResourceModel(<SPAN class="code-quote">&quot;label.greetings&quot;</SPAN>)));
+</PRE>
+</DIV></DIV>
+<P>(Note however that you can also accomplish the same thing using the wicket:message tag in the html.)</P>
+
+<P><TT>ResourceModel</TT> has another constructor which takes an additional string to be used as a default if the resource is not found.</P>
+
+<P>The model objects created via <TT>ResourceModel</TT> vary according to the locale and the contents of the resource bundle, but they don't otherwise depend on the program state. For example, the greeting message produced above doesn't contain the user's name. More dynamic models can be constructed using <TT>StringResourceModel</TT>.</P>
+
+<P>Note that the <TT>ResourceModel</TT>, like other models that use the ComponentStringResourceLoader, takes two attempts to load each key it's looking for.  I.e., in addition to the various style/locale/component-path retries, it looks using both a relative path and an absolute path.  To try &amp; clarify using the example above, it will look for both the property &quot;greetings.label.greetings&quot; (assuming the Label is directly added to the page) as well as the absolute &quot;label.greetings&quot; key.  If the label was part of a form, it could be &quot;formName.greetings.label.greetings&quot; (etc...).</P>
+
+<H3><A name="WorkingwithWicketmodels-StringResourceModel"></A>StringResourceModel</H3>
+
+<P>StringResourceModels have a resource key, a Component, an optional model and an optional array of parameters that can be passed to the Java MessageFormat facility. The constructors look like this:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> StringResourceModel(<SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">String</SPAN> resourceKey, <SPAN class="code-keyword">final</SPAN> Component component, <SPAN class="code-keyword">final</SPAN> IModel model)
+<SPAN class="code-keyword">public</SPAN> StringResourceModel(<SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">String</SPAN> resourceKey, <SPAN class="code-keyword">final</SPAN> Component component, <SPAN class="code-keyword">final</SPAN> IModel model, <SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">Object</SPAN>[] parameters)
+</PRE>
+</DIV></DIV>
+<P>The resourceKey is used to find the resource in a property file. The property file used depends on the component.</P>
+
+<P>A very simple example of a <TT>StringResourceModel</TT> might be a Label constructed like this:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+add(<SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;greetings&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> StringResourceModel(<SPAN class="code-quote">&quot;label.greetings&quot;</SPAN>, <SPAN class="code-keyword">this</SPAN>, <SPAN class="code-keyword">null</SPAN>)));
+</PRE>
+</DIV></DIV>
+<P>where the resource bundle for the page contains an entry like this:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+label.greetings=Welcome!
+</PRE>
+</DIV></DIV>
+<P>This label is essentially the same as that constructed with <TT>ResourceModel</TT> above. However, with <TT>StringResourceModel</TT> we can add the name from a User object to the greeting. We pass the user object as the model parameter to the constructor. Wicket will find the localized string in the resource bundle, find any substrings within it of the form ${propertyexpression}, and replace these substrings with their values as property expressions. The model is used to evaluate the property expressions.</P>
+
+<P>For example, suppose we wanted to add the name from a User object to the greeting above. We'd say:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+User user;
+...
+add(<SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;greetings&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> StringResourceModel(<SPAN class="code-quote">&quot;label.greetings&quot;</SPAN>, <SPAN class="code-keyword">this</SPAN>, <SPAN class="code-keyword">new</SPAN> Model(user))));
+</PRE>
+</DIV></DIV>
+<P>and have a resource like:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+label.greetings=Welcome, ${name}!
+</PRE>
+</DIV></DIV>
+<P>where User has a <TT>getName()</TT> method exposing its <TT>&quot;name&quot;</TT> property.</P>
+
+<P>Note that <TT>StringResourceModel</TT> is dynamic: the property expression is re-evaluated every time <TT>getObject()</TT> is called. In contrast, if the application code called <TT>Localizer</TT> itself and used the resulting string as model data, the result would be a static (non-changing) model.</P>
+
+<H2><A name="WorkingwithWicketmodels-DetachableModels"></A>Detachable Models</H2>
+
+<P>At the end of each request cycle the active page is serialized into a byte array and stored for the next request (some in the session and some to disk: see <TT>IPageStore</TT> for more info).  The entire object graph of the page including all components and their associated models are included in generated byte stream (byte array).  Once you get past all but the most trivial of applications this object graph becomes huge and the time required to serialize it becomes a bottle neck.  Keeping the size of the serialized pages low will increase the number of concurrent users your application can support.  It will also minimize the amount of time required to fail over to another cluster node and the bandwidth to keep the sessions replicated.</P>
+
+<P>The Wicket solution to this problem is to create the concept of <EM>detachability</EM> where by at the end of the request cycle all the components contained in a page are recursively detached (See Component.detatch()) which dramatically reduces the size of the object graph being serialized.  Each component in turn then detaches its internal state including the value of its default model by calling the <TT>IModel.detach()</TT> method.  </P>
+
+<P>So a <B>Detachable Model</B> is an IModel that releases most of its object graph when you call <TT>detatch()</TT> retaining just enough detail (typically a unique identifier) that can be used to reconstitute the object on the next call to <TT>getObject()</TT> which will occur on the next page render.</P>
+
+<P>Two commonly used built-in Wicket IModel implementations are:</P>
+
+<OL>
+	<LI><B>AbstractReadOnlyModel</B></LI>
+	<LI><B>LoadableDetachableModel</B> (also commonly referred to as an <B>LDM</B>)</LI>
+</OL>
+
+
+<P>It is also possible to create a custom <TT>IModel</TT> implementation that mirrors the <TT>LoadableDetchableModel</TT> inner workings but also supporting <TT>IModel.setObject()</TT>.</P>
+
+<H3><A name="WorkingwithWicketmodels-ManagingthelifecycleofnondefaultdetachableIModel%27s"></A>Managing the lifecycle of non default detachable IModel's</H3>
+
+<P>Wicket provides the detachability hooks and will automatically detach the default model of each component.  However its common to use more than a single <TT>IModel</TT> implementation per component especially when using nested or chaining models.  In this case the developer is responsible for registering their custom models to participate in the detachment process.</P>
+
+<P>The best way to handle this registration is to make sure it occurs in the same scope as where the <TT>IModel</TT> implementation was instantiated.</P>
+
+<P>For example:</P>
+
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+
+<SPAN class="code-keyword">public</SPAN> class MyPanel <SPAN class="code-keyword">extends</SPAN> Panel {
+
+   <SPAN class="code-keyword">private</SPAN> <SPAN class="code-keyword">final</SPAN> DetatchableModelA detachableModelA;
+
+
+   <SPAN class="code-keyword">public</SPAN> MyPanel (<SPAN class="code-object">String</SPAN> id) {
+       <SPAN class="code-keyword">super</SPAN>(id);
+
+       <SPAN class="code-keyword">this</SPAN>.detachableModelA = <SPAN class="code-keyword">new</SPAN> DetachableModelA();
+
+       add (<SPAN class="code-keyword">new</SPAN> CustomFormPanel (<SPAN class="code-quote">&quot;formPanel&quot;</SPAN>, <SPAN class="code-keyword">new</SPAN> CListModelFromA (<SPAN class="code-keyword">this</SPAN>.detachableModelA)));
+
+   }
+
+   @Override
+   <SPAN class="code-keyword">public</SPAN> void detach() {
+
+     <SPAN class="code-comment">// remember to call the parent detach logic
+</SPAN>     <SPAN class="code-keyword">super</SPAN>.detach();
+
+     <SPAN class="code-keyword">this</SPAN>.detachableModelA.detach();
+
+   }
+}
+</PRE>
+</DIV></DIV>
+
+<P>Here you see that the <TT>DetachableModelA</TT> instance is created in the <TT>MyPanel</TT> constructor and then passed in as the inner model to the <TT>CListModelFromA</TT> model which will load a <TT>List&lt;C&gt;</TT> instances based on the details of the <TT>A</TT> instance contained in the model.  Because the <TT>this.detachableModelA</TT> instance could possibly be shared like this in many sub component models its important that the <TT>CListModelFromA</TT> implementation does not try and call <TT>detach()</TT> on it but rather leave the detachment to occur in the same scope that the model was instantiated.  In this case the detachment is done in the <TT>MyPanel.detach</TT>.</P>
+
+<H3><A name="WorkingwithWicketmodels-AbstractReadOnlyModel"></A>AbstractReadOnlyModel</H3>
+
+<P>When you subclass <TT>AbstractReadOnlyModel</TT> you implement the:</P>
+
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> <SPAN class="code-keyword">abstract</SPAN> T getObject();
+</PRE>
+</DIV></DIV> 
+
+<P>So long as your subclass does not contain any private fields then no business data will be serialized when the the request cycle ends.  The model object value is computed<BR>
+at the time the method is called and not cached anywhere.</P>
+
+<P>For example:</P>
+
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> class PersonNameModel <SPAN class="code-keyword">extends</SPAN> AbstractReadOnlyModel&lt;<SPAN class="code-object">String</SPAN>&gt; {
+
+    <SPAN class="code-keyword">private</SPAN> <SPAN class="code-keyword">final</SPAN> IModel&lt;Person&gt;personModel;
+
+    <SPAN class="code-keyword">public</SPAN> PersonNameModel (IModel&lt;Person&gt;personContainingModel&gt; personModel) {
+        <SPAN class="code-keyword">this</SPAN>.personModel = personModel;
+    }
+
+    <SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">String</SPAN> getObject() {
+        Person p = <SPAN class="code-keyword">this</SPAN>.personModel.getObject();
+
+        <SPAN class="code-keyword">if</SPAN> (p == <SPAN class="code-keyword">null</SPAN>)
+            <SPAN class="code-keyword">return</SPAN> &quot;&quot;;
+
+        <SPAN class="code-keyword">return</SPAN> p.getName();
+    }
+
+}
+</PRE>
+</DIV></DIV>
+
+<P>You can see it takes in an existing <TT>IModel</TT> that contains the Person object and that the <TT>getObject()</TT> method extracts the name of the person.</P>
+
+<H3><A name="WorkingwithWicketmodels-LoadableDetachableModel"></A>LoadableDetachableModel</H3>
+
+<P>This class extends <TT>AbstractReadOnlyModel</TT> and finalizes the <TT>IModel.getObject()</TT> method requiring you to implement:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">protected</SPAN> <SPAN class="code-keyword">abstract</SPAN> T load();
+</PRE>
+</DIV></DIV>
+
+<P>This method is called once per request cycle, the first time that the <TT>getObject()</TT> method is invoked.  The T object value is then cached in a transient private field and used as the return value to all subsequent calls to <TT>getObject()</TT>.</P>
+
+<P>For example:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+class LoadablePersonModel <SPAN class="code-keyword">extends</SPAN> LoadableDetachableModel&lt;Person&gt; {
+
+	<SPAN class="code-object">Long</SPAN> id;
+
+	LoadablePersonModel(<SPAN class="code-object">Long</SPAN> id)	 {
+		<SPAN class="code-keyword">this</SPAN>.id = id;
+	}
+
+	@Override
+	<SPAN class="code-keyword">protected</SPAN> Person load() {
+		<SPAN class="code-keyword">return</SPAN> DataManager.getPersonFromDatabase(id);
+	}
+}
+</PRE>
+</DIV></DIV>
+<P>When <TT>getObject()</TT> is called for the first time on a given instance of this class, it will call <TT>load()</TT> to retrieve the data. At this point the data is said to be <EM>attached</EM>. Subsequent calls to <TT>getObject()</TT> will return the attached data. At some point (after the page has been rendered) this data will be removed (the internal references to it will be set to null). The data is now <EM>detached</EM>. If <TT>getObject()</TT> is subsequently called (for example, if the page is rendered again), the data will be attached again, and the cycle starts anew.</P>
+
+<H3><A name="WorkingwithWicketmodels-Read%2FWriteDetachableModel"></A>Read/Write Detachable Model</H3>
+
+<P>Here is an example of how to create a model that is loadable and detachable but also supports using the <TT>IModel.setObject(T value)</TT> to store a different value into the model.</P>
+
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> class LoadableDetachableAttributeModel <SPAN class="code-keyword">implements</SPAN>
+		IModel&lt;Attribute&gt; {
+
+
+	<SPAN class="code-keyword">private</SPAN> <SPAN class="code-keyword">transient</SPAN> Attribute cachedAttribute = <SPAN class="code-keyword">null</SPAN>;
+        <SPAN class="code-keyword">private</SPAN> <SPAN class="code-keyword">transient</SPAN> <SPAN class="code-object">boolean</SPAN> attached = <SPAN class="code-keyword">false</SPAN>;
+	
+	<SPAN class="code-keyword">private</SPAN> <SPAN class="code-object">String</SPAN> attributeName = <SPAN class="code-keyword">null</SPAN>;
+
+        <SPAN class="code-keyword">private</SPAN> <SPAN class="code-keyword">final</SPAN> AttributeService service;
+
+	<SPAN class="code-keyword">public</SPAN> LoadableDetachableAttributeModel (AttributeService service) {
+            <SPAN class="code-keyword">this</SPAN>.service = service;
+        }
+    
+
+	<SPAN class="code-keyword">public</SPAN> LoadableDetachableAttributeModel (AttributeService service, Attribute defaultValue) {
+	      <SPAN class="code-keyword">this</SPAN> (service);
+              <SPAN class="code-keyword">if</SPAN> (defaultValue != <SPAN class="code-keyword">null</SPAN>) {
+                   setObject(defaultValue);
+              }
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.apache.wicket.model.IDetachable#detach()
+	 */
+	@Override
+	<SPAN class="code-keyword">public</SPAN> void detach() {
+
+                attached = <SPAN class="code-keyword">false</SPAN>;
+		cachedAttribute = <SPAN class="code-keyword">null</SPAN>;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.wicket.model.IModel#getObject()
+	 */
+	@Override
+	<SPAN class="code-keyword">public</SPAN> Attribute getObject() {
+
+                <SPAN class="code-keyword">if</SPAN> (!attached) {
+                
+                    <SPAN class="code-comment">// load the attribute
+</SPAN>                    attached = <SPAN class="code-keyword">true</SPAN>;
+                    
+                    <SPAN class="code-keyword">if</SPAN> (attributeName != <SPAN class="code-keyword">null</SPAN>) {
+
+                       <SPAN class="code-comment">// load the attribute from the service
+</SPAN>                       <SPAN class="code-keyword">this</SPAN>.cachedAttribute = service.loadAttribute (<SPAN class="code-keyword">this</SPAN>.attributeName);
+                    }
+                }
+                <SPAN class="code-keyword">return</SPAN> <SPAN class="code-keyword">this</SPAN>.cachedAttribute;
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.wicket.model.IModel#setObject(java.lang.<SPAN class="code-object">Object</SPAN>)
+	 */
+	@Override
+	<SPAN class="code-keyword">public</SPAN> void setObject(Attribute object) {
+
+                <SPAN class="code-keyword">this</SPAN>.attached = <SPAN class="code-keyword">true</SPAN>;
+
+		<SPAN class="code-keyword">if</SPAN> (object == <SPAN class="code-keyword">null</SPAN>) {
+		      <SPAN class="code-keyword">this</SPAN>.attributeName = <SPAN class="code-keyword">null</SPAN>;
+                      <SPAN class="code-keyword">this</SPAN>.cachedAttribute = <SPAN class="code-keyword">null</SPAN>;			
+		}
+		<SPAN class="code-keyword">else</SPAN> {
+			attributeName = object.getName();
+                        <SPAN class="code-keyword">this</SPAN>.cachedAttribute = object;
+		}		
+		
+	}
+	
+	
+</PRE>
+</DIV></DIV>
+
+
+
+
+
+
+<H2><A name="WorkingwithWicketmodels-Chainingmodels"></A>Chaining models</H2>
+
+<P>Suppose you want a model that is both a loadable model and a compound model, or some other combination of the model types described above. One way to achieve this is to chain models, like this:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+CompoundPropertyModel personModel = <SPAN class="code-keyword">new</SPAN> CompoundPropertyModel(<SPAN class="code-keyword">new</SPAN> LoadablePersonModel(personId));
+</PRE>
+</DIV></DIV>
+<P>(here <TT>LoadablePersonModel</TT> is a subclass of <TT>CompoundPropertyModel</TT>, as described earlier)</P>
+
+<P>The model classes in the core Wicket distribution support chaining where it make sense.</P>
+
+<H2><A name="WorkingwithWicketmodels-MoreabouttheIModelinterface"></A>More about the IModel interface</H2>
+
+<P>We are now in a position to understand the complete <TT>IModel</TT> interface:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> <SPAN class="code-keyword">interface</SPAN> IModel <SPAN class="code-keyword">extends</SPAN> IDetachable
+{
+	<SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">Object</SPAN> getNestedModel();
+	<SPAN class="code-keyword">public</SPAN> <SPAN class="code-object">Object</SPAN> getObject(<SPAN class="code-keyword">final</SPAN> Component component);
+	<SPAN class="code-keyword">public</SPAN> void setObject(<SPAN class="code-keyword">final</SPAN> Component component, <SPAN class="code-keyword">final</SPAN> <SPAN class="code-object">Object</SPAN> object);
+}
+</PRE>
+</DIV></DIV>
+<P><TT>IModel</TT> extends <TT>IDetachable</TT>, which means that all models must provide a method <TT>public void detach()</TT>. Some model classes (<TT>Model</TT> for one) provide an empty, no-op implementation.</P>
+
+<P>In some cases model instances form a natural hierarchy. For example, several <TT>CompoundPropertyModels</TT> share the same model object. The <TT>getNestedModel()</TT> method will return this common shared object. In cases where there is no such object it returns <TT>null</TT>.</P>
+
+<P>Compound models are also the motivation for the <TT>component</TT> parameters to <TT>getObject</TT> and <TT>setObject</TT>. Several components may share the same <TT>CompoundPropertyModel</TT> object. If <TT>getObject</TT> (or <TT>setObject</TT>) is called it must return something different depending on the component (e.g., evaluate the appropriate property expression). Thus these two methods must be passed a component as a parameter.</P>
+<DIV class="panel" style="border-width: 1px;"><DIV class="panelContent">
+<P>The IModel interface was simplified in Wicket 2.0:</P>
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">public</SPAN> <SPAN class="code-keyword">interface</SPAN> IModel&lt;T&gt; <SPAN class="code-keyword">extends</SPAN> IDetachable
+{
+  T getObject();
+  void setObject(<SPAN class="code-keyword">final</SPAN> T object);
+}
+</PRE>
+</DIV></DIV>
+<P>The get and set methods do not take a component argument anymore. Instead, Wicket 2.0 has specialized model interfaces to do with specific issues like recording the 'owning' component of a model. See IAssignmentAwareModel and IInheritableModel (though you typically don't need to know these interfaces directly).</P>
+
+<P>Another change is that IModel does now support generics. This is especially interesting when authoring custom components where you allow only models (compile time) that produce a certain type. ListView for instance only accepts models that produces instances of java.util.List.</P>
+</DIV></DIV>
+
+
+<H2><A name="WorkingwithWicketmodels-RefactorSafePropertyModels"></A>Refactor Safe Property Models</H2>
+<H3><A name="WorkingwithWicketmodels-Annotationprocessors"></A>Annotation processors</H3>
+<P>There are a number of annotation processors that generate a meta data that can be used to build safe property models. Examples of such processors:</P>
+
+<UL>
+	<LI><A href="https://github.com/42Lines/metagen" class="external-link" rel="nofollow">https://github.com/42Lines/metagen</A> MetaGen</LI>
+	<LI><A href="http://bindgen.org/" class="external-link" rel="nofollow">http://bindgen.org/</A> Bindgen together with <A href="http://code.google.com/p/bindgen-wicket/" class="external-link" rel="nofollow">http://code.google.com/p/bindgen-wicket/</A> Bindgen-Wicket module</LI>
+	<LI>Hibernate metamodel processor's metamodel can be used for this purpose with a custom model implementation</LI>
+</UL>
+
+
+<H3><A name="WorkingwithWicketmodels-LambdaJ"></A>LambdaJ</H3>
+
+<P>With a little bit of help from the <A href="http://code.google.com/p/lambdaj/" class="external-link" rel="nofollow">LambdaJ</A> project we can stop using fragile PropertyModels.</P>
+
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+/* www.starjar.com
+ * Copyright (c) 2011 Peter Henderson. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0
+ */
+<SPAN class="code-keyword">package</SPAN> com.starjar.wicket;
+
+<SPAN class="code-keyword">import</SPAN> ch.lambdaj.function.argument.Argument;
+<SPAN class="code-keyword">import</SPAN> ch.lambdaj.function.argument.ArgumentsFactory;
+<SPAN class="code-keyword">import</SPAN> org.apache.wicket.model.PropertyModel;
+
+<SPAN class="code-keyword">public</SPAN> class ModelFactory {
+
+  /**
+   * Use with the on() function from Lambdaj to have refactor safe property models.
+   *
+   * e.g.
+   * &lt;pre&gt;
+   * <SPAN class="code-keyword">import</SPAN> <SPAN class="code-keyword">static</SPAN> com.starjar.wicket.ModelFactory.*;
+   * <SPAN class="code-keyword">import</SPAN> <SPAN class="code-keyword">static</SPAN> ch.lambdaj.Lambda.*;
+   *
+   * Contact contact = getContactFromDB();
+   *
+   * Label l = <SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;id&quot;</SPAN>, model(contact, on(Contact.class).getFirstName()));
+   *
+   *
+   * &lt;/pre&gt;
+   *
+   * OR
+   *
+   * &lt;pre&gt;
+   * <SPAN class="code-keyword">import</SPAN> <SPAN class="code-keyword">static</SPAN> com.starjar.wicket.ModelFactory.*;
+   * <SPAN class="code-keyword">import</SPAN> <SPAN class="code-keyword">static</SPAN> ch.lambdaj.Lambda.*;
+   *
+   * ContactLDM contactLDM = <SPAN class="code-keyword">new</SPAN> ContactLDM(contactId);
+   *
+   * Label l = <SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;id&quot;</SPAN>, model(contactLDM, on(Contact.class).getFirstName()));
+   * &lt;/pre&gt;
+   *
+   * Works as expected <SPAN class="code-keyword">for</SPAN> nested objects
+   *
+   * &lt;pre&gt;
+   * Label l = <SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;address&quot;</SPAN>, model(contactLDM, on(Contact.class).getAddress().getLine1()));
+   * &lt;/pre&gt;
+   *
+   *
+   * @param &lt;T&gt; Type of the model value
+   * @param value
+   * @param proxiedValue
+   * @<SPAN class="code-keyword">return</SPAN>
+   */
+  <SPAN class="code-keyword">public</SPAN> <SPAN class="code-keyword">static</SPAN> &lt;T&gt; PropertyModel&lt;T&gt; model(<SPAN class="code-object">Object</SPAN> value, T proxiedValue) {
+    Argument&lt;T&gt; a = ArgumentsFactory.actualArgument(proxiedValue);
+    <SPAN class="code-object">String</SPAN> invokedPN = a.getInkvokedPropertyName();
+    PropertyModel&lt;T&gt; m = <SPAN class="code-keyword">new</SPAN> PropertyModel&lt;T&gt;(value, invokedPN);
+    <SPAN class="code-keyword">return</SPAN> m;
+  }
+}
+</PRE>
+</DIV></DIV>
+
+<P>Which can then be used</P>
+
+<DIV class="code panel" style="border-width: 1px;"><DIV class="codeContent panelContent">
+<PRE class="code-java">
+<SPAN class="code-keyword">import</SPAN> <SPAN class="code-keyword">static</SPAN> ch.lambdaj.Lambda.*;
+<SPAN class="code-keyword">import</SPAN> <SPAN class="code-keyword">static</SPAN> com.starjar.wicket.ModelFactory.*;
+
+
+<SPAN class="code-keyword">public</SPAN> class MyPanel <SPAN class="code-keyword">extends</SPAN> Panel {
+  <SPAN class="code-keyword">public</SPAN> MyPanel(<SPAN class="code-object">String</SPAN> id) {
+    Label l = <SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;firstName&quot;</SPAN>, model(contact, on(Contact.class).getFirstName());
+    add(l);
+    Label addr = <SPAN class="code-keyword">new</SPAN> Label(<SPAN class="code-quote">&quot;address&quot;</SPAN>, model(contact, on(Contact.class).getAddress().getLine1());
+    add(addr);
+  }
+}
+</PRE>
+</DIV></DIV>
+        </DIV>
+
+        
+      </DIV>
+    </DIV>
+    <DIV class="footer">
+      Generated by
+      <A href="http://www.atlassian.com/confluence/">Atlassian Confluence</A> (Version: 3.4.9 Build: 2042 Feb 14, 2011)
+      <A href="http://could.it/autoexport/">Auto Export Plugin</A> (Version: 1.0.0-dkulp)
+    </DIV>
+<SCRIPT type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</SCRIPT>
+<SCRIPT type="text/javascript">
+var pageTracker = _gat._getTracker("UA-2350632-4");
+pageTracker._initData();
+pageTracker._trackPageview();
+</SCRIPT>
+  </BODY>
+</HTML>
