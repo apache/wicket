@@ -1,9 +1,9 @@
-Model
+What are Wicket Models?
 ============================
 .. toctree::
    :maxdepth: 3
 
-In Wicket, a model holds a value for a component to display and/or edit. How exactly this value is held is determined by a given model's implementation of the :ref:`IModel <models--imodel-label>` interface. The IModel interface decouples a component from the model object which forms its value. This in turn decouples the whole Wicket framework from any and all details of model storage, such as the details of a given persistence technology. As far as Wicket itself is concerned, a model is anything that implements the IModel interface, no matter how it might do that. Although there are some refinements described below, conceptually, IModel looks like this:
+In Wicket, a model holds a value for a component to display and/or edit. How exactly this value is held is determined by a given model's implementation of the :ref:`IModel <models--imodel-label>` interface. The ``IModel`` interface decouples a component from the *model object* which forms its value. This in turn decouples the whole Wicket framework from any and all details of model storage, such as the details of a given persistence technology. As far as Wicket itself is concerned, a model is anything that implements the ``IModel`` interface, no matter how it might do that. Although there are some refinements described below, conceptually, ``IModel`` looks like this:
 
 .. _models--imodel-label:
 
@@ -11,15 +11,15 @@ In Wicket, a model holds a value for a component to display and/or edit. How exa
 	:start-after: */
 	:lines: 40-
 
-The IModel interface defines a simple contract for getting and setting a value. The nature of the Object retrieved or set will depend on the component referencing the model. For a Label component, the value must be something which can be converted to a String (see :doc:`converter`) which will be displayed when the label is rendered. For a ListView, it must be a java.util.List containing the values to be displayed as a list.
+The ``IModel`` interface defines a simple contract for getting and setting a value. The nature of the Object retrieved or set will depend on the component referencing the model. For a ``Label`` component, the value must be something which can be converted to a ``String`` (see :doc:`converter`) which will be displayed when the label is rendered. For a ``ListView``, it must be a ``java.util.List`` containing the values to be displayed as a list.
 
-Different frameworks implement the model concept differently. Swing has a number of component-specific model interfaces. Struts requires that the model be a Java Bean and there is no explicit model interface. The IModel interface in Wicket allows models to be generic (as in Struts) but it can do things that would not be possible if components accessed their model directly (as in Swing). For example, Wicket applications can use or provide IModel implementations that read a model value from a resource file or retrieve a model value from a database only when needed.
+Different frameworks implement the model concept differently. Swing has a number of component-specific model interfaces. Struts requires that the model be a Java Bean and there is no explicit model interface. The ``IModel`` interface in Wicket allows models to be generic (as in Struts) but it can do things that would not be possible if components accessed their model directly (as in Swing). For example, Wicket applications can use or provide ``IModel`` implementations that read a model value from a resource file or retrieve a model value from a database only when needed.
 
 The use of a single model interface (as compared to having multiple interfaces, or having no model interface at all) has a number of advantages:
 
-* Wicket provides IModel implementations you can use with any component. These models can do things such as retrieve the value from a resource file, or read and write the value from a Java Bean property.
-* Wicket also provides IModel implementations that defer retrieving the value until it is actually needed, and remove it from the servlet Session when the request is complete. This reduces session memory consumption and is particularly useful with large values such as lists.
-* Unlike Swing, you do not have to implement an extra interface or helper class for each different component. Especially for the most often used components such as Labels and TextFields you can easily bind to a bean property.
+* Wicket provides ``IModel`` implementations you can use with any component. These models can do things such as retrieve the value from a resource file, or read and write the value from a Java Bean property.
+* Wicket also provides ``IModel`` implementations that defer retrieving the value until it is actually needed, and remove it from the servlet Session when the request is complete. This reduces session memory consumption and is particularly useful with large values such as lists.
+* Unlike Swing, you do not have to implement an extra interface or helper class for each different component. Especially for the most often used components such as ``Labels`` and ``TextFields`` you can easily bind to a bean property.
 * In many cases you can provide the required value directly to the component and it will wrap a default model implementation around it for you.
 * And while you do not have to use beans as your models as you must with Struts, you may still easily use beans if you wish. Wicket provides the appropriate model implementations.
 
@@ -32,11 +32,11 @@ The HelloWorld example program demonstrates the simplest model type in Wicket:
 .. includecode:: ../../../helloworld/src/main/java/org/apache/wicket/reference/helloworld/HelloWorld.java#docu
 	:tabsize: 2
 
-The constructor for this page constructs a Label component. The first parameter to the Label component's constructor is the Wicket id, which associates the Label with a tag in the HelloWorld.html markup file:
+The constructor for this page constructs a ``Label`` component. The first parameter to the ``Label`` component's constructor is the Wicket id, which associates the ``Label`` with a tag in the HelloWorld.html markup file:
 
 .. includecode:: ../../../helloworld/src/main/java/org/apache/wicket/reference/helloworld/HelloWorld.html
 	
-The second parameter to the Label component's constructor is the model data for the Label, providing content that replaces any text inside the <span> tag to which the Label is associated. The model data passed to the Label constructor above is apparently a String. Internally Label creates a Model for the String. :ref:`Model<models--model-label>` is a simple default implementation of IModel.
+The second parameter to the ``Label`` component's constructor is the model data for the Label, providing content that replaces any text inside the ``<span>`` tag to which the ``Label`` is associated. The model data passed to the ``Label`` constructor above is apparently a String. Internally ``Label`` creates a Model for the String. :ref:`Model<models--model-label>` is a simple default implementation of IModel.
 
 
 .. todo:: replace with real code
@@ -52,7 +52,7 @@ or::
 	add(new Label("message", Model.of("Hello World!")));
 
 
-The Label constructor that takes a String is simply a convenience.
+The ``Label`` constructor that takes a ``String`` is simply a convenience.
 
 
 
@@ -63,9 +63,9 @@ The data we gave to the model in the previous example, the string "Hello World",
 
 	Label name = new Label ("name", Model.of(person.getName()));
 	
-The model data is still a String, the value of ``person.getName()`` is set at the time the model is created. Recall that Java strings are immutable: this string will never change. Even if ``person.getName()`` would later return a different value, the model data is unchanged. So the page will still display the old value to the user even if it is reloaded. Models like this, whose values never change, are known as *static models*.
+The model data is still a String, the value of ``person.getName()`` is set at the time the model is created. Recall that Java strings are immutable: this string will never change. Even if ``person.getName()`` would later return a different value, the model data is unchanged. So the page will still display the old value to the user even if it is reloaded. Models like this, whose values never change, are known as *static* models.
 
-In many cases the underlying data can change, and you want the user to see those changes. For example, the user might use a form to change a person's name. Models which can automatically reflect change are known as *dynamic models*. While the :ref:`Model<models--model-label>` class is static, most of the other core Wicket model classes are dynamic.
+In many cases the underlying data can change, and you want the user to see those changes. For example, the user might use a form to change a person's name. Models which can automatically reflect change are known as *dynamic* models. While the :ref:`Model<models--model-label>` class is static, most of the other core Wicket model classes are dynamic.
 
 It's instructive to see how to make a dynamic model by subclassing Model.
 
@@ -78,7 +78,7 @@ It would be inconvenient to have to do this for every component that needs a dyn
 Property Models
 ---------------
 
-The PropertyModel class allows you to create a model that accesses a particular property of its associated model object at runtime. This property is accessed using a simple expression language with a dot notation (e.g. 'name' means property 'name', and 'person.name' means property name of object person). The simplest PropertyModel constructor is:
+The PropertyModel class allows you to create a model that accesses a particular property of its associated model object at runtime. This property is accessed using a simple expression language with a dot notation (e.g. ``'name'`` means property ``'name'``, and ``'person.name'`` means property name of object person). The PropertyModel constructor looks like:
 
 .. literalinclude:: ../../../../wicket-core/src/main/java/org/apache/wicket/model/PropertyModel.java
 	:start-after: */
@@ -91,11 +91,17 @@ which takes a model object and a property expression. When the property model is
 
 then the property expression "name" can be used to access the "name" property of any Person object via the ``getName()`` getter method.
 
+.. todo:: replace with real code
+
 ::
 
 	personForm.add(new RequiredTextField("personName", new PropertyModel(person, "name")));
 
-Nested property expressions are possible as well. You can access sub-properties via reflection using a dotted path notation, which means the property expression "person.name" is equivalent to calling ``getPerson().getName()`` on the given model object.
+Nested property expressions are possible as well. You can access sub-properties via reflection using a dotted path notation, which means the property expression ``'person.name'`` is equivalent to calling ``getPerson().getName()`` on the given model object.
+
+.. warning::
+
+	If the Field is accesible and has the same name, the ``PropertyModel`` would try to access the field first.
 
 There are three principal reasons why you might use PropertyModel instead of Model:
 
@@ -139,7 +145,7 @@ There is a simple model implementation, which can hold any data, which is serial
 
 .. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/SerializableModelPage.java#docu
 
-This examples shows an easy way to create a model instance for a value and how the value can be changed afterwards. The Label component accepts any serializable model value (not only strings, see :doc:`converter`).
+This examples shows an easy way to create a model instance for a value and how the value can be changed afterwards. The ``Label`` component accepts any serializable model value (not only strings, see :doc:`converter`).
 
 TODO
 -------------------
