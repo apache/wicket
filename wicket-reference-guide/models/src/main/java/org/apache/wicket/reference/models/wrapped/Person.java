@@ -1,4 +1,4 @@
-package org.apache.wicket.reference.models.compound;
+package org.apache.wicket.reference.models.wrapped;
 
 import java.io.Serializable;
 

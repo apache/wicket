@@ -183,6 +183,65 @@ Also, note that if you are using a component that you do not want to reference t
 
 
 
+Wrapped Object Models
+---------------------
+
+.. todo:: IMHO this is not the best way to explain and implement this concept
+
+It is possible to create Models that explicitly define in normal java code what is to be returned as the model object for each property within the object being wrapped. So instead of specifying via a string the name of the property to fetch the value you from the specification is done in Java.
+
+While creating Model's in this pattern takes longer (more classes) than using Reflection based PropertyModels it prevents the problems that can occur when critical functionality is defined in String based context that most IDE's do not refactor properly.
+
+It also helps with readability when the models are added to components to be able to easily see the types involved.
+
+These are the Address and Person classes used in the previous examples:
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/Address.java#classOnly
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/Person.java#classOnly
+
+The first step is to create a Wrapped Object Model for the Address and Person classes:
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/AddressModel.java#classOnly
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/PersonModel.java#classOnly
+
+Notice how each wrapped model contains an inner model that contains the actual pojo instance. This allows for the wrapped model to be a plain Model or a LoadableDetachableModel, or even another wrapped model where its .getObject() results in a suitably typed input value (see the "address.city" field in the example below).
+
+At this point to create a form using our wrapped object models looks like:
+
+.. todo:: IMHO this needs refactoring (improve generic type handling)
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/WrappedModelFormPage.java#form
+
+A wrapped object model also makes working with DataTables's easier as one IColumn implementation can be written for each object class which makes the declaration of the table much simpler.
+
+e.g.
+
+.. todo:: IMHO refactoring needed
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/PersonTableColumn.java#classOnly
+	
+So the table could be declared like:
+
+.. todo:: IMHO refactoring needed
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/WrappedModelFormPage.java#datatable
+  
+Another option with the complex object is to create a custom ``IConverter`` that will take in this case the Address instance from the PersonModel and render the string value as the city name.
+
+e.g.
+
+.. todo:: IMHO refactoring needed
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/CustomLabel.java#classOnly
+
+
+With the populate from above as:
+
+.. includecode:: ../../../models/src/main/java/org/apache/wicket/reference/models/wrapped/PersonTableColumnWithCustomLabel.java#refactor
+
+
 
 
 
