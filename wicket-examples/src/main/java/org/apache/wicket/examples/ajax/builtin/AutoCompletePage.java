@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -83,6 +84,14 @@ public class AutoCompletePage extends BasePage
 
 		final Label label = new Label("selectedValue", field.getDefaultModel());
 		label.setOutputMarkupId(true);
+		label.add(new AjaxEventBehavior("click")
+		{
+			@Override
+			protected void onEvent(AjaxRequestTarget target)
+			{
+				target.add(field);
+			}
+		});
 		form.add(label);
 
 		field.add(new AjaxFormSubmitBehavior(form, "change")
