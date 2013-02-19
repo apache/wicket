@@ -278,8 +278,9 @@ public class EventBus implements UnboundListener
 		}
 	}
 
-	private void postToSingleResource(Object event, AtmosphereResource resource)
+	private void postToSingleResource(Object payload, AtmosphereResource resource)
 	{
+		AtmosphereEvent event = new AtmosphereEvent(payload, resource);
 		ThreadContext.detach();
 		ThreadContext.setApplication(application);
 		PageKey key;
@@ -297,7 +298,7 @@ public class EventBus implements UnboundListener
 	}
 
 	private void post(AtmosphereResource resource, PageKey pageKey,
-		Collection<EventSubscription> subscriptionsForPage, Object event)
+		Collection<EventSubscription> subscriptionsForPage, AtmosphereEvent event)
 	{
 		String filterPath = WebApplication.get()
 			.getWicketFilter()

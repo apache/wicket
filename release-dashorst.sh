@@ -226,13 +226,12 @@ popd
 
 echo "Uploading release"
 pushd target/dist
-svn mkdir https://dist.apache.org/repos/dist/dev/wicket/wicket-$version -m "Create $version release staging area"
-svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/wicket-$version .
+svn mkdir https://dist.apache.org/repos/dist/dev/wicket/$version -m "Create $version release staging area"
+svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/$version .
 cp ../../CHANGELOG* .
-svn add .
+svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
-
 
 echo ""
 echo "The release has been created. It is up to you to check if the release is up"
@@ -275,7 +274,7 @@ echo "    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec s
 # do the same for the original snapshot version, as our maven release
 # plugin friend doesn't do that for us in the dependency management section
 mvn_version_to_replace="$major_version.$minor_version.0-SNAPSHOT"
-echo "    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;"
+echo "    find . ! \\( -type d -name \"target\" -prune \\) -type f -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;"
 echo "    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`"
 echo "    git commit -m \"Start next development version\""
 echo "    git push"

@@ -40,7 +40,7 @@ public class AtmosphereRequestHandler implements IRequestHandler
 {
 	private PageKey pageKey;
 
-	private Object event;
+	private AtmosphereEvent event;
 
 	private Collection<EventSubscription> subscriptions;
 
@@ -54,7 +54,7 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	 * @param event
 	 */
 	public AtmosphereRequestHandler(PageKey pageKey, Collection<EventSubscription> subscriptions,
-		Object event)
+		AtmosphereEvent event)
 	{
 		this.pageKey = pageKey;
 		this.subscriptions = subscriptions;
@@ -100,7 +100,7 @@ public class AtmosphereRequestHandler implements IRequestHandler
 						RequestCycle.get().scheduleRequestHandlerAfterCurrent(target);
 					}
 					curMethod.setAccessible(true);
-					curMethod.invoke(base, target, event);
+					curMethod.invoke(base, target, event.getPayload());
 				}
 				catch (IllegalAccessException e)
 				{

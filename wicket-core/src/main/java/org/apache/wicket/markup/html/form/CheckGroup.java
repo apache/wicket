@@ -102,6 +102,9 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 		setRenderBodyOnly(true);
 	}
 
+	/**
+	 * @see FormComponent#getModelValue()
+	 */
 	@Override
 	protected String getModelValue()
 	{

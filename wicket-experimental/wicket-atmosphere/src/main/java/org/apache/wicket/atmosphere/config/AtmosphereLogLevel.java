@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.atmosphere.config;
 
+/**
+ * The log levels used by Atmosphere JS.
+ * 
+ * @author papegaaij
+ */
+@SuppressWarnings("javadoc")
 public enum AtmosphereLogLevel {
 	DEBUG("debug"), INFO("info"), ERROR("error");
 

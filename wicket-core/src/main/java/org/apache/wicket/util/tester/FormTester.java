@@ -418,13 +418,17 @@ public class FormTester
 		// the browser sends parameters for visible and enabled components only
 		if (formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy())
 		{
-			// TODO are text components the only ones with an inherent single value
-			if (formComponent instanceof AbstractTextComponent)
+			if (formComponent instanceof IFormSubmittingComponent)
+			{
+				// buttons have to be sumitted explicitely
+			}
+			else if (formComponent instanceof AbstractTextComponent)
 			{
 				return new String[] { getFormComponentValue(formComponent) };
 			}
 			else
 			{
+				// TODO is it safe to assume that all other components' values can be split?
 				String value = getFormComponentValue(formComponent);
 				if (!Strings.isEmpty(value))
 				{

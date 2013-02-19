@@ -53,7 +53,7 @@ public @interface Subscribe {
 	 * 
 	 * @return The filter on events, defaults to no filter.
 	 */
-	Class<? extends Predicate<?>> filter() default NoFilterPredicate.class;
+	Class<? extends Predicate<AtmosphereEvent>> filter() default NoFilterPredicate.class;
 
 	/**
 	 * An optional filter on events to be received by the method. This filter has access to the
@@ -63,5 +63,5 @@ public @interface Subscribe {
 	 * 
 	 * @return The filter on events, defaults to no filter.
 	 */
-	Class<? extends Predicate<?>> contextAwareFilter() default NoFilterPredicate.class;
+	Class<? extends Predicate<AtmosphereEvent>> contextAwareFilter() default NoFilterPredicate.class;
 }

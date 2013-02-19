@@ -28,14 +28,14 @@ import com.google.common.base.Predicate;
  */
 public class EventFilter implements Predicate<EventSubscription>
 {
-	private Object event;
+	private AtmosphereEvent event;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param event
 	 */
-	public EventFilter(Object event)
+	public EventFilter(AtmosphereEvent event)
 	{
 		this.event = event;
 	}

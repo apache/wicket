@@ -25,10 +25,10 @@ import com.google.common.base.Predicate;
  * 
  * @author papegaaij
  */
-public class NoFilterPredicate implements Predicate<Object>
+public class NoFilterPredicate implements Predicate<AtmosphereEvent>
 {
 	@Override
-	public boolean apply(@Nullable Object input)
+	public boolean apply(@Nullable AtmosphereEvent input)
 	{
 		return true;
 	}

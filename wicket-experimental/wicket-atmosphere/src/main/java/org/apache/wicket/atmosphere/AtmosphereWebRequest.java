@@ -42,10 +42,10 @@ class AtmosphereWebRequest extends WebRequest
 
 	private Collection<EventSubscription> subscriptions;
 
-	private Object event;
+	private AtmosphereEvent event;
 
 	AtmosphereWebRequest(WebRequest wrappedRequest, PageKey pageKey,
-		Collection<EventSubscription> subscriptions, Object event)
+		Collection<EventSubscription> subscriptions, AtmosphereEvent event)
 	{
 		this.wrappedRequest = wrappedRequest;
 		this.pageKey = pageKey;
@@ -63,7 +63,7 @@ class AtmosphereWebRequest extends WebRequest
 		return subscriptions;
 	}
 
-	public Object getEvent()
+	public AtmosphereEvent getEvent()
 	{
 		return event;
 	}

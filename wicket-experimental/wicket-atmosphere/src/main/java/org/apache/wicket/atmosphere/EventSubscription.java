@@ -40,9 +40,9 @@ public class EventSubscription
 
 	private String methodName;
 
-	private Predicate<Object> filter;
+	private Predicate<AtmosphereEvent> filter;
 
-	private Predicate<Object> contextAwareFilter;
+	private Predicate<AtmosphereEvent> contextAwareFilter;
 
 	/**
 	 * Construct.
@@ -57,17 +57,29 @@ public class EventSubscription
 		behaviorIndex = behavior == null ? null : component.getBehaviorId(behavior);
 		Class<?> eventType = method.getParameterTypes()[1];
 		Subscribe subscribe = method.getAnnotation(Subscribe.class);
-		filter = Predicates.and(Predicates.instanceOf(eventType), createFilter(subscribe.filter()));
+		filter = Predicates.and(payloadOfType(eventType), createFilter(subscribe.filter()));
 		contextAwareFilter = createFilter(subscribe.contextAwareFilter());
 		methodName = method.getName();
 	}
 
-	@SuppressWarnings("unchecked")
-	private static Predicate<Object> createFilter(Class<? extends Predicate<?>> filterClass)
+	private static Predicate<AtmosphereEvent> payloadOfType(final Class<?> type)
+	{
+		return new Predicate<AtmosphereEvent>()
+		{
+			@Override
+			public boolean apply(AtmosphereEvent input)
+			{
+				return type.isInstance(input.getPayload());
+			}
+		};
+	}
+
+	private static Predicate<AtmosphereEvent> createFilter(
+		Class<? extends Predicate<AtmosphereEvent>> filterClass)
 	{
 		try
 		{
-			return (Predicate<Object>)filterClass.newInstance();
+			return filterClass.newInstance();
 		}
 		catch (InstantiationException e)
 		{
@@ -100,7 +112,7 @@ public class EventSubscription
 	 * @return The filter on incomming events, a combination of the type and the
 	 *         {@link Subscribe#filter()} parameter.
 	 */
-	public Predicate<Object> getFilter()
+	public Predicate<AtmosphereEvent> getFilter()
 	{
 		return filter;
 	}
@@ -109,7 +121,7 @@ public class EventSubscription
 	 * @return The context ware filter on incomming events, constructed from the
 	 *         {@link Subscribe#contextAwareFilter()} parameter.
 	 */
-	public Predicate<Object> getContextAwareFilter()
+	public Predicate<AtmosphereEvent> getContextAwareFilter()
 	{
 		return contextAwareFilter;
 	}
