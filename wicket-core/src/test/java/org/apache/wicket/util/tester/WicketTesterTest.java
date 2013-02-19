@@ -73,6 +73,7 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -285,7 +286,7 @@ public class WicketTesterTest extends WicketTestCase
 		tester.assertRenderedPage(LinkPage.class);
 
 		tester.getComponentFromLastRenderedPage("ajaxLinkWithSetResponsePageClass").setEnabled(
-			false);
+				false);
 		try
 		{
 			tester.assertEnabled("ajaxLinkWithSetResponsePageClass");
@@ -695,7 +696,7 @@ public class WicketTesterTest extends WicketTestCase
 		FormTester form = tester.newFormTester("form");
 		form.setValue("name", "New name");
 		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
-			"onclick");
+				"onclick");
 
 		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester.getLastRenderedPage();
 		Pojo pojo = page.getPojo();
@@ -861,7 +862,7 @@ public class WicketTesterTest extends WicketTestCase
 			BlockedResourceLinkPage.class.getSimpleName() + ".html,xml";
 		tester.executeUrl(url);
 		assertNull("Comma separated extensions are not supported and wont find any resource",
-			tester.getLastResponse());
+				tester.getLastResponse());
 	}
 
 	/**
@@ -919,34 +920,6 @@ public class WicketTesterTest extends WicketTestCase
 		tester.getLastResponse().addCookie(new Cookie("name", "value"));
 		Collection<Cookie> cookies = tester.getLastResponse().getCookies();
 		assertEquals(cookies.iterator().next().getValue(), "value");
-	}
-
-	/**
-	 *
-	 */
-	@Test
-	public void cookieIsFoundOnNextRequestWhenAddedToResponse()
-	{
-		// Test that maxAge == -1 (Default) works properly
-		tester.startPage(CreateBook.class);
-		Cookie cookie = new Cookie("name", "value");
-		tester.getLastResponse().addCookie(cookie);
-		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
-
-		tester.startPage(CreateBook.class);
-		cookie = new Cookie("name", "value");
-		cookie.setMaxAge(60);
-		tester.getLastResponse().addCookie(cookie);
-		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
-
-		// Should copy persisted cookie from browser
-		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
 	}
 
 	/**
@@ -1277,5 +1250,56 @@ public class WicketTesterTest extends WicketTestCase
 		tester.startPage(AlwaysRedirectPage.class);
 		tester.assertRedirectUrl("http://localhost:4333/");
 		assertEquals(HttpServletResponse.SC_FOUND, tester.getLastResponse().getStatus());
+	}
+
+	/**
+	 * A cookie set in the request headers should not be
+	 * expected in the response headers unless the page
+	 * sets it explicitly.
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-4989
+	 */
+	@Test
+	public void cookieSetInRequestShouldNotBeInResponse()
+	{
+		//start and render the test page
+		tester.getRequest().addCookie(new Cookie("dummy", "sample"));
+		tester.startPage(tester.getApplication().getHomePage());
+
+		//assert rendered page class
+		tester.assertRenderedPage(tester.getApplication().getHomePage());
+
+		Assert.assertEquals("The cookie should not be in the response unless explicitly set",
+				0, tester.getLastResponse().getCookies().size());
+
+		// The cookie should be in each following request unless the server code
+		// schedules it for removal it with cookie.setMaxAge(0)
+		Assert.assertEquals("The cookie should be in each following request",
+				1, tester.getRequest().getCookies().length);
+	}
+
+	/**
+	 * The response cookie should not be the same instance as the request
+	 * cookie.
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-4989
+	 */
+	@Test
+	public void doNotReuseTheSameInstanceOfTheCookieForRequestAndResponse()
+	{
+		//start and render the test page
+		String cookieName = "cookieName";
+		String cookieValue = "cookieValue";
+		Cookie requestCookie = new Cookie(cookieName, cookieValue);
+		tester.getRequest().addCookie(requestCookie);
+		tester.startPage(new CookiePage(cookieName, cookieValue));
+
+		//assert rendered page class
+		tester.assertRenderedPage(CookiePage.class);
+
+		Cookie responseCookie = tester.getLastResponse().getCookies().get(0);
+		requestCookie.setValue("valueChanged");
+
+		Assert.assertEquals(cookieValue, responseCookie.getValue());
 	}
 }

@@ -450,7 +450,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			if (cookie.getName().equals(name))
 			{
-				return cookie;
+				return Cookies.copyOf(cookie);
 			}
 		}
 		return null;
@@ -468,7 +468,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 			return null;
 		}
 		Cookie[] result = new Cookie[cookies.size()];
-		return cookies.toArray(result);
+		for (int i = 0; i < cookies.size(); i++)
+		{
+			result[i] = Cookies.copyOf(cookies.get(i));
+		}
+		return result;
 	}
 
 	/**
@@ -1257,7 +1261,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setCookies(final Cookie[] theCookies)
 	{
 		cookies.clear();
-		cookies.addAll(Arrays.asList(theCookies));
+		addCookies(Arrays.asList(theCookies));
 	}
 
 	/**

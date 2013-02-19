@@ -35,10 +35,10 @@ public class SetCookieAndRedirectTest extends WicketTestCase
 	private static final String cookieValue = "cookieValue";
 
 	/**
-	 * Validate proper cookie value set with statefull page
+	 * Validate proper cookie value set with stateful page
 	 */
 	@Test
-	public void statefullPage()
+	public void statefulPage()
 	{
 		tester.startPage(SetCookieAndRedirectStatefullTestPage.class);
 		FormTester formTester = tester.newFormTester("form");
