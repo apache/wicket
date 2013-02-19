@@ -24,7 +24,7 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * Statefull form page which sets a cookie and calls setResponsePage()
+ * Stateful form page which sets a cookie and calls setResponsePage()
  * 
  * @author Bertrand Guay-Paquet
  */

@@ -23,7 +23,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -54,7 +53,11 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  * <br />
  * You can also add your own information to the bar by creating a {@link IDebugBarContributor} and
  * registering it with the debug bar.
- * 
+ *
+ * <p>The debug bar uses CSS absolute positioning to appear in the top-right corner of the page.
+ * <strong>Important</strong>: if there is an element with a z-index in this part of your page, the DebugBar will need a higher
+ * "z-index" style value to show up. Or you can use different position for it. See wicket-debugbar.css.</p>
+ *
  * @author Jeremy Thomerson <jthomerson@apache.org>
  * @see IDebugBarContributor
  */
