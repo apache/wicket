@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.io.UnsupportedEncodingException;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Adapted from java.net.URLDecoder, but defines instances for query string decoding versus URL path
@@ -159,8 +159,10 @@ public class WicketURLDecoder
 						// "%x" will cause an exception to be thrown
 						if ((i < numChars) && (c == '%'))
 						{
-							throw new IllegalArgumentException(
-								"URLDecoder: Incomplete trailing escape (%) pattern");
+							log.info("Incomplete trailing escape (%) pattern in '%s'. The escape character (%) will be ignored.",
+									s);
+							i++;
+							break;
 						}
 
 						try
@@ -174,9 +176,10 @@ public class WicketURLDecoder
 					}
 					catch (NumberFormatException e)
 					{
-						throw new IllegalArgumentException(
-							"URLDecoder: Illegal hex characters in escape (%) pattern - " +
-								e.getMessage());
+						log.info("Illegal hex characters in escape (%) pattern in '{}'. " +
+								"The escape character (%) will be ignored. NumberFormatException: {} ",
+								s, e.getMessage());
+						i++;
 					}
 					break;
 
