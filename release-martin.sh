@@ -125,9 +125,18 @@ echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $gitarchive.asc --de
 echo "Publishing build branch"
 git push origin $branch:refs/heads/$branch
 
-echo "Uploading release"
-svn export http://svn.apache.org/repos/asf/wicket/common/KEYS target/dist/KEYS
-ssh mgrigorov@people.apache.org mkdir -p dist/wicket-$version public_html/wicket-$version
-scp -r target/dist mgrigorov@people.apache.org:dist/wicket-$version
-scp -r $gitarchive* mgrigorov@people.apache.org:public_html/wicket-$version
+#echo "Uploading release"
+#svn export http://svn.apache.org/repos/asf/wicket/common/KEYS target/dist/KEYS
+#ssh mgrigorov@people.apache.org mkdir -p dist/wicket-$version public_html/wicket-$version
+#scp -r target/dist mgrigorov@people.apache.org:dist/wicket-$version
+#scp -r $gitarchive* mgrigorov@people.apache.org:public_html/wicket-$version
 
+echo "Uploading release"
+pushd target/dist
+svn mkdir https://dist.apache.org/repos/dist/dev/wicket/$version -m "Create $version release staging area"
+svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/$version .
+cp ../../CHANGELOG* .
+cp ../../$gitarchive .
+svn add *
+svn commit -m "Upload wicket-$version to staging area"
+popd
