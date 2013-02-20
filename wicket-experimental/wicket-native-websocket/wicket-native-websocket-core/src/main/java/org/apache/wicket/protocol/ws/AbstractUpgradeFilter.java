@@ -41,11 +41,11 @@ import org.apache.wicket.request.http.WebResponse;
  */
 public class AbstractUpgradeFilter extends WicketFilter
 {
-
 	protected boolean processRequestCycle(final RequestCycle requestCycle, final WebResponse webResponse,
 			final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
 			final FilterChain chain)
-		throws IOException, ServletException {
+		throws IOException, ServletException
+	{
 
 		// Assume we are able to handle the request
 		boolean res = true;
@@ -80,37 +80,43 @@ public class AbstractUpgradeFilter extends WicketFilter
 		String subProtocol = null;
 		List<String> extensions = Collections.emptyList();
 
-		if (!headerContainsToken(req, "upgrade", "websocket")) {
+		if (!headerContainsToken(req, "upgrade", "websocket"))
+		{
 //			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return false;
 		}
 
-		if (!headerContainsToken(req, "connection", "upgrade")) {
+		if (!headerContainsToken(req, "connection", "upgrade"))
+		{
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return false;
 		}
 
-		if (!headerContainsToken(req, "sec-websocket-version", "13")) {
+		if (!headerContainsToken(req, "sec-websocket-version", "13"))
+		{
 			resp.setStatus(426);
 			resp.setHeader("Sec-WebSocket-Version", "13");
 			return false;
 		}
 
 		key = req.getHeader("Sec-WebSocket-Key");
-		if (key == null) {
+		if (key == null)
+		{
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return false;
 		}
 
 		String origin = req.getHeader("Origin");
-		if (!verifyOrigin(origin)) {
+		if (!verifyOrigin(origin))
+		{
 			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return false;
 		}
 
 		List<String> subProtocols = getTokensFromHeader(req,
 				"Sec-WebSocket-Protocol-Client");
-		if (!subProtocols.isEmpty()) {
+		if (!subProtocols.isEmpty())
+		{
 			subProtocol = selectSubProtocol(subProtocols);
 
 		}
@@ -118,7 +124,8 @@ public class AbstractUpgradeFilter extends WicketFilter
 		resp.setHeader("upgrade", "websocket");
 		resp.setHeader("connection", "upgrade");
 
-		if (subProtocol != null) {
+		if (subProtocol != null)
+		{
 			resp.setHeader("Sec-WebSocket-Protocol", subProtocol);
 		}
 
@@ -130,8 +137,8 @@ public class AbstractUpgradeFilter extends WicketFilter
 	 * This only works for tokens. Quoted strings need more sophisticated
 	 * parsing.
 	 */
-	private boolean headerContainsToken(HttpServletRequest req,
-	                                    String headerName, String target) {
+	private boolean headerContainsToken(HttpServletRequest req, String headerName, String target)
+	{
 		Enumeration<String> headers = req.getHeaders(headerName);
 		while (headers.hasMoreElements()) {
 			String header = headers.nextElement();
@@ -149,8 +156,8 @@ public class AbstractUpgradeFilter extends WicketFilter
 	 * This only works for tokens. Quoted strings need more sophisticated
 	 * parsing.
 	 */
-	protected List<String> getTokensFromHeader(HttpServletRequest req,
-	                                           String headerName) {
+	protected List<String> getTokensFromHeader(HttpServletRequest req, String headerName)
+	{
 		List<String> result = new ArrayList<String>();
 
 		Enumeration<String> headers = req.getHeaders(headerName);
@@ -175,7 +182,8 @@ public class AbstractUpgradeFilter extends WicketFilter
 	 *          reject it. This default implementation always returns
 	 *          <code>true</code>.
 	 */
-	protected boolean verifyOrigin(String origin) {
+	protected boolean verifyOrigin(String origin)
+	{
 		return true;
 	}
 
@@ -191,7 +199,8 @@ public class AbstractUpgradeFilter extends WicketFilter
 	 *          the client. This default implementation always returns
 	 *          <code>null</code>.
 	 */
-	protected String selectSubProtocol(List<String> subProtocols) {
+	protected String selectSubProtocol(List<String> subProtocols)
+	{
 		return null;
 	}
 }
