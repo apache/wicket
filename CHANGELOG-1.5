@@ -1,5 +1,42 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5.10
+
+** Sub-task
+    * [WICKET-4976] - WicketTester#startComponent(Component) doesn't detach the component and request cycle
+
+** Bug
+    * [WICKET-4803] - UrlDecoder should log a message when invalid input is provided
+    * [WICKET-4872] - IllegalArgumentException on ReloadingWicketFilter and inheritance markup
+    * [WICKET-4877] - encodeUrl fails parsing jsessionid when using root context
+    * [WICKET-4878] - Rendering of feedback messages fails with DebugBar in page
+    * [WICKET-4884] - ValidationError messages for NumberTextFields with minimum/maximum are always English
+    * [WICKET-4894] - Internet Explorer fails fails to properly include conditional stylesheet links added via AjaxRequestTarget
+    * [WICKET-4895] - WicketRuntimeException: addOrReplace for feedback panel does not clear Component.FEEDBACK_LIST - feedback from replaced component causes error.
+    * [WICKET-4899] - autocomplete shows strings with quotes strings as string2 with &quot;quote&quot;
+    * [WICKET-4900] - Setting a status code on an AbstractResource results in no HTTP body
+    * [WICKET-4913] - HtmlDocumentParser does not support tags containing number (e.g. h1-h6)
+    * [WICKET-4918] - LazyInitProxyFactory prevents using package private interfaces
+    * [WICKET-4922] - Cloned ServletWebRequest returns wrong OriginalUrl
+    * [WICKET-4925] - AbstractAjaxBehavior should clean stored reference to a component on unbind
+    * [WICKET-4926] - CheckGroupSelector does not work in nested forms in modal windows
+    * [WICKET-4927] - Header can not be set from IRequestCycleListener#onEndRequest()
+    * [WICKET-4935] - Rendered URL is resulting with double slash when using AuthenticatedWebApplication
+    * [WICKET-4948] - Modal window does not center correctly when window is scrolled in safari
+    * [WICKET-4954] - Issue with file upload with progress bar via AJAX and Firefox
+    * [WICKET-4989] - WicketTester should send copies of its cookies 
+    * [WICKET-5013] - Wicket Enclosure fails with more than one component
+    * [WICKET-5014] - Changes in WicketObjects.sizeof(final Serializable object) clashes with <header-contribution> in AjaxResponse
+    * [WICKET-5026] - wicket-event.js defined Function.prototype.bind doesn't support prepended arguments
+    * [WICKET-5029] - Palette does not allow to turn off localization
+    * [WICKET-5032] - NumberFormatException in request.Url.parse()
+
+** Improvement
+    * [WICKET-4444] - Add a callback to the Session which is called when the HttpSession is invalidated
+    * [WICKET-4867] - Detach the object before calculating its size
+    * [WICKET-4937] - Add IResponseFilter that can filter out invalid XML characters
+
+
 Release Notes - Wicket - Version 1.5.9
 
 ** Sub-task
