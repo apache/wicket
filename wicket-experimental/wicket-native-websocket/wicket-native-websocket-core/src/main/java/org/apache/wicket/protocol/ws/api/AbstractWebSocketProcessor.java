@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import java.lang.reflect.Method;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
@@ -24,6 +26,8 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.ws.IWebSocketSettings;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
@@ -57,10 +61,23 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractWebSocketProcessor.class);
 
+	private static final Method GET_FILTER_PATH_METHOD;
+	static
+	{
+		try
+		{
+			GET_FILTER_PATH_METHOD = WicketFilter.class.getDeclaredMethod("getFilterPath", new Class[]{});
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		GET_FILTER_PATH_METHOD.setAccessible(true);
+	}
+
 	private final WebRequest webRequest;
 	private final int pageId;
 	private final Url baseUrl;
-	private final Application application;
+	private final WebApplication application;
 	private final String sessionId;
 	private final IWebSocketConnectionRegistry connectionRegistry;
 
@@ -72,7 +89,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * @param application
 	 *      the current Wicket Application
 	 */
-	public AbstractWebSocketProcessor(final HttpServletRequest request, final Application application)
+	public AbstractWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
 	{
 		this.sessionId = request.getSession(true).getId();
 		Session.get().bind();
@@ -85,11 +102,25 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		Checks.notNull(baseUrl, String.format("Request parameter '%s' is required!", WebRequest.PARAM_AJAX_BASE_URL));
 		this.baseUrl = Url.parse(baseUrl);
 
-		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request));
+		WicketFilter wicketFilter = application.getWicketFilter();
+		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request), getFilterPath(wicketFilter));
 
 		this.application = Args.notNull(application, "application");
 		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
+	}
+
+	private String getFilterPath(WicketFilter wicketFilter)
+	{
+		String filterPath;
+		try
+		{
+			filterPath = (String) GET_FILTER_PATH_METHOD.invoke(wicketFilter);
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		return filterPath;
 	}
 
 	@Override
@@ -224,7 +255,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 	}
 
-	protected final Application getApplication()
+	protected final WebApplication getApplication()
 	{
 		return application;
 	}

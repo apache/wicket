@@ -26,6 +26,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.lang.Generics;
@@ -38,32 +39,30 @@ import org.apache.wicket.util.time.Time;
  *
  * @since 6.0
  */
-public class WebSocketRequest extends WebRequest
+public class WebSocketRequest extends ServletWebRequest
 {
-	private final HttpServletRequest request;
-
 	/**
 	 * Constructor.
 	 *
 	 * @param req
 	 *      the copy of the HttpServletRequest used for the upgrade of the HTTP protocol
 	 */
-	public WebSocketRequest(HttpServletRequest req)
+	public WebSocketRequest(HttpServletRequest req, String filterPrefix)
 	{
-		this.request = req;
+		super(req, filterPrefix);
 	}
 
 	@Override
 	public List<Cookie> getCookies()
 	{
-		List<Cookie> cookies = Arrays.asList(request.getCookies());
+		List<Cookie> cookies = Arrays.asList(getContainerRequest().getCookies());
 		return cookies;
 	}
 
 	@Override
 	public List<String> getHeaders(String name)
 	{
-		Enumeration<String> headers = request.getHeaders(name);
+		Enumeration<String> headers = getContainerRequest().getHeaders(name);
 		List<String> h = Generics.newArrayList();
 		while (headers.hasMoreElements())
 		{
@@ -76,13 +75,13 @@ public class WebSocketRequest extends WebRequest
 	@Override
 	public String getHeader(String name)
 	{
-		return request.getHeader(name);
+		return getContainerRequest().getHeader(name);
 	}
 
 	@Override
 	public Time getDateHeader(String name)
 	{
-		long dateHeader = request.getDateHeader(name);
+		long dateHeader = getContainerRequest().getDateHeader(name);
 		return Time.millis(dateHeader);
 	}
 
@@ -101,19 +100,13 @@ public class WebSocketRequest extends WebRequest
 	@Override
 	public Locale getLocale()
 	{
-		return request.getLocale();
+		return getContainerRequest().getLocale();
 	}
 
 	@Override
 	public Charset getCharset()
 	{
-		return RequestUtils.getCharset(request);
-	}
-
-	@Override
-	public Object getContainerRequest()
-	{
-		return request;
+		return RequestUtils.getCharset(getContainerRequest());
 	}
 
 	@Override

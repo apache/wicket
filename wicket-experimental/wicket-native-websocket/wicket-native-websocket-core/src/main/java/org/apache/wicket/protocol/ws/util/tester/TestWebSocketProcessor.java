@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
@@ -43,7 +44,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 */
 	public TestWebSocketProcessor(final WicketTester wicketTester, final Page page)
 	{
-		super(createRequest(wicketTester, page), page.getApplication());
+		super(createRequest(wicketTester, page), (WebApplication) page.getApplication());
 	}
 
 	/**

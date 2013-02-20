@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.ws.jetty9;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.eclipse.jetty.websocket.core.annotations.WebSocket;
 import org.eclipse.jetty.websocket.core.api.UpgradeRequest;
@@ -53,7 +53,7 @@ public class Jetty9WebSocketProcessor extends AbstractWebSocketProcessor
 	 *            the current Wicket Application
 	 */
 	public Jetty9WebSocketProcessor(final UpgradeRequest upgradeRequest,
-		final UpgradeResponse upgradeResponse, final Application application)
+		final UpgradeResponse upgradeResponse, final WebApplication application)
 	{
 		super((HttpServletRequest)((HttpServletRequestWrapper)upgradeRequest).getRequest(),
 			application);

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.websocket.MessageInbound;
 import org.apache.catalina.websocket.WsOutbound;
-import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 
 /**
@@ -64,7 +64,7 @@ public class TomcatWebSocketProcessor extends AbstractWebSocketProcessor
 			TomcatWebSocketProcessor.this.onClose(status, "Connection closed by client");
 		}
 	}
-	public TomcatWebSocketProcessor(final HttpServletRequest request, final Application application)
+	public TomcatWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
 	{
 		super(request, application);
 	}
