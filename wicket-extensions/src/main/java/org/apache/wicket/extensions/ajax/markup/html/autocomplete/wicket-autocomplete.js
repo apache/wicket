@@ -345,9 +345,12 @@
 			var paramName = cfg.parameterName;
 			var attrs = {
 				u: callbackUrl,
-				dt: 'html',
+				pre: [ function (attributes) {
+					return (document.activeElement == initialElement);
+				}],
 				ep: {},
 				wr: false,
+				dt: 'html',
 				sh: [ doUpdateAllChoices ]
 			};
 			attrs.ep[paramName] = '';
@@ -356,16 +359,19 @@
 
 		function actualUpdateChoices() {
 			showIndicator();
+			
 			var paramName = cfg.parameterName;
-			var value = Wicket.$(elementId).value;
 			var attrs = {
 				u: callbackUrl,
-				wr: false,
+				pre: [ function (attributes) {
+					return (document.activeElement == initialElement);
+				}],
 				ep: {},
+				wr: false,
 				dt: 'html',
 				sh: [ doUpdateChoices ]
 			};
-			attrs.ep[paramName] = value;
+			attrs.ep[paramName] = Wicket.$(elementId).value;
 			Wicket.Ajax.ajax(attrs);
 		}
 
