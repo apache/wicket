@@ -39,4 +39,24 @@ public class UrlDecoderTest
 		assertEquals(-1, decoded.indexOf('\0'));
 		assertEquals("http://www.devil.com/highway?destination=NULLhell", decoded);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4803
+	 * @throws Exception
+	 */
+	@Test
+	public void badUrlEntities() throws Exception
+	{
+		String url = "http://localhost/test?a=%%%";
+		String decoded = UrlDecoder.QUERY_INSTANCE.decode(url, "UTF-8");
+		assertEquals("http://localhost/test?a=", decoded);
+
+		url = "http://localhost/test?%%%";
+		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, "UTF-8");
+		assertEquals("http://localhost/test?", decoded);
+
+		url = "http://localhost/test?%a=%b%";
+		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, "UTF-8");
+		assertEquals("http://localhost/test?a=b", decoded);
+	}
 }
