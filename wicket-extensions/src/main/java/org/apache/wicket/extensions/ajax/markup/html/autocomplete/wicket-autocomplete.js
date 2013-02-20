@@ -831,7 +831,7 @@
 					if (!tag.wicket_element_visibility) {
 						tag.wicket_element_visibility=isVisible(tag);
 					}
-					if (popupVisible === 0 || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
+					if (!popupVisible || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
 						tag.style.visibility = tag.wicket_element_visibility;
 					} else {
 						tag.style.visibility = "hidden";
