@@ -1692,11 +1692,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	}
 
 	/**
-	 * Take URL-encoded query string value, unencode it and return HTML-escaped version
+	 * Take URL-encoded query string value, decode it and return HTML-escaped version
 	 * 
 	 * @param s
-	 *            value to reencode
-	 * @return reencoded value
+	 *            value to decode
+	 * @return URL decoded and HTML escaped value
 	 */
 	private String recode(String s)
 	{
