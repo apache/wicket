@@ -15,4 +15,4 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<ajax-response><evaluate>ignored|start(); ok(true, 'Evaluation with identifier must be executed!'); arguments[0]();</evaluate></ajax-response>
+<ajax-response><evaluate>(function(){ignored|start(); ok(true, 'Evaluation with identifier must be executed!'); equal(typeof(ignored), 'function', 'The passed identifier must be a function'); arguments[0]();})();</evaluate></ajax-response>

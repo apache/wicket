@@ -1029,6 +1029,10 @@
 		 * @param node {XmlElement} - the <[priority-]evaluate> element with the script to evaluate
 		 */
 		processEvaluation: function (context, node) {
+
+			// used to match evaluation scripts which manually call FunctionsExecuter's notify() when ready
+			var scriptWithIdentifierR = new RegExp("^\\(function\\(\\)\\{([a-zA-Z_][a-zA-Z0-9_]*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
+
 			context.steps.push(function (notify) {
 				// get the javascript body
 				var text = jQuery(node).text();
@@ -1042,7 +1046,7 @@
 				// test if the javascript is in form of identifier|code
 				// if it is, we allow for letting the javascript decide when the rest of processing will continue
 				// by invoking identifier();
-				var res = text.match(new RegExp("^([a-z|A-Z_][a-z|A-Z|0-9_]*)\\|((.|\\n)*)$"));
+				var res = text.match(scriptWithIdentifierR);
 
 				if (res !== null) {
 					var f = jQuery.noop;

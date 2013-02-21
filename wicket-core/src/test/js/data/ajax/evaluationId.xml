@@ -15,4 +15,4 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<ajax-response><evaluate>start(); ok(true, 'Evaluation must be executed!');</evaluate></ajax-response>
+<ajax-response><evaluate>(function(){start(); ok(true, 'Evaluation must be executed!');})();</evaluate></ajax-response>
