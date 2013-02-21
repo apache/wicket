@@ -146,20 +146,19 @@ jQuery(document).ready(function() {
 
 	test('Wicket.Head.addJavascripts - no script tags', function() {
 		var $element = jQuery('<div>DIV TEXT<span>SPAN TEXT<a href="#anchor">ANCHOR</a></span></div>'),
-		initialHeadElementsNumber = jQuery('head').children().length;
-		
+			initialHeadElementsNumber = jQuery('head').children().length;
+
 		Wicket.Head.addJavascripts($element[0]);
 
 		equal(initialHeadElementsNumber, jQuery('head').children().length, 'No script elements in the added element, so nothing is added');
 	});
 
-
 	test('Wicket.Head.addJavascripts - direct script tag', function() {
 		expect(2);
 		
 		var $element = jQuery('<script>ok(true);</script>'),
-		initialHeadElementsNumber = jQuery('head').children().length;
-		
+			initialHeadElementsNumber = jQuery('head').children().length;
+
 		Wicket.Head.addJavascripts($element[0]);
 
 		equal(jQuery('head').children().length, initialHeadElementsNumber + 1, 'A script element must be added');

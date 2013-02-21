@@ -1979,6 +1979,11 @@
 
 							var id = node.getAttribute("id");
 
+							var type = node.getAttribute("type");
+							if (!type || type.toLowerCase() === "text/javascript") {
+								text = 'try{'+text+'}catch(e){Wicket.Log.error(e);}';
+							}
+
 							if (typeof(id) === "string" && id.length > 0) {
 								// add javascript to document head
 								Wicket.Head.addJavascript(text, id);
@@ -2070,7 +2075,6 @@
 			// also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 			// Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
 			addJavascript: function (content, id, fakeSrc) {
-				content = 'try{'+content+'}catch(e){Wicket.Log.error(e);}';
 				var script = Wicket.Head.createElement("script");
 				if (id) {
 					script.id = id;
@@ -2092,11 +2096,14 @@
 			addJavascripts: function (element, contentFilter) {
 				function add(element) {
 					var src = element.getAttribute("src");
+					var type = element.getAttribute("type");
 
 					// if it is a reference, just add it to head
 					if (src !== null && src.length > 0) {
 						var e = document.createElement("script");
-						e.setAttribute("type","text/javascript");
+						if (type) {
+							e.setAttribute("type",type);
+						}
 						e.setAttribute("src", src);
 						Wicket.Head.addElement(e);
 					} else {
@@ -2107,6 +2114,10 @@
 
 						if (typeof(contentFilter) === "function") {
 							content = contentFilter(content);
+						}
+
+						if (!type || type.toLowerCase() === "text/javascript") {
+							content = 'try{'+content+'}catch(e){Wicket.Log.error(e);}';
 						}
 
 						Wicket.Head.addJavascript(content, element.id);
