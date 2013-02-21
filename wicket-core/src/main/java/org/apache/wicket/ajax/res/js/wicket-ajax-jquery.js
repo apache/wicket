@@ -1045,7 +1045,8 @@
 
 				// test if the javascript is in form of identifier|code
 				// if it is, we allow for letting the javascript decide when the rest of processing will continue
-				// by invoking identifier();
+				// by invoking identifier();. This allows usage of some asynchronous/deferred logic before the next script
+				// See WICKET-5039
 				var res = text.match(scriptWithIdentifierR);
 
 				if (res !== null) {
