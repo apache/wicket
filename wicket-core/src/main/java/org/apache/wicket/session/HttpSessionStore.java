@@ -438,8 +438,11 @@ public class HttpSessionStore implements ISessionStore
 				log.debug("Session unbound: " + sessionId);
 			}
 
-			wicketSession.onInvalidate();
-
+			if (wicketSession != null)
+			{
+				wicketSession.onInvalidate();
+			}
+			
 			Application application = Application.get(applicationKey);
 			if (application == null)
 			{
