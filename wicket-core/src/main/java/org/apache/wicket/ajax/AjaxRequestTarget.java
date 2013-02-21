@@ -174,12 +174,28 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 	/**
 	 * Adds javascript that will be evaluated on the client side after components are replaced
 	 *
+	 * <p>If the javascript needs to do something asynchronously (i.e. needs to use window.setTimeout(), for example
+	 * to do animations) then the following special syntax may be used: <code>someFunctionName|myJsLogic(someFunctionName);</code>.
+	 * Wicket will transform it to: <code>function(someFunctionName){myJsLogic(someFunctionName);}</code> and your code
+	 * is responsible to execute <em>someFunctionName()</em> when the asynchronous task is finished. Once <em>someFunctionName</em>
+	 * is executed the next appended script will be executed. <strong>Important</strong>: it is highly recommended to
+	 * execute your code in try/finally to make sure <em>someFunctionName</em> is executed even an error happens in
+	 * your code, otherwise all following scripts wont be executed.</p>
+	 *
 	 * @param javascript
 	 */
 	void appendJavaScript(CharSequence javascript);
 
 	/**
-	 * Adds javascript that will be evaluated on the client side before components are replaced
+	 * Adds javascript that will be evaluated on the client side before components are replaced.
+	 *
+	 * <p>If the javascript needs to do something asynchronously (i.e. needs to use window.setTimeout(), for example
+	 * to do animations) then the following special syntax may be used: <code>someFunctionName|myJsLogic(someFunctionName);</code>.
+	 * Wicket will transform it to: <code>function(someFunctionName){myJsLogic(someFunctionName);}</code> and your code
+	 * is responsible to execute <em>someFunctionName()</em> when the asynchronous task is finished. Once <em>someFunctionName</em>
+	 * is executed the next prepended script will be executed. <strong>Important</strong>: it is highly recommended to
+	 * execute your code in try/finally to make sure <em>someFunctionName</em> is executed even an error happens in
+	 * your code, otherwise all following scripts and component replacements wont be made.</p>
 	 *
 	 * @param javascript
 	 */
