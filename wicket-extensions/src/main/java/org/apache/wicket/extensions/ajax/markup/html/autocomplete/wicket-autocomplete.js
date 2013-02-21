@@ -346,7 +346,7 @@
 			var attrs = {
 				u: callbackUrl,
 				pre: [ function (attributes) {
-					return (document.activeElement == initialElement);
+					return (document.activeElement === initialElement);
 				}],
 				ep: {},
 				wr: false,
@@ -364,7 +364,7 @@
 			var attrs = {
 				u: callbackUrl,
 				pre: [ function (attributes) {
-					return (document.activeElement == initialElement);
+					return (document.activeElement === initialElement);
 				}],
 				ep: {},
 				wr: false,
