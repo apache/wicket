@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #  Licensed to the Apache Software Foundation (ASF) under one or more
 #  contributor license agreements.  See the NOTICE file distributed with
 #  this work for additional information regarding copyright ownership.
@@ -116,7 +116,7 @@ echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $filename.asc --deta
 
 echo "Creating Git archive..."
 mkdir -p target/git
-gitarchive="target/git/apache-wicket-$version-git.tgz"
+gitarchive="target/git/apache-wicket-$version-source.tgz"
 git archive --format=tgz  --prefix=apache-wicket-$version/ -o $gitarchive build/wicket-$version
 gpg --print-md MD5 $gitarchive > $gitarchive.md5
 gpg --print-md SHA1 $gitarchive > $gitarchive.sha
@@ -126,8 +126,13 @@ echo "Publishing build branch"
 git push origin $branch:refs/heads/$branch
 
 echo "Uploading release"
-svn export http://svn.apache.org/repos/asf/wicket/common/KEYS target/dist/KEYS
-ssh mgrigorov@people.apache.org mkdir -p dist/wicket-$version public_html/wicket-$version
-scp -r target/dist mgrigorov@people.apache.org:dist/wicket-$version
-scp -r $gitarchive* mgrigorov@people.apache.org:public_html/wicket-$version
-
+mkdir -p target/svn-dist/binaries
+pushd target/svn-dist
+svn mkdir https://mgrigorov@dist.apache.org/repos/dist/dev/wicket/$version -m "Create $version release staging area for sources"
+svn co --force --depth=empty https://mgrigorov@dist.apache.org/repos/dist/dev/wicket/$version .
+cp ../../CHANGELOG* .
+cp ../../$gitarchive* .
+cp ../dist/* binaries
+svn add *
+svn commit -m "Upload wicket-$version to staging area"
+popd
