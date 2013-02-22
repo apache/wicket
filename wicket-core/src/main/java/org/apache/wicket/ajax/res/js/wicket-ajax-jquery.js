@@ -1031,7 +1031,7 @@
 		processEvaluation: function (context, node) {
 
 			// used to match evaluation scripts which manually call FunctionsExecuter's notify() when ready
-			var scriptWithIdentifierR = new RegExp("^\\(function\\(\\)\\{([a-zA-Z_][a-zA-Z0-9_]*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
+			var scriptWithIdentifierR = new RegExp("^\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
 
 			context.steps.push(function (notify) {
 				// get the javascript body
