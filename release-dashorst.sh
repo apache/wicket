@@ -226,13 +226,12 @@ popd
 
 echo "Uploading release"
 pushd target/dist
-svn mkdir https://dist.apache.org/repos/dist/dev/wicket/wicket-$version -m "Create $version release staging area"
-svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/wicket-$version .
+svn mkdir https://dist.apache.org/repos/dist/dev/wicket/$version -m "Create $version release staging area"
+svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/$version .
 cp ../../CHANGELOG* .
-svn add .
+svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
-
 
 echo ""
 echo "The release has been created. It is up to you to check if the release is up"

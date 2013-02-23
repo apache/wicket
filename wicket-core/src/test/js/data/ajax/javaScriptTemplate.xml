@@ -15,4 +15,4 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<ajax-response><evaluate>(function(){ignored|start(); ok(true, 'Evaluation with identifier must be executed!'); equal(typeof(ignored), 'function', 'The passed identifier must be a function'); arguments[0]();})();</evaluate></ajax-response>
+<ajax-response><header-contribution encoding="wicket1"><![CDATA[<head><script type="text/x-jquery-tmpl" id="jsTemplate">var data = 123;</script><script type="text/javascript" id="jsNonTemplate">var data = 456;</script></head>]]></header-contribution></ajax-response>

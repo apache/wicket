@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.util.tester;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.IWebSocketProcessor;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.tester.WicketTester;
@@ -42,6 +43,9 @@ public class WebSocketTester
 	{
 		Args.notNull(wicketTester, "wicketTester");
 		Args.notNull(page, "page");
+
+		WebApplication webApplication = wicketTester.getApplication();
+		webApplication.getWicketFilter().setFilterPath("");
 
 		socketProcessor = new TestWebSocketProcessor(wicketTester, page) {
 

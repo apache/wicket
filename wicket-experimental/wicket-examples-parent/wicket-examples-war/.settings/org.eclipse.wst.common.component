@@ -8,31 +8,31 @@
         <dependent-module archiveName="wicket-atmosphere-0.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-atmosphere/wicket-atmosphere">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wicket-auth-roles-6.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-auth-roles/wicket-auth-roles">
+        <dependent-module archiveName="wicket-auth-roles-6.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-auth-roles/wicket-auth-roles">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="wicket-bootstrap-0.7-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-bootstrap/wicket-bootstrap">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wicket-core-6.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-core/wicket-core">
+        <dependent-module archiveName="wicket-core-6.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-core/wicket-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wicket-util-6.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-util/wicket-util">
+        <dependent-module archiveName="wicket-util-6.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-util/wicket-util">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wicket-request-6.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-request/wicket-request">
+        <dependent-module archiveName="wicket-request-6.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-request/wicket-request">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wicket-extensions-6.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-extensions/wicket-extensions">
+        <dependent-module archiveName="wicket-extensions-6.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-extensions/wicket-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wicket-guice-6.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-guice/wicket-guice">
+        <dependent-module archiveName="wicket-guice-6.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-guice/wicket-guice">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wicket-ioc-6.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-ioc/wicket-ioc">
+        <dependent-module archiveName="wicket-ioc-6.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-ioc/wicket-ioc">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wicket-spring-6.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-spring/wicket-spring">
+        <dependent-module archiveName="wicket-spring-6.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wicket-spring/wicket-spring">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="wicket-examples-war"/>

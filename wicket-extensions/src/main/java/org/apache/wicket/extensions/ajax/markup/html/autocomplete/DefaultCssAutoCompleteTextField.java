@@ -35,14 +35,27 @@ public abstract class DefaultCssAutoCompleteTextField<T> extends AutoCompleteTex
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Constructor.
+	 *
+	 * @param id
+	 *      the component id
+	 */
+	public DefaultCssAutoCompleteTextField(final String id)
+	{
+		this(id, null);
+	}
+
+	/**
 	 * Construct.
 	 * 
-	 * @param string
+	 * @param id
+	 *      the component id
 	 * @param model
+	 *      the component model
 	 */
-	public DefaultCssAutoCompleteTextField(final String string, final IModel<T> model)
+	public DefaultCssAutoCompleteTextField(final String id, final IModel<T> model)
 	{
-		super(string, model);
+		super(id, model);
 	}
 
 	@Override

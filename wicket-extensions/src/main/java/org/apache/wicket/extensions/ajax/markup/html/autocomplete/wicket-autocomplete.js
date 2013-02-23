@@ -345,9 +345,12 @@
 			var paramName = cfg.parameterName;
 			var attrs = {
 				u: callbackUrl,
-				dt: 'html',
+				pre: [ function (attributes) {
+					return (document.activeElement === initialElement);
+				}],
 				ep: {},
 				wr: false,
+				dt: 'html',
 				sh: [ doUpdateAllChoices ]
 			};
 			attrs.ep[paramName] = '';
@@ -356,16 +359,19 @@
 
 		function actualUpdateChoices() {
 			showIndicator();
+			
 			var paramName = cfg.parameterName;
-			var value = Wicket.$(elementId).value;
 			var attrs = {
 				u: callbackUrl,
-				wr: false,
+				pre: [ function (attributes) {
+					return (document.activeElement === initialElement);
+				}],
 				ep: {},
+				wr: false,
 				dt: 'html',
 				sh: [ doUpdateChoices ]
 			};
-			attrs.ep[paramName] = value;
+			attrs.ep[paramName] = Wicket.$(elementId).value;
 			Wicket.Ajax.ajax(attrs);
 		}
 
@@ -825,7 +831,7 @@
 					if (!tag.wicket_element_visibility) {
 						tag.wicket_element_visibility=isVisible(tag);
 					}
-					if (popupVisible === 0 || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
+					if (!popupVisible || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
 						tag.style.visibility = tag.wicket_element_visibility;
 					} else {
 						tag.style.visibility = "hidden";

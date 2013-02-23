@@ -20,13 +20,16 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.ResourceAggregator;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -36,6 +39,40 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBehavior
 {
+	/**
+	 * A wrapper for the auto-complete DOM-ready event handler.
+	 * <p>
+	 * A plain OnDomReadyItem would be aggregated by {@link ResourceAggregator}, possible coming
+	 * after the event registration of other behaviors.
+	 */
+	private static final class WrappedHeaderItem extends HeaderItem implements IWrappedHeaderItem
+	{
+		private final OnDomReadyHeaderItem item;
+
+		private WrappedHeaderItem(OnDomReadyHeaderItem onDomReady)
+		{
+			item = onDomReady;
+		}
+
+		@Override
+		public void render(Response response)
+		{
+			item.render(response);
+		}
+
+		@Override
+		public Iterable<?> getRenderTokens()
+		{
+			return item.getRenderTokens();
+		}
+
+		@Override
+		public HeaderItem getWrapped()
+		{
+			return item;
+		}
+	}
+
 	private static final ResourceReference AUTOCOMPLETE_JS = new JavaScriptResourceReference(
 		AutoCompleteBehavior.class, "wicket-autocomplete.js");
 
@@ -70,7 +107,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		super.renderHead(component, response);
-		CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
+
 		renderAutocompleteHead(response);
 	}
 
@@ -96,7 +133,10 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s,%s);", id,
 			getCallbackUrl(), constructSettingsJS(), indicatorId);
-		response.render(OnDomReadyHeaderItem.forScript(initJS));
+
+		final OnDomReadyHeaderItem onDomReady = OnDomReadyHeaderItem.forScript(initJS);
+
+		response.render(new WrappedHeaderItem(onDomReady));
 	}
 
 	/**

@@ -35,6 +35,7 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.atmosphere.config.AtmosphereParameters;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.atmosphere.cpr.AtmosphereResource;
@@ -278,8 +279,9 @@ public class EventBus implements UnboundListener
 		}
 	}
 
-	private void postToSingleResource(Object event, AtmosphereResource resource)
+	private void postToSingleResource(Object payload, AtmosphereResource resource)
 	{
+		AtmosphereEvent event = new AtmosphereEvent(payload, resource);
 		ThreadContext.detach();
 		ThreadContext.setApplication(application);
 		PageKey key;
@@ -301,7 +303,7 @@ public class EventBus implements UnboundListener
 	}
 
 	private void post(AtmosphereResource resource, PageKey pageKey,
-		Collection<EventSubscription> subscriptionsForPage, Object event)
+		Collection<EventSubscription> subscriptionsForPage, AtmosphereEvent event)
 	{
 		String filterPath = WebApplication.get()
 			.getWicketFilter()
@@ -317,8 +319,9 @@ public class EventBus implements UnboundListener
 				return ret == null ? "" : ret;
 			}
 		};
-		AtmosphereWebRequest request = new AtmosphereWebRequest(application.newWebRequest(
-			httpRequest, filterPath), pageKey, subscriptionsForPage, event);
+		AtmosphereWebRequest request = new AtmosphereWebRequest(
+			(ServletWebRequest)application.newWebRequest(httpRequest, filterPath), pageKey,
+			subscriptionsForPage, event);
 		Response response = new AtmosphereWebResponse(resource.getResponse());
 		if (application.createRequestCycle(request, response).processRequestAndDetach())
 		{

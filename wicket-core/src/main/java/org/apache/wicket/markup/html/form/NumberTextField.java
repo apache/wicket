@@ -22,7 +22,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.lang.Numbers;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.validation.validator.RangeValidator;
@@ -126,40 +125,14 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		if (validator != null)
 		{
 			remove(validator);
+			validator = null;
 		}
 
-		validator = new RangeValidator<N>(getMinValue(), getMaxValue());
-		add(validator);
-	}
-
-	private N getMinValue()
-	{
-		N result;
-		if (minimum != null)
+		if (minimum != null || maximum != null)
 		{
-			result = minimum;
+			validator = RangeValidator.range(minimum, maximum);
+			add(validator);
 		}
-		else
-		{
-			Class<N> numberType = getNumberType();
-			result = (N)Numbers.getMinValue(numberType);
-		}
-		return result;
-	}
-
-	private N getMaxValue()
-	{
-		N result;
-		if (maximum != null)
-		{
-			result = maximum;
-		}
-		else
-		{
-			Class<N> numberType = getNumberType();
-			result = (N)Numbers.getMaxValue(numberType);
-		}
-		return result;
 	}
 
 	private Class<N> getNumberType()

@@ -14,48 +14,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.cookies;
+package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-
 /**
- * Stateful form page which sets a cookie and calls setResponsePage()
- * 
- * @author Bertrand Guay-Paquet
+ * @author svenmeier
  */
-public class SetCookieAndRedirectStatefullTestPage extends WebPage
+public class AutoCompletePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-
-	/**	 */
-	public static final String cookieName = "CookieValuePersisterStatelessTestPage";
-
-	private IModel<String> inputModel;
+	private AutoCompleteTextField<String> textField;
 
 	/**
 	 * Construct.
 	 */
-	public SetCookieAndRedirectStatefullTestPage()
+	public AutoCompletePage()
 	{
-		inputModel = new Model<String>();
-		Form<Void> form = new Form<Void>("form")
+		textField = new AutoCompleteTextField<String>("textfield", Model.of(""))
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit()
+			protected Iterator<String> getChoices(String input)
 			{
-				CookieUtils utils = new CookieUtils();
-				utils.save(cookieName, inputModel.getObject());
-				setResponsePage(getApplication().getHomePage());
+				return Arrays.<String> asList().iterator();
 			}
 		};
-		add(form);
-		form.add(new TextField<String>("input", inputModel));
+		textField.add(new AjaxEventBehavior("change")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onEvent(AjaxRequestTarget target)
+			{
+			}
+		});
+		add(textField);
+
+		add(new AjaxLink<Void>("link")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				target.add(textField);
+			}
+		});
 	}
 }

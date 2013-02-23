@@ -100,7 +100,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('processEvaluation with identifier|code.', function () {
 
-			expect(2);
+			expect(3);
 
 			var attrs = {
 				u: 'data/ajax/evaluationIdentifierAndCodeId.xml',
@@ -1112,6 +1112,42 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 
 			jQuery('#usedAsContextWicket5025').triggerHandler("asContextFailure");
+		});
+
+		/**
+		 * https://issues.apache.org/jira/browse/WICKET-5047
+		 */
+		asyncTest('try/catch only the content of \'script type="text/javascript"\'.', function () {
+
+			// manually call HTMLScriptElement.onload() to let
+			// FunctionsExecutor finish its work
+			var oldAddElement = Wicket.Head.addElement;
+			Wicket.Head.addElement = function(element) {
+				oldAddElement(element);
+				if (element.onload) {
+					element.onload();
+				}
+			};
+
+			expect(2);
+
+			var attrs = {
+				u: 'data/ajax/javaScriptTemplate.xml',
+				coh: [
+					function() {
+						start();
+
+						var jsTemplateText = jQuery('#jsTemplate').text();
+						equal(jsTemplateText, 'var data = 123;', 'JavaScript template is *not* try/catched');
+
+						var jsNonTemplateText = jQuery('#jsNonTemplate').text();
+						equal(jsNonTemplateText, 'try{var data = 456;}catch(e){Wicket.Log.error(e);}', 'JavaScript non template *is* try/catched');
+
+					}
+				]
+			};
+
+			Wicket.Ajax.ajax(attrs);
 		});
 	}
 });

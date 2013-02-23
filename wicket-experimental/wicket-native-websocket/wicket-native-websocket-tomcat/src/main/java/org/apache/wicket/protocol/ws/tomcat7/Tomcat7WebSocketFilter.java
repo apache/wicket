@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.connector.RequestFacade;
 import org.apache.catalina.util.Base64;
 import org.apache.tomcat.util.buf.B2CConverter;
-import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
 
 /**
@@ -71,7 +71,7 @@ public class Tomcat7WebSocketFilter extends AbstractUpgradeFilter
 		String key = req.getHeader("Sec-WebSocket-Key");
 		resp.setHeader("Sec-WebSocket-Accept", getWebSocketAccept(key));
 
-		Application application = getApplication();
+		WebApplication application = getApplication();
 		// Small hack until the Servlet API provides a way to do this.
 		TomcatWebSocketProcessor webSocketHandler = new TomcatWebSocketProcessor(req, application);
 		TomcatWebSocketProcessor.TomcatWebSocket tomcatWebSocket = webSocketHandler.new TomcatWebSocket();
