@@ -16,25 +16,22 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
-
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
+
 /**
  * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the
  * subscribed methods are invoked.
  * 
  * @author papegaaij
+ * @author floaz
  */
 public class AtmosphereRequestHandler implements IRequestHandler
 {
@@ -72,49 +69,14 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	private void executeHandlers(AjaxRequestTarget target, Page page)
 	{
 		for (EventSubscription curSubscription : subscriptions)
-		{
-			if (curSubscription.getContextAwareFilter().apply(event))
+		{					
+			if(!ajaxRequestScheduled)
 			{
-				Component component = page.get(curSubscription.getComponentPath());
-				if (curSubscription.getBehaviorIndex() == null)
-					invokeMethod(target, curSubscription, component);
-				else
-					invokeMethod(target, curSubscription,
-						component.getBehaviorById(curSubscription.getBehaviorIndex()));
+				ajaxRequestScheduled = true;
+				RequestCycle.get().scheduleRequestHandlerAfterCurrent(target);
 			}
-		}
-	}
-
-	private void invokeMethod(AjaxRequestTarget target, EventSubscription subscription, Object base)
-	{
-		for (Method curMethod : base.getClass().getMethods())
-		{
-			if (curMethod.isAnnotationPresent(Subscribe.class) &&
-				curMethod.getName().equals(subscription.getMethodName()))
-			{
-				try
-				{
-					if (!ajaxRequestScheduled)
-					{
-						ajaxRequestScheduled = true;
-						RequestCycle.get().scheduleRequestHandlerAfterCurrent(target);
-					}
-					curMethod.setAccessible(true);
-					curMethod.invoke(base, target, event);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-				catch (IllegalArgumentException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-				catch (InvocationTargetException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-			}
+			
+			curSubscription.call(target, event);
 		}
 	}
 

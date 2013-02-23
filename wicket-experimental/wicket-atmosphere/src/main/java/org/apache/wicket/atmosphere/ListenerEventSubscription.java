@@ -1,0 +1,91 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.atmosphere;
+
+
+import org.apache.wicket.Component;
+
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+
+/**
+ * The subscription of listener class to certain events. This is used by {@link EventBus}
+ * to track the subscriptions.
+ * 
+ * @author floaz
+ */
+public class ListenerEventSubscription implements EventSubscription
+{	
+	private Predicate		filter;
+	private AtmosphereEventSubscription	eventListener;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param component
+	 * @param behavior
+	 * @param method
+	 */
+	public ListenerEventSubscription(AtmosphereEventSubscription eventListener, Predicate filter, Class eventType)
+	{
+		this.eventListener = eventListener;
+		this.filter = Predicates.and(Predicates.instanceOf(eventType), filter);
+	}
+
+
+	/**
+	 * @return The filter on incomming events, a combination of the type and the
+	 *         {@link Subscribe#filter()} parameter.
+	 */
+	@Override
+	public Predicate<Object> getFilter()
+	{
+		return filter;
+	}
+
+
+	/**
+	 * @return The filter on incomming events, a combination of the type and the
+	 *         {@link Subscribe#filter()} parameter.
+	 */
+	@Override
+	public void call(AjaxRequestTarget target, Object event)
+	{
+		eventListener.call(target, event);
+	}
+
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(eventListener, filter);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof ListenerEventSubscription)
+		{
+			ListenerEventSubscription other = (ListenerEventSubscription)obj;
+			return Objects.equal(eventListener, eventListener) &&
+				Objects.equal(filter, other.getFilter());
+		}
+		return false;
+	}
+}

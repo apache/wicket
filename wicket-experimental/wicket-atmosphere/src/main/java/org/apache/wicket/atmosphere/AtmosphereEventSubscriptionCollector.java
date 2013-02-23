@@ -38,6 +38,7 @@ import com.google.common.collect.ImmutableList;
  * is added automatically by {@link EventBus}.
  * 
  * @author papegaaij
+ * @author floaz
  */
 public class AtmosphereEventSubscriptionCollector implements IComponentOnBeforeRenderListener
 {
@@ -103,17 +104,22 @@ public class AtmosphereEventSubscriptionCollector implements IComponentOnBeforeR
 	{
 		Class<?>[] params = method.getParameterTypes();
 		if (params.length != 2 || !params[0].equals(AjaxRequestTarget.class))
+		{
 			throw new WicketRuntimeException("@Subscribe can only be used on " +
 				"methods with 2 params, of which the first is AjaxRequestTarget. " + method +
 				" does not conform to this signature.");
+		}
 	}
 
 	private void subscribeComponent(Component component, Behavior behavior, Method method)
 	{
-		EventSubscription subscription = new EventSubscription(component, behavior, method);
+		EventSubscription subscription = new MethodEventSubscription(component, behavior, method);
 		Page page = component.getPage();
 		eventBus.register(page, subscription);
+		
 		if (page.getBehaviors(AtmosphereBehavior.class).isEmpty())
+		{
 			page.add(new AtmosphereBehavior());
+		}
 	}
 }

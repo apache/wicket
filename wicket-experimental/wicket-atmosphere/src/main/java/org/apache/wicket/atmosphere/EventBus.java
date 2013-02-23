@@ -178,18 +178,18 @@ public class EventBus implements UnboundListener
 	 */
 	public synchronized void register(Page page, EventSubscription subscription)
 	{
-		if (log.isInfoEnabled())
-		{
-			log.info(
-				"registering {} for page {} for session {}: {}{}",
-				new Object[] {
-						subscription.getBehaviorIndex() == null ? "component" : "behavior",
-						page.getPageId(),
-						Session.get().getId(),
-						subscription.getComponentPath(),
-						subscription.getBehaviorIndex() == null ? "" : ":" +
-							subscription.getBehaviorIndex() });
-		}
+//		if (log.isInfoEnabled())
+//		{
+//			log.info(
+//				"registering {} for page {} for session {}: {}{}",
+//				new Object[] {
+//						subscription.getBehaviorIndex() == null ? "component" : "behavior",
+//						page.getPageId(),
+//						Session.get().getId(),
+//						subscription.getComponentPath(),
+//						subscription.getBehaviorIndex() == null ? "" : ":" +
+//							subscription.getBehaviorIndex() });
+//		}
 		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
 		if (!subscriptions.containsEntry(pageKey, subscription))
 		{
@@ -291,9 +291,13 @@ public class EventBus implements UnboundListener
 				Collections.unmodifiableCollection(subscriptions.get(key)), new EventFilter(event));
 		}
 		if (key == null)
+		{
 			broadcaster.removeAtmosphereResource(resource);
+		}
 		else
+		{
 			post(resource, key, subscriptionsForPage, event);
+		}
 	}
 
 	private void post(AtmosphereResource resource, PageKey pageKey,
@@ -317,13 +321,16 @@ public class EventBus implements UnboundListener
 			httpRequest, filterPath), pageKey, subscriptionsForPage, event);
 		Response response = new AtmosphereWebResponse(resource.getResponse());
 		if (application.createRequestCycle(request, response).processRequestAndDetach())
+		{
 			broadcaster.broadcast(response.toString(), resource);
+		}
 	}
 
 	@Override
 	public synchronized void sessionUnbound(String sessionId)
 	{
 		log.info("Session unbound {}", sessionId);
+		
 		Iterator<Entry<String, PageKey>> pageIt = trackedPages.entrySet().iterator();
 		while (pageIt.hasNext())
 		{
@@ -334,10 +341,15 @@ public class EventBus implements UnboundListener
 				fireUnregistration(curEntry.getKey());
 			}
 		}
+
 		Iterator<PageKey> subscriptionIt = subscriptions.keySet().iterator();
 		while (subscriptionIt.hasNext())
+		{
 			if (subscriptionIt.next().isForSession(sessionId))
+			{
 				subscriptionIt.remove();
+			}
+		}
 	}
 
 	/**
