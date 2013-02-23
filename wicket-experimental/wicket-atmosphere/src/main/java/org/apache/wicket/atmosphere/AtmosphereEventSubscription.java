@@ -16,29 +16,19 @@
  */
 package org.apache.wicket.atmosphere;
 
-
-import com.google.common.base.Predicate;
+import java.io.Serializable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
+
+
+
 /**
- * The interface of tracked event subscriptions. This is used by {@link EventBus}
- * to track the subscriptions.
+ * The interface for handling events.
  * 
  * @author floaz
  */
-public interface EventSubscription {
-
-	/**
-	 * @return The filter on incomming events, a combination of the type and the
-	 *         {@link Subscribe#filter()} parameter.
-	 */
-	Predicate<Object> getFilter();
-
+public interface AtmosphereEventSubscription<T> extends Serializable {
 	
-	/**
-	 * The execution of the subscription method.
-	 */
-	void call(AjaxRequestTarget target, Object event);
-	
+	void call(AjaxRequestTarget target, T event);	
 	
 }
