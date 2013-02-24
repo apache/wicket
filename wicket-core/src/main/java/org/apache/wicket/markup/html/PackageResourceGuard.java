@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,10 +64,9 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.Class,
 	 *      java.lang.String)
 	 */
-	@Override
-	public boolean accept(Class<?> scope, String path)
+	public boolean accept(Class<?> scope, String absolutePath)
 	{
-		String absolutePath = Packages.absolutePath(scope, path);
+		// path is already absolute
 		return acceptAbsolutePath(absolutePath);
 	}
 

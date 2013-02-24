@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.lang.Packages;
 import org.junit.Test;
 
 /**
@@ -34,22 +35,29 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.setAllowAccessToRootResources(false);
 		guard.addPattern("+*.gif");
-		assertTrue(guard.accept(Application.class, "test.gif"));
-		assertTrue(guard.accept(Application.class, "mydir/test.gif"));
+		assertTrue(guard.accept(Application.class,
+			Packages.absolutePath(Application.class, "test.gif")));
+		assertTrue(guard.accept(Application.class,
+			Packages.absolutePath(Application.class, "mydir/test.gif")));
 		assertTrue(guard.accept(Application.class, "/root/mydir/test.gif"));
-		assertTrue(guard.accept(Application.class, "../test.gif"));
-		assertTrue(guard.accept(Application.class, "../../test.gif"));
+		assertTrue(guard.accept(Application.class,
+			Packages.absolutePath(Application.class, "../test.gif")));
+		assertTrue(guard.accept(Application.class,
+			Packages.absolutePath(Application.class, "../../test.gif")));
 
-		// root package
-		assertFalse(guard.accept(Application.class, "../../../test.gif"));
+		// web-inf (root package)
+		assertFalse(guard.accept(Application.class,
+			Packages.absolutePath(Application.class, "../../../test.gif")));
 		guard.setAllowAccessToRootResources(true);
-		assertTrue(guard.accept(Application.class, "../../../test.gif"));
+		assertTrue(guard.accept(Application.class,
+			Packages.absolutePath(Application.class, "../../../test.gif")));
 
 		boolean hit = false;
 		try
 		{
 			// you can not go below root
-			assertTrue(guard.accept(Application.class, "../../../../test.gif"));
+			assertTrue(guard.accept(Application.class,
+				Packages.absolutePath(Application.class, "../../../../test.gif")));
 		}
 		catch (IllegalArgumentException ex)
 		{

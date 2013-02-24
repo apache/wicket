@@ -23,10 +23,10 @@ import org.apache.wicket.SharedResources;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.JavaScriptPackageResource;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Packages;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -75,13 +75,20 @@ public class PackageResourceTest extends WicketTestCase
 		assertFalse(guard.acceptExtension("java"));
 		assertTrue(guard.acceptAbsolutePath("foo/Bar.txt"));
 		assertFalse(guard.acceptAbsolutePath("foo/Bar.java"));
-		assertTrue(guard.accept(PackageResourceTest.class, "Bar.txt"));
-		assertTrue(guard.accept(PackageResourceTest.class, "Bar.txt."));
-		assertTrue(guard.accept(PackageResourceTest.class, ".Bar.txt"));
-		assertTrue(guard.accept(PackageResourceTest.class, ".Bar.txt."));
-		assertTrue(guard.accept(PackageResourceTest.class, ".Bar"));
-		assertTrue(guard.accept(PackageResourceTest.class, ".java"));
-		assertFalse(guard.accept(PackageResourceTest.class, "Bar.java"));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, "Bar.txt")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, "Bar.txt.")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, ".Bar.txt")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, ".Bar.txt.")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, ".Bar")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, ".java")));
+		assertFalse(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, "Bar.java")));
 	}
 
 	/**
@@ -163,11 +170,11 @@ public class PackageResourceTest extends WicketTestCase
 	public void textFileWithEncoding()
 	{
 		final String encoding = "Klingon-8859-42";
-		final PackageResource resource =
-			new PackageResource(PackageResourceTest.class, "packaged1.txt", null, null, null)
-			{
-				private static final long serialVersionUID = 1L;
-			};
+		final PackageResource resource = new PackageResource(PackageResourceTest.class,
+			"packaged1.txt", null, null, null)
+		{
+			private static final long serialVersionUID = 1L;
+		};
 		resource.setTextEncoding(encoding);
 		tester.startResource(resource);
 		final String contentType = tester.getLastResponse().getContentType();
@@ -178,11 +185,11 @@ public class PackageResourceTest extends WicketTestCase
 	public void javascriptFileWithEncoding()
 	{
 		final String encoding = "Klingon-8859-42";
-		final JavaScriptPackageResource resource =
-			new JavaScriptPackageResource(PackageResourceTest.class, "packaged3.js", null, null, null)
-			{
-				private static final long serialVersionUID = 1L;
-			};
+		final JavaScriptPackageResource resource = new JavaScriptPackageResource(
+			PackageResourceTest.class, "packaged3.js", null, null, null)
+		{
+			private static final long serialVersionUID = 1L;
+		};
 		resource.setTextEncoding(encoding);
 		tester.startResource(resource);
 		final String contentType = tester.getLastResponse().getContentType();

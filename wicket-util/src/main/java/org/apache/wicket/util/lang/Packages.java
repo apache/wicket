@@ -27,31 +27,31 @@ import org.apache.wicket.util.string.StringList;
 public final class Packages
 {
 	/**
-	 * Takes a package and a relative path to a resource and returns an absolute path to the
-	 * resource. For example, if the given package was java.lang and the relative path was
-	 * "../util/List", then "java/util/List" would be returned.
+	 * Takes a package and a path to a resource and returns an absolute path to the resource.
+	 * <p>
+	 * See {@link #absolutePath(String, String)} for details.
 	 * 
 	 * @param p
 	 *            The package to start at
-	 * @param relativePath
-	 *            The relative path to the class
+	 * @param path
+	 *            The path to the resource
 	 * @return The absolute path
 	 */
-	public static String absolutePath(final Class<?> p, final String relativePath)
+	public static String absolutePath(final Class<?> p, final String path)
 	{
 		String packName = (p != null ? extractPackageName(p) : "");
-		return absolutePath(packName, relativePath);
+		return absolutePath(packName, path);
 	}
 
 	/**
-	 * Takes a package and a relative path to a resource and returns an absolute path to the
-	 * resource. For example, if the given package was java.lang and the relative path was
-	 * "../util/List", then "java/util/List" would be returned.
+	 * Takes a package and a path to a resource and returns an absolute path to the resource.
+	 * <p>
+	 * See {@link #absolutePath(String, String)} for details.
 	 * 
 	 * @param p
 	 *            The package to start at
 	 * @param relativePath
-	 *            The relative path to the class
+	 *            The path to the resource
 	 * @return The absolute path
 	 */
 	public static String absolutePath(final Package p, final String relativePath)
@@ -60,22 +60,24 @@ public final class Packages
 	}
 
 	/**
-	 * Takes a package and a relative path to a resource and returns an absolute path to the
-	 * resource. For example, if the given package was java.lang and the relative path was
-	 * "../util/List", then "java/util/List" would be returned.
+	 * Takes a package and a path to a resource and returns an absolute path to the resource. For
+	 * example, if the given package was java.lang and the relative path was "../util/List", then
+	 * "java/util/List" would be returned. An already absolute path stays absolute.
+	 * <p>
+	 * Note: The returned absolute path does not start with a slash ("/").
 	 * 
 	 * @param packageName
 	 *            The package to start at
-	 * @param relativePath
-	 *            The relative path to the class
+	 * @param path
+	 *            The path to the resource
 	 * @return The absolute path
 	 */
-	public static String absolutePath(final String packageName, final String relativePath)
+	public static String absolutePath(final String packageName, final String path)
 	{
 		// Is path already absolute?
-		if (relativePath.startsWith("/"))
+		if (path.startsWith("/"))
 		{
-			return relativePath;
+			return path.substring(1);
 		}
 		else
 		{
@@ -83,7 +85,7 @@ public final class Packages
 			final StringList absolutePath = StringList.tokenize(packageName, ".");
 
 			// Break path into folders
-			final StringList folders = StringList.tokenize(relativePath, "/\\");
+			final StringList folders = StringList.tokenize(path, "/\\");
 
 			// Iterate through folders
 			for (int i = 0, size = folders.size(); i < size; i++)
@@ -101,10 +103,10 @@ public final class Packages
 					}
 					else
 					{
-						throw new IllegalArgumentException("Invalid path " + relativePath);
+						throw new IllegalArgumentException("Invalid path " + path);
 					}
 				}
-				else if (absolutePath.size() <= i || absolutePath.get(i).equals(folder) == false)
+				else
 				{
 					// Add to stack
 					absolutePath.add(folder);

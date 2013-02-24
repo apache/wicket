@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import java.io.InputStream;
 
+import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -93,6 +94,10 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 	@Test
 	public void requestHandlingOfResourceUrlWithEscapeStringInsideTest()
 	{
+		((PackageResourceGuard)tester.getApplication()
+			.getResourceSettings()
+			.getPackageResourceGuard()).setAllowAccessToRootResources(true);
+
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
 		requestHandlingOfResourceUrlWithEscapeStringInside();
 

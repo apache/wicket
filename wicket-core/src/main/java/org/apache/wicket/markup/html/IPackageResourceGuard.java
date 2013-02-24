@@ -32,11 +32,11 @@ public interface IPackageResourceGuard
 	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
-	 *            resource, and to determine what package it is in
-	 * @param path
-	 *            The path to the resource
+	 *            resource
+	 * @param absolutePath
+	 *            The absolute path to the resource
 	 * 
 	 * @return True if access is permitted, false otherwise
 	 */
-	boolean accept(final Class<?> scope, final String path);
+	boolean accept(final Class<?> scope, final String absolutePath);
 }
