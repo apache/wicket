@@ -25,6 +25,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Packages;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -73,13 +74,20 @@ public class PackageResourceTest extends WicketTestCase
 		assertFalse(guard.acceptExtension("java"));
 		assertTrue(guard.acceptAbsolutePath("foo/Bar.txt"));
 		assertFalse(guard.acceptAbsolutePath("foo/Bar.java"));
-		assertTrue(guard.accept(PackageResourceTest.class, "Bar.txt"));
-		assertTrue(guard.accept(PackageResourceTest.class, "Bar.txt."));
-		assertTrue(guard.accept(PackageResourceTest.class, ".Bar.txt"));
-		assertTrue(guard.accept(PackageResourceTest.class, ".Bar.txt."));
-		assertTrue(guard.accept(PackageResourceTest.class, ".Bar"));
-		assertTrue(guard.accept(PackageResourceTest.class, ".java"));
-		assertFalse(guard.accept(PackageResourceTest.class, "Bar.java"));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, "Bar.txt")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, "Bar.txt.")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, ".Bar.txt")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, ".Bar.txt.")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, ".Bar")));
+		assertTrue(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, ".java")));
+		assertFalse(guard.accept(PackageResourceTest.class,
+			Packages.absolutePath(PackageResourceTest.class, "Bar.java")));
 	}
 
 	/**
