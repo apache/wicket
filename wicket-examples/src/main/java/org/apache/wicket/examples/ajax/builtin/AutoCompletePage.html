@@ -26,8 +26,11 @@
 		The textfield below will autocomplete country names. It utilizes AutoCompleteTextField in wicket-extensions.<br/><br/>
 
 		<form wicket:id="form">
-			Selected value is: <span wicket:id="selectedValue"></span><br/>
 			Country: <input type="text" wicket:id="ac" size="50"/>
+			<br/>
+			History of selected values:
+			<br/>
+			<div wicket:id="history"></div>
 		</form>
 
 		</wicket:extend>
