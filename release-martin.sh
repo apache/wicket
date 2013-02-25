@@ -136,3 +136,8 @@ cp ../dist/* binaries
 svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
+
+
+
+### POST VOTE
+# svn mv https://mgrigorov@dist.apache.org/repos/dist/dev/wicket/$version https://mgrigorov@dist.apache.org/repos/dist/release/wicket
