@@ -54,7 +54,7 @@
 		var ignoreFocus = false;		// ignore focus and gain because menu is showing
 		var	ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
 		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
-		var ignoreChange = false;		// ignore change event because TAB or ENTER event already triggered a change  
+		var ignoreChange = false;		// ignore change event because TAB or ENTER event already triggered a change
 
 		var initialElement;
 
