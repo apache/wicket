@@ -375,8 +375,8 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * If true re-rendering the list view is more efficient if the windows doesn't get changed at
 	 * all or if it gets scrolled (compared to paging). But if you modify the listView model object,
 	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
-	 * nest a ListView in a Form, ALLWAYS set this property to true, as otherwise validation will
-	 * not work properly.
+	 * nest a ListView in a Form, <strong>always</strong> set this property to true,
+	 * as otherwise validation will not work properly.
 	 * 
 	 * @param reuseItems
 	 *            Whether to reuse the child items.
