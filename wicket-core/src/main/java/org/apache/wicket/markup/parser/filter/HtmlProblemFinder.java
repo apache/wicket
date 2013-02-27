@@ -100,10 +100,12 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 			if (key != null)
 			{
 				key = key.toLowerCase();
-				if (key.startsWith("wicket."))
+				String namespaceDot = getWicketNamespace() + '.';
+				if (key.startsWith(namespaceDot))
 				{
 					escalateWarning(
-						"You probably want 'wicket:xxx' rather than 'wicket.xxx'. Location: ", tag);
+						String.format("You probably want '%s:xxx' rather than '%s.xxx'. Location: ", namespaceDot, namespaceDot),
+							tag);
 				}
 			}
 		}
