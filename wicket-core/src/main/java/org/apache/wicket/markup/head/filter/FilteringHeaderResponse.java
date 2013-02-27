@@ -152,6 +152,12 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		if (item instanceof FilteredHeaderItem)
 		{
 			String filterName = ((FilteredHeaderItem)item).getFilterName();
+
+			if (responseFilterMap.containsKey(filterName) == false)
+			{
+				responseFilterMap.put(filterName, new ArrayList<HeaderItem>());
+			}
+
 			render(item, filterName);
 		}
 		else

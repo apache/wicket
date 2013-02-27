@@ -16,9 +16,15 @@
  */
 package org.apache.wicket.markup.head.filter;
 
+import java.util.Collections;
+
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.StringHeaderItem;
+import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.response.StringResponse;
 import org.junit.Test;
 
 /**
@@ -43,5 +49,29 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 			}
 		});
 		executeTest(FilteredHeaderPage.class, "FilteredHeaderPageExpected.html");
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5057
+	 * @throws Exception
+	 */
+	@Test
+	public void createBucketOnTheFlyForFilteredHeaderItem() throws Exception
+	{
+		FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
+		{
+			@Override
+			protected Response getRealResponse()
+			{
+				return new StringResponse();
+			}
+		}, "headerBucketName", Collections.EMPTY_LIST);
+
+		String filterName = "filterName";
+		String headerContent = "content";
+		FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
+		headerResponse.render(item);
+		CharSequence realContent = headerResponse.getContent(filterName);
+		assertEquals(headerContent, realContent.toString());
 	}
 }
