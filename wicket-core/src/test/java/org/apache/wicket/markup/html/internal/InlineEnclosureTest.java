@@ -56,6 +56,13 @@ public class InlineEnclosureTest extends WicketTestCase
 		executeTest(InlineEnclosurePanelPage.class, "InlineEnclosurePanelPageExpectedResult.html");
 	}
 
+	@Test
+	public void inlineEnclosurePageDifferentNamespace() throws Exception
+	{
+		executeTest(InlineEnclosureDifferentNamespacePage.class,
+		"InlineEnclosureDifferentNamespaceExpectedResult.html");
+	}
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4520
 	 *

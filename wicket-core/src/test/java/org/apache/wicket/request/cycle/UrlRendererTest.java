@@ -466,4 +466,5 @@ public class UrlRendererTest extends Assert
 
 		assertEquals("../../../../a/b;jsessionid=123456", encodedRelativeUrl);
 	}
+
 }

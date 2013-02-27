@@ -26,7 +26,7 @@ import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.junit.Test;
 
 /**
- * Testcases for resource bundles
+ * Test cases for resource bundles
  * 
  * @author papegaaij
  */

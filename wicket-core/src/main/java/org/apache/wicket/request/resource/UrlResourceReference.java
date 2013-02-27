@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.resource;
 
+import org.apache.wicket.request.IUrlRenderer;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -30,6 +31,30 @@ import org.apache.wicket.util.lang.Args;
  */
 public class UrlResourceReference extends ResourceReference
 {
+	/**
+	 * An Url that knows how to render itself, so it doesn't need re-calculating in UrlRenderer.
+	 * It should be rendered as is.
+	 */
+	private static class CalculatedUrl extends Url implements IUrlRenderer
+	{
+		private CalculatedUrl(Url original)
+		{
+			super(original);
+		}
+
+		@Override
+		public String renderFullUrl(Url url, Url baseUrl)
+		{
+			return url.toString(StringMode.FULL);
+		}
+
+		@Override
+		public String renderRelativeUrl(Url url, Url baseUrl)
+		{
+			return url.toString();
+		}
+	}
+
 	/**
 	 * The url to the resource.
 	 */
@@ -61,12 +86,16 @@ public class UrlResourceReference extends ResourceReference
 	 */
 	public final Url getUrl()
 	{
-		Url _url = url;
+		CalculatedUrl _url;
 
 		if (contextRelative)
 		{
 			String contextRelative = UrlUtils.rewriteToContextRelative(url.toString(), RequestCycle.get());
-			_url = Url.parse(contextRelative, url.getCharset());
+			_url = new CalculatedUrl(Url.parse(contextRelative, url.getCharset()));
+		}
+		else
+		{
+			_url = new CalculatedUrl(url);
 		}
 
 		return _url;

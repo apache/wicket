@@ -127,6 +127,12 @@ public class UrlRenderer
 	 */
 	public String renderFullUrl(final Url url)
 	{
+		if (url instanceof IUrlRenderer)
+		{
+			IUrlRenderer renderer = (IUrlRenderer) url;
+			return renderer.renderFullUrl(url, getBaseUrl());
+		}
+
 		final String protocol = resolveProtocol(url);
 		final String host = resolveHost(url);
 		final Integer port = resolvePort(url);
@@ -213,6 +219,12 @@ public class UrlRenderer
 	public String renderRelativeUrl(final Url url)
 	{
 		Args.notNull(url, "url");
+
+		if (url instanceof IUrlRenderer)
+		{
+			IUrlRenderer renderer = (IUrlRenderer) url;
+			return renderer.renderRelativeUrl(url, getBaseUrl());
+		}
 
 		List<String> baseUrlSegments = getBaseUrl().getSegments();
 		List<String> urlSegments = new ArrayList<String>(url.getSegments());

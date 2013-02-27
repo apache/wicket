@@ -32,6 +32,7 @@ import org.junit.Test;
  */
 public class UrlResourceReferenceTest extends WicketTestCase
 {
+	@Test
 	public void relativeUrl()
 	{
 		Url url = Url.parse("some/relative/url");
@@ -70,7 +71,7 @@ public class UrlResourceReferenceTest extends WicketTestCase
 		tester.getApplication().mountPage("/some/mount/path", TestPage.class);
 		tester.startPage(new TestPage());
 
-		tester.assertContains("<script type=\"text/javascript\" src=\"../../::/::/some/relative/url\"></script>");
+		tester.assertContains("<script type=\"text/javascript\" src=\"../../some/relative/url\"></script>");
 	}
 
 	/**

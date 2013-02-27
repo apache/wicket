@@ -30,7 +30,6 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
-import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
@@ -169,7 +168,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 
 			Url url;
 
-			if (reference instanceof ResourceBundleReference)
+			while (reference instanceof ResourceBundleReference)
 			{
 				// unwrap the bundle to render the url for the actual reference
 				reference = ((ResourceBundleReference)reference).getBundleReference();
@@ -184,12 +183,6 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 					return url;
 				}
 				// otherwise it has to be served by the standard wicket way
-			}
-			else if (reference instanceof UrlResourceReference)
-			{
-				UrlResourceReference urlReference = (UrlResourceReference)reference;
-				url = urlReference.getUrl();
-				return url;
 			}
 
 			if (reference.canBeRegistered())

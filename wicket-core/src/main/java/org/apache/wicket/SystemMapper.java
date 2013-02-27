@@ -50,6 +50,7 @@ public class SystemMapper extends CompoundRequestMapper
 		add(new HomePageMapper(new HomePageProvider(application)));
 		add(new ResourceReferenceMapper(new PageParametersEncoder(),
 			new ParentFolderPlaceholderProvider(application), getResourceCachingStrategy()));
+		add(new UrlResourceReferenceMapper());
 		add(RestartResponseAtInterceptPageException.MAPPER);
 		add(new BufferedResponseMapper());
 	}
