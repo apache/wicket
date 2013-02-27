@@ -72,7 +72,7 @@ public class PopupSettings implements IClusterable
 	private int left = -1;
 
 	/**
-	 * The target to put in JavaScript. This implementation simply refers to the href element, but
+	 * The target to put in JavaScript. This implementation simply refers to the href attribute, but
 	 * clients may want to override this (e.g. when the HTML element is not an anchor).
 	 */
 	private String target = "href";
