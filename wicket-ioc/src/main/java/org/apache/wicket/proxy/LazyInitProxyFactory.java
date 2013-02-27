@@ -431,6 +431,7 @@ public class LazyInitProxyFactory
 			}
 			try
 			{
+				method.setAccessible(true);
 				return method.invoke(target, args);
 			}
 			catch (InvocationTargetException e)
