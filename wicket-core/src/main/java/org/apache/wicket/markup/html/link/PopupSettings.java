@@ -217,9 +217,14 @@ public class PopupSettings implements IClusterable
 	}
 
 	/**
-	 * Sets the target of the link. The default implementation simply refers to the href element,
-	 * but clients may want to override this (e.g. when the HTML element is not an anchor) by
+	 * Sets the target of the link. The default implementation simply refers to the href attribute of
+	 * the anchor element, but clients may want to override this (e.g. when the HTML element is not an anchor) by
 	 * setting the target explicitly.
+	 *
+	 * <strong>Note</strong>: if the target is an url (relative or absolute) then it should be wrapped in
+	 * quotes, for example: <code>setTarget("'some/url'")</code>. If the url is delivered with an HTML attribute then
+	 * it should be without quotes, for example: <code>setTarget("this.dataset['popup-url']")</code> with markup like:
+	 * <pre><code>&lt;a data-popup-url="some/url"&gt;Link&lt;/a&gt;</code></pre>.
 	 * 
 	 * @param target
 	 *            the target of the link
