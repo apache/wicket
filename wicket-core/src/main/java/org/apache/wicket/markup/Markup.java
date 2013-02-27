@@ -60,13 +60,34 @@ public class Markup implements IMarkupFragment
 	 * not applied, which you might have registered with MarkupFactory.
 	 * 
 	 * @param markup
-	 * @return Markup
+	 *      the string to use as markup
+	 * @return Markup The parsed markup
 	 */
 	public static Markup of(final String markup)
 	{
+		return of(markup, MarkupParser.WICKET);
+	}
+
+	/**
+	 * Take the markup string, parse it and return the Markup (list of MarkupElements).
+	 * <p>
+	 * Limitation: Please note that MarkupFactory is NOT used and thus no caching is used (which
+	 * doesn't matter for Strings anyway), but what might matter is that your own MarkupFilters are
+	 * not applied, which you might have registered with MarkupFactory.
+	 *
+	 * @param markup
+	 *      the string to use as markup
+	 * @param wicketNamespace
+	 *      the namespace for Wicket elements and attributes
+	 * @return Markup The parsed markup
+	 */
+	public static Markup of(final String markup, String wicketNamespace)
+	{
 		try
 		{
-			return new MarkupParser(markup).parse();
+			MarkupParser markupParser = new MarkupParser(markup);
+			markupParser.setWicketNamespace(wicketNamespace);
+			return markupParser.parse();
 		}
 		catch (IOException ex)
 		{

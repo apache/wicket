@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.MarkupParser;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,9 +109,29 @@ public class InlineEnclosure extends Enclosure
 		}
 		else
 		{
-			enclosureMarkup = Markup.of(enclosureMarkupAsString);
+			enclosureMarkup = Markup.of(enclosureMarkupAsString, getWicketNamespace());
 		}
 
 		return enclosureMarkup;
+	}
+
+	/**
+	 * @return the markup namespace for Wicket elements and attributes.
+	 */
+	private String getWicketNamespace()
+	{
+		String markupNamespace = MarkupParser.WICKET;
+		Page page = findPage();
+		if (page != null)
+		{
+			IMarkupFragment markup = page.getMarkup();
+			MarkupResourceStream markupResourceStream = markup.getMarkupResourceStream();
+			String namespace = markupResourceStream.getWicketNamespace();
+			if (Strings.isEmpty(namespace) == false)
+			{
+				markupNamespace = namespace;
+			}
+		}
+		return markupNamespace;
 	}
 }

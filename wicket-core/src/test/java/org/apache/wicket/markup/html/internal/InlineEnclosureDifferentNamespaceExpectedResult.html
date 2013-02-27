@@ -1,0 +1,106 @@
+<html>
+<body>
+
+<!-- nested inline enclosures with separate child depths. -->
+<div id="w_InlineEnclosure-1"><span>Test Label 1</span>
+	<div id="w_InlineEnclosure-2">
+		<table>
+			<tr>
+				<td><span>Test Label 2</span></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<!-- nested inline enclosures with same child depth. -->
+<div id="w_InlineEnclosure-3">
+	<div id="w_InlineEnclosure-4">
+		<span>Test Label 3</span>
+		<span>Test Label 4</span>
+	</div>
+</div>
+
+<!-- enclosure tag nested inside inline enclosure with separate child depths. -->
+<div id="w_InlineEnclosure-5"> <span>Test Label 5</span>
+	
+		<table>
+			<tr>
+				<td>
+					<span>Test Label 6</span>
+				</td>
+			</tr>
+		</table>
+	
+</div>
+
+<!-- enclosure tag nested inside inline enclosure with same child depth. -->
+<div id="w_InlineEnclosure-7">
+	
+		<table>
+			<tr>
+				<td>
+					<span>Test Label 7</span>
+					<span>Test Label 8</span>
+				</td>
+			</tr>
+		</table>
+	
+</div>
+
+<!--  inline enclosure nested inside enclosure tag with separate child depths. -->
+
+	<div id="w_InlineEnclosure-10"> <span>Test Label 9</span>
+		<table>
+			<tr>
+				<td><span>Test Label 10</span></td>
+			</tr>
+		</table>
+	</div>
+
+
+<!--  inline enclosure nested inside enclosure tag with same child depth. -->
+<div id="w_InlineEnclosure-11">
+	
+		<table>
+			<tr>
+				<td>
+					<span>Test Label 11</span>
+					<span>Test Label 12</span>
+				</td>
+			</tr>
+		</table>
+	
+</div>
+
+<!--  inline enclosure nested inside enclosure tag with same child depth inside a wicket container. -->
+
+	<div id="w_InlineEnclosure-14">
+		<div>
+			<table>
+				<tr>
+					<td>
+						<span>Test Label 13</span>
+						<span>Test Label 14</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+
+
+<!-- nested inline enclosures without explicitly determining children -->
+<div id="w_InlineEnclosure-15">
+	<div id="w_InlineEnclosure-16">
+		<table>
+			<tr>
+				<td>
+					<span>Test Label 15</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>
