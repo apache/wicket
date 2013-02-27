@@ -51,6 +51,9 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	static
 	{
 		// Tags which are allowed not be closed in HTML
+		// http://www.w3.org/TR/html5/syntax.html#void-elements
+
+		// HTML5 doesn't allow void <p> but we should keep it for backward compatibility
 		doesNotRequireCloseTag.put("p", Boolean.TRUE);
 		doesNotRequireCloseTag.put("br", Boolean.TRUE);
 		doesNotRequireCloseTag.put("img", Boolean.TRUE);
@@ -58,6 +61,16 @@ public final class HtmlHandler extends AbstractMarkupFilter
 		doesNotRequireCloseTag.put("hr", Boolean.TRUE);
 		doesNotRequireCloseTag.put("link", Boolean.TRUE);
 		doesNotRequireCloseTag.put("meta", Boolean.TRUE);
+		doesNotRequireCloseTag.put("area", Boolean.TRUE);
+		doesNotRequireCloseTag.put("base", Boolean.TRUE);
+		doesNotRequireCloseTag.put("col", Boolean.TRUE);
+		doesNotRequireCloseTag.put("command", Boolean.TRUE);
+		doesNotRequireCloseTag.put("embed", Boolean.TRUE);
+		doesNotRequireCloseTag.put("keygen", Boolean.TRUE);
+		doesNotRequireCloseTag.put("param", Boolean.TRUE);
+		doesNotRequireCloseTag.put("source", Boolean.TRUE);
+		doesNotRequireCloseTag.put("track", Boolean.TRUE);
+		doesNotRequireCloseTag.put("wbr", Boolean.TRUE);
 	}
 
 	/**
