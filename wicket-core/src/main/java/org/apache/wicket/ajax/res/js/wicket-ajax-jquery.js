@@ -1983,15 +1983,11 @@
 							text = text.replace(/\n\/\*\]\]>\*\/\n$/, "");
 
 							var id = node.getAttribute("id");
-
 							var type = node.getAttribute("type");
-							if (!type || type.toLowerCase() === "text/javascript") {
-								text = 'try{'+text+'}catch(e){Wicket.Log.error(e);}';
-							}
 
 							if (typeof(id) === "string" && id.length > 0) {
 								// add javascript to document head
-								Wicket.Head.addJavascript(text, id);
+								Wicket.Head.addJavascript(text, id, "", type);
 							} else {
 								try {
 									eval(text);
@@ -2079,13 +2075,21 @@
 			// attribute to filter out duplicates. However, since we set the body of the element, we can't assign
 			// also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 			// Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
-			addJavascript: function (content, id, fakeSrc) {
+			addJavascript: function (content, id, fakeSrc, type) {
 				var script = Wicket.Head.createElement("script");
 				if (id) {
 					script.id = id;
 				}
+
+				// WICKET-5047: encloses the content with a try...catch... block if the content is javascript
+				// content is considered javascript if mime-type is empty (html5's default) or is 'text/javascript'
+				if (!type || type.toLowerCase() === "text/javascript") {
+					type = "text/javascript";
+					content = 'try{'+content+'}catch(e){Wicket.Log.error(e);}';
+				}
+
 				script.setAttribute("src_", fakeSrc);
-				script.setAttribute("type", "text/javascript");
+				script.setAttribute("type", type);
 
 				// set the javascript as element content
 				if (null === script.canHaveChildren || script.canHaveChildren) {
@@ -2121,11 +2125,7 @@
 							content = contentFilter(content);
 						}
 
-						if (!type || type.toLowerCase() === "text/javascript") {
-							content = 'try{'+content+'}catch(e){Wicket.Log.error(e);}';
-						}
-
-						Wicket.Head.addJavascript(content, element.id);
+						Wicket.Head.addJavascript(content, element.id, "", type);
 					}
 				}
 				if (typeof(element) !== "undefined" &&
