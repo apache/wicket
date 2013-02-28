@@ -21,6 +21,7 @@ import java.util.Collection;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.WildcardCollectionModel;
@@ -161,6 +162,19 @@ public class SelectOptions<T> extends RepeatingView
 		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
 			replaceComponentTagBody(markupStream, openTag, text);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		protected void onComponentTag(ComponentTag tag)
+		{
+			super.onComponentTag(tag);
+
+			// always transform the tag to <label></label> so even markup defined as <label/>
+			// render
+			tag.setType(TagType.OPEN);
 		}
 	}
 }
