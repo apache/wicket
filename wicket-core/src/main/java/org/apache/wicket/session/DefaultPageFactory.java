@@ -77,7 +77,7 @@ public final class DefaultPageFactory implements IPageFactory
 			else
 			{
 				throw new WicketRuntimeException("Unable to create page from " + pageClass +
-					". Class does not have a visible default contructor.", e);
+					". Class does not have a visible default constructor.", e);
 			}
 		}
 	}
