@@ -466,13 +466,18 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
+	 * Checks whether access is granted for this resource.
+	 *
+	 * By default IPackageResourceGuard is used to check the permissions but
+	 * the resource itself can also make the check.
+	 *
 	 * @param scope
 	 *            resource scope
 	 * @param path
 	 *            resource path
 	 * @return <code>true<code> if resource access is granted
 	 */
-	private boolean accept(Class<?> scope, String path)
+	protected boolean accept(Class<?> scope, String path)
 	{
 		IPackageResourceGuard guard = Application.get()
 			.getResourceSettings()
