@@ -150,14 +150,22 @@ public class UrlRenderer
 		}
 
 		StringBuilder render = new StringBuilder();
-		render.append(protocol);
-		render.append("://");
-		render.append(host);
-
-		if ((port != null) && !port.equals(PROTO_TO_PORT.get(protocol)))
+		if (Strings.isEmpty(protocol) == false)
 		{
+			render.append(protocol);
 			render.append(':');
-			render.append(port);
+		}
+
+		if (Strings.isEmpty(host) == false)
+		{
+			render.append("//");
+			render.append(host);
+
+			if ((port != null) && !port.equals(PROTO_TO_PORT.get(protocol)))
+			{
+				render.append(':');
+				render.append(port);
+			}
 		}
 
 		if (url.isAbsolute() == false)
@@ -353,6 +361,10 @@ public class UrlRenderer
 		}
 		if ((url.getPort() != null) && !url.getPort().equals(clientUrl.getPort()))
 		{
+			return true;
+		}
+		if (url.isAbsolute()) {
+			// do not relativize urls like "/a/b"
 			return true;
 		}
 		return false;

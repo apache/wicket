@@ -49,9 +49,9 @@ import org.junit.Test;
 public class RequestCycleUrlForTest extends Assert
 {
 	private static final String JSESSIONID = ";jsessionid=1234567890";
-	private static final String BOOKMARKABLE_PAGE_URL = "/bookmarkablePage";
-	private static final String RES_REF_URL = "/resRef";
-	private static final String RESOURCE_URL = "/res";
+	private static final String BOOKMARKABLE_PAGE_URL = "bookmarkablePage";
+	private static final String RES_REF_URL = "resRef";
+	private static final String RESOURCE_URL = "res";
 
 	RequestCycle requestCycle;
 	
@@ -59,6 +59,9 @@ public class RequestCycleUrlForTest extends Assert
 	public void before()
 	{
 		Request request = mock(Request.class);
+		Url baseUrl = Url.parse("");
+		when(request.getClientUrl()).thenReturn(baseUrl);
+
 		Response response = new StringResponse() {
 			@Override
 			public String encodeURL(CharSequence url)
@@ -81,7 +84,7 @@ public class RequestCycleUrlForTest extends Assert
 		RequestCycleContext context = new RequestCycleContext(request, response, mapper, exceptionMapper);
 
 		requestCycle = new RequestCycle(context);
-		requestCycle.getUrlRenderer().setBaseUrl(Url.parse("http://dummy-host"));
+		requestCycle.getUrlRenderer().setBaseUrl(baseUrl);
 	}
 
 	/**
@@ -115,7 +118,7 @@ public class RequestCycleUrlForTest extends Assert
 		}; 
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals('.'+RES_REF_URL, url);
+		assertEquals("./"+RES_REF_URL, url);
 	}
 
 	/**
@@ -137,7 +140,7 @@ public class RequestCycleUrlForTest extends Assert
 		};
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals('.'+RES_REF_URL+JSESSIONID, url);
+		assertEquals("./"+RES_REF_URL+JSESSIONID, url);
 	}
 
 	/**
@@ -151,7 +154,7 @@ public class RequestCycleUrlForTest extends Assert
 		IStaticCacheableResource resource = mock(IStaticCacheableResource.class);
 		ResourceRequestHandler handler = new ResourceRequestHandler(resource, new PageParameters());
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals('.'+RESOURCE_URL, url);
+		assertEquals("./"+RESOURCE_URL, url);
 	}
 
 	/**
@@ -165,7 +168,7 @@ public class RequestCycleUrlForTest extends Assert
 		ByteArrayResource resource = new ByteArrayResource(null, new byte[] {1, 2}, "test.bin");
 		ResourceRequestHandler handler = new ResourceRequestHandler(resource, new PageParameters());
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals('.'+RESOURCE_URL + JSESSIONID, url);
+		assertEquals("./"+RESOURCE_URL + JSESSIONID, url);
 	}
 
 	/**
