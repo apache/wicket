@@ -86,7 +86,10 @@ public class UrlTest extends Assert
 	{
 		String s = "//foo/bar/";
 		Url url = Url.parse(s);
-		checkSegments(url, "", "", "foo", "bar", "");
+		assertNull(url.getProtocol());
+		assertEquals("foo", url.getHost());
+		assertNull(url.getPort());
+		checkSegments(url, "", "bar", "");
 		checkQueryParams(url);
 	}
 
@@ -98,6 +101,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/foo/bar//";
 		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
 		checkSegments(url, "", "foo", "bar", "", "");
 		checkQueryParams(url);
 	}
@@ -146,6 +150,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/";
 		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url);
 	}
@@ -158,6 +163,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b";
 		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b");
 	}
@@ -170,6 +176,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a";
 		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "");
 	}
@@ -182,6 +189,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=";
 		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "");
 	}
@@ -194,6 +202,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?=b";
 		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "", "b");
 	}
@@ -206,6 +215,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b&";
 		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b");
 	}
@@ -218,6 +228,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b&+";
 		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b", " ", "");
 	}
@@ -230,6 +241,21 @@ public class UrlTest extends Assert
 	{
 		String s = "http://localhost:56704;jsessionid=8kxeo3reannw1qjtxgkju8yiu";
 		Url url = Url.parse(s);
+		assertEquals(Integer.valueOf(56704), url.getPort());
+		checkSegments(url, ";jsessionid=8kxeo3reannw1qjtxgkju8yiu");
+	}
+
+	/**
+	 * Make it possible to use full url without protocol
+	 * https://issues.apache.org/jira/browse/WICKET-5065
+	 */
+	@Test
+	public void parse16()
+	{
+		String s = "//localhost:56704;jsessionid=8kxeo3reannw1qjtxgkju8yiu";
+		Url url = Url.parse(s);
+		assertNull(url.getProtocol());
+		assertEquals("localhost", url.getHost());
 		assertEquals(Integer.valueOf(56704), url.getPort());
 		checkSegments(url, ";jsessionid=8kxeo3reannw1qjtxgkju8yiu");
 	}
@@ -270,7 +296,7 @@ public class UrlTest extends Assert
 	{
 		String s = "//absolute/url";
 		Url url = Url.parse(s);
-		assertEquals(url.toString(), s);
+		assertEquals(url.toString(StringMode.FULL), s);
 	}
 
 	/**

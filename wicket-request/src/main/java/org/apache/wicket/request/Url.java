@@ -33,27 +33,36 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Represents the URL part <b>after Wicket Filter</b>. For example if Wicket Filter is mapped to
- * <code>/app/*</code> then with URL <code>/app/my/url</code> the {@link Url} object would represent
- * part <code>my/url</code>. If Wicket Filter is mapped to <code>/*</code> then with URL
- * <code>/my/url</code> the {@link Url} object would represent <code>my/url</code> (without leading
- * the slash).
+ * Represents the URL to an external resource or internal resource/component.
  * <p>
- * URL consists of segments and query parameters.
- * <p>
+ * A url could be:
+ * <ul>
+ *     <li>full - consists of an optional protocol/scheme, a host name, an optional port,
+ * optional segments and and optional query parameters.</li>
+ *      <li>non-full:
+ *      <ul>
+ *          <li>absolute - a url relative to the host name. Such url may escape from the application by using
+ *          different context path and/or different filter path. For example: <code>/foo/bar</code></li>
+ *          <li>relative - a url relative to the current base url. The base url is the url of the currently rendered page.
+ *          For example: <code>foo/bar</code>, <code>../foo/bar</code></li>
+ *      </ul>
+ * </ul>
+ *
+ * </p>
+ *
  * Example URLs:
  * 
- * <pre>
- * foo/bar/baz?a=1&amp;b=5    - segments: [&quot;foo&quot;,&quot;bar,&quot;baz], query parameters: [&quot;a&quot;=&quot;1&quot;, &quot;b&quot;=&quot;5&quot;]
- * foo/bar//baz?=4&amp;6      - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;baz&quot;], query parameters: [&quot;&quot;=&quot;4&quot;, &quot;6&quot;=&quot;&quot;]
- * /foo/bar/              - segments: [&quot;&quot;, &quot;foo&quot;, &quot;bar&quot;, &quot;&quot;]
- * foo/bar//              - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;&quot;]
- * ?a=b                   - segments: [ ], query parameters: [&quot;a&quot;=&quot;b&quot;]
- * /                      - segments: [&quot;&quot;, &quot;&quot;]   (note that Url represents part after Wicket Filter 
- *                                                - so if Wicket filter is mapped to /* this would be
- *                                                an additional slash, i.e. //
- * </pre>
- * 
+ * <ul>
+ *     <li>http://hostname:1234/foo/bar?a=b - protocol: http, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;] </li>
+ *     <li>//hostname:1234/foo/bar?a=b - protocol: null, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;] </li>
+ *     <li>foo/bar/baz?a=1&amp;b=5    - segments: [&quot;foo&quot;,&quot;bar&quot;,&quot;baz&quot;], query parameters: [&quot;a&quot;=&quot;1&quot;, &quot;b&quot;=&quot;5&quot;]</li>
+ *     <li>foo/bar//baz?=4&amp;6      - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;baz&quot;], query parameters: [&quot;&quot;=&quot;4&quot;, &quot;6&quot;=&quot;&quot;]</li>
+ *     <li>/foo/bar/              - segments: [&quot;&quot;, &quot;foo&quot;, &quot;bar&quot;, &quot;&quot;]</li>
+ *     <li>foo/bar//              - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;&quot;]</li>
+ *     <li>?a=b                   - segments: [ ], query parameters: [&quot;a&quot;=&quot;b&quot;]</li>
+ *     <li></li>
+ * </ul>
+ *
  * The Url class takes care of encoding and decoding of the segments and parameters.
  * 
  * @author Matej Knopp
@@ -221,13 +230,19 @@ public class Url implements Serializable
 		// get absolute / relative part of url
 		String relativeUrl;
 
-		// absolute urls contain a scheme://
 		final int idxOfFirstSlash = absoluteUrl.indexOf('/');
 		final int protocolAt = absoluteUrl.indexOf("://");
 
-		if (protocolAt > -1 && (protocolAt < idxOfFirstSlash))
+		// full urls start either with a "scheme://" or with "//"
+		boolean protocolLess = absoluteUrl.startsWith("//");
+		final boolean isFull = (protocolAt > 1 && (protocolAt < idxOfFirstSlash)) || protocolLess;
+
+		if (isFull)
 		{
-			result.protocol = absoluteUrl.substring(0, protocolAt).toLowerCase(Locale.US);
+			if (protocolLess == false)
+			{
+				result.protocol = absoluteUrl.substring(0, protocolAt).toLowerCase(Locale.US);
+			}
 
 			final String afterProto = absoluteUrl.substring(protocolAt + 3);
 			final String hostAndPort;
@@ -642,15 +657,15 @@ public class Url implements Serializable
 					StringMode.FULL.name() + " mode because it does not have a host set.");
 			}
 
-			String protocol = this.protocol;
-			if (Strings.isEmpty(protocol))
+			if (Strings.isEmpty(protocol) == false)
 			{
-				protocol = "http";
+				result.append(protocol);
+				result.append("://");
 			}
-
-			// output scheme://host:port if specified
-			result.append(protocol);
-			result.append("://");
+			else if (Strings.isEmpty(protocol) && Strings.isEmpty(host) == false)
+			{
+				result.append("//");
+			}
 			result.append(host);
 
 			if (port != null && port.equals(getDefaultPortForProtocol(protocol)) == false)

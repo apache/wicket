@@ -49,20 +49,20 @@ public class ServletWebRequestTest extends Assert
 	public void wicket3599()
 	{
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
-		httpRequest.setURL("/" + httpRequest.getContextPath() + "/request/Uri");
+		httpRequest.setURL(httpRequest.getContextPath() + "/request/Uri");
 		httpRequest.setParameter("some", "parameter");
 
-		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, "/");
+		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, "");
 		Url clientUrl = webRequest.getClientUrl();
 		assertEquals("request/Uri?some=parameter", clientUrl.toString());
 
 		// simulates a request that has errors metadata
 		httpRequest.setAttribute("javax.servlet.error.request_uri",
-			"/" + httpRequest.getContextPath() + "/any/source/of/error");
+			httpRequest.getContextPath() + "/any/source/of/error");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "/");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
-		assertEquals("/any/source/of/error", errorClientUrl.toString());
+		assertEquals("any/source/of/error", errorClientUrl.toString());
 	}
 
 	/**
