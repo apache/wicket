@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.mock;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Objects;
 
 /**
  * A helper class for dealing with cookies
@@ -59,7 +60,7 @@ public final class Cookies
 		Args.notNull(c2, "c2");
 
 		return c1.getName().equals(c2.getName()) &&
-				((c1.getPath() == null && c2.getPath() == null) || (c1.getPath().equals(c2.getPath()))) &&
-				((c1.getDomain() == null && c2.getDomain() == null) || (c1.getDomain().equals(c2.getDomain())));
+				Objects.isEqual(c1.getPath(), c2.getPath()) &&
+				Objects.isEqual(c1.getDomain(), c2.getDomain());
 	}
 }
