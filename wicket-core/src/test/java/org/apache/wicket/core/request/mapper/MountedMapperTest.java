@@ -18,12 +18,6 @@ package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.markup.html.link.ILinkListener;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestMapper;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -31,6 +25,12 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
@@ -288,6 +288,31 @@ public class MountedMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * 
+	 */
+	@Test
+	public void decode12()
+	{
+		Url url = Url.parse("some/mount/path/i1/i2?-1.ILinkListener-foo-bar&a=b&b=c");
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+
+		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		IRequestablePage page = h.getPage();
+		checkPage(page, 1);
+
+		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
+		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
+		assertNull(h.getBehaviorIndex());
+
+		PageParameters p = page.getPageParameters();
+		assertEquals(2, p.getIndexedCount());
+
+		assertEquals(2, p.getNamedKeys().size());
+	}
+
+	/**
 	 *
 	 */
 	@Test
@@ -413,7 +438,7 @@ public class MountedMapperTest extends AbstractMapperTest
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4014
-	 *
+	 * 
 	 * The difference with testEncode7 is that here ListenerInterfaceRequestHandler is used instead
 	 * of BookmarkableListenerInterfaceRequestHandler
 	 */
@@ -477,7 +502,7 @@ public class MountedMapperTest extends AbstractMapperTest
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4014
-	 *
+	 * 
 	 * The difference with testEncode7 is that here ListenerInterfaceRequestHandler is used instead
 	 * of BookmarkableListenerInterfaceRequestHandler
 	 */
