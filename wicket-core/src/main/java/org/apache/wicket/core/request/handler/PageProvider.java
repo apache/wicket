@@ -42,7 +42,7 @@ import org.apache.wicket.util.lang.Args;
  * Apart from simplifying {@link IRequestMapper}s and {@link IRequestHandler}s {@link PageProvider}
  * also helps performance because creating or obtaining page from {@link IPageManager} is delayed
  * until the {@link IRequestHandler} actually requires the page.
- *
+ * 
  * @author Matej Knopp
  */
 public class PageProvider implements IPageProvider
@@ -63,7 +63,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
 	 * will return page instance with specified id.
-	 *
+	 * 
 	 * @param pageId
 	 * @param renderCount
 	 *            optional argument
@@ -78,7 +78,7 @@ public class PageProvider implements IPageProvider
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
 	 * will return page instance with specified id if it exists and it's class matches pageClass. If
 	 * none of these is true new page instance will be created.
-	 *
+	 * 
 	 * @param pageId
 	 * @param pageClass
 	 * @param renderCount
@@ -94,7 +94,7 @@ public class PageProvider implements IPageProvider
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
 	 * will return page instance with specified id if it exists and it's class matches pageClass. If
 	 * none of these is true new page instance will be created.
-	 *
+	 * 
 	 * @param pageId
 	 * @param pageClass
 	 * @param pageParameters
@@ -113,7 +113,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
 	 * will return new instance of page with specified class.
-	 *
+	 * 
 	 * @param pageClass
 	 * @param pageParameters
 	 */
@@ -132,7 +132,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
 	 * will return new instance of page with specified class.
-	 *
+	 * 
 	 * @param pageClass
 	 */
 	public PageProvider(Class<? extends IRequestablePage> pageClass)
@@ -143,7 +143,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
 	 * will return the given page instance.
-	 *
+	 * 
 	 * @param page
 	 */
 	public PageProvider(IRequestablePage page)
@@ -196,7 +196,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * The page instance is new only if there is no cached instance or the data stores doesn't have
 	 * a page with that id with the same {@linkplain #pageClass}.
-	 *
+	 * 
 	 * @see IPageProvider#isNewPageInstance()
 	 */
 	@Override
@@ -265,17 +265,7 @@ public class PageProvider implements IPageProvider
 		{
 			if (pageClass != null)
 			{
-				PageParameters parameters;
-				if (pageId != null)
-				{
-					// WICKET-4594 - re-creating an expired page. Ignore the parsed parameters for the callback url
-					parameters = new PageParameters();
-				}
-				else
-				{
-					parameters = pageParameters;
-				}
-				page = getPageSource().newPageInstance(pageClass, parameters);
+				page = getPageSource().newPageInstance(pageClass, pageParameters);
 				freshCreated = true;
 			}
 		}
@@ -296,7 +286,7 @@ public class PageProvider implements IPageProvider
 	 * Looks up a page by id from the {@link IPageStore}. <br/>
 	 * If {@linkplain #pageClass} is specified then compares it against the stored instance class
 	 * and returns the found instance only if they match.
-	 *
+	 * 
 	 * @param pageId
 	 *            the id of the page to look for.
 	 * @return the found page instance by id.
@@ -342,7 +332,7 @@ public class PageProvider implements IPageProvider
 	 * If the {@link PageProvider} is used outside request thread (thread that does not have
 	 * application instance assigned) it is necessary to specify a {@link IPageSource} instance so
 	 * that {@link PageProvider} knows how to get a page instance.
-	 *
+	 * 
 	 * @param pageSource
 	 */
 	public void setPageSource(IPageSource pageSource)
@@ -351,7 +341,7 @@ public class PageProvider implements IPageProvider
 	}
 
 	/**
-	 *
+	 * 
 	 * @param pageClass
 	 */
 	private void setPageClass(Class<? extends IRequestablePage> pageClass)
@@ -362,7 +352,7 @@ public class PageProvider implements IPageProvider
 	}
 
 	/**
-	 *
+	 * 
 	 * @param pageParameters
 	 */
 	protected void setPageParameters(PageParameters pageParameters)
@@ -371,7 +361,7 @@ public class PageProvider implements IPageProvider
 	}
 
 	/**
-	 *
+	 * 
 	 * @return page id
 	 */
 	@Override
@@ -390,7 +380,7 @@ public class PageProvider implements IPageProvider
 	 * Checks whether or not the provider has a page instance. This page instance might have been
 	 * passed to this page provider directly or it may have been instantiated or retrieved from the
 	 * page store.
-	 *
+	 * 
 	 * @return {@code true} iff page instance has been created or retrieved
 	 */
 	@Override
@@ -407,7 +397,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * Returns whether or not the page instance held by this provider has been instantiated by the
 	 * provider.
-	 *
+	 * 
 	 * @throws IllegalStateException
 	 *             if this method is called and the provider does not yet have a page instance, ie
 	 *             if {@link #getPageInstance()} has never been called on this provider
@@ -427,13 +417,8 @@ public class PageProvider implements IPageProvider
 	@Override
 	public String toString()
 	{
-		return "PageProvider{" +
-				"renderCount=" + renderCount +
-				", pageId=" + pageId +
-				", pageInstanceIsFresh=" + pageInstanceIsFresh +
-				", pageClass=" + pageClass +
-				", pageParameters=" + pageParameters +
-				", pageInstance=" + pageInstance +
-				'}';
+		return "PageProvider{" + "renderCount=" + renderCount + ", pageId=" + pageId +
+			", pageInstanceIsFresh=" + pageInstanceIsFresh + ", pageClass=" + pageClass +
+			", pageParameters=" + pageParameters + ", pageInstance=" + pageInstance + '}';
 	}
 }

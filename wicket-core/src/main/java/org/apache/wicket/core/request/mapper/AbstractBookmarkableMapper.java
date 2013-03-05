@@ -246,8 +246,9 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 		if (listenerInterface != null)
 		{
+			// WICKET-4594 - ignore the parsed parameters as they have nothing to do with the page
 			PageAndComponentProvider provider = new PageAndComponentProvider(pageInfo.getPageId(),
-				pageClass, pageParameters, renderCount, componentInfo.getComponentPath());
+				pageClass, null, renderCount, componentInfo.getComponentPath());
 
 			provider.setPageSource(getContext());
 
