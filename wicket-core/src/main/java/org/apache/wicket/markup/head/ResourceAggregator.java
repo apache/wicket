@@ -312,9 +312,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 			HeaderItem itemToBeRendered = getItemToBeRendered(curItem);
 			if (itemToBeRendered == curItem)
 			{
-				combinedScript.append("\n");
+				combinedScript.append('\n');
 				combinedScript.append(curItem.getJavaScript());
-				combinedScript.append(";");
+				combinedScript.append(';');
 			}
 			else
 			{
@@ -324,7 +324,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		if (combinedScript.length() > 0)
 		{
 			getRealResponse().render(
-				OnDomReadyHeaderItem.forScript(combinedScript.append("\n").toString()));
+				OnDomReadyHeaderItem.forScript(combinedScript.append('\n').toString()));
 		}
 
 		combinedScript.setLength(0);
@@ -333,9 +333,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 			HeaderItem itemToBeRendered = getItemToBeRendered(curItem);
 			if (itemToBeRendered == curItem)
 			{
-				combinedScript.append("\n");
+				combinedScript.append('\n');
 				combinedScript.append(curItem.getJavaScript());
-				combinedScript.append(";");
+				combinedScript.append(';');
 			}
 			else
 			{
@@ -345,7 +345,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		if (combinedScript.length() > 0)
 		{
 			getRealResponse().render(
-				OnLoadHeaderItem.forScript(combinedScript.append("\n").toString()));
+				OnLoadHeaderItem.forScript(combinedScript.append('\n').toString()));
 		}
 	}
 
