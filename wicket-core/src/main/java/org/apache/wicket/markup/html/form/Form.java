@@ -55,6 +55,7 @@ import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -143,7 +144,10 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, IGenericComponent<T>
+public class Form<T> extends WebMarkupContainer
+	implements
+		IFormSubmitListener,
+		IGenericComponent<T>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
 
@@ -1228,14 +1232,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	{
 		final Form<?> processingForm = findFormToProcess(submittingComponent);
 
-		// process submitting component (if specified)
-		if (submittingComponent != null)
-		{
-			// invoke submit on component
-			submittingComponent.onSubmit();
-		}
-
-		// invoke Form#onSubmit(..) going from innermost to outermost
+		// collect all forms innermost to outermost before any hierarchy is changed
+		final List<Form<?>> forms = Generics.newArrayList(3);
 		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
 		{
 			@Override
@@ -1243,10 +1241,23 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			{
 				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
-					form.onSubmit();
+					forms.add(form);
 				}
 			}
 		}, new ClassVisitFilter(Form.class));
+
+		// process submitting component (if specified)
+		if (submittingComponent != null)
+		{
+			// invoke submit on component
+			submittingComponent.onSubmit();
+		}
+
+		// invoke Form#onSubmit(..)
+		for (Form<?> form : forms)
+		{
+			form.onSubmit();
+		}
 
 		if (submittingComponent != null)
 		{
