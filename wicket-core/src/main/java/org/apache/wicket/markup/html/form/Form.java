@@ -53,6 +53,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -1213,6 +1214,18 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		final Form<?> processingForm = findFormToProcess(submittingComponent);
 
+		// collect all forms innermost to outermost before any hierarchy is changed
+		final List<Form<?>> forms = Generics.newArrayList(3);
+		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
+		{
+			public void component(Form<?> form, IVisit<Void> visit)
+			{
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
+				{
+					forms.add(form);
+				}
+			}
+		}, new ClassVisitFilter(Form.class));
 
 		// process submitting component (if specified)
 		if (submittingComponent != null)
@@ -1221,19 +1234,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			submittingComponent.onSubmit();
 		}
 
-		// invoke Form#onSubmit(..) going from innermost to outermost
-		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
+		// invoke Form#onSubmit(..)
+		for (Form<?> form : forms)
 		{
-			public void component(Form<?> form, IVisit<Void> visit)
-			{
-				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
-				{
-
-					form.onSubmit();
-				}
-			}
-		}, new ClassVisitFilter(Form.class));
-
+			form.onSubmit();
+		}
 
 		if (submittingComponent != null)
 		{
