@@ -261,17 +261,7 @@ public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 		{
 			if (pageClass != null)
 			{
-				PageParameters parameters;
-				if (pageId != null)
-				{
-					// WICKET-4594 - re-creating an expired page. Ignore the parsed parameters for the callback url
-					parameters = new PageParameters();
-				}
-				else
-				{
-					parameters = pageParameters;
-				}
-				page = getPageSource().newPageInstance(pageClass, parameters);
+				page = getPageSource().newPageInstance(pageClass, pageParameters);
 				freshCreated = true;
 			}
 		}
