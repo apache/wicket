@@ -289,6 +289,31 @@ public class MountedMapperTest extends AbstractMapperTest
 	 * 
 	 */
 	@Test
+	public void decode12()
+	{
+		Url url = Url.parse("some/mount/path/i1/i2?-1.ILinkListener-foo-bar&a=b&b=c");
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+
+		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		IRequestablePage page = h.getPage();
+		checkPage(page, 1);
+
+		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
+		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
+		assertNull(h.getBehaviorIndex());
+
+		PageParameters p = page.getPageParameters();
+		assertEquals(2, p.getIndexedCount());
+
+		assertEquals(2, p.getNamedKeys().size());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
 	public void encode1()
 	{
 		PageProvider provider = new PageProvider(MockPage.class, new PageParameters());
