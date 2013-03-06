@@ -32,61 +32,6 @@ import org.apache.wicket.util.time.Duration;
  */
 public final class AjaxRequestAttributes
 {
-	public static final String J_THROTTLING = "tr";
-
-	public static final String J_THROTTLING_POSTPONE_ON_UPDATE = "p";
-
-	public static final String J_THROTTLING_DELAY = "d";
-
-	public static final String J_THROTTLING_ID = "id";
-
-	public static final String J_DATATYPE = "dt";
-
-	public static final String J_IS_WICKET_AJAX_RESPONSE = "wr";
-
-	public static final String J_REQUEST_TIMEOUT = "rt";
-
-	public static final String J_IS_ALLOW_DEFAULT = "ad";
-
-	public static final String J_CHANNEL = "ch";
-
-	public static final String J_EVENT_NAME = "e";
-
-	public static final String J_IS_ASYNC = "async";
-
-	public static final String J_DYNAMIC_PARAMETER_FUNCTION = "dep";
-
-	public static final String J_EXTRA_PARAMETERS = "ep";
-
-	public static final String J_PRECONDITION = "pre";
-
-	public static final String J_COMPLETE_HANDLER = "coh";
-
-	public static final String J_FAILURE_HANDLER = "fh";
-
-	public static final String J_SUCCESS_HANDLER = "sh";
-
-	public static final String J_AFTER_HANDLER = "ah";
-
-	public static final String J_BEFORE_SEND_HANDLER = "bsh";
-
-	public static final String J_BEFORE_HANDLER = "bh";
-
-	public static final String J_INDICATOR_ID = "i";
-
-	public static final String J_SUBMITTING_COMPONENT_NAME = "sc";
-
-	public static final String J_IS_MULTIPART = "mp";
-
-	public static final String J_FORM_ID = "f";
-
-	public static final String J_MARKUP_ID = "c";
-
-	public static final String J_METHOD = "m";
-
-	public static final String J_URL = "u";
-
-
 	/**
 	 * The method to be used when submitting a form
 	 */
