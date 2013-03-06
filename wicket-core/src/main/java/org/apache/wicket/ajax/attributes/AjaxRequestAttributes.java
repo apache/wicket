@@ -32,6 +32,60 @@ import org.apache.wicket.util.time.Duration;
  */
 public final class AjaxRequestAttributes
 {
+	public static final String J_THROTTLING = "tr";
+
+	public static final String J_THROTTLING_POSTPONE_ON_UPDATE = "p";
+
+	public static final String J_THROTTLING_DELAY = "d";
+
+	public static final String J_THROTTLING_ID = "id";
+
+	public static final String J_DATATYPE = "dt";
+
+	public static final String J_IS_WICKET_AJAX_RESPONSE = "wr";
+
+	public static final String J_REQUEST_TIMEOUT = "rt";
+
+	public static final String J_IS_ALLOW_DEFAULT = "ad";
+
+	public static final String J_CHANNEL = "ch";
+
+	public static final String J_EVENT_NAME = "e";
+
+	public static final String J_IS_ASYNC = "async";
+
+	public static final String J_DYNAMIC_PARAMETER_FUNCTION = "dep";
+
+	public static final String J_EXTRA_PARAMETERS = "ep";
+
+	public static final String J_PRECONDITION = "pre";
+
+	public static final String J_COMPLETE_HANDLER = "coh";
+
+	public static final String J_FAILURE_HANDLER = "fh";
+
+	public static final String J_SUCCESS_HANDLER = "sh";
+
+	public static final String J_AFTER_HANDLER = "ah";
+
+	public static final String J_BEFORE_SEND_HANDLER = "bsh";
+
+	public static final String J_BEFORE_HANDLER = "bh";
+
+	public static final String J_INDICATOR_ID = "i";
+
+	public static final String J_SUBMITTING_COMPONENT_NAME = "sc";
+
+	public static final String J_IS_MULTIPART = "mp";
+
+	public static final String J_FORM_ID = "f";
+
+	public static final String J_MARKUP_ID = "c";
+
+	public static final String J_METHOD = "m";
+
+	public static final String J_URL = "u";
+
 
 	/**
 	 * The method to be used when submitting a form
@@ -98,9 +152,8 @@ public final class AjaxRequestAttributes
 	private boolean async = true;
 
 	/**
-	 * The settings to use if the Ajax call should be throttled.
-	 * Throttled behaviors only execute once within the given delay
-	 * even though they are triggered multiple times.
+	 * The settings to use if the Ajax call should be throttled. Throttled behaviors only execute
+	 * once within the given delay even though they are triggered multiple times.
 	 * <p>
 	 * For example, this is useful when attaching a behavior to the keypress event. It is not
 	 * desirable to have an ajax call made every time the user types so we throttle that call to a
@@ -159,7 +212,7 @@ public final class AjaxRequestAttributes
 	 * the URL parameters are longer than maximal URL length.
 	 * 
 	 * @param method
-	 *      the type of the Ajax request
+	 *            the type of the Ajax request
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setMethod(final Method method)
@@ -195,8 +248,8 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * @return a list of {@link IAjaxCallListener}s which will be notified during the
-	 *  the execution of the Ajax call.
+	 * @return a list of {@link IAjaxCallListener}s which will be notified during the the execution
+	 *         of the Ajax call.
 	 */
 	public List<IAjaxCallListener> getAjaxCallListeners()
 	{
@@ -209,9 +262,9 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * Map that contains additional (static) URL parameters. These will be appended to the request
-	 * URL. If you need more than one value for a key then use a java.util.List or an Object[] as
-	 * a value of that key.
-	 *
+	 * URL. If you need more than one value for a key then use a java.util.List or an Object[] as a
+	 * value of that key.
+	 * 
 	 * @return a map with additional URL arguments
 	 * @see #getDynamicExtraParameters()
 	 */
@@ -226,32 +279,33 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * Array of JavaScript functions that produce additional URL arguments.
-	 *
-	 * <p>If there are no multivalued parameters then the function can return a
-	 * simple JavaScript object. Example:
-	 *
+	 * 
+	 * <p>
+	 * If there are no multivalued parameters then the function can return a simple JavaScript
+	 * object. Example:
+	 * 
 	 * <pre>
 	 *  return {
 	 *      'param1': document.body.tagName,
 	 *      'param2': calculateParam2()
 	 *  }
 	 * </pre>
-	 *
+	 * 
 	 * </p>
-	 * <p>If there are multivalued parameters then an array of objects may be used.
-	 * Example:
-	 *
+	 * <p>
+	 * If there are multivalued parameters then an array of objects may be used. Example:
+	 * 
 	 * <pre>
 	 *  return [
 	 *      { name: 'param1', value: document.body.tagName },
 	 *      { name: 'param1', value: calculateSecondValueForParam1() },
 	 *      { name: 'param2', value: calculateParam2() }
 	 *  ]
-	 *
+	 * 
 	 * </pre>
-	 *
+	 * 
 	 * </p>
-	 *
+	 * 
 	 * @return a list of functions that produce additional URL arguments.
 	 * @see #getExtraParameters()
 	 */
@@ -269,11 +323,10 @@ public final class AjaxRequestAttributes
 	 * handler to be invoked. For example if the behavior is attached to a link and
 	 * {@link #isAllowDefault()} returns <code>false</code> (which is default value), the link's URL
 	 * will not be followed. If the Ajax behavior is attached to a checkbox or a radio button then
-	 * the default behavior should be allowed to actually check the box or radio button, i.e.
-	 * this method should return <code>true</code>.
+	 * the default behavior should be allowed to actually check the box or radio button, i.e. this
+	 * method should return <code>true</code>.
 	 * 
-	 * @return {@code true} if the default event handler should be invoked, {@code false}
-	 *         otherwise.
+	 * @return {@code true} if the default event handler should be invoked, {@code false} otherwise.
 	 */
 	public boolean isAllowDefault()
 	{
@@ -325,8 +378,8 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param channel
-	 *      the Ajax channel to use. Pass {@code null} to use the default channel
-	 *      with name <em>0</em> and queueing type.
+	 *            the Ajax channel to use. Pass {@code null} to use the default channel with name
+	 *            <em>0</em> and queueing type.
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setChannel(final AjaxChannel channel)
@@ -394,8 +447,8 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * @return a flag indicating whether the Ajax response should be processed by
-	 *  Wicket (i.e. to replace components, execute scripts, etc.). Default: {@code true}.
+	 * @return a flag indicating whether the Ajax response should be processed by Wicket (i.e. to
+	 *         replace components, execute scripts, etc.). Default: {@code true}.
 	 */
 	public boolean isWicketAjaxResponse()
 	{
@@ -404,8 +457,8 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param wicketAjaxResponse
-	 *      a flag indicating whether the Ajax response should be processed by
-	 *       Wicket (i.e. to replace components, execute scripts, etc.).
+	 *            a flag indicating whether the Ajax response should be processed by Wicket (i.e. to
+	 *            replace components, execute scripts, etc.).
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setWicketAjaxResponse(final boolean wicketAjaxResponse)
@@ -417,7 +470,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * Returns the type of the data in the Ajax response. For example: 'xml', 'json', 'html', etc.
 	 * See the documentation of jQuery.ajax() method for more information.
-	 *
+	 * 
 	 * @return the type of the data in the Ajax response.
 	 */
 	public String getDataType()
@@ -427,7 +480,7 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param dataType
-	 *      the type of the data in the Ajax response.
+	 *            the type of the data in the Ajax response.
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setDataType(final String dataType)
@@ -446,7 +499,8 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param throttlingSettings
-	 *      the settings to use when throttling is needed. Pass {@code null} to disable throttling.
+	 *            the settings to use when throttling is needed. Pass {@code null} to disable
+	 *            throttling.
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setThrottlingSettings(ThrottlingSettings throttlingSettings)

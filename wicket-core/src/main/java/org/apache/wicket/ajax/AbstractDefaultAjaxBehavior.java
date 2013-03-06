@@ -55,6 +55,7 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 {
+
 	private static final long serialVersionUID = 1L;
 
 	/** reference to the default indicator gif file. */
@@ -133,13 +134,13 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	protected final AjaxRequestAttributes getAttributes()
 	{
 		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
-		WebApplication application = (WebApplication) getComponent().getApplication();
+		WebApplication application = (WebApplication)getComponent().getApplication();
 		AjaxRequestTargetListenerCollection ajaxRequestTargetListeners = application.getAjaxRequestTargetListeners();
 		for (AjaxRequestTarget.IListener listener : ajaxRequestTargetListeners)
 		{
 			if (listener instanceof AjaxRequestTarget.AbstractListener)
 			{
-				((AjaxRequestTarget.AbstractListener) listener).updateAjaxAttributes(attributes);
+				((AjaxRequestTarget.AbstractListener)listener).updateAjaxAttributes(attributes);
 			}
 		}
 		updateAjaxAttributesBackwardCompatibility(attributes);
@@ -218,40 +219,41 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		try
 		{
-			attributesJson.put("u", getCallbackUrl());
+			attributesJson.put(AjaxRequestAttributes.J_URL, getCallbackUrl());
 			Method method = attributes.getMethod();
 			if (Method.POST == method)
 			{
-				attributesJson.put("m", method);
+				attributesJson.put(AjaxRequestAttributes.J_METHOD, method);
 			}
 
 			if (component instanceof Page == false)
 			{
 				String componentId = component.getMarkupId();
-				attributesJson.put("c", componentId);
+				attributesJson.put(AjaxRequestAttributes.J_MARKUP_ID, componentId);
 			}
 
 			String formId = attributes.getFormId();
 			if (Strings.isEmpty(formId) == false)
 			{
-				attributesJson.put("f", formId);
+				attributesJson.put(AjaxRequestAttributes.J_FORM_ID, formId);
 			}
 
 			if (attributes.isMultipart())
 			{
-				attributesJson.put("mp", true);
+				attributesJson.put(AjaxRequestAttributes.J_IS_MULTIPART, true);
 			}
 
 			String submittingComponentId = attributes.getSubmittingComponentName();
 			if (Strings.isEmpty(submittingComponentId) == false)
 			{
-				attributesJson.put("sc", submittingComponentId);
+				attributesJson.put(AjaxRequestAttributes.J_SUBMITTING_COMPONENT_NAME,
+					submittingComponentId);
 			}
 
 			String indicatorId = findIndicatorId();
 			if (Strings.isEmpty(indicatorId) == false)
 			{
-				attributesJson.put("i", indicatorId);
+				attributesJson.put(AjaxRequestAttributes.J_INDICATOR_ID, indicatorId);
 			}
 
 			for (IAjaxCallListener ajaxCallListener : attributes.getAjaxCallListeners())
@@ -259,32 +261,34 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				if (ajaxCallListener != null)
 				{
 					CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
-					appendListenerHandler(beforeHandler, attributesJson, "bh",
-						BEFORE_HANDLER_FUNCTION_TEMPLATE);
+					appendListenerHandler(beforeHandler, attributesJson,
+						AjaxRequestAttributes.J_BEFORE_HANDLER, BEFORE_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence beforeSendHandler = ajaxCallListener.getBeforeSendHandler(component);
-					appendListenerHandler(beforeSendHandler, attributesJson, "bsh",
+					appendListenerHandler(beforeSendHandler, attributesJson,
+						AjaxRequestAttributes.J_BEFORE_SEND_HANDLER,
 						BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
-					appendListenerHandler(afterHandler, attributesJson, "ah",
-						AFTER_HANDLER_FUNCTION_TEMPLATE);
+					appendListenerHandler(afterHandler, attributesJson,
+						AjaxRequestAttributes.J_AFTER_HANDLER, AFTER_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
-					appendListenerHandler(successHandler, attributesJson, "sh",
-						SUCCESS_HANDLER_FUNCTION_TEMPLATE);
+					appendListenerHandler(successHandler, attributesJson,
+						AjaxRequestAttributes.J_SUCCESS_HANDLER, SUCCESS_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
-					appendListenerHandler(failureHandler, attributesJson, "fh",
-						FAILURE_HANDLER_FUNCTION_TEMPLATE);
+					appendListenerHandler(failureHandler, attributesJson,
+						AjaxRequestAttributes.J_FAILURE_HANDLER, FAILURE_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
-					appendListenerHandler(completeHandler, attributesJson, "coh",
+					appendListenerHandler(completeHandler, attributesJson,
+						AjaxRequestAttributes.J_COMPLETE_HANDLER,
 						COMPLETE_HANDLER_FUNCTION_TEMPLATE);
 
 					CharSequence precondition = ajaxCallListener.getPrecondition(component);
-					appendListenerHandler(precondition, attributesJson, "pre",
-						PRECONDITION_FUNCTION_TEMPLATE);
+					appendListenerHandler(precondition, attributesJson,
+						AjaxRequestAttributes.J_PRECONDITION, PRECONDITION_FUNCTION_TEMPLATE);
 				}
 			}
 
@@ -292,7 +296,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 			if (extraParameters.length() > 0)
 			{
-				attributesJson.put("ep", extraParameters);
+				attributesJson.put(AjaxRequestAttributes.J_EXTRA_PARAMETERS, extraParameters);
 			}
 
 			List<CharSequence> dynamicExtraParameters = attributes.getDynamicExtraParameters();
@@ -303,68 +307,73 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 					String func = String.format(DYNAMIC_PARAMETER_FUNCTION_TEMPLATE,
 						dynamicExtraParameter);
 					JsonFunction function = new JsonFunction(func);
-					attributesJson.append("dep", function);
+					attributesJson.append(AjaxRequestAttributes.J_DYNAMIC_PARAMETER_FUNCTION,
+						function);
 				}
 			}
 
 			if (attributes.isAsynchronous() == false)
 			{
-				attributesJson.put("async", false);
+				attributesJson.put(AjaxRequestAttributes.J_IS_ASYNC, false);
 			}
 
 			String[] eventNames = attributes.getEventNames();
 			if (eventNames.length == 1)
 			{
-				attributesJson.put("e", eventNames[0]);
+				attributesJson.put(AjaxRequestAttributes.J_EVENT_NAME, eventNames[0]);
 			}
 			else
 			{
 				for (String eventName : eventNames)
 				{
-					attributesJson.append("e", eventName);
+					attributesJson.append(AjaxRequestAttributes.J_EVENT_NAME, eventName);
 				}
 			}
 
 			AjaxChannel channel = attributes.getChannel();
 			if (channel != null)
 			{
-				attributesJson.put("ch", channel);
+				attributesJson.put(AjaxRequestAttributes.J_CHANNEL, channel);
 			}
 
 			if (attributes.isAllowDefault())
 			{
-				attributesJson.put("ad", true);
+				attributesJson.put(AjaxRequestAttributes.J_IS_ALLOW_DEFAULT, true);
 			}
 
 			Duration requestTimeout = attributes.getRequestTimeout();
 			if (requestTimeout != null)
 			{
-				attributesJson.put("rt", requestTimeout.getMilliseconds());
+				attributesJson.put(AjaxRequestAttributes.J_REQUEST_TIMEOUT,
+					requestTimeout.getMilliseconds());
 			}
 
 			boolean wicketAjaxResponse = attributes.isWicketAjaxResponse();
 			if (wicketAjaxResponse == false)
 			{
-				attributesJson.put("wr", false);
+				attributesJson.put(AjaxRequestAttributes.J_IS_WICKET_AJAX_RESPONSE, false);
 			}
 
 			String dataType = attributes.getDataType();
 			if (AjaxRequestAttributes.XML_DATA_TYPE.equals(dataType) == false)
 			{
-				attributesJson.put("dt", dataType);
+				attributesJson.put(AjaxRequestAttributes.J_DATATYPE, dataType);
 			}
 
 			ThrottlingSettings throttlingSettings = attributes.getThrottlingSettings();
 			if (throttlingSettings != null)
 			{
 				JSONObject throttlingSettingsJson = new JSONObject();
-				throttlingSettingsJson.put("id", throttlingSettings.getId());
-				throttlingSettingsJson.put("d", throttlingSettings.getDelay().getMilliseconds());
+				throttlingSettingsJson.put(AjaxRequestAttributes.J_THROTTLING_ID,
+					throttlingSettings.getId());
+				throttlingSettingsJson.put(AjaxRequestAttributes.J_THROTTLING_DELAY,
+					throttlingSettings.getDelay().getMilliseconds());
 				if (throttlingSettings.getPostponeTimerOnUpdate())
 				{
-					throttlingSettingsJson.put("p", true);
+					throttlingSettingsJson.put(
+						AjaxRequestAttributes.J_THROTTLING_POSTPONE_ON_UPDATE, true);
 				}
-				attributesJson.put("tr", throttlingSettingsJson);
+				attributesJson.put(AjaxRequestAttributes.J_THROTTLING, throttlingSettingsJson);
 			}
 
 			postprocessConfiguration(attributesJson, component);
@@ -510,9 +519,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 		sb.append("};\n");
 		if (attributes.getExtraParameters().isEmpty())
-			sb.append("attrs.ep = params;\n");
+			sb.append("attrs." + AjaxRequestAttributes.J_EXTRA_PARAMETERS + " = params;\n");
 		else
-			sb.append("attrs.ep = Wicket.merge(attrs.ep, params);\n");
+			sb.append("attrs." + AjaxRequestAttributes.J_EXTRA_PARAMETERS +
+				" = Wicket.merge(attrs." + AjaxRequestAttributes.J_EXTRA_PARAMETERS +
+				", params);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
 	}
