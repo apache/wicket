@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -34,6 +33,8 @@ import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
+import org.apache.wicket.markup.renderStrategy.IHeaderRenderStrategy;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Response;
@@ -44,8 +45,6 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -460,28 +459,9 @@ public abstract class AbstractAjaxResponse
 		try {
 			encodingHeaderResponse.reset();
 
-			// render the head of component and all it's children
+			IHeaderRenderStrategy strategy = AbstractHeaderRenderStrategy.get();
 
-			component.renderHead(header);
-
-			if (component instanceof MarkupContainer)
-			{
-				((MarkupContainer)component).visitChildren(new IVisitor<Component, Void>()
-				{
-					@Override
-					public void component(final Component component, final IVisit<Void> visit)
-					{
-						if (component.isVisibleInHierarchy())
-						{
-							component.renderHead(header);
-						}
-						else
-						{
-							visit.dontGoDeeper();
-						}
-					}
-				});
-			}
+			strategy.renderHeader(header, null, component);
 		} finally {
 			// revert to old response
 			requestCycle.setResponse(oldResponse);
