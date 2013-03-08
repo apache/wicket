@@ -36,9 +36,9 @@ public class AjaxEnclosureTest extends WicketTestCase
 {
 	private final String inlineEnclosureIdPrefix = "wicket_InlineEnclosure-";
 	private final String inlineEnclosureHiddenPattern = "<div id=\"" + inlineEnclosureIdPrefix +
-		"1\" style=\"display:none\"></div>";
+		"0\" style=\"display:none\"></div>";
 	private final String inlineEnclosureVisiblePattern = "<div id=\"" + inlineEnclosureIdPrefix +
-		"1\">";
+		"0\">";
 
 	@Override
 	protected WebApplication newApplication()
@@ -54,7 +54,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		};
 		return webApplication;
 	}
-	
+
 	/**
 	 * Test toggling the controlling child inside the inline enclosure
 	 */
@@ -104,7 +104,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	@Test
 	public void ajaxTogglingNonControllingChildShouldNotToggleEnclosure()
 	{
-		final String enclosurePath = "wicket_InlineEnclosure-1";
+		final String enclosurePath = "wicket_InlineEnclosure-0";
 		{
 			// label 2 On
 			AjaxEnclosurePage_1 ajaxPage = tester.startPage(AjaxEnclosurePage_1.class);
@@ -145,7 +145,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	@Test
 	public void nestedInlineEnclosuresShouldToggleNormally()
 	{
-		final String enclosure1Path = "wicket_InlineEnclosure-1";
+		final String enclosure1Path = "wicket_InlineEnclosure-0";
 
 		{
 			// 1. test that enclosure1, enclosure2, label1, label2 are visible, click link1,
@@ -235,7 +235,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	@Test
 	public void controllingChildShouldDefaultToTheSingleComponentInsideEnclosure()
 	{
-		final String enclosurePath = "wicket_InlineEnclosure-1";
+		final String enclosurePath = "wicket_InlineEnclosure-0";
 
 		{
 			// enclosure On
