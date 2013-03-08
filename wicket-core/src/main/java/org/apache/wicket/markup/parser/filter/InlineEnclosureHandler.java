@@ -64,6 +64,12 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 	private Stack<ComponentTag> enclosures;
 
 	/**
+	 * InlinceEnclosures are not removed after render as other auto-components, thus they have to
+	 * have a stable id.
+	 */
+	private int counter;
+
+	/**
 	 * Construct.
 	 */
 	public InlineEnclosureHandler()
@@ -100,7 +106,8 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 				{
 					if (Strings.isEmpty(htmlId))
 					{
-						tag.setId(INLINE_ENCLOSURE_ID_PREFIX);
+						String id = INLINE_ENCLOSURE_ID_PREFIX + (counter++);
+						tag.setId(id);
 					}
 					else
 					{
@@ -175,7 +182,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		String inlineEnclosureChildId = getInlineEnclosureAttribute(tag);
 		if (Strings.isEmpty(inlineEnclosureChildId) == false)
 		{
-			String id = tag.getId() + container.getPage().getAutoIndex();
+			String id = tag.getId();
 			// Yes, we handled the tag
 			return new InlineEnclosure(id, inlineEnclosureChildId);
 		}

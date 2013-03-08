@@ -18,17 +18,43 @@ package org.apache.wicket.markup.html.internal;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Test;
 
 
 /**
- * Simple test using the WicketTester
+ * Test for {@link InlineEnclosure} and {@link InlineEnclosureHandler}.
  * 
  * @author Joonas Hamalainen
  */
 public class InlineEnclosureTest extends WicketTestCase
 {
+	/**
+	 * WICKET-5085: Since {@link InlineEnclosure}s are not removed as other auto-Components, they
+	 * must be resolved once only.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void inlineEnclosuresAreResolvedOnceOnly() throws Exception
+	{
+		InlineEnclosurePanelPage page = new InlineEnclosurePanelPage();
+
+		tester.startPage(page);
+
+		assertEquals(2, page.visitChildren(InlineEnclosure.class).toList().size());
+
+		tester.startPage(page);
+
+		assertEquals(2, page.visitChildren(InlineEnclosure.class).toList().size());
+
+		tester.startPage(page);
+
+		assertEquals(2, page.visitChildren(InlineEnclosure.class).toList().size());
+	}
+
+
 	/**
 	 * @throws Exception
 	 */
@@ -58,22 +84,22 @@ public class InlineEnclosureTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4520
-	 *
+	 * 
 	 * Tests that wicket:enclosure and wicket:message attributes can co-exist
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void inlineEnclosureWithWicketMessageVisible() throws Exception
 	{
 		executeTest(new InlineEnclosureWithWicketMessagePage(true),
-				"InlineEnclosureWithWicketMessagePage_visible_expected.html");
+			"InlineEnclosureWithWicketMessagePage_visible_expected.html");
 	}
 
 	/**
-	 *
+	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-4520
-	 *
+	 * 
 	 * Tests that wicket:enclosure and wicket:message attributes can co-exist
 	 * 
 	 * @throws Exception
@@ -82,7 +108,7 @@ public class InlineEnclosureTest extends WicketTestCase
 	public void inlineEnclosureWithWicketMessageInvisible() throws Exception
 	{
 		executeTest(new InlineEnclosureWithWicketMessagePage(false),
-				"InlineEnclosureWithWicketMessagePage_invisible_expected.html");
+			"InlineEnclosureWithWicketMessagePage_invisible_expected.html");
 	}
 
 	@Override
