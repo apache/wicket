@@ -102,7 +102,8 @@ class AtmosphereWebResponse extends WebResponse
 	@Override
 	public String encodeRedirectURL(CharSequence url)
 	{
-		return response.encodeRedirectUrl(url.toString());
+		// TODO temp fix for https://github.com/Atmosphere/atmosphere/issues/949
+		return url.toString();
 	}
 
 	@Override
@@ -128,7 +129,8 @@ class AtmosphereWebResponse extends WebResponse
 	@Override
 	public String encodeURL(CharSequence url)
 	{
-		return response.encodeURL(url.toString());
+		// TODO temp fix for https://github.com/Atmosphere/atmosphere/issues/949
+		return url.toString();
 	}
 
 	@Override
