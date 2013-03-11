@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
@@ -45,7 +46,6 @@ import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
@@ -57,12 +57,12 @@ import org.slf4j.LoggerFactory;
 /**
  * A MarkupContainer holds a map of child components.
  * <ul>
- * <li><b>Children </b>- Children can be added by calling the {@link #add(Component...)} method, and they can be looked
- * up using a colon separated path. For example, if a container called "a" held a nested container "b" which
- * held a nested component "c", then a.get("b:c") would return the Component with id "c". The number
- * of children in a MarkupContainer can be determined by calling size(), and the whole hierarchy of
- * children held by a MarkupContainer can be traversed by calling visitChildren(), passing in an
- * implementation of IVisitor.
+ * <li><b>Children </b>- Children can be added by calling the {@link #add(Component...)} method, and
+ * they can be looked up using a colon separated path. For example, if a container called "a" held a
+ * nested container "b" which held a nested component "c", then a.get("b:c") would return the
+ * Component with id "c". The number of children in a MarkupContainer can be determined by calling
+ * size(), and the whole hierarchy of children held by a MarkupContainer can be traversed by calling
+ * visitChildren(), passing in an implementation of IVisitor.
  * 
  * <li><b>Markup Rendering </b>- A MarkupContainer also holds/references associated markup which is
  * used to render the container. As the markup stream for a container is rendered, component
@@ -75,20 +75,21 @@ import org.slf4j.LoggerFactory;
  * graphic designers may be setting attributes on component tags that affect visual presentation.
  * <p>
  * The type of markup held in a given container subclass can be determined by calling
- * {@link #getMarkupType()}. Markup is accessed via a MarkupStream object which allows a component to
- * traverse ComponentTag and RawMarkup MarkupElements while rendering a response. Markup in the
+ * {@link #getMarkupType()}. Markup is accessed via a MarkupStream object which allows a component
+ * to traverse ComponentTag and RawMarkup MarkupElements while rendering a response. Markup in the
  * stream may be HTML or some other kind of markup, such as VXML, as determined by the specific
  * container subclass.
  * <p>
  * A markup stream may be directly associated with a container via setMarkupStream. However, a
  * container which does not have a markup stream (its getMarkupStream() returns null) may inherit a
- * markup stream from a container above it in the component hierarchy. The {@link #findMarkupStream()} method
- * will locate the first container at or above this container which has a markup stream.
+ * markup stream from a container above it in the component hierarchy. The
+ * {@link #findMarkupStream()} method will locate the first container at or above this container
+ * which has a markup stream.
  * <p>
  * All Page containers set a markup stream before rendering by calling the method
- * {@link #getAssociatedMarkupStream(boolean)} to load the markup associated with the page. Since Page is at the top
- * of the container hierarchy, it is guaranteed that {@link #findMarkupStream()} will always return a valid
- * markup stream.
+ * {@link #getAssociatedMarkupStream(boolean)} to load the markup associated with the page. Since
+ * Page is at the top of the container hierarchy, it is guaranteed that {@link #findMarkupStream()}
+ * will always return a valid markup stream.
  * 
  * @see MarkupStream
  * @author Jonathan Locke
@@ -152,7 +153,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					if (child instanceof Border.BorderBodyContainer)
 					{
 						msg += ". Please consider using Border.addToBorder(new " +
-								Classes.simpleName(this.getClass()) + "(\"" + this.getId() +
+							Classes.simpleName(this.getClass()) + "(\"" + this.getId() +
 							"\", ...) instead of add(...)";
 					}
 
@@ -305,9 +306,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Get a child component by looking it up with the given path.
+	 * <p>
+	 * A component path consists of component ids separated by colons, e.g. "b:c" identifies a
+	 * component "c" inside container "b" inside this container.
 	 * 
 	 * @param path
-	 *            Path to component
+	 *            path to component
 	 * @return The component at the path
 	 */
 	@Override
@@ -909,7 +913,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		child.setParent(this);
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled() && debugSettings.getComponentUseCheck())
+		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled() &&
+			debugSettings.getComponentUseCheck())
 		{
 			child.setMetaData(ADDED_AT_KEY,
 				ComponentStrings.toString(child, new MarkupException("added")));
@@ -1498,8 +1503,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param openTag
 	 *            The open tag
 	 */
-	private void renderComponentTagBody(final MarkupStream markupStream,
-		final ComponentTag openTag)
+	private void renderComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		if ((markupStream != null) && (markupStream.getCurrentIndex() > 0))
 		{
