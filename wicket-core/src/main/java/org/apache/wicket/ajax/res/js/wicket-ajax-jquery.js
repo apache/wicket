@@ -1700,12 +1700,10 @@
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
 									call.ajax(attributes);
-									return attributes.ad;
 								}, this));
 						}
 						else {
 							call.ajax(attributes);
-							return attributes.ad;
 						}
 					});
 				});
