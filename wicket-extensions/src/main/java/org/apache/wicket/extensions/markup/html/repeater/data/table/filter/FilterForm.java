@@ -21,20 +21,23 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.Strings;
 
 /**
  * A form with filter-related special functionality for its form components.
- *
+ * 
  * <p>
- * This form uses an invisible button to be able to submit when the user presses
- * the <em>ENTER</em> key. If there is a need to add an explicit
- * {@link org.apache.wicket.markup.html.form.IFormSubmittingComponent} to this form
- * then {@link Form#setDefaultButton(org.apache.wicket.markup.html.form.IFormSubmittingComponent)}
- * should be used to specify this custom submitting component.
+ * This form uses an invisible button to be able to submit when the user presses the <em>ENTER</em>
+ * key. If there is a need to add an explicit
+ * {@link org.apache.wicket.markup.html.form.IFormSubmittingComponent} to this form then
+ * {@link Form#setDefaultButton(org.apache.wicket.markup.html.form.IFormSubmittingComponent)} should
+ * be used to specify this custom submitting component.
  * </p>
  * 
  * @param <T>
@@ -44,6 +47,10 @@ import org.apache.wicket.util.string.Strings;
 public class FilterForm<T> extends Form<T>
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final ResourceReference JS = new JavaScriptResourceReference(FilterForm.class,
+		"wicket-filterform.js");
+
 	private final IFilterStateLocator<T> locator;
 
 	/**
@@ -63,8 +70,11 @@ public class FilterForm<T> extends Form<T>
 	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.render(OnLoadHeaderItem.forScript("_filter_focus_restore('" +
-			getFocusTrackerFieldCssId() + "');"));
+
+		response.render(JavaScriptHeaderItem.forReference(JS));
+
+		response.render(OnLoadHeaderItem.forScript(String.format(
+			"Wicket.FilterForm.restore('%s');", getFocusTrackerFieldCssId())));
 	}
 
 	/**
@@ -74,6 +84,7 @@ public class FilterForm<T> extends Form<T>
 	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		super.onComponentTagBody(markupStream, openTag);
+
 		String id = Strings.escapeMarkup(getFocusTrackerFieldCssId()).toString();
 		String value = getRequest().getPostParameters().getParameterValue(id).toString("");
 		getResponse().write(
@@ -122,6 +133,7 @@ public class FilterForm<T> extends Form<T>
 			public void onComponentTag(final Component component, final ComponentTag tag)
 			{
 				tag.put("onfocus", getFocusTrackingHandler(component));
+
 				super.onComponentTag(component, tag);
 			}
 		});
@@ -143,6 +155,6 @@ public class FilterForm<T> extends Form<T>
 	 */
 	public final String getFocusTrackingHandler(final Component component)
 	{
-		return ("_filter_focus(this, '" + getFocusTrackerFieldCssId() + "');");
+		return String.format("Wicket.FilterForm.focused(this, '%s');", getFocusTrackerFieldCssId());
 	}
 }

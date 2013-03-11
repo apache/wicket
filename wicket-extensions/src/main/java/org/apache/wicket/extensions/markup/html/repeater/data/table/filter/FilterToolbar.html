@@ -16,27 +16,6 @@
    limitations under the License.
 -->
 <html xmlns:wicket="http://wicket.apache.org/">
-<wicket:head>
-
-	<script type="text/javascript">
-
-	function _filter_focus(ctrl, trackerId) {
-		document.getElementById(trackerId).value=ctrl.id;
-	}
-	
-	function _filter_focus_restore(trackerId) {
-		var tracker=document.getElementById(trackerId);
-		if (tracker!=null) {
-			var focused=tracker.value;
-			if (focused!="") {
-				document.getElementById(focused).focus();
-			}
-		}
-	}
-	
-	</script>
-
-</wicket:head>
 <wicket:panel>
 	<tr class="filters-tr">
 		<wicket:container wicket:id="filters">
