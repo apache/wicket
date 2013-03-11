@@ -66,18 +66,18 @@ public class AbstractDefaultAjaxBehaviorTest extends Assert
 
 		CharSequence json = behavior.renderAjaxAttributes(component, attributes);
 
-		String expected = "{\"" + AjaxAttributeName.COMPLETE_HANDLER.jsonName() +
+		String expected = "{\"" + AjaxAttributeName.COMPLETE_HANDLER +
 			"\":[function(attrs, jqXHR, textStatus){alert('Complete!');}],\"" +
-			AjaxAttributeName.URL.jsonName() + "\":\"some/url\",\"" +
-			AjaxAttributeName.PRECONDITION.jsonName() +
+			AjaxAttributeName.URL + "\":\"some/url\",\"" +
+			AjaxAttributeName.PRECONDITION +
 			"\":[function(attrs){return somePrecondition();}],\"" +
-			AjaxAttributeName.FAILURE_HANDLER.jsonName() +
+			AjaxAttributeName.FAILURE_HANDLER +
 			"\":[function(attrs, jqXHR, errorMessage, textStatus){alert('Failure!');}],\"" +
-			AjaxAttributeName.BEFORE_HANDLER.jsonName() +
+			AjaxAttributeName.BEFORE_HANDLER +
 			"\":[function(attrs){alert('Before!');}],\"" +
-			AjaxAttributeName.SUCCESS_HANDLER.jsonName() +
+			AjaxAttributeName.SUCCESS_HANDLER +
 			"\":[function(attrs, jqXHR, data, textStatus){alert('Success!');}],\"" +
-			AjaxAttributeName.AFTER_HANDLER.jsonName() + "\":[function(attrs){alert('After!');}]}";
+			AjaxAttributeName.AFTER_HANDLER + "\":[function(attrs){alert('After!');}]}";
 		assertEquals(expected, json);
 	}
 }

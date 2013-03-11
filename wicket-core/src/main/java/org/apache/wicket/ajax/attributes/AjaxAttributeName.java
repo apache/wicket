@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.attributes;
 
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * ajax attribute names
@@ -216,7 +217,7 @@ public enum AjaxAttributeName {
 
 	private AjaxAttributeName(String jsonName)
 	{
-		this.jsonName = jsonName;
+		this.jsonName = Args.notNull(jsonName, "jsonName");
 	}
 
 	/**
@@ -225,6 +226,12 @@ public enum AjaxAttributeName {
 	 * @return as string
 	 */
 	public String jsonName()
+	{
+		return jsonName;
+	}
+
+	@Override
+	public String toString()
 	{
 		return jsonName;
 	}
