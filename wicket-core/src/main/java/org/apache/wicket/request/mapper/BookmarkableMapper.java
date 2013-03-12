@@ -20,6 +20,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.handler.PageProvider;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -91,14 +93,6 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
-		if (Application.exists())
-		{
-			if (Application.get().getSecuritySettings().getEnforceMounts())
-			{
-				return null;
-			}
-		}
-
 		Url url = request.getUrl();
 		if (matches(url))
 		{
@@ -111,6 +105,25 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 
 			if (pageClass != null && IRequestablePage.class.isAssignableFrom(pageClass))
 			{
+				if (Application.exists())
+				{
+					Application application = Application.get();
+
+					if (application.getSecuritySettings().getEnforceMounts())
+					{
+						// we make an excepion if the homepage itself was mounted, see WICKET-1898
+						if (!pageClass.equals(application.getHomePage()))
+						{
+							// WICKET-5094 only enforce mount if page is mounted
+							Url reverseUrl = application.getRootRequestMapper().mapHandler(
+								new RenderPageRequestHandler(new PageProvider(pageClass)));
+							if (!matches(reverseUrl))
+							{
+								return null;
+							}
+						}
+					}
+				}
 
 				// extract the PageParameters from URL if there are any
 				PageParameters pageParameters = extractPageParameters(request, 3,
