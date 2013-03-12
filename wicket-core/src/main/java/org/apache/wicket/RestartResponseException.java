@@ -73,7 +73,7 @@ public class RestartResponseException extends ResetResponseException
 	 */
 	public RestartResponseException(final IRequestablePage page)
 	{
-		this(new PageProvider(page), RedirectPolicy.AUTO_REDIRECT);
+		this(new PageProvider(makeStateful(page)), RedirectPolicy.AUTO_REDIRECT);
 	}
 
 	/**
@@ -91,4 +91,21 @@ public class RestartResponseException extends ResetResponseException
 		super(new RenderPageRequestHandler(pageProvider, redirectPolicy));
 	}
 
+	/**
+	 * Marks the page as stateful so that it is still available after a redirect.
+	 * See WICKET-5078 and WICKET-3965
+	 *
+	 * @param page
+	 *      The page to mark stateful
+	 * @return The passed page.
+	 *
+	 */
+	private static IRequestablePage makeStateful(IRequestablePage page)
+	{
+		if (page instanceof Page)
+		{
+			((Page)page).setStatelessHint(false);
+		}
+		return page;
+	}
 }
