@@ -96,10 +96,10 @@ public class Bootstrap
 
 	private static final BootstrapResponsiveResourceReference bootstrapResponsive = new BootstrapResponsiveResourceReference();
 
-	private static final CssResourceReference bootstrapCss = new CssResourceReference(
+	public static final CssResourceReference BOOTSTRAP_CSS = new CssResourceReference(
 		Bootstrap.class, "css/bootstrap.css");
 
-	private static final CssResourceReference bootstrapResponsiveCss = new CssResourceReference(
+	public static final CssResourceReference BOOTSTRAP_RESPONSIVE_CSS = new CssResourceReference(
 		Bootstrap.class, "css/bootstrap-responsive.css");
 
 	private Bootstrap()
@@ -119,7 +119,7 @@ public class Bootstrap
 		public Iterable<? extends HeaderItem> getDependencies()
 		{
 			HeaderItem jquery = JavaScriptHeaderItem.forReference(WicketEventJQueryResourceReference.get());
-			HeaderItem stylesheet = CssHeaderItem.forReference(bootstrapCss);
+			HeaderItem stylesheet = CssHeaderItem.forReference(BOOTSTRAP_CSS);
 
 			return asList(jquery, stylesheet);
 		}
@@ -138,8 +138,8 @@ public class Bootstrap
 		public Iterable<? extends HeaderItem> getDependencies()
 		{
 			HeaderItem jquery = JavaScriptHeaderItem.forReference(WicketEventJQueryResourceReference.get());
-			HeaderItem stylesheet = CssHeaderItem.forReference(bootstrapCss);
-			HeaderItem responsive = CssHeaderItem.forReference(bootstrapResponsiveCss);
+			HeaderItem stylesheet = CssHeaderItem.forReference(BOOTSTRAP_CSS);
+			HeaderItem responsive = CssHeaderItem.forReference(BOOTSTRAP_RESPONSIVE_CSS);
 			return asList(jquery, stylesheet, responsive);
 		}
 	}
