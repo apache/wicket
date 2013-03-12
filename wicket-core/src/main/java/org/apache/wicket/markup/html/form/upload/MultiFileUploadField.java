@@ -93,7 +93,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	private static final String MAGIC_SEPARATOR = "_mf_";
 
 
-	private static final ResourceReference JS = new JavaScriptResourceReference(
+	public static final ResourceReference JS = new JavaScriptResourceReference(
 		MultiFileUploadField.class, "MultiFileUploadField.js");
 
 
