@@ -17,16 +17,15 @@
 package org.apache.wicket.protocol.ws.jetty9;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.util.concurrent.ExecutionException;
+import java.nio.ByteBuffer;
 
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.util.lang.Args;
-import org.eclipse.jetty.util.Callback;
-import org.eclipse.jetty.util.FutureCallback;
-import org.eclipse.jetty.websocket.core.api.WebSocketConnection;
+import org.eclipse.jetty.websocket.api.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A wrapper around Jetty9's native WebSocketConnection.
@@ -35,24 +34,26 @@ import org.eclipse.jetty.websocket.core.api.WebSocketConnection;
  */
 public class Jetty9WebSocketConnection extends AbstractWebSocketConnection
 {
-	private final WebSocketConnection connection;
+	private static final Logger LOG = LoggerFactory.getLogger(Jetty9WebSocketConnection.class);
+
+	private final Session session;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param connection
+	 * @param session
 	 *            the jetty websocket connection
 	 */
-	public Jetty9WebSocketConnection(WebSocketConnection connection, AbstractWebSocketProcessor webSocketProcessor)
+	public Jetty9WebSocketConnection(Session session, AbstractWebSocketProcessor webSocketProcessor)
 	{
 		super(webSocketProcessor);
-		this.connection = Args.notNull(connection, "connection");
+		this.session = Args.notNull(session, "connection");
 	}
 
 	@Override
 	public boolean isOpen()
 	{
-		return connection.isOpen();
+		return session.isOpen();
 	}
 
 	@Override
@@ -60,7 +61,13 @@ public class Jetty9WebSocketConnection extends AbstractWebSocketConnection
 	{
 		if (isOpen())
 		{
-			connection.close(code, reason);
+			try
+			{
+				session.close(code, reason);
+			} catch (IOException iox)
+			{
+				LOG.error("An error occurred while closing WebSocket session", iox);
+			}
 		}
 	}
 
@@ -69,9 +76,7 @@ public class Jetty9WebSocketConnection extends AbstractWebSocketConnection
 	{
 		checkClosed();
 
-		FutureCallback<Void> waiter = new FutureCallback<Void>();
-		connection.write(null, waiter, message);
-		waitForMessageSent(waiter);
+		session.getRemote().sendString(message);
 		return this;
 	}
 
@@ -81,26 +86,9 @@ public class Jetty9WebSocketConnection extends AbstractWebSocketConnection
 	{
 		checkClosed();
 
-		FutureCallback<Void> waiter = new FutureCallback<Void>();
-		connection.write(null, new Callback.Empty<Void>(), message, offset, length);
-		waitForMessageSent(waiter);
+		ByteBuffer buf = ByteBuffer.wrap(message, offset, length);
+		session.getRemote().sendBytes(buf);
 		return this;
-	}
-
-	private void waitForMessageSent(FutureCallback<?> waiter) throws IOException
-	{
-		try
-		{
-			waiter.get();
-		}
-		catch (InterruptedException e)
-		{
-			throw new InterruptedIOException();
-		}
-		catch (ExecutionException e)
-		{
-			FutureCallback.rethrow(e);
-		}
 	}
 
 	private void checkClosed()

@@ -24,11 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
-import org.eclipse.jetty.websocket.core.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.core.api.UpgradeResponse;
-import org.eclipse.jetty.websocket.core.api.WebSocketPolicy;
-import org.eclipse.jetty.websocket.server.WebSocketCreator;
+import org.eclipse.jetty.websocket.api.UpgradeRequest;
+import org.eclipse.jetty.websocket.api.UpgradeResponse;
+import org.eclipse.jetty.websocket.api.WebSocketPolicy;
 import org.eclipse.jetty.websocket.server.WebSocketServerFactory;
+import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,20 +50,17 @@ public class Jetty9WebSocketFilter extends AbstractUpgradeFilter
 		try
 		{
 			WebSocketPolicy serverPolicy = WebSocketPolicy.newServerPolicy();
-			String bs = filterConfig.getInitParameter("bufferSize");
+			String bs = filterConfig.getInitParameter("inputBufferSize");
 			if (bs != null)
-				serverPolicy.setBufferSize(Integer.parseInt(bs));
+				serverPolicy.setInputBufferSize(Integer.parseInt(bs));
 			String max = filterConfig.getInitParameter("maxIdleTime");
 			if (max != null)
 				serverPolicy.setIdleTimeout(Integer.parseInt(max));
 
-			max = filterConfig.getInitParameter("maxTextMessageSize");
+			max = filterConfig.getInitParameter("maxMessageSize");
 			if (max != null)
-				serverPolicy.setMaxTextMessageSize(Integer.parseInt(max));
+				serverPolicy.setMaxMessageSize(Integer.parseInt(max));
 
-			max = filterConfig.getInitParameter("maxBinaryMessageSize");
-			if (max != null)
-				serverPolicy.setMaxBinaryMessageSize(Integer.parseInt(max));
 			_webSocketFactory = new WebSocketServerFactory(serverPolicy);
 
 			_webSocketFactory.setCreator(new WebSocketCreator()

@@ -16,23 +16,18 @@
  */
 package org.apache.wicket.protocol.ws.jetty9;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
-import org.eclipse.jetty.websocket.core.annotations.WebSocket;
-import org.eclipse.jetty.websocket.core.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.core.api.UpgradeResponse;
-import org.eclipse.jetty.websocket.core.api.WebSocketConnection;
-import org.eclipse.jetty.websocket.core.api.WebSocketException;
-import org.eclipse.jetty.websocket.core.api.WebSocketListener;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.UpgradeRequest;
+import org.eclipse.jetty.websocket.api.UpgradeResponse;
+import org.eclipse.jetty.websocket.api.WebSocketListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * An {@link org.apache.wicket.protocol.ws.api.IWebSocketProcessor processor} that integrates with
- * Jetty 9.x {@link WebSocket web socket} implementation.
+ * Jetty 9.x {@link Session web socket} implementation.
  *
  * @since 6.2
  */
@@ -55,14 +50,13 @@ public class Jetty9WebSocketProcessor extends AbstractWebSocketProcessor
 	public Jetty9WebSocketProcessor(final UpgradeRequest upgradeRequest,
 		final UpgradeResponse upgradeResponse, final WebApplication application)
 	{
-		super((HttpServletRequest)((HttpServletRequestWrapper)upgradeRequest).getRequest(),
-			application);
+		super(new Jetty9UpgradeHttpRequest(upgradeRequest), application);
 	}
 
 	@Override
-	public void onWebSocketConnect(WebSocketConnection connection)
+	public void onWebSocketConnect(Session session)
 	{
-		onConnect(new Jetty9WebSocketConnection(connection, this));
+		onConnect(new Jetty9WebSocketConnection(session, this));
 	}
 
 	@Override
@@ -84,19 +78,19 @@ public class Jetty9WebSocketProcessor extends AbstractWebSocketProcessor
 	}
 
 	@Override
-	public void onWebSocketException(WebSocketException error)
+	public void onWebSocketError(Throwable throwable)
 	{
-		LOG.error("An error occurred when using WebSocket.", error);
+		LOG.error("An error occurred when using WebSocket.", throwable);
 	}
 
 	@Override
 	public void onOpen(Object connection)
 	{
-		if (!(connection instanceof WebSocketConnection))
+		if (!(connection instanceof Session))
 		{
-			throw new IllegalArgumentException(WebSocketConnection.class.getName() +
-				" can work only with " + WebSocketConnection.class.getName());
+			throw new IllegalArgumentException(Jetty9WebSocketProcessor.class.getName() +
+				" can work only with " + Session.class.getName());
 		}
-		onWebSocketConnect((WebSocketConnection)connection);
+		onWebSocketConnect((Session)connection);
 	}
 }
