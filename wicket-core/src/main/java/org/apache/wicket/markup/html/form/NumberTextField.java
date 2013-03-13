@@ -48,6 +48,8 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 	private N maximum;
 
+	private N step;
+
 	/**
 	 * Construct.
 	 * 
@@ -106,7 +108,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 	/**
 	 * Sets the maximum allowed value
-	 * 
+	 *
 	 * @param maximum
 	 *            the maximum allowed value
 	 * @return this instance
@@ -114,6 +116,19 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	public NumberTextField<N> setMaximum(final N maximum)
 	{
 		this.maximum = maximum;
+		return this;
+	}
+
+	/**
+	 * Sets the step attribute
+	 *
+	 * @param step
+	 *            the step attribute
+	 * @return this instance
+	 */
+	public NumberTextField<N> setStep(final N step)
+	{
+		this.step = step;
 		return this;
 	}
 
@@ -168,6 +183,15 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		else
 		{
 			attributes.remove("max");
+		}
+
+		if (step != null)
+		{
+			attributes.put("step", Objects.stringValue(step));
+		}
+		else
+		{
+			attributes.remove("step");
 		}
 	}
 
