@@ -1515,7 +1515,9 @@ public class BaseWicketTester
 	 * @param component
 	 * @return the processed component
 	 * @see #startComponentInPage(Class)
+	 * @deprecated Use {@linkplain #startComponentInPage(Component)} instead. WICKET-5097
 	 */
+	@Deprecated
 	public Component startComponent(final Component component)
 	{
 		try
