@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -83,7 +84,8 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		int ixExtension = path.lastIndexOf('.');
 		int len = path.length();
 		final String ext;
-		if (ixExtension <= 0 || ixExtension == len || (path.lastIndexOf('/') + 1) == ixExtension)
+		if (ixExtension <= 0 || ixExtension == len ||
+			(path.lastIndexOf(File.separator) + 1) == ixExtension)
 		{
 			ext = null;
 		}
@@ -107,7 +109,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			return false;
 		}
 
-		String filename = Strings.lastPathComponent(path, '/');
+		String filename = Strings.lastPathComponent(path, File.separatorChar);
 		if (acceptFile(filename) == false)
 		{
 			log.warn("Access denied to shared (static) resource because of the file name: " + path);
@@ -128,11 +130,22 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		if (!allowAccessToRootResources)
 		{
 			String absolute = path;
-			if (absolute.startsWith("/"))
+			if ("\\".equals(File.separator))
+			{
+				// handle a windows path which may have a drive letter in it
+
+				if (absolute.indexOf(":\\") > 0)
+				{
+					// strip the drive letter off the path
+					absolute = absolute.substring(absolute.indexOf(":\\") + 2);
+				}
+			}
+
+			if (absolute.startsWith(File.separator))
 			{
 				absolute = absolute.substring(1);
 			}
-			if (!absolute.contains("/"))
+			if (!absolute.contains(File.separator))
 			{
 				log.warn("Access to root directory is by default disabled for shared resources: " +
 					path);

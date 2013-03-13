@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.io.File;
+
 import org.apache.wicket.WicketTestCase;
 import org.junit.Test;
 
@@ -37,5 +39,31 @@ public class PackageResourceGuardTest extends WicketTestCase
 
 		guard.setAllowAccessToRootResources(true);
 		assertTrue(guard.accept(Integer.TYPE, "test.gif"));
+
+
 	}
+
+	/**
+	 * Test whether Windows absolute paths are handled properly on the current system (properly
+	 * works on Windows and properly blocks on any other OS).
+	 */
+	@Test
+	public void acceptAbsolutePath()
+	{
+		PackageResourceGuard guard = new PackageResourceGuard();
+		guard.setAllowAccessToRootResources(false);
+
+		assertTrue(guard.acceptAbsolutePath("/test/test.js"));
+		assertFalse(guard.acceptAbsolutePath("/test.js"));
+
+		if ("\\".equals(File.pathSeparator))
+		{
+			assertTrue(guard.acceptAbsolutePath("c:\\test\\org\\apache\\test.js"));
+			assertTrue(guard.acceptAbsolutePath("\\test\\org\\apache\\test.js"));
+			assertFalse(guard.acceptAbsolutePath("c:\\test.js"));
+			assertFalse(guard.acceptAbsolutePath("\\test.js"));
+		}
+
+	}
+
 }
