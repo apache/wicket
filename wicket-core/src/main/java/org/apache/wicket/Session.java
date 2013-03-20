@@ -392,11 +392,8 @@ public abstract class Session implements IClusterable, IEventSink
 	{
 		if (id == null)
 		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle != null)
-			{
-				id = getSessionStore().getSessionId(requestCycle.getRequest(), false);
-			}
+			updateId();
+
 			// we have one?
 			if (id != null)
 			{
@@ -404,6 +401,15 @@ public abstract class Session implements IClusterable, IEventSink
 			}
 		}
 		return id;
+	}
+
+	private void updateId()
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle != null)
+		{
+			id = getSessionStore().getSessionId(requestCycle.getRequest(), false);
+		}
 	}
 
 	/**
@@ -665,6 +671,11 @@ public abstract class Session implements IClusterable, IEventSink
 		if (sessionInvalidated)
 		{
 			invalidateNow();
+		}
+		else
+		{
+			// WICKET-5103 container might have changed id
+			updateId();
 		}
 	}
 
