@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
+import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -23,8 +24,21 @@ public class DefaultPropertyResolver implements IPropertyResolver
 	{
 		IModel<?> model = component.getModel();
 
-		if (!(model instanceof IPropertyReflectionAwareModel))
+		while (true)
 		{
+			if (model == null)
+			{
+				return null;
+			}
+			if (model instanceof IPropertyReflectionAwareModel)
+			{
+				break;
+			}
+			if (model instanceof IWrapModel<?>)
+			{
+				model = ((IWrapModel<?>)model).getWrappedModel();
+				continue;
+			}
 			return null;
 		}
 
@@ -35,11 +49,11 @@ public class DefaultPropertyResolver implements IPropertyResolver
 		{
 			return new Property(field.getDeclaringClass(), field.getName());
 		}
-	
+
 		Method getter = delegate.getPropertyGetter();
 		if (getter != null)
 		{
-			String name = getter.getName().substring(3, 1).toLowerCase() +
+			String name = getter.getName().substring(3, 4).toLowerCase() +
 				getter.getName().substring(4);
 			return new Property(getter.getDeclaringClass(), name);
 		}
