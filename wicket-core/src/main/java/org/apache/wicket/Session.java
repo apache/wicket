@@ -356,18 +356,15 @@ public abstract class Session implements IClusterable, IEventSink
 	/**
 	 * Gets the unique id for this session from the underlying SessionStore. May be
 	 * <code>null</code> if a concrete session is not yet created.
-	 *
+	 * 
 	 * @return The unique id for this session or null if it is a temporary session
 	 */
 	public final String getId()
 	{
 		if (id == null)
 		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle != null)
-			{
-				id = getSessionStore().getSessionId(requestCycle.getRequest(), false);
-			}
+			updateId();
+
 			// we have one?
 			if (id != null)
 			{
@@ -375,6 +372,15 @@ public abstract class Session implements IClusterable, IEventSink
 			}
 		}
 		return id;
+	}
+
+	private void updateId()
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle != null)
+		{
+			id = getSessionStore().getSessionId(requestCycle.getRequest(), false);
+		}
 	}
 
 	/**
@@ -634,6 +640,11 @@ public abstract class Session implements IClusterable, IEventSink
 		if (sessionInvalidated)
 		{
 			invalidateNow();
+		}
+		else
+		{
+			// WICKET-5103 container might have changed id
+			updateId();
 		}
 	}
 
