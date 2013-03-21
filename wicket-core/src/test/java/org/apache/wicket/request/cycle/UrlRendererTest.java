@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.cycle;
 
+import java.util.Arrays;
+
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
@@ -439,5 +441,23 @@ public class UrlRendererTest extends Assert
 		String encodedRelativeUrl = renderer.renderRelativeUrl(encodedFullUrl);
 
 		assertEquals("../../../../a/b;jsessionid=123456", encodedRelativeUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5073
+	 */
+	@Test
+	public void removeCommonPrefixesWicket5073()
+	{
+		Url baseUrl = new Url(Arrays.asList(""), Arrays.<Url.QueryParameter>asList());
+
+		MockWebRequest request = new MockWebRequest(baseUrl);
+		request.setContextPath("/qs");
+		request.setFilterPath("");
+		UrlRenderer renderer = new UrlRenderer(request);
+		renderer.setBaseUrl(baseUrl);
+
+		String rendered = renderer.renderRelativeUrl(Url.parse("wicket/resource/org.apache.wicket.Application/x.css"));
+		assertEquals("./wicket/resource/org.apache.wicket.Application/x.css", rendered);
 	}
 }

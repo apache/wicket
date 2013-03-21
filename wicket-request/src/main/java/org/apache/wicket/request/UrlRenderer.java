@@ -311,7 +311,7 @@ public class UrlRenderer
 			}
 		}
 
-		for (int i = 0; i < commonPrefix.getSegments().size(); i++)
+		for (int i = 0; i < commonPrefix.getSegments().size() && !segments.isEmpty(); i++)
 		{
 			segments.remove(0);
 		}
