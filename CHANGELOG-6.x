@@ -2,6 +2,76 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.7.0
+
+** Bug
+
+    * [WICKET-4803] - UrlDecoder should log a message when invalid input is provided
+    * [WICKET-4871] - wicket-atmosphere version mismatch with wicket-example-jar
+    * [WICKET-4903] - relativeUrl's begins with ./
+    * [WICKET-4907] - UrlResourceReference generates broken relative URLs
+    * [WICKET-4942] - Double slash '//' in starting url makes Url.parse output a relative Url
+    * [WICKET-4989] - WicketTester should send copies of its cookies 
+    * [WICKET-4995] - Using CryptoMapper causes page to render twice
+    * [WICKET-5039] - Manual invocation of FunctionsExecutor#notify() is broken
+    * [WICKET-5041] - DefaultCssAutoCompleteTextField should have Constructor (String id)
+    * [WICKET-5044] - Atmosphere + DateLabel
+    * [WICKET-5045] - Upgrade Atmosphere to 1.0.10
+    * [WICKET-5047] - Wicket Ajax: Inline script header contribution issue
+    * [WICKET-5048] - Inline enclosures don't work with different namespace
+    * [WICKET-5049] - Wicket Session may be null in SessionBindingListener after deserialization
+    * [WICKET-5052] - @SpringBean fails to invoke methods on bean with non-public methods
+    * [WICKET-5053] - "random" parameters is now "_" with jQuery Ajax
+    * [WICKET-5054] - Possible bug in org.apache.wicket.util.lang.Packages when building path with repeating names
+    * [WICKET-5055] - AutoComplete still triggers redundant events to registered change listener
+    * [WICKET-5061] - EnclosureHandler ignores wicket:xyz elements as children
+    * [WICKET-5067] - SelectOptions fails to render text on openClose tag
+    * [WICKET-5072] - Cookies#isEqual(Cookie, Cookie) may fail with NullPointerException
+    * [WICKET-5073] - UrlRenderer#removeCommonPrefixes() fails when contextPath+filterPrefix has more segments than the argument
+    * [WICKET-5075] - When modal window is closed page scrolls to top
+    * [WICKET-5076] - form#onSubmit() is called on just replaced nested forms
+    * [WICKET-5078] - RestartResponseException broken with page instance and bookmarkable page
+    * [WICKET-5080] - FilterToolbar.html contains javascript that is used elsewhere
+    * [WICKET-5082] - Ajax update renders parent/child JS in different order than initial Page render
+    * [WICKET-5085] - InlineEnclosure are piling up on each render
+    * [WICKET-5093] - The event listener in Wicket.Ajax.ajax() should not return the value of attrs.ad (allowDefault)
+    * [WICKET-5094] - ISecuritySettings#getEnforceMounts(true) prevents access to *all* non-mounted bookmarkable pages
+    * [WICKET-5098] - PackageResourceBlockedException under Windows for *.js files in web app's own packages, not in jars
+    * [WICKET-5102] - wicket-bean-validation: Bean validation PropertyValidator only works with direct field access
+    * [WICKET-5103] - Wicket session id not up to date when container changes session id
+
+** Improvement
+
+    * [WICKET-4115] - SignInPanel should not always redirect to the Home page when the user is signed-in automaticaly with the remember-me feature.
+    * [WICKET-5005] - Add Utility to allow conversion from Panel (or Component) to html String
+    * [WICKET-5038] - Add equals() and hashcode() implementation to INamedParameters.NamedPair
+    * [WICKET-5046] - NumberTextField should use appropriate validator
+    * [WICKET-5050] - AutoComplete should not request suggestions if input is no longer active element
+    * [WICKET-5057] - FilteringHeaderResponse requires a usage of FilteringHeaderResponse.IHeaderResponseFilter for no reason when FilteredHeaderItem is used
+    * [WICKET-5062] - Update the list of HTML void elements with the latest HTML5 ones
+    * [WICKET-5065] - Improve UrlRenderer to be able to render urls without scheme and/or host 
+    * [WICKET-5066] - Allow PackageResource to decide itself whether it could be accepted or not
+    * [WICKET-5074] - Improvement for MockHttpServletRequest and FormTester to support 'multiple' input type of fileUpload
+    * [WICKET-5079] - Allow WebApplication-specific Spring configuration
+    * [WICKET-5088] - The Bootstrap class does not provide a handle for the CSSResourceReferences.
+    * [WICKET-5089] - Make MultiFileUploadField's ResourceReference JS public to be able to include in Application's getResourceBundles.
+    * [WICKET-5090] - Add path syntax to MarkupContainer#get( String )
+    * [WICKET-5091] - Extract the short names of the ajax attributes as a constants
+    * [WICKET-5095] - Upgrade Wicket Native WebSocket to Jetty 9.0.0
+    * [WICKET-5096] - Add setStep method to NumberTextField
+    * [WICKET-5105] - JavaDoc of IHeaderContributor is outdated
+    * [WICKET-5111] - Upgrade bootstrap to 2.3.1
+
+** Task
+
+    * [WICKET-5097] - Deprecate BaseWicketTester#startComponent(Component)
+
+** Test
+
+    * [WICKET-5042] - Cleanup FilteringHeaderResponseTest to make it more readable
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.6.0
 
 ** Bug
