@@ -155,7 +155,7 @@ public final class PropertyResolver
 		if (setter == null)
 		{
 			throw new WicketRuntimeException("Null object returned for expression: " + expression +
-				" for getting the target classs of: " + object);
+				" for getting the target class of: " + object);
 		}
 		return setter.getTargetClass();
 	}
@@ -173,7 +173,7 @@ public final class PropertyResolver
 		if (setter == null)
 		{
 			throw new WicketRuntimeException("No Class returned for expression: " + expression +
-				" for getting the target classs of: " + clz);
+				" for getting the target class of: " + clz);
 		}
 		return (Class<T>)setter.getTargetClass();
 	}
@@ -190,7 +190,7 @@ public final class PropertyResolver
 		if (setter == null)
 		{
 			throw new WicketRuntimeException("Null object returned for expression: " + expression +
-				" for getting the target classs of: " + object);
+				" for getting the target class of: " + object);
 		}
 		return setter.getField();
 	}
@@ -207,7 +207,7 @@ public final class PropertyResolver
 		if (setter == null)
 		{
 			throw new WicketRuntimeException("Null object returned for expression: " + expression +
-				" for getting the target classs of: " + object);
+				" for getting the target class of: " + object);
 		}
 		return setter.getGetter();
 	}
@@ -224,7 +224,7 @@ public final class PropertyResolver
 		if (setter == null)
 		{
 			throw new WicketRuntimeException("Null object returned for expression: " + expression +
-				" for getting the target classs of: " + object);
+				" for getting the target class of: " + object);
 		}
 		return setter.getSetter();
 	}
