@@ -187,11 +187,7 @@ public final class PropertyResolver
 	public final static Field getPropertyField(final String expression, final Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, RESOLVE_CLASS);
-		if (setter == null)
-		{
-			throw new WicketRuntimeException("Null object returned for expression: " + expression +
-				" for getting the target classs of: " + object);
-		}
+		if (setter == null) return null;
 		return setter.getField();
 	}
 
@@ -204,11 +200,7 @@ public final class PropertyResolver
 	public final static Method getPropertyGetter(final String expression, final Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, RESOLVE_CLASS);
-		if (setter == null)
-		{
-			throw new WicketRuntimeException("Null object returned for expression: " + expression +
-				" for getting the target classs of: " + object);
-		}
+		if (setter == null) return null;
 		return setter.getGetter();
 	}
 
@@ -221,11 +213,7 @@ public final class PropertyResolver
 	public final static Method getPropertySetter(final String expression, final Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, RESOLVE_CLASS);
-		if (setter == null)
-		{
-			throw new WicketRuntimeException("Null object returned for expression: " + expression +
-				" for getting the target classs of: " + object);
-		}
+		if (setter == null) return null;
 		return setter.getSetter();
 	}
 
