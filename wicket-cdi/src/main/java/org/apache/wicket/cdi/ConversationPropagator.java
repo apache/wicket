@@ -27,9 +27,11 @@ import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.BufferedResponseRequestHandler;
 import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
+import org.apache.wicket.core.request.mapper.StalePageException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -103,6 +105,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			: null;
 	}
 
+	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
 		String cid = cycle.getRequest().getRequestParameters().getParameterValue(CID).toString();
@@ -126,6 +129,30 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	@Override
 	public IRequestHandler onException(RequestCycle cycle, Exception ex)
 	{
+		// if we are handling a stale page exception then use its conversation since we are most
+		// likely about to rerender it.
+
+		if (ex instanceof StalePageException)
+		{
+			IRequestablePage requestable = ((StalePageException)ex).getPage();
+			if (requestable instanceof Page)
+			{
+				String cid = container.getConversationMarker((Page)requestable);
+				if (cid != null)
+				{
+					try
+					{
+						activateConversationIfNeeded(cycle, null, cid);
+						return null;
+					}
+					catch (ConversationExpiredException e)
+					{
+						// ignore, we will start a new one below
+					}
+				}
+			}
+		}
+
 		activateConversationIfNeeded(cycle, null, null);
 		return null;
 	}
@@ -188,6 +215,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		}
 	}
 
+	@Override
 	public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
 	{
 		Conversation conversation = getConversation(cycle);
