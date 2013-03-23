@@ -325,6 +325,18 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	protected IRequestHandler handleException(final Exception e)
 	{
+
+		if (Application.exists() && Application.get().usesDevelopmentConfig())
+		{
+			/*
+			 * Call out the fact that we are processing an exception in a loud way, helps to notice
+			 * them when developing even if they get wrapped or processed in a custom handler.
+			 */
+			log.warn("********************************");
+			log.warn("Handling the following exception", e);
+			log.warn("********************************");
+		}
+
 		IRequestHandler handler = listeners.onException(this, e);
 		if (handler != null)
 		{
@@ -396,13 +408,13 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * Returns URL for the request handler or <code>null</code> if the handler couldn't have been
 	 * encoded.
 	 * <p>
-	 *     <strong>Note</strong>: The produced URL is relative to the filter path. Application code
-	 *     most probably need URL relative to the currently used page, for this use
-	 *     {@linkplain #urlFor(org.apache.wicket.request.IRequestHandler)}
+	 * <strong>Note</strong>: The produced URL is relative to the filter path. Application code most
+	 * probably need URL relative to the currently used page, for this use
+	 * {@linkplain #urlFor(org.apache.wicket.request.IRequestHandler)}
 	 * </p>
 	 * 
 	 * @param handler
-	 *      the {@link IRequestHandler request handler} for which to create a callback url
+	 *            the {@link IRequestHandler request handler} for which to create a callback url
 	 * @return Url instance or <code>null</code>
 	 */
 	public Url mapUrlFor(IRequestHandler handler)
@@ -415,11 +427,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	/**
 	 * Returns a {@link Url} for the resource reference
 	 * <p>
-	 *     <strong>Note</strong>: The produced URL is relative to the filter path. Application code
-	 *     most probably need URL relative to the currently used page, for this use
-	 *     {@linkplain #urlFor(org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.PageParameters)}
+	 * <strong>Note</strong>: The produced URL is relative to the filter path. Application code most
+	 * probably need URL relative to the currently used page, for this use
+	 * {@linkplain #urlFor(org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.PageParameters)}
 	 * </p>
-	 *
+	 * 
 	 * @param reference
 	 *            resource reference
 	 * @param params
@@ -436,11 +448,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
 	 * <p>
-	 *     <strong>Note</strong>: The produced URL is relative to the filter path. Application code
-	 *     most probably need URL relative to the currently used page, for this use
-	 *     {@linkplain #urlFor(Class, org.apache.wicket.request.mapper.parameter.PageParameters)}
+	 * <strong>Note</strong>: The produced URL is relative to the filter path. Application code most
+	 * probably need URL relative to the currently used page, for this use
+	 * {@linkplain #urlFor(Class, org.apache.wicket.request.mapper.parameter.PageParameters)}
 	 * </p>
-	 *
+	 * 
 	 * @param <C>
 	 *            The type of the page
 	 * @param pageClass
@@ -513,8 +525,8 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		}
 		catch (Exception x)
 		{
-			throw new WicketRuntimeException(
-					String.format("An error occurred while generating an Url for handler '%s'", handler), x);
+			throw new WicketRuntimeException(String.format(
+				"An error occurred while generating an Url for handler '%s'", handler), x);
 		}
 
 	}
@@ -524,14 +536,15 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		if (url != null)
 		{
 			boolean shouldEncodeStaticResource = Application.exists() &&
-					Application.get().getResourceSettings().isEncodeJSessionId();
+				Application.get().getResourceSettings().isEncodeJSessionId();
 
 			String renderedUrl = getUrlRenderer().renderUrl(url);
 			if (handler instanceof ResourceReferenceRequestHandler)
 			{
 				ResourceReferenceRequestHandler rrrh = (ResourceReferenceRequestHandler)handler;
 				IResource resource = rrrh.getResource();
-				if (resource != null && !(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
+				if (resource != null && !(resource instanceof IStaticCacheableResource) ||
+					shouldEncodeStaticResource)
 				{
 					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
 				}
@@ -540,7 +553,8 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			{
 				ResourceRequestHandler rrh = (ResourceRequestHandler)handler;
 				IResource resource = rrh.getResource();
-				if (resource != null && !(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
+				if (resource != null && !(resource instanceof IStaticCacheableResource) ||
+					shouldEncodeStaticResource)
 				{
 					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
 				}
