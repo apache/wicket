@@ -127,6 +127,11 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			}
 		}
 
+		//
+		// for windows we have to check both File.separator ('\') and the usual '/' since both can
+		// be used and are used interchangeably
+		//
+
 		if (!allowAccessToRootResources)
 		{
 			String absolute = path;
@@ -134,18 +139,23 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			{
 				// handle a windows path which may have a drive letter in it
 
-				if (absolute.indexOf(":\\") > 0)
+				int drive = absolute.indexOf(":\\");
+				if (drive < 0)
+				{
+					drive = absolute.indexOf(":/");
+				}
+				if (drive > 0)
 				{
 					// strip the drive letter off the path
-					absolute = absolute.substring(absolute.indexOf(":\\") + 2);
+					absolute = absolute.substring(drive + 2);
 				}
 			}
 
-			if (absolute.startsWith(File.separator))
+			if (absolute.startsWith(File.separator) || absolute.startsWith("/"))
 			{
 				absolute = absolute.substring(1);
 			}
-			if (!absolute.contains(File.separator))
+			if (!absolute.contains(File.separator) && !absolute.contains("/"))
 			{
 				log.warn("Access to root directory is by default disabled for shared resources: " +
 					path);
