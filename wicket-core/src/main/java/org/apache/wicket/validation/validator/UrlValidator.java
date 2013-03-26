@@ -113,7 +113,7 @@ public class UrlValidator extends AbstractValidator<String>
 	private static final int PARSE_AUTHORITY_PORT = 4;
 	private static final int PARSE_AUTHORITY_EXTRA = 5; // Should always be empty.
 
-	private static final String PATH_PATTERN = "^(/[-\\w:@&?=+,.!/~*'%$_;]*)?$";
+	private static final String PATH_PATTERN = "^(/[-\\w:@&?=+,.!/~*'%$_;\\(\\)]*)?$";
 
 	private static final String QUERY_PATTERN = "^(.*)$";
 

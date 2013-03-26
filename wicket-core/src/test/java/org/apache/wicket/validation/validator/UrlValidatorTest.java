@@ -53,6 +53,16 @@ public class UrlValidatorTest extends TestCase
 	}
 
 	/**
+	 * WICKET-5112
+	 */
+	public void testParentheses()
+	{
+		String[] schemes = { "http" };
+		UrlValidator urlValidator = new UrlValidator(schemes);
+		assertTrue(urlValidator.isValid("http://en.wikipedia.org/wiki/Genus_(mathematics)"));
+	}
+
+	/**
 	 * test
 	 */
 	public void testIsValid()
