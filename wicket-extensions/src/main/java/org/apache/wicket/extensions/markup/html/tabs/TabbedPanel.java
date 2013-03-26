@@ -372,7 +372,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 *            index of the tab to select
 	 * @return this for chaining
 	 * @throws IndexOutOfBoundsException
-	 *             if index is not {@code -1} or in the range of available tabs
+	 *             if index is not in the range of available tabs
 	 */
 	public TabbedPanel<T> setSelectedTab(final int index)
 	{
