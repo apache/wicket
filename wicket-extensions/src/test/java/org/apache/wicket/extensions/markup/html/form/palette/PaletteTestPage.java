@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -31,7 +32,7 @@ public class PaletteTestPage extends WebPage
 
 	private static final long serialVersionUID = 1L;
 
-	public Form<Void> form;
+	public Form<Object> form;
 
 	public Palette<String> palette;
 
@@ -40,7 +41,7 @@ public class PaletteTestPage extends WebPage
 	 */
 	public PaletteTestPage(IModel<List<String>> selected, IModel<List<String>> all)
 	{
-		form = new Form<Void>("form");
+		form = new Form<Object>("form", new CompoundPropertyModel<Object>("WICKET-5086"));
 		add(form);
 
 		IChoiceRenderer<String> choiceRenderer = new IChoiceRenderer<String>()
