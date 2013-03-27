@@ -440,6 +440,22 @@
 		},
 
 		/**
+		 * Aborts the default event if attributes request it
+		 *
+		 * @param {Object} attrs - the Ajax request attributes configured at the server side
+		 */
+		_preventDefaultIfNecessary: function(attrs) {
+			if (!attrs.ad && attrs.event) {
+				try {
+					attrs.event.preventDefault();
+				} catch (ignore) {
+					// WICKET-4986
+					// jquery fails 'member not found' with calls on busy channel
+				}
+			}
+		},
+		
+		/**
 		 * Executes or schedules for execution #doAjax()
 		 *
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
@@ -528,8 +544,8 @@
 			Wicket.Event.publish('/ajax/call/precondition', attrs);
 
 			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
-				var ret = this.submitMultipartForm(context);
-				self.preventDefaultIfNecessary(attrs);
+				var ret = self.submitMultipartForm(context);
+				self._preventDefaultIfNecessary(attrs);
 				return ret;
 			}
 
@@ -637,27 +653,11 @@
 			self._executeHandlers(attrs.ah, attrs);
 			Wicket.Event.publish('/ajax/call/after', attrs);
 
-			self.preventDefaultIfNecessary(attrs);
+			self._preventDefaultIfNecessary(attrs);
 			
 			return jqXHR;
 		},
-		
-		/**
-		 * Aborts the default event if attributes request it
-		 *
-		 * @param {Object} attrs - the Ajax request attributes configured at the server side
-		 */
-		preventDefaultIfNecessary: function(attrs) {
-			if (!attrs.ad && attrs.event) {
-				try {
-					attrs.event.preventDefault();
-				} catch (ignore) {
-					// WICKET-4986
-					// jquery fails 'member not found' with calls on busy channel
-				}
-			}
-		},
-		
+
 		/**
 		 * Method that processes a manually supplied <ajax-response>.
 		 *
