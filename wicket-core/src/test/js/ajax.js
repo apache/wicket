@@ -968,7 +968,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - success scenario.', function () {
 
-			expect(7);
+			expect(8);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -977,13 +977,19 @@ jQuery(document).ready(function() {
 				e:  "nestedFormSubmit", // the event
 				c:  "innerSubmitButton", // the component that submits the form
 				m:  "POST", // submit method,
+				ad: true, // do not allow default behavior
 				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
 				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
 				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(true, "Success handler executed"); } ],
 				fh: [ function(attrs) { ok(false, "Failure handler should not be executed"); } ],
-				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+				coh: [
+					function(attrs) {
+						ok(true, "Complete handler executed");
+						equal(attrs.event.isDefaultPrevented(), false, "default behavior is allowed");
+					}
+				]
 			};
 
 			Wicket.Ajax.ajax(attrs);
@@ -998,7 +1004,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - failure scenario.', function () {
 
-			expect(6);
+			expect(7);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1007,13 +1013,19 @@ jQuery(document).ready(function() {
 				e:  "nestedFormSubmit", // the event
 				c:  "innerSubmitButton", // the component that submits the form
 				m:  "POST", // submit method,
+				ad: false,
 				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
 				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
 				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
 				fh: [ function(attrs) { ok(true, "Failure handler executed"); start(); } ],
-				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+				coh: [
+					function(attrs) {
+						ok(true, "Complete handler executed");
+						equal(attrs.event.isDefaultPrevented(), true, "default behavior is prevented");
+					}
+				]
 			};
 
 			Wicket.Ajax.ajax(attrs);
