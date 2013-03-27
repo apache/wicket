@@ -80,7 +80,8 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		ft.setValue("name", "999999999");
 		ft.submit();
 		assertEquals(1, new FeedbackCollector(page).collect().size());
-		assertEquals("MAX", new FeedbackCollector(page).collect()
+		// WICKET-5115 variables in default message are not substituted (was the case in 1.5.x)
+		assertEquals("MAX ${len}", new FeedbackCollector(page).collect()
 			.get(0)
 			.getMessage()
 			.toString());
@@ -136,7 +137,8 @@ public class ValidatorBehaviorTest extends WicketTestCase
 			if (value.length() > len)
 			{
 				ValidationError error = new ValidationError();
-				error.setMessage("MAX");
+				error.setVariable("len", len);
+				error.setMessage("MAX ${len}");
 				validatable.error(error);
 			}
 		}
