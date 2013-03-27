@@ -238,9 +238,6 @@ public final class ValidationError implements IValidationError
 	@Override
 	public final Serializable getErrorMessage(IErrorMessageSource messageSource)
 	{
-
-		final Map<String, Object> p = (vars != null) ? vars : EMPTY_VARS;
-
 		String errorMessage = null;
 
 		if (keys != null)
