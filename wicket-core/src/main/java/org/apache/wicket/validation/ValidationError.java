@@ -274,6 +274,8 @@ public final class ValidationError implements IValidationError
 
 	/**
 	 * Sets message that will be used when no message could be located via message keys.
+	 * <p>
+	 * Note: No variable substitution is performed on the given message!
 	 * 
 	 * @param message
 	 *            a default message to be used when all keys yield no message
