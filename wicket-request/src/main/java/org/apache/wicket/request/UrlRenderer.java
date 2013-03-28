@@ -260,7 +260,7 @@ public class UrlRenderer
 		String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
 
 		// sanitize start
-		if (!renderedUrl.startsWith(".."))
+		if (!renderedUrl.startsWith("..") && !renderedUrl.equals("."))
 		{
 			// WICKET-4260
 			renderedUrl = "./" + renderedUrl;
