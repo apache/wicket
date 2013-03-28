@@ -149,7 +149,7 @@ public class UrlRendererTest extends Assert
 	public void test11()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("a")));
-		assertEquals("./.", r1.renderUrl(Url.parse("")));
+		assertEquals(".", r1.renderUrl(Url.parse("")));
 	}
 
 	/**
@@ -470,6 +470,23 @@ public class UrlRendererTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5123
+	 */
+	@Test
+	public void renderHomeUrl()
+	{
+		Url baseUrl = Url.parse("login");
+
+		MockWebRequest request = new MockWebRequest(baseUrl);
+		UrlRenderer renderer = new UrlRenderer(request);
+
+		Url homeUrl = Url.parse("");
+		String encodedRelativeUrl = renderer.renderUrl(homeUrl);
+
+		assertEquals(".", encodedRelativeUrl);
+	}
+
+	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5065
 	 */
 	@Test
@@ -526,7 +543,7 @@ public class UrlRendererTest extends Assert
 	@Test
 	public void removeCommonPrefixesWicket5073()
 	{
-		Url baseUrl = new Url(Arrays.asList(""), Arrays.<Url.QueryParameter>asList());
+		Url baseUrl = new Url(Arrays.asList(""), Arrays.<Url.QueryParameter> asList());
 
 		MockWebRequest request = new MockWebRequest(baseUrl);
 		request.setContextPath("/qs");

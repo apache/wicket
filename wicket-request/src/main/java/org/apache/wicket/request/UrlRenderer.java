@@ -283,7 +283,7 @@ public class UrlRenderer
 		String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
 
 		// sanitize start
-		if (!renderedUrl.startsWith(".."))
+		if (!renderedUrl.startsWith("..") && !renderedUrl.equals("."))
 		{
 			// WICKET-4260
 			renderedUrl = "./" + renderedUrl;
@@ -363,7 +363,8 @@ public class UrlRenderer
 		{
 			return true;
 		}
-		if (url.isAbsolute()) {
+		if (url.isAbsolute())
+		{
 			// do not relativize urls like "/a/b"
 			return true;
 		}
