@@ -16,25 +16,34 @@
  */
 package org.apache.wicket.cdi;
 
-import java.util.Arrays;
+import java.io.Serializable;
 
-import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
+import javax.enterprise.context.ConversationScoped;
 
 /**
- * Test that the license headers are in place in this project. The tests are run from
- * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
+ * A bean that can be used to override whether the lifecycle of the conversation should be managed
+ * automatically or not. See {@link CdiConfiguration#setAutoConversationManagement(boolean)} for
+ * details.
  * 
- * @author Frank Bille Jensen (frankbille)
+ * @author igor
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+@ConversationScoped
+public class AutoConversation implements Serializable
 {
-	/**
-	 * Construct.
-	 */
-	public ApacheLicenceHeaderTest()
-	{
-		xmlIgnore.add(".settings");
+	private Boolean automatic;
 
-		xmlPrologIgnore = Arrays.asList("src");
+	public AutoConversation()
+	{
+		automatic = false;
+	}
+
+	public void setAutomatic(boolean automatic)
+	{
+		this.automatic = automatic;
+	}
+
+	public boolean isAutomatic()
+	{
+		return automatic;
 	}
 }

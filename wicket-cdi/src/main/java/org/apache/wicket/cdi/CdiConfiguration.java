@@ -24,7 +24,7 @@ import org.apache.wicket.util.lang.Args;
 import org.jboss.seam.conversation.spi.SeamConversationContextFactory;
 
 /**
- * Configures Weld integration
+ * Configures CDI integration
  * 
  * @author igor
  * 
@@ -39,7 +39,7 @@ public class CdiConfiguration
 	private boolean injectApplication = true;
 	private boolean injectSession = true;
 	private boolean injectBehaviors = true;
-
+	private boolean autoConversationManagement = false;
 
 	/**
 	 * Constructor
@@ -67,6 +67,38 @@ public class CdiConfiguration
 	public IConversationPropagation getPropagation()
 	{
 		return propagation;
+	}
+
+	/**
+	 * Checks if auto conversation management is enabled. See
+	 * {@link #setAutoConversationManagement(boolean)} for details.
+	 */
+	public boolean isAutoConversationManagement()
+	{
+		return autoConversationManagement;
+	}
+
+	/**
+	 * Toggles automatic conversation management feature.
+	 * 
+	 * Automatic conversation management controls the lifecycle of the conversation based on
+	 * presense of components implementing the {@link ConversationalComponent} interface. If such
+	 * components are found in the page a conversation is makred persistent, and if they are not the
+	 * conversation is marked transient. This greatly simplifies the management of conversation
+	 * lifecycle.
+	 * 
+	 * Sometimes it is necessary to manually control the application. For these cases, once a
+	 * conversation is started {@link AutoConversation} bean can be used to mark the conversation as
+	 * manually-managed.
+	 * 
+	 * @param enabled
+	 * 
+	 * @return {@code this} for easy chaining
+	 */
+	public CdiConfiguration setAutoConversationManagement(boolean enabled)
+	{
+		autoConversationManagement = enabled;
+		return this;
 	}
 
 	public CdiConfiguration setPropagation(IConversationPropagation propagation)
@@ -153,7 +185,8 @@ public class CdiConfiguration
 		// enable conversation propagation
 		if (getPropagation() != ConversationPropagation.NONE)
 		{
-			listeners.add(new ConversationPropagator(application, container, getPropagation()));
+			listeners.add(new ConversationPropagator(application, container, getPropagation(),
+				autoConversationManagement));
 			application.getComponentPreOnBeforeRenderListeners().add(
 				new ConversationExpiryChecker(container));
 			SeamConversationContextFactory.setDisableNoopInstance(true);
@@ -161,6 +194,7 @@ public class CdiConfiguration
 
 		// enable detach event
 		listeners.add(new DetachEventEmitter(container));
+
 
 		// inject application instance
 		if (isInjectApplication())

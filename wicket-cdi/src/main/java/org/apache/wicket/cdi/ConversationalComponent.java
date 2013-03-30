@@ -16,25 +16,15 @@
  */
 package org.apache.wicket.cdi;
 
-import java.util.Arrays;
-
-import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
-
 /**
- * Test that the license headers are in place in this project. The tests are run from
- * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
+ * Marks a component that requires a conversation. This marker is used by the automatic conversation
+ * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
+ * automatically begin and end conversations based on the presense of these components in the
+ * component hierarchy of pages (can be applied to the page itself).
  * 
- * @author Frank Bille Jensen (frankbille)
+ * @author igor
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+public interface ConversationalComponent
 {
-	/**
-	 * Construct.
-	 */
-	public ApacheLicenceHeaderTest()
-	{
-		xmlIgnore.add(".settings");
 
-		xmlPrologIgnore = Arrays.asList("src");
-	}
 }

@@ -22,6 +22,7 @@ import javax.enterprise.context.NonexistentConversationException;
 import javax.inject.Inject;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.BufferedResponseRequestHandler;
@@ -40,6 +41,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.visit.Visits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +74,13 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 
 	private final Application application;
 
+	private final boolean auto;
+
 	@Inject
 	Conversation conversation_;
+
+	@Inject
+	AutoConversation autoConversation;
 
 	/**
 	 * Constructor
@@ -80,7 +89,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	 * @param propagation
 	 */
 	public ConversationPropagator(Application application, CdiContainer container,
-		IConversationPropagation propagation)
+		IConversationPropagation propagation, boolean auto)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(container, "container");
@@ -95,6 +104,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		this.application = application;
 		this.container = container;
 		this.propagation = propagation;
+		this.auto = auto;
 
 		container.getNonContextualManager().postConstruct(this);
 	}
@@ -201,14 +211,24 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	{
 		Conversation conversation = getConversation(cycle);
 
-		if (conversation == null || conversation.isTransient())
+		if (conversation == null)
 		{
 			return;
 		}
 
-
 		Page page = getPage(handler);
-		if (page != null && propagation.propagatesViaPage(page, handler))
+
+		if (page == null)
+		{
+			return;
+		}
+
+		// apply auto semantics
+
+		autoEndIfNecessary(page, handler, conversation);
+		autoBeginIfNecessary(page, handler, conversation);
+
+		if (propagation.propagatesViaPage(page, handler))
 		{
 			// propagate a conversation across non-bookmarkable page instances
 			setConversationOnPage(conversation, page);
@@ -218,6 +238,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	@Override
 	public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
 	{
+		// propagate current non-transient conversation to the newly scheduled page
+
 		Conversation conversation = getConversation(cycle);
 
 		if (conversation == null || conversation.isTransient())
@@ -226,10 +248,13 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		}
 
 		Page page = getPage(handler);
-		if (page != null && propagation.propagatesViaPage(page, handler))
+		if (page != null)
 		{
-			// propagate a conversation across non-bookmarkable page instances
-			setConversationOnPage(conversation, page);
+			if (propagation.propagatesViaPage(page, handler))
+			{
+				// propagate a conversation across non-bookmarkable page instances
+				setConversationOnPage(conversation, page);
+			}
 		}
 
 		if (propagation.propagatesViaParameters(handler))
@@ -250,12 +275,22 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 
 	protected void setConversationOnPage(Conversation conversation, Page page)
 	{
-		logger.debug("Propagating non-transient conversation {} via meta of page instance {}",
-			conversation.getId(), page);
+		if (conversation == null || conversation.isTransient())
+		{
+			logger.debug("Detaching transient conversation {} via meta of page instance {}",
+				(conversation == null ? "null" : conversation.getId()), page);
 
-		page.setMetaData(CID_KEY, conversation.getId());
+			page.setMetaData(CID_KEY, null);
+		}
+		else
+		{
+
+			logger.debug("Propagating non-transient conversation {} via meta of page instance {}",
+				conversation.getId(), page);
+
+			page.setMetaData(CID_KEY, conversation.getId());
+		}
 	}
-
 
 	@Override
 	public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
@@ -326,6 +361,60 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			}
 		}
 		return true;
+	}
+
+	protected void autoBeginIfNecessary(Page page, IRequestHandler handler,
+		Conversation conversation)
+	{
+		if (!auto || conversation == null || !conversation.isTransient() || page == null ||
+			!propagation.propagatesViaPage(page, handler) || !hasConversationalComponent(page))
+		{
+			return;
+		}
+
+		// auto activate conversation
+
+		conversation.begin();
+		autoConversation.setAutomatic(true);
+
+		logger.debug("Auto-began conversation {} for page {}", conversation.getId(), page);
+	}
+
+	protected void autoEndIfNecessary(Page page, IRequestHandler handler, Conversation conversation)
+	{
+		if (!auto || conversation == null || conversation.isTransient() || page == null ||
+			!propagation.propagatesViaPage(page, handler) || hasConversationalComponent(page) ||
+			autoConversation.isAutomatic() == false)
+		{
+			return;
+		}
+
+		// auto de-activate conversation
+
+		String cid = conversation.getId();
+
+		autoConversation.setAutomatic(false);
+		conversation.end();
+
+		logger.debug("Auto-ended conversation {} for page {}", cid, page);
+	}
+
+
+	protected boolean hasConversationalComponent(Page page)
+	{
+		Boolean hasConversational = Visits.visit(page, new IVisitor<Component, Boolean>()
+		{
+			@Override
+			public void component(Component object, IVisit<Boolean> visit)
+			{
+				if (object instanceof ConversationalComponent)
+				{
+					visit.stop(true);
+				}
+			}
+		});
+
+		return hasConversational == null ? false : hasConversational;
 	}
 
 	/**
