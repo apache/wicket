@@ -20,8 +20,6 @@ import java.io.IOException;
 
 import org.apache.wicket.util.io.StringBufferWriter;
 
-import com.sun.istack.internal.Nullable;
-
 /**
  * An efficient implementation of a JSON stringer. The efficiency comes from the fact that istead of
  * a {@link String} this class can return a {@link CharSequence}. This is better for downstream
@@ -40,7 +38,6 @@ public class JSONSequenceStringer extends JSONWriter
 	/**
 	 * @return JSON text as a {@link CharSequence}
 	 */
-	@Nullable
 	public CharSequence toCharSequence()
 	{
 
