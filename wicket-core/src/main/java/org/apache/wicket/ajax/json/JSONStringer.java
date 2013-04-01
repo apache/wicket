@@ -56,11 +56,11 @@ import java.io.StringWriter;
  * @author JSON.org
  * @version 2008-09-18
  */
-public class JsonStringer extends JSONWriter {
+public class JSONStringer extends JSONWriter {
     /**
      * Make a fresh JSONStringer. It can be used to build one JSON text.
      */
-    public JsonStringer() {
+    public JSONStringer() {
         super(new StringWriter());
     }
 

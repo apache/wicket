@@ -28,9 +28,9 @@ import org.apache.wicket.util.io.StringBufferWriter;
  * 
  * @author igor
  */
-public class JSONSequenceStringer extends JSONWriter
+public class JsonSequenceStringer extends JSONWriter
 {
-	public JSONSequenceStringer()
+	public JsonSequenceStringer()
 	{
 		super(new StringBufferWriter());
 	}
