@@ -94,10 +94,10 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param cache
-	 *      the internal cache that will hold the results for all already checked resources.
-	 *      Use {@code null} to disable caching.
+	 *            the internal cache that will hold the results for all already checked resources.
+	 *            Use {@code null} to disable caching.
 	 */
 	public SecurePackageResourceGuard(final ConcurrentMap<String, Boolean> cache)
 	{
@@ -121,6 +121,12 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.swf");
 		addPattern("+*.bmp");
 		addPattern("+*.svg");
+
+		// allow web fonts
+		addPattern("+*.eot");
+		addPattern("+*.ttf");
+		addPattern("+*.woff");
+
 	}
 
 	/**
