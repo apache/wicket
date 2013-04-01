@@ -89,6 +89,19 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	 * @param propagation
 	 */
 	public ConversationPropagator(Application application, CdiContainer container,
+		IConversationPropagation propagation)
+	{
+		this(application, container, propagation, false);
+	}
+
+
+	/**
+	 * Constructor
+	 * 
+	 * @param container
+	 * @param propagation
+	 */
+	public ConversationPropagator(Application application, CdiContainer container,
 		IConversationPropagation propagation, boolean auto)
 	{
 		Args.notNull(application, "application");
