@@ -34,7 +34,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	public ApacheLicenceHeaderTest()
 	{
 		xmlIgnore.add(".settings");
-
+		xmlIgnore.add("src/main/resources/META-INF/beans.xml");
 		xmlPrologIgnore = Arrays.asList("src");
 	}
 }
