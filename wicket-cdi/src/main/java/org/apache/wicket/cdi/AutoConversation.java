@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.cdi;
 
-import java.io.Serializable;
-
 import javax.enterprise.context.ConversationScoped;
+
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A bean that can be used to override whether the lifecycle of the conversation should be managed
@@ -28,9 +28,9 @@ import javax.enterprise.context.ConversationScoped;
  * @author igor
  */
 @ConversationScoped
-public class AutoConversation implements Serializable
+public class AutoConversation implements IClusterable
 {
-	private Boolean automatic;
+	private boolean automatic;
 
 	public AutoConversation()
 	{
