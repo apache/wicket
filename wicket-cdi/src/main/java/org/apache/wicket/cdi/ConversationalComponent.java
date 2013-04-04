@@ -19,7 +19,7 @@ package org.apache.wicket.cdi;
 /**
  * Marks a component that requires a conversation. This marker is used by the automatic conversation
  * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presense of these components in the
+ * automatically begin and end conversations based on the presence of these components in the
  * component hierarchy of pages (can be applied to the page itself).
  * 
  * @author igor

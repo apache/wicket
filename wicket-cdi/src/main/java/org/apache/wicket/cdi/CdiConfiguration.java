@@ -82,8 +82,8 @@ public class CdiConfiguration
 	 * Toggles automatic conversation management feature.
 	 * 
 	 * Automatic conversation management controls the lifecycle of the conversation based on
-	 * presense of components implementing the {@link ConversationalComponent} interface. If such
-	 * components are found in the page a conversation is makred persistent, and if they are not the
+	 * presence of components implementing the {@link ConversationalComponent} interface. If such
+	 * components are found in the page a conversation is marked persistent, and if they are not the
 	 * conversation is marked transient. This greatly simplifies the management of conversation
 	 * lifecycle.
 	 * 
