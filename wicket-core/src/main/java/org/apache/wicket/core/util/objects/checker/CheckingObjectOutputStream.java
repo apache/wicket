@@ -345,8 +345,8 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 		}
 		catch (RuntimeException e)
 		{
-			log.warn("Wasn't possible to check the object '{}' possible due an problematic " +
-					"implementation of equals method", obj.getClass());
+			log.warn(String.format("Wasn't possible to check the object '%s' possible due an problematic " +
+					"implementation of equals method", obj.getClass()), e);
 			/*
 			 * Can't check if this obj were in stack, giving up because we don't want to throw an
 			 * invaluable exception to user. The main goal of this checker is to find non
