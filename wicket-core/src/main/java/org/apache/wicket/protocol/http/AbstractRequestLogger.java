@@ -492,7 +492,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 *            the date to format
 	 * @return the formatted date
 	 */
-	protected final String formatDate(final Date date)
+	protected String formatDate(final Date date)
 	{
 		Args.notNull(date, "date");
 
