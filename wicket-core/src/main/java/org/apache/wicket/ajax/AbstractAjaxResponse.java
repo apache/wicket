@@ -206,7 +206,6 @@ public abstract class AbstractAjaxResponse
 		for (Map.Entry<String, Component> stringComponentEntry : markupIdToComponent.entrySet())
 		{
 			final Component component = stringComponentEntry.getValue();
-			// final String markupId = stringComponentEntry.getKey();
 
 			if (!containsAncestorFor(component))
 			{

@@ -92,8 +92,8 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 		{
 			// dont throw an exception but just ignore this component, somehow
 			// it got removed from the page.
-			LOG.debug("component: " + component + " with markupid: " + markupId +
-					" not rendered because it was already removed from page");
+			LOG.warn("Component '{}' with markupid: '{}' not rendered because it was already removed from page",
+					component, markupId);
 			return;
 		}
 
