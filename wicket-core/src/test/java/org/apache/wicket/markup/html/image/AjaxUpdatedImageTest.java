@@ -44,9 +44,9 @@ public class AjaxUpdatedImageTest extends WicketTestCase
 		tester.clickLink("link", true);
 		page = (AjaxyImagesPage)tester.getLastRenderedPage();
 		tagTester = tester.getTagById(page.image.getMarkupId());
-		final String imageAjaxComponent = tagTester.getValue();
+		final String srcAttr1 = tagTester.getAttribute("src");
 		assertTrue(
 			"Image has not be rendered in Ajax request so it has no wicket:antiCache' parameter",
-			imageAjaxComponent.contains("antiCache"));
+				srcAttr1.contains("antiCache"));
 	}
 }
