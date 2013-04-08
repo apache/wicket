@@ -2695,7 +2695,7 @@ public abstract class Component
 				response.markRendered(this);
 			}
 
-			// Than ask all behaviors
+			// Then ask all behaviors
 			for (Behavior behavior : getBehaviors())
 			{
 				if (isBehaviorAccepted(behavior))
