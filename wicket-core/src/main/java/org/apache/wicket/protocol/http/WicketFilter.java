@@ -174,6 +174,19 @@ public class WicketFilter implements Filter
 				return false;
 			}
 
+			if ("OPTIONS".equals(httpServletRequest.getMethod()))
+			{
+				// handle the OPTIONS request outside of normal request processing.
+				// wicket pages normally only support GET and POST methods, but resources and
+				// special pages acting like REST clients can also support other methods, so
+				// we include them all.
+				httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+				httpServletResponse.setHeader("Allow",
+					"GET,POST,OPTIONS,PUT,HEAD,PATCH,DELETE,TRACE");
+				httpServletResponse.setHeader("Content-Length", "0");
+				return true;
+			}
+
 			String redirectURL = checkIfRedirectRequired(httpServletRequest);
 			if (redirectURL == null)
 			{
