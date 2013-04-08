@@ -190,9 +190,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	public final void stop(final AjaxRequestTarget target)
 	{
-		stopped = true;
-		String timeoutHandle = getTimeoutHandle();
-		target.prependJavaScript("clearTimeout("+timeoutHandle+"); delete "+timeoutHandle+";");
+		if (headRendered && stopped == false)
+		{
+			stopped = true;
+			String timeoutHandle = getTimeoutHandle();
+			target.prependJavaScript("clearTimeout("+timeoutHandle+"); delete "+timeoutHandle+";");
+		}
 	}
 
 	@Override
