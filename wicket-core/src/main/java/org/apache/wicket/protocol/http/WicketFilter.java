@@ -96,8 +96,8 @@ public class WicketFilter implements Filter
 	private boolean isServlet = false;
 
 	/**
-	 * default constructor, usually invoked through the servlet 
-	 * container by the web.xml configuration
+	 * default constructor, usually invoked through the servlet container by the web.xml
+	 * configuration
 	 */
 	public WicketFilter()
 	{
@@ -106,11 +106,11 @@ public class WicketFilter implements Filter
 	/**
 	 * constructor supporting programmatic setup of the filter
 	 * <p/>
-	 *  this can be useful for programmatically creating and appending the 
-	 *  wicket filter to the servlet context using servlet 3 features.
+	 * this can be useful for programmatically creating and appending the wicket filter to the
+	 * servlet context using servlet 3 features.
 	 * 
 	 * @param application
-	 *           web application
+	 *            web application
 	 */
 	public WicketFilter(WebApplication application)
 	{
@@ -174,7 +174,7 @@ public class WicketFilter implements Filter
 				return false;
 			}
 
-			if ("OPTIONS".equals(httpServletRequest.getMethod()))
+			if ("OPTIONS".equalsIgnoreCase(httpServletRequest.getMethod()))
 			{
 				// handle the OPTIONS request outside of normal request processing.
 				// wicket pages normally only support GET and POST methods, but resources and
@@ -198,7 +198,8 @@ public class WicketFilter implements Filter
 					httpServletResponse);
 
 				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
-				res = processRequestCycle(requestCycle, webResponse, httpServletRequest, httpServletResponse, chain);
+				res = processRequestCycle(requestCycle, webResponse, httpServletRequest,
+					httpServletResponse, chain);
 			}
 			else
 			{
@@ -238,7 +239,7 @@ public class WicketFilter implements Filter
 
 	/**
 	 * Process the request cycle
-	 *
+	 * 
 	 * @param requestCycle
 	 * @param webResponse
 	 * @param httpServletRequest
@@ -249,8 +250,9 @@ public class WicketFilter implements Filter
 	 * @throws ServletException
 	 */
 	protected boolean processRequestCycle(RequestCycle requestCycle, WebResponse webResponse,
-	    HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-		final FilterChain chain) throws IOException, ServletException {
+		HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+		final FilterChain chain) throws IOException, ServletException
+	{
 		// Assume we are able to handle the request
 		boolean res = true;
 
@@ -518,6 +520,7 @@ public class WicketFilter implements Filter
 
 	/**
 	 * Provide a standard getter for filterPath.
+	 * 
 	 * @return The configured filterPath.
 	 */
 	protected String getFilterPath()
@@ -651,7 +654,8 @@ public class WicketFilter implements Filter
 		if (this.filterPath != null)
 		{
 			throw new IllegalStateException(
-				"Filter path is write-once. You can not change it. Current value='" + filterPath + '\'');
+				"Filter path is write-once. You can not change it. Current value='" + filterPath +
+					'\'');
 		}
 		if (filterPath != null)
 		{
@@ -775,7 +779,7 @@ public class WicketFilter implements Filter
 	 * A filterPath should have all leading slashes removed and exactly one trailing slash. A
 	 * wildcard asterisk character has no special meaning. If your intention is to mean the top
 	 * level "/" then an empty string should be used instead.
-	 *
+	 * 
 	 * @param filterPath
 	 * @return
 	 */

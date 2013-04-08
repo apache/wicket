@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,8 +51,11 @@ import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.DynamicImageResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.file.WebXmlFile;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.junit.After;
 import org.junit.Assert;
@@ -170,6 +170,80 @@ public class WicketFilterTest extends Assert
 			ThreadContext.detach();
 		}
 	}
+
+	@Test
+	public void options() throws IOException, ServletException, ParseException
+	{
+		try
+		{
+			application = new MockApplication();
+			WicketFilter filter = new WicketFilter();
+			filter.init(new FilterTestingConfig());
+			ThreadContext.setApplication(application);
+			final String failure = "Should never get here when an OPTIONS request is issued";
+			IResource resource = new AbstractResource()
+			{
+				@Override
+				protected ResourceResponse newResourceResponse(Attributes attributes)
+				{
+
+					fail(failure);
+					return null;
+				}
+			};
+			application.getSharedResources().add("foo.txt", resource);
+
+			// check OPTIONS request is processed correctly
+
+			MockHttpServletRequest request = new MockHttpServletRequest(application, null, null);
+			request.setURL(request.getContextPath() + request.getServletPath() +
+				"/wicket/resource/" + Application.class.getName() + "/foo.txt");
+			request.setMethod("OPtioNS"); // test that we do not care about case
+			MockHttpServletResponse response = new MockHttpServletResponse(request);
+			filter.doFilter(request, response, new FilterChain()
+			{
+				@Override
+				public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse)
+					throws IOException, ServletException
+				{
+				}
+			});
+
+			assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+			assertEquals("0", response.getHeader("Content-Length"));
+			assertFalse(Strings.isEmpty(response.getHeader("Allow")));
+			assertTrue(response.getHeader("Allow").toUpperCase().contains("GET"));
+			assertTrue(response.getHeader("Allow").toUpperCase().contains("POST"));
+
+			// try with a GET request to make sure we fail correctly
+
+			request = new MockHttpServletRequest(application, null, null);
+			request.setURL(request.getContextPath() + request.getServletPath() +
+				"/wicket/resource/" + Application.class.getName() + "/foo.txt");
+			response = new MockHttpServletResponse(request);
+			try
+			{
+				filter.doFilter(request, response, new FilterChain()
+				{
+					@Override
+					public void doFilter(ServletRequest servletRequest,
+						ServletResponse servletResponse) throws IOException, ServletException
+					{
+					}
+				});
+			}
+			catch (AssertionError e)
+			{
+				assertTrue(failure.equals(e.getMessage()));
+			}
+
+		}
+		finally
+		{
+			ThreadContext.detach();
+		}
+	}
+
 
 	private void setIfModifiedSinceToNextWeek(MockHttpServletRequest request)
 	{
