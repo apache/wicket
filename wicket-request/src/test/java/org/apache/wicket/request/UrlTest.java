@@ -799,4 +799,21 @@ public class UrlTest extends Assert
 		assertEquals(Integer.valueOf(9090), url.getPort());
 
 	}
+
+	@Test
+	public void wicket_5114_allowtoStringFullWhenContainingTwoDots()
+	{
+		Url url = Url.parse("/mountPoint/whatever.../");
+		url.setHost("wicketHost");
+		assertEquals("http://wicketHost/mountPoint/whatever.../", url.toString(StringMode.FULL));
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void wicket_5114_throwExceptionWhenToStringFullContainsRelativePathSegment()
+	{
+		Url url = Url.parse("/mountPoint/../whatever/");
+		url.setHost("wicketHost");
+		url.toString(StringMode.FULL);
+	}
+
 }
