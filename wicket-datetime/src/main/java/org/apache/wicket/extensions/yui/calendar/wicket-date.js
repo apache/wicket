@@ -304,7 +304,13 @@
 				var showBtn = document.getElementById(cfg.icon);
 				var fieldEl = document.getElementById(cfg.componentId);
 
-				if (el !== dialogEl && el !== fieldEl && !YAHOO.util.Dom.isAncestor(dialogEl, el) && el !== showBtn && !YAHOO.util.Dom.isAncestor(showBtn, el)) {
+				if (YAHOO.wicket[cfg.dpJs] &&
+					el !== dialogEl &&
+					el !== fieldEl &&
+					!YAHOO.util.Dom.isAncestor(dialogEl, el) &&
+					el !== showBtn &&
+					!YAHOO.util.Dom.isAncestor(showBtn, el))
+				{
 					YAHOO.wicket[cfg.dpJs].hide();
 				}
 	        });
@@ -414,7 +420,7 @@
 		});
 	};
 
-	YAHOO.register("wicket-date", Wicket.DateTime, {version: "6.5.0", build: "1"});
+	YAHOO.register("wicket-date", Wicket.DateTime, {version: "6.7.0", build: "1"});
 
 	// register a listener to clean up YAHOO.wicket cache.
 	Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {
