@@ -1046,7 +1046,14 @@
 
 			context.steps.push(function (notify) {
 				// get the javascript body
-				var text = jQuery(node).text();
+				var text;
+
+				try {
+					text = node.firstChild.nodeValue;
+				} catch (e) {
+					// TODO remove this fallback in 6.11.0+
+					text = jQuery(node).text();
+				}
 
 				// unescape it if necessary
 				var encoding = node.getAttribute("encoding");
