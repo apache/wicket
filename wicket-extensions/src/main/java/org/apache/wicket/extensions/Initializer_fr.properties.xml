@@ -19,5 +19,9 @@
 <properties>
 	<entry key="NavigatorLabel">Affichage de ${from} à ${to} sur ${of}</entry>
 	<entry key="datatable.no-records-found">Aucun résultat</entry>
+	<entry key="datatable.export-to">Exporter vers</entry>
+	<entry key="datatable.export-file-name">export</entry>
+	<entry key="UploadProgressBar.starting">Démarrage du téléchargement...</entry>
+	<entry key="UploadStatusResource.status">${percentageComplete}% terminés, ${bytesUploadedString} sur ${totalBytesString} à ${transferRateString}; ${remainingTimeString}</entry>
     <entry key="RfcCompliantEmailAddressValidator">'${label}' n'est pas une adresse e-mail valide.</entry>
 </properties>

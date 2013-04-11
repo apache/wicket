@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance the
+  License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="Required">Le champ '${label}' est obligatoire.</entry>
+    <entry key="EmailAddressValidator">La valeur du champ '${label}' n'est pas une adresse e-mail valide.</entry>
+    <entry key="IConverter">La valeur du champ '${label}' n'est pas valide pour le type ${type}.</entry>
+    <entry key="null">Faites votre choix</entry>
+    <entry key="PagingNavigator.last">Dernière page</entry>
+    <entry key="RangeValidator.maximum">La valeur du champ '${label}' doit être plus petit que ${maximum}.</entry>
+    <!-- deprecated, use RangeValidator.maximum -->
+    <entry key="MaximumValidator">La valeur du champ '${label}' doit être plus petit que ${maximum}.</entry>
+    <entry key="DateValidator.range">La valeur du champ '${label}' doit être entre ${minimum} et ${maximum}.</entry>
+    <entry key="PagingNavigator.next">Page suivante</entry>
+    <entry key="PatternValidator">La valeur du champ '${label}' ne correspond pas au modèle '${pattern}'.</entry>
+    <entry key="CreditCardValidator">Le numéro de carte est invalide.</entry>
+    <entry key="DateValidator.minimum">La valeur du champ '${label}' doit être plus grande que ${minimum}.</entry>
+    <entry key="nullValid"/>
+    <entry key="org.apache.wicket.mfu.caption.limited">Fichiers (${max} maximum):</entry>
+    <entry key="PagingNavigator.first">Première page</entry>
+    <entry key="StringValidator.minimum">La valeur du champ '${label}' doit être d'au moins ${minimum} caractères.</entry>
+    <entry key="RangeValidator.exact">La valeur du champ '${label}' doit être égale à ${minimum}.</entry>
+    <entry key="PagingNavigation.page">Page ${page}</entry>
+    <entry key="RangeValidator.minimum">La valeur du champ '${label}' doit être plus grand que ${minimum}.</entry>
+    <entry key="UrlValidator">La valeur du champ '${label}' n'est pas une URL valide.</entry>
+    <entry key="DateValidator.maximum">La valeur du champ '${label}' doit être plus petite que ${maximum}.</entry>
+    <entry key="EqualPasswordInputValidator">${label0} et ${label1} doivent être égaux.</entry>
+    <!-- replaced with RangeValidator -->
+    <entry key="NumberValidator.positive">La valeur du champ '${label}' doit être positif.</entry>
+    <entry key="EqualInputValidator">'${input0}' du champ ${label0} et '${input1}' du champ ${label1} doivent être égaux.</entry>
+    <entry key="StringValidator.range">La valeur du champ '${label}' doit être entre ${minimum} et ${maximum} caractères.</entry>
+    <!-- replaced with RangeValidator -->
+    <entry key="NumberValidator.negative">La valeur du champ '${label}' doit être négatif.</entry>
+    <!-- deprecated, use RangeValidator.minimum -->
+    <entry key="MinimumValidator">La valeur du champ '${label}' doit être plus grand que ${minimum}.</entry>
+    <entry key="org.apache.wicket.mfu.caption.unlimited">Fichiers:</entry>
+    <entry key="org.apache.wicket.mfu.delete">Supprimer</entry>
+    <entry key="StringValidator.maximum">La valeur du champ '${label}' doit être d'au maximum ${maximum} caractères.</entry>
+    <entry key="RangeValidator.range">La valeur du champ '${label}' doit être entre ${minimum} et ${maximum}.</entry>
+    <entry key="PagingNavigator.previous">Page précédente</entry>
+    <entry key="StringValidator.exact">La valeur du champ '${label}' ne fait pas exactement ${exact} caractères.</entry>
+</properties>
