@@ -6,8 +6,10 @@ Release Notes - Wicket - Version 6.7.0
 
 ** Bug
 
+    * [WICKET-4658] - TabbedPanel CSS "last" is wrong if last step is not visible
     * [WICKET-4803] - UrlDecoder should log a message when invalid input is provided
     * [WICKET-4871] - wicket-atmosphere version mismatch with wicket-example-jar
+    * [WICKET-4893] - AutoCompleteTextField removes DropDownChoice from Page
     * [WICKET-4903] - relativeUrl's begins with ./
     * [WICKET-4907] - UrlResourceReference generates broken relative URLs
     * [WICKET-4942] - Double slash '//' in starting url makes Url.parse output a relative Url
@@ -34,14 +36,31 @@ Release Notes - Wicket - Version 6.7.0
     * [WICKET-5080] - FilterToolbar.html contains javascript that is used elsewhere
     * [WICKET-5082] - Ajax update renders parent/child JS in different order than initial Page render
     * [WICKET-5085] - InlineEnclosure are piling up on each render
+    * [WICKET-5086] - FormTester throws an exception when a Palette component is added to a Form associated with a compound property model
     * [WICKET-5093] - The event listener in Wicket.Ajax.ajax() should not return the value of attrs.ad (allowDefault)
     * [WICKET-5094] - ISecuritySettings#getEnforceMounts(true) prevents access to *all* non-mounted bookmarkable pages
     * [WICKET-5098] - PackageResourceBlockedException under Windows for *.js files in web app's own packages, not in jars
     * [WICKET-5102] - wicket-bean-validation: Bean validation PropertyValidator only works with direct field access
     * [WICKET-5103] - Wicket session id not up to date when container changes session id
+    * [WICKET-5104] - AjaxSelfUpdatingTimerBehavior in hidden component in ModalWindow causes Ajax Response Error
+    * [WICKET-5112] - Parantheses problem with UrlValidator
+    * [WICKET-5114] - Url#toString(StringMode.FULL) throws exception if a segment contains two dots
+    * [WICKET-5116] - TabbedPanel.setSelectedTab() does not behave as specified in JavaDoc
+    * [WICKET-5117] - Wicket ignores allowDefault:false attribute in multipart ajax requests
+    * [WICKET-5123] - Component.continueToOriginalDestination() can redirect to ./.
+    * [WICKET-5125] - IE8 error in wicket-date.js when used in a modalwindow
+    * [WICKET-5126] - SecurePackageResourceGuard is blocking access to web fonts
+    * [WICKET-5131] - Problems with cookies disabled when using 301/302 and also 303 (even with cookies)
+    * [WICKET-5132] - Evaluation of returned data (which includes alot of javascript) very slow after ajax call in IE10.
+    * [WICKET-5134] - java.lang.NullPointerException at org.apache.wicket.markup.html.form.Form.onComponentTag(Form.java:1520) during Atmosphere eventbus.post() if using WebSockets
+    * [WICKET-5136] - CheckingObjectOutputStream#check(Object) swallows Exception without logging the cause
+    * [WICKET-5138] - Wicket does not correctly handle http OPTIONS requests
+    * [WICKET-5141] - Exception while rendering absolute URL with UrlResourceReference
+
+
+
 
 ** Improvement
-
     * [WICKET-4115] - SignInPanel should not always redirect to the Home page when the user is signed-in automaticaly with the remember-me feature.
     * [WICKET-5005] - Add Utility to allow conversion from Panel (or Component) to html String
     * [WICKET-5038] - Add equals() and hashcode() implementation to INamedParameters.NamedPair
@@ -61,6 +80,12 @@ Release Notes - Wicket - Version 6.7.0
     * [WICKET-5096] - Add setStep method to NumberTextField
     * [WICKET-5105] - JavaDoc of IHeaderContributor is outdated
     * [WICKET-5111] - Upgrade bootstrap to 2.3.1
+    * [WICKET-5113] - Set a different TimeZone for the RequestLogger
+    * [WICKET-5121] - Log warning message if a component that is not on the page associated with the AjaxRequestTarget is added
+    * [WICKET-5122] - Add the free Wicket guide in the books page on the official site.
+    * [WICKET-5127] - Dont use sun-internal packages to allow easy jdk7 compilation
+    * [WICKET-5137] - Improve TagTester support for Ajax responses
+    * [WICKET-5139] - Missing French translations
 
 ** Task
 
