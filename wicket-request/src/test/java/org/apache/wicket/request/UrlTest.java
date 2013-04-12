@@ -927,4 +927,42 @@ public class UrlTest extends Assert
         url.setHost("wicketHost");
         url.toString(StringMode.FULL);
     }
+
+	@Test
+	public void isContextAbsolute()
+	{
+		Url url = Url.parse("");
+		assertFalse(url.isContextAbsolute());
+
+		url = Url.parse("http://www.example.com/path");
+		assertFalse(url.isContextAbsolute());
+
+		url = Url.parse("//www.example.com/path");
+		assertFalse(url.isContextAbsolute());
+
+		url = Url.parse("path");
+		assertFalse(url.isContextAbsolute());
+
+		url = Url.parse("/path");
+		assertTrue(url.isContextAbsolute());
+	}
+
+	@Test
+	public void isFull()
+	{
+		Url url = Url.parse("");
+		assertFalse(url.isFull());
+
+		url = Url.parse("http://www.example.com/path");
+		assertTrue(url.isFull());
+
+		url = Url.parse("//www.example.com/path");
+		assertTrue(url.isFull());
+
+		url = Url.parse("path");
+		assertFalse(url.isFull());
+
+		url = Url.parse("/path");
+		assertFalse(url.isFull());
+	}
 }

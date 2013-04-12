@@ -434,10 +434,34 @@ public class Url implements Serializable
 	 * Returns whether the Url is absolute. Absolute Urls start with a '{@literal /}'.
 	 * 
 	 * @return <code>true</code> if Url is absolute, <code>false</code> otherwise.
+	 * @deprecated Use #isContextAbsolute() or #isFull()
 	 */
+	@Deprecated
 	public boolean isAbsolute()
 	{
 		return !getSegments().isEmpty() && Strings.isEmpty(getSegments().get(0));
+	}
+
+	/**
+	 * Returns whether the Url is context absolute. Absolute Urls start with a '{@literal /}'.
+	 *
+	 * @return <code>true</code> if Url starts with the context path, <code>false</code> otherwise.
+	 */
+	public boolean isContextAbsolute()
+	{
+		return !isFull() && !getSegments().isEmpty() && Strings.isEmpty(getSegments().get(0));
+	}
+
+	/**
+	 * Returns whether the Url has a <em>host</em> attribute.
+	 * The scheme is optional because the url may be <code>//host/path</code>.
+	 * The port is also optional because there are defaults for the different protocols.
+	 *
+	 * @return <code>true</code> if Url has a <em>host</em> attribute, <code>false</code> otherwise.
+	 */
+	public boolean isFull()
+	{
+		return getHost() != null;
 	}
 
 	/**

@@ -363,7 +363,7 @@ public class UrlRenderer
 		{
 			return true;
 		}
-		if (url.isAbsolute())
+		if (url.isContextAbsolute())
 		{
 			// do not relativize urls like "/a/b"
 			return true;

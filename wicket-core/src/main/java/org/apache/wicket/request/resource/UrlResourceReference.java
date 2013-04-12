@@ -45,7 +45,8 @@ public class UrlResourceReference extends ResourceReference
 		@Override
 		public String renderFullUrl(Url url, Url baseUrl)
 		{
-			return url.toString(StringMode.FULL);
+			StringMode mode = getStringMode(url);
+			return url.toString(mode);
 		}
 
 		@Override
@@ -132,8 +133,22 @@ public class UrlResourceReference extends ResourceReference
 	public String toString()
 	{
 		return "UrlResourceReference{" +
-				"url=" + url.toString(Url.StringMode.FULL) +
+				"url=" + url.toString(getStringMode(url)) +
 				", contextRelative=" + contextRelative +
 				'}';
+	}
+
+	private static Url.StringMode getStringMode(Url url)
+	{
+		final Url.StringMode mode;
+		if (url.isFull())
+		{
+			mode = Url.StringMode.FULL;
+		}
+		else
+		{
+			mode = Url.StringMode.LOCAL;
+		}
+		return mode;
 	}
 }

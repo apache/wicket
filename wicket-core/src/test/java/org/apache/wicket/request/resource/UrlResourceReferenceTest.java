@@ -57,6 +57,19 @@ public class UrlResourceReferenceTest extends WicketTestCase
 		assertNull(reference.getResource());
 	}
 
+	@Test
+	public void contextAbsoluteUrl()
+	{
+		Url url = Url.parse("/some/path.ext");
+		UrlResourceReference reference = new UrlResourceReference(url);
+		assertEquals(url, reference.getUrl());
+		assertNull(reference.getResource());
+
+		CharSequence _url = tester.getRequestCycle().urlFor(reference, null);
+		assertEquals(url.toString(), _url);
+		assertNull(reference.getResource());
+	}
+
 	@Test(expected = IllegalStateException.class)
 	public void cannotMakeAnAbsoluteUrlContextRelative()
 	{
