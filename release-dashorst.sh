@@ -253,7 +253,7 @@ echo ""
 
 echo "To move the release from staging to the mirrors:"
 echo ""
-echo "    svn mv https://dist.apache.org/repos/dist/dev/wicket/wicket-$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\""
+echo "    svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\""
 echo ""
 
 echo "To sign the release tag issue the following three commands: "
@@ -279,4 +279,3 @@ echo "    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.x
 echo "    git commit -m \"Start next development version\""
 echo "    git push"
 echo ""
-
