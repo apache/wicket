@@ -687,8 +687,6 @@ public class BaseWicketTester
 
 		try
 		{
-			// transferRequestCookies();
-
 			applyRequest();
 			requestCycle.scheduleRequestHandlerAfterCurrent(null);
 
