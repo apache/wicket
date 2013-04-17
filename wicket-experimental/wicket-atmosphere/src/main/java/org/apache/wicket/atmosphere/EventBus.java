@@ -294,7 +294,7 @@ public class EventBus implements UnboundListener
 		}
 		if (key == null)
 			broadcaster.removeAtmosphereResource(resource);
-		else
+		else if (!subscriptionsForPage.isEmpty())
 			post(resource, key, subscriptionsForPage, event);
 	}
 
