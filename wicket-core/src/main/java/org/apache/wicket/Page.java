@@ -450,6 +450,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		if (stateless == null)
 		{
+			internalInitialize();
+
 			if (isStateless() == false)
 			{
 				stateless = Boolean.FALSE;
