@@ -96,8 +96,8 @@ public class WicketFilter implements Filter
 	private boolean isServlet = false;
 
 	/**
-	 * default constructor, usually invoked through the servlet 
-	 * container by the web.xml configuration
+	 * default constructor, usually invoked through the servlet container by the web.xml
+	 * configuration
 	 */
 	public WicketFilter()
 	{
@@ -106,11 +106,11 @@ public class WicketFilter implements Filter
 	/**
 	 * constructor supporting programmatic setup of the filter
 	 * <p/>
-	 *  this can be useful for programmatically creating and appending the 
-	 *  wicket filter to the servlet context using servlet 3 features.
+	 * this can be useful for programmatically creating and appending the wicket filter to the
+	 * servlet context using servlet 3 features.
 	 * 
 	 * @param application
-	 *           web application
+	 *            web application
 	 */
 	public WicketFilter(WebApplication application)
 	{
@@ -385,6 +385,23 @@ public class WicketFilter implements Filter
 				ThreadContext.detach();
 			}
 		}
+		catch (Exception e)
+		{
+			// #destroy() might not be called by the web container when #init() fails,
+			// so destroy now
+			log.warn("initialization failed, destroying now");
+
+			try
+			{
+				destroy();
+			}
+			catch (Exception destroyException)
+			{
+				log.warn("Unable to destroy after initialization failure", destroyException);
+			}
+
+			throw new ServletException(e);
+		}
 		finally
 		{
 			if (newClassLoader != previousClassLoader)
@@ -521,7 +538,14 @@ public class WicketFilter implements Filter
 
 		if (applicationFactory != null)
 		{
-			applicationFactory.destroy(this);
+			try
+			{
+				applicationFactory.destroy(this);
+			}
+			finally
+			{
+				applicationFactory = null;
+			}
 		}
 	}
 
