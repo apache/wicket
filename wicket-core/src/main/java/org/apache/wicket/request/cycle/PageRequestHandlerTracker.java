@@ -59,6 +59,13 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 		registerLastHandler(cycle,handler);
 	}
 
+	@Override
+	public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler, Exception exception)
+	{
+		super.onExceptionRequestHandlerResolved(cycle, handler, exception);
+		registerLastHandler(cycle,handler);
+	}
+
 	/**
 	 * Registers pagerequesthandler when it's resolved ,keeps up with the most recent handler resolved
 	 *
