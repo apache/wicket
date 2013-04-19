@@ -56,7 +56,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			Response response = RequestCycle.get().getResponse();
 			if (response instanceof WebResponse)
 			{
-				// we don't wan't to cache an exceptional reply in the browser
+				// we don't want to cache an exceptional reply in the browser
 				((WebResponse)response).disableCaching();
 			}
 			return internalMap(e);
@@ -92,7 +92,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 		if (e instanceof StalePageException)
 		{
-			// If the page was stale, just rerender it
+			// If the page was stale, just re-render it
 			// (the url should always be updated by an redirect in that case)
 			return new RenderPageRequestHandler(new PageProvider(((StalePageException)e).getPage()));
 		}
@@ -167,7 +167,6 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 	private boolean isProcessingAjaxRequest()
 	{
-
 		RequestCycle rc = RequestCycle.get();
 		Request request = rc.getRequest();
 		if (request instanceof WebRequest)
