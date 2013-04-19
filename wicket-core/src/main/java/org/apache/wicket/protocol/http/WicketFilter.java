@@ -431,6 +431,23 @@ public class WicketFilter implements Filter
 				ThreadContext.detach();
 			}
 		}
+		catch (Exception e)
+		{
+			// #destroy() might not be called by the web container when #init() fails,
+			// so destroy now
+			log.warn("initialization failed, destroying now");
+
+			try
+			{
+				destroy();
+			}
+			catch (Exception destroyException)
+			{
+				log.warn("Unable to destroy after initialization failure", destroyException);
+			}
+
+			throw new ServletException(e);
+		}
 		finally
 		{
 			if (newClassLoader != previousClassLoader)
@@ -578,7 +595,14 @@ public class WicketFilter implements Filter
 
 		if (applicationFactory != null)
 		{
-			applicationFactory.destroy(this);
+			try
+			{
+				applicationFactory.destroy(this);
+			}
+			finally
+			{
+				applicationFactory = null;
+			}
 		}
 	}
 
@@ -781,7 +805,7 @@ public class WicketFilter implements Filter
 	 * level "/" then an empty string should be used instead.
 	 * 
 	 * @param filterPath
-	 * @return
+	 * @return canonic filter path
 	 */
 	static String canonicaliseFilterPath(String filterPath)
 	{
