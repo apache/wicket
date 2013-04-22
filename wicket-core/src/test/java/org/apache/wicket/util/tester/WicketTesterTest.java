@@ -17,8 +17,10 @@
 package org.apache.wicket.util.tester;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -51,6 +53,7 @@ import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.mock.Cookies;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
@@ -73,6 +76,9 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
+import org.apache.wicket.util.tester.cookies.CollectAllRequestCookiesPage;
+import org.apache.wicket.util.tester.cookies.EndPage;
+import org.apache.wicket.util.tester.cookies.SetCookiePage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -1053,7 +1059,7 @@ public class WicketTesterTest extends WicketTestCase
 		assertEquals(cookieAge, cookie2.getMaxAge());
 
 		// assert that the cookie will be preserved for the next request
-		assertEquals(cookieValue, tester.getRequest().getCookie(cookieName).getValue());
+		assertEquals(cookieValue, tester.getLastRequest().getCookie(cookieName).getValue());
 	}
 
 	/**
@@ -1341,7 +1347,7 @@ public class WicketTesterTest extends WicketTestCase
 		// The cookie should be in each following request unless the server code
 		// schedules it for removal it with cookie.setMaxAge(0)
 		Assert.assertEquals("The cookie should be in each following request",
-				1, tester.getRequest().getCookies().length);
+				1, tester.getLastRequest().getCookies().length);
 	}
 
 	/**
@@ -1367,5 +1373,245 @@ public class WicketTesterTest extends WicketTestCase
 		requestCookie.setValue("valueChanged");
 
 		Assert.assertEquals(cookieValue, responseCookie.getValue());
+	}
+	
+	/**
+	 * There are some expectations about wicket tester cookie handling which should match as 
+	 * best as it can be with a real client server request response cycle:
+	 * - all valid cookies set before a request is made should appear in the wicket request
+	 * - all cookies set in the response should appear in the tester response after the request is made
+	 * - all cookies set in the response should appear even after a redirect response is made until the final response is written to the client
+	 * - all valid cookies from the last response should be added or should overwrite the next request cookies
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-5147
+	 */
+	@Test
+	public void wicketTesterCookieHandlingWithoutRedirect() {
+		// no cookies set
+		CollectAllRequestCookiesPage collectingPage = collectAllRequestCookiesOnThisPage();
+		Assert.assertTrue("no cookie in first request",collectingPage.getCookies().isEmpty());
+		lastResponseDoesNotHaveAnyCookies();
+		responseDoesNotHaveAnyCookies();
+		
+		// set cookie on request
+		Cookie cookieA = newCookie("a","1",1);
+		tester.getRequest().addCookie(cookieA);
+		collectingPage = collectAllRequestCookiesOnThisPage();
+		requestOnPageShouldHaveTheseCookies(collectingPage, cookieA);
+		lastResponseDoesNotHaveAnyCookies();
+		responseDoesNotHaveAnyCookies();
+
+		// cookies from last request should appear on following requests
+		collectingPage = collectAllRequestCookiesOnThisPage();
+		requestOnPageShouldHaveTheseCookies(collectingPage, cookieA);
+		lastResponseDoesNotHaveAnyCookies();
+		responseDoesNotHaveAnyCookies();
+
+		// cookie will be overwritten if response will do so
+		Cookie newCookieA = newCookie("a","newValue",1);
+		setCookieInResponse(newCookieA);
+		lastResponseShouldHaveTheseCookies(newCookieA);
+		
+		// cookies from last response then should appear on following requests
+		collectingPage = collectAllRequestCookiesOnThisPage();
+		requestOnPageShouldHaveTheseCookies(collectingPage, newCookieA);
+		lastResponseDoesNotHaveAnyCookies();
+		
+		// cookies from requests will be deleted if the response will do so
+		Cookie removeCookieA = newCookie("a","removeMe",0);
+		setCookieInResponse(removeCookieA);
+		lastResponseShouldHaveTheseCookies(removeCookieA);
+		responseDoesNotHaveAnyCookies();
+		
+		// no cookies in next request while last cookie was deleted
+		collectingPage = collectAllRequestCookiesOnThisPage();
+		requestOnPageShouldHaveTheseCookies(collectingPage);
+		lastResponseDoesNotHaveAnyCookies();
+		responseDoesNotHaveAnyCookies();
+	}
+
+	/**
+	 * @see WicketTesterTest#wicketTesterCookieHandlingWithoutRedirect()
+	 *  
+	 * https://issues.apache.org/jira/browse/WICKET-5147
+	 */
+	@Test
+	public void wicketTesterCookieHandlingWithRedirect() {
+		// set cookie in response then redirect to other page
+		Cookie newCookieA = newCookie("a","newValue",1);
+		setCookieInResponseAndRedirect(newCookieA);
+		lastResponseShouldHaveTheseCookies(newCookieA);
+
+		// cookie in response after redirect should appear in next request
+		CollectAllRequestCookiesPage collectingPage = collectAllRequestCookiesOnThisPage();
+		requestOnPageShouldHaveTheseCookies(collectingPage,newCookieA);
+		lastResponseDoesNotHaveAnyCookies();
+		responseDoesNotHaveAnyCookies();
+		
+		// set cookie on request and overwrite in response then redirect to other page
+		Cookie cookieA = newCookie("a","1",1);
+		newCookieA = newCookie("a","newValue",1);
+		tester.getRequest().addCookie(cookieA);
+		setCookieInResponseAndRedirect(newCookieA);
+		lastResponseShouldHaveTheseCookies(newCookieA);
+		
+		// cookie in response after redirect should appear in next request
+		collectingPage = collectAllRequestCookiesOnThisPage();
+		requestOnPageShouldHaveTheseCookies(collectingPage,newCookieA);
+		lastResponseDoesNotHaveAnyCookies();
+		responseDoesNotHaveAnyCookies();
+		
+		// set cookie on request and remove it in response then redirect to other page
+		cookieA = newCookie("a","1",1);
+		newCookieA = newCookie("a","newValue",0);
+		tester.getRequest().addCookie(cookieA);
+		setCookieInResponseAndRedirect(newCookieA);
+		lastResponseDoesNotHaveAnyCookies();
+		responseDoesNotHaveAnyCookies();
+		
+		// no cookies left
+		collectingPage = collectAllRequestCookiesOnThisPage();
+		requestOnPageShouldHaveTheseCookies(collectingPage);
+		lastResponseDoesNotHaveAnyCookies();
+		responseDoesNotHaveAnyCookies();
+	}
+	
+	/**
+	 * creates a new cookie with maxAge set
+	 * @param name name
+	 * @param value value
+	 * @param maxAge maxAge
+	 * @return a cookie
+	 */
+	private static Cookie newCookie(String name,String value, int maxAge) {
+		Cookie cookie = new Cookie(name,value);
+		cookie.setMaxAge(maxAge);
+		return cookie;
+	}
+	
+	/**
+	 * start a page which collects all cookies from request 
+	 * @return the page
+	 */
+	private CollectAllRequestCookiesPage collectAllRequestCookiesOnThisPage()
+	{
+		return tester.startPage(CollectAllRequestCookiesPage.class);
+	}
+
+	/**
+	 * start a page which set a cookie in response
+	 * @param cookie cookie
+	 */
+	private void setCookieInResponse(Cookie cookie)
+	{
+		tester.startPage(new SetCookiePage(cookie));
+	}
+
+	/**
+	 * start a page which set a cookie in response and then redirect to different page
+	 * @param cookie cookie
+	 */
+	private void setCookieInResponseAndRedirect(Cookie cookie)
+	{
+		tester.startPage(new SetCookiePage(cookie,EndPage.class));
+	}
+
+	/**
+	 * check cookies collected by page
+	 * @param page page
+	 * @param cookies cookies
+	 */
+	private void requestOnPageShouldHaveTheseCookies(CollectAllRequestCookiesPage page, Cookie...cookies) {
+		listShouldMatchAll(page.getCookies(), cookies);
+	}
+
+	/**
+	 * check if every cookie is found in the list and no cookie is left 
+	 * @param cookieList cookie list
+	 * @param cookies cookies to check
+	 */
+	private void listShouldMatchAll(List<Cookie> cookieList, Cookie... cookies)
+	{
+		Map<String, Cookie> cookieMap = cookiesFromList(cookieList);
+		for (Cookie cookie : cookies) {
+			Cookie removed = cookieMap.remove(cookie.getName());
+			Assert.assertNotNull("Cookie "+cookie.getName(),removed);
+			Assert.assertTrue("Cookie "+cookie.getName()+" matches",Cookies.isEqual(cookie, removed));
+		}
+		Assert.assertTrue("no cookies left "+asString(cookieMap),cookieMap.isEmpty());
+	}
+	
+	/**
+	 * make cookie map more readable
+	 * @param cookieMap cookie map
+	 * @return string
+	 */
+	private static String asString(Map<String, Cookie> cookieMap)
+	{
+		StringBuilder sb=new StringBuilder();
+		sb.append("{");
+		for (Map.Entry<String, Cookie> e : cookieMap.entrySet()) {
+			sb.append(e.getKey()).append("=").append(asString(e.getValue()));
+			sb.append(",");
+		}
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * make cookie more readable
+	 * @param c cookie
+	 * @return string
+	 */
+	private static String asString(Cookie c)
+	{
+		StringBuilder sb=new StringBuilder();
+		sb.append("[");
+		sb.append("name=").append(c.getName()).append(",");
+		sb.append("value=").append(c.getValue()).append(",");
+		sb.append("maxAge=").append(c.getMaxAge());
+		sb.append("]");
+		return sb.toString();
+	}
+
+	/**
+	 * check last response cookies
+	 * @param cookies cookies
+	 */
+	private void lastResponseShouldHaveTheseCookies(Cookie...cookies) {
+		listShouldMatchAll(tester.getLastResponse().getCookies(), cookies);
+	}
+	
+	/**
+	 * response should not have any cookies
+	 */
+	private void lastResponseDoesNotHaveAnyCookies()
+	{
+		listShouldMatchAll(tester.getLastResponse().getCookies());
+	}
+	
+	/**
+	 * response should not have any cookies
+	 */
+	private void responseDoesNotHaveAnyCookies()
+	{
+		listShouldMatchAll(tester.getResponse().getCookies());
+	}
+	
+	/**
+	 * create a cookie map based on cookie name
+	 * @param cookies cookie list
+	 * @return as map
+	 * @throws RuntimeException if more than one cookie with the same name
+	 */
+	private static Map<String,Cookie> cookiesFromList(List<Cookie> cookies) {
+		Map<String, Cookie> ret = new LinkedHashMap<String, Cookie>();
+		for (Cookie cookie : cookies) {
+			Cookie oldValue = ret.put(cookie.getName(), cookie);
+			if (oldValue!=null) {
+				throw new RuntimeException("Cookie with name "+cookie.getName()+"("+asString(oldValue)+") allready in map "+asString(ret));
+			}
+		}
+		return ret;
 	}
 }

@@ -369,8 +369,6 @@ public class BaseWicketTester
 			request.setServerPort(lastRequest.getServerPort());
 		}
 
-		transferRequestCookies();
-
 		response = new MockHttpServletResponse(request);
 
 		// Preserve response cookies in redirects
@@ -478,19 +476,16 @@ public class BaseWicketTester
 					}
 					else
 					{
-						boolean newlyCreated = true;
-						for (Cookie oldCookie : lastRequestCookies)
+						Iterator<Cookie> cookieIterator = lastRequestCookies.iterator();
+						while (cookieIterator.hasNext())
 						{
+							Cookie oldCookie = cookieIterator.next();
 							if (Cookies.isEqual(cookie, oldCookie))
 							{
-								newlyCreated = false;
-								break;
+								cookieIterator.remove();
 							}
 						}
-						if (newlyCreated)
-						{
-							lastRequestCookies.add(cookie);
-						}
+						lastRequestCookies.add(cookie);
 					}
 				}
 			}
