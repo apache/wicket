@@ -1044,53 +1044,100 @@
 			// used to match evaluation scripts which manually call FunctionsExecuter's notify() when ready
 			var scriptWithIdentifierR = new RegExp("^\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
 
-			context.steps.push(function (notify) {
-				// get the javascript body
-				var text;
+			/**
+			 * A regex used to split the text in (priority-)evaluate elements in the Ajax response
+			 * when there are scripts which require manual call of 'FunctionExecutor#notify()'
+			 * @type {RegExp}
+			 */
+			var scriptSplitterR = new RegExp("(\\(function\\(\\)\\{.*?}\\)\\(\\);)");
 
-				try {
-					text = node.firstChild.nodeValue;
-				} catch (e) {
-					// TODO remove this fallback in 6.11.0+
-					text = jQuery(node).text();
+			/**
+			 * Removes all empty items from an Array of String's
+			 * @param original The array is empty string elements
+			 * @returns {Array[String]} An array that has no empty elements
+			 */
+			// Needed because String.split(scriptSplitterR) returns something like ["", "script1", "", "script2", ""]
+			var cleanArray = function (original) {
+				var result = [];
+				for(var i = 0; i < original.length; i++){
+					if (original[i]) {
+						result.push(original[i]);
+					}
 				}
+				return result;
+			};
 
-				// unescape it if necessary
-				var encoding = node.getAttribute("encoding");
-				if (encoding) {
-					text = Wicket.Head.Contributor.decode(encoding, text);
-				}
+			// get the javascript body
+			var text;
 
-				// test if the javascript is in form of identifier|code
-				// if it is, we allow for letting the javascript decide when the rest of processing will continue
-				// by invoking identifier();. This allows usage of some asynchronous/deferred logic before the next script
-				// See WICKET-5039
-				var res = text.match(scriptWithIdentifierR);
+			try {
+				text = node.firstChild.nodeValue;
+			} catch (e) {
+				// TODO remove this fallback in 6.11.0+
+				text = jQuery(node).text();
+			}
 
-				if (res !== null) {
+			// unescape it if necessary
+			var encoding = node.getAttribute("encoding");
+			if (encoding) {
+				text = Wicket.Head.Contributor.decode(encoding, text);
+			}
+
+			// aliases to improve performance
+			var steps = context.steps;
+			var log = Wicket.Log;
+
+			var evaluateWithManualNotify = function (parameters, body) {
+				return function(notify) {
 					var f = jQuery.noop;
-					text = "f = function(" + res[1] + ") {" + res[2] + "};";
+					var toExecute = "f = function(" + parameters + ") {" + body + "};";
 
 					try {
 						// do the evaluation
-						eval(text);
+						eval(toExecute);
 						f(notify);
 					} catch (exception) {
-						Wicket.Log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
+						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
+				};
+			};
 
-				} else {
+			var evaluate = function (script) {
+				return function(notify) {
 					// just evaluate the javascript
 					try {
 						// do the evaluation
-						eval(text);
+						eval(script);
 					} catch (exception) {
-						Wicket.Log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
+						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
 					// continue to next step
 					notify();
+				};
+			};
+
+			// test if the javascript is in form of identifier|code
+			// if it is, we allow for letting the javascript decide when the rest of processing will continue
+			// by invoking identifier();. This allows usage of some asynchronous/deferred logic before the next script
+			// See WICKET-5039
+			if (scriptWithIdentifierR.test(text)) {
+				var scripts = cleanArray(text.split(scriptSplitterR));
+
+				for (var s = 0; s < scripts.length; s++) {
+					var script = scripts[s];
+					if (script) {
+						var scriptWithIdentifier = script.match(scriptWithIdentifierR);
+						if (scriptWithIdentifier) {
+							steps.push(evaluateWithManualNotify(scriptWithIdentifier[1], scriptWithIdentifier[2]));
+						}
+						else {
+							steps.push(evaluate(script));
+						}
+					}
 				}
-			});
+			} else {
+				steps.push(evaluate(text));
+			}
 		},
 
 		// Adds a closure that processes a header contribution
