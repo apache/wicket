@@ -1376,13 +1376,8 @@ public class WicketTesterTest extends WicketTestCase
 	}
 	
 	/**
-	 * There are some expectations about wicket tester cookie handling which should match as 
-	 * best as it can be with a real client server request response cycle:
-	 * - all valid cookies set before a request is made should appear in the wicket request
-	 * - all cookies set in the response should appear in the tester response after the request is made
-	 * - all cookies set in the response should appear even after a redirect response is made until the final response is written to the client
-	 * - all valid cookies from the last response should be added or should overwrite the next request cookies
-	 *
+	 * @see WicketTester
+	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-5147
 	 */
 	@Test

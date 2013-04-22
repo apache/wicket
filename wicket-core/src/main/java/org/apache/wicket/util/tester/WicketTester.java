@@ -39,6 +39,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
@@ -134,13 +135,27 @@ import org.slf4j.LoggerFactory;
  * 	tester.assertInfoMessages(new String[] { &quot;Wicket Rocks ;-)&quot; });
  * }
  * </pre>
- *
+ * 
  * Many methods require a 'path' parameter. E.g. the page relative path can be obtained via
  * {@link Component#getPageRelativePath()}. Since each Component has an ID/name, any Component can
  * also be referenced by its ID {@link MarkupContainer#get(String)}. And since MarkupContainer's and
  * its subclasses are containers which allow to add Components (in sync with the markup hierarchy),
  * you may not only access direct childs but also subchilds like get("myPanel:myForm:myNameField")
  * separating each ID with a ':'.
+ * 
+ * Cookie handling:
+ * 
+ * There are some expectations about wicket tester cookie handling which should match as best as
+ * it can be with a real client server request response cycle: 
+ * - all valid cookies set before a request is made (tester.getRequest().addCookie()) should
+ *   appear in the page request
+ * - all cookies set in the response should appear in the last response (tester.getLastResponse()) 
+ *   after the request is made 
+ * - all cookies set in the response should appear even after a redirect response is made
+ *   until the final response (tester.getLastResponse()) is written to the client (wicket tester) 
+ * - all valid cookies (maxAge!=0) from the last response should be added or should overwrite 
+ *   the next request cookies (not visible in tester.getRequest().getCookies())
+ * 
  * 
  * TODO General: Example usage of FormTester
  * 
