@@ -109,6 +109,29 @@ jQuery(document).ready(function() {
 			execute(attrs);
 		});
 
+		/**
+		 * Executes the second part of 'something|functionBody' by passing 'notify' function as parameter.
+		 * There are two functions with passed 'notify' function which leads to splitting the text in
+		 * <(priority-)evaluate> elements to eval one function at a time to be able to call notify manually.
+		 */
+		asyncTest('processEvaluation*s* with identifier|code.', function () {
+
+			expect(7);
+
+			var attrs = {
+				u: 'data/ajax/twoEvaluationsWithIdentifier.xml',
+				c: 'twoEvaluationsWithIdentifier',
+				counter: 0,
+				coh: [
+					function(attrs) {
+						start();
+						equal(attrs.counter, 3, "The counter is incremented in both evaluations with and without manual notifying");
+					}
+				]
+			};
+			execute(attrs);
+		});
+
 		asyncTest('processComponent, normal case.', function () {
 
 			expect(2);

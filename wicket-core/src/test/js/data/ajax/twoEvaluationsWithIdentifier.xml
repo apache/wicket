@@ -15,21 +15,4 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-experimental</artifactId>
-		<version>6.8.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	<artifactId>wicket-examples-parent</artifactId>
-	<version>0.9-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>Wicket Examples Parent</name>
-	<description>New examples structure for Apache Wicket</description>
-	<modules>
-		<module>wicket-examples-jar</module>
-		<module>wicket-examples-war</module>
-	</modules>
-</project>
+<ajax-response><evaluate>(function(){notify|context.attrs.counter++; ok(true, 'Evaluation1 with identifier must be executed!'); equal(typeof(notify), 'function', 'The passed identifier1 must be a function'); notify();})();(function(){context.attrs.counter++;ok(true, 'Evaluation2 without identifier must be executed!');})();(function(){notify|context.attrs.counter++;ok(true, 'Evaluation3 with identifier must be executed!'); equal(typeof(notify), 'function', 'The passed identifier3 must be a function'); notify();})();</evaluate></ajax-response>

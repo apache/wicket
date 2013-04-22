@@ -127,10 +127,6 @@ public abstract class AbstractPageManager implements IPageManager
 	@Override
 	public void touchPage(IManageablePage page)
 	{
-		if (!page.isPageStateless())
-		{
-			getContext().bind();
-		}
 		getRequestAdapter().touch(page);
 	}
 }
