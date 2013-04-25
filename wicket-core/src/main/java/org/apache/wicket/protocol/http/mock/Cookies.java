@@ -16,8 +16,14 @@
  */
 package org.apache.wicket.protocol.http.mock;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javax.servlet.http.Cookie;
 
+import org.apache.wicket.protocol.http.mock.Cookies.Key;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 
@@ -45,6 +51,16 @@ public final class Cookies
 	}
 
 	/**
+	 * creates a key based on the property for cookie equality
+	 * @param cookie cookie
+	 * @return key
+	 */
+	public static Key keyOf(Cookie cookie)
+	{
+		return new Key(cookie);
+	}
+	
+	/**
 	 * Checks whether two cookies are equal.
 	 * See http://www.ietf.org/rfc/rfc2109.txt, p.4.3.3
 	 *
@@ -59,8 +75,85 @@ public final class Cookies
 		Args.notNull(c1, "c1");
 		Args.notNull(c2, "c2");
 
-		return c1.getName().equals(c2.getName()) &&
-				Objects.isEqual(c1.getPath(), c2.getPath()) &&
-				Objects.isEqual(c1.getDomain(), c2.getDomain());
+//		return c1.getName().equals(c2.getName()) &&
+//				Objects.isEqual(c1.getPath(), c2.getPath()) &&
+//				Objects.isEqual(c1.getDomain(), c2.getDomain());
+		return new Key(c1).equals(new Key(c2));
 	}
+	
+	/**
+	 * detect if this cookie is expired
+	 * @param cookie
+	 * @return
+	 */
+	public static boolean isExpired(Cookie cookie)
+	{
+		return cookie.getMaxAge() == 0;
+	}
+	
+	public static class Key implements Serializable {
+		
+		private final String name;
+		private final String path;
+		private final String domain;
+
+		protected Key(Cookie cookie) {
+			this.name=cookie.getName();
+			this.path=cookie.getPath();
+			this.domain=cookie.getDomain();
+		}
+
+		@Override
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((domain == null) ? 0 : domain.hashCode());
+			result = prime * result + ((name == null) ? 0 : name.hashCode());
+			result = prime * result + ((path == null) ? 0 : path.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Key other = (Key)obj;
+			if (domain == null)
+			{
+				if (other.domain != null)
+					return false;
+			}
+			else if (!domain.equals(other.domain))
+				return false;
+			if (name == null)
+			{
+				if (other.name != null)
+					return false;
+			}
+			else if (!name.equals(other.name))
+				return false;
+			if (path == null)
+			{
+				if (other.path != null)
+					return false;
+			}
+			else if (!path.equals(other.path))
+				return false;
+			return true;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return name+";"+domain+"/"+path;
+		}
+		
+	}
+
 }

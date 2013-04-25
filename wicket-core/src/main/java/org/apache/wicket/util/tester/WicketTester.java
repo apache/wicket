@@ -153,8 +153,8 @@ import org.slf4j.LoggerFactory;
  *   after the request is made 
  * - all cookies set in the response should appear even after a redirect response is made
  *   until the final response (tester.getLastResponse()) is written to the client (wicket tester) 
- * - all valid cookies (maxAge!=0) from the last response should be added or should overwrite 
- *   the next request cookies (not visible in tester.getRequest().getCookies())
+ * - all valid cookies (maxAge!=0) from the last response should be added to
+ *   the next request cookies (tester.getRequest().getCookies())
  * 
  * 
  * TODO General: Example usage of FormTester

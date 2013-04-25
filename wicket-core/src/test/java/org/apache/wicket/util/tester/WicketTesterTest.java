@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -82,6 +84,8 @@ import org.apache.wicket.util.tester.cookies.SetCookiePage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import sun.security.provider.certpath.OCSPResponse.ResponseStatus;
 
 /**
  * 
@@ -1059,7 +1063,7 @@ public class WicketTesterTest extends WicketTestCase
 		assertEquals(cookieAge, cookie2.getMaxAge());
 
 		// assert that the cookie will be preserved for the next request
-		assertEquals(cookieValue, tester.getLastRequest().getCookie(cookieName).getValue());
+		assertEquals(cookieValue, tester.getRequest().getCookie(cookieName).getValue());
 	}
 
 	/**
@@ -1347,7 +1351,7 @@ public class WicketTesterTest extends WicketTestCase
 		// The cookie should be in each following request unless the server code
 		// schedules it for removal it with cookie.setMaxAge(0)
 		Assert.assertEquals("The cookie should be in each following request",
-				1, tester.getLastRequest().getCookies().length);
+				1, tester.getRequest().getCookies().length);
 	}
 
 	/**
@@ -1378,6 +1382,7 @@ public class WicketTesterTest extends WicketTestCase
 	/**
 	 * @see WicketTester
 	 * 
+	 * TODO add a cookie to request, which should override cookie from last response and last request
 	 * https://issues.apache.org/jira/browse/WICKET-5147
 	 */
 	@Test
@@ -1387,41 +1392,48 @@ public class WicketTesterTest extends WicketTestCase
 		Assert.assertTrue("no cookie in first request",collectingPage.getCookies().isEmpty());
 		lastResponseDoesNotHaveAnyCookies();
 		responseDoesNotHaveAnyCookies();
+		requestDoesNotHaveAnyCookies();
 		
 		// set cookie on request
-		Cookie cookieA = newCookie("a","1",1);
-		tester.getRequest().addCookie(cookieA);
+		Cookie firstCookie = newCookie("a","firstValue",1);
+		tester.getRequest().addCookie(firstCookie);
 		collectingPage = collectAllRequestCookiesOnThisPage();
-		requestOnPageShouldHaveTheseCookies(collectingPage, cookieA);
+		requestOnPageShouldHaveTheseCookies(collectingPage, firstCookie);
 		lastResponseDoesNotHaveAnyCookies();
+		requestShouldHaveTheseCookies(firstCookie);
 		responseDoesNotHaveAnyCookies();
 
 		// cookies from last request should appear on following requests
 		collectingPage = collectAllRequestCookiesOnThisPage();
-		requestOnPageShouldHaveTheseCookies(collectingPage, cookieA);
+		requestOnPageShouldHaveTheseCookies(collectingPage, firstCookie);
 		lastResponseDoesNotHaveAnyCookies();
+		requestShouldHaveTheseCookies(firstCookie);
 		responseDoesNotHaveAnyCookies();
 
 		// cookie will be overwritten if response will do so
-		Cookie newCookieA = newCookie("a","newValue",1);
-		setCookieInResponse(newCookieA);
-		lastResponseShouldHaveTheseCookies(newCookieA);
+		Cookie cookieSetInResponse = newCookie("a","overwriteWithNewValue",1);
+		setCookieInResponse(cookieSetInResponse);
+		lastResponseShouldHaveTheseCookies(cookieSetInResponse);
+		requestShouldHaveTheseCookies(cookieSetInResponse);
 		
 		// cookies from last response then should appear on following requests
 		collectingPage = collectAllRequestCookiesOnThisPage();
-		requestOnPageShouldHaveTheseCookies(collectingPage, newCookieA);
+		requestOnPageShouldHaveTheseCookies(collectingPage, cookieSetInResponse);
 		lastResponseDoesNotHaveAnyCookies();
+		requestShouldHaveTheseCookies(cookieSetInResponse);
 		
 		// cookies from requests will be deleted if the response will do so
-		Cookie removeCookieA = newCookie("a","removeMe",0);
-		setCookieInResponse(removeCookieA);
-		lastResponseShouldHaveTheseCookies(removeCookieA);
+		Cookie expiredCookieSetInResponse = newCookie("a","removeMe",0);
+		setCookieInResponse(expiredCookieSetInResponse);
+		lastResponseShouldHaveTheseCookies(expiredCookieSetInResponse);
 		responseDoesNotHaveAnyCookies();
+		requestDoesNotHaveAnyCookies();
 		
 		// no cookies in next request while last cookie was deleted
 		collectingPage = collectAllRequestCookiesOnThisPage();
 		requestOnPageShouldHaveTheseCookies(collectingPage);
 		lastResponseDoesNotHaveAnyCookies();
+		requestDoesNotHaveAnyCookies();
 		responseDoesNotHaveAnyCookies();
 	}
 
@@ -1433,41 +1445,47 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void wicketTesterCookieHandlingWithRedirect() {
 		// set cookie in response then redirect to other page
-		Cookie newCookieA = newCookie("a","newValue",1);
-		setCookieInResponseAndRedirect(newCookieA);
-		lastResponseShouldHaveTheseCookies(newCookieA);
+		Cookie firstCookie = newCookie("a","firstValue",1);
+		setCookieInResponseAndRedirect(firstCookie);
+		lastResponseShouldHaveTheseCookies(firstCookie);
+		requestShouldHaveTheseCookies(firstCookie);
 
 		// cookie in response after redirect should appear in next request
 		CollectAllRequestCookiesPage collectingPage = collectAllRequestCookiesOnThisPage();
-		requestOnPageShouldHaveTheseCookies(collectingPage,newCookieA);
+		requestOnPageShouldHaveTheseCookies(collectingPage,firstCookie);
 		lastResponseDoesNotHaveAnyCookies();
+		requestShouldHaveTheseCookies(firstCookie);
 		responseDoesNotHaveAnyCookies();
 		
 		// set cookie on request and overwrite in response then redirect to other page
-		Cookie cookieA = newCookie("a","1",1);
-		newCookieA = newCookie("a","newValue",1);
-		tester.getRequest().addCookie(cookieA);
-		setCookieInResponseAndRedirect(newCookieA);
-		lastResponseShouldHaveTheseCookies(newCookieA);
+		Cookie cookieSetInRequest = newCookie("a","valueFromRequest",1);
+		Cookie cookieSetInResponse = newCookie("a","overwriteInResponse",1);
+		tester.getRequest().addCookie(cookieSetInRequest);
+		setCookieInResponseAndRedirect(cookieSetInResponse);
+		lastResponseShouldHaveTheseCookies(cookieSetInResponse);
+		requestShouldHaveTheseCookies(cookieSetInResponse);
 		
 		// cookie in response after redirect should appear in next request
 		collectingPage = collectAllRequestCookiesOnThisPage();
-		requestOnPageShouldHaveTheseCookies(collectingPage,newCookieA);
+		requestOnPageShouldHaveTheseCookies(collectingPage,cookieSetInResponse);
 		lastResponseDoesNotHaveAnyCookies();
+		requestShouldHaveTheseCookies(cookieSetInResponse);
 		responseDoesNotHaveAnyCookies();
 		
 		// set cookie on request and remove it in response then redirect to other page
-		cookieA = newCookie("a","1",1);
-		newCookieA = newCookie("a","newValue",0);
-		tester.getRequest().addCookie(cookieA);
-		setCookieInResponseAndRedirect(newCookieA);
-		lastResponseDoesNotHaveAnyCookies();
+		Cookie nextCookieSetInRequest = newCookie("a","nextValueFromRequest",1);
+		Cookie nextCookieSetInResponse = newCookie("a","newValue",0);
+		tester.getRequest().addCookie(nextCookieSetInRequest);
+		setCookieInResponseAndRedirect(nextCookieSetInResponse);
+		lastResponseShouldHaveTheseCookies(nextCookieSetInResponse);
+		requestDoesNotHaveAnyCookies();
 		responseDoesNotHaveAnyCookies();
 		
 		// no cookies left
 		collectingPage = collectAllRequestCookiesOnThisPage();
 		requestOnPageShouldHaveTheseCookies(collectingPage);
 		lastResponseDoesNotHaveAnyCookies();
+		requestDoesNotHaveAnyCookies();
 		responseDoesNotHaveAnyCookies();
 	}
 	
@@ -1520,6 +1538,16 @@ public class WicketTesterTest extends WicketTestCase
 		listShouldMatchAll(page.getCookies(), cookies);
 	}
 
+	/**
+	 * check cookies in current request
+	 * @param page page
+	 * @param cookies cookies
+	 */
+	private void requestShouldHaveTheseCookies(Cookie...cookies) {
+		Cookie[] cookieFromRequest = tester.getRequest().getCookies();
+		listShouldMatchAll(cookieFromRequest!=null ? Arrays.asList(cookieFromRequest) : new ArrayList<Cookie>(), cookies);
+	}
+	
 	/**
 	 * check if every cookie is found in the list and no cookie is left 
 	 * @param cookieList cookie list
@@ -1591,6 +1619,14 @@ public class WicketTesterTest extends WicketTestCase
 	private void responseDoesNotHaveAnyCookies()
 	{
 		listShouldMatchAll(tester.getResponse().getCookies());
+	}
+	
+	/**
+	 * request should not have any cookies
+	 */
+	private void requestDoesNotHaveAnyCookies()
+	{
+		requestShouldHaveTheseCookies();
 	}
 	
 	/**

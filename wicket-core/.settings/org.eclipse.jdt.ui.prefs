@@ -1,4 +1,3 @@
-#Fri Nov 05 09:40:42 PDT 2010
 comment_clear_blank_lines=false
 comment_format_comments=true
 comment_format_header=true
@@ -10,7 +9,7 @@ comment_line_length=80
 comment_new_line_for_parameter=true
 comment_separate_root_tags=true
 eclipse.preferences.version=1
-editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
+editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=false
 formatter_profile=_Wicket
 formatter_settings_version=11
 instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
@@ -22,6 +21,7 @@ sp_cleanup.add_missing_deprecated_annotations=true
 sp_cleanup.add_missing_methods=false
 sp_cleanup.add_missing_nls_tags=false
 sp_cleanup.add_missing_override_annotations=true
+sp_cleanup.add_missing_override_annotations_interface_methods=false
 sp_cleanup.add_serial_version_id=false
 sp_cleanup.always_use_blocks=true
 sp_cleanup.always_use_parentheses_in_expressions=false
