@@ -150,7 +150,7 @@ import org.slf4j.LoggerFactory;
  * - all valid cookies set before a request is made (tester.getRequest().addCookie()) should
  *   appear in the page request
  * - all cookies set in the response should appear in the last response (tester.getLastResponse()) 
- *   after the request is made 
+ *   after the request is made (expired cookies and others)
  * - all cookies set in the response should appear even after a redirect response is made
  *   until the final response (tester.getLastResponse()) is written to the client (wicket tester) 
  * - all valid cookies (maxAge!=0) from the last response should be added to
