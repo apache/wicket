@@ -56,8 +56,7 @@
 	};
 
 	replaceAll = function (str, from, to) {
-		var regex = '';
-		eval('regex = /' + from.replace( /\W/g ,'\\$&' ) + '/g ;');
+		var regex = new RegExp(from.replace( /\W/g ,'\\$&' ), 'g');
 		return str.replace(regex,to);
 	};
 
