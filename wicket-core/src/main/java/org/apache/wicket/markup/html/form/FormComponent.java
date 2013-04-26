@@ -1543,7 +1543,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			{
 				// ignore this exception because it could be that there
 				// is not setter for this collection.
-				logger.info("no setter for the property attached to " + formComponent);
+				logger.info("An error occurred while trying to set the new value for the property attached to " + formComponent, e);
 			}
 		}
 	}
