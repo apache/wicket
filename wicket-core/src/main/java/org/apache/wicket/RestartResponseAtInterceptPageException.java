@@ -175,6 +175,11 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		}
 	}
 
+	static void clearOriginalDestination()
+	{
+		InterceptData.clear();
+	}
+
 	static IRequestMapper MAPPER = new IRequestMapper()
 	{
 		@Override
