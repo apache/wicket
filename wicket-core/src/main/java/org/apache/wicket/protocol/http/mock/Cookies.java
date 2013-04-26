@@ -59,7 +59,8 @@ public final class Cookies
 	}
 
 	/**
-	 * Checks whether two cookies are equal. See http://www.ietf.org/rfc/rfc2109.txt, p.4.3.3
+	 * Checks whether two cookies are equal. 
+	 * See http://www.ietf.org/rfc/rfc2109.txt, p.4.3.3
 	 * 
 	 * @param c1
 	 *            the first cookie
