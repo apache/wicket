@@ -337,15 +337,16 @@ public class Url implements Serializable
 	 */
 	private static QueryParameter parseQueryParameter(final String qp, final Charset charset)
 	{
-		if (qp.indexOf('=') == -1)
+		int idxOfEquals = qp.indexOf('=');
+		if (idxOfEquals == -1)
 		{
 			// name => empty value
 			return new QueryParameter(decodeParameter(qp, charset), "");
 		}
 
-		String parts[] = Strings.split(qp, '=');
-		return new QueryParameter(decodeParameter(parts[0], charset), decodeParameter(parts[1],
-			charset));
+		String parameterName = qp.substring(0, idxOfEquals);
+		String parameterValue = qp.substring(idxOfEquals + 1);
+		return new QueryParameter(decodeParameter(parameterName, charset), decodeParameter(parameterValue, charset));
 	}
 
 	/**
