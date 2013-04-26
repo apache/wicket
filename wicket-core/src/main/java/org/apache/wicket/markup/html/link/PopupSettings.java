@@ -160,7 +160,7 @@ public class PopupSettings implements IClusterable
 			windowTitle = windowTitle.replaceAll("\\W", "_");
 		}
 
-	 StringBuilder script = new StringBuilder("var w = window.open(" + target + ", '").append(
+	    StringBuilder script = new StringBuilder("var w = window.open(" + target + ", '").append(
 			windowTitle).append("', '");
 
 		script.append("scrollbars=").append(flagToString(SCROLLBARS));
@@ -190,7 +190,7 @@ public class PopupSettings implements IClusterable
 			script.append(",top=").append(top);
 		}
 
-		script.append("'); if(w.blur) w.focus();").append(" return false;");
+		script.append("'); try {if (w.blur) w.focus();}catch(ignore){}; return false;");
 
 		return script.toString();
 	}
