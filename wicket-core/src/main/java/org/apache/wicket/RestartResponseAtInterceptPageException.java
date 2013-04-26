@@ -173,6 +173,11 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		return false;
 	}
 
+	static void clearOriginalDestination()
+	{
+		InterceptData.clear();
+	}
+
 	static IRequestMapper MAPPER = new IRequestMapper()
 	{
 		public int getCompatibilityScore(Request request)

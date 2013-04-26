@@ -1131,6 +1131,14 @@ public abstract class Component
 	}
 
 	/**
+	 * Clears any data about previously intercepted page.
+	 */
+	public final void clearOriginalDestination()
+	{
+		RestartResponseAtInterceptPageException.clearOriginalDestination();
+	}
+
+	/**
 	 * Registers a debug feedback message for this component
 	 * 
 	 * @param message
