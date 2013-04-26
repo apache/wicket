@@ -57,6 +57,8 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private boolean useSmartPositioning = false;
 
+	private boolean ignoreBordersWhenPositioning = true;
+
 	private boolean useHideShowCoveredIEFix = true;
 
 	private String cssClassName = null;
@@ -152,6 +154,32 @@ public final class AutoCompleteSettings implements IClusterable
 	public AutoCompleteSettings setMaxHeightInPx(final int maxHeightInPx)
 	{
 		this.maxHeightInPx = maxHeightInPx;
+		return this;
+	}
+
+	/**
+	 * Indicates whether the popup positioning will take into account the borders of the input
+	 * element and its ancestors.
+	 *
+	 * @return true if borders are ignored, false otherwise.
+	 */
+	public boolean getIgnoreBordersWhenPositioning()
+	{
+		return ignoreBordersWhenPositioning;
+	}
+
+	/**
+	 * Sets whether the popup positioning will take into account the borders of the input element
+	 * and its ancestors (by including the <code>clientLeft</code> and <code>clientTop</code> DOM
+	 * properties in the computation).
+	 *
+	 * @param ignoreBordersWhenPositioning
+	 *            the flag
+	 * @return this {@link AutoCompleteSettings}.
+	 */
+	public AutoCompleteSettings setIgnoreBordersWhenPositioning(final boolean ignoreBordersWhenPositioning)
+	{
+		this.ignoreBordersWhenPositioning = ignoreBordersWhenPositioning;
 		return this;
 	}
 

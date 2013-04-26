@@ -570,12 +570,23 @@
 		function getPosition(obj) {
 			var leftPosition = obj.offsetLeft || 0;
 			var topPosition = obj.offsetTop || 0;
+			if (!cfg.ignoreBordersWhenPositioning) {
+				topPosition += obj.clientTop || 0;
+				leftPosition += obj.clientLeft || 0;
+			}
+
 			obj = obj.offsetParent;
 			while (obj && obj !== document.documentElement && obj !== document.body) {
 				topPosition += obj.offsetTop || 0;
 				topPosition -= obj.scrollTop || 0;
+				if (!cfg.ignoreBordersWhenPositioning) {
+					topPosition += obj.clientTop || 0;
+				}
 				leftPosition += obj.offsetLeft || 0;
 				leftPosition -= obj.scrollLeft || 0;
+				if (!cfg.ignoreBordersWhenPositioning) {
+					leftPosition += obj.clientLeft || 0;
+				}
 				obj = obj.offsetParent;
 			}
 
