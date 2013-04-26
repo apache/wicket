@@ -28,7 +28,7 @@ import org.apache.wicket.util.string.StringList;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class Roles extends HashSet<String> implements IClusterable
+public class Roles extends HashSet<String> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
