@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -161,7 +162,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final ServletContext context;
 
-	private final List<Cookie> cookies = new ArrayList<Cookie>();
+	private final Map<Cookies.Key,Cookie> cookies = new LinkedHashMap<Cookies.Key, Cookie>();
 
 	private final ValueMap headers = new ValueMap();
 
@@ -217,7 +218,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addCookie(final Cookie cookie)
 	{
-		cookies.add(cookie);
+		cookies.put(Cookies.keyOf(cookie),cookie);
 	}
 
 	/**
@@ -478,16 +479,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public Cookie[] getCookies()
 	{
-		if (cookies.size() == 0)
+		if (cookies.isEmpty())
 		{
 			return null;
 		}
-		Cookie[] result = new Cookie[cookies.size()];
-		for (int i = 0; i < cookies.size(); i++)
-		{
-			result[i] = Cookies.copyOf(cookies.get(i));
-		}
-		return result;
+		List<Cookie> cookieValues = new ArrayList<Cookie>();
+		cookieValues.addAll(cookies.values());
+		return cookieValues.toArray(new Cookie[cookieValues.size()]);
 	}
 
 	/**

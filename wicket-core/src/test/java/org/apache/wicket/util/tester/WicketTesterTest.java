@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.util.tester;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.AssertionFailedError;
@@ -73,12 +71,11 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ * @see WicketTesterCookieTest for cookie related test
  * @author Juergen Donnerstag
  */
 public class WicketTesterTest extends WicketTestCase
@@ -904,28 +901,6 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 *
-	 */
-	@Test
-	public void cookieIsFoundWhenAddedToRequest()
-	{
-		tester.getRequest().addCookie(new Cookie("name", "value"));
-		assertEquals("value", tester.getRequest().getCookie("name").getValue());
-	}
-
-	/**
-	 *
-	 */
-	@Test
-	public void cookieIsFoundWhenAddedToResponse()
-	{
-		tester.startPage(CreateBook.class);
-		tester.getLastResponse().addCookie(new Cookie("name", "value"));
-		Collection<Cookie> cookies = tester.getLastResponse().getCookies();
-		assertEquals(cookies.iterator().next().getValue(), "value");
-	}
-
-	/**
 	 * Test for WICKET-3123
 	 */
 	@Test
@@ -1023,81 +998,6 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		tester.startComponentInPage(new Label("testLabel"));
 		tester.startPage(tester.getLastRenderedPage());
-	}
-
-	/**
-	 * Tests that setting a cookie with age > 0 before creating the page will survive after the
-	 * rendering of the page and it will be used for the next request cycle.
-	 */
-	@Test
-	public void transferCookies()
-	{
-		String cookieName = "wicket4289Name";
-		String cookieValue = "wicket4289Value";
-		int cookieAge = 1; // age > 0 => the cookie will be preserved for the the next request cycle
-
-		Cookie cookie = new Cookie(cookieName, cookieValue);
-		cookie.setMaxAge(cookieAge);
-		tester.getRequest().addCookie(cookie);
-
-		CookiePage page = new CookiePage(cookieName, cookieValue);
-
-		tester.startPage(page);
-
-		// assert that the cookie was in the response
-		List<Cookie> cookies = tester.getLastResponse().getCookies();
-		assertEquals(1, cookies.size());
-		Cookie cookie2 = cookies.get(0);
-		assertEquals(cookieName, cookie2.getName());
-		assertEquals(cookieValue, cookie2.getValue());
-		assertEquals(cookieAge, cookie2.getMaxAge());
-
-		// assert that the cookie will be preserved for the next request
-		assertEquals(cookieValue, tester.getRequest().getCookie(cookieName).getValue());
-	}
-
-	/**
-	 * Tests that setting a cookie with age == 0 will not be stored after the request cycle.
-	 */
-	@Test
-	public void dontTransferCookiesWithNegativeAge()
-	{
-		String cookieName = "wicket4289Name";
-		String cookieValue = "wicket4289Value";
-		int cookieAge = 0; // age = 0 => do not store it
-
-		Cookie cookie = new Cookie(cookieName, cookieValue);
-		cookie.setMaxAge(cookieAge);
-		tester.getRequest().addCookie(cookie);
-
-		CookiePage page = new CookiePage(cookieName, cookieValue);
-
-		tester.startPage(page);
-
-		// assert that the cookie is not preserved for the next request cycle
-		assertNull(tester.getRequest().getCookies());
-	}
-
-	/**
-	 * Tests that setting a cookie with age < 0 will not be stored after the request cycle.
-	 */
-	@Test
-	public void dontTransferCookiesWithZeroAge()
-	{
-		String cookieName = "wicket4289Name";
-		String cookieValue = "wicket4289Value";
-		int cookieAge = 0; // age == 0 => delete the cookie
-
-		Cookie cookie = new Cookie(cookieName, cookieValue);
-		cookie.setMaxAge(cookieAge);
-		tester.getRequest().addCookie(cookie);
-
-		CookiePage page = new CookiePage(cookieName, cookieValue);
-
-		tester.startPage(page);
-
-		// assert that the cookie is not preserved for the next request cycle
-		assertNull(tester.getRequest().getCookies());
 	}
 
 	/**
@@ -1316,56 +1216,5 @@ public class WicketTesterTest extends WicketTestCase
 		// this one doesn't
 		tester.submitForm(page.form);
 		assertEquals(null, page.text);
-	}
-
-	/**
-	 * A cookie set in the request headers should not be
-	 * expected in the response headers unless the page
-	 * sets it explicitly.
-	 *
-	 * https://issues.apache.org/jira/browse/WICKET-4989
-	 */
-	@Test
-	public void cookieSetInRequestShouldNotBeInResponse()
-	{
-		//start and render the test page
-		tester.getRequest().addCookie(new Cookie("dummy", "sample"));
-		tester.startPage(tester.getApplication().getHomePage());
-
-		//assert rendered page class
-		tester.assertRenderedPage(tester.getApplication().getHomePage());
-
-		Assert.assertEquals("The cookie should not be in the response unless explicitly set",
-				0, tester.getLastResponse().getCookies().size());
-
-		// The cookie should be in each following request unless the server code
-		// schedules it for removal it with cookie.setMaxAge(0)
-		Assert.assertEquals("The cookie should be in each following request",
-				1, tester.getRequest().getCookies().length);
-	}
-
-	/**
-	 * The response cookie should not be the same instance as the request
-	 * cookie.
-	 *
-	 * https://issues.apache.org/jira/browse/WICKET-4989
-	 */
-	@Test
-	public void doNotReuseTheSameInstanceOfTheCookieForRequestAndResponse()
-	{
-		//start and render the test page
-		String cookieName = "cookieName";
-		String cookieValue = "cookieValue";
-		Cookie requestCookie = new Cookie(cookieName, cookieValue);
-		tester.getRequest().addCookie(requestCookie);
-		tester.startPage(new CookiePage(cookieName, cookieValue));
-
-		//assert rendered page class
-		tester.assertRenderedPage(CookiePage.class);
-
-		Cookie responseCookie = tester.getLastResponse().getCookies().get(0);
-		requestCookie.setValue("valueChanged");
-
-		Assert.assertEquals(cookieValue, responseCookie.getValue());
 	}
 }

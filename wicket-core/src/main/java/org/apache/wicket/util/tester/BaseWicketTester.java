@@ -98,6 +98,7 @@ import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.protocol.http.mock.CookieCollection;
 import org.apache.wicket.protocol.http.mock.Cookies;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
@@ -369,8 +370,6 @@ public class BaseWicketTester
 			request.setServerPort(lastRequest.getServerPort());
 		}
 
-		transferRequestCookies();
-
 		response = new MockHttpServletResponse(request);
 
 		// Preserve response cookies in redirects
@@ -378,16 +377,44 @@ public class BaseWicketTester
 		// Wicket tests assert that a cookie is in the response,
 		// even after redirects (see org.apache.wicket.util.cookies.SetCookieAndRedirectTest.statefulPage())
 		// They should assert that the cookie is in the next *request*
-		if (lastResponse != null && lastResponse.isRedirect())
+		if (lastResponse != null)
 		{
 			List<Cookie> lastResponseCookies = lastResponse.getCookies();
-			for (Cookie cookie : lastResponseCookies)
+			if (lastResponse.isRedirect()) 
 			{
-				if (cookie.getMaxAge() != 0)
+				CookieCollection responseCookies=new CookieCollection();
+				
+				// if the last request is a redirect, all cookies from last response should appear in current reponse
+				// this call will filter duplicates
+				responseCookies.addAll(lastResponseCookies);
+				for (Cookie cookie : responseCookies.allAsList())
 				{
-					// max-age==0 are already handled in #transferRequestCookies() above
 					response.addCookie(cookie);
 				}
+				
+				// copy all request cookies from last request to the new request because of redirect handling
+				// this way, the cookie will be send to the next requested page
+				if (lastRequest!=null) {
+					CookieCollection requestCookies=new CookieCollection();
+					// this call will filter duplicates
+					requestCookies.addAll(lastRequest.getCookies());
+					request.addCookies(requestCookies.asList());
+				}
+			} 
+			else
+			{
+				// if the last response is not a redirect 
+				// - copy last request cookies to collection
+				// - copy last response cookies to collection
+				// - set only the not expired cookies to the next request
+				CookieCollection cookies=new CookieCollection();				
+				if (lastRequest!=null) {
+					// this call will filter duplicates
+					cookies.addAll(lastRequest.getCookies());
+				}
+				// this call will filter duplicates
+				cookies.addAll(lastResponseCookies);
+				request.addCookies(cookies.asList());
 			}
 		}
 
@@ -432,72 +459,6 @@ public class BaseWicketTester
 		getSession().detach();
 		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
 			IFeedbackMessageFilter.NONE);
-	}
-
-	/**
-	 * Simulates browser behavior by preserving all non-removed cookies from
-	 * the previous request.
-	 * A cookie is removed if the response contains a cookie with the same
-	 * name, path and domain and max-age=0
-	 */
-	private void transferRequestCookies()
-	{
-		List<Cookie> lastRequestCookies = new ArrayList<Cookie>();
-
-		// copy all cookies from the previous request
-		if (lastRequest != null && lastRequest.getCookies() != null)
-		{
-			for (Cookie lastRequestCookie : lastRequest.getCookies())
-			{
-				lastRequestCookies.add(lastRequestCookie);
-			}
-		}
-
-		// filter out all removed cookies
-		if (lastResponse != null)
-		{
-			List<Cookie> cookies = lastResponse.getCookies();
-			if (cookies != null)
-			{
-				for (Cookie cookie : cookies)
-				{
-					// maxAge == -1 -> means session cookie
-					// maxAge == 0 -> delete the cookie
-					// maxAge > 0 -> the cookie will expire after this age
-					if (cookie.getMaxAge() == 0)
-					{
-						Iterator<Cookie> cookieIterator = lastRequestCookies.iterator();
-						while (cookieIterator.hasNext())
-						{
-							Cookie lastRequestCookie = cookieIterator.next();
-							if (Cookies.isEqual(lastRequestCookie, cookie))
-							{
-								cookieIterator.remove();
-							}
-						}
-					}
-					else
-					{
-						boolean newlyCreated = true;
-						for (Cookie oldCookie : lastRequestCookies)
-						{
-							if (Cookies.isEqual(cookie, oldCookie))
-							{
-								newlyCreated = false;
-								break;
-							}
-						}
-						if (newlyCreated)
-						{
-							lastRequestCookies.add(cookie);
-						}
-					}
-				}
-			}
-		}
-
-		// transfer only the non-removed ones
-		request.addCookies(lastRequestCookies);
 	}
 
 	/**
@@ -686,8 +647,6 @@ public class BaseWicketTester
 
 		try
 		{
-			transferRequestCookies();
-
 			applyRequest();
 			requestCycle.scheduleRequestHandlerAfterCurrent(null);
 
