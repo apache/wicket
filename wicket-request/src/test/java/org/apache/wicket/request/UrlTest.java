@@ -816,4 +816,18 @@ public class UrlTest extends Assert
 		url.toString(StringMode.FULL);
 	}
 
+	/**
+	 * Should accept parameter values containing equals sign(s)
+	 * https://issues.apache.org/jira/browse/WICKET-5157
+	 */
+	@Test
+	public void parseQueryStringWithEqualsSignInParameterValue()
+	{
+		String s = "/?a=b=c&d=e=f";
+		Url url = Url.parse(s);
+		assertTrue(url.isAbsolute());
+		checkSegments(url, "", "");
+		checkQueryParams(url, "a", "b=c", "d", "e=f");
+	}
+
 }
