@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -99,7 +98,6 @@ import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.CookieCollection;
-import org.apache.wicket.protocol.http.mock.Cookies;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockHttpSession;
@@ -382,7 +380,7 @@ public class BaseWicketTester
 			List<Cookie> lastResponseCookies = lastResponse.getCookies();
 			if (lastResponse.isRedirect()) 
 			{
-				CookieCollection responseCookies=new CookieCollection();
+				CookieCollection responseCookies = new CookieCollection();
 				
 				// if the last request is a redirect, all cookies from last response should appear in current reponse
 				// this call will filter duplicates
@@ -394,7 +392,8 @@ public class BaseWicketTester
 				
 				// copy all request cookies from last request to the new request because of redirect handling
 				// this way, the cookie will be send to the next requested page
-				if (lastRequest!=null) {
+				if (lastRequest != null)
+				{
 					CookieCollection requestCookies=new CookieCollection();
 					// this call will filter duplicates
 					requestCookies.addAll(lastRequest.getCookies());
@@ -407,8 +406,9 @@ public class BaseWicketTester
 				// - copy last request cookies to collection
 				// - copy last response cookies to collection
 				// - set only the not expired cookies to the next request
-				CookieCollection cookies=new CookieCollection();				
-				if (lastRequest!=null) {
+				CookieCollection cookies = new CookieCollection();
+				if (lastRequest != null)
+				{
 					// this call will filter duplicates
 					cookies.addAll(lastRequest.getCookies());
 				}

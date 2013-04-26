@@ -44,10 +44,12 @@ public class SetCookiePage extends DummyHomePage
 	
 	protected void onInitialize() {
 		super.onInitialize();
+
 		WebResponse response = (WebResponse) getResponse();
 		response.addCookie(cookie);
 		
-		if (redirectToPageClass!=null) {
+		if (redirectToPageClass != null)
+		{
 			setResponsePage(redirectToPageClass);
 		}
 	};

@@ -43,7 +43,7 @@ public final class Cookies
 	 */
 	public static Cookie copyOf(Cookie cookie)
 	{
-		return cookie != null ? (Cookie)cookie.clone() : null;
+		return cookie != null ? (Cookie) cookie.clone() : null;
 	}
 
 	/**
@@ -96,6 +96,7 @@ public final class Cookies
 
 		protected Key(Cookie cookie)
 		{
+			Args.notNull(cookie, "cookie");
 			name = cookie.getName();
 			path = cookie.getPath();
 			domain = cookie.getDomain();

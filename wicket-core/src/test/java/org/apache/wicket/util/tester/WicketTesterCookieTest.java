@@ -248,7 +248,7 @@ public class WicketTesterCookieTest extends WicketTestCase
 	}
 
 	/**
-	 * @see WicketTesterTest#wicketTesterCookieHandlingWithoutRedirect()
+	 * @see WicketTesterCookieTest#wicketTesterCookieHandlingWithoutRedirect()
 	 *  
 	 * https://issues.apache.org/jira/browse/WICKET-5147
 	 */
@@ -350,7 +350,6 @@ public class WicketTesterCookieTest extends WicketTestCase
 
 	/**
 	 * check cookies in current request
-	 * @param page page
 	 * @param cookies cookies
 	 */
 	private void requestShouldHaveTheseCookies(Cookie...cookies) {
@@ -382,12 +381,12 @@ public class WicketTesterCookieTest extends WicketTestCase
 	private static String asString(Map<String, Cookie> cookieMap)
 	{
 		StringBuilder sb=new StringBuilder();
-		sb.append("{");
+		sb.append('{');
 		for (Map.Entry<String, Cookie> e : cookieMap.entrySet()) {
-			sb.append(e.getKey()).append("=").append(asString(e.getValue()));
+			sb.append(e.getKey()).append('=').append(asString(e.getValue()));
 			sb.append(",");
 		}
-		sb.append("}");
+		sb.append('}');
 		return sb.toString();
 	}
 
@@ -399,11 +398,11 @@ public class WicketTesterCookieTest extends WicketTestCase
 	private static String asString(Cookie c)
 	{
 		StringBuilder sb=new StringBuilder();
-		sb.append("[");
-		sb.append("name=").append(c.getName()).append(",");
-		sb.append("value=").append(c.getValue()).append(",");
+		sb.append('[');
+		sb.append("name=").append(c.getName()).append(',');
+		sb.append("value=").append(c.getValue()).append(',');
 		sb.append("maxAge=").append(c.getMaxAge());
-		sb.append("]");
+		sb.append(']');
 		return sb.toString();
 	}
 
@@ -447,10 +446,13 @@ public class WicketTesterCookieTest extends WicketTestCase
 	 */
 	private static Map<String,Cookie> cookiesFromList(List<Cookie> cookies) {
 		Map<String, Cookie> ret = new LinkedHashMap<String, Cookie>();
-		for (Cookie cookie : cookies) {
+		for (Cookie cookie : cookies)
+		{
 			Cookie oldValue = ret.put(cookie.getName(), cookie);
-			if (oldValue!=null) {
-				throw new RuntimeException("Cookie with name "+cookie.getName()+"("+asString(oldValue)+") allready in map "+asString(ret));
+			if (oldValue != null)
+			{
+				throw new RuntimeException(String.format("Cookie with name '%s' ('%s') already in map %s",
+						cookie.getName(), asString(oldValue), asString(ret)));
 			}
 		}
 		return ret;

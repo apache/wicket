@@ -32,8 +32,8 @@ import org.apache.wicket.protocol.http.mock.Cookies.Key;
  */
 public class CookieCollection
 {
-	Map<Cookies.Key, Cookie> cookies = new LinkedHashMap<Cookies.Key, Cookie>();
-	Map<Cookies.Key, Cookie> expiredCookies = new LinkedHashMap<Cookies.Key, Cookie>();
+	private final Map<Cookies.Key, Cookie> cookies = new LinkedHashMap<Cookies.Key, Cookie>();
+	private final Map<Cookies.Key, Cookie> expiredCookies = new LinkedHashMap<Cookies.Key, Cookie>();
 
 	/**
 	 * add cookie to collection
@@ -45,7 +45,7 @@ public class CookieCollection
 	{
 		Key key = Cookies.keyOf(cookie);
 		Cookie copyOfCookie = Cookies.copyOf(cookie);
-		if (isExpired(cookie))
+		if (Cookies.isExpired(cookie))
 		{
 			expiredCookies.put(key, copyOfCookie);
 			cookies.remove(key);
@@ -63,7 +63,9 @@ public class CookieCollection
 	public void addAll(Cookie[] cookies)
 	{
 		if (cookies != null)
+		{
 			addAll(Arrays.asList(cookies));
+		}
 	}
 
 	/**
@@ -111,17 +113,5 @@ public class CookieCollection
 		ret.addAll(expiredCookies.values());
 		return ret;
 	}
-
-	/**
-	 * detect if this cookie is expired
-	 * 
-	 * @param cookie
-	 * @return true, if expired
-	 */
-	public static boolean isExpired(Cookie cookie)
-	{
-		return cookie.getMaxAge() == 0;
-	}
-
 
 }
