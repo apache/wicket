@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -754,6 +755,7 @@ public class WebClientInfoTest
 	 * will resolve to some DNS service saying "'blah' domain is free. Buy it."
 	 */
 	@Test
+	@Ignore
 	public void testExtractFromContainerRequestUnknownXForwardedFor()
 	{
 		String expected = "10.17.37.8";
