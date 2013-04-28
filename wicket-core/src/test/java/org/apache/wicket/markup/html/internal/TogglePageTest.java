@@ -155,10 +155,10 @@ public class TogglePageTest extends WicketTestCase
 		String inlineEnclosureIdPrefix = "wicket_InlineEnclosure-";
 
 		String inlineEnclosureHiddenPattern = "<tr id=\"" + inlineEnclosureIdPrefix +
-			"0\" style=\"display:none\"></tr>";
+			"\\d\" style=\"display:none\"></tr>";
 
 		String inlineEnclosureVisiblePattern = "<tr bgcolor=\"red\" id=\"" +
-			inlineEnclosureIdPrefix + "0\">";
+			inlineEnclosureIdPrefix + "\\d\">";
 
 		{
 			// On

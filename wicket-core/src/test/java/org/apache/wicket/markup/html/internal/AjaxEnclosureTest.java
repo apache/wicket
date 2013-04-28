@@ -16,14 +16,18 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.junit.Test;
 
 
@@ -36,9 +40,9 @@ public class AjaxEnclosureTest extends WicketTestCase
 {
 	private final String inlineEnclosureIdPrefix = "wicket_InlineEnclosure-";
 	private final String inlineEnclosureHiddenPattern = "<div id=\"" + inlineEnclosureIdPrefix +
-		"0\" style=\"display:none\"></div>";
+		"\\d\" style=\"display:none\"></div>";
 	private final String inlineEnclosureVisiblePattern = "<div id=\"" + inlineEnclosureIdPrefix +
-		"0\">";
+		"\\d\">";
 
 	@Override
 	protected WebApplication newApplication()
@@ -104,11 +108,10 @@ public class AjaxEnclosureTest extends WicketTestCase
 	@Test
 	public void ajaxTogglingNonControllingChildShouldNotToggleEnclosure()
 	{
-		final String enclosurePath = "wicket_InlineEnclosure-0";
 		{
 			// label 2 On
 			AjaxEnclosurePage_1 ajaxPage = tester.startPage(AjaxEnclosurePage_1.class);
-			ensureEnclosureIsVisible(enclosurePath, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			assertVisible(ajaxPage.getLabel1(), true);
 			assertVisible(ajaxPage.getLabel2(), true);
 			tester.clickLink(ajaxPage.getToggleLabel2Link().getPageRelativePath());
@@ -116,7 +119,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		{
 			// label 2 Off
 			AjaxEnclosurePage_1 ajaxPage = (AjaxEnclosurePage_1)tester.getLastRenderedPage();
-			ensureEnclosureIsVisible(enclosurePath, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			assertVisible(ajaxPage.getLabel1(), false);
 			assertInvisible(ajaxPage.getLabel2());
 			tester.clickLink(ajaxPage.getToggleLabel2Link().getPageRelativePath());
@@ -124,7 +127,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		{
 			// label 2 On
 			AjaxEnclosurePage_1 ajaxPage = (AjaxEnclosurePage_1)tester.getLastRenderedPage();
-			ensureEnclosureIsVisible(enclosurePath, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			assertVisible(ajaxPage.getLabel1(), false);
 			assertVisible(ajaxPage.getLabel2(), false);
 			tester.clickLink(ajaxPage.getToggleLabel2Link().getPageRelativePath());
@@ -132,7 +135,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		{
 			// label 2 Off
 			AjaxEnclosurePage_1 ajaxPage = (AjaxEnclosurePage_1)tester.getLastRenderedPage();
-			ensureEnclosureIsVisible(enclosurePath, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			assertVisible(ajaxPage.getLabel1(), false);
 			assertInvisible(ajaxPage.getLabel2());
 			tester.clickLink(ajaxPage.getToggleLabel2Link().getPageRelativePath());
@@ -145,13 +148,11 @@ public class AjaxEnclosureTest extends WicketTestCase
 	@Test
 	public void nestedInlineEnclosuresShouldToggleNormally()
 	{
-		final String enclosure1Path = "wicket_InlineEnclosure-0";
-
 		{
 			// 1. test that enclosure1, enclosure2, label1, label2 are visible, click link1,
 			// hiding label1 and the whole enclosure
 			AjaxEnclosurePage_2 ajaxPage = tester.startPage(AjaxEnclosurePage_2.class);
-			ensureEnclosureIsVisible(enclosure1Path, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			assertVisible(ajaxPage.getEnclosure2Marker(), true);
 			assertVisible(ajaxPage.getLabel1(), true);
 			assertVisible(ajaxPage.getLabel2(), true);
@@ -161,7 +162,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 			// 2. test that enclosure1, enclosure2, label1, label2 are INvisible, click link 1,
 			// bringing all back
 			AjaxEnclosurePage_2 ajaxPage = (AjaxEnclosurePage_2)tester.getLastRenderedPage();
-			ensureEnclosureIsInVisible(enclosure1Path, ajaxPage);
+			ensureEnclosureIsInvisible(ajaxPage, new AtomicInteger(2));
 			assertInvisible(ajaxPage.getEnclosure2Marker());
 			assertInvisible(ajaxPage.getLabel1());
 			assertInvisible(ajaxPage.getLabel2());
@@ -171,7 +172,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 			// 3. test that enclosure1, enclosure2, label1, label2 are visble, click link 2,
 			// hiding label 2 and enclosure 2
 			AjaxEnclosurePage_2 ajaxPage = (AjaxEnclosurePage_2)tester.getLastRenderedPage();
-			ensureEnclosureIsVisible(enclosure1Path, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			// ensureEnclosureIsVisible(enclosure2Path, ajaxPage);
 			assertVisible(ajaxPage.getEnclosure2Marker(), false);
 			assertVisible(ajaxPage.getLabel1(), false);
@@ -182,7 +183,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 			// 4. test that enclosure1, label1 are visible and enclosure2, label2 INvisible.
 			// click link 2 again
 			AjaxEnclosurePage_2 ajaxPage = (AjaxEnclosurePage_2)tester.getLastRenderedPage();
-			ensureEnclosureIsVisible(enclosure1Path, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(2));
 			assertVisible(ajaxPage.getLabel1(), false);
 			assertInvisible(ajaxPage.getEnclosure2Marker());
 			assertInvisible(ajaxPage.getLabel2());
@@ -192,7 +193,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 			// 3. test that enclosure1, enclosure2, label1, label2 are visble, Click link 1,
 			// hiding all
 			AjaxEnclosurePage_2 ajaxPage = (AjaxEnclosurePage_2)tester.getLastRenderedPage();
-			ensureEnclosureIsVisible(enclosure1Path, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			assertVisible(ajaxPage.getEnclosure2Marker(), false);
 			assertVisible(ajaxPage.getLabel1(), false);
 			assertVisible(ajaxPage.getLabel2(), false);
@@ -201,7 +202,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		{
 			// 4. test that enclosure1, enclosure2 label1, label2 are invisible. click link 2
 			AjaxEnclosurePage_2 ajaxPage = (AjaxEnclosurePage_2)tester.getLastRenderedPage();
-			ensureEnclosureIsInVisible(enclosure1Path, ajaxPage);
+			ensureEnclosureIsInvisible(ajaxPage, new AtomicInteger(2));
 			assertInvisible(ajaxPage.getEnclosure2Marker());
 			assertInvisible(ajaxPage.getLabel1());
 			assertInvisible(ajaxPage.getLabel2());
@@ -210,7 +211,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		{
 			// 5. test that enclosure1, enclosure2 label1, label2 are invisible. click link 1
 			AjaxEnclosurePage_2 ajaxPage = (AjaxEnclosurePage_2)tester.getLastRenderedPage();
-			ensureEnclosureIsInVisible(enclosure1Path, ajaxPage);
+			ensureEnclosureIsInvisible(ajaxPage, new AtomicInteger(1));
 			assertInvisible(ajaxPage.getEnclosure2Marker());
 			assertInvisible(ajaxPage.getLabel1());
 			assertInvisible(ajaxPage.getLabel2());
@@ -220,7 +221,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 			// 6. test that enclosure1, label1 are visible, and enclosure2, label2 invisible
 			// (because of step 4)
 			AjaxEnclosurePage_2 ajaxPage = (AjaxEnclosurePage_2)tester.getLastRenderedPage();
-			ensureEnclosureIsVisible(enclosure1Path, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(2));
 			assertInvisible(ajaxPage.getEnclosure2Marker());
 			assertVisible(ajaxPage.getLabel1(), false);
 			assertInvisible(ajaxPage.getLabel2());
@@ -235,13 +236,11 @@ public class AjaxEnclosureTest extends WicketTestCase
 	@Test
 	public void controllingChildShouldDefaultToTheSingleComponentInsideEnclosure()
 	{
-		final String enclosurePath = "wicket_InlineEnclosure-0";
-
 		{
 			// enclosure On
 			AjaxEnclosurePage_3 ajaxPage = tester.startPage(AjaxEnclosurePage_3.class);
 			assertVisible(ajaxPage.getLabel1(), true);
-			ensureEnclosureIsVisible(enclosurePath, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			tester.clickLink(ajaxPage.getToggleLabel1Link().getPageRelativePath());
 		}
 		{
@@ -249,7 +248,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 			AjaxEnclosurePage_3 ajaxPage = (AjaxEnclosurePage_3)tester.getLastRenderedPage();
 			tester.assertContains(inlineEnclosureHiddenPattern);
 			assertInvisible(ajaxPage.getLabel1());
-			ensureEnclosureIsInVisible(enclosurePath, ajaxPage);
+			ensureEnclosureIsInvisible(ajaxPage, new AtomicInteger(1));
 			tester.clickLink(ajaxPage.getToggleLabel1Link().getPageRelativePath());
 		}
 		{
@@ -257,7 +256,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 			AjaxEnclosurePage_3 ajaxPage = (AjaxEnclosurePage_3)tester.getLastRenderedPage();
 			tester.assertContains(inlineEnclosureVisiblePattern);
 			assertVisible(ajaxPage.getLabel1(), true);
-			ensureEnclosureIsVisible(enclosurePath, ajaxPage);
+			ensureEnclosureIsVisible(ajaxPage, new AtomicInteger(1));
 			tester.clickLink(ajaxPage.getToggleLabel1Link().getPageRelativePath());
 		}
 		{
@@ -265,24 +264,41 @@ public class AjaxEnclosureTest extends WicketTestCase
 			AjaxEnclosurePage_3 ajaxPage = (AjaxEnclosurePage_3)tester.getLastRenderedPage();
 			tester.assertContains(inlineEnclosureHiddenPattern);
 			assertInvisible(ajaxPage.getLabel1());
-			ensureEnclosureIsInVisible(enclosurePath, ajaxPage);
+			ensureEnclosureIsInvisible(ajaxPage, new AtomicInteger(1));
 			tester.clickLink(ajaxPage.getToggleLabel1Link().getPageRelativePath());
 		}
 	}
 
-	private void ensureEnclosureIsVisible(final String enclosurePath, Page ajaxPage)
+	private void ensureEnclosureIsVisible(Page ajaxPage, AtomicInteger n)
 	{
-		Component enclosure = ajaxPage.get(enclosurePath);
+		InlineEnclosure enclosure = findNthComponent(InlineEnclosure.class, ajaxPage, n);
 		assertTrue("Is not visible", enclosure.determineVisibility());
 	}
 
-	private void ensureEnclosureIsInVisible(final String enclosurePath, Page ajaxPage)
+	private void ensureEnclosureIsInvisible(Page ajaxPage, AtomicInteger n)
 	{
-		Component enclosure = ajaxPage.get(enclosurePath);
+		InlineEnclosure enclosure = findNthComponent(InlineEnclosure.class, ajaxPage, n);
 		if (enclosure != null)
 		{
 			assertFalse("Is visible", enclosure.determineVisibility());
 		}
+	}
+
+	private <T> T findNthComponent(final Class<T> type, MarkupContainer container, final AtomicInteger n)
+	{
+		// finds the Nth InlineEnclosure in the children
+		Component instance = container.visitChildren(new IVisitor<Component, Component>()
+		{
+			@Override
+			public void component(Component object, IVisit<Component> visit)
+			{
+				if (type.isInstance(object) && n.decrementAndGet() == 0)
+				{
+					visit.stop(object);
+				}
+			}
+		});
+		return type.cast(instance);
 	}
 
 	protected void assertVisible(Label label, boolean checkAlsoMarkup)

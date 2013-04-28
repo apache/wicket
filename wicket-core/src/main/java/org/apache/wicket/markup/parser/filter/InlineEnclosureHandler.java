@@ -206,10 +206,10 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		if (Strings.isEmpty(inlineEnclosureChildId) == false)
 		{
 			String id = tag.getId();
-			if (container instanceof LoopItem)
+			LoopItem loopItemParent = findLoopItemParent(container);
+			if (loopItemParent != null)
 			{
-				LoopItem item = (LoopItem) container;
-				id = id + '_' + item.getIndex();
+				id = id + '_' + loopItemParent.getIndex();
 			}
 
 			// Yes, we handled the tag
@@ -222,5 +222,19 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 
 	private String getInlineEnclosureAttributeName(MarkupStream markupStream) {
 		return getWicketNamespace(markupStream) + ':' + INLINE_ENCLOSURE_ATTRIBUTE_NAME;
+	}
+
+	private LoopItem findLoopItemParent(MarkupContainer parent)
+	{
+		LoopItem loopItemParent;
+		if (parent instanceof LoopItem)
+		{
+			loopItemParent = (LoopItem) parent;
+		}
+		else
+		{
+			loopItemParent = parent.findParent(LoopItem.class);
+		}
+		return loopItemParent;
 	}
 }

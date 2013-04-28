@@ -749,6 +749,9 @@ public class WebClientInfoTest
 
 	/**
 	 * Test X-Forwarded-For ip address extraction with fallback when no ip is contained.
+	 *
+	 * Note mgrigorov: this test could fail in network setups where unknown addresses, like "blah",
+	 * will resolve to some DNS service saying "'blah' domain is free. Buy it."
 	 */
 	@Test
 	public void testExtractFromContainerRequestUnknownXForwardedFor()
