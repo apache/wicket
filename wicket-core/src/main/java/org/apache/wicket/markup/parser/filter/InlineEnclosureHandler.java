@@ -27,6 +27,7 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.string.Strings;
@@ -65,10 +66,10 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 	private Stack<ComponentTag> enclosures;
 
 	/**
-	 * InlinceEnclosures are not removed after render as other auto-components,
+	 * InlineEnclosures are not removed after render as other auto-components,
 	 * thus they have to have a stable id.
 	 */
-	private int counter;
+	private static int counter;
 
 	/**
 	 * Construct.
@@ -205,6 +206,11 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		if (Strings.isEmpty(inlineEnclosureChildId) == false)
 		{
 			String id = tag.getId();
+			if (container instanceof LoopItem)
+			{
+				LoopItem item = (LoopItem) container;
+				id = id + '_' + item.getIndex();
+			}
 
 			// Yes, we handled the tag
 			return new InlineEnclosure(id, inlineEnclosureChildId);
