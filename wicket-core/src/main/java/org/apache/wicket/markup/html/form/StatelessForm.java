@@ -16,8 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
@@ -105,6 +110,19 @@ public class StatelessForm<T> extends Form<T>
 			{
 				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;
 				parameters.remove(submitLink.getInputName());
+			}
+
+			// remove the special parameter for IRequestListener
+			List<INamedParameters.NamedPair> namedParameters = parameters.getAllNamed();
+			Iterator<INamedParameters.NamedPair> iterator = namedParameters.iterator();
+			while (iterator.hasNext())
+			{
+				INamedParameters.NamedPair namedParameter = iterator.next();
+				if (Strings.isEmpty(namedParameter.getValue()))
+				{
+					parameters.remove(namedParameter.getKey());
+					break;
+				}
 			}
 		}
 	}
