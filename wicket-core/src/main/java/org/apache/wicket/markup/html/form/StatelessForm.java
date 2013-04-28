@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.visit.IVisit;
@@ -85,29 +84,27 @@ public class StatelessForm<T> extends Form<T>
 	@Override
 	public void process(IFormSubmitter submittingComponent)
 	{
+		// get the parameters before processing the form because the
+		// application may remove this form from its parent in #onSubmit() (WICKET-5158)
+		final PageParameters parameters = getPage().getPageParameters();
+
 		super.process(submittingComponent);
 
-		Page page = findPage();
-		// the application may have removed this form from its parent in #onSubmit()
-		if (page != null)
+		if (parameters != null)
 		{
-			final PageParameters parameters = page.getPageParameters();
-			if (parameters != null)
+			visitFormComponents(new IVisitor<FormComponent<?>, Void>()
 			{
-				visitFormComponents(new IVisitor<FormComponent<?>, Void>()
+				@Override
+				public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 				{
-					@Override
-					public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
-					{
-						parameters.remove(formComponent.getInputName());
-					}
-				});
-				parameters.remove(getHiddenFieldId());
-				if (submittingComponent instanceof AbstractSubmitLink)
-				{
-					AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;
-					parameters.remove(submitLink.getInputName());
+					parameters.remove(formComponent.getInputName());
 				}
+			});
+			parameters.remove(getHiddenFieldId());
+			if (submittingComponent instanceof AbstractSubmitLink)
+			{
+				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;
+				parameters.remove(submitLink.getInputName());
 			}
 		}
 	}
