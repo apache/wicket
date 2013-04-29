@@ -46,18 +46,41 @@ public final class RequestUtils
 	 */
 	public static void decodeParameters(String queryString, PageParameters params)
 	{
+		decodeParameters(queryString, params, getCurrentCharset());
+	}
+
+	/**
+	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
+	 * value map.
+	 *
+	 * @param queryString
+	 *            string to decode, uses '&' to separate parameters and '=' to separate key from
+	 *            value
+	 * @param params
+	 *            parameters map to write the found key/ value pairs to
+	 * @param currentCharset
+	 *            charset resolved via current requestCycle
+	 */
+	static void decodeParameters(String queryString, PageParameters params, Charset currentCharset)
+	{
+        
+        if (Strings.indexOf(queryString, '?') == 0)
+        {
+            queryString = queryString.substring(1);
+        }
+        
 		for (String paramTuple : Strings.split(queryString, '&'))
 		{
 			final String[] bits = Strings.split(paramTuple, '=');
 
 			if (bits.length == 2)
 			{
-				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()),
-					UrlDecoder.QUERY_INSTANCE.decode(bits[1], getCurrentCharset()));
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset),
+					UrlDecoder.QUERY_INSTANCE.decode(bits[1], currentCharset));
 			}
 			else
 			{
-				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()), "");
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset), "");
 			}
 		}
 	}
