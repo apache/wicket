@@ -18,8 +18,6 @@ package org.apache.wicket.markup.html.internal;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,8 +37,6 @@ public class InlineEnclosure extends Enclosure
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = LoggerFactory.getLogger(InlineEnclosure.class);
-
 	/**
 	 * Construct.
 	 * 
@@ -53,7 +49,6 @@ public class InlineEnclosure extends Enclosure
 
 		// ensure that the Enclosure is ready for ajax updates
 		setOutputMarkupPlaceholderTag(true);
-		setMarkupId(getId());
 	}
 
 	@Override

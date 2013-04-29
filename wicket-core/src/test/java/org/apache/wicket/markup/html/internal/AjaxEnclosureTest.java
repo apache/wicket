@@ -32,11 +32,11 @@ import org.junit.Test;
  */
 public class AjaxEnclosureTest extends WicketTestCase
 {
-	private final String inlineEnclosureIdPrefix = "InlineEnclosure-";
+	private final String inlineEnclosureIdPrefix = "InlineEnclosure_";
 	private final String inlineEnclosureHiddenPattern = "<div id=\"" + inlineEnclosureIdPrefix +
-		"0\" style=\"display:none\"></div>";
+		"\\w+\" style=\"display:none\"></div>";
 	private final String inlineEnclosureVisiblePattern = "<div id=\"" + inlineEnclosureIdPrefix +
-		"0\">";
+		"\\w+\">";
 
 
 	/**

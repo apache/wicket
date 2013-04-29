@@ -64,7 +64,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 	private Stack<ComponentTag> enclosures;
 
 	/**
-	 * InlinceEnclosures are not removed after render as other auto-components, thus they have to
+	 * InlineEnclosures are not removed after render as other auto-components, thus they have to
 	 * have a stable id.
 	 */
 	private int counter;
