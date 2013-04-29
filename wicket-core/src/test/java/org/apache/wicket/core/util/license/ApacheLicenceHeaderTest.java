@@ -43,6 +43,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 
 		// the licence header breaks the tests in IE
 		htmlIgnore.add("src/test/js/all.html");
+		htmlIgnore.add("src/test/js/amd.html");
 
 		/*
 		 * See NOTICE.txt
@@ -50,6 +51,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		xmlPrologIgnore.add("src/main/java/org/apache/wicket/util/diff");
 		// the xml prolog breaks the tests in IE
 		xmlPrologIgnore.add("src/test/js/all.html");
+		xmlPrologIgnore.add("src/test/js/amd.html");
 
 		/*
 		 * .css in test is very test specific and a license header would confuse and make it unclear
@@ -102,6 +104,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js");
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/resource/jquery");
 		javaScriptIgnore.add("src/test/js/qunit/qunit.js");
+		javaScriptIgnore.add("src/test/js/amd/require.js");
 		javaScriptIgnore.add("src/test/js/data/ajax/nonWicketResponse.json"); // no way to add licence in JSON
 	}
 }
