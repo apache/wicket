@@ -46,7 +46,8 @@ module.exports = function(grunt) {
 			"./wicket-core/src/test/js/form.js",
 			"./wicket-core/src/test/js/dom.js",
 			"./wicket-core/src/test/js/channels.js",
-			"./wicket-core/src/test/js/event.js"
+			"./wicket-core/src/test/js/event.js",
+			"./wicket-core/src/test/js/amd.js"
 		],
 		gruntJs = [
 			"grunt.js"
@@ -93,6 +94,11 @@ module.exports = function(grunt) {
 			 * See ajax.js header for details how to setup it.
 			 */
 			index: ['http://localhost/ajax-tests/test/js/all.html'],
+
+			/**
+			 * Run Asynchronous module definition tests
+			 */
+			amd: ['http://localhost/ajax-tests/test/js/amd.html'],
 
 			/*
 			 * Runs only local tests (w/o ajax ones).

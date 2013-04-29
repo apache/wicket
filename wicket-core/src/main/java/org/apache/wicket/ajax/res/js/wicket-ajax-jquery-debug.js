@@ -28,7 +28,7 @@
 	'use strict';
 
 	if (typeof(Wicket) === 'undefined') {
-		Wicket = {};
+		window.Wicket = {};
 	}
 
 	if (typeof(Wicket.Ajax) === 'undefined') {
@@ -265,4 +265,5 @@
 	};
 
 	jQuery(window).on('load', Wicket.Ajax.DebugWindow.init);
+
 })();
