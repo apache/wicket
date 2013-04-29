@@ -213,10 +213,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 						" was rendered already. You can render it only once during a render phase. Class relative path: " +
 						component.getClassRelativePath());
 			}
-			if (log.isDebugEnabled())
-			{
-				log.debug("Rendered " + component);
-			}
+			log.debug("Rendered {}", component);
+
 		}
 	}
 

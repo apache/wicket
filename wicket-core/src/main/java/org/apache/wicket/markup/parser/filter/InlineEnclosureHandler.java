@@ -27,7 +27,6 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
-import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.string.Strings;
@@ -69,7 +68,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 	 * InlineEnclosures are not removed after render as other auto-components,
 	 * thus they have to have a stable id.
 	 */
-	private static int counter;
+	private int counter;
 
 	/**
 	 * Construct.
@@ -114,8 +113,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 				{
 					if (Strings.isEmpty(htmlId))
 					{
-						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX +
-							(counter++);
+						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX + (counter++);
 						tag.setId(id);
 					}
 					else
@@ -206,11 +204,6 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		if (Strings.isEmpty(inlineEnclosureChildId) == false)
 		{
 			String id = tag.getId();
-			LoopItem loopItemParent = findLoopItemParent(container);
-			if (loopItemParent != null)
-			{
-				id = id + '_' + loopItemParent.getIndex();
-			}
 
 			// Yes, we handled the tag
 			return new InlineEnclosure(id, inlineEnclosureChildId);
@@ -224,17 +217,4 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		return getWicketNamespace(markupStream) + ':' + INLINE_ENCLOSURE_ATTRIBUTE_NAME;
 	}
 
-	private LoopItem findLoopItemParent(MarkupContainer parent)
-	{
-		LoopItem loopItemParent;
-		if (parent instanceof LoopItem)
-		{
-			loopItemParent = (LoopItem) parent;
-		}
-		else
-		{
-			loopItemParent = parent.findParent(LoopItem.class);
-		}
-		return loopItemParent;
-	}
 }

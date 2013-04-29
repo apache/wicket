@@ -152,13 +152,13 @@ public class TogglePageTest extends WicketTestCase
 	 */
 	public void testInlineEnclosureAjaxPage()
 	{
-		String inlineEnclosureIdPrefix = "wicket_InlineEnclosure-";
+		String inlineEnclosureIdPrefix = "wicket__InlineEnclosure_";
 
 		String inlineEnclosureHiddenPattern = "<tr id=\"" + inlineEnclosureIdPrefix +
-			"\\d\" style=\"display:none\"></tr>";
+			"\\w+\" style=\"display:none\"></tr>";
 
 		String inlineEnclosureVisiblePattern = "<tr bgcolor=\"red\" id=\"" +
-			inlineEnclosureIdPrefix + "\\d\">";
+			inlineEnclosureIdPrefix + "\\w+\">";
 
 		{
 			// On

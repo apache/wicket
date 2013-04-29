@@ -16,15 +16,8 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupParser;
-import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
-import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -44,13 +37,11 @@ public class InlineEnclosure extends Enclosure
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = LoggerFactory.getLogger(InlineEnclosure.class);
-
 	/**
 	 * Construct.
 	 * 
-	 * @param id
-	 * @param childId
+	 * @param id The component id
+	 * @param childId The id of the child component that controls the visibility
 	 */
 	public InlineEnclosure(final String id, final String childId)
 	{
@@ -58,7 +49,6 @@ public class InlineEnclosure extends Enclosure
 
 		// ensure that the Enclosure is ready for ajax updates
 		setOutputMarkupPlaceholderTag(true);
-		setMarkupId(getId());
 	}
 
 	@Override
@@ -80,25 +70,5 @@ public class InlineEnclosure extends Enclosure
 		boolean visible = getChild().determineVisibility();
 		setVisible(visible);
 		return visible;
-	}
-
-	/**
-	 * @return the markup namespace for Wicket elements and attributes.
-	 */
-	private String getWicketNamespace()
-	{
-		String markupNamespace = MarkupParser.WICKET;
-		Page page = findPage();
-		if (page != null)
-		{
-			IMarkupFragment markup = page.getMarkup();
-			MarkupResourceStream markupResourceStream = markup.getMarkupResourceStream();
-			String namespace = markupResourceStream.getWicketNamespace();
-			if (Strings.isEmpty(namespace) == false)
-			{
-				markupNamespace = namespace;
-			}
-		}
-		return markupNamespace;
 	}
 }
