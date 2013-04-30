@@ -380,7 +380,8 @@ public class PageStoreManager extends AbstractPageManager
 				entry.setSessionCache(touchedPages);
 				for (IManageablePage page : touchedPages)
 				{
-					pageStore.storePage(getSessionId(), page);
+					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
+					pageStore.storePage(entry.sessionId, page);
 				}
 			}
 		}
