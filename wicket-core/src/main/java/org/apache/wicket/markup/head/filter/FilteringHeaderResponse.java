@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head.filter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,12 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 {
 
 	private static final Logger log = LoggerFactory.getLogger(FilteringHeaderResponse.class);
+
+	/**
+	 * The default name of the filter that will collect contributions which should be rendered
+	 * in the page's &lt;head&gt;
+	 */
+	public static final String DEFAULT_HEADER_FILTER_NAME = "wicket-default-header-filter";
 
 	/**
 	 * A filter used to bucket your resources, inline scripts, etc, into different responses. The
@@ -88,6 +95,21 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	private final Map<String, List<HeaderItem>> responseFilterMap = new HashMap<String, List<HeaderItem>>();
 	private Iterable<? extends IHeaderResponseFilter> filters;
 	private final String headerFilterName;
+
+	/**
+	 * Constructor without explicit filters.
+	 *
+	 * Generates filters automatically for any FilteredHeaderItem.
+	 * Any other contribution is rendered in the page's &lt;head&gt;
+	 *
+	 * @param response
+	 *            the wrapped IHeaderResponse
+	 * @see HeaderResponseContainer
+	 */
+	public FilteringHeaderResponse(IHeaderResponse response)
+	{
+		this(response, DEFAULT_HEADER_FILTER_NAME, Collections.<IHeaderResponseFilter>emptyList());
+	}
 
 	/**
 	 * Construct.
@@ -162,17 +184,26 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		}
 		else
 		{
-			for (IHeaderResponseFilter filter : filters)
+			if (filters != null)
 			{
-				if (filter.accepts(item))
+				for (IHeaderResponseFilter filter : filters)
 				{
-					render(item, filter.getName());
-					return;
+					if (filter.accepts(item))
+					{
+						render(item, filter.getName());
+						return;
+					}
 				}
 			}
-			log.warn(
-				"A HeaderItem '{}' was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests",
-				item);
+
+			// none of the configured filters accepted it so put it in the header
+			if (responseFilterMap.containsKey(headerFilterName) == false)
+			{
+				responseFilterMap.put(headerFilterName, new ArrayList<HeaderItem>());
+			}
+			render(item, headerFilterName);
+			log.debug("A HeaderItem '{}' was rendered to the filtering header response, but did not match any filters, so it put in the <head>.",
+					item);
 		}
 	}
 
