@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head.filter;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 
@@ -47,13 +48,13 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 	public JavaScriptFilteredIntoFooterHeaderResponse(IHeaderResponse response,
 		String footerBucketName)
 	{
-		super(response, HEADER_FILTER_NAME, null);
+		super(response, HEADER_FILTER_NAME, Collections.<IHeaderResponseFilter>emptyList());
 		setFilters(createFilters(footerBucketName));
 	}
 
+	// TODO: make this method private in Wicket 7
 	protected Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
 	{
-		// TODO: make private method in wicket 7.x
 		IHeaderResponseFilter footer = createFooterFilter(footerBucketName);
 		IHeaderResponseFilter header = createHeaderFilter(HEADER_FILTER_NAME, footer);
 		return Arrays.asList(header, footer);
