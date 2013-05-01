@@ -87,7 +87,7 @@ public class SpringWebApplicationFactoryTest extends Assert
 		}
 
 		@Override
-		public Enumeration<?> getInitParameterNames()
+		public Enumeration<String> getInitParameterNames()
 		{
 			throw new UnsupportedOperationException();
 		}

@@ -20,7 +20,6 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
@@ -42,37 +41,6 @@ public class MetaInfStaticResourceReferenceTest
 	private static final String STATIC_RESOURCE_NAME = "sample.js";
 
 	/**
-	 * Test with Servlet 2.5 container
-	 */
-	@Test
-	public void testWithServlet25()
-	{
-		BaseWicketTester tester = new BaseWicketTester();
-
-		MetaInfStaticResourceReference metaRes = new MetaInfStaticResourceReference(getClass(),
-			STATIC_RESOURCE_NAME);
-		PackageResourceReference packRes = new PackageResourceReference(getClass(),
-			STATIC_RESOURCE_NAME);
-
-		Url packUrl = tester.getRequestCycle().mapUrlFor(packRes, null);
-		Url metaUrl = tester.getRequestCycle().mapUrlFor(metaRes, null);
-
-		Assert.assertNotNull(metaUrl);
-
-		// under 2.5 there should not be any difference between meta and pack resource urls
-		Assert.assertEquals(metaUrl, packUrl);
-
-		MockWebRequest request = new MockWebRequest(metaUrl);
-
-		IRequestHandler requestHandler = tester.getApplication()
-			.getRootRequestMapper()
-			.mapRequest(request);
-
-		// meta resource is served by wicket under 2.5
-		Assert.assertNotNull(requestHandler);
-	}
-
-	/**
 	 * Test with Servlet 3.0 container
 	 * 
 	 * @throws MalformedURLException
@@ -82,7 +50,7 @@ public class MetaInfStaticResourceReferenceTest
 	public void testWithServlet30() throws MalformedURLException
 	{
 		MockApplication application = new MockApplication();
-		MockServletContext servletContext = new MockServletContext30(application, null);
+		MockServletContext servletContext = new MockServletContext(application, "/");
 		BaseWicketTester tester = new BaseWicketTester(application, servletContext);
 
 		MetaInfStaticResourceReference metaRes = new MetaInfStaticResourceReference(getClass(),
@@ -100,7 +68,7 @@ public class MetaInfStaticResourceReferenceTest
 			metaUrl.equals(packUrl));
 
 		String metaUrlStr = metaUrl.toString();
-		if (!metaUrlStr.startsWith("/"))
+		if (metaUrlStr.charAt(1) != '/')
 		{
 			metaUrlStr = "/" + metaUrlStr;
 		}
@@ -148,46 +116,4 @@ public class MetaInfStaticResourceReferenceTest
 		before();
 	}
 
-	/**
-	 * Partial mock implementation for Servlet 3.0 ServletContext.
-	 */
-	private static class MockServletContext30 extends MockServletContext
-	{
-		public MockServletContext30(Application application, String path)
-		{
-			super(application, path);
-		}
-
-		@Override
-		public URL getResource(String name) throws MalformedURLException
-		{
-			URL url = super.getResource(name);
-
-			if (url != null)
-			{
-				return url;
-			}
-
-			return getClass().getClassLoader().getResource("META-INF/resources" + name);
-		}
-
-		/**
-		 * @return 3
-		 */
-		@Override
-		public int getMajorVersion()
-		{
-			return 3;
-		}
-
-		/**
-		 * @return 0
-		 */
-		@Override
-		public int getMinorVersion()
-		{
-			return 0;
-		}
-
-	}
 }

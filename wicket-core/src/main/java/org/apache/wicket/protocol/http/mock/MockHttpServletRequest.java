@@ -41,12 +41,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -1204,6 +1211,34 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return false;
 	}
 
+	@Override
+	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException
+	{
+		return false;
+	}
+
+	@Override
+	public void login(String username, String password) throws ServletException
+	{
+	}
+
+	@Override
+	public void logout() throws ServletException
+	{
+	}
+
+	@Override
+	public Collection<Part> getParts() throws IOException, ServletException
+	{
+		return null;
+	}
+
+	@Override
+	public Part getPart(String name) throws IOException, ServletException
+	{
+		return null;
+	}
+
 	/**
 	 * Check whether session id is from a url rewrite. Always returns false.
 	 * 
@@ -1826,64 +1861,40 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return context;
 	}
 
-	// @formatter:off
-	/* TODO JAVA6,SERVLET3.0
-	 * servlet 3.0 stuff
-	 * 
-	
+	@Override
 	public AsyncContext startAsync() throws IllegalStateException
 	{
 		return null;
 	}
 
-	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
-		throws IllegalStateException
+	@Override
+	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException
 	{
 		return null;
 	}
 
+	@Override
 	public boolean isAsyncStarted()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean isAsyncSupported()
 	{
 		return false;
 	}
 
+	@Override
 	public AsyncContext getAsyncContext()
 	{
 		return null;
 	}
 
+	@Override
 	public DispatcherType getDispatcherType()
 	{
 		return null;
 	}
 
-	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException
-	{
-		return false;
-	}
-
-	public void login(String username, String password) throws ServletException
-	{
-	}
-
-	public void logout() throws ServletException
-	{
-	}
-
-	public Collection<Part> getParts() throws IOException, ServletException
-	{
-		return null;
-	}
-
-	public Part getPart(String name) throws IOException, ServletException
-	{
-		return null;
-	}
-	*/
-	// @formatter:on
 }
