@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.head.filter;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 
@@ -34,7 +33,8 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 	/**
 	 * The name of the filter that renders the head section of the page
 	 */
-	public static final String HEADER_FILTER_NAME = "headerBucket";
+	@Deprecated
+	public static final String HEADER_FILTER_NAME = DEFAULT_HEADER_FILTER_NAME;
 
 	/**
 	 * Construct.
@@ -48,15 +48,14 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 	public JavaScriptFilteredIntoFooterHeaderResponse(IHeaderResponse response,
 		String footerBucketName)
 	{
-		super(response, HEADER_FILTER_NAME, Collections.<IHeaderResponseFilter>emptyList());
+		super(response);
 		setFilters(createFilters(footerBucketName));
 	}
 
-	// TODO: make this method private in Wicket 7
-	protected Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
+	private Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
 	{
 		IHeaderResponseFilter footer = createFooterFilter(footerBucketName);
-		IHeaderResponseFilter header = createHeaderFilter(HEADER_FILTER_NAME, footer);
+		IHeaderResponseFilter header = createHeaderFilter(DEFAULT_HEADER_FILTER_NAME, footer);
 		return Arrays.asList(header, footer);
 	}
 
@@ -70,31 +69,4 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 		return new OppositeHeaderResponseFilter(headerFilterName, footerFilter);
 	}
 
-	/**
-	 * see WICKET-4736 JavaScriptFilteredIntoFooterHeaderResponse should reverse filter logic
-	 * 
-	 * @param footerBucketName
-	 * @param header
-	 * @return the correct header response filter, but a different one
-	 * @deprecated no longer part of the API
-	 */
-	@Deprecated
-	protected IHeaderResponseFilter createFooterFilter(String footerBucketName,
-		IHeaderResponseFilter header)
-	{
-		return new OppositeHeaderResponseFilter(footerBucketName, header);
-	}
-
-	/**
-	 * see WICKET-4736 JavaScriptFilteredIntoFooterHeaderResponse should reverse filter logic
-	 * 
-	 * @param headerFilterName
-	 * @return the wrong header response filter
-	 * @deprecated no longer part of the API
-	 */
-	@Deprecated
-	protected IHeaderResponseFilter createHeaderFilter(String headerFilterName)
-	{
-		return new CssAndPageAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
-	}
 }
