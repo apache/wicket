@@ -838,12 +838,13 @@
 					<artifactId>clirr-maven-plugin</artifactId>
 					<version>2.5</version>
 					<configuration>
+						<skip>true</skip> <!-- Disabled until 7.0 -->
 						<comparisonVersion>6.0.0</comparisonVersion>
 						<failOnError>true</failOnError>
 						<logResults>true</logResults>
 						<ignored>
 							<difference>
-								<!-- FeedbackCollector used to be final. Now it is non-final and so all existing methods were made final to keep them non-overridable. However, clirr does not take into account the class going from final to non-finall and thinks overridable methods were made final. We ignore this change to silence it. -->
+								<!-- FeedbackCollector used to be final. Now it is non-final and so all existing methods were made final to keep them non-overridable. However, clirr does not take into account the class going from final to non-final and thinks overridable methods were made final. We ignore this change to silence it. -->
 								<className>org${file.separator}apache${file.separator}wicket${file.separator}feedback${file.separator}FeedbackCollector</className>
 								<method>*</method>
 								<differenceType>7014</differenceType>
