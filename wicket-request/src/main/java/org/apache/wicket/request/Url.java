@@ -714,7 +714,12 @@ public class Url implements Serializable
 
 
 		result.append(path);
-		result.append(getQueryString(charset));
+        
+        final String queryString = getQueryString(charset);
+        if (queryString != null)
+        {
+            result.append('?').append(queryString);
+        }
 		return result.toString();
 	}
 
