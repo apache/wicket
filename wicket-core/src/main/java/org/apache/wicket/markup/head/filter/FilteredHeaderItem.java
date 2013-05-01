@@ -27,7 +27,7 @@ import org.apache.wicket.request.Response;
  * {@link HeaderItem} that specifies the filter it belongs to. Dependencies of a
  * {@code FilteredHeaderItem} belong to the same filter. If used in conjunction with
  * {@link JavaScriptFilteredIntoFooterHeaderResponse}, use
- * {@link JavaScriptFilteredIntoFooterHeaderResponse#HEADER_FILTER_NAME HEADER_FILTER_NAME} to
+ * {@link FilteringHeaderResponse#DEFAULT_HEADER_FILTER_NAME DEFAULT_HEADER_FILTER_NAME} to
  * render items in the header.
  * 
  * @author papegaaij

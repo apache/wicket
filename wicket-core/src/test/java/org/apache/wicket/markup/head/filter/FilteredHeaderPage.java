@@ -57,7 +57,7 @@ public class FilteredHeaderPage extends WebPage
 		final JavaScriptResourceReference topJsReference = new JavaScriptResourceReference(
 			FilteredHeaderPage.class, "top.js");
 		response.render(new FilteredHeaderItem(JavaScriptHeaderItem.forReference(topJsReference),
-			JavaScriptFilteredIntoFooterHeaderResponse.HEADER_FILTER_NAME));
+			FilteringHeaderResponse.DEFAULT_HEADER_FILTER_NAME));
 
 		// rendered at the bottom of the body bucket
 		JQueryPluginResourceReference bottomJs = new JQueryPluginResourceReference(
