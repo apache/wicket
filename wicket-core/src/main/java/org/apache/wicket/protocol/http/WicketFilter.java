@@ -26,6 +26,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -465,10 +467,6 @@ public class WicketFilter implements Filter
 	 */
 	protected String getFilterPathFromAnnotation(boolean isServlet)
 	{
-		// @formatter:off
-		/* TODO JAVA6,SERVLET3.0
-		 * the code below is disabled because servlet 3.0 requires java 6 and wicket still supports java 5
-		 * for now the code below will go into a wicket-stuff module
 		String[] patterns = null;
 
 		if (isServlet)
@@ -476,7 +474,14 @@ public class WicketFilter implements Filter
 			WebServlet servlet = getClass().getAnnotation(WebServlet.class);
 			if (servlet != null)
 			{
-				patterns = servlet.urlPatterns();
+				if (servlet.urlPatterns().length > 0)
+				{
+					patterns = servlet.urlPatterns();
+				}
+				else
+				{
+					patterns = servlet.value();
+				}
 			}
 		}
 		else
@@ -484,22 +489,34 @@ public class WicketFilter implements Filter
 			WebFilter filter = getClass().getAnnotation(WebFilter.class);
 			if (filter != null)
 			{
-				patterns = filter.urlPatterns();
+				if (filter.urlPatterns().length > 0)
+				{
+					patterns = filter.urlPatterns();
+				}
+				else
+				{
+					patterns = filter.value();
+				}
 			}
 		}
+
 		if (patterns != null && patterns.length > 0)
 		{
 			String pattern = patterns[0];
 			if (patterns.length > 1)
 			{
 				log.warn(
-					"Multiple url patterns defined for Wicket filter/servlet, using the first: {}",
-					pattern);
+						"Multiple url patterns defined for Wicket filter/servlet, using the first: {}",
+						pattern);
 			}
+
+			if ("/*".equals(pattern))
+			{
+				pattern = "";
+			}
+
 			return pattern;
 		}
-		*/
-		// @formatter:on
 		return null;
 	}
 
