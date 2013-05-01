@@ -146,15 +146,15 @@ public class WicketFilter implements Filter
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		final ClassLoader newClassLoader = getClassLoader();
 
+		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+
 		try
 		{
 			if (previousClassLoader != newClassLoader)
 			{
 				Thread.currentThread().setContextClassLoader(newClassLoader);
 			}
-
-			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
 			// Make sure getFilterPath() gets called before checkIfRedirectRequired()
 			String filterPath = getFilterPath(httpServletRequest);
@@ -229,7 +229,7 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
 			}
 
-			if (response.isCommitted())
+			if (response.isCommitted() && httpServletRequest.isAsyncStarted() == false)
 			{
 				response.flushBuffer();
 			}

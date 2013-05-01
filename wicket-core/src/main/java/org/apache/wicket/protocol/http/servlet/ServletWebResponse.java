@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import java.io.IOException;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
@@ -285,7 +286,11 @@ public class ServletWebResponse extends WebResponse
 	{
 		try
 		{
-			httpServletResponse.flushBuffer();
+			HttpServletRequest httpServletRequest = webRequest.getContainerRequest();
+			if (httpServletRequest.isAsyncStarted() == false)
+			{
+				httpServletResponse.flushBuffer();
+			}
 		}
 		catch (IOException e)
 		{
