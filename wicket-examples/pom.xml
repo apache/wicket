@@ -32,6 +32,10 @@
 	</description>
 	<dependencies>
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
@@ -57,7 +61,7 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.3.0.Final</version>
 		</dependency>
-        <!-- / bean validation -->
+		<!-- / bean validation -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-jmx</artifactId>
@@ -99,9 +103,15 @@
 			<groupId>com.uwyn</groupId>
 			<artifactId>jhighlight</artifactId>
 			<version>1.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>httpunit</groupId>
+			<groupId>org.httpunit</groupId>
 			<artifactId>httpunit</artifactId>
 		</dependency>
 		<dependency>
@@ -130,6 +140,12 @@
 			<groupId>org.jboss.seam.conversation</groupId>
 			<artifactId>seam-conversation-weld</artifactId>
 			<version>3.0.0.Final</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.spec.javax.servlet</groupId>
+					<artifactId>jboss-servlet-api_3.0_spec</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

@@ -88,7 +88,7 @@ public class GuiceWebApplicationFactoryTest
 					}
 
 					@Override
-					public Enumeration<?> getInitParameterNames()
+					public Enumeration<String> getInitParameterNames()
 					{
 						return null;
 					}
