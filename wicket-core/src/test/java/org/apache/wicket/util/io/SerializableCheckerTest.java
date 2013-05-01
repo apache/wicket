@@ -23,8 +23,8 @@ import java.io.Serializable;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.wicket.core.util.io.SerializableChecker;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
+import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.util.Log4jEventHistory;
 import org.apache.wicket.util.value.ValueMap;
 import org.junit.Assert;
@@ -44,7 +44,8 @@ public class SerializableCheckerTest extends Assert
 	@Test
 	public void valueMap() throws IOException
 	{
-		SerializableChecker checker = new SerializableChecker(new ByteArrayOutputStream(), new NotSerializableException());
+		CheckingObjectOutputStream checker = new CheckingObjectOutputStream(new ByteArrayOutputStream(),
+				new ObjectSerializationChecker(new NotSerializableException()));
 		checker.writeObject(new ValueMap());
 	}
 
@@ -62,11 +63,11 @@ public class SerializableCheckerTest extends Assert
 		logger.setLevel(Level.WARN);
 		Log4jEventHistory logHistory = new Log4jEventHistory();
 		logger.addAppender(logHistory);
-		SerializableChecker serializableChecker = new SerializableChecker(new ByteArrayOutputStream(),
-				new NotSerializableException());
+		CheckingObjectOutputStream checker = new CheckingObjectOutputStream(new ByteArrayOutputStream(),
+				new ObjectSerializationChecker(new NotSerializableException()));
 		try
 		{
-			serializableChecker.writeObject(new TestType1());
+			checker.writeObject(new TestType1());
 			String expectedMessage = "Wasn't possible to check the object 'class org.apache.wicket.util.io.SerializableCheckerTest$ProblematicType' possible due an problematic implementation of equals method";
 			assertTrue(logHistory.contains(Level.WARN, expectedMessage));
 		}
@@ -82,12 +83,12 @@ public class SerializableCheckerTest extends Assert
 	@Test
 	public void nonSerializableTypeDetection() throws IOException
 	{
-		SerializableChecker serializableChecker = new SerializableChecker(new ByteArrayOutputStream(),
-				new NotSerializableException());
+		CheckingObjectOutputStream checker = new CheckingObjectOutputStream(new ByteArrayOutputStream(),
+			new ObjectSerializationChecker(new NotSerializableException()));
 		String exceptionMessage = null;
 		try
 		{
-			serializableChecker.writeObject(new TestType2());
+			checker.writeObject(new TestType2());
 		}
 		catch (CheckingObjectOutputStream.ObjectCheckException e)
 		{

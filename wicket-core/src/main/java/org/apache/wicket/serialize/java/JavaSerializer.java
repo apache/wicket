@@ -30,8 +30,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
-import org.apache.wicket.core.util.io.SerializableChecker;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
+import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.io.IOUtils;
@@ -263,11 +263,12 @@ public class JavaSerializer implements ISerializer
 			{
 				if (CheckingObjectOutputStream.isAvailable())
 				{
-					// trigger serialization again, but this time gather
-					// some more info
-					new SerializableChecker(outputStream, nsx).writeObject(obj);
-					// if we get here, we didn't fail, while we
-					// should;
+					// trigger serialization again, but this time gather some more info
+					CheckingObjectOutputStream checkingObjectOutputStream =
+							new CheckingObjectOutputStream(outputStream, new ObjectSerializationChecker(nsx));
+					checkingObjectOutputStream.writeObject(obj);
+
+					// if we get here, we didn't fail, while we should
 					throw nsx;
 				}
 				throw nsx;
