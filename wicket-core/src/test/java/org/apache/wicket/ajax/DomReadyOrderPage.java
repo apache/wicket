@@ -51,9 +51,9 @@ public class DomReadyOrderPage extends WebPage
 		}
 
 		@Override
-		public void renderHead(HtmlHeaderContainer container)
+		public void internalRenderHead(HtmlHeaderContainer container)
 		{
-			super.renderHead(container);
+			super.internalRenderHead(container);
 
 			container.getHeaderResponse().render(OnDomReadyHeaderItem.forScript("test1();"));
 			container.getHeaderResponse().render(OnDomReadyHeaderItem.forScript("test2();"));

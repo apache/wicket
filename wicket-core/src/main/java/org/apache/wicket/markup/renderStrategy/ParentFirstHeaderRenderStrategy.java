@@ -61,7 +61,7 @@ public class ParentFirstHeaderRenderStrategy extends AbstractHeaderRenderStrateg
 				{
 					if (component.isVisibleInHierarchy())
 					{
-						component.renderHead(headerContainer);
+						component.internalRenderHead(headerContainer);
 					}
 					else
 					{

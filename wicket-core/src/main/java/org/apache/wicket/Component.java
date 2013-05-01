@@ -2665,13 +2665,13 @@ public abstract class Component
 	 * @param container
 	 *            The HtmlHeaderContainer
 	 */
-	public void renderHead(final HtmlHeaderContainer container)
+	public void internalRenderHead(final HtmlHeaderContainer container)
 	{
 		if (isVisibleInHierarchy() && isRenderAllowed())
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("renderHead: {}", toString(false));
+				log.debug("internalRenderHead: {}", toString(false));
 			}
 
 			IHeaderResponse response = container.getHeaderResponse();

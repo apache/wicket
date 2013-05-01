@@ -124,7 +124,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 		final HeaderStreamState headerStreamState, final Component rootComponent)
 	{
 		headerContainer.renderHeaderTagBody(headerStreamState);
-		rootComponent.renderHead(headerContainer);
+		rootComponent.internalRenderHead(headerContainer);
 	}
 
 	/**
