@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.html.border;
 
 
+import org.apache.wicket.markup.resolver.border.BaseBorder;
+
 /**
  * 
  * @author Juergen Donnerstag
@@ -32,7 +34,7 @@ public class MyApplicationBorder extends Border
 	{
 		super(id);
 
-		Border border = new BoxBorder("boxBorder");
+		Border border = new BaseBorder("boxBorder");
 		addToBorder(border);
 
 		border.add(getBodyContainer());

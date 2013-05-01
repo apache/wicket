@@ -20,7 +20,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.border.BoxBorder;
+import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.resolver.border.BaseBorder;
 
 /**
  * 
@@ -30,7 +31,7 @@ public class AjaxPage2 extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private final Label ajaxLabel;
-	private final BoxBorder myBorder;
+	private final Border myBorder;
 
 	/**
 	 * Construct.
@@ -39,7 +40,7 @@ public class AjaxPage2 extends WebPage
 	{
 		super();
 
-		myBorder = new BoxBorder("pageLayout");
+		myBorder = new BaseBorder("pageLayout");
 		add(myBorder);
 
 		ajaxLabel = new Label("ajaxLabel", "AAAAAAA");
