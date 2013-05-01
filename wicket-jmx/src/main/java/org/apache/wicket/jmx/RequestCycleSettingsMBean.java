@@ -93,4 +93,19 @@ public interface RequestCycleSettingsMBean
 	 * @param timeout
 	 */
 	void setTimeout(String timeout);
+
+
+	/**
+	 * Sets how many attempts Wicket will make to render the exception request handler before
+	 *         giving up.
+	 * @param retries
+	 *      the number of attempts
+	 */
+	void setExceptionRetryCount(int retries);
+
+	/**
+	 * @return How many times will Wicket attempt to render the exception request handler before
+	 *         giving up.
+	 */
+	int getExceptionRetryCount();
 }

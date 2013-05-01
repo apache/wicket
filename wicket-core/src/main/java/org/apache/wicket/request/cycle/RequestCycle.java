@@ -189,7 +189,12 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	protected int getExceptionRetryCount()
 	{
-		return 10;
+		int retries = 10;
+		if (Application.exists())
+		{
+			retries = Application.get().getRequestCycleSettings().getExceptionRetryCount();
+		}
+		return retries;
 	}
 
 	/**

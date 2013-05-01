@@ -288,4 +288,18 @@ public interface IRequestCycleSettings
 	 * @param timeout
 	 */
 	void setTimeout(Duration timeout);
+
+	/**
+	 * Sets how many attempts Wicket will make to render the exception request handler before
+	 *         giving up.
+	 * @param retries
+	 *      the number of attempts
+	 */
+	void setExceptionRetryCount(int retries);
+
+	/**
+	 * @return How many times will Wicket attempt to render the exception request handler before
+	 *         giving up.
+	 */
+	int getExceptionRetryCount();
 }

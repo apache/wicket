@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.response.filter.IResponseFilter;
-import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
@@ -70,6 +69,8 @@ public class RequestCycleSettings implements IRequestCycleSettings
 	 * before giving up. Defaults to one minute.
 	 */
 	private Duration timeout = Duration.ONE_MINUTE;
+
+	private int exceptionRetryCount = 10;
 
 // ****************************************************************************
 // IRequestCycleSettings Implementation
@@ -192,10 +193,19 @@ public class RequestCycleSettings implements IRequestCycleSettings
 	@Override
 	public void setTimeout(Duration timeout)
 	{
-		if (timeout == null)
-		{
-			throw new IllegalArgumentException("timeout cannot be null");
-		}
+		Args.notNull(timeout, "timeout");
 		this.timeout = timeout;
+	}
+
+	@Override
+	public void setExceptionRetryCount(int retries)
+	{
+		this.exceptionRetryCount = retries;
+	}
+
+	@Override
+	public int getExceptionRetryCount()
+	{
+		return exceptionRetryCount;
 	}
 }

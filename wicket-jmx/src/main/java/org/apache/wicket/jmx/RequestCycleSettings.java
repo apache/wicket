@@ -110,4 +110,16 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	{
 		application.getRequestCycleSettings().setTimeout(Duration.valueOf(timeout));
 	}
+
+	@Override
+	public void setExceptionRetryCount(int retries)
+	{
+		application.getRequestCycleSettings().setExceptionRetryCount(retries);
+	}
+
+	@Override
+	public int getExceptionRetryCount()
+	{
+		return application.getRequestCycleSettings().getExceptionRetryCount();
+	}
 }
