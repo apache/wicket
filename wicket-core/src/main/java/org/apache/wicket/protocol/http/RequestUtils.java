@@ -94,7 +94,7 @@ public final class RequestUtils
 	public static String removeDoubleDots(String path)
 	{
 		String[] segments = Strings.split(path, '/');
-		List<String> newcomponents = new ArrayList<String>(Arrays.asList(segments));
+		List<String> newcomponents = new ArrayList<>(Arrays.asList(segments));
 
 		for (int i = 0; i < newcomponents.size(); i++)
 		{
