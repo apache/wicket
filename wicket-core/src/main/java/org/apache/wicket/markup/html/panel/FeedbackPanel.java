@@ -286,13 +286,12 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @param message
 	 *            the message
-	 * @return the css class; by default, this returns 'alert-' + the message
-	 *         level in lowercase, eg 'alert-error', but you can override this
-	 *         method to provide your own
+	 * @return the css class; by default, this returns feedbackPanel + the message level, eg
+	 *         'feedbackPanelERROR', but you can override this method to provide your own
 	 */
 	protected String getCSSClass(final FeedbackMessage message)
 	{
-		return "alert-" + message.getLevelAsString().toLowerCase();
+		return "feedbackPanel" + message.getLevelAsString();
 	}
 
 	/**

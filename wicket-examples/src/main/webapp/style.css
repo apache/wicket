@@ -53,13 +53,13 @@ h1,h2 {
 	margin: 5px;	
 }
 
-ul.feedbackPanel li.alert-error {
+ul.feedbackPanel li.feedbackPanelERROR {
 	color: red;
 	list-style: circle;
 	font-weight: bold;
 }
 
-ul.feedbackPanel li.alert-info {
+ul.feedbackPanel li.feedbackPanelINFO {
 	color: green;
 	list-style: circle;
 	font-weight: bold;
