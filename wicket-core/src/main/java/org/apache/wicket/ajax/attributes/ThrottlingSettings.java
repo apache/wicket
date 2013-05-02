@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.attributes;
 
 import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -28,9 +29,9 @@ public class ThrottlingSettings implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Duration delay;
+	private Duration delay;
 	private final String id;
-	private final boolean postponeTimerOnUpdate;
+	private boolean postponeTimerOnUpdate;
 
 	/**
 	 * Construct.
@@ -47,22 +48,27 @@ public class ThrottlingSettings implements IClusterable
 	 * Construct.
 	 *
 	 * @param id    throttle id
-	 * @param delay throttle delay
+	 * @param delay the amount of time the action should be postponed
 	 * @param postponeTimerOnUpdate postpone timer
 	 */
 	public ThrottlingSettings(final String id, final Duration delay, final boolean postponeTimerOnUpdate)
 	{
-		this.id = id;
-		this.delay = delay;
+		this.id = Args.notNull(id, "id");
+		this.delay = Args.notNull(delay, "delay");
 		this.postponeTimerOnUpdate = postponeTimerOnUpdate;
 	}
 
 	/**
-	 * @return throttle delay
+	 * @return the amount of time the action should be postponed
 	 */
 	public Duration getDelay()
 	{
 		return delay;
+	}
+
+	public void setDelay(Duration delay)
+	{
+		this.delay = Args.notNull(delay, "delay");
 	}
 
 	/**
@@ -76,10 +82,16 @@ public class ThrottlingSettings implements IClusterable
 	/**
 	 * If it is set to true, then the timer is reset each time the throttle function
 	 * gets called. Use this behaviour if you want something to happen at X milliseconds
-	 * after the *last* call to throttle. If the parameter is not set, or set to false,
+	 * after the <strong>last</strong> call to throttle. If the parameter is not set, or set to false,
 	 * then the timer is not reset.
 	 */
 	public boolean getPostponeTimerOnUpdate() {
 		return postponeTimerOnUpdate;
 	}
+
+	public void setPostponeTimerOnUpdate(boolean postponeTimerOnUpdate)
+	{
+		this.postponeTimerOnUpdate = postponeTimerOnUpdate;
+	}
+
 }
