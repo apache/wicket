@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
@@ -162,7 +163,7 @@ public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializa
 	 * @param validatable
 	 * @return decorated error
 	 */
-	protected ValidationError decorate(ValidationError error, IValidatable<V> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<V> validatable)
 	{
 		return error;
 	}

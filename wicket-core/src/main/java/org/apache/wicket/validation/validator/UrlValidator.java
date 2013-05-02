@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
@@ -236,7 +237,7 @@ public class UrlValidator implements IValidator<String>
 	 * @param error
 	 * @return decorated error
 	 */
-	protected ValidationError decorate(ValidationError error, IValidatable<String> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<String> validatable)
 	{
 		return error;
 	}

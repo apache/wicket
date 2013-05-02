@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.validation.validator;
 
+import java.util.Locale;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
 
 /**
@@ -88,10 +91,13 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 	}
 
 	@Override
-	protected ValidationError decorate(ValidationError error, IValidatable<String> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<String> validatable)
 	{
 		error = super.decorate(error, validatable);
-		error.setVariable("length", validatable.getValue().length());
+		if (error instanceof ValidationError)
+		{
+			((ValidationError)error).setVariable("length", validatable.getValue().length());
+		}
 		return error;
 	}
 
@@ -99,7 +105,7 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 	public void onComponentTag(Component component, ComponentTag tag)
 	{
 		super.onComponentTag(component, tag);
-		if (getMaximum() != null && "input".equalsIgnoreCase(tag.getName()))
+		if (getMaximum() != null && "input".equalsIgnoreCase(tag.getName().toLowerCase(Locale.ENGLISH)))
 		{
 			tag.put("maxlength", getMaximum());
 		}

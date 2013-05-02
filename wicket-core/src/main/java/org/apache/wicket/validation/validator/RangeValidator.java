@@ -19,6 +19,7 @@ package org.apache.wicket.validation.validator;
 import java.io.Serializable;
 
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
 
 /**
@@ -115,18 +116,23 @@ public class RangeValidator<Z extends Comparable<Z> & Serializable> extends
 	}
 
 	@Override
-	protected ValidationError decorate(ValidationError error, IValidatable<Z> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<Z> validatable)
 	{
 		// TODO wicket 7: remove deprecated keys
 		error = super.decorate(error, validatable);
-		switch (getMode())
+
+		if (error instanceof ValidationError)
 		{
-			case MINIMUM :
-				error.addKey("MinimumValidator");
-				break;
-			case MAXIMUM :
-				error.addKey("MaximumValidator");
-				break;
+			ValidationError ve = (ValidationError) error;
+			switch (getMode())
+			{
+				case MINIMUM :
+					ve.addKey("MinimumValidator");
+					break;
+				case MAXIMUM :
+					ve.addKey("MaximumValidator");
+					break;
+			}
 		}
 		return error;
 	}
