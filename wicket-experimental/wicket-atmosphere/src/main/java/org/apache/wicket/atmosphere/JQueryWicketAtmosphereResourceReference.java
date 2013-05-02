@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -48,9 +48,11 @@ public class JQueryWicketAtmosphereResourceReference extends JavaScriptResourceR
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		return Arrays.asList(JavaScriptHeaderItem.forReference(new JQueryPluginResourceReference(
-			JQueryWicketAtmosphereResourceReference.class, "jquery.atmosphere.js")));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(JavaScriptHeaderItem.forReference(new JQueryPluginResourceReference(
+				JQueryWicketAtmosphereResourceReference.class, "jquery.atmosphere.js")));
+		return dependencies;
 	}
 }

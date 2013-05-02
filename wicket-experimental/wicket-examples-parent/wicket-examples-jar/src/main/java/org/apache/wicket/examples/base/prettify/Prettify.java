@@ -1,6 +1,6 @@
 package org.apache.wicket.examples.base.prettify;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
@@ -33,9 +33,11 @@ public class Prettify extends JavaScriptResourceReference
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		return Arrays.asList(CssHeaderItem.forReference(new CssResourceReference(Prettify.class,
-			"prettify.css")));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(CssHeaderItem.forReference(new CssResourceReference(Prettify.class,
+				"prettify.css")));
+		return dependencies;
 	}
 }

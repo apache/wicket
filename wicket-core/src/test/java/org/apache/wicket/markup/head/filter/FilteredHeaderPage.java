@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.head.filter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.head.HeaderItem;
@@ -66,17 +65,13 @@ public class FilteredHeaderPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Iterable<? extends HeaderItem> getDependencies()
+			public List<HeaderItem> getDependencies()
 			{
-				Iterable<? extends HeaderItem> dependencies = super.getDependencies();
-				List<HeaderItem> deps = new ArrayList<HeaderItem>();
-				for (HeaderItem hi : dependencies)
-				{
-					deps.add(hi);
-				}
+				List<HeaderItem> dependencies = super.getDependencies();
+
 				// WICKET-4566 : depend on a resource which is rendered in a different bucket
-				deps.add(JavaScriptHeaderItem.forReference(topJsReference));
-				return deps;
+				dependencies.add(JavaScriptHeaderItem.forReference(topJsReference));
+				return dependencies;
 			}
 		};
 		response.render(JavaScriptHeaderItem.forReference(bottomJs));

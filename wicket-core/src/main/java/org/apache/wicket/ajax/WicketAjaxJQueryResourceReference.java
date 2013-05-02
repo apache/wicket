@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import java.util.Collections;
+import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
@@ -47,7 +47,7 @@ public class WicketAjaxJQueryResourceReference extends JavaScriptResourceReferen
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
 		final ResourceReference wicketEventReference;
 		if (Application.exists())
@@ -58,6 +58,8 @@ public class WicketAjaxJQueryResourceReference extends JavaScriptResourceReferen
 		{
 			wicketEventReference = WicketEventJQueryResourceReference.get();
 		}
-		return Collections.singletonList(JavaScriptHeaderItem.forReference(wicketEventReference));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		return dependencies;
 	}
 }

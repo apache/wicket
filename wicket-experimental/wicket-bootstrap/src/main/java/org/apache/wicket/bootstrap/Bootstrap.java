@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.bootstrap;
 
-import static java.util.Arrays.asList;
+import java.util.List;
 
 import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -116,12 +116,15 @@ public class Bootstrap
 		}
 
 		@Override
-		public Iterable<? extends HeaderItem> getDependencies()
+		public List<HeaderItem> getDependencies()
 		{
 			HeaderItem jquery = JavaScriptHeaderItem.forReference(WicketEventJQueryResourceReference.get());
 			HeaderItem stylesheet = CssHeaderItem.forReference(BOOTSTRAP_CSS);
 
-			return asList(jquery, stylesheet);
+			List<HeaderItem> dependencies = super.getDependencies();
+			dependencies.add(jquery);
+			dependencies.add(stylesheet);
+			return dependencies;
 		}
 	}
 
@@ -135,12 +138,16 @@ public class Bootstrap
 		}
 
 		@Override
-		public Iterable<? extends HeaderItem> getDependencies()
+		public List<HeaderItem> getDependencies()
 		{
 			HeaderItem jquery = JavaScriptHeaderItem.forReference(WicketEventJQueryResourceReference.get());
 			HeaderItem stylesheet = CssHeaderItem.forReference(BOOTSTRAP_CSS);
 			HeaderItem responsive = CssHeaderItem.forReference(BOOTSTRAP_RESPONSIVE_CSS);
-			return asList(jquery, stylesheet, responsive);
+			List<HeaderItem> dependencies = super.getDependencies();
+			dependencies.add(jquery);
+			dependencies.add(stylesheet);
+			dependencies.add(responsive);
+			return dependencies;
 		}
 	}
 }

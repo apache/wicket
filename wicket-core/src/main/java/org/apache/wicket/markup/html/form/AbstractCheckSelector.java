@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.util.Arrays;
+import java.util.List;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.HeaderItem;
@@ -54,10 +55,16 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Iterable<? extends HeaderItem> getDependencies()
+		public List<HeaderItem> getDependencies()
 		{
-			return Arrays.asList(JavaScriptHeaderItem.forReference(WicketEventJQueryResourceReference.get()));
-		};
+			List<HeaderItem> dependencies = super.getDependencies();
+			ResourceReference wicketEventReference = WicketEventJQueryResourceReference.get();
+			if (Application.exists()) {
+				wicketEventReference = Application.get().getJavaScriptLibrarySettings().getWicketEventReference();
+			}
+			dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+			return dependencies;
+		}
 	};
 
 	/**
