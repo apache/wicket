@@ -24,7 +24,6 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -164,8 +163,6 @@ public class DownloadLink extends Link<File>
 		{
 			fileName = file.getName();
 		}
-
-		fileName = UrlEncoder.QUERY_INSTANCE.encode(fileName, getRequest().getCharset());
 
 		IResourceStream resourceStream = new FileResourceStream(
 			new org.apache.wicket.util.file.File(file));

@@ -176,7 +176,7 @@ public class Home extends WicketExamplePage
 
 				return tempFile;
 			}
-		}).setCacheDuration(Duration.NONE).setDeleteAfterDownload(true));
+		}, "Downlöad\"here now.tmp").setCacheDuration(Duration.NONE).setDeleteAfterDownload(true));
 
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
