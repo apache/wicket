@@ -3,4 +3,5 @@ velocity.log
 velocity.log.*
 .project
 .classpath
+.iml
 
