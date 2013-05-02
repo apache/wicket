@@ -712,14 +712,13 @@ public class Url implements Serializable
 
 		}
 
-
 		result.append(path);
-        
-        final String queryString = getQueryString(charset);
-        if (queryString != null)
-        {
-            result.append('?').append(queryString);
-        }
+
+		final String queryString = getQueryString(charset);
+		if (queryString != null)
+		{
+			result.append('?').append(queryString);
+		}
 		return result.toString();
 	}
 
@@ -734,7 +733,6 @@ public class Url implements Serializable
 	{
 		return toString(mode, getCharset());
 	}
-
 
 	/**
 	 * Stringizes this url using {@link StringMode#LOCAL} and the specified charset
@@ -1160,16 +1158,15 @@ public class Url implements Serializable
 
 	/**
 	 * return query string part of url in original encoding
-     * 
-     * @since Wicket 7 
-     *              the return value does not contain any "?" and could be null
+	 *
+	 * @since Wicket 7
+	 *              the return value does not contain any "?" and could be null
 	 * @return query string (null if empty)
 	 */
 	public String getQueryString()
 	{
 		return getQueryString(getCharset());
 	}
-
 
 	/**
 	 * Try to reduce url by eliminating '..' and '.' from the path where appropriate (this is
