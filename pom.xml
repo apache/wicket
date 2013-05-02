@@ -32,10 +32,13 @@
 		<mvn.build.java.version>1.7</mvn.build.java.version>
 		<jetty.version>8.1.10.v20130312</jetty.version>
 		<jetty9.version>9.0.2.v20130417</jetty9.version>
-		<spring.version>3.0.7.RELEASE</spring.version>
+		<spring.version>3.2.2.RELEASE</spring.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
 		<maven.javadoc.version>2.8.1</maven.javadoc.version>
 		<maven.surefire.version>2.12.2</maven.surefire.version>
+		<mockito.version>1.9.5</mockito.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<hamcrest.version>1.3</hamcrest.version>
 	</properties>
 	<modules>
 		<module>wicket</module>
@@ -345,25 +348,25 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.10</version>
+				<version>4.11</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest-library</artifactId>
-				<version>1.3</version>
+				<version>${hamcrest.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest-core</artifactId>
-				<version>1.3</version>
+				<version>${hamcrest.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
-				<version>1.8.5</version>
+				<version>${mockito.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -375,22 +378,22 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.6.4</version>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-ext</artifactId>
-				<version>1.6.4</version>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.6.4</version>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>jcl-over-slf4j</artifactId>
-				<version>1.6.4</version>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
@@ -429,7 +432,7 @@
 			<dependency>
 				<groupId>mx4j</groupId>
 				<artifactId>mx4j</artifactId>
-				<version>3.0.1</version>
+				<version>3.0.2</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -445,7 +448,12 @@
 			<dependency>
 				<groupId>cglib</groupId>
 				<artifactId>cglib</artifactId>
-				<version>2.2.2</version>
+				<version>3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-util</artifactId>
+				<version>4.1</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.inject</groupId>
@@ -469,10 +477,10 @@
 				<version>3.0</version>
 			</dependency>
 			<dependency>
-				<groupId>easymock</groupId>
+				<groupId>org.easymock</groupId>
 				<artifactId>easymock</artifactId>
-				<version>1.2_Java1.3</version>
-				<scope>provided</scope>
+				<version>3.1</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.httpunit</groupId>
@@ -518,7 +526,7 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh-external</artifactId>
-				<version>2.2</version>
+				<version>2.4</version>
 			</extension>
 		</extensions>
 		<resources>
@@ -614,12 +622,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>2.3.1</version>
+					<version>2.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>2.4.1</version>
 					<inherited>true</inherited>
 					<configuration>
 						<pushChanges>false</pushChanges>
@@ -645,7 +653,7 @@
 					<inherited>true</inherited>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
+					<version>3.1</version>
 					<configuration>
 						<source>${mvn.build.java.version}</source>
 						<target>${mvn.build.java.version}</target>
@@ -681,7 +689,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>2.2</version>
+					<version>2.3</version>
 					<configuration>
 						<warName>${project.artifactId}</warName>
 					</configuration>
@@ -727,13 +735,13 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.1</version>
+					<version>3.2</version>
 				</plugin>
 				<plugin>
 					<inherited>true</inherited>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.2</version>
+					<version>2.2.1</version>
 					<executions>
 						<execution>
 							<id>attach-sources</id>
@@ -779,7 +787,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-remote-resources-plugin</artifactId>
-					<version>1.3</version>
+					<version>1.4</version>
 					<executions>
 						<execution>
 							<goals>
@@ -824,7 +832,7 @@
 				<plugin>
 					<groupId>net.alchim31.maven</groupId>
 					<artifactId>yuicompressor-maven-plugin</artifactId>
-					<version>1.3.0</version>
+					<version>1.3.2</version>
 					<configuration>
 						<statistics>true</statistics>
 						<jswarn>false</jswarn>
@@ -844,7 +852,7 @@
 					<version>2.5</version>
 					<configuration>
 						<skip>true</skip> <!-- Disabled until 7.0 -->
-						<comparisonVersion>6.0.0</comparisonVersion>
+						<comparisonVersion>7.0.0</comparisonVersion>
 						<failOnError>true</failOnError>
 						<logResults>true</logResults>
 						<ignored>
@@ -875,7 +883,7 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.6</version>
 				<reportSets>
 					<reportSet>
 						<reports>

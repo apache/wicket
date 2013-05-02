@@ -20,7 +20,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import org.easymock.MockControl;
+import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 
 	private Field field;
 
-	private final MockControl[] ctrl = new MockControl[4];
+	private final IMocksControl[] ctrl = new IMocksControl[4];
 
 	private final IFieldValueFactory[] fact = new IFieldValueFactory[4];
 
@@ -52,8 +53,8 @@ public class CompoundFieldValueFactoryTest extends Assert
 
 		for (int i = 0; i < 4; i++)
 		{
-			ctrl[i] = MockControl.createControl(IFieldValueFactory.class);
-			fact[i] = (IFieldValueFactory)ctrl[i].getMock();
+			ctrl[i] = EasyMock.createControl();
+			fact[i] = ctrl[i].createMock(IFieldValueFactory.class);
 		}
 	}
 
@@ -61,7 +62,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 	{
 		for (int i = 0; i < cnt; i++)
 		{
-			ctrl[i].expectAndReturn(fact[i].getFieldValue(field, this), null);
+			EasyMock.expect(fact[i].getFieldValue(field, this)).andReturn(null);
 			ctrl[i].replay();
 		}
 	}
@@ -160,7 +161,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 	public void testBreakOnNonNullReturn()
 	{
 		prepare(2);
-		ctrl[2].expectAndReturn(fact[2].getFieldValue(field, this), new Object());
+		EasyMock.expect(fact[2].getFieldValue(field, this)).andReturn(new Object());
 		ctrl[2].replay();
 		ctrl[3].replay();
 		List<IFieldValueFactory> list = Arrays.asList(fact[0], fact[1], fact[2], fact[3]);

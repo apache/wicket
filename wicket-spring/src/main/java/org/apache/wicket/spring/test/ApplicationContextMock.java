@@ -35,6 +35,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 
 /**
@@ -439,8 +440,14 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public String getId()
 	{
-		throw new UnsupportedOperationException();
+		throw null;
 
+	}
+
+	@Override
+	public String getApplicationName()
+	{
+		return "";
 	}
 
 	/**
@@ -475,4 +482,9 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public Environment getEnvironment()
+	{
+		return null;
+	}
 }

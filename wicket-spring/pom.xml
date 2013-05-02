@@ -43,7 +43,7 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>easymock</groupId>
+			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
 		</dependency>
 	</dependencies>

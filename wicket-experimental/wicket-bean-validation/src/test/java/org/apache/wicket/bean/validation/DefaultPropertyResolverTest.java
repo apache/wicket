@@ -28,7 +28,7 @@ import org.junit.Test;
 public class DefaultPropertyResolverTest
 {
 	@Rule
-	public static WicketTesterScope scope = new WicketTesterScope();
+	public WicketTesterScope scope = new WicketTesterScope();
 
 	public static class Bean1
 	{
