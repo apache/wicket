@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.nio.charset.Charset;
+
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,6 +28,9 @@ import org.junit.Test;
  */
 public class RequestUtilsTest extends Assert
 {
+
+	public static final Charset UTF_8_CHARSET = Charset.forName("UTF-8");
+
 	/**
 	 * 
 	 */
@@ -96,5 +102,73 @@ public class RequestUtilsTest extends Assert
 			"http://aif.ru/blah/");
 		assertEquals(RequestUtils.toAbsolutePath("http://aif.ru/", "./"), "http://aif.ru/");
 
+	}
+
+	/**
+	 * WICKET-4664 - remove leading ? if present
+	 */
+	@Test
+	public void removeLeadingQuestionMark_simpleParam()
+	{
+		final PageParameters params = new PageParameters();
+		RequestUtils.decodeParameters("?key=value", params, UTF_8_CHARSET);
+		assertEquals("value", params.get("key").toString());
+	}
+
+	/**
+	 * WICKET-4664 - remove leading ? if present
+	 */
+	@Test
+	public void removeLeadingQuestionMark_simpleParamWithoutValueAndAnotherParam()
+	{
+		final PageParameters params = new PageParameters();
+		RequestUtils.decodeParameters("?123&key=value", params, UTF_8_CHARSET);
+		assertEquals("", params.get("123").toString());
+		assertEquals("value", params.get("key").toString());
+	}
+
+	/**
+	 * WICKET-4664 - remove leading ? if present
+	 */
+	@Test
+	public void removeLeadingQuestionMark_simpleParamWithoutValue()
+	{
+		final PageParameters params = new PageParameters();
+		RequestUtils.decodeParameters("?123", params, UTF_8_CHARSET);
+		assertEquals("", params.get("123").toString());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void decodeParam_simpleParam_noQuestionMark()
+	{
+		final PageParameters params = new PageParameters();
+		RequestUtils.decodeParameters("key=value", params, UTF_8_CHARSET);
+		assertEquals("value", params.get("key").toString());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void decodeParam_simpleParamWithoutValueAndAnotherParam_NoQuestionMark()
+	{
+		final PageParameters params = new PageParameters();
+		RequestUtils.decodeParameters("123&key=value", params, UTF_8_CHARSET);
+		assertEquals("", params.get("123").toString());
+		assertEquals("value", params.get("key").toString());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void decodeParam_simpleParamWithoutValue_NoQuestionMark()
+	{
+		final PageParameters params = new PageParameters();
+		RequestUtils.decodeParameters("123", params, UTF_8_CHARSET);
+		assertEquals("", params.get("123").toString());
 	}
 }

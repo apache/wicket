@@ -44,7 +44,7 @@ public class UrlTest extends Assert
 
 	private void checkQueryParams(Url url, String... params)
 	{
-		List<QueryParameter> list = new ArrayList<QueryParameter>();
+		List<QueryParameter> list = new ArrayList<>();
 		for (int i = 0; i < params.length; i += 2)
 		{
 			QueryParameter p = new QueryParameter(params[i], params[i + 1]);
@@ -912,21 +912,21 @@ public class UrlTest extends Assert
 		url.removeLeadingSegments(3);
 	}
 
-    @Test
-    public void wicket_5114_allowtoStringFullWhenContainingTwoDots()
-    {
-        Url url = Url.parse("/mountPoint/whatever.../");
-        url.setHost("wicketHost");
-        assertEquals("//wicketHost/mountPoint/whatever.../", url.toString(StringMode.FULL));
-    }
+	@Test
+	public void wicket_5114_allowtoStringFullWhenContainingTwoDots()
+	{
+		Url url = Url.parse("/mountPoint/whatever.../");
+		url.setHost("wicketHost");
+		assertEquals("//wicketHost/mountPoint/whatever.../", url.toString(StringMode.FULL));
+	}
 
-    @Test(expected = IllegalStateException.class)
-    public void wicket_5114_throwExceptionWhenToStringFullContainsRelativePathSegment()
-    {
-        Url url = Url.parse("/mountPoint/../whatever/");
-        url.setHost("wicketHost");
-        url.toString(StringMode.FULL);
-    }
+	@Test(expected = IllegalStateException.class)
+	public void wicket_5114_throwExceptionWhenToStringFullContainsRelativePathSegment()
+	{
+		Url url = Url.parse("/mountPoint/../whatever/");
+		url.setHost("wicketHost");
+		url.toString(StringMode.FULL);
+	}
 
 	@Test
 	public void isContextAbsolute()

@@ -712,9 +712,13 @@ public class Url implements Serializable
 
 		}
 
-
 		result.append(path);
-		result.append(getQueryString(charset));
+
+		final String queryString = getQueryString(charset);
+		if (queryString != null)
+		{
+			result.append('?').append(queryString);
+		}
 		return result.toString();
 	}
 
@@ -729,7 +733,6 @@ public class Url implements Serializable
 	{
 		return toString(mode, getCharset());
 	}
-
 
 	/**
 	 * Stringizes this url using {@link StringMode#LOCAL} and the specified charset
@@ -1125,33 +1128,45 @@ public class Url implements Serializable
 	 * 
 	 * @param charset
 	 *            character set for encoding
-	 * 
-	 * @return query string
+	 * @since Wicket 7 
+     *            the return value does not contain any "?" and could be null
+	 * @return query string (null if empty)
 	 */
 	public String getQueryString(Charset charset)
 	{
 		Args.notNull(charset, "charset");
 
-		StringBuilder query = new StringBuilder();
+		String queryString = null;
+		List<QueryParameter> queryParameters = getQueryParameters();
 
-		for (QueryParameter parameter : getQueryParameters())
+		if (queryParameters.size() != 0)
 		{
-			query.append(query.length() == 0 ? '?' : '&');
-			query.append(parameter.toString(charset));
+			StringBuilder query = new StringBuilder();
+
+			for (QueryParameter parameter : queryParameters)
+			{
+				if (query.length() != 0)
+				{
+					query.append('&');
+				}
+				query.append(parameter.toString(charset));
+			}
+			queryString = query.toString();
 		}
-		return query.toString();
+		return queryString;
 	}
 
 	/**
 	 * return query string part of url in original encoding
-	 * 
-	 * @return query string
+	 *
+	 * @since Wicket 7
+	 *              the return value does not contain any "?" and could be null
+	 * @return query string (null if empty)
 	 */
 	public String getQueryString()
 	{
 		return getQueryString(getCharset());
 	}
-
 
 	/**
 	 * Try to reduce url by eliminating '..' and '.' from the path where appropriate (this is
