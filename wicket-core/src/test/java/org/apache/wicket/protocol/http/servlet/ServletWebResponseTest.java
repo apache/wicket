@@ -27,6 +27,8 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
+import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.Url;
 import org.junit.Assert;
 import org.junit.Test;
@@ -112,5 +114,35 @@ public class ServletWebResponseTest extends Assert
 
 		verify(httpServletResponse).sendRedirect("relative/path");
 		assertTrue(webResponse.isRedirect());
+	}
+
+	/**
+	 * WICKET-4934 DownloadLink uses wrong encoding for spaces/non-ASCII characters
+	 */
+	@Test
+	public void setDispositionHeader()
+	{
+		ServletWebRequest webRequest = mock(ServletWebRequest.class);
+		MockHttpServletRequest httpRequest = mock(MockHttpServletRequest.class);
+		HttpServletResponse httpResponse = new MockHttpServletResponse(httpRequest);
+		ServletWebResponse response = new ServletWebResponse(webRequest, httpResponse);
+
+		response.setInlineHeader("name with spaces");
+		String header = httpResponse.getHeader("Content-Disposition");
+		assertEquals("inline; filename=\"name%20with%20spaces\"; filename*=UTF-8''name%20with%20spaces", header);
+
+		// says: "name with bulgarian"
+		response.setInlineHeader("name with български");
+		header = httpResponse.getHeader("Content-Disposition");
+		assertEquals("inline; filename=\"name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8\"; filename*=UTF-8''name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8", header);
+
+		response.setAttachmentHeader("name with spaces");
+		header = httpResponse.getHeader("Content-Disposition");
+		assertEquals("attachment; filename=\"name%20with%20spaces\"; filename*=UTF-8''name%20with%20spaces", header);
+
+		// says: "name with bulgarian"
+		response.setAttachmentHeader("name with български");
+		header = httpResponse.getHeader("Content-Disposition");
+		assertEquals("attachment; filename=\"name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8\"; filename*=UTF-8''name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8", header);
 	}
 }
