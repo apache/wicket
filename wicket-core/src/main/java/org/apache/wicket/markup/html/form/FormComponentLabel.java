@@ -58,8 +58,32 @@ public class FormComponentLabel extends WebMarkupContainer
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
+
 		checkComponentTag(tag, "label");
-		tag.put("for", component.getMarkupId());
+
+		LabeledWebMarkupContainer formComponent = getFormComponent();
+
+		tag.put("for", formComponent.getMarkupId());
+
+		if (formComponent instanceof FormComponent<?>)
+		{
+			FormComponent<?> fc = (FormComponent<?>) formComponent;
+
+			if (fc.isRequired())
+			{
+				tag.append("class", "required", " ");
+			}
+			if (fc.isValid() == false)
+			{
+				tag.append("class", "error", " ");
+			}
+		}
+
+		if (formComponent.isEnabledInHierarchy() == false)
+		{
+			tag.append("class", "disabled", " ");
+		}
+
 		// always transform the tag to <span></span> so even labels defined as <span/> render
 		tag.setType(TagType.OPEN);
 	}
