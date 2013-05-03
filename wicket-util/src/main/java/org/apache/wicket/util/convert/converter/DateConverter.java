@@ -16,69 +16,23 @@
  */
 package org.apache.wicket.util.convert.converter;
 
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.Locale;
-
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Converts from Object to Date.
  * 
  * @author Eelco Hillenius
  */
-public class DateConverter extends AbstractConverter<Date>
+public class DateConverter extends AbstractDateConverter<Date>
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
-	 */
 	@Override
-	public Date convertToObject(final String value, final Locale locale)
+	protected Date createDateLike(long date)
 	{
-		if ((value == null) || Strings.isEmpty(value))
-		{
-			return null;
-		}
-		else
-		{
-			return parse(getDateFormat(locale), value, locale);
-		}
+		return new Date(date);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(Object, java.util.Locale)
-	 */
-	@Override
-	public String convertToString(final Date value, final Locale locale)
-	{
-		final DateFormat dateFormat = getDateFormat(locale);
-		if (dateFormat != null)
-		{
-			return dateFormat.format(value);
-		}
-		return value.toString();
-	}
-
-
-	/**
-	 * @param locale
-	 * @return Returns the date format.
-	 */
-	public DateFormat getDateFormat(Locale locale)
-	{
-		if (locale == null)
-		{
-			locale = Locale.getDefault();
-		}
-
-		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
-	}
-
-	/**
-	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
-	 */
 	@Override
 	protected Class<Date> getTargetType()
 	{

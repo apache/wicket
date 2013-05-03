@@ -18,61 +18,31 @@ package org.apache.wicket.util.convert.converter;
 
 import java.sql.Time;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.Locale;
-
-import org.apache.wicket.util.convert.ConversionException;
 
 /**
  * Converts to {@link Time}.
  */
-public class SqlTimeConverter extends AbstractConverter<Time>
+public class SqlTimeConverter extends AbstractDateConverter<Time>
 {
-
 	private static final long serialVersionUID = 1L;
 
-	/** @see org.apache.wicket.util.convert.converter.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
 	@Override
-	public Time convertToObject(final String value, Locale locale)
+	protected Time createDateLike(long date)
 	{
-		if (value == null)
-		{
-			return null;
-		}
-		if (locale == null)
-		{
-			locale = Locale.getDefault();
-		}
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
-		try
-		{
-			Date date = format.parse(value);
-			return new Time(date.getTime());
-		}
-		catch (ParseException e)
-		{
-			throw new ConversionException("Cannot parse '" + value + "' using format " + format).setSourceValue(
-				value)
-				.setTargetType(getTargetType())
-				.setConverter(this)
-				.setLocale(locale);
-		}
+		return new Time(date);
 	}
 
 	@Override
-	public String convertToString(final Time time, Locale locale)
+	public DateFormat getDateFormat(Locale locale)
 	{
-		if (time == null)
-		{
-			return null;
-		}
 		if (locale == null)
 		{
 			locale = Locale.getDefault();
 		}
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
-		return format.format(time);
+
+		// return a clone because DateFormat.getDateInstance uses a pool
+		return (DateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, locale).clone();
 	}
 
 	@Override

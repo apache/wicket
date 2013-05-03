@@ -18,8 +18,6 @@ package org.apache.wicket.util.convert.converter;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -27,7 +25,7 @@ import java.util.Locale;
  * 
  * @author eelcohillenius
  */
-public class SqlTimestampConverter extends AbstractConverter<Timestamp>
+public class SqlTimestampConverter extends AbstractDateConverter<Timestamp>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,8 +37,7 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 	 */
 	public SqlTimestampConverter()
 	{
-		dateFormat = DateFormat.SHORT;
-		timeFormat = DateFormat.SHORT;
+		this(DateFormat.SHORT, DateFormat.SHORT);
 	}
 
 	/**
@@ -51,8 +48,7 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 	 */
 	public SqlTimestampConverter(final int dateFormat)
 	{
-		this.dateFormat = dateFormat;
-		timeFormat = DateFormat.SHORT;
+		this(dateFormat, DateFormat.SHORT);
 	}
 
 	/**
@@ -69,67 +65,28 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 		this.timeFormat = timeFormat;
 	}
 
-
-	/**
-	 * 
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
-	 *      java.util.Locale)
-	 */
 	@Override
-	public Timestamp convertToObject(final String value, Locale locale)
+	public DateFormat getDateFormat(Locale locale)
 	{
-		if (value == null)
-		{
-			return null;
-		}
-
 		if (locale == null)
 		{
 			locale = Locale.getDefault();
 		}
 
-		DateFormat format = DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale);
-		try
-		{
-			Date date = format.parse(value);
-			return new Timestamp(date.getTime());
-		}
-		catch (ParseException e)
-		{
-			throw newConversionException("Cannot parse '" + value + "' using format " + format,
-				value, locale);
-		}
+		// return a clone because DateFormat.getDateInstance uses a pool
+		return (DateFormat) DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale).clone();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#convertToString(java.lang.Object,
-	 *      java.util.Locale)
-	 */
 	@Override
-	public String convertToString(final Timestamp timestamp, Locale locale)
+	protected Timestamp createDateLike(long date)
 	{
-		if (timestamp == null)
-		{
-			return null;
-		}
-
-		if (locale == null)
-		{
-			locale = Locale.getDefault();
-		}
-
-		DateFormat format = DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale);
-		return format.format(timestamp);
+		return new Timestamp(date);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
-	 */
 	@Override
 	protected Class<Timestamp> getTargetType()
 	{
 		return Timestamp.class;
 	}
+
 }
