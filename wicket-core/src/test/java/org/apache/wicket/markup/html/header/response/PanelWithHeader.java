@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.markup.html.header.response;
 
-import java.util.Collections;
+import java.util.List;
 
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.StringHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.head.HeaderItem;
 
 /**
  * Panel to be rendered in the body of the page, with a wicket:head and a contribution
@@ -39,9 +39,11 @@ public class PanelWithHeader extends Panel
 		}
 
 		@Override
-		public Iterable<? extends HeaderItem> getDependencies()
+		public List<HeaderItem> getDependencies()
 		{
-			return Collections.singletonList(StringHeaderItem.forString("<title>DependencyOfPriorityHeaderContributionInPanelWithHeader</title>\n"));
+			List<HeaderItem> dependencies = super.getDependencies();
+			dependencies.add(StringHeaderItem.forString("<title>DependencyOfPriorityHeaderContributionInPanelWithHeader</title>\n"));
+			return dependencies;
 		}
 	}
 

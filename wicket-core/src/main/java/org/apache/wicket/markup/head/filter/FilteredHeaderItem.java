@@ -82,14 +82,16 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		List<FilteredHeaderItem> ret = new ArrayList<FilteredHeaderItem>();
+		List<FilteredHeaderItem> ret = new ArrayList<>();
 		for (HeaderItem curDependency : getWrapped().getDependencies())
 		{
 			ret.add(new FilteredHeaderItem(curDependency, getFilterName()));
 		}
-		return ret;
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.addAll(ret);
+		return dependencies;
 	}
 
 	@Override

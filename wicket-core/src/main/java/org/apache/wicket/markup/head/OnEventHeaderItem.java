@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.Response;
@@ -130,10 +131,12 @@ public class OnEventHeaderItem extends HeaderItem
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
 		IJavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
 		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
-		return Collections.singletonList(JavaScriptHeaderItem.forReference(wicketEventReference));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		return dependencies;
 	}
 }

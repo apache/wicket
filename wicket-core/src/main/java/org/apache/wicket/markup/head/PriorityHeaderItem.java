@@ -65,14 +65,16 @@ public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		List<PriorityHeaderItem> ret = new ArrayList<PriorityHeaderItem>();
+		List<PriorityHeaderItem> ret = new ArrayList<>();
 		for (HeaderItem curDependency : getWrapped().getDependencies())
 		{
 			ret.add(new PriorityHeaderItem(curDependency));
 		}
-		return ret;
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.addAll(ret);
+		return dependencies;
 	}
 
 	@Override

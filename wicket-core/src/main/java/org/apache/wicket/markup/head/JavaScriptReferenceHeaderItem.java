@@ -18,6 +18,7 @@ package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -116,7 +117,7 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
 		return getReference().getDependencies();
 	}

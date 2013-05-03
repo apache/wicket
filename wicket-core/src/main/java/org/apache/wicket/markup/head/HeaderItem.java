@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.markup.head;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.wicket.request.Response;
 
@@ -36,9 +38,9 @@ public abstract class HeaderItem
 	 * @return The dependencies this {@code HeaderItem} has. Dependencies will always be rendered
 	 *         before the item itself.
 	 */
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	/**
