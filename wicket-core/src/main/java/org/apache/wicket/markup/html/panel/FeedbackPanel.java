@@ -347,7 +347,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 *            The model object of the item
 	 * @return Container that holds components of the feedback MessageListView.
 	 */
-	protected ListItem<FeedbackMessage> newMessageItem(int index, IModel<FeedbackMessage> itemModel){
+	protected ListItem<FeedbackMessage> newMessageItem(int index, IModel<FeedbackMessage> itemModel) {
         return new ListItem<>(index, itemModel);
     }
 }

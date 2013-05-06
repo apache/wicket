@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.panel;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.feedback.FencedFeedbackPanel;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -34,9 +33,8 @@ import org.junit.Test;
  */
 public class FeedbackPanelTest extends WicketTestCase
 {
-    
     @Test
-    public void testCssClassesOnFeedbackPanel() throws Exception{
+    public void testCssClassesOnFeedbackPanel() throws Exception {
         TestPage testPage = new TestPage();
         testPage.label.error("Error message");
         testPage.label.info("Info message");
@@ -44,8 +42,7 @@ public class FeedbackPanelTest extends WicketTestCase
         executeTest(testPage, "FeedbackPanelTest_cssClasses_expected.html");
     }
 
-
-    public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+    private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
     {
         FeedbackPanel feedbackPanel;
         Component label;
