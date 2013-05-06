@@ -99,11 +99,25 @@ public class FeedbackPanel extends Panel implements IFeedback
 			final Component label = newMessageDisplayComponent("message", message);
 			final AttributeModifier levelModifier = AttributeModifier.append("class",
 				getCSSClass(message));
-			label.add(levelModifier);
 			listItem.add(levelModifier);
 			listItem.add(label);
 		}
-	}
+
+		/**
+		 * WICKET-4831 - Overridable to allow customization
+		 * 
+		 * @param index
+		 *            The index of the item
+		 * @param itemModel
+		 *            object in the list that the item represents
+		 * @return
+		 */
+		@Override
+		protected ListItem<FeedbackMessage> newItem(int index, IModel<FeedbackMessage> itemModel)
+		{
+			return FeedbackPanel.this.newMessageItem(index, itemModel);
+		}
+    }
 
 	private static final long serialVersionUID = 1L;
 
@@ -323,4 +337,17 @@ public class FeedbackPanel extends Panel implements IFeedback
 		label.setEscapeModelStrings(FeedbackPanel.this.getEscapeModelStrings());
 		return label;
 	}
+
+	/**
+	 * Allows to define the listItem to use in the feedback's message list.
+	 * 
+	 * @param index
+	 *            The index of the item
+	 * @param itemModel
+	 *            The model object of the item
+	 * @return Container that holds components of the feedback MessageListView.
+	 */
+	protected ListItem<FeedbackMessage> newMessageItem(int index, IModel<FeedbackMessage> itemModel){
+        return new ListItem<>(index, itemModel);
+    }
 }

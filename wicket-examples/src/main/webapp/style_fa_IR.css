@@ -44,13 +44,13 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	margin: 5px;	
 }
 
-.feedbackPanelERROR {
+ul.feedbackPanel li.feedbackPanelERROR {
 	color: red;
 	list-style: circle;
 	font-weight: bold;
 }
 
-.feedbackPanelINFO {
+ul.feedbackPanel li.feedbackPanelINFO {
 	color: green;
 	list-style: circle;
 	font-weight: bold;
@@ -145,7 +145,7 @@ a.none {
 	width: 300px;
 }
 
-#feedbackPanel {
+ul.feedbackPanel {
 	width: 600px;
 }
 

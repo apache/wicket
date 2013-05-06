@@ -53,13 +53,13 @@ h1,h2 {
 	margin: 5px;	
 }
 
-.feedbackPanelERROR {
+ul.feedbackPanel li.feedbackPanelERROR {
 	color: red;
 	list-style: circle;
 	font-weight: bold;
 }
 
-.feedbackPanelINFO {
+ul.feedbackPanel li.feedbackPanelINFO {
 	color: green;
 	list-style: circle;
 	font-weight: bold;
@@ -162,7 +162,7 @@ a.none {
 	width: 300px;
 }
 
-#feedbackPanel {
+ul.feedbackPanel {
 	width: 600px;
 }
 
