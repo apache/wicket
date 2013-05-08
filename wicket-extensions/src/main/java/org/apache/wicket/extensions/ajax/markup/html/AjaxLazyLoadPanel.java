@@ -169,12 +169,12 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	/**
 	 * Called when the placeholder component is replaced with the lazy loaded one.
 	 *
+	 * @param component
+	 *      The lazy loaded component
 	 * @param target
 	 *      The Ajax request handler
-	 * @param component
-	 *      The lazy loaded component.
 	 */
-	protected void onComponentLoaded(Component target, AjaxRequestTarget component)
+	protected void onComponentLoaded(Component component, AjaxRequestTarget target)
 	{
 	}
 
