@@ -35,7 +35,8 @@ public final class AjaxRequestAttributes
 	/**
 	 * The method to be used when submitting a form
 	 */
-	public static enum Method {
+	public static enum Method
+	{
 		/** get */
 		GET,
 
@@ -49,6 +50,28 @@ public final class AjaxRequestAttributes
 		}
 	}
 
+	/**
+	 * The JavaScript event propagation type
+	 */
+	public static enum StopPropagation
+	{
+		/**
+		 * Stops the propagation of the JavaScript event to the parent of its target
+		 */
+		STOP,
+
+		/**
+		 * Stops the propagation of the JavaScript event to the parent of its target
+		 * and all other event listeners registered on the same target
+		 */
+		STOP_IMMEDIATE,
+
+		/**
+		 * Do not stop the propagation of the JavaScript event
+		 */
+		NO
+	}
+
 	public static final String XML_DATA_TYPE = "xml";
 
 	private boolean multipart = false;
@@ -58,6 +81,8 @@ public final class AjaxRequestAttributes
 	private Duration requestTimeout;
 
 	private boolean allowDefault = false;
+
+	private StopPropagation stopPropagation = StopPropagation.STOP;
 
 	/**
 	 * The names of the events which will trigger the Ajax call
@@ -279,6 +304,15 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
+	 * Only applies for event behaviors. Returns whether the behavior should allow the JavaScript event
+	 * to propagate to the parent of its target.
+	 */
+	public StopPropagation getStopPropagation()
+	{
+		return stopPropagation;
+	}
+
+	/**
 	 * Only applies for event behaviors. Determines whether the behavior should allow the default
 	 * event handler to be invoked.
 	 * 
@@ -291,6 +325,20 @@ public final class AjaxRequestAttributes
 	public AjaxRequestAttributes setAllowDefault(boolean allowDefault)
 	{
 		this.allowDefault = allowDefault;
+		return this;
+	}
+
+	/**
+	 * Only applies to event behaviors. Determines whether the behavior should allow the
+	 * JavaScript event to propagate to the parent of its target.
+	 *
+	 * @param stopPropagation
+	 *      the type of the stop
+	 * @return {@code this} object, for chaining
+	 */
+	public AjaxRequestAttributes setStopPropagation(StopPropagation stopPropagation)
+	{
+		this.stopPropagation = Args.notNull(stopPropagation, "stopPropagation");
 		return this;
 	}
 

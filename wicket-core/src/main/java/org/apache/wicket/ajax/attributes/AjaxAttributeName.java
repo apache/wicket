@@ -83,6 +83,13 @@ public enum AjaxAttributeName {
 	IS_ALLOW_DEFAULT("ad"),
 
 	/**
+	 * stop propagation
+	 *
+	 * @see AjaxRequestAttributes#setStopPropagation(org.apache.wicket.ajax.attributes.AjaxRequestAttributes.StopPropagation)
+	 */
+	STOP_PROPAGATION("sp"),
+
+	/**
 	 * channel (ch)
 	 * 
 	 * @see AjaxRequestAttributes#getChannel()
