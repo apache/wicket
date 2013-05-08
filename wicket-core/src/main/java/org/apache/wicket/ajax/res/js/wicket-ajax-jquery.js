@@ -361,6 +361,10 @@
 			if (attrs.ad !== true) {
 				attrs.ad = false;
 			}
+
+			if (!attrs.sp) {
+				attrs.sp = "stop";
+			}
 		},
 
 		/**
@@ -1764,6 +1768,19 @@
 
 			ajax: function(attrs) {
 
+				var handleStopPropagation = function (attributes) {
+					var result = false;
+					var evt = attributes.event;
+					if (attributes.sp === "stop") {
+						Wicket.Event.stop(evt);
+					} else if (attributes.sp === "stopImmediate") {
+						Wicket.Event.stop(evt, true);
+					} else {
+						result = true;
+					}
+					return result;
+				};
+
 				attrs.c = attrs.c || window;
 				attrs.e = attrs.e || [ 'domready' ];
 
@@ -1787,10 +1804,12 @@
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
 									call.ajax(attributes);
+									return handleStopPropagation(attributes);
 								}, this));
 						}
 						else {
 							call.ajax(attributes);
+							return handleStopPropagation(attributes);
 						}
 					});
 				});

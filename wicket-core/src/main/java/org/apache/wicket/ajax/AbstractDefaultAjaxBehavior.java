@@ -345,6 +345,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put(AjaxAttributeName.IS_ALLOW_DEFAULT.jsonName(), true);
 			}
 
+			if (AjaxRequestAttributes.StopPropagation.NO.equals(attributes.getStopPropagation()))
+			{
+				attributesJson.put(AjaxAttributeName.STOP_PROPAGATION.jsonName(), "no");
+			}
+			else if (AjaxRequestAttributes.StopPropagation.STOP_IMMEDIATE.equals(attributes.getStopPropagation()))
+			{
+				attributesJson.put(AjaxAttributeName.STOP_PROPAGATION.jsonName(), "stopImmediate");
+			}
+
 			Duration requestTimeout = attributes.getRequestTimeout();
 			if (requestTimeout != null)
 			{
