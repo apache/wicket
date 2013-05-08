@@ -447,13 +447,22 @@
 		 *
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
 		 */
-		_preventDefaultIfNecessary: function(attrs) {
-			if (!attrs.ad && attrs.event) {
-				try {
-					attrs.event.preventDefault();
-				} catch (ignore) {
-					// WICKET-4986
-					// jquery fails 'member not found' with calls on busy channel
+		_handleEventCancelation: function(attrs) {
+			var evt = attrs.event;
+			if (evt) {
+				if (!attrs.ad) {
+					try {
+						evt.preventDefault();
+					} catch (ignore) {
+						// WICKET-4986
+						// jquery fails 'member not found' with calls on busy channel
+					}
+				}
+
+				if (attrs.sp === "stop") {
+					Wicket.Event.stop(evt);
+				} else if (attrs.sp === "stopImmediate") {
+					Wicket.Event.stop(evt, true);
 				}
 			}
 		},
@@ -548,7 +557,7 @@
 
 			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
 				var ret = self.submitMultipartForm(context);
-				self._preventDefaultIfNecessary(attrs);
+				self._handleEventCancelation(attrs);
 				return ret;
 			}
 
@@ -656,8 +665,8 @@
 			self._executeHandlers(attrs.ah, attrs);
 			Wicket.Event.publish('/ajax/call/after', attrs);
 
-			self._preventDefaultIfNecessary(attrs);
-			
+			self._handleEventCancelation(attrs);
+
 			return jqXHR;
 		},
 
@@ -1745,19 +1754,6 @@
 
 			ajax: function(attrs) {
 
-				var handleStopPropagation = function (attributes) {
-					var result = false;
-					var evt = attributes.event;
-					if (attributes.sp === "stop") {
-						Wicket.Event.stop(evt);
-					} else if (attributes.sp === "stopImmediate") {
-						Wicket.Event.stop(evt, true);
-					} else {
-						result = true;
-					}
-					return result;
-				};
-
 				attrs.c = attrs.c || window;
 				attrs.e = attrs.e || [ 'domready' ];
 
@@ -1781,12 +1777,10 @@
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
 									call.ajax(attributes);
-									return handleStopPropagation(attributes);
 								}, this));
 						}
 						else {
 							call.ajax(attributes);
-							return handleStopPropagation(attributes);
 						}
 					});
 				});
