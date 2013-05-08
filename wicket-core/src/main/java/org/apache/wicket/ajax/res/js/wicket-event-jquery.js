@@ -144,18 +144,20 @@
 				if (type === 'domready') {
 					jQuery(fn);
 				} else {
-					type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
-					
-					var el = element;
-					if (typeof(element) === 'string') {
-						el = document.getElementById(element);
-					}
-					
-					if (!el && Wicket.Log) {
-						Wicket.Log.error('Cannot find element with id: ' + element);
-					}
-					
-					jQuery(el).on(type, data, fn);
+					// try to find the element once the DOM is ready
+					jQuery(function() {
+						type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
+						var el = element;
+						if (typeof(element) === 'string') {
+							el = document.getElementById(element);
+						}
+
+						if (!el && Wicket.Log) {
+							Wicket.Log.error('Cannot find element with id: ' + element);
+						}
+
+						jQuery(el).on(type, data, fn);
+					});
 				}
 				return element;
 			},
