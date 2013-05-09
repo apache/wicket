@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -33,6 +34,19 @@ import org.apache.wicket.model.IModel;
 public abstract class ModelIteratorAdapter<T> implements Iterator<IModel<T>>
 {
 	private final Iterator<T> delegate;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param iterable
+	 *            iterable whose iterator will be wrapped
+	 */
+	public ModelIteratorAdapter(Iterable<T> iterable)
+	{
+		Args.notNull(iterable, "iterable");
+		this.delegate = iterable.iterator();
+	}
+
 
 	/**
 	 * Constructor
