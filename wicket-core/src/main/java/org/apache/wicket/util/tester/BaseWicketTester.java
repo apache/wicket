@@ -92,6 +92,7 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.mock.MockRequestParameters;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
@@ -1112,6 +1113,14 @@ public class BaseWicketTester
 			Form<?> form = formSubmitBehavior.getForm();
 			getRequest().setUseMultiPartContentType(form.isMultiPart());
 			serializeFormToRequest(form);
+			
+			// mark behavior's component as the form submitter,
+			String name = Form.getRootFormRelativeId(new PropertyModel<Component>(behavior,
+					"component").getObject());
+			if (!request.getPostParameters().getParameterNames().contains(name))
+			{
+				request.getPostParameters().setParameterValue(name, "marked");
+			}
 		}
 
 		processRequest();
