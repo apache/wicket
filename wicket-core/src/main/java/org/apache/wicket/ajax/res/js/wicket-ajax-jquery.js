@@ -443,31 +443,6 @@
 		},
 
 		/**
-		 * Aborts the default event if attributes request it
-		 *
-		 * @param {Object} attrs - the Ajax request attributes configured at the server side
-		 */
-		_handleEventCancelation: function(attrs) {
-			var evt = attrs.event;
-			if (evt) {
-				if (!attrs.ad) {
-					try {
-						evt.preventDefault();
-					} catch (ignore) {
-						// WICKET-4986
-						// jquery fails 'member not found' with calls on busy channel
-					}
-				}
-
-				if (attrs.sp === "stop") {
-					Wicket.Event.stop(evt);
-				} else if (attrs.sp === "stopImmediate") {
-					Wicket.Event.stop(evt, true);
-				}
-			}
-		},
-		
-		/**
 		 * Executes or schedules for execution #doAjax()
 		 *
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
@@ -557,7 +532,6 @@
 
 			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
 				var ret = self.submitMultipartForm(context);
-				self._handleEventCancelation(attrs);
 				return ret;
 			}
 
@@ -664,8 +638,6 @@
 			// execute after handlers right after the Ajax request is fired
 			self._executeHandlers(attrs.ah, attrs);
 			Wicket.Event.publish('/ajax/call/after', attrs);
-
-			self._handleEventCancelation(attrs);
 
 			return jqXHR;
 		},
@@ -1761,6 +1733,31 @@
 
 			Call: Wicket.Ajax.Call,
 
+			/**
+			 * Aborts the default event if attributes request it
+			 *
+			 * @param {Object} attrs - the Ajax request attributes configured at the server side
+			 */
+			_handleEventCancelation: function(attrs) {
+				var evt = attrs.event;
+				if (evt) {
+					if (!attrs.ad) {
+						try {
+							evt.preventDefault();
+						} catch (ignore) {
+							// WICKET-4986
+							// jquery fails 'member not found' with calls on busy channel
+						}
+					}
+
+					if (attrs.sp === "stop") {
+						Wicket.Event.stop(evt);
+					} else if (attrs.sp === "stopImmediate") {
+						Wicket.Event.stop(evt, true);
+					}
+				}
+			},
+
 			get: function (attrs) {
 
 				attrs.m = 'GET';
@@ -1800,10 +1797,12 @@
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
 									call.ajax(attributes);
+									Wicket.Ajax._handleEventCancelation(attributes);
 								}, this));
 						}
 						else {
 							call.ajax(attributes);
+							Wicket.Ajax._handleEventCancelation(attributes);
 						}
 					});
 				});

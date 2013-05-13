@@ -345,13 +345,13 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put(AjaxAttributeName.IS_ALLOW_DEFAULT.jsonName(), true);
 			}
 
-			if (AjaxRequestAttributes.StopPropagation.NO.equals(attributes.getStopPropagation()))
+			if (AjaxRequestAttributes.EventPropagation.BUBBLE.equals(attributes.getEventPropagation()))
 			{
-				attributesJson.put(AjaxAttributeName.STOP_PROPAGATION.jsonName(), "no");
+				attributesJson.put(AjaxAttributeName.EVENT_PROPAGATION.jsonName(), "bubble");
 			}
-			else if (AjaxRequestAttributes.StopPropagation.STOP_IMMEDIATE.equals(attributes.getStopPropagation()))
+			else if (AjaxRequestAttributes.EventPropagation.STOP_IMMEDIATE.equals(attributes.getEventPropagation()))
 			{
-				attributesJson.put(AjaxAttributeName.STOP_PROPAGATION.jsonName(), "stopImmediate");
+				attributesJson.put(AjaxAttributeName.EVENT_PROPAGATION.jsonName(), "stopImmediate");
 			}
 
 			Duration requestTimeout = attributes.getRequestTimeout();
