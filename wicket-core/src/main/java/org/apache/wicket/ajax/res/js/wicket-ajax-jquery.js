@@ -1811,13 +1811,12 @@
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
 									call.ajax(attributes);
-									Wicket.Ajax._handleEventCancelation(attributes);
 								}, this));
 						}
 						else {
 							call.ajax(attributes);
-							Wicket.Ajax._handleEventCancelation(attributes);
 						}
+						Wicket.Ajax._handleEventCancelation(attributes);
 					});
 				});
 			},
