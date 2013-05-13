@@ -69,8 +69,45 @@ public class PackageResourceGuardTest extends WicketTestCase
 			assertFalse(guard.acceptAbsolutePath("c:/test.js"));
 			assertFalse(guard.acceptAbsolutePath("/test.js"));
 		}
-
-
 	}
 
+	/**
+	 * Allow access to non-component markup
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void markup() throws Exception
+	{
+		PackageResourceGuard guard = new PackageResourceGuard();
+
+		assertNotNull(getClass().getResource(
+			"/org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass.class"));
+
+		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass.html"));
+		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass_de.html"));
+		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass_SomeHTMLSnippetIWantServed.html"));
+		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName.html"));
+		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName_de.html"));
+		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName_en.html"));
+		assertTrue(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass.html"));
+	}
+
+	private class MyClass extends WebComponent
+	{
+
+		public MyClass(String id)
+		{
+			super(id);
+		}
+	}
+
+	private class MyOtherClass_WithCrazyName extends WebComponent
+	{
+
+		public MyOtherClass_WithCrazyName(String id)
+		{
+			super(id);
+		}
+	}
 }
