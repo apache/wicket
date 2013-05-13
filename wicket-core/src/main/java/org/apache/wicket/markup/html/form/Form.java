@@ -1642,30 +1642,7 @@ public class Form<T> extends WebMarkupContainer
 	{
 		if (isRootForm())
 		{
-			// get the hidden field id
-			String nameAndId = getHiddenFieldId();
-
-			// render the hidden field
-			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
-				"<input type=\"hidden\" name=\"")
-				.append(nameAndId)
-				.append("\" id=\"")
-				.append(nameAndId)
-				.append("\" />");
-
-			// if it's a get, did put the parameters in the action attribute,
-			// and have to write the url parameters as hidden fields
-			if (encodeUrlInHiddenFields())
-			{
-				String url = getActionUrl().toString();
-				int i = url.indexOf('?');
-				String queryString = (i > -1) ? url.substring(i + 1) : url;
-				String[] params = Strings.split(queryString, '&');
-
-				writeParamsAsHiddenFields(params, buffer);
-			}
-			buffer.append("</div>");
-			getResponse().write(buffer);
+			writeHiddenField(getResponse());
 
 			// if a default submitting component was set, handle the rendering of that
 			if (defaultSubmittingComponent instanceof Component)
@@ -1681,6 +1658,39 @@ public class Form<T> extends WebMarkupContainer
 
 		// do the rest of the processing
 		super.onComponentTagBody(markupStream, openTag);
+	}
+
+	/**
+	 * Writes the markup for the hidden input field into the provided response
+	 *
+	 * @param response
+	 *      The response to write to
+	 */
+	public final void writeHiddenField(final Response response)
+	{
+		// get the hidden field id
+		String nameAndId = getHiddenFieldId();
+
+		AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
+				"<input type=\"hidden\" name=\"")
+				.append(nameAndId)
+				.append("\" id=\"")
+				.append(nameAndId)
+				.append("\" />");
+
+		// if it's a get, did put the parameters in the action attribute,
+		// and have to write the url parameters as hidden fields
+		if (encodeUrlInHiddenFields())
+		{
+			String url = getActionUrl().toString();
+			int i = url.indexOf('?');
+			String queryString = (i > -1) ? url.substring(i + 1) : url;
+			String[] params = Strings.split(queryString, '&');
+
+			writeParamsAsHiddenFields(params, buffer);
+		}
+		buffer.append("</div>");
+		response.write(buffer);
 	}
 
 	/**
