@@ -211,4 +211,33 @@ jQuery(document).ready(function() {
 		Wicket.DOM.replace(toReplace, newElementMarkup);
 		jQuery(document).off();
 	});
+
+	test("text - read text from a node with single text type child", function() {
+
+		var node = jQuery("<div></div>")[0];
+		var doc = node.ownerDocument;
+		var textNode = doc.createTextNode("some text");
+		node.appendChild(textNode);
+
+		var text = Wicket.DOM.text(node);
+		equal(text, "some text", "Single text child text");
+	});
+
+	test("text - read text from a node with several text type children", function() {
+
+		var document = Wicket.Xml.parse("<root><![CDATA[text1]]>|<![CDATA[text2]]>|<![CDATA[text3]]></root>");
+		var node = document.documentElement;
+
+		var text = Wicket.DOM.text(node);
+		equal(text, "text1|text2|text3", "Several text children");
+	});
+
+	test("text - read text from a node with several children (text and elements)", function() {
+
+		var document = Wicket.Xml.parse("<root><![CDATA[text1|]]><child1>child1text|<![CDATA[text2|]]></child1><![CDATA[text3|]]><child2>child2Test</child2></root>");
+		var node = document.documentElement;
+
+		var text = Wicket.DOM.text(node);
+		equal(text, "text1|child1text|text2|text3|child2Test", "Several text and element children");
+	});
 });

@@ -1067,14 +1067,7 @@
 			};
 
 			// get the javascript body
-			var text;
-
-			try {
-				text = node.firstChild.nodeValue;
-			} catch (e) {
-				// TODO remove this fallback in 6.11.0+
-				text = jQuery(node).text();
-			}
+			var text = Wicket.DOM.text(node);
 
 			// unescape it if necessary
 			var encoding = node.getAttribute("encoding");
@@ -1714,6 +1707,36 @@
 				else {
 					return false;
 				}
+			},
+
+			/**
+			 * Reads the text from the node's children nodes
+			 * @param node the root node
+			 */
+			text: function (node) {
+				var result = "";
+
+				if (node.childNodes.length > 0) {
+					for (var i = 0; i < node.childNodes.length; i++) {
+						var thisNode = node.childNodes[i];
+						switch (thisNode.nodeType) {
+							case 1: // ELEMENT_NODE
+							case 5: // ENTITY_REFERENCE_NODE
+								result += this.text(thisNode);
+								break;
+							case 3: // TEXT_NODE
+							case 4: // CDATA_SECTION_NODE
+								result += thisNode.nodeValue;
+								break;
+							default:
+								break;
+						}
+					}
+				} else {
+					result += node.textContent || node.text;
+				}
+
+				return result;
 			}
 		},
 
