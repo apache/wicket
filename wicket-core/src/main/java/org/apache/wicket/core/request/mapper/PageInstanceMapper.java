@@ -163,7 +163,8 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	/**
 	 * Matches when the request url starts with
 	 * {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}/{@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
-	 * or when the base url starts with {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}
+	 * or when the base url starts with
+	 * {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}/{@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
 	 * and the request url with {@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
 
 	 * @param request
@@ -180,7 +181,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		{
 			matches = true;
 		}
-		else if (urlStartsWith(request.getClientUrl(), namespace) && urlStartsWith(url, pageIdentifier))
+		else if (urlStartsWith(request.getClientUrl(), namespace, pageIdentifier) && urlStartsWith(url, pageIdentifier))
 		{
 			matches = true;
 		}
