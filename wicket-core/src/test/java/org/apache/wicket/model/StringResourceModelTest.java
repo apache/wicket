@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
@@ -259,6 +259,41 @@ public class StringResourceModelTest extends WicketTestCase
 		label2.getDefaultModelObject();
 		label2.detach();
 		Assert.assertNull(nullOnDetachModel.getObject());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5176
+	 */
+	@Test
+	public void detachEvenNotAttached() {
+		Wicket5176Model wrappedModel = new Wicket5176Model();
+		StringResourceModel stringResourceModel = new StringResourceModel("test", (Component) null, wrappedModel);
+		assertFalse(stringResourceModel.isAttached());
+		assertTrue(wrappedModel.isAttached());
+		stringResourceModel.detach();
+		assertFalse(wrappedModel.isAttached());
+	}
+
+	private static class Wicket5176Model implements IModel {
+		private boolean attached = true;
+
+		@Override
+		public Object getObject() {
+			return null;
+		}
+
+		@Override
+		public void setObject(Object object) {
+		}
+
+		@Override
+		public void detach() {
+			attached = false;
+		}
+
+		private boolean isAttached() {
+			return attached;
+		}
 	}
 
 	/**

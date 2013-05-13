@@ -588,13 +588,10 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		return getString();
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
-	protected final void onDetach()
+	public final void detach()
 	{
-		super.onDetach();
+		super.detach();
 
 		// detach any model
 		if (model != null)
