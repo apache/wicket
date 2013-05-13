@@ -92,12 +92,28 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			ext = path.substring(ixExtension + 1).toLowerCase().trim();
 		}
 
-		if ("html".equals(ext) &&
-			getClass().getClassLoader().getResource(path.replaceAll("\\.html", ".class")) != null)
+		if ("html".equals(ext))
 		{
-			log.warn("Access denied to shared (static) resource because it is a Wicket markup file: " +
-				path);
-			return false;
+			String prefix = path.substring(0, ixExtension);
+
+			ClassLoader classLoader = getClass().getClassLoader();
+			while (true)
+			{
+				if (classLoader.getResource(prefix + ".class") != null)
+				{
+					log.warn("Access denied to shared (static) resource because it is a Wicket markup file: " +
+						path);
+					return false;
+				}
+
+				int ixUnderscore = prefix.lastIndexOf('_');
+				if (ixUnderscore == -1)
+				{
+					break;
+				}
+
+				prefix = prefix.substring(0, ixUnderscore);
+			}
 		}
 
 		if (acceptExtension(ext) == false)
