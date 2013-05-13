@@ -85,9 +85,9 @@ public enum AjaxAttributeName {
 	/**
 	 * stop propagation
 	 *
-	 * @see AjaxRequestAttributes#setStopPropagation(org.apache.wicket.ajax.attributes.AjaxRequestAttributes.StopPropagation)
+	 * @see AjaxRequestAttributes#setEventPropagation(org.apache.wicket.ajax.attributes.AjaxRequestAttributes.EventPropagation)
 	 */
-	STOP_PROPAGATION("sp"),
+	EVENT_PROPAGATION("sp"),
 
 	/**
 	 * channel (ch)

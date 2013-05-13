@@ -53,7 +53,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The JavaScript event propagation type
 	 */
-	public static enum StopPropagation
+	public static enum EventPropagation
 	{
 		/**
 		 * Stops the propagation of the JavaScript event to the parent of its target
@@ -69,7 +69,7 @@ public final class AjaxRequestAttributes
 		/**
 		 * Do not stop the propagation of the JavaScript event
 		 */
-		NO
+		BUBBLE
 	}
 
 	public static final String XML_DATA_TYPE = "xml";
@@ -82,7 +82,7 @@ public final class AjaxRequestAttributes
 
 	private boolean allowDefault = false;
 
-	private StopPropagation stopPropagation = StopPropagation.STOP;
+	private EventPropagation eventPropagation = EventPropagation.STOP;
 
 	/**
 	 * The names of the events which will trigger the Ajax call
@@ -307,9 +307,9 @@ public final class AjaxRequestAttributes
 	 * Only applies for event behaviors. Returns whether the behavior should allow the JavaScript event
 	 * to propagate to the parent of its target.
 	 */
-	public StopPropagation getStopPropagation()
+	public EventPropagation getEventPropagation()
 	{
-		return stopPropagation;
+		return eventPropagation;
 	}
 
 	/**
@@ -332,13 +332,13 @@ public final class AjaxRequestAttributes
 	 * Only applies to event behaviors. Determines whether the behavior should allow the
 	 * JavaScript event to propagate to the parent of its target.
 	 *
-	 * @param stopPropagation
+	 * @param eventPropagation
 	 *      the type of the stop
 	 * @return {@code this} object, for chaining
 	 */
-	public AjaxRequestAttributes setStopPropagation(StopPropagation stopPropagation)
+	public AjaxRequestAttributes setEventPropagation(EventPropagation eventPropagation)
 	{
-		this.stopPropagation = Args.notNull(stopPropagation, "stopPropagation");
+		this.eventPropagation = Args.notNull(eventPropagation, "eventPropagation");
 		return this;
 	}
 
