@@ -1629,7 +1629,7 @@
 				if (isUndef(node)) {
 					return "";
 				}
-				var result = "";
+				var result = [];
 
 				if (node.childNodes.length > 0) {
 					for (var i = 0; i < node.childNodes.length; i++) {
@@ -1637,50 +1637,60 @@
 						switch (thisNode.nodeType) {
 							case 1: // ELEMENT_NODE
 							case 5: // ENTITY_REFERENCE_NODE
-								result += this.serializeNode(thisNode);
+								result.push(this.serializeNode(thisNode));
 								break;
 							case 8: // COMMENT
-								result += "<!--" + thisNode.nodeValue + "-->";
+								result.push("<!--");
+								result.push(thisNode.nodeValue);
+								result.push("-->");
 								break;
 							case 4: // CDATA_SECTION_NODE
-								result += "<![CDATA[" + thisNode.nodeValue + "]]>";
+								result.push("<![CDATA[");
+								result.push(thisNode.nodeValue);
+								result.push("]]>");
 								break;
 							case 3: // TEXT_NODE
 							case 2: // ATTRIBUTE_NODE
-								result += thisNode.nodeValue;
+								result.push(thisNode.nodeValue);
 								break;
 							default:
 								break;
 						}
 					}
 				} else {
-					result += node.textContent || node.text;
+					result.push(node.textContent || node.text);
 				}
-				return result;
+				return result.join("");
 			},
 
 			serializeNode: function (node){
 				if (isUndef(node)) {
 					return "";
 				}
-				var result = "";
-				result += '<' + node.nodeName;
+				var result = [];
+				result.push("<");
+				result.push(node.nodeName);
 
 				if (node.attributes && node.attributes.length > 0) {
 
 					for (var i = 0; i < node.attributes.length; i++) {
 						// serialize the attribute only if it has meaningful value that is not inherited
 						if (node.attributes[i].nodeValue && node.attributes[i].specified) {
-							result += " " + node.attributes[i].name +
-								"=\"" + node.attributes[i].value + "\"";
+							result.push(" ");
+							result.push(node.attributes[i].name);
+							result.push("=\"");
+							result.push(node.attributes[i].value);
+							result.push("\"");
 						}
 					}
 				}
 
-				result += '>';
-				result += Wicket.DOM.serializeNodeChildren(node);
-				result += '</' + node.nodeName + '>';
-				return result;
+				result.push(">");
+				result.push(Wicket.DOM.serializeNodeChildren(node));
+				result.push("</");
+				result.push(node.nodeName);
+				result.push(">");
+				return result.join("");
 			},
 
 			// Utility function that determines whether given element is part of the current document
@@ -1699,7 +1709,11 @@
 			 * @param node the root node
 			 */
 			text: function (node) {
-				var result = "";
+				if (isUndef(node)) {
+					return "";
+				}
+
+				var result = [];
 
 				if (node.childNodes.length > 0) {
 					for (var i = 0; i < node.childNodes.length; i++) {
@@ -1707,21 +1721,21 @@
 						switch (thisNode.nodeType) {
 							case 1: // ELEMENT_NODE
 							case 5: // ENTITY_REFERENCE_NODE
-								result += this.text(thisNode);
+								result.push(this.text(thisNode));
 								break;
 							case 3: // TEXT_NODE
 							case 4: // CDATA_SECTION_NODE
-								result += thisNode.nodeValue;
+								result.push(thisNode.nodeValue);
 								break;
 							default:
 								break;
 						}
 					}
 				} else {
-					result += node.textContent || node.text;
+					result.push(node.textContent || node.text);
 				}
 
-				return result;
+				return result.join("");
 			}
 		},
 
