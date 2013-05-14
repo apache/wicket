@@ -57,12 +57,6 @@ public abstract class Panel extends WebMarkupContainer
 	/** */
 	public static final String PANEL = "panel";
 
-	static
-	{
-		// register "wicket:panel"
-		WicketTagIdentifier.registerWellKnownTagName(PANEL);
-	}
-
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
