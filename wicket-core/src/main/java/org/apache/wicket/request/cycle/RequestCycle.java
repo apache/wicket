@@ -72,6 +72,13 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
 	/**
+	 * An additional logger which is used to log extra information.
+	 * Could be disabled separately than the main logger if the application developer
+	 * does not want to see this extra information.
+	 */
+	private static final Logger logExtra = LoggerFactory.getLogger("RequestCycleExtra");
+
+	/**
 	 * Returns request cycle associated with current thread.
 	 * 
 	 * @return request cycle instance or <code>null</code> if no request cycle is associated with
@@ -332,9 +339,9 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			 * Call out the fact that we are processing an exception in a loud way, helps to notice
 			 * them when developing even if they get wrapped or processed in a custom handler.
 			 */
-			log.warn("********************************");
-			log.warn("Handling the following exception", e);
-			log.warn("********************************");
+			logExtra.warn("********************************");
+			logExtra.warn("Handling the following exception", e);
+			logExtra.warn("********************************");
 		}
 
 		IRequestHandler handler = listeners.onException(this, e);
