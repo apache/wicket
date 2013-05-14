@@ -16,13 +16,11 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.nio.charset.Charset;
+import java.util.Locale;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.markup.html.link.ILinkListener;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -30,6 +28,12 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
@@ -235,6 +239,121 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertNull("A non-page class should not create a request handler!", handler);
+	}
+
+	/**
+	 * WICKET-5071
+	 *
+	 * Decodes a request to {@link org.apache.wicket.core.request.mapper.IMapperContext#getBookmarkableIdentifier()}/com.example.MyPage
+	 * when the current base url is
+	 * {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}/{@link org.apache.wicket.core.request.mapper.IMapperContext#getBookmarkableIdentifier()}
+	 */
+	@Test
+	public void decode11()
+	{
+		final Url url = Url.parse(context.getBookmarkableIdentifier() + "/" + PAGE_CLASS_NAME);
+
+		Request request = new Request()
+		{
+			@Override
+			public Url getUrl()
+			{
+				return url;
+			}
+
+			@Override
+			public Locale getLocale()
+			{
+				return null;
+			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return Charset.forName("UTF-8");
+			}
+
+			@Override
+			public Url getClientUrl()
+			{
+				StringBuilder url = new StringBuilder();
+				url.append(context.getNamespace())
+						.append('/')
+						.append(context.getBookmarkableIdentifier())
+						.append('/')
+						.append("com.example.MyPage");
+				return Url.parse(url.toString());
+			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return null;
+			}
+		};
+
+		IRequestHandler handler = encoder.mapRequest(request);
+		assertNotNull("A handler should be resolved for relative url to a bookmarkable page!", handler);
+
+		IRequestablePage page = ((IPageRequestHandler) handler).getPage();
+		assertEquals(page.getClass().getName(), PAGE_CLASS_NAME);
+	}
+
+	/**
+	 * WICKET-5071
+	 *
+	 * Decodes a request to {@link org.apache.wicket.core.request.mapper.IMapperContext#getBookmarkableIdentifier()}/com.example.MyPage
+	 * when the current base url is
+	 * {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}/{@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
+	 */
+	@Test
+	public void decode12()
+	{
+		final Url url = Url.parse(context.getBookmarkableIdentifier() + "/" + PAGE_CLASS_NAME);
+
+		Request request = new Request()
+		{
+			@Override
+			public Url getUrl()
+			{
+				return url;
+			}
+
+			@Override
+			public Locale getLocale()
+			{
+				return null;
+			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return Charset.forName("UTF-8");
+			}
+
+			@Override
+			public Url getClientUrl()
+			{
+				StringBuilder url = new StringBuilder();
+				url.append(context.getNamespace())
+						.append('/')
+						.append(context.getPageIdentifier())
+						.append("?3");
+				return Url.parse(url.toString());
+			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return null;
+			}
+		};
+
+		IRequestHandler handler = encoder.mapRequest(request);
+		assertNotNull("A handler should be resolved for relative url to a page instance url!", handler);
+
+		IRequestablePage page = ((IPageRequestHandler) handler).getPage();
+		assertEquals(page.getClass().getName(), PAGE_CLASS_NAME);
 	}
 
 	/**
