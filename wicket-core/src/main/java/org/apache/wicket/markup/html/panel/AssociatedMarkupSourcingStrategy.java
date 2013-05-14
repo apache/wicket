@@ -30,6 +30,7 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.HeaderPartContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 
@@ -55,6 +56,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	public AssociatedMarkupSourcingStrategy(final String tagName)
 	{
 		this.tagName = Args.notNull(tagName, "tagName");
+		WicketTagIdentifier.registerWellKnownTagName(tagName);
 	}
 
 	@Override
