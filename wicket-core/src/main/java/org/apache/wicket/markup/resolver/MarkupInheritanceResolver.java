@@ -22,7 +22,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags, which are silently ignored, because
@@ -39,13 +38,6 @@ public class MarkupInheritanceResolver implements IComponentResolver
 
 	/** */
 	public static final String EXTEND = "extend";
-
-	static
-	{
-		// register "wicket:extend" and "wicket:child"
-		WicketTagIdentifier.registerWellKnownTagName(EXTEND);
-		WicketTagIdentifier.registerWellKnownTagName(CHILD);
-	}
 
 	/**
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,

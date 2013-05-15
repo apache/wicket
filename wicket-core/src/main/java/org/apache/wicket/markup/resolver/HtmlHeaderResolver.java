@@ -51,12 +51,6 @@ public class HtmlHeaderResolver implements IComponentResolver
 	/** */
 	public static final String HEAD = "head";
 
-	static
-	{
-		// register "wicket:head"
-		WicketTagIdentifier.registerWellKnownTagName(HEAD);
-	}
-
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)

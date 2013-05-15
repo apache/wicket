@@ -21,7 +21,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,12 +66,6 @@ public class WicketContainerResolver implements IComponentResolver
 
 	/** */
 	public static final String CONTAINER = "container";
-
-	static
-	{
-		// register "wicket:container"
-		WicketTagIdentifier.registerWellKnownTagName(CONTAINER);
-	}
 
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,

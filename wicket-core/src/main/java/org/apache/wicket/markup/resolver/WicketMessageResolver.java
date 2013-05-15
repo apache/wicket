@@ -23,17 +23,16 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
-import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
@@ -97,12 +96,6 @@ public class WicketMessageResolver implements IComponentResolver
 
 	/** */
 	public static final String MESSAGE = "message";
-
-	static
-	{
-		// register "wicket:message"
-		WicketTagIdentifier.registerWellKnownTagName(MESSAGE);
-	}
 
 	/**
 	 * If the key can't be resolved and the default is null, an exception will be thrown. Instead,

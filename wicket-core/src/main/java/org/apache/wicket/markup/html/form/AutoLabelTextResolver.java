@@ -26,7 +26,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.AutoLabelResolver.AutoLabel;
 import org.apache.wicket.markup.html.internal.ResponseBufferZone;
 import org.apache.wicket.markup.parser.XmlTag;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -99,10 +98,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class AutoLabelTextResolver implements IComponentResolver
 {
-	static
-	{
-		WicketTagIdentifier.registerWellKnownTagName("label");
-	}
+	public static final String LABEL = "label";
 
 	/**
 	 * This is inserted by the resolver to render the label.

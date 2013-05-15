@@ -57,12 +57,6 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	/** The child attribute */
 	public static final String CHILD_ATTRIBUTE = "child";
 
-	static
-	{
-		// register "wicket:enclosure"
-		WicketTagIdentifier.registerWellKnownTagName(ENCLOSURE);
-	}
-
 	/** Stack of <wicket:enclosure> tags */
 	private Stack<ComponentTag> stack;
 

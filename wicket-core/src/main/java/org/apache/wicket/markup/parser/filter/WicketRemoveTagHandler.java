@@ -38,12 +38,6 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	/** */
 	public static final String REMOVE = "remove";
 
-	static
-	{
-		// register "wicket:remove"
-		WicketTagIdentifier.registerWellKnownTagName(REMOVE);
-	}
-
 	/**
 	 * Construct.
 	 */
