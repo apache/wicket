@@ -41,10 +41,10 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	private static final Logger log = LoggerFactory.getLogger(PackageResourceGuard.class);
 
 	/** Set of extensions that are denied access. */
-	private Set<String> blockedExtensions = new HashSet<String>(4);
+	private Set<String> blockedExtensions = new HashSet<>(4);
 
 	/** Set of filenames that are denied access. */
-	private Set<String> blockedFiles = new HashSet<String>(4);
+	private Set<String> blockedFiles = new HashSet<>(4);
 
 	private boolean allowAccessToRootResources = false;
 

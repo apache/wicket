@@ -128,7 +128,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	{
 		if (wellKnownTagNames == null)
 		{
-			wellKnownTagNames = new HashSet<String>();
+			wellKnownTagNames = new HashSet<>();
 		}
 
 		String lowerCaseName = name.toLowerCase(Locale.ENGLISH);

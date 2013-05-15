@@ -79,7 +79,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	private static final char PATH_SEPARATOR = '/';
 
 	/** The list of pattern. Note that the order is important, hence a list */
-	private List<SearchPattern> pattern = new ArrayList<SearchPattern>();
+	private List<SearchPattern> pattern = new ArrayList<>();
 
 	/** A cache to speed up the checks */
 	private final ConcurrentMap<String, Boolean> cache;
@@ -183,7 +183,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 
 		// Check against the pattern
 		boolean hit = false;
-		for (SearchPattern pattern : new ReverseListIterator<SearchPattern>(this.pattern))
+		for (SearchPattern pattern : new ReverseListIterator<>(this.pattern))
 		{
 			if ((pattern != null) && pattern.isActive())
 			{
@@ -424,7 +424,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final ConcurrentLinkedQueue<String> fifo = new ConcurrentLinkedQueue<String>();
+		private final ConcurrentLinkedQueue<String> fifo = new ConcurrentLinkedQueue<>();
 
 		private final int maxSize;
 
