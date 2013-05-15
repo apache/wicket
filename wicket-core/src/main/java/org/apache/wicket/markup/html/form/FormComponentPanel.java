@@ -18,9 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -113,15 +111,6 @@ import org.apache.wicket.model.IModel;
 public abstract class FormComponentPanel<T> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
-
-	static
-	{
-		// register "wicket:panel"
-		// Same as in Panel.java. Not that it can be moved in the PanelMarkupSourcingStrategy which
-		// provides common functionality for Panel and FormComponentPanel, since the sourcing
-		// strategy gets lazy loaded. Too late as some users found out.
-		WicketTagIdentifier.registerWellKnownTagName(Panel.PANEL);
-	}
 
 	/**
 	 * Construct.

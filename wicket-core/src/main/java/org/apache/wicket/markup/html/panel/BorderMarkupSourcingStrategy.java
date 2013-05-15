@@ -22,7 +22,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * The Border component's markup sourcing strategy
@@ -31,13 +30,6 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  */
 public class BorderMarkupSourcingStrategy extends AssociatedMarkupSourcingStrategy
 {
-
-	static
-	{
-		// register "wicket:body" and "wicket:border"
-		WicketTagIdentifier.registerWellKnownTagName(Border.BORDER);
-		WicketTagIdentifier.registerWellKnownTagName(Border.BODY);
-	}
 
 	/**
 	 * Constructor.

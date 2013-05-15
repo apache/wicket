@@ -26,7 +26,15 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.form.AutoLabelTextResolver;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
+import org.apache.wicket.markup.resolver.FragmentResolver;
+import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
+import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
+import org.apache.wicket.markup.resolver.WicketContainerResolver;
+import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -44,7 +52,23 @@ import org.apache.wicket.util.string.Strings;
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
 	/** List of well known wicket tag names */
-	private static Set<String> wellKnownTagNames;
+	private static final Set<String> WELL_KNOWN_TAG_NAMES = new HashSet<>();
+
+	static {
+		WELL_KNOWN_TAG_NAMES.add(Border.BORDER);
+		WELL_KNOWN_TAG_NAMES.add(Border.BODY);
+		WELL_KNOWN_TAG_NAMES.add(AutoLabelTextResolver.LABEL);
+		WELL_KNOWN_TAG_NAMES.add(Panel.PANEL);
+		WELL_KNOWN_TAG_NAMES.add(EnclosureHandler.ENCLOSURE);
+		WELL_KNOWN_TAG_NAMES.add(WicketLinkTagHandler.LINK);
+		WELL_KNOWN_TAG_NAMES.add(WicketRemoveTagHandler.REMOVE);
+		WELL_KNOWN_TAG_NAMES.add(FragmentResolver.FRAGMENT);
+		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEAD);
+		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.CHILD);
+		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.EXTEND);
+		WELL_KNOWN_TAG_NAMES.add(WicketContainerResolver.CONTAINER);
+		WELL_KNOWN_TAG_NAMES.add(WicketMessageResolver.MESSAGE);
+	}
 
 	/**
 	 * Construct.
@@ -124,15 +148,10 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 * 
 	 * @param name
 	 */
-	public final static void registerWellKnownTagName(final String name)
+	public static void registerWellKnownTagName(final String name)
 	{
-		if (wellKnownTagNames == null)
-		{
-			wellKnownTagNames = new HashSet<>();
-		}
-
 		String lowerCaseName = name.toLowerCase(Locale.ENGLISH);
-		wellKnownTagNames.add(lowerCaseName);
+		WELL_KNOWN_TAG_NAMES.add(lowerCaseName);
 	}
 
 	/**
@@ -143,6 +162,6 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	private boolean isWellKnown(final ComponentTag tag)
 	{
 		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ENGLISH);
-		return wellKnownTagNames.contains(lowerCaseTagName);
+		return WELL_KNOWN_TAG_NAMES.contains(lowerCaseTagName);
 	}
 }

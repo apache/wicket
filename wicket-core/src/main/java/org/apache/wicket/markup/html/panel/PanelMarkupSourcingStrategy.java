@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * The Panel components markup sourcing strategy.
@@ -36,13 +35,6 @@ public class PanelMarkupSourcingStrategy extends AssociatedMarkupSourcingStrateg
 {
 	// False for Panel and true for Border components.
 	private final boolean allowWicketComponentsInBodyMarkup;
-
-	static
-	{
-		// register "wicket:panel"
-		WicketTagIdentifier.registerWellKnownTagName(Panel.PANEL);
-	}
-
 
 	/**
 	 * Constructor.

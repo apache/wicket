@@ -60,12 +60,6 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 	/** The id of autolink components */
 	public static final String AUTOLINK_ID = "_autolink_";
 
-	static
-	{
-		// register "wicket:link"
-		WicketTagIdentifier.registerWellKnownTagName(LINK);
-	}
-
 	/** Allow to have link regions within link regions */
 	private ArrayListStack<Boolean> autolinkStatus;
 

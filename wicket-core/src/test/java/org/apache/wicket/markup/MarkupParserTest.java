@@ -281,10 +281,6 @@ public final class MarkupParserTest extends WicketTestCase
 	@Test
 	public void wicketTag() throws ParseException, ResourceStreamNotFoundException, IOException
 	{
-		WicketTagIdentifier.registerWellKnownTagName("body");
-		WicketTagIdentifier.registerWellKnownTagName("border");
-		WicketTagIdentifier.registerWellKnownTagName("panel");
-
 		new MarkupParser("<span wicket:id=\"test\"/>").parse();
 		new MarkupParser("<span wicket:id=\"test\">Body</span>").parse();
 		new MarkupParser("This is a test <span wicket:id=\"test\"/>").parse();
