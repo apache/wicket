@@ -98,12 +98,15 @@ public abstract class PageRenderer
 	 */
 	protected String getSessionId()
 	{
-		return Session.get().getId();
+		return Session.exists() ? Session.get().getId() : null;
 	}
 
+	/**
+	 * @return whether the current session is temporary
+	 */
 	protected boolean isSessionTemporary()
 	{
-		return Session.get().isTemporary();
+		return Session.exists() ? Session.get().isTemporary() : true;
 	}
 
 	/**
