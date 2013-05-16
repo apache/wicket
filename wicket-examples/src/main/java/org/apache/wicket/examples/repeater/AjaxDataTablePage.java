@@ -39,9 +39,9 @@ public class AjaxDataTablePage extends BasePage
 	 */
 	public AjaxDataTablePage()
 	{
-		List<IColumn<Contact, String>> columns = new ArrayList<IColumn<Contact, String>>();
+		List<IColumn<Contact, String>> columns = new ArrayList<>();
 
-		columns.add(new AbstractColumn<Contact, String>(new Model<String>("Actions"))
+		columns.add(new AbstractColumn<Contact, String>(Model.of("Actions"))
 		{
 			@Override
 			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
@@ -51,15 +51,15 @@ public class AjaxDataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("ID"), "id"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("First Name"), "firstName",
+		columns.add(new PropertyColumn<Contact, String>(Model.of("ID"), "id"));
+		columns.add(new PropertyColumn<Contact, String>(Model.of("First Name"), "firstName",
 			"firstName"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Last Name"), "lastName",
+		columns.add(new PropertyColumn<Contact, String>(Model.of("Last Name"), "lastName",
 			"lastName"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<Contact, String>(Model.of("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn<Contact, String>(Model.of("Cell Phone"), "cellPhone"));
 
-		add(new AjaxFallbackDefaultDataTable<Contact, String>("table", columns,
+		add(new AjaxFallbackDefaultDataTable<>("table", columns,
 			new SortableContactDataProvider(), 8));
 	}
 }
