@@ -18,11 +18,11 @@ package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
-import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 
 /**
@@ -98,12 +98,15 @@ public abstract class PageRenderer
 	 */
 	protected String getSessionId()
 	{
-		return Session.get().getId();
+		return Session.exists() ? Session.get().getId() : null;
 	}
 
+	/**
+	 * @return whether the current session is temporary
+	 */
 	protected boolean isSessionTemporary()
 	{
-		return Session.get().isTemporary();
+		return Session.exists() ? Session.get().isTemporary() : true;
 	}
 
 	/**
