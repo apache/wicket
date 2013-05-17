@@ -110,9 +110,9 @@ fi
 
 setup_gpg
 
-echo "Ensuring we are starting from master"
+echo "Ensuring we are starting from wicket-6.x"
 # otherwise we can't remove a previous release branch that failed
-git checkout master
+git checkout wicket-6.x
 
 echo "Cleaning up any release artifacts that might linger"
 mvn -q release:clean
@@ -268,7 +268,7 @@ next_dev_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
 
 echo "To renumber the next development iteration $next_dev_version:"
 echo ""
-echo "    git checkout master"
+echo "    git checkout wicket-6.x"
 echo "    mvn release:update-versions --batch-mode"
 echo "    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;"
 # do the same for the original snapshot version, as our maven release
