@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-experimental</artifactId>
-		<version>6.8.0-SNAPSHOT</version>
+		<version>6.8.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-examples-parent</artifactId>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9</version>
 	<packaging>pom</packaging>
 	<name>Wicket Examples Parent</name>
 	<description>New examples structure for Apache Wicket</description>
