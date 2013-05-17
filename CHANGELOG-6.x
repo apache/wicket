@@ -2,6 +2,52 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.8.0
+
+** Sub-task
+
+    * [WICKET-5162] - InlineEnclosure markup id could collide in the final page markup
+    * [WICKET-5185] - JavaScript text is spread in several DOM text nodes 
+
+** Bug
+
+    * [WICKET-5083] - Page#isPageStateless() may return wrong value
+    * [WICKET-5103] - Wicket session id not up to date when container changes session id
+    * [WICKET-5119] - PopupSettings IE8 - dosen't work second time a link is clicked.
+    * [WICKET-5140] - InterceptData never gets cleared from session after continueToOriginalDestination is called and another page is requested afterwards
+    * [WICKET-5142] - Generating invalid JavaScript for ajax update
+    * [WICKET-5145] - do not post an Atmosphere event if the filtered subscription set is empty
+    * [WICKET-5146] - Application not destroyed if WicketFilter#init() fails
+    * [WICKET-5147] - WicketTester MockHttpRequest.getCookies very slow / OutOfMemory
+    * [WICKET-5149] - PageRequestHandlerTracker doesn't track resolves of handlers caused by Exception 
+    * [WICKET-5154] - Positioning of autocomplete popup does not take into account borders
+    * [WICKET-5157] - URL query parameter values containing equals sign get cut off
+    * [WICKET-5163] - Implementing markup loading by extending ResourceStreamLocator produces errors with inherited markup
+    * [WICKET-5176] - StringResourceModel doesn't detach model in some cases
+    * [WICKET-5178] - StopPropagation functionality on link is broken
+    * [WICKET-5181] - Problem with OnEventHeaderItem and Wicket.Event.add
+    * [WICKET-5187] - Unknown tag name with Wicket namespace: 'panel'
+    * [WICKET-5191] - Session is created unnecessarily
+
+** Improvement
+
+    * [WICKET-5143] - Create an interface for the roles replacing the current Roles class
+    * [WICKET-5150] - Log additional info when FormComponent fails in updateCollectionModel
+    * [WICKET-5158] - Ignore missing Page in StatelessForm#process()
+    * [WICKET-5159] - Replace usage of JavaScript eval() with plain JS in headed contribution decoding
+    * [WICKET-5160] - Throttle the animation in DebugWindow when there are many errors
+    * [WICKET-5161] - The url gets longer when using StatelessForm with GET method
+    * [WICKET-5166] - Relax the requirements for using FilteringHeaderResponse
+    * [WICKET-5186] - Use arrays instead of String concatenation in JavaScript for better performance
+    * [WICKET-5188] - Use a separate logger for the extra information logged in RequestCycle#onException()
+    * [WICKET-5189] - preregister known wicket tag names 
+
+** Task
+
+    * [WICKET-5169] - Create BuildBot config for wicket-6.x branch 
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.7.0
 
 ** Bug
