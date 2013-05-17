@@ -119,7 +119,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		Args.notNull(upload, "upload");
 		this.upload = upload;
 		parameters = new ValueMap();
-		files = new HashMap<String, List<FileItem>>();
+		files = new HashMap<>();
 
 		// Check that request is multipart
 		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
@@ -214,7 +214,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 				List<FileItem> fileItems = files.get(item.getFieldName());
 				if (fileItems == null)
 				{
-					fileItems = new ArrayList<FileItem>();
+					fileItems = new ArrayList<>();
 					files.put(item.getFieldName(), fileItems);
 				}
 				// Add to file list
@@ -277,13 +277,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	@Override
 	protected Map<String, List<StringValue>> generatePostParameters()
 	{
-		Map<String, List<StringValue>> res = new HashMap<String, List<StringValue>>();
+		Map<String, List<StringValue>> res = new HashMap<>();
 		for (String key : parameters.keySet())
 		{
 			String[] val = (String[])parameters.get(key);
 			if (val != null && val.length > 0)
 			{
-				List<StringValue> items = new ArrayList<StringValue>();
+				List<StringValue> items = new ArrayList<>();
 				for (String s : val)
 				{
 					items.add(StringValue.valueOf(s));
