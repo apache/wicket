@@ -1755,7 +1755,7 @@
 			_handleEventCancelation: function(attrs) {
 				var evt = attrs.event;
 				if (evt) {
-					if (!attrs.ad) {
+					if (attrs.pd) {
 						try {
 							evt.preventDefault();
 						} catch (ignore) {
