@@ -115,6 +115,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
@@ -1104,8 +1105,8 @@ public class BaseWicketTester
 			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.setUrl(url);
-		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.addHeader("Wicket-Ajax", "true");
+		request.addHeader(WebRequest.HEADER_AJAX_BASE_URL, url.toString());
+		request.addHeader(WebRequest.HEADER_AJAX, "true");
 
 		if (behavior instanceof AjaxFormSubmitBehavior)
 		{
