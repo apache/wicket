@@ -29,6 +29,28 @@ import org.apache.wicket.request.Url;
  */
 public class AtmosphereRequestMapper implements IRequestMapper
 {
+	private EventSubscriptionInvoker eventSubscriptionInvoker;
+
+	/**
+	 * 
+	 * Construct with {@link SubscribeAnnotationEventSubscriptionInvoker}
+	 */
+	public AtmosphereRequestMapper()
+	{
+		eventSubscriptionInvoker = new SubscribeAnnotationEventSubscriptionInvoker();
+	}
+
+	/**
+	 * 
+	 * Construct.
+	 * 
+	 * @param eventSubscriptionInvoker
+	 */
+	public AtmosphereRequestMapper(EventSubscriptionInvoker eventSubscriptionInvoker)
+	{
+		this.eventSubscriptionInvoker = eventSubscriptionInvoker;
+	}
+
 	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
@@ -36,7 +58,7 @@ public class AtmosphereRequestMapper implements IRequestMapper
 		{
 			AtmosphereWebRequest pushRequest = (AtmosphereWebRequest)request;
 			return new AtmosphereRequestHandler(pushRequest.getPageKey(),
-				pushRequest.getSubscriptions(), pushRequest.getEvent());
+				pushRequest.getSubscriptions(), pushRequest.getEvent(), eventSubscriptionInvoker);
 		}
 		return null;
 	}
