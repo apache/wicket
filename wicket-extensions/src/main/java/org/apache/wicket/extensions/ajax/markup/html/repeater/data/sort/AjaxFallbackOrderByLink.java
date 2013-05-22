@@ -137,6 +137,7 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+				attributes.setPreventDefault(true);
 				if (ajaxCallListener != null) {
 					attributes.getAjaxCallListeners().add(ajaxCallListener);
 				}

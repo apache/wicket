@@ -340,9 +340,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put(AjaxAttributeName.CHANNEL.jsonName(), channel);
 			}
 
-			if (attributes.isAllowDefault())
+			if (attributes.isPreventDefault())
 			{
-				attributesJson.put(AjaxAttributeName.IS_ALLOW_DEFAULT.jsonName(), true);
+				attributesJson.put(AjaxAttributeName.IS_PREVENT_DEFAULT.jsonName(), true);
 			}
 
 			if (AjaxRequestAttributes.EventPropagation.BUBBLE.equals(attributes.getEventPropagation()))

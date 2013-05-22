@@ -19,8 +19,7 @@ package org.apache.wicket.ajax.attributes;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -28,7 +27,7 @@ import org.junit.Test;
  * 
  * @author mosmann
  */
-public class AjaxAttributeNameTest
+public class AjaxAttributeNameTest extends Assert
 {
 	/**
 	 * do not let json parameter names collide
@@ -39,7 +38,7 @@ public class AjaxAttributeNameTest
 		Set<String> jsonNames = new HashSet<String>();
 		for (AjaxAttributeName name : AjaxAttributeName.values())
 		{
-			Assert.assertTrue("Attribute: " + name, jsonNames.add(name.jsonName()));
+			assertTrue("Attribute: " + name, jsonNames.add(name.jsonName()));
 		}
 	}
 
@@ -54,11 +53,11 @@ public class AjaxAttributeNameTest
 		for (AjaxAttributeName name : AjaxAttributeName.values())
 		{
 			sb.append(name.jsonName());
-			sb.append("|");
+			sb.append('|');
 		}
 
-		Assert.assertEquals("all known json parameter names",
-			"tr|p|d|id|dt|wr|rt|ad|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|i|sc|mp|f|c|m|u|",
+		assertEquals("all known json parameter names",
+			"tr|p|d|id|dt|wr|rt|pd|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|i|sc|mp|f|c|m|u|",
 			sb.toString());
 	}
 }

@@ -80,7 +80,7 @@ public final class AjaxRequestAttributes
 
 	private Duration requestTimeout;
 
-	private boolean allowDefault = false;
+	private boolean preventDefault = false;
 
 	private EventPropagation eventPropagation = EventPropagation.STOP;
 
@@ -291,16 +291,16 @@ public final class AjaxRequestAttributes
 	/**
 	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
 	 * handler to be invoked. For example if the behavior is attached to a link and
-	 * {@link #isAllowDefault()} returns <code>false</code> (which is default value), the link's URL
+	 * {@link #isPreventDefault()} returns <code>false</code> (which is default value), the link's URL
 	 * will not be followed. If the Ajax behavior is attached to a checkbox or a radio button then
 	 * the default behavior should be allowed to actually check the box or radio button, i.e. this
 	 * method should return <code>true</code>.
 	 * 
 	 * @return {@code true} if the default event handler should be invoked, {@code false} otherwise.
 	 */
-	public boolean isAllowDefault()
+	public boolean isPreventDefault()
 	{
-		return allowDefault;
+		return preventDefault;
 	}
 
 	/**
@@ -316,15 +316,15 @@ public final class AjaxRequestAttributes
 	 * Only applies for event behaviors. Determines whether the behavior should allow the default
 	 * event handler to be invoked.
 	 * 
-	 * @see #isAllowDefault()
+	 * @see #isPreventDefault()
 	 * 
-	 * @param allowDefault
+	 * @param preventDefault
 	 * @return {@code this} object for chaining
-	 * @see #isAllowDefault()
+	 * @see #isPreventDefault()
 	 */
-	public AjaxRequestAttributes setAllowDefault(boolean allowDefault)
+	public AjaxRequestAttributes setPreventDefault(boolean preventDefault)
 	{
-		this.allowDefault = allowDefault;
+		this.preventDefault = preventDefault;
 		return this;
 	}
 

@@ -78,9 +78,9 @@ public enum AjaxAttributeName {
 	/**
 	 * allow default
 	 * 
-	 * @see AjaxRequestAttributes#isAllowDefault()
+	 * @see AjaxRequestAttributes#isPreventDefault()
 	 */
-	IS_ALLOW_DEFAULT("ad"),
+	IS_PREVENT_DEFAULT("pd"),
 
 	/**
 	 * stop propagation

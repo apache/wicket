@@ -119,7 +119,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		super.updateAjaxAttributes(attributes);
 
 		attributes.setMethod(Method.POST);
-		attributes.setAllowDefault(true);
 	}
 
 	/**

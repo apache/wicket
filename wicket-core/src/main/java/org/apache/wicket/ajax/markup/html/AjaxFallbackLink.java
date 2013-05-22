@@ -116,6 +116,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+				attributes.setPreventDefault(true);
 				AjaxFallbackLink.this.updateAjaxAttributes(attributes);
 			}
 		};

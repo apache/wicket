@@ -358,8 +358,8 @@
 				attrs.rt = 0;
 			}
 
-			if (attrs.ad !== true) {
-				attrs.ad = false;
+			if (attrs.pd !== true) {
+				attrs.pd = false;
 			}
 
 			if (!attrs.sp) {
