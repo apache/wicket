@@ -32,6 +32,7 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.atmosphere.config.AtmosphereParameters;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -125,10 +126,28 @@ public class EventBus implements UnboundListener
 		this.application = application;
 		this.broadcaster = broadcaster;
 		application.setMetaData(EVENT_BUS_KEY, this);
-		application.mount(new AtmosphereRequestMapper());
+		application.mount(new AtmosphereRequestMapper(createEventSubscriptionInvoker()));
 		application.getComponentPostOnBeforeRenderListeners().add(
-			new AtmosphereEventSubscriptionCollector(this));
+			createEventSubscriptionCollector());
 		application.getSessionStore().registerUnboundListener(this);
+	}
+
+	/**
+	 * 
+	 * @return event subscription invoker
+	 */
+	protected EventSubscriptionInvoker createEventSubscriptionInvoker()
+	{
+		return new SubscribeAnnotationEventSubscriptionInvoker();
+	}
+
+	/**
+	 * 
+	 * @return event subscription collector
+	 */
+	protected IComponentOnBeforeRenderListener createEventSubscriptionCollector()
+	{
+		return new AtmosphereEventSubscriptionCollector(this);
 	}
 
 	/**
