@@ -363,7 +363,7 @@
 			}
 
 			if (!attrs.sp) {
-				attrs.sp = "stop";
+				attrs.sp = "bubble";
 			}
 		},
 

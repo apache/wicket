@@ -97,8 +97,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		RequestCycle requestCycle = component.getRequestCycle();
 		Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
-		response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl +
-			"\";", "wicket-ajax-base-url"));
+		response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl
+			+ "\";", "wicket-ajax-base-url"));
 
 		renderExtraHeaderContributors(component, response);
 	}
@@ -136,7 +136,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
 		WebApplication application = (WebApplication)getComponent().getApplication();
-		AjaxRequestTargetListenerCollection ajaxRequestTargetListeners = application.getAjaxRequestTargetListeners();
+		AjaxRequestTargetListenerCollection ajaxRequestTargetListeners = application
+			.getAjaxRequestTargetListeners();
 		for (AjaxRequestTarget.IListener listener : ajaxRequestTargetListeners)
 		{
 			if (listener instanceof AjaxRequestTarget.AbstractListener)
@@ -266,7 +267,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 						AjaxAttributeName.BEFORE_HANDLER.jsonName(),
 						BEFORE_HANDLER_FUNCTION_TEMPLATE);
 
-					CharSequence beforeSendHandler = ajaxCallListener.getBeforeSendHandler(component);
+					CharSequence beforeSendHandler = ajaxCallListener
+						.getBeforeSendHandler(component);
 					appendListenerHandler(beforeSendHandler, attributesJson,
 						AjaxAttributeName.BEFORE_SEND_HANDLER.jsonName(),
 						BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE);
@@ -345,11 +347,13 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put(AjaxAttributeName.IS_PREVENT_DEFAULT.jsonName(), true);
 			}
 
-			if (AjaxRequestAttributes.EventPropagation.BUBBLE.equals(attributes.getEventPropagation()))
+			if (AjaxRequestAttributes.EventPropagation.STOP
+				.equals(attributes.getEventPropagation()))
 			{
-				attributesJson.put(AjaxAttributeName.EVENT_PROPAGATION.jsonName(), "bubble");
+				attributesJson.put(AjaxAttributeName.EVENT_PROPAGATION.jsonName(), "stop");
 			}
-			else if (AjaxRequestAttributes.EventPropagation.STOP_IMMEDIATE.equals(attributes.getEventPropagation()))
+			else if (AjaxRequestAttributes.EventPropagation.STOP_IMMEDIATE.equals(attributes
+				.getEventPropagation()))
 			{
 				attributesJson.put(AjaxAttributeName.EVENT_PROPAGATION.jsonName(), "stopImmediate");
 			}
@@ -524,9 +528,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 					sb.append(',');
 				else
 					first = false;
-				sb.append('\'')
-					.append(curExtraParameter.getAjaxParameterName())
-					.append("': ")
+				sb.append('\'').append(curExtraParameter.getAjaxParameterName()).append("': ")
 					.append(curExtraParameter.getAjaxParameterCode());
 			}
 		}
@@ -534,8 +536,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		if (attributes.getExtraParameters().isEmpty())
 			sb.append("attrs." + AjaxAttributeName.EXTRA_PARAMETERS + " = params;\n");
 		else
-			sb.append("attrs." + AjaxAttributeName.EXTRA_PARAMETERS + " = Wicket.merge(attrs." +
-				AjaxAttributeName.EXTRA_PARAMETERS + ", params);\n");
+			sb.append("attrs." + AjaxAttributeName.EXTRA_PARAMETERS + " = Wicket.merge(attrs."
+				+ AjaxAttributeName.EXTRA_PARAMETERS + ", params);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
 	}

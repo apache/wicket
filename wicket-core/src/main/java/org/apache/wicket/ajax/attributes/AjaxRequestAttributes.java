@@ -61,8 +61,8 @@ public final class AjaxRequestAttributes
 		STOP,
 
 		/**
-		 * Stops the propagation of the JavaScript event to the parent of its target
-		 * and all other event listeners registered on the same target
+		 * Stops the propagation of the JavaScript event to the parent of its target and all other
+		 * event listeners registered on the same target
 		 */
 		STOP_IMMEDIATE,
 
@@ -82,7 +82,7 @@ public final class AjaxRequestAttributes
 
 	private boolean preventDefault = false;
 
-	private EventPropagation eventPropagation = EventPropagation.STOP;
+	private EventPropagation eventPropagation = EventPropagation.BUBBLE;
 
 	/**
 	 * The names of the events which will trigger the Ajax call
@@ -291,10 +291,10 @@ public final class AjaxRequestAttributes
 	/**
 	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
 	 * handler to be invoked. For example if the behavior is attached to a link and
-	 * {@link #isPreventDefault()} returns <code>false</code> (which is default value), the link's URL
-	 * will not be followed. If the Ajax behavior is attached to a checkbox or a radio button then
-	 * the default behavior should be allowed to actually check the box or radio button, i.e. this
-	 * method should return <code>true</code>.
+	 * {@link #isPreventDefault()} returns <code>false</code> (which is default value), the link's
+	 * URL will not be followed. If the Ajax behavior is attached to a checkbox or a radio button
+	 * then the default behavior should be allowed to actually check the box or radio button, i.e.
+	 * this method should return <code>true</code>.
 	 * 
 	 * @return {@code true} if the default event handler should be invoked, {@code false} otherwise.
 	 */
@@ -304,8 +304,8 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * Only applies for event behaviors. Returns whether the behavior should allow the JavaScript event
-	 * to propagate to the parent of its target.
+	 * Only applies for event behaviors. Returns whether the behavior should allow the JavaScript
+	 * event to propagate to the parent of its target.
 	 */
 	public EventPropagation getEventPropagation()
 	{
@@ -329,11 +329,11 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * Only applies to event behaviors. Determines whether the behavior should allow the
-	 * JavaScript event to propagate to the parent of its target.
-	 *
+	 * Only applies to event behaviors. Determines whether the behavior should allow the JavaScript
+	 * event to propagate to the parent of its target.
+	 * 
 	 * @param eventPropagation
-	 *      the type of the stop
+	 *            the type of the stop
 	 * @return {@code this} object, for chaining
 	 */
 	public AjaxRequestAttributes setEventPropagation(EventPropagation eventPropagation)
