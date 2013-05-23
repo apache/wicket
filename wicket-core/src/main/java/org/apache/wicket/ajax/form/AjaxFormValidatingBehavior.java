@@ -145,6 +145,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 							throttleDelay);
 						attributes.setThrottlingSettings(throttlingSettings);
 					}
+					attributes.setAllowDefault(true);
 				}
 			};
 			component.add(behavior);
