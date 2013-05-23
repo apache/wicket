@@ -167,7 +167,6 @@ public class AjaxFormValidatingBehavior extends Behavior
 						ThrottlingSettings throttlingSettings = new ThrottlingSettings(id,
 							throttleDelay);
 						attributes.setThrottlingSettings(throttlingSettings);
-						attributes.setPreventDefault(false); // WICKET-5194
 					}
 
 					AjaxFormValidatingBehavior.this.updateAjaxAttributes(attributes);
