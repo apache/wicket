@@ -33,6 +33,8 @@ import org.apache.wicket.util.visit.IVisitor;
 /**
  * Ajax event behavior that submits the form and updates all form feedback panels on the page.
  * Useful for providing instant feedback.
+ *
+ * Can be bound either to a {@link Form form} or to a component inside a form.
  * 
  * @since 1.2
  * 
