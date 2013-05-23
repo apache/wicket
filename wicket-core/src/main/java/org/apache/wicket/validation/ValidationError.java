@@ -18,7 +18,6 @@ package org.apache.wicket.validation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -50,8 +49,6 @@ import org.apache.wicket.util.string.Strings;
 public final class ValidationError implements IValidationError
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final Map<String, Object> EMPTY_VARS = Collections.emptyMap();
 
 	/** list of message keys to try against the <code>IErrorMessageSource</code> */
 	private List<String> keys;
@@ -139,7 +136,7 @@ public final class ValidationError implements IValidationError
 
 		if (keys == null)
 		{
-			keys = new ArrayList<String>(1);
+			keys = new ArrayList<>(1);
 		}
 		keys.add(key);
 		return this;
@@ -212,7 +209,7 @@ public final class ValidationError implements IValidationError
 	{
 		if (vars == null)
 		{
-			vars = new HashMap<String, Object>(2);
+			vars = new HashMap<>(2);
 		}
 		return vars;
 	}
@@ -300,7 +297,7 @@ public final class ValidationError implements IValidationError
 	{
 		if (keys == null)
 		{
-			keys = new ArrayList<String>();
+			keys = new ArrayList<>();
 		}
 		return keys;
 	}
@@ -351,14 +348,14 @@ public final class ValidationError implements IValidationError
 			while (i.hasNext())
 			{
 				final Entry<String, Object> e = i.next();
-				tostring.append("[")
+				tostring.append('[')
 					.append(e.getKey())
-					.append("=")
+					.append('=')
 					.append(e.getValue())
-					.append("]");
+					.append(']');
 				if (i.hasNext())
 				{
-					tostring.append(",");
+					tostring.append(',');
 				}
 			}
 		}
@@ -366,9 +363,9 @@ public final class ValidationError implements IValidationError
 		{
 			tostring.append("null");
 		}
-		tostring.append("]");
+		tostring.append(']');
 
-		tostring.append("]");
+		tostring.append(']');
 
 		return tostring.toString();
 	}

@@ -1839,7 +1839,7 @@ public class Form<T> extends WebMarkupContainer
 	 * containing illegal values. However, with external frameworks there may not be an alternate
 	 * way to validate the model object. A good example of this is a JSR303 Bean Validator
 	 * validating the model object to check any class-level constraints, in order to check such
-	 * constaints the model object must contain the values set by the user.
+	 * constraints the model object must contain the values set by the user.
 	 */
 	protected void onValidateModelObjects()
 	{
