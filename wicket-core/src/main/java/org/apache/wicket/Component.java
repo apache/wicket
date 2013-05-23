@@ -683,7 +683,8 @@ public abstract class Component
 		getApplication().getComponentInstantiationListeners().onInstantiation(this);
 
 		final IDebugSettings debugSettings = getApplication().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
+		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() &&
+			debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
 				ComponentStrings.toString(this, new MarkupException("constructed")));
@@ -3650,16 +3651,16 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the subset of the currently coupled {@link Behavior}s that are of the provided type as a
-	 * unmodifiable list. Returns an empty list rather than null if there are no behaviors coupled
-	 * to this component.
+	 * Gets the subset of the currently coupled {@link Behavior}s that are of the provided type as
+	 * an unmodifiable list. Returns an empty list if there are no behaviors coupled to this
+	 * component.
 	 * 
 	 * @param type
 	 *            The type or null for all
-	 * @return The subset of the currently coupled behaviors that are of the provided type as a
-	 *         unmodifiable list or null
+	 * @return The subset of the currently coupled behaviors that are of the provided type as an
+	 *         unmodifiable list
 	 * @param <M>
-	 *            A class derived from IBehavior
+	 *            A class derived from Behavior
 	 */
 	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
