@@ -34,7 +34,7 @@ public class RedirectB extends WebPage
 	 */
 	public RedirectB()
 	{
-		add(new Label("interceptContinuationURL", Model .of(InterceptData.get()
+		add(new Label("interceptContinuationURL", Model.of(InterceptData.get()
 			.getOriginalUrl()
 			.toString())));
 
