@@ -17,9 +17,11 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -37,38 +39,90 @@ import org.apache.wicket.util.visit.IVisitor;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
+public class AjaxFormValidatingBehavior extends Behavior
 {
 	private static final long serialVersionUID = 1L;
+
+	private final String event;
+	private final Duration throttleDelay;
+
+	/**
+	 * The form that will be submitted via ajax
+	 */
+	private Form<?> form;
+
+	/**
+	 * A flag indicating whether this behavior has been rendered at least once
+	 */
+	private boolean hasBeenRendered = false;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param form
-	 *            form that will be submitted via ajax
 	 * @param event
 	 *            javascript event this behavior will be invoked on, like onclick
 	 */
-	public AjaxFormValidatingBehavior(Form<?> form, String event)
+	public AjaxFormValidatingBehavior(String event)
 	{
-		super(form, event);
+		this(event, null);
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
+	 * Construct.
+	 *
+	 * @param event
+	 *            javascript event this behavior will be invoked on, like onclick
+	 * @param throttleDelay
+	 *            the duration for which the Ajax call should be throttled
 	 */
+	public AjaxFormValidatingBehavior(String event, Duration throttleDelay)
+	{
+		this.event = event;
+		this.throttleDelay = throttleDelay;
+	}
+
 	@Override
+	public void bind(Component component)
+	{
+		super.bind(component);
+
+		if (component instanceof Form<?>)
+		{
+			form = (Form<?>) component;
+		}
+		else
+		{
+			form = Form.findForm(component);
+			if (form == null)
+			{
+				throw new WicketRuntimeException(AjaxFormValidatingBehavior.class.getSimpleName() +
+						" should be bound to a Form component or a component that is inside a form!");
+			}
+		}
+	}
+
+	@Override
+	public void onConfigure(Component component)
+	{
+		super.onConfigure(component);
+
+		if (hasBeenRendered == false)
+		{
+			hasBeenRendered = true;
+
+			form.visitChildren(FormComponent.class, new FormValidateVisitor());
+		}
+	}
+
 	protected void onSubmit(final AjaxRequestTarget target)
 	{
 		addFeedbackPanels(target);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onError(org.apache.wicket.ajax.AjaxRequestTarget)
-	 */
-	@Override
+	protected void onAfterSubmit(final AjaxRequestTarget target)
+	{
+	}
+
 	protected void onError(AjaxRequestTarget target)
 	{
 		addFeedbackPanels(target);
@@ -79,9 +133,9 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * 
 	 * @param target
 	 */
-	private void addFeedbackPanels(final AjaxRequestTarget target)
+	protected final void addFeedbackPanels(final AjaxRequestTarget target)
 	{
-		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor<Component, Void>()
+		form.getPage().visitChildren(IFeedback.class, new IVisitor<Component, Void>()
 		{
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
@@ -91,47 +145,16 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 		});
 	}
 
-	/**
-	 * Adds this behavior to all form components of the specified form
-	 * 
-	 * @param form
-	 * @param event
-	 */
-	public static void addToAllFormComponents(final Form<?> form, final String event)
+	protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
 	{
-		addToAllFormComponents(form, event, null);
 	}
 
-	/**
-	 * Adds this behavior to all form components of the specified form
-	 * 
-	 * @param form
-	 * @param event
-	 * @param throttleDelay
-	 */
-	public static void addToAllFormComponents(final Form<?> form, final String event,
-		final Duration throttleDelay)
+	private class FormValidateVisitor implements IVisitor<FormComponent, Void>, IClusterable
 	{
-		form.visitChildren(FormComponent.class, new FormValidateVisitor(form, event, throttleDelay));
-	}
-
-	private static class FormValidateVisitor implements IVisitor<Component, Void>, IClusterable
-	{
-		private final Form<?> form;
-		private final String event;
-		private final Duration throttleDelay;
-
-		private FormValidateVisitor(Form<?> form, String event, Duration throttleDelay)
-		{
-			this.form = form;
-			this.event = event;
-			this.throttleDelay = throttleDelay;
-		}
-
 		@Override
-		public void component(final Component component, final IVisit<Void> visit)
+		public void component(final FormComponent component, final IVisit<Void> visit)
 		{
-			final AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event)
+			final AjaxFormSubmitBehavior behavior = new AjaxFormSubmitBehavior(form, event)
 			{
 				@Override
 				protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
@@ -144,7 +167,31 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 						ThrottlingSettings throttlingSettings = new ThrottlingSettings(id,
 							throttleDelay);
 						attributes.setThrottlingSettings(throttlingSettings);
+						attributes.setPreventDefault(false); // WICKET-5194
 					}
+
+					AjaxFormValidatingBehavior.this.updateAjaxAttributes(attributes);
+				}
+
+				@Override
+				protected void onSubmit(AjaxRequestTarget target)
+				{
+					super.onSubmit(target);
+					AjaxFormValidatingBehavior.this.onSubmit(target);
+				}
+
+				@Override
+				protected void onAfterSubmit(AjaxRequestTarget target)
+				{
+					super.onAfterSubmit(target);
+					AjaxFormValidatingBehavior.this.onAfterSubmit(target);
+				}
+
+				@Override
+				protected void onError(AjaxRequestTarget target)
+				{
+					super.onError(target);
+					AjaxFormValidatingBehavior.this.onError(target);
 				}
 			};
 			component.add(behavior);

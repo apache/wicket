@@ -52,7 +52,7 @@ public class FormPage extends BasePage
 
 		// add form with markup id setter so it can be updated via ajax
 		Bean bean = new Bean();
-		Form<Bean> form = new Form<Bean>("form", new CompoundPropertyModel<Bean>(bean));
+		Form<Bean> form = new Form<>("form", new CompoundPropertyModel<>(bean));
 		add(form);
 		form.setOutputMarkupId(true);
 
@@ -77,7 +77,7 @@ public class FormPage extends BasePage
 		// attach an ajax validation behavior to all form component's keydown
 		// event and throttle it down to once per second
 
-		AjaxFormValidatingBehavior.addToAllFormComponents(form, "keydown", Duration.ONE_SECOND);
+		form.add(new AjaxFormValidatingBehavior("keydown", Duration.ONE_SECOND));
 
 		// add a button that can be used to submit the form via ajax
 		form.add(new AjaxButton("ajax-button", form)

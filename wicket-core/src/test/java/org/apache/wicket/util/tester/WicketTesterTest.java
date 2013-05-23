@@ -914,7 +914,7 @@ public class WicketTesterTest extends WicketTestCase
 
 	private void setTextFieldAndAssertSubmit(boolean expected)
 	{
-		tester.executeAjaxEvent("form:text", "onkeyup");
+		tester.executeAjaxEvent("form:text", "keyup");
 		Button submit = getSubmitButton();
 // System.out.println(Session.get().getFeedbackMessages());
 		assertEquals(expected, submit.isEnabled());
