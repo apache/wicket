@@ -22,7 +22,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.attributes.AjaxAttributeName;
-import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.attributes.CallbackParameter;
@@ -145,7 +144,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				((AjaxRequestTarget.AbstractListener)listener).updateAjaxAttributes(attributes);
 			}
 		}
-		updateAjaxAttributesBackwardCompatibility(attributes);
 		updateAjaxAttributes(attributes);
 		return attributes;
 	}
@@ -158,26 +156,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
-	}
-
-	/**
-	 * The code below handles backward compatibility.
-	 * 
-	 * @param attributes
-	 */
-	private void updateAjaxAttributesBackwardCompatibility(final AjaxRequestAttributes attributes)
-	{
-		AjaxCallListener backwardCompatibleAjaxCallListener = new AjaxCallListener();
-		backwardCompatibleAjaxCallListener.onSuccess(getSuccessScript());
-		backwardCompatibleAjaxCallListener.onFailure(getFailureScript());
-		backwardCompatibleAjaxCallListener.onPrecondition(getPreconditionScript());
-		attributes.getAjaxCallListeners().add(backwardCompatibleAjaxCallListener);
-
-		AjaxChannel channel = getChannel();
-		if (channel != null)
-		{
-			attributes.setChannel(channel);
-		}
 	}
 
 	/**
@@ -540,47 +518,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				+ AjaxAttributeName.EXTRA_PARAMETERS + ", params);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
-	}
-
-	/**
-	 * @return an optional javascript expression that determines whether the request will actually
-	 *         execute (in form of return XXX;);
-	 * @deprecated Use {@link org.apache.wicket.ajax.attributes.AjaxRequestAttributes}
-	 */
-	@Deprecated
-	protected CharSequence getPreconditionScript()
-	{
-		return null;
-	}
-
-	/**
-	 * @return javascript that will run when the ajax call finishes with an error status
-	 */
-	@Deprecated
-	protected CharSequence getFailureScript()
-	{
-		return null;
-	}
-
-	/**
-	 * @return javascript that will run when the ajax call finishes successfully
-	 */
-	@Deprecated
-	protected CharSequence getSuccessScript()
-	{
-		return null;
-	}
-
-	/**
-	 * Provides an AjaxChannel for this Behavior.
-	 * 
-	 * @return an AjaxChannel - Defaults to null.
-	 * @deprecated Use {@link org.apache.wicket.ajax.attributes.AjaxRequestAttributes}
-	 */
-	@Deprecated
-	protected AjaxChannel getChannel()
-	{
-		return null;
 	}
 
 	/**

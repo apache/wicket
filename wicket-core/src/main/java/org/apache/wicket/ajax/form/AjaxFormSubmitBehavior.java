@@ -214,16 +214,6 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
-	 */
-	@Override
-	@Deprecated
-	protected CharSequence getPreconditionScript()
-	{
-		return null;
-	}
-
-	/**
 	 * @see Button#getDefaultFormProcessing()
 	 * 
 	 * @return {@code true} for default processing
