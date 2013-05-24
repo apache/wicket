@@ -19,9 +19,6 @@ package org.apache.wicket.examples.ajax.builtin;
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
-import org.apache.wicket.examples.ajax.builtin.tree.EditableTreeTablePage;
-import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
-import org.apache.wicket.examples.ajax.builtin.tree.TreeTablePage;
 import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 
 
@@ -69,9 +66,6 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("tabbed-panel", TabbedPanelPage.class);
 		mountPage("todo-list", TodoList.class);
 		mountPage("world-clock", WorldClockPage.class);
-		mountPage("tree/simple", SimpleTreePage.class);
-		mountPage("tree/table", TreeTablePage.class);
-		mountPage("tree/table/editable", EditableTreeTablePage.class);
 		mountPage("upload", FileUploadPage.class);
 
 	}
