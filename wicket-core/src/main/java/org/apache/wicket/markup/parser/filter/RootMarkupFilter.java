@@ -40,18 +40,6 @@ public final class RootMarkupFilter extends AbstractMarkupFilter
 	private final IXmlPullParser parser;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param parser
-	 *      the parser that reads the markup
-	 * @deprecated Use #RootMarkupFilter(IXmlPullParser, MarkupResourceStream) instead
-	 */
-	public RootMarkupFilter(final IXmlPullParser parser)
-	{
-		this(parser, null);
-	}
-
-	/**
 	 * Construct.
 	 * 
 	 * @param parser

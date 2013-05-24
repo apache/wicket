@@ -17,8 +17,6 @@
 package org.apache.wicket.ajax.markup.html;
 
 import org.apache.wicket.IGenericComponent;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -97,16 +95,6 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
-	}
-
-	/**
-	 * @return the channel that manages how Ajax calls are executed
-	 * @see AbstractDefaultAjaxBehavior#getChannel()
-	 */
-	@Deprecated
-	protected AjaxChannel getChannel()
-	{
-		return null;
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +51,7 @@ public class MarkupCacheTest extends WicketTestCase
 		});
 
 		component = new MarkupCachingAssumingComponent("panel");
-		tester.startComponent(component);
+		tester.startComponentInPage(component);
 	}
 
 	/**
@@ -60,10 +61,10 @@ public class MarkupCacheTest extends WicketTestCase
 	public void markupNotFoundInformationIsCachedInDeploymentMode()
 	{
 		IMarkupFragment markup = cache.getMarkup(component, null, false);
-		assertNull(markup);
+		assertNotNull(markup);
 
 		markup = cache.getMarkup(component, null, false);
-		assertNull(markup);
+		assertNotNull(markup);
 	}
 
 	/**
@@ -105,7 +106,7 @@ public class MarkupCacheTest extends WicketTestCase
 			if (firstCall)
 			{
 				firstCall = false;
-				return null;
+				return new StringResourceStream("<wicket:panel><div></div></wicket:panel>");
 			}
 			fail("Markup should be cached");
 			throw new IllegalStateException();

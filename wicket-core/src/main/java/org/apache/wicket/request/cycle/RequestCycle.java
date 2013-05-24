@@ -46,7 +46,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -693,36 +692,6 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
 			RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT));
-	}
-
-	/**
-	 * Gets whether or not feedback messages are to be cleaned up on detach.
-	 * 
-	 * @return true if they are
-	 * @deprecated see {@link IApplicationSettings#getFeedbackMessageCleanupFilter()}
-	 * 
-	 *             TODO 7.0 remove
-	 */
-	@Deprecated
-	public final boolean isCleanupFeedbackMessagesOnDetach()
-	{
-		throw new UnsupportedOperationException("Deprecated, see javadoc");
-	}
-
-	/**
-	 * Sets whether or not feedback messages should be cleaned up on detach.
-	 * 
-	 * @param cleanupFeedbackMessagesOnDetach
-	 *            true if you want them to be cleaned up
-	 * 
-	 * @deprecated see {@link #isCleanupFeedbackMessagesOnDetach()}
-	 * 
-	 *             TODO 7.0 remove
-	 */
-	@Deprecated
-	public final void setCleanupFeedbackMessagesOnDetach(boolean cleanupFeedbackMessagesOnDetach)
-	{
-		throw new UnsupportedOperationException("Deprecated, see javadoc");
 	}
 
 	/**

@@ -839,16 +839,6 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	}
 
 	/**
-	 * @deprecated use {@link #getDocument()}
-	 * @return response as String
-	 */
-	@Deprecated
-	public String getTextResponse()
-	{
-		return getDocument();
-	}
-
-	/**
 	 * @return binary response
 	 */
 	public String getBinaryResponse()

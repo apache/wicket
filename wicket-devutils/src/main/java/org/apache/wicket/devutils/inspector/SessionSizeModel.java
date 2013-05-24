@@ -36,17 +36,6 @@ public class SessionSizeModel extends AbstractReadOnlyModel<Bytes>
 	{
 	}
 
-	/**
-	 * Constructor that calculates the size of the passed Session.
-	 *
-	 * @param ignored
-	 *      the session which size to measure. Ignored.
-	 */
-	@Deprecated
-	public SessionSizeModel(@SuppressWarnings("unused")Session ignored)
-	{
-	}
-
 	@Override
 	public Bytes getObject()
 	{

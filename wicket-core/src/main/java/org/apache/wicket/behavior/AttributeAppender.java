@@ -62,27 +62,6 @@ public class AttributeAppender extends AttributeModifier
 	private String separator;
 
 	/**
-	 * Creates an AttributeModifier that appends the appendModel's value to the current value of the
-	 * attribute, and will add the attribute when addAttributeIfNotPresent is true.
-	 * 
-	 * @param attribute
-	 *            the attribute to append the appendModels value to
-	 * @param addAttributeIfNotPresent
-	 *            when true, adds the attribute to the tag
-	 * @param appendModel
-	 *            the model supplying the value to append
-	 * @param separator
-	 *            the separator string, comes between the original value and the append value
-	 * @deprecated use {@link #AttributeAppender(String, IModel)} instead.
-	 */
-	@Deprecated
-	public AttributeAppender(String attribute, boolean addAttributeIfNotPresent,
-		IModel<?> appendModel, String separator)
-	{
-		this(attribute, appendModel, separator);
-	}
-
-	/**
 	 * Creates an attribute modifier that concatenates the {@code replaceModel} to the attribute's
 	 * current value, optionally separated by the {@link #getSeparator() separator}.
 	 * 

@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.util.tester;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,7 +42,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
@@ -674,7 +676,7 @@ public class WicketTester extends BaseWicketTester
 	{
 		log.info("=== " + component.getClass().getName() + " ===");
 
-		startComponent(component);
+		startComponentInPage(component);
 		assertResultPage(testClass, filename);
 	}
 

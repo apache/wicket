@@ -111,21 +111,6 @@ public final class ValidationError implements IValidationError
 	 * Adds a key to the list of keys that will be tried against <code>IErrorMessageSource</code> to
 	 * locate the error message string.
 	 * 
-	 * @deprecated use {@link #addKey(String)}
-	 * 
-	 * @param key
-	 * @return this <code>ValidationError</code> for chaining purposes
-	 */
-	@Deprecated
-	public ValidationError addMessageKey(String key)
-	{
-		return addKey(key);
-	}
-
-	/**
-	 * Adds a key to the list of keys that will be tried against <code>IErrorMessageSource</code> to
-	 * locate the error message string.
-	 * 
 	 * @param key
 	 *            a message key to be added
 	 * @return this <code>ValidationError</code> for chaining purposes

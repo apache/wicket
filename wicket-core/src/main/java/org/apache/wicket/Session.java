@@ -37,12 +37,10 @@ import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -276,21 +274,6 @@ public abstract class Session implements IClusterable, IEventSink
 			}
 		}
 	}
-
-	/**
-	 * Cleans up all rendered feedback messages and any unrendered, dangling feedback messages there
-	 * may be left after that.
-	 * 
-	 * @deprecated see
-	 *             {@link IApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)}
-	 *             for cleanup during testing see {@link BaseWicketTester#cleanupFeedbackMessages()}
-	 */
-	@Deprecated
-	public final void cleanupFeedbackMessages()
-	{
-		throw new UnsupportedOperationException("Deprecated, see the javadoc");
-	}
-
 
 	/**
 	 * Removes all pages from the session. Although this method should rarely be needed, it is

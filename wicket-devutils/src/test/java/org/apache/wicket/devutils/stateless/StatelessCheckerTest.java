@@ -94,6 +94,6 @@ public class StatelessCheckerTest extends TestCase
 	public void testPositive()
 	{
 		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-		tester.startComponent(new StatelessLabel("foo"));
+		tester.startComponentInPage(new StatelessLabel("foo"));
 	}
 }

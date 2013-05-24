@@ -1471,43 +1471,6 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * A helper method for starting a component for a test without attaching it to a Page.
-	 * 
-	 * Components which are somehow dependent on the page structure can not be currently tested with
-	 * this method.
-	 * 
-	 * Example:
-	 * 
-	 * UserDataView view = new UserDataView("view", new ListDataProvider(userList));
-	 * tester.startComponent(view); assertEquals(4, view.size());
-	 * 
-	 * @param component
-	 * @return the processed component
-	 * @see #startComponentInPage(Class)
-	 * @deprecated Use {@linkplain #startComponentInPage(Component)} instead. WICKET-5097
-	 */
-	@Deprecated
-	public Component startComponent(final Component component)
-	{
-		try
-		{
-			component.internalInitialize();
-			if (component instanceof FormComponent)
-			{
-				((FormComponent<?>)component).processInput();
-			}
-			component.beforeRender();
-		}
-		finally
-		{
-			getRequestCycle().detach();
-			component.detach();
-		}
-
-		return component;
-	}
-
-	/**
 	 * Gets the component with the given path from last rendered page. This method fails in case the
 	 * component couldn't be found.
 	 * 

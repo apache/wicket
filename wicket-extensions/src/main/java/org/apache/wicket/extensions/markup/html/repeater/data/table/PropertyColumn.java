@@ -94,22 +94,7 @@ public class PropertyColumn<T, S> extends AbstractColumn<T, S> implements IExpor
 	public void populateItem(final Item<ICellPopulator<T>> item, final String componentId,
 		final IModel<T> rowModel)
 	{
-		item.add(new Label(componentId, createLabelModel(rowModel)));
-	}
-
-	/**
-	 * Factory method for generating a model that will generated the displayed value. Typically the
-	 * model is a property model using the {@link #propertyExpression} specified in the constructor.
-	 * 
-	 * @param rowModel
-	 * @return model
-	 * @deprecated
-	 *	since 6.2.0, scheduled for removal in 7.0.0. Please use {@link #getDataModel(org.apache.wicket.model.IModel)}
-	 *	instead.
-	 */
-	protected IModel<?> createLabelModel(final IModel<T> rowModel)
-	{
-		return getDataModel(rowModel);
+		item.add(new Label(componentId, getDataModel(rowModel)));
 	}
 
 	/**

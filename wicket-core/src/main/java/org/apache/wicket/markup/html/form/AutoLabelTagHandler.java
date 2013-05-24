@@ -33,18 +33,6 @@ import org.apache.wicket.util.string.Strings;
  */
 public class AutoLabelTagHandler extends AbstractMarkupFilter
 {
-
-	/**
-	 * Constructor.
-	 *
-	 * @deprecated Use #AutoLabelResolver(MarkupResourceStream) instead
-	 */
-	@Deprecated
-	public AutoLabelTagHandler()
-	{
-		this(null);
-	}
-
 	public AutoLabelTagHandler(MarkupResourceStream resourceStream)
 	{
 		super(resourceStream);

@@ -43,7 +43,7 @@ public class SessionSizeModelTest extends TestCase
 				return new TestSession(request);
 			}
 		});
-		SessionSizeModel model = new SessionSizeModel(tester.getSession());
+		SessionSizeModel model = new SessionSizeModel();
 		assertEquals(null, model.getObject());
 	}
 

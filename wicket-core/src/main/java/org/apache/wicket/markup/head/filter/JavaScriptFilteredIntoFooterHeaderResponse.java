@@ -33,7 +33,7 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 	/**
 	 * The name of the filter that renders the head section of the page
 	 */
-	@Deprecated
+	@Deprecated // Remove in Wicket 8.0
 	public static final String HEADER_FILTER_NAME = DEFAULT_HEADER_FILTER_NAME;
 
 	/**

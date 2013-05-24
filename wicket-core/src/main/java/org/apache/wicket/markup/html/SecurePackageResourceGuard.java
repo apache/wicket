@@ -130,20 +130,6 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	}
 
 	/**
-	 * Get a new cache implementation. Subclasses may return null to disable caching. More advanced
-	 * caches (e.h. ehcache) should be used in production environments to limit the size and remove
-	 * "old" entries.
-	 * 
-	 * @return the cache implementation
-	 * @deprecated Pass the cache as a parameter to the constructor
-	 */
-	@Deprecated
-	public ConcurrentHashMap<String, Boolean> newCache()
-	{
-		return new SimpleCache(100);
-	}
-
-	/**
 	 * 
 	 */
 	public void clearCache()
