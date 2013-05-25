@@ -223,8 +223,8 @@ public class Form<T> extends WebMarkupContainer
 					{
 						if (form.isEnabledInHierarchy())
 						{
-							if (component.isVisibleInHierarchy() &&
-								component.isEnabledInHierarchy())
+							if (component.isVisibleInHierarchy()
+								&& component.isEnabledInHierarchy())
 							{
 								((IFormModelUpdateListener)component).updateModel();
 							}
@@ -441,20 +441,20 @@ public class Form<T> extends WebMarkupContainer
 					{
 						String name = submittingComponent.getInputName();
 						IRequestParameters parameters = getRequest().getRequestParameters();
-						if ((!parameters.getParameterValue(name).isNull()) ||
-							!parameters.getParameterValue(name + ".x").isNull())
+						if ((!parameters.getParameterValue(name).isNull())
+							|| !parameters.getParameterValue(name + ".x").isNull())
 						{
 							if (!component.isVisibleInHierarchy())
 							{
-								throw new WicketRuntimeException("Submit Button " +
-									submittingComponent.getInputName() + " (path=" +
-									component.getPageRelativePath() + ") is not visible");
+								throw new WicketRuntimeException("Submit Button "
+									+ submittingComponent.getInputName() + " (path="
+									+ component.getPageRelativePath() + ") is not visible");
 							}
 							if (!component.isEnabledInHierarchy())
 							{
-								throw new WicketRuntimeException("Submit Button " +
-									submittingComponent.getInputName() + " (path=" +
-									component.getPageRelativePath() + ") is not enabled");
+								throw new WicketRuntimeException("Submit Button "
+									+ submittingComponent.getInputName() + " (path="
+									+ component.getPageRelativePath() + ") is not enabled");
 							}
 							visit.stop(submittingComponent);
 						}
@@ -544,12 +544,9 @@ public class Form<T> extends WebMarkupContainer
 		}
 
 		Form<?> root = getRootForm();
-		return new AppendingStringBuffer("document.getElementById('").append(
-			root.getHiddenFieldId())
-			.append("').value='")
-			.append(url)
-			.append("';document.getElementById('")
-			.append(root.getMarkupId())
+		return new AppendingStringBuffer("document.getElementById('")
+			.append(root.getHiddenFieldId()).append("').value='").append(url)
+			.append("';document.getElementById('").append(root.getMarkupId())
 			.append("').submit();");
 	}
 
@@ -685,7 +682,8 @@ public class Form<T> extends WebMarkupContainer
 		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
 		{
 			String desiredMethod = getMethod();
-			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
+			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest())
+				.getMethod();
 			if (!actualMethod.equalsIgnoreCase(desiredMethod))
 			{
 				MethodMismatchResponse response = onMethodMismatch();
@@ -696,8 +694,8 @@ public class Form<T> extends WebMarkupContainer
 					case CONTINUE :
 						break;
 					default :
-						throw new IllegalStateException("Invalid " +
-							MethodMismatchResponse.class.getName() + " value: " + response);
+						throw new IllegalStateException("Invalid "
+							+ MethodMismatchResponse.class.getName() + " value: " + response);
 				}
 			}
 		}
@@ -737,8 +735,7 @@ public class Form<T> extends WebMarkupContainer
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			String url = getRequest().getRequestParameters()
-				.getParameterValue(getHiddenFieldId())
+			String url = getRequest().getRequestParameters().getParameterValue(getHiddenFieldId())
 				.toString();
 			if (!Strings.isEmpty(url))
 			{
@@ -1191,7 +1188,8 @@ public class Form<T> extends WebMarkupContainer
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
-		buffer.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
+		buffer
+			.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
 		// close div
@@ -1404,20 +1402,12 @@ public class Form<T> extends WebMarkupContainer
 	{
 		if (e instanceof SizeLimitExceededException)
 		{
-			// Resource key should be <form-id>.uploadTooLarge to
-			// override default message
-			final String defaultValue = "Upload must be less than " + getMaxSize();
-			String msg = getString(getId() + '.' + UPLOAD_TOO_LARGE_RESOURCE_KEY,
-				Model.ofMap(model), defaultValue);
+			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 		}
 		else
 		{
-			// Resource key should be <form-id>.uploadFailed to override
-			// default message
-			final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-			String msg = getString(getId() + '.' + UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model),
-				defaultValue);
+			String msg = getString(UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 
 			log.warn(msg, e);
@@ -1646,12 +1636,9 @@ public class Form<T> extends WebMarkupContainer
 			String nameAndId = getHiddenFieldId();
 
 			// render the hidden field
-			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
-				"<input type=\"hidden\" name=\"")
-				.append(nameAndId)
-				.append("\" id=\"")
-				.append(nameAndId)
-				.append("\" />");
+			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START)
+				.append("<input type=\"hidden\" name=\"").append(nameAndId).append("\" id=\"")
+				.append(nameAndId).append("\" />");
 
 			// if it's a get, did put the parameters in the action attribute,
 			// and have to write the url parameters as hidden fields
@@ -1671,8 +1658,8 @@ public class Form<T> extends WebMarkupContainer
 			if (defaultSubmittingComponent instanceof Component)
 			{
 				final Component submittingComponent = (Component)defaultSubmittingComponent;
-				if (submittingComponent.isVisibleInHierarchy() &&
-					submittingComponent.isEnabledInHierarchy())
+				if (submittingComponent.isVisibleInHierarchy()
+					&& submittingComponent.isEnabledInHierarchy())
 				{
 					appendDefaultButtonField(markupStream, openTag);
 				}
@@ -1694,10 +1681,8 @@ public class Form<T> extends WebMarkupContainer
 		{
 			String[] pair = Strings.split(param, '=');
 
-			buffer.append("<input type=\"hidden\" name=\"")
-				.append(recode(pair[0]))
-				.append("\" value=\"")
-				.append(pair.length > 1 ? recode(pair[1]) : "")
+			buffer.append("<input type=\"hidden\" name=\"").append(recode(pair[0]))
+				.append("\" value=\"").append(pair.length > 1 ? recode(pair[1]) : "")
 				.append("\" />");
 		}
 	}
@@ -1913,10 +1898,10 @@ public class Form<T> extends WebMarkupContainer
 				{
 					if (log.isWarnEnabled())
 					{
-						log.warn("IFormValidator in form `" +
-							getPageRelativePath() +
-							"` depends on a component that has been removed from the page or is no longer visible. " +
-							"Offending component id `" + dependent.getId() + "`.");
+						log.warn("IFormValidator in form `"
+							+ getPageRelativePath()
+							+ "` depends on a component that has been removed from the page or is no longer visible. "
+							+ "Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;
 					break;
@@ -2028,8 +2013,10 @@ public class Form<T> extends WebMarkupContainer
 			// register some metadata so we can later properly handle multipart ajax posts for
 			// embedded forms
 			registerJavaScriptNamespaces(response);
-			response.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId() +
-				"\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId() + ".metadata"));
+			response
+				.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId()
+					+ "\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId()
+					+ ".metadata"));
 		}
 	}
 
@@ -2040,9 +2027,11 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected void registerJavaScriptNamespaces(IHeaderResponse response)
 	{
-		response.render(JavaScriptHeaderItem.forScript(
-			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
-			Form.class.getName()));
+		response
+			.render(JavaScriptHeaderItem
+				.forScript(
+					"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
+					Form.class.getName()));
 	}
 
 	/**
@@ -2061,8 +2050,8 @@ public class Form<T> extends WebMarkupContainer
 		{
 			inputName.prepend(id);
 			c = c.getParent();
-			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm()) ||
-				c instanceof Page)
+			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm())
+				|| c instanceof Page)
 			{
 				break;
 			}

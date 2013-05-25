@@ -57,4 +57,7 @@
 	
 	<entry key="org.apache.wicket.mfu.caption.unlimited">Файлы:</entry>
 	<entry key="org.apache.wicket.mfu.caption.limited">Файлы (всего не больше ${max}): </entry>
+	
+	<entry key="uploadTooLarge">Размер файла не должен превышать ${maxSize}.</entry>
+	<entry key="uploadFailed">Ошибка загрузки файла на сервер: ${exception.localizedMessage}.</entry>
 </properties>
