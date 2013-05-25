@@ -148,7 +148,9 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 	public final void unbind(Component component)
 	{
 		onUnbind();
-		component = null;
+
+		this.component = null;
+
 		super.unbind(component);
 	}
 
