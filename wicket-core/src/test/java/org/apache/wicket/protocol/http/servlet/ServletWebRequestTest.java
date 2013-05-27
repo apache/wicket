@@ -59,7 +59,7 @@ public class ServletWebRequestTest extends Assert
 		// simulates a request that has errors metadata
 		httpRequest.setAttribute("javax.servlet.error.request_uri",
 			httpRequest.getContextPath() + "/any/source/of/error");
-		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "/");
+		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
 		assertEquals("any/source/of/error", errorClientUrl.toString());
@@ -83,7 +83,6 @@ public class ServletWebRequestTest extends Assert
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
 		assertEquals("any/source/of/error", errorClientUrl.toString());
-
 	}
 
 	/**
@@ -164,6 +163,32 @@ public class ServletWebRequestTest extends Assert
 		{
 			assertEquals(HttpServletResponse.SC_BAD_REQUEST, awhex.getErrorCode());
 		}
+	}
+
+	/**
+	 * Tests that {@link ServletWebRequest#getClientUrl()} returns the current url + the query
+	 * string when this is not forward dispatched request. When the request is error dispatched it
+	 * returns just the request uri to the error page without the query string
+	 */
+	@Test
+	public void wicket5203()
+	{
+		String filterPath = "filterPath";
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
+		httpRequest.setURL(httpRequest.getContextPath() + '/' + filterPath + "/request/Path");
+		httpRequest.setParameter("some", "parameter");
+
+		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, filterPath);
+		Url clientUrl = webRequest.getClientUrl();
+		assertEquals("request/Path?some=parameter", clientUrl.toString());
+
+		// simulates a request that has errors metadata
+		httpRequest.setAttribute("javax.servlet.error.request_uri",
+				httpRequest.getContextPath() + '/' + filterPath + "/any/source/of/error");
+		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, filterPath);
+		Url errorClientUrl = errorWebRequest.getClientUrl();
+
+		assertEquals("any/source/of/error", errorClientUrl.toString());
 	}
 
 	private static class CustomRequestPage extends WebPage implements IMarkupResourceStreamProvider
