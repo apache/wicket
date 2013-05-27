@@ -425,7 +425,7 @@ jQuery(document).ready(function() {
 		});
 
 		/**
-		 * Only attributes with non-default values are transfered to the client side.
+		 * Only attributes with non-default values are transferred to the client side.
 		 * All defaults are initialized at the client side.
 		 */
 		asyncTest('verify default attributes.', function () {
@@ -459,8 +459,7 @@ jQuery(document).ready(function() {
 						ok(attributes.dep === undefined, 'dynamic extra parameters');
 						equal(attributes.async, true, 'asynchronous');
 						equal(attributes.rt, 0, 'request timeout');
-						equal(attributes.ad, false, 'allow default');
-
+						equal(attributes.pd, false, 'prevent default');
 					}
 				]
 			};
@@ -1046,7 +1045,7 @@ jQuery(document).ready(function() {
 				coh: [
 					function(attrs) {
 						ok(true, "Complete handler executed");
-						equal(attrs.event.isDefaultPrevented(), true, "default behavior is prevented");
+						equal(attrs.event.isDefaultPrevented(), false, "default behavior is not prevented");
 					}
 				]
 			};
