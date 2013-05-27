@@ -45,7 +45,6 @@ public class Checks
 	 * @param argument
 	 * @param message
 	 * @param params
-	 * @param name
 	 * @throws IllegalStateException
 	 */
 	public static void notEmpty(final String argument, final String message, final Object... params)
@@ -64,10 +63,9 @@ public class Checks
 	 * @param max
 	 * @param value
 	 * @param message
-	 * @param name
 	 * @throws IllegalStateException
 	 */
-	public static <T extends Comparable<T>> void withinRange(final T min, final T max,
+	public static <T extends Comparable<? super T>> void withinRange(final T min, final T max,
 		final T value, final String message)
 	{
 		notNull(min, message);
@@ -113,7 +111,7 @@ public class Checks
 	 * @param name
 	 * @throws IllegalStateException
 	 */
-	public static <T extends Comparable<T>> void withinRangeShort(final T min, final T max,
+	public static <T extends Comparable<? super T>> void withinRangeShort(final T min, final T max,
 		final T value, final String name)
 	{
 		withinRange(min, max, value,

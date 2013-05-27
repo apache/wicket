@@ -110,7 +110,7 @@ public class Args
 	 * @param name
 	 * @throws IllegalArgumentException
 	 */
-	public static <T extends Comparable<T>> T withinRange(final T min, final T max,
+	public static <T extends Comparable<? super T>> T withinRange(final T min, final T max,
 		final T value, final String name)
 	{
 		notNull(min, name);

@@ -58,7 +58,7 @@ import org.apache.wicket.validation.ValidationError;
  * 
  * @author igor
  */
-public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializable, V extends Serializable>
+public abstract class AbstractRangeValidator<R extends Comparable<? super R> & Serializable, V extends Serializable>
 	extends Behavior implements IValidator<V>
 {
 	private static final long serialVersionUID = 1L;

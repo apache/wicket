@@ -52,7 +52,7 @@ import org.apache.wicket.validation.ValidationError;
  * {@code FormComponent.labelModel} or resource key {@code <form-id>.<form-component-id>}</li>
  * <li>{@code input}: the input value</li>
  * <li>{@code length}: the length of the entered</li>
- * <li>{@code minimum}: the minimum alloed length</li>
+ * <li>{@code minimum}: the minimum allowed length</li>
  * <li>{@code maximum}: the maximum allowed length</li>
  * </ul>
  * </p>
@@ -67,7 +67,7 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 	 * Constructor that sets the minimum and maximum length values.
 	 * 
 	 * @param minimum
-	 *            the minimum lenghh
+	 *            the minimum length
 	 * @param maximum
 	 *            the maximum length
 	 */
