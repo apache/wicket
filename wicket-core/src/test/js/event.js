@@ -233,4 +233,29 @@ jQuery(document).ready(function() {
 		Wicket.Event.publish('topicName1', "arg1", "arg2");
 		Wicket.Event.publish('topicName2', "arg1", "arg2");
 	});
+
+	module("Custom events");
+
+	test('inputchange', function() {
+		if (Wicket.Browser.isIE()) {
+			expect(4);
+		} else {
+			expect(1);
+		}
+
+		var $input = jQuery("#inputChangeInput");
+		$input.on("inputchange", function() {
+			ok(true, "inputchange event is triggered!");
+		});
+
+		if (Wicket.Browser.isIE()) {
+			$input.trigger("keydown");
+			$input.trigger("keyup");
+			$input.trigger("cut");
+			$input.trigger("paste");
+		} else {
+			$input.trigger("input");
+		}
+
+	})
 });

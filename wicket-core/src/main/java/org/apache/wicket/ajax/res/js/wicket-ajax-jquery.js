@@ -2650,7 +2650,7 @@
 				default:
 					event.type = "inputchange";
 					var args = Array.prototype.slice.call( arguments, 0 );
-					return jQuery.event.handle.apply( event.target, args );
+					return jQuery(this).trigger(event.type, args);
 			}
 		}
 	};
