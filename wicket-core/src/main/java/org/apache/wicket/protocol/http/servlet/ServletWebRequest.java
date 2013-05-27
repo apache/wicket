@@ -102,20 +102,7 @@ public class ServletWebRequest extends WebRequest
 
 		forwardAttributes = ForwardAttributes.of(httpServletRequest, filterPrefix);
 
-		if (forwardAttributes != null || errorAttributes != null)
-		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Setting filterPrefix('{}') to '' because there is either an error or a forward. {}, {}",
-						new Object[] {filterPrefix, forwardAttributes, errorAttributes});
-			}
-			// the filter prefix is not needed when the current request is internal
-			// see WICKET-4387
-			this.filterPrefix = "";
-		} else
-		{
-			this.filterPrefix = filterPrefix;
-		}
+		this.filterPrefix = filterPrefix;
 
 		if (url != null)
 		{
