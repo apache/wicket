@@ -286,8 +286,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	@Deprecated
 	public void setStatus(int sc, String sm)
 	{
-		throw new UnsupportedOperationException(
-			"not supported in the buffered http response, use setStatus(int)");
+		setStatus(sc);
 	}
 
 	/**
