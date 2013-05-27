@@ -80,7 +80,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 */
 	public static <C> IModel<List<? extends C>> ofList(final List<? extends C> list)
 	{
-		return new WildcardListModel<C>(list);
+		return new WildcardListModel<>(list);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 */
 	public static <K, V> IModel<Map<K, V>> ofMap(final Map<K, V> map)
 	{
-		return new MapModel<K, V>(map);
+		return new MapModel<>(map);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 */
 	public static <C> IModel<Set<? extends C>> ofSet(final Set<? extends C> set)
 	{
-		return new WildcardSetModel<C>(set);
+		return new WildcardSetModel<>(set);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 */
 	public static <C> IModel<Collection<? extends C>> of(final Collection<? extends C> collection)
 	{
-		return new WildcardCollectionModel<C>(collection);
+		return new WildcardCollectionModel<>(collection);
 	}
 
 
@@ -141,7 +141,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 */
 	public static <T extends Serializable> Model<T> of(T object)
 	{
-		return new Model<T>(object);
+		return new Model<>(object);
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 */
 	public static <T extends Serializable> Model<T> of()
 	{
-		return new Model<T>();
+		return new Model<>();
 	}
 
 	/**
