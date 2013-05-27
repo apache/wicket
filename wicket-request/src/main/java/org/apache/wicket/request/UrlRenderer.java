@@ -303,7 +303,9 @@ public class UrlRenderer
 
 		for (int i = 0; i < commonPrefix.getSegments().size() && i < segments.size(); i++)
 		{
-			if (commonPrefix.getSegments().get(i).equals(segments.get(i)) == false)
+			String commonPrefixSegment = Strings.stripJSessionId(commonPrefix.getSegments().get(i));
+			String segmentToClean = Strings.stripJSessionId(segments.get(i));
+			if (commonPrefixSegment.equals(segmentToClean) == false)
 			{
 				LOG.debug("Segments '{}' do not start with common prefix '{}'", segments,
 					commonPrefix);
