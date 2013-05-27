@@ -554,4 +554,22 @@ public class UrlRendererTest extends Assert
 		String rendered = renderer.renderRelativeUrl(Url.parse("wicket/resource/org.apache.wicket.Application/x.css"));
 		assertEquals("./wicket/resource/org.apache.wicket.Application/x.css", rendered);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5202
+	 */
+	@Test
+	public void removeCommonPrefixesWithJSessionId()
+	{
+		Url baseUrl = new Url(Arrays.asList("", "SomePage;jsessionid=1234"), Arrays.<Url.QueryParameter>asList());
+
+		MockWebRequest request = new MockWebRequest(baseUrl);
+		request.setContextPath("/");
+		request.setFilterPath("filter");
+		UrlRenderer renderer = new UrlRenderer(request);
+		renderer.setBaseUrl(baseUrl);
+
+		String rendered = renderer.renderRelativeUrl(Url.parse("/filter;jsessionid=1234"));
+		assertEquals("../", rendered);
+	}
 }
