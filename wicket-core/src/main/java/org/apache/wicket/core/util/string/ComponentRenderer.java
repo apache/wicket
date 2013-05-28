@@ -100,6 +100,7 @@ public class ComponentRenderer
 
 			RenderPage page = new RenderPage();
 			page.add(component);
+			page.internalInitialize();
 
 			component.render();
 		}
