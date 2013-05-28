@@ -1613,8 +1613,7 @@
 					var cleanedText = jQuery.trim(text);
 
 					var $newElement = jQuery(cleanedText);
-					// WICKET-4236
-					jQuery(element).after($newElement).remove();
+					jQuery(element).replaceWith($newElement);
 				}
 
 				var newElement = Wicket.$(element.id);
