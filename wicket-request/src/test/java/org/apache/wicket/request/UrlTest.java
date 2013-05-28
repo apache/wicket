@@ -325,6 +325,63 @@ public class UrlTest extends Assert
 		assertEquals(url.toString(StringMode.LOCAL), url.toString());
 	}
 
+
+	/**
+	 * 
+	 */
+	@Test
+	public void absolute1()
+	{
+		Url url = Url.parse("abc/efg");
+		assertFalse(url.isFull());
+		assertFalse(url.isContextAbsolute());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void absolute2()
+	{
+		Url url = Url.parse("");
+		assertFalse(url.isFull());
+		assertFalse(url.isContextAbsolute());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void absolute3()
+	{
+		Url url = Url.parse("/");
+		assertFalse(url.isFull());
+		assertTrue(url.isContextAbsolute());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void absolute4()
+	{
+		Url url = Url.parse("/abc/efg");
+		assertFalse(url.isFull());
+		assertTrue(url.isContextAbsolute());
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void absolute5()
+	{
+		Url url = Url.parse("http://www.domain.com");
+		assertTrue(url.isFull());
+		assertFalse(url.isContextAbsolute());
+	}
+
+
 	/**
 	 * 
 	 */
