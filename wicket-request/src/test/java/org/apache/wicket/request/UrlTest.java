@@ -101,7 +101,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/foo/bar//";
 		Url url = Url.parse(s);
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "foo", "bar", "", "");
 		checkQueryParams(url);
 	}
@@ -150,7 +150,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/";
 		Url url = Url.parse(s);
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url);
 	}
@@ -163,7 +163,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b";
 		Url url = Url.parse(s);
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b");
 	}
@@ -176,7 +176,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a";
 		Url url = Url.parse(s);
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "");
 	}
@@ -189,7 +189,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=";
 		Url url = Url.parse(s);
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "");
 	}
@@ -202,7 +202,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?=b";
 		Url url = Url.parse(s);
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "", "b");
 	}
@@ -215,7 +215,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b&";
 		Url url = Url.parse(s);
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b");
 	}
@@ -228,7 +228,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b&+";
 		Url url = Url.parse(s);
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b", " ", "");
 	}
@@ -324,58 +324,6 @@ public class UrlTest extends Assert
 		// local is the default mode
 		assertEquals(url.toString(StringMode.LOCAL), url.toString());
 	}
-
-
-	/**
-	 * 
-	 */
-	@Test
-	public void absolute1()
-	{
-		Url url = Url.parse("abc/efg");
-		assertFalse(url.isAbsolute());
-	}
-
-	/**
-	 * 
-	 */
-	@Test
-	public void absolute2()
-	{
-		Url url = Url.parse("");
-		assertFalse(url.isAbsolute());
-	}
-
-	/**
-	 * 
-	 */
-	@Test
-	public void absolute3()
-	{
-		Url url = Url.parse("/");
-		assertTrue(url.isAbsolute());
-	}
-
-	/**
-	 * 
-	 */
-	@Test
-	public void absolute4()
-	{
-		Url url = Url.parse("/abc/efg");
-		assertTrue(url.isAbsolute());
-	}
-
-	/**
-	 * 
-	 */
-	@Test
-	public void absolute5()
-	{
-		Url url = Url.parse("http://www.domain.com");
-		assertTrue(url.isAbsolute());
-	}
-
 
 	/**
 	 * 
@@ -663,25 +611,25 @@ public class UrlTest extends Assert
 	{
 		Url url = Url.parse("foo");
 		checkUrl(url, null, null, null, "foo");
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isContextAbsolute());
 
 		url = Url.parse("foo/bar/baz");
 		checkUrl(url, null, null, null, "foo", "bar", "baz");
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isContextAbsolute());
 
 		url = Url.parse("?foobar");
 		checkUrl(url, null, null, null);
 		assertEquals("", url.getQueryParameter("foobar").getValue());
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isContextAbsolute());
 
 		url = Url.parse("foo?a=123");
 		checkUrl(url, null, null, null, "foo");
 		assertEquals("123", url.getQueryParameter("a").getValue());
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isContextAbsolute());
 
 		url = Url.parse("/foo");
 		checkUrl(url, null, null, null, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 	}
 
 	/**
@@ -692,62 +640,62 @@ public class UrlTest extends Assert
 	{
 		Url url = Url.parse("ftp://myhost:8081");
 		checkUrl(url, "ftp", "myhost", 8081, "", "");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://myhost:8081/", url.toString(StringMode.FULL));
 
 		url = Url.parse("gopher://myhost:8081/foo");
 		checkUrl(url, "gopher", "myhost", 8081, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("gopher://myhost:8081/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost:80/foo");
 		checkUrl(url, "http", "myhost", 80, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("http://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost:81/foo");
 		checkUrl(url, "http", "myhost", 81, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("http://myhost:81/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost/foo");
 		checkUrl(url, "http", "myhost", 80, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("http://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("https://myhost:443/foo");
 		checkUrl(url, "https", "myhost", 443, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("https://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("HTTPS://myhost/foo:123");
 		checkUrl(url, "https", "myhost", 443, "", "foo:123");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("https://myhost/foo:123", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://myhost/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://myhost:21/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://user:pass@myhost:21/foo");
 		checkUrl(url, "ftp", "user:pass@myhost", 21, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://user:pass@myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("FTp://myhost/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("unknown://myhost/foo");
 		checkUrl(url, "unknown", "myhost", null, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("unknown://myhost/foo", url.toString(StringMode.FULL));
 	}
 
