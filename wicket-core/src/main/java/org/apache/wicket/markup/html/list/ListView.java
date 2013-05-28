@@ -183,7 +183,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	/**
 	 * If true re-rendering the list view is more efficient if the windows doesn't get changed at
 	 * all or if it gets scrolled (compared to paging). But if you modify the listView model object,
-	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
+	 * then you must manually call listView.removeAll() in order to rebuild the ListItems. If you
 	 * nest a ListView in a Form, ALLWAYS set this property to true, as otherwise validation will
 	 * not work properly.
 	 * 
@@ -483,7 +483,7 @@ public abstract class ListView<T> extends AbstractRepeater
 					final ListItem<?> child = (ListItem<?>)iterator.next();
 					if (child != null)
 					{
-						final int index = (int)child.getIndex();
+						final int index = child.getIndex();
 						if (index < firstIndex || index >= maxIndex)
 						{
 							iterator.remove();
