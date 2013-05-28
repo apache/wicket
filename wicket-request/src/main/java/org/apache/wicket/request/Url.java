@@ -430,19 +430,7 @@ public class Url implements Serializable
 	{
 		return parameters;
 	}
-
-	/**
-	 * Returns whether the Url is absolute. Absolute Urls start with a '{@literal /}'.
-	 * 
-	 * @return <code>true</code> if Url is absolute, <code>false</code> otherwise.
-	 * @deprecated Use #isContextAbsolute() or #isFull()
-	 */
-	@Deprecated
-	public boolean isAbsolute()
-	{
-		return !getSegments().isEmpty() && Strings.isEmpty(getSegments().get(0));
-	}
-
+	
 	/**
 	 * Returns whether the Url is context absolute. Absolute Urls start with a '{@literal /}'.
 	 *

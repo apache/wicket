@@ -99,7 +99,7 @@ public class UrlRenderer
 		final String renderedUrl;
 		if (shouldRenderAsFull(url))
 		{
-			if (url.isAbsolute() == false)
+			if (!(url.isFull() || url.isContextAbsolute()))
 			{
 				String relativeUrl = renderRelativeUrl(url);
 				Url relative = Url.parse(relativeUrl, url.getCharset());
@@ -129,7 +129,7 @@ public class UrlRenderer
 	{
 		if (url instanceof IUrlRenderer)
 		{
-			IUrlRenderer renderer = (IUrlRenderer) url;
+			IUrlRenderer renderer = (IUrlRenderer)url;
 			return renderer.renderFullUrl(url, getBaseUrl());
 		}
 
@@ -138,7 +138,7 @@ public class UrlRenderer
 		final Integer port = resolvePort(url);
 
 		final String path;
-		if (url.isAbsolute())
+		if (url.isFull() || url.isContextAbsolute())
 		{
 			path = url.toString();
 		}
@@ -168,7 +168,7 @@ public class UrlRenderer
 			}
 		}
 
-		if (url.isAbsolute() == false)
+		if (!(url.isFull() || url.isContextAbsolute()))
 		{
 			render.append(request.getContextPath());
 			render.append(request.getFilterPath());
@@ -230,7 +230,7 @@ public class UrlRenderer
 
 		if (url instanceof IUrlRenderer)
 		{
-			IUrlRenderer renderer = (IUrlRenderer) url;
+			IUrlRenderer renderer = (IUrlRenderer)url;
 			return renderer.renderRelativeUrl(url, getBaseUrl());
 		}
 

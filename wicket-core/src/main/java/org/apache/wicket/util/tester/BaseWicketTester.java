@@ -41,6 +41,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -375,36 +376,39 @@ public class BaseWicketTester
 		// Preserve response cookies in redirects
 		// XXX: is this really needed ? Browsers wont do that, but some
 		// Wicket tests assert that a cookie is in the response,
-		// even after redirects (see org.apache.wicket.util.cookies.SetCookieAndRedirectTest.statefulPage())
+		// even after redirects (see
+// org.apache.wicket.util.cookies.SetCookieAndRedirectTest.statefulPage())
 		// They should assert that the cookie is in the next *request*
 		if (lastResponse != null)
 		{
 			List<Cookie> lastResponseCookies = lastResponse.getCookies();
-			if (lastResponse.isRedirect()) 
+			if (lastResponse.isRedirect())
 			{
 				CookieCollection responseCookies = new CookieCollection();
-				
-				// if the last request is a redirect, all cookies from last response should appear in current reponse
+
+				// if the last request is a redirect, all cookies from last response should appear
+// in current reponse
 				// this call will filter duplicates
 				responseCookies.addAll(lastResponseCookies);
 				for (Cookie cookie : responseCookies.allAsList())
 				{
 					response.addCookie(cookie);
 				}
-				
-				// copy all request cookies from last request to the new request because of redirect handling
+
+				// copy all request cookies from last request to the new request because of redirect
+// handling
 				// this way, the cookie will be send to the next requested page
 				if (lastRequest != null)
 				{
-					CookieCollection requestCookies=new CookieCollection();
+					CookieCollection requestCookies = new CookieCollection();
 					// this call will filter duplicates
 					requestCookies.addAll(lastRequest.getCookies());
 					request.addCookies(requestCookies.asList());
 				}
-			} 
+			}
 			else
 			{
-				// if the last response is not a redirect 
+				// if the last response is not a redirect
 				// - copy last request cookies to collection
 				// - copy last response cookies to collection
 				// - set only the not expired cookies to the next request
@@ -678,7 +682,7 @@ public class BaseWicketTester
 					return true;
 				}
 
-				if (newUrl.isAbsolute())
+				if (newUrl.isFull() || newUrl.isContextAbsolute())
 				{
 					request.setUrl(newUrl);
 
@@ -1114,10 +1118,10 @@ public class BaseWicketTester
 			Form<?> form = formSubmitBehavior.getForm();
 			getRequest().setUseMultiPartContentType(form.isMultiPart());
 			serializeFormToRequest(form);
-			
+
 			// mark behavior's component as the form submitter,
 			String name = Form.getRootFormRelativeId(new PropertyModel<Component>(behavior,
-					"component").getObject());
+				"component").getObject());
 			if (!request.getPostParameters().getParameterNames().contains(name))
 			{
 				request.getPostParameters().setParameterValue(name, "marked");
@@ -1234,10 +1238,10 @@ public class BaseWicketTester
 	 * Process a component. A web page will be automatically created with the markup created in
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the instantiated component will have an auto-generated id. To
-	 *     reach any of its children use their relative path to the component itself. For example
-	 *     if the started component has a child a Link component with id "link" then after starting
-	 *     the component you can click it with: <code>tester.clickLink("link")</code>
+	 * <strong>Note</strong>: the instantiated component will have an auto-generated id. To reach
+	 * any of its children use their relative path to the component itself. For example if the
+	 * started component has a child a Link component with id "link" then after starting the
+	 * component you can click it with: <code>tester.clickLink("link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1257,10 +1261,10 @@ public class BaseWicketTester
 	 * provided. In case pageMarkup is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the instantiated component will have an auto-generated id. To
-	 *     reach any of its children use their relative path to the component itself. For example
-	 *     if the started component has a child a Link component with id "link" then after starting
-	 *     the component you can click it with: <code>tester.clickLink("link")</code>
+	 * <strong>Note</strong>: the instantiated component will have an auto-generated id. To reach
+	 * any of its children use their relative path to the component itself. For example if the
+	 * started component has a child a Link component with id "link" then after starting the
+	 * component you can click it with: <code>tester.clickLink("link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1302,10 +1306,10 @@ public class BaseWicketTester
 	 * Process a component. A web page will be automatically created with markup created by the
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the component id is set by the user. To
-	 *     reach any of its children use this id + their relative path to the component itself. For example
-	 *     if the started component has id <em>compId</em> and a Link child component component with id "link"
-	 *     then after starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
+	 * <strong>Note</strong>: the component id is set by the user. To reach any of its children use
+	 * this id + their relative path to the component itself. For example if the started component
+	 * has id <em>compId</em> and a Link child component component with id "link" then after
+	 * starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1325,10 +1329,10 @@ public class BaseWicketTester
 	 * provided. In case {@code pageMarkup} is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the component id is set by the user. To
-	 *     reach any of its children use this id + their relative path to the component itself. For example
-	 *     if the started component has id <em>compId</em> and a Link child component component with id "link"
-	 *     then after starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
+	 * <strong>Note</strong>: the component id is set by the user. To reach any of its children use
+	 * this id + their relative path to the component itself. For example if the started component
+	 * has id <em>compId</em> and a Link child component component with id "link" then after
+	 * starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1489,7 +1493,7 @@ public class BaseWicketTester
 			String componentIdPageId = componentInPage.component.getId() + ':';
 			if (path.startsWith(componentIdPageId) == false)
 			{
-				path =  componentIdPageId + path;
+				path = componentIdPageId + path;
 			}
 		}
 
@@ -1579,7 +1583,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			result = Result.fail("path: '" + path + "' does no exist for page: " +
-					Classes.simpleName(getLastRenderedPage().getClass()));
+				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		else
 		{
@@ -1786,7 +1790,8 @@ public class BaseWicketTester
 					"not be invoked when AJAX (javascript) is disabled.");
 			}
 
-			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(linkComponent, "onclick");
+			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
+				linkComponent, "onclick");
 			for (AjaxEventBehavior behavior : behaviors)
 			{
 				executeBehavior(behavior);
@@ -1797,7 +1802,8 @@ public class BaseWicketTester
 		// Link.
 		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
 		{
-			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(linkComponent, "onclick");
+			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
+				linkComponent, "onclick");
 			for (AjaxEventBehavior behavior : behaviors)
 			{
 				executeBehavior(behavior);
@@ -1870,12 +1876,13 @@ public class BaseWicketTester
 				{
 					Method getURL = ResourceLink.class.getDeclaredMethod("getURL", new Class[0]);
 					getURL.setAccessible(true);
-					CharSequence url = (CharSequence) getURL.invoke(link);
+					CharSequence url = (CharSequence)getURL.invoke(link);
 					executeUrl(url.toString());
 				}
 				catch (Exception x)
 				{
-					throw new RuntimeException("An error occurred while clicking on a ResourceLink", x);
+					throw new RuntimeException(
+						"An error occurred while clicking on a ResourceLink", x);
 				}
 			}
 			else
@@ -2182,7 +2189,7 @@ public class BaseWicketTester
 	 * Simulates the firing of all ajax timer behaviors on the page
 	 * 
 	 * @param page
-	 *      the page which timers will be executed
+	 *            the page which timers will be executed
 	 */
 	public void executeAllTimerBehaviors(final MarkupContainer page)
 	{
@@ -2211,7 +2218,8 @@ public class BaseWicketTester
 			{
 				if (log.isDebugEnabled())
 				{
-					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}", component.getClassRelativePath());
+					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}",
+						component.getClassRelativePath());
 				}
 
 				executeBehavior(timer);
@@ -2261,8 +2269,8 @@ public class BaseWicketTester
 
 		checkUsability(component, true);
 
-		List<AjaxEventBehavior> ajaxEventBehaviors = WicketTesterHelper.findAjaxEventBehaviors(component,
-				event);
+		List<AjaxEventBehavior> ajaxEventBehaviors = WicketTesterHelper.findAjaxEventBehaviors(
+			component, event);
 		for (AjaxEventBehavior ajaxEventBehavior : ajaxEventBehaviors)
 		{
 			executeBehavior(ajaxEventBehavior);
