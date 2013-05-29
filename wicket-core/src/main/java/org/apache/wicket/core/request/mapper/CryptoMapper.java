@@ -140,7 +140,7 @@ public class CryptoMapper implements IRequestMapper
 		return wrappedMapper;
 	}
 
-	private Url encryptUrl(final Url url)
+	protected Url encryptUrl(final Url url)
 	{
 		if (url.getSegments().isEmpty())
 		{
@@ -160,7 +160,7 @@ public class CryptoMapper implements IRequestMapper
 		return encryptedUrl;
 	}
 
-	private Url decryptUrl(final Request request, final Url encryptedUrl)
+	protected Url decryptUrl(final Request request, final Url encryptedUrl)
 	{
 		/*
 		 * If the encrypted URL has no segments it is the home page URL,
@@ -265,7 +265,7 @@ public class CryptoMapper implements IRequestMapper
 	/**
 	 * A generator of hashed segments.
 	 */
-	private static class HashedSegmentGenerator
+	public static class HashedSegmentGenerator
 	{
 		private char[] characters;
 
@@ -298,7 +298,7 @@ public class CryptoMapper implements IRequestMapper
 			return segment;
 		}
 
-		private int hashString(final String str)
+		public int hashString(final String str)
 		{
 			int hash = 97;
 
