@@ -43,7 +43,7 @@
 	</licenses>
 	<properties>
 		<wicket.version>6.8.0-SNAPSHOT</wicket.version>
-		<jetty.version>8.1.10.v20130312</jetty.version>
+		<jetty.version>8.1.11.v20130520</jetty.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
