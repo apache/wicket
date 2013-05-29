@@ -302,7 +302,7 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 		}
 	}
 
-	private static class ValidatingAjaxRequestTargetListener implements AjaxRequestTarget.IListener
+	private static class ValidatingAjaxRequestTargetListener extends AjaxRequestTarget.AbstractListener
 	{
 		boolean onBeforeRespondExecuted = false;
 		boolean onAfterRespondExecuted = false;

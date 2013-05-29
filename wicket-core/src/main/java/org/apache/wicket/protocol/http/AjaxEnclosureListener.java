@@ -55,7 +55,7 @@ import org.apache.wicket.util.visit.IVisitor;
  *
  * @author Joonas Hamalainen
  */
-public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
+public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 {
 	/**
 	 * Construct.
@@ -106,10 +106,5 @@ public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
 		final InlineEnclosure enclosure)
 	{
 		return enclosure.getParent().get(enclosure.getChildId()) == component;
-	}
-
-	@Override
-	public void onAfterRespond(final Map<String, Component> map, final AjaxRequestTarget.IJavaScriptResponse response)
-	{
 	}
 }

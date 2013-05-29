@@ -66,6 +66,15 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 		 *            response object that can be used to output javascript
 		 */
 		void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response);
+
+		/**
+		 * Triggered for every Ajax behavior.
+		 * Can be used to configure common settings.
+		 *
+		 * @param attributes
+		 *            The attributes for the Ajax behavior
+		 */
+		void updateAjaxAttributes(AjaxRequestAttributes attributes);
 	}
 
 	/**
@@ -74,7 +83,7 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 	 */
 	class AbstractListener implements IListener
 	{
-		// TODO Wicket 7.0 Move in IListener
+		@Override
 		public void updateAjaxAttributes(AjaxRequestAttributes attributes)
 		{
 		}
