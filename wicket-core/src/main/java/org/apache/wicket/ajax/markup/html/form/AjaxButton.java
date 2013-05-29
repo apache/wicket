@@ -122,6 +122,10 @@ public abstract class AjaxButton extends Button
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+
+				// do not allow normal form submit to happen
+				attributes.setPreventDefault(true);
+
 				AjaxButton.this.updateAjaxAttributes(attributes);
 			}
 
