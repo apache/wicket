@@ -29,4 +29,12 @@ public interface ISessionListener
 	 * @param session
 	 */
 	void onCreated(Session session);
+
+	/**
+	 * Informs the listener that session with specific id has been unbound.
+	 *
+	 * @param sessionId
+	 *          the id of the unbound session
+	 */
+	void onUnbound(String sessionId);
 }
