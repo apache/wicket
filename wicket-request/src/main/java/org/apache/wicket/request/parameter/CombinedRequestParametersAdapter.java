@@ -51,7 +51,7 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 	@Override
 	public Set<String> getParameterNames()
 	{
-		Set<String> result = new LinkedHashSet<String>();
+		Set<String> result = new LinkedHashSet<>();
 		for (IRequestParameters p : parameters)
 		{
 			result.addAll(p.getParameterNames());
@@ -82,7 +82,7 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 	@Override
 	public List<StringValue> getParameterValues(final String name)
 	{
-		List<StringValue> result = new ArrayList<StringValue>();
+		List<StringValue> result = new ArrayList<>();
 		for (IRequestParameters p : parameters)
 		{
 			List<StringValue> values = p.getParameterValues(name);

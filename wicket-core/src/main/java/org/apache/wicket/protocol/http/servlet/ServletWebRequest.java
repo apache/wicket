@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -277,15 +276,9 @@ public class ServletWebRequest extends WebRequest
 
 	private Map<String, List<StringValue>> postParameters = null;
 
-	private static boolean isMultiPart(ServletRequest request)
-	{
-		String contentType = request.getContentType();
-		return contentType != null && contentType.toLowerCase().contains("multipart");
-	}
-
 	protected Map<String, List<StringValue>> generatePostParameters()
 	{
-		Map<String, List<StringValue>> postParameters = new HashMap<String, List<StringValue>>();
+		Map<String, List<StringValue>> postParameters = new HashMap<>();
 
 		IRequestParameters queryParams = getQueryParameters();
 
@@ -306,11 +299,11 @@ public class ServletWebRequest extends WebRequest
 				}
 				else
 				{
-					queryValues = new ArrayList<StringValue>(queryValues);
+					queryValues = new ArrayList<>(queryValues);
 				}
 
 				// the list that will contain accepted post param values
-				List<StringValue> postValues = new ArrayList<StringValue>();
+				List<StringValue> postValues = new ArrayList<>();
 
 				for (String value : values)
 				{
