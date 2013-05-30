@@ -72,7 +72,7 @@ public class DynamicJQueryResourceReference extends JavaScriptResourceReference
 		return INSTANCE;
 	}
 
-	private DynamicJQueryResourceReference()
+	protected DynamicJQueryResourceReference()
 	{
 		super(DynamicJQueryResourceReference.class, VERSION_1);
 	}
@@ -85,7 +85,7 @@ public class DynamicJQueryResourceReference extends JavaScriptResourceReference
 		if (name == null)
 		{
 			WebClientInfo clientInfo;
-			name = VERSION_2;
+			name = getVersion2();
 			if (Session.exists())
 			{
 				WebSession session = WebSession.get();
@@ -98,11 +98,27 @@ public class DynamicJQueryResourceReference extends JavaScriptResourceReference
 			ClientProperties clientProperties = clientInfo.getProperties();
 			if (clientProperties.isBrowserInternetExplorer() && clientProperties.getBrowserVersionMajor() < 9)
 			{
-				name = VERSION_1;
+				name = getVersion1();
 			}
 
 			requestCycle.setMetaData(KEY, name);
 		}
 		return name;
+	}
+
+	protected String getVersion1()
+	{
+		return VERSION_1;
+	}
+
+	protected String getVersion2()
+	{
+		return VERSION_2;
+	}
+
+	@Override
+	public Class<?> getScope()
+	{
+		return getClass();
 	}
 }
