@@ -31,6 +31,11 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * jQuery ver. 1.x - works on modern browsers and IE 6/7/8
+	 */
+	public static final String VERSION_1 = "jquery/jquery-1.10.1.js";
+
 	private static final JQueryResourceReference INSTANCE = new JQueryResourceReference();
 
 	/**
@@ -44,8 +49,8 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 		return INSTANCE;
 	}
 
-	private JQueryResourceReference()
+	protected JQueryResourceReference()
 	{
-		super(JQueryResourceReference.class, "jquery/jquery-1.10.0.js");
+		super(JQueryResourceReference.class, VERSION_1);
 	}
 }
