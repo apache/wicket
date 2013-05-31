@@ -22,8 +22,6 @@ import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 
 
 /**
@@ -35,9 +33,9 @@ import org.apache.wicket.settings.IJavaScriptLibrarySettings;
  * app.getJavaScriptLibrarySettings().setJQueryReference(DynamicJQueryResourceReference.INSTANCE)
  * </code>
  *
- * @since 7.0.0
+ * @since 6.9.0
  */
-public class DynamicJQueryResourceReference extends JavaScriptResourceReference
+public class DynamicJQueryResourceReference extends JQueryResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,31 +48,12 @@ public class DynamicJQueryResourceReference extends JavaScriptResourceReference
 	};
 
 	/**
-	 * jQuery ver. 1.x - works on modern browsers and IE 6/7/8
-	 */
-	private static final String VERSION_1 = "jquery/jquery-1.10.1.js";
-
-	/**
 	 * jQuery ver. 2.x - works only on modern browsers
 	 */
-	private static final String VERSION_2 = "jquery/jquery-2.0.2.js";
+	public static final String VERSION_2 = "jquery/jquery-2.0.2.js";
 
-	private static final DynamicJQueryResourceReference INSTANCE = new DynamicJQueryResourceReference();
-
-	/**
-	 * Normally you should not use this method, but use
-	 * {@link IJavaScriptLibrarySettings#getJQueryReference()} to prevent version conflicts.
-	 * 
-	 * @return the single instance of the resource reference
-	 */
-	public static DynamicJQueryResourceReference get()
+	public DynamicJQueryResourceReference()
 	{
-		return INSTANCE;
-	}
-
-	protected DynamicJQueryResourceReference()
-	{
-		super(DynamicJQueryResourceReference.class, VERSION_1);
 	}
 
 	@Override
