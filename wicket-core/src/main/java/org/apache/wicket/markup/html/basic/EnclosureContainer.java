@@ -71,10 +71,14 @@ public class EnclosureContainer extends WebMarkupContainer
 		setRenderBodyOnly(true);
 	}
 
+	/**
+	 * Overriden to set the visibility depending on childs {@link #determineVisibility()}.
+	 */
 	@Override
-	public boolean isVisible()
+	protected void onConfigure()
 	{
 		child.configure();
-		return child.determineVisibility();
+
+		setVisible(child.determineVisibility());
 	}
 }
