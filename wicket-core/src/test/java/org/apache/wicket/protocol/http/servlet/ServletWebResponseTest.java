@@ -70,7 +70,7 @@ public class ServletWebResponseTest extends Assert
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		webResponse.sendRedirect(url);
 
-		verify(httpServletResponse).addHeader("Ajax-Location", url);
+		verify(httpServletResponse).setHeader("Ajax-Location", url);
 		verify(httpServletResponse).setContentType("text/xml;charset=UTF-8");
 		assertEquals(
 			"<ajax-response><redirect><![CDATA[./relative/path]]></redirect></ajax-response>",
