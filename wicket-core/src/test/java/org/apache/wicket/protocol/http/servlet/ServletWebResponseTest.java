@@ -72,7 +72,7 @@ public class ServletWebResponseTest extends Assert
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		webResponse.sendRedirect(url);
 
-		verify(httpServletResponse).addHeader("Ajax-Location", url);
+		verify(httpServletResponse).setHeader("Ajax-Location", url);
 		verify(httpServletResponse).setContentType("text/xml;charset=UTF-8");
 		assertEquals(
 			"<ajax-response><redirect><![CDATA[./relative/path]]></redirect></ajax-response>",
@@ -129,20 +129,28 @@ public class ServletWebResponseTest extends Assert
 
 		response.setInlineHeader("name with spaces");
 		String header = httpResponse.getHeader("Content-Disposition");
-		assertEquals("inline; filename=\"name%20with%20spaces\"; filename*=UTF-8''name%20with%20spaces", header);
+		assertEquals(
+			"inline; filename=\"name%20with%20spaces\"; filename*=UTF-8''name%20with%20spaces",
+			header);
 
 		// says: "name with bulgarian"
 		response.setInlineHeader("name with български");
 		header = httpResponse.getHeader("Content-Disposition");
-		assertEquals("inline; filename=\"name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8\"; filename*=UTF-8''name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8", header);
+		assertEquals(
+			"inline; filename=\"name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8\"; filename*=UTF-8''name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8",
+			header);
 
 		response.setAttachmentHeader("name with spaces");
 		header = httpResponse.getHeader("Content-Disposition");
-		assertEquals("attachment; filename=\"name%20with%20spaces\"; filename*=UTF-8''name%20with%20spaces", header);
+		assertEquals(
+			"attachment; filename=\"name%20with%20spaces\"; filename*=UTF-8''name%20with%20spaces",
+			header);
 
 		// says: "name with bulgarian"
 		response.setAttachmentHeader("name with български");
 		header = httpResponse.getHeader("Content-Disposition");
-		assertEquals("attachment; filename=\"name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8\"; filename*=UTF-8''name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8", header);
+		assertEquals(
+			"attachment; filename=\"name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8\"; filename*=UTF-8''name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8",
+			header);
 	}
 }
