@@ -105,24 +105,22 @@ public class AtmosphereBehavior extends Behavior
 
 		// Grab a Meteor
 		Meteor meteor = Meteor.build(request.getContainerRequest());
-		String uuid = meteor.getAtmosphereResource().uuid();
-		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
-		findEventBus().registerPage(uuid, component.getPage());
-
 		// Add us to the listener list.
 		meteor.addListener(this);
 
 		String transport = request.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
 		if (HeaderConfig.LONG_POLLING_TRANSPORT.equalsIgnoreCase(transport))
 		{
-			// request.getContainerRequest().setAttribute(ApplicationConfig.RESUME_ON_BROADCAST,
-			// Boolean.TRUE);
 			meteor.suspend(-1, false);
 		}
 		else
 		{
 			meteor.suspend(-1);
 		}
+
+		String uuid = meteor.getAtmosphereResource().uuid();
+		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
+		findEventBus().registerPage(uuid, component.getPage());
 	}
 
 	@Override
