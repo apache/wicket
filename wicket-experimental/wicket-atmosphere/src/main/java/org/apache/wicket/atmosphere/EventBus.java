@@ -140,8 +140,8 @@ public class EventBus implements UnboundListener
 	}
 
 	/**
-	 * Returns the {@linkplain AtmosphereParameters paramters} that will be passed to the Atmosphere
-	 * JQuery plugin. You can change these parameters, for example to disable WebSockets.
+	 * Returns the {@linkplain AtmosphereParameters parameters} that will be passed to the
+	 * Atmosphere JQuery plugin. You can change these parameters, for example to disable WebSockets.
 	 * 
 	 * @return The parameters.
 	 */
