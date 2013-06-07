@@ -240,7 +240,7 @@ public class ServletWebResponse extends WebResponse
 
 			if (webRequest.isAjax())
 			{
-				httpServletResponse.addHeader("Ajax-Location", url);
+				httpServletResponse.setHeader("Ajax-Location", url);
 
 				/*
 				 * usually the Ajax-Location header is enough and we do not need to the redirect url
