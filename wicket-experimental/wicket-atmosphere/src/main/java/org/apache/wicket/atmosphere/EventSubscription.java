@@ -109,7 +109,7 @@ public class EventSubscription
 	}
 
 	/**
-	 * @return The filter on incomming events, a combination of the type and the
+	 * @return The filter on incoming events, a combination of the type and the
 	 *         {@link Subscribe#filter()} parameter.
 	 */
 	public Predicate<AtmosphereEvent> getFilter()
@@ -118,7 +118,7 @@ public class EventSubscription
 	}
 
 	/**
-	 * @return The context ware filter on incomming events, constructed from the
+	 * @return The context ware filter on incoming events, constructed from the
 	 *         {@link Subscribe#contextAwareFilter()} parameter.
 	 */
 	public Predicate<AtmosphereEvent> getContextAwareFilter()
