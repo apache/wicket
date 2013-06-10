@@ -88,6 +88,14 @@ public class AjaxEditableLabel<T> extends Panel
 		private static final long serialVersionUID = 1L;
 
 		@Override
+		protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+		{
+			super.updateAjaxAttributes(attributes);
+
+			AjaxEditableLabel.this.updateEditorAjaxAttributes(attributes);
+		}
+
+		@Override
 		public void renderHead(final Component component, final IHeaderResponse response)
 		{
 			super.renderHead(component, response);
@@ -148,6 +156,36 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 			onEdit(target);
 		}
+
+		@Override
+		protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+		{
+			super.updateAjaxAttributes(attributes);
+
+			AjaxEditableLabel.this.updateLabelAjaxAttributes(attributes);
+		}
+	}
+
+	/**
+	 * Gives a chance to the specializations to modify the Ajax attributes for
+	 * the request when this component switches from an editor to a label.
+	 *
+	 * @param attributes
+	 *          The Ajax attributes to modify
+	 */
+	protected void updateLabelAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+	}
+
+	/**
+	 * Gives a chance to the specializations to modify the Ajax attributes for
+	 * the request when this component switches from a label to an editor.
+	 *
+	 * @param attributes
+	 *          The Ajax attributes to modify
+	 */
+	protected void updateEditorAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**
