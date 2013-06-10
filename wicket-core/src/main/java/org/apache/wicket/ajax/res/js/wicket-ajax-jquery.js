@@ -864,8 +864,10 @@
 
 			context.steps.push(jQuery.proxy(function(notify) {
 				// remove the iframe and button elements
-				jQuery('#'+iframe.id + '-btn').remove();
-				jQuery(iframe).remove();
+				setTimeout(function() {
+					jQuery('#'+iframe.id + '-btn').remove();
+					jQuery(iframe).remove();
+				}, 0);
 
 				var attrs = context.attrs;
 				if (attrs.i) {
