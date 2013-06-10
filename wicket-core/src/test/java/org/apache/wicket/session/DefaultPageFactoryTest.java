@@ -149,10 +149,29 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		}
 	}
 
+	public static class ThrowExceptionInConstructorPage extends WebPage
+	{
+		public ThrowExceptionInConstructorPage()
+		{
+
+			throw new RuntimeException("exception!");
+		}
+	}
+
 	final private IPageFactory pageFactory = new DefaultPageFactory();
 
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
+
+
+	@Test
+	public void throwExceptionInConstructor()
+	{
+		expectedException.expect(WicketRuntimeException.class);
+		expectedException.expectMessage("Can't instantiate page using constructor 'public org.apache.wicket.session.DefaultPageFactoryTest$ThrowExceptionInConstructorPage()'. An exception has been thrown during construction!");
+
+		pageFactory.newPage(ThrowExceptionInConstructorPage.class);
+	}
 
 	@Test
 	public void privateConstructor() {

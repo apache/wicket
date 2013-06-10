@@ -211,22 +211,31 @@ public final class DefaultPageFactory implements IPageFactory
 
 	private String createDescription(final Constructor<?> constructor, final Object argument)
 	{
-		String msg = "Can't instantiate page using constructor '" + constructor + "'";
+		StringBuilder msg = new StringBuilder();
+		msg.append("Can't instantiate page using constructor '").append(constructor).append('\'');
 		if (argument != null)
 		{
-			msg += " and argument '" + argument + "'";
+			msg.append(" and argument '").append(argument).append('\'');
 		}
+		msg.append('.');
 
-		if (constructor != null && Modifier.isPrivate(constructor.getModifiers()))
+		if (constructor != null)
 		{
-			msg += ". This constructor is private!";
+			if (Modifier.isPrivate(constructor.getModifiers()))
+			{
+				msg.append(" This constructor is private!");
+			}
+			else
+			{
+				msg.append(" An exception has been thrown during construction!");
+			}
 		}
 		else
 		{
-			msg += ". There is no such constructor!";
+			msg.append(" There is no such constructor!");
 		}
 
-		return msg;
+		return msg.toString();
 	}
 
 	@Override
