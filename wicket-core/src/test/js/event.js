@@ -257,5 +257,5 @@ jQuery(document).ready(function() {
 			$input.trigger("input");
 		}
 
-	})
+	});
 });
