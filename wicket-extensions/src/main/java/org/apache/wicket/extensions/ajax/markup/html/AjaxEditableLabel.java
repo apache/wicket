@@ -167,22 +167,22 @@ public class AjaxEditableLabel<T> extends Panel
 	}
 
 	/**
-	 * Gives a chance to the specializations to modify the Ajax attributes for
-	 * the request when this component switches from an editor to a label.
-	 *
+	 * Gives a chance to the specializations to modify the Ajax attributes for the request when this
+	 * component switches from an editor to a label.
+	 * 
 	 * @param attributes
-	 *          The Ajax attributes to modify
+	 *            The Ajax attributes to modify
 	 */
 	protected void updateLabelAjaxAttributes(AjaxRequestAttributes attributes)
 	{
 	}
 
 	/**
-	 * Gives a chance to the specializations to modify the Ajax attributes for
-	 * the request when this component switches from a label to an editor.
-	 *
+	 * Gives a chance to the specializations to modify the Ajax attributes for the request when this
+	 * component switches from a label to an editor.
+	 * 
 	 * @param attributes
-	 *          The Ajax attributes to modify
+	 *            The Ajax attributes to modify
 	 */
 	protected void updateEditorAjaxAttributes(AjaxRequestAttributes attributes)
 	{
@@ -334,31 +334,27 @@ public class AjaxEditableLabel<T> extends Panel
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				attributes.setEventNames("blur", "keyup");
+				attributes.setEventNames("blur", "keyup", "keydown");
 
-				CharSequence dynamicExtraParameters = "var result = [], "
-					+ "kc=Wicket.Event.keyCode(attrs.event),"
-					+ "evtType=attrs.event.type;"
-					+ "if (evtType === 'keyup') {"
-					+
-					// ESCAPE key
-					"if (kc===27) { result.push( { name: 'save', value: false } ); }"
-					+
+				// Note: preventDefault is handled selectively below
+				attributes.setPreventDefault(false);
 
-					// ENTER key
-					"else if (kc===13) { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }"
-					+ "}"
-					+ "else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }"
-					+ "return result;";
-				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
-
+				// Note: escape can be detected on keyup, enter can be detected on keyup
 				CharSequence precondition = "var kc=Wicket.Event.keyCode(attrs.event),"
 					+ "evtType=attrs.event.type,"
 					+ "ret=false;"
-					+ "if(evtType==='blur' || (evtType==='keyup' && (kc===27 || kc===13))) ret = true;"
+					+ "if (evtType==='blur' || (evtType==='keyup' && kc===27) || (evtType==='keydown' && kc===13)) {attrs.event.preventDefault(); ret = true;}"
 					+ "return ret;";
 				AjaxCallListener ajaxCallListener = new AjaxCallListener();
 				ajaxCallListener.onPrecondition(precondition);
+
+				CharSequence dynamicExtraParameters = "var result = [],"
+					+ "evtType=attrs.event.type;"
+					+ "if (evtType === 'keyup') { result.push( { name: 'save', value: false } ); }"
+					+ "else { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }"
+					+ "return result;";
+				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
+
 				attributes.getAjaxCallListeners().add(ajaxCallListener);
 
 			}
@@ -492,8 +488,9 @@ public class AjaxEditableLabel<T> extends Panel
 		label.setVisible(false);
 		editor.setVisible(true);
 		target.add(AjaxEditableLabel.this);
-		String selectScript = String.format("(function(){var el = Wicket.$('%s'); if (el.select) el.select();})()",
-				editor.getMarkupId());
+		String selectScript = String.format(
+			"(function(){var el = Wicket.$('%s'); if (el.select) el.select();})()",
+			editor.getMarkupId());
 		target.appendJavaScript(selectScript);
 		target.focusComponent(editor);
 	}
@@ -512,8 +509,9 @@ public class AjaxEditableLabel<T> extends Panel
 			target.appendJavaScript("window.status='" +
 				JavaScriptUtils.escapeQuotes(errorMessage.toString()) + "';");
 		}
-		String selectAndFocusScript = String.format("(function(){var el=Wicket.$('%s'); if (el.select) el.select(); el.focus();})()",
-				editor.getMarkupId());
+		String selectAndFocusScript = String.format(
+			"(function(){var el=Wicket.$('%s'); if (el.select) el.select(); el.focus();})()",
+			editor.getMarkupId());
 		target.appendJavaScript(selectAndFocusScript);
 	}
 
