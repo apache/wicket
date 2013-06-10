@@ -23,6 +23,7 @@ import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -36,7 +37,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 public class EditableLabelPage extends BasePage
 {
 	/** available sites for the multiple select. */
-	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby",
+		"Java.Net");
 	private String site = SITES.get(0);
 	private String text1 = "fox";
 	private String text2 = "dog";
@@ -48,13 +50,15 @@ public class EditableLabelPage extends BasePage
 	 */
 	public EditableLabelPage()
 	{
-		setDefaultModel(new CompoundPropertyModel<EditableLabelPage>(this));
-		add(new AjaxEditableLabel("text1"));
-		add(new AjaxEditableLabel("text2"));
-		add(new AjaxEditableMultiLineLabel("text3"));
-		add(new AjaxEditableChoiceLabel("site", SITES));
+		Form form = new Form("form", new CompoundPropertyModel<EditableLabelPage>(this));
+		add(form);
 
-		add(new Label("refresh-counter", new AbstractReadOnlyModel<String>()
+		form.add(new AjaxEditableLabel("text1"));
+		form.add(new AjaxEditableLabel("text2"));
+		form.add(new AjaxEditableMultiLineLabel("text3"));
+		form.add(new AjaxEditableChoiceLabel("site", SITES));
+
+		form.add(new Label("refresh-counter", new AbstractReadOnlyModel<String>()
 		{
 			@Override
 			public String getObject()
@@ -63,7 +67,7 @@ public class EditableLabelPage extends BasePage
 			}
 		}));
 
-		add(new Link("refresh-link")
+		form.add(new Link("refresh-link")
 		{
 			@Override
 			public void onClick()
