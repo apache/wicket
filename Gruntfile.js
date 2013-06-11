@@ -4,9 +4,12 @@
  *
  * To use it:
  * 1) install node.js - http://nodejs.org/#download. This will install 'npm' (Node Package Manager) too
- * 2) install phantomjs - http://code.google.com/p/phantomjs/downloads/list
- * 3) install grunt - 'npm -g install grunt'
- * 4) run it: grunt lint, grunt lint:core, grunt qunit, grunt qunit:local
+ * 2) install grunt - 'npm -g install grunt-cli'
+ * 3) run: npm install (This will use package.json and install all dependencies)
+ * 4) use it: 
+ * 4.1) grunt jshint - checks all JavaScript files with JSHint
+ * 4.2) grunt jshint:core - checks only the files in wicket-core
+ * 4.3) grunt test - starts a web server and runs all tests (Ajax, non-Ajax and AMD)
  */
 
  /*global module: true */
@@ -35,7 +38,7 @@ module.exports = function(grunt) {
 			"wicket-datetime/src/main/java/org/apache/wicket/extensions/yui/calendar/wicket-date.js"
 		],
 		nativeWebSocketJs = [
-		"wicket-experimental/wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
+			"wicket-experimental/wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
 		],
 		atmosphereJs = [
 			"wicket-experimental/wicket-atmosphere/src/main/java/org/apache/wicket/atmosphere/jquery.wicketatmosphere.js"
@@ -55,17 +58,17 @@ module.exports = function(grunt) {
 
 	// Project configuration.
 	grunt.initConfig({
-		lint: {
+		pkg: grunt.file.readJSON('package.json'),
+
+		jshint: {
 			core: coreJs,
 			extensions: extensionsJs,
 			datetime: datetimeJs,
 			nativeWebSocket: nativeWebSocketJs,
 			atmosphere: atmosphereJs,
 			testsJs: testsJs,
-			grunt: gruntJs
-		},
+			grunt: gruntJs,
 
-		jshint: {
 			options: {
 				"boss": true,
 				"browser": true,
@@ -93,17 +96,43 @@ module.exports = function(grunt) {
 			 * Runs all tests (w/ ajax).
 			 * See ajax.js header for details how to setup it.
 			 */
-			index: ['http://localhost/ajax-tests/test/js/all.html'],
+			all: {
+				options: {
+			        urls: ['http://localhost:38888/test/js/all.html']
+			    }
+			},
 
 			/**
 			 * Run Asynchronous module definition tests
 			 */
-			amd: ['http://localhost/ajax-tests/test/js/amd.html'],
+			amd: {
+				options: {
+					urls: ['http://localhost:38888/test/js/amd.html']
+				}
+			},
 
 			/*
 			 * Runs only local tests (w/o ajax ones).
 			 */
 			local: ['wicket-core/src/test/js/all.html']
-		}
+		},
+
+		connect: {
+    		server: {
+      			options: {
+        			port: 38888,
+        			base: './wicket-core/src'
+      			}
+    		}
+  		}
 	});
+
+	grunt.loadNpmTasks('grunt-contrib-qunit');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+
+	// This plugin provides the "connect" task - starts a web server for the Ajax tests.
+	grunt.loadNpmTasks('grunt-contrib-connect');
+
+	// A convenient task alias.
+	grunt.registerTask('test', ['connect', 'qunit']);
 };
