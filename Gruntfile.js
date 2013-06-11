@@ -53,7 +53,7 @@ module.exports = function(grunt) {
 			"./wicket-core/src/test/js/amd.js"
 		],
 		gruntJs = [
-			"grunt.js"
+			"Gruntfile.js"
 		];
 
 	// Project configuration.
