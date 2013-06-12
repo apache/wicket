@@ -599,7 +599,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized void setMetaData(final MetaDataKey<?> key, final Serializable object)
+	public final synchronized <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		metaData = key.set(metaData, object);
 		dirty();

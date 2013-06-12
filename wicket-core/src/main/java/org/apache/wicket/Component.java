@@ -2925,7 +2925,7 @@ public abstract class Component
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final <M> void setMetaData(final MetaDataKey<M> key, final M object)
+	public final <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		MetaDataEntry<?>[] old = getMetaData();
 
