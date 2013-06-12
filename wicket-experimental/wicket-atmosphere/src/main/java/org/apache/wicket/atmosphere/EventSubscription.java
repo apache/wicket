@@ -62,6 +62,26 @@ public class EventSubscription
 		methodName = method.getName();
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param component
+	 * @param behavior
+	 * @param method
+	 * @param filter
+	 * @param contextAwareFilter
+	 */
+	public EventSubscription(Component component, Behavior behavior, Method method,
+		Predicate<AtmosphereEvent> filter, Predicate<AtmosphereEvent> contextAwareFilter)
+	{
+		componentPath = component.getPageRelativePath();
+		behaviorIndex = behavior == null ? null : component.getBehaviorId(behavior);
+		this.filter = filter == null ? new NoFilterPredicate() : filter;
+		this.contextAwareFilter = contextAwareFilter == null ? new NoFilterPredicate()
+			: contextAwareFilter;
+		methodName = method.getName();
+	}
+
 	private static Predicate<AtmosphereEvent> payloadOfType(final Class<?> type)
 	{
 		return new Predicate<AtmosphereEvent>()
