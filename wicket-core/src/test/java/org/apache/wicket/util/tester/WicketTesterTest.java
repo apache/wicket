@@ -21,7 +21,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.AssertionFailedError;
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
@@ -241,7 +240,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.clickLink("ajaxLinkWithSetResponsePageClass");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -265,7 +264,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "onclick");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -289,7 +288,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertEnabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be enabled.");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -313,7 +312,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertDisabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be disabled.");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -341,7 +340,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertRequired("createForm:id");
 			fail("Book ID component must not be required anymore!");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -351,7 +350,7 @@ public class WicketTesterTest extends WicketTestCase
 			// test #3: "createForm" is not a FormComponent
 			tester.assertRequired("createForm");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -1147,7 +1146,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertRedirectUrl("http://this.did.not.happen");
 			caught = false;
 		}
-		catch (AssertionFailedError e)
+		catch (AssertionError e)
 		{
 			caught = true;
 		}
