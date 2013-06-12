@@ -28,7 +28,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 public class SubscribeAnnotationEventSubscriptionInvoker implements EventSubscriptionInvoker
 {
 	@Override
-	public boolean invoke(AjaxRequestTarget target, EventSubscription subscription, Object base,
+	public void invoke(AjaxRequestTarget target, EventSubscription subscription, Object base,
 		AtmosphereEvent event, AjaxRequestInitializer ajaxRequestInitializer)
 	{
 		for (Method curMethod : base.getClass().getMethods())
@@ -41,7 +41,6 @@ public class SubscribeAnnotationEventSubscriptionInvoker implements EventSubscri
 				{
 					curMethod.setAccessible(true);
 					curMethod.invoke(base, target, event.getPayload());
-					return true;
 				}
 				catch (IllegalAccessException e)
 				{
@@ -57,7 +56,6 @@ public class SubscribeAnnotationEventSubscriptionInvoker implements EventSubscri
 				}
 			}
 		}
-		return false;
 	}
 
 }

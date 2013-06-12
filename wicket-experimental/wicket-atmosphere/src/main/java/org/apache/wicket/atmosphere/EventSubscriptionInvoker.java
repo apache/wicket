@@ -16,28 +16,32 @@
  */
 package org.apache.wicket.atmosphere;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.Behavior;
 
 /**
- * Invokes {@link EventSubscription}
+ * Delivers events to a subscribed {@link Component} or {@link Behavior}. Implementations convey
+ * {@link AtmosphereEvent#getPayload()} into an invocation of the subscription method
+ * {@link EventSubscription#getMethodName()}.
  */
 public interface EventSubscriptionInvoker
 {
 	/**
 	 * 
 	 * @param target
-	 *            {@link AjaxRequestTarget} to which {@link EventSubscription} result should be set
+	 *            {@link AjaxRequestTarget} to which {@link EventSubscription} result should be sent
 	 * @param subscription
 	 *            {@link EventSubscription}
 	 * @param base
 	 *            {@link EventSubscription} object on which {@link EventSubscription} should be
 	 *            invoked
 	 * @param event
+	 *            {@link AtmosphereEvent} which matches the {@link EventSubscription}'s predicates
 	 * @param ajaxRequestInitializer
 	 *            call {@code ajaxRequestInitializer.initialize()} before you are going to invoke
 	 *            {@link EventSubscription}
-	 * @return true if invocation was successful
 	 */
-	boolean invoke(AjaxRequestTarget target, EventSubscription subscription, Object base,
+	void invoke(AjaxRequestTarget target, EventSubscription subscription, Object base,
 		AtmosphereEvent event, AjaxRequestInitializer ajaxRequestInitializer);
 }
