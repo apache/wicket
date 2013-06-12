@@ -959,11 +959,6 @@
 				this._executeHandlers(attrs.sh, attrs, null, null, 'success');
 				Wicket.Event.publish('/ajax/call/success', attrs, null, null, 'success');
 
-				// re-attach the events to the new components (a bit blunt method...)
-				// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
-				// IE this will cause double events for everything.. (mostly because of the jQuery.proxy(element))
-				Wicket.Focus.attachFocusEvent();
-
 				// set the focus to the last component
 				window.setTimeout("Wicket.Focus.requestFocus();", 0);
 
@@ -2424,7 +2419,7 @@
 			refocusLastFocusedComponentAfterResponse : false,
 			focusSetFromServer : false,
 
-			setFocus: function (event) {
+			focusin: function (event) {
 				event = Wicket.Event.fix(event);
 
 				var target = event.target;
@@ -2435,7 +2430,7 @@
 				}
 			},
 
-			blur: function (event) {
+			focusout: function (event) {
 				event = Wicket.Event.fix(event);
 
 				var target = event.target;
@@ -2545,30 +2540,6 @@
 					Wicket.Log.info("refocus last focused component not needed/allowed");
 				}
 				Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
-			},
-
-			setFocusOnElements: function (elements) {
-				// we need to cache array length because IE will try to recalculate
-				// the collection of elements every time length() is called which can be quiet expensive
-				// if the collection is a result of getElementsByTagName or a similar function.
-				var len = elements.length;
-				for (var i = 0; i < len; i++)
-				{
-					if (elements[i].wicketFocusSet !== true)
-					{
-						 Wicket.Event.add(elements[i], 'focus', Wicket.Focus.setFocus);
-						 Wicket.Event.add(elements[i], 'blur', Wicket.Focus.blur);
-						 elements[i].wicketFocusSet = true;
-					}
-				}
-			},
-
-			attachFocusEvent: function () {
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("input"));
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("select"));
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("textarea"));
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("button"));
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("a"));
 			}
 		}
 	});
@@ -2658,7 +2629,11 @@
 
 	// MISC FUNCTIONS
 
-	Wicket.Event.add(window, 'domready', Wicket.Focus.attachFocusEvent);
+	/**
+	 * Track focussed element.
+	 */
+	Wicket.Event.add(window, 'focusin', Wicket.Focus.focusin);
+	Wicket.Event.add(window, 'focusout', Wicket.Focus.focusout);
 
 	/**
 	 * Remove any scheduled timers on the removed element.
