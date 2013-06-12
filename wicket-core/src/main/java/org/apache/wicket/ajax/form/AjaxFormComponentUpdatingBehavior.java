@@ -46,7 +46,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
-	private static final Logger log = LoggerFactory.getLogger(AjaxFormComponentUpdatingBehavior.class);
+	private static final Logger log = LoggerFactory
+		.getLogger(AjaxFormComponentUpdatingBehavior.class);
 
 	/**
 	 * 
@@ -76,8 +77,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		Component component = getComponent();
 		if (!(component instanceof FormComponent))
 		{
-			throw new WicketRuntimeException("Behavior " + getClass().getName() +
-				" can only be added to an instance of a FormComponent");
+			throw new WicketRuntimeException("Behavior " + getClass().getName()
+				+ " can only be added to an instance of a FormComponent");
 		}
 
 		checkComponent((FormComponent<?>)component);
@@ -94,13 +95,14 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	protected void checkComponent(FormComponent<?> component)
 	{
-		if (Application.get().usesDevelopmentConfig() &&
-			AjaxFormChoiceComponentUpdatingBehavior.appliesTo(component))
+		if (Application.get().usesDevelopmentConfig()
+			&& AjaxFormChoiceComponentUpdatingBehavior.appliesTo(component))
 		{
-			log.warn(String.format(
-				"AjaxFormComponentUpdatingBehavior is not supposed to be added in the form component at path: \"%s\". "
-					+ "Use the AjaxFormChoiceComponentUpdatingBehavior instead, that is meant for choices/groups that are not one component in the html but many",
-				component.getPageRelativePath()));
+			log.warn(String
+				.format(
+					"AjaxFormComponentUpdatingBehavior is not supposed to be added in the form component at path: \"%s\". "
+						+ "Use the AjaxFormChoiceComponentUpdatingBehavior instead, that is meant for choices/groups that are not one component in the html but many",
+					component.getPageRelativePath()));
 		}
 	}
 
@@ -139,13 +141,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			formComponent.inputChanged();
 			formComponent.validate();
-			if (formComponent.hasErrorMessage())
-			{
-				formComponent.invalid();
-
-				onError(target, null);
-			}
-			else
+			if (formComponent.isValid())
 			{
 				formComponent.valid();
 				if (getUpdateModel())
@@ -154,6 +150,12 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 				}
 
 				onUpdate(target);
+			}
+			else
+			{
+				formComponent.invalid();
+
+				onError(target, null);
 			}
 		}
 		catch (RuntimeException e)
