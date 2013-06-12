@@ -140,13 +140,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			formComponent.inputChanged();
 			formComponent.validate();
-			if (formComponent.hasErrorMessage())
-			{
-				formComponent.invalid();
-
-				onError(target, null);
-			}
-			else
+			if (formComponent.isValid())
 			{
 				formComponent.valid();
 				if (getUpdateModel())
@@ -155,6 +149,12 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 				}
 
 				onUpdate(target);
+			}
+			else
+			{
+				formComponent.invalid();
+
+				onError(target, null);
 			}
 		}
 		catch (RuntimeException e)

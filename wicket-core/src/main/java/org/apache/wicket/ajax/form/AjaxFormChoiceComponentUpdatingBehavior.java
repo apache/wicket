@@ -163,17 +163,17 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		{
 			formComponent.inputChanged();
 			formComponent.validate();
-			if (formComponent.hasErrorMessage())
-			{
-				formComponent.invalid();
-
-				onError(target, null);
-			}
-			else
+			if (formComponent.isValid())
 			{
 				formComponent.valid();
 				formComponent.updateModel();
 				onUpdate(target);
+			}
+			else
+			{
+				formComponent.invalid();
+
+				onError(target, null);
 			}
 		}
 		catch (RuntimeException e)
