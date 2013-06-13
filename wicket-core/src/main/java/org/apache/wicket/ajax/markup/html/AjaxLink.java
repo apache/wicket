@@ -111,6 +111,11 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 				tag.put("href", "#");
 			}
 		}
+		else
+		{
+			disableLink(tag);
+		}
+
 	}
 
 	/**

@@ -91,7 +91,7 @@ public class AjaxEditableTest extends WicketTestCase
 		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
 		AjaxLink<Void> toggle = (AjaxLink<Void>)page.get("toggle");
 
-		AbstractAjaxBehavior toggleBehavior = toggle.getBehaviors(AbstractAjaxBehavior.class).get(0);
+		AbstractAjaxBehavior toggleBehavior = (AbstractAjaxBehavior)toggle.getBehaviors().get(0);
 
 		// check for correct rendering
 		tester.assertInvisible("ajaxLabel:editor");
@@ -106,6 +106,12 @@ public class AjaxEditableTest extends WicketTestCase
 
 		// enable ajaxLabel
 		tester.executeBehavior(toggleBehavior);
+
+		// check for the *presence* of the ajax onclick call
+
+		// TODO Wicket.next - re-enable
+// markup = tester.getTagById(ajaxLabel.getMarkupId()).getMarkup();
+// assertTrue(markup.matches(".*onclick=\"var wcall=Wicket.Ajax.get.*"));
 	}
 
 	/**

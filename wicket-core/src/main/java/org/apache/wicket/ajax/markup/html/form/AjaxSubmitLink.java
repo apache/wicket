@@ -156,6 +156,10 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 				tag.put("href", "#");
 			}
 		}
+		else
+		{
+			disableLink(tag);
+		}
 	}
 
 	/**

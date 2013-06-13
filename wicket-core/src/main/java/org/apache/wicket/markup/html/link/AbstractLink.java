@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -148,7 +147,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 * 
 	 * @return whether the link should be rendered as enabled
 	 */
-	public boolean isLinkEnabled()
+	protected boolean isLinkEnabled()
 	{
 		return isEnabledInHierarchy();
 	}
@@ -165,6 +164,12 @@ public abstract class AbstractLink extends WebMarkupContainer
 	@Override
 	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
+		// Draw anything before the body?
+		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
+		{
+			getResponse().write(getBeforeDisabledLink());
+		}
+
 		// Get a copy of the body model from the getBody() method. This method could be overridden.
 		IModel<?> tmpBodyModel = getBody();
 
@@ -178,23 +183,41 @@ public abstract class AbstractLink extends WebMarkupContainer
 			// Render the body of the link
 			super.onComponentTagBody(markupStream, openTag);
 		}
-	}
-
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-
-		add(getDisablingBehavior());
+		// Draw anything after the body?
+		if (!isLinkEnabled() && getAfterDisabledLink() != null)
+		{
+			getResponse().write(getAfterDisabledLink());
+		}
 	}
 
 	/**
-	 * @return A behavior that will modify this link's markup
-	 *      if it is disabled.
+	 * Alters the tag so that the link renders as disabled.
+	 * 
+	 * This method is meant to be called from {@link #onComponentTag(ComponentTag)} method of the
+	 * derived class.
+	 * 
+	 * @param tag
 	 */
-	protected Behavior getDisablingBehavior()
+	protected void disableLink(final ComponentTag tag)
 	{
-		return new DisableLinkBehavior();
+		// if the tag is an anchor proper
+		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
+			tag.getName().equalsIgnoreCase("area"))
+		{
+			// Change anchor link to span tag
+			tag.setName("span");
+
+			// Remove any href from the old link
+			tag.remove("href");
+
+			tag.remove("onclick");
+		}
+		// if the tag is a button or input
+		else if ("button".equalsIgnoreCase(tag.getName()) ||
+			"input".equalsIgnoreCase(tag.getName()))
+		{
+			tag.put("disabled", "disabled");
+		}
 	}
 
 	/**
