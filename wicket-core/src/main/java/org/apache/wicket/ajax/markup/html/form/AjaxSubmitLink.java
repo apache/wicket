@@ -91,7 +91,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// write the onclick handler only if link is enabled
-				if (isLinkEnabled())
+				if (isEnabledInHierarchy())
 				{
 					super.onComponentTag(tag);
 				}
@@ -149,7 +149,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	{
 		super.onComponentTag(tag);
 
-		if (isLinkEnabled())
+		if (isEnabledInHierarchy())
 		{
 			if (tag.getName().toLowerCase().equals("a"))
 			{

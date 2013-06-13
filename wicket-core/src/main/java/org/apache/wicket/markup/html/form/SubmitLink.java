@@ -155,18 +155,18 @@ public class SubmitLink extends AbstractSubmitLink
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		// If we're disabled
-		if (!isLinkEnabled())
-		{
-			disableLink(tag);
-		}
-		else
+
+		if (isEnabledInHierarchy())
 		{
 			if (tag.getName().equalsIgnoreCase("a"))
 			{
 				tag.put("href", "#");
 			}
 			tag.put("onclick", getTriggerJavaScript());
+		}
+		else
+		{
+			disableLink(tag);
 		}
 	}
 

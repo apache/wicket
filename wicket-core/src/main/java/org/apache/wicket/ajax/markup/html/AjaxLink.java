@@ -102,7 +102,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	{
 		super.onComponentTag(tag);
 
-		if (isLinkEnabled())
+		if (isEnabledInHierarchy())
 		{
 			// disable any href attr in markup
 			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
