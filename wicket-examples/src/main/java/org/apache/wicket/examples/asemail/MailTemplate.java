@@ -108,7 +108,7 @@ public class MailTemplate extends WicketExamplePage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				CharSequence panelHtml = ComponentRenderer.renderComponent(new MailTemplatePanel(ComponentRenderer.COMP_ID,
+				CharSequence panelHtml = ComponentRenderer.renderComponent(new MailTemplatePanel("someId",
 						new PropertyModel<String>(MailTemplate.this, "name")));
 
 				updateResult(result, panelHtml, target);
