@@ -34,6 +34,6 @@ public class ComponentRendererTest extends WicketTestCase
 	@Test
 	public void componentsAreInitialized()
 	{
-		ComponentRenderer.renderComponent(new EnclosurePanel(ComponentRenderer.COMP_ID));
+		ComponentRenderer.renderComponent(new EnclosurePanel("anyId"));
 	}
 }
