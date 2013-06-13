@@ -122,7 +122,9 @@ public class AbstractLinkTest extends WicketTestCase
 		mockPageWithLink.add(link);
 
 		tester.startPage(mockPageWithLink);
-		tester.assertContains("<body>\n<a href=\"#\" wicket:id=\"link\" id=\"link\" disabled=\"disabled\">Link</a>\n</body>");
+		TagTester tagTester = tester.getTagById("link");
+		String markup = tagTester.getMarkup();
+		Assert.assertEquals("<a href=\"#\" wicket:id=\"link\" id=\"link\" disabled=\"disabled\">Link</a>", markup);
 	}
 
 }
