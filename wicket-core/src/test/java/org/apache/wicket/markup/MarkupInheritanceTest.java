@@ -20,16 +20,12 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  */
 public class MarkupInheritanceTest extends WicketTestCase
 {
-	private static final Logger log = LoggerFactory.getLogger(MarkupInheritanceTest.class);
-
 	/**
 	 * TEST FOR WICKET-1507
 	 * 

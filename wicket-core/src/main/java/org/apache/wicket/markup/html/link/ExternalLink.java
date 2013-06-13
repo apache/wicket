@@ -153,11 +153,7 @@ public class ExternalLink extends AbstractLink
 	{
 		super.onComponentTag(tag);
 
-		if (isLinkEnabled() == false)
-		{
-			disableLink(tag);
-		}
-		else if (getDefaultModel() != null)
+		if (isLinkEnabled() && getDefaultModel() != null)
 		{
 			Object hrefValue = getDefaultModelObject();
 			if (hrefValue != null)

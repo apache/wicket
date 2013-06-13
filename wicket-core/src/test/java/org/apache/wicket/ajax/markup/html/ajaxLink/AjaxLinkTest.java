@@ -21,7 +21,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.util.tester.TagTester;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -55,25 +54,9 @@ public class AjaxLinkTest extends WicketTestCase
 		tester.assertRenderedPage(AjaxLinkPageToNormalPage.class);
 		Page page = tester.getLastRenderedPage();
 		Component ajaxLink = page.get("ajaxLink");
-		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
+		AbstractAjaxBehavior behavior = ajaxLink.getBehaviors(AbstractAjaxBehavior.class).get(0);
 		tester.executeBehavior(behavior);
 		tester.assertRenderedPage(NormalPage.class);
-	}
-
-	/**
-	 * Test that the onclick on ajax link has "return !wcall;" at the end. This ensures that
-	 * execution is not turned over to the href attribute, which would then append # to the url.
-	 */
-	@Test
-	@Ignore
-	// TODO Wicket.next - re-enable
-	public void javaScriptEndsWithReturn()
-	{
-		tester.startPage(AjaxLinkPage.class);
-
-		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
-
-		assertTrue(ajaxLink.getAttributeEndsWith("onclick", "return !wcall;"));
 	}
 
 	/**
@@ -87,7 +70,7 @@ public class AjaxLinkTest extends WicketTestCase
 
 		Page page = tester.getLastRenderedPage();
 		Component ajaxLink = page.get("pageLayout:pageLayout_body:ajaxLink");
-		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
+		AbstractAjaxBehavior behavior = ajaxLink.getBehaviors(AbstractAjaxBehavior.class).get(0);
 
 		executeBehavior(behavior, "AjaxPage2-1_ExpectedResult.html");
 	}
@@ -113,7 +96,7 @@ public class AjaxLinkTest extends WicketTestCase
 
 		Page page = tester.getLastRenderedPage();
 		Component ajaxLink = page.get("border:border_body:ajaxLink");
-		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
+		AbstractAjaxBehavior behavior = ajaxLink.getBehaviors(AbstractAjaxBehavior.class).get(0);
 
 		executeBehavior(behavior, "AjaxLinkWithBorderPage-1ExpectedResult.html");
 	}
