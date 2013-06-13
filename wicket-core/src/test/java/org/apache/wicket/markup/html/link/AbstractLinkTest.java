@@ -18,8 +18,11 @@ package org.apache.wicket.markup.html.link;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.TagTester;
@@ -85,4 +88,43 @@ public class AbstractLinkTest extends WicketTestCase
 		tagTester = tester.getTagById("link");
 		Assert.assertEquals("1", tagTester.getValue());
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4904
+	 *
+	 * Use a Behavior that does what Twitter Bootstrap requires
+	 */
+	@Test
+	public void useCustomDisablingBehavior()
+	{
+		MockPageWithLink mockPageWithLink = new MockPageWithLink();
+		AbstractLink link = new AbstractLink("link")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected Behavior getDisablingBehavior()
+			{
+				return new Behavior()
+				{
+					@Override
+					public void onComponentTag(Component component, ComponentTag tag)
+					{
+						super.onComponentTag(component, tag);
+
+						tag.put("disabled", "disabled");
+					}
+				};
+			}
+		};
+		link.setMarkupId("link");
+		link.setBody(Model.of("Link"));
+		mockPageWithLink.add(link);
+
+		tester.startPage(mockPageWithLink);
+		TagTester tagTester = tester.getTagById("link");
+		String markup = tagTester.getMarkup();
+		Assert.assertEquals("<a href=\"#\" wicket:id=\"link\" id=\"link\" disabled=\"disabled\">Link</a>", markup);
+	}
+
 }
