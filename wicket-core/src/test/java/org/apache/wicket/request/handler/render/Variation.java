@@ -24,23 +24,27 @@ import java.util.List;
  *
  * Similar to <a href="https://github.com/rickynils/scalacheck">Scala Check</a>
  */
-public class Variation<T> {
-
+public class Variation<T>
+{
 	private final List<T> value;
 
-	public Variation(T...values) {
+	public Variation(T...values)
+	{
 		this.value = Arrays.asList(values);
 	}
 
-	public List<T> values() {
+	public List<T> values()
+	{
 		return value;
 	}
 
-	public static Variation<Boolean> ofBoolean() {
+	public static Variation<Boolean> ofBoolean()
+	{
 		return new Variation<>(Boolean.FALSE,Boolean.TRUE);
 	}
 
-	public static <T extends Enum<T>> Variation<T> of(Class<T> enumType) {
+	public static <T extends Enum<T>> Variation<T> of(Class<T> enumType)
+	{
 		return new Variation<>(enumType.getEnumConstants());
 	}
 }

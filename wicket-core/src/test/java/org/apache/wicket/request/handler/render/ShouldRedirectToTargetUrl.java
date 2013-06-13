@@ -18,20 +18,22 @@ package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 
-public class ShouldRedirectToTargetUrl extends AbstractVariations {
+public class ShouldRedirectToTargetUrl extends AbstractVariations
+{
 
-	VariationIterator<Boolean> ajax=VariationIterator.of(Variation.ofBoolean());
-	VariationIterator<RenderPageRequestHandler.RedirectPolicy> redirectPolicy=VariationIterator.of(ajax,Variation.of(RenderPageRequestHandler.RedirectPolicy.class));
-	VariationIterator<Boolean> redirectToRender=VariationIterator.of(redirectPolicy,Variation.ofBoolean());
-	VariationIterator<Boolean> targetEqualsCurrentUrl=VariationIterator.of(redirectToRender,Variation.ofBoolean());
-	VariationIterator<Boolean> newPageInstance=VariationIterator.of(targetEqualsCurrentUrl,Variation.ofBoolean());
-	VariationIterator<Boolean> pageStateless=VariationIterator.of(newPageInstance,Variation.ofBoolean());
-	VariationIterator<Boolean> sessionTemporary=VariationIterator.of(pageStateless,Variation.ofBoolean());
+	VariationIterator<Boolean> ajax = VariationIterator.of(Variation.ofBoolean());
+	VariationIterator<RenderPageRequestHandler.RedirectPolicy> redirectPolicy = VariationIterator.of(ajax,Variation.of(RenderPageRequestHandler.RedirectPolicy.class));
+	VariationIterator<Boolean> redirectToRender = VariationIterator.of(redirectPolicy,Variation.ofBoolean());
+	VariationIterator<Boolean> targetEqualsCurrentUrl = VariationIterator.of(redirectToRender,Variation.ofBoolean());
+	VariationIterator<Boolean> newPageInstance = VariationIterator.of(targetEqualsCurrentUrl,Variation.ofBoolean());
+	VariationIterator<Boolean> pageStateless = VariationIterator.of(newPageInstance,Variation.ofBoolean());
+	VariationIterator<Boolean> sessionTemporary = VariationIterator.of(pageStateless,Variation.ofBoolean());
 
-	VariationIterator<Boolean> last=sessionTemporary;
+	VariationIterator<Boolean> last = sessionTemporary;
 
-
-	public String toString() {
+	@Override
+	public String toString()
+	{
 		StringBuilder sb=new StringBuilder();
 		toString(sb,"ajax",ajax);
 		toString(sb,"redirectPolicy",redirectPolicy);
@@ -44,13 +46,16 @@ public class ShouldRedirectToTargetUrl extends AbstractVariations {
 	}
 
 	@Override
-	protected VariationIterator<?> last() {
+	protected VariationIterator<?> last()
+	{
 		return last;
 	}
 
 	@Override
-	public boolean getResult() {
-		return WebPageRenderer.shouldRedirectToTargetUrl(ajax.next(), redirectPolicy.next(),
+	public boolean getResult()
+	{
+		TestPageRenderer renderer = new TestPageRenderer(null);
+		return renderer.shouldRedirectToTargetUrl(ajax.next(), redirectPolicy.next(),
 				redirectToRender.next(), targetEqualsCurrentUrl.next(), newPageInstance.next(),
 				pageStateless.next(), sessionTemporary.next());
 	}

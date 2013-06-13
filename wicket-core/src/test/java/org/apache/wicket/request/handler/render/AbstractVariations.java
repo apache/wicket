@@ -16,21 +16,24 @@
  */
 package org.apache.wicket.request.handler.render;
 
-public abstract class AbstractVariations {
-
+public abstract class AbstractVariations
+{
 	protected abstract VariationIterator<?> last();
 
 	public abstract boolean getResult();
 
-	public boolean hasNextVariation() {
+	public boolean hasNextVariation()
+	{
 		return last().hasNext();
 	}
 
-	public void nextVariation() {
+	public void nextVariation()
+	{
 		last().nextVariation();
 	}
 
-	protected static void toString(StringBuilder sb,String label, VariationIterator<?> iterator) {
+	protected void toString(StringBuilder sb, String label, VariationIterator<?> iterator)
+	{
 		sb.append(label).append('=').append(iterator.next()).append(',');
 	}
 

@@ -18,31 +18,36 @@ package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 
-public class ShouldRenderPageAndWriteResponseVariations extends AbstractVariations {
+public class ShouldRenderPageAndWriteResponseVariations extends AbstractVariations
+{
+	VariationIterator<RenderPageRequestHandler.RedirectPolicy> redirectPolicy = VariationIterator.of(Variation.of(RenderPageRequestHandler.RedirectPolicy.class));
+	VariationIterator<Boolean> ajax = VariationIterator.of(redirectPolicy, Variation.ofBoolean());
+	VariationIterator<Boolean> onePassRender = VariationIterator.of(ajax,Variation.ofBoolean());
+	VariationIterator<Boolean> redirectToRender = VariationIterator.of(onePassRender,Variation.ofBoolean());
+	VariationIterator<Boolean> shouldPreserveClientUrl = VariationIterator.of(redirectToRender,Variation.ofBoolean());
+	VariationIterator<Boolean> targetEqualsCurrentUrl = VariationIterator.of(shouldPreserveClientUrl,Variation.ofBoolean());
+	VariationIterator<Boolean> newPageInstance = VariationIterator.of(targetEqualsCurrentUrl,Variation.ofBoolean());
+	VariationIterator<Boolean> pageStateless = VariationIterator.of(newPageInstance,Variation.ofBoolean());
 
-	VariationIterator<RenderPageRequestHandler.RedirectPolicy> redirectPolicy=VariationIterator.of(Variation.of(RenderPageRequestHandler.RedirectPolicy.class));
-	VariationIterator<Boolean> ajax=VariationIterator.of(redirectPolicy, Variation.ofBoolean());
-	VariationIterator<Boolean> onePassRender=VariationIterator.of(ajax,Variation.ofBoolean());
-	VariationIterator<Boolean> redirectToRender=VariationIterator.of(onePassRender,Variation.ofBoolean());
-	VariationIterator<Boolean> shouldPreserveClientUrl=VariationIterator.of(redirectToRender,Variation.ofBoolean());
-	VariationIterator<Boolean> targetEqualsCurrentUrl=VariationIterator.of(shouldPreserveClientUrl,Variation.ofBoolean());
-	VariationIterator<Boolean> newPageInstance=VariationIterator.of(targetEqualsCurrentUrl,Variation.ofBoolean());
-	VariationIterator<Boolean> pageStateless=VariationIterator.of(newPageInstance,Variation.ofBoolean());
-
-	VariationIterator<Boolean> last=pageStateless;
+	VariationIterator<Boolean> last = pageStateless;
 
 	@Override
-	protected VariationIterator<?> last() {
+	protected VariationIterator<?> last()
+	{
 		return last;
 	}
 
-	public boolean getResult() {
-		return WebPageRenderer.shouldRenderPageAndWriteResponse(ajax.next(), onePassRender.next(),
+	public boolean getResult()
+	{
+		TestPageRenderer renderer = new TestPageRenderer(null);
+		return renderer.shouldRenderPageAndWriteResponse(ajax.next(), onePassRender.next(),
 				redirectToRender.next(), redirectPolicy.next(), shouldPreserveClientUrl.next(),
 				targetEqualsCurrentUrl.next(), newPageInstance.next(), pageStateless.next());
 	}
 
-	public String toString() {
+	@Override
+	public String toString()
+	{
 		StringBuilder sb=new StringBuilder();
 		toString(sb,"ajax",ajax);
 		toString(sb,"onePassRender",onePassRender);

@@ -19,26 +19,31 @@ package org.apache.wicket.request.handler.render;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestVariations {
-
+public class TestVariations
+{
 	@Test
-	public void testSingle() {
+	public void testSingle()
+	{
 		VariationIterator<Boolean> single = VariationIterator.of(Variation.ofBoolean());
 		Assert.assertTrue(single.hasNext());
 		single.nextVariation();
 		Assert.assertFalse(single.hasNext());
 
 		Exception ex = null;
-		try {
+		try
+		{
 			single.nextVariation();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			ex = e;
 		}
 		Assert.assertNotNull(ex);
 	}
 
 	@Test
-	public void testDouble() {
+	public void testDouble()
+	{
 		VariationIterator<Integer> numbers = VariationIterator.of(new Variation<>(1,2,3));
 		VariationIterator<Boolean> flag = VariationIterator.of(numbers,Variation.ofBoolean());
 		VariationIterator<?> last=flag;
@@ -56,9 +61,12 @@ public class TestVariations {
 		Assert.assertFalse(last.hasNext());
 
 		Exception ex = null;
-		try {
+		try
+		{
 			last.nextVariation();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			ex = e;
 		}
 		Assert.assertNotNull(ex);

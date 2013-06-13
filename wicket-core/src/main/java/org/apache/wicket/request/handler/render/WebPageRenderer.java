@@ -277,7 +277,7 @@ public class WebPageRenderer extends PageRenderer
 	//				session is temporary and page is stateless
 	// just redirect
 
-	protected static boolean shouldRedirectToTargetUrl(boolean ajax, RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless,boolean sessionTemporary) {
+	protected boolean shouldRedirectToTargetUrl(boolean ajax, RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless,boolean sessionTemporary) {
 		return alwaysRedirect(redirectPolicy) //
 						||
 						redirectToRender //
@@ -308,7 +308,7 @@ public class WebPageRenderer extends PageRenderer
 	//	or
 	//  	the request determines that the current url should be preserved
 	//	just render the page
-	protected static boolean shouldRenderPageAndWriteResponse(boolean ajax, boolean onePassRender, boolean redirectToRender, RedirectPolicy redirectPolicy, boolean shouldPreserveClientUrl, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless) {
+	protected boolean shouldRenderPageAndWriteResponse(boolean ajax, boolean onePassRender, boolean redirectToRender, RedirectPolicy redirectPolicy, boolean shouldPreserveClientUrl, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless) {
 		return neverRedirect(redirectPolicy)
 			||
 			(!ajax &&
