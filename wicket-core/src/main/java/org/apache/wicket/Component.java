@@ -4520,7 +4520,7 @@ public abstract class Component
 	 */
 	public final List<? extends Behavior> getBehaviors()
 	{
-		return getBehaviors(Behavior.class);
+		return getBehaviors(null);
 	}
 
 }
