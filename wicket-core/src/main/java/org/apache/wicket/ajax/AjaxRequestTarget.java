@@ -1171,7 +1171,16 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 			if (wasRendered(token) == false)
 			{
 				// execute the javascript after all other scripts are executed
-				appendJavaScripts.add(javascript);
+				String script = new StringBuilder()
+						.append("Wicket.Event.add(")
+						.append(target)
+						.append(", \"")
+						.append(event)
+						.append("\", function(event) { ")
+						.append(javascript)
+						.append(";});")
+						.toString();
+				appendJavaScripts.add(script);
 				markRendered(token);
 			}
 		}
