@@ -1163,6 +1163,19 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 			}
 		}
 
+
+		@Override
+		public void renderOnEventJavaScript(String target, String event, String javascript)
+		{
+			List<String> token = Arrays.asList("javascript-event", "window", "event", javascript);
+			if (wasRendered(token) == false)
+			{
+				// execute the javascript after all other scripts are executed
+				appendJavaScripts.add(javascript);
+				markRendered(token);
+			}
+		}
+
 		/**
 		 * 
 		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#getRealResponse()
