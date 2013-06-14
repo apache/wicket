@@ -29,6 +29,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -531,6 +532,14 @@ public abstract class AbstractAjaxResponse
 				if (!wasItemRendered(item))
 				{
 					AbstractAjaxResponse.this.appendJavaScript(((OnLoadHeaderItem) item).getJavaScript());
+					markItemRendered(item);
+				}
+			}
+			else if (item instanceof OnEventHeaderItem)
+			{
+				if (!wasItemRendered(item))
+				{
+					AbstractAjaxResponse.this.appendJavaScript(((OnEventHeaderItem) item).getJavaScript());
 					markItemRendered(item);
 				}
 			}
