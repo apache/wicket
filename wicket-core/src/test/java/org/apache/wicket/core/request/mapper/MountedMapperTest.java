@@ -28,6 +28,7 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -808,5 +809,62 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = optionPlaceholderEncoder.mapHandler(handler);
 		assertEquals("some/path/p2/p3/i1/i2?a=b&b=c", url.toString());
+	}
+
+	/* WICKET-5056 **/
+	@Test
+	public void optionalParameterGetsLowerScore_ThanExactOne() throws Exception
+	{
+		final Url url = Url.parse("all/sindex");
+		final MountedMapper exactMount = new MountedMapper("/all/sindex", MockPage.class);
+		final MountedMapper optionalParameter = new MountedMapper("/all/#{exp}", MockPage.class);
+		Request request = getRequest(url);
+		final int exactCompatScore = exactMount.getCompatibilityScore(request);
+		final int optCompatScore = optionalParameter.getCompatibilityScore(request);
+		assertTrue("exactCompatScore should have greater compatibility score than optional one" +
+			" got exact = " + exactCompatScore + " and optional = " + optCompatScore,
+			exactCompatScore > optCompatScore);
+	}
+
+	@Test
+	public void exactMountGetsBetterScore_ThanParameterOne() throws Exception
+	{
+		final Url url = Url.parse("all/sindex");
+		final MountedMapper exactMount = new MountedMapper("/all/sindex", MockPage.class);
+		final MountedMapper requiredParam = new MountedMapper("/all/${exp}", MockPage.class);
+		Request request = getRequest(url);
+		final int exactCompatScore = exactMount.getCompatibilityScore(request);
+		final int requiredParamScore = requiredParam.getCompatibilityScore(request);
+		assertTrue("exactCompatScore should have greater compatibility score than required one" +
+			" got exact = " + exactCompatScore + " and required= " + requiredParamScore,
+			exactCompatScore > requiredParamScore);
+	}
+
+	@Test
+	public void exactMountGetsBetterScore_ThanParameterOne_ThenOptionalOne() throws Exception
+	{
+		final Url url = Url.parse("all/sindex");
+		final MountedMapper exactMount = new MountedMapper("/all/sindex", MockPage.class);
+		final MountedMapper requiredParam = new MountedMapper("/all/${exp}", MockPage.class);
+		final MountedMapper optionalParameter = new MountedMapper("/all/#{exp}", MockPage.class);
+		final MountedMapper requiredOptionalParam = new MountedMapper("/all/${exp}/#{opt}", MockPage.class);
+
+		Request request = getRequest(url);
+		final int exactCompatScore = exactMount.getCompatibilityScore(request);
+		final int requiredParamScore = requiredParam.getCompatibilityScore(request);
+		final int optCompatScore = optionalParameter.getCompatibilityScore(request);
+		final int requiredOptCompatScore = requiredOptionalParam.getCompatibilityScore(request);
+
+		assertTrue("exactCompatScore should have greater compatibility score than required one" +
+			" got exact = " + exactCompatScore + " and required= " + requiredParamScore,
+				exactCompatScore > requiredParamScore);
+
+		assertTrue("exactCompatScore should have greater compatibility score than required+optional one" +
+				" got exact = " + exactCompatScore + " and requiredOptional= " + requiredOptCompatScore,
+				exactCompatScore > requiredOptCompatScore);
+
+		assertTrue("exactCompatScore should have greater compatibility score than optional one" +
+			" got exact = " + exactCompatScore + " and optional = " + optCompatScore,
+				requiredParamScore > optCompatScore);
 	}
 }
