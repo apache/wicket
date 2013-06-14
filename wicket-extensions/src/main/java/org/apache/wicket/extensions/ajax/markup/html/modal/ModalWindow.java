@@ -1080,22 +1080,17 @@ public class ModalWindow extends Panel
 			{
 				throw new WicketRuntimeException("Error creating page for modal dialog.");
 			}
-			CharSequence pageUrl = null;
+			CharSequence pageUrl;
 			RequestCycle requestCycle = RequestCycle.get();
 
 			if (page.isPageStateless())
 			{
 				pageUrl = requestCycle.urlFor(page.getClass(), page.getPageParameters());
-				appendAssignment(buffer, "settings.ie8_src", pageUrl);
 			}
 			else
 			{
 				IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
-
 				pageUrl = requestCycle.urlFor(handler);
-				String ie8_pageUrl = requestCycle.getUrlRenderer().renderRelativeUrl(
-					requestCycle.mapUrlFor(handler));
-				appendAssignment(buffer, "settings.ie8_src", ie8_pageUrl);
 			}
 
 			appendAssignment(buffer, "settings.src", pageUrl);
