@@ -31,6 +31,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.junit.Test;
 
 /**
@@ -211,7 +212,53 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(request);
 
-		((IPageRequestHandler)handler).getPage();
+		IRequestablePage page = ((IPageRequestHandler) handler).getPage();
+		checkPage(page, 4);
+	}
+
+
+	@Test
+	public void decode10()
+	{
+		final Url url = Url.parse("page?4");
+
+		Request request = new Request()
+		{
+			@Override
+			public Url getUrl()
+			{
+				return url;
+			}
+
+			@Override
+			public Locale getLocale()
+			{
+				return null;
+			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return Charset.forName("UTF-8");
+			}
+
+			@Override
+			public Url getClientUrl()
+			{
+				return Url.parse("page");
+			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return null;
+			}
+		};
+
+		IRequestHandler handler = encoder.mapRequest(request);
+
+		IRequestablePage page = ((IPageRequestHandler) handler).getPage();
+		checkPage(page, 4);
 	}
 
 	/**

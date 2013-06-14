@@ -632,11 +632,7 @@
 
 			try
 			{
-				if(Wicket.Browser.isIELessThan9()){
-					this.content.contentWindow.location.replace(this.settings.ie8_src);
-				}else{
-					this.content.contentWindow.location.replace(this.settings.src);
-				}
+				this.content.contentWindow.location.replace(this.settings.src);
 			}
 			catch(ignore)
 			{
