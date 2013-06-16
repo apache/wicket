@@ -90,7 +90,7 @@ public class OrderByLink<S> extends Link<Void>
 
 		this.property = property;
 		this.stateLocator = stateLocator;
-		add(new CssModifier<S>(this, cssProvider));
+		add(new CssModifier<>(this, cssProvider));
 	}
 
 	/**
