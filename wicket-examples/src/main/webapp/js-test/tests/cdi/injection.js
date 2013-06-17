@@ -18,18 +18,31 @@
 $q(document).ready(function() {
 	"use strict";
 
-	module('Hello World');
+	module('CDI');
 
-	asyncTest('hello world', function () {
+	asyncTest('injection', function () {
 		expect(2);
 
-		gym.load('/helloworld').then(function($) {
+		gym.load('/cdi/injection').then(function($) {
 
-			var $message = $('#message');
-			equal($message.length, 1, "The greeting is there");
-			equal($message.text(), 'Hello World!', "The greeting is correct");
+			var initialValue = $('p > span').text();
+			initialValue = parseInt(initialValue, 10);
 
-			start();
+			gym.click($('p > a')).then(function($$) {
+
+				var counterLabelValue = $$('p > span').text();
+				var expectedValue = initialValue + 1;
+				equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +1');
+
+				gym.click($$('p > a')).then(function($$$) {
+
+					counterLabelValue = $$$('p > span').text();
+					expectedValue = initialValue + 2;
+					equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +2');
+
+					start();
+				});
+			});
 		});
 	});
 

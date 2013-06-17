@@ -35,7 +35,12 @@
 	        deferred.resolve(iframe, $$);
 	    });
 
-		$btn.click();
+		if ($btn[0].tagName.toLowerCase() === "a") {
+			var iframe = _getIframe()[0].contentWindow;
+			_followHref(iframe, $btn)
+		} else {
+			$btn.click();
+		}
 
 	    return deferred;
 	}
@@ -86,20 +91,35 @@
 		return deferred;
 	}
 
+	// private
+	var _followHref = function(iframe, $link) {
+		var loc = iframe.document.location;
+
+		if ($link.length) {
+			var newUrl = $link.attr('href');
+			var uri = new URI(newUrl);
+			var absoluteUrl = uri.absoluteTo(loc.href);
+
+			loc.replace(absoluteUrl);
+		}
+	}
+
+
 	/**
 	 * Registers a callback when Wicket Ajax call is completed
 	 */
 	// private
 	var _onAjaxComplete = function(iframe, toExecute) {
 
-		iframe.jQuery(iframe.document).off("ajaxStop");
+		var $$ = iframe.jQuery || _jQueryWithContext;
+		$$(iframe.document).off("ajaxStop");
 
-		iframe.jQuery(iframe.document).ajaxStop(function() {
+		$$(iframe.document).ajaxStop(function() {
 
-			iframe.jQuery(iframe.document).off("ajaxStop");
-			
-			var $$ = iframe.jQuery || _jQueryWithContext;
-			toExecute($$);
+			$$(iframe.document).off("ajaxStop");
+
+			var $$$ = iframe.jQuery || _jQueryWithContext;
+			toExecute($$$);
 		});
 	};
 
