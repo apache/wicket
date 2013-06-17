@@ -6,13 +6,13 @@ $q(document).ready(function() {
 	asyncTest('Change StringProperty', function () {
 		expect(2);
 
-		load('/forminput').then(function($) {
+		gym.load('/forminput').then(function($) {
 
 			var $stringPropertyInput = $('#stringProperty');
 			var text = 'qunit test value';
 			$stringPropertyInput.val(text);
 
-			click($('input[value=save]')).then(function($$) {
+			gym.click($('input[value=save]')).then(function($$) {
 
 				var $feedback = $$('li.feedbackPanelINFO > span');
 				equal($feedback.length, 1, 'The feedback is here');
@@ -26,13 +26,14 @@ $q(document).ready(function() {
 	asyncTest('Change the locale', function () {
 		expect(2);
 
-		load('/forminput').then(function($) {
+		gym.load('/forminput').then(function($) {
 
 			var $select = $('select[name=localeSelect]');
 			var locale = '2'; // German
 
 			$select.val(locale);
-			click($('input[value=save]')).then(function($$) {
+
+			gym.click($('input[value=save]')).then(function($$) {
 
 				var $integerInRangeProperty = $$('label[for=integerInRangeProperty]');
 				equal($integerInRangeProperty.length, 1, 'The label for integerInRangeProperty is here');

@@ -6,13 +6,13 @@ $q(document).ready(function() {
 	asyncTest('echo', function () {
 		expect(2);
 
-		load('/echo').then(function($) {
+		gym.load('/echo').then(function($) {
 
 			var $messageInput = $('input[name=msgInput]');
 			var message = 'Hello Functional QUnit';
 			$messageInput.val(message);
-		
-			click($('input[type=submit]')).then(function($$) {
+
+			gym.click($('input[type=submit]')).then(function($$) {
 
 				var $msg = $$('#msg');
 				equal($msg.length, 1, 'The entered message is here');

@@ -6,7 +6,7 @@ $q(document).ready(function() {
 	asyncTest('hello world', function () {
 		expect(2);
 
-		load('/helloworld').then(function($) {
+		gym.load('/helloworld').then(function($) {
 
 			var $message = $('#message');
 			equal($message.length, 1, "The greeting is there");
