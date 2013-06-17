@@ -357,6 +357,62 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * WICKET-5071
+	 *
+	 * Decodes a request to {@link org.apache.wicket.core.request.mapper.IMapperContext#getBookmarkableIdentifier()}/com.example.MyPage
+	 * when the current base url is
+	 * {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}/{@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
+	 */
+	@Test
+	public void decode13()
+	{
+		final Url url = Url.parse(context.getBookmarkableIdentifier() + "/" + PAGE_CLASS_NAME);
+
+		Request request = new Request()
+		{
+			@Override
+			public Url getUrl()
+			{
+				return url;
+			}
+
+			@Override
+			public Locale getLocale()
+			{
+				return null;
+			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return Charset.forName("UTF-8");
+			}
+
+			@Override
+			public Url getClientUrl()
+			{
+				StringBuilder url = new StringBuilder();
+				url.append(context.getBookmarkableIdentifier())
+					.append('/')
+					.append(PAGE_CLASS_NAME);
+				return Url.parse(url.toString());
+			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return null;
+			}
+		};
+
+		IRequestHandler handler = encoder.mapRequest(request);
+		assertNotNull("A handler should be resolved for relative url to a bookmarkable page url!", handler);
+
+		IRequestablePage page = ((IPageRequestHandler) handler).getPage();
+		assertEquals(page.getClass().getName(), PAGE_CLASS_NAME);
+	}
+
+	/**
 	 *
 	 */
 	@Test
