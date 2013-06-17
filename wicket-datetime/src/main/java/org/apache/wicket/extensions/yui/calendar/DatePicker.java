@@ -587,7 +587,7 @@ public class DatePicker extends Behavior
 			filterEmpty(dfSymbols.getShortWeekdays()));
 		setWidgetProperty(i18nVariables, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
 
-		i18nVariables.put("START_WEEKDAY", Calendar.getInstance(locale).getFirstDayOfWeek() - 1);
+		i18nVariables.put("START_WEEKDAY", getFirstDayOfWeek(locale));
 
 		if (Locale.SIMPLIFIED_CHINESE.equals(locale) || Locale.TRADITIONAL_CHINESE.equals(locale))
 		{
@@ -612,6 +612,16 @@ public class DatePicker extends Behavior
 		response.render(OnDomReadyHeaderItem.forScript(i18n.toString()));
 
 		response.wasRendered(key);
+	}
+
+	/**
+	  * Gets the first day of week of a given locale.
+	  *
+	  * @return By default the first day of week accordingly to Calendar class.
+	  */
+	protected int getFirstDayOfWeek(Locale locale)
+	{
+		return Calendar.getInstance(locale).getFirstDayOfWeek() - 1;
 	}
 
 	/**
