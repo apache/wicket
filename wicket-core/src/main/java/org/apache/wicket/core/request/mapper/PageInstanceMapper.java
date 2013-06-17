@@ -175,17 +175,19 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	{
 		boolean matches = false;
 		Url url = request.getUrl();
+		Url baseUrl = request.getClientUrl();
 		String namespace = getContext().getNamespace();
 		String pageIdentifier = getContext().getPageIdentifier();
+
 		if (urlStartsWith(url, namespace, pageIdentifier))
 		{
 			matches = true;
 		}
-		else if (urlStartsWith(request.getClientUrl(), namespace, pageIdentifier) && urlStartsWith(url, pageIdentifier))
+		else if (urlStartsWith(baseUrl, namespace, pageIdentifier) && urlStartsWith(url, pageIdentifier))
 		{
 			matches = true;
 		}
-		else if (urlStartsWith(request.getClientUrl(), pageIdentifier) && urlStartsWith(url, pageIdentifier))
+		else if (urlStartsWith(baseUrl, pageIdentifier) && urlStartsWith(url, pageIdentifier))
 		{
 			matches = true;
 		}
