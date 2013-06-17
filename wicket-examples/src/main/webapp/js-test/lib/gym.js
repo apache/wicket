@@ -92,15 +92,12 @@
 	// private
 	var _onAjaxComplete = function(iframe, toExecute) {
 
-		// unregister any leaked subscriber
-		iframe.jQuery(iframe.document).off('/ajax/call/complete');
+		iframe.jQuery(iframe.document).off("ajaxStop");
 
-		// register the requested subscriber
-		iframe.Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
-			// immediately unregister this subscriber
-			iframe.jQuery(iframe.document).off('/ajax/call/complete');
+		iframe.jQuery(iframe.document).ajaxStop(function() {
 
-			// call back
+			iframe.jQuery(iframe.document).off("ajaxStop");
+			
 			var $$ = iframe.jQuery || _jQueryWithContext;
 			toExecute($$);
 		});
