@@ -32,15 +32,22 @@ public class ConversationPage2 extends CdiExamplePage
 	{
 		add(new Label("count", new PropertyModel(this, "counter.count")));
 
-		add(new Link<Void>("increment")
-		{
-			@Override
-			public void onClick()
-			{
-				counter.increment();
-			}
-		});
+		add(new IncrementLink("increment"));
 
 		add(new BookmarkablePageLink<Void>("next", ConversationPage3.class));
+	}
+
+	private class IncrementLink extends Link<Void> {
+
+		public IncrementLink(String id)
+		{
+			super(id);
+		}
+
+		@Override
+		public void onClick()
+		{
+			counter.increment();
+		}
 	}
 }
