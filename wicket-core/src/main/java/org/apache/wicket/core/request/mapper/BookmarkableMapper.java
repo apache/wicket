@@ -190,6 +190,11 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		{
 			matches = true;
 		}
+		// baseUrl = 'bookmarkable/com.example.SomePage', requestUrl = 'bookmarkable/com.example.SomePage'
+		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, bookmarkableIdentifier) && url.getSegments().size() == 2 && urlStartsWith(url, bookmarkableIdentifier))
+		{
+			matches = true;
+		}
 		// baseUrl = 'wicket/page[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
 		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, namespace, pageIdentifier) && url.getSegments().size() >= 2 && urlStartsWith(url, bookmarkableIdentifier))
 		{
