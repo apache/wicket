@@ -29,6 +29,8 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Test;
@@ -187,7 +189,7 @@ public class InterceptTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	private static class MyAuthorizationStrategy implements IAuthorizationStrategy
+	private static class MyAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 	{
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
@@ -201,16 +203,6 @@ public class InterceptTest extends WicketTestCase
 			{
 				throw new RestartResponseAtInterceptPageException(MockLoginPage.class);
 			}
-			return true;
-		}
-
-		/**
-		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
-		 *      org.apache.wicket.authorization.Action)
-		 */
-		@Override
-		public boolean isActionAuthorized(Component component, Action action)
-		{
 			return true;
 		}
 	}

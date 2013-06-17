@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.request.handler.resource;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.Session;
+import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.settings.def.DefaultUnauthorizedResourceRequestListener;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -30,30 +34,56 @@ import org.apache.wicket.util.lang.Args;
 public class ResourceRequestHandler implements IRequestHandler
 {
 	private final IResource resource;
-	private final PageParameters pageParameters;
+	private final PageParameters parameters;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param resource
-	 * @param pageParameters
+	 * @param parameters
 	 */
-	public ResourceRequestHandler(IResource resource, PageParameters pageParameters)
+	public ResourceRequestHandler(IResource resource, PageParameters parameters)
 	{
 		Args.notNull(resource, "resource");
 
 		this.resource = resource;
 
-		this.pageParameters = pageParameters != null ? pageParameters : new PageParameters();
+		this.parameters = parameters != null ? parameters : new PageParameters();
+
+		authorize();
 	}
 
+	private void authorize()
+	{
+		IAuthorizationStrategy authorizationStrategy = null;
+		if (Session.exists())
+		{
+			authorizationStrategy = Session.get().getAuthorizationStrategy();
+		}
+		else if (Application.exists())
+		{
+			authorizationStrategy = Application.get().getSecuritySettings().getAuthorizationStrategy();
+		}
+
+		if (authorizationStrategy != null && authorizationStrategy.isResourceAuthorized(resource, parameters) == false)
+		{
+			if (Application.exists())
+			{
+				Application.get().getSecuritySettings().getUnauthorizedResourceRequestListener().onUnauthorizedRequest(resource, parameters);
+			}
+			else
+			{
+				new DefaultUnauthorizedResourceRequestListener().onUnauthorizedRequest(resource, parameters);
+			}
+		}
+	}
 
 	/**
 	 * @return page parameters
 	 */
 	public PageParameters getPageParameters()
 	{
-		return pageParameters;
+		return parameters;
 	}
 
 	/**
@@ -71,7 +101,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	public void respond(final IRequestCycle requestCycle)
 	{
 		IResource.Attributes a = new IResource.Attributes(requestCycle.getRequest(),
-			requestCycle.getResponse(), pageParameters);
+			requestCycle.getResponse(), parameters);
 		resource.respond(a);
 	}
 

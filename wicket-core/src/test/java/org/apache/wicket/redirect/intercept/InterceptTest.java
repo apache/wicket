@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.redirect.intercept;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -43,16 +41,10 @@ public class InterceptTest extends WicketTestCase
 			@Override
 			protected void init()
 			{
-				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
+				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 				{
 
 					private boolean block = true;
-
-					@Override
-					public boolean isActionAuthorized(Component component, Action action)
-					{
-						return true;
-					}
 
 					@Override
 					public <T extends IRequestableComponent> boolean isInstantiationAuthorized(

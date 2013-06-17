@@ -30,7 +30,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -337,19 +336,12 @@ public class EnclosureTest extends WicketTestCase
 				super.init();
 
 				// This should cause all SecuredContainer components to be hidden
-				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
+				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 				{
 					@Override
 					public boolean isActionAuthorized(Component component, Action action)
 					{
 						return !(component instanceof SecuredContainer_13);
-					}
-
-					@Override
-					public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
-						Class<T> componentClass)
-					{
-						return true;
 					}
 				});
 			}
