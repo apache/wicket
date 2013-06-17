@@ -98,7 +98,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// only render handler if link is enabled
-				if (isLinkEnabled())
+				if (isEnabledInHierarchy())
 				{
 					super.onComponentTag(tag);
 				}
@@ -156,7 +156,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 		tag.remove("onclick");
 
 		String tagName = tag.getName();
-		if (isLinkEnabled() &&
+		if (isEnabledInHierarchy() &&
 			!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName)))
 		{
 			String msg = String.format(

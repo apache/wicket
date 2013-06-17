@@ -48,16 +48,6 @@ public interface IMarkupSettings
 	boolean getCompressWhitespace();
 
 	/**
-	 * @return Returns the defaultAfterDisabledLink.
-	 */
-	String getDefaultAfterDisabledLink();
-
-	/**
-	 * @return Returns the defaultBeforeDisabledLink.
-	 */
-	String getDefaultBeforeDisabledLink();
-
-	/**
 	 * @since 1.1
 	 * @return Returns default encoding of markup files. If null, the operating system provided
 	 *         encoding will be used.
@@ -110,18 +100,6 @@ public interface IMarkupSettings
 	 *            The compressWhitespace to set.
 	 */
 	void setCompressWhitespace(final boolean compressWhitespace);
-
-	/**
-	 * @param defaultAfterDisabledLink
-	 *            The defaultAfterDisabledLink to set.
-	 */
-	void setDefaultAfterDisabledLink(String defaultAfterDisabledLink);
-
-	/**
-	 * @param defaultBeforeDisabledLink
-	 *            The defaultBeforeDisabledLink to set.
-	 */
-	void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink);
 
 	/**
 	 * Set default encoding for markup files. If null, the encoding provided by the operating system

@@ -353,11 +353,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 		super.onComponentTag(tag);
 
 		// If we're disabled
-		if (!isLinkEnabled())
-		{
-			disableLink(tag);
-		}
-		else
+		if (isEnabledInHierarchy())
 		{
 			// Set href to link to this link's linkClicked method
 			CharSequence url = getURL();
@@ -415,6 +411,10 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 			{
 				tag.put("onclick", onClickJavaScript);
 			}
+		}
+		else
+		{
+			disableLink(tag);
 		}
 	}
 

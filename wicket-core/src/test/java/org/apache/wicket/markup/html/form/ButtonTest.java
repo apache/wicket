@@ -20,6 +20,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -39,25 +40,33 @@ public class ButtonTest extends WicketTestCase
 	@Test
 	public void valueAttribute()
 	{
-		TestPage testPage = new TestPage();
 		String text = "some text & another text";
-		testPage.buttonModel.setObject(text);
+		TestPage testPage = new TestPage(Model.of(text));
 		tester.startPage(testPage);
 		assertTrue(tester.getLastResponseAsString().contains(Strings.escapeMarkup(text)));
+	}
+
+	/**
+	 * WICKET-5235 button does not use an inherited model
+	 */
+	@Test
+	public void buttonDoesNotInheritModel()
+	{
+		TestPage testPage = new TestPage(null);
+		tester.startPage(testPage);
 	}
 
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
-		Form<Void> form;
+		Form<Object> form;
 		Button button;
-		IModel<String> buttonModel = Model.of((String)null);
 
 		/** */
-		public TestPage()
+		public TestPage(IModel<String> buttonModel)
 		{
-			add(form = new Form<Void>("form"));
+			add(form = new Form<Object>("form", new CompoundPropertyModel<>(new Object())));
 			form.add(button = new Button("button", buttonModel));
 		}
 

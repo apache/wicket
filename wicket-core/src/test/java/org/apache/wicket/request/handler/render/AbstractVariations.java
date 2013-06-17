@@ -14,42 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.navomatic;
+package org.apache.wicket.request.handler.render;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.markup.html.link.DisabledLinkBehavior;
-
-/**
- * Application class.
- * 
- * @author Jonathan Locke
- */
-public class NavomaticApplication extends WicketExampleApplication
+public abstract class AbstractVariations
 {
-	/**
-	 * Constructor.
-	 */
-	public NavomaticApplication()
+	protected abstract VariationIterator<?> last();
+
+	public abstract boolean getResult();
+
+	public boolean hasNextVariation()
 	{
+		return last().hasNext();
 	}
 
-	@Override
-	protected void init()
+	public void nextVariation()
 	{
-		super.init();
-
-		getComponentInstantiationListeners().add(new DisabledLinkBehavior.LinkInstantiationListener());
+		last().nextVariation();
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	@Override
-	public Class<? extends Page> getHomePage()
+	protected void toString(StringBuilder sb, String label, VariationIterator<?> iterator)
 	{
-		return Page1.class;
+		sb.append(label).append('=').append(iterator.next()).append(',');
 	}
-
 
 }

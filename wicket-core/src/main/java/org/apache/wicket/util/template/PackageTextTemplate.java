@@ -19,6 +19,7 @@ package org.apache.wicket.util.template;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.util.io.Streams;
@@ -52,6 +53,12 @@ public class PackageTextTemplate extends TextTemplate
 
 	/** contents */
 	private final StringBuilder buffer = new StringBuilder();
+
+	private final Class<?> scope;
+
+	private final String fileName;
+
+	private String encoding;
 
 	/**
 	 * Constructor.
@@ -129,57 +136,112 @@ public class PackageTextTemplate extends TextTemplate
 	{
 		super(contentType);
 
-		String path = Packages.absolutePath(clazz, fileName);
+		this.scope = clazz;
+		this.fileName = fileName;
+		this.encoding = encoding;
 
-		Application app = Application.get();
+		setStyle(style);
+		setVariation(variation);
+		setLocale(locale);
+	}
 
-		// first try default class loading locator to find the resource
-		IResourceStream stream = app.getResourceSettings()
-			.getResourceStreamLocator()
-			.locate(clazz, path, style, variation, locale, null, false);
-
-		if (stream == null)
+	@Override
+	public void setStyle(String style)
+	{
+		if (Objects.equals(style, getStyle()) == false)
 		{
-			// if the default locator didn't find the resource then fallback
-			stream = new ResourceStreamLocator().locate(clazz, path, style, variation, locale, null, false);
+			buffer.setLength(0);
 		}
+		super.setStyle(style);
+	}
 
-		if (stream == null)
+	@Override
+	public void setLocale(Locale locale)
+	{
+		if (Objects.equals(locale, getLocale()) == false)
 		{
-			throw new IllegalArgumentException("resource " + fileName + " not found for scope " +
-				clazz + " (path = " + path + ")");
+			buffer.setLength(0);
 		}
+		super.setLocale(locale);
+	}
 
-		setLastModified(stream.lastModifiedTime());
-
-		try
+	@Override
+	public void setVariation(String variation)
+	{
+		if (Objects.equals(variation, getVariation()) == false)
 		{
-			if (encoding != null)
+			buffer.setLength(0);
+		}
+		super.setVariation(variation);
+	}
+
+	public void setEncoding(String encoding)
+	{
+		if (Objects.equals(encoding, this.encoding) == false)
+		{
+			buffer.setLength(0);
+		}
+		this.encoding = encoding == null ? DEFAULT_ENCODING : encoding;
+	}
+
+	/**
+	 * Loads the template if it is not loaded yet
+	 */
+	private void load() {
+		if (buffer.length() == 0)
+		{
+			String path = Packages.absolutePath(scope, fileName);
+
+			Application app = Application.get();
+
+			// first try default class loading locator to find the resource
+			IResourceStream stream = app.getResourceSettings()
+				.getResourceStreamLocator()
+				.locate(scope, path, getStyle(), getVariation(), getLocale(), null, false);
+
+			if (stream == null)
 			{
-				buffer.append(Streams.readString(stream.getInputStream(), encoding));
+				// if the default locator didn't find the resource then fallback
+				stream = new ResourceStreamLocator().locate(scope, path, getStyle(), getVariation(), getLocale(), null, false);
 			}
-			else
+
+			if (stream == null)
 			{
-				buffer.append(Streams.readString(stream.getInputStream()));
+				throw new IllegalArgumentException("resource " + fileName + " not found for scope " +
+					scope + " (path = " + path + ")");
 			}
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			throw new RuntimeException(e);
-		}
-		finally
-		{
+
+			setLastModified(stream.lastModifiedTime());
+
 			try
 			{
-				stream.close();
+				if (encoding != null)
+				{
+					buffer.append(Streams.readString(stream.getInputStream(), encoding));
+				}
+				else
+				{
+					buffer.append(Streams.readString(stream.getInputStream()));
+				}
 			}
 			catch (IOException e)
 			{
-				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
+			catch (ResourceStreamNotFoundException e)
+			{
+				throw new RuntimeException(e);
+			}
+			finally
+			{
+				try
+				{
+					stream.close();
+				}
+				catch (IOException e)
+				{
+					log.error(e.getMessage(), e);
+				}
 			}
 		}
 	}
@@ -190,6 +252,7 @@ public class PackageTextTemplate extends TextTemplate
 	@Override
 	public String getString()
 	{
+		load();
 		return buffer.toString();
 	}
 
@@ -214,8 +277,9 @@ public class PackageTextTemplate extends TextTemplate
 	{
 		if (variables != null)
 		{
+			load();
 			String result = new MapVariableInterpolator(buffer.toString(), variables).toString();
-			buffer.delete(0, buffer.length());
+			buffer.setLength(0);
 			buffer.append(result);
 		}
 		return this;

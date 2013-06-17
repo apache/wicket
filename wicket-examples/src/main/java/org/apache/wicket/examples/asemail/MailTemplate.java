@@ -108,7 +108,7 @@ public class MailTemplate extends WicketExamplePage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				CharSequence panelHtml = ComponentRenderer.renderComponent(new MailTemplatePanel(ComponentRenderer.COMP_ID,
+				CharSequence panelHtml = ComponentRenderer.renderComponent(new MailTemplatePanel("someId",
 						new PropertyModel<String>(MailTemplate.this, "name")));
 
 				updateResult(result, panelHtml, target);
@@ -129,7 +129,7 @@ public class MailTemplate extends WicketExamplePage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				Map<String, Object> variables = new HashMap<String, Object>();
+				Map<String, Object> variables = new HashMap<>();
 				variables.put("name", name);
 
 				CharSequence relativeUrl = urlFor(new PackageResourceReference(MailTemplate.class,

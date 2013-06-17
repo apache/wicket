@@ -38,12 +38,6 @@ public class MarkupSettings implements IMarkupSettings
 	/** True if multiple tabs/spaces should be compressed to a single space */
 	private boolean compressWhitespace = false;
 
-	/** Default markup for after a disabled link */
-	private String defaultAfterDisabledLink = "</em>";
-
-	/** Default markup for before a disabled link */
-	private String defaultBeforeDisabledLink = "<em>";
-
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
 
@@ -84,24 +78,6 @@ public class MarkupSettings implements IMarkupSettings
 	public boolean getCompressWhitespace()
 	{
 		return compressWhitespace;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#getDefaultAfterDisabledLink()
-	 */
-	@Override
-	public String getDefaultAfterDisabledLink()
-	{
-		return defaultAfterDisabledLink;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#getDefaultBeforeDisabledLink()
-	 */
-	@Override
-	public String getDefaultBeforeDisabledLink()
-	{
-		return defaultBeforeDisabledLink;
 	}
 
 	/**
@@ -169,24 +145,6 @@ public class MarkupSettings implements IMarkupSettings
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#setDefaultAfterDisabledLink(java.lang.String)
-	 */
-	@Override
-	public void setDefaultAfterDisabledLink(final String defaultAfterDisabledLink)
-	{
-		this.defaultAfterDisabledLink = defaultAfterDisabledLink;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#setDefaultBeforeDisabledLink(java.lang.String)
-	 */
-	@Override
-	public void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
-	{
-		this.defaultBeforeDisabledLink = defaultBeforeDisabledLink;
 	}
 
 	/**

@@ -193,17 +193,10 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 		// Default handling for component tag
 		super.onComponentTag(tag);
 
-		try
+		String value = getDefaultModelObjectAsString();
+		if (value != null && !"".equals(value))
 		{
-			String value = getDefaultModelObjectAsString();
-			if (value != null && !"".equals(value))
-			{
-				tag.put("value", value);
-			}
-		}
-		catch (Exception e)
-		{
-			// ignore.
+			tag.put("value", value);
 		}
 
 		// If the subclass specified javascript, use that

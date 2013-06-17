@@ -80,8 +80,8 @@ public class PagedTableTest extends WicketTestCase
 		body.addExpectedChild(ulTable);
 
 		Tag ulNav = new Tag("ul");
-		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new Tag(
-			"em").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("1"))))));
+		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
+			"span").addExpectedChild(new TextContent("1")))));
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
 			"span").addExpectedChild(new TextContent("2")))));
 

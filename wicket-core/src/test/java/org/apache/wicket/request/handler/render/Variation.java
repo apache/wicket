@@ -14,42 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.navomatic;
+package org.apache.wicket.request.handler.render;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.markup.html.link.DisabledLinkBehavior;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * Application class.
- * 
- * @author Jonathan Locke
+ * Provides some value variations that can be used for tests
+ *
+ * Similar to <a href="https://github.com/rickynils/scalacheck">Scala Check</a>
  */
-public class NavomaticApplication extends WicketExampleApplication
+public class Variation<T>
 {
-	/**
-	 * Constructor.
-	 */
-	public NavomaticApplication()
+	private final List<T> value;
+
+	public Variation(T...values)
 	{
+		this.value = Arrays.asList(values);
 	}
 
-	@Override
-	protected void init()
+	public List<T> values()
 	{
-		super.init();
-
-		getComponentInstantiationListeners().add(new DisabledLinkBehavior.LinkInstantiationListener());
+		return value;
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	@Override
-	public Class<? extends Page> getHomePage()
+	public static Variation<Boolean> ofBoolean()
 	{
-		return Page1.class;
+		return new Variation<>(Boolean.FALSE,Boolean.TRUE);
 	}
 
-
+	public static <T extends Enum<T>> Variation<T> of(Class<T> enumType)
+	{
+		return new Variation<>(enumType.getEnumConstants());
+	}
 }

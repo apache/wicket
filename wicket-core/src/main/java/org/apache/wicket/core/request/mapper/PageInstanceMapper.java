@@ -185,6 +185,10 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		{
 			matches = true;
 		}
+		else if (urlStartsWith(request.getClientUrl(), pageIdentifier) && urlStartsWith(url, pageIdentifier))
+		{
+			matches = true;
+		}
 
 		return matches;
 	}
