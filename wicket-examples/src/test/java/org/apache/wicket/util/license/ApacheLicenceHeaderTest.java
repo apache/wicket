@@ -65,6 +65,14 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 */
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/examples/preview/dojo.js");
 
+		/**
+		 * QUnit and jQuery used for tests - MIT licence. See NOTICE
+		 */
+		javaScriptIgnore.add("src/main/webapp/js-test/lib/qunit.js");
+		javaScriptIgnore.add("src/main/webapp/js-test/lib/jquery.js");
+
+		cssIgnore.add("src/main/webapp/js-test/lib/qunit.css");
+
 		/*
 		 * Part of an example
 		 */
