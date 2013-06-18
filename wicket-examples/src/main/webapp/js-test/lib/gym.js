@@ -36,9 +36,10 @@
 	    });
 
 		if ($btn[0].tagName.toLowerCase() === "a") {
-			var iframe = _getIframe()[0].contentWindow;
-			_followHref(iframe, $btn)
+			// native click for <a>
+			$btn[0].click();
 		} else {
+			// jQuery.click() for <button> and <input type="button|submit">
 			$btn.click();
 		}
 
@@ -90,20 +91,6 @@
 
 		return deferred.promise();
 	}
-
-	// private
-	var _followHref = function(iframe, $link) {
-		var loc = iframe.document.location;
-
-		if ($link.length) {
-			var newUrl = $link.attr('href');
-			var uri = new URI(newUrl);
-			var absoluteUrl = uri.absoluteTo(loc.href);
-
-			loc.replace(absoluteUrl);
-		}
-	}
-
 
 	/**
 	 * Registers a callback when Wicket Ajax call is completed
