@@ -1007,7 +1007,7 @@ public class WicketTesterTest extends WicketTestCase
 	public void rerenderNotAllowed()
 	{
 		tester.setExposeExceptions(false);
-		class YesNoPageAuthorizationStrategy implements IAuthorizationStrategy
+		class YesNoPageAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 		{
 			private boolean allowed = true;
 

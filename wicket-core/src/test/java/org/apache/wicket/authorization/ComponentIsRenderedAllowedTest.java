@@ -24,7 +24,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
@@ -134,16 +133,8 @@ public class ComponentIsRenderedAllowedTest extends WicketTestCase
 
 	}
 
-	private static class Authorizer implements IAuthorizationStrategy
+	private static class Authorizer extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 	{
-
-		@Override
-		public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
-			Class<T> componentClass)
-		{
-			return true;
-		}
-
 		@Override
 		public boolean isActionAuthorized(Component component, Action action)
 		{

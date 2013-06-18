@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
-import org.apache.wicket.request.component.IRequestableComponent;
 
 
 /**
@@ -32,10 +31,10 @@ import org.apache.wicket.request.component.IRequestableComponent;
  * @author Jonathan Locke
  * @since Wicket 1.2
  */
-public class ActionAuthorizationStrategy implements IAuthorizationStrategy
+public class ActionAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 {
 	/** Map from Action keys to IActionAuthorizer implementations. */
-	private final Map<Action, IActionAuthorizer> actionAuthorizerForAction = new HashMap<Action, IActionAuthorizer>();
+	private final Map<Action, IActionAuthorizer> actionAuthorizerForAction = new HashMap<>();
 
 	/**
 	 * Adds an action authorizer.
@@ -46,16 +45,6 @@ public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 	public void addActionAuthorizer(IActionAuthorizer authorizer)
 	{
 		actionAuthorizerForAction.put(authorizer.getAction(), authorizer);
-	}
-
-	/**
-	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
-	 */
-	@Override
-	public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
-		Class<T> componentClass)
-	{
-		return true;
 	}
 
 	/**

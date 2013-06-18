@@ -23,6 +23,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
 
 
 /**
@@ -34,7 +36,7 @@ import org.apache.wicket.request.component.IRequestableComponent;
 public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** List of strategies to consult */
-	private final List<IAuthorizationStrategy> strategies = new ArrayList<IAuthorizationStrategy>();
+	private final List<IAuthorizationStrategy> strategies = new ArrayList<>();
 
 	/**
 	 * Adds a strategy to the chain
@@ -78,6 +80,19 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 		for (IAuthorizationStrategy strategy : strategies)
 		{
 			if (!strategy.isActionAuthorized(component, action))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isResourceAuthorized(IResource resource, PageParameters parameters)
+	{
+		for (IAuthorizationStrategy strategy : strategies)
+		{
+			if (!strategy.isResourceAuthorized(resource, parameters))
 			{
 				return false;
 			}
