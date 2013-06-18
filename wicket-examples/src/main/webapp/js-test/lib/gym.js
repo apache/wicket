@@ -26,7 +26,7 @@
 	    });
 	    _getIframe().attr('src', url);
 
-	    return deferred;
+	    return deferred.promise();
 	}
 
 	var click = function($btn) {
@@ -42,7 +42,7 @@
 			$btn.click();
 		}
 
-	    return deferred;
+	    return deferred.promise();
 	}
 
 	// private
@@ -88,7 +88,7 @@
 
 		$btn.click();
 
-		return deferred;
+		return deferred.promise();
 	}
 
 	// private
