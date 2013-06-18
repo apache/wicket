@@ -148,7 +148,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 		if (Application.exists())
 		{
 			HeaderContributorListenerCollection headerContributorListenerCollection =
-					Application.get().getHeaderContributorListenerCollection();
+					Application.get().getHeaderContributorListeners();
 			IHeaderResponse headerResponse = headerContainer.getHeaderResponse();
 
 			for (IHeaderContributor listener : headerContributorListenerCollection)

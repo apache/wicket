@@ -918,16 +918,16 @@ public abstract class Application implements UnboundListener, IEventSink
 	private final ComponentInitializationListenerCollection componentInitializationListeners = new ComponentInitializationListenerCollection();
 
 	/** list of {@link IHeaderContributor}s. */
-	private final HeaderContributorListenerCollection headerContributorListenerCollection = new HeaderContributorListenerCollection();
+	private final HeaderContributorListenerCollection headerContributorListeners = new HeaderContributorListenerCollection();
 
 	private final BehaviorInstantiationListenerCollection behaviorInstantiationListeners = new BehaviorInstantiationListenerCollection();
 
 	/**
 	 * @return Gets the application's {@link HeaderContributorListenerCollection}
 	 */
-	public final HeaderContributorListenerCollection getHeaderContributorListenerCollection()
+	public final HeaderContributorListenerCollection getHeaderContributorListeners()
 	{
-		return headerContributorListenerCollection;
+		return headerContributorListeners;
 	}
 
 	/**

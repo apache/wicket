@@ -45,7 +45,7 @@ import org.apache.wicket.util.io.IClusterable;
  * 
  * @see IHeaderResponse
  * @see HeaderItem
- * @see Application#getHeaderContributorListenerCollection()
+ * @see Application#getHeaderContributorListeners()
  * 
  * @author Juergen Donnerstag
  * @author Matej Knopp
