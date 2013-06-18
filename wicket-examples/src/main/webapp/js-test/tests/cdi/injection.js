@@ -50,8 +50,6 @@ $q(document).ready(function() {
 			var expectedValue = initialValue + 2;
 			equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +2');
 
-			start();
-		});
+		}).always(start);
 	});
-
 });
