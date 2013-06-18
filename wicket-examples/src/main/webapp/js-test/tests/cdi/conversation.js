@@ -32,41 +32,41 @@ $q(document).ready(function() {
 
 	asyncTest('conversation', function () {
 		expect(4);
+		var initialValue;
 
 		gym.load('/cdi/conversation').then(function($) {
 
-			var initialValue = $(countSelector).text();
+			initialValue = $(countSelector).text();
 			initialValue = parseInt(initialValue, 10);
 
-			increment($).then(function($$) {
+			return increment($);
+		}).then(function($) {
 
-				var counterLabelValue = $$(countSelector).text();
-				var expectedValue = initialValue + 1;
-				equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +1');
+			var counterLabelValue = $(countSelector).text();
+			var expectedValue = initialValue + 1;
+			equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +1');
 
-				nextPage($$).then(function($$$) {
+			return nextPage($);
+		}).then(function($) {
 
-					counterLabelValue = $$$(countSelector).text();
-					expectedValue = initialValue + 1;
-					equal(counterLabelValue, "" + expectedValue, 'The value of the counter is the same as in the previous page');
+			var counterLabelValue = $(countSelector).text();
+			var expectedValue = initialValue + 1;
+			equal(counterLabelValue, "" + expectedValue, 'The value of the counter is the same as in the previous page');
 
-					increment($$$).then(function($$$$) {
+			return increment($);
+		}).then(function($) {
 
-						var counterLabelValue = $$$$(countSelector).text();
-						var expectedValue = initialValue + 2;
-						equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +2');
+			var counterLabelValue = $(countSelector).text();
+			var expectedValue = initialValue + 2;
+			equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +2');
 
-						nextPage($$$$).then(function($$$$$) {
+			return nextPage($);
+		}).then(function($) {
 
-							counterLabelValue = $$$$$(countSelector).text();
-							equal(counterLabelValue, "0", 'The value of the counter is 0 (no conversation)');
+			var counterLabelValue = $(countSelector).text();
+			equal(counterLabelValue, "0", 'The value of the counter is 0 (no conversation)');
 
-							start();
-						});
-					});
-				});
-			});
-		});
+		}).always(start);
 	});
 
 });
