@@ -43,6 +43,9 @@ public class CdiApplication extends WebApplication
 
 		// configure wicket/cdi
 		new CdiConfiguration(manager).configure(this);
+
+		mountPage("injection", InjectionPage.class);
+		mountPage("conversation", ConversationPage1.class);
 	}
 
 }

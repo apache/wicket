@@ -37,3 +37,12 @@
 
    This product includes jhighlight (https://jhighlight.dev.java.net/)
    which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
+
+   Contains jquery.js javascript library released under a MIT style license.
+   jQuery Foundation, Inc, http://jquery.org/license
+
+   Contains qunit.js javascript library released under a MIT style license.
+   jQuery Foundation, Inc, http://jquery.org/license
+
+   Contains qunit.css released under a MIT style license.
+   jQuery Foundation, Inc, http://jquery.org/license
