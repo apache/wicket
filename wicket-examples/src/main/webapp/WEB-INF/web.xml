@@ -755,6 +755,14 @@
 		<url-pattern>/mailtemplate/*</url-pattern>
 	</filter-mapping>
 
+    <filter>
+        <filter-name>ConversationFilter</filter-name>
+        <filter-class>org.jboss.weld.servlet.ConversationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ConversationFilter</filter-name>
+        <url-pattern>/cdi/*</url-pattern>
+    </filter-mapping>
 
 	<!-- CDI EXAMPLE APPLICATION -->
 	<filter>
