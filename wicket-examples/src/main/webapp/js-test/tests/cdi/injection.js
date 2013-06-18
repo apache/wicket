@@ -18,31 +18,39 @@
 $q(document).ready(function() {
 	"use strict";
 
+	var countSelector = 'p > span';
+
+	var increment = function($) {
+		return gym.click($('a:contains("increment")'));
+	};
+
 	module('CDI');
 
 	asyncTest('injection', function () {
 		expect(2);
 
+		var initialValue;
+
 		gym.load('/cdi/injection').then(function($) {
 
-			var initialValue = $('p > span').text();
+			initialValue = $(countSelector).text();
 			initialValue = parseInt(initialValue, 10);
 
-			gym.click($('p > a')).then(function($$) {
+			return increment($);
+		}).then(function($) {
 
-				var counterLabelValue = $$('p > span').text();
-				var expectedValue = initialValue + 1;
-				equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +1');
+			var counterLabelValue = $(countSelector).text();
+			var expectedValue = initialValue + 1;
+			equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +1');
 
-				gym.click($$('p > a')).then(function($$$) {
+			return increment($);
+		}).then(function($) {
 
-					counterLabelValue = $$$('p > span').text();
-					expectedValue = initialValue + 2;
-					equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +2');
+			var counterLabelValue = $(countSelector).text();
+			var expectedValue = initialValue + 2;
+			equal(counterLabelValue, "" + expectedValue, 'The new value of the counter is +2');
 
-					start();
-				});
-			});
+			start();
 		});
 	});
 
