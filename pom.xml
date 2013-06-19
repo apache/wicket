@@ -59,7 +59,8 @@
 		<module>wicket-examples</module>
 		<module>wicket-experimental</module>
 		<module>archetypes/quickstart</module>
-		<module>testing/wicket-common-tests</module>
+                <module>testing/wicket-common-tests</module>
+                <module>wicket-glassfish</module>
   </modules>
 	<profiles>
 		<profile>
