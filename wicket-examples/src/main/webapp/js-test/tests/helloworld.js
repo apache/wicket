@@ -29,8 +29,7 @@ $q(document).ready(function() {
 			equal($message.length, 1, "The greeting is there");
 			equal($message.text(), 'Hello World!', "The greeting is correct");
 
-			start();
-		});
+		}).always(start);
 	});
 
 });
