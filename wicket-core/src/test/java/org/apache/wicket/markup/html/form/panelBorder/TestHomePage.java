@@ -19,15 +19,14 @@ package org.apache.wicket.markup.html.form.panelBorder;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
  */
 public class TestHomePage extends WicketTestCase
 {
-	/**
-	 * 
-	 */
+	@Test
 	public void testWithBorder2()
 	{
 		tester.startPage(HomePage.class);

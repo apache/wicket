@@ -186,6 +186,7 @@ public class VisitorTest extends WicketTestCase
 	 * 
 	 * Visit parents with arbitrary type
 	 */
+	@Test
 	public void testVisitParents()
 	{
 		TestContainer testContainer = new TestContainer();

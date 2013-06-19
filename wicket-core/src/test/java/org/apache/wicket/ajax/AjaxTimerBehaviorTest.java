@@ -120,6 +120,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 	 * WICKET-1525, WICKET-2152
 	 */
+	@Test
 	public void testRestartMethod()
 	{
 		final Integer labelInitialValue = Integer.valueOf(0);

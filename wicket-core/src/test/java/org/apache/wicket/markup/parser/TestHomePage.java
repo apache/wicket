@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * 
@@ -26,6 +27,7 @@ public class TestHomePage extends WicketTestCase
 	/**
 	 * Wicket-2105
 	 */
+	@Test
 	public void testRenderMyPage()
 	{
 		// start and render the test page

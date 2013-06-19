@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.markup.html.form.login;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -29,8 +27,6 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Test;
@@ -136,10 +132,6 @@ public class InterceptTest extends WicketTestCase
 			return MockLoginPage.class;
 		}
 
-		/**
-		 * 
-		 * @see org.apache.wicket.ISessionFactory#newSession(Request, Response)
-		 */
 		@Override
 		public Session newSession(Request request, Response response)
 		{
@@ -158,7 +150,6 @@ public class InterceptTest extends WicketTestCase
 		private String username;
 
 		/**
-		 * @param tester
 		 * @param request
 		 */
 		protected MySession(Request request)

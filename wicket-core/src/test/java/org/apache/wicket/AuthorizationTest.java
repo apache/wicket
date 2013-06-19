@@ -54,6 +54,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testCreateDisallowedComponent() throws Exception
 	{
 		tester.getApplication()
@@ -84,6 +85,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testRenderAllowedComponent() throws Exception
 	{
 		tester.getApplication()
@@ -100,6 +102,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testRenderDisallowedComponent() throws Exception
 	{
 		tester.getApplication()
@@ -130,6 +133,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testEnabledAllowedComponent() throws Exception
 	{
 		tester.getApplication()
@@ -153,6 +157,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testEnabledDisallowedComponent() throws Exception
 	{
 		tester.getApplication()

@@ -20,6 +20,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.value.ValueMap;
+import org.junit.Test;
 
 /**
  * Tests the inheritance of models.
@@ -29,6 +30,7 @@ public class InheritedModelTest extends WicketTestCase
 	/**
 	 * Tests the CPM inheritance by setting a different root model using a rendered scenario.
 	 */
+	@Test
 	public void testCompoundPropertyModelRendered()
 	{
 		ValueMap data1 = new ValueMap();
@@ -40,11 +42,11 @@ public class InheritedModelTest extends WicketTestCase
 		InheritedTestPage page = new InheritedTestPage();
 
 
-		page.setDefaultModel(new CompoundPropertyModel<ValueMap>(data1));
+		page.setDefaultModel(new CompoundPropertyModel<>(data1));
 		tester.startPage(page);
 		tester.assertLabel("label", "foo");
 
-		page.setDefaultModel(new CompoundPropertyModel<ValueMap>(data2));
+		page.setDefaultModel(new CompoundPropertyModel<>(data2));
 		tester.startPage(page);
 		tester.assertLabel("label", "bar");
 	}
@@ -52,6 +54,7 @@ public class InheritedModelTest extends WicketTestCase
 	/**
 	 * Tests the CPM by setting a different root model using a direct scenario.
 	 */
+	@Test
 	public void testCompoundPropertyModelDirect()
 	{
 		ValueMap data1 = new ValueMap();
@@ -64,10 +67,10 @@ public class InheritedModelTest extends WicketTestCase
 		Label label = new Label("label");
 		parent.add(label);
 
-		parent.setDefaultModel(new CompoundPropertyModel<ValueMap>(data1));
+		parent.setDefaultModel(new CompoundPropertyModel<>(data1));
 		assertEquals("foo", label.getDefaultModelObject());
 
-		parent.setDefaultModel(new CompoundPropertyModel<ValueMap>(data2));
+		parent.setDefaultModel(new CompoundPropertyModel<>(data2));
 		assertEquals("bar", label.getDefaultModelObject());
 
 		data2.put("label", "foo");
@@ -77,6 +80,7 @@ public class InheritedModelTest extends WicketTestCase
 	/**
 	 * Tests if Component#FLAG_INHERITABLE_MODEL reset after model change (WICKET-3413).
 	 */
+	@Test
 	public void testResetInheritedModelFlag()
 	{
 		ValueMap data1 = new ValueMap();
@@ -87,7 +91,7 @@ public class InheritedModelTest extends WicketTestCase
 
 		InheritedTestPage page = new InheritedTestPage();
 
-		page.setDefaultModel(new CompoundPropertyModel<ValueMap>(data1));
+		page.setDefaultModel(new CompoundPropertyModel<>(data1));
 		tester.startPage(page);
 		assertEquals("foo", page.label.getDefaultModelObject());
 

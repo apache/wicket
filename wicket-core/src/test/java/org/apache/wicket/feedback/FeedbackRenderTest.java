@@ -18,6 +18,7 @@ package org.apache.wicket.feedback;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Test calling of {@link Component#beforeRender()} for {@link IFeedback} components.
@@ -28,6 +29,7 @@ public class FeedbackRenderTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test() throws Exception
 	{
 		final FeedbacksPage page = new FeedbacksPage();
