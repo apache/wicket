@@ -45,7 +45,7 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<Bean1>("id", new PropertyModel<Bean1>(new Bean1(),
+		TextField<?> component = new TextField<>("id", new PropertyModel<Bean1>(new Bean1(),
 			"foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
@@ -58,7 +58,7 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<Bean2>("id", new PropertyModel<Bean2>(new Bean2(),
+		TextField<?> component = new TextField<>("id", new PropertyModel<Bean2>(new Bean2(),
 			"foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
@@ -76,7 +76,7 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<Bean3>("id", new PropertyModel<Bean3>(new Bean3(),
+		TextField<?> component = new TextField<>("id", new PropertyModel<Bean3>(new Bean3(),
 			"foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
