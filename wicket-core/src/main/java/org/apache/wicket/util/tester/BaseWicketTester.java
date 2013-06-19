@@ -376,8 +376,7 @@ public class BaseWicketTester
 		// Preserve response cookies in redirects
 		// XXX: is this really needed ? Browsers wont do that, but some
 		// Wicket tests assert that a cookie is in the response,
-		// even after redirects (see
-// org.apache.wicket.util.cookies.SetCookieAndRedirectTest.statefulPage())
+		// even after redirects (see org.apache.wicket.util.cookies.SetCookieAndRedirectTest.statefulPage())
 		// They should assert that the cookie is in the next *request*
 		if (lastResponse != null)
 		{
@@ -387,7 +386,7 @@ public class BaseWicketTester
 				CookieCollection responseCookies = new CookieCollection();
 
 				// if the last request is a redirect, all cookies from last response should appear
-// in current reponse
+				// in current reponse
 				// this call will filter duplicates
 				responseCookies.addAll(lastResponseCookies);
 				for (Cookie cookie : responseCookies.allAsList())
@@ -396,8 +395,7 @@ public class BaseWicketTester
 				}
 
 				// copy all request cookies from last request to the new request because of redirect
-// handling
-				// this way, the cookie will be send to the next requested page
+				// handling this way, the cookie will be send to the next requested page
 				if (lastRequest != null)
 				{
 					CookieCollection requestCookies = new CookieCollection();

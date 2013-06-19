@@ -103,7 +103,7 @@ public class UrlResourceReference extends ResourceReference
 	}
 
 	/**
-	 * @return {@code null} because this ResourceReference wont use an IResource to deliver the
+	 * @return {@code null} because this ResourceReference won't use an IResource to deliver the
 	 *         content of the external resource. The browser will make a direct request to the
 	 *         external url.
 	 */
