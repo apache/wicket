@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.redirect.abort;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;

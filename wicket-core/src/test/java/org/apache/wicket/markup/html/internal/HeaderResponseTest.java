@@ -22,9 +22,8 @@ import static org.mockito.Mockito.when;
 
 import java.nio.charset.Charset;
 
-import junit.framework.Assert;
-
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
@@ -36,10 +35,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.response.StringResponse;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

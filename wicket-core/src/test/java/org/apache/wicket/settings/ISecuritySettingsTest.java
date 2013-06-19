@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.settings;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;

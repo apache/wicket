@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.Strings;
 

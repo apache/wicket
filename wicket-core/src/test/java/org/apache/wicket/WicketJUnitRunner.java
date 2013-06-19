@@ -53,7 +53,7 @@ public class WicketJUnitRunner extends BlockJUnit4ClassRunner
 	@Override
 	protected List<FrameworkMethod> computeTestMethods()
 	{
-		List<FrameworkMethod> methods = new ArrayList<FrameworkMethod>();
+		List<FrameworkMethod> methods = new ArrayList<>();
 		methods.addAll(super.computeTestMethods());
 
 		for (Method javaMethod : getTestClass().getJavaClass().getMethods())
@@ -71,7 +71,7 @@ public class WicketJUnitRunner extends BlockJUnit4ClassRunner
 	@Override
 	protected Statement withBefores(FrameworkMethod method, Object target, Statement statement)
 	{
-		List<FrameworkMethod> befores = new ArrayList<FrameworkMethod>();
+		List<FrameworkMethod> befores = new ArrayList<>();
 		befores.addAll(getTestClass().getAnnotatedMethods(Before.class));
 		findMethod(getTestClass(), befores, "setUp");
 
@@ -81,7 +81,7 @@ public class WicketJUnitRunner extends BlockJUnit4ClassRunner
 	@Override
 	protected Statement withAfters(FrameworkMethod method, Object target, Statement statement)
 	{
-		List<FrameworkMethod> afters = new ArrayList<FrameworkMethod>();
+		List<FrameworkMethod> afters = new ArrayList<>();
 		afters.addAll(getTestClass().getAnnotatedMethods(After.class));
 		findMethod(getTestClass(), afters, "tearDown");
 
