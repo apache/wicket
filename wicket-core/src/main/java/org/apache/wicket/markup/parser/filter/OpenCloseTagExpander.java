@@ -37,6 +37,10 @@ import org.apache.wicket.markup.parser.XmlTag.TagType;
  */
 public class OpenCloseTagExpander extends AbstractMarkupFilter
 {
+	// A list of elements which should not be expanded from TagType.OPEN_CLOSE to TagType.OPEN + TagType.CLOSE
+	// http://www.w3.org/TR/html-markup/syntax.html#void-element
+	// area, base, br, col, command, embed, hr, img, input, keygen, link, meta, param, source, track, wbr
+
 	private static final List<String> replaceForTags = Arrays.asList("a", "q", "sub", "sup",
 		"abbr", "acronym", "cite", "code", "del", "dfn", "em", "ins", "kbd", "samp", "var",
 		"label", "textarea", "tr", "td", "th", "caption", "thead", "tbody", "tfoot", "dl", "dt",
@@ -52,12 +56,9 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 		"b",
 		"e",
 		"select",
-		"col",
 
-		// New HTML5 elements (excluding: open-close tags:
-		// wbr, source, time, embed, keygen
 		// @TODO by now an exclude list is probably shorter
-		"article", "aside", "command", "details", "summary", "figure", "figcaption", "footer",
+		"article", "aside", "details", "summary", "figure", "figcaption", "footer",
 		"header", "hgroup", "mark", "meter", "nav", "progress", "ruby", "rt", "rp", "section",
 		"audio", "video", "canvas", "datalist", "output");
 
