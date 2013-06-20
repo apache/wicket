@@ -41,7 +41,7 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 	// http://www.w3.org/TR/html-markup/syntax.html#void-element
 	// area, base, br, col, command, embed, hr, img, input, keygen, link, meta, param, source, track, wbr
 
-	private static final List<String> replaceForTags = Arrays.asList("a", "q", "sub", "sup",
+	static final List<String> REPLACE_FOR_TAGS = Arrays.asList("a", "q", "sub", "sup",
 		"abbr", "acronym", "cite", "code", "del", "dfn", "em", "ins", "kbd", "samp", "var",
 		"label", "textarea", "tr", "td", "th", "caption", "thead", "tbody", "tfoot", "dl", "dt",
 		"dd", "li", "ol", "ul", "h1", "h2", "h3", "h4", "h5", "h6", "i",
@@ -131,6 +131,6 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 	 */
 	protected boolean contains(final String name)
 	{
-		return replaceForTags.contains(name.toLowerCase());
+		return REPLACE_FOR_TAGS.contains(name.toLowerCase());
 	}
 }
