@@ -237,8 +237,9 @@ jQuery(document).ready(function() {
 	module("Custom events");
 
 	test('inputchange', function() {
+		stop();
 		if (Wicket.Browser.isIE()) {
-			expect(4);
+			expect(3);
 		} else {
 			expect(1);
 		}
@@ -249,13 +250,13 @@ jQuery(document).ready(function() {
 		});
 
 		if (Wicket.Browser.isIE()) {
-			$input.trigger("keydown");
+			$input.trigger("paste");
 			$input.trigger("keyup");
 			$input.trigger("cut");
-			$input.trigger("paste");
 		} else {
 			$input.trigger("input");
 		}
+		start();
 
 	});
 });
