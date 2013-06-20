@@ -317,7 +317,9 @@
 
 				onClose: function() { }, /* called when window is closed */
 
-				mask: "semi-transparent" /* or "transparent" */
+				mask: "semi-transparent",  /* or "transparent" */
+
+                unloadConfirmation : true /* Display confirmation dialog if the user is about to leave a page (IE and FF) */
 
 			}, settings || { });
 
@@ -738,9 +740,7 @@
 			// preserve old beforeunload handler
 			this.old_onbeforeunload = window.onbeforeunload;
 
-			// Wicket.Window.unloadConfirmation is deprecated but we need to check it
-			// for backward compatibility. Remove it after Wicket 7.0
-			if (this.settings.unloadConfirmation && Wicket.Window.unloadConfirmation) {
+			if (this.settings.unloadConfirmation) {
 				// new beforeunload handler - ask user before reloading window
 				window.onbeforeunload = function() {
 					return "Reloading this page will cause the modal window to disappear.";
