@@ -16,9 +16,14 @@
  */
 package org.apache.wicket.request.handler.render;
 
+import java.util.List;
+
 import org.apache.wicket.Application;
+import org.apache.wicket.Session;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.feedback.FeedbackCollector;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
@@ -145,9 +150,26 @@ public class WebPageRenderer extends PageRenderer
 	 */
 	protected void redirectTo(Url url, RequestCycle requestCycle)
 	{
+		bindSessionIfNeeded();
+
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 		String relativeUrl = requestCycle.getUrlRenderer().renderUrl(url);
 		response.sendRedirect(relativeUrl);
+	}
+
+	/**
+	 * Bind the session if there are feedback messages pending.
+	 * https://issues.apache.org/jira/browse/WICKET-5165
+	 */
+	private void bindSessionIfNeeded()
+	{
+		// check for session feedback messages only
+		FeedbackCollector collector = new FeedbackCollector();
+		List<FeedbackMessage> feedbackMessages = collector.collect();
+		if (feedbackMessages.size() > 0)
+		{
+			Session.get().bind();
+		}
 	}
 
 	/*
