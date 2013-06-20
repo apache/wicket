@@ -18,6 +18,8 @@ package org.apache.wicket.cdi;
 
 import org.apache.wicket.IBehaviorInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Injects components with CDI dependencies
@@ -27,6 +29,7 @@ import org.apache.wicket.behavior.Behavior;
  */
 class BehaviorInjector extends AbstractInjector implements IBehaviorInstantiationListener
 {
+        private static final Logger LOG = LoggerFactory.getLogger(ComponentInjector.class);
 	/**
 	 * Constructor
 	 * 
@@ -40,6 +43,15 @@ class BehaviorInjector extends AbstractInjector implements IBehaviorInstantiatio
 	@Override
 	public void onInstantiation(Behavior behavior)
 	{
-		inject(behavior);
+		Class<? extends Behavior> behaviorClass = behavior.getClass();
+
+		if (!behaviorClass.isAnnotationPresent(CdiAware.class))
+		{
+			LOG.debug("Skipping non cdi aware class '{}' ", behaviorClass);
+		}
+		else
+		{
+			inject(behavior);
+		}
 	}
 }
