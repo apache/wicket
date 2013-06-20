@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.submitlink;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;

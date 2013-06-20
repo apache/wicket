@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;

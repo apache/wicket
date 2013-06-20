@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.page;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
@@ -26,6 +27,7 @@ public class TestHomePage extends WicketTestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testRenderMyPage()
 	{
 		// no exception should occur

@@ -55,7 +55,7 @@ import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthorizationStrategy
 {
 	/**
-	 * The supertype (class or interface) of Pages that require authorization to be instantiated.
+	 * The super type (class or interface) of Pages that require authorization to be instantiated.
 	 */
 	private final WeakReference<Class<?>> securePageSuperTypeRef;
 

@@ -29,7 +29,6 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 
 /**
  * Base class for tests which require comparing wicket response with a file.
@@ -37,7 +36,6 @@ import org.junit.runner.RunWith;
  * To create/replace the expected result file with the new content, define the system property like
  * -Dwicket.replace.expected.results=true
  */
-@RunWith(WicketJUnitRunner.class)
 public abstract class WicketTestCase extends Assert
 {
 	/** */

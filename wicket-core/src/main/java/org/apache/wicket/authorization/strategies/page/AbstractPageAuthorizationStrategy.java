@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.authorization.strategies.page;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.request.component.IRequestableComponent;
 
@@ -30,18 +28,8 @@ import org.apache.wicket.request.component.IRequestableComponent;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class AbstractPageAuthorizationStrategy implements IAuthorizationStrategy
+public abstract class AbstractPageAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 {
-	/**
-	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
-	 *      org.apache.wicket.authorization.Action)
-	 */
-	@Override
-	public boolean isActionAuthorized(final Component component, final Action action)
-	{
-		return true;
-	}
-
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */

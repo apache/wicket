@@ -2575,20 +2575,20 @@
 					jQuery.event.special.inputchange.keyDownPressed = true;
 				});
 
-				jQuery(this).on("cut paste", function (event) {
+				jQuery(this).on("cut paste", function (evt) {
 
 					var self = this;
 
 					if (false === jQuery.event.special.inputchange.keyDownPressed) {
 						window.setTimeout(function() {
-							jQuery.event.special.inputchange.handler.apply(self, arguments);
+							jQuery.event.special.inputchange.handler.call(self, evt);
 						}, 10);
 					}
 				});
 
-				jQuery(this).on("keyup", function (event) {
+				jQuery(this).on("keyup", function (evt) {
 					jQuery.event.special.inputchange.keyDownPressed = false; // reset
-					jQuery.event.special.inputchange.handler.apply(this, arguments);
+					jQuery.event.special.inputchange.handler.call(this, evt);
 				});
 
 			} else {
@@ -2601,10 +2601,11 @@
 			jQuery(this).off("input keyup cut paste", jQuery.event.special.inputchange.handler);
 		},
 
-		handler: function( event ) {
+		handler: function( evt ) {
 			var WE = Wicket.Event;
 			var k = jQuery.event.special.inputchange.keys;
-			var kc = WE.keyCode(WE.fix(event));
+
+			var kc = WE.keyCode(WE.fix(evt));
 			switch (kc) {
 				case k.ENTER:
 				case k.UP:
@@ -2618,11 +2619,11 @@
 				case k.CTRL:
 				case k.HOME:
 				case k.END:
-					return WE.stop(event);
+					return WE.stop(evt);
 				default:
-					event.type = "inputchange";
+					evt.type = "inputchange";
 					var args = Array.prototype.slice.call( arguments, 0 );
-					return jQuery(this).trigger(event.type, args);
+					return jQuery(this).trigger(evt.type, args);
 			}
 		}
 	};

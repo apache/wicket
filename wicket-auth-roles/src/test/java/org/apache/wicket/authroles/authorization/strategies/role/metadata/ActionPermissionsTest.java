@@ -16,30 +16,33 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.metadata;
 
-import junit.framework.TestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * Test case for {@link org.apache.wicket.authorization.strategies.role.metadata.ActionPermissions}.
+ * Test case for {@link ActionPermissions}.
  * 
  * @author Eelco Hillenius
  */
-public class ActionPermissionsTest extends TestCase
+public class ActionPermissionsTest extends Assert
 {
 	private WicketTester tester;
 
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	@After
+	public void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
@@ -49,6 +52,7 @@ public class ActionPermissionsTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAdd1() throws Exception
 	{
 		ActionPermissions permissions = new ActionPermissions();
@@ -69,6 +73,7 @@ public class ActionPermissionsTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testRemove1() throws Exception
 	{
 		ActionPermissions permissions = new ActionPermissions();
@@ -81,8 +86,8 @@ public class ActionPermissionsTest extends TestCase
 
 	/**
 	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
-	 * 
 	 */
+	@Test
 	public void testRemove2()
 	{
 		Label label = new Label("label", "text");
@@ -106,6 +111,7 @@ public class ActionPermissionsTest extends TestCase
 	 * Test consistency in behavior between authorizing a role for an action and then unauthorizing
 	 * it with {@link #testRemove2()}.
 	 */
+	@Test
 	public void testRemove3()
 	{
 		Label label = new Label("label", "text");

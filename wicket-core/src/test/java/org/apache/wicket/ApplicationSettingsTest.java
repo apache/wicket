@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;

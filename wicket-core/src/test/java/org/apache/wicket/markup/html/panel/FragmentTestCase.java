@@ -17,15 +17,14 @@
 package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * 
  */
 public class FragmentTestCase extends WicketTestCase
 {
-	/**
-	 * 
-	 */
+	@Test
 	public void testFragments()
 	{
 		tester.startComponentInPage(FragmentTestPanel.class);

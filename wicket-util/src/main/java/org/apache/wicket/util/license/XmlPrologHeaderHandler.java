@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 {

@@ -23,17 +23,16 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A ResourceReference that can be used to point to a resource by using an Url.
- * For example to a resource residing in a CDN (Content Delivering Network) or
- * context relative one.
- *
+ * A ResourceReference that can be used to point to a resource by using an Url. For example to a
+ * resource residing in a CDN (Content Delivering Network) or context relative one.
+ * 
  * @since 6.0
  */
 public class UrlResourceReference extends ResourceReference
 {
 	/**
-	 * An Url that knows how to render itself, so it doesn't need re-calculating in UrlRenderer.
-	 * It should be rendered as is.
+	 * An Url that knows how to render itself, so it doesn't need re-calculating in UrlRenderer. It
+	 * should be rendered as is.
 	 */
 	private static class CalculatedUrl extends Url implements IUrlRenderer
 	{
@@ -65,9 +64,9 @@ public class UrlResourceReference extends ResourceReference
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param url
-	 *      the url of the external resource
+	 *            the url of the external resource
 	 */
 	public UrlResourceReference(final Url url)
 	{
@@ -91,7 +90,8 @@ public class UrlResourceReference extends ResourceReference
 
 		if (contextRelative)
 		{
-			String contextRelative = UrlUtils.rewriteToContextRelative(url.toString(), RequestCycle.get());
+			String contextRelative = UrlUtils.rewriteToContextRelative(url.toString(),
+				RequestCycle.get());
 			_url = new CalculatedUrl(Url.parse(contextRelative, url.getCharset()));
 		}
 		else
@@ -103,9 +103,9 @@ public class UrlResourceReference extends ResourceReference
 	}
 
 	/**
-	 * @return {@code null} because this ResourceReference wont use an IResource to deliver
-	 *  the content of the external resource. The browser will make a direct request to the
-	 *  external url.
+	 * @return {@code null} because this ResourceReference won't use an IResource to deliver the
+	 *         content of the external resource. The browser will make a direct request to the
+	 *         external url.
 	 */
 	@Override
 	public final IResource getResource()
@@ -115,10 +115,10 @@ public class UrlResourceReference extends ResourceReference
 
 	public UrlResourceReference setContextRelative(final boolean contextRelative)
 	{
-		if (contextRelative && url.isAbsolute())
+		if (contextRelative && (url.isFull() || url.isContextAbsolute()))
 		{
-			throw new IllegalStateException(
-					String.format("An absolute url '%s' cannot be rendered as context relative", url));
+			throw new IllegalStateException(String.format(
+				"An absolute url '%s' cannot be rendered as context relative", url));
 		}
 		this.contextRelative = contextRelative;
 		return this;
@@ -132,10 +132,8 @@ public class UrlResourceReference extends ResourceReference
 	@Override
 	public String toString()
 	{
-		return "UrlResourceReference{" +
-				"url=" + url.toString(getStringMode(url)) +
-				", contextRelative=" + contextRelative +
-				'}';
+		return "UrlResourceReference{" + "url=" + url.toString(getStringMode(url)) +
+			", contextRelative=" + contextRelative + '}';
 	}
 
 	private static Url.StringMode getStringMode(Url url)

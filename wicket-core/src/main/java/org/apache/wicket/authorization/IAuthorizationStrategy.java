@@ -18,6 +18,8 @@ package org.apache.wicket.authorization;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.settings.ISecuritySettings;
 
 /**
@@ -33,10 +35,7 @@ import org.apache.wicket.settings.ISecuritySettings;
  */
 public interface IAuthorizationStrategy
 {
-	/**
-	 * Implementation of {@link IAuthorizationStrategy} that allows everything.
-	 */
-	public static final IAuthorizationStrategy ALLOW_ALL = new IAuthorizationStrategy()
+	public static class AllowAllAuthorizationStrategy implements IAuthorizationStrategy
 	{
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
@@ -56,7 +55,18 @@ public interface IAuthorizationStrategy
 		{
 			return true;
 		}
-	};
+
+		@Override
+		public boolean isResourceAuthorized(IResource resource, PageParameters pageParameters)
+		{
+			return true;
+		}
+	}
+
+	/**
+	 * Implementation of {@link IAuthorizationStrategy} that allows everything.
+	 */
+	public static final IAuthorizationStrategy ALLOW_ALL = new AllowAllAuthorizationStrategy();
 
 	/**
 	 * Checks whether an instance of the given component class may be created. If this method
@@ -94,4 +104,15 @@ public interface IAuthorizationStrategy
 	 * @see Component#RENDER
 	 */
 	boolean isActionAuthorized(Component component, Action action);
+
+	/**
+	 * Checks whether a request with some parameters is allowed to a resource.
+	 *
+	 * @param resource
+	 *            The resource that should be processed
+	 * @param parameters
+	 *            The request parameters
+	 * @return {@code true} if the request to this resource is allowed.
+	 */
+	boolean isResourceAuthorized(IResource resource, PageParameters parameters);
 }

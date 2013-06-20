@@ -16,26 +16,28 @@
  */
 package org.apache.wicket.devutils.inspector;
 
-import junit.framework.TestCase;
 import org.apache.wicket.Session;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
  */
-public class SessionSizeModelTest extends TestCase
+public class SessionSizeModelTest extends Assert
 {
 
 	/**
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3355">WICKET-3355</a>
 	 */
+	@Test
 	public void testTorelanceOnProblematicSessions()
 	{
-		WicketTester tester = new WicketTester(new MockApplication()
+		new WicketTester(new MockApplication()
 		{
 			@Override
 			public Session newSession(final Request request, final Response response)

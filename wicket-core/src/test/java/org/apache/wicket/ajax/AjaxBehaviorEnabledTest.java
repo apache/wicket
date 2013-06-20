@@ -25,7 +25,6 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +39,7 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	 * 
 	 * @author marrink
 	 */
-	private static final class CustomStrategy implements IAuthorizationStrategy
+	private static final class CustomStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 	{
 		/**
 		 * 
@@ -56,18 +55,6 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 			}
 			return true;
 		}
-
-		/**
-		 * 
-		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
-		 */
-		@Override
-		public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
-			Class<T> componentClass)
-		{
-			return true;
-		}
-
 	}
 
 	/**

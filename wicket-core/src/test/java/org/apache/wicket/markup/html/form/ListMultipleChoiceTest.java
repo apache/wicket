@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 public class ListMultipleChoiceTest extends WicketTestCase
 {
@@ -35,15 +36,16 @@ public class ListMultipleChoiceTest extends WicketTestCase
 
 		public TestPage()
 		{
-			Form<Void> form = new Form<Void>("form");
+			Form<Void> form = new Form<>("form");
 			this.add(form);
 			form.add(newListMultipleChoice("list", selectedValues, choices));
 		}
 	}
 
+	@Test
 	public void testSelectionWorks() throws Exception
 	{
-		TestPage page = (TestPage)tester.startPage(new TestPage());
+		TestPage page = tester.startPage(new TestPage());
 		FormTester form = tester.newFormTester("form");
 		form.select("list", 1);
 		form.select("list", 3);
@@ -55,6 +57,7 @@ public class ListMultipleChoiceTest extends WicketTestCase
 		assertTrue(page.selectedValues.getObject().contains("f"));
 	}
 
+	@Test
 	public void testSelectionAccumulates() throws Exception
 	{
 		final TestPage page = new TestPage();
@@ -75,6 +78,6 @@ public class ListMultipleChoiceTest extends WicketTestCase
 	protected ListMultipleChoice<String> newListMultipleChoice(String id,
 		IModel<List<String>> selectedValues, List<String> choices)
 	{
-		return new ListMultipleChoice<String>(id, selectedValues, choices);
+		return new ListMultipleChoice<>(id, selectedValues, choices);
 	}
 }

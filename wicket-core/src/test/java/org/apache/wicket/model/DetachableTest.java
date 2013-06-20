@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -32,6 +33,7 @@ public class DetachableTest extends WicketTestCase
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3872">WICKET-3872</a>
 	 */
+	@Test
 	public void testDetachRemovedChildrenTree()
 	{
 		DetachableComponent a = new DetachableComponent("a");
