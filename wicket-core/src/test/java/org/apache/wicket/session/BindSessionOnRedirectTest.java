@@ -31,16 +31,20 @@ import org.junit.Test;
 public class BindSessionOnRedirectTest extends WicketTestCase
 {
 
+	public static final String SESSION_FEEDBACK_MESSAGE = "Session message";
+
 	@Test
 	public void bindSessionWhenThereAreFeedbackMessages()
 	{
 		tester.startPage(FirstPage.class);
 		assertTrue(tester.getSession().isTemporary());
+		tester.assertNoInfoMessage();
 
 		tester.clickLink("link");
 
 		tester.assertRenderedPage(SecondPage.class);
 		assertFalse(tester.getSession().isTemporary());
+		tester.assertInfoMessages(SESSION_FEEDBACK_MESSAGE);
 	}
 
 	public static class FirstPage extends WebPage implements IMarkupResourceStreamProvider
@@ -52,7 +56,7 @@ public class BindSessionOnRedirectTest extends WicketTestCase
 				@Override
 				public void onClick()
 				{
-					getSession().info("Session message");
+					getSession().info(SESSION_FEEDBACK_MESSAGE);
 					setResponsePage(SecondPage.class);
 				}
 			});
