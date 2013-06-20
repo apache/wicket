@@ -3179,7 +3179,7 @@ public abstract class Component
 	 * 
 	 * @see RequestCycle#setResponsePage(org.apache.wicket.request.component.IRequestablePage)
 	 */
-	public final void setResponsePage(final Page page)
+	public final void setResponsePage(final IRequestablePage page)
 	{
 		getRequestCycle().setResponsePage(page);
 	}
