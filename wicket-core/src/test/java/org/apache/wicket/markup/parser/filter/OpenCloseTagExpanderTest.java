@@ -47,7 +47,7 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 	 * @throws ParseException
 	 */
 	@Test
-	public void expand() throws ParseException
+	public void doNotExpandVoidElements() throws ParseException
 	{
 		String[] htmlVoidElements = new String[] {
 			"area", "base", "br", "col", "command", "embed", "hr", "img", "input",
@@ -85,6 +85,47 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 
 			// assert the next element is returned by the parent
 			assertTrue(markupElement instanceof TestMarkupElement);
+		}
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5237
+	 * @throws ParseException
+	 */
+	@Test
+	public void expandNonVoidElements() throws ParseException
+	{
+		for (String htmlNonVoidElement : OpenCloseTagExpander.REPLACE_FOR_TAGS)
+		{
+			OpenCloseTagExpander expander = new OpenCloseTagExpander() {
+				@Override
+				public IMarkupFilter getNextFilter()
+				{
+					return new AbstractMarkupFilter()
+					{
+						@Override
+						protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+						{
+							return null;
+						}
+
+						@Override
+						public MarkupElement nextElement() throws ParseException
+						{
+							return new TestMarkupElement();
+						}
+					};
+				}
+			};
+
+			ComponentTag tag = new ComponentTag(htmlNonVoidElement, XmlTag.TagType.OPEN_CLOSE);
+			expander.onComponentTag(tag);
+
+			ComponentTag markupElement = (ComponentTag) expander.nextElement();
+
+			// assert the next element is returned by the parent
+			assertEquals(htmlNonVoidElement, markupElement.getName());
+			assertTrue(markupElement.closes(tag));
 		}
 	}
 
