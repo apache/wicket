@@ -37,6 +37,17 @@ class ComponentInjector extends AbstractInjector implements IComponentInstantiat
 		super(container);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param container
+	 * @param forceDeclarative
+	 */
+	public ComponentInjector(CdiContainer container, boolean forceDeclarative)
+	{
+		super(container,forceDeclarative);
+	}
+        
 	@Override
 	public void onInstantiation(Component component)
 	{

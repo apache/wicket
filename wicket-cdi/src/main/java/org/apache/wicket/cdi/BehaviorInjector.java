@@ -37,6 +37,17 @@ class BehaviorInjector extends AbstractInjector implements IBehaviorInstantiatio
 		super(container);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param container
+	 * @param forceDeclarative
+	 */         
+	public BehaviorInjector(CdiContainer container, boolean forceDeclarative)
+	{
+		super(container,forceDeclarative);
+	}
+        
 	@Override
 	public void onInstantiation(Behavior behavior)
 	{

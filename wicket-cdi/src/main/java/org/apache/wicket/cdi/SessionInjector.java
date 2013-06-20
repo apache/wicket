@@ -37,6 +37,17 @@ class SessionInjector extends AbstractInjector implements ISessionListener
 		super(container);
 	}
 
+       /**
+	 * Constructor
+	 * 
+	 * @param container
+	 * @param forceDeclarative
+	 */
+	public SessionInjector(CdiContainer container, boolean forceDeclarative)
+	{
+		super(container,forceDeclarative);
+	}
+        
 	@Override
 	public void onCreated(Session session)
 	{
