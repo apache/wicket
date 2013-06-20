@@ -32,11 +32,18 @@ class AbstractInjector
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractInjector.class);
 
 	private final CdiContainer container;
+	private boolean forceDeclarative;
 
 	public AbstractInjector(CdiContainer container)
 	{
+		this(container,false);
+	}
+
+	public AbstractInjector(CdiContainer container, boolean forceDeclarative)
+	{
 		Args.notNull(container, "container");
 		this.container = container;
+		this.forceDeclarative = forceDeclarative;
 	}
 
 	protected <T> void postConstruct(T instance)
@@ -58,6 +65,20 @@ class AbstractInjector
 	{
 		final boolean canProcess;
 		Class<?> instanceClass = instance.getClass();
+                
+		if(forceDeclarative)
+		{
+			if(instanceClass.isAnnotationPresent(CdiAware.class))
+			{                        
+				return true;
+			}
+			else
+			{
+				LOG.debug("Class '{}' will not be processed for CDI injection because it does not contain @CdiAware Annotation",
+						instanceClass);
+				return false;
+			}
+		}
 
 		if (instanceClass.isAnonymousClass() ||
 				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))

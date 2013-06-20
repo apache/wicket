@@ -40,6 +40,7 @@ public class CdiConfiguration
 	private boolean injectSession = true;
 	private boolean injectBehaviors = true;
 	private boolean autoConversationManagement = false;
+	private boolean forceDeclarative = false;
 
 	/**
 	 * Constructor
@@ -162,6 +163,17 @@ public class CdiConfiguration
 		return this;
 	}
 
+	public boolean isForceDeclarative()
+	{
+		return injectSession;
+	}
+
+	public CdiConfiguration setForceDeclarative(boolean forceDeclarative)
+	{
+		this.forceDeclarative = forceDeclarative;
+		return this;
+	}
+
 	/**
 	 * Configures the specified application
 	 * 
@@ -206,17 +218,17 @@ public class CdiConfiguration
 
 		if (isInjectSession())
 		{
-			application.getSessionListeners().add(new SessionInjector(container));
+			application.getSessionListeners().add(new SessionInjector(container, forceDeclarative));
 		}
 
 		if (isInjectComponents())
 		{
-			application.getComponentInstantiationListeners().add(new ComponentInjector(container));
+			application.getComponentInstantiationListeners().add(new ComponentInjector(container, forceDeclarative));
 		}
 
 		if (isInjectBehaviors())
 		{
-			application.getBehaviorInstantiationListeners().add(new BehaviorInjector(container));
+			application.getBehaviorInstantiationListeners().add(new BehaviorInjector(container, forceDeclarative));
 		}
 
 		// enable cleanup
