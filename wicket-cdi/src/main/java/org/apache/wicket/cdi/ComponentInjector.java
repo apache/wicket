@@ -48,10 +48,9 @@ class ComponentInjector extends AbstractInjector implements IComponentInstantiat
 	{
 		Class<? extends Component> componentClass = component.getClass();
 
-		if (componentClass.isAnonymousClass() ||
-			(componentClass.isMemberClass() && Modifier.isStatic(componentClass.getModifiers()) == false))
+		if (!componentClass.isAnnotationPresent(CdiAware.class))
 		{
-			LOG.debug("Skipping non-static inner class '{}' ", componentClass);
+			LOG.debug("Skipping non cdi aware class '{}' ", componentClass);
 		}
 		else
 		{
