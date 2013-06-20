@@ -155,6 +155,7 @@ div.wicket-modal div.w_content_2 {
 	background-color: white;
 	padding-top: 0.1em;
 	_overflow: auto;
+	cursor: default;
 }
 
 div.wicket-modal div.w_content_3 {
