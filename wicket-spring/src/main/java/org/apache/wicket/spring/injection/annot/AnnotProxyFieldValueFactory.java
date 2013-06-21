@@ -241,7 +241,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		{
 			if (ctx instanceof AbstractApplicationContext)
 			{
-				List<String> primaries = new ArrayList<String>();
+				List<String> primaries = new ArrayList<>();
 				for (String name : names)
 				{
 					BeanDefinition beanDef = getBeanDefinition(
