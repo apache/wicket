@@ -34,7 +34,7 @@ public class OsgiClashingPackagesTest extends Assert
 		String[] dependencies = Strings.split(classpath, pathSeparator);
 
 		// packageName -> projects containing a package with this name
-		Map<String, List<Project>> projectBuckets = new HashMap<String, List<Project>>();
+		Map<String, List<Project>> projectBuckets = new HashMap<>();
 
 		for (String dependency : dependencies)
 		{
@@ -87,7 +87,7 @@ public class OsgiClashingPackagesTest extends Assert
 
 	private static class Project {
 		// a set with all package names in a dependency
-		private final Set<String> packagesWithContent = new TreeSet<String>();
+		private final Set<String> packagesWithContent = new TreeSet<>();
 
 		// the name of the dependency
 		private final String name;
@@ -105,7 +105,7 @@ public class OsgiClashingPackagesTest extends Assert
 		public void addTo(Map<String, List<Project>> projectBuckets) {
 			for (String packageWithContent : packagesWithContent) {
 				if (!projectBuckets.containsKey(packageWithContent)) {
-					projectBuckets.put(packageWithContent, new ArrayList<OsgiClashingPackagesTest.Project>());
+					projectBuckets.put(packageWithContent, new ArrayList<Project>());
 				}
 				projectBuckets.get(packageWithContent).add(this);
 			}
