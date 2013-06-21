@@ -16,7 +16,7 @@
  */
 
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true */
+ QUnit: true, module: true, expect: true, stop: true */
 
 jQuery(document).ready(function() {
 	"use strict";
@@ -237,7 +237,9 @@ jQuery(document).ready(function() {
 	module("Custom events");
 
 	test('inputchange', function() {
+
 		stop();
+
 		if (Wicket.Browser.isIE()) {
 			expect(3);
 		} else {
