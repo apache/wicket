@@ -975,7 +975,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Sets the flag that determins whether or not this page was created using one of its
+	 * Sets the flag that determines whether or not this page was created using one of its
 	 * bookmarkable constructors
 	 * 
 	 * @param wasCreatedBookmarkable
