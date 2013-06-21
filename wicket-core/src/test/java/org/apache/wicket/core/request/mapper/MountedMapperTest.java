@@ -680,6 +680,26 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertEquals("some/p1/path/p2/i1/i2?1&a=b&b=c", url.toString());
 	}
 
+	/**
+	 * WICKET-5247 page instantiated without required parameters won't be mapped
+	 */
+	@Test
+	public void placeholderEncode4()
+	{
+		PageProvider provider = new PageProvider(new MockPage())
+		{
+			@Override
+			public boolean isNewPageInstance()
+			{
+				return false;
+			}
+		};
+		provider.setPageSource(context);
+		IRequestHandler handler = new RenderPageRequestHandler(provider);
+		Url url = placeholderEncoder.mapHandler(handler);
+		assertNull(url);
+	}
+
 	/** */
 	@Test
 	public void optionPlaceholderDecode1()
