@@ -30,7 +30,7 @@ import org.apache.wicket.util.string.StringValue;
  */
 public class MountParameters
 {
-	private final Map<String, String> map = new HashMap<String, String>();
+	private final Map<String, String> map = new HashMap<>();
 
 	/**
 	 * 
