@@ -72,7 +72,7 @@ public class InspectorDebugPanel extends StandardDebugPanel
 	@Override
 	protected IModel<String> getDataModel()
 	{
-		return new Model<String>("Inspector");
+		return new Model<>("Inspector");
 	}
 
 	@Override
