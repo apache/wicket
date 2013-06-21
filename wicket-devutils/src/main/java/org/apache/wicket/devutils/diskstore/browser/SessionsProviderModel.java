@@ -34,7 +34,7 @@ public class SessionsProviderModel extends LoadableDetachableModel<List<String>>
 	@Override
 	protected List<String> load()
 	{
-		List<String> sessionIds = new ArrayList<String>();
+		List<String> sessionIds = new ArrayList<>();
 		if (Application.exists())
 		{
 			DebugDiskDataStore dataStore = DataStoreHelper.getDataStore();

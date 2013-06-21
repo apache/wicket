@@ -50,7 +50,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription,
 	{
 		List<PageWindow> lastPageWindows = getPageWindows();
 		List<PageWindow> subList = lastPageWindows.subList((int)first, (int)(first + count));
-		List<PageWindowDescription> pageDescriptions = new ArrayList<PageWindowDescription>();
+		List<PageWindowDescription> pageDescriptions = new ArrayList<>();
 		for (PageWindow pw : subList)
 		{
 			pageDescriptions.add(new PageWindowDescription(pw, sessionId.getObject()));
@@ -61,7 +61,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription,
 
 	private List<PageWindow> getPageWindows()
 	{
-		List<PageWindow> lastPageWindows = new ArrayList<PageWindow>();
+		List<PageWindow> lastPageWindows = new ArrayList<>();
 		if (sessionId != null && sessionId.getObject() != null)
 		{
 			String sessId = sessionId.getObject();
@@ -86,7 +86,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription,
 	@Override
 	public IModel<PageWindowDescription> model(PageWindowDescription description)
 	{
-		return new Model<PageWindowDescription>(description);
+		return new Model<>(description);
 	}
 
 	@Override
