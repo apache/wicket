@@ -415,7 +415,7 @@ public class DatePicker extends Behavior
 			return null;
 		}
 
-		List<String> list = new ArrayList<String>(stringArray.length);
+		List<String> list = new ArrayList<>(stringArray.length);
 		for (String string : stringArray)
 		{
 			if (!Strings.isEmpty(string))
