@@ -46,7 +46,7 @@ public class HttpHeaderCollection
 
 	public HttpHeaderCollection()
 	{
-		headers = new HashMap<HeaderKey, List<Object>>();
+		headers = new HashMap<>();
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class HttpHeaderCollection
 
 		if (values == null)
 		{
-			values = new ArrayList<Object>();
+			values = new ArrayList<>();
 			headers.put(key, values);
 		}
 		values.add(object);
@@ -202,7 +202,7 @@ public class HttpHeaderCollection
 			return Collections.emptySet();
 		}
 
-		final Set<String> names = new HashSet<String>(headers.size());
+		final Set<String> names = new HashSet<>(headers.size());
 
 		for (HeaderKey key : headers.keySet())
 		{
