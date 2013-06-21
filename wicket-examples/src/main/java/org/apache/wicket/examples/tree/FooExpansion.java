@@ -44,7 +44,7 @@ public class FooExpansion implements Set<Foo>, Serializable
 		private static final long serialVersionUID = 1L;
 	};
 
-	private Set<String> ids = new HashSet<String>();
+	private Set<String> ids = new HashSet<>();
 
 	private boolean inverse;
 

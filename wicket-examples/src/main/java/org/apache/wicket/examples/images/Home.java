@@ -76,7 +76,7 @@ public final class Home extends WicketExamplePage
 		add(new Image("image3", new CircleDynamicImageResource(100, 100)));
 
 		// Simple model
-		add(new Image("image4", new Model<String>("Image2.gif")));
+		add(new Image("image4", new Model<>("Image2.gif")));
 
 		// Dynamically created buffered image
 		add(new Image("image5", getImage5Resource()));
@@ -88,7 +88,7 @@ public final class Home extends WicketExamplePage
 		add(new Image("cancelButton", new SharedResourceReference("cancelButton")));
 
 		// image loaded as resource ref via model.
-		add(new Image("imageModelResourceReference", new Model<ResourceReference>(RESOURCE_REF)));
+		add(new Image("imageModelResourceReference", new Model<>(RESOURCE_REF)));
 
 		// image loaded as resource via model.
 		add(new Image("imageModelResource", new Model<CircleDynamicImageResource>(

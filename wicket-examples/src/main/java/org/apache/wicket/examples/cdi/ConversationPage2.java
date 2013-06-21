@@ -34,7 +34,7 @@ public class ConversationPage2 extends CdiExamplePage
 
 		add(new IncrementLink("increment"));
 
-		add(new BookmarkablePageLink<Void>("next", ConversationPage3.class));
+		add(new BookmarkablePageLink<>("next", ConversationPage3.class));
 	}
 
 	private class IncrementLink extends Link<Void> {

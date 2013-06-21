@@ -37,7 +37,7 @@ public class DataGridPage extends BasePage
 	 */
 	public DataGridPage()
 	{
-		List<ICellPopulator<Contact>> columns = new ArrayList<ICellPopulator<Contact>>();
+		List<ICellPopulator<Contact>> columns = new ArrayList<>();
 
 		columns.add(new PropertyPopulator<Contact>("id"));
 		columns.add(new PropertyPopulator<Contact>("firstName"));
@@ -45,6 +45,6 @@ public class DataGridPage extends BasePage
 		columns.add(new PropertyPopulator<Contact>("homePhone"));
 		columns.add(new PropertyPopulator<Contact>("cellPhone"));
 
-		add(new DataGridView<Contact>("rows", columns, new SortableContactDataProvider()));
+		add(new DataGridView<>("rows", columns, new SortableContactDataProvider()));
 	}
 }

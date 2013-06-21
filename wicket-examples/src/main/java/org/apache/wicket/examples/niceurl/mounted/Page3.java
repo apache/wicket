@@ -36,6 +36,6 @@ public class Page3 extends WicketExamplePage
 	 */
 	public Page3(PageParameters parameters)
 	{
-		add(new BookmarkablePageLink<Void>("homeLink", Home.class));
+		add(new BookmarkablePageLink<>("homeLink", Home.class));
 	}
 }

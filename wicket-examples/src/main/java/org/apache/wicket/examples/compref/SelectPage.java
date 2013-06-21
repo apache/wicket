@@ -58,7 +58,7 @@ public class SelectPage extends WicketExamplePage
 	public SelectPage()
 	{
 		final Input input = new Input();
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -77,14 +77,14 @@ public class SelectPage extends WicketExamplePage
 		};
 		add(form);
 
-		Select<String> site = new Select<String>("site");
+		Select<String> site = new Select<>("site");
 		form.add(site);
-		site.add(new SelectOption<String>("site1", new Model<String>("tss")));
-		site.add(new SelectOption<String>("site2", new Model<String>("jl")));
-		site.add(new SelectOption<String>("site3", new Model<String>("sd")));
-		site.add(new SelectOption<String>("site4", new Model<String>("bn")));
+		site.add(new SelectOption<>("site1", new Model<>("tss")));
+		site.add(new SelectOption<>("site2", new Model<>("jl")));
+		site.add(new SelectOption<>("site3", new Model<>("sd")));
+		site.add(new SelectOption<>("site4", new Model<>("bn")));
 
-		Select<List<String>> choices = new Select<List<String>>("choices");
+		Select<List<String>> choices = new Select<>("choices");
 		form.add(choices);
 		IOptionRenderer<String> renderer = new IOptionRenderer<String>()
 		{
@@ -99,13 +99,13 @@ public class SelectPage extends WicketExamplePage
 			@Override
 			public IModel<String> getModel(String value)
 			{
-				return new Model<String>(value);
+				return new Model<>(value);
 			}
 
 		};
 		IModel<Collection<? extends String>> model = new WildcardCollectionModel<String>(
 			MANY_CHOICES);
-		choices.add(new SelectOptions<String>("manychoices", model, renderer));
+		choices.add(new SelectOptions<>("manychoices", model, renderer));
 
 	}
 
@@ -118,7 +118,7 @@ public class SelectPage extends WicketExamplePage
 		public String site = "sd";
 
 		/** the selected choices. */
-		public List<String> choices = new ArrayList<String>();
+		public List<String> choices = new ArrayList<>();
 
 		/** adds pre-selected items to the choices list */
 		public Input()

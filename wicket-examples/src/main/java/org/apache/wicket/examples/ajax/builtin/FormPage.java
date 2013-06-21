@@ -60,14 +60,14 @@ public class FormPage extends BasePage
 
 		// add form components to the form as usual
 
-		fc = new RequiredTextField<String>("name");
+		fc = new RequiredTextField<>("name");
 		fc.add(new StringValidator(4, null));
 		fc.setLabel(new ResourceModel("label.name"));
 
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("name-label", fc));
 
-		fc = new RequiredTextField<String>("email");
+		fc = new RequiredTextField<>("email");
 		fc.add(EmailAddressValidator.getInstance());
 		fc.setLabel(new ResourceModel("label.email"));
 

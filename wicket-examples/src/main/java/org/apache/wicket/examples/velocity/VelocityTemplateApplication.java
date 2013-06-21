@@ -33,10 +33,10 @@ import org.apache.wicket.protocol.http.WebApplication;
  */
 public class VelocityTemplateApplication extends WebApplication
 {
-	private static List<Field> fields = new ArrayList<Field>();
+	private static List<Field> fields = new ArrayList<>();
 
 	/** simple persons db. */
-	private static List<Person> persons = new ArrayList<Person>();
+	private static List<Person> persons = new ArrayList<>();
 
 	static
 	{

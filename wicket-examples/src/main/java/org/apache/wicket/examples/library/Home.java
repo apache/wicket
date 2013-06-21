@@ -53,7 +53,7 @@ public final class Home extends AuthenticatedWebPage
 				final Book book = listItem.getModelObject();
 				listItem.add(BookDetails.link("details", book, getLocalizer().getString(
 					"noBookTitle", this)));
-				listItem.add(new Label("author", new Model<Book>(book)));
+				listItem.add(new Label("author", new Model<>(book)));
 				listItem.add(moveUpLink("moveUp", listItem));
 				listItem.add(moveDownLink("moveDown", listItem));
 				listItem.add(removeLink("remove", listItem));
@@ -76,7 +76,7 @@ public final class Home extends AuthenticatedWebPage
 		User user = getLibrarySession().getUser();
 		if (user == null)
 		{
-			return new ArrayList<Book>();
+			return new ArrayList<>();
 		}
 
 		return user.getBooks();

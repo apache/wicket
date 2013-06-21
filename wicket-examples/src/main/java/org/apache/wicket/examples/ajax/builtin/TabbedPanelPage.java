@@ -39,7 +39,7 @@ public class TabbedPanelPage extends BasePage
 	public TabbedPanelPage()
 	{
 		// create a list of ITab objects used to feed the tabbed panel
-		List<ITab> tabs = new ArrayList<ITab>();
+		List<ITab> tabs = new ArrayList<>();
 		tabs.add(new AbstractTab(new Model<String>("first tab"))
 		{
 			@Override

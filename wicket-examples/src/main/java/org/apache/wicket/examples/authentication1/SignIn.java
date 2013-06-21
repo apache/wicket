@@ -68,7 +68,7 @@ public final class SignIn extends WicketExamplePage
 			super(id);
 
 			// Attach textfield components that edit properties map model
-			add(new TextField<String>(USERNAME, new PropertyModel<String>(properties, USERNAME)));
+			add(new TextField<>(USERNAME, new PropertyModel<String>(properties, USERNAME)));
 			add(new PasswordTextField(PASSWORD, new PropertyModel<String>(properties, PASSWORD)));
 		}
 

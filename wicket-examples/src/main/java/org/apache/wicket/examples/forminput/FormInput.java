@@ -73,7 +73,7 @@ public class FormInput extends WicketExamplePage
 		@SuppressWarnings("serial")
 		public InputForm(String name)
 		{
-			super(name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
+			super(name, new CompoundPropertyModel<>(new FormInputModel()));
 
 			// Dropdown for selecting locale
 			add(new LocaleDropDownChoice("localeSelect"));
@@ -90,15 +90,15 @@ public class FormInput extends WicketExamplePage
 			});
 
 			add(new TextField<String>("stringProperty").setRequired(true).setLabel(
-				new Model<String>("String")));
+				new Model<>("String")));
 
-			add(new TextField<Integer>("integerProperty", Integer.class).setRequired(true).add(
-				new RangeValidator<Integer>(1, Integer.MAX_VALUE)));
+			add(new TextField<>("integerProperty", Integer.class).setRequired(true).add(
+				new RangeValidator<>(1, Integer.MAX_VALUE)));
 
-			add(new TextField<Double>("doubleProperty", Double.class).setRequired(true));
+			add(new TextField<>("doubleProperty", Double.class).setRequired(true));
 
 			add(new TextField<Integer>("integerInRangeProperty").setRequired(true).add(
-				new RangeValidator<Integer>(0, 100)));
+				new RangeValidator<>(0, 100)));
 
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
@@ -108,19 +108,19 @@ public class FormInput extends WicketExamplePage
 			// just for fun, add a border so that our result will be displayed as '[ x ]'
 			multiplyLabel.add(new BeforeAndAfterBorder());
 			add(multiplyLabel);
-			RadioChoice<String> rc = new RadioChoice<String>("numberRadioChoice", NUMBERS).setSuffix("");
-			rc.setLabel(new Model<String>("number"));
+			RadioChoice<String> rc = new RadioChoice<>("numberRadioChoice", NUMBERS).setSuffix("");
+			rc.setLabel(new Model<>("number"));
 			rc.setRequired(true);
 			add(rc);
 
-			RadioGroup<String> group = new RadioGroup<String>("numbersGroup");
+			RadioGroup<String> group = new RadioGroup<>("numbersGroup");
 			add(group);
 			ListView<String> persons = new ListView<String>("numbers", NUMBERS)
 			{
 				@Override
 				protected void populateItem(ListItem<String> item)
 				{
-					Radio<String> radio = new Radio<String>("radio", item.getModel());
+					Radio<String> radio = new Radio<>("radio", item.getModel());
 					radio.setLabel(item.getModel());
 					item.add(radio);
 					item.add(new SimpleFormComponentLabel("number", radio));
@@ -128,14 +128,14 @@ public class FormInput extends WicketExamplePage
 			}.setReuseItems(true);
 			group.add(persons);
 
-			CheckGroup<String> checks = new CheckGroup<String>("numbersCheckGroup");
+			CheckGroup<String> checks = new CheckGroup<>("numbersCheckGroup");
 			add(checks);
 			ListView<String> checksList = new ListView<String>("numbers", NUMBERS)
 			{
 				@Override
 				protected void populateItem(ListItem<String> item)
 				{
-					Check<String> check = new Check<String>("check", item.getModel());
+					Check<String> check = new Check<>("check", item.getModel());
 					check.setLabel(item.getModel());
 					item.add(check);
 					item.add(new SimpleFormComponentLabel("number", check));
@@ -143,7 +143,7 @@ public class FormInput extends WicketExamplePage
 			}.setReuseItems(true);
 			checks.add(checksList);
 
-			add(new ListMultipleChoice<String>("siteSelection", SITES));
+			add(new ListMultipleChoice<>("siteSelection", SITES));
 
 			// TextField using a custom converter.
 			add(new TextField<URL>("urlProperty", URL.class)
@@ -173,7 +173,7 @@ public class FormInput extends WicketExamplePage
 					if (UsPhoneNumber.class.isAssignableFrom(type))
 					{
 						// US telephone number mask
-						return new MaskConverter<C>("(###) ###-####", UsPhoneNumber.class);
+						return new MaskConverter<>("(###) ###-####", UsPhoneNumber.class);
 					}
 					else
 					{
@@ -231,7 +231,7 @@ public class FormInput extends WicketExamplePage
 			// add a text field that works on each list item model (returns
 			// objects of
 			// type FormInputModel.Line) using property text.
-			item.add(new TextField<String>("lineEdit", new PropertyModel<String>(
+			item.add(new TextField<>("lineEdit", new PropertyModel<String>(
 				item.getDefaultModel(), "text")));
 		}
 	}

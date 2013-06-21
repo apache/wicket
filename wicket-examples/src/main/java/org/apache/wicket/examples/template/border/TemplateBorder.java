@@ -60,7 +60,7 @@ public class TemplateBorder extends Border
 				}
 			}
 		});
-		addToBorder(new BookmarkablePageLink<Void>("page1Link", Page1.class));
-		addToBorder(new BookmarkablePageLink<Void>("page2Link", Page2.class));
+		addToBorder(new BookmarkablePageLink<>("page1Link", Page1.class));
+		addToBorder(new BookmarkablePageLink<>("page2Link", Page2.class));
 	}
 }

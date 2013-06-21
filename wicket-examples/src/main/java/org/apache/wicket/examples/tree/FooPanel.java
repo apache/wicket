@@ -31,10 +31,10 @@ public class FooPanel extends Panel
 
 	public FooPanel(String id, IModel<Foo> foo)
 	{
-		super(id, new CompoundPropertyModel<Foo>(foo));
+		super(id, new CompoundPropertyModel<>(foo));
 
-		add(new TextField<String>("bar"));
-		add(new TextField<String>("baz"));
+		add(new TextField<>("bar"));
+		add(new TextField<>("baz"));
 		add(new CheckBox("quux"));
 	}
 }

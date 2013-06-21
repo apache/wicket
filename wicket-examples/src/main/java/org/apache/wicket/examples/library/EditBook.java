@@ -100,11 +100,11 @@ public final class EditBook extends AuthenticatedWebPage
 		 */
 		public EditBookForm(final String id, final Book book)
 		{
-			super(id, new CompoundPropertyModel<Book>(book));
+			super(id, new CompoundPropertyModel<>(book));
 
 			// Create a required text field with a max length of 30 characters
 			// that edits the book's title
-			final TextField<String> title = new TextField<String>("title");
+			final TextField<String> title = new TextField<>("title");
 			title.setRequired(true);
 			title.add(new StringValidator(null, 30));
 
@@ -113,7 +113,7 @@ public final class EditBook extends AuthenticatedWebPage
 			titleFeedback.add(title);
 
 			// Create a required text field that edits the book's author
-			final TextField<String> author = new TextField<String>("author");
+			final TextField<String> author = new TextField<>("author");
 			author.setRequired(true);
 			final MarkupContainer authorFeedback = new FormComponentFeedbackBorder("authorFeedback");
 			add(authorFeedback);
@@ -123,15 +123,15 @@ public final class EditBook extends AuthenticatedWebPage
 			add(new CheckBox("fiction"));
 
 			// Books is everything but otherBook
-			List<Book> books = new ArrayList<Book>();
+			List<Book> books = new ArrayList<>();
 			books.addAll(Book.getBooks());
 			books.remove(otherBook);
 
 			// Add companion book choice
-			add(new DropDownChoice<Book>("companionBook", books));
+			add(new DropDownChoice<>("companionBook", books));
 
 			// Add radio choice test
-			final RadioChoice<Book> relatedBook = new RadioChoice<Book>("relatedBook", books);
+			final RadioChoice<Book> relatedBook = new RadioChoice<>("relatedBook", books);
 			add(relatedBook);
 
 			// Multi-select among writing styles
