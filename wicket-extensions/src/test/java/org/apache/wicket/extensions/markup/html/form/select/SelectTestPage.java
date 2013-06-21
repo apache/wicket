@@ -42,6 +42,6 @@ public class SelectTestPage extends WebPage
 		select.add(option1 = new SelectOption<>("option1", new Model<>("OPTION_1")));
 		select.add(new SelectOption<>("option2", new Model<>("OPTION_2")));
 
-		form.add(new TextField<>("text", new Model<String>(null)).setRequired(true));
+		form.add(new TextField<>("text", new Model<>(null)).setRequired(true));
 	}
 }

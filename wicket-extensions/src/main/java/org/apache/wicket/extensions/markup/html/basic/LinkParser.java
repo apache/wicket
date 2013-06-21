@@ -32,7 +32,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class LinkParser implements ILinkParser
 {
-	private final Map<String, ILinkRenderStrategy> renderStrategies = new HashMap<String, ILinkRenderStrategy>();
+	private final Map<String, ILinkRenderStrategy> renderStrategies = new HashMap<>();
 
 	/**
 	 * Adds a render strategy to the parser.

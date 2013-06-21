@@ -99,7 +99,7 @@ public class TreeDataProviderTest extends Assert
 		@Override
 		public Iterator<? extends String> getChildren(String object)
 		{
-			List<String> children = new ArrayList<String>();
+			List<String> children = new ArrayList<>();
 
 			if (hasChildren(object))
 			{

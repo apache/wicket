@@ -83,13 +83,13 @@ public class WizardModel extends AbstractWizardModel
 	private IWizardStep activeStep;
 
 	/** Conditions with steps. */
-	private final List<ICondition> conditions = new ArrayList<ICondition>();
+	private final List<ICondition> conditions = new ArrayList<>();
 
 	/** State history. */
-	private final ArrayListStack<IWizardStep> history = new ArrayListStack<IWizardStep>();
+	private final ArrayListStack<IWizardStep> history = new ArrayListStack<>();
 
 	/** The wizard steps. */
-	private final List<IWizardStep> steps = new ArrayList<IWizardStep>();
+	private final List<IWizardStep> steps = new ArrayList<>();
 
 	/**
 	 * Construct.

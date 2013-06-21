@@ -54,7 +54,7 @@ class OpaqueRegion
 		}
 
 		// Initialize rectangle list
-		rectangles = new ArrayList<Rectangle>();
+		rectangles = new ArrayList<>();
 
 		// Get color model for image
 		final ColorModel colorModel = image.getColorModel();
@@ -181,7 +181,7 @@ class OpaqueRegion
 	OpaqueRegion subtract(final OpaqueRegion removeRegion, final Point offset)
 	{
 		// Create new rectangle list
-		final List<Rectangle> newRectangles = new ArrayList<Rectangle>();
+		final List<Rectangle> newRectangles = new ArrayList<>();
 
 		// For each rectangle
 		for (final Rectangle rectangle : rectangles)
@@ -190,7 +190,7 @@ class OpaqueRegion
 			final int y = rectangle.y;
 
 			// Work list starts with the current rectangle in this opaque region
-			final List<Rectangle> workList = new ArrayList<Rectangle>();
+			final List<Rectangle> workList = new ArrayList<>();
 			workList.add(new Rectangle(rectangle));
 
 			// For each rectangle in the region to remove

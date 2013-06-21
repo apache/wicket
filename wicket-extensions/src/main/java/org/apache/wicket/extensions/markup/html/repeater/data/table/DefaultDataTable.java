@@ -63,14 +63,14 @@ public class DefaultDataTable<T, S> extends DataTable<T, S>
 		super(id, columns, dataProvider, rowsPerPage);
 
 		addTopToolbar(new NavigationToolbar(this));
-		addTopToolbar(new HeadersToolbar<S>(this, dataProvider));
+		addTopToolbar(new HeadersToolbar<>(this, dataProvider));
 		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 
 	@Override
 	protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 	{
-		return new OddEvenItem<T>(id, index, model);
+		return new OddEvenItem<>(id, index, model);
 	}
 
 }

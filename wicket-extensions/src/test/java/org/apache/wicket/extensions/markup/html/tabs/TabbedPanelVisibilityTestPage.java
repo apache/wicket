@@ -34,7 +34,7 @@ public class TabbedPanelVisibilityTestPage extends WebPage
 
 	public TabbedPanelVisibilityTestPage(int nbTabs, int nbTabsVisible)
 	{
-		List<ITab> tabs = new ArrayList<ITab>(nbTabs);
+		List<ITab> tabs = new ArrayList<>(nbTabs);
 		for (int i = 0; i < nbTabs; i++)
 		{
 			tabs.add(new DummyTab(i < nbTabsVisible));

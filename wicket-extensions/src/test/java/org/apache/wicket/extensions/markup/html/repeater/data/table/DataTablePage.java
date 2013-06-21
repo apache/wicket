@@ -43,9 +43,9 @@ public class DataTablePage extends WebPage
 	 */
 	public DataTablePage()
 	{
-		List<IColumn<Contact, String>> columns = new ArrayList<IColumn<Contact, String>>();
+		List<IColumn<Contact, String>> columns = new ArrayList<>();
 
-		columns.add(new AbstractColumn<Contact, String>(new Model<String>("Actions"))
+		columns.add(new AbstractColumn<Contact, String>(new Model<>("Actions"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class DataTablePage extends WebPage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("ID"), "id")
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("ID"), "id")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -68,10 +68,10 @@ public class DataTablePage extends WebPage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("First Name"), "firstName",
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("First Name"), "firstName",
 			"firstName"));
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Last Name"), "lastName",
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Last Name"), "lastName",
 			"lastName")
 		{
 			private static final long serialVersionUID = 1L;
@@ -83,8 +83,8 @@ public class DataTablePage extends WebPage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Cell Phone"), "cellPhone"));
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		DefaultDataTable defaultDataTable = new DefaultDataTable("table", columns,

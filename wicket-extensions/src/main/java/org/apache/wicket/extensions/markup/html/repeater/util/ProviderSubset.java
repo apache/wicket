@@ -43,7 +43,7 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 
 	private ITreeProvider<T> provider;
 
-	private Set<IModel<T>> models = new HashSet<IModel<T>>();
+	private Set<IModel<T>> models = new HashSet<>();
 
 	/**
 	 * Create an empty subset.
