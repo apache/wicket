@@ -209,7 +209,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public StringList()
 	{
-		strings = new ArrayList<String>();
+		strings = new ArrayList<>();
 	}
 
 	/**
@@ -220,7 +220,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public StringList(final int size)
 	{
-		strings = new ArrayList<String>(size);
+		strings = new ArrayList<>(size);
 	}
 
 	/**

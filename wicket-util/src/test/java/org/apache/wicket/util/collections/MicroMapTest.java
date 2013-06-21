@@ -40,7 +40,7 @@ public class MicroMapTest extends Assert
 	@Test
 	public void microMap()
 	{
-		MicroMap<Object, Object> m = new MicroMap<Object, Object>();
+		MicroMap<Object, Object> m = new MicroMap<>();
 		m.put(FOO, BAR);
 
 		// Test .keySet();

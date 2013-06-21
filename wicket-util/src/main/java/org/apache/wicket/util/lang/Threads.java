@@ -102,7 +102,7 @@ public class Threads
 
 	private static void dumpSingleThread(Logger logger, Thread thread, StackTraceElement[] trace)
 	{
-		Map<CharSequence, Object> variables = new HashMap<CharSequence, Object>();
+		Map<CharSequence, Object> variables = new HashMap<>();
 		variables.put("name", thread.getName());
 		variables.put("isDaemon", thread.isDaemon() ? " daemon" : "");
 		variables.put("priority", thread.getPriority());

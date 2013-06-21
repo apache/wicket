@@ -34,7 +34,7 @@ public class MostRecentlyUsedMapTest
 	@Test
 	public void max2Entries()
 	{
-		MostRecentlyUsedMap<String, String> map = new MostRecentlyUsedMap<String, String>(2);
+		MostRecentlyUsedMap<String, String> map = new MostRecentlyUsedMap<>(2);
 		assertEquals(0, map.size());
 		map.put("1", "one");
 		assertEquals(1, map.size());
