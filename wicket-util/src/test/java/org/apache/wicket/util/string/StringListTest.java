@@ -42,7 +42,7 @@ public class StringListTest extends Assert
 	 */
 	private void checkValueOf(String[] inputs, int expectedNumber, String expectedString)
 	{
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		Object[] objects = new Object[inputs.length];
 		for (int i = 0; i < inputs.length; i++)
 		{
@@ -183,7 +183,7 @@ public class StringListTest extends Assert
 		isEmptyList(StringList.valueOf((String)null));
 		isEmptyList(StringList.valueOf((Object[])null));
 		isEmptyList(StringList.valueOf((String[])null));
-		isEmptyList(StringList.valueOf(new ArrayList<Object>()));
+		isEmptyList(StringList.valueOf(new ArrayList<>()));
 		isEmptyList(StringList.valueOf(new Object[0]));
 		isEmptyList(StringList.valueOf(new String[0]));
 

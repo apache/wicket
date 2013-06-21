@@ -89,7 +89,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 		List<V> list = get(key);
 		if (list == null)
 		{
-			list = new ArrayList<V>(1);
+			list = new ArrayList<>(1);
 			put(key, list);
 		}
 		list.add(value);

@@ -35,7 +35,7 @@ public class VariableInterpolatorTest extends Assert
 	@Test
 	public void withValue()
 	{
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("key", "value");
 		MapVariableInterpolator in = new MapVariableInterpolator("${key}", params);
 		assertEquals("value", in.toString());
@@ -47,7 +47,7 @@ public class VariableInterpolatorTest extends Assert
 	@Test
 	public void withoutValue()
 	{
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		MapVariableInterpolator in = new MapVariableInterpolator("${key}", params);
 		assertEquals("${key}", in.toString());
 	}
@@ -58,7 +58,7 @@ public class VariableInterpolatorTest extends Assert
 	@Test
 	public void withoutValueAndException()
 	{
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		MapVariableInterpolator in = new MapVariableInterpolator("${key}", params, true);
 		try
 		{
@@ -77,7 +77,7 @@ public class VariableInterpolatorTest extends Assert
 	@Test
 	public void literal()
 	{
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("key", "value");
 		MapVariableInterpolator in = new MapVariableInterpolator("aaa $${key} bbb", params);
 		assertEquals("aaa ${key} bbb", in.toString());

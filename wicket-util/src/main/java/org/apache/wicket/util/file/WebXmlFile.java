@@ -242,7 +242,7 @@ public class WebXmlFile
 			}
 			log.info(msg.toString());
 		}
-		Set<String> stripped = new HashSet<String>(urlPatterns.size());
+		Set<String> stripped = new HashSet<>(urlPatterns.size());
 
 		for (String urlPattern : urlPatterns)
 		{
@@ -262,7 +262,7 @@ public class WebXmlFile
 	 */
 	private Set<String> getFilterPaths(final String filterName, final String name, final Node node)
 	{
-		Set<String> paths = new HashSet<String>();
+		Set<String> paths = new HashSet<>();
 		String foundUrlPattern = null;
 		String foundFilterName = null;
 
@@ -309,7 +309,7 @@ public class WebXmlFile
 	private Set<String> getFilterPaths(final String filterName, final String mapping,
 		final String name, final NodeList nodeList)
 	{
-		Set<String> paths = new HashSet<String>(1);
+		Set<String> paths = new HashSet<>(1);
 
 		for (int i = 0; i < nodeList.getLength(); ++i)
 		{

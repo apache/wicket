@@ -849,7 +849,7 @@ public final class Strings
 		{
 			return NO_STRINGS;
 		}
-		final List<String> strings = new ArrayList<String>();
+		final List<String> strings = new ArrayList<>();
 		int pos = 0;
 		while (true)
 		{
@@ -1181,7 +1181,7 @@ public final class Strings
 	{
 		if (throwable != null)
 		{
-			List<Throwable> al = new ArrayList<Throwable>();
+			List<Throwable> al = new ArrayList<>();
 			Throwable cause = throwable;
 			al.add(cause);
 			while ((cause.getCause() != null) && (cause != cause.getCause()))

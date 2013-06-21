@@ -125,7 +125,7 @@ public class Exceptions
 	 */
 	public static <T> T visit(final Throwable throwable, final IThrowableVisitor<T> visitor)
 	{
-		Visit<T> visit = new Visit<T>();
+		Visit<T> visit = new Visit<>();
 		Throwable cursor = throwable;
 		while (cursor != null)
 		{
