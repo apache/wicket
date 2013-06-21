@@ -40,7 +40,7 @@ public class VelocityWithMarkupParsingPage extends WebPage
 	 */
 	public VelocityWithMarkupParsingPage()
 	{
-		HashMap<String, String> values = new HashMap<String, String>();
+		HashMap<String, String> values = new HashMap<>();
 		values.put("labelId", "message");
 		VelocityPanel velocityPanel = new VelocityPanel("velocityPanel",
 			new Model<HashMap<String, String>>(values))
