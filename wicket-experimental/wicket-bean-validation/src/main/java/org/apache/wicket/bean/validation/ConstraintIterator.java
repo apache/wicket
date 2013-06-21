@@ -20,7 +20,7 @@ class ConstraintIterator implements Iterator<ConstraintDescriptor<?>>
 {
 	private ConstraintDescriptor<?> next;
 
-	private List<Iterator<ConstraintDescriptor<?>>> stack = new ArrayList<Iterator<ConstraintDescriptor<?>>>();
+	private List<Iterator<ConstraintDescriptor<?>>> stack = new ArrayList<>();
 
 	public ConstraintIterator(Validator validator, Property property, Class<?>... groups)
 	{

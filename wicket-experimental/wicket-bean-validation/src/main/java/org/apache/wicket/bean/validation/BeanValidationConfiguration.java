@@ -31,9 +31,9 @@ public class BeanValidationConfiguration implements BeanValidationContext
 
 	private IViolationTranslator violationTranslator = new DefaultViolationTranslator();
 
-	private List<IPropertyResolver> propertyResolvers = new CopyOnWriteArrayList<IPropertyResolver>();
+	private List<IPropertyResolver> propertyResolvers = new CopyOnWriteArrayList<>();
 
-	private Map<Class<?>, ITagModifier<? extends Annotation>> tagModifiers = new ConcurrentHashMap<Class<?>, ITagModifier<? extends Annotation>>();
+	private Map<Class<?>, ITagModifier<? extends Annotation>> tagModifiers = new ConcurrentHashMap<>();
 
 	public BeanValidationConfiguration()
 	{
