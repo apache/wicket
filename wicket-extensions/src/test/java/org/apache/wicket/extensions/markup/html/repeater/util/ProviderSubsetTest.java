@@ -38,7 +38,7 @@ public class ProviderSubsetTest extends Assert
 	/**
 	 * All models requested from the provider.
 	 */
-	private List<StringModel> models = new ArrayList<StringModel>();
+	private List<StringModel> models = new ArrayList<>();
 
 	/**
 	 * Test set methods.
@@ -46,7 +46,7 @@ public class ProviderSubsetTest extends Assert
 	@Test
 	public void setMethods()
 	{
-		ProviderSubset<String> subset = new ProviderSubset<String>(provider);
+		ProviderSubset<String> subset = new ProviderSubset<>(provider);
 
 		subset.add("A");
 		subset.addAll(Arrays.asList("AA", "AAA"));
@@ -144,7 +144,7 @@ public class ProviderSubsetTest extends Assert
 
 		private static final long serialVersionUID = 1L;
 
-		private List<String> EMPTY = new ArrayList<String>();
+		private List<String> EMPTY = new ArrayList<>();
 
 		@Override
 		public Iterator<String> getRoots()

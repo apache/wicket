@@ -209,7 +209,7 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 	{
 		if (nodeUpdates == null)
 		{
-			nodeUpdates = new ArrayList<T>();
+			nodeUpdates = new ArrayList<>();
 		}
 
 		for (Object node : nodes)
@@ -222,7 +222,7 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 	{
 		if (branchUpdates == null)
 		{
-			branchUpdates = new ArrayList<T>();
+			branchUpdates = new ArrayList<>();
 		}
 
 		branchUpdates.add(cast(branch));

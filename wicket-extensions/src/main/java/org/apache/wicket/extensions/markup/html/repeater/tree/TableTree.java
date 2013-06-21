@@ -243,7 +243,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 */
 	protected Item<T> newRowItem(String id, int index, IModel<T> model)
 	{
-		Item<T> item = new Item<T>(id, index, model);
+		Item<T> item = new Item<>(id, index, model);
 
 		return item;
 	}

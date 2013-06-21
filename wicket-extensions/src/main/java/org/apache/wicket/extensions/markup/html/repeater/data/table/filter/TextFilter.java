@@ -46,7 +46,7 @@ public class TextFilter<T> extends AbstractFilter
 	public TextFilter(final String id, final IModel<T> model, final FilterForm<?> form)
 	{
 		super(id, form);
-		filter = new TextField<T>("filter", model);
+		filter = new TextField<>("filter", model);
 		enableFocusTracking(filter);
 		add(filter);
 	}

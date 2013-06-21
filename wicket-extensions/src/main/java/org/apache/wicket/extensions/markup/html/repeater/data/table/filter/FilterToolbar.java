@@ -72,7 +72,7 @@ public class FilterToolbar extends AbstractToolbar
 
 			@Override
 			public List<IColumn<T, S>> getObject() {
-				List<IColumn<T, S>> columnsModels = new LinkedList<IColumn<T, S>>();
+				List<IColumn<T, S>> columnsModels = new LinkedList<>();
 
 				for (IColumn<T, S> column : table.getColumns())
 				{

@@ -41,7 +41,7 @@ public class PaletteTestPage extends WebPage
 	 */
 	public PaletteTestPage(IModel<List<String>> selected, IModel<List<String>> all)
 	{
-		form = new Form<Object>("form", new CompoundPropertyModel<Object>("WICKET-5086"));
+		form = new Form<>("form", new CompoundPropertyModel<Object>("WICKET-5086"));
 		add(form);
 
 		IChoiceRenderer<String> choiceRenderer = new IChoiceRenderer<String>()
@@ -60,7 +60,7 @@ public class PaletteTestPage extends WebPage
 		};
 
 
-		palette = new Palette<String>("palette", selected, all, choiceRenderer, 10, true);
+		palette = new Palette<>("palette", selected, all, choiceRenderer, 10, true);
 		form.add(palette);
 	}
 }

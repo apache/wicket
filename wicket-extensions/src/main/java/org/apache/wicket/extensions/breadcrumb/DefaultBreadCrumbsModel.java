@@ -32,7 +32,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	private IBreadCrumbParticipant activeParticipant = null;
 
 	/** Holds the current list of crumbs. */
-	private final List<IBreadCrumbParticipant> crumbs = new ArrayList<IBreadCrumbParticipant>();
+	private final List<IBreadCrumbParticipant> crumbs = new ArrayList<>();
 
 	/** listeners utility. */
 	private final BreadCrumbModelListenerSupport listenerSupport = new BreadCrumbModelListenerSupport();

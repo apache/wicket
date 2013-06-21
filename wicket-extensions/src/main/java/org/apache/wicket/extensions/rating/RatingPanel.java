@@ -172,7 +172,7 @@ public abstract class RatingPanel extends Panel
 	/**
 	 * The number of stars that need to be shown, should result in an Integer object.
 	 */
-	private IModel<Integer> nrOfStars = new Model<Integer>(5);
+	private IModel<Integer> nrOfStars = new Model<>(5);
 
 	/**
 	 * The number of votes that have been cast, should result in an Integer object.
@@ -213,7 +213,7 @@ public abstract class RatingPanel extends Panel
 	 */
 	public RatingPanel(final String id, final IModel<? extends Number> rating)
 	{
-		this(id, rating, new Model<Integer>(5), null, new Model<Boolean>(Boolean.FALSE), true);
+		this(id, rating, new Model<Integer>(5), null, new Model<>(Boolean.FALSE), true);
 	}
 
 	/**
@@ -270,7 +270,7 @@ public abstract class RatingPanel extends Panel
 		final IModel<Integer> nrOfVotes, final boolean addDefaultCssStyle)
 	{
 		this(id, rating, new Model<Integer>(nrOfStars), nrOfVotes,
-			new Model<Boolean>(Boolean.FALSE), addDefaultCssStyle);
+			new Model<>(Boolean.FALSE), addDefaultCssStyle);
 	}
 
 	/**

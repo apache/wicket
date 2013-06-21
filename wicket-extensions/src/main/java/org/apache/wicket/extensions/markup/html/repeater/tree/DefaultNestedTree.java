@@ -76,6 +76,6 @@ public class DefaultNestedTree<T> extends NestedTree<T>
 	@Override
 	protected Component newContentComponent(String id, IModel<T> node)
 	{
-		return new Folder<T>(id, this, node);
+		return new Folder<>(id, this, node);
 	}
 }

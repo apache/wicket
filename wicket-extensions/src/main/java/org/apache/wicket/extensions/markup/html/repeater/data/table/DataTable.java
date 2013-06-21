@@ -392,7 +392,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	protected Item<IColumn<T, S>> newCellItem(final String id, final int index,
 		final IModel<IColumn<T, S>> model)
 	{
-		return new Item<IColumn<T, S>>(id, index, model);
+		return new Item<>(id, index, model);
 	}
 
 	/**
@@ -411,7 +411,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 */
 	protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 	{
-		return new Item<T>(id, index, model);
+		return new Item<>(id, index, model);
 	}
 
 	/**

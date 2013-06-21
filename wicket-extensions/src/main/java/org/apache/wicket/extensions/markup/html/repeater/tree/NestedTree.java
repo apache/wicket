@@ -82,7 +82,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 */
 	public Component newSubtree(String id, IModel<T> model)
 	{
-		return new Subtree<T>(id, this, model);
+		return new Subtree<>(id, this, model);
 	}
 
 	/**

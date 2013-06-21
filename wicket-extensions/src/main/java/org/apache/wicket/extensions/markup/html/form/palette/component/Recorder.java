@@ -82,8 +82,8 @@ public class Recorder<T> extends HiddenField<Object>
 	{
 		super(id);
 		this.palette = palette;
-		this.selectedIds = new ArrayList<String>();
-		setDefaultModel(new Model<Serializable>());
+		this.selectedIds = new ArrayList<>();
+		setDefaultModel(new Model<>());
 		setOutputMarkupId(true);
 	}
 
@@ -132,7 +132,7 @@ public class Recorder<T> extends HiddenField<Object>
 
 		// set model and update ids array
 		String modelString = modelStringBuffer.toString();
-		setDefaultModel(new Model<String>(modelString));
+		setDefaultModel(new Model<>(modelString));
 		updateIds(modelString);
 	}
 
@@ -158,9 +158,9 @@ public class Recorder<T> extends HiddenField<Object>
 		}
 
 		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
-		final List<T> selected = new ArrayList<T>(getSelectedIds().size());
+		final List<T> selected = new ArrayList<>(getSelectedIds().size());
 		final Collection<? extends T> choices = getPalette().getChoices();
-		final Map<T, String> idForChoice = new HashMap<T, String>(choices.size());
+		final Map<T, String> idForChoice = new HashMap<>(choices.size());
 
 		// reduce number of method calls by building a lookup table
 		for (final T choice : choices)

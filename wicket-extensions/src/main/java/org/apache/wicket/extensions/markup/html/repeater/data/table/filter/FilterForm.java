@@ -61,7 +61,7 @@ public class FilterForm<T> extends Form<T>
 	 */
 	public FilterForm(final String id, final IFilterStateLocator<T> locator)
 	{
-		super(id, new FilterStateModel<T>(locator));
+		super(id, new FilterStateModel<>(locator));
 
 		this.locator = locator;
 	}
