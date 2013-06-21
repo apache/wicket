@@ -39,7 +39,7 @@ public class InstantiationPermissions implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** Holds roles objects for component classes */
-	private final Map<Class<? extends Component>, Roles> rolesForComponentClass = new HashMap<Class<? extends Component>, Roles>();
+	private final Map<Class<? extends Component>, Roles> rolesForComponentClass = new HashMap<>();
 
 	/**
 	 * Gives the given role permission to instantiate the given class.
