@@ -423,6 +423,11 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			String optionalPlaceholder = getOptionalPlaceholder(mountSegments[i]);
 			if (placeholder != null)
 			{
+				if (!copy.getNamedKeys().contains(placeholder))
+				{
+					// no value for placeholder - cannot mount
+					return null;
+				}
 				url.getSegments().set(i - dropped, copy.get(placeholder).toString(""));
 				copy.remove(placeholder);
 			}
