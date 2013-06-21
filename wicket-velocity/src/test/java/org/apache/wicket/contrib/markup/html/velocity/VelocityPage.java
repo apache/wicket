@@ -38,9 +38,9 @@ public class VelocityPage extends WebPage
 	 */
 	public VelocityPage()
 	{
-		HashMap<String, String> values = new HashMap<String, String>();
+		HashMap<String, String> values = new HashMap<>();
 		values.put("message", TEST_STRING);
-		add(VelocityPanel.forTemplateResource("velocityPanel", new Model<HashMap<String, String>>(
+		add(VelocityPanel.forTemplateResource("velocityPanel", new Model<>(
 			values), new UrlResourceStream(this.getClass().getResource("test.html"))));
 	}
 }
