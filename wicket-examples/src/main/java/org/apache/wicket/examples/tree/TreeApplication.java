@@ -33,7 +33,7 @@ public class TreeApplication extends WebApplication
 	/**
 	 * All root {@link Foo}s.
 	 */
-	public List<Foo> foos = new ArrayList<Foo>();
+	public List<Foo> foos = new ArrayList<>();
 
 	/**
 	 * Constructor.

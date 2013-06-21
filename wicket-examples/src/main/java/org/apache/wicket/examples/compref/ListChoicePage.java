@@ -43,7 +43,7 @@ public class ListChoicePage extends WicketExamplePage
 	public ListChoicePage()
 	{
 		final Input input = new Input();
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -64,7 +64,7 @@ public class ListChoicePage extends WicketExamplePage
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		ListChoice<String> listChoice = new ListChoice<String>("site", SITES);
+		ListChoice<String> listChoice = new ListChoice<>("site", SITES);
 		listChoice.setMaxRows(4);
 		form.add(listChoice);
 	}

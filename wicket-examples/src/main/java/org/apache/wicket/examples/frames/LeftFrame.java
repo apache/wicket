@@ -93,7 +93,7 @@ public class LeftFrame extends WebPage
 	{
 		add(new ChangeFramePageLink("linkToPage1", index, Page1.class));
 		add(new ChangeFramePageLink("linkToPage2", index, Page2.class));
-		BookmarkablePageLink<?> link = new BookmarkablePageLink<Void>("directLink", Home.class);
+		BookmarkablePageLink<?> link = new BookmarkablePageLink<>("directLink", Home.class);
 		add(link);
 	}
 

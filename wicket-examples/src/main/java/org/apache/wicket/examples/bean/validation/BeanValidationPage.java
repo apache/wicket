@@ -36,14 +36,14 @@ public class BeanValidationPage extends WicketExamplePage
 	{
 		add(new FeedbackPanel("feedback"));
 
-		Form<?> form = new Form<Void>("form");
+		Form<?> form = new Form<>("form");
 		add(form);
 
-		form.add(new TextField<String>("name", new PropertyModel<String>(this, "person.name")).add(new PropertyValidator<String>()));
-		form.add(new TextField<String>("phone", new PropertyModel<String>(this, "person.phone")).add(new PropertyValidator<String>()));
-		form.add(new TextField<String>("email", new PropertyModel<String>(this, "person.email")).add(new PropertyValidator<String>()));
+		form.add(new TextField<String>("name", new PropertyModel<String>(this, "person.name")).add(new PropertyValidator<>()));
+		form.add(new TextField<String>("phone", new PropertyModel<String>(this, "person.phone")).add(new PropertyValidator<>()));
+		form.add(new TextField<String>("email", new PropertyModel<String>(this, "person.email")).add(new PropertyValidator<>()));
 		form.add(new DateTextField("birthdate", new PropertyModel<Date>(this, "person.birthdate"),
-			new StyleDateConverter("S-", true)).add(new PropertyValidator<String>()));
+			new StyleDateConverter("S-", true)).add(new PropertyValidator<>()));
 
 	}
 }

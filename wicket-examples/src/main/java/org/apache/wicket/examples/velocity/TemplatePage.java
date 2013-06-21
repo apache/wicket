@@ -58,9 +58,9 @@ public class TemplatePage extends WicketExamplePage
 		public TemplateForm(String name)
 		{
 			super(name);
-			add(templateTextArea = new TextArea<IStringResourceStream>("templateInput",
+			add(templateTextArea = new TextArea<>("templateInput",
 				new PropertyModel<IStringResourceStream>(
-					new Model<TemplatePage>(TemplatePage.this), "template")));
+					new Model<>(TemplatePage.this), "template")));
 		}
 
 		/**
@@ -86,7 +86,7 @@ public class TemplatePage extends WicketExamplePage
 	 */
 	public TemplatePage(final PageParameters parameters)
 	{
-		Map<String, List<Person>> map = new HashMap<String, List<Person>>();
+		Map<String, List<Person>> map = new HashMap<>();
 		map.put("persons", VelocityTemplateApplication.getPersons());
 		templateContext = Model.ofMap(map);
 

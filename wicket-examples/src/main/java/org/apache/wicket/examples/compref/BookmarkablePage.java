@@ -77,6 +77,6 @@ public class BookmarkablePage extends WebPage
 		// Add a link back. We did not hold any important instance data in
 		// BookMarkabelPageLinkPage,
 		// so navigating to a new instance is just fine
-		add(new BookmarkablePageLink<Void>("navigateBackLink", BookmarkablePageLinkPage.class));
+		add(new BookmarkablePageLink<>("navigateBackLink", BookmarkablePageLinkPage.class));
 	}
 }

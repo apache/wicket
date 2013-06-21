@@ -74,11 +74,11 @@ public class EffectsPage extends BasePage
 	 */
 	public EffectsPage()
 	{
-		final Label c1 = new Label("c1", new PropertyModel<Integer>(this, "counter1"));
+		final Label c1 = new Label("c1", new PropertyModel<>(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label c2 = new Label("c2", new PropertyModel<Integer>(this, "counter2"));
+		final Label c2 = new Label("c2", new PropertyModel<>(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
