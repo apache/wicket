@@ -56,7 +56,7 @@ public class NonContextual<T>
 			synchronized (lock)
 			{
 				// copy-on-write the cache
-				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
+				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<>(
 					cache);
 				newCache.remove(beanManager);
 				cache = Collections.unmodifiableMap(newCache);
@@ -81,7 +81,7 @@ public class NonContextual<T>
 
 		if (nc == null)
 		{
-			nc = new NonContextual<T>(manager, clazz);
+			nc = new NonContextual<>(manager, clazz);
 			meta.put(clazz, nc);
 		}
 		return nc;
@@ -97,10 +97,10 @@ public class NonContextual<T>
 				meta = cache.get(manager);
 				if (meta == null)
 				{
-					meta = new ClassMetaCache<NonContextual<?>>();
+					meta = new ClassMetaCache<>();
 
 					// copy-on-write the cache
-					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
+					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<>(
 						cache);
 					newCache.put(manager, meta);
 					cache = Collections.unmodifiableMap(newCache);
