@@ -100,7 +100,7 @@ public class EventBus implements UnboundListener
 
 	private Map<String, PageKey> trackedPages = Maps.newHashMap();
 
-	private List<ResourceRegistrationListener> registrationListeners = new CopyOnWriteArrayList<ResourceRegistrationListener>();
+	private List<ResourceRegistrationListener> registrationListeners = new CopyOnWriteArrayList<>();
 
 	private AtmosphereParameters parameters = new AtmosphereParameters();
 
