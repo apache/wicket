@@ -2,6 +2,47 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.9.0
+
+** Bug
+
+    * [WICKET-4827] - Modal panel mouse pointer in resize style for MSIE8 and MSIE9
+    * [WICKET-5056] - Page mount with an optional named parameter overtakes a mount with more specific path
+    * [WICKET-5071] - 404 Error on Nested ModalWindows in IE7 and IE8
+    * [WICKET-5165] - Session should be bound when adding messages to it
+    * [WICKET-5194] - Adding AjaxFormValidatingBehavior to the form prevents form from being filled
+    * [WICKET-5200] - Upgrade atmosphere-runtime to 1.0.13
+    * [WICKET-5202] - Page redirects can fail when using url encoding
+    * [WICKET-5203] - Base url is incorrect for error dispatched pages
+    * [WICKET-5204] - The DateTimeField.onBeforeRender() method does not format the fields correctly.
+    * [WICKET-5205] - AbstractAjaxBehavior.unbind does not clean stored reference to host component
+    * [WICKET-5209] - NPE when using ComponentRenderer.renderComponent on a panel with <wicket:enclosure>
+    * [WICKET-5218] - EnclosureContainer calls child#configure() way before rendering
+    * [WICKET-5220] - AjaxEditableLabel not working well in form
+    * [WICKET-5222] - Direct iframe removal not supported by Firefox: tab title stays as "Connecting"
+    * [WICKET-5223] - AjaxEditableLabel doesn't provide a way to configure Ajax attributes for its Ajax behaviors
+    * [WICKET-5226] - CDI integration fails in Glassfish 4.0 with WELD-000070
+    * [WICKET-5230] - AjaxFormChoiceComponentUpdatingBehavior fails for choices containing other invalid FormComponents
+    * [WICKET-5234] - OnEventHeaderItem can't be applied via AJAX
+    * [WICKET-5237] - Wicket generates invalid HTML by expanding col tags
+    * [WICKET-5247] - Broken Link in Tomcat because of Page Mount
+
+** Improvement
+
+    * [WICKET-5199] - Component.getBehaviors(Class<M> type) documentation is obsolete
+    * [WICKET-5207] - Use documented jQuery APIs for triggering the special event 'inputchange'
+    * [WICKET-5208] - Contribute jQuery 1.x or 2.x depending on the user agent
+    * [WICKET-5210] - JQuery problem because component appears twice in DOM while Ajax refresh 
+    * [WICKET-5211] - Make CryptoMapper extendable
+    * [WICKET-5215] - Better exception message when Page instantiation fails in DefaultPageFactory
+    * [WICKET-5219] - ServletWebResponse should call #setHeader() to set Ajax-Location for redirect
+    * [WICKET-5228] - Add method getFirstDayOfWeek to DatePicker class
+    * [WICKET-5232] - ComponentRenderer.renderComponent could accept components with any markupId, not just "compId"
+    * [WICKET-5233] - Component.getBehaviors() can be implemented slightly more efficiently
+    * [WICKET-5238] - Upgrade bootstrap from 2.3.1 to 2.3.2
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.8.0
 
 ** Sub-task
@@ -103,10 +144,8 @@ Release Notes - Wicket - Version 6.7.0
     * [WICKET-5138] - Wicket does not correctly handle http OPTIONS requests
     * [WICKET-5141] - Exception while rendering absolute URL with UrlResourceReference
 
-
-
-
 ** Improvement
+
     * [WICKET-4115] - SignInPanel should not always redirect to the Home page when the user is signed-in automaticaly with the remember-me feature.
     * [WICKET-5005] - Add Utility to allow conversion from Panel (or Component) to html String
     * [WICKET-5038] - Add equals() and hashcode() implementation to INamedParameters.NamedPair
