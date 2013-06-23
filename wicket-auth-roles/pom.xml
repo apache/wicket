@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>6.9.0</version>
+		<version>6.9.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-auth-roles</artifactId>
