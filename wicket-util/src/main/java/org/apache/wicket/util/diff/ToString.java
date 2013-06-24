@@ -106,7 +106,7 @@ public class ToString
 	public static String[] stringToArray(final String value)
 	{
 		BufferedReader reader = new BufferedReader(new StringReader(value));
-		List<String> l = new LinkedList<String>();
+		List<String> l = new LinkedList<>();
 		String s;
 		try
 		{

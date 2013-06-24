@@ -44,7 +44,7 @@ import org.apache.wicket.model.PropertyModel;
 public class GuestBook extends BasePage
 {
 	/** A global list of all comments from all users across all sessions */
-	public static final List<Comment> commentList = new ArrayList<Comment>();
+	public static final List<Comment> commentList = new ArrayList<>();
 
 	/** The list view that shows comments */
 	private final ListView<Comment> commentListView;
@@ -75,7 +75,7 @@ public class GuestBook extends BasePage
 			public void populateItem(final ListItem<Comment> listItem)
 			{
 				final Comment comment = listItem.getModelObject();
-				listItem.add(new Label("date", new Model<Date>(comment.getDate())));
+				listItem.add(new Label("date", new Model<>(comment.getDate())));
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
 		});
@@ -128,10 +128,10 @@ public class GuestBook extends BasePage
 		public CommentForm(final String id)
 		{
 			// Construct form with no validation listener
-			super(id, new CompoundPropertyModel<Comment>(new Comment()));
+			super(id, new CompoundPropertyModel<>(new Comment()));
 
 			// Add text entry widget
-			text = new TextArea<String>("text").setOutputMarkupId(true);
+			text = new TextArea<>("text").setOutputMarkupId(true);
 			add(text);
 		}
 

@@ -44,7 +44,7 @@ public final class TimeMap implements Serializable
 	 * <code>Map</code> from <code>ITimeFrameSource</code> implementing objects to
 	 * <code>Object</code> values.
 	 */
-	private final Map<ITimeFrameSource, Object> sources = new ConcurrentHashMap<ITimeFrameSource, Object>();
+	private final Map<ITimeFrameSource, Object> sources = new ConcurrentHashMap<>();
 
 	/**
 	 * Retrieves an <code>Object</code> for the current <code>Time</code> value.

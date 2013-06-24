@@ -54,7 +54,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Map<String, Object> beans = new HashMap<String, Object>();
+	private final Map<String, Object> beans = new HashMap<>();
 
 	/**
 	 * puts bean with the given name into the context
@@ -118,7 +118,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@SuppressWarnings({ "unchecked" })
 	public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException
 	{
-		final Map<String, T> found = new HashMap<String, T>();
+		final Map<String, T> found = new HashMap<>();
 
 		for (Entry<String, Object> entry : beans.entrySet())
 		{
@@ -155,7 +155,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType)
 		throws BeansException
 	{
-		final Map<String, Object> found = new HashMap<String, Object>();
+		final Map<String, Object> found = new HashMap<>();
 
 		for (Entry<String, Object> entry : beans.entrySet())
 		{
@@ -273,7 +273,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@SuppressWarnings({ "unchecked" })
 	public String[] getBeanNamesForType(final Class type)
 	{
-		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<>();
 		for (Entry<String, Object> entry : beans.entrySet())
 		{
 			Object bean = entry.getValue();

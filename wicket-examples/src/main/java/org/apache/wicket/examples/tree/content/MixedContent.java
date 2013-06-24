@@ -36,7 +36,7 @@ public class MixedContent extends Content
 
 	public MixedContent(List<Content> contents)
 	{
-		this.contents = new ArrayList<Content>(contents);
+		this.contents = new ArrayList<>(contents);
 	}
 
 	@Override

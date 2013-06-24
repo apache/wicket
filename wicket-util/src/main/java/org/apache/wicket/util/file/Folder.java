@@ -193,7 +193,7 @@ public class Folder extends File
 	 */
 	public File[] getNestedFiles(final FileFilter filter)
 	{
-		final List<File> files = new ArrayList<File>();
+		final List<File> files = new ArrayList<>();
 		files.addAll(Arrays.asList(getFiles(filter)));
 		final Folder[] folders = getFolders();
 		for (Folder folder : folders)

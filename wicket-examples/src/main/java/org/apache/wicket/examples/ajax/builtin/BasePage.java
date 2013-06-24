@@ -30,6 +30,6 @@ public class BasePage extends WicketExamplePage
 	 */
 	public BasePage()
 	{
-		add(new BookmarkablePageLink<Void>("back", Index.class).setAutoEnable(true));
+		add(new BookmarkablePageLink<>("back", Index.class).setAutoEnable(true));
 	}
 }

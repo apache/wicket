@@ -134,8 +134,8 @@ public class Url implements Serializable
 		protocol = url.protocol;
 		host = url.host;
 		port = url.port;
-		segments = new ArrayList<String>(url.segments);
-		parameters = new ArrayList<QueryParameter>(url.parameters);
+		segments = new ArrayList<>(url.segments);
+		parameters = new ArrayList<>(url.parameters);
 		charsetName = url.charsetName;
 		_charset = url._charset;
 	}
@@ -175,8 +175,8 @@ public class Url implements Serializable
 		Args.notNull(segments, "segments");
 		Args.notNull(parameters, "parameters");
 
-		this.segments = new ArrayList<String>(segments);
-		this.parameters = new ArrayList<QueryParameter>(parameters);
+		this.segments = new ArrayList<>(segments);
+		this.parameters = new ArrayList<>(parameters);
 		setCharset(charset);
 	}
 
@@ -430,19 +430,7 @@ public class Url implements Serializable
 	{
 		return parameters;
 	}
-
-	/**
-	 * Returns whether the Url is absolute. Absolute Urls start with a '{@literal /}'.
-	 * 
-	 * @return <code>true</code> if Url is absolute, <code>false</code> otherwise.
-	 * @deprecated Use #isContextAbsolute() or #isFull()
-	 */
-	@Deprecated
-	public boolean isAbsolute()
-	{
-		return !getSegments().isEmpty() && Strings.isEmpty(getSegments().get(0));
-	}
-
+	
 	/**
 	 * Returns whether the Url is context absolute. Absolute Urls start with a '{@literal /}'.
 	 *
@@ -810,7 +798,7 @@ public class Url implements Serializable
 
 		if (!isAtLeastOneSegmentReal(segments) && !isLastSegmentEmpty(segments))
 		{
-			segments = new ArrayList<String>(segments);
+			segments = new ArrayList<>(segments);
 			segments.add("");
 		}
 

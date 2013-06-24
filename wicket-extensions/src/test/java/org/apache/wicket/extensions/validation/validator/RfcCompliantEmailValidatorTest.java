@@ -43,7 +43,7 @@ public class RfcCompliantEmailValidatorTest extends Assert
 				"giovanni+cuccu@email.com" };
 		for (String emailAddress : validEmails)
 		{
-			Validatable<String> validatable = new Validatable<String>(emailAddress);
+			Validatable<String> validatable = new Validatable<>(emailAddress);
 			validator.validate(validatable);
 			assertTrue(emailAddress + " wasn't valid but should be", validatable.isValid());
 		}
@@ -64,7 +64,7 @@ public class RfcCompliantEmailValidatorTest extends Assert
 
 		for (String emailAddress : inValidEmails)
 		{
-			Validatable<String> validatable = new Validatable<String>(emailAddress);
+			Validatable<String> validatable = new Validatable<>(emailAddress);
 			validator.validate(validatable);
 			assertFalse(emailAddress + " was valid but shouldn't be", validatable.isValid());
 		}

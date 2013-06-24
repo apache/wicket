@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.Page;

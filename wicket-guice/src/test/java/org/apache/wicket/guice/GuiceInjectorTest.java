@@ -76,7 +76,7 @@ public class GuiceInjectorTest extends Assert
 						@Override
 						public Map<String, String> get()
 						{
-							Map<String, String> strings = new HashMap<String, String>();
+							Map<String, String> strings = new HashMap<>();
 
 							strings.put(ITestService.RESULT, ITestService.RESULT);
 

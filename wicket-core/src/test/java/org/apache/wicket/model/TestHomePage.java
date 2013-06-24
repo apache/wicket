@@ -18,15 +18,14 @@ package org.apache.wicket.model;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * Simple test for CompoundPropertyModel and id's like "A.B"
  */
 public class TestHomePage extends WicketTestCase
 {
-	/**
-	 * 
-	 */
+	@Test
 	public void testRenderMyPage()
 	{
 		// start and render the test page

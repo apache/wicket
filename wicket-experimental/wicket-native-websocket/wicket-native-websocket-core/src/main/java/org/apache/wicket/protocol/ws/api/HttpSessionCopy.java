@@ -42,7 +42,7 @@ public class HttpSessionCopy implements HttpSession
 		this.servletContext = originalSession.getServletContext();
 		this.creationTime = originalSession.getCreationTime();
 
-		this.attributes = new ConcurrentHashMap<String, Object>();
+		this.attributes = new ConcurrentHashMap<>();
 		Enumeration<String> attributeNames = originalSession.getAttributeNames();
 		while (attributeNames.hasMoreElements())
 		{

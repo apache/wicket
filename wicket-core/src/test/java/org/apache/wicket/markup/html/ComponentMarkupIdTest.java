@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;

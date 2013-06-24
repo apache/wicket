@@ -119,7 +119,7 @@ public class Subtree<T> extends Panel
 
 	protected BranchItem<T> newBranchItem(String id, int index, IModel<T> model)
 	{
-		return new BranchItem<T>(id, index, model);
+		return new BranchItem<>(id, index, model);
 	}
 
 	@Override

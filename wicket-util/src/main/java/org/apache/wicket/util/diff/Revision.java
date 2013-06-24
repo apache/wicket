@@ -82,7 +82,7 @@ import java.util.ListIterator;
 public class Revision extends ToString
 {
 
-	List<Delta> deltas_ = new LinkedList<Delta>();
+	List<Delta> deltas_ = new LinkedList<>();
 
 	/**
 	 * Creates an empty Revision.
@@ -154,7 +154,7 @@ public class Revision extends ToString
 	 */
 	public Object[] patch(final Object[] src) throws PatchFailedException
 	{
-		List<Object> target = new ArrayList<Object>(Arrays.asList(src));
+		List<Object> target = new ArrayList<>(Arrays.asList(src));
 		applyTo(target);
 		return target.toArray();
 	}

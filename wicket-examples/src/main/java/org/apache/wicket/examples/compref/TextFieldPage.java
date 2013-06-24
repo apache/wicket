@@ -50,7 +50,7 @@ public class TextFieldPage extends WicketExamplePage
 		// property model's actual object is an instance of 'Input', it will map
 		// to
 		// Input's 'text' property.
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -69,7 +69,7 @@ public class TextFieldPage extends WicketExamplePage
 
 		// add a simple text field that uses Input's 'text' property. Nothing
 		// can go wrong here
-		form.add(new TextField<String>("text"));
+		form.add(new TextField<>("text"));
 
 		// here we add a text field that uses Input's 'integer' property.
 		// Something could go
@@ -94,7 +94,7 @@ public class TextFieldPage extends WicketExamplePage
 		// with key 'form.integer.IConverter'. Read more about how this works
 		// in the javadocs
 		// of AbstractValidator
-		form.add(new TextField<Integer>("integer", Integer.class));
+		form.add(new TextField<>("integer", Integer.class));
 	}
 
 	/**

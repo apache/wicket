@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.image;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @author Juergen Donnerstag
@@ -30,6 +31,7 @@ public class ImageTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		Locale.setDefault(new Locale("en", "US"));
@@ -57,6 +59,7 @@ public class ImageTest extends WicketTestCase
 	/**
 	 * testParentRelativeImage()
 	 */
+	@Test
 	public void testParentRelativeImage()
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("$up$");

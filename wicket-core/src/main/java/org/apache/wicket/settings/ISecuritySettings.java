@@ -19,6 +19,7 @@ package org.apache.wicket.settings;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.util.crypt.ICryptFactory;
 
 /**
@@ -108,4 +109,17 @@ public interface ISecuritySettings
 	 */
 	void setUnauthorizedComponentInstantiationListener(
 		IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener);
+
+	/**
+	 * @return The listener that will be used when a request to an IResource is not allowed for some reason
+	 */
+	IUnauthorizedResourceRequestListener getUnauthorizedResourceRequestListener();
+
+	/**
+	 * Sets a listener that will be used when a request to an IResource is not allowed for some reason
+	 *
+	 * @param listener
+	 *          The listener
+	 */
+	void setUnauthorizedResourceRequestListener(IUnauthorizedResourceRequestListener listener);
 }

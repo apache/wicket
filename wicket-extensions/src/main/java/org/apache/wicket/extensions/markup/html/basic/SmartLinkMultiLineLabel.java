@@ -45,7 +45,7 @@ public class SmartLinkMultiLineLabel extends MultiLineLabel
 	 */
 	public SmartLinkMultiLineLabel(final String id, final String label)
 	{
-		this(id, new Model<String>(label));
+		this(id, new Model<>(label));
 	}
 
 	/**

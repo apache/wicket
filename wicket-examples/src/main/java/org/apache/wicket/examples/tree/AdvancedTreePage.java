@@ -75,7 +75,7 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 	{
 		content = new CheckedFolderContent(provider);
 
-		Form<Void> form = new Form<Void>("form");
+		Form<Void> form = new Form<>("form");
 		add(form);
 
 		tree = createTree(provider, new FooExpansionModel());
@@ -159,7 +159,7 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 
 	private List<Content> initContents()
 	{
-		contents = new ArrayList<Content>();
+		contents = new ArrayList<>();
 
 		contents.add(new BookmarkableFolderContent(tree));
 		contents.add(new LabelContent());
@@ -180,7 +180,7 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 
 	private List<Behavior> initThemes()
 	{
-		themes = new ArrayList<Behavior>();
+		themes = new ArrayList<>();
 
 		themes.add(new WindowsTheme());
 		themes.add(new HumanTheme());

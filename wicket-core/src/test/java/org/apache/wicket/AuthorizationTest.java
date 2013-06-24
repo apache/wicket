@@ -54,11 +54,12 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testCreateDisallowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
-			.setAuthorizationStrategy(new DummyAuthorizationStrategy()
+			.setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 			{
 				@Override
 				public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
@@ -84,11 +85,12 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testRenderAllowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
-			.setAuthorizationStrategy(new DummyAuthorizationStrategy());
+			.setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy());
 
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
@@ -100,11 +102,12 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testRenderDisallowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
-			.setAuthorizationStrategy(new DummyAuthorizationStrategy()
+			.setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 			{
 				/**
 				 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
@@ -130,11 +133,12 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testEnabledAllowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
-			.setAuthorizationStrategy(new DummyAuthorizationStrategy());
+			.setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy());
 
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
@@ -153,11 +157,12 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testEnabledDisallowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
-			.setAuthorizationStrategy(new DummyAuthorizationStrategy()
+			.setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 			{
 				/**
 				 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
@@ -186,32 +191,6 @@ public class AuthorizationTest extends WicketTestCase
 		catch (WicketRuntimeException e)
 		{
 			// good
-		}
-	}
-
-	/**
-	 * noop strategy so we don't have to implement the whole interface every time.
-	 */
-	private static class DummyAuthorizationStrategy implements IAuthorizationStrategy
-	{
-		/**
-		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
-		 */
-		@Override
-		public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
-			Class<T> componentClass)
-		{
-			return true;
-		}
-
-		/**
-		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
-		 *      org.apache.wicket.authorization.Action)
-		 */
-		@Override
-		public boolean isActionAuthorized(Component c, Action action)
-		{
-			return true;
 		}
 	}
 

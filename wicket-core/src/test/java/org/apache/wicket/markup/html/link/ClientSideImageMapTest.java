@@ -19,17 +19,17 @@ package org.apache.wicket.markup.html.link;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @since 1.5
  */
 public class ClientSideImageMapTest extends WicketTestCase
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testRenderClientSideImageMapPage_1() throws Exception
 	{
 		tester.getSession().setLocale(Locale.US);

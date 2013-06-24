@@ -23,6 +23,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.junit.Test;
 
 
 /**
@@ -46,9 +47,7 @@ public class TogglePageTest extends WicketTestCase
 		return webApplication;
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testNoAjaxPage()
 	{
 		{
@@ -76,9 +75,7 @@ public class TogglePageTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testTraditionalAjaxEnclosurePage()
 	{
 		{
@@ -109,9 +106,7 @@ public class TogglePageTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testInlineEnclosureWithAdditionalAjaxTarget()
 	{
 		{
@@ -147,9 +142,7 @@ public class TogglePageTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testInlineEnclosureAjaxPage()
 	{
 		String inlineEnclosureIdPrefix = "wicket__InlineEnclosure_";

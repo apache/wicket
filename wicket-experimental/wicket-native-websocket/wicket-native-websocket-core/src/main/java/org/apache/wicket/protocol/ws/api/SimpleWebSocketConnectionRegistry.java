@@ -70,7 +70,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	{
 		Args.notNull(application, "application");
 
-		Collection<IWebSocketConnection> connections = new ArrayList<IWebSocketConnection>();
+		Collection<IWebSocketConnection> connections = new ArrayList<>();
 		ConcurrentMap<String, ConcurrentMap<Integer, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
 		if (connectionsBySession != null)
 		{

@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.markup.html.form.login;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -134,10 +132,6 @@ public class InterceptTest extends WicketTestCase
 			return MockLoginPage.class;
 		}
 
-		/**
-		 * 
-		 * @see org.apache.wicket.ISessionFactory#newSession(Request, Response)
-		 */
 		@Override
 		public Session newSession(Request request, Response response)
 		{
@@ -156,7 +150,6 @@ public class InterceptTest extends WicketTestCase
 		private String username;
 
 		/**
-		 * @param tester
 		 * @param request
 		 */
 		protected MySession(Request request)
@@ -187,7 +180,7 @@ public class InterceptTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	private static class MyAuthorizationStrategy implements IAuthorizationStrategy
+	private static class MyAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 	{
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
@@ -201,16 +194,6 @@ public class InterceptTest extends WicketTestCase
 			{
 				throw new RestartResponseAtInterceptPageException(MockLoginPage.class);
 			}
-			return true;
-		}
-
-		/**
-		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
-		 *      org.apache.wicket.authorization.Action)
-		 */
-		@Override
-		public boolean isActionAuthorized(Component component, Action action)
-		{
 			return true;
 		}
 	}

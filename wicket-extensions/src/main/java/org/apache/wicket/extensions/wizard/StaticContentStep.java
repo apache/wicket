@@ -88,7 +88,7 @@ public class StaticContentStep extends WizardStep
 	public StaticContentStep(final IModel<String> title, final IModel<String> summary,
 		final String content, final boolean allowHtml)
 	{
-		this(title, summary, new Model<String>(content), allowHtml);
+		this(title, summary, new Model<>(content), allowHtml);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class StaticContentStep extends WizardStep
 	public StaticContentStep(final String title, final String summary, final IModel<?> content,
 		final boolean allowHtml)
 	{
-		this(new Model<String>(title), new Model<String>(summary), content, allowHtml);
+		this(new Model<String>(title), new Model<>(summary), content, allowHtml);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class StaticContentStep extends WizardStep
 	public StaticContentStep(final String title, final String summary, final String content,
 		final boolean allowHtml)
 	{
-		this(title, summary, new Model<String>(content), allowHtml);
+		this(title, summary, new Model<>(content), allowHtml);
 	}
 
 	/**

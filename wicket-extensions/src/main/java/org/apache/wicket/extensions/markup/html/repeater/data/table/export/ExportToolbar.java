@@ -58,7 +58,7 @@ public class ExportToolbar extends AbstractToolbar
 	private static final IModel<String> DEFAULT_FILE_NAME_MODEL = new ResourceModel(
 		"datatable.export-file-name");
 
-	private final List<IDataExporter> dataExporters = new LinkedList<IDataExporter>();
+	private final List<IDataExporter> dataExporters = new LinkedList<>();
 
 	private IModel<String> messageModel;
 
@@ -332,7 +332,7 @@ public class ExportToolbar extends AbstractToolbar
 			throws IOException
 		{
 			IDataProvider<T> dataProvider = dataTable.getDataProvider();
-			List<IExportableColumn<T, ?, ?>> exportableColumns = new LinkedList<IExportableColumn<T, ?, ?>>();
+			List<IExportableColumn<T, ?, ?>> exportableColumns = new LinkedList<>();
 			for (IColumn<T, S> col : dataTable.getColumns())
 			{
 				if (col instanceof IExportableColumn)

@@ -45,7 +45,7 @@ public class RadioChoicePage extends WicketExamplePage
 	public RadioChoicePage()
 	{
 		final Input input = new Input();
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -67,7 +67,7 @@ public class RadioChoicePage extends WicketExamplePage
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		RadioChoice<String> sites = new RadioChoice<String>("site", SITES);
+		RadioChoice<String> sites = new RadioChoice<>("site", SITES);
 		sites.add(new AjaxFormChoiceComponentUpdatingBehavior()
 		{
 			@Override

@@ -55,6 +55,6 @@ public class ValueProvider<T> implements IProvider<T>
 	 */
 	public static <T> ValueProvider<T> of(final T value)
 	{
-		return new ValueProvider<T>(value);
+		return new ValueProvider<>(value);
 	}
 }

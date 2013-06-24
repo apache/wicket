@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.link.submitLink;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;

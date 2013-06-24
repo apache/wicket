@@ -31,7 +31,7 @@ public class GroupsModel extends LoadableDetachableModel<Class<?>[]>
 		}
 		else
 		{
-			this.groups = new ArrayList<ClassReference<?>>();
+			this.groups = new ArrayList<>();
 			for (Class<?> group : groups)
 			{
 				this.groups.add(ClassReference.of(group));

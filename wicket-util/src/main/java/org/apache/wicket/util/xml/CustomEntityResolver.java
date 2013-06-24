@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
  */
 public class CustomEntityResolver implements EntityResolver
 {
-	private final Map<EntityKey, EntityLocator> entities = new HashMap<EntityKey, EntityLocator>(3);
+	private final Map<EntityKey, EntityLocator> entities = new HashMap<>(3);
 
 	/**
 	 * get default instances of custom entity resolver with preloaded well-known entities

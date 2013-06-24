@@ -539,7 +539,7 @@ public abstract class AbstractAjaxResponse
 			{
 				if (!wasItemRendered(item))
 				{
-					AbstractAjaxResponse.this.appendJavaScript(((OnEventHeaderItem) item).getJavaScript());
+					AbstractAjaxResponse.this.appendJavaScript(((OnEventHeaderItem) item).getCompleteJavaScript());
 					markItemRendered(item);
 				}
 			}

@@ -46,7 +46,7 @@ public class DynamicPage extends WicketExamplePage
 		final IResourceStream template = new PackageResourceStream(DynamicPage.class,
 			"fields.vm");
 
-		Map<String, List<Field>> map = new HashMap<String, List<Field>>();
+		Map<String, List<Field>> map = new HashMap<>();
 		List<Field> fields = VelocityTemplateApplication.getFields();
 		map.put("fields", fields);
 
@@ -67,7 +67,7 @@ public class DynamicPage extends WicketExamplePage
 		});
 		for (Field field : fields)
 		{
-			panel.add(new TextField<Object>(field.getFieldName()));
+			panel.add(new TextField<>(field.getFieldName()));
 		}
 	}
 }

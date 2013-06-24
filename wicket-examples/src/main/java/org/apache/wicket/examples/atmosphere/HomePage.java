@@ -46,10 +46,10 @@ public class HomePage extends WicketExamplePage
 		add(timeLabel = new Label("time", Model.of("start")).setOutputMarkupId(true));
 		add(messageLabel = new Label("message", Model.of("-")).setOutputMarkupId(true));
 
-		Form<Void> form = new Form<Void>("form");
+		Form<Void> form = new Form<>("form");
 		add(form);
-		form.add(receiver = new TextField<String>("receiver", Model.of("")));
-		form.add(input = new TextField<String>("input", Model.of("")));
+		form.add(receiver = new TextField<>("receiver", Model.of("")));
+		form.add(input = new TextField<>("input", Model.of("")));
 		form.add(new AjaxSubmitLink("send", form)
 		{
 			private static final long serialVersionUID = 1L;

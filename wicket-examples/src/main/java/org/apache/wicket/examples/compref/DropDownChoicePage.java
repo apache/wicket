@@ -47,7 +47,7 @@ public class DropDownChoicePage extends WicketExamplePage
 	public DropDownChoicePage()
 	{
 		final Input input = new Input();
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -73,7 +73,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// represent this null with key: "id + '.null'". In this case, this is
 		// 'site.null'
 		// which can be found in DropDownChoicePage.properties
-		form.add(new DropDownChoice<String>("site", SITES));
+		form.add(new DropDownChoice<>("site", SITES));
 
 		// Allthough the default behavior of displaying the string
 		// representations of the choices

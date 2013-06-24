@@ -36,9 +36,9 @@ public abstract class RequestHandlerStack
 	private static final Logger log = LoggerFactory.getLogger(RequestHandlerStack.class);
 
 	// we need both Queue and List interfaces
-	private final LinkedList<IRequestHandler> requestHandlers = new LinkedList<IRequestHandler>();
+	private final LinkedList<IRequestHandler> requestHandlers = new LinkedList<>();
 
-	private final List<IRequestHandler> inactiveRequestHandlers = new ArrayList<IRequestHandler>();
+	private final List<IRequestHandler> inactiveRequestHandlers = new ArrayList<>();
 
 	private IRequestHandler scheduledAfterCurrent = null;
 

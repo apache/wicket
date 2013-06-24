@@ -284,10 +284,10 @@ public class SignInPanel extends Panel
 		{
 			super(id);
 
-			setModel(new CompoundPropertyModel<SignInPanel>(SignInPanel.this));
+			setModel(new CompoundPropertyModel<>(SignInPanel.this));
 
 			// Attach textfields for username and password
-			add(new TextField<String>("username"));
+			add(new TextField<>("username"));
 			add(new PasswordTextField("password"));
 
 			// MarkupContainer row for remember me checkbox

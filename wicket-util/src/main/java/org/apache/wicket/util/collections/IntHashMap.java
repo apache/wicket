@@ -740,7 +740,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 */
 	void addEntry(final int key, final V value, final int bucketIndex)
 	{
-		table[bucketIndex] = new Entry<V>(key, value, table[bucketIndex]);
+		table[bucketIndex] = new Entry<>(key, value, table[bucketIndex]);
 		if (size++ >= threshold)
 		{
 			resize(2 * table.length);
@@ -760,7 +760,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 */
 	void createEntry(final int key, final V value, final int bucketIndex)
 	{
-		table[bucketIndex] = new Entry<V>(key, value, table[bucketIndex]);
+		table[bucketIndex] = new Entry<>(key, value, table[bucketIndex]);
 		size++;
 	}
 

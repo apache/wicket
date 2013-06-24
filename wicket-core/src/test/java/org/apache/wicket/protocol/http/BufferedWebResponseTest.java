@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.request.http.WebResponse;
+import org.junit.Test;
 
 
 /**
@@ -37,6 +38,7 @@ public class BufferedWebResponseTest extends WicketTestCase
 	 * 
 	 * WICKET-3618
 	 */
+	@Test
 	public void testBufferedResponsePostponeWriteResponseAction()
 	{
 		final ArrayList<TestAction> actionsSequence = new ArrayList<TestAction>();

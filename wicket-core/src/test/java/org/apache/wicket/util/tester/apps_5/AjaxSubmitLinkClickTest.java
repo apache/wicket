@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.apps_5.MockPageWithFormAndLink.MockPojo;
 import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -45,6 +46,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	/**
 	 *
 	 */
+	@Test
 	public void testClickLinkInsideForm_ajaxSubmitLink()
 	{
 		MockPojo mockPojo = new MockPageWithFormAndLink.MockPojo();
@@ -90,6 +92,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	/**
 	 *
 	 */
+	@Test
 	public void testClickLink_ajaxSubmitLink()
 	{
 		MockPojo mockPojo = new MockPageWithFormAndLink.MockPojo();

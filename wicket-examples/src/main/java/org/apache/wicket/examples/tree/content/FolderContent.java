@@ -33,6 +33,6 @@ public class FolderContent extends Content
 	@Override
 	public Component newContentComponent(String id, final AbstractTree<Foo> tree, IModel<Foo> model)
 	{
-		return new Folder<Foo>(id, tree, model);
+		return new Folder<>(id, tree, model);
 	}
 }

@@ -21,11 +21,11 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * Base strategy that uses an instance of
- * {@link org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy}.
+ * {@link IRoleCheckingStrategy}.
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizationStrategy
+public abstract class AbstractRoleAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 {
 	/** Role checking strategy. */
 	private final IRoleCheckingStrategy roleCheckingStrategy;

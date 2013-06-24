@@ -134,7 +134,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 */
 	protected IModel<Set<T>> newModel()
 	{
-		return new ProviderSubset<T>(provider).createModel();
+		return new ProviderSubset<>(provider).createModel();
 	}
 
 	/**

@@ -66,7 +66,7 @@ public class DebugDiskDataStore extends DiskDataStore
 	 */
 	public List<PageWindow> getLastPageWindows(String sessionId, int count)
 	{
-		List<PageWindow> pageWindows = new ArrayList<PageWindowManager.PageWindow>();
+		List<PageWindow> pageWindows = new ArrayList<>();
 
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
 		if (sessionEntry != null)

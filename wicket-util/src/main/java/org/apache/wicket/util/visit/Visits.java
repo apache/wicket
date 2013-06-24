@@ -119,7 +119,7 @@ public class Visits
 	public static final <S, R> R visitChildren(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
-		Visit<R> visit = new Visit<R>();
+		Visit<R> visit = new Visit<>();
 		visitChildren(container, visitor, filter, visit);
 		return visit.getResult();
 	}
@@ -137,7 +137,7 @@ public class Visits
 			// Is the child of the correct class (or was no class specified)?
 			if (filter.visitObject(child))
 			{
-				Visit<R> childTraversal = new Visit<R>();
+				Visit<R> childTraversal = new Visit<>();
 
 				// Call visitor
 				S s = (S)child;
@@ -241,7 +241,7 @@ public class Visits
 	{
 		Args.notNull(visitor, "visitor");
 
-		Visit<R> visit = new Visit<R>();
+		Visit<R> visit = new Visit<>();
 		visitPostOrderHelper(root, visitor, filter, visit);
 		return visit.getResult();
 	}
@@ -256,7 +256,7 @@ public class Visits
 			final Iterable<?> container = (Iterable<?>)component;
 			if (filter.visitChildren(container))
 			{
-				Visit<R> childTraversal = new Visit<R>();
+				Visit<R> childTraversal = new Visit<>();
 				for (final Object child : ((Iterable<?>)component))
 				{
 					visitPostOrderHelper(child, visitor, filter, childTraversal);

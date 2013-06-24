@@ -35,7 +35,7 @@ public class LongEncoderTest
 	@Test
 	public void defaultAlphabet()
 	{
-		Set<String> encoded = new HashSet<String>();
+		Set<String> encoded = new HashSet<>();
 		for (int i = -10000; i < 10000; i++)
 		{
 			String enc = LongEncoder.encode(i);

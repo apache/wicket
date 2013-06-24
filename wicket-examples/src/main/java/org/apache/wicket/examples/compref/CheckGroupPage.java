@@ -42,7 +42,7 @@ public class CheckGroupPage extends WicketExamplePage
 	 */
 	public CheckGroupPage()
 	{
-		final CheckGroup<Person> group = new CheckGroup<Person>("group", new ArrayList<Person>());
+		final CheckGroup<Person> group = new CheckGroup<>("group", new ArrayList<Person>());
 		Form<?> form = new Form("form")
 		{
 			@Override
@@ -64,9 +64,9 @@ public class CheckGroupPage extends WicketExamplePage
 			@Override
 			protected void populateItem(ListItem<Person> item)
 			{
-				item.add(new Check<Person>("checkbox", item.getModel()));
+				item.add(new Check<>("checkbox", item.getModel()));
 				item.add(new Label("name",
-					new PropertyModel<String>(item.getDefaultModel(), "name")));
+					new PropertyModel<>(item.getDefaultModel(), "name")));
 				item.add(new Label("lastName", new PropertyModel<String>(item.getDefaultModel(),
 					"lastName")));
 			}

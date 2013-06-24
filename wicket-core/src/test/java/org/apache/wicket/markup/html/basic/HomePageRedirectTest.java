@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.DiffUtil;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -27,6 +28,7 @@ public class HomePageRedirectTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testRenderHomePagePageRedirect() throws Exception
 	{
 		tester.startPage(HomePagePageRedirect.class);
@@ -41,6 +43,7 @@ public class HomePageRedirectTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testRenderHomePageClassRedirect() throws Exception
 	{
 		tester.startPage(HomePageClassRedirect.class);

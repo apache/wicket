@@ -45,7 +45,7 @@ public class SmartLinkLabel extends Label
 	 */
 	public SmartLinkLabel(final String name, final String label)
 	{
-		this(name, new Model<String>(label));
+		this(name, new Model<>(label));
 	}
 
 	/**

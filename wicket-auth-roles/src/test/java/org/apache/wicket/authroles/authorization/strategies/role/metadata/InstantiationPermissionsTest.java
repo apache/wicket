@@ -16,30 +16,33 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.metadata;
 
-import junit.framework.TestCase;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test case for
- * {@link org.apache.wicket.authorization.strategies.role.metadata.InstantiationPermissions}.
+ * {@link InstantiationPermissions}.
  * 
  * @author Eelco Hillenius
  */
-public class InstantiationPermissionsTest extends TestCase
+public class InstantiationPermissionsTest extends Assert
 {
 	private WicketTester tester;
 
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	@After
+	public void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
@@ -49,6 +52,7 @@ public class InstantiationPermissionsTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAdd1() throws Exception
 	{
 		InstantiationPermissions permissions = new InstantiationPermissions();
@@ -68,6 +72,7 @@ public class InstantiationPermissionsTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testRemove1() throws Exception
 	{
 		InstantiationPermissions permissions = new InstantiationPermissions();
@@ -81,6 +86,7 @@ public class InstantiationPermissionsTest extends TestCase
 	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
 	 * 
 	 */
+	@Test
 	public void testRemove2()
 	{
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
@@ -103,6 +109,7 @@ public class InstantiationPermissionsTest extends TestCase
 	 * Test consistency in behavior between authorizing a role for a class and then unauthorizing it
 	 * with {@link #testRemove2()}.
 	 */
+	@Test
 	public void testRemove3()
 	{
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(

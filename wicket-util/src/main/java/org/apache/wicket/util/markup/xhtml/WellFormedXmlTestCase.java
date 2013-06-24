@@ -136,7 +136,7 @@ public class WellFormedXmlTestCase
 
 	private static final EntityResolver entityResolver = new EntityResolver()
 	{
-		private final Map<String, String> systemIdToUri = new HashMap<String, String>();
+		private final Map<String, String> systemIdToUri = new HashMap<>();
 
 		{
 			systemIdToUri.put("http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd",

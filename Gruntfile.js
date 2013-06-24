@@ -6,7 +6,6 @@
  * 1) install node.js - http://nodejs.org/#download. This will install 'npm' (Node Package Manager) too
  * 2) install grunt - 'npm -g install grunt-cli'
  * 3) run: npm install (This will use package.json and install all dependencies)
- * 4) use it: 
  * 4.1) grunt jshint - checks all JavaScript files with JSHint
  * 4.2) grunt jshint:core - checks only the files in wicket-core
  * 4.3) grunt test - starts a web server and runs all tests (Ajax, non-Ajax and AMD)
@@ -118,13 +117,13 @@ module.exports = function(grunt) {
 		},
 
 		connect: {
-    		server: {
-      			options: {
-        			port: 38888,
-        			base: './wicket-core/src'
-      			}
-    		}
-  		}
+			server: {
+				options: {
+					port: 38888,
+					base: './wicket-core/src'
+				}
+			}
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-qunit');

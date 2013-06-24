@@ -95,8 +95,23 @@ public class OnEventHeaderItem extends HeaderItem
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(" + getTarget() + ", \"" +
-			getEvent() + "\", function(event) { " + getJavaScript() + ";});");
+		JavaScriptUtils.writeJavaScript(response, getCompleteJavaScript());
+	}
+
+	/**
+	 * @return The JavaScript that registers the event handler.
+	 */
+	public CharSequence getCompleteJavaScript()
+	{
+		StringBuilder result = new StringBuilder();
+		result.append("Wicket.Event.add(")
+				.append(getTarget())
+				.append(", \"")
+				.append(getEvent())
+				.append("\", function(event) { ")
+				.append(getJavaScript())
+				.append(";});");
+		return result;
 	}
 
 	@Override

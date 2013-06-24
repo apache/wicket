@@ -68,15 +68,15 @@ public class RequestsPage extends DevUtilsPage
 		}
 		else
 		{
-			add(new Label("id", new Model<String>(sessionData.getSessionId())));
+			add(new Label("id", new Model<>(sessionData.getSessionId())));
 			add(new Label("sessionInfo", new Model<Serializable>(
 				(Serializable)sessionData.getSessionInfo())));
-			add(new Label("startDate", new Model<String>(sdf.format(sessionData.getStartDate()))));
+			add(new Label("startDate", new Model<>(sdf.format(sessionData.getStartDate()))));
 			add(new Label("lastRequestTime", new Model<String>(
 				sdf.format(sessionData.getLastActive()))));
-			add(new Label("numberOfRequests", new Model<Long>(sessionData.getNumberOfRequests())));
-			add(new Label("totalTimeTaken", new Model<Long>(sessionData.getTotalTimeTaken())));
-			add(new Label("size", new Model<Bytes>(Bytes.bytes(sessionData.getSessionSize()))));
+			add(new Label("numberOfRequests", new Model<>(sessionData.getNumberOfRequests())));
+			add(new Label("totalTimeTaken", new Model<>(sessionData.getTotalTimeTaken())));
+			add(new Label("size", new Model<>(Bytes.bytes(sessionData.getSessionSize()))));
 			add(new WebMarkupContainer("sessionid").setVisible(false));
 		}
 
@@ -90,7 +90,7 @@ public class RequestsPage extends DevUtilsPage
 				List<RequestData> requests = getRequestLogger().getRequests();
 				if (sessionData != null)
 				{
-					ArrayList<RequestData> returnValues = new ArrayList<RequestData>();
+					ArrayList<RequestData> returnValues = new ArrayList<>();
 					for (RequestData data : requests)
 					{
 						if (sessionData.getSessionId().equals(data.getSessionId()))
@@ -100,7 +100,7 @@ public class RequestsPage extends DevUtilsPage
 					}
 					return returnValues;
 				}
-				return new ArrayList<RequestData>(requests);
+				return new ArrayList<>(requests);
 			}
 		};
 		PageableListView<RequestData> listView = new PageableListView<RequestData>("requests",
@@ -112,18 +112,18 @@ public class RequestsPage extends DevUtilsPage
 			protected void populateItem(final ListItem<RequestData> item)
 			{
 				RequestData rd = item.getModelObject();
-				item.add(new Label("id", new Model<String>(rd.getSessionId())).setVisible(sessionData == null));
-				item.add(new Label("startDate", new Model<String>(sdf.format(rd.getStartDate()))));
-				item.add(new Label("timeTaken", new Model<Long>(rd.getTimeTaken())));
+				item.add(new Label("id", new Model<>(rd.getSessionId())).setVisible(sessionData == null));
+				item.add(new Label("startDate", new Model<>(sdf.format(rd.getStartDate()))));
+				item.add(new Label("timeTaken", new Model<>(rd.getTimeTaken())));
 				String eventTarget = rd.getEventTarget() != null ? rd.getEventTarget()
 					.getClass()
 					.getName() : "";
-				item.add(new Label("eventTarget", new Model<String>(eventTarget)));
+				item.add(new Label("eventTarget", new Model<>(eventTarget)));
 				String responseTarget = rd.getResponseTarget() != null ? rd.getResponseTarget()
 					.getClass()
 					.getName() : "";
-				item.add(new Label("responseTarget", new Model<String>(responseTarget)));
-				item.add(new Label("alteredObjects", new Model<String>(rd.getAlteredObjects())).setEscapeModelStrings(false));
+				item.add(new Label("responseTarget", new Model<>(responseTarget)));
+				item.add(new Label("alteredObjects", new Model<>(rd.getAlteredObjects())).setEscapeModelStrings(false));
 				item.add(new Label("sessionSize", new Model<Bytes>(Bytes.bytes(rd.getSessionSize()
 					.longValue()))));
 			}
