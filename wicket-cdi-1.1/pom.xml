@@ -25,7 +25,7 @@
 	</parent>
 	<artifactId>wicket-cdi-1.1</artifactId>
 	<packaging>jar</packaging>
-	<name>Wicket CDI Integration</name>
+	<name>Wicket CDI 1.1 Integration</name>
 	<description>
 		Provides integration between Wicket and CDI containers. Enables injection of
 		components and behaviors, as well as other non-contextual object instances.
@@ -40,7 +40,14 @@
 		<dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
-			<version>1.1-20130403</version>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-api</artifactId>
+			<version>2.0.Final</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

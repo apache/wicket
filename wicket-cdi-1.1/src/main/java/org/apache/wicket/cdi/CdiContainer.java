@@ -16,9 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.context.spi.Context;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
@@ -26,6 +25,8 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
+import org.jboss.weld.context.ConversationContext;
+import org.jboss.weld.context.http.Http;
 
 /**
  * Provides access to CDI features from inside a Wicket request
@@ -44,6 +45,9 @@ public class CdiContainer
 //	private final BoundContext<HttpServletRequest> conversationContext;
 	private final INonContextualManager nonContextualManager;
 
+	@Inject 
+	@Http 
+	ConversationContext conversationContext;
 	/**
 	 * Constructor
 	 * 
@@ -57,14 +61,16 @@ public class CdiContainer
 
 		this.beanManager = beanManager;
 		this.nonContextualManager = nonContextualManager;
-
-//		conversationContext = SeamConversationContextFactory.getContext(HttpServletRequest.class);
-//		if (conversationContext == null)
-//		{
-//			throw new IllegalStateException(
-//				"Could not resolve conversation context manager. Make sure a Seam-Conversation module for your CDI container implementation is included in your dependencies.");
-//		}
-	}
+		
+		try 
+		{
+			Class.forName("org.jboss.weld.context.ConversationContext");
+		} 
+		catch (ClassNotFoundException cnfe) 
+		{
+			throw new IllegalStateException("Could not find Weld 2.0 Context. Make sure a Weld 2.0 module for your CDI container implementation is included in your dependencies.");
+		}
+        }
 
 	public INonContextualManager getNonContextualManager()
 	{
@@ -78,11 +84,7 @@ public class CdiContainer
 	 */
 	public void deactivateConversationalContext(RequestCycle cycle)
 	{
-		Context context = beanManager.getContext(ConversationScoped.class);
-
-		System.err.println("");
-//		conversationContext.deactivate();
-//		conversationContext.dissociate(getRequest(cycle));
+		conversationContext.deactivate();		
 	}
 
 	/**
@@ -93,18 +95,11 @@ public class CdiContainer
 	 */
 	public void activateConversationalContext(RequestCycle cycle, String cid)
 	{
-		Context context = beanManager.getContext(ConversationScoped.class);
-		System.err.println("ctx: " + context);
-		// with Weld 'context' is an instance of org.jboss.weld.context.http.HttpConversationContextImpl
-		// and it has the methods below but there is no API in javax.cdi to use them
-
-//		conversationContext.associate(getRequest(cycle));
-//		conversationContext.activate(cid);
-	}
-
-	private HttpServletRequest getRequest(RequestCycle cycle)
-	{
-		return (HttpServletRequest)cycle.getRequest().getContainerRequest();
+		if(conversationContext.isActive())
+		{
+			deactivateConversationalContext(cycle);
+		}
+		conversationContext.activate(cid);
 	}
 
 	/**
