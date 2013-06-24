@@ -70,9 +70,10 @@ public class CdiContainer
 		{
 			throw new IllegalStateException("Could not find Weld 2.0 Context. Make sure a Weld 2.0 module for your CDI container implementation is included in your dependencies.");
 		}
+                getNonContextualManager().postConstruct(this);
         }
 
-	public INonContextualManager getNonContextualManager()
+	public final INonContextualManager getNonContextualManager()
 	{
 		return nonContextualManager;
 	}
