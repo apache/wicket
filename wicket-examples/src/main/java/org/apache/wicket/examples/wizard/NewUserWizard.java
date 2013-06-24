@@ -62,7 +62,7 @@ public class NewUserWizard extends Wizard
 		public ConfirmationStep()
 		{
 			super(true);
-			IModel<User> userModel = new Model<User>(user);
+			IModel<User> userModel = new Model<>(user);
 			setTitleModel(new ResourceModel("confirmation.title"));
 			setSummaryModel(new StringResourceModel("confirmation.summary", this, userModel));
 			setContentModel(new StringResourceModel("confirmation.content", this, userModel));
@@ -80,11 +80,11 @@ public class NewUserWizard extends Wizard
 		public UserDetailsStep()
 		{
 			setTitleModel(new ResourceModel("confirmation.title"));
-			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model<User>(
+			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model<>(
 				user)));
-			add(new RequiredTextField<String>("user.firstName"));
-			add(new RequiredTextField<String>("user.lastName"));
-			add(new TextField<String>("user.department"));
+			add(new RequiredTextField<>("user.firstName"));
+			add(new RequiredTextField<>("user.lastName"));
+			add(new TextField<>("user.department"));
 			add(new CheckBox("assignRoles"));
 		}
 	}
@@ -101,12 +101,12 @@ public class NewUserWizard extends Wizard
 		{
 			super(new ResourceModel("username.title"), new ResourceModel("username.summary"));
 
-			add(new RequiredTextField<String>("user.userName"));
+			add(new RequiredTextField<>("user.userName"));
 
 			FormComponent<String> email = new RequiredTextField<String>("user.email").add(EmailAddressValidator.getInstance());
 			add(email);
 
-			TextField<String> emailRepeat = new TextField<String>("emailRepeat",
+			TextField<String> emailRepeat = new TextField<>("emailRepeat",
 				new Model<String>());
 			add(emailRepeat);
 
@@ -126,11 +126,11 @@ public class NewUserWizard extends Wizard
 		{
 			super(new ResourceModel("userroles.title"), null);
 			setSummaryModel(new StringResourceModel("userroles.summary", this,
-				new Model<User>(user)));
-			final ListMultipleChoice<String> rolesChoiceField = new ListMultipleChoice<String>(
+				new Model<>(user)));
+			final ListMultipleChoice<String> rolesChoiceField = new ListMultipleChoice<>(
 				"user.roles", allRoles);
 			add(rolesChoiceField);
-			final TextField<String> rolesSetNameField = new TextField<String>("user.rolesSetName");
+			final TextField<String> rolesSetNameField = new TextField<>("user.rolesSetName");
 			add(rolesSetNameField);
 			add(new AbstractFormValidator()
 			{
@@ -190,7 +190,7 @@ public class NewUserWizard extends Wizard
 		// create a blank user
 		user = new User();
 
-		setDefaultModel(new CompoundPropertyModel<NewUserWizard>(this));
+		setDefaultModel(new CompoundPropertyModel<>(this));
 		WizardModel model = new WizardModel();
 		model.add(new UserNameStep());
 		model.add(new UserDetailsStep());

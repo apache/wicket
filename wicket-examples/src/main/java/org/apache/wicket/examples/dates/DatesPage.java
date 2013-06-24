@@ -88,7 +88,7 @@ public class DatesPage extends WicketExamplePage
 				@Override
 				public List<Locale> getObject()
 				{
-					List<Locale> locales = new ArrayList<Locale>(LOCALES);
+					List<Locale> locales = new ArrayList<>(LOCALES);
 					Collections.sort(locales, new Comparator<Locale>()
 					{
 						@Override
@@ -102,7 +102,7 @@ public class DatesPage extends WicketExamplePage
 				}
 			});
 			setChoiceRenderer(new LocaleChoiceRenderer());
-			setDefaultModel(new PropertyModel<Locale>(DatesPage.this, "selectedLocale"));
+			setDefaultModel(new PropertyModel<>(DatesPage.this, "selectedLocale"));
 		}
 
 		/**
@@ -148,7 +148,7 @@ public class DatesPage extends WicketExamplePage
 	public DatesPage()
 	{
 		selectedLocale = Session.get().getLocale();
-		Form<?> localeForm = new Form<Void>("localeForm");
+		Form<?> localeForm = new Form<>("localeForm");
 		localeForm.add(new LocaleDropDownChoice("localeSelect"));
 		localeForm.add(new Link("localeUSLink")
 		{

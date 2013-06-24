@@ -50,7 +50,7 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 		}
 		else
 		{
-			param = new SortParam<T>(property, order == SortOrder.ASCENDING);
+			param = new SortParam<>(property, order == SortOrder.ASCENDING);
 		}
 	}
 

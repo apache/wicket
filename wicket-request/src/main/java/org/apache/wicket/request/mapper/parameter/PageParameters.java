@@ -116,12 +116,12 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			if (copy.indexedParameters != null)
 			{
-				indexedParameters = new ArrayList<String>(copy.indexedParameters);
+				indexedParameters = new ArrayList<>(copy.indexedParameters);
 			}
 
 			if (copy.namedParameters != null)
 			{
-				namedParameters = new ArrayList<Entry>(copy.namedParameters);
+				namedParameters = new ArrayList<>(copy.namedParameters);
 			}
 		}
 	}
@@ -142,7 +142,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	{
 		if (indexedParameters == null)
 		{
-			indexedParameters = new ArrayList<String>(index);
+			indexedParameters = new ArrayList<>(index);
 		}
 
 		for (int i = indexedParameters.size(); i <= index; ++i)
@@ -196,7 +196,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			return Collections.emptySet();
 		}
-		Set<String> set = new TreeSet<String>();
+		Set<String> set = new TreeSet<>();
 		for (Entry entry : namedParameters)
 		{
 			set.add(entry.key);
@@ -235,7 +235,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		if (namedParameters != null)
 		{
-			List<StringValue> result = new ArrayList<StringValue>();
+			List<StringValue> result = new ArrayList<>();
 			for (Entry entry : namedParameters)
 			{
 				if (entry.key.equals(name))
@@ -257,7 +257,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	@Override
 	public List<NamedPair> getAllNamed()
 	{
-		List<NamedPair> res = new ArrayList<NamedPair>();
+		List<NamedPair> res = new ArrayList<>();
 		if (namedParameters != null)
 		{
 			for (Entry e : namedParameters)
@@ -350,10 +350,10 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		if (namedParameters == null)
 		{
-			namedParameters = new ArrayList<Entry>(1);
+			namedParameters = new ArrayList<>(1);
 		}
 
-		List<String> values = new ArrayList<String>();
+		List<String> values = new ArrayList<>();
 		if (value instanceof String[])
 		{
 			values.addAll(Arrays.asList((String[])value));

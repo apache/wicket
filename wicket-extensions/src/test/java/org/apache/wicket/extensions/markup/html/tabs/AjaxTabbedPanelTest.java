@@ -25,6 +25,6 @@ public class AjaxTabbedPanelTest extends TabbedPanelTest
 	@Override
 	TabbedPanel<ITab> newTabbedPanel(List<ITab> defaultTabs)
 	{
-		return new AjaxTabbedPanel<ITab>("tabpanel", defaultTabs);
+		return new AjaxTabbedPanel<>("tabpanel", defaultTabs);
 	}
 }

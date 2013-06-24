@@ -46,9 +46,9 @@ public class DataTablePage extends BasePage
 	 */
 	public DataTablePage()
 	{
-		List<IColumn<Contact, String>> columns = new ArrayList<IColumn<Contact, String>>();
+		List<IColumn<Contact, String>> columns = new ArrayList<>();
 
-		columns.add(new AbstractColumn<Contact, String>(new Model<String>("Actions"))
+		columns.add(new AbstractColumn<Contact, String>(new Model<>("Actions"))
 		{
 			@Override
 			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
@@ -58,7 +58,7 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("ID"), "id")
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("ID"), "id")
 		{
 			@Override
 			public String getCssClass()
@@ -67,9 +67,9 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("First Name"), "firstName", "firstName"));
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("First Name"), "firstName", "firstName"));
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Last Name"), "lastName", "lastName")
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Last Name"), "lastName", "lastName")
 		{
 			@Override
 			public String getCssClass()
@@ -78,10 +78,10 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Cell Phone"), "cellPhone"));
 
-		DataTable dataTable = new DefaultDataTable<Contact, String>("table", columns,
+		DataTable dataTable = new DefaultDataTable<>("table", columns,
 				new SortableContactDataProvider(), 8);
 		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter()));
 

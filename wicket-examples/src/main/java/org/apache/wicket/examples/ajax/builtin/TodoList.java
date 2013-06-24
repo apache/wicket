@@ -250,9 +250,9 @@ public class TodoList extends BasePage
 			 */
 			public AddTodoForm(String id)
 			{
-				super(id, new CompoundPropertyModel<TodoItem>(new TodoItem()));
+				super(id, new CompoundPropertyModel<>(new TodoItem()));
 				setOutputMarkupId(true);
-				add(new TextField<String>("text"));
+				add(new TextField<>("text"));
 				add(new AjaxButton("add", this)
 				{
 					@Override
@@ -332,7 +332,7 @@ public class TodoList extends BasePage
 
 		void onRemoveCompletedTodos(AjaxRequestTarget target)
 		{
-			List<TodoItem> ready = new ArrayList<TodoItem>();
+			List<TodoItem> ready = new ArrayList<>();
 			for (TodoItem todo : items)
 			{
 				if (todo.isChecked())
@@ -400,7 +400,7 @@ public class TodoList extends BasePage
 	/**
 	 * The list of todo items.
 	 */
-	final List<TodoItem> items = new ArrayList<TodoItem>();
+	final List<TodoItem> items = new ArrayList<>();
 
 	/**
 	 * Constructor.

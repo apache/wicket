@@ -33,7 +33,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	private static final List<Person> personsDB;
 	static
 	{
-		personsDB = new ArrayList<Person>();
+		personsDB = new ArrayList<>();
 		personsDB.add(new Person("Fritz", "Fritzel"));
 		personsDB.add(new Person("Ghan", "Phariounimn"));
 		personsDB.add(new Person("Jan", "Klaasen"));

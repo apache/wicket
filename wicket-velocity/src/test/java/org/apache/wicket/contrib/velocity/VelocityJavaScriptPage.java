@@ -50,7 +50,7 @@ public class VelocityJavaScriptPage extends WebPage
 			@Override
 			public MiniMap<String, String> getObject()
 			{
-				MiniMap<String, String> map = new MiniMap<String, String>(2);
+				MiniMap<String, String> map = new MiniMap<>(2);
 				map.put("msg1", MSG1);
 				map.put("msg2", "Stooopid test 2");
 				return map;

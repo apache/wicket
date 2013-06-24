@@ -37,7 +37,7 @@ public final class ActionPermissions implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** Map from an action to a set of role strings */
-	private final Map<Action, Roles> rolesForAction = new HashMap<Action, Roles>();
+	private final Map<Action, Roles> rolesForAction = new HashMap<>();
 
 	/**
 	 * Gives permission for the given roles to perform the given action

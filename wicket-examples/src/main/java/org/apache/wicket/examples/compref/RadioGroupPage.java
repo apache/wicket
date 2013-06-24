@@ -41,7 +41,7 @@ public class RadioGroupPage extends WicketExamplePage
 	public RadioGroupPage()
 	{
 
-		final RadioGroup<Person> group = new RadioGroup<Person>("group", new Model<Person>());
+		final RadioGroup<Person> group = new RadioGroup<>("group", new Model<Person>());
 		Form<?> form = new Form("form")
 		{
 			@Override
@@ -61,9 +61,9 @@ public class RadioGroupPage extends WicketExamplePage
 			@Override
 			protected void populateItem(ListItem<Person> item)
 			{
-				item.add(new Radio<Person>("radio", item.getModel()));
+				item.add(new Radio<>("radio", item.getModel()));
 				item.add(new Label("name",
-					new PropertyModel<String>(item.getDefaultModel(), "name")));
+					new PropertyModel<>(item.getDefaultModel(), "name")));
 				item.add(new Label("lastName", new PropertyModel<String>(item.getDefaultModel(),
 					"lastName")));
 			}

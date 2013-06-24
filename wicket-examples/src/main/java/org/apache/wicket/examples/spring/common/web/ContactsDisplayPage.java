@@ -39,13 +39,13 @@ public abstract class ContactsDisplayPage extends BasePage
 	 */
 	public ContactsDisplayPage()
 	{
-		List<IColumn<Contact, String>> cols = new ArrayList<IColumn<Contact, String>>(4);
-		cols.add(new PropertyColumn<Contact, String>(new Model<String>("first name"), "firstName", "firstName"));
-		cols.add(new PropertyColumn<Contact, String>(new Model<String>("last name"), "lastName", "lastName"));
-		cols.add(new PropertyColumn<Contact, String>(new Model<String>("home phone"), "homePhone"));
-		cols.add(new PropertyColumn<Contact, String>(new Model<String>("cell phone"), "cellPhone"));
+		List<IColumn<Contact, String>> cols = new ArrayList<>(4);
+		cols.add(new PropertyColumn<Contact, String>(new Model<>("first name"), "firstName", "firstName"));
+		cols.add(new PropertyColumn<Contact, String>(new Model<>("last name"), "lastName", "lastName"));
+		cols.add(new PropertyColumn<Contact, String>(new Model<>("home phone"), "homePhone"));
+		cols.add(new PropertyColumn<Contact, String>(new Model<>("cell phone"), "cellPhone"));
 
-		add(new DefaultDataTable<Contact, String>("contacts", cols, getDataProvider(), 5));
+		add(new DefaultDataTable<>("contacts", cols, getDataProvider(), 5));
 	}
 
 	protected abstract ContactDataProvider getDataProvider();

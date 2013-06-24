@@ -40,7 +40,7 @@ public class MiniMapTest extends Assert
 	@Test
 	public void miniMap()
 	{
-		MiniMap<Object, Object> m = new MiniMap<Object, Object>(3);
+		MiniMap<Object, Object> m = new MiniMap<>(3);
 		m.put(FOO, BAR);
 
 		// Test .keySet();

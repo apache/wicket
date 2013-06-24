@@ -40,7 +40,7 @@ public class Guess extends HangmanPage
 	public Guess()
 	{
 		// Components for displaying the guesses remaining & the hangman
-		add(new Label("guessesRemaining", new PropertyModel<Integer>(getGame(), "guessesRemaining")));
+		add(new Label("guessesRemaining", new PropertyModel<>(getGame(), "guessesRemaining")));
 
 		// Components for displaying the current word
 		add(new Label("word", new Model<String>()

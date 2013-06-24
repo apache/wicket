@@ -42,10 +42,10 @@ public class Index extends WicketExamplePage
 		setStatelessHint(true);
 		add(new Label("message", new SessionModel()));
 		// First a normal bookmarkable link (which is stateless by default)
-		add(new BookmarkablePageLink<Void>("linkToStatelessPage", StatelessPage.class));
-		add(new BookmarkablePageLink<Void>("linkToStatelessPage1", StatelessPage1.class));
-		add(new BookmarkablePageLink<Void>("linkToStatelessPage2", StatelessPage2.class));
-		add(new BookmarkablePageLink<Void>("linkToStatelessPage3", StatelessPage3.class));
+		add(new BookmarkablePageLink<>("linkToStatelessPage", StatelessPage.class));
+		add(new BookmarkablePageLink<>("linkToStatelessPage1", StatelessPage1.class));
+		add(new BookmarkablePageLink<>("linkToStatelessPage2", StatelessPage2.class));
+		add(new BookmarkablePageLink<>("linkToStatelessPage3", StatelessPage3.class));
 		// The second with a stateless link, so the onclick will be called but
 		// on a stateless page.
 		add(new StatelessLink<Void>("linkToStatefulPage")

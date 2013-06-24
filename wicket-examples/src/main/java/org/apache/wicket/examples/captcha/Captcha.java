@@ -116,7 +116,7 @@ public class Captcha extends WicketExamplePage
 	{
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
-		add(new CaptchaForm<Void>("captchaForm"));
+		add(new CaptchaForm<>("captchaForm"));
 	}
 
 	private String getPassword()

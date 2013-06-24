@@ -40,10 +40,10 @@ public class PaletteTest extends WicketTestCase
 	@Test
 	public void standard()
 	{
-		IModel<List<String>> selected = new ListModel<String>(new ArrayList<String>(Arrays.asList(
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<>(Arrays.asList(
 			"A", "D")));
 
-		IModel<List<String>> all = new ListModel<String>(new ArrayList<String>(Arrays.asList("A",
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(Arrays.asList("A",
 			"B", "C", "D")));
 
 		PaletteTestPage testPage = new PaletteTestPage(selected, all);
@@ -67,10 +67,10 @@ public class PaletteTest extends WicketTestCase
 	@Test
 	public void choicesModelMissingSelected()
 	{
-		IModel<List<String>> selected = new ListModel<String>(new ArrayList<String>(
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<>(
 			Arrays.asList("D")));
 
-		IModel<List<String>> all = new ListModel<String>(new ArrayList<String>(Arrays.asList("A",
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(Arrays.asList("A",
 			"B", "C")));
 
 		PaletteTestPage testPage = new PaletteTestPage(selected, all);
@@ -91,9 +91,9 @@ public class PaletteTest extends WicketTestCase
 	@Test
 	public void choicesModelAccountingForSelected()
 	{
-		final List<String> list = new ArrayList<String>(Arrays.asList("D"));
+		final List<String> list = new ArrayList<>(Arrays.asList("D"));
 
-		IModel<List<String>> selected = new ListModel<String>(list);
+		IModel<List<String>> selected = new ListModel<>(list);
 
 		IModel<List<String>> all = new LoadableDetachableModel<List<String>>()
 		{
@@ -102,7 +102,7 @@ public class PaletteTest extends WicketTestCase
 			{
 				List<String> fromDB = Arrays.asList("A", "B", "C"); // normally coming from DB
 
-				List<String> result = new ArrayList<String>();
+				List<String> result = new ArrayList<>();
 				result.addAll(fromDB);
 
 				// include already selected
@@ -131,9 +131,9 @@ public class PaletteTest extends WicketTestCase
 	@Test
 	public void choicesModelSingleNotSelected()
 	{
-		IModel<List<String>> selected = new ListModel<String>(new ArrayList<String>());
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<String>());
 
-		IModel<List<String>> all = new ListModel<String>(new ArrayList<String>(Arrays.asList("A")));
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(Arrays.asList("A")));
 
 		PaletteTestPage testPage = new PaletteTestPage(selected, all);
 

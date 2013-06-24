@@ -69,7 +69,7 @@ public class BookmarkableFolderContent extends Content
 					PageParameters parameters = new PageParameters();
 					parameters.add("foo", foo.getId());
 
-					return new BookmarkablePageLink<Void>(id, tree.getPage().getClass(), parameters);
+					return new BookmarkablePageLink<>(id, tree.getPage().getClass(), parameters);
 				}
 			}
 		};

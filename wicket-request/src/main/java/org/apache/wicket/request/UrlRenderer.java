@@ -41,7 +41,7 @@ public class UrlRenderer
 {
 	private static final Logger LOG = LoggerFactory.getLogger(UrlRenderer.class);
 
-	private static final Map<String, Integer> PROTO_TO_PORT = new HashMap<String, Integer>();
+	private static final Map<String, Integer> PROTO_TO_PORT = new HashMap<>();
 	static
 	{
 		PROTO_TO_PORT.put("http", 80);
@@ -235,12 +235,12 @@ public class UrlRenderer
 		}
 
 		List<String> baseUrlSegments = getBaseUrl().getSegments();
-		List<String> urlSegments = new ArrayList<String>(url.getSegments());
+		List<String> urlSegments = new ArrayList<>(url.getSegments());
 
 		removeCommonPrefixes(request, baseUrlSegments);
 		removeCommonPrefixes(request, urlSegments);
 
-		List<String> newSegments = new ArrayList<String>();
+		List<String> newSegments = new ArrayList<>();
 
 		int common = 0;
 

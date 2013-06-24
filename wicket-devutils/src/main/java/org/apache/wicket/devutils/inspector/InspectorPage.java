@@ -65,7 +65,7 @@ public final class InspectorPage extends DevUtilsPage
 		}
 		add(new EnhancedPageView("page", (Page)page));
 		add(new Image("bug", new PackageResourceReference(InspectorPage.class, "bug.png")));
-		add(new BookmarkablePageLink<Void>("allsessions", LiveSessionsPage.class));
+		add(new BookmarkablePageLink<>("allsessions", LiveSessionsPage.class));
 		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
 	}
 

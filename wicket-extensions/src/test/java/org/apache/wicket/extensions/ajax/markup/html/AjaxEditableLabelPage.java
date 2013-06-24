@@ -34,7 +34,7 @@ public class AjaxEditableLabelPage extends WebPage
 	public AjaxEditableLabelPage()
 	{
 		final AjaxEditableLabel<String> ajaxLabel = new AjaxEditableLabel<String>("ajaxLabel",
-			new Model<String>("ajaxTest"));
+			new Model<>("ajaxTest"));
 		add(ajaxLabel);
 		add(new AjaxLink<Void>("toggle")
 		{

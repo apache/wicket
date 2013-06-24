@@ -50,7 +50,7 @@ public class EditableLabelPage extends BasePage
 	 */
 	public EditableLabelPage()
 	{
-		Form form = new Form("form", new CompoundPropertyModel<EditableLabelPage>(this));
+		Form form = new Form("form", new CompoundPropertyModel<>(this));
 		add(form);
 
 		form.add(new AjaxEditableLabel("text1"));

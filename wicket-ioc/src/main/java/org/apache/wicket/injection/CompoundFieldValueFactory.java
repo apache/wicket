@@ -35,7 +35,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class CompoundFieldValueFactory implements IFieldValueFactory
 {
-	private final List<IFieldValueFactory> delegates = new ArrayList<IFieldValueFactory>();
+	private final List<IFieldValueFactory> delegates = new ArrayList<>();
 
 	/**
 	 * Constructor

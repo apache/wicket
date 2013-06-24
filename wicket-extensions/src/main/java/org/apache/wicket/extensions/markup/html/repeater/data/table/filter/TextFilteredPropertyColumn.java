@@ -67,7 +67,7 @@ public class TextFilteredPropertyColumn<T, F, S> extends FilteredPropertyColumn<
 	@Override
 	public Component getFilter(final String componentId, final FilterForm<?> form)
 	{
-		return new TextFilter<F>(componentId, getFilterModel(form), form);
+		return new TextFilter<>(componentId, getFilterModel(form), form);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class TextFilteredPropertyColumn<T, F, S> extends FilteredPropertyColumn<
 	 */
 	protected IModel<F> getFilterModel(final FilterForm<?> form)
 	{
-		return new PropertyModel<F>(form.getDefaultModel(), getPropertyExpression());
+		return new PropertyModel<>(form.getDefaultModel(), getPropertyExpression());
 	}
 
 

@@ -92,7 +92,7 @@ public class ClassMetaCache<T>
 				container = cache.get(classLoader);
 				if (container == null)
 				{
-					container = new ConcurrentHashMap<String, T>();
+					container = new ConcurrentHashMap<>();
 
 					/*
 					 * don't write to current cache, copy instead

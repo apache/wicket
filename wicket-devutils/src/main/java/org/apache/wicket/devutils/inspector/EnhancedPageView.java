@@ -126,7 +126,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		showStatefulAndParentsOnly = false;
 		showBehaviors = true;
 		allColumns = allColumns();
-		visibleColumns = new ArrayList<IColumn<TreeNode, Void>>(allColumns);
+		visibleColumns = new ArrayList<>(allColumns);
 
 		// Name of page
 		add(new Label("info", new Model<String>()
@@ -169,7 +169,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 
 	private List<IColumn<TreeNode, Void>> allColumns()
 	{
-		List<IColumn<TreeNode, Void>> columns = new ArrayList<IColumn<TreeNode, Void>>();
+		List<IColumn<TreeNode, Void>> columns = new ArrayList<>();
 
 		columns.add(new PropertyColumn<TreeNode, Void>(Model.of("Path"), "path")
 		{
@@ -281,12 +281,12 @@ public final class EnhancedPageView extends GenericPanel<Page>
 
 	private void addTreeControls()
 	{
-		Form<Void> form = new Form<Void>("form");
+		Form<Void> form = new Form<>("form");
 		add(form);
 		form.add(new CheckBox("showStateless", new PropertyModel<Boolean>(this,
 			"showStatefulAndParentsOnly")));
 		form.add(new CheckBox("showBehaviors", new PropertyModel<Boolean>(this, "showBehaviors")));
-		form.add(new CheckBoxMultipleChoice<IColumn<TreeNode, Void>>("visibleColumns",
+		form.add(new CheckBoxMultipleChoice<>("visibleColumns",
 			new PropertyModel<List<IColumn<TreeNode, Void>>>(this, "visibleColumns"), allColumns).setSuffix(" "));
 		form.add(new AjaxFallbackButton("submit", form)
 		{
@@ -350,7 +350,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 			@Override
 			protected Item<TreeNode> newRowItem(String id, int index, IModel<TreeNode> model)
 			{
-				return new OddEvenItem<TreeNode>(id, index, model);
+				return new OddEvenItem<>(id, index, model);
 			}
 		};
 		tree.setOutputMarkupId(true);
@@ -371,7 +371,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		{
 			this.node = node;
 			this.parent = parent;
-			children = new ArrayList<TreeNode>();
+			children = new ArrayList<>();
 			if (!(node instanceof Component) && !(node instanceof Behavior))
 				throw new IllegalArgumentException("Only accepts Components and Behaviors");
 		}
@@ -387,7 +387,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		 */
 		public List<Integer> getPathIndexes()
 		{
-			List<Integer> path = new ArrayList<Integer>();
+			List<Integer> path = new ArrayList<>();
 			TreeNode nextChild = this;
 			TreeNode parent;
 			while ((parent = nextChild.parent) != null)
@@ -706,7 +706,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private HashSet<List<Integer>> set = new HashSet<List<Integer>>();
+		private HashSet<List<Integer>> set = new HashSet<>();
 		private boolean reversed = false;
 
 		public void expandAll()

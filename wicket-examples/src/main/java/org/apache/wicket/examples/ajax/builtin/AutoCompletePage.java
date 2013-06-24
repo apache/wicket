@@ -47,7 +47,7 @@ public class AutoCompletePage extends BasePage
 	 */
 	public AutoCompletePage()
 	{
-		Form<Void> form = new Form<Void>("form");
+		Form<Void> form = new Form<>("form");
 		add(form);
 
 		final IModel<String> model = new IModel<String>()
@@ -86,7 +86,7 @@ public class AutoCompletePage extends BasePage
 					return emptyList.iterator();
 				}
 
-				List<String> choices = new ArrayList<String>(10);
+				List<String> choices = new ArrayList<>(10);
 
 				Locale[] locales = Locale.getAvailableLocales();
 

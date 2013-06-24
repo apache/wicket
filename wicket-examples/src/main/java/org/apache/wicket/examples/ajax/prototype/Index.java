@@ -92,7 +92,7 @@ public class Index extends WicketExamplePage
 		});
 
 		// Add the label
-		add(counter = new Label("counter", new PropertyModel<Integer>(this, "count")));
+		add(counter = new Label("counter", new PropertyModel<>(this, "count")));
 	}
 
 	/**

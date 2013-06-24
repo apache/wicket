@@ -82,7 +82,7 @@ public class FileUploadPage extends BasePage
 		add(form);
 
 		// create a textfield to demo non-file content
-		form.add(text = new TextField<String>("text", new Model<String>()));
+		form.add(text = new TextField<>("text", new Model<String>()));
 		text.add(StringValidator.minimumLength(2));
 
 		// create the file upload field

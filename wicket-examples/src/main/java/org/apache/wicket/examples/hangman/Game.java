@@ -39,7 +39,7 @@ public class Game implements IClusterable
 	private int guessesRemaining;
 
 	/** The letters */
-	private final List<Letter> letters = new ArrayList<Letter>();
+	private final List<Letter> letters = new ArrayList<>();
 
 	/** The word being guessed by the user */
 	private Word word;

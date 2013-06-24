@@ -79,7 +79,7 @@ public class AjaxFallbackDefaultDataTable<T, S> extends DataTable<T, S>
 	@Override
 	protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 	{
-		return new OddEvenItem<T>(id, index, model);
+		return new OddEvenItem<>(id, index, model);
 	}
 
 }

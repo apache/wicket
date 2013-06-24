@@ -43,7 +43,7 @@ public class Index extends BasePage
 	 */
 	public Index()
 	{
-		add(new Label("currentUser", new PropertyModel<User>(this, "session.user")));
+		add(new Label("currentUser", new PropertyModel<>(this, "session.user")));
 		add(new ListView<User>("users", RolesApplication.USERS)
 		{
 			@Override
@@ -58,12 +58,12 @@ public class Index extends BasePage
 						RolesSession session = (RolesSession)Session.get();
 						session.setUser(user);
 					}
-				}.add(new Label("userId", new Model<User>(user))));
+				}.add(new Label("userId", new Model<>(user))));
 			}
 		});
 
 		// pages that are protected using wicket meta data
-		add(new BookmarkablePageLink<Void>("adminBookmarkableLink", AdminBookmarkablePage.class));
+		add(new BookmarkablePageLink<>("adminBookmarkableLink", AdminBookmarkablePage.class));
 		add(new Link("adminInternalLink")
 		{
 			@Override
@@ -72,7 +72,7 @@ public class Index extends BasePage
 				setResponsePage(new AdminInternalPage("foo"));
 			}
 		});
-		add(new BookmarkablePageLink<Void>("panelsPageLink", PanelsPage.class));
+		add(new BookmarkablePageLink<>("panelsPageLink", PanelsPage.class));
 
 		// pages that are protected using annotations
 		add(new BookmarkablePageLink<Void>("adminAnnotBookmarkableLink",
@@ -85,6 +85,6 @@ public class Index extends BasePage
 				setResponsePage(new AdminAnnotationsInternalPage("bar"));
 			}
 		});
-		add(new BookmarkablePageLink<Void>("panelsAnnotPageLink", AnnotationsPanelsPage.class));
+		add(new BookmarkablePageLink<>("panelsAnnotPageLink", AnnotationsPanelsPage.class));
 	}
 }

@@ -268,7 +268,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 				new XmlPrologHeaderHandler(xmlPrologIgnore),
 				new CssLicenseHeaderHandler(cssIgnore), };
 
-		final Map<ILicenseHeaderHandler, List<File>> badFiles = new HashMap<ILicenseHeaderHandler, List<File>>();
+		final Map<ILicenseHeaderHandler, List<File>> badFiles = new HashMap<>();
 
 		for (final ILicenseHeaderHandler licenseHeaderHandler : licenseHeaderHandlers)
 		{
@@ -287,7 +287,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 
 								if (files == null)
 								{
-									files = new ArrayList<File>();
+									files = new ArrayList<>();
 									badFiles.put(licenseHeaderHandler, files);
 								}
 

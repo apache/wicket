@@ -50,7 +50,7 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 	public CheckBoxMultipleChoicePage()
 	{
 		final Input input = new Input();
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -82,10 +82,10 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 	private static class Input implements IClusterable
 	{
 		/** the selected sites. */
-		public List<String> sites = new ArrayList<String>();
+		public List<String> sites = new ArrayList<>();
 
 		/** the selected choices. */
-		public List<String> choices = new ArrayList<String>();
+		public List<String> choices = new ArrayList<>();
 
 		/** adds pre-selected items to the choices list */
 		public Input()

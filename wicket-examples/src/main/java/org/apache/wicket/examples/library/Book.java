@@ -53,7 +53,7 @@ public final class Book implements IClusterable
 	public static final WritingStyle BAD = new WritingStyle("bad");
 
 	private static long nextId = 0;
-	private static final Map<Long, Book> idToBook = new HashMap<Long, Book>();
+	private static final Map<Long, Book> idToBook = new HashMap<>();
 
 	static
 	{
@@ -68,7 +68,7 @@ public final class Book implements IClusterable
 	private Book companionBook;
 	private Book relatedBook;
 	private boolean isFiction;
-	private List<WritingStyle> writingStyles = new ArrayList<WritingStyle>();
+	private List<WritingStyle> writingStyles = new ArrayList<>();
 
 	/**
 	 * Constructor

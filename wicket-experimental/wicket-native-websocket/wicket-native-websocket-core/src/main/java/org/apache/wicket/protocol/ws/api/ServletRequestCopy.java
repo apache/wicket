@@ -57,9 +57,9 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final String requestUri;
 	private final HttpSessionCopy httpSession;
 	private final StringBuffer requestURL;
-	private final Map<String, Object> attributes = new HashMap<String, Object>();
-	private final Map<String, String> headers = new HashMap<String, String>();
-	private final Map<String, String[]> parameters = new HashMap<String, String[]>();
+	private final Map<String, Object> attributes = new HashMap<>();
+	private final Map<String, String> headers = new HashMap<>();
+	private final Map<String, String[]> parameters = new HashMap<>();
 	private final String method;
 	private final String serverName;
 	private final int serverPort;

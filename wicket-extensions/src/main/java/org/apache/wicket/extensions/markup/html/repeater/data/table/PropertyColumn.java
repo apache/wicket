@@ -115,7 +115,7 @@ public class PropertyColumn<T, S> extends AbstractColumn<T, S> implements IExpor
 	@Override
 	public IModel<Object> getDataModel(IModel<T> rowModel)
 	{
-		PropertyModel<Object> propertyModel = new PropertyModel<Object>(rowModel, propertyExpression);
+		PropertyModel<Object> propertyModel = new PropertyModel<>(rowModel, propertyExpression);
 		return propertyModel;
 	}
 }

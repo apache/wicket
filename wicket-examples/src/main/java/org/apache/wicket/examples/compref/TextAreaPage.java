@@ -37,7 +37,7 @@ public class TextAreaPage extends WicketExamplePage
 	public TextAreaPage()
 	{
 		final Input input = new Input();
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -55,7 +55,7 @@ public class TextAreaPage extends WicketExamplePage
 		add(form);
 
 		// add a text area component that uses Input's 'text' property.
-		form.add(new TextArea<String>("text"));
+		form.add(new TextArea<>("text"));
 	}
 
 	/** Simple data class that acts as a model for the input fields. */

@@ -100,7 +100,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 		}
 	}
 
-	private final List<IRequestMapper> mappers = new CopyOnWriteArrayList<IRequestMapper>();
+	private final List<IRequestMapper> mappers = new CopyOnWriteArrayList<>();
 
 	@Override
 	public CompoundRequestMapper add(final IRequestMapper mapper)
@@ -131,7 +131,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	@Override
 	public IRequestHandler mapRequest(final Request request)
 	{
-		List<MapperWithScore> list = new ArrayList<MapperWithScore>(mappers.size());
+		List<MapperWithScore> list = new ArrayList<>(mappers.size());
 
 		for (IRequestMapper mapper : mappers)
 		{
@@ -169,7 +169,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	 */
 	private void logMappers(final List<MapperWithScore> mappersWithScores, final String url)
 	{
-		final List<MapperWithScore> compatibleMappers = new ArrayList<MapperWithScore>();
+		final List<MapperWithScore> compatibleMappers = new ArrayList<>();
 		for (MapperWithScore mapperWithScore : mappersWithScores)
 		{
 			if (mapperWithScore.compatibilityScore > 0)

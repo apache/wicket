@@ -73,7 +73,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 	@Override
 	public Iterator<? extends T> iterator(long first, long count)
 	{
-		currentBranch = new Branch<T>(null, provider.getRoots());
+		currentBranch = new Branch<>(null, provider.getRoots());
 
 		Iterator<T> iterator = new Iterator<T>()
 		{
@@ -106,7 +106,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 
 				if (iterateChildren(next))
 				{
-					currentBranch = new Branch<T>(previousBranch, provider.getChildren(next));
+					currentBranch = new Branch<>(previousBranch, provider.getChildren(next));
 				}
 
 				return next;
@@ -175,7 +175,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 				branch = branch.parent;
 			}
 
-			return new NodeModel<T>(model, branches);
+			return new NodeModel<>(model, branches);
 		}
 
 		public int getDepth()

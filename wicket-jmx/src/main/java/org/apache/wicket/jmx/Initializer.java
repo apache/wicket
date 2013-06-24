@@ -60,7 +60,7 @@ public class Initializer implements IInitializer
 	/**
 	 * List of registered names
 	 */
-	private final List<ObjectName> registered = new ArrayList<ObjectName>();
+	private final List<ObjectName> registered = new ArrayList<>();
 
 	/**
 	 * @see org.apache.wicket.IInitializer#destroy(org.apache.wicket.Application)

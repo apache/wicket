@@ -111,7 +111,7 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 	 */
 	protected IModel<Y> getFilterModel(final FilterForm<?> form)
 	{
-		return new PropertyModel<Y>(form.getDefaultModel(), getPropertyExpression());
+		return new PropertyModel<>(form.getDefaultModel(), getPropertyExpression());
 	}
 
 	/**

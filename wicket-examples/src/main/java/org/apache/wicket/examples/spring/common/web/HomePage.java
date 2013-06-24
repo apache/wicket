@@ -32,6 +32,6 @@ public class HomePage extends BasePage
 	 */
 	public HomePage()
 	{
-		add(new BookmarkablePageLink<Void>("annot-link", AnnotPage.class));
+		add(new BookmarkablePageLink<>("annot-link", AnnotPage.class));
 	}
 }

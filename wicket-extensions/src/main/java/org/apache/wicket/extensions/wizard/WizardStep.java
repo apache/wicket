@@ -88,7 +88,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 		private static final long serialVersionUID = 1L;
 
-		private final List<IFormValidator> validators = new ArrayList<IFormValidator>();
+		private final List<IFormValidator> validators = new ArrayList<>();
 
 		/**
 		 * Adds a form validator.
@@ -109,7 +109,7 @@ public class WizardStep extends Panel implements IWizardStep
 		{
 			if (isActiveStep())
 			{
-				Set<Component> components = new HashSet<Component>();
+				Set<Component> components = new HashSet<>();
 				for (IFormValidator v : validators)
 				{
 					FormComponent<?>[] dependentComponents = v.getDependentFormComponents();
@@ -166,7 +166,7 @@ public class WizardStep extends Panel implements IWizardStep
 		public Header(final String id, final IWizard wizard)
 		{
 			super(id);
-			setDefaultModel(new CompoundPropertyModel<IWizard>(wizard));
+			setDefaultModel(new CompoundPropertyModel<>(wizard));
 			add(new Label("title", new AbstractReadOnlyModel<String>()
 			{
 				private static final long serialVersionUID = 1L;
@@ -290,7 +290,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public WizardStep(final String title, final String summary, final IModel<?> model)
 	{
-		this(new Model<String>(title), new Model<String>(summary), model);
+		this(new Model<String>(title), new Model<>(summary), model);
 	}
 
 	/**
