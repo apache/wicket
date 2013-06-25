@@ -26,6 +26,11 @@ import org.apache.wicket.util.lang.Args;
 class AbstractInjector
 {
 	private final CdiContainer container;
+	private static final String[] ignoredPackages =new String[]{
+		"org.apache.wicket.markup.html",       
+		"org.apache.wicket.protocol.html",
+		"org.apache.wicket.behavior",    
+	};
 
 	public AbstractInjector(CdiContainer container)
 	{
@@ -40,6 +45,21 @@ class AbstractInjector
 
 	protected <T> void inject(T instance)
 	{
-		container.getNonContextualManager().inject(instance);
+		if(!ignore(instance.getClass())) {
+			container.getNonContextualManager().inject(instance);
+		}
+	}
+        
+	private static boolean ignore(Class clazz)
+	{
+		String packageName = clazz.getName();
+		for(String ignore:ignoredPackages)
+		{
+			if(packageName.contains(ignore))
+			{
+				return true;
+			}
+		}           
+		return false;
 	}
 }
