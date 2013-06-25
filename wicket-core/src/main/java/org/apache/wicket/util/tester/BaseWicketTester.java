@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -68,6 +69,7 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
@@ -2012,31 +2014,43 @@ public class BaseWicketTester
 	 * Asserts no error-level feedback messages.
 	 * 
 	 * @return a <code>Result</code>
+	 * @see #hasNoFeedbackMessage(int)
 	 */
 	public Result hasNoErrorMessage()
 	{
-		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		return isTrue(
-			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+		return hasNoFeedbackMessage(FeedbackMessage.ERROR);
 	}
 
 	/**
 	 * Asserts no info-level feedback messages.
 	 * 
 	 * @return a <code>Result</code>
+	 * @see #hasNoFeedbackMessage(int)
 	 */
 	public Result hasNoInfoMessage()
 	{
-		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
+		return hasNoFeedbackMessage(FeedbackMessage.INFO);
+	}
+
+	/**
+	 * Asserts there are no feedback messages with the given level.
+	 *
+	 * @param level
+	 *              the level of the feedback message
+	 * @return a <code>Result</code>
+	 */
+	public Result hasNoFeedbackMessage(int level)
+	{
+		List<Serializable> messages = getMessages(level);
 		return isTrue(
-			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+				String.format("expected no %s message, but contains\n%s",
+						new FeedbackMessage(null, "", level).getLevelAsString().toLowerCase(Locale.ENGLISH), WicketTesterHelper.asLined(messages)),
+				messages.isEmpty());
 	}
 
 	/**
 	 * Retrieves <code>FeedbackMessages</code>.
-	 * 
+	 *
 	 * @param level
 	 *            level of feedback message, for example:
 	 *            <code>FeedbackMessage.DEBUG or FeedbackMessage.INFO.. etc</code>
@@ -2045,22 +2059,27 @@ public class BaseWicketTester
 	 */
 	public List<Serializable> getMessages(final int level)
 	{
-		List<FeedbackMessage> allMessages = new FeedbackCollector(getLastRenderedPage()).collect(new IFeedbackMessageFilter()
-		{
-
-			@Override
-			public boolean accept(FeedbackMessage message)
-			{
-				return message.getLevel() == level;
-			}
-		});
+		List<FeedbackMessage> messages = getFeedbackMessages(new ExactLevelFeedbackMessageFilter(level));
 
 		List<Serializable> actualMessages = Generics.newArrayList();
-		for (FeedbackMessage message : allMessages)
+		for (FeedbackMessage message : messages)
 		{
 			actualMessages.add(message.getMessage());
 		}
 		return actualMessages;
+	}
+
+	/**
+	 * Retrieves <code>FeedbackMessages</code>.
+	 *
+	 * @param filter
+	 *            A filter that decides which messages to collect
+	 * @return <code>List</code> of messages (as <code>String</code>s)
+	 * @see FeedbackMessage
+	 */
+	public List<FeedbackMessage> getFeedbackMessages(final IFeedbackMessageFilter filter)
+	{
+		return new FeedbackCollector(getLastRenderedPage()).collect(filter);
 	}
 
 	/**
