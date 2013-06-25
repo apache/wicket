@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -25,8 +26,7 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
-import org.jboss.weld.context.ConversationContext;
-import org.jboss.weld.context.http.Http;
+import org.jboss.weld.context.http.HttpConversationContext;
 
 /**
  * Provides access to CDI features from inside a Wicket request
@@ -46,8 +46,7 @@ public class CdiContainer
 	private final INonContextualManager nonContextualManager;
 
 	@Inject 
-	@Http 
-	ConversationContext conversationContext;
+	Instance<HttpConversationContext> conversationContextSource;
 	/**
 	 * Constructor
 	 * 
@@ -84,8 +83,10 @@ public class CdiContainer
 	 * @param cycle
 	 */
 	public void deactivateConversationalContext(RequestCycle cycle)
-	{
-		conversationContext.deactivate();		
+	{	    
+		HttpConversationContext conversationContext = conversationContextSource.get(); 
+		conversationContext.deactivate();	            
+		conversationContext.dissociate(getRequest(cycle));
 	}
 
 	/**
@@ -96,11 +97,31 @@ public class CdiContainer
 	 */
 	public void activateConversationalContext(RequestCycle cycle, String cid)
 	{
+		// Force a session created if one does not exist 
+		// Glassfish does not have a session initially to store the transactions
+		// so it gets lost in the request.              
+		getRequest(cycle).getSession(true);
+		HttpConversationContext conversationContext = conversationContextSource.get();               
+		conversationContext.associate(getRequest(cycle)); 
 		if(conversationContext.isActive())
 		{
-			deactivateConversationalContext(cycle);
+			// Only reactivate if transient and cid is set
+			if(conversationContext.getCurrentConversation().isTransient() 
+				&& cid != null && !cid.isEmpty())
+			{
+				conversationContext.deactivate();
+				conversationContext.activate(cid);                                                             
+			}                
+		} 
+		else
+		{
+			conversationContext.activate(cid);         
 		}
-		conversationContext.activate(cid);
+	}
+
+	private HttpServletRequest getRequest(RequestCycle cycle)
+	{
+		return (HttpServletRequest)cycle.getRequest().getContainerRequest();
 	}
 
 	/**
