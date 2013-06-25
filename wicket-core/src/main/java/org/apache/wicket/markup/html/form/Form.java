@@ -1164,16 +1164,9 @@ public class Form<T> extends WebMarkupContainer
 	 * will do a form submit using this component. This method is overridable as what we do is best
 	 * effort only, and may not what you want in specific situations. So if you have specific
 	 * usability concerns, or want to follow another strategy, you may override this method.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 * @param openTag
-	 *            The open tag for the body
 	 */
-	protected void appendDefaultButtonField(final MarkupStream markupStream,
-		final ComponentTag openTag)
+	protected void appendDefaultButtonField()
 	{
-
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		// div that is not visible (but not display:none either)
@@ -1633,41 +1626,52 @@ public class Form<T> extends WebMarkupContainer
 		if (isRootForm())
 		{
 			// get the hidden field id
-			String nameAndId = getHiddenFieldId();
-
-			// render the hidden field
-			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START)
-				.append("<input type=\"hidden\" name=\"").append(nameAndId).append("\" id=\"")
-				.append(nameAndId).append("\" />");
-
-			// if it's a get, did put the parameters in the action attribute,
-			// and have to write the url parameters as hidden fields
-			if (encodeUrlInHiddenFields())
-			{
-				String url = getActionUrl().toString();
-				int i = url.indexOf('?');
-				String queryString = (i > -1) ? url.substring(i + 1) : url;
-				String[] params = Strings.split(queryString, '&');
-
-				writeParamsAsHiddenFields(params, buffer);
-			}
-			buffer.append("</div>");
-			getResponse().write(buffer);
-
-			// if a default submitting component was set, handle the rendering of that
-			if (defaultSubmittingComponent instanceof Component)
-			{
-				final Component submittingComponent = (Component)defaultSubmittingComponent;
-				if (submittingComponent.isVisibleInHierarchy()
-					&& submittingComponent.isEnabledInHierarchy())
-				{
-					appendDefaultButtonField(markupStream, openTag);
-				}
-			}
+			writeHiddenFields();
 		}
 
 		// do the rest of the processing
 		super.onComponentTagBody(markupStream, openTag);
+	}
+
+	/*
+	 * Writes the markup for the hidden input field and default button field if applicable to the current response.
+	 */
+	public final void writeHiddenFields()
+	{
+		// get the hidden field id
+		String nameAndId = getHiddenFieldId();
+
+		AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
+			"<input type=\"hidden\" name=\"")
+			.append(nameAndId)
+			.append("\" id=\"")
+			.append(nameAndId)
+			.append("\" />");
+
+		// if it's a get, did put the parameters in the action attribute,
+		// and have to write the url parameters as hidden fields
+		if (encodeUrlInHiddenFields())
+		{
+			String url = getActionUrl().toString();
+			int i = url.indexOf('?');
+			String queryString = (i > -1) ? url.substring(i + 1) : url;
+			String[] params = Strings.split(queryString, '&');
+
+			writeParamsAsHiddenFields(params, buffer);
+		}
+		buffer.append("</div>");
+		getResponse().write(buffer);
+
+		// if a default submitting component was set, handle the rendering of that
+		if (defaultSubmittingComponent instanceof Component)
+		{
+			final Component submittingComponent = (Component)defaultSubmittingComponent;
+			if (submittingComponent.isVisibleInHierarchy()
+					&& submittingComponent.isEnabledInHierarchy())
+			{
+				appendDefaultButtonField();
+			}
+		}
 	}
 
 	/**
