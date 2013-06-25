@@ -17,7 +17,7 @@
 package org.apache.wicket.feedback;
 
 /**
- * Filter for accepting feedback messages of a certain error level.
+ * Filter for accepting feedback messages with minimum level.
  * 
  * @author Jonathan Locke
  */
