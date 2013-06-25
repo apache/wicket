@@ -48,7 +48,7 @@ public class CheckedSelectableFolderContent extends SelectableFolderContent
 			@Override
 			protected IModel<Boolean> newCheckBoxModel(final IModel<Foo> model)
 			{
-				return new PropertyModel<Boolean>(model, "quux");
+				return new PropertyModel<>(model, "quux");
 			}
 
 			@Override

@@ -31,7 +31,7 @@ public abstract class AbstractIntegerConverter<I extends Number> extends Abstrac
 	private static final long serialVersionUID = 1L;
 
 	/** The date format to use */
-	private final ConcurrentHashMap<Locale, NumberFormat> numberFormats = new ConcurrentHashMap<Locale, NumberFormat>();
+	private final ConcurrentHashMap<Locale, NumberFormat> numberFormats = new ConcurrentHashMap<>();
 
 	/**
 	 * @param locale

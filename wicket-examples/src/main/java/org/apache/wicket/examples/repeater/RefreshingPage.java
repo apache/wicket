@@ -45,7 +45,7 @@ public class RefreshingPage extends BasePage
 	 */
 	public RefreshingPage()
 	{
-		final List<IModel<Contact>> contacts = new ArrayList<IModel<Contact>>(10);
+		final List<IModel<Contact>> contacts = new ArrayList<>(10);
 
 		// populate list of contacts to be displayed
 		ContactDataProvider dp = new ContactDataProvider();

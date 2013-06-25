@@ -37,7 +37,7 @@ public class BasePage extends ExamplePage
 	 */
 	public BasePage()
 	{
-		add(new Label("selectedLabel", new PropertyModel<String>(this, "selectedContactLabel")));
+		add(new Label("selectedLabel", new PropertyModel<>(this, "selectedContactLabel")));
 		add(new FeedbackPanel("feedback"));
 	}
 

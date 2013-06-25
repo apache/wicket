@@ -122,6 +122,7 @@ public class AppendingStringBufferTest extends Assert
 		assertFalse(asb.endsWith("67890"));
 	}
 
+	@Test
 	public void testInsert() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");

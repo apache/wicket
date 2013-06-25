@@ -102,7 +102,7 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 		final int size = size();
 
 		// Allocate list of exactly the right size
-		final List<String> strings = new ArrayList<String>(size);
+		final List<String> strings = new ArrayList<>(size);
 
 		// Add strings to list
 		for (int i = 0; i < size; i++)

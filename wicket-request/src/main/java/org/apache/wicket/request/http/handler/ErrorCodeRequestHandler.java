@@ -24,7 +24,7 @@ import org.apache.wicket.request.http.WebResponse;
 /**
  * Response target that is to be used in a servlet environment to send an error code and optionally
  * a message. NOTE: this target can only be used in a servlet environment with
- * {@link org.apache.wicket.protocol.http.WebRequestCycle}s.
+ * {@link IRequestCycle}s.
  * 
  * @author Eelco Hillenius
  */

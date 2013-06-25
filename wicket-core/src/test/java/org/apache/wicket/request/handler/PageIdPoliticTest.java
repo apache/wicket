@@ -18,7 +18,6 @@ package org.apache.wicket.request.handler;
 
 import java.nio.charset.Charset;
 
-import junit.framework.TestCase;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -38,11 +37,15 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.versioning.InMemoryPageStore;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
  */
-public class PageIdPoliticTest extends TestCase
+public class PageIdPoliticTest extends Assert
 {
 	private WicketTester tester;
 	private InMemoryPageStore dataStore;
@@ -55,6 +58,7 @@ public class PageIdPoliticTest extends TestCase
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3667">WICKET-3667</a>
 	 */
+	@Test
 	public void testPageGetsTouchedInAjaxRequest()
 	{
 		TestPage testPage = new TestPage();
@@ -68,6 +72,7 @@ public class PageIdPoliticTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testPageIdDontGetIncreasedInAjaxRequest()
 	{
 		TestPage testPage = new TestPage();
@@ -78,8 +83,8 @@ public class PageIdPoliticTest extends TestCase
 		assertTrue(testPage.ajaxCallbackExecuted);
 	}
 
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		application = new MockApplication();
 		dataStore = new InMemoryPageStore()
@@ -111,8 +116,8 @@ public class PageIdPoliticTest extends TestCase
 		};
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	@After
+	public void tearDown() throws Exception
 	{
 		tester.destroy();
 	}

@@ -79,7 +79,7 @@ final class Behaviors implements IDetachable
 			return Collections.emptyList();
 		}
 
-		List<M> subset = new ArrayList<M>(len);
+		List<M> subset = new ArrayList<>(len);
 		for (int i = component.data_start(); i < len; i++)
 		{
 			Object obj = component.data_get(i);

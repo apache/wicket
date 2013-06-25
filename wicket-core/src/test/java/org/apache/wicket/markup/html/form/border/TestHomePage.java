@@ -20,6 +20,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
@@ -37,9 +38,7 @@ public class TestHomePage extends WicketTestCase
 		tester.assertRenderedPage(HomePage.class);
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testWithBorder2()
 	{
 		FormTester formTester = tester.newFormTester("border:form");

@@ -499,7 +499,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final Collection<IFormValidator> getFormValidators()
 	{
-		List<IFormValidator> validators = new ArrayList<IFormValidator>();
+		List<IFormValidator> validators = new ArrayList<>();
 
 		for (Behavior behavior : getBehaviors())
 		{
@@ -1374,7 +1374,7 @@ public class Form<T> extends WebMarkupContainer
 			catch (final FileUploadException fux)
 			{
 				// Create model with exception and maximum size values
-				final Map<String, Object> model = new HashMap<String, Object>();
+				final Map<String, Object> model = new HashMap<>();
 				model.put("exception", fux);
 				model.put("maxSize", getMaxSize());
 
@@ -2087,6 +2087,6 @@ public class Form<T> extends WebMarkupContainer
 		/**
 		 * Abort processing.
 		 */
-		ABORT;
+		ABORT
 	}
 }

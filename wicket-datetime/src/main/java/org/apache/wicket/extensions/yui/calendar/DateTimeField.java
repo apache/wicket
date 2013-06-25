@@ -136,7 +136,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 		setType(Date.class);
 
 		// Create and add the date TextField
-		PropertyModel<Date> dateFieldModel = new PropertyModel<Date>(this, DATE);
+		PropertyModel<Date> dateFieldModel = new PropertyModel<>(this, DATE);
 		add(dateField = newDateTextField(DATE, dateFieldModel));
 
 		// Add a date picker to the date TextField
@@ -146,7 +146,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 		add(hoursField = new TextField<Integer>(HOURS, new PropertyModel<Integer>(this, HOURS),
 			Integer.class));
 		hoursField.add(new HoursValidator());
-		hoursField.setLabel(new Model<String>(HOURS));
+		hoursField.setLabel(new Model<>(HOURS));
 
 		// Create and add the "minutes" TextField
 		add(minutesField = new TextField<Integer>(MINUTES,
@@ -168,8 +168,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 				}
 			}
 		});
-		minutesField.add(new RangeValidator<Integer>(0, 59));
-		minutesField.setLabel(new Model<String>(MINUTES));
+		minutesField.add(new RangeValidator<>(0, 59));
+		minutesField.setLabel(new Model<>(MINUTES));
 
 		// Create and add the "AM/PM" Listbox
 		add(amOrPmChoice = new DropDownChoice<AM_PM>(AM_OR_PM_CHOICE, new PropertyModel<AM_PM>(

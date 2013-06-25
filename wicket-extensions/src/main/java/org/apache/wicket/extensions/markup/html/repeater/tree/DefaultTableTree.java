@@ -84,7 +84,7 @@ public class DefaultTableTree<T, S> extends TableTree<T, S>
 		super(id, columns, provider, rowsPerPage, state);
 
 		getTable().addTopToolbar(new NavigationToolbar(getTable()));
-		getTable().addTopToolbar(new HeadersToolbar<S>(getTable(), provider));
+		getTable().addTopToolbar(new HeadersToolbar<>(getTable(), provider));
 		getTable().addBottomToolbar(new NoRecordsToolbar(getTable()));
 
 		add(new WindowsTheme());
@@ -101,7 +101,7 @@ public class DefaultTableTree<T, S> extends TableTree<T, S>
 	@Override
 	protected Component newContentComponent(String id, IModel<T> model)
 	{
-		return new Folder<T>(id, this, model);
+		return new Folder<>(id, this, model);
 	}
 
 	/**
@@ -115,6 +115,6 @@ public class DefaultTableTree<T, S> extends TableTree<T, S>
 	@Override
 	protected Item<T> newRowItem(String id, int index, IModel<T> node)
 	{
-		return new OddEvenItem<T>(id, index, node);
+		return new OddEvenItem<>(id, index, node);
 	}
 }

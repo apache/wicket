@@ -21,7 +21,7 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.border.Border;

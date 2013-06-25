@@ -219,8 +219,8 @@ public class RatingsPage extends BasePage
 				RatingsPage.rating2.addRating(rating);
 			}
 		});
-		add(new ResetRatingLink("reset1", new Model<RatingModel>(rating1)));
-		add(new ResetRatingLink("reset2", new Model<RatingModel>(rating2)));
+		add(new ResetRatingLink("reset1", new Model<>(rating1)));
+		add(new ResetRatingLink("reset2", new Model<>(rating2)));
 	}
 
 	/**

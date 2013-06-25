@@ -16,15 +16,14 @@
  */
 package org.apache.wicket.redirect.intercept;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.junit.Test;
 
 /**
  * Testcase for bug WICKET-1292.
@@ -43,16 +42,10 @@ public class InterceptTest extends WicketTestCase
 			@Override
 			protected void init()
 			{
-				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
+				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 				{
 
 					private boolean block = true;
-
-					@Override
-					public boolean isActionAuthorized(Component component, Action action)
-					{
-						return true;
-					}
 
 					@Override
 					public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
@@ -82,6 +75,7 @@ public class InterceptTest extends WicketTestCase
 	 * Testcase for the behavior of WicketTester with respect to continueToOrginialDestination.
 	 * Tests a non homepage class.
 	 */
+	@Test
 	public void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination()
 	{
 		tester.startPage(TargetPage.class);
@@ -94,6 +88,7 @@ public class InterceptTest extends WicketTestCase
 	 * Testcase for the behavior of WicketTester with respect to continueToOrginialDestination.
 	 * Tests homepage class.
 	 */
+	@Test
 	public void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination2()
 	{
 		tester.startPage(HomePage.class);

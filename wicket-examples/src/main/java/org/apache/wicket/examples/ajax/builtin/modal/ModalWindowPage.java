@@ -36,7 +36,7 @@ public class ModalWindowPage extends BasePage
 	public ModalWindowPage()
 	{
 		final Label result;
-		add(result = new Label("result", new PropertyModel<String>(this, "result")));
+		add(result = new Label("result", new PropertyModel<>(this, "result")));
 		result.setOutputMarkupId(true);
 
 		/*

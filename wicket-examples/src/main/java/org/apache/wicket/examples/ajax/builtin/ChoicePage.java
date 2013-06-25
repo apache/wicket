@@ -41,7 +41,7 @@ public class ChoicePage extends BasePage
 {
 	private String selectedMake;
 
-	private final Map<String, List<String>> modelsMap = new HashMap<String, List<String>>(); // map:company->model
+	private final Map<String, List<String>> modelsMap = new HashMap<>(); // map:company->model
 
 	/**
 	 * @return Currently selected make
@@ -74,7 +74,7 @@ public class ChoicePage extends BasePage
 			@Override
 			public List<String> getObject()
 			{
-				return new ArrayList<String>(modelsMap.keySet());
+				return new ArrayList<>(modelsMap.keySet());
 			}
 
 		};
@@ -97,10 +97,10 @@ public class ChoicePage extends BasePage
 		Form<?> form = new Form("form");
 		add(form);
 
-		final DropDownChoice<String> makes = new DropDownChoice<String>("makes",
+		final DropDownChoice<String> makes = new DropDownChoice<>("makes",
 			new PropertyModel<String>(this, "selectedMake"), makeChoices);
 
-		final DropDownChoice<String> models = new DropDownChoice<String>("models",
+		final DropDownChoice<String> models = new DropDownChoice<>("models",
 			new Model<String>(), modelChoices);
 		models.setOutputMarkupId(true);
 

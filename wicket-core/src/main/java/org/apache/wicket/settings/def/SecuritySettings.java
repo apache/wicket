@@ -21,6 +21,7 @@ import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
@@ -55,7 +56,7 @@ public class SecuritySettings implements ISecuritySettings
 	private boolean enforceMounts = false;
 
 	/** Authorizer for component instantiations */
-	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
+	private static final IUnauthorizedComponentInstantiationListener DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER = new IUnauthorizedComponentInstantiationListener()
 	{
 		/**
 		 * Called when an unauthorized component instantiation is about to take place (but before it
@@ -70,6 +71,14 @@ public class SecuritySettings implements ISecuritySettings
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}
 	};
+
+	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener =
+			DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER;
+
+	private static final IUnauthorizedResourceRequestListener DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER =
+			new DefaultUnauthorizedResourceRequestListener();
+
+	private IUnauthorizedResourceRequestListener unauthorizedResourceRequestListener = DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER;
 
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#getAuthorizationStrategy()
@@ -151,9 +160,21 @@ public class SecuritySettings implements ISecuritySettings
 	 */
 	@Override
 	public void setUnauthorizedComponentInstantiationListener(
-		IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener)
+		IUnauthorizedComponentInstantiationListener listener)
 	{
-		this.unauthorizedComponentInstantiationListener = unauthorizedComponentInstantiationListener;
+		this.unauthorizedComponentInstantiationListener = listener == null ? DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER : listener;
+	}
+
+	@Override
+	public IUnauthorizedResourceRequestListener getUnauthorizedResourceRequestListener()
+	{
+		return unauthorizedResourceRequestListener;
+	}
+
+	@Override
+	public void setUnauthorizedResourceRequestListener(IUnauthorizedResourceRequestListener listener)
+	{
+		this.unauthorizedResourceRequestListener = listener == null ? DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER : listener;
 	}
 
 	/**

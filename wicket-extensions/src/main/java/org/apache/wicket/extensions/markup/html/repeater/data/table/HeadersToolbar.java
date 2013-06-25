@@ -66,7 +66,7 @@ public class HeadersToolbar<S> extends AbstractToolbar
 			@Override
 			protected Iterator<IModel<IColumn<T, S>>> getItemModels()
 			{
-				List<IModel<IColumn<T, S>>> columnsModels = new LinkedList<IModel<IColumn<T, S>>>();
+				List<IModel<IColumn<T, S>>> columnsModels = new LinkedList<>();
 
 				for (IColumn<T, S> column : table.getColumns())
 				{

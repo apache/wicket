@@ -42,14 +42,14 @@ class MyPanel extends Panel
 		add(new AnotherPanel("otherPanel"));
 
 		// create a list with sublists
-		List<Object> l1 = new ArrayList<Object>();
+		List<Object> l1 = new ArrayList<>();
 		l1.add("test 1.1");
 		l1.add("test 1.2");
-		List<Object> l2 = new ArrayList<Object>();
+		List<Object> l2 = new ArrayList<>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
-		List<String> l3 = new ArrayList<String>();
+		List<String> l3 = new ArrayList<>();
 		l3.add("test 3.1");
 		l2.add(l3);
 		l2.add("test 2.4");

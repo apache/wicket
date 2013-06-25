@@ -40,7 +40,7 @@ public abstract class SortableDataProvider<T, S> implements ISortableDataProvide
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final SingleSortState<S> state = new SingleSortState<S>();
+	private final SingleSortState<S> state = new SingleSortState<>();
 
 	/**
 	 * @see ISortableDataProvider#getSortState()

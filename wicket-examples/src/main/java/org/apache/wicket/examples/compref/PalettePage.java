@@ -44,10 +44,10 @@ public class PalettePage extends WicketExamplePage
 	public PalettePage()
 	{
 		List<Person> persons = ComponentReferenceApplication.getPersons();
-		IChoiceRenderer<Person> renderer = new ChoiceRenderer<Person>("fullName", "fullName");
+		IChoiceRenderer<Person> renderer = new ChoiceRenderer<>("fullName", "fullName");
 
 		final Palette<Person> palette = new Palette<Person>("palette", new ListModel<Person>(
-			new ArrayList<Person>()), new CollectionModel<Person>(persons), renderer, 10, true);
+			new ArrayList<Person>()), new CollectionModel<>(persons), renderer, 10, true);
 
 
 		Form<Void> form = new Form<Void>("form")

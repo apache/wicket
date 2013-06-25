@@ -72,15 +72,15 @@ public class LinksPage extends BasePage
 	 */
 	public LinksPage()
 	{
-		final Label c1 = new Label("c1", new PropertyModel<Integer>(this, "counter1"));
+		final Label c1 = new Label("c1", new PropertyModel<>(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label c2 = new Label("c2", new PropertyModel<Integer>(this, "counter2"));
+		final Label c2 = new Label("c2", new PropertyModel<>(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		final Label c3 = new Label("c3", new PropertyModel<Integer>(this, "counter3"));
+		final Label c3 = new Label("c3", new PropertyModel<>(this, "counter3"));
 		c3.setOutputMarkupId(true);
 		add(c3);
 

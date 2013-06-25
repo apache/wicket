@@ -37,7 +37,7 @@ public class CheckBoxPage extends WicketExamplePage
 	public CheckBoxPage()
 	{
 		final Input input = new Input();
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");

@@ -48,15 +48,15 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 	{
 		super(parameters);
 
-		final Form<?> form = new Form<Void>("form");
+		final Form<?> form = new Form<>("form");
 		add(form);
 		final CheckGroup<Integer> checkgroup = new CheckGroup<Integer>("checkgroup", Arrays.asList(
 			1, 2, 3, 4));
 		form.add(checkgroup);
-		checkgroup.add(new Check<Integer>("check1", Model.of(1)));
-		checkgroup.add(new Check<Integer>("check2", Model.of(2)));
-		checkgroup.add(new Check<Integer>("check3", Model.of(3)));
-		checkgroup.add(new Check<Integer>("check4", Model.of(4)));
+		checkgroup.add(new Check<>("check1", Model.of(1)));
+		checkgroup.add(new Check<>("check2", Model.of(2)));
+		checkgroup.add(new Check<>("check3", Model.of(3)));
+		checkgroup.add(new Check<>("check4", Model.of(4)));
 		// one selector inside the checkgroup...
 		checkgroup.add(new CheckGroupSelector("groupSelector")
 		{

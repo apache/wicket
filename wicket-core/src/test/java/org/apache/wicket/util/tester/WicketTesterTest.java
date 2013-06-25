@@ -37,6 +37,8 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -70,6 +72,7 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
+import org.apache.wicket.util.tester.apps_8.ComponentFeedbackResourceTestingPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -1007,7 +1010,7 @@ public class WicketTesterTest extends WicketTestCase
 	public void rerenderNotAllowed()
 	{
 		tester.setExposeExceptions(false);
-		class YesNoPageAuthorizationStrategy implements IAuthorizationStrategy
+		class YesNoPageAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 		{
 			private boolean allowed = true;
 
@@ -1215,5 +1218,27 @@ public class WicketTesterTest extends WicketTestCase
 		// this one doesn't
 		tester.submitForm(page.form);
 		assertEquals(null, page.text);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5128
+	 */
+	@Test
+	public void renderComponentRelativeErrorMessage()
+	{
+		tester.startPage(new ComponentFeedbackResourceTestingPage());
+		Component label = tester.getComponentFromLastRenderedPage("label");
+		tester.assertComponentFeedbackMessage(label, "error.msg", null, new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5128
+	 */
+	@Test
+	public void renderComponentRelativeInfoMessage()
+	{
+		tester.startPage(new ComponentFeedbackResourceTestingPage());
+		Component label = tester.getComponentFromLastRenderedPage("label");
+		tester.assertComponentFeedbackMessage(label, "info.msg", null, new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO));
 	}
 }

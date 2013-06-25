@@ -55,7 +55,7 @@ public class Generics
 	 */
 	public static <K, V> HashMap<K, V> newHashMap()
 	{
-		return new HashMap<K, V>();
+		return new HashMap<>();
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class Generics
 	 */
 	public static <K, V> HashMap<K, V> newHashMap(final int capacity)
 	{
-		return new HashMap<K, V>(capacity);
+		return new HashMap<>(capacity);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class Generics
 	 */
 	public static <T> ArrayList<T> newArrayList(final int capacity)
 	{
-		return new ArrayList<T>(capacity);
+		return new ArrayList<>(capacity);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class Generics
 	 */
 	public static <T> ArrayList<T> newArrayList()
 	{
-		return new ArrayList<T>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class Generics
 	 */
 	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap()
 	{
-		return new ConcurrentHashMap<K, V>();
+		return new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class Generics
 	 */
 	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(final int initialCapacity)
 	{
-		return new ConcurrentHashMap<K, V>(initialCapacity);
+		return new ConcurrentHashMap<>(initialCapacity);
 	}
 
 

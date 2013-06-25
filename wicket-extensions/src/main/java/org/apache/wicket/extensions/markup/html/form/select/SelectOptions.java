@@ -74,7 +74,7 @@ public class SelectOptions<T> extends RepeatingView
 	public SelectOptions(final String id, final Collection<? extends T> elements,
 		final IOptionRenderer<T> renderer)
 	{
-		this(id, new WildcardCollectionModel<T>(elements), renderer);
+		this(id, new WildcardCollectionModel<>(elements), renderer);
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class SelectOptions<T> extends RepeatingView
 	 */
 	protected SelectOption<T> newOption(final String text, final IModel<T> model)
 	{
-		return new SimpleSelectOption<T>("option", model, text);
+		return new SimpleSelectOption<>("option", model, text);
 	}
 
 	/**

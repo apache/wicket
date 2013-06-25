@@ -47,7 +47,7 @@ public class StatefulPage extends WicketExamplePage
 	public StatefulPage()
 	{
 		add(new Label("message", new SessionModel()));
-		add(new BookmarkablePageLink<Void>("indexLink", Index.class));
+		add(new BookmarkablePageLink<>("indexLink", Index.class));
 
 		// Action link counts link clicks
 		final Link actionLink = new Link("actionLink")
@@ -62,7 +62,7 @@ public class StatefulPage extends WicketExamplePage
 		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this,
 			"linkClickCount")));
 
-		final TextField<String> field = new TextField<String>("textfield", new Model<String>());
+		final TextField<String> field = new TextField<>("textfield", new Model<String>());
 
 		StatelessForm<?> statelessForm = new StatelessForm("statelessform")
 		{

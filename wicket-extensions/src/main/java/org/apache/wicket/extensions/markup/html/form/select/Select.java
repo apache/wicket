@@ -151,7 +151,7 @@ public class Select<T> extends FormComponent<T>
 					"] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
 		}
 
-		List<Object> converted = new ArrayList<Object>(values.length);
+		List<Object> converted = new ArrayList<>(values.length);
 
 		/*
 		 * if the input is null we do not need to do anything since the model collection has already

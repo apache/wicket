@@ -44,7 +44,7 @@ public class WordGeneratorTest extends WicketTestCase
 	{
 		WordGenerator wg = new WordGenerator();
 		int wordCount = wg.size();
-		Set<Word> words = new HashSet<Word>();
+		Set<Word> words = new HashSet<>();
 		log.info("First iteration...");
 		for (int i = 0; i < wordCount; i++)
 		{

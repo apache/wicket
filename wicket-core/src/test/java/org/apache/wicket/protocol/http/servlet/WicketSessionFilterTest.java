@@ -28,9 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
@@ -41,6 +38,7 @@ import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.time.Duration;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -190,12 +188,12 @@ public class WicketSessionFilterTest extends WicketTestCase
 		{
 			if (Application.exists() == false)
 			{
-				throw new AssertionFailedError("The application is not available!");
+				throw new AssertionError("The application is not available!");
 			}
 
 			if (Session.exists() == false)
 			{
-				throw new AssertionFailedError("The session is not available!");
+				throw new AssertionError("The session is not available!");
 			}
 		}
 

@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.image;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.TagTester;
+import org.junit.Test;
 
 /**
  * Test for {@link NonCachingImage}.
@@ -30,6 +31,7 @@ public class NonCachingImageTest extends WicketTestCase
 	/**
 	 * {@link NonCachingImage} always adds anticache.
 	 */
+	@Test
 	public void test()
 	{
 		NonCachingImagePage page = tester.startPage(NonCachingImagePage.class);

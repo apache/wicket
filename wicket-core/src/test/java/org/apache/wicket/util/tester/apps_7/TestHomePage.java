@@ -17,6 +17,7 @@
 package org.apache.wicket.util.tester.apps_7;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
@@ -24,6 +25,7 @@ import org.apache.wicket.WicketTestCase;
 public class TestHomePage extends WicketTestCase
 {
 	/**	 */
+	@Test
 	public void testAjaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page

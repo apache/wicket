@@ -33,7 +33,7 @@ public final class User implements IClusterable
 	private String name;
 
 	// The user's personal book list
-	private List<Book> books = new ArrayList<Book>();
+	private List<Book> books = new ArrayList<>();
 
 	/**
 	 * @return User name

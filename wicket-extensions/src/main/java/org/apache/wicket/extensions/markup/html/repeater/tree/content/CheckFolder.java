@@ -35,6 +35,6 @@ public class CheckFolder<T> extends Folder<T>
 	{
 		super(id, tree, model);
 
-		add(new Check<T>("check", model));
+		add(new Check<>("check", model));
 	}
 }

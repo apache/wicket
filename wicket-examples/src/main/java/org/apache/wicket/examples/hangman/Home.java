@@ -46,6 +46,6 @@ public class Home extends HangmanPage
 		{
 			getGame().newGame(5, new WordGenerator(new String[] { word }));
 		}
-		add(new BookmarkablePageLink<Void>("start", Guess.class));
+		add(new BookmarkablePageLink<>("start", Guess.class));
 	}
 }

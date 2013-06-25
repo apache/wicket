@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.markupId;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
@@ -34,6 +35,7 @@ public class TestHomePage extends WicketTestCase
 	/**
 	 * testRenderMyPage()
 	 */
+	@Test
 	public void testRenderMyPage()
 	{
 		// start and render the test page

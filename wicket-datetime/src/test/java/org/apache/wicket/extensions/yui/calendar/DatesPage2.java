@@ -43,7 +43,7 @@ public class DatesPage2 extends WebPage
 	 */
 	public DatesPage2()
 	{
-		Form<?> form = new Form<Void>("form");
+		Form<?> form = new Form<>("form");
 		add(form);
 
 		form.add(new DateTimeField("dateTimeField", new PropertyModel<Date>(this, "dateTime")));

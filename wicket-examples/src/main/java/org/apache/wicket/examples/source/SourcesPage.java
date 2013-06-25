@@ -151,7 +151,7 @@ public class SourcesPage extends WebPage
 	 */
 	public class PackagedResourcesModel extends AbstractReadOnlyModel<List<String>>
 	{
-		private final List<String> resources = new ArrayList<String>();
+		private final List<String> resources = new ArrayList<>();
 
 		/**
 		 * Constructor.

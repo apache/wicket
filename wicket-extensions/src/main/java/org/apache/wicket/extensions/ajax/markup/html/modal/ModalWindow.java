@@ -741,7 +741,7 @@ public class ModalWindow extends Panel
 	 */
 	public ModalWindow setTitle(final String title)
 	{
-		this.title = new Model<String>(title);
+		this.title = new Model<>(title);
 		return this;
 	}
 

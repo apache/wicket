@@ -66,7 +66,7 @@ public class MailTemplate extends WicketExamplePage
 		feedback.setOutputMarkupId(true);
 		add(feedback);
 
-		final Form<Void> form = new Form<Void>("form");
+		final Form<Void> form = new Form<>("form");
 		add(form);
 
 		TextField<String> nameTextField = new TextField<String>("name", new PropertyModel<String>(
@@ -74,7 +74,7 @@ public class MailTemplate extends WicketExamplePage
 		nameTextField.setOutputMarkupId(true);
 		form.add(nameTextField);
 
-		final MultiLineLabel result = new MultiLineLabel("result", new Model<String>());
+		final MultiLineLabel result = new MultiLineLabel("result", new Model<>());
 		result.setOutputMarkupId(true);
 		add(result);
 

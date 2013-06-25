@@ -55,7 +55,7 @@ public final class Home extends WicketExamplePage
 		// be substituted with the given model (the wrapped map). Hence,
 		// ${user} will be replaced by map.get('user'), which is 'Jonathan'.
 		StringResourceModel labelModel = new StringResourceModel("salutation", this,
-			new Model<ValueMap>(map));
+			new Model<>(map));
 
 		// Add the label with the dynamic model
 		add(new Label("salutation", labelModel));

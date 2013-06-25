@@ -18,7 +18,7 @@ package org.apache.wicket.util.tester;
 
 import javax.servlet.http.Cookie;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 

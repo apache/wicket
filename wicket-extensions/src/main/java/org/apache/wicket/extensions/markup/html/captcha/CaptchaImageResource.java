@@ -150,7 +150,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 */
 	public CaptchaImageResource(final String challengeId)
 	{
-		this(new Model<String>(challengeId));
+		this(new Model<>(challengeId));
 	}
 
 	/**
@@ -197,7 +197,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 */
 	public CaptchaImageResource(final String challengeId, final int fontSize, final int margin)
 	{
-		this(new Model<String>(challengeId), fontSize, margin);
+		this(new Model<>(challengeId), fontSize, margin);
 	}
 
 	/**
@@ -240,7 +240,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 		if (data == null)
 		{
 			data = render();
-			imageData = new SoftReference<byte[]>(data);
+			imageData = new SoftReference<>(data);
 			setLastModifiedTime(Time.now());
 		}
 		return data;
@@ -261,7 +261,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 		int width = margin * 2;
 		int height = margin * 2;
 		char[] chars = challengeId.getObject().toCharArray();
-		List<CharAttributes> charAttsList = new ArrayList<CharAttributes>();
+		List<CharAttributes> charAttsList = new ArrayList<>();
 		TextLayout text;
 		AffineTransform textAt;
 		Shape shape;

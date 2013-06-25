@@ -63,17 +63,17 @@ public class TableTreePage extends AdvancedTreePage
 			@Override
 			protected Item<Foo> newRowItem(String id, int index, IModel<Foo> model)
 			{
-				return new OddEvenItem<Foo>(id, index, model);
+				return new OddEvenItem<>(id, index, model);
 			}
 		};
-		tree.getTable().addTopToolbar(new HeadersToolbar<String>(tree.getTable(), null));
+		tree.getTable().addTopToolbar(new HeadersToolbar<>(tree.getTable(), null));
 		tree.getTable().addBottomToolbar(new NoRecordsToolbar(tree.getTable()));
 		return tree;
 	}
 
 	private List<IColumn<Foo, String>> createColumns()
 	{
-		List<IColumn<Foo, String>> columns = new ArrayList<IColumn<Foo, String>>();
+		List<IColumn<Foo, String>> columns = new ArrayList<>();
 
 		columns.add(new PropertyColumn<Foo, String>(Model.of("ID"), "id"));
 

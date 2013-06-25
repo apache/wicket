@@ -16,7 +16,15 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import java.text.ParseException;
+
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
+import org.apache.wicket.markup.parser.IMarkupFilter;
+import org.apache.wicket.markup.parser.XmlTag;
 import org.junit.Test;
 
 /**
@@ -32,5 +40,100 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 	{
 		executeTest(OpenCloseTagExpanderPage_1.class,
 			"OpenCloseTagExpanderPageExpectedResult_1.html");
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5237
+	 * @throws ParseException
+	 */
+	@Test
+	public void doNotExpandVoidElements() throws ParseException
+	{
+		String[] htmlVoidElements = new String[] {
+			"area", "base", "br", "col", "command", "embed", "hr", "img", "input",
+			"keygen", "link", "meta", "param", "source", "track", "wbr"
+		};
+
+		for (String htmlVoidElement : htmlVoidElements)
+		{
+
+			OpenCloseTagExpander expander = new OpenCloseTagExpander() {
+				@Override
+				public IMarkupFilter getNextFilter()
+				{
+					return new AbstractMarkupFilter()
+					{
+						@Override
+						protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+						{
+							return null;
+						}
+
+						@Override
+						public MarkupElement nextElement() throws ParseException
+						{
+							return new TestMarkupElement();
+						}
+					};
+				}
+			};
+
+			ComponentTag tag = new ComponentTag(htmlVoidElement, XmlTag.TagType.OPEN_CLOSE);
+			expander.onComponentTag(tag);
+
+			MarkupElement markupElement = expander.nextElement();
+
+			// assert the next element is returned by the parent
+			assertTrue(markupElement instanceof TestMarkupElement);
+		}
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5237
+	 * @throws ParseException
+	 */
+	@Test
+	public void expandNonVoidElements() throws ParseException
+	{
+		for (String htmlNonVoidElement : OpenCloseTagExpander.REPLACE_FOR_TAGS)
+		{
+			OpenCloseTagExpander expander = new OpenCloseTagExpander() {
+				@Override
+				public IMarkupFilter getNextFilter()
+				{
+					return new AbstractMarkupFilter()
+					{
+						@Override
+						protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+						{
+							return null;
+						}
+
+						@Override
+						public MarkupElement nextElement() throws ParseException
+						{
+							return new TestMarkupElement();
+						}
+					};
+				}
+			};
+
+			ComponentTag tag = new ComponentTag(htmlNonVoidElement, XmlTag.TagType.OPEN_CLOSE);
+			expander.onComponentTag(tag);
+
+			ComponentTag markupElement = (ComponentTag) expander.nextElement();
+
+			// assert the next element is returned by the parent
+			assertEquals(htmlNonVoidElement, markupElement.getName());
+			assertTrue(markupElement.closes(tag));
+		}
+	}
+
+	private static class TestMarkupElement extends WicketTag
+	{
+		public TestMarkupElement()
+		{
+			super(new XmlTag());
+		}
 	}
 }

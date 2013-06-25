@@ -154,14 +154,14 @@ public class LiveSessionsPage extends DevUtilsPage
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				link.add(new Label("id", new Model<String>(sd.getSessionId())));
+				link.add(new Label("id", new Model<>(sd.getSessionId())));
 				item.add(link);
 				item.add(new Label("lastRequestTime", new Model<String>(
 					sdf.format(sd.getLastActive()))));
-				item.add(new Label("requestCount", new Model<Long>(sd.getNumberOfRequests())));
-				item.add(new Label("requestsTime", new Model<Long>(sd.getTotalTimeTaken())));
+				item.add(new Label("requestCount", new Model<>(sd.getNumberOfRequests())));
+				item.add(new Label("requestsTime", new Model<>(sd.getTotalTimeTaken())));
 				item.add(new Label("sessionSize",
-					new Model<Bytes>(Bytes.bytes(sd.getSessionSize()))));
+					new Model<>(Bytes.bytes(sd.getSessionSize()))));
 			}
 		};
 		add(listView);

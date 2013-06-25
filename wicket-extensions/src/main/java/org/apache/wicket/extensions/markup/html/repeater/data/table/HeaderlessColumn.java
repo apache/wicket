@@ -36,7 +36,7 @@ public abstract class HeaderlessColumn<T, S> extends AbstractColumn<T, S>
 	 */
 	public HeaderlessColumn()
 	{
-		super(new Model<String>("&nbsp;"));
+		super(new Model<>("&nbsp;"));
 	}
 
 	/**

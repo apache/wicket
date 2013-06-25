@@ -19,8 +19,7 @@ package org.apache.wicket.examples.base.markdown;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.io.Resources;

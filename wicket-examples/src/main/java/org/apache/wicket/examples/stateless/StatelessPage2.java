@@ -46,10 +46,10 @@ public class StatelessPage2 extends WicketExamplePage
 	{
 		setStatelessHint(true);
 		add(new Label("message", new SessionModel()));
-		add(new BookmarkablePageLink<Void>("indexLink", Index.class));
-		final TextField<Integer> field = new TextField<Integer>("textfield",
+		add(new BookmarkablePageLink<>("indexLink", Index.class));
+		final TextField<Integer> field = new TextField<>("textfield",
 			new PropertyModel<Integer>(this, "number"));
-		field.add(new RangeValidator<Integer>(0, 20));
+		field.add(new RangeValidator<>(0, 20));
 		field.setRequired(true);
 
 		StatelessForm<?> statelessForm = new StatelessForm("statelessform")

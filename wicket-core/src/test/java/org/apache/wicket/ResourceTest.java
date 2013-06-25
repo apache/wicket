@@ -28,8 +28,6 @@ import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -37,12 +35,12 @@ import org.slf4j.LoggerFactory;
  */
 public class ResourceTest extends WicketTestCase
 {
-	private static final Logger log = LoggerFactory.getLogger(ResourceTest.class);
 	private static final String TEST_STRING = "Hello, World!";
 
 	/**
 	 * tests a resource that is not cacheable.
 	 */
+	@Test
 	public void testFileResourceStream()
 	{
 		final File testFile;

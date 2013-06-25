@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form.panelBorder;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
@@ -27,6 +28,7 @@ public class TestHomePage_2134 extends WicketTestCase
 	/**
 	 * WICKET-2134: two forms inside a border throw a ConversionException error
 	 */
+	@Test
 	public void testRenderMyPage()
 	{
 		// start and render the test page
@@ -46,6 +48,7 @@ public class TestHomePage_2134 extends WicketTestCase
 	/**
 	 * WICKET-2134: two forms inside a border throw a ConversionException error
 	 */
+	@Test
 	public void testRenderMyPage2()
 	{
 		// start and render the test page
@@ -67,6 +70,7 @@ public class TestHomePage_2134 extends WicketTestCase
 	/**
 	 * WICKET-2134: two forms inside a border throw a ConversionException error
 	 */
+	@Test
 	public void testRenderMyPage3()
 	{
 		// start and render the test page

@@ -34,7 +34,7 @@ public class SelectTestPage2 extends WebPage
 
 	public SelectTestPage2()
 	{
-		form = new Form<Void>("form");
+		form = new Form<>("form");
 		add(form);
 
 		select = new Select<Foo>("select", new Model<Foo>(new Foo("foo")))
@@ -50,7 +50,7 @@ public class SelectTestPage2 extends WebPage
 		};
 		form.add(select);
 
-		select.add(option0 = new SelectOption<Foo>("option0", new Model<Foo>(new Foo("foo"))));
+		select.add(option0 = new SelectOption<Foo>("option0", new Model<>(new Foo("foo"))));
 	}
 
 	/**

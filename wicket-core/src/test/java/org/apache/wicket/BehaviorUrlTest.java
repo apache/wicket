@@ -38,7 +38,7 @@ import org.junit.Test;
 public class BehaviorUrlTest extends WicketTestCase
 {
 	/**
-	 * @see href https://issues.apache.org/jira/browse/WICKET-3097
+	 * https://issues.apache.org/jira/browse/WICKET-3097
 	 */
 	@Test
 	public void urlRemainsStable()
@@ -60,7 +60,7 @@ public class BehaviorUrlTest extends WicketTestCase
 	/**
 	 * Asserting that the component model assigning don't affect the behavior data index
 	 * 
-	 * @see href https://issues.apache.org/jira/browse/WICKET-3142
+	 * https://issues.apache.org/jira/browse/WICKET-3142
 	 */
 	@Test
 	public void urlRemainsStableAfterComponentReceiveAnModel()
@@ -143,9 +143,7 @@ public class BehaviorUrlTest extends WicketTestCase
 	}
 
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testBehaviorUrlNotDoubleEscaped()
 	{
 		tester.startPage(EscapeTestPage.class);

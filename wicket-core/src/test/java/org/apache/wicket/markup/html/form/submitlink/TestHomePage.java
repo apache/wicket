@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form.submitlink;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  */
@@ -26,6 +27,7 @@ public class TestHomePage extends WicketTestCase
 	/**
 	 * testSubmitLinkByClickingLink()
 	 */
+	@Test
 	public void testSubmitLinkByClickingLink()
 	{
 		tester.startPage(HomePage.class);
@@ -45,6 +47,7 @@ public class TestHomePage extends WicketTestCase
 	/**
 	 * testSubmitLinkBySubmittingForm()
 	 */
+	@Test
 	public void testSubmitLinkBySubmittingForm()
 	{
 		tester.startPage(HomePage.class);
@@ -65,6 +68,7 @@ public class TestHomePage extends WicketTestCase
 	/**
 	 * testSubmitLinkByUsingFormTester()
 	 */
+	@Test
 	public void testSubmitLinkByUsingFormTester()
 	{
 		tester.startPage(HomePage.class);

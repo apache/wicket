@@ -45,7 +45,7 @@ import org.apache.wicket.util.value.ValueMap;
 public final class GuestBook extends WicketExamplePage
 {
 	/** A global list of all comments from all users across all sessions */
-	private static final List<Comment> commentList = new ArrayList<Comment>();
+	private static final List<Comment> commentList = new ArrayList<>();
 
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
@@ -83,16 +83,16 @@ public final class GuestBook extends WicketExamplePage
 		public CommentForm(final String id)
 		{
 			// Construct form with no validation listener
-			super(id, new CompoundPropertyModel<ValueMap>(new ValueMap()));
+			super(id, new CompoundPropertyModel<>(new ValueMap()));
 
 			// this is just to make the unit test happy
 			setMarkupId("commentForm");
 
 			// Add text entry widget
-			add(new TextArea<String>("text").setType(String.class));
+			add(new TextArea<>("text").setType(String.class));
 
 			// Add simple automated spam prevention measure.
-			add(new TextField<String>("comment").setType(String.class));
+			add(new TextField<>("comment").setType(String.class));
 		}
 
 		/**

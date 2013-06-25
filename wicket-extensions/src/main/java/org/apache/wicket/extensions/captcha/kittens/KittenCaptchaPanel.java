@@ -68,8 +68,8 @@ public class KittenCaptchaPanel extends Panel
 	private static BufferedImage grass = load("images/grass.png");
 
 	// The kittens and other animals
-	private static final List<Animal> kittens = new ArrayList<Animal>();
-	private static final List<Animal> nonKittens = new ArrayList<Animal>();
+	private static final List<Animal> kittens = new ArrayList<>();
+	private static final List<Animal> nonKittens = new ArrayList<>();
 
 	// Random number generator
 	private static Random random = new Random(-1);
@@ -440,7 +440,7 @@ public class KittenCaptchaPanel extends Panel
 			{
 				// Create the image and turn it into data
 				final BufferedImage composedImage = animals.createImage();
-				data = new SoftReference<byte[]>(toImageData(composedImage));
+				data = new SoftReference<>(toImageData(composedImage));
 			}
 
 			// Return image data
@@ -632,7 +632,7 @@ public class KittenCaptchaPanel extends Panel
 		/**
 		 * List of placed animals
 		 */
-		private final List<PlacedAnimal> animals = new ArrayList<PlacedAnimal>();
+		private final List<PlacedAnimal> animals = new ArrayList<>();
 
 		/**
 		 * Arrange random animals and kittens
@@ -668,7 +668,7 @@ public class KittenCaptchaPanel extends Panel
 			Collections.shuffle(animals);
 
 			// Ensure kittens are visible enough
-			List<PlacedAnimal> strayKittens = new ArrayList<PlacedAnimal>();
+			List<PlacedAnimal> strayKittens = new ArrayList<>();
 			for (final PlacedAnimal animal : animals)
 			{
 				// If it's a kitten
@@ -718,7 +718,7 @@ public class KittenCaptchaPanel extends Panel
 		private PlacedAnimal atLocation(final Point location)
 		{
 			// Reverse list for z-ordered hit-testing
-			final List<PlacedAnimal> reversedAnimals = new ArrayList<PlacedAnimal>(animals);
+			final List<PlacedAnimal> reversedAnimals = new ArrayList<>(animals);
 			Collections.reverse(reversedAnimals);
 
 			// Return any animal at the given location

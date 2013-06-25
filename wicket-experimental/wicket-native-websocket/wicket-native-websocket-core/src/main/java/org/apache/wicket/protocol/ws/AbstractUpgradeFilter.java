@@ -158,7 +158,7 @@ public class AbstractUpgradeFilter extends WicketFilter
 	 */
 	protected List<String> getTokensFromHeader(HttpServletRequest req, String headerName)
 	{
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 
 		Enumeration<String> headers = req.getHeaders(headerName);
 		while (headers.hasMoreElements()) {

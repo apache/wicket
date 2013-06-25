@@ -85,14 +85,14 @@ public final class FormInputModel implements IClusterable
 	private Double doubleProperty = 20.5;
 	private Integer integerInRangeProperty = 50;
 	private Integer integerProperty = 100;
-	private List<Line> lines = new ArrayList<Line>();
+	private List<Line> lines = new ArrayList<>();
 	private Integer multiply = 0;
 	private String numberRadioChoice = FormInput.NUMBERS.get(0);
-	private final List<String> numbersCheckGroup = new ArrayList<String>();
+	private final List<String> numbersCheckGroup = new ArrayList<>();
 	private String numbersGroup;
 	/** US phone number with mask '(###) ###-####'. */
 	private UsPhoneNumber phoneNumberUS = new UsPhoneNumber("(123) 456-1234");
-	private Set<String> siteSelection = new HashSet<String>();
+	private Set<String> siteSelection = new HashSet<>();
 	private String stringProperty = "test";
 	private URL urlProperty;
 

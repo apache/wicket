@@ -59,7 +59,7 @@ public class FeedbackMessage implements IDetachable
 	public static final int FATAL = 500;
 
 	/** Levels as strings for debugging. */
-	private static final Map<Integer, String> levelStrings = new HashMap<Integer, String>();
+	private static final Map<Integer, String> levelStrings = new HashMap<>();
 
 	static
 	{

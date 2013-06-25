@@ -37,7 +37,7 @@ public class MultiSelectableFolderContent extends Content
 
 	public MultiSelectableFolderContent(ITreeProvider<Foo> provider)
 	{
-		selected = new ProviderSubset<Foo>(provider, false);
+		selected = new ProviderSubset<>(provider, false);
 	}
 
 	@Override

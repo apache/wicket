@@ -35,7 +35,7 @@ public class LocalizedPage extends WicketExamplePage
 	 */
 	public LocalizedPage(final PageParameters pageParameters)
 	{
-		add(new BookmarkablePageLink<Void>("back", RequestMapperHomePage.class).setAutoEnable(true));
+		add(new BookmarkablePageLink<>("back", RequestMapperHomePage.class).setAutoEnable(true));
 
 		add(new Label("localizedLabel", new ResourceModel("localizedLabel")));
 	}

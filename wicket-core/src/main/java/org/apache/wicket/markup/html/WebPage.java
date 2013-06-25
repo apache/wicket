@@ -306,7 +306,7 @@ public class WebPage extends Page
 	 */
 	protected final BookmarkablePageLink<Void> homePageLink(final String id)
 	{
-		return new BookmarkablePageLink<Void>(id, getApplication().getHomePage());
+		return new BookmarkablePageLink<>(id, getApplication().getHomePage());
 	}
 
 	/**

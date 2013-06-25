@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.Page;
@@ -70,7 +70,7 @@ public class WicketTesterHelper
 	 */
 	public static List<WicketTesterHelper.ComponentData> getComponentData(final Page page)
 	{
-		final List<ComponentData> data = new ArrayList<ComponentData>();
+		final List<ComponentData> data = new ArrayList<>();
 
 		if (page != null)
 		{
@@ -158,7 +158,7 @@ public class WicketTesterHelper
 			lined.append(objectString);
 			if (iter.hasNext())
 			{
-				lined.append("\n");
+				lined.append('\n');
 			}
 		}
 		return lined.toString();
@@ -194,7 +194,7 @@ public class WicketTesterHelper
 	public static List<AjaxEventBehavior> findAjaxEventBehaviors(Component component, String event)
 	{
 		Args.notEmpty(event, "event");
-		List<AjaxEventBehavior> behaviors = new ArrayList<AjaxEventBehavior>();
+		List<AjaxEventBehavior> behaviors = new ArrayList<>();
 		String[] eventNames = Strings.split(event, ' ');
 		for (String eventName : eventNames)
 		{
@@ -233,12 +233,9 @@ public class WicketTesterHelper
 	 */
 	public static Behavior findBehavior(Component component, Class<? extends Behavior> behaviorClass)
 	{
-		for (Behavior behavior : component.getBehaviors())
+		for (Behavior behavior : component.getBehaviors(behaviorClass))
 		{
-			if (behaviorClass.isAssignableFrom(behavior.getClass()))
-			{
-				return behavior;
-			}
+			return behavior;
 		}
 		return null;
 	}

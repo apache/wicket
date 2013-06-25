@@ -64,7 +64,7 @@ public final class CharSetMap
 	/**
 	 * A common charset mapper for languages.
 	 */
-	private static final Map<String, String> commonMapper = new HashMap<String, String>();
+	private static final Map<String, String> commonMapper = new HashMap<>();
 
 	static
 	{
@@ -112,7 +112,7 @@ public final class CharSetMap
 	/**
 	 * A collection of available charset mappers.
 	 */
-	private final List<Map<String, String>> mappers = new ArrayList<Map<String, String>>();
+	private final List<Map<String, String>> mappers = new ArrayList<>();
 	{
 		for (int i = 0; i < MAP_COM; i++)
 		{
@@ -144,7 +144,7 @@ public final class CharSetMap
 
 	private static Map<String, String> createMap(final Properties props)
 	{
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		for (Object key : props.keySet())
 		{
 			String keyString = (String)key;
@@ -322,7 +322,7 @@ public final class CharSetMap
 		}
 		else
 		{
-			mapper = new HashMap<String, String>();
+			mapper = new HashMap<>();
 		}
 		mapper.put(key, charset);
 		mappers.add(MAP_PROG, mapper);

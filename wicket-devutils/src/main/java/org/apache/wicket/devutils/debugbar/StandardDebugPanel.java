@@ -66,7 +66,7 @@ public abstract class StandardDebugPanel extends DevUtilsPanel
 
 	protected BookmarkablePageLink<Void> createLink(final String id)
 	{
-		return new BookmarkablePageLink<Void>(id, getLinkPageClass(), getLinkPageParameters());
+		return new BookmarkablePageLink<>(id, getLinkPageClass(), getLinkPageParameters());
 	}
 
 	protected abstract IModel<String> getDataModel();
