@@ -17,8 +17,9 @@
 package org.apache.wicket.util.tester;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.io.Serializable;
@@ -33,17 +34,22 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ValidationErrorFeedback;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
+import org.hamcrest.core.IsCollectionContaining;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -329,15 +335,9 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedErrorMessages
 	 *            expected error messages
 	 */
-	public void assertErrorMessages(String... expectedErrorMessages)
+	public void assertErrorMessages(Serializable... expectedErrorMessages)
 	{
-		List<Serializable> actualMessages = getMessages(FeedbackMessage.ERROR);
-		List<Serializable> msgs = new ArrayList<Serializable>();
-		for (Serializable actualMessage : actualMessages)
-		{
-			msgs.add(actualMessage.toString());
-		}
-		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), msgs);
+		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR), expectedErrorMessages);
 	}
 
 	/**
@@ -346,12 +346,77 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedInfoMessages
 	 *            expected info messages
 	 */
-	public void assertInfoMessages(String... expectedInfoMessages)
+	public void assertInfoMessages(Serializable... expectedInfoMessages)
 	{
-		List<Serializable> actualMessages = getMessages(FeedbackMessage.INFO);
-		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);
+		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO), expectedInfoMessages);
 	}
 
+	/**
+	 * Assert there are feedback messages accepted by the provided filter.
+	 *
+	 * @param filter
+	 *            the filter that will decide which messages to check
+	 * @param expectedMessages
+	 *            expected feedback messages
+	 */
+	public void assertFeedbackMessages(IFeedbackMessageFilter filter, Serializable... expectedMessages)
+	{
+		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
+		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
+		WicketTesterHelper.assertEquals(Arrays.asList(expectedMessages), actualMessages);
+	}
+
+	/**
+	 * Asserts that there is a feedback message provided by a given component
+	 *
+	 * @param component
+	 *          the component that provided the expected feedback message. Optional.
+	 * @param key
+	 *          the resource key for the feedback message. Mandatory.
+	 * @param model
+	 *          the model used for interpolating the feedback message. Optional.
+	 * @param filter
+	 *          the filter that decides in which messages to look in. E.g. with a specific
+	 *          level, rendered or not, etc.
+	 */
+	public void assertComponentFeedbackMessage(Component component, String key, IModel<?> model, IFeedbackMessageFilter filter)
+	{
+		Args.notNull(key, "key");
+
+		String expectedMessage = getApplication().getResourceSettings().getLocalizer().getString(key, component, model);
+
+		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
+		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
+
+		assertThat(String.format("Feedback message with key '%s' cannot be found", key),
+				actualMessages, IsCollectionContaining.hasItem(expectedMessage));
+	}
+
+	/**
+	 * Extracts the actual messages from the passed feedback messages.
+	 * Specially handles ValidationErrorFeedback messages by extracting their String message
+	 *
+	 * @param feedbackMessages
+	 *            the feedback messages
+	 * @return the FeedbackMessages' messages
+	 */
+	private List<Serializable> getActualFeedbackMessages(List<FeedbackMessage> feedbackMessages)
+	{
+		List<Serializable> actualMessages = new ArrayList<>();
+		for (FeedbackMessage feedbackMessage : feedbackMessages)
+		{
+			Serializable message = feedbackMessage.getMessage();
+			if (message instanceof ValidationErrorFeedback)
+			{
+				actualMessages.add(message.toString());
+			}
+			else
+			{
+				actualMessages.add(message);
+			}
+		}
+		return actualMessages;
+	}
 
 	/**
 	 * Assert that a particular feedback panel is rendering certain messages.
@@ -365,27 +430,27 @@ public class WicketTester extends BaseWicketTester
 	 * @param messages
 	 *            messages expected to be rendered
 	 */
-	public void assertFeedback(String path, String... messages)
+	public void assertFeedback(String path, Serializable... messages)
 	{
 		final FeedbackPanel fbp = (FeedbackPanel)getComponentFromLastRenderedPage(path);
 		final IModel<List<FeedbackMessage>> model = fbp.getFeedbackMessagesModel();
 		final List<FeedbackMessage> renderedMessages = model.getObject();
 		if (renderedMessages == null)
 		{
-			fail("feedback panel at path [" + path + "] returned null messages");
+			fail(String.format("feedback panel at path [%s] returned null messages", path));
 		}
 		if (messages.length != renderedMessages.size())
 		{
-			fail("you expected " + messages.length + " messages for the feedback panel [" + path +
-				"], but there were actually " + renderedMessages.size());
+			fail(String.format("you expected '%d' messages for the feedback panel [%s], but there were actually '%d'",
+					messages.length, path, renderedMessages.size()));
 		}
 		for (int i = 0; i < messages.length && i < renderedMessages.size(); i++)
 		{
-			final String expected = messages[i];
+			final Serializable expected = messages[i];
 			boolean found = false;
 			for (FeedbackMessage actual : renderedMessages)
 			{
-				if (Objects.equal(expected, actual.getMessage().toString()))
+				if (Objects.equal(expected, actual.getMessage()))
 				{
 					found = true;
 					break;
@@ -457,10 +522,7 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertNoErrorMessage()
 	{
-		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		assertTrue(
-			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+		assertNoFeedbackMessage(FeedbackMessage.ERROR);
 	}
 
 	/**
@@ -468,9 +530,16 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertNoInfoMessage()
 	{
-		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		assertTrue("expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+		assertNoFeedbackMessage(FeedbackMessage.INFO);
+	}
+
+	/**
+	 * Asserts there are no feedback messages with a certain level.
+	 */
+	public void assertNoFeedbackMessage(int level)
+	{
+		Result result = hasNoFeedbackMessage(level);
+		assertFalse(result.getMessage(), result.wasFailed());
 	}
 
 	/**
