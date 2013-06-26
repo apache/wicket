@@ -150,9 +150,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		sb.append(",maxHeight: ").append(settings.getMaxHeightInPx());
 		sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
 		sb.append(",useSmartPositioning: ").append(settings.getUseSmartPositioning());
-		sb.append(",useHideShowCoveredIEFix: ").append(settings.getUseHideShowCoveredIEFix());
 		sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
-		sb.append(",ignoreBordersWhenPositioning: ").append(settings.getIgnoreBordersWhenPositioning());
+		sb.append(",ignoreBordersWhenPositioning: ").append(
+			settings.getIgnoreBordersWhenPositioning());
 		sb.append(",showListOnFocusGain: ").append(settings.getShowListOnFocusGain());
 		sb.append(",throttleDelay: ").append(settings.getThrottleDelay());
 		sb.append(",parameterName: '").append(settings.getParameterName()).append('\'');
