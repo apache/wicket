@@ -185,23 +185,23 @@ public class PackageResourceReferenceTest extends WicketTestCase
 		}
 	}
 
-    /**
-     * see WICKET-5251 : Proper detection of already minified resources
-     */
-    @Test
-    public void testMinifiedNameDetectMinInName() throws Exception 
-    {
-        final PackageResourceReference html5minjs = new PackageResourceReference("html5.min.js");
-        Assert.assertEquals("html5.min.js", html5minjs.getMinifiedName());
+	/**
+	 * see WICKET-5251 : Proper detection of already minified resources
+	 */
+	@Test
+	public void testMinifiedNameDetectMinInName() throws Exception
+	{
+		final PackageResourceReference html5minjs = new PackageResourceReference("html5.min.js");
+		Assert.assertEquals("html5.min.js", html5minjs.getMinifiedName());
 
-        final PackageResourceReference html5notminjs = new PackageResourceReference("html5.notmin.js");
-        Assert.assertEquals("html5.notmin.min.js", html5notminjs.getMinifiedName());
+		final PackageResourceReference html5notminjs = new PackageResourceReference("html5.notmin.js");
+		Assert.assertEquals("html5.notmin.min.js", html5notminjs.getMinifiedName());
 
-        final PackageResourceReference html5notmin = new PackageResourceReference("html5notmin");
-        Assert.assertEquals("html5notmin.min", html5notmin.getMinifiedName());
-        
-        final PackageResourceReference html5min = new PackageResourceReference("html5.min");
-        Assert.assertEquals("html5.min", html5min.getMinifiedName());
+		final PackageResourceReference html5notmin = new PackageResourceReference("html5notmin");
+		Assert.assertEquals("html5notmin.min", html5notmin.getMinifiedName());
 
-    }
+		final PackageResourceReference html5min = new PackageResourceReference("html5.min");
+		Assert.assertEquals("html5.min", html5min.getMinifiedName());
+
+	}
 }
