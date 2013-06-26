@@ -91,7 +91,7 @@ public final class PropertyResolver
 	 *            The object which is evaluated.
 	 * @return The value that is evaluated. Null something in the expression evaluated to null.
 	 */
-	public final static Object getValue(final String expression, final Object object)
+	public static Object getValue(final String expression, final Object object)
 	{
 		if (expression == null || expression.equals("") || object == null)
 		{
@@ -124,7 +124,7 @@ public final class PropertyResolver
 	 *            The converter to convert the value if needed to the right type.
 	 * @throws WicketRuntimeException
 	 */
-	public final static void setValue(final String expression, final Object object,
+	public static void setValue(final String expression, final Object object,
 		final Object value, final PropertyResolverConverter converter)
 	{
 		if (expression == null || expression.equals(""))
@@ -155,7 +155,7 @@ public final class PropertyResolver
 	 * @return class of the target property object
 	 * @throws WicketRuntimeException if the cannot be resolved
 	 */
-	public final static Class<?> getPropertyClass(final String expression, final Object object)
+	public static Class<?> getPropertyClass(final String expression, final Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, RESOLVE_CLASS);
 		if (setter == null)
@@ -191,7 +191,7 @@ public final class PropertyResolver
 	 * @return Field for the property expression
 	 * @throws WicketRuntimeException if there is no such field
 	 */
-	public final static Field getPropertyField(final String expression, final Object object)
+	public static Field getPropertyField(final String expression, final Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, RESOLVE_CLASS);
 		if (setter == null)
@@ -208,7 +208,7 @@ public final class PropertyResolver
 	 * @return Getter method for the property expression
 	 * @throws WicketRuntimeException if there is no getter method
 	 */
-	public final static Method getPropertyGetter(final String expression, final Object object)
+	public static Method getPropertyGetter(final String expression, final Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, RESOLVE_CLASS);
 		if (setter == null)
@@ -225,7 +225,7 @@ public final class PropertyResolver
 	 * @return Setter method for the property expression
 	 * @throws WicketRuntimeException if there is no setter method
 	 */
-	public final static Method getPropertySetter(final String expression, final Object object)
+	public static Method getPropertySetter(final String expression, final Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, RESOLVE_CLASS);
 		if (setter == null)
@@ -377,7 +377,7 @@ public final class PropertyResolver
 		return -1;
 	}
 
-	private final static IGetAndSet getGetAndSetter(String exp, final Class<?> clz)
+	private static IGetAndSet getGetAndSetter(String exp, final Class<?> clz)
 	{
 		IClassCache classesToGetAndSetters = getClassesToGetAndSetters();
 		Map<String, IGetAndSet> getAndSetters = classesToGetAndSetters.get(clz);
@@ -391,7 +391,7 @@ public final class PropertyResolver
 		if (getAndSetter == null)
 		{
 			Method method = null;
-			Field field = null;
+			Field field;
 			if (exp.startsWith("["))
 			{
 				// if expression begins with [ skip method finding and use it as
@@ -570,7 +570,7 @@ public final class PropertyResolver
 	 * @param expression
 	 * @return The method for the expression null if not found
 	 */
-	private final static Method findGetter(final Class<?> clz, final String expression)
+	private static Method findGetter(final Class<?> clz, final String expression)
 	{
 		String name = Character.toUpperCase(expression.charAt(0)) + expression.substring(1);
 		Method method = null;
@@ -595,7 +595,7 @@ public final class PropertyResolver
 		return method;
 	}
 
-	private final static Method findMethod(final Class<?> clz, String expression)
+	private static Method findMethod(final Class<?> clz, String expression)
 	{
 		if (expression.endsWith("()"))
 		{
@@ -1003,7 +1003,7 @@ public final class PropertyResolver
 			getMethod.setAccessible(true);
 		}
 
-		private final static Method findSetter(final Method getMethod, final Class<?> clz)
+		private static Method findSetter(final Method getMethod, final Class<?> clz)
 		{
 			String name = getMethod.getName();
 			name = SET + name.substring(3);
@@ -1024,7 +1024,7 @@ public final class PropertyResolver
 		@Override
 		public Object getValue(Object object)
 		{
-			Object ret = null;
+			Object ret;
 			try
 			{
 				ret = getMethod.invoke(object, index);
@@ -1145,7 +1145,7 @@ public final class PropertyResolver
 		@Override
 		public final Object getValue(final Object object)
 		{
-			Object ret = null;
+			Object ret;
 			try
 			{
 				ret = getMethod.invoke(object, (Object[])null);
@@ -1243,7 +1243,7 @@ public final class PropertyResolver
 			}
 		}
 
-		private final static Method findSetter(Method getMethod, Class<?> clz)
+		private static Method findSetter(Method getMethod, Class<?> clz)
 		{
 			String name = getMethod.getName();
 			if (name.startsWith(GET))
