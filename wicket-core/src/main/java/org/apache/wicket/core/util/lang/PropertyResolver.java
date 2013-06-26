@@ -57,6 +57,10 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * <p>
  * Index or map properties can also be written as: "property[index]" or "property[key]"
+ *
+ * <strong>Note that the property resolver by default provides access to private members and methods. If
+ * guaranteeing encapsulation of the target objects is a big concern, you should consider using an
+ * alternative implementation.</strong>
  * <p/>
  *
  * @author jcompagner
