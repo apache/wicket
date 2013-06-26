@@ -16,33 +16,21 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.context.ConversationScoped;
-import org.apache.wicket.util.io.IClusterable;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.inject.Qualifier;
 
 /**
- * A bean that can be used to override whether the lifecycle of the conversation should be managed
- * automatically or not. See {@link CdiConfiguration#setAutoConversationManagement(boolean)} for
- * details.
+ * Qualifier for injecting the Ignore Package List 
  * 
- * @author igor
+ * @author jsarman
  */
-@ConversationScoped
-public class AutoConversation implements IClusterable
+@Qualifier
+@Target( { ElementType.TYPE,ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface IgnoreList 
 {
-	private boolean automatic;
-
-	public AutoConversation()
-	{
-		automatic = false;
-	}
-
-	public void setAutomatic(boolean automatic)
-	{
-		this.automatic = automatic;
-	}
-
-	public boolean isAutomatic()
-	{
-		return automatic;
-	}
 }

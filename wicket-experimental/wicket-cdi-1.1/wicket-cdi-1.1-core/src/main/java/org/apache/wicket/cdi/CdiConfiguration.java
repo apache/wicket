@@ -16,7 +16,11 @@
  */
 package org.apache.wicket.cdi;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Instance;
@@ -25,7 +29,6 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
@@ -39,6 +42,12 @@ import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 @ApplicationScoped
 public class CdiConfiguration
 {
+	private static final String[] defaultIgnoredPackages = new String[]
+	{
+		"org.apache.wicket.markup",       
+		"org.apache.wicket.protocol.http",
+		"org.apache.wicket.behavior",
+	};
     
 	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
 
@@ -49,9 +58,6 @@ public class CdiConfiguration
 	INonContextualManager nonContextualManager;
 
 	@Inject
-	AbstractCdiContainer container;
-
-	@Inject
 	Instance<ConversationPropagator> conversationPropagatorSource;
 
 	@Inject
@@ -59,22 +65,31 @@ public class CdiConfiguration
 
 	@Inject
 	Instance<DetachEventEmitter> detachEventEmitterSource;
+        
+	@Inject
+	BehaviorInjector behaviorInjector;
+
+	@Inject
+	ComponentInjector componentInjector;
+
+	@Inject
+	SessionInjector sessionInjector;
 	
 	private boolean injectComponents = true;
 	private boolean injectApplication = true;
 	private boolean injectSession = true;
 	private boolean injectBehaviors = true;
 	private boolean autoConversationManagement = false;
+	private boolean configured = false;
+	private List<String> ignoredPackages;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param beanManager
-	 */
-	public CdiConfiguration()
-	{				
+	@PostConstruct
+	public void init()
+	{
+		ignoredPackages = new ArrayList<>();
+		ignoredPackages.addAll(Arrays.asList(defaultIgnoredPackages));
 	}
-
+        
 	/**
 	 * Gets the configured bean manager
 	 * 
@@ -94,7 +109,7 @@ public class CdiConfiguration
 	 * Checks if auto conversation management is enabled. See
 	 * {@link #setAutoConversationManagement(boolean)} for details.
 	 */
-	public @Produces @Auto boolean isAutoConversationManagement()
+	public @Produces @Auto Boolean isAutoConversationManagement()
 	{
 		return autoConversationManagement;
 	}
@@ -133,12 +148,7 @@ public class CdiConfiguration
 		return nonContextualManager;
 	}
 
-	public CdiConfiguration setNonContextualManager(INonContextualManager nonContextualManager)
-	{
-		this.nonContextualManager = nonContextualManager;
-		return this;
-	}
-
+	
 	public boolean isInjectComponents()
 	{
 		return injectComponents;
@@ -183,17 +193,35 @@ public class CdiConfiguration
 		return this;
 	}
 
+	public @Produces @IgnoreList String[] getPackagesToIgnore()
+	{
+		String[] ignore = new String[ignoredPackages.size()];
+		return ignoredPackages.toArray(ignore);
+	}
+
+	public void addPackageToIgnore(String packageName )
+	{
+		ignoredPackages.add(packageName);
+	}
+
+	public void removePackageToIgnore(String packageName)
+	{
+		ignoredPackages.remove(packageName);
+	}
+
 	/**
 	 * Configures the specified application
 	 * 
 	 * @param application
 	 * @return
 	 */
-	public AbstractCdiContainer configure(Application application)
+	public synchronized void configure(Application application)
 	{		
+		if(configured)
+		{
+			throw new IllegalStateException("Cannot configure CdiConfiguration multiple times");
+		}
 		
-		container.bind(application);
-
 		RequestCycleListenerCollection listeners = new RequestCycleListenerCollection();
 		application.getRequestCycleListeners().add(listeners);
 
@@ -212,24 +240,24 @@ public class CdiConfiguration
 		// inject application instance
 		if (isInjectApplication())
 		{
-			container.getNonContextualManager().postConstruct(application);
+			nonContextualManager.postConstruct(application);
 		}
 
 		// enable injection of various framework components
 
 		if (isInjectSession())
 		{
-			application.getSessionListeners().add(new SessionInjector(container));
+			application.getSessionListeners().add(sessionInjector);
 		}
 
 		if (isInjectComponents())
 		{
-			application.getComponentInstantiationListeners().add(new ComponentInjector(container));
+			application.getComponentInstantiationListeners().add(componentInjector);
 		}
 
 		if (isInjectBehaviors())
 		{
-			application.getBehaviorInstantiationListeners().add(new BehaviorInjector(container));
+			application.getBehaviorInstantiationListeners().add(behaviorInjector);
 		}
 
 		// enable cleanup
@@ -237,7 +265,8 @@ public class CdiConfiguration
 		application.getApplicationListeners().add(
 			new CdiShutdownCleaner(isInjectApplication()));
 
-		return container;
+		configured = true;
+
 	}
         
 	public static CdiConfiguration get()

@@ -35,7 +35,7 @@ import org.apache.wicket.util.collections.ClassMetaCache;
  * 
  * @param <T>
  */
-public class NonContextual<T>
+public class NonContextual <T>
 {
 	private static final Object lock = new Object();
 	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections.emptyMap();

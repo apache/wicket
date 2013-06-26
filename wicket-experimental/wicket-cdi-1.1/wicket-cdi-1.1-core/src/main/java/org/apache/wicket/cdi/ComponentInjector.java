@@ -17,7 +17,8 @@
 package org.apache.wicket.cdi;
 
 import java.lang.reflect.Modifier;
-
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.slf4j.Logger;
@@ -29,33 +30,13 @@ import org.slf4j.LoggerFactory;
  * @author igor
  * 
  */
-class ComponentInjector extends AbstractInjector implements IComponentInstantiationListener
+@ApplicationScoped
+class ComponentInjector extends AbstractInjector<Component> implements IComponentInstantiationListener
 {
-	private static final Logger LOG = LoggerFactory.getLogger(ComponentInjector.class);
-
-	/**
-	 * Constructor
-	 * 
-	 * @param container
-	 */
-	public ComponentInjector(AbstractCdiContainer container)
-	{
-		super(container);
-	}
 
 	@Override
 	public void onInstantiation(Component component)
-	{
-		Class<? extends Component> componentClass = component.getClass();
-
-		if (componentClass.isAnonymousClass() ||
-				(componentClass.isMemberClass() && Modifier.isStatic(componentClass.getModifiers()) == false))
-		{
-			LOG.debug("Skipping non-static inner class '{}' ", componentClass);
-		}
-		else
-		{
-			inject(component);
-		}
+	{		
+			inject(component);		
 	}
 }

@@ -16,50 +16,68 @@
  */
 package org.apache.wicket.cdi;
 
-import org.apache.wicket.util.lang.Args;
+import java.lang.reflect.Modifier;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for injectors
  * 
  * @author igor
  */
-class AbstractInjector
+class AbstractInjector <T>
 {
-	private final AbstractCdiContainer container;
-	private static final String[] ignoredPackages =new String[]{
-		"org.apache.wicket.markup.html",       
-		"org.apache.wicket.protocol.html",
-		"org.apache.wicket.behavior",    
-	};
+    
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractInjector.class);
 
-	public AbstractInjector(AbstractCdiContainer container)
+	@Inject
+	INonContextualManager nonContextualManager;
+
+	@Inject	
+	@IgnoreList
+	Instance<String[]> ignorePackages;
+
+	protected void postConstruct(T instance)
 	{
-		Args.notNull(container, "container");
-		this.container = container;
+		if(!ignore(instance.getClass()))
+		{
+			nonContextualManager.postConstruct(instance);
+		}
 	}
 
-	protected <T> void postConstruct(T instance)
+	protected void inject(T instance)
 	{
-		container.getNonContextualManager().postConstruct(instance);
-	}
-
-	protected <T> void inject(T instance)
-	{
-		if(!ignore(instance.getClass())) {
-			container.getNonContextualManager().inject(instance);
+		
+		if(!ignore(instance.getClass()))
+		{
+			nonContextualManager.inject(instance);
 		}
 	}
         
-	private static boolean ignore(Class clazz)
+        
+	private boolean ignore(Class instanceClass)
 	{
-		String packageName = clazz.getName();
-		for(String ignore:ignoredPackages)
+		if (instanceClass.isAnonymousClass() ||
+				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))
+		{
+			LOG.debug("Skipping non-static inner class '{}' ", instanceClass);
+                        return true;
+		}
+		
+		String packageName = instanceClass.getPackage().getName();
+		for(String ignore:ignorePackages.get())
 		{
 			if(packageName.contains(ignore))
 			{
+				LOG.debug("Skipping {} which is in a package to ignore {}",instanceClass,packageName);	
 				return true;
 			}
 		}           
+                        
 		return false;
+		
 	}
+
 }
