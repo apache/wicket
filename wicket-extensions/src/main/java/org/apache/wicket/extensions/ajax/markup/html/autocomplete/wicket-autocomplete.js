@@ -67,11 +67,6 @@
 		var scrollbarSize = 0;
 		var selChSinceLastRender = false;
 
-		// this are the last visible and non-temporary bounds of the pop-up; the may change position and size several times when showing/updating choices and so on
-		// before it reaches the bounds that will be visible by the user (this is because of height/width settings limits or because it tries to compute preferred size);
-		// used for IE fix with hideShowCovered() - to be able to call it when bounds change while popup is visible.
-		var lastStablePopupBounds = [0, 0, 0, 0];
-
 		// holds a throttler, for not sending many requests if the user types
 		// too quickly.
 		var localThrottler = new Wicket.Throttler(true);
@@ -407,10 +402,7 @@
 
 			calculateAndSetPopupBounds(input, container);
 
-			if (visible === 0) {
-				visible = 1;
-				hideShowCovered(true, lastStablePopupBounds[0], lastStablePopupBounds[1], lastStablePopupBounds[2], lastStablePopupBounds[3]);
-			}
+			visible = 1;
 		}
 
 		function initializeUsefulDimensions(input, container) {
@@ -437,7 +429,6 @@
 			var container = getAutocompleteContainer();
 			if (container)
 			{
-				hideShowCovered(false, lastStablePopupBounds[0], lastStablePopupBounds[1], lastStablePopupBounds[2], lastStablePopupBounds[3]);
 				container.hide();
 				if (!cfg.adjustInputWidth && container.style.width !== "auto") {
 					container.style.width = "auto"; // let browser auto-set width again next time it is shown
@@ -554,17 +545,6 @@
 			}
 			popup.style.left=leftPosition+'px';
 			popup.style.top=topPosition+'px';
-
-			if (visible === 1 &&
-					(lastStablePopupBounds[0] !== popup.offsetLeft ||
-					 lastStablePopupBounds[1] !== popup.offsetTop ||
-					 lastStablePopupBounds[2] !== popup.offsetWidth ||
-					 lastStablePopupBounds[3] !== popup.offsetHeight)) {
-				hideShowCovered(false, lastStablePopupBounds[0], lastStablePopupBounds[1], lastStablePopupBounds[2], lastStablePopupBounds[3]); // show previously hidden
-				hideShowCovered(true, popup.offsetLeft, popup.offsetTop, popup.offsetWidth, popup.offsetHeight); // hide ones under new bounds
-			}
-
-			lastStablePopupBounds = [popup.offsetLeft, popup.offsetTop, popup.offsetWidth, popup.offsetHeight];
 		}
 
 		function getPosition(obj) {
@@ -826,37 +806,6 @@
 				obj=obj.offsetParent;
 			} while (obj && index === "auto");
 			return index;
-		}
-
-		function hideShowCovered(popupVisible, acLeftX, acTopY, acWidth, acHeight) {
-			if (!cfg.useHideShowCoveredIEFix || (!/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent))) {
-				return;
-			}
-
-			var hideTags=["select","iframe","applet"];
-			var acRightX = acLeftX + acWidth;
-			var acBottomY = acTopY + acHeight;
-
-			for (var j=0;j<hideTags.length;j++) {
-				var tagsFound=document.getElementsByTagName(hideTags[j]);
-				for (var i=0; i<tagsFound.length; i++){
-					var tag=tagsFound[i];
-					var p=getPosition(tag); // maybe determine only visible area of tag somehow? as it could be in a small scrolled container...
-					var leftX=p[0];
-					var rightX=leftX+tag.offsetWidth;
-					var topY=p[1];
-					var bottomY=topY+tag.offsetHeight;
-
-					if (!tag.wicket_element_visibility) {
-						tag.wicket_element_visibility=isVisible(tag);
-					}
-					if (!popupVisible || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
-						tag.style.visibility = tag.wicket_element_visibility;
-					} else {
-						tag.style.visibility = "hidden";
-					}
-				}
-			}
 		}
 
 		initialize();
