@@ -19,33 +19,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-parent</artifactId>
+		<artifactId>wicket-experimental</artifactId>
 		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-experimental</artifactId>
+	<artifactId>wicket-cdi-1.1</artifactId>
+    <version>0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Wicket-Experimental</name>
-	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
+	<name>Wicket CDI 1.1</name>
+	<description>Wicket CDI 1.1 Parent.</description>
 	<modules>
-		<module>wicket-atmosphere</module>
-		<module>wicket-native-websocket</module>
-		<module>wicket-bootstrap</module>
-		<module>wicket-examples-parent</module>
-		<module>wicket-bean-validation</module>
-		<module>wicket-cdi-1.1</module>
+		<module>wicket-cdi-1.1-core</module>
+		<module>wicket-cdi-1.1-weld</module>
+		<!--<module>wicket-cdi-1.1-owb</module>-->
 	</modules>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>clirr-maven-plugin</artifactId>
-					<configuration>
-						<skip>true</skip>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
 </project>
