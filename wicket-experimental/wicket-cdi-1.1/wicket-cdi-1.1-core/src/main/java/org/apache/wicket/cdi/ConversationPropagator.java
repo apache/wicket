@@ -69,7 +69,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 	static final String CID_ATTR = "cid";
        
 	@Inject
-	AbstractCdiContainer container;
+	Instance<AbstractCdiContainer> containerSource;
 
 	/** propagation mode to use */
 	@Propagation
@@ -78,13 +78,10 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 	
 	@Auto
 	@Inject
-	private boolean auto;
+	Instance<Boolean> auto;
 
 	@Inject
 	Conversation conversation_;
-
-	@Inject
-	AutoConversation autoConversation;
 
 	/**
 	 * Constructor
@@ -135,7 +132,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 			IRequestablePage requestable = ((StalePageException)ex).getPage();
 			if (requestable instanceof Page)
 			{
-				String cid = container.getConversationMarker((Page)requestable);
+				String cid = containerSource.get().getConversationMarker((Page)requestable);
 				if (cid != null)
 				{
 					try
@@ -169,7 +166,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 
 		try
 		{
-			container.activateConversationalContext(cycle, cid);
+			containerSource.get().activateConversationalContext(cycle, cid);
 			fireOnAfterConversationStarted(cycle);
 		}
 		catch (NonexistentConversationException e)
@@ -324,7 +321,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 					((ICdiAwareRequestCycleListener)listener).onBeforeConversationDeactivated(cycle);
 				}
 			}
-			container.deactivateConversationalContext(cycle);
+			containerSource.get().deactivateConversationalContext(cycle);
 
 			cycle.setMetaData(CONVERSATION_STARTED_KEY, null);
 		}
@@ -354,7 +351,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 	protected void autoBeginIfNecessary(Page page, IRequestHandler handler,
 		Conversation conversation)
 	{
-		if (!auto || conversation == null || !conversation.isTransient() || page == null ||
+		if (!auto.get() || conversation == null || !conversation.isTransient() || page == null ||
 			!propagationSource.get().propagatesViaPage(page, handler) || !hasConversationalComponent(page))
 		{
 			return;
@@ -363,16 +360,14 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 		// auto activate conversation
 
 		conversation.begin();
-		autoConversation.setAutomatic(true);
 
 		logger.debug("Auto-began conversation {} for page {}", conversation.getId(), page);
 	}
 
 	protected void autoEndIfNecessary(Page page, IRequestHandler handler, Conversation conversation)
 	{
-		if (!auto || conversation == null || conversation.isTransient() || page == null ||
-			!propagationSource.get().propagatesViaPage(page, handler) || hasConversationalComponent(page) ||
-			autoConversation.isAutomatic() == false)
+		if (!auto.get() || conversation == null || conversation.isTransient() || page == null ||
+			!propagationSource.get().propagatesViaPage(page, handler) || hasConversationalComponent(page))
 		{
 			return;
 		}
@@ -381,7 +376,6 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 
 		String cid = conversation.getId();
 
-		autoConversation.setAutomatic(false);
 		conversation.end();
 
 		logger.debug("Auto-ended conversation {} for page {}", cid, page);
