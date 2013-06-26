@@ -264,7 +264,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = (int)item.getIndex();
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 					addStateChange();
@@ -446,7 +446,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	protected IModel<T> getListItemModel(final IModel<? extends List<T>> listViewModel,
 		final int index)
 	{
-		return new ListItemModel<T>(this, index);
+		return new ListItemModel<>(this, index);
 	}
 
 	/**
@@ -459,7 +459,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 */
 	protected ListItem<T> newItem(final int index, IModel<T> itemModel)
 	{
-		return new ListItem<T>(index, itemModel);
+		return new ListItem<>(index, itemModel);
 	}
 
 	/**
