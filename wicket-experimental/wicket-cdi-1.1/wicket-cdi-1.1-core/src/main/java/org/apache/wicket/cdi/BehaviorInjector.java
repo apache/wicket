@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.context.ApplicationScoped;
 import org.apache.wicket.IBehaviorInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
 
@@ -25,18 +26,10 @@ import org.apache.wicket.behavior.Behavior;
  * @author igor
  * 
  */
-class BehaviorInjector extends AbstractInjector implements IBehaviorInstantiationListener
+@ApplicationScoped
+class BehaviorInjector extends AbstractInjector<Behavior> implements IBehaviorInstantiationListener
 {
-	/**
-	 * Constructor
-	 * 
-	 * @param container
-	 */
-	public BehaviorInjector(AbstractCdiContainer container)
-	{
-		super(container);
-	}
-
+	
 	@Override
 	public void onInstantiation(Behavior behavior)
 	{

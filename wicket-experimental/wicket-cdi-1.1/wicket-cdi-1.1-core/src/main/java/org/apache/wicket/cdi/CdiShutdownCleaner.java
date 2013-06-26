@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.inject.spi.BeanManager;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.IApplicationListener;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Listens to application shutdown and cleans up

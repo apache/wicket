@@ -20,7 +20,6 @@ import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
@@ -46,9 +45,7 @@ public class DetachEventEmitter extends AbstractRequestCycleListener implements 
 
 	@Inject
 	Event<DetachEvent> detachEvent;
-
-	@Inject
-	AbstractCdiContainer container;
+	
 	/**
 	 * Constructor
 	 * 

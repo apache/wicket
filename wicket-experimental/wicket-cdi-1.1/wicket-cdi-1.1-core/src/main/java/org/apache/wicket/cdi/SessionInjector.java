@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import org.apache.wicket.ISessionListener;
 import org.apache.wicket.Session;
 
@@ -25,18 +27,9 @@ import org.apache.wicket.Session;
  * @author igor
  * 
  */
-class SessionInjector extends AbstractInjector implements ISessionListener
+@ApplicationScoped
+class SessionInjector extends AbstractInjector<Session> implements ISessionListener
 {
-	/**
-	 * Constructor
-	 * 
-	 * @param container
-	 */
-	public SessionInjector(AbstractCdiContainer container)
-	{
-		super(container);
-	}
-
 	@Override
 	public void onCreated(Session session)
 	{

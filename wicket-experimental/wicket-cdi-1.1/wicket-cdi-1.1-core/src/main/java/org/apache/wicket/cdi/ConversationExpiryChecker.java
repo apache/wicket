@@ -19,6 +19,7 @@ package org.apache.wicket.cdi;
 import java.io.Serializable;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import org.apache.wicket.Component;
@@ -47,7 +48,7 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 	private static final Logger logger = LoggerFactory.getLogger(ConversationExpiryChecker.class);
 	
 	@Inject 
-	AbstractCdiContainer  container;
+	Instance<AbstractCdiContainer>  containerSource;
 
 	@Inject
 	private Conversation conversation;
@@ -63,7 +64,7 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 		if (component instanceof Page || RequestCycle.get().find(AjaxRequestTarget.class) != null)
 		{
 			Page page = component.getPage();
-			String cid = container.getConversationMarker(page);
+			String cid = containerSource.get().getConversationMarker(page);
 			if (cid != null && !Objects.isEqual(conversation.getId(), cid))
 			{
 				logger.info("Conversation {} has expired for {}", cid, page);

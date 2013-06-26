@@ -43,7 +43,7 @@ public enum ConversationPropagation implements IConversationPropagation {
 		}
 	},
 	/**
-	 * Pesistent conversations are propagated between non-bookmarkable pages only
+	 * Persistent conversations are propagated between non-bookmarkable pages only
 	 */
 	NONBOOKMARKABLE {
 		@Override

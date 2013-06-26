@@ -16,11 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.wicket.Application;
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
@@ -32,21 +28,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  */
 public abstract class AbstractCdiContainer
-{
-	private static final MetaDataKey<AbstractCdiContainer> CONTEXT_KEY = new MetaDataKey<AbstractCdiContainer>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
-		
-	/**
-	 * Constructor
-	 * 	
-	 */
-	public AbstractCdiContainer()
-	{
-	}
-
-	protected abstract INonContextualManager getNonContextualManager();
+{		
 	
 	/**
 	 * Deactivates conversational context
@@ -94,43 +76,6 @@ public abstract class AbstractCdiContainer
 
 		page.setMetaData(ConversationIdMetaKey.INSTANCE, null);
 		page.getPageParameters().remove(ConversationPropagator.CID_ATTR);
-	}
-
-	/**
-	 * Binds this container instance to the {@link Application}, making it possible to retrieve it
-	 * later
-	 * 
-	 * @param application
-	 */
-	protected void bind(Application application)
-	{
-		application.setMetaData(CONTEXT_KEY, this);
-	}
-
-	/**
-	 * Retrieves container instance stored in the application
-	 * 
-	 * @param application
-	 * @return container instance or {@code null} if none
-	 */
-	public static final AbstractCdiContainer get(Application application)
-	{
-		AbstractCdiContainer ctx = application.getMetaData(CONTEXT_KEY);
-		if (ctx == null)
-		{
-			throw new IllegalStateException("No CDI Context bound to application");
-		}
-		return ctx;
-	}
-
-	/**
-	 * Retrieves container instance stored in the current thread's application
-	 * 
-	 * @return container instance or {@code null} if none
-	 */
-	public static final AbstractCdiContainer get()
-	{
-		return get(Application.get());
 	}
 
 }

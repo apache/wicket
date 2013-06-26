@@ -17,9 +17,9 @@
 package org.apache.wicket.cdi.weld;
 
 import javax.enterprise.context.ApplicationScoped;
-import org.apache.wicket.cdi.*;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import org.apache.wicket.cdi.AbstractCdiContainer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.jboss.weld.context.http.HttpConversationContext;
 
@@ -35,23 +35,6 @@ public class WeldCdiContainer extends AbstractCdiContainer
 	@Inject 
 	Instance<HttpConversationContext> conversationContextSource;
        
-	@Inject
-	INonContextualManager nonContextualManager;
-	
-	/**
-	 * Constructor	 	 
-	 */
-	public WeldCdiContainer()
-	{
-
-	}
-
-	@Override
-	protected INonContextualManager getNonContextualManager()
-	{
-		return nonContextualManager;
-	}
-
 	/**
 	 * Deactivates conversational context
 	 * 
@@ -74,10 +57,6 @@ public class WeldCdiContainer extends AbstractCdiContainer
 	@Override
 	public void activateConversationalContext(RequestCycle cycle, String cid)
 	{
-		// Force a session created if one does not exist 
-		// Glassfish does not have a session initially to store the transactions
-		// so it gets lost in the request.              
-		getRequest(cycle).getSession(true);
 		HttpConversationContext conversationContext = conversationContextSource.get();               
 		conversationContext.associate(getRequest(cycle)); 
 		if(conversationContext.isActive())
