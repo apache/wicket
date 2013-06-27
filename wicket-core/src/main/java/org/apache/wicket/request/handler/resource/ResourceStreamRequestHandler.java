@@ -130,6 +130,20 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 			requestCycle.getResponse());
 
 		ResourceStreamResource resource = new ResourceStreamResource(resourceStream);
+
+		configure(resource);
+
+		resource.respond(attributes);
+	}
+
+	/**
+	 * Configures the ResourceStreamResource used by this request handler
+	 *
+	 * @param resource
+	 *          the resource to configure
+	 */
+	protected void configure(ResourceStreamResource resource)
+	{
 		resource.setFileName(fileName);
 		if (contentDisposition != null)
 		{
@@ -138,7 +152,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 		else
 		{
 			resource.setContentDisposition(Strings.isEmpty(fileName) ? ContentDisposition.INLINE
-				: ContentDisposition.ATTACHMENT);
+					: ContentDisposition.ATTACHMENT);
 		}
 
 		final Duration cacheDuration = getCacheDuration();
@@ -146,8 +160,6 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 		{
 			resource.setCacheDuration(cacheDuration);
 		}
-
-		resource.respond(attributes);
 	}
 
 	@Override
