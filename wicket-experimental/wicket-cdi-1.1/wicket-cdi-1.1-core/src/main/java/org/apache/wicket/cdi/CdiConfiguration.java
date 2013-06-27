@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
@@ -35,25 +36,24 @@ import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 
 /**
  * Configures CDI integration
- * 
+ *
  * @author igor
- * 
  */
 @ApplicationScoped
 public class CdiConfiguration
 {
 	private static final String[] defaultIgnoredPackages = new String[]
-	{
-		"org.apache.wicket.markup",       
-		"org.apache.wicket.protocol.http",
-		"org.apache.wicket.behavior",
-	};
-    
+			{
+					"org.apache.wicket.markup",
+					"org.apache.wicket.protocol.http",
+					"org.apache.wicket.behavior",
+			};
+
 	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
 
 	@Inject
 	BeanManager beanManager;
-        
+
 	@Inject
 	INonContextualManager nonContextualManager;
 
@@ -65,7 +65,7 @@ public class CdiConfiguration
 
 	@Inject
 	Instance<DetachEventEmitter> detachEventEmitterSource;
-        
+
 	@Inject
 	BehaviorInjector behaviorInjector;
 
@@ -74,7 +74,7 @@ public class CdiConfiguration
 
 	@Inject
 	SessionInjector sessionInjector;
-	
+
 	private boolean injectComponents = true;
 	private boolean injectApplication = true;
 	private boolean injectSession = true;
@@ -89,10 +89,10 @@ public class CdiConfiguration
 		ignoredPackages = new TreeSet<>();
 		ignoredPackages.addAll(Arrays.asList(defaultIgnoredPackages));
 	}
-        
+
 	/**
 	 * Gets the configured bean manager
-	 * 
+	 *
 	 * @return bean manager or {@code null} if none
 	 */
 	public BeanManager getBeanManager()
@@ -100,7 +100,10 @@ public class CdiConfiguration
 		return beanManager;
 	}
 
-	public @Produces @Propagation IConversationPropagation getPropagation()
+	public
+	@Produces
+	@Propagation
+	IConversationPropagation getPropagation()
 	{
 		return propagation;
 	}
@@ -109,26 +112,28 @@ public class CdiConfiguration
 	 * Checks if auto conversation management is enabled. See
 	 * {@link #setAutoConversationManagement(boolean)} for details.
 	 */
-	public @Produces @Auto Boolean isAutoConversationManagement()
+	public
+	@Produces
+	@Auto
+	Boolean isAutoConversationManagement()
 	{
 		return autoConversationManagement;
 	}
 
 	/**
 	 * Toggles automatic conversation management feature.
-	 * 
+	 * <p/>
 	 * Automatic conversation management controls the lifecycle of the conversation based on
 	 * presence of components implementing the {@link ConversationalComponent} interface. If such
 	 * components are found in the page a conversation is marked persistent, and if they are not the
 	 * conversation is marked transient. This greatly simplifies the management of conversation
 	 * lifecycle.
-	 * 
+	 * <p/>
 	 * Sometimes it is necessary to manually control the application. For these cases, once a
 	 * conversation is started {@link AutoConversation} bean can be used to mark the conversation as
 	 * manually-managed.
-	 * 
+	 *
 	 * @param enabled
-	 * 
 	 * @return {@code this} for easy chaining
 	 */
 	public CdiConfiguration setAutoConversationManagement(boolean enabled)
@@ -148,7 +153,7 @@ public class CdiConfiguration
 		return nonContextualManager;
 	}
 
-	
+
 	public boolean isInjectComponents()
 	{
 		return injectComponents;
@@ -193,44 +198,49 @@ public class CdiConfiguration
 		return this;
 	}
 
-	public @Produces @IgnoreList String[] getPackagesToIgnore()
+	public
+	@Produces
+	@IgnoreList
+	String[] getPackagesToIgnore()
 	{
 		String[] ignore = new String[ignoredPackages.size()];
 		return ignoredPackages.toArray(ignore);
 	}
 
-	public void addPackagesToIgnore(String ... packageNames )
+	public CdiConfiguration addPackagesToIgnore(String... packageNames)
 	{
 		ignoredPackages.addAll(Arrays.asList(packageNames));
+		return this;
 	}
 
-	public void removePackagesToIgnore(String ... packageNames)
+	public CdiConfiguration removePackagesToIgnore(String... packageNames)
 	{
 		ignoredPackages.removeAll(Arrays.asList(packageNames));
+		return this;
 	}
 
 	/**
 	 * Configures the specified application
-	 * 
+	 *
 	 * @param application
 	 * @return
 	 */
 	public synchronized void configure(Application application)
-	{		
-		if(configured)
+	{
+		if (configured)
 		{
 			throw new IllegalStateException("Cannot configure CdiConfiguration multiple times");
 		}
-		
+
 		RequestCycleListenerCollection listeners = new RequestCycleListenerCollection();
 		application.getRequestCycleListeners().add(listeners);
 
 		// enable conversation propagation
 		if (getPropagation() != ConversationPropagation.NONE)
-		{                    
+		{
 			listeners.add(conversationPropagatorSource.get());
 			application.getComponentPreOnBeforeRenderListeners().add(
-				conversationExpiryCheckerSource.get());
+					conversationExpiryCheckerSource.get());
 		}
 
 		// enable detach event
@@ -263,23 +273,23 @@ public class CdiConfiguration
 		// enable cleanup
 
 		application.getApplicationListeners().add(
-			new CdiShutdownCleaner(isInjectApplication()));
+				new CdiShutdownCleaner(isInjectApplication()));
 
 		configured = true;
 
 	}
-        
+
 	public static CdiConfiguration get()
 	{
-		BeanManager beanManager = CDI.current().getBeanManager();            
-		Iterator<Bean< ? >> iter = beanManager.getBeans(CdiConfiguration.class).iterator();
+		BeanManager beanManager = CDI.current().getBeanManager();
+		Iterator<Bean<?>> iter = beanManager.getBeans(CdiConfiguration.class).iterator();
 		if (!iter.hasNext())
 		{
 			throw new IllegalStateException("CDI BeanManager cannot find CdiConfiguration");
 		}
 		Bean<CdiConfiguration> bean = (Bean<CdiConfiguration>) iter.next();
 		CreationalContext<CdiConfiguration> ctx = beanManager.createCreationalContext(bean);
-		return (CdiConfiguration) beanManager.getReference(bean, CdiConfiguration.class, ctx);           
+		return (CdiConfiguration) beanManager.getReference(bean, CdiConfiguration.class, ctx);
 	}
 
 }
