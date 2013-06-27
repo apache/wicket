@@ -23,28 +23,21 @@ import org.apache.wicket.cdi.testapp.TestAppScope;
 import org.apache.wicket.cdi.testapp.TestApplication;
 import org.apache.wicket.cdi.testapp.TestConversationBean;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
-import org.apache.wicket.cdi.testapp.TestQualifier;
-
-import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.jglue.cdiunit.ContextController;
 import org.junit.After;
 import org.junit.Assert;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Tests for ComponentInjector
+ * @author jsarman
  */
 @RunWith(CdiRunner.class)
-@AdditionalClasses({
-		BehaviorInjector.class,
+@AdditionalClasses({BehaviorInjector.class,
 		CdiConfiguration.class,
 		CdiShutdownCleaner.class,
 		ComponentInjector.class,
@@ -56,12 +49,14 @@ import org.junit.runner.RunWith;
 		MockContainer.class,
 		TestAppScope.class,
 		TestConversationBean.class})
-public class ComponentInjectorTest extends Assert
+public class CdiConfigurationTest extends Assert
 {
 
 	private WicketTester tester;
 	@Inject
 	ContextController contextController;
+	@Inject
+	ConversationPropagator conversationPropagator;
 	@Inject
 	ComponentInjector componentInjector;
 
@@ -86,71 +81,45 @@ public class ComponentInjectorTest extends Assert
 		contextController.openConversation(request);
 	}
 
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5226
-	 */
 	@Test
-	public void innerNonStaticClass()
+	public void testApplicationScope()
 	{
-
-		TestNonStaticComponent component = new TestNonStaticComponent("someId");
-		assertNull(component.dependency);
-		componentInjector.onInstantiation(component);
-		assertNull(component.dependency);
-	}
-
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5226
-	 */
-	@Test
-	public void innerStaticClass()
-	{
-		TestStaticComponent component = new TestStaticComponent("someId");
-		componentInjector.onInstantiation(component);
-		assertEquals(component.dependency, "Test String");
+		tester.startPage(tester.getApplication().getHomePage());
+		tester.assertLabel("appscope", "Test ok");
 	}
 
 	@Test
-	public void anonymousInnerClass()
+	public void testConversationScope()
 	{
-
-		WebComponent component = new WebComponent("someId")
+		tester.startPage(TestConversationPage.class);
+		for (int i = 0; i < 20; i++)
 		{
-			@Inject
-			private String dependency;
-
-			@Override
-			public String toString()
-			{
-				return dependency;
-			}
-		};
-		componentInjector.onInstantiation(component);
-		assertNull(component.toString());
-	}
-
-	private class TestNonStaticComponent extends WebComponent
-	{
-
-		@Inject
-		private String dependency;
-
-		public TestNonStaticComponent(String id)
-		{
-			super(id);
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
 		}
 	}
 
-	private static class TestStaticComponent extends WebComponent
+	@Test
+	public void testDynamicConfigureChange()
 	{
-
-		@Inject
-		@TestQualifier
-		private String dependency;
-
-		public TestStaticComponent(String id)
+		// CdiConfiguration is configured at begin auto is false
+		assertEquals(false, conversationPropagator.getAuto());
+		// set auto to true in configuration
+		CdiConfiguration.get().setAutoConversationManagement(true);
+		assertEquals(true, conversationPropagator.getAuto());
+		// Test Changing Propagation
+		for (ConversationPropagation propagation : ConversationPropagation.values())
 		{
-			super(id);
+			CdiConfiguration.get().setPropagation(propagation);
+			assertEquals(propagation, conversationPropagator.getPropagation());
 		}
+
+		int ignoreCnt = componentInjector.getIgnorePackages().length;
+
+		CdiConfiguration.get().addPackagesToIgnore("test1", "test2", "test3");
+		assertEquals(ignoreCnt + 3, componentInjector.getIgnorePackages().length);
+
+		CdiConfiguration.get().removePackagesToIgnore("test1", "test2");
+		assertEquals(ignoreCnt + 1, componentInjector.getIgnorePackages().length);
 	}
 }
