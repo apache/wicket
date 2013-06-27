@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.cdi;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
@@ -81,12 +81,12 @@ public class CdiConfiguration
 	private boolean injectBehaviors = true;
 	private boolean autoConversationManagement = false;
 	private boolean configured = false;
-	private List<String> ignoredPackages;
+	private Set<String> ignoredPackages;
 
 	@PostConstruct
 	public void init()
 	{
-		ignoredPackages = new ArrayList<>();
+		ignoredPackages = new TreeSet<>();
 		ignoredPackages.addAll(Arrays.asList(defaultIgnoredPackages));
 	}
         
@@ -199,14 +199,14 @@ public class CdiConfiguration
 		return ignoredPackages.toArray(ignore);
 	}
 
-	public void addPackageToIgnore(String packageName )
+	public void addPackagesToIgnore(String ... packageNames )
 	{
-		ignoredPackages.add(packageName);
+		ignoredPackages.addAll(Arrays.asList(packageNames));
 	}
 
-	public void removePackageToIgnore(String packageName)
+	public void removePackageToIgnore(String ... packageNames)
 	{
-		ignoredPackages.remove(packageName);
+		ignoredPackages.removeAll(Arrays.asList(packageNames));
 	}
 
 	/**
