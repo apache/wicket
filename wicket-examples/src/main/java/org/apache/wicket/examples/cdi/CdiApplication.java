@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.examples.cdi;
 
-import javax.enterprise.inject.spi.BeanManager;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.cdi.CdiConfiguration;
+import org.apache.wicket.cdi.ConversationPropagation;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.jboss.weld.environment.servlet.Listener;
 
 public class CdiApplication extends WebApplication
 {
@@ -37,12 +35,9 @@ public class CdiApplication extends WebApplication
 	{
 		super.init();
 
-		// lookup bean manager from Weld's servlet listener
-		BeanManager manager = (BeanManager)getServletContext().getAttribute(
-			Listener.BEAN_MANAGER_ATTRIBUTE_NAME);
-
-		// configure wicket/cdi
-		new CdiConfiguration(manager).configure(this);
+		CdiConfiguration.get()
+				.setPropagation(ConversationPropagation.NONBOOKMARKABLE)
+				.configure(this);
 
 		mountPage("injection", InjectionPage.class);
 		mountPage("conversation", ConversationPage1.class);
