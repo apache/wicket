@@ -204,7 +204,7 @@ public class CdiConfiguration
 		ignoredPackages.addAll(Arrays.asList(packageNames));
 	}
 
-	public void removePackageToIgnore(String ... packageNames)
+	public void removePackagesToIgnore(String ... packageNames)
 	{
 		ignoredPackages.removeAll(Arrays.asList(packageNames));
 	}

@@ -20,12 +20,12 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-cdi-1.1</artifactId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-cdi-1.1-core</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<name>Wicket CDI 1.1 Core</name>
 	<description>
 		Provides integration between Wicket and CDI containers. Enables injection of
@@ -49,9 +49,9 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>javax.el-api</artifactId>
-			<version>2.2.4</version>
+			<groupId>org.jglue.cdi-unit</groupId>
+			<artifactId>cdi-unit</artifactId>
+			<version>2.1.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
