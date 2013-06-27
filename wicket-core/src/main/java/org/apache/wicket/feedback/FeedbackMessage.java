@@ -34,6 +34,20 @@ public class FeedbackMessage implements IDetachable
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String UNDEFINED_CSS_CLASS_KEY = "wicket-core-feedback-message-undefined-css-class";
+
+	public static final String DEBUG_CSS_CLASS_KEY = "wicket-core-feedback-message-debug-css-class";
+
+	public static final String INFO_CSS_CLASS_KEY = "wicket-core-feedback-message-info-css-class";
+
+	public static final String SUCCESS_CSS_CLASS_KEY = "wicket-core-feedback-message-success-css-class";
+
+	public static final String WARNING_CSS_CLASS_KEY = "wicket-core-feedback-message-warning-css-class";
+
+	public static final String ERROR_CSS_CLASS_KEY = "wicket-core-feedback-message-error-css-class";
+
+	public static final String FATAL_CSS_CLASS_KEY = "wicket-core-feedback-message-fatal-css-class";
+
 	/**
 	 * Constant for an undefined level; note that components might decide not to render anything
 	 * when this level is used.

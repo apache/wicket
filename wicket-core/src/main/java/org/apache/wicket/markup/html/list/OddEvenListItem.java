@@ -31,6 +31,10 @@ public class OddEvenListItem<T> extends ListItem<T>
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String ODD_CSS_CLASS_KEY = "wicket-core-odd-list-item-css-class";
+
+	public static final String EVEN_CSS_CLASS_KEY = "wicket-core-even-list-item-css-class";
+
 	/**
 	 * Constructor
 	 * 
@@ -51,6 +55,6 @@ public class OddEvenListItem<T> extends ListItem<T>
 		super.onComponentTag(tag);
 
 		ICssSettings cssSettings = getApplication().getCssSettings();
-		tag.append("class", (getIndex() % 2 == 0) ? cssSettings.getEvenItemCssClass() : cssSettings.getOddItemCssClass(), " ");
+		tag.append("class", (getIndex() % 2 == 0) ? cssSettings.getCssClass(EVEN_CSS_CLASS_KEY) : cssSettings.getCssClass(ODD_CSS_CLASS_KEY), " ");
 	}
 }

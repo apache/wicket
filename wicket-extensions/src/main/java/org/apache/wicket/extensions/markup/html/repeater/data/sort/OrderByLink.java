@@ -35,6 +35,12 @@ public class OrderByLink<S> extends Link<Void>
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String SORT_ASCENDING_CSS_CLASS_KEY = "wicket-extensions-order-by-link-sort-ascending-css-class";
+
+	public static final String SORT_DESCENDING_CSS_CLASS_KEY = "wicket-extensions-order-by-link-sort-descending-css-class";
+
+	public static final String SORT_NONE_CSS_CLASS_KEY = "wicket-extensions-order-by-link-sort-none-css-class";
+
 	/** sortable property */
 	private final S property;
 
@@ -139,15 +145,15 @@ public class OrderByLink<S> extends Link<Void>
 		String cssClass;
 		if (dir == SortOrder.ASCENDING)
 		{
-			cssClass = cssSettings.getSortOrderUpCssClass();
+			cssClass = cssSettings.getCssClass(SORT_ASCENDING_CSS_CLASS_KEY);
 		}
 		else if (dir == SortOrder.DESCENDING)
 		{
-			cssClass = cssSettings.getSortOrderDownCssClass();
+			cssClass = cssSettings.getCssClass(SORT_DESCENDING_CSS_CLASS_KEY);
 		}
 		else
 		{
-			cssClass = cssSettings.getSortOrderNoneCssClass();
+			cssClass = cssSettings.getCssClass(SORT_NONE_CSS_CLASS_KEY);
 		}
 
 		if (!Strings.isEmpty(cssClass))

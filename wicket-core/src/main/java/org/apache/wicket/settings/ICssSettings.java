@@ -16,61 +16,13 @@
  */
 package org.apache.wicket.settings;
 
-import org.apache.wicket.feedback.FeedbackMessage;
-
 /**
  * Provides means to change the default CSS classes and styles used
  * by the components in Wicket distribution.
  */
 public interface ICssSettings
 {
-	/**
-	 *
-	 * @return
-	 */
-	String getSortOrderDownCssClass();
+	String getCssClass(String key);
 
-	void setSortOrderDownCssClass(String cssClassName);
-
-	String getSortOrderUpCssClass();
-
-	void setSortOrderUpCssClass(String cssClassName);
-
-	String getSortOrderNoneCssClass();
-
-	void setSortOrderNoneCssClass(String cssClassName);
-
-	String getFeedbackMessageCssClass(FeedbackMessage message);
-
-	void setRequiredCssClass(String cssClassName);
-
-	String getRequiredCssClass();
-
-	void setInvalidCssClass(String cssClassName);
-
-	String getInvalidCssClass();
-
-	void setDisabledCssClass(String cssClassName);
-
-	String getDisabledCssClass();
-
-	void setOddItemCssClass(String cssClassName);
-
-	String getOddItemCssClass();
-
-	void setEvenItemCssClass(String cssClassName);
-
-	String getEvenItemCssClass();
-
-	void setTabbedPanelSelectedCssClass(String cssClassName);
-
-	String getTabbedPanelSelectedCssClass();
-
-	void setTabbedPanelLastCssClass(String cssClassName);
-
-	String getTabbedPanelLastCssClass();
-
-	void setTabbedPanelTabContainerCssClass(String cssClassName);
-
-	String getTabbedPanelTabContainerCssClass();
+	void setCssClass(String key, String cssClassName);
 }

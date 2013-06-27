@@ -33,6 +33,12 @@ public class FormComponentLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String REQUIRED_CSS_CLASS_KEY = "wicket-core-form-component-label-required-css-class";
+
+	public static final String INVALID_CSS_CLASS_KEY = "wicket-core-form-component-label-invalid-css-class";
+
+	public static final String DISABLED_CSS_CLASS_KEY = "wicket-core-form-component-label-disabled-css-class";
+
 	private final LabeledWebMarkupContainer component;
 
 	/**
@@ -74,17 +80,17 @@ public class FormComponentLabel extends WebMarkupContainer
 
 			if (fc.isRequired())
 			{
-				tag.append("class", cssSettings.getRequiredCssClass(), " ");
+				tag.append("class", cssSettings.getCssClass(REQUIRED_CSS_CLASS_KEY), " ");
 			}
 			if (fc.isValid() == false)
 			{
-				tag.append("class", cssSettings.getInvalidCssClass(), " ");
+				tag.append("class", cssSettings.getCssClass(INVALID_CSS_CLASS_KEY), " ");
 			}
 		}
 
 		if (formComponent.isEnabledInHierarchy() == false)
 		{
-			tag.append("class", cssSettings.getDisabledCssClass(), " ");
+			tag.append("class", cssSettings.getCssClass(DISABLED_CSS_CLASS_KEY), " ");
 		}
 
 		// always transform the tag to <span></span> so even labels defined as <span/> render

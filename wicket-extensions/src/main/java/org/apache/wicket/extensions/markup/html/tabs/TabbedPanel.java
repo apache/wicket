@@ -79,6 +79,12 @@ public class TabbedPanel<T extends ITab> extends Panel
 	/** id used for child panels */
 	public static final String TAB_PANEL_ID = "panel";
 
+	public static final String CONTAINER_CSS_CLASS_KEY = "wicket-extensions-tabbed-panel-container-css-class-key";
+
+	public static final String SELECTED_CSS_CLASS_KEY = "wicket-extensions-tabbed-panel-selected-css-class-key";
+
+	public static final String LAST_CSS_CLASS_KEY = "wicket-extensions-tabbed-panel-last-css-class-key";
+
 	private final List<T> tabs;
 
 	/** the current tab */
@@ -272,7 +278,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	protected String getTabContainerCssClass()
 	{
-		return getApplication().getCssSettings().getTabbedPanelTabContainerCssClass();
+		return getApplication().getCssSettings().getCssClass(CONTAINER_CSS_CLASS_KEY);
 	}
 
 	/**
@@ -281,7 +287,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	protected String getLastTabCssClass()
 	{
-		return getApplication().getCssSettings().getTabbedPanelLastCssClass();
+		return getApplication().getCssSettings().getCssClass(LAST_CSS_CLASS_KEY);
 	}
 
 	/**
@@ -290,7 +296,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	protected String getSelectedTabCssClass()
 	{
-		return getApplication().getCssSettings().getTabbedPanelSelectedCssClass();
+		return getApplication().getCssSettings().getCssClass(SELECTED_CSS_CLASS_KEY);
 	}
 
 	/**

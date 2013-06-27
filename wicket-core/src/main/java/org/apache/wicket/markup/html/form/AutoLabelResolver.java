@@ -63,6 +63,13 @@ public class AutoLabelResolver implements IComponentResolver
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
 
+	public static final String REQUIRED_CSS_CLASS_KEY = "wicket-core-auto-label-required-css-class";
+
+	public static final String INVALID_CSS_CLASS_KEY = "wicket-core-auto-label-invalid-css-class";
+
+	public static final String DISABLED_CSS_CLASS_KEY = "wicket-core-auto-label-disabled-css-class";
+
+
 	static final String WICKET_FOR = ":for";
 
 	@Override
@@ -193,17 +200,17 @@ public class AutoLabelResolver implements IComponentResolver
 				FormComponent<?> fc = (FormComponent<?>)component;
 				if (fc.isRequired())
 				{
-					tag.append("class", cssSettings.getRequiredCssClass(), " ");
+					tag.append("class", cssSettings.getCssClass(REQUIRED_CSS_CLASS_KEY), " ");
 				}
 				if (!fc.isValid())
 				{
-					tag.append("class", cssSettings.getInvalidCssClass(), " ");
+					tag.append("class", cssSettings.getCssClass(INVALID_CSS_CLASS_KEY), " ");
 				}
 			}
 
 			if (!component.isEnabledInHierarchy())
 			{
-				tag.append("class", cssSettings.getDisabledCssClass(), " ");
+				tag.append("class", cssSettings.getCssClass(DISABLED_CSS_CLASS_KEY), " ");
 			}
 		}
 

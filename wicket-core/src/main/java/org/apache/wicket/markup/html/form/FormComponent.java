@@ -132,7 +132,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 			// retrieve prefix that will be used to construct message keys
 			String prefix = formComponent.getValidatorKeyPrefix();
-			String message = null;
+			String message;
 
 			// first try the full form of key [form-component-id].[prefix].[key]
 			String resource = getId() + "." + prefix(prefix, key);
@@ -256,7 +256,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			final HashMap<String, Object> fullParams;
 			if (params == null)
 			{
-				fullParams = new HashMap<String, Object>(6);
+				fullParams = new HashMap<>(6);
 			}
 			else
 			{

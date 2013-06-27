@@ -16,7 +16,14 @@
  */
 package org.apache.wicket.settings.def;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.html.form.AutoLabelResolver;
+import org.apache.wicket.markup.html.form.FormComponentLabel;
+import org.apache.wicket.markup.html.list.OddEvenListItem;
+import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.settings.ICssSettings;
 
 /**
@@ -24,163 +31,44 @@ import org.apache.wicket.settings.ICssSettings;
  */
 public class CssSettings implements ICssSettings
 {
-	private String sortOrderDownCssClass = "wicket_orderDown";
+	private final Map<String, String> cssClassNames;
 
-	private String sortOrderUpCssClass = "wicket_orderUp";
-
-	private String sortOrderNoneCssClass = "wicket_orderNone";
-
-	private String requiredCssClass = "required";
-
-	private String invalidCssClass = "error";
-
-	private String disabledCssClass = "disabled";
-
-	private String oddItemCssClass = "odd";
-
-	private String evenItemCssClass = "even";
-
-	private String tabbedPanelSelectedCssClass = "selected";
-
-	private String tabbedPanelLastCssClass = "last";
-
-	private String tabbedPanelTabContainerCssClass = "tab-row";
-
-	@Override
-	public String getSortOrderDownCssClass()
+	public CssSettings()
 	{
-		return sortOrderDownCssClass;
+		this.cssClassNames = new HashMap<>();
+
+		setCssClass(FormComponentLabel.DISABLED_CSS_CLASS_KEY, "disabled");
+		setCssClass(FormComponentLabel.INVALID_CSS_CLASS_KEY, "error");
+		setCssClass(FormComponentLabel.REQUIRED_CSS_CLASS_KEY, "required");
+
+		setCssClass(AutoLabelResolver.DISABLED_CSS_CLASS_KEY, "disabled");
+		setCssClass(AutoLabelResolver.INVALID_CSS_CLASS_KEY, "error");
+		setCssClass(AutoLabelResolver.REQUIRED_CSS_CLASS_KEY, "required");
+
+		setCssClass(OddEvenItem.ODD_CSS_CLASS_KEY, "odd");
+		setCssClass(OddEvenItem.EVEN_CSS_CLASS_KEY, "even");
+
+		setCssClass(OddEvenListItem.ODD_CSS_CLASS_KEY, "odd");
+		setCssClass(OddEvenListItem.EVEN_CSS_CLASS_KEY, "even");
+
+		setCssClass(FeedbackMessage.UNDEFINED_CSS_CLASS_KEY, "feedbackPanelUNDEFINED");
+		setCssClass(FeedbackMessage.DEBUG_CSS_CLASS_KEY, "feedbackPanelDEBUG");
+		setCssClass(FeedbackMessage.INFO_CSS_CLASS_KEY, "feedbackPanelINFO");
+		setCssClass(FeedbackMessage.SUCCESS_CSS_CLASS_KEY, "feedbackPanelSUCCESS");
+		setCssClass(FeedbackMessage.WARNING_CSS_CLASS_KEY, "feedbackPanelWARNING");
+		setCssClass(FeedbackMessage.ERROR_CSS_CLASS_KEY, "feedbackPanelERROR");
+		setCssClass(FeedbackMessage.FATAL_CSS_CLASS_KEY, "feedbackPanelFATAL");
 	}
 
 	@Override
-	public void setSortOrderDownCssClass(String cssClassName)
+	public String getCssClass(String key)
 	{
-		this.sortOrderDownCssClass = cssClassName;
+		return cssClassNames.get(key);
 	}
 
 	@Override
-	public String getSortOrderUpCssClass()
+	public void setCssClass(String key, String cssClassName)
 	{
-		return sortOrderUpCssClass;
-	}
-
-	@Override
-	public void setSortOrderUpCssClass(String cssClassName)
-	{
-		this.sortOrderUpCssClass = cssClassName;
-	}
-
-	@Override
-	public String getSortOrderNoneCssClass()
-	{
-		return sortOrderNoneCssClass;
-	}
-
-	@Override
-	public void setSortOrderNoneCssClass(String cssClassName)
-	{
-		this.sortOrderNoneCssClass = cssClassName;
-	}
-
-	@Override
-	public String getFeedbackMessageCssClass(FeedbackMessage message)
-	{
-		return "feedbackPanel" + message.getLevelAsString();
-	}
-
-	@Override
-	public void setRequiredCssClass(String cssClassName)
-	{
-		this.requiredCssClass = cssClassName;
-	}
-
-	@Override
-	public String getRequiredCssClass()
-	{
-		return requiredCssClass;
-	}
-
-	@Override
-	public void setInvalidCssClass(String cssClassName)
-	{
-		this.invalidCssClass = cssClassName;
-	}
-
-	@Override
-	public String getInvalidCssClass()
-	{
-		return invalidCssClass;
-	}
-
-	@Override
-	public void setDisabledCssClass(String cssClassName)
-	{
-		this.disabledCssClass = cssClassName;
-	}
-
-	@Override
-	public String getDisabledCssClass()
-	{
-		return disabledCssClass;
-	}
-
-	@Override
-	public void setOddItemCssClass(String cssClassName)
-	{
-		this.oddItemCssClass = cssClassName;
-	}
-
-	@Override
-	public String getOddItemCssClass()
-	{
-		return oddItemCssClass;
-	}
-
-	@Override
-	public void setEvenItemCssClass(String cssClassName)
-	{
-		this.evenItemCssClass = cssClassName;
-	}
-
-	@Override
-	public String getEvenItemCssClass()
-	{
-		return evenItemCssClass;
-	}
-
-	@Override
-	public void setTabbedPanelSelectedCssClass(String cssClassName)
-	{
-		this.tabbedPanelSelectedCssClass = cssClassName;
-	}
-
-	@Override
-	public String getTabbedPanelSelectedCssClass()
-	{
-		return tabbedPanelSelectedCssClass;
-	}
-
-	@Override
-	public void setTabbedPanelLastCssClass(String cssClassName)
-	{
-		this.tabbedPanelLastCssClass = cssClassName;
-	}
-
-	@Override
-	public String getTabbedPanelLastCssClass()
-	{
-		return tabbedPanelLastCssClass;
-	}
-
-	@Override
-	public void setTabbedPanelTabContainerCssClass(String cssClassName)
-	{
-		this.tabbedPanelTabContainerCssClass = cssClassName;
-	}
-
-	@Override
-	public String getTabbedPanelTabContainerCssClass()
-	{
-		return tabbedPanelTabContainerCssClass;
+		cssClassNames.put(key, cssClassName);
 	}
 }
