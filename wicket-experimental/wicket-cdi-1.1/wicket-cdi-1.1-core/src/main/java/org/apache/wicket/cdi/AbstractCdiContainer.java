@@ -28,8 +28,8 @@ import org.apache.wicket.util.lang.Args;
  * 
  */
 public abstract class AbstractCdiContainer
-{		
-	
+{
+
 	/**
 	 * Deactivates conversational context
 	 * 
@@ -44,7 +44,6 @@ public abstract class AbstractCdiContainer
 	 * @param cid
 	 */
 	public abstract void activateConversationalContext(RequestCycle cycle, String cid);
-	
 
 	protected HttpServletRequest getRequest(RequestCycle cycle)
 	{
