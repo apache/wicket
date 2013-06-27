@@ -25,7 +25,7 @@
 	</parent>
 	<artifactId>wicket-cdi-1.1-core</artifactId>
 	<packaging>jar</packaging>
-        <version>0.1-SNAPSHOT</version>
+	<version>0.1-SNAPSHOT</version>
 	<name>Wicket CDI 1.1 Core</name>
 	<description>
 		Provides integration between Wicket and CDI containers. Enables injection of
@@ -43,11 +43,10 @@
 			<artifactId>cdi-api</artifactId>
 			<version>1.1</version>
 			<scope>provided</scope>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.el</groupId>
@@ -56,33 +55,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>clirr-maven-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>clirr-check</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-							<configuration>
-								<comparisonVersion>6.1.0</comparisonVersion>
-								<failOnError>true</failOnError>
-								<logResults>true</logResults>
-							</configuration>
-						</execution>
-					</executions>
-					<configuration>
-						<comparisonVersion>6.1.0</comparisonVersion>
-						<failOnError>true</failOnError>
-						<logResults>true</logResults>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
 </project>

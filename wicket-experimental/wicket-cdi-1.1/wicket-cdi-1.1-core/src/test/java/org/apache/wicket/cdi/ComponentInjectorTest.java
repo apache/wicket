@@ -16,13 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
 import org.apache.wicket.markup.html.WebComponent;
@@ -31,8 +24,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
  * Tests for ComponentInjector

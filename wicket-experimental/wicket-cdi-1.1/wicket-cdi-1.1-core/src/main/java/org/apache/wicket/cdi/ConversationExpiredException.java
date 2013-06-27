@@ -21,9 +21,9 @@ import org.apache.wicket.request.IRequestHandler;
 
 public class ConversationExpiredException extends RuntimeException
 {
-	private String cid;
-	private Page page;
-	private IRequestHandler handler;
+	private final String cid;
+	private final Page page;
+	private final IRequestHandler handler;
 
 	public ConversationExpiredException(Throwable cause, String cid, Page page,
 		IRequestHandler handler)
