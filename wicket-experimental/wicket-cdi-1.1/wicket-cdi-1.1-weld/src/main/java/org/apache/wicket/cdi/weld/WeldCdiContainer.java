@@ -33,7 +33,7 @@ import org.jboss.weld.context.http.HttpConversationContext;
 public class WeldCdiContainer extends AbstractCdiContainer
 {
 	@Inject 
-	Instance<HttpConversationContext> conversationContextSource;
+	private Instance<HttpConversationContext> conversationContextSource;
        
 	/**
 	 * Deactivates conversational context
@@ -42,9 +42,9 @@ public class WeldCdiContainer extends AbstractCdiContainer
 	 */
 	@Override
 	public void deactivateConversationalContext(RequestCycle cycle)
-	{	    
+	{
 		HttpConversationContext conversationContext = conversationContextSource.get(); 
-		conversationContext.deactivate();	            
+		conversationContext.deactivate();
 		conversationContext.dissociate(getRequest(cycle));
 	}
 
