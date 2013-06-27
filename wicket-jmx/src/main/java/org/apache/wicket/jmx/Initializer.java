@@ -192,6 +192,8 @@ public class Initializer implements IInitializer
 				":type=Application,name=SessionSettings"));
 			register(new StoreSettings(application), new ObjectName(domain +
 				":type=Application,name=StoreSettings"));
+			register(new CssSettings(application), new ObjectName(domain +
+					":type=Application,name=CssSettings"));
 
 			RequestLogger sessionsBean = new RequestLogger(application);
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");

@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.settings.ICssSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -48,25 +46,6 @@ public class OrderByLink<S> extends Link<Void>
 	 * 
 	 * @param id
 	 *            the component id of the link
-	 * @param sortProperty
-	 *            the name of the sortable sortProperty this link represents. this value will be
-	 *            used as parameter for sort state object methods. sort state object will be located
-	 *            via the stateLocator argument.
-	 * @param stateLocator
-	 *            locator used to locate sort state object that this will use to read/write state of
-	 *            sorted properties
-	 */
-	public OrderByLink(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator)
-	{
-		this(id, sortProperty, stateLocator, new DefaultCssProvider<S>());
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param id
-	 *            the component id of the link
 	 * @param property
 	 *            the name of the sortable property this link represents. this value will be used as
 	 *            parameter for sort state object methods. sort state object will be located via the
@@ -74,23 +53,16 @@ public class OrderByLink<S> extends Link<Void>
 	 * @param stateLocator
 	 *            locator used to locate sort state object that this will use to read/write state of
 	 *            sorted properties
-	 * @param cssProvider
-	 *            CSS provider that will be used generate the value of class attribute for this link
-	 * 
-	 * @see OrderByLink.ICssProvider
-	 * 
+	 *
 	 */
-	public OrderByLink(final String id, final S property, final ISortStateLocator<S> stateLocator,
-		final ICssProvider<S> cssProvider)
+	public OrderByLink(final String id, final S property, final ISortStateLocator<S> stateLocator)
 	{
 		super(id);
 
-		Args.notNull(cssProvider, "cssProvider");
 		Args.notNull(property, "property");
 
 		this.property = property;
 		this.stateLocator = stateLocator;
-		add(new CssModifier<>(this, cssProvider));
 	}
 
 	/**
@@ -155,162 +127,33 @@ public class OrderByLink<S> extends Link<Void>
 		}
 	}
 
-	/**
-	 * Uses the specified ICssProvider to add css class attributes to the link.
-	 * 
-	 * @param <S>
-	 *            type of sort property
-	 * @author Igor Vaynberg ( ivaynberg )
-	 */
-	public static class CssModifier<S> extends Behavior
+	@Override
+	public void onComponentTag(final ComponentTag tag)
 	{
-		private static final long serialVersionUID = 1L;
-		private final OrderByLink<S> link;
-		private final ICssProvider<S> provider;
+		super.onComponentTag(tag);
 
-		/**
-		 * @param link
-		 *            the link this modifier is being added to
-		 * @param provider
-		 *            implementation of ICssProvider
-		 */
-		public CssModifier(final OrderByLink<S> link, final ICssProvider<S> provider)
+		final ISortState<S> sortState = stateLocator.getSortState();
+
+		ICssSettings cssSettings = getApplication().getCssSettings();
+		SortOrder dir = sortState.getPropertySortOrder(property);
+		String cssClass;
+		if (dir == SortOrder.ASCENDING)
 		{
-			this.link = link;
-			this.provider = provider;
+			cssClass = cssSettings.getSortOrderUpCssClass();
+		}
+		else if (dir == SortOrder.DESCENDING)
+		{
+			cssClass = cssSettings.getSortOrderDownCssClass();
+		}
+		else
+		{
+			cssClass = cssSettings.getSortOrderNoneCssClass();
 		}
 
-		@Override
-		public void onComponentTag(final Component component, final ComponentTag tag)
+		if (!Strings.isEmpty(cssClass))
 		{
-			super.onComponentTag(component, tag);
-
-			final ISortState<S> sortState = link.stateLocator.getSortState();
-			String cssClass = provider.getClassAttributeValue(sortState, link.property);
-			if (!Strings.isEmpty(cssClass))
-			{
-				tag.append("class", cssClass, " ");
-			}
-
+			tag.append("class", cssClass, " ");
 		}
+
 	}
-
-
-	/**
-	 * Interface used to generate values of css class attribute for the anchor tag If the generated
-	 * value is null class attribute will not be added
-	 * 
-	 * @author igor
-	 * @param <S>
-	 *            the type of the sort property
-	 */
-	public static interface ICssProvider<S> extends IClusterable
-	{
-		/**
-		 * @param state
-		 *            current sort state
-		 * @param sortProperty
-		 *            sort sortProperty represented by the {@link OrderByLink}
-		 * @return the value of the "class" attribute for the given sort state/sort sortProperty
-		 *         combination
-		 */
-		public String getClassAttributeValue(ISortState<S> state, S sortProperty);
-	}
-
-
-	/**
-	 * Easily constructible implementation of ICSSProvider
-	 * 
-	 * @param <S>
-	 *            the type of the sort property
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	public static class CssProvider<S> implements ICssProvider<S>
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final String ascending;
-
-		private final String descending;
-
-		private final String none;
-
-		/**
-		 * @param ascending
-		 *            css class when sorting is ascending
-		 * @param descending
-		 *            css class when sorting is descending
-		 * @param none
-		 *            css class when not sorted
-		 */
-		public CssProvider(final String ascending, final String descending, final String none)
-		{
-			this.ascending = ascending;
-			this.descending = descending;
-			this.none = none;
-		}
-
-		@Override
-		public String getClassAttributeValue(final ISortState<S> state, final S sortProperty)
-		{
-			SortOrder dir = state.getPropertySortOrder(sortProperty);
-
-			if (dir == SortOrder.ASCENDING)
-			{
-				return ascending;
-			}
-			else if (dir == SortOrder.DESCENDING)
-			{
-				return descending;
-			}
-			else
-			{
-				return none;
-			}
-		}
-	}
-
-	/**
-	 * Convenience implementation of ICssProvider that always returns a null and so never adds a
-	 * class attribute
-	 * 
-	 * @param <S>
-	 *            the type of the sort property
-	 * @author Igor Vaynberg ( ivaynberg )
-	 */
-	public static class VoidCssProvider<S> extends CssProvider<S>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 */
-		public VoidCssProvider()
-		{
-			super("", "", "");
-		}
-	}
-
-	/**
-	 * Default implementation of ICssProvider
-	 * 
-	 * @param <S>
-	 *            the type of the sort property
-	 * 
-	 * @author Igor Vaynberg ( ivaynberg )
-	 */
-	public static class DefaultCssProvider<S> extends CssProvider<S>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 */
-		public DefaultCssProvider()
-		{
-			super("wicket_orderUp", "wicket_orderDown", "wicket_orderNone");
-		}
-	}
-
 }

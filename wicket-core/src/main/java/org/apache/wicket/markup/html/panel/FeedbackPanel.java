@@ -291,7 +291,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected String getCSSClass(final FeedbackMessage message)
 	{
-		return "feedbackPanel" + message.getLevelAsString();
+		return getApplication().getCssSettings().getFeedbackMessageCssClass(message);
 	}
 
 	/**

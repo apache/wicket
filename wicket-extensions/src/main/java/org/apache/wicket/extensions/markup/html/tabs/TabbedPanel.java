@@ -272,7 +272,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	protected String getTabContainerCssClass()
 	{
-		return "tab-row";
+		return getApplication().getCssSettings().getTabbedPanelTabContainerCssClass();
 	}
 
 	/**
@@ -281,7 +281,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	protected String getLastTabCssClass()
 	{
-		return "last";
+		return getApplication().getCssSettings().getTabbedPanelLastCssClass();
 	}
 
 	/**
@@ -290,7 +290,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	protected String getSelectedTabCssClass()
 	{
-		return "selected";
+		return getApplication().getCssSettings().getTabbedPanelSelectedCssClass();
 	}
 
 	/**

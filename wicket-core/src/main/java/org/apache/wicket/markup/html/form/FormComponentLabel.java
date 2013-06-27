@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
+import org.apache.wicket.settings.ICssSettings;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -65,23 +66,25 @@ public class FormComponentLabel extends WebMarkupContainer
 
 		tag.put("for", formComponent.getMarkupId());
 
+		ICssSettings cssSettings = getApplication().getCssSettings();
+
 		if (formComponent instanceof FormComponent<?>)
 		{
 			FormComponent<?> fc = (FormComponent<?>) formComponent;
 
 			if (fc.isRequired())
 			{
-				tag.append("class", "required", " ");
+				tag.append("class", cssSettings.getRequiredCssClass(), " ");
 			}
 			if (fc.isValid() == false)
 			{
-				tag.append("class", "error", " ");
+				tag.append("class", cssSettings.getInvalidCssClass(), " ");
 			}
 		}
 
 		if (formComponent.isEnabledInHierarchy() == false)
 		{
-			tag.append("class", "disabled", " ");
+			tag.append("class", cssSettings.getDisabledCssClass(), " ");
 		}
 
 		// always transform the tag to <span></span> so even labels defined as <span/> render

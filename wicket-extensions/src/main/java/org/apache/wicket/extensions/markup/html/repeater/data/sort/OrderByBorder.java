@@ -39,25 +39,21 @@ public class OrderByBorder<S> extends Border
 	/**
 	 * @param id
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
 	 * @param property
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
 	 * @param stateLocator
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
-	 * @param cssProvider
-	 *            see
-	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
 	 */
 	public OrderByBorder(final String id, final S property,
-		final ISortStateLocator<S> stateLocator, final OrderByLink.ICssProvider<S> cssProvider)
+		final ISortStateLocator<S> stateLocator)
 	{
 		super(id);
 
 		OrderByLink<S> link = newOrderByLink("orderByLink", property, stateLocator);
 		addToBorder(link);
-		add(new OrderByLink.CssModifier<>(link, cssProvider));
 		link.add(getBodyContainer());
 	}
 
@@ -75,8 +71,7 @@ public class OrderByBorder<S> extends Border
 	protected OrderByLink<S> newOrderByLink(final String id, final S property,
 		final ISortStateLocator<S> stateLocator)
 	{
-		return new OrderByLink<S>(id, property, stateLocator,
-			new OrderByLink.VoidCssProvider<S>())
+		return new OrderByLink<S>(id, property, stateLocator)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -94,20 +89,6 @@ public class OrderByBorder<S> extends Border
 	protected void onSortChanged()
 	{
 		// noop
-	}
-
-	/**
-	 * @param id
-	 *            see {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
-	 * @param property
-	 *            see {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
-	 * @param stateLocator
-	 *            see {@link OrderByLink#OrderByLink(java.lang.String, java.lang.Object, org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator) }
-	 */
-	public OrderByBorder(final String id, final S property,
-		final ISortStateLocator<S> stateLocator)
-	{
-		this(id, property, stateLocator, new OrderByLink.DefaultCssProvider<S>());
 	}
 
 }

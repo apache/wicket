@@ -23,6 +23,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.settings.ICssSettings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -185,22 +186,24 @@ public class AutoLabelResolver implements IComponentResolver
 			super.onComponentTag(tag);
 			tag.put("for", component.getMarkupId());
 
+			ICssSettings cssSettings = getApplication().getCssSettings();
+
 			if (component instanceof FormComponent)
 			{
 				FormComponent<?> fc = (FormComponent<?>)component;
 				if (fc.isRequired())
 				{
-					tag.append("class", "required", " ");
+					tag.append("class", cssSettings.getRequiredCssClass(), " ");
 				}
 				if (!fc.isValid())
 				{
-					tag.append("class", "error", " ");
+					tag.append("class", cssSettings.getInvalidCssClass(), " ");
 				}
 			}
 
 			if (!component.isEnabledInHierarchy())
 			{
-				tag.append("class", "disabled", " ");
+				tag.append("class", cssSettings.getDisabledCssClass(), " ");
 			}
 		}
 
