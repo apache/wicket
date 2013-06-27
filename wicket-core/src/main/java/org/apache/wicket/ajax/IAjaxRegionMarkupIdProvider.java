@@ -27,14 +27,14 @@ import org.apache.wicket.markup.html.form.TextField;
  * behavior that wraps the component in a paragraph tag:
  * 
  * <pre>
- * class PB extends AbstractBehavior
+ * class PB extends Behavior
  * {
- * 	public void onBeforeRender(Component c)
+ * 	public void beforeRender(Component c)
  * 	{
  * 		c.getResponse().write(&quot;&lt;p&gt;&quot;);
  * 	}
  * 
- * 	public void onComponentRendered(Component c)
+ * 	public void afterRender(Component c)
  * 	{
  * 		c.getResponse().write(&quot;&lt;/p&gt;&quot;);
  * 	}
@@ -60,14 +60,14 @@ import org.apache.wicket.markup.html.form.TextField;
  * To fix this we can modify our behavior as follows:
  * 
  * <pre>
- * class PB extends AbstractBehavior implements IAjaxRegionMarkupIdProvider
+ * class PB extends Behavior implements IAjaxRegionMarkupIdProvider
  * {
- * 	public void onBeforeRender(Component c)
+ * 	public void beforeRender(Component c)
  * 	{
  * 		c.getResponse().write(&quot;&lt;p id='&quot; + c.getMarkupId() + &quot;_p'&gt;&quot;);
  * 	}
  * 
- * 	public void onComponentRendered(Component c)
+ * 	public void afterRender(Component c)
  * 	{
  * 		c.getResponse().write(&quot;&lt;/p&gt;&quot;);
  * 	}
