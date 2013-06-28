@@ -236,6 +236,31 @@ public class UrlTest extends Assert
 	}
 
 	/**
+	 * WICKET-5259
+	 */
+	@Test
+	public void parse17()
+	{
+		String s = "http://me:secret@localhost";
+		Url url = Url.parse(s);
+		assertEquals("http", url.getProtocol());
+		assertEquals("me:secret@localhost", url.getHost());
+	}
+
+	/**
+	 * WICKET-5259
+	 */
+	@Test
+	public void parse18()
+	{
+		String s = "http://me:secret@localhost:8080";
+		Url url = Url.parse(s);
+		assertEquals("http", url.getProtocol());
+		assertEquals("me:secret@localhost", url.getHost());
+		assertEquals(Integer.valueOf(8080), url.getPort());
+	}
+
+	/**
 	 * 
 	 */
 	@Test
