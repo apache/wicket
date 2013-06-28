@@ -27,7 +27,7 @@ import org.jboss.weld.context.http.HttpConversationContext;
  * @author jsarman
  */
 @ApplicationScoped
-public class MockContainer extends AbstractCdiContainer
+public class MockCdiContainer extends AbstractCdiContainer
 {
 
 	@Inject

@@ -17,69 +17,21 @@
 package org.apache.wicket.cdi;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.cdi.testapp.TestAppScope;
-import org.apache.wicket.cdi.testapp.TestApplication;
 import org.apache.wicket.cdi.testapp.TestConversationBean;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
-import org.apache.wicket.util.tester.WicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.CdiRunner;
-import org.jglue.cdiunit.ContextController;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * @author jsarman
  */
-@RunWith(CdiRunner.class)
-@AdditionalClasses({BehaviorInjector.class,
-		CdiConfiguration.class,
-		CdiShutdownCleaner.class,
-		ComponentInjector.class,
-		ConversationExpiryChecker.class,
-		ConversationPropagator.class,
-		DetachEventEmitter.class,
-		NonContextualManager.class,
-		SessionInjector.class,
-		MockContainer.class,
-		TestAppScope.class,
-		TestConversationBean.class})
-public class CdiConfigurationTest extends Assert
+@AdditionalClasses({TestAppScope.class, TestConversationBean.class})
+public class CdiConfigurationTest extends WicketCdiTestCase
 {
-
-	private WicketTester tester;
-	@Inject
-	ContextController contextController;
 	@Inject
 	ConversationPropagator conversationPropagator;
-	@Inject
-	ComponentInjector componentInjector;
-
-	@Before
-	public void before()
-	{
-		tester = new WicketTester(new TestApplication());
-		prepareRequest(tester.getRequest());
-	}
-
-	@After
-	public void after()
-	{
-		tester.destroy();
-		tester = null;
-	}
-
-	public void prepareRequest(HttpServletRequest request)
-	{
-		contextController.openRequest(request);
-		contextController.openSession(request);
-		contextController.openConversation(request);
-	}
 
 	@Test
 	public void testApplicationScope()
