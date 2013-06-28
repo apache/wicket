@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -62,11 +63,11 @@ public class AutoLabelResolver implements IComponentResolver
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
 
-	public static final String REQUIRED_CSS_CLASS_KEY = "autoLabelRequiredCssClass";
+	public static final String REQUIRED_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "required");
 
-	public static final String INVALID_CSS_CLASS_KEY = "autoLabelInvalidCssClass";
+	public static final String INVALID_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "invalid");
 
-	public static final String DISABLED_CSS_CLASS_KEY = "autoLabelDisabledCssClass";
+	public static final String DISABLED_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "disabled");
 
 	static final String WICKET_FOR = ":for";
 

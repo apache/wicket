@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -79,11 +80,12 @@ public class TabbedPanel<T extends ITab> extends Panel
 	/** id used for child panels */
 	public static final String TAB_PANEL_ID = "panel";
 
-	public static final String CONTAINER_CSS_CLASS_KEY = "tabbedPanelContainerCssClass";
+	public static final String CONTAINER_CSS_CLASS_KEY = CssUtils.key(TabbedPanel.class,
+			"container");
 
-	public static final String SELECTED_CSS_CLASS_KEY = "tabbedPanelSelectedCssClass";
+	public static final String SELECTED_CSS_CLASS_KEY = CssUtils.key(TabbedPanel.class, "selected");
 
-	public static final String LAST_CSS_CLASS_KEY = "tabbedPanelLastCssClass";
+	public static final String LAST_CSS_CLASS_KEY = CssUtils.key(TabbedPanel.class, "last");
 
 	private final List<T> tabs;
 

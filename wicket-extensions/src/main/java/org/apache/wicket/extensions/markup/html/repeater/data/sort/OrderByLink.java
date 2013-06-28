@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.lang.Args;
@@ -34,11 +35,13 @@ public class OrderByLink<S> extends Link<Void>
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final String SORT_ASCENDING_CSS_CLASS_KEY = "orderByLinkSortAscendingCssClass";
+	public static final String SORT_ASCENDING_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class,
+			"ascending");
 
-	public static final String SORT_DESCENDING_CSS_CLASS_KEY = "orderByLinkSortDescendingCssClass";
+	public static final String SORT_DESCENDING_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class,
+			"descending");
 
-	public static final String SORT_NONE_CSS_CLASS_KEY = "orderByLinkSortNoneCssClass";
+	public static final String SORT_NONE_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class, "none");
 
 	/** sortable property */
 	private final S property;

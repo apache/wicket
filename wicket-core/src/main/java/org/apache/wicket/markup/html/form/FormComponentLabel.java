@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
@@ -32,11 +33,14 @@ public class FormComponentLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final String REQUIRED_CSS_CLASS_KEY = "formComponentLabelRequiredCssClass";
+	public static final String REQUIRED_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
+			"required");
 
-	public static final String INVALID_CSS_CLASS_KEY = "formComponentLabelInvalidCssClass";
+	public static final String INVALID_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
+			"invalid");
 
-	public static final String DISABLED_CSS_CLASS_KEY = "formComponentLabelDisabledCssClass";
+	public static final String DISABLED_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
+			"disabled");
 
 	private final LabeledWebMarkupContainer component;
 

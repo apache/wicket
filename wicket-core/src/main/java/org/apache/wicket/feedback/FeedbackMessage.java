@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.model.IDetachable;
 
 
@@ -34,19 +35,22 @@ public class FeedbackMessage implements IDetachable
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final String UNDEFINED_CSS_CLASS_KEY = "feedbackMessageUndefinedCssClass";
+	public static final String UNDEFINED_CSS_CLASS_KEY = CssUtils.key(FeedbackMessage.class,
+			"undefined");
 
-	public static final String DEBUG_CSS_CLASS_KEY = "feedbackMessageDebugCssClass";
+	public static final String DEBUG_CSS_CLASS_KEY = CssUtils.key(FeedbackMessage.class, "debug");
 
-	public static final String INFO_CSS_CLASS_KEY = "feedbackMessageInfoCssClass";
+	public static final String INFO_CSS_CLASS_KEY = CssUtils.key(FeedbackMessage.class, "info");
 
-	public static final String SUCCESS_CSS_CLASS_KEY = "feedbackMessageSuccessCssClass";
+	public static final String SUCCESS_CSS_CLASS_KEY = CssUtils.key(FeedbackMessage.class,
+			"success");
 
-	public static final String WARNING_CSS_CLASS_KEY = "feedbackMessageWarningCssClass";
+	public static final String WARNING_CSS_CLASS_KEY = CssUtils.key(FeedbackMessage.class,
+			"warning");
 
-	public static final String ERROR_CSS_CLASS_KEY = "feedbackMessageErrorCssClass";
+	public static final String ERROR_CSS_CLASS_KEY = CssUtils.key(FeedbackMessage.class, "error");
 
-	public static final String FATAL_CSS_CLASS_KEY = "feedbackMessageFatalCssClass";
+	public static final String FATAL_CSS_CLASS_KEY = CssUtils.key(FeedbackMessage.class, "fatal");
 
 	/**
 	 * Constant for an undefined level; note that components might decide not to render anything
