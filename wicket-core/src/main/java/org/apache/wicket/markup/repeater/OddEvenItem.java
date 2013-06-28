@@ -18,7 +18,6 @@ package org.apache.wicket.markup.repeater;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.settings.ICssSettings;
 
 /**
  * Item that sets class="even" or class="odd" attributes based on its index
@@ -32,9 +31,9 @@ public class OddEvenItem<T> extends Item<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final String ODD_CSS_CLASS_KEY = "wicket-core-odd-item-css-class";
+	public static final String ODD_CSS_CLASS_KEY = "oddItemCssClass";
 
-	public static final String EVEN_CSS_CLASS_KEY = "wicket-core-even-item-css-class";
+	public static final String EVEN_CSS_CLASS_KEY = "evenItemCssClass";
 
 	/**
 	 * Constructor
@@ -56,8 +55,7 @@ public class OddEvenItem<T> extends Item<T>
 	{
 		super.onComponentTag(tag);
 
-		ICssSettings cssSettings = getApplication().getCssSettings();
-		tag.put("class", (getIndex() % 2 == 0) ? cssSettings.getCssClass(EVEN_CSS_CLASS_KEY) : cssSettings.getCssClass(ODD_CSS_CLASS_KEY));
+		tag.put("class", (getIndex() % 2 == 0) ? getString(EVEN_CSS_CLASS_KEY) : getString(ODD_CSS_CLASS_KEY));
 	}
 
 }

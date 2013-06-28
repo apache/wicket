@@ -85,7 +85,6 @@ import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.IApplicationSettings;
-import org.apache.wicket.settings.ICssSettings;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IFrameworkSettings;
@@ -98,7 +97,6 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
-import org.apache.wicket.settings.def.CssSettings;
 import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
 import org.apache.wicket.settings.def.FrameworkSettings;
@@ -1041,9 +1039,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** The Markup Settings */
 	private IMarkupSettings markupSettings;
 
-	/** The CSS Settings */
-	private ICssSettings cssSettings;
-
 	/** The Page Settings */
 	private IPageSettings pageSettings;
 
@@ -1243,29 +1238,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		this.markupSettings = markupSettings;
 	}
-
-
-	/**
-	 * @return Application's CSS related settings
-	 */
-	public ICssSettings getCssSettings()
-	{
-		checkSettingsAvailable();
-		if (cssSettings == null)
-		{
-			cssSettings = new CssSettings();
-		}
-		return cssSettings;
-	}
-
-	/**
-	 * @param cssSettings
-	 */
-	public final void setCssSettings(final ICssSettings cssSettings)
-	{
-		this.cssSettings = cssSettings;
-	}
-
 
 	/**
 	 * @return Application's request logger related settings

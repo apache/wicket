@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
-import org.apache.wicket.settings.ICssSettings;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -33,11 +32,11 @@ public class FormComponentLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final String REQUIRED_CSS_CLASS_KEY = "wicket-core-form-component-label-required-css-class";
+	public static final String REQUIRED_CSS_CLASS_KEY = "formComponentLabelRequiredCssClass";
 
-	public static final String INVALID_CSS_CLASS_KEY = "wicket-core-form-component-label-invalid-css-class";
+	public static final String INVALID_CSS_CLASS_KEY = "formComponentLabelInvalidCssClass";
 
-	public static final String DISABLED_CSS_CLASS_KEY = "wicket-core-form-component-label-disabled-css-class";
+	public static final String DISABLED_CSS_CLASS_KEY = "formComponentLabelDisabledCssClass";
 
 	private final LabeledWebMarkupContainer component;
 
@@ -72,25 +71,23 @@ public class FormComponentLabel extends WebMarkupContainer
 
 		tag.put("for", formComponent.getMarkupId());
 
-		ICssSettings cssSettings = getApplication().getCssSettings();
-
 		if (formComponent instanceof FormComponent<?>)
 		{
 			FormComponent<?> fc = (FormComponent<?>) formComponent;
 
 			if (fc.isRequired())
 			{
-				tag.append("class", cssSettings.getCssClass(REQUIRED_CSS_CLASS_KEY), " ");
+				tag.append("class", getString(REQUIRED_CSS_CLASS_KEY), " ");
 			}
 			if (fc.isValid() == false)
 			{
-				tag.append("class", cssSettings.getCssClass(INVALID_CSS_CLASS_KEY), " ");
+				tag.append("class", getString(INVALID_CSS_CLASS_KEY), " ");
 			}
 		}
 
 		if (formComponent.isEnabledInHierarchy() == false)
 		{
-			tag.append("class", cssSettings.getCssClass(DISABLED_CSS_CLASS_KEY), " ");
+			tag.append("class", getString(DISABLED_CSS_CLASS_KEY), " ");
 		}
 
 		// always transform the tag to <span></span> so even labels defined as <span/> render

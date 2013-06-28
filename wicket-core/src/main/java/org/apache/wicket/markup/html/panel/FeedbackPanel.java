@@ -34,7 +34,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.settings.IApplicationSettings;
-import org.apache.wicket.settings.ICssSettings;
 
 
 /**
@@ -292,30 +291,29 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected String getCSSClass(final FeedbackMessage message)
 	{
-		ICssSettings cssSettings = getApplication().getCssSettings();
 		String cssClass;
 		switch (message.getLevel())
 		{
 			case FeedbackMessage.UNDEFINED:
-				cssClass = cssSettings.getCssClass(FeedbackMessage.UNDEFINED_CSS_CLASS_KEY);
+				cssClass = getString(FeedbackMessage.UNDEFINED_CSS_CLASS_KEY);
 				break;
 			case FeedbackMessage.DEBUG:
-				cssClass = cssSettings.getCssClass(FeedbackMessage.DEBUG_CSS_CLASS_KEY);
+				cssClass = getString(FeedbackMessage.DEBUG_CSS_CLASS_KEY);
 				break;
 			case FeedbackMessage.INFO:
-				cssClass = cssSettings.getCssClass(FeedbackMessage.INFO_CSS_CLASS_KEY);
+				cssClass = getString(FeedbackMessage.INFO_CSS_CLASS_KEY);
 				break;
 			case FeedbackMessage.SUCCESS:
-				cssClass = cssSettings.getCssClass(FeedbackMessage.SUCCESS_CSS_CLASS_KEY);
+				cssClass = getString(FeedbackMessage.SUCCESS_CSS_CLASS_KEY);
 				break;
 			case FeedbackMessage.WARNING:
-				cssClass = cssSettings.getCssClass(FeedbackMessage.WARNING_CSS_CLASS_KEY);
+				cssClass = getString(FeedbackMessage.WARNING_CSS_CLASS_KEY);
 				break;
 			case FeedbackMessage.ERROR:
-				cssClass = cssSettings.getCssClass(FeedbackMessage.ERROR_CSS_CLASS_KEY);
+				cssClass = getString(FeedbackMessage.ERROR_CSS_CLASS_KEY);
 				break;
 			case FeedbackMessage.FATAL:
-				cssClass = cssSettings.getCssClass(FeedbackMessage.FATAL_CSS_CLASS_KEY);
+				cssClass = getString(FeedbackMessage.FATAL_CSS_CLASS_KEY);
 				break;
 			default:
 				cssClass = "feedbackPanel" + message.getLevelAsString();

@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.list;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.settings.ICssSettings;
 
 /**
  * ListItem that adds <code>class="odd"</code> or <code>class="even"</code> html attribute depending
@@ -31,9 +30,9 @@ public class OddEvenListItem<T> extends ListItem<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final String ODD_CSS_CLASS_KEY = "wicket-core-odd-list-item-css-class";
+	public static final String ODD_CSS_CLASS_KEY = "oddListItemCssClass";
 
-	public static final String EVEN_CSS_CLASS_KEY = "wicket-core-even-list-item-css-class";
+	public static final String EVEN_CSS_CLASS_KEY = "evenListItemCssClass";
 
 	/**
 	 * Constructor
@@ -54,7 +53,6 @@ public class OddEvenListItem<T> extends ListItem<T>
 	{
 		super.onComponentTag(tag);
 
-		ICssSettings cssSettings = getApplication().getCssSettings();
-		tag.append("class", (getIndex() % 2 == 0) ? cssSettings.getCssClass(EVEN_CSS_CLASS_KEY) : cssSettings.getCssClass(ODD_CSS_CLASS_KEY), " ");
+		tag.append("class", (getIndex() % 2 == 0) ? getString(EVEN_CSS_CLASS_KEY) : getString(ODD_CSS_CLASS_KEY), " ");
 	}
 }

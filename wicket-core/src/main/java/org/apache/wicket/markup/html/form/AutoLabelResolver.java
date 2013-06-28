@@ -23,7 +23,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.resolver.IComponentResolver;
-import org.apache.wicket.settings.ICssSettings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -63,12 +62,11 @@ public class AutoLabelResolver implements IComponentResolver
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
 
-	public static final String REQUIRED_CSS_CLASS_KEY = "wicket-core-auto-label-required-css-class";
+	public static final String REQUIRED_CSS_CLASS_KEY = "autoLabelRequiredCssClass";
 
-	public static final String INVALID_CSS_CLASS_KEY = "wicket-core-auto-label-invalid-css-class";
+	public static final String INVALID_CSS_CLASS_KEY = "autoLabelInvalidCssClass";
 
-	public static final String DISABLED_CSS_CLASS_KEY = "wicket-core-auto-label-disabled-css-class";
-
+	public static final String DISABLED_CSS_CLASS_KEY = "autoLabelDisabledCssClass";
 
 	static final String WICKET_FOR = ":for";
 
@@ -193,24 +191,22 @@ public class AutoLabelResolver implements IComponentResolver
 			super.onComponentTag(tag);
 			tag.put("for", component.getMarkupId());
 
-			ICssSettings cssSettings = getApplication().getCssSettings();
-
 			if (component instanceof FormComponent)
 			{
 				FormComponent<?> fc = (FormComponent<?>)component;
 				if (fc.isRequired())
 				{
-					tag.append("class", cssSettings.getCssClass(REQUIRED_CSS_CLASS_KEY), " ");
+					tag.append("class", getString(REQUIRED_CSS_CLASS_KEY), " ");
 				}
 				if (!fc.isValid())
 				{
-					tag.append("class", cssSettings.getCssClass(INVALID_CSS_CLASS_KEY), " ");
+					tag.append("class", getString(INVALID_CSS_CLASS_KEY), " ");
 				}
 			}
 
 			if (!component.isEnabledInHierarchy())
 			{
-				tag.append("class", cssSettings.getCssClass(DISABLED_CSS_CLASS_KEY), " ");
+				tag.append("class", getString(DISABLED_CSS_CLASS_KEY), " ");
 			}
 		}
 

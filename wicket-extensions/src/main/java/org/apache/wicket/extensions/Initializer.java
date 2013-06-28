@@ -19,9 +19,6 @@ package org.apache.wicket.extensions;
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
-import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
-import org.apache.wicket.settings.ICssSettings;
 
 
 /**
@@ -38,21 +35,6 @@ public class Initializer implements IInitializer
 	public void init(final Application application)
 	{
 		new UploadProgressBar.ComponentInitializer().init(application);
-
-		configureCssSettings(application);
-	}
-
-	private void configureCssSettings(Application application)
-	{
-		ICssSettings cssSettings = application.getCssSettings();
-
-		cssSettings.setCssClass(TabbedPanel.CONTAINER_CSS_CLASS_KEY, "tab-row");
-		cssSettings.setCssClass(TabbedPanel.SELECTED_CSS_CLASS_KEY, "selected");
-		cssSettings.setCssClass(TabbedPanel.LAST_CSS_CLASS_KEY, "last");
-
-		cssSettings.setCssClass(OrderByLink.SORT_ASCENDING_CSS_CLASS_KEY, "wicket_orderUp");
-		cssSettings.setCssClass(OrderByLink.SORT_DESCENDING_CSS_CLASS_KEY, "wicket_orderDown");
-		cssSettings.setCssClass(OrderByLink.SORT_NONE_CSS_CLASS_KEY, "wicket_orderNone");
 	}
 
 	/**
