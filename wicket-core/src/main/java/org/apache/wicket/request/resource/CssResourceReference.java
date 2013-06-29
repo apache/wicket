@@ -76,8 +76,10 @@ public class CssResourceReference extends PackageResourceReference
 	@Override
 	public CssPackageResource getResource()
 	{
-		return new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
-			getVariation());
+        final CssPackageResource resource = new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
+                getVariation());
+        removeCompressFlagIfUnnecessary(resource);
+        return resource;
 	}
 
 }

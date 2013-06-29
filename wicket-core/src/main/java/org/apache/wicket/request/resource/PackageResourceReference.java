@@ -129,16 +129,30 @@ public class PackageResourceReference extends ResourceReference
 				getVariation());
 		}
 
-		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
-		if (minifiedName != null && minifiedName != NO_MINIFIED_NAME)
-		{
-			resource.setCompress(false);
-		}
+        removeCompressFlagIfUnnecessary(resource);
 
-		return resource;
-	}
+        return resource;
+    }
 
-	private ResourceReference.UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
+    /**
+     * Method allowing to remove the compress flag if the resource has been detected as a minified one
+     * (i.e. ending with .min.EXT)
+     * This method is to be called by subclasses overriding <code>getResource</code>
+     * if they want to rely on default minification detection handling
+     *
+     * see WICKET-5250 for further explanation
+     * @param resource resource to check
+     */
+    protected void removeCompressFlagIfUnnecessary(final PackageResource resource)
+    {
+        String minifiedName = MINIFIED_NAMES_CACHE.get(this);
+        if (minifiedName != null && minifiedName != NO_MINIFIED_NAME)
+        {
+            resource.setCompress(false);
+        }
+    }
+
+    private ResourceReference.UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
 	{
 		IResourceStreamLocator locator = Application.get()
 			.getResourceSettings()

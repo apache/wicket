@@ -18,6 +18,7 @@ package org.apache.wicket.request.resource;
 
 import java.util.Locale;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
@@ -204,4 +205,36 @@ public class PackageResourceReferenceTest extends WicketTestCase
 		Assert.assertEquals("html5.min", html5min.getMinifiedName());
 
 	}
+
+    /**
+     * see WICKET-5250 - for JavaScriptResourceReference
+     */
+    @Test
+    public void testJavaScriptResourceReferenceRespectsMinifiedResourcesDetection() throws Exception
+    {
+        Application.get().getResourceSettings().setUseMinifiedResources(true);
+        final JavaScriptResourceReference notMinified = new JavaScriptResourceReference(PackageResourceReferenceTest.class, "a.js");
+        final JavaScriptPackageResource notMinifiedResource = notMinified.getResource();
+        Assert.assertTrue("Not minified resource should got its compress flag set to true",notMinifiedResource.getCompress());
+
+        final JavaScriptResourceReference alreadyMinified = new JavaScriptResourceReference(PackageResourceReferenceTest.class, "b.min.js");
+        final JavaScriptPackageResource alreadyMinifiedResource = alreadyMinified.getResource();
+        Assert.assertFalse("Already minified resource should got its compress flag set to false", alreadyMinifiedResource.getCompress());
+    }
+
+    /**
+     * see WICKET-5250 - for CSSResourceReference
+     */
+    @Test
+    public void testCSSResourceReferenceRespectsMinifiedResourcesDetection() throws Exception
+    {
+        Application.get().getResourceSettings().setUseMinifiedResources(true);
+        final CssResourceReference notMinified = new CssResourceReference(PackageResourceReferenceTest.class, "a.css");
+        final CssPackageResource notMinifiedResource = notMinified.getResource();
+        Assert.assertTrue("Not minified resource should got its compress flag set to true",notMinifiedResource.getCompress());
+
+        final CssResourceReference alreadyMinified = new CssResourceReference(PackageResourceReferenceTest.class, "b.min.css");
+        final CssPackageResource alreadyMinifiedResource = alreadyMinified.getResource();
+        Assert.assertFalse("Already minified resource should got its compress flag set to false", alreadyMinifiedResource.getCompress());
+    }
 }
