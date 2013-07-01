@@ -33,7 +33,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty.version>7.4.2.v20110526</jetty.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
-		<maven.javadoc.version>2.8</maven.javadoc.version>
+		<maven.javadoc.version>2.9.1</maven.javadoc.version>
 		<maven.surefire.version>2.11</maven.surefire.version>
 	</properties>
 
