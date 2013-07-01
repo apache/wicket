@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.list;
 
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 
@@ -30,8 +31,9 @@ public class OddEvenListItem<T> extends ListItem<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final String CLASS_EVEN = "even";
-	private static final String CLASS_ODD = "odd";
+	public static final String ODD_CSS_CLASS_KEY = CssUtils.key(OddEvenListItem.class, "odd");
+
+	public static final String EVEN_CSS_CLASS_KEY = CssUtils.key(OddEvenListItem.class, "even");
 
 	/**
 	 * Constructor
@@ -51,6 +53,7 @@ public class OddEvenListItem<T> extends ListItem<T>
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.append("class", (getIndex() % 2 == 0) ? CLASS_EVEN : CLASS_ODD, " ");
+
+		tag.append("class", (getIndex() % 2 == 0) ? getString(EVEN_CSS_CLASS_KEY) : getString(ODD_CSS_CLASS_KEY), " ");
 	}
 }

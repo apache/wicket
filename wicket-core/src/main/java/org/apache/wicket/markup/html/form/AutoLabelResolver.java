@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -61,6 +62,12 @@ public class AutoLabelResolver implements IComponentResolver
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
+
+	public static final String REQUIRED_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "required");
+
+	public static final String INVALID_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "invalid");
+
+	public static final String DISABLED_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "disabled");
 
 	static final String WICKET_FOR = ":for";
 
@@ -190,17 +197,17 @@ public class AutoLabelResolver implements IComponentResolver
 				FormComponent<?> fc = (FormComponent<?>)component;
 				if (fc.isRequired())
 				{
-					tag.append("class", "required", " ");
+					tag.append("class", getString(REQUIRED_CSS_CLASS_KEY), " ");
 				}
 				if (!fc.isValid())
 				{
-					tag.append("class", "error", " ");
+					tag.append("class", getString(INVALID_CSS_CLASS_KEY), " ");
 				}
 			}
 
 			if (!component.isEnabledInHierarchy())
 			{
-				tag.append("class", "disabled", " ");
+				tag.append("class", getString(DISABLED_CSS_CLASS_KEY), " ");
 			}
 		}
 

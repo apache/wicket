@@ -103,4 +103,18 @@ public final class CssUtils
 		}
 		response.write(" />");
 	}
+
+	/**
+	 * Get a standardized key for a CSS class.
+	 * 
+	 * @param scope
+	 *            scope of CSS class
+	 * @param facet
+	 *            facet of CSS class
+	 * @return CSS key
+	 */
+	public static String key(Class<?> scope, String facet)
+	{
+		return scope.getSimpleName() + ".CSS." + facet;
+	}
 }
