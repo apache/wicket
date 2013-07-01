@@ -34,7 +34,7 @@
 		<jetty9.version>9.0.4.v20130625</jetty9.version>
 		<spring.version>3.2.3.RELEASE</spring.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
-		<maven.javadoc.version>2.8.1</maven.javadoc.version>
+		<maven.javadoc.version>2.9.1</maven.javadoc.version>
 		<maven.surefire.version>2.12.2</maven.surefire.version>
 		<mockito.version>1.9.5</mockito.version>
 		<slf4j.version>1.7.5</slf4j.version>
