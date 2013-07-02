@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import org.apache.wicket.Application;
 import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
+import org.apache.wicket.cdi.testapp.TestPage;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 
@@ -37,6 +38,13 @@ public class CdiConfigurationTest extends CdiFilterBaseTest
 	@Inject
 	ComponentInjector componentInjector;
 
+	@Override
+	public void init()
+	{
+		//do not init
+	}
+
+
 	/**
 	 * Allows to force an app name when class is extended
 	 *
@@ -50,15 +58,14 @@ public class CdiConfigurationTest extends CdiFilterBaseTest
 	@Test
 	public void testApplicationScope()
 	{
-		initializeTest();
-		tester.startPage(tester.getApplication().getHomePage());
+
+		tester.startPage(TestPage.class);
 		tester.assertLabel("appscope", "Test ok");
 	}
 
 	@Test
 	public void testConversationScope()
 	{
-		initializeTest();
 		tester.startPage(TestConversationPage.class);
 		for (int i = 0; i < 20; i++)
 		{
@@ -70,14 +77,13 @@ public class CdiConfigurationTest extends CdiFilterBaseTest
 	@Test(expected = Exception.class)
 	public void testConfigureTwice()
 	{
-		initializeTest();
+		tester.configure();
 		CdiConfiguration.get().configure(tester.getApplication());
 	}
 
 	@Test
 	public void testDeprecatedApplicationLevelConfiguration()
 	{
-		tester = new WicketTester();
 		CdiConfiguration config = CdiConfiguration.get();
 		config.setAutoConversationManagement(true);
 		assertTrue(config.isAutoConversationManagement());

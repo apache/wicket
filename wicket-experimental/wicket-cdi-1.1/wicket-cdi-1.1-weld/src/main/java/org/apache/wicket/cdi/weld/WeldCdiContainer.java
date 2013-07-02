@@ -19,57 +19,73 @@ package org.apache.wicket.cdi.weld;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
+
 import org.apache.wicket.cdi.AbstractCdiContainer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.jboss.weld.context.http.HttpConversationContext;
 
 /**
  * Provides access to CDI features from inside a Wicket request
- * 
+ *
  * @author jsarman
- * 
  */
 @ApplicationScoped
 public class WeldCdiContainer extends AbstractCdiContainer
 {
-	@Inject 
+	@Inject
 	private HttpConversationContext conversationContext;
-       	
+
 	/**
 	 * Activates the conversational context and starts the conversation with the specified cid
-	 * 
+	 *
 	 * @param cycle
 	 * @param cid
 	 */
 	@Override
 	public void activateConversationalContext(RequestCycle cycle, String cid)
 	{
-		if(cid == null) {
-                    throw new IllegalStateException("Attempting to activate a conversation with no cid set");
-                }                
-                                     
-		conversationContext.associate(getRequest(cycle)); 
-		if(conversationContext.isActive())
+		if (cid == null)
+		{
+			throw new IllegalStateException("Attempting to activate a conversation with no cid set");
+		}
+
+		conversationContext.associate(getRequest(cycle));
+		if (conversationContext.isActive())
 		{
 			// Only reactivate if transient
-			if(conversationContext.getCurrentConversation().isTransient()) 				
-			{				
-                                conversationContext.invalidate();
-                                conversationContext.deactivate();
-				conversationContext.activate(cid);                                                             
-			}                
-		} 
-		else
+			if (conversationContext.getCurrentConversation().isTransient())
+			{
+				conversationContext.invalidate();
+				conversationContext.deactivate();
+				conversationContext.activate(cid);
+			}
+		} else
 		{
-			conversationContext.activate(cid);         
+			conversationContext.activate(cid);
 		}
 	}
 
-        
-    @Override
-    public Conversation getCurrentConversation() {
-        return conversationContext.getCurrentConversation();
-    }
-        
-        
+	@Override
+	public void deactivateConversationalContext(RequestCycle cycle)
+	{
+		conversationContext.associate(getRequest(cycle));
+		if (conversationContext.isActive())
+		{
+			// Only deactivate if not transient
+			if (!conversationContext.getCurrentConversation().isTransient())
+			{
+				conversationContext.invalidate();
+				conversationContext.deactivate();
+			}
+		}
+	}
+
+
+	@Override
+	public Conversation getCurrentConversation()
+	{
+		return conversationContext.getCurrentConversation();
+	}
+
+
 }

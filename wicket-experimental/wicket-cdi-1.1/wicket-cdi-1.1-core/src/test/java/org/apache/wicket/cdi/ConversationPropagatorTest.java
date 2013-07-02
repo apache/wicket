@@ -16,16 +16,31 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.inject.Inject;
+
+import org.apache.wicket.cdi.testapp.TestConversationPage;
+import org.junit.Test;
+
 /**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
- *
- * @author igor
+ * @author jsarman
  */
-@Conversational
-public interface ConversationalComponent
+public class ConversationPropagatorTest extends CdiBaseTest
 {
 
+	@Inject
+	CdiConfiguration cdiConfiguration;
+
+
+	@Test
+	public void testAutoConversation()
+	{
+
+		tester.startPage(TestConversationPage.class);//, new PageParameters().add("auto", true));
+		for (int i = 0; i < 7; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+
+		}
+	}
 }

@@ -65,6 +65,22 @@ public class MockCdiContainer extends AbstractCdiContainer
 	}
 
 	@Override
+	public void deactivateConversationalContext(RequestCycle cycle)
+	{
+		conversationContext.associate(getRequest(cycle));
+		if (conversationContext.isActive())
+		{
+			// Only reactivate if transient
+			if (!conversationContext.getCurrentConversation().isTransient())
+			{
+				conversationContext.invalidate();
+				conversationContext.deactivate();
+				conversationContext.activate(); // Now active a transient
+			}
+		}
+	}
+
+	@Override
 	public Conversation getCurrentConversation()
 	{
 		return conversationContext.getCurrentConversation();

@@ -39,6 +39,8 @@ public abstract class AbstractCdiContainer
 	 */
 	public abstract void activateConversationalContext(RequestCycle cycle, String cid);
 
+	public abstract void deactivateConversationalContext(RequestCycle cycle);
+
 	protected HttpServletRequest getRequest(RequestCycle cycle)
 	{
 		return (HttpServletRequest) cycle.getRequest().getContainerRequest();
