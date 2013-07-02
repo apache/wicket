@@ -16,16 +16,23 @@
  */
 package org.apache.wicket.cdi;
 
-/**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
- *
- * @author igor
- */
-@Conversational
-public interface ConversationalComponent
-{
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
+import javax.enterprise.inject.Typed;
+
+import org.apache.wicket.Page;
+
+/**
+ * @author jsarman
+ */
+@Documented
+@Target(ElementType.TYPE)
+@Typed(Page.class)
+public @interface Conversational
+{
+	ConversationPropagation prop() default ConversationPropagation.ALL;
+
+	boolean auto() default true;
 }

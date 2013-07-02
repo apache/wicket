@@ -80,6 +80,9 @@ public class CdiConfiguration
 	@Inject
 	SessionInjector sessionInjector;
 
+	@Inject
+	ConversationManager conversationManager;
+
 	private Map<String, ConfigurationParameters> parameters;
 
 	/**
@@ -227,50 +230,49 @@ public class CdiConfiguration
 	 * conversation is marked transient. This greatly simplifies the management of conversation
 	 * lifecycle.
 	 * <p/>
-	 * This method will throw IllegalStateException if called after configured.
+	 * ConversationManagement can also be enable per Conversation after configured.
+	 * Once the CdiConfiguration is configured this call is passed to {@link ConversationManager#setManageConversation(java.lang.Boolean) }
+	 * for the ConversationManager in the current ConversationScope. This allows for ConversationManagement
+	 * per active Conversation.
+	 * <p/>
 	 *
 	 * @param enabled
 	 * @return {@code this} for easy chaining
-	 * @deprecated Application Level Configuration replaced with {@link CdiWicketFilter}
 	 */
-	@Deprecated
 	public CdiConfiguration setAutoConversationManagement(boolean enabled)
 	{
 		ConfigurationParameters params = getApplicationParameters();
 		if (params.isConfigured())
 		{
-			throw new IllegalStateException("AutoConversationManagement can only be changed before configure is called");
+			conversationManager.setManageConversation(enabled);
+		} else
+		{
+			params.setAutoConversationManagement(enabled);
 		}
-
-		params.setAutoConversationManagement(enabled);
 		return this;
 	}
 
 	/**
 	 * Method to set the ConversationPropagation.
 	 * <p/>
-	 * This method will throw IllegalStateException if called after configured.
 	 *
 	 * @param propagation
 	 * @return {@code this} for easy chaining
-	 * @deprecated Application Level Configuration replaced with {@link CdiWicketFilter}
 	 */
-	@Deprecated
-	public synchronized CdiConfiguration setPropagation(IConversationPropagation propagation)
+	public CdiConfiguration setPropagation(IConversationPropagation propagation)
 	{
 		Args.notNull(propagation, "propagation");
-
 
 		ConfigurationParameters params = getApplicationParameters();
 		if (params.isConfigured())
 		{
-			throw new IllegalStateException("Propagation can only be changed before configure is called");
+			conversationManager.setPropagation(propagation);
+		} else
+		{
+			params.setPropagation(propagation);
 		}
-
-		params.setPropagation(propagation);
 		return this;
 	}
-
 
 	public INonContextualManager getNonContextualManager()
 	{

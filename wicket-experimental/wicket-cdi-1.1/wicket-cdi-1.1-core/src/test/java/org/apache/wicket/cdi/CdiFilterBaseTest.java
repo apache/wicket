@@ -44,12 +44,6 @@ public abstract class CdiFilterBaseTest extends CdiBaseTest
 	@Inject
 	CdiWicketFilter cdiWicketFilter;
 
-	@Override
-	public boolean autoInitializeTester()
-	{
-		return false;
-	}
-
 	Application testFilterInitialization(ConfigurationParameters params, String appName)
 	{
 		String testAppKey = "testKey " + UUID.randomUUID();

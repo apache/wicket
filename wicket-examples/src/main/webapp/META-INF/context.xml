@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<Context>
-    <!-- <Loader className="org.atmosphere.util.AtmosphereClassloader"/> -->
-    <Loader delegate="true"/>
+<Context path="/wicket-examples">
+  <!-- <Loader className="org.atmosphere.util.AtmosphereClassloader"/> -->
+  <Loader delegate="true"/>
 </Context>

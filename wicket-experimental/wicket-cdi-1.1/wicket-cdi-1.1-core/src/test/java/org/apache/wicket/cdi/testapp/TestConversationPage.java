@@ -25,6 +25,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 
 /**
  * @author jsarman
@@ -42,11 +44,19 @@ public class TestConversationPage extends WebPage
 
 	public TestConversationPage()
 	{
+		this(new PageParameters());
+	}
 
-		conversation.begin(random.nextInt(1000) + "");
+	public TestConversationPage(PageParameters parameters)
+	{
+		super(parameters);
 
-		System.out.println("Opened Conversion with id = " + conversation.getId());
+		if (!parameters.get("auto").toBoolean())
+		{
+			conversation.begin(random.nextInt(1000) + "");
 
+			System.out.println("Opened Conversion with id = " + conversation.getId());
+		}
 		add(new Label("count", new PropertyModel(this, "counter.count")));
 
 		add(new Link<Void>("increment")
@@ -68,5 +78,4 @@ public class TestConversationPage extends WebPage
 		});
 
 	}
-
 }

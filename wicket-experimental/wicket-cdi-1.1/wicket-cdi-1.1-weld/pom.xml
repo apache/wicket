@@ -15,73 +15,74 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-cdi-1.1</artifactId>
-		<version>0.3-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	<artifactId>wicket-cdi-1.1-weld</artifactId>
-	<packaging>jar</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.wicket</groupId>
+        <artifactId>wicket-cdi-1.1</artifactId>
         <version>0.3-SNAPSHOT</version>
-	<name>Wicket CDI 1.1 Weld</name>
-	<description>
-		Provides integration between Wicket and CDI containers. Adds support for weld
-                based containers.
-	</description>
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-cdi-1.1-core</artifactId>   
-			<version>0.3-SNAPSHOT</version>                     
-		</dependency>		
-		<dependency>
-			<groupId>org.jboss.weld</groupId>
-			<artifactId>weld-api</artifactId>
-			<version>2.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>javax.el-api</artifactId>
-			<version>2.2.4</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>clirr-maven-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>clirr-check</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-							<configuration>
-								<comparisonVersion>6.1.0</comparisonVersion>
-								<failOnError>true</failOnError>
-								<logResults>true</logResults>
-							</configuration>
-						</execution>
-					</executions>
-					<configuration>
-						<comparisonVersion>6.1.0</comparisonVersion>
-						<failOnError>true</failOnError>
-						<logResults>true</logResults>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>wicket-cdi-1.1-weld</artifactId>
+    <packaging>jar</packaging>
+    <version>0.3-SNAPSHOT</version>
+    <name>Wicket CDI 1.1 Weld</name>
+    <description>
+        Provides integration between Wicket and CDI containers. Adds support for weld
+        based containers.
+    </description>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-cdi-1.1-core</artifactId>
+            <version>0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-api</artifactId>
+            <version>2.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>2.2.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>clirr-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>clirr-check</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <comparisonVersion>6.1.0</comparisonVersion>
+                                <failOnError>true</failOnError>
+                                <logResults>true</logResults>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <comparisonVersion>6.1.0</comparisonVersion>
+                        <failOnError>true</failOnError>
+                        <logResults>true</logResults>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

@@ -17,16 +17,12 @@
 package org.apache.wicket.cdi;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.cdi.testapp.TestAppScope;
-import org.apache.wicket.cdi.testapp.TestApplication;
 import org.apache.wicket.cdi.testapp.TestConversationBean;
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.cdi.util.tester.CdiWicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
-import org.jglue.cdiunit.ContextController;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -41,6 +37,7 @@ import org.junit.runner.RunWith;
 		ComponentInjector.class,
 		ConversationExpiryChecker.class,
 		ConversationPropagator.class,
+		ConversationManager.class,
 		DetachEventEmitter.class,
 		NonContextualManager.class,
 		SessionInjector.class,
@@ -49,55 +46,13 @@ import org.junit.runner.RunWith;
 		TestConversationBean.class})
 public abstract class CdiBaseTest extends Assert
 {
-
-	WicketTester tester;
 	@Inject
-	ContextController contextController;
-
-	boolean inited;
+	CdiWicketTester tester;
 
 	@Before
-	public void before()
+	public void init()
 	{
-		if (autoInitializeTester())
-		{
-			initializeTest();
-		}
+		tester.configure();
 	}
 
-	@After
-	public void after()
-	{
-		if (inited)
-		{
-			destroyTester();
-		}
-	}
-
-
-	protected void initializeTest()
-	{
-		tester = new WicketTester(new TestApplication());
-		prepareRequest(tester.getRequest());
-		inited = true;
-	}
-
-	protected void destroyTester()
-	{
-		inited = false;
-		tester.destroy();
-		tester = null;
-	}
-
-	public void prepareRequest(HttpServletRequest request)
-	{
-		contextController.openRequest(request);
-		contextController.openSession(request);
-		contextController.openConversation(request);
-	}
-
-	public boolean autoInitializeTester()
-	{
-		return true;
-	}
 }
