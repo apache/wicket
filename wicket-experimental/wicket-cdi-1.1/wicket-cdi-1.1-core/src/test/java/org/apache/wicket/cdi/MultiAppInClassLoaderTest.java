@@ -16,15 +16,35 @@
  */
 package org.apache.wicket.cdi;
 
+import org.apache.wicket.cdi.testapp.TestCdiAdditionApplication;
+import org.apache.wicket.cdi.testapp.TestCdiApplication;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.Test;
+
 /**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
- *
- * @author igor
+ * @author jsarman
  */
-public interface ConversationalComponent
+@AdditionalClasses({
+		TestCdiApplication.class,
+		TestCdiAdditionApplication.class
+})
+public class MultiAppInClassLoaderTest extends CdiFilterBaseTest
 {
 
+
+	@Test
+	public void TestConfigureBothApp()
+	{
+		WicketApp annot1 = TestCdiApplication.class.getAnnotation(WicketApp.class);
+		WicketApp annot2 = TestCdiAdditionApplication.class.getAnnotation(WicketApp.class);
+
+		testFilterInitialization(null, annot1.value());
+		testFilterInitialization(null, annot2.value());
+	}
+
+	@Test(expected = Exception.class)
+	public void TestConfigureAppWithoutInitParam()
+	{
+		testFilterInitialization(null, null);
+	}
 }

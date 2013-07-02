@@ -18,19 +18,19 @@ package org.apache.wicket.cdi;
 
 import javax.inject.Inject;
 
-import org.apache.wicket.cdi.testapp.TestAppScope;
-import org.apache.wicket.cdi.testapp.TestConversationBean;
 import org.apache.wicket.cdi.testapp.TestQualifier;
 import org.apache.wicket.markup.html.WebComponent;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 
 /**
  * Tests for ComponentInjector
  */
-@AdditionalClasses({TestAppScope.class, TestConversationBean.class})
-public class ComponentInjectorTest extends WicketCdiTestCase
+public class ComponentInjectorTest extends CdiBaseTest
 {
+
+	@Inject
+	ComponentInjector componentInjector;
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5226
 	 */

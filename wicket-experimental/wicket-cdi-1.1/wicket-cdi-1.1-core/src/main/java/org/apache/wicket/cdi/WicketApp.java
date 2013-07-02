@@ -16,23 +16,34 @@
  */
 package org.apache.wicket.cdi;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Typed;
 import javax.inject.Qualifier;
 
+import org.apache.wicket.protocol.http.WebApplication;
+
 /**
- * Qualifier for injecting the Automatic Conversation begin boolean
+ * Bean Qualifier for Cdi enable WebApplication. This Qualifier allows for the WebApplication
+ * to be named so that the CdiApplicationFactory can select the WebApplication when multiple
+ * WebApplication exist in the ClassLoader. This Annotation also marks the WebApplication as Dependent.
+ * This prevents the WebApplication from being proxied, which will cause failures in an EE container.
  *
  * @author jsarman
  */
 @Qualifier
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Auto
+@Retention(RUNTIME)
+@Documented
+@Dependent
+@Typed(WebApplication.class)
+public @interface WicketApp
 {
-
+	String value() default "";
 }

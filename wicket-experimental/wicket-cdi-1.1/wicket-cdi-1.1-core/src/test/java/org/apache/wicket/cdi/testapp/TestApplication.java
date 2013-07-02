@@ -18,6 +18,7 @@ package org.apache.wicket.cdi.testapp;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.cdi.CdiConfiguration;
+import org.apache.wicket.cdi.ConversationPropagation;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -36,7 +37,15 @@ public class TestApplication extends WebApplication
 	protected void init()
 	{
 		super.init();
-		CdiConfiguration.get().configure(this);
+		//Configure everything to default just to hit that code.
+		CdiConfiguration.get()
+				.setAutoConversationManagement(false)
+				.setInjectApplication(true)
+				.setInjectBehaviors(true)
+				.setInjectComponents(true)
+				.setInjectSession(true)
+				.setPropagation(ConversationPropagation.NONBOOKMARKABLE)
+				.configure(this);
 	}
 
 

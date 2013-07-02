@@ -16,24 +16,28 @@
  */
 package org.apache.wicket.cdi;
 
-import org.apache.wicket.request.cycle.IRequestCycleListener;
-import org.apache.wicket.request.cycle.RequestCycle;
+import javax.enterprise.util.AnnotationLiteral;
 
-public interface ICdiAwareRequestCycleListener extends IRequestCycleListener
+/**
+ * Allows for Programmatic lookup of WebApplications based on the Named Annotation.
+ *
+ * @author jsarman
+ */
+public class ApplicationQualifier extends AnnotationLiteral<WicketApp> implements WicketApp
 {
-	/**
-	 * Called right after a conversation context for this request is activated
-	 * 
-	 * @param cycle
-	 *            request cycle
-	 */
-	void onAfterConversationActivated(RequestCycle cycle);
 
-	/**
-	 * Called right before the current conversation context is deactivated
-	 * 
-	 * @param cycle
-	 *            request cycle
-	 */
-	void onBeforeConversationDeactivated(RequestCycle cycle);
+	private String value;
+
+	public ApplicationQualifier(String value)
+	{
+		super();
+		this.value = value;
+	}
+
+	@Override
+	public String value()
+	{
+		return value;
+	}
+
 }

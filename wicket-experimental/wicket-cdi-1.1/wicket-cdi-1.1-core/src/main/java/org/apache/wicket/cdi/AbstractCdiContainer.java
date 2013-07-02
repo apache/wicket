@@ -16,30 +16,24 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.context.Conversation;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 
 /**
  * Provides access to CDI features from inside a Wicket request
- * 
+ *
  * @author igor
- * 
  */
 public abstract class AbstractCdiContainer
 {
 
 	/**
-	 * Deactivates conversational context
-	 * 
-	 * @param cycle
-	 */
-	public abstract void deactivateConversationalContext(RequestCycle cycle);
-
-	/**
 	 * Activates the conversational context and starts the conversation with the specified cid
-	 * 
+	 *
 	 * @param cycle
 	 * @param cid
 	 */
@@ -47,14 +41,15 @@ public abstract class AbstractCdiContainer
 
 	protected HttpServletRequest getRequest(RequestCycle cycle)
 	{
-		return (HttpServletRequest)cycle.getRequest().getContainerRequest();
+		return (HttpServletRequest) cycle.getRequest().getContainerRequest();
 	}
+
+	public abstract Conversation getCurrentConversation();
 
 	/**
 	 * Retrieves a conversation id, if any, that is associated with a {@link Page} instance
-	 * 
-	 * @param page
-	 *            page instance
+	 *
+	 * @param page page instance
 	 * @return conversation id, if any
 	 */
 	public String getConversationMarker(Page page)
@@ -66,7 +61,7 @@ public abstract class AbstractCdiContainer
 	 * Removes conversation marker from the page instance which prevents the conversation from
 	 * propagating to the page. This method should usually be called from page's {@code onDetach()}
 	 * method.
-	 * 
+	 *
 	 * @param page
 	 */
 	public void removeConversationMarker(Page page)
