@@ -16,15 +16,33 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.inject.Inject;
+
+import org.apache.wicket.protocol.http.IWebApplicationFactory;
+import org.apache.wicket.protocol.http.WicketFilter;
+
 /**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
+ * CdiWicketFilter is a Cdi Enabled version of WicketFilter. It uses the Managed Version of
+ * {@link CdiWebApplicationFactory} therefore the WebApplication is also Managed via the Cdi container.
  *
- * @author igor
+ * @author jsarman
  */
-public interface ConversationalComponent
+
+public class CdiWicketFilter extends WicketFilter
 {
+
+	@Inject
+	CdiWebApplicationFactory applicationFactory;
+
+	public CdiWicketFilter()
+	{
+	}
+
+
+	@Override
+	protected IWebApplicationFactory getApplicationFactory()
+	{
+		return applicationFactory;
+	}
 
 }

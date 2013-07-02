@@ -14,17 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi;
+package org.apache.wicket.cdi.testapp;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.apache.wicket.Page;
+import org.apache.wicket.cdi.WicketApp;
+import org.apache.wicket.protocol.http.WebApplication;
 
 /**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
- *
- * @author igor
+ * @author jsarman
  */
-public interface ConversationalComponent
+@WicketApp("test")
+public class TestCdiApplication extends WebApplication
 {
+
+	@Inject
+	@TestQualifier
+	String testString;
+
+
+	@Override
+	public Class<? extends Page> getHomePage()
+	{
+		return TestPage.class;
+	}
+
+
+	@PostConstruct
+	@Override
+	protected void init()
+	{
+		super.init();
+
+	}
+
+	public String getInjectedTestString()
+	{
+		return testString;
+	}
 
 }

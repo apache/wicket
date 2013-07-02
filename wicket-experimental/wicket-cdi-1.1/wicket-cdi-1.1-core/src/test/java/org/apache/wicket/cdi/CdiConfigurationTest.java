@@ -17,73 +17,41 @@
 package org.apache.wicket.cdi;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.cdi.testapp.TestAppScope;
-import org.apache.wicket.cdi.testapp.TestApplication;
-import org.apache.wicket.cdi.testapp.TestConversationBean;
+import org.apache.wicket.Application;
+import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.CdiRunner;
-import org.jglue.cdiunit.ContextController;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * @author jsarman
  */
-@RunWith(CdiRunner.class)
-@AdditionalClasses({BehaviorInjector.class,
-		CdiConfiguration.class,
-		CdiShutdownCleaner.class,
-		ComponentInjector.class,
-		ConversationExpiryChecker.class,
-		ConversationPropagator.class,
-		DetachEventEmitter.class,
-		NonContextualManager.class,
-		SessionInjector.class,
-		MockContainer.class,
-		TestAppScope.class,
-		TestConversationBean.class})
-public class CdiConfigurationTest extends Assert
+@AdditionalClasses({
+		TestCdiApplication.class})
+public class CdiConfigurationTest extends CdiFilterBaseTest
 {
 
-	private WicketTester tester;
-	@Inject
-	ContextController contextController;
 	@Inject
 	ConversationPropagator conversationPropagator;
 	@Inject
 	ComponentInjector componentInjector;
 
-	@Before
-	public void before()
+	/**
+	 * Allows to force an app name when class is extended
+	 *
+	 * @return
+	 */
+	protected String overrideAppName()
 	{
-		tester = new WicketTester(new TestApplication());
-		prepareRequest(tester.getRequest());
-	}
-
-	@After
-	public void after()
-	{
-		tester.destroy();
-		tester = null;
-	}
-
-	public void prepareRequest(HttpServletRequest request)
-	{
-		contextController.openRequest(request);
-		contextController.openSession(request);
-		contextController.openConversation(request);
+		return null;
 	}
 
 	@Test
 	public void testApplicationScope()
 	{
+		initializeTest();
 		tester.startPage(tester.getApplication().getHomePage());
 		tester.assertLabel("appscope", "Test ok");
 	}
@@ -91,6 +59,7 @@ public class CdiConfigurationTest extends Assert
 	@Test
 	public void testConversationScope()
 	{
+		initializeTest();
 		tester.startPage(TestConversationPage.class);
 		for (int i = 0; i < 20; i++)
 		{
@@ -99,27 +68,129 @@ public class CdiConfigurationTest extends Assert
 		}
 	}
 
-	@Test
-	public void testDynamicConfigureChange()
+	@Test(expected = Exception.class)
+	public void testConfigureTwice()
 	{
-		// CdiConfiguration is configured at begin auto is false
-		assertEquals(false, conversationPropagator.getAuto());
-		// set auto to true in configuration
-		CdiConfiguration.get().setAutoConversationManagement(true);
-		assertEquals(true, conversationPropagator.getAuto());
-		// Test Changing Propagation
-		for (ConversationPropagation propagation : ConversationPropagation.values())
-		{
-			CdiConfiguration.get().setPropagation(propagation);
-			assertEquals(propagation, conversationPropagator.getPropagation());
-		}
-
-		int ignoreCnt = componentInjector.getIgnorePackages().length;
-
-		CdiConfiguration.get().addPackagesToIgnore("test1", "test2", "test3");
-		assertEquals(ignoreCnt + 3, componentInjector.getIgnorePackages().length);
-
-		CdiConfiguration.get().removePackagesToIgnore("test1", "test2");
-		assertEquals(ignoreCnt + 1, componentInjector.getIgnorePackages().length);
+		initializeTest();
+		CdiConfiguration.get().configure(tester.getApplication());
 	}
+
+	@Test
+	public void testDeprecatedApplicationLevelConfiguration()
+	{
+		tester = new WicketTester();
+		CdiConfiguration config = CdiConfiguration.get();
+		config.setAutoConversationManagement(true);
+		assertTrue(config.isAutoConversationManagement());
+		config.setAutoConversationManagement(false);
+		assertFalse(config.isAutoConversationManagement());
+		config.setInjectApplication(false);
+		assertFalse(config.isInjectApplication());
+		config.setInjectApplication(true);
+		assertTrue(config.isInjectApplication());
+		config.setInjectBehaviors(false);
+		assertFalse(config.isInjectBehaviors());
+		config.setInjectBehaviors(true);
+		assertTrue(config.isInjectBehaviors());
+		config.setInjectComponents(false);
+		assertFalse(config.isInjectComponents());
+		config.setInjectComponents(true);
+		assertTrue(config.isInjectComponents());
+		config.setInjectSession(false);
+		assertFalse(config.isInjectSession());
+		config.setInjectSession(true);
+		assertTrue(config.isInjectSession());
+		for (ConversationPropagation cp : ConversationPropagation.values())
+		{
+			config.setPropagation(cp);
+			assertEquals(cp, config.getPropagation());
+		}
+		config.configure(tester.getApplication());
+		assertTrue(config.isConfigured());
+	}
+
+	@Test
+	public void testFilterInitWithInitParam()
+	{
+		WicketApp annot = TestCdiApplication.class.getAnnotation(WicketApp.class);
+		Application app = testFilterInitialization(null, annot.value());
+		//Did our app get Injected
+		assertEquals("Test String", ((TestCdiApplication) app).getInjectedTestString());
+	}
+
+	@Test
+	public void testFilterInitWithoutInitParam()
+	{
+		if (overrideAppName() == null)
+		{
+			Application app = testFilterInitialization(null, null);
+			assertEquals("Test String", ((TestCdiApplication) app).getInjectedTestString());
+		}
+	}
+
+	@Test
+	public void testFilterParamsBooleansTrue()
+	{
+		testFilterParamsBooleans(true);
+	}
+
+	@Test
+	public void testFilterParamsBooleansFalse()
+	{
+		testFilterParamsBooleans(true);
+	}
+
+	@Test
+	public void testFilterParamPropagationNone()
+	{
+		testFilterParamPropagation(ConversationPropagation.NONE);
+	}
+
+	@Test
+	public void testFilterParamPropagationNonBookmarkable()
+	{
+		testFilterParamPropagation(ConversationPropagation.NONBOOKMARKABLE);
+	}
+
+	@Test
+	public void testFilterParamPropagationAll()
+	{
+		testFilterParamPropagation(ConversationPropagation.ALL);
+	}
+
+	@Test(expected = Exception.class)
+	public void testInvalidNameInFilter()
+	{
+		testFilterInitialization(null, "0xDEADBEEF");
+	}
+
+	public void testFilterParamsBooleans(boolean val)
+	{
+		ConfigurationParameters cp = new ConfigurationParameters();
+		cp.setInjectApplication(val);
+		cp.setInjectBehaviors(val);
+		cp.setInjectComponents(val);
+		cp.setInjectSession(val);
+		cp.setAutoConversationManagement(val);
+		testFilterInitialization(cp, overrideAppName());
+		CdiConfiguration cc = CdiConfiguration.get();
+
+		assertFalse(cc.isInjectApplication()); // This is false bacause app is injected in Filter.
+		assertEquals(val, cc.isInjectBehaviors());
+		assertEquals(val, cc.isInjectComponents());
+		assertEquals(val, cc.isInjectSession());
+		assertEquals(val, cc.isAutoConversationManagement());
+	}
+
+	public void testFilterParamPropagation(ConversationPropagation propagation)
+	{
+		ConfigurationParameters cp = new ConfigurationParameters();
+		cp.setPropagation(propagation);
+		testFilterInitialization(cp, overrideAppName());
+		CdiConfiguration cc = CdiConfiguration.get();
+
+		assertEquals(propagation, cc.getPropagation());
+	}
+
+
 }
