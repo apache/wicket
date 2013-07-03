@@ -30,7 +30,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  *
  * To use this resource reference do:
  * <code>
- * app.getJavaScriptLibrarySettings().setJQueryReference(DynamicJQueryResourceReference.INSTANCE)
+ * app.getJavaScriptLibrarySettings().setJQueryReference(new DynamicJQueryResourceReference())
  * </code>
  *
  * @since 6.9.0

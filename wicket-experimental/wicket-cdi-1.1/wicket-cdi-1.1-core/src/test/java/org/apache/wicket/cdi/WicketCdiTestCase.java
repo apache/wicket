@@ -16,51 +16,63 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.cdi.testapp.TestAppScope;
-import org.apache.wicket.cdi.testapp.TestConversationBean;
-import org.apache.wicket.cdi.util.tester.CdiWicketTester;
+import org.apache.wicket.cdi.testapp.TestApplication;
+import org.apache.wicket.util.tester.WicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
+import org.jglue.cdiunit.ContextController;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
- * @author jsarman
+ * Base class for all CDI unit tests
  */
 @RunWith(CdiRunner.class)
-@AdditionalClasses({BehaviorInjector.class,
+@AdditionalClasses({
+		BehaviorInjector.class,
 		CdiConfiguration.class,
 		CdiShutdownCleaner.class,
 		ComponentInjector.class,
 		ConversationExpiryChecker.class,
 		ConversationPropagator.class,
-		ConversationManager.class,
 		DetachEventEmitter.class,
 		NonContextualManager.class,
 		SessionInjector.class,
-		MockCdiContainer.class,
-		TestAppScope.class,
-		TestConversationBean.class})
-public abstract class CdiBaseTest extends Assert
+		MockCdiContainer.class})
+public class WicketCdiTestCase extends Assert
 {
-	@Inject
-	CdiWicketTester tester;
+	protected WicketTester tester;
 
 	@Inject
-	Conversation conversation;
+	protected ContextController contextController;
+
+	@Inject
+	protected ComponentInjector componentInjector;
+
+	@Before
+	public void before()
+	{
+		tester = new WicketTester(new TestApplication());
+		prepareRequest(tester.getRequest());
+	}
 
 	@After
-	public void end()
+	public void after()
 	{
+		tester.destroy();
+		tester = null;
+	}
 
-		if (!conversation.isTransient())
-		{
-			conversation.end();
-		}
+	private void prepareRequest(HttpServletRequest request)
+	{
+		contextController.openRequest(request);
+		contextController.openSession(request);
+		contextController.openConversation(request);
 	}
 
 }

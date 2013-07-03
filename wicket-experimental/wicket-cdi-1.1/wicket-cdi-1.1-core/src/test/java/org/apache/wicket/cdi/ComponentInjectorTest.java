@@ -37,7 +37,6 @@ public class ComponentInjectorTest extends CdiBaseTest
 	@Test
 	public void innerNonStaticClass()
 	{
-
 		TestNonStaticComponent component = new TestNonStaticComponent("someId");
 		assertNull(component.dependency);
 		componentInjector.onInstantiation(component);

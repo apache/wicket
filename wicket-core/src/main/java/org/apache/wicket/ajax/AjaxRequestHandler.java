@@ -90,7 +90,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	private List<AjaxRequestTarget.IListener> listeners = null;
 
 	/** */
-	private final Set<ITargetRespondListener> respondListeners = new HashSet<ITargetRespondListener>();
+	private final Set<ITargetRespondListener> respondListeners = new HashSet<>();
 
 	/** see https://issues.apache.org/jira/browse/WICKET-3564 */
 	protected transient boolean respondersFrozen;
@@ -192,7 +192,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 
 		if (listeners == null)
 		{
-			listeners = new LinkedList<AjaxRequestTarget.IListener>();
+			listeners = new LinkedList<>();
 		}
 
 		if (!listeners.contains(listener))
