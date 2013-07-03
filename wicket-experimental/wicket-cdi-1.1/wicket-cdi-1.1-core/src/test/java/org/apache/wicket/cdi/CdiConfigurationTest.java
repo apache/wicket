@@ -30,7 +30,7 @@ import org.junit.Test;
  */
 @AdditionalClasses({
 		TestCdiApplication.class})
-public class CdiConfigurationTest extends CdiFilterBaseTest
+public class CdiConfigurationTest extends WicketCdiFilterBaseTest
 {
 
 	@Inject

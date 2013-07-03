@@ -28,7 +28,7 @@ import org.junit.Test;
 		TestCdiApplication.class,
 		TestCdiAdditionApplication.class
 })
-public class MultiAppInClassLoaderTest extends CdiFilterBaseTest
+public class MultiAppInClassLoaderTest extends WicketCdiFilterBaseTest
 {
 
 

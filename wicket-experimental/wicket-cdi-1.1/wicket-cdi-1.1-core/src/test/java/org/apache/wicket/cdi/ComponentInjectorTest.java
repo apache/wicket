@@ -25,7 +25,7 @@ import org.junit.Test;
 /**
  * Tests for ComponentInjector
  */
-public class ComponentInjectorTest extends CdiBaseTest
+public class ComponentInjectorTest extends WicketCdiTestCase
 {
 
 	@Inject

@@ -38,7 +38,7 @@ import org.mockito.Mockito;
 		CdiWicketFilter.class,
 		CdiWebApplicationFactory.class
 })
-public abstract class CdiFilterBaseTest extends CdiBaseTest
+public abstract class WicketCdiFilterBaseTest extends WicketCdiTestCase
 {
 
 	@Inject

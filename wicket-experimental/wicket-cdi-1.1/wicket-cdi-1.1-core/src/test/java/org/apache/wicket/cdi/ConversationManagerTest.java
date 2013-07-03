@@ -26,7 +26,7 @@ import org.junit.Test;
 /**
  * @author jsarman
  */
-public class ConversationManagerTest extends CdiBaseTest
+public class ConversationManagerTest extends WicketCdiTestCase
 {
 
 	@Inject

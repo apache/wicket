@@ -16,21 +16,20 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.cdi.testapp.TestApplication;
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.cdi.testapp.TestAppScope;
+import org.apache.wicket.cdi.testapp.TestConversationBean;
+import org.apache.wicket.cdi.util.tester.CdiWicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
-import org.jglue.cdiunit.ContextController;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
- * Base class for all CDI unit tests
+ * @author jsarman
  */
 @RunWith(CdiRunner.class)
 @AdditionalClasses({
@@ -40,39 +39,29 @@ import org.junit.runner.RunWith;
 		ComponentInjector.class,
 		ConversationExpiryChecker.class,
 		ConversationPropagator.class,
+		ConversationManager.class,
 		DetachEventEmitter.class,
 		NonContextualManager.class,
 		SessionInjector.class,
-		MockCdiContainer.class})
-public class WicketCdiTestCase extends Assert
+		MockCdiContainer.class,
+		TestAppScope.class,
+		TestConversationBean.class})
+public abstract class WicketCdiTestCase extends Assert
 {
-	protected WicketTester tester;
+	@Inject
+	CdiWicketTester tester;
 
 	@Inject
-	protected ContextController contextController;
-
-	@Inject
-	protected ComponentInjector componentInjector;
-
-	@Before
-	public void before()
-	{
-		tester = new WicketTester(new TestApplication());
-		prepareRequest(tester.getRequest());
-	}
+	Conversation conversation;
 
 	@After
-	public void after()
+	public void end()
 	{
-		tester.destroy();
-		tester = null;
-	}
 
-	private void prepareRequest(HttpServletRequest request)
-	{
-		contextController.openRequest(request);
-		contextController.openSession(request);
-		contextController.openConversation(request);
+		if (!conversation.isTransient())
+		{
+			conversation.end();
+		}
 	}
 
 }

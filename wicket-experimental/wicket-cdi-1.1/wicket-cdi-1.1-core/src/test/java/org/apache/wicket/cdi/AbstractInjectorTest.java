@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * @author jsarman
  */
-public class AbstractInjectorTest extends CdiBaseTest
+public class AbstractInjectorTest extends WicketCdiTestCase
 {
 
 	@Inject
