@@ -19,6 +19,7 @@ package org.apache.wicket.cdi.util.tester;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.jboss.weld.context.http.HttpConversationContext;
 import org.jboss.weld.context.http.HttpRequestContext;
@@ -83,5 +84,11 @@ public class ContextManager
 			conversationContext.invalidate();
 			conversationContext.deactivate();
 		}
+	}
+
+	public void destroy(HttpSession session)
+	{
+		conversationContext.destroy(session);
+		sessionContext.destroy(session);
 	}
 }

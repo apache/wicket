@@ -38,13 +38,6 @@ public class CdiConfigurationTest extends CdiFilterBaseTest
 	@Inject
 	ComponentInjector componentInjector;
 
-	@Override
-	public void init()
-	{
-		//do not init
-	}
-
-
 	/**
 	 * Allows to force an app name when class is extended
 	 *

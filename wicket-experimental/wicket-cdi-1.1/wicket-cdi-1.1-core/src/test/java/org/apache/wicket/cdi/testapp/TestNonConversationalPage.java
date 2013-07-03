@@ -16,43 +16,41 @@
  */
 package org.apache.wicket.cdi.testapp;
 
-import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Random;
 
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * @author jsarman
  */
-@ConversationScoped
-public class TestConversationBean implements Serializable
+public class TestNonConversationalPage extends WebPage
 {
-
-	private static final Logger logger = LoggerFactory.getLogger(TestConversationBean.class);
-	private AtomicInteger counter = new AtomicInteger();
-
+	private static final Logger logger = LoggerFactory.getLogger(TestConversationPage.class);
 	@Inject
-	Conversation conversation;
+	TestConversationBean counter;
 
-	public int getCount()
-	{
-		logger.debug("Count = {}", counter.get());
-		return counter.get();
-	}
+	Random random = new Random();
 
-	public void increment()
+	public TestNonConversationalPage()
 	{
-		if (!conversation.isTransient())
+		logger.debug("Starting TestConversationalPage");
+		add(new Label("count", new PropertyModel(this, "counter.count")));
+
+		add(new Link<Void>("increment")
 		{
-			counter.incrementAndGet();
-		} else
-		{
-			logger.debug("Not incrementing. Converation is transient");
-		}
+			@Override
+			public void onClick()
+			{
+				counter.increment();
+			}
+		});
 	}
 }

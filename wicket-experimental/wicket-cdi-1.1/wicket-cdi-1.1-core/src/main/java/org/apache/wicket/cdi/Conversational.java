@@ -18,6 +18,8 @@ package org.apache.wicket.cdi;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import javax.enterprise.inject.Typed;
@@ -29,10 +31,11 @@ import org.apache.wicket.Page;
  */
 @Documented
 @Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 @Typed(Page.class)
 public @interface Conversational
 {
-	ConversationPropagation prop() default ConversationPropagation.ALL;
+	ConversationPropagation prop() default ConversationPropagation.NONBOOKMARKABLE;
 
 	boolean auto() default true;
 }
