@@ -20,6 +20,8 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * resource caching strategy that adds a version for the 
@@ -43,6 +45,8 @@ import org.apache.wicket.util.lang.Args;
  */
 public class FilenameWithVersionResourceCachingStrategy implements IResourceCachingStrategy
 {
+	private static final Logger LOG = LoggerFactory.getLogger(FilenameWithVersionResourceCachingStrategy.class);
+
 	private static final String DEFAULT_VERSION_PREFIX = "-ver-";
 	
 	/** string that marks the beginning the of the version in the decorated filename */
@@ -104,6 +108,12 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 
 		// get undecorated filename
 		final String filename = url.getFileName();
+
+		if (filename.contains(getVersionPrefix()))
+		{
+			LOG.error("A resource with name '{}' contains the version prefix '{}' so the un-decoration will not work." +
+					" Either use a different version prefix or rename this resource.", filename, getVersionPrefix());
+		}
 
 		// check if resource name has extension
 		final int extensionAt = filename.lastIndexOf('.');
