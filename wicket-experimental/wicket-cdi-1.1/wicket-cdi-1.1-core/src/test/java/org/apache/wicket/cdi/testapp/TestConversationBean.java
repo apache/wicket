@@ -19,9 +19,7 @@ package org.apache.wicket.cdi.testapp;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +34,6 @@ public class TestConversationBean implements Serializable
 	private static final Logger logger = LoggerFactory.getLogger(TestConversationBean.class);
 	private AtomicInteger counter = new AtomicInteger();
 
-	@Inject
-	Conversation conversation;
 
 	public int getCount()
 	{
@@ -47,12 +43,8 @@ public class TestConversationBean implements Serializable
 
 	public void increment()
 	{
-		if (!conversation.isTransient())
-		{
-			counter.incrementAndGet();
-		} else
-		{
-			logger.debug("Not incrementing. Converation is transient");
-		}
+
+		counter.incrementAndGet();
+
 	}
 }

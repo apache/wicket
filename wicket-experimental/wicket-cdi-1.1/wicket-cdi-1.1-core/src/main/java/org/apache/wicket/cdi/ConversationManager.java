@@ -18,9 +18,9 @@ package org.apache.wicket.cdi;
 
 import java.io.Serializable;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -33,24 +33,40 @@ import org.slf4j.LoggerFactory;
 public class ConversationManager implements Serializable
 {
 	private static final Logger logger = LoggerFactory.getLogger(ConversationManager.class);
-	@Inject
-	Conversation conversation;
 
 	@Inject
-	@Propagation
-	Instance<IConversationPropagation> propagations;
+	AbstractCdiContainer container;
 
 	@Inject
 	@Auto
-	Instance<Boolean> manageConversations;
+	Boolean globalAuto;
+
+	@Inject
+	@Propagation
+	IConversationPropagation globalPropagation;
+
 	IConversationPropagation propagation;
 	Boolean manageConversation;
 
-	boolean containerManaged;
+	boolean terminateConversation;
+
+	@PostConstruct
+	public void init()
+	{
+		logger.debug("Starting new Conversation manager for id = {}", getConversation().getId());
+		propagation = globalPropagation;
+		manageConversation = globalAuto;
+		logger.debug("Setting initial values to auto = {} prop = {}", manageConversation, propagation);
+	}
+
+	private Conversation getConversation()
+	{
+		return container.getCurrentConversation();
+	}
 
 	public IConversationPropagation getPropagation()
 	{
-		return propagation == null ? propagations.get() : propagation;
+		return propagation;
 	}
 
 	public void setPropagation(IConversationPropagation propagation)
@@ -59,59 +75,47 @@ public class ConversationManager implements Serializable
 		{
 			throw new IllegalArgumentException("Propagation cannot be null");
 		}
-		if (conversation.isTransient())
-		{
-			logger.warn("Attempt to set Propagation with transient conversation. Ignoring.");
-			return;
-		}
 		if (this.propagation == propagation)
 		{
 			return;
 		}
-		if (propagation == ConversationPropagation.NONE)
-		{
-			logger.warn("Changing conversation dependent propagation to NONE can cause undesirable results.");
-		} else
-		{
-			logger.debug("Changing conversation dependent propagation to {} for id = {}",
-					propagation, conversation.getId());
-		}
+
+		logger.debug("Changing conversation dependent propagation to {} for id = {}",
+				propagation, getConversation().getId());
+
 		this.propagation = propagation;
 	}
 
 	public Boolean getManageConversation()
 	{
-		return manageConversation == null ? manageConversations.get() : manageConversation;
+		return manageConversation;
 	}
 
 	public void setManageConversation(boolean manageConversation)
 	{
-		if (conversation.isTransient())
+		if (this.manageConversation == manageConversation)
 		{
-			logger.warn("Attempt to set manageConversation with transient conversation. Ignoring.");
 			return;
 		}
 		logger.debug("Setting conversation dependent manageConversation to {} for id = {} ",
-				manageConversation, conversation.getId());
+				manageConversation, getConversation().getId());
+
 		this.manageConversation = manageConversation;
 	}
 
-	boolean getContainerManaged()
+	void cancelConversationEnd()
 	{
-		return containerManaged;
+		terminateConversation = false;
 	}
 
-	void setContainerManaged(boolean managed, IConversationPropagation propagation)
+	void scheduleConversationEnd()
 	{
-		setManageConversation(managed);
-		setPropagation(propagation);
-		containerManaged = managed;
+		terminateConversation = true;
 	}
 
-
-	public void endConversation()
+	boolean isConversationScheduledForEnd()
 	{
-		conversation.end();
+		return terminateConversation;
 	}
 
 }

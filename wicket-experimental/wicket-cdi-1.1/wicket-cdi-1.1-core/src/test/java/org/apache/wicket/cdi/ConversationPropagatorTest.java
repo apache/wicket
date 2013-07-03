@@ -20,7 +20,6 @@ import javax.inject.Inject;
 
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;
-import org.apache.wicket.cdi.testapp.TestNonAutoConversationalPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
@@ -59,6 +58,31 @@ public class ConversationPropagatorTest extends CdiBaseTest
 	{
 		tester.startPage(TestConversationalPage.class,
 				new PageParameters().add("pageType", "bookmarkable"));
+
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		//The conversation should auto end and not create another one
+		//so the next page just keeps getting 1 because the conversationscoped bean
+		//doesnt persist across requests.
+		for (i = 0; i < 3; i++)
+		{
+			tester.clickLink("increment");
+			tester.assertLabel("count", 1 + "");
+		}
+	}
+
+	@Test
+	public void testPropagationAllNonBookmarkable()
+	{
+
+		cdiConfiguration.setPropagation(ConversationPropagation.ALL);
+		cdiConfiguration.configure(tester.getApplication());
+		tester.startPage(TestConversationPage.class);
 		int i;
 		for (i = 0; i < 3; i++)
 		{
@@ -75,71 +99,11 @@ public class ConversationPropagatorTest extends CdiBaseTest
 	}
 
 	@Test
-	public void testAutoThenDisableConversationNonBookmarkable()
+	public void testPropagationAllBookmarkable()
 	{
-		tester.startPage(TestConversationalPage.class,
-				new PageParameters().add("pageType", "nonbookmarkable"));
-		int i;
-		for (i = 0; i < 3; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
-		}
-		cdiConfiguration.setAutoConversationManagement(false); // Disable Auto
-		tester.clickLink("next");
-		for (; i < 6; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
-		}
-	}
-
-	@Test
-	public void testAutoThenDisableConversationBookmarkable()
-	{
-		tester.startPage(TestConversationalPage.class,
-				new PageParameters().add("pageType", "bookmarkable"));
-		int i;
-		for (i = 0; i < 3; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
-		}
-		cdiConfiguration.setAutoConversationManagement(false); // Disable Auto
-		tester.clickLink("next");
-		for (; i < 6; i++)
-		{
-			tester.assertLabel("count", 0 + "");
-			tester.clickLink("increment");
-		}
-	}
-
-	@Test
-	public void testPropagationAllConversationNonBookmarkable()
-	{
-
-		tester.startPage(TestNonAutoConversationalPage.class);
-		int i;
-		for (i = 0; i < 3; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
-		}
-		tester.clickLink("next");
-		for (; i < 6; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
-		}
-
-	}
-
-	@Test
-	public void testPropagationAllConversationBookmarkable()
-	{
-		TestConversationalPage page = new TestConversationalPage();
-
-		tester.startPage(TestNonAutoConversationalPage.class,
+		cdiConfiguration.setPropagation(ConversationPropagation.ALL);
+		cdiConfiguration.configure(tester.getApplication());
+		tester.startPage(TestConversationPage.class,
 				new PageParameters().add("pageType", "bookmarkable"));
 		int i;
 		for (i = 0; i < 3; i++)
@@ -175,6 +139,48 @@ public class ConversationPropagatorTest extends CdiBaseTest
 			tester.assertLabel("count", "1");
 		}
 
+	}
+
+	@Test
+	public void testGlobalAutoSettingNonBookmarkable()
+	{
+		cdiConfiguration.setAutoConversationManagement(true);
+		cdiConfiguration.configure(tester.getApplication());
+		tester.startPage(TestConversationPage.class,
+				new PageParameters().add("auto", true));
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+	}
+
+	@Test
+	public void testGlobalAutoSettingBookmarkable()
+	{
+		cdiConfiguration.setAutoConversationManagement(true);
+		cdiConfiguration.configure(tester.getApplication());
+		tester.startPage(TestConversationPage.class,
+				new PageParameters().add("auto", true).add("pageType", "bookmarkable"));
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
 	}
 
 
