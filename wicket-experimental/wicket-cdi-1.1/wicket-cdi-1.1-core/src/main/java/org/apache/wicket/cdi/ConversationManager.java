@@ -46,6 +46,8 @@ public class ConversationManager implements Serializable
 	IConversationPropagation propagation;
 	Boolean manageConversation;
 
+	boolean containerManaged;
+
 	public IConversationPropagation getPropagation()
 	{
 		return propagation == null ? propagations.get() : propagation;
@@ -62,8 +64,18 @@ public class ConversationManager implements Serializable
 			logger.warn("Attempt to set Propagation with transient conversation. Ignoring.");
 			return;
 		}
-		logger.debug("Setting conversation dependent propagation to {} for id = {}",
-				propagation, conversation.getId());
+		if (this.propagation == propagation)
+		{
+			return;
+		}
+		if (propagation == ConversationPropagation.NONE)
+		{
+			logger.warn("Changing conversation dependent propagation to NONE can cause undesirable results.");
+		} else
+		{
+			logger.debug("Changing conversation dependent propagation to {} for id = {}",
+					propagation, conversation.getId());
+		}
 		this.propagation = propagation;
 	}
 
@@ -84,5 +96,22 @@ public class ConversationManager implements Serializable
 		this.manageConversation = manageConversation;
 	}
 
+	boolean getContainerManaged()
+	{
+		return containerManaged;
+	}
+
+	void setContainerManaged(boolean managed, IConversationPropagation propagation)
+	{
+		setManageConversation(managed);
+		setPropagation(propagation);
+		containerManaged = managed;
+	}
+
+
+	public void endConversation()
+	{
+		conversation.end();
+	}
 
 }

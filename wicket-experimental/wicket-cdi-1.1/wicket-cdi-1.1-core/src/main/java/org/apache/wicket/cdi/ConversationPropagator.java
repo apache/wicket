@@ -91,7 +91,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		}
 
 
-		if (!conversation.isTransient() && !Objects.isEqual(conversation.getId(), cid))
+		if (cid != null && !conversation.isTransient() && !Objects.isEqual(conversation.getId(), cid))
 		{
 			logger.info("Conversation {} has expired for {}", cid, page);
 			throw new ConversationExpiredException(null, cid, page, handler);
@@ -141,24 +141,21 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 
 		try
 		{
-			if (cid != null)
+			Conversation conversation = getConversation();
+			if (!conversation.isTransient() && cid == null)
 			{
-				logger.debug("Activating conversation {}", cid);
-				container.activateConversationalContext(cycle, cid);
-				//Check to verify propagation is enabled for the Converation.
-				if (getPropagation().equals(ConversationPropagation.NONE))
+				if (getAuto())
 				{
-					container.deactivateConversationalContext(cycle);
-					if (page != null)
-					{
-						clearConversationOnPage(page);
-					}
-					logger.debug("Did not activate conversation {}. Propagation is set to NONE", cid);
-				} else
+					setConversationOnPage(page);
+					cid = conversation.getId();
+				} else if (conversationManager.getContainerManaged())
 				{
-					logger.debug("Activated conversation {}", cid);
+					conversation.end();
 				}
 			}
+			logger.debug("Activating conversation {}", cid);
+			container.activateConversationalContext(cycle, cid);
+
 		} catch (NonexistentConversationException e)
 		{
 			logger.info("Unable to restore conversation with id {}", cid, e.getMessage());
@@ -180,9 +177,6 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			return;
 		}
 
-		// apply auto semantics
-
-		autoEndIfNecessary(page, handler, conversation);
 		autoBeginIfNecessary(page, handler, conversation);
 
 		if (getPropagation().propagatesViaPage(page, handler))
@@ -275,6 +269,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			return;
 		}
 
+		Page p = getPage(handler);
 		if (getPropagation().propagatesViaParameters(handler))
 		{
 			// propagate cid to bookmarkable pages via urls
@@ -309,17 +304,41 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	protected void autoBeginIfNecessary(Page page, IRequestHandler handler,
 	                                    Conversation conversation)
 	{
-		if (!getAuto() || !conversation.isTransient() || page == null ||
-				!getPropagation().propagatesViaPage(page, handler) || !hasConversationalComponent(page))
+
+		if (page == null || !hasConversationalComponent(page))
 		{
 			return;
 		}
 
-		// auto activate conversation
-
-		conversation.begin();
-
-		logger.debug("Auto-began conversation {} for page {}", conversation.getId(), page);
+		Conversational annotation = page.getClass().getAnnotation(Conversational.class);
+		if (conversation.isTransient())
+		{
+			if (annotation.auto())
+			{
+				conversation.begin();
+				logger.debug("Auto-began conversation {} for page {}", conversation.getId(), page);
+			}
+		}
+		boolean propagationChanged = getPropagation() != annotation.prop();
+		if (!conversation.isTransient())
+		{
+			if (!conversationManager.getContainerManaged())
+			{
+				if (propagationChanged)
+				{
+					logger.debug("Changing propagation for conversation id={} to {}",
+							conversation.getId(), annotation.prop());
+				}
+				conversationManager.setContainerManaged(annotation.auto(), annotation.prop());
+			}
+		} else
+		{
+			if (propagationChanged)
+			{
+				logger.info("Not setting propagation to {} because no conversation is started.",
+						annotation.prop());
+			}
+		}
 	}
 
 	protected void autoEndIfNecessary(Page page, IRequestHandler handler, Conversation conversation)
@@ -347,7 +366,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			@Override
 			public void component(Component object, IVisit<Boolean> visit)
 			{
-				if (object instanceof ConversationalComponent)
+				Conversational annotation = object.getClass().getAnnotation(Conversational.class);
+				if (annotation != null)
 				{
 					visit.stop(true);
 				}

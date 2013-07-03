@@ -44,11 +44,6 @@ public class CdiWicketTester extends WicketTester
 	@Inject
 	CdiConfiguration cdiConfiguration;
 
-	public CdiWicketTester()
-	{
-		super();
-	}
-
 	@PostConstruct
 	public void initializeApp()
 	{
@@ -105,10 +100,17 @@ public class CdiWicketTester extends WicketTester
 	@PreDestroy
 	public void finish()
 	{
-		logger.info("Destroying Cdi Wicket Tester");
-		if (getLastRequest() != null)
+		try
 		{
-			contextManager.deactivateContexts(getLastRequest());
+			logger.info("Destroying Cdi Wicket Tester");
+			if (getLastRequest() != null)
+			{
+				contextManager.deactivateContexts(getLastRequest());
+			}
+			contextManager.destroy(getHttpSession());
+			destroy();
+		} catch (Throwable t)
+		{
 		}
 	}
 }

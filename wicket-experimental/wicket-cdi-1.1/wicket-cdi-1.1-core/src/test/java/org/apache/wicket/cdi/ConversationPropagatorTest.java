@@ -19,6 +19,9 @@ package org.apache.wicket.cdi;
 import javax.inject.Inject;
 
 import org.apache.wicket.cdi.testapp.TestConversationPage;
+import org.apache.wicket.cdi.testapp.TestConversationalPage;
+import org.apache.wicket.cdi.testapp.TestNonAutoConversationalPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
 /**
@@ -32,15 +35,147 @@ public class ConversationPropagatorTest extends CdiBaseTest
 
 
 	@Test
-	public void testAutoConversation()
+	public void testAutoConversationNonBookmarkable()
 	{
 
-		tester.startPage(TestConversationPage.class);//, new PageParameters().add("auto", true));
-		for (int i = 0; i < 7; i++)
+		tester.startPage(TestConversationalPage.class);
+		int i;
+		for (i = 0; i < 3; i++)
 		{
 			tester.assertLabel("count", i + "");
 			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
 
+	}
+
+	@Test
+	public void testAutoConversationBookmarkable()
+	{
+		tester.startPage(TestConversationalPage.class,
+				new PageParameters().add("pageType", "bookmarkable"));
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+
+	}
+
+	@Test
+	public void testAutoThenDisableConversationNonBookmarkable()
+	{
+		tester.startPage(TestConversationalPage.class,
+				new PageParameters().add("pageType", "nonbookmarkable"));
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+		cdiConfiguration.setAutoConversationManagement(false); // Disable Auto
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
 		}
 	}
+
+	@Test
+	public void testAutoThenDisableConversationBookmarkable()
+	{
+		tester.startPage(TestConversationalPage.class,
+				new PageParameters().add("pageType", "bookmarkable"));
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+		cdiConfiguration.setAutoConversationManagement(false); // Disable Auto
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.assertLabel("count", 0 + "");
+			tester.clickLink("increment");
+		}
+	}
+
+	@Test
+	public void testPropagationAllConversationNonBookmarkable()
+	{
+
+		tester.startPage(TestNonAutoConversationalPage.class);
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+
+	}
+
+	@Test
+	public void testPropagationAllConversationBookmarkable()
+	{
+		TestConversationalPage page = new TestConversationalPage();
+
+		tester.startPage(TestNonAutoConversationalPage.class,
+				new PageParameters().add("pageType", "bookmarkable"));
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.assertLabel("count", i + "");
+			tester.clickLink("increment");
+		}
+
+	}
+
+	@Test
+	public void testPropagationNone()
+	{
+		cdiConfiguration.setPropagation(ConversationPropagation.NONE);
+		cdiConfiguration.configure(tester.getApplication());
+		tester.startPage(TestConversationPage.class);
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.clickLink("increment");
+			tester.assertLabel("count", "1");
+		}
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.clickLink("increment");
+			tester.assertLabel("count", "1");
+		}
+
+	}
+
+
 }

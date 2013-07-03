@@ -44,42 +44,17 @@ public class WeldCdiContainer extends AbstractCdiContainer
 	@Override
 	public void activateConversationalContext(RequestCycle cycle, String cid)
 	{
-		if (cid == null)
-		{
-			throw new IllegalStateException("Attempting to activate a conversation with no cid set");
-		}
-
 		conversationContext.associate(getRequest(cycle));
 		if (conversationContext.isActive())
 		{
-			// Only reactivate if transient
-			if (conversationContext.getCurrentConversation().isTransient())
-			{
-				conversationContext.invalidate();
-				conversationContext.deactivate();
-				conversationContext.activate(cid);
-			}
+			conversationContext.invalidate();
+			conversationContext.deactivate();
+			conversationContext.activate(cid);
 		} else
 		{
 			conversationContext.activate(cid);
 		}
 	}
-
-	@Override
-	public void deactivateConversationalContext(RequestCycle cycle)
-	{
-		conversationContext.associate(getRequest(cycle));
-		if (conversationContext.isActive())
-		{
-			// Only deactivate if not transient
-			if (!conversationContext.getCurrentConversation().isTransient())
-			{
-				conversationContext.invalidate();
-				conversationContext.deactivate();
-			}
-		}
-	}
-
 
 	@Override
 	public Conversation getCurrentConversation()

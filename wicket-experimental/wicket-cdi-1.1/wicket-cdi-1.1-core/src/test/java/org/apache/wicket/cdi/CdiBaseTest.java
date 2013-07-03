@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
 import org.apache.wicket.cdi.testapp.TestAppScope;
@@ -23,8 +24,8 @@ import org.apache.wicket.cdi.testapp.TestConversationBean;
 import org.apache.wicket.cdi.util.tester.CdiWicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
@@ -49,10 +50,17 @@ public abstract class CdiBaseTest extends Assert
 	@Inject
 	CdiWicketTester tester;
 
-	@Before
-	public void init()
+	@Inject
+	Conversation conversation;
+
+	@After
+	public void end()
 	{
-		tester.configure();
+
+		if (!conversation.isTransient())
+		{
+			conversation.end();
+		}
 	}
 
 }
