@@ -61,6 +61,9 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	static final String CID_ATTR = "cid";
 
 	@Inject
+	CdiConfiguration cdiConfiguration;
+
+	@Inject
 	AbstractCdiContainer container;
 
 	@Inject
@@ -142,19 +145,12 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		try
 		{
 			Conversation conversation = getConversation();
-			if (!conversation.isTransient() && cid == null)
+
+			if (!(conversation.isTransient() && cid == null))
 			{
-				if (getAuto())
-				{
-					setConversationOnPage(page);
-					cid = conversation.getId();
-				} else if (conversationManager.getContainerManaged())
-				{
-					conversation.end();
-				}
+				logger.debug("Activating conversation {}", cid);
+				container.activateConversationalContext(cycle, cid);
 			}
-			logger.debug("Activating conversation {}", cid);
-			container.activateConversationalContext(cycle, cid);
 
 		} catch (NonexistentConversationException e)
 		{
@@ -177,8 +173,13 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			return;
 		}
 
-		autoBeginIfNecessary(page, handler, conversation);
-
+		if (autoEndIfNecessary(page, handler, conversation))
+		{
+			container.activateConversationalContext(cycle, null);
+		} else
+		{
+			autoBeginIfNecessary(page, handler);
+		}
 		if (getPropagation().propagatesViaPage(page, handler))
 		{
 			// propagate a conversation across non-bookmarkable page instances
@@ -197,7 +198,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		{
 			return;
 		}
-
+		boolean propagated = false;
 		Page page = getPage(handler);
 		if (page != null)
 		{
@@ -205,6 +206,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			{
 				// propagate a conversation across non-bookmarkable page instances
 				setConversationOnPage(page);
+				propagated = true;
 			}
 		}
 
@@ -220,7 +222,12 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			if (parameters != null)
 			{
 				parameters.set(CID_ATTR, conversation.getId());
+				propagated = true;
 			}
+		}
+		if (!propagated && getAuto())
+		{
+			getConversationManager().scheduleConversationEnd();
 		}
 	}
 
@@ -269,7 +276,6 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			return;
 		}
 
-		Page p = getPage(handler);
 		if (getPropagation().propagatesViaParameters(handler))
 		{
 			// propagate cid to bookmarkable pages via urls
@@ -277,6 +283,22 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			logger.debug("Propagating non-transient conversation {} via url", conversation.getId());
 
 			url.setQueryParameter(CID_ATTR, conversation.getId());
+		} else
+		{
+			//we did not propagate.
+			//Cancel scheduled conversation end if page is auto.
+			Page page = getPage(handler);
+			if (page != null)
+			{
+				Conversational annotation = page.getClass().getAnnotation(Conversational.class);
+				if (annotation != null)
+				{
+					if (annotation.auto() && getConversationManager().isConversationScheduledForEnd())
+					{
+						getConversationManager().cancelConversationEnd(); //was scheduled to end but next page is auto
+					}
+				}
+			}
 		}
 	}
 
@@ -301,64 +323,68 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		return true;
 	}
 
-	protected void autoBeginIfNecessary(Page page, IRequestHandler handler,
-	                                    Conversation conversation)
+	protected void autoBeginIfNecessary(Page page, IRequestHandler handler)
 	{
 
-		if (page == null || !hasConversationalComponent(page))
+		if (page == null)
 		{
 			return;
 		}
 
 		Conversational annotation = page.getClass().getAnnotation(Conversational.class);
-		if (conversation.isTransient())
-		{
-			if (annotation.auto())
-			{
-				conversation.begin();
-				logger.debug("Auto-began conversation {} for page {}", conversation.getId(), page);
-			}
-		}
-		boolean propagationChanged = getPropagation() != annotation.prop();
-		if (!conversation.isTransient())
-		{
-			if (!conversationManager.getContainerManaged())
-			{
-				if (propagationChanged)
-				{
-					logger.debug("Changing propagation for conversation id={} to {}",
-							conversation.getId(), annotation.prop());
-				}
-				conversationManager.setContainerManaged(annotation.auto(), annotation.prop());
-			}
-		} else
-		{
-			if (propagationChanged)
-			{
-				logger.info("Not setting propagation to {} because no conversation is started.",
-						annotation.prop());
-			}
-		}
-	}
 
-	protected void autoEndIfNecessary(Page page, IRequestHandler handler, Conversation conversation)
-	{
-		if (!getAuto() || conversation.isTransient() || page == null ||
-				!getPropagation().propagatesViaPage(page, handler) || hasConversationalComponent(page))
+		boolean auto = getAuto();
+		auto |= annotation == null ? false : annotation.auto();
+
+		// possibly changing propagation and auto is not set
+		if (annotation == null && !auto)
 		{
 			return;
 		}
 
-		// auto de-activate conversation
+		if (getConversation().isTransient())
+		{
+			if (auto)
+			{
+				getConversation().begin();
+				logger.debug("Auto-began conversation {} for page {}", getConversation().getId(), page);
+			}
+		}
+		ConversationPropagation prop = annotation != null ? annotation.prop() : getPropagation();
+		// The conversationManager is attached to a conversation so update
+		if (!getConversation().isTransient())
+		{
+			getConversationManager().setPropagation(prop);
+			getConversationManager().setManageConversation(auto);
+		} else
+		{
+			if (prop != getPropagation())
+			{
+				logger.info("Not setting propagation to {} because no conversation is started.",
+						prop);
+			}
+		}
+	}
 
-		String cid = conversation.getId();
+	protected boolean autoEndIfNecessary(Page page, IRequestHandler handler, Conversation conversation)
+	{
+		if (page == null || conversation.isTransient())
+		{
+			return false;
+		}
 
-		conversation.end();
-
-		logger.debug("Auto-ended conversation {} for page {}", cid, page);
+		boolean endConversation = getConversationManager().isConversationScheduledForEnd();
+		if (endConversation)
+		{
+			String cid = conversation.getId();
+			getConversation().end();
+			logger.debug("Auto-ended conversation {} for page {}", cid, page);
+		}
+		return endConversation;
 	}
 
 
+	// Currently not being used will reinvestigate this concept.
 	protected boolean hasConversationalComponent(Page page)
 	{
 		Boolean hasConversational = Visits.visit(page, new IVisitor<Component, Boolean>()
@@ -417,16 +443,35 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		return null;
 	}
 
+	ConversationManager getConversationManager()
+	{
+		if (getConversation().isTransient())
+		{
+			logger.warn("Accessing Conversation Manager from transient Conversation Context");
+		}
+		return conversationManager;
+	}
+
 	Boolean getAuto()
 	{
-		logger.info("Getting Auto setting for conversation = {}", getConversation().getId());
-		return conversationManager.getManageConversation();
+		if (getConversation().isTransient())
+		{
+			logger.debug("Getting Global Auto setting");
+			return cdiConfiguration.isAutoConversationManagement();
+		}
+		logger.debug("Getting Auto setting for conversation = {}", getConversation().getId());
+		return getConversationManager().getManageConversation();
 	}
 
 	ConversationPropagation getPropagation()
 	{
-		logger.info("Propagation is set to {} with id = {}", conversationManager.getPropagation(), getConversation().getId());
-		return (ConversationPropagation) conversationManager.getPropagation();
+		if (getConversation().isTransient())
+		{
+			logger.debug("Getting global Propagation {}.", cdiConfiguration.getPropagation());
+			return (ConversationPropagation) cdiConfiguration.getPropagation();
+		}
+		logger.debug("Propagation is set to {} with id = {}", getConversationManager().getPropagation(), getConversation().getId());
+		return (ConversationPropagation) getConversationManager().getPropagation();
 	}
 
 }

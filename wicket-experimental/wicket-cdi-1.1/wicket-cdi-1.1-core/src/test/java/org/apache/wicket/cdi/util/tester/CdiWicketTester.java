@@ -47,7 +47,7 @@ public class CdiWicketTester extends WicketTester
 	@PostConstruct
 	public void initializeApp()
 	{
-		logger.info("Initialized Cdi Wicket Tester");
+		logger.debug("Initialized Cdi Wicket Tester");
 		contextManager.activateContexts(getRequest()); //Start up contexts in case no requests are performed
 	}
 
@@ -102,7 +102,7 @@ public class CdiWicketTester extends WicketTester
 	{
 		try
 		{
-			logger.info("Destroying Cdi Wicket Tester");
+			logger.debug("Destroying Cdi Wicket Tester");
 			if (getLastRequest() != null)
 			{
 				contextManager.deactivateContexts(getLastRequest());

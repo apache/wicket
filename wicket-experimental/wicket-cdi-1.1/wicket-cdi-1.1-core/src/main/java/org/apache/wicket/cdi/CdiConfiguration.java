@@ -41,6 +41,8 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configures CDI integration
@@ -51,6 +53,7 @@ import org.apache.wicket.util.lang.Args;
 @ApplicationScoped
 public class CdiConfiguration
 {
+	private static final Logger logger = LoggerFactory.getLogger(CdiConfiguration.class);
 	private static final String[] defaultIgnoredPackages = new String[]
 			{
 					"org.apache.wicket.markup",
@@ -58,6 +61,8 @@ public class CdiConfiguration
 					"org.apache.wicket.behavior",
 			};
 
+	@Inject
+	AbstractCdiContainer container;
 
 	@Inject
 	INonContextualManager nonContextualManager;
@@ -244,6 +249,11 @@ public class CdiConfiguration
 		ConfigurationParameters params = getApplicationParameters();
 		if (params.isConfigured())
 		{
+			if (container.getCurrentConversation().isTransient())
+			{
+				logger.warn("Not setting AutoConversationManagement because the conversation context is transient.");
+				return this;
+			}
 			conversationManager.setManageConversation(enabled);
 		} else
 		{
@@ -266,6 +276,11 @@ public class CdiConfiguration
 		ConfigurationParameters params = getApplicationParameters();
 		if (params.isConfigured())
 		{
+			if (container.getCurrentConversation().isTransient())
+			{
+				logger.warn("Not setting propagation because the conversation context is transient.");
+				return this;
+			}
 			conversationManager.setPropagation(propagation);
 		} else
 		{
