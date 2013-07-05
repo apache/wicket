@@ -107,27 +107,6 @@ public class ComponentInjectorTest extends Assert
 		assertEquals(expectedValue, component.dependency);
 	}
 
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5226
-	 */
-	@Test
-	public void anonymousClass()
-	{
-		BeanManager beanManager = mock(BeanManager.class);
-		INonContextualManager nonContextualManager = mock(INonContextualManager.class);
-
-		CdiContainer cdiContainer = new CdiContainer(beanManager, nonContextualManager);
-		ComponentInjector injector = new ComponentInjector(cdiContainer);
-
-		WebComponent component = new WebComponent("someId") {
-			// anonymous class
-		};
-
-		injector.onInstantiation(component);
-
-		verify(nonContextualManager, never()).inject(any());
-	}
-
 	private class TestNonStaticComponent extends WebComponent
 	{
 		@Inject
