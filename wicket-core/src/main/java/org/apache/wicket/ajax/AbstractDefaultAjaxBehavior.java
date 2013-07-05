@@ -532,10 +532,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 		sb.append("};\n");
 		if (attributes.getExtraParameters().isEmpty())
-			sb.append("attrs." + AjaxAttributeName.EXTRA_PARAMETERS + " = params;\n");
+			sb.append("attrs.").append(AjaxAttributeName.EXTRA_PARAMETERS).append(" = params;\n");
 		else
-			sb.append("attrs." + AjaxAttributeName.EXTRA_PARAMETERS + " = Wicket.merge(attrs." +
-				AjaxAttributeName.EXTRA_PARAMETERS + ", params);\n");
+			sb.append("attrs.").append(AjaxAttributeName.EXTRA_PARAMETERS).append(" = Wicket.merge(attrs.")
+					.append(AjaxAttributeName.EXTRA_PARAMETERS).append(", params);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
 	}
