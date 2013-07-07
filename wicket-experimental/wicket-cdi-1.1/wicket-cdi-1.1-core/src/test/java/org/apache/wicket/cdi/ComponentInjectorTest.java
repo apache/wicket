@@ -18,52 +18,29 @@ package org.apache.wicket.cdi;
 
 import javax.inject.Inject;
 
+import org.apache.wicket.cdi.testapp.TestAppScope;
+import org.apache.wicket.cdi.testapp.TestConversationBean;
+import org.apache.wicket.cdi.testapp.TestQualifier;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 
 /**
  * Tests for ComponentInjector
  */
-public class ComponentInjectorTest extends Assert
+@AdditionalClasses({TestAppScope.class, TestConversationBean.class})
+public class ComponentInjectorTest extends WicketCdiTestCase
 {
-	private WicketTester tester;
-
-	@Before
-	public void before()
-	{
-		// starts an application so we can instantiate components
-		tester = new WicketTester();
-	}
-
-	@After
-	public void after()
-	{
-		tester.destroy();
-		tester = null;
-	}
-
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5226
 	 */
 	@Test
 	public void innerNonStaticClass()
 	{
-            //Disabled for now
-//		BeanManager beanManager = mock(BeanManager.class);
-//		INonContextualManager nonContextualManager = mock(INonContextualManager.class);
-//		AbstractCdiContainer cdiContainer = new AbstractCdiContainer(beanManager, nonContextualManager);
-//		ComponentInjector injector = new ComponentInjector(cdiContainer);
-//
-//		TestNonStaticComponent component = new TestNonStaticComponent("someId");
-//		assertNull(component.dependency);
-//
-//		injector.onInstantiation(component);
-//
-//		verify(nonContextualManager, never()).inject(any());
+		TestNonStaticComponent component = new TestNonStaticComponent("someId");
+		assertNull(component.dependency);
+		componentInjector.onInstantiation(component);
+		assertNull(component.dependency);
 	}
 
 	/**
@@ -72,36 +49,33 @@ public class ComponentInjectorTest extends Assert
 	@Test
 	public void innerStaticClass()
 	{
-            //Disabled for now need to add injectable test dependencies
-//		BeanManager beanManager = mock(BeanManager.class);
-//		INonContextualManager nonContextualManager = mock(INonContextualManager.class);
-//		final String expectedValue = "injected";
-//
-//		doAnswer(new Answer<Void>()
-//		{
-//			@Override
-//			public Void answer(InvocationOnMock invocation) throws Throwable
-//			{
-//				TestStaticComponent component = (TestStaticComponent) invocation.getArguments()[0];
-//				component.dependency = expectedValue;
-//
-//				return null;
-//			}
-//		}).when(nonContextualManager).inject(any(TestStaticComponent.class));
-//
-//		AbstractCdiContainer cdiContainer = new AbstractCdiContainer(beanManager, nonContextualManager);
-//		ComponentInjector injector = new ComponentInjector(cdiContainer);
-//
-//		TestStaticComponent component = new TestStaticComponent("someId");
-//		assertNull(component.dependency);
-//
-//		injector.onInstantiation(component);
-//
-//		assertEquals(expectedValue, component.dependency);
+		TestStaticComponent component = new TestStaticComponent("someId");
+		componentInjector.onInstantiation(component);
+		assertEquals(component.dependency, "Test String");
+	}
+
+	@Test
+	public void anonymousInnerClass()
+	{
+
+		WebComponent component = new WebComponent("someId")
+		{
+			@Inject
+			private String dependency;
+
+			@Override
+			public String toString()
+			{
+				return dependency;
+			}
+		};
+		componentInjector.onInstantiation(component);
+		assertNull(component.toString());
 	}
 
 	private class TestNonStaticComponent extends WebComponent
 	{
+
 		@Inject
 		private String dependency;
 
@@ -113,7 +87,9 @@ public class ComponentInjectorTest extends Assert
 
 	private static class TestStaticComponent extends WebComponent
 	{
+
 		@Inject
+		@TestQualifier
 		private String dependency;
 
 		public TestStaticComponent(String id)

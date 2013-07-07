@@ -16,11 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
-import java.lang.reflect.Modifier;
-
 import org.apache.wicket.util.lang.Args;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Base class for injectors
@@ -29,8 +25,6 @@ import org.slf4j.LoggerFactory;
  */
 class AbstractInjector
 {
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractInjector.class);
-
 	private final CdiContainer container;
 
 	public AbstractInjector(CdiContainer container)
@@ -41,37 +35,11 @@ class AbstractInjector
 
 	protected <T> void postConstruct(T instance)
 	{
-		// TODO: is #canProcess() needed here too ?
-		// What are the rules to post construct an instance
 		container.getNonContextualManager().postConstruct(instance);
 	}
 
 	protected <T> void inject(T instance)
 	{
-		if (canProcess(instance))
-		{
-			container.getNonContextualManager().inject(instance);
-		}
-	}
-
-	private <T> boolean canProcess(T instance)
-	{
-		final boolean canProcess;
-		Class<?> instanceClass = instance.getClass();
-
-		if (instanceClass.isAnonymousClass() ||
-				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))
-		{
-			canProcess = false;
-			LOG.debug("Class '{}' will not be processed for CDI injection because it is anonymous or non-static member class",
-					instanceClass);
-		}
-		else
-		{
-			canProcess = true;
-			LOG.debug("Going to process class '{}' for CDI injection", instanceClass);
-		}
-
-		return canProcess;
+		container.getNonContextualManager().inject(instance);
 	}
 }

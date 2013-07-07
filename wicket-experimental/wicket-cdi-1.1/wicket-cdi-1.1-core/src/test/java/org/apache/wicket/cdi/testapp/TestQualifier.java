@@ -14,27 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi.weld;
+package org.apache.wicket.cdi.testapp;
 
-import java.util.Arrays;
 
-import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
 
 /**
- * Test that the license headers are in place in this project. The tests are run from
- * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
- * 
- * @author Frank Bille Jensen (frankbille)
+ * @author jsarman
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+@Qualifier
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TestQualifier
 {
-	/**
-	 * Construct.
-	 */
-	public ApacheLicenceHeaderTest()
-	{
-		xmlIgnore.add(".settings");
-		xmlIgnore.add("src/main/resources/META-INF/beans.xml");
-		xmlPrologIgnore = Arrays.asList("src");
-	}
+
 }

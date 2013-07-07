@@ -14,27 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi.weld;
+package org.apache.wicket.cdi.testapp;
 
-import java.util.Arrays;
+import javax.inject.Inject;
 
-import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 
 /**
- * Test that the license headers are in place in this project. The tests are run from
- * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
- * 
- * @author Frank Bille Jensen (frankbille)
+ * @author jsarman
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+public class TestPage extends WebPage
 {
-	/**
-	 * Construct.
-	 */
-	public ApacheLicenceHeaderTest()
+
+	@Inject
+	TestAppScope appScope;
+
+	public TestPage()
 	{
-		xmlIgnore.add(".settings");
-		xmlIgnore.add("src/main/resources/META-INF/beans.xml");
-		xmlPrologIgnore = Arrays.asList("src");
+
+		add(new Label("appscope", appScope.test()));
 	}
+
 }

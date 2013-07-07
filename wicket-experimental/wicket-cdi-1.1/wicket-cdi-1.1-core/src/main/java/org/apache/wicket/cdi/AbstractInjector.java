@@ -80,4 +80,9 @@ class AbstractInjector <T>
 		
 	}
 
+	public String[] getIgnorePackages()
+	{
+		return ignorePackages.get();
+	}
+        
 }

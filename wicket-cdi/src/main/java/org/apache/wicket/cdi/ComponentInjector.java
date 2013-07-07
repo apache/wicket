@@ -42,4 +42,5 @@ class ComponentInjector extends AbstractInjector implements IComponentInstantiat
 	{
 		inject(component);
 	}
+
 }

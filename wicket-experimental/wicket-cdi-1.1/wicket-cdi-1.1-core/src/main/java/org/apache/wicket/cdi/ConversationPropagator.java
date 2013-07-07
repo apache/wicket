@@ -438,4 +438,13 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 		}
 		return null;
 	}
+
+    Boolean getAuto() {
+        return auto.get();
+    }
+    
+    ConversationPropagation getPropagation() {
+        return (ConversationPropagation)propagationSource.get();
+    }
+   
 }

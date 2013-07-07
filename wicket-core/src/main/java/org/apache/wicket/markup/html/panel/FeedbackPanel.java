@@ -291,7 +291,34 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected String getCSSClass(final FeedbackMessage message)
 	{
-		return "feedbackPanel" + message.getLevelAsString();
+		String cssClass;
+		switch (message.getLevel())
+		{
+			case FeedbackMessage.UNDEFINED:
+				cssClass = getString(FeedbackMessage.UNDEFINED_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.DEBUG:
+				cssClass = getString(FeedbackMessage.DEBUG_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.INFO:
+				cssClass = getString(FeedbackMessage.INFO_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.SUCCESS:
+				cssClass = getString(FeedbackMessage.SUCCESS_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.WARNING:
+				cssClass = getString(FeedbackMessage.WARNING_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.ERROR:
+				cssClass = getString(FeedbackMessage.ERROR_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.FATAL:
+				cssClass = getString(FeedbackMessage.FATAL_CSS_CLASS_KEY);
+				break;
+			default:
+				cssClass = "feedbackPanel" + message.getLevelAsString();
+		}
+		return cssClass;
 	}
 
 	/**

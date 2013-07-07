@@ -1425,7 +1425,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				msg.append(this.toString());
 				msg.append("\n\tExpected: '");
 				msg.append(getPageRelativePath());
-				msg.append(".");
+				msg.append(PATH_SEPARATOR);
 				msg.append(id);
 				msg.append("'.\n\tFound with similar names: '");
 				msg.append(Strings.join("', ", names));

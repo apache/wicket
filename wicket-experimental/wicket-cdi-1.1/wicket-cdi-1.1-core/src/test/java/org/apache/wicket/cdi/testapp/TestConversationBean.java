@@ -14,27 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi.weld;
+package org.apache.wicket.cdi.testapp;
 
-import java.util.Arrays;
+import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
+import javax.enterprise.context.ConversationScoped;
 
 /**
- * Test that the license headers are in place in this project. The tests are run from
- * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
- * 
- * @author Frank Bille Jensen (frankbille)
+ * @author jsarman
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+@ConversationScoped
+public class TestConversationBean implements Serializable
 {
-	/**
-	 * Construct.
-	 */
-	public ApacheLicenceHeaderTest()
+
+	private AtomicInteger counter = new AtomicInteger();
+
+	public int getCount()
 	{
-		xmlIgnore.add(".settings");
-		xmlIgnore.add("src/main/resources/META-INF/beans.xml");
-		xmlPrologIgnore = Arrays.asList("src");
+		return counter.get();
+	}
+
+	public void increment()
+	{
+		counter.incrementAndGet();
 	}
 }
