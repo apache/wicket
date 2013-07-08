@@ -16,42 +16,49 @@
  */
 package org.apache.wicket.cdi;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+
 import javax.inject.Inject;
 
-import org.apache.wicket.Application;
+import org.apache.wicket.cdi.AbstractCdiContainer.ContainerSupport;
+import org.apache.wicket.cdi.testapp.TestCdiAdditionApplication;
 import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestPage;
+import org.apache.wicket.cdi.util.tester.CdiWicketTester;
+import org.apache.wicket.util.tester.WicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 
 /**
  * @author jsarman
  */
-@AdditionalClasses({
-		TestCdiApplication.class})
-public class CdiConfigurationTest extends WicketCdiFilterBaseTest
+@AdditionalClasses({TestCdiAdditionApplication.class})
+public class CdiConfigurationTest extends WicketCdiTestCase
 {
 
 	@Inject
 	ConversationPropagator conversationPropagator;
 	@Inject
 	ComponentInjector componentInjector;
+	@Inject
+	CdiConfiguration cdiConfiguration;
 
-	/**
-	 * Allows to force an app name when class is extended
-	 *
-	 * @return
-	 */
-	protected String overrideAppName()
+	@Override
+	public void init()
 	{
-		return null;
+
 	}
+
 
 	@Test
 	public void testApplicationScope()
 	{
-
+		CdiWicketTester tester = getTester();
 		tester.startPage(TestPage.class);
 		tester.assertLabel("appscope", "Test ok");
 	}
@@ -59,6 +66,7 @@ public class CdiConfigurationTest extends WicketCdiFilterBaseTest
 	@Test
 	public void testConversationScope()
 	{
+		CdiWicketTester tester = getTester();
 		tester.startPage(TestConversationPage.class);
 		for (int i = 0; i < 20; i++)
 		{
@@ -70,6 +78,7 @@ public class CdiConfigurationTest extends WicketCdiFilterBaseTest
 	@Test(expected = Exception.class)
 	public void testConfigureTwice()
 	{
+		CdiWicketTester tester = getTester();
 		tester.configure();
 		CdiConfiguration.get().configure(tester.getApplication());
 	}
@@ -77,6 +86,7 @@ public class CdiConfigurationTest extends WicketCdiFilterBaseTest
 	@Test
 	public void testDeprecatedApplicationLevelConfiguration()
 	{
+		WicketTester tester = new WicketTester();
 		CdiConfiguration config = CdiConfiguration.get();
 		config.setAutoConversationManagement(true);
 		assertTrue(config.isAutoConversationManagement());
@@ -110,20 +120,48 @@ public class CdiConfigurationTest extends WicketCdiFilterBaseTest
 	@Test
 	public void testFilterInitWithInitParam()
 	{
-		WicketApp annot = TestCdiApplication.class.getAnnotation(WicketApp.class);
-		Application app = testFilterInitialization(null, annot.value());
-		//Did our app get Injected
-		assertEquals("Test String", ((TestCdiApplication) app).getInjectedTestString());
+
+		assertEquals("Test String", ((TestCdiApplication) getTester().getApplication()).getInjectedTestString());
 	}
 
-	@Test
+	@Test(expected = Exception.class)
 	public void testFilterInitWithoutInitParam()
 	{
-		if (overrideAppName() == null)
+		filterConfigProducer.removeParameter(CdiWebApplicationFactory.WICKET_APP_NAME);
+		getTester();
+	}
+
+	/**
+	 * Bring up two different apps that are uniquely configured and verify they do not affect the application
+	 * dependent global settings.
+	 */
+	@Test
+	public void testMultiAppLoad()
+	{
+		getTester(); //Bring up app with name mockApp : the default
+		try
 		{
-			Application app = testFilterInitialization(null, null);
-			assertEquals("Test String", ((TestCdiApplication) app).getInjectedTestString());
+			Executors.newSingleThreadExecutor().submit(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					Map<String, String> params = new TreeMap<>();
+					params.put(CdiWebApplicationFactory.WICKET_APP_NAME, "test2");
+					//change global default for auto to true
+					params.put(CdiWebApplicationFactory.AUTO_CONVERSATION, "true");
+
+					getTester(true, params); // bring up app 2 with name test2
+					assertTrue(cdiConfiguration.isAutoConversationManagement());
+				}
+
+			}).get();
+		} catch (InterruptedException | ExecutionException ex)
+		{
+			fail(ex.getMessage());
 		}
+		// now check that app1 auto is still false after app2's auto was set to true
+		assertFalse(cdiConfiguration.isAutoConversationManagement());
 	}
 
 	@Test
@@ -159,18 +197,23 @@ public class CdiConfigurationTest extends WicketCdiFilterBaseTest
 	@Test(expected = Exception.class)
 	public void testInvalidNameInFilter()
 	{
-		testFilterInitialization(null, "0xDEADBEEF");
+		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.WICKET_APP_NAME, "0xDEADBEEF");
+		getTester(params);
 	}
 
-	public void testFilterParamsBooleans(boolean val)
+	public void testFilterParamsBooleans(Boolean val)
 	{
-		ConfigurationParameters cp = new ConfigurationParameters();
-		cp.setInjectApplication(val);
-		cp.setInjectBehaviors(val);
-		cp.setInjectComponents(val);
-		cp.setInjectSession(val);
-		cp.setAutoConversationManagement(val);
-		testFilterInitialization(cp, overrideAppName());
+		Map<String, String> params = new TreeMap<>();
+		params.put(CdiWebApplicationFactory.AUTO_CONVERSATION, val.toString());
+		params.put(CdiWebApplicationFactory.INJECT_APP, val.toString());
+		params.put(CdiWebApplicationFactory.INJECT_BEHAVIOR, val.toString());
+		params.put(CdiWebApplicationFactory.INJECT_COMPONENT, val.toString());
+		params.put(CdiWebApplicationFactory.INJECT_SESSION, val.toString());
+		for (ContainerSupport support : ContainerSupport.values())
+		{
+			params.put(support.getInitParameterName(), val.toString());
+		}
+		getTester(params);
 		CdiConfiguration cc = CdiConfiguration.get();
 
 		assertFalse(cc.isInjectApplication()); // This is false bacause app is injected in Filter.
@@ -178,13 +221,16 @@ public class CdiConfigurationTest extends WicketCdiFilterBaseTest
 		assertEquals(val, cc.isInjectComponents());
 		assertEquals(val, cc.isInjectSession());
 		assertEquals(val, cc.isAutoConversationManagement());
+		for (ContainerSupport support : ContainerSupport.values())
+		{
+			assertEquals(val, cc.isContainerFeatureEnabled(support));
+		}
 	}
 
 	public void testFilterParamPropagation(ConversationPropagation propagation)
 	{
-		ConfigurationParameters cp = new ConfigurationParameters();
-		cp.setPropagation(propagation);
-		testFilterInitialization(cp, overrideAppName());
+		Map params = Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION, propagation.name());
+		getTester(params);
 		CdiConfiguration cc = CdiConfiguration.get();
 
 		assertEquals(propagation, cc.getPropagation());

@@ -16,16 +16,23 @@
  */
 package org.apache.wicket.cdi;
 
+import java.util.Map;
+
 import javax.enterprise.context.Conversation;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import org.apache.wicket.cdi.testapp.TestAppScope;
+import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationBean;
 import org.apache.wicket.cdi.util.tester.CdiWicketTester;
+import org.apache.wicket.cdi.util.tester.FilterConfigProducer;
+import org.apache.wicket.cdi.util.tester.TestCdiConfiguration;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
@@ -33,8 +40,9 @@ import org.junit.runner.RunWith;
  */
 @RunWith(CdiRunner.class)
 @AdditionalClasses({
+		CdiWicketTester.class,
 		BehaviorInjector.class,
-		CdiConfiguration.class,
+		TestCdiConfiguration.class,
 		CdiShutdownCleaner.class,
 		ComponentInjector.class,
 		ConversationExpiryChecker.class,
@@ -45,22 +53,76 @@ import org.junit.runner.RunWith;
 		SessionInjector.class,
 		MockCdiContainer.class,
 		TestAppScope.class,
-		TestConversationBean.class})
+		TestConversationBean.class,
+		FilterConfigProducer.class,
+		TestCdiApplication.class,
+		CdiWebApplicationFactory.class})
 public abstract class WicketCdiTestCase extends Assert
 {
 	@Inject
-	CdiWicketTester tester;
+	private Instance<CdiWicketTester> testers;
+
+	private CdiWicketTester instantiatedTester;
 
 	@Inject
 	Conversation conversation;
 
+	@Inject
+	FilterConfigProducer filterConfigProducer;
+
+	public CdiWicketTester getTester()
+	{
+		if (instantiatedTester == null)
+		{
+			instantiatedTester = testers.get();
+		}
+		return instantiatedTester;
+	}
+
+	public CdiWicketTester getTester(boolean newTest)
+	{
+		if (newTest)
+		{
+			return testers.get();
+		}
+		return getTester();
+	}
+
+	public CdiWicketTester getTester(Map<String, String> customParamters)
+	{
+		if (instantiatedTester != null)
+		{
+			throw new IllegalStateException("The Wicket Tester is already initialized.");
+		}
+		filterConfigProducer.addParameters(customParamters);
+		return getTester();
+	}
+
+	public CdiWicketTester getTester(boolean newTest, Map<String, String> customParamters)
+	{
+		if (newTest)
+		{
+			filterConfigProducer.addParameters(customParamters);
+			return testers.get();
+		}
+		return getTester(customParamters);
+	}
+
+	@Before
+	public void init()
+	{
+		getTester();
+	}
+
 	@After
 	public void end()
 	{
-
-		if (!conversation.isTransient())
+		if (instantiatedTester != null)
 		{
-			conversation.end();
+			if (!conversation.isTransient())
+			{
+				conversation.end();
+			}
 		}
 	}
 

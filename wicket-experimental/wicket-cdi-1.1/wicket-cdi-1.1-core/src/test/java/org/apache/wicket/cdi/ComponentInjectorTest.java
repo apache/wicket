@@ -16,8 +16,12 @@
  */
 package org.apache.wicket.cdi;
 
+import java.util.Collections;
+import java.util.Map;
+
 import javax.inject.Inject;
 
+import org.apache.wicket.cdi.AbstractCdiContainer.ContainerSupport;
 import org.apache.wicket.cdi.testapp.TestQualifier;
 import org.apache.wicket.markup.html.WebComponent;
 import org.junit.Test;
@@ -27,25 +31,41 @@ import org.junit.Test;
  */
 public class ComponentInjectorTest extends WicketCdiTestCase
 {
+	@Inject
+	AbstractCdiContainer container;
 
 	@Inject
 	ComponentInjector componentInjector;
 
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5226
-	 */
 	@Test
 	public void innerNonStaticClass()
 	{
 		TestNonStaticComponent component = new TestNonStaticComponent("someId");
 		assertNull(component.dependency);
 		componentInjector.onInstantiation(component);
+		if (container.isFeatureSupported(ContainerSupport.NON_STATIC_INNER_CLASS_INJECTION))
+		{
+			assertNotNull(component.dependency);
+		} else
+		{
+			assertNull(component.dependency);
+		}
+	}
+
+	@Test
+	public void innerNonStaticClassGlobalDisabled()
+	{
+		Map<String, String> params =
+				Collections.singletonMap(
+						ContainerSupport.NON_STATIC_INNER_CLASS_INJECTION.getInitParameterName(),
+						"false");
+		getTester(true, params);
+		TestNonStaticComponent component = new TestNonStaticComponent("someId");
+		assertNull(component.dependency);
+		componentInjector.onInstantiation(component);
 		assertNull(component.dependency);
 	}
 
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5226
-	 */
 	@Test
 	public void innerStaticClass()
 	{
@@ -58,6 +78,35 @@ public class ComponentInjectorTest extends WicketCdiTestCase
 	public void anonymousInnerClass()
 	{
 
+		WebComponent component = new WebComponent("someId")
+		{
+			@Inject
+			private String dependency;
+
+			@Override
+			public String toString()
+			{
+				return dependency;
+			}
+		};
+		componentInjector.onInstantiation(component);
+		if (container.isFeatureSupported(ContainerSupport.ANONYMOUS_INNER_CLASS_INJECTION))
+		{
+			assertNotNull(component.toString());
+		} else
+		{
+			assertNull(component.toString());
+		}
+	}
+
+	@Test
+	public void anonymousInnerClassGlobalDisabled()
+	{
+		Map<String, String> params =
+				Collections.singletonMap(
+						ContainerSupport.ANONYMOUS_INNER_CLASS_INJECTION.getInitParameterName(),
+						"false");
+		getTester(true, params);
 		WebComponent component = new WebComponent("someId")
 		{
 			@Inject

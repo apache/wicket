@@ -14,37 +14,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi;
+package org.apache.wicket.cdi.util.tester;
 
-import org.apache.wicket.cdi.testapp.TestCdiAdditionApplication;
-import org.apache.wicket.cdi.testapp.TestCdiApplication;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Test;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.servlet.FilterConfig;
 
 /**
  * @author jsarman
  */
-@AdditionalClasses({
-		TestCdiApplication.class,
-		TestCdiAdditionApplication.class
-})
-public class MultiAppInClassLoaderTest extends WicketCdiFilterBaseTest
+@ApplicationScoped
+public class FilterConfigProducer
 {
 
+	TestFilterConfig config;
 
-	@Test
-	public void TestConfigureBothApp()
+	@PostConstruct
+	public void init()
 	{
-		WicketApp annot1 = TestCdiApplication.class.getAnnotation(WicketApp.class);
-		WicketApp annot2 = TestCdiAdditionApplication.class.getAnnotation(WicketApp.class);
-
-		testFilterInitialization(null, annot1.value());
-		testFilterInitialization(null, annot2.value());
+		config = new TestFilterConfig();
 	}
 
-	@Test(expected = Exception.class)
-	public void TestConfigureAppWithoutInitParam()
+	@Produces
+	@ConfigurationFilter
+	public FilterConfig getConfig()
 	{
-		testFilterInitialization(null, null);
+		return config;
+	}
+
+	public void addParameter(String paramName, String value)
+	{
+		config.put(paramName, value);
+	}
+
+	public void removeParameter(String paramName)
+	{
+		config.remove(paramName);
+	}
+
+	public void addParameters(Map<String, String> params)
+	{
+		config.putAll(params);
 	}
 }
