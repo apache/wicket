@@ -34,7 +34,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
-import org.apache.wicket.cdi.AbstractCdiContainer.ContainerSupport;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
@@ -288,11 +287,6 @@ public class CdiConfiguration
 			params.setPropagation(propagation);
 		}
 		return this;
-	}
-
-	public boolean isContainerFeatureEnabled(ContainerSupport support)
-	{
-		return getApplicationParameters().isContainerFeatureEnabled(support);
 	}
 
 	public INonContextualManager getNonContextualManager()

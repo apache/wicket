@@ -27,7 +27,7 @@ import org.apache.wicket.behavior.Behavior;
  * @author igor
  */
 @ApplicationScoped
-class BehaviorInjector extends AbstractInjector<Behavior> implements IBehaviorInstantiationListener
+public class BehaviorInjector extends AbstractInjector<Behavior> implements IBehaviorInstantiationListener
 {
 
 	@Override
