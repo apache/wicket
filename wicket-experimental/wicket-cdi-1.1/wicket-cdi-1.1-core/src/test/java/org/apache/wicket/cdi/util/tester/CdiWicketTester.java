@@ -22,8 +22,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.servlet.FilterConfig;
 
-import org.apache.wicket.cdi.CdiConfiguration;
+import org.apache.wicket.cdi.CdiWebApplicationFactory;
+import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.util.tester.WicketTester;
@@ -41,13 +43,32 @@ public class CdiWicketTester extends WicketTester
 	@Inject
 	ContextManager contextManager;
 
+	TestCdiConfiguration cdiConfiguration;
+	FilterConfig filterConfig;
+
+
 	@Inject
-	CdiConfiguration cdiConfiguration;
+	public CdiWicketTester(TestCdiConfiguration cdiConfiguration, CdiWebApplicationFactory factory, @ConfigurationFilter final FilterConfig filterConfig)
+	{
+		super(factory.createApplication(new WicketFilter()
+		{
+
+			@Override
+			public FilterConfig getFilterConfig()
+			{
+				return filterConfig;
+			}
+
+		}));
+		this.cdiConfiguration = cdiConfiguration;
+		this.filterConfig = filterConfig;
+	}
 
 	@PostConstruct
 	public void initializeApp()
 	{
 		logger.debug("Initialized Cdi Wicket Tester");
+		cdiConfiguration.remapApplicationKey(filterConfig.getFilterName(), getApplication());
 		contextManager.activateContexts(getRequest()); //Start up contexts in case no requests are performed
 	}
 

@@ -17,10 +17,13 @@
 package org.apache.wicket.cdi;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
+import org.apache.wicket.cdi.AbstractCdiContainer.ContainerSupport;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 
 /**
@@ -29,7 +32,7 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
  *
  * @author jsarman
  */
-class ConfigurationParameters implements Serializable
+public class ConfigurationParameters implements Serializable
 {
 
 	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
@@ -38,18 +41,24 @@ class ConfigurationParameters implements Serializable
 	private boolean injectSession = true;
 	private boolean injectBehaviors = true;
 	private boolean autoConversationManagement = false;
+	private Map<ContainerSupport, Boolean> containerFeatures;
 	private boolean configured = false;
 
 	private Set<String> ignoredPackages = new TreeSet<>();
 	private IRequestCycleListener activeRequestCycleListener;
 	private IComponentOnBeforeRenderListener activeComponentOnBeforeRenderListener;
 
-	ConfigurationParameters()
+	public ConfigurationParameters()
 	{
+		containerFeatures = new TreeMap<>();
+		for (ContainerSupport support : ContainerSupport.values())
+		{
+			containerFeatures.put(support, support.getDefaultValue());
+		}
 	}
 
 
-	IConversationPropagation getPropagation()
+	public IConversationPropagation getPropagation()
 	{
 		return propagation;
 	}
@@ -61,7 +70,7 @@ class ConfigurationParameters implements Serializable
 	}
 
 
-	boolean isInjectComponents()
+	public boolean isInjectComponents()
 	{
 		return injectComponents;
 	}
@@ -72,7 +81,7 @@ class ConfigurationParameters implements Serializable
 		return this;
 	}
 
-	boolean isInjectApplication()
+	public boolean isInjectApplication()
 	{
 		return injectApplication;
 	}
@@ -83,7 +92,7 @@ class ConfigurationParameters implements Serializable
 		return this;
 	}
 
-	boolean isInjectSession()
+	public boolean isInjectSession()
 	{
 		return injectSession;
 	}
@@ -94,7 +103,7 @@ class ConfigurationParameters implements Serializable
 		return this;
 	}
 
-	boolean isInjectBehaviors()
+	public boolean isInjectBehaviors()
 	{
 		return injectBehaviors;
 	}
@@ -105,7 +114,7 @@ class ConfigurationParameters implements Serializable
 		return this;
 	}
 
-	boolean isAutoConversationManagement()
+	public boolean isAutoConversationManagement()
 	{
 		return autoConversationManagement;
 	}
@@ -116,7 +125,7 @@ class ConfigurationParameters implements Serializable
 		return this;
 	}
 
-	Set<String> getIgnoredPackages()
+	public Set<String> getIgnoredPackages()
 	{
 		return ignoredPackages;
 	}
@@ -146,7 +155,17 @@ class ConfigurationParameters implements Serializable
 		this.activeComponentOnBeforeRenderListener = activeComponentOnBeforeRenderListener;
 	}
 
-	boolean isConfigured()
+	public boolean isContainerFeatureEnabled(ContainerSupport support)
+	{
+		return containerFeatures.get(support);
+	}
+
+	void setContainerFeature(ContainerSupport support, boolean value)
+	{
+		containerFeatures.put(support, value);
+	}
+
+	public boolean isConfigured()
 	{
 		return configured;
 	}
@@ -155,6 +174,5 @@ class ConfigurationParameters implements Serializable
 	{
 		this.configured = configured;
 	}
-
 
 }

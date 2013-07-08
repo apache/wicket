@@ -14,45 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi.testapp;
+package org.apache.wicket.cdi.util.tester;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.WicketApp;
-import org.apache.wicket.protocol.http.WebApplication;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
 
 /**
+ * Qualifier for injecting the FilterConfiguration for testing
+ *
  * @author jsarman
  */
-@WicketApp("mockApp")
-public class TestCdiApplication extends WebApplication
+@Qualifier
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ConfigurationFilter
 {
-
-	@Inject
-	@TestQualifier
-	String testString;
-
-
-	@Override
-	public Class<? extends Page> getHomePage()
-	{
-		return TestPage.class;
-	}
-
-
-	@PostConstruct
-	@Override
-	protected void init()
-	{
-		super.init();
-
-	}
-
-	public String getInjectedTestString()
-	{
-		return testString;
-	}
 
 }

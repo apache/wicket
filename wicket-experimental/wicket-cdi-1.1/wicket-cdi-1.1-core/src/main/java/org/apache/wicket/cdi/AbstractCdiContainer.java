@@ -30,6 +30,40 @@ import org.apache.wicket.util.lang.Args;
  */
 public abstract class AbstractCdiContainer
 {
+	/**
+	 * Enum to list Features that can be queried for container support. These are features that the wicket-cdi
+	 * api uses and needs to be able to override if the implementation container
+	 * cannot support.
+	 */
+	public enum ContainerSupport
+	{
+		ANONYMOUS_INNER_CLASS_INJECTION("enableAnonymousInnerClassInjection"),
+		NON_STATIC_INNER_CLASS_INJECTION("enableNonStaticInnerClassInjection");
+
+		private String initParameter;
+		private boolean defaultValue = true;
+
+		private ContainerSupport(String initParameter)
+		{
+			this.initParameter = initParameter;
+		}
+
+		private ContainerSupport(String initParameter, boolean defaultValue)
+		{
+			this.initParameter = initParameter;
+			this.defaultValue = defaultValue;
+		}
+
+		public String getInitParameterName()
+		{
+			return initParameter;
+		}
+
+		public boolean getDefaultValue()
+		{
+			return defaultValue;
+		}
+	}
 
 	/**
 	 * Activates the conversational context and starts the conversation with the specified cid
@@ -39,13 +73,32 @@ public abstract class AbstractCdiContainer
 	 */
 	public abstract void activateConversationalContext(RequestCycle cycle, String cid);
 
+	/**
+	 * Retrieve the current conversation associated with the ConversationContext
+	 *
+	 * @return The current Conversation attached to the current Conversation Context
+	 */
+	public abstract Conversation getCurrentConversation();
+
+	/**
+	 * Retrieve the cdi implementations name and version.
+	 *
+	 * @return The implementation containers name and version
+	 */
+	public abstract String getContainerImplementationName();
+
+	/**
+	 * Query to check is a specific feature is supported by cdi container implementation.
+	 *
+	 * @param support {@link ContainerSupport}
+	 * @return true if the feature is supported false otherwise
+	 */
+	public abstract boolean isFeatureSupported(ContainerSupport support);
 
 	protected HttpServletRequest getRequest(RequestCycle cycle)
 	{
 		return (HttpServletRequest) cycle.getRequest().getContainerRequest();
 	}
-
-	public abstract Conversation getCurrentConversation();
 
 	/**
 	 * Retrieves a conversation id, if any, that is associated with a {@link Page} instance

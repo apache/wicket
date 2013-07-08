@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.cdi;
 
+import java.util.Collections;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;
+import org.apache.wicket.cdi.util.tester.CdiWicketTester;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
@@ -32,11 +36,17 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Inject
 	CdiConfiguration cdiConfiguration;
 
+	@Override
+	public void init()
+	{
+		//override so we do not initialize tester
+	}
 
 	@Test
 	public void testAutoConversationNonBookmarkable()
 	{
 
+		CdiWicketTester tester = getTester();
 		tester.startPage(TestConversationalPage.class);
 		int i;
 		for (i = 0; i < 3; i++)
@@ -56,6 +66,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Test
 	public void testAutoConversationBookmarkable()
 	{
+		CdiWicketTester tester = getTester();
 		tester.startPage(TestConversationalPage.class,
 				new PageParameters().add("pageType", "bookmarkable"));
 
@@ -80,8 +91,12 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	public void testPropagationAllNonBookmarkable()
 	{
 
-		cdiConfiguration.setPropagation(ConversationPropagation.ALL);
-		cdiConfiguration.configure(tester.getApplication());
+		Map<String, String> params =
+				Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
+						ConversationPropagation.ALL.name());
+
+		CdiWicketTester tester = getTester(params);
+
 		tester.startPage(TestConversationPage.class);
 		int i;
 		for (i = 0; i < 3; i++)
@@ -101,8 +116,12 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Test
 	public void testPropagationAllBookmarkable()
 	{
-		cdiConfiguration.setPropagation(ConversationPropagation.ALL);
-		cdiConfiguration.configure(tester.getApplication());
+		Map<String, String> params =
+				Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
+						ConversationPropagation.ALL.name());
+
+		CdiWicketTester tester = getTester(params);
+
 		tester.startPage(TestConversationPage.class,
 				new PageParameters().add("pageType", "bookmarkable"));
 		int i;
@@ -123,8 +142,12 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Test
 	public void testPropagationNone()
 	{
-		cdiConfiguration.setPropagation(ConversationPropagation.NONE);
-		cdiConfiguration.configure(tester.getApplication());
+		Map<String, String> params =
+				Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
+						ConversationPropagation.NONE.name());
+
+		CdiWicketTester tester = getTester(params);
+
 		tester.startPage(TestConversationPage.class);
 		int i;
 		for (i = 0; i < 3; i++)
@@ -144,8 +167,10 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Test
 	public void testGlobalAutoSettingNonBookmarkable()
 	{
-		cdiConfiguration.setAutoConversationManagement(true);
-		cdiConfiguration.configure(tester.getApplication());
+
+		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.AUTO_CONVERSATION, "true");
+
+		CdiWicketTester tester = getTester(params);
 		tester.startPage(TestConversationPage.class,
 				new PageParameters().add("auto", true));
 		int i;
@@ -165,8 +190,9 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Test
 	public void testGlobalAutoSettingBookmarkable()
 	{
-		cdiConfiguration.setAutoConversationManagement(true);
-		cdiConfiguration.configure(tester.getApplication());
+		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.AUTO_CONVERSATION, "true");
+
+		CdiWicketTester tester = getTester(params);
 		tester.startPage(TestConversationPage.class,
 				new PageParameters().add("auto", true).add("pageType", "bookmarkable"));
 		int i;

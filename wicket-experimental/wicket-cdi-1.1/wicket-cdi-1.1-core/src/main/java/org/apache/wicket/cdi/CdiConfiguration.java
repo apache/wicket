@@ -34,6 +34,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
+import org.apache.wicket.cdi.AbstractCdiContainer.ContainerSupport;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
@@ -88,7 +89,7 @@ public class CdiConfiguration
 	@Inject
 	ConversationManager conversationManager;
 
-	private Map<String, ConfigurationParameters> parameters;
+	protected Map<String, ConfigurationParameters> parameters;
 
 	/**
 	 * Not intended for public use. Use {@link #get()}
@@ -289,6 +290,11 @@ public class CdiConfiguration
 		return this;
 	}
 
+	public boolean isContainerFeatureEnabled(ContainerSupport support)
+	{
+		return getApplicationParameters().isContainerFeatureEnabled(support);
+	}
+
 	public INonContextualManager getNonContextualManager()
 	{
 		return nonContextualManager;
@@ -381,7 +387,7 @@ public class CdiConfiguration
 		return this;
 	}
 
-	private ConfigurationParameters getApplicationParameters()
+	protected ConfigurationParameters getApplicationParameters()
 	{
 		ConfigurationParameters params = parameters.get(Application.get().getApplicationKey());
 		if (params == null)
@@ -421,7 +427,7 @@ public class CdiConfiguration
 		configure(application.getApplicationKey(), application, params);
 	}
 
-	synchronized void configure(String appKey, Application application, ConfigurationParameters params)
+	protected synchronized void configure(String appKey, Application application, ConfigurationParameters params)
 	{
 
 		if (parameters.containsKey(appKey))
@@ -478,6 +484,7 @@ public class CdiConfiguration
 
 		application.getApplicationListeners().add(
 				new CdiShutdownCleaner(params.isInjectApplication()));
+
 
 		params.setConfigured(true);
 	}

@@ -20,7 +20,6 @@ import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
 import org.apache.wicket.cdi.util.tester.ContextManager;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -37,12 +36,6 @@ public class ConversationManagerTest extends WicketCdiTestCase
 	Conversation conversation;
 	@Inject
 	ContextManager contextManager;
-
-	@Before
-	public void init()
-	{
-		tester.configure();
-	}
 
 	@Test
 	public void testConverationManagerWithConversation()
@@ -62,7 +55,6 @@ public class ConversationManagerTest extends WicketCdiTestCase
 	@Test
 	public void testConverationManagerWithoutConversation()
 	{
-
 		// Transient conversation results in conversationManager using global so test should return false
 		assertFalse(testConversationManagerConversationManagement(!cdiConfiguration.isAutoConversationManagement()));
 		for (ConversationPropagation cp : ConversationPropagation.values())
@@ -74,7 +66,6 @@ public class ConversationManagerTest extends WicketCdiTestCase
 				assertFalse(testConversationManagerPropagation(cp));
 			}
 		}
-
 	}
 
 	@Test(expected = Exception.class)
