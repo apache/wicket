@@ -26,7 +26,6 @@ import javax.enterprise.inject.UnsatisfiedResolutionException;
 import javax.inject.Inject;
 import javax.servlet.FilterConfig;
 
-import org.apache.wicket.cdi.AbstractCdiContainer.ContainerSupport;
 import org.apache.wicket.protocol.http.ContextParamWebApplicationFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -180,16 +179,6 @@ public class CdiWebApplicationFactory extends ContextParamWebApplicationFactory
 			} catch (IllegalArgumentException iae)
 			{
 				log.warn("Init Param {} = {} is not a valid propagation type. Using Default {}", PROPAGATION, propagation, parameters.getPropagation().toString());
-			}
-		}
-
-		for (ContainerSupport support : ContainerSupport.values())
-		{
-			final String supportParam = filterConfig.getInitParameter(
-					support.getInitParameterName());
-			if (supportParam != null)
-			{
-				parameters.setContainerFeature(support, Boolean.parseBoolean(supportParam));
 			}
 		}
 

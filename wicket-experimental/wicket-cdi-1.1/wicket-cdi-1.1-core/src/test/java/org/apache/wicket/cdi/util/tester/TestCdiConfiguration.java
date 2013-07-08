@@ -18,6 +18,7 @@ package org.apache.wicket.cdi.util.tester;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Specializes;
 
@@ -39,6 +40,7 @@ import org.apache.wicket.cdi.Propagation;
  * @author jsarman
  */
 @ApplicationScoped
+@Alternative
 @Specializes
 public class TestCdiConfiguration extends CdiConfiguration
 {

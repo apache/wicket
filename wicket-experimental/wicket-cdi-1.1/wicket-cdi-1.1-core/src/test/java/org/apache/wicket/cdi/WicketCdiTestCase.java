@@ -27,7 +27,10 @@ import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationBean;
 import org.apache.wicket.cdi.util.tester.CdiWicketTester;
 import org.apache.wicket.cdi.util.tester.FilterConfigProducer;
+import org.apache.wicket.cdi.util.tester.TestBehaviorInjector;
 import org.apache.wicket.cdi.util.tester.TestCdiConfiguration;
+import org.apache.wicket.cdi.util.tester.TestComponentInjector;
+import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
@@ -39,10 +42,11 @@ import org.junit.runner.RunWith;
  * @author jsarman
  */
 @RunWith(CdiRunner.class)
+@ActivatedAlternatives({TestBehaviorInjector.class, TestComponentInjector.class, TestCdiConfiguration.class})
 @AdditionalClasses({
 		CdiWicketTester.class,
 		BehaviorInjector.class,
-		TestCdiConfiguration.class,
+		CdiConfiguration.class,
 		CdiShutdownCleaner.class,
 		ComponentInjector.class,
 		ConversationExpiryChecker.class,

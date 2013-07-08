@@ -24,7 +24,6 @@ import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
-import org.apache.wicket.cdi.AbstractCdiContainer.ContainerSupport;
 import org.apache.wicket.cdi.testapp.TestCdiAdditionApplication;
 import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
@@ -209,10 +208,7 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 		params.put(CdiWebApplicationFactory.INJECT_BEHAVIOR, val.toString());
 		params.put(CdiWebApplicationFactory.INJECT_COMPONENT, val.toString());
 		params.put(CdiWebApplicationFactory.INJECT_SESSION, val.toString());
-		for (ContainerSupport support : ContainerSupport.values())
-		{
-			params.put(support.getInitParameterName(), val.toString());
-		}
+
 		getTester(params);
 		CdiConfiguration cc = CdiConfiguration.get();
 
@@ -221,10 +217,7 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 		assertEquals(val, cc.isInjectComponents());
 		assertEquals(val, cc.isInjectSession());
 		assertEquals(val, cc.isAutoConversationManagement());
-		for (ContainerSupport support : ContainerSupport.values())
-		{
-			assertEquals(val, cc.isContainerFeatureEnabled(support));
-		}
+
 	}
 
 	public void testFilterParamPropagation(ConversationPropagation propagation)

@@ -208,6 +208,4 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 			tester.clickLink("increment");
 		}
 	}
-
-
 }

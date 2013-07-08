@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.cdi.weld;
 
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
@@ -27,8 +23,6 @@ import javax.inject.Inject;
 import org.apache.wicket.cdi.AbstractCdiContainer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.jboss.weld.context.http.HttpConversationContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides access to CDI features from inside a Wicket request
@@ -37,83 +31,9 @@ import org.slf4j.LoggerFactory;
  */
 @ApplicationScoped
 public class WeldCdiContainer extends AbstractCdiContainer
-{
-	private static final Logger logger = LoggerFactory.getLogger(WeldCdiContainer.class);
+{	
 	@Inject
 	private HttpConversationContext conversationContext;
-
-	private String specificationTitle;
-	private String specificationVersion;
-
-	private Map<ContainerSupport, Boolean> supportedFeatures;
-
-	@PostConstruct
-	public void init()
-	{
-		supportedFeatures = new TreeMap<>();
-		boolean isSnapshot = false;
-		try
-		{
-			Class<?> clazz = Class.forName("org.jboss.weld.bootstrap.WeldBootstrap");
-			specificationTitle = clazz.getPackage().getSpecificationTitle();
-			specificationVersion = clazz.getPackage().getSpecificationVersion();
-		} catch (ClassNotFoundException cnfe)
-		{
-			throw new RuntimeException("Unable to find Weld implemention is classpath");
-		}
-		int major = 0;
-		int minor = 0;
-		int micro = 0;
-
-		if (specificationTitle == null && specificationVersion == null)
-		{
-			isSnapshot = true;
-			logger.warn("Using a weld snaphot without version info. Enabling all features.");
-			specificationTitle = "Weld Snapshot";
-			specificationVersion = "UNKNOWN";
-		} else
-		{
-			String[] versionSplit = specificationVersion.split("\\.");
-			if (versionSplit.length > 0)
-				major = Integer.parseInt(versionSplit[0]);
-			if (versionSplit.length > 1)
-			{
-				minor = Integer.parseInt(versionSplit[1]);
-			}
-			if (versionSplit.length > 2)
-			{
-				micro = Integer.parseInt(versionSplit[2]);
-			}
-		}
-
-		if (major != 2 && !isSnapshot)
-		{
-			throw new RuntimeException("The Weld CDI 1.1 code requires major version 2");
-		}
-
-		for (ContainerSupport support : ContainerSupport.values())
-		{
-			switch (support)
-			{
-				case ANONYMOUS_INNER_CLASS_INJECTION:
-				case NON_STATIC_INNER_CLASS_INJECTION:
-					if (major == 2 && (minor > 0 || (minor == 0 && micro > 2)))
-					{
-						supportedFeatures.put(support, true);
-					} else if (specificationVersion.equals("2.0.2.Final"))
-					{
-						//Support officially introduced at this release
-						supportedFeatures.put(support, true);
-					} else
-					{
-						supportedFeatures.put(support, isSnapshot);
-					}
-					break;
-				default:
-					supportedFeatures.put(support, isSnapshot);
-			}
-		}
-	}
 
 	/**
 	 * Activates the conversational context and starts the conversation with the specified cid
@@ -140,23 +60,6 @@ public class WeldCdiContainer extends AbstractCdiContainer
 	public Conversation getCurrentConversation()
 	{
 		return conversationContext.getCurrentConversation();
-	}
-
-	@Override
-	public String getContainerImplementationName()
-	{
-		return specificationTitle + " " + specificationVersion;
-	}
-
-	@Override
-	public boolean isFeatureSupported(ContainerSupport support)
-	{
-		Boolean isSupported = supportedFeatures.get(support);
-		if (isSupported == null)
-		{
-			return false;
-		}
-		return isSupported;
 	}
 
 }

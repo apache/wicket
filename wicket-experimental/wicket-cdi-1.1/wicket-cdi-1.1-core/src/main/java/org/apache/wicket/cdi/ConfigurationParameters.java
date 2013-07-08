@@ -17,13 +17,10 @@
 package org.apache.wicket.cdi;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
-import org.apache.wicket.cdi.AbstractCdiContainer.ContainerSupport;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 
 /**
@@ -41,7 +38,6 @@ public class ConfigurationParameters implements Serializable
 	private boolean injectSession = true;
 	private boolean injectBehaviors = true;
 	private boolean autoConversationManagement = false;
-	private Map<ContainerSupport, Boolean> containerFeatures;
 	private boolean configured = false;
 
 	private Set<String> ignoredPackages = new TreeSet<>();
@@ -50,11 +46,7 @@ public class ConfigurationParameters implements Serializable
 
 	public ConfigurationParameters()
 	{
-		containerFeatures = new TreeMap<>();
-		for (ContainerSupport support : ContainerSupport.values())
-		{
-			containerFeatures.put(support, support.getDefaultValue());
-		}
+
 	}
 
 
@@ -153,16 +145,6 @@ public class ConfigurationParameters implements Serializable
 	void setActiveComponentOnBeforeRenderListener(IComponentOnBeforeRenderListener activeComponentOnBeforeRenderListener)
 	{
 		this.activeComponentOnBeforeRenderListener = activeComponentOnBeforeRenderListener;
-	}
-
-	public boolean isContainerFeatureEnabled(ContainerSupport support)
-	{
-		return containerFeatures.get(support);
-	}
-
-	void setContainerFeature(ContainerSupport support, boolean value)
-	{
-		containerFeatures.put(support, value);
 	}
 
 	public boolean isConfigured()

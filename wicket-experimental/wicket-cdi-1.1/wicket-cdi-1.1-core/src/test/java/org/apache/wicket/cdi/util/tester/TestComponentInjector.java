@@ -14,12 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi;
+package org.apache.wicket.cdi.util.tester;
+
+import java.lang.reflect.Modifier;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Specializes;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.cdi.ComponentInjector;
 
 /**
  * Injects components with CDI dependencies
@@ -27,12 +31,20 @@ import org.apache.wicket.application.IComponentInstantiationListener;
  * @author igor
  */
 @ApplicationScoped
-public class ComponentInjector extends AbstractInjector<Component> implements IComponentInstantiationListener
+@Alternative
+@Specializes
+public class TestComponentInjector extends ComponentInjector
 {
 
 	@Override
 	public void onInstantiation(Component component)
 	{
+		Class instanceClass = component.getClass();
+		if (instanceClass.isAnonymousClass() ||
+				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))
+		{
+			return;
+		}
 		inject(component);
 	}
 }
