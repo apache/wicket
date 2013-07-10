@@ -86,7 +86,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	}
 
 	/**
-	 * Overriden to let the node output its markup id.
+	 * Overridden to let the node output its markup id.
 	 * 
 	 * @see #updateNode(Object, AjaxRequestTarget)
 	 * @see Component#setOutputMarkupId(boolean)
