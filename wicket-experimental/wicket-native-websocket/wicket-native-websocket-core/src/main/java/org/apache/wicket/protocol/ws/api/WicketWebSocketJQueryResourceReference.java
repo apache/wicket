@@ -55,10 +55,12 @@ public class WicketWebSocketJQueryResourceReference extends JavaScriptResourceRe
 	public List<HeaderItem> getDependencies()
 	{
 		final ResourceReference wicketAjaxReference;
-		if (Application.exists()) {
+		if (Application.exists())
+		{
 			wicketAjaxReference = Application.get().getJavaScriptLibrarySettings().getWicketAjaxReference();
 		}
-		else {
+		else
+		{
 			wicketAjaxReference = WicketAjaxJQueryResourceReference.get();
 		}
 		List<HeaderItem> dependencies = super.getDependencies();
