@@ -300,7 +300,12 @@ public class PageStoreManager extends AbstractPageManager
 		public void valueUnbound(HttpSessionBindingEvent event)
 		{
 			// WICKET-5164 use the original sessionId
-			getPageStore().unbind(this.sessionId);
+			IPageStore store = getPageStore();
+			// store might be null if destroyed already
+			if (store != null)
+			{
+				store.unbind(sessionId);
+			}
 		}
 	}
 
