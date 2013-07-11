@@ -43,7 +43,7 @@ define(
 					ok($.isFunction(new w.ChannelManager().done), "Wicket ChannelManager (from wicket-ajax-jquery.js) is imported");
 					ok($.isFunction(w.Class.create), "Wicket Class (from wicket-ajax-jquery.js) is imported");
 					ok($.isFunction(w.Head.addElement), "Wicket Head (from wicket-ajax-jquery.js) is imported");
-					ok($.isFunction(w.Focus.attachFocusEvent), "Wicket Focus (from wicket-ajax-jquery.js) is imported");
+					ok($.isFunction(w.Focus.focusin), "Wicket Focus (from wicket-ajax-jquery.js) is imported");
 					ok($.isFunction(w.Log.error), "Wicket Log (from wicket-ajax-jquery.js) is imported");
 					ok($.isFunction(new w.Throttler().throttle), "Wicket Throttler (from wicket-ajax-jquery.js) is imported");
 					ok($.isFunction(new w.ThrottlerEntry().getFunc), "Wicket ThrottlerEntry (from wicket-ajax-jquery.js) is imported");
