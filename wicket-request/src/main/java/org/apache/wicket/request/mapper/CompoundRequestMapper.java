@@ -288,7 +288,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 			@Override
 			public Url getClientUrl()
 			{
-				return null;
+				return url;
 			}
 
 			@Override
