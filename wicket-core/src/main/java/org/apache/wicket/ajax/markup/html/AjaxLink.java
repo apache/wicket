@@ -120,7 +120,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
 				tag.getName().equalsIgnoreCase("area"))
 			{
-				tag.put("href", "#");
+				tag.put("href", "javascript:;");
 			}
 		}
 		else

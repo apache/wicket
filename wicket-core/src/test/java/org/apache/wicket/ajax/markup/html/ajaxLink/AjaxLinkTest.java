@@ -21,7 +21,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.util.tester.TagTester;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -42,7 +41,7 @@ public class AjaxLinkTest extends WicketTestCase
 		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
 
 		// It was a link to google in the markup, but should be replaced to "#"
-		assertTrue(ajaxLink.getAttributeIs("href", "#"));
+		assertTrue(ajaxLink.getAttributeIs("href", "javascript:;"));
 	}
 
 	/**
@@ -58,22 +57,6 @@ public class AjaxLinkTest extends WicketTestCase
 		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
 		tester.executeBehavior(behavior);
 		tester.assertRenderedPage(NormalPage.class);
-	}
-
-	/**
-	 * Test that the onclick on ajax link has "return !wcall;" at the end. This ensures that
-	 * execution is not turned over to the href attribute, which would then append # to the url.
-	 */
-	@Test
-	@Ignore
-	// TODO Wicket.next - re-enable
-	public void javaScriptEndsWithReturn()
-	{
-		tester.startPage(AjaxLinkPage.class);
-
-		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
-
-		assertTrue(ajaxLink.getAttributeEndsWith("onclick", "return !wcall;"));
 	}
 
 	/**
