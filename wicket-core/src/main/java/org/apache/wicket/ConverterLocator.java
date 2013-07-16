@@ -74,7 +74,7 @@ public class ConverterLocator implements IConverterLocator
 		 */
 		private DefaultConverter(Class<C> type)
 		{
-			this.type = new WeakReference<Class<C>>(type);
+			this.type = new WeakReference<>(type);
 		}
 
 		/**

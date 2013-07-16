@@ -160,7 +160,7 @@ public class SubmitLink extends AbstractSubmitLink
 		{
 			if (tag.getName().equalsIgnoreCase("a"))
 			{
-				tag.put("href", "#");
+				tag.put("href", "javascript:;");
 			}
 			tag.put("onclick", getTriggerJavaScript());
 		}

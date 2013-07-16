@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.connector.RequestFacade;
@@ -75,6 +76,12 @@ public class Tomcat7WebSocketFilter extends AbstractUpgradeFilter
 		// Small hack until the Servlet API provides a way to do this.
 		TomcatWebSocketProcessor webSocketHandler = new TomcatWebSocketProcessor(req, application);
 		TomcatWebSocketProcessor.TomcatWebSocket tomcatWebSocket = webSocketHandler.new TomcatWebSocket();
+
+		// the request can be a wrapper from application servlet filters
+		while (req instanceof HttpServletRequestWrapper)
+		{
+			req = (HttpServletRequest) ((HttpServletRequestWrapper) req).getRequest();
+		}
 		((RequestFacade) req).doUpgrade(tomcatWebSocket);
 		return true;
 	}

@@ -33,7 +33,7 @@
 
 /* node */
 
-.tree-theme-human span.tree-junction {
+.tree-theme-human a.tree-junction {
   display: block;
   float: left;
   width: 18px;

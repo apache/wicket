@@ -357,18 +357,10 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		// Make sure it is not cached by a client
 		response.disableCaching();
 
-		try
-		{
-			final StringResponse bodyResponse = new StringResponse();
-			responseObject.writeTo(bodyResponse, encoding);
-			CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
-			response.write(filteredResponse);
-		}
-		finally
-		{
-			// restore the original response
-			rc.setResponse(response);
-		}
+		final StringResponse bodyResponse = new StringResponse();
+		responseObject.writeTo(bodyResponse, encoding);
+		CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
+		response.write(filteredResponse);
 	}
 
 	/**

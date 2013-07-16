@@ -21,6 +21,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.markup.IMarkupCacheKeyProvider;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
@@ -111,7 +112,7 @@ public class ComponentRenderer
 	/**
 	 * A page used as a parent for the component based rendering.
 	 */
-	private static class RenderPage extends WebPage implements IMarkupResourceStreamProvider
+	private static class RenderPage extends WebPage implements IMarkupResourceStreamProvider, IMarkupCacheKeyProvider
 	{
 		private static final String MARKUP = "<wicket:container wicket:id='%s'></wicket:container>";
 
@@ -131,6 +132,12 @@ public class ComponentRenderer
 			return component.getId();
 		}
 
+		@Override
+		public String getCacheKey(MarkupContainer container, Class<?> containerClass)
+		{
+			// no caching for this page
+			return null;
+		}
 	}
 
 }
