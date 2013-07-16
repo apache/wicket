@@ -14,26 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi;
+package org.apache.wicket.cdi.util.tester;
 
-import org.apache.wicket.request.cycle.IRequestCycleListener;
-import org.apache.wicket.request.cycle.RequestCycle;
+import java.lang.reflect.Modifier;
 
-public interface ICdiAwareRequestCycleListener extends IRequestCycleListener
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Specializes;
+
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.cdi.BehaviorInjector;
+
+/**
+ * Injects components with CDI dependencies
+ *
+ * @author igor
+ */
+@ApplicationScoped
+@Alternative
+@Specializes
+public class TestBehaviorInjector extends BehaviorInjector
 {
-	/**
-	 * Called right after a conversation context for this request is activated
-	 * 
-	 * @param cycle
-	 *            request cycle
-	 */
-	void onAfterConversationActivated(RequestCycle cycle);
 
-	/**
-	 * Called right before the current conversation context is deactivated
-	 * 
-	 * @param cycle
-	 *            request cycle
-	 */
-	void onBeforeConversationDeactivated(RequestCycle cycle);
+	@Override
+	public void onInstantiation(Behavior behavior)
+	{
+		Class instanceClass = behavior.getClass();
+		if (instanceClass.isAnonymousClass() ||
+				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))
+		{
+			return;
+		}
+		inject(behavior);
+	}
 }

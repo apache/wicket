@@ -16,13 +16,19 @@
  */
 package org.apache.wicket.examples.cdi;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.ConversationPropagation;
+import org.apache.wicket.cdi.WicketApp;
 import org.apache.wicket.protocol.http.WebApplication;
 
+@WicketApp("CdiExample")
 public class CdiApplication extends WebApplication
 {
+
+	@Inject
+	CdiConfiguration cdiConfiguration;
 
 	@Override
 	public Class<? extends Page> getHomePage()
@@ -35,9 +41,13 @@ public class CdiApplication extends WebApplication
 	{
 		super.init();
 
-		CdiConfiguration.get()
-				.setPropagation(ConversationPropagation.NONBOOKMARKABLE)
-				.configure(this);
+		cdiConfiguration
+				.addPackagesToIgnore("org.apache.wicket.devutils",
+						"org.apache.wicket.ajax")
+				.addClassesToIgnore(org.apache.wicket.AttributeModifier.class,
+						org.apache.wicket.examples.WicketExampleHeader.class,
+						org.apache.wicket.examples.source.SourcesPage.class);
+
 
 		mountPage("injection", InjectionPage.class);
 		mountPage("conversation", ConversationPage1.class);

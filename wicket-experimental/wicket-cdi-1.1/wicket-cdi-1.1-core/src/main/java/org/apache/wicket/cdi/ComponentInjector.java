@@ -16,27 +16,23 @@
  */
 package org.apache.wicket.cdi;
 
-import java.lang.reflect.Modifier;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInstantiationListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Injects components with CDI dependencies
- * 
+ *
  * @author igor
- * 
  */
 @ApplicationScoped
-class ComponentInjector extends AbstractInjector<Component> implements IComponentInstantiationListener
+public class ComponentInjector extends AbstractInjector<Component> implements IComponentInstantiationListener
 {
 
 	@Override
 	public void onInstantiation(Component component)
-	{		
-			inject(component);		
+	{
+		inject(component);
 	}
 }

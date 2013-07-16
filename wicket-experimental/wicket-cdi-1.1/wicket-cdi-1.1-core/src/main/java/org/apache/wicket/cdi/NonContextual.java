@@ -30,21 +30,20 @@ import org.apache.wicket.util.collections.ClassMetaCache;
 
 /**
  * Manages lifecycle of non-contextual (non-CDI-managed) objects
- * 
- * @author igor
- * 
+ *
  * @param <T>
+ * @author igor
  */
-public class NonContextual <T>
+public class NonContextual<T>
 {
 	private static final Object lock = new Object();
 	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections.emptyMap();
 
 	final InjectionTarget<T> it;
-	
+
 	/**
 	 * Undeploys specified bean manager from cache
-	 * 
+	 *
 	 * @param beanManager
 	 */
 	public static void undeploy()
@@ -54,8 +53,8 @@ public class NonContextual <T>
 			synchronized (lock)
 			{
 				// copy-on-write the cache
-				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
-					cache);
+				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<>(
+						cache);
 				newCache.remove(CDI.current().getBeanManager());
 				cache = Collections.unmodifiableMap(newCache);
 			}
@@ -64,7 +63,7 @@ public class NonContextual <T>
 
 	/**
 	 * Factory method for creating noncontextual instances
-	 * 
+	 *
 	 * @param <T>
 	 * @param clazz
 	 * @param manager
@@ -75,11 +74,11 @@ public class NonContextual <T>
 		ClassMetaCache<NonContextual<?>> meta = getCache();
 
 		@SuppressWarnings("unchecked")
-		NonContextual<T> nc = (NonContextual<T>)meta.get(clazz);
+		NonContextual<T> nc = (NonContextual<T>) meta.get(clazz);
 
 		if (nc == null)
 		{
-			nc = new NonContextual<T>(clazz);
+			nc = new NonContextual<>(clazz);
 			meta.put(clazz, nc);
 		}
 		return nc;
@@ -92,15 +91,15 @@ public class NonContextual <T>
 		{
 			synchronized (lock)
 			{
-                                BeanManager manager = CDI.current().getBeanManager(); 
+				BeanManager manager = CDI.current().getBeanManager();
 				meta = cache.get(manager);
 				if (meta == null)
 				{
-					meta = new ClassMetaCache<NonContextual<?>>();
+					meta = new ClassMetaCache<>();
 
 					// copy-on-write the cache
-					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
-						cache);
+					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<>(
+							cache);
 					newCache.put(manager, meta);
 					cache = Collections.unmodifiableMap(newCache);
 				}
@@ -114,12 +113,12 @@ public class NonContextual <T>
 	{
 		BeanManager manager = CDI.current().getBeanManager();
 		AnnotatedType<? extends T> type = manager.createAnnotatedType(clazz);
-		this.it = (InjectionTarget<T>)manager.createInjectionTarget(type);
+		this.it = (InjectionTarget<T>) manager.createInjectionTarget(type);
 	}
 
 	/**
 	 * Injects the instance and calls any {@link PostConstruct} methods
-	 * 
+	 *
 	 * @param instance
 	 */
 	public void postConstruct(T instance)
@@ -128,10 +127,10 @@ public class NonContextual <T>
 		it.inject(instance, cc);
 		it.postConstruct(instance);
 	}
-	
+
 	/**
 	 * Injects the instance
-	 * 
+	 *
 	 * @param instance
 	 */
 	public void inject(T instance)
@@ -143,7 +142,7 @@ public class NonContextual <T>
 	/**
 	 * Calls any {@link PreDestroy} methods and destroys any injected dependencies that need to be
 	 * destroyed.
-	 * 
+	 *
 	 * @param instance
 	 */
 	public void preDestroy(T instance)

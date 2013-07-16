@@ -17,11 +17,13 @@
 package org.apache.wicket.cdi;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
+import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.jboss.weld.context.http.HttpConversationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jsarman
@@ -29,17 +31,10 @@ import org.jboss.weld.context.http.HttpConversationContext;
 @ApplicationScoped
 public class MockCdiContainer extends AbstractCdiContainer
 {
+	private static final Logger logger = LoggerFactory.getLogger(MockCdiContainer.class);
 
 	@Inject
-	private Instance<HttpConversationContext> conversationContextSource;
-
-	@Override
-	public void deactivateConversationalContext(RequestCycle cycle)
-	{
-		HttpConversationContext conversationContext = conversationContextSource.get();
-		conversationContext.deactivate();
-		conversationContext.dissociate(getRequest(cycle));
-	}
+	private HttpConversationContext conversationContext;
 
 	/**
 	 * Activates the conversational context and starts the conversation with the
@@ -51,20 +46,22 @@ public class MockCdiContainer extends AbstractCdiContainer
 	@Override
 	public void activateConversationalContext(RequestCycle cycle, String cid)
 	{
-		HttpConversationContext conversationContext = conversationContextSource.get();
 		conversationContext.associate(getRequest(cycle));
 		if (conversationContext.isActive())
 		{
-			// Only reactivate if transient and cid is set
-			if (conversationContext.getCurrentConversation().isTransient()
-					&& cid != null && !cid.isEmpty())
-			{
-				conversationContext.deactivate();
-				conversationContext.activate(cid);
-			}
+			conversationContext.invalidate();
+			conversationContext.deactivate();
+			conversationContext.activate(cid);
 		} else
 		{
 			conversationContext.activate(cid);
 		}
 	}
+
+	@Override
+	public Conversation getCurrentConversation()
+	{
+		return conversationContext.getCurrentConversation();
+	}
+
 }

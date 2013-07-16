@@ -17,9 +17,9 @@
 package org.apache.wicket.cdi;
 
 import java.io.Serializable;
+
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import org.apache.wicket.Component;
@@ -34,28 +34,24 @@ import org.slf4j.LoggerFactory;
 /**
  * Checks for conversation expiration during page render and throws a
  * {@link ConversationExpiredException} when an expired conversation is detected.
- * 
+ * <p/>
  * For example a link that calls {@link Conversation#end()} but does not redirect to a
  * non-conversation-dependent page will be caught by this listener.
- * 
+ *
  * @author igor
- * 
  */
-@ConversationScoped
+@ApplicationScoped
 public class ConversationExpiryChecker implements IComponentOnBeforeRenderListener, Serializable
 {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(ConversationExpiryChecker.class);
-	
-	@Inject 
-	Instance<AbstractCdiContainer>  containerSource;
 
 	@Inject
-	private Conversation conversation;
+	AbstractCdiContainer container;
 
 	public ConversationExpiryChecker()
 	{
-		
+
 	}
 
 	@Override
@@ -64,12 +60,12 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 		if (component instanceof Page || RequestCycle.get().find(AjaxRequestTarget.class) != null)
 		{
 			Page page = component.getPage();
-			String cid = containerSource.get().getConversationMarker(page);
-			if (cid != null && !Objects.isEqual(conversation.getId(), cid))
+			String cid = container.getConversationMarker(page);
+			if (cid != null && !Objects.isEqual(container.getCurrentConversation().getId(), cid))
 			{
 				logger.info("Conversation {} has expired for {}", cid, page);
 				throw new ConversationExpiredException(null, cid, page, RequestCycle.get()
-					.getActiveRequestHandler());
+						.getActiveRequestHandler());
 			}
 		}
 	}
