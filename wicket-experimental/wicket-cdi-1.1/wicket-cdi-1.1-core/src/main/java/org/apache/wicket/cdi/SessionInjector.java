@@ -17,15 +17,14 @@
 package org.apache.wicket.cdi;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+
 import org.apache.wicket.ISessionListener;
 import org.apache.wicket.Session;
 
 /**
  * Injects components with CDI dependencies
- * 
+ *
  * @author igor
- * 
  */
 @ApplicationScoped
 class SessionInjector extends AbstractInjector<Session> implements ISessionListener

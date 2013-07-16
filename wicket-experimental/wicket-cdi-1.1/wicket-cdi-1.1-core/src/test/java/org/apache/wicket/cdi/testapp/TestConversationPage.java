@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.cdi.testapp;
 
+import java.util.Random;
+
 import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
@@ -23,6 +25,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 
 /**
  * @author jsarman
@@ -36,11 +40,23 @@ public class TestConversationPage extends WebPage
 	@Inject
 	TestConversationBean counter;
 
+	Random random = new Random();
+
 	public TestConversationPage()
 	{
+		this(new PageParameters());
+	}
 
-		conversation.begin();
+	public TestConversationPage(final PageParameters parameters)
+	{
+		super(parameters);
 
+		if (!parameters.get("auto").toBoolean())
+		{
+			conversation.begin();
+
+			System.out.println("Opened Conversion with id = " + conversation.getId());
+		}
 		add(new Label("count", new PropertyModel(this, "counter.count")));
 
 		add(new Link<Void>("increment")
@@ -51,16 +67,23 @@ public class TestConversationPage extends WebPage
 				counter.increment();
 			}
 		});
-		add(new Link<Void>("reset")
+		add(new Link<Void>("next")
 		{
 			@Override
 			public void onClick()
 			{
-				conversation.end();
-				setResponsePage(TestPage.class);
+				String pageType = parameters.get("pageType").toString("nonbookmarkable");
+				switch (pageType.toLowerCase())
+				{
+					case "bookmarkable":
+						setResponsePage(TestNonConversationalPage.class);
+						break;
+					default:
+						setResponsePage(new TestNonConversationalPage());
+				}
+
 			}
 		});
 
 	}
-
 }

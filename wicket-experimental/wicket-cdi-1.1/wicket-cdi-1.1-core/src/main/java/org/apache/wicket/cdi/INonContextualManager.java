@@ -23,23 +23,22 @@ import org.apache.wicket.Component;
 
 /**
  * Manages lifecycle of non-contextual objects like {@link Component} instances, etc
- * 
+ *
  * @author igor
- * 
  */
 public interface INonContextualManager
 {
 	/**
 	 * Inject a noncontextual instance
-	 * 
+	 *
 	 * @param <T>
 	 * @param instance
 	 */
 	<T> void inject(T instance);
-	
+
 	/**
 	 * Inject a noncontextual instance and invokes any {@link PostConstruct} callbacks
-	 * 
+	 *
 	 * @param <T>
 	 * @param instance
 	 */
@@ -47,7 +46,7 @@ public interface INonContextualManager
 
 	/**
 	 * Invokes any {@link PreDestroy} callbacks and cleans up
-	 * 
+	 *
 	 * @param <T>
 	 * @param instance
 	 */

@@ -24,19 +24,18 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * Default implementation of {@link INonContextualManager} using {@link NonContextual} helper
- * 
+ *
  * @author igor
- * 
  */
 @ApplicationScoped
 class NonContextualManager implements INonContextualManager
 {
-	
+
 	/**
 	 * Constructor
 	 */
 	public NonContextualManager()
-	{		
+	{
 	}
 
 	/**
