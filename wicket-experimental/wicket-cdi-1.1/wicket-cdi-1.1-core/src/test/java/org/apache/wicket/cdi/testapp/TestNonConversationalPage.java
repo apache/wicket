@@ -16,36 +16,44 @@
  */
 package org.apache.wicket.cdi.testapp;
 
-import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Random;
 
-import javax.enterprise.context.ConversationScoped;
+import javax.inject.Inject;
 
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * @author jsarman
  */
-@ConversationScoped
-public class TestConversationBean implements Serializable
+public class TestNonConversationalPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(TestConversationPage.class);
+	@Inject
+	TestConversationBean counter;
 
-	private static final Logger logger = LoggerFactory.getLogger(TestConversationBean.class);
-	
-	private AtomicInteger counter = new AtomicInteger();
+	Random random = new Random();
 
-	public int getCount()
+	public TestNonConversationalPage()
 	{
-		logger.debug("Count = {}", counter.get());
-		return counter.get();
-	}
+		logger.debug("Starting TestConversationalPage");
+		add(new Label("count", new PropertyModel<Integer>(this, "counter.count")));
 
-	public void increment()
-	{
+		add(new Link<Void>("increment")
+		{
+			private static final long serialVersionUID = 1L;
 
-		counter.incrementAndGet();
-
+			@Override
+			public void onClick()
+			{
+				counter.increment();
+			}
+		});
 	}
 }

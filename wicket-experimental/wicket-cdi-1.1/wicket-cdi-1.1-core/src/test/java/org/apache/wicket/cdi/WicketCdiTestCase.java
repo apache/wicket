@@ -16,62 +16,117 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
-import org.apache.wicket.cdi.testapp.TestApplication;
-import org.apache.wicket.util.tester.WicketTester;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+
+import org.apache.wicket.cdi.testapp.TestAppScope;
+import org.apache.wicket.cdi.testapp.TestCdiApplication;
+import org.apache.wicket.cdi.testapp.TestConversationBean;
+import org.apache.wicket.cdi.util.tester.CdiWicketTester;
+import org.apache.wicket.cdi.util.tester.FilterConfigProducer;
+import org.apache.wicket.cdi.util.tester.TestBehaviorInjector;
+import org.apache.wicket.cdi.util.tester.TestCdiConfiguration;
+import org.apache.wicket.cdi.util.tester.TestComponentInjector;
+import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
-import org.jglue.cdiunit.ContextController;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
- * Base class for all CDI unit tests
+ * @author jsarman
  */
 @RunWith(CdiRunner.class)
+@ActivatedAlternatives({TestBehaviorInjector.class, TestComponentInjector.class, TestCdiConfiguration.class})
 @AdditionalClasses({
+		CdiWicketTester.class,
 		BehaviorInjector.class,
 		CdiConfiguration.class,
 		CdiShutdownCleaner.class,
 		ComponentInjector.class,
 		ConversationExpiryChecker.class,
 		ConversationPropagator.class,
+		ConversationManager.class,
 		DetachEventEmitter.class,
 		NonContextualManager.class,
 		SessionInjector.class,
-		MockCdiContainer.class})
-public class WicketCdiTestCase extends Assert
+		MockCdiContainer.class,
+		TestAppScope.class,
+		TestConversationBean.class,
+		FilterConfigProducer.class,
+		TestCdiApplication.class,
+		CdiWebApplicationFactory.class})
+public abstract class WicketCdiTestCase extends Assert
 {
-	protected WicketTester tester;
+	@Inject
+	private Instance<CdiWicketTester> testers;
+
+	private CdiWicketTester instantiatedTester;
 
 	@Inject
-	protected ContextController contextController;
+	Conversation conversation;
 
 	@Inject
-	protected ComponentInjector componentInjector;
+	FilterConfigProducer filterConfigProducer;
+
+	public CdiWicketTester getTester()
+	{
+		if (instantiatedTester == null)
+		{
+			instantiatedTester = testers.get();
+		}
+		return instantiatedTester;
+	}
+
+	public CdiWicketTester getTester(boolean newTest)
+	{
+		if (newTest)
+		{
+			return testers.get();
+		}
+		return getTester();
+	}
+
+	public CdiWicketTester getTester(Map<String, String> customParamters)
+	{
+		if (instantiatedTester != null)
+		{
+			throw new IllegalStateException("The Wicket Tester is already initialized.");
+		}
+		filterConfigProducer.addParameters(customParamters);
+		return getTester();
+	}
+
+	public CdiWicketTester getTester(boolean newTest, Map<String, String> customParamters)
+	{
+		if (newTest)
+		{
+			filterConfigProducer.addParameters(customParamters);
+			return testers.get();
+		}
+		return getTester(customParamters);
+	}
 
 	@Before
-	public void before()
+	public void init()
 	{
-		tester = new WicketTester(new TestApplication());
-		prepareRequest(tester.getRequest());
+		getTester();
 	}
 
 	@After
-	public void after()
+	public void end()
 	{
-		tester.destroy();
-		tester = null;
-		contextController.closeRequest();
+		if (instantiatedTester != null)
+		{
+			if (!conversation.isTransient())
+			{
+				conversation.end();
+			}
+		}
 	}
-
-	private void prepareRequest(HttpServletRequest request)
-	{
-		contextController.openRequest(request);
-	}
-
 }

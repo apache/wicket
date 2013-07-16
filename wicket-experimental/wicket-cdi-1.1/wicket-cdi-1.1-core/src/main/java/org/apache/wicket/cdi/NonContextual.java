@@ -32,17 +32,17 @@ import org.apache.wicket.util.collections.ClassMetaCache;
 /**
  * Manages lifecycle of non-contextual (non-CDI-managed) objects
  * 
- * @author igor
- * 
  * @param <T>
+ * @author igor
  */
-public class NonContextual <T>
+public class NonContextual<T>
 {
 	private static final Object lock = new Object();
-	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections.emptyMap();
+	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections
+			.emptyMap();
 
 	final InjectionTarget<T> it;
-	
+
 	/**
 	 * Undeploys specified bean manager from cache
 	 * 
@@ -56,7 +56,7 @@ public class NonContextual <T>
 			{
 				// copy-on-write the cache
 				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
-					cache);
+						cache);
 				newCache.remove(BeanManagerLookup.lookup());
 				cache = Collections.unmodifiableMap(newCache);
 			}
@@ -101,7 +101,7 @@ public class NonContextual <T>
 
 					// copy-on-write the cache
 					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
-						cache);
+							cache);
 					newCache.put(manager, meta);
 					cache = Collections.unmodifiableMap(newCache);
 				}
@@ -129,7 +129,7 @@ public class NonContextual <T>
 		it.inject(instance, cc);
 		it.postConstruct(instance);
 	}
-	
+
 	/**
 	 * Injects the instance
 	 * 
@@ -142,8 +142,8 @@ public class NonContextual <T>
 	}
 
 	/**
-	 * Calls any {@link PreDestroy} methods and destroys any injected dependencies that need to be
-	 * destroyed.
+	 * Calls any {@link PreDestroy} methods and destroys any injected
+	 * dependencies that need to be destroyed.
 	 * 
 	 * @param instance
 	 */

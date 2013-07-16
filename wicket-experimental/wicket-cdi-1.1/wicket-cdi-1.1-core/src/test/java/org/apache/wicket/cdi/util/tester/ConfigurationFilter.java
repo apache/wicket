@@ -14,18 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi;
+package org.apache.wicket.cdi.util.tester;
+
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
 
 /**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
+ * Qualifier for injecting the FilterConfiguration for testing
  *
- * @author igor
+ * @author jsarman
  */
-@Conversational
-public interface ConversationalComponent
+@Qualifier
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ConfigurationFilter
 {
 
 }

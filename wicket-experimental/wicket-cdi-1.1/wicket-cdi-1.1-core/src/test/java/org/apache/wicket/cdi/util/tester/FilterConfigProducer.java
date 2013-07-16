@@ -14,18 +14,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi;
+package org.apache.wicket.cdi.util.tester;
+
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.servlet.FilterConfig;
 
 /**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
- *
- * @author igor
+ * @author jsarman
  */
-@Conversational
-public interface ConversationalComponent
+@ApplicationScoped
+public class FilterConfigProducer
 {
 
+	TestFilterConfig config;
+
+	@PostConstruct
+	public void init()
+	{
+		config = new TestFilterConfig();
+	}
+
+	@Produces
+	@ConfigurationFilter
+	public FilterConfig getConfig()
+	{
+		return config;
+	}
+
+	public void addParameter(String paramName, String value)
+	{
+		config.put(paramName, value);
+	}
+
+	public void removeParameter(String paramName)
+	{
+		config.remove(paramName);
+	}
+
+	public void addParameters(Map<String, String> params)
+	{
+		config.putAll(params);
+	}
 }

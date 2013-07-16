@@ -16,16 +16,29 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.util.AnnotationLiteral;
+
 /**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
+ * Allows for Programmatic lookup of WebApplications based on the Named Annotation.
  *
- * @author igor
+ * @author jsarman
  */
-@Conversational
-public interface ConversationalComponent
+public class ApplicationQualifier extends AnnotationLiteral<WicketApp> implements WicketApp
 {
+	private static final long serialVersionUID = 1L;
+	
+	private String value;
+
+	public ApplicationQualifier(String value)
+	{
+		super();
+		this.value = value;
+	}
+
+	@Override
+	public String value()
+	{
+		return value;
+	}
 
 }

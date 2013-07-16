@@ -14,18 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi;
+package org.apache.wicket.cdi.util.tester;
+
+import java.lang.reflect.Modifier;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Specializes;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.cdi.ComponentInjector;
 
 /**
- * Marks a component that requires a conversation. This marker is used by the automatic conversation
- * management feature ({@link CdiConfiguration#setAutoConversationManagement(boolean)}) to
- * automatically begin and end conversations based on the presence of these components in the
- * component hierarchy of pages (can be applied to the page itself).
+ * Injects components with CDI dependencies
  *
  * @author igor
  */
-@Conversational
-public interface ConversationalComponent
+@ApplicationScoped
+@Alternative
+@Specializes
+public class TestComponentInjector extends ComponentInjector
 {
 
+	@Override
+	public void onInstantiation(Component component)
+	{
+		Class instanceClass = component.getClass();
+		if (instanceClass.isAnonymousClass() ||
+				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))
+		{
+			return;
+		}
+		inject(component);
+	}
 }

@@ -17,9 +17,11 @@
 package org.apache.wicket.cdi;
 
 import java.io.Serializable;
+
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
@@ -29,9 +31,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Request cycle listener that fires the {@link DetachEvent} event
- * 
+ *
  * @author igor
- * 
  */
 @SessionScoped
 public class DetachEventEmitter extends AbstractRequestCycleListener implements Serializable
@@ -46,14 +47,14 @@ public class DetachEventEmitter extends AbstractRequestCycleListener implements 
 
 	@Inject
 	Event<DetachEvent> detachEvent;
-	
+
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param container
 	 */
 	public DetachEventEmitter()
-	{		
+	{
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class DetachEventEmitter extends AbstractRequestCycleListener implements 
 			logger.debug("Firing Detach event {}", cycle.getRequest().getUrl());
 
 			detachEvent.fire(new DetachEvent());
-			
+
 			cycle.setMetaData(DETACH_SCHEDULED_KEY, null);
 		}
 	}

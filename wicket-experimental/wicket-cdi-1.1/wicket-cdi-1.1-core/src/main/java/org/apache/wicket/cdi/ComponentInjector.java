@@ -23,17 +23,16 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 
 /**
  * Injects components with CDI dependencies
- * 
+ *
  * @author igor
- * 
  */
 @ApplicationScoped
-class ComponentInjector extends AbstractInjector<Component> implements IComponentInstantiationListener
+public class ComponentInjector extends AbstractInjector<Component> implements IComponentInstantiationListener
 {
 
 	@Override
 	public void onInstantiation(Component component)
-	{		
-			inject(component);		
+	{
+		inject(component);
 	}
 }

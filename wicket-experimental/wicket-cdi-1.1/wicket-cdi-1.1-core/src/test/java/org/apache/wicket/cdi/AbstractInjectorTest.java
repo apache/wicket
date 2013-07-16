@@ -16,23 +16,42 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.inject.Any;
+import javax.inject.Inject;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import javax.inject.Qualifier;
+import org.junit.Test;
 
 /**
- * Qualifier for injecting the Automatic Conversation begin boolean
- *
  * @author jsarman
  */
-@Qualifier
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Auto
+public class AbstractInjectorTest extends WicketCdiTestCase
 {
+
+	@Inject
+	ConversationPropagator conversationPropagator;
+	@Inject
+	@Any
+	AbstractInjector abstractInjector;
+
+
+	@Test
+	public void testIgnore()
+	{
+		CdiConfiguration.get().addClassesToIgnore(Object.class);
+		assertTrue(abstractInjector.ignore(Object.class));
+
+		CdiConfiguration.get().removeClassesToIgnore(Object.class);
+		assertFalse(abstractInjector.ignore(Object.class));
+
+		CdiConfiguration.get().addPackagesToIgnore("java.lang");
+		assertTrue(abstractInjector.ignore(Object.class));
+		assertTrue(abstractInjector.ignore(Runtime.class));
+
+		CdiConfiguration.get().removePackagesToIgnore("java.lang");
+		assertFalse(abstractInjector.ignore(Object.class));
+		assertFalse(abstractInjector.ignore(Runtime.class));
+
+	}
+
 
 }
