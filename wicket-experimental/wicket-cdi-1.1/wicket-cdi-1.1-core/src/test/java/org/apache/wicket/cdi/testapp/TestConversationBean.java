@@ -21,6 +21,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.enterprise.context.ConversationScoped;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author jsarman
  */
@@ -28,15 +31,20 @@ import javax.enterprise.context.ConversationScoped;
 public class TestConversationBean implements Serializable
 {
 
+	private static final Logger logger = LoggerFactory.getLogger(TestConversationBean.class);
 	private AtomicInteger counter = new AtomicInteger();
+
 
 	public int getCount()
 	{
+		logger.debug("Count = {}", counter.get());
 		return counter.get();
 	}
 
 	public void increment()
 	{
+
 		counter.incrementAndGet();
+
 	}
 }

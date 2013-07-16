@@ -21,16 +21,16 @@ import org.apache.wicket.IApplicationListener;
 
 /**
  * Listens to application shutdown and cleans up
- * 
+ *
  * @author igor
  */
 class CdiShutdownCleaner implements IApplicationListener
 {
-	
+
 	private final boolean preDestroyApplication;
 
 	public CdiShutdownCleaner(boolean preDestroyApplication)
-	{		
+	{
 		this.preDestroyApplication = preDestroyApplication;
 	}
 
