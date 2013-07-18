@@ -1151,8 +1151,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 	/**
 	 * Converts and validates the conversion of the raw input string into the object specified by
-	 * {@link FormComponent#getType()} and records any errors. Converted value is available through
-	 * {@link FormComponent#getConvertedInput()}.
+	 * {@link FormComponent#getType()} and records any thrown {@link ConversionException}s.
+	 * Converted value is available through {@link FormComponent#getConvertedInput()}.
 	 * 
 	 * <p>
 	 * Usually the user should do custom conversions by specifying an {@link IConverter} by
@@ -1162,6 +1162,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @see IConverterLocator
 	 * @see Application#newConverterLocator()
+	 * @see IConverter#convertToObject(String, Locale)
+	 * @see #newValidationError(ConversionException)
 	 */
 	protected void convertInput()
 	{
