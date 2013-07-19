@@ -98,6 +98,19 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	}
 
 	/**
+	 * Sets the provider used to retrieve {@link Validator} instances
+	 * 
+	 * @param validatorProvider
+	 */
+	public void setValidatorProvider(IProvider<Validator> validatorProvider)
+	{
+		Args.notNull(validatorProvider, "validatorProvider");
+
+		this.validatorProvider = validatorProvider;
+	}
+
+
+	/**
 	 * Binds this configuration to the application instance
 	 * 
 	 * @param application
