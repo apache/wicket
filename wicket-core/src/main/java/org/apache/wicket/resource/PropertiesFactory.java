@@ -201,7 +201,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * @param resourceStream
 	 * @return properties
 	 */
-	private ValueMap loadFromLoader(final IPropertiesLoader loader,
+	protected ValueMap loadFromLoader(final IPropertiesLoader loader,
 		final IResourceStream resourceStream)
 	{
 		if (log.isInfoEnabled())
@@ -257,7 +257,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * @param resourceStream
 	 * @param watcher
 	 */
-	private void addToWatcher(final String path, final IResourceStream resourceStream,
+	protected void addToWatcher(final String path, final IResourceStream resourceStream,
 		final IModificationWatcher watcher)
 	{
 		watcher.add(resourceStream, new IChangeListener()
