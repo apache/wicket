@@ -54,7 +54,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	private static final Logger log = LoggerFactory.getLogger(PropertiesFactory.class);
 
 	/** Listeners will be invoked after changes to property file have been detected */
-	private final List<IPropertiesChangeListener> afterReloadListeners = new ArrayList<IPropertiesChangeListener>();
+	private final List<IPropertiesChangeListener> afterReloadListeners = new ArrayList<>();
 
 	/** Cache for all property files loaded */
 	private final Map<String, Properties> propertiesCache = newPropertiesCache();
@@ -74,7 +74,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	public PropertiesFactory(final IPropertiesFactoryContext context)
 	{
 		this.context = context;
-		this.propertiesLoader = new ArrayList<IPropertiesLoader>();
+		this.propertiesLoader = new ArrayList<>();
 		this.propertiesLoader.add(new IsoPropertiesFilePropertiesLoader("properties"));
 		this.propertiesLoader.add(new UtfPropertiesFilePropertiesLoader("utf8.properties", "utf-8"));
 		this.propertiesLoader.add(new XmlFilePropertiesLoader("properties.xml"));
@@ -96,7 +96,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 */
 	protected Map<String, Properties> newPropertiesCache()
 	{
-		return new ConcurrentHashMap<String, Properties>();
+		return new ConcurrentHashMap<>();
 	}
 
 	/**
