@@ -1553,9 +1553,9 @@
 				for (var j = 0; j < this.tabbableTags.length; j++) {
 					var tagElements = doc.getElementsByTagName(this.tabbableTags[j]);
 					for (var k = 0 ; k < tagElements.length; k++) {
-						// if this is not an iframe window and the element is child of window content,
+						// if this is not an iframe window and the element is child of modal window,
 						// don't disable tab on it
-						if (win.isIframe() === true || this.isParent(tagElements[k], win.content) === false) {
+						if (win.isIframe() === true || this.isParent(tagElements[k], win.window) === false) {
 							var element = tagElements[k];
 							element.hiddenTabIndex = element.tabIndex;
 							element.tabIndex="-1";
