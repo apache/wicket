@@ -126,7 +126,10 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onBroadcast(AtmosphereResourceEvent event)
 	{
-		log.info("onBroadcast: {}", event.getMessage());
+		if (log.isDebugEnabled())
+		{
+			log.debug("onBroadcast: {}", event.getMessage());
+		}
 
 		// If we are using long-polling, resume the connection as soon as we get
 		// an event.
