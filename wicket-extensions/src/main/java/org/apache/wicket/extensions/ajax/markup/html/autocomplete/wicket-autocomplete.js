@@ -120,11 +120,15 @@
 						if (selected>-1) {
 							setSelected(selected-1);
 						}
-						if(selected === -1) {
-							hideAutoComplete();
-						} else {
-							render(true, false);
+
+						var searchTerm = Wicket.$(elementId).value;
+						if(selected === -1 && searchTerm) {
+							// select the last element
+							setSelected(elementCount-1);
+							showAutoComplete();
 						}
+						render(true, false);
+
 						if (Wicket.Browser.isSafari()) {
 							return jqEvent.stopPropagation();
 						}
@@ -132,6 +136,9 @@
 					case KEY_DOWN:
 						if (selected < elementCount-1) {
 							setSelected(selected+1);
+						} else if (selected === elementCount-1) {
+							// select the first element
+							setSelected(0);
 						}
 						if (visible===0) {
 							updateChoices();
