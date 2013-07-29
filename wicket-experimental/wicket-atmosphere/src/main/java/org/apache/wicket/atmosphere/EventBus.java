@@ -32,6 +32,7 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.atmosphere.config.AtmosphereParameters;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -89,7 +90,14 @@ public class EventBus implements UnboundListener
 	 */
 	public static EventBus get(Application application)
 	{
-		return application.getMetaData(EVENT_BUS_KEY);
+		EventBus eventBus = application.getMetaData(EVENT_BUS_KEY);
+		if (eventBus == null)
+		{
+			throw new WicketRuntimeException(
+				"There is no EventBus registered for the given application: " +
+					application.getName());
+		}
+		return eventBus;
 	}
 
 	private WebApplication application;
@@ -112,7 +120,26 @@ public class EventBus implements UnboundListener
 	 */
 	public EventBus(WebApplication application)
 	{
-		this(application, BroadcasterFactory.getDefault().lookupAll().iterator().next());
+		this(application, lookupDefaultBroadcaster());
+	}
+
+	private static Broadcaster lookupDefaultBroadcaster()
+	{
+		BroadcasterFactory factory = BroadcasterFactory.getDefault();
+		if (factory == null)
+		{
+			throw new WicketRuntimeException(
+				"There is no Atmosphere BroadcasterFactory configured. Did you include the "
+					+ "atmosphere.xml configuration file and configured AtmosphereServlet?");
+		}
+		Collection<Broadcaster> allBroadcasters = factory.lookupAll();
+		if (allBroadcasters.isEmpty())
+		{
+			throw new WicketRuntimeException(
+				"The Atmosphere BroadcasterFactory has no Broadcasters, "
+					+ "something is wrong with your Atmosphere configuration.");
+		}
+		return allBroadcasters.iterator().next();
 	}
 
 	/**
