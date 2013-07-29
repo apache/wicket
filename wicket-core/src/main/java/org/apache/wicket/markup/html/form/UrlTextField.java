@@ -74,7 +74,7 @@ public class UrlTextField extends TextField<String>
 	}
 
 	@Override
-	protected String[] getInputType()
+	protected String[] getInputTypes()
 	{
 		return new String[] {"url"};
 	}

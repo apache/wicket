@@ -92,10 +92,10 @@ public class TextField<T> extends AbstractTextComponent<T>
 		checkComponentTag(tag, "input");
 
 		// check for text type
-		String[] inputType = getInputType();
-		if (inputType != null)
+		String[] inputTypes = getInputTypes();
+		if (inputTypes != null)
 		{
-			checkComponentTagAttribute(tag, "type", inputType);
+			checkComponentTagAttribute(tag, "type", inputTypes);
 		}
 		else
 		{
@@ -117,7 +117,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 * 
 	 * @return The input type of this textfield, default is null
 	 */
-	protected String[] getInputType()
+	protected String[] getInputTypes()
 	{
 		return null;
 	}

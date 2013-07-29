@@ -194,7 +194,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	}
 
 	@Override
-	protected String[] getInputType()
+	protected String[] getInputTypes()
 	{
 		return new String[] { "date", "datetime", "datetime-local", "month", "time", "week" };
 	}
