@@ -108,8 +108,8 @@ public class TextFieldTest extends WicketTestCase
 		/** */
 		public TestPage()
 		{
-			add(form = new Form<Void>("form"));
-			form.add(textField = new TextField<String>("text", textModel));
+			add(form = new Form<>("form"));
+			form.add(textField = new TextField<>("text", textModel));
 		}
 
 		@Override

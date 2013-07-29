@@ -44,8 +44,8 @@ public class TextAreaTest extends WicketTestCase
 		/** */
 		public TestPage()
 		{
-			add(form = new Form<Void>("form"));
-			form.add(textArea = new TextArea<String>("textarea", textModel));
+			add(form = new Form<>("form"));
+			form.add(textArea = new TextArea<>("textarea", textModel));
 		}
 
 		@Override
