@@ -1388,6 +1388,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			onDisabled(tag);
 		}
 
+		if (isRequired())
+		{
+			onRequired(tag);
+		}
+
 		super.onComponentTag(tag);
 	}
 
@@ -1414,6 +1419,16 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	protected void onDisabled(final ComponentTag tag)
 	{
 		tag.put("disabled", "disabled");
+	}
+
+	/**
+	 * Called by {@link #onComponentTag(ComponentTag)} when the component is required.
+	 *
+	 * @param tag
+	 *            the tag that is being rendered
+	 */
+	protected void onRequired(final ComponentTag tag)
+	{
 	}
 
 	/**

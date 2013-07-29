@@ -26,6 +26,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.junit.Test;
 
@@ -77,6 +78,23 @@ public class TextFieldTest extends WicketTestCase
 		formTester.submit();
 		assertEquals(null, testPage.textField.getDefaultModelObject());
 		assertTrue(testPage.textField.isValid());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5289
+	 */
+	@Test
+	public void requiredAttribute()
+	{
+		TestPage testPage = new TestPage();
+		testPage.textField.setOutputMarkupId(true);
+		testPage.textField.setType(String.class);
+		testPage.textField.setRequired(true);
+		tester.startPage(testPage);
+
+		TagTester tagTester = tester.getTagById(testPage.textField.getMarkupId());
+		String required = tagTester.getAttribute("required");
+		assertEquals("required", required);
 	}
 
 	/** */

@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.text.SimpleDateFormat;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.util.string.Strings;
@@ -189,5 +190,13 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	{
 		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
 		return this;
+	}
+
+	@Override
+	protected void onRequired(ComponentTag tag)
+	{
+		super.onRequired(tag);
+
+		tag.put("required", "required");
 	}
 }
