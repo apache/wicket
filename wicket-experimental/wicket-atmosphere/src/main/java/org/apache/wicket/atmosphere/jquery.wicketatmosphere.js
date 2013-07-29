@@ -39,7 +39,7 @@
 		callbackAdded = true;
 		response = $.atmosphere.response;
 
-		$(window).bind("beforeunload", function() {
+		$(window).on("beforeunload", function() {
 			callbackAdded = false;
 			$.atmosphere.unsubscribe();
 		});
