@@ -281,7 +281,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 		// Move up one level
 		data = stack.pop();
 
-		// If we are on childFirst, than it's now time to handle the parent
+		// If we are on childFirst, then it's now time to handle the parent
 		if (childFirst)
 		{
 			hasNextWasLast = true;
@@ -291,7 +291,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 			}
 			return nextNode();
 		}
-		// If we are on parent first, than get the next element
+		// If we are on parent first, then get the next element
 		else if (data.hasNext())
 		{
 			return nextNode();
@@ -381,14 +381,14 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 			.append(childFirst)
 			.append("; hasNextWasLast=")
 			.append(hasNextWasLast)
-			.append("\n");
+			.append('\n');
 
 		msg.append("data.node=")
 			.append(data.node)
-			.append("\n")
+			.append('\n')
 			.append("data.lastNode=")
 			.append(data.lastNode)
-			.append("\n");
+			.append('\n');
 
 		msg.append("stack.size=").append(stack.size());
 
@@ -450,10 +450,10 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 			StringBuilder msg = new StringBuilder(500);
 			msg.append("node=")
 				.append(node)
-				.append("\n")
+				.append('\n')
 				.append("lastNode=")
 				.append(lastNode)
-				.append("\n");
+				.append('\n');
 
 			return msg.toString();
 		}
