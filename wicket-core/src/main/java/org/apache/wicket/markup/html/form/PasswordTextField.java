@@ -116,8 +116,8 @@ public class PasswordTextField extends TextField<String>
 	 * @see org.apache.wicket.markup.html.form.TextField#getInputType()
 	 */
 	@Override
-	protected String getInputType()
+	protected String[] getInputType()
 	{
-		return "password";
+		return new String[] {"password"};
 	}
 }

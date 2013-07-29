@@ -3557,22 +3557,36 @@ public abstract class Component
 	 *            The tag
 	 * @param key
 	 *            The attribute key
-	 * @param value
+	 * @param values
 	 *            The required value for the attribute key
 	 * @throws MarkupException
 	 *             Thrown if the tag does not have the required attribute value
 	 */
 	protected final void checkComponentTagAttribute(final ComponentTag tag, final String key,
-		final String value)
+		final String... values)
 	{
 		if (key != null)
 		{
 			final String tagAttributeValue = tag.getAttributes().getString(key);
-			if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
+
+			boolean found = false;
+			if (tagAttributeValue != null)
+			{
+				for (String value : values)
+				{
+					if (value.equalsIgnoreCase(tagAttributeValue))
+					{
+						found = true;
+						break;
+					}
+				}
+			}
+
+			if (found == false)
 			{
 				String msg = String.format("Component [%s] (path = [%s]) must be applied to a tag "
-					+ "with [%s] attribute matching [%s], not [%s]", getId(), getPath(), key,
-					value, tagAttributeValue);
+						+ "with [%s] attribute matching any of %s, not [%s]", getId(), getPath(), key,
+						Arrays.toString(values), tagAttributeValue);
 
 				findMarkupStream().throwMarkupException(msg);
 			}

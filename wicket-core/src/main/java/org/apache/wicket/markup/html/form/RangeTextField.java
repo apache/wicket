@@ -73,8 +73,8 @@ public class RangeTextField<N extends Number & Comparable<N>> extends NumberText
 	}
 
 	@Override
-	protected String getInputType()
+	protected String[] getInputType()
 	{
-		return "range";
+		return new String[] {"range"};
 	}
 }

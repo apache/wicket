@@ -91,8 +91,8 @@ public class EmailTextField extends TextField<String>
 	}
 
 	@Override
-	protected String getInputType()
+	protected String[] getInputType()
 	{
-		return "email";
+		return new String[] {"email"};
 	}
 }

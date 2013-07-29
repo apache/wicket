@@ -196,9 +196,9 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	}
 
 	@Override
-	protected String getInputType()
+	protected String[] getInputType()
 	{
-		return "number";
+		return new String[] {"number"};
 	}
 
 	/**

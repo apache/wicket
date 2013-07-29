@@ -93,8 +93,8 @@ public class HiddenField<T> extends TextField<T>
 	 * @see org.apache.wicket.markup.html.form.TextField#getInputType()
 	 */
 	@Override
-	protected String getInputType()
+	protected String[] getInputType()
 	{
-		return "hidden";
+		return new String[] {"hidden"};
 	}
 }
