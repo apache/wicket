@@ -46,7 +46,7 @@ import org.apache.wicket.util.lang.Args;
 public abstract class AbstractHierarchyIterator<N, I extends N> implements Iterator<I>, Iterable<I>
 {
 	// An iterator for each level we are down from root
-	private ArrayListStack<LevelIterator<N>> stack = new ArrayListStack<LevelIterator<N>>();
+	private ArrayListStack<LevelIterator<N>> stack = new ArrayListStack<>();
 
 	// The current level iterator
 	private LevelIterator<N> data;
@@ -74,7 +74,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 
 		if (hasChildren(root))
 		{
-			data = new LevelIterator<N>(root, newIterator(root));
+			data = new LevelIterator<>(root, newIterator(root));
 		}
 	}
 
@@ -163,7 +163,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 		stack.push(data);
 
 		// Initialize the data for the next level
-		data = new LevelIterator<N>(node, newIterator(node));
+		data = new LevelIterator<>(node, newIterator(node));
 
 		// Get the next node on the current level. If it's a container, than move downwards. If
 		// there are no more elements, than move up again.
