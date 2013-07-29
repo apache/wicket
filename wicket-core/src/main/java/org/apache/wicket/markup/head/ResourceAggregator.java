@@ -232,6 +232,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		for (HeaderItem curDependency : item.getDependencies())
 		{
+			curDependency = getItemToBeRendered(curDependency);
 			if (depsDone.add(curDependency))
 			{
 				recordHeaderItem(curDependency, depsDone);
@@ -247,6 +248,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	@Override
 	public void render(HeaderItem item)
 	{
+		item = getItemToBeRendered(item);
 		if (item instanceof OnDomReadyHeaderItem)
 		{
 			renderDependencies(item, new LinkedHashSet<HeaderItem>());
@@ -297,7 +299,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 		for (RecordedHeaderItem curRenderItem : sortedItemsToBeRendered)
 		{
-			getRealResponse().render(getItemToBeRendered(curRenderItem.getItem()));
+			if (markItemRendered(curRenderItem.getItem()))
+			{
+				getRealResponse().render(curRenderItem.getItem());
+			}
 		}
 	}
 
@@ -309,16 +314,11 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		StringBuilder combinedScript = new StringBuilder();
 		for (OnDomReadyHeaderItem curItem : domReadyItemsToBeRendered)
 		{
-			HeaderItem itemToBeRendered = getItemToBeRendered(curItem);
-			if (itemToBeRendered == curItem)
+			if (markItemRendered(curItem))
 			{
 				combinedScript.append('\n');
 				combinedScript.append(curItem.getJavaScript());
 				combinedScript.append(';');
-			}
-			else
-			{
-				getRealResponse().render(itemToBeRendered);
 			}
 		}
 		if (combinedScript.length() > 0)
@@ -330,16 +330,11 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		combinedScript.setLength(0);
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
 		{
-			HeaderItem itemToBeRendered = getItemToBeRendered(curItem);
-			if (itemToBeRendered == curItem)
+			if (markItemRendered(curItem))
 			{
 				combinedScript.append('\n');
 				combinedScript.append(curItem.getJavaScript());
 				combinedScript.append(';');
-			}
-			else
-			{
-				getRealResponse().render(itemToBeRendered);
 			}
 		}
 		if (combinedScript.length() > 0)
@@ -356,13 +351,32 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		for (OnDomReadyHeaderItem curItem : domReadyItemsToBeRendered)
 		{
-			getRealResponse().render(getItemToBeRendered(curItem));
+			if (markItemRendered(curItem))
+			{
+				getRealResponse().render(curItem);
+			}
 		}
 
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
 		{
-			getRealResponse().render(getItemToBeRendered(curItem));
+			if (markItemRendered(curItem))
+			{
+				getRealResponse().render(curItem);
+			}
 		}
+	}
+
+	private boolean markItemRendered(HeaderItem item)
+	{
+		if (wasRendered(item))
+			return false;
+
+		getRealResponse().markRendered(item);
+		for (HeaderItem curProvided : item.getProvidedResources())
+		{
+			getRealResponse().markRendered(curProvided);
+		}
+		return true;
 	}
 
 	/**
@@ -375,27 +389,17 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private HeaderItem getItemToBeRendered(HeaderItem item)
 	{
-		while (item instanceof IWrappedHeaderItem)
+		HeaderItem innerItem = item;
+		while (innerItem instanceof IWrappedHeaderItem)
 		{
-			item = ((IWrappedHeaderItem)item).getWrapped();
+			innerItem = ((IWrappedHeaderItem)innerItem).getWrapped();
 		}
-		if (getRealResponse().wasRendered(item))
+		if (getRealResponse().wasRendered(innerItem))
 		{
 			return NoHeaderItem.get();
 		}
 
-		getRealResponse().markRendered(item);
-		HeaderItem bundle = Application.get().getResourceBundles().findBundle(item);
-		if (bundle == null)
-		{
-			return item;
-		}
-
-		for (HeaderItem curProvided : bundle.getProvidedResources())
-		{
-			getRealResponse().markRendered(curProvided);
-		}
-
-		return bundle;
+		HeaderItem bundle = Application.get().getResourceBundles().findBundle(innerItem);
+		return bundle == null ? item : bundle;
 	}
 }

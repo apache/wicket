@@ -237,4 +237,19 @@ public class ResourceAggregatorTest extends WicketTestCase
 	{
 		aggregator.render(forReference(new ResourceReferenceCirc1()));
 	}
+
+	/**
+	 * bundle {bun1 -> x, bun2 -> y}, render [bun1], should render [x, y, bun12]
+	 */
+	@Test
+	public void testTwoResourcesWithBundleAsDependency()
+	{
+		HeaderItem bundle12 = Application.get()
+			.getResourceBundles()
+			.addJavaScriptBundle(Application.class, "bun12.js", new ResourceReferenceBun1(),
+				new ResourceReferenceBun2());
+		aggregator.render(forReference(new ResourceReferenceBun1()));
+		assertItems(forReference(new ResourceReferenceX()), forReference(new ResourceReferenceY()),
+			bundle12);
+	}
 }
