@@ -54,4 +54,6 @@
     <entry key="RangeValidator.range">La valeur du champ '${label}' doit être entre ${minimum} et ${maximum}.</entry>
     <entry key="PagingNavigator.previous">Page précédente</entry>
     <entry key="StringValidator.exact">La valeur du champ '${label}' ne fait pas exactement ${exact} caractères.</entry>
+    <entry key="uploadTooLarge">Le fichier doit avoir une taille inférieure à ${maxSize}</entry>
+    <entry key="uploadFailed">Erreur de téléchargement: ${exception.localizedMessage}</entry>
 </properties>
