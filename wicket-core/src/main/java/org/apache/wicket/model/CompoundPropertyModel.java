@@ -94,7 +94,7 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 	 */
 	public <S> IModel<S> bind(String property)
 	{
-		return new PropertyModel<S>(this, property);
+		return new PropertyModel<>(this, property);
 	}
 
 	/**
@@ -165,6 +165,6 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 	 */
 	public static <Z> CompoundPropertyModel<Z> of(IModel<Z> model)
 	{
-		return new CompoundPropertyModel<Z>(model);
+		return new CompoundPropertyModel<>(model);
 	}
 }
