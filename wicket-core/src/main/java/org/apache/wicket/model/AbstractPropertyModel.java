@@ -126,9 +126,8 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		}
 		else
 		{
-			PropertyResolverConverter prc = null;
-			prc = new PropertyResolverConverter(Application.get().getConverterLocator(),
-				Session.get().getLocale());
+			PropertyResolverConverter prc = new PropertyResolverConverter(
+					Application.get().getConverterLocator(), Session.get().getLocale());
 			PropertyResolver.setValue(expression, getInnermostModelOrObject(), object, prc);
 		}
 	}
