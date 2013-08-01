@@ -495,19 +495,22 @@ public class MarkupCache implements IMarkupCache
 		final String cacheKey = markupResourceStream.getCacheKey();
 		if (cacheKey != null)
 		{
-			// get the location String
-			String locationString = markupResourceStream.locationAsString();
-			if (locationString == null)
+			if (enforceReload == false)
 			{
-				// set the cache key as location string, because location string
-				// couldn't be resolved.
-				locationString = cacheKey;
-			}
-			Markup markup = markupCache.get(locationString);
-			if (markup != null)
-			{
-				markupKeyCache.put(cacheKey, locationString);
-				return markup;
+				// get the location String
+				String locationString = markupResourceStream.locationAsString();
+				if (locationString == null)
+				{
+					// set the cache key as location string, because location string
+					// couldn't be resolved.
+					locationString = cacheKey;
+				}
+				Markup markup = markupCache.get(locationString);
+				if (markup != null)
+				{
+					markupKeyCache.put(cacheKey, locationString);
+					return markup;
+				}
 			}
 
 			// Watch file in the future
