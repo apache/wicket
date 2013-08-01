@@ -69,6 +69,9 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.settings.IAjaxSettings;
+import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.settings.def.AjaxSettings;
 import org.apache.wicket.util.IContextProvider;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.CharEncoding;
@@ -145,6 +148,8 @@ public abstract class WebApplication extends Application
 	 * runtime.
 	 */
 	private RuntimeConfigurationType configurationType;
+
+	private IAjaxSettings ajaxSettings;
 
 	/**
 	 * Covariant override for easy getting the current {@link WebApplication} without having to cast
@@ -980,5 +985,27 @@ public abstract class WebApplication extends Application
 			filterFactoryManager = new FilterFactoryManager();
 		}
 		return filterFactoryManager;
+	}
+
+	/**
+	 * @return Application's resources related settings
+	 */
+	public final IAjaxSettings getAjaxSettings()
+	{
+		checkSettingsAvailable();
+		if (ajaxSettings == null)
+		{
+			ajaxSettings = new AjaxSettings(this);
+		}
+		return ajaxSettings;
+	}
+
+	/**
+	 *
+	 * @param ajaxSettings
+	 */
+	public final void setAjaxSettings(final IAjaxSettings ajaxSettings)
+	{
+		this.ajaxSettings = ajaxSettings;
 	}
 }

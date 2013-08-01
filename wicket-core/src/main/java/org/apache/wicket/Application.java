@@ -1330,7 +1330,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 *
 	 */
-	private void checkSettingsAvailable()
+	protected final void checkSettingsAvailable()
 	{
 		if (!settingsAccessible)
 		{

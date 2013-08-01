@@ -18,8 +18,8 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -80,9 +80,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 		if (component.isEnabledInHierarchy())
 		{
-			CharSequence js = getCallbackScript(component);
-
-			response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			getAjaxStrategy().renderHead(this, response);
 		}
 	}
 
@@ -130,4 +128,13 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 *      the current request handler
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
+
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		getAjaxStrategy().onComponentTag(this, tag);
+	}
+
 }
