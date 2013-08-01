@@ -224,7 +224,7 @@ public class Localizer
 		{
 			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find property: '");
 			message.append(key);
-			message.append("'");
+			message.append('\'');
 
 			if (component != null)
 			{

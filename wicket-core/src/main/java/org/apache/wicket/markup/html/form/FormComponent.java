@@ -682,7 +682,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 					buffer.append(", ");
 				}
 			}
-			buffer.append(".");
+			buffer.append('.');
 			message = buffer.toString();
 			logger.warn(message.toString());
 		}
