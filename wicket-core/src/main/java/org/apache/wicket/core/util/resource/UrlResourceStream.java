@@ -119,19 +119,20 @@ public class UrlResourceStream extends AbstractResourceStream
 			{
 				streamData.connection = url.openConnection();
 				streamData.contentLength = streamData.connection.getContentLength();
-				streamData.contentType = streamData.connection.getContentType();
+
+				if (Application.exists())
+				{
+					streamData.contentType = Application.get().getMimeType(url.getFile());
+				}
+				else
+				{
+					streamData.contentType = streamData.connection.getContentType();
+				}
 
 				if (streamData.contentType == null || streamData.contentType.contains("unknown"))
 				{
-					if (Application.exists())
-					{
-						streamData.contentType = Application.get().getMimeType(url.getFile());
-					}
-					else
-					{
-						streamData.contentType = URLConnection.getFileNameMap().getContentTypeFor(
-							url.getFile());
-					}
+					streamData.contentType = URLConnection.getFileNameMap().getContentTypeFor(
+						url.getFile());
 				}
 			}
 			catch (IOException ex)
