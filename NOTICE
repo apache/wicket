@@ -77,6 +77,8 @@ src/./wicket-core
    This product includes software from QOS.ch (http://slf4j.org) licensed under the X11 license
    Copyright (c) 2004-2008 QOS.ch
    
+   This product includes software developed by the jQuery Foundation (http://jquery.com/), released under MIT.
+
    Contains Diff library from Mavens JRCS, released under
    The Apache Software License, Version 1.1.
    (c) 1999-2003
