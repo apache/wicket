@@ -72,6 +72,11 @@ public class ThrottlingSettings implements IClusterable
 	}
 
 	/**
+	 * This id is used by the client-side throttling code to keep track of the various event
+	 * throttles. Normally you can just use any unique ID here, such as the component's markupId (
+	 * {@link WebComponent#getMarkupId()}). To unite several different events with one throttle,
+	 * give them the same ID.
+	 * 
 	 * @return throttle id
 	 */
 	public String getId()
@@ -85,7 +90,8 @@ public class ThrottlingSettings implements IClusterable
 	 * after the <strong>last</strong> call to throttle. If the parameter is not set, or set to false,
 	 * then the timer is not reset.
 	 */
-	public boolean getPostponeTimerOnUpdate() {
+	public boolean getPostponeTimerOnUpdate()
+	{
 		return postponeTimerOnUpdate;
 	}
 
