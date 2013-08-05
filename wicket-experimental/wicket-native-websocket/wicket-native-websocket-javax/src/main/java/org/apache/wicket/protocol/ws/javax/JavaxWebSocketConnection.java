@@ -30,9 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A wrapper around Jetty9's native WebSocketConnection.
+ * A wrapper around JSR 356's native Session.
  *
- * @since 6.2
+ * @since 7.0.0
  */
 public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 {
@@ -44,7 +44,7 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	 * Constructor.
 	 *
 	 * @param session
-	 *            the jetty websocket connection
+	 *            the WebSocket session
 	 */
 	public JavaxWebSocketConnection(Session session, AbstractWebSocketProcessor webSocketProcessor)
 	{

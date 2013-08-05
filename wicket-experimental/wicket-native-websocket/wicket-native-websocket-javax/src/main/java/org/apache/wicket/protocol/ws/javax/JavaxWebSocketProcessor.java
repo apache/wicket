@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An {@link org.apache.wicket.protocol.ws.api.IWebSocketProcessor processor} that integrates with
- * Jetty 9.x {@link Session web socket} implementation.
+ * JSR 356 {@link Session web socket} implementation.
  *
- * @since 6.2
+ * @since 7.0.0
  */
 public class JavaxWebSocketProcessor extends AbstractWebSocketProcessor
 {

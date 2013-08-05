@@ -26,6 +26,9 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * JSR 356 WebSocket Endpoint that integrates with Wicket Native WebSocket's IWebSocketProcessor
+ */
 public class WicketEndpoint extends Endpoint
 {
 	private static final Logger LOG = LoggerFactory.getLogger(WicketEndpoint.class);
