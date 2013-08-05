@@ -38,18 +38,15 @@
 
 				var self = this,
 					url,
-					hashIdx,
-					delim;
+					protocol;
 
-				url = document.location.toString()
-					.replace('http://', 'ws://')
-					.replace('https://', 'wss://');
-				hashIdx = url.indexOf('#');
-				if (hashIdx > -1) {
-					url = url.substring(0, hashIdx);
-				}
-				delim = url.indexOf('?') > -1 ? '&' : '?';
-				url += delim + 'pageId=' + Wicket.WebSocket.pageId;
+				protocol = document.location.protocol
+					.replace('https:', 'wss:')
+					.replace('http:', 'ws:');
+
+				url = protocol + '//' + document.location.host + Wicket.WebSocket.contextPath + '/wicket/websocket';
+
+				url += '?pageId=' + Wicket.WebSocket.pageId;
 				url += '&wicket-ajax-baseurl=' + Wicket.WebSocket.baseUrl;
 				self.ws = new WebSocket(url);
 
