@@ -44,7 +44,7 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 		 * Triggered before ajax request target begins its response cycle
 		 *
 		 * @param map
-		 *            read-only map:markupId->component of components already added to the target
+		 *            modifiable map (markupId -> component) of components already added to the target
 		 * @param target
 		 *            the target itself. Could be used to add components or to append/prepend
 		 *            javascript
