@@ -591,12 +591,6 @@ public abstract class AbstractResource implements IResource
 			// 2. Caching
 			configureCache(data, attributes);
 
-			if (!data.dataNeedsToBeWritten(attributes))
-			{
-				webResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-				return;
-			}
-
 			if (data.getErrorCode() != null)
 			{
 				webResponse.sendError(data.getErrorCode(), data.getErrorMessage());
@@ -606,6 +600,12 @@ public abstract class AbstractResource implements IResource
 			if (data.getStatusCode() != null)
 			{
 				webResponse.setStatus(data.getStatusCode());
+				return;
+			}
+			
+			if (!data.dataNeedsToBeWritten(attributes))
+			{
+				webResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 				return;
 			}
 
