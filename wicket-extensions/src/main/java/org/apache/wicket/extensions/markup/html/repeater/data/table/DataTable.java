@@ -113,6 +113,8 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 
 	private final Caption caption;
 
+	private long toolbarIdCounter;
+
 	/**
 	 * Constructor
 	 * 
@@ -434,6 +436,15 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	protected void onPageChanged()
 	{
 		// noop
+	}
+
+	/**
+	 * @see AbstractToolbar
+	 */
+	String newToolbarId()
+	{
+		toolbarIdCounter++;
+		return String.valueOf(toolbarIdCounter).intern();
 	}
 
 	/**
