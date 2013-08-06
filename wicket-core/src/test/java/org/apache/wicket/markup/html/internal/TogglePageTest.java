@@ -132,7 +132,9 @@ public class TogglePageTest extends WicketTestCase
 		{
 			// On
 			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester.getLastRenderedPage();
-			tester.assertComponentOnAjaxResponse(ajaxPage.getLabel1());
+			// WICKET-5302 - only the InlineEnclosure is in the Ajax response
+			// Label1 is inside the InlineEncosure
+			tester.assertComponentOnAjaxResponse("wicket_InlineEnclosure-0");
 			tester.assertComponentOnAjaxResponse(ajaxPage.getLabel2());
 			assertVisible(ajaxPage.getLabel1());
 			assertVisible(ajaxPage.getLabel2());

@@ -161,11 +161,9 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 
 				if (listeners != null)
 				{
-					final Map<String, Component> components = Collections.unmodifiableMap(markupIdToComponent);
-
 					for (AjaxRequestTarget.IListener listener : listeners)
 					{
-						listener.onBeforeRespond(components, AjaxRequestHandler.this);
+						listener.onBeforeRespond(markupIdToComponent, AjaxRequestHandler.this);
 					}
 				}
 
