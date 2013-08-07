@@ -140,7 +140,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		for (AjaxRequestTarget.IListener listener : ajaxRequestTargetListeners)
 		{
 			listener.updateAjaxAttributes(attributes);
-		}
+			}
 		updateAjaxAttributes(attributes);
 		return attributes;
 	}
