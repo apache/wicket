@@ -755,14 +755,6 @@
 
 			var attrs = context.attrs;
 
-			this._executeHandlers(attrs.bsh, attrs, null, null);
-			Wicket.Event.publish('/ajax/call/beforeSend', attrs, null, null);
-
-			if (attrs.i) {
-				// show the indicator
-				Wicket.DOM.showIncrementally(attrs.i);
-			}
-
 			var form = Wicket.$(attrs.f);
 			if (!form) {
 				Wicket.Log.error("Wicket.Ajax.Call.submitForm: Trying to submit form with id '" + attrs.f + "' that is not in document.");
@@ -827,6 +819,14 @@
 				form.appendChild($btn[0]);
 			}
 
+			this._executeHandlers(attrs.bsh, attrs, null, null);
+			Wicket.Event.publish('/ajax/call/beforeSend', attrs, null, null);
+
+			if (attrs.i) {
+				// show the indicator
+				Wicket.DOM.showIncrementally(attrs.i);
+			}
+			
 			//submit the form into the iframe, response will be handled by the onload callback
 			form.submit();
 
