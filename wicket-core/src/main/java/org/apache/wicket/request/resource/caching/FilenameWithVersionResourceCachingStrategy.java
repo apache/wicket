@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
@@ -175,6 +176,15 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 			// create filename without version string 
 			// (required for working resource lookup)
 			url.setFileName(extension == null? basename : basename + extension);
+
+			// store the version in the request cycle
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle != null)
+			{
+				int idx = fullname.indexOf(versionPrefix);
+				String urlVersion = fullname.substring(pos + idx + 1);
+				requestCycle.setMetaData(URL_VERSION, urlVersion);
+			}
 		}
 	}
 

@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.StringValue;
 
 /**
  * resource caching strategy that adds a version string to the query parameters of the resource
@@ -109,6 +111,15 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 		
 		if (parameters != null)
 		{
+			// store the version in the request cycle
+			StringValue versionValue = parameters.get(versionParameter);
+			RequestCycle requestCycle = RequestCycle.get();
+			if (versionValue.isEmpty() == false && requestCycle != null)
+			{
+				requestCycle.setMetaData(URL_VERSION, versionValue.toString());
+			}
+
+			// undecorate
 			parameters.remove(versionParameter);
 		}
 	}

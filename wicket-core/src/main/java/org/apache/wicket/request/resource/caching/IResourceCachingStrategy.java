@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.resource.AbstractResource;
 
 /**
@@ -31,6 +32,15 @@ import org.apache.wicket.request.resource.AbstractResource;
  */
 public interface IResourceCachingStrategy
 {
+
+	/**
+	 * A key used to store the extracted resource's version in
+	 * {@linkplain #undecorateUrl(ResourceUrl)} into the request cycle
+	 */
+	final MetaDataKey<String> URL_VERSION = new MetaDataKey<String>()
+	{
+	};
+
 	/**
 	 * add caching related information to filename + parameters
 	 * 
