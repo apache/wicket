@@ -182,7 +182,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 			if (requestCycle != null)
 			{
 				int idx = fullname.indexOf(versionPrefix);
-				String urlVersion = fullname.substring(pos + idx + 1);
+				String urlVersion = fullname.substring(idx + versionPrefix.length());
 				requestCycle.setMetaData(URL_VERSION, urlVersion);
 			}
 		}
