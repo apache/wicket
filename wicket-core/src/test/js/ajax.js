@@ -990,7 +990,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - success scenario.', function () {
 
-			expect(8);
+			expect(9);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1012,6 +1012,13 @@ jQuery(document).ready(function() {
 						equal(attrs.event.isDefaultPrevented(), false, "default behavior is allowed");
 					}
 				]
+				,
+				dep: [
+					function(attrs) {
+						ok(true, "Dynamic parameters are collected in success scenario!");
+						return { 'one': 1 };
+					}
+				]
 			};
 
 			Wicket.Ajax.ajax(attrs);
@@ -1026,7 +1033,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - failure scenario.', function () {
 
-			expect(7);
+			expect(8);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1046,6 +1053,12 @@ jQuery(document).ready(function() {
 					function(attrs) {
 						ok(true, "Complete handler executed");
 						equal(attrs.event.isDefaultPrevented(), false, "default behavior is not prevented");
+					}
+				],
+				dep: [
+					function(attrs) {
+						ok(true, "Dynamic parameters are collected in failure scenario!");
+						return { 'one': 1 };
 					}
 				]
 			};
