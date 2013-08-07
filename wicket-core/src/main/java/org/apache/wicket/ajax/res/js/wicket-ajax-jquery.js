@@ -443,6 +443,32 @@
 		},
 
 		/**
+		 * Executes all functions to calculate any dynamic extra parameters
+		 *
+		 * @param attrs The Ajax request attributes
+		 * @returns {String} A query string snippet with any calculated request
+		 *  parameters. An empty string if there are no dynamic parameters in attrs
+		 * @private
+		 */
+		_calculateDynamicParameters: function(attrs) {
+			var deps = attrs.dep,
+				params = [];
+
+			for (var i = 0; i < deps.length; i++) {
+				var dep = deps[i],
+					extraParam;
+				if (jQuery.isFunction(dep)) {
+					extraParam = dep(attrs);
+				} else {
+					extraParam = new Function('attrs', dep)(attrs);
+				}
+				extraParam = this._asParamArray(extraParam);
+				params = params.concat(extraParam);
+			}
+			return jQuery.param(params);
+		},
+
+		/**
 		 * Executes or schedules for execution #doAjax()
 		 *
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
@@ -564,23 +590,10 @@
 
 					// collect the dynamic extra parameters
 					if (jQuery.isArray(attrs.dep)) {
-						var deps = attrs.dep,
-							params = [],
-							queryString,
+						var queryString,
 							separator;
 
-						for (var i = 0; i < deps.length; i++) {
-							var dep = deps[i],
-								extraParam;
-							if (jQuery.isFunction(dep)) {
-								extraParam = dep(attrs);
-							} else {
-								extraParam = new Function('attrs', dep)(attrs);
-							}
-							extraParam = this._asParamArray(extraParam);
-							params = params.concat(extraParam);
-						}
-						queryString = jQuery.param(params);
+						queryString = this._calculateDynamicParameters(attrs);
 						if (settings.type.toLowerCase() === 'post') {
 							separator = settings.data.length > 0 ? '&' : '';
 							settings.data = settings.data + separator + queryString;
@@ -798,6 +811,12 @@
 			form.target = iframe.name;
 			var separator = (attrs.u.indexOf("?")>-1 ? "&" : "?");
 			form.action = attrs.u + separator + "wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(getAjaxBaseUrl());
+			if (jQuery.isArray(attrs.dep)) {
+				var dynamicExtraParameters = this._calculateDynamicParameters(attrs);
+				if (dynamicExtraParameters) {
+					form.action = form.action + '&' + dynamicExtraParameters;
+				}
+			}
 			form.method = "post";
 			form.enctype = "multipart/form-data";
 			form.encoding = "multipart/form-data";
