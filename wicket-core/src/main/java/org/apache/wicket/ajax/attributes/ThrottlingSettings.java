@@ -35,6 +35,31 @@ public class ThrottlingSettings implements IClusterable
 	private boolean postponeTimerOnUpdate;
 
 	/**
+	 * Construct without id (will default to the component's markup ID) and postponeTimerOnUpdate
+	 * set to false.
+	 * 
+	 * @param delay
+	 *            throttle delay
+	 */
+	public ThrottlingSettings(final Duration delay)
+	{
+		this(null, delay, false);
+	}
+
+	/**
+	 * Construct without id (will default to the component's markup ID).
+	 * 
+	 * @param delay
+	 *            throttle delay
+	 * @param postponeTimerOnUpdate
+	 *            postpone timer
+	 */
+	public ThrottlingSettings(final Duration delay, boolean postponeTimerOnUpdate)
+	{
+		this(null, delay, postponeTimerOnUpdate);
+	}
+
+	/**
 	 * Construct.
 	 * 
 	 * @param id
@@ -58,7 +83,7 @@ public class ThrottlingSettings implements IClusterable
 	public ThrottlingSettings(final String id, final Duration delay,
 		final boolean postponeTimerOnUpdate)
 	{
-		this.id = Args.notNull(id, "id");
+		this.id = id;
 		this.delay = Args.notNull(delay, "delay");
 		this.postponeTimerOnUpdate = postponeTimerOnUpdate;
 	}
@@ -80,7 +105,8 @@ public class ThrottlingSettings implements IClusterable
 	 * This id is used by the client-side throttling code to keep track of the various event
 	 * throttles. Normally you can just use any unique ID here, such as the component's markupId (
 	 * {@link WebComponent#getMarkupId()}). To unite several different events with one throttle,
-	 * give them the same ID.
+	 * give them the same ID. If this is null, it will (on the client only) default to the
+	 * component's markupId.
 	 * 
 	 * @return throttle id
 	 */
