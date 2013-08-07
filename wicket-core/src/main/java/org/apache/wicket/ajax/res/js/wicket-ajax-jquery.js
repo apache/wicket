@@ -803,12 +803,24 @@
 			form.target = iframe.name;
 			var separator = (attrs.u.indexOf("?")>-1 ? "&" : "?");
 			form.action = attrs.u + separator + "wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(getAjaxBaseUrl());
+
+			// add the static extra parameters
+			if (attrs.ep) {
+				var extraParametersArray = this._asParamArray(attrs.ep);
+				if (extraParametersArray.length > 0) {
+					var extraParametersQueryString = jQuery.param(extraParametersArray);
+					form.action = form.action + '&' + extraParametersQueryString;
+				}
+			}
+
+			// add the dynamic extra parameters
 			if (jQuery.isArray(attrs.dep)) {
 				var dynamicExtraParameters = this._calculateDynamicParameters(attrs);
 				if (dynamicExtraParameters) {
 					form.action = form.action + '&' + dynamicExtraParameters;
 				}
 			}
+
 			form.method = "post";
 			form.enctype = "multipart/form-data";
 			form.encoding = "multipart/form-data";
@@ -826,7 +838,7 @@
 				// show the indicator
 				Wicket.DOM.showIncrementally(attrs.i);
 			}
-			
+
 			//submit the form into the iframe, response will be handled by the onload callback
 			form.submit();
 

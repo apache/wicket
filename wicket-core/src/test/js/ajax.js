@@ -990,7 +990,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - success scenario.', function () {
 
-			expect(9);
+			expect(13);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1002,7 +1002,21 @@ jQuery(document).ready(function() {
 				ad: true, // do not allow default behavior
 				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
 				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
-				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
+				bsh: [ function(attrs) {
+					ok(true, "BeforeSend handler executed");
+
+					var form = Wicket.$(attrs.f);
+					if (form.tagName.toLowerCase() !== "form") {
+						do {
+							form = form.parentNode;
+						} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
+					}
+					var formUrl = form.action;
+					ok(formUrl.indexOf('dynamicEPName') > -1, "Dynamic extra parameter name is in the request query string");
+					ok(formUrl.indexOf('dynamicEPValue') > -1, "Dynamic extra parameter value is in the request query string");
+					ok(formUrl.indexOf('extraParamName') > -1, "Static extra parameter name is in the request query string");
+					ok(formUrl.indexOf('extraParamValue') > -1, "Static extra parameter value is in the request query string");
+				} ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(true, "Success handler executed"); } ],
 				fh: [ function(attrs) { ok(false, "Failure handler should not be executed"); } ],
@@ -1011,14 +1025,16 @@ jQuery(document).ready(function() {
 						ok(true, "Complete handler executed");
 						equal(attrs.event.isDefaultPrevented(), false, "default behavior is allowed");
 					}
-				]
-				,
+				],
 				dep: [
 					function(attrs) {
 						ok(true, "Dynamic parameters are collected in success scenario!");
-						return { 'one': 1 };
+						return { 'dynamicEPName': 'dynamicEPValue' };
 					}
-				]
+				],
+				ep: {
+					'extraParamName': 'extraParamValue'
+				}
 			};
 
 			Wicket.Ajax.ajax(attrs);
@@ -1033,7 +1049,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - failure scenario.', function () {
 
-			expect(8);
+			expect(12);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1045,7 +1061,21 @@ jQuery(document).ready(function() {
 				ad: false,
 				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
 				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
-				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
+				bsh: [ function(attrs) {
+					ok(true, "BeforeSend handler executed");
+
+					var form = Wicket.$(attrs.f);
+					if (form.tagName.toLowerCase() !== "form") {
+						do {
+							form = form.parentNode;
+						} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
+					}
+					var formUrl = form.action;
+					ok(formUrl.indexOf('dynamicEPName') > -1, "Dynamic extra parameter name is in the request query string");
+					ok(formUrl.indexOf('dynamicEPValue') > -1, "Dynamic extra parameter value is in the request query string");
+					ok(formUrl.indexOf('extraParamName') > -1, "Static extra parameter name is in the request query string");
+					ok(formUrl.indexOf('extraParamValue') > -1, "Static extra parameter value is in the request query string");
+				} ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
 				fh: [ function(attrs) { ok(true, "Failure handler executed"); start(); } ],
@@ -1057,10 +1087,13 @@ jQuery(document).ready(function() {
 				],
 				dep: [
 					function(attrs) {
-						ok(true, "Dynamic parameters are collected in failure scenario!");
-						return { 'one': 1 };
+						ok(true, "Dynamic parameters are collected in success scenario!");
+						return { 'dynamicEPName': 'dynamicEPValue' };
 					}
-				]
+				],
+				ep: {
+					'extraParamName': 'extraParamValue'
+				}
 			};
 
 			Wicket.Ajax.ajax(attrs);
