@@ -259,17 +259,32 @@ public class WebPageRenderer extends PageRenderer
 					// force creation of possible stateful page to get the final target url
 					getPage();
 
-					Url renderTargetUrl = requestCycle.mapUrlFor(getRenderPageRequestHandler());
+					Url beforeRenderUrl = requestCycle.mapUrlFor(getRenderPageRequestHandler());
 
 					// redirect to buffer
-					BufferedWebResponse response = renderPage(renderTargetUrl, requestCycle);
+					BufferedWebResponse response = renderPage(beforeRenderUrl, requestCycle);
 
 					if (response == null)
 					{
 						return;
 					}
 
-					if (currentUrl.equals(renderTargetUrl))
+					// the url might have changed after page has been rendered (e.g. the
+					// stateless flag might have changed because stateful components
+					// were added)
+					final Url afterRenderUrl = requestCycle
+						.mapUrlFor(getRenderPageRequestHandler());
+
+					if (beforeRenderUrl.getSegments().equals(afterRenderUrl.getSegments()) == false)
+					{
+						// the amount of segments is different - generated relative URLs
+						// will not work, we need to rerender the page. This can happen
+						// with IRequestHandlers that produce different URLs with
+						// different amount of segments for stateless and stateful pages
+						response = renderPage(afterRenderUrl, requestCycle);
+					}
+
+					if (currentUrl.equals(afterRenderUrl))
 					{
 						// no need to redirect when both urls are exactly the same
 						response.writeTo((WebResponse)requestCycle.getResponse());
@@ -289,9 +304,9 @@ public class WebPageRenderer extends PageRenderer
 					}
 					else
 					{
-						storeBufferedResponse(renderTargetUrl, response);
+						storeBufferedResponse(afterRenderUrl, response);
 
-						redirectTo(renderTargetUrl, requestCycle);
+						redirectTo(afterRenderUrl, requestCycle);
 					}
 				}
 			}
