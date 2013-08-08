@@ -30,9 +30,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mvn.build.java.version>1.7</mvn.build.java.version>
-		<jetty.version>8.1.11.v20130520</jetty.version>
+		<jetty.version>8.1.12.v20130726</jetty.version>
 		<jetty9.version>9.0.4.v20130625</jetty9.version>
-		<spring.version>3.2.3.RELEASE</spring.version>
+		<spring.version>3.2.4.RELEASE</spring.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
 		<maven.javadoc.version>2.9.1</maven.javadoc.version>
 		<maven.surefire.version>2.12.2</maven.surefire.version>
