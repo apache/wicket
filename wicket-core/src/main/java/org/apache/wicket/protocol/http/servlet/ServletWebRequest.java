@@ -205,7 +205,7 @@ public class ServletWebRequest extends WebRequest
 			}
 		}
 
-		return setParameters(Url.parse(url.toString(), getCharset()));
+		return setParameters(Url.parse(url.toString(), getCharset(), false));
 	}
 
 	/**
