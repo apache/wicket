@@ -191,6 +191,21 @@ public class ServletWebRequestTest extends Assert
 		assertEquals("any/source/of/error", errorClientUrl.toString());
 	}
 
+	/**
+	 * WICKET-5287
+	 */
+	@Test
+	public void parseUrlWhichLooksLikeFullInItsContextRelativePart()
+	{
+		String filterPath = "filterPath";
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
+		String looksLikeFullUrl = "/foo://:/";
+		httpRequest.setURL("http://localhost" + '/' + httpRequest.getContextPath() + '/' + filterPath + looksLikeFullUrl);
+
+		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, filterPath);
+		assertEquals(looksLikeFullUrl, webRequest.getClientUrl().toString());
+	}
+
 	private static class CustomRequestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;

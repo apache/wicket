@@ -202,6 +202,21 @@ public class Url implements Serializable
 	 */
 	public static Url parse(CharSequence _url, Charset charset)
 	{
+		return parse(_url, charset, true);
+	}
+
+	/**
+	 * Parses the given URL string.
+	 *
+	 * @param _url
+	 *            absolute or relative url with query string
+	 * @param charset
+	 * @param isFullHint
+	 *            a hint whether to try to parse the protocol, host and port part of the url
+	 * @return Url object
+	 */
+	public static Url parse(CharSequence _url, Charset charset, boolean isFullHint)
+	{
 		Args.notNull(_url, "_url");
 
 		final Url result = new Url(charset);
@@ -237,7 +252,7 @@ public class Url implements Serializable
 		boolean protocolLess = absoluteUrl.startsWith("//");
 		final boolean isFull = (protocolAt > 1 && (protocolAt < idxOfFirstSlash)) || protocolLess;
 
-		if (isFull)
+		if (isFull && isFullHint)
 		{
 			if (protocolLess == false)
 			{
