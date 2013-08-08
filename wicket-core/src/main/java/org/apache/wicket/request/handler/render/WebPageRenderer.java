@@ -107,7 +107,7 @@ public class WebPageRenderer extends PageRenderer
 		}
 
 		// keep the original response
-		final WebResponse originalResponse = (WebResponse) requestCycle.getResponse();
+		final WebResponse originalResponse = (WebResponse)requestCycle.getResponse();
 
 		// buffered web response for page
 		BufferedWebResponse response = new BufferedWebResponse(originalResponse);
@@ -123,10 +123,11 @@ public class WebPageRenderer extends PageRenderer
 			if (scheduled == null && requestCycle.getRequestHandlerScheduledAfterCurrent() != null)
 			{
 				// This is a special case.
-				// During page render another request handler got scheduled and will want to overwrite
-				// the response, so we need to let it.
-				// Just preserve the meta data headers
-				originalResponse.reset(); // clear the initial actions because they are already copied into the new response's actions
+				// During page render another request handler got scheduled and will want to
+				// overwrite the response, so we need to let it.
+				// Just preserve the meta data headers. Clear the initial actions because they are
+				// already copied into the new response's actions
+				originalResponse.reset();
 				response.writeMetaData(originalResponse);
 				return null;
 			}
@@ -253,13 +254,15 @@ public class WebPageRenderer extends PageRenderer
 		{
 			if (isRedirectToBuffer() == false && logger.isDebugEnabled())
 			{
-				String details = String.format("redirect strategy: '%s', isAjax: '%s', redirect policy: '%s', " +
-						"current url: '%s', target url: '%s', is new: '%s', is stateless: '%s', is temporary: '%s'",
-						Application.get().getRequestCycleSettings().getRenderStrategy(),
-						isAjax, getRedirectPolicy(), currentUrl, targetUrl, getPageProvider().isNewPageInstance(),
-						getPage().isPageStateless(), isSessionTemporary());
+				String details = String.format(
+					"redirect strategy: '%s', isAjax: '%s', redirect policy: '%s', "
+						+ "current url: '%s', target url: '%s', is new: '%s', is stateless: '%s', is temporary: '%s'",
+					Application.get().getRequestCycleSettings().getRenderStrategy(), isAjax,
+					getRedirectPolicy(), currentUrl, targetUrl,
+					getPageProvider().isNewPageInstance(), getPage().isPageStateless(),
+					isSessionTemporary());
 				logger.debug("Falling back to Redirect_To_Buffer render strategy because none of the conditions " +
-						"matched. Details: " + details);
+					"matched. Details: " + details);
 			}
 
 			// force creation of possible stateful page to get the final target url
