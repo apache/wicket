@@ -73,6 +73,8 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private String parameterName = "q";
 
+	private int minInputLength = 1;
+
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
 	 * list is shown.
@@ -384,5 +386,26 @@ public final class AutoCompleteSettings implements IClusterable
 	public String getParameterName()
 	{
 		return parameterName;
+	}
+
+	/**
+	 * @return the minimum input length required to display the autocomplete list
+	 */
+	public int getMinInputLength()
+	{
+		return minInputLength;
+	}
+
+	/**
+	 * Set the minimum input length required to display the autocomplete list
+	 *
+	 * @param minInputLength
+	 *            the minimum input length required to display the autocomplete list
+	 * @return this {@link AutoCompleteSettings}
+	 */
+	public AutoCompleteSettings setMinInputLength(int minInputLength)
+	{
+		this.minInputLength = minInputLength;
+		return this;
 	}
 }

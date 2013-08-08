@@ -155,6 +155,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		sb.append(",ignoreBordersWhenPositioning: ").append(settings.getIgnoreBordersWhenPositioning());
 		sb.append(",showListOnFocusGain: ").append(settings.getShowListOnFocusGain());
 		sb.append(",throttleDelay: ").append(settings.getThrottleDelay());
+		sb.append(",minInputLength: ").append(settings.getMinInputLength());
 		sb.append(",parameterName: '").append(settings.getParameterName()).append('\'');
 		sb.append(",showCompleteListOnFocusGain: ").append(
 			settings.getShowCompleteListOnFocusGain());
