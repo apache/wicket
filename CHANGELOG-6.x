@@ -2,6 +2,53 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.10.0
+
+** Sub-task
+    * [WICKET-5248] - OnEventHeaderItem is still broken in 6.9.0
+
+** Bug
+
+    * [WICKET-5135] - wicket-atmosphere EventBus constructor throws NullPointerException under invalid state
+    * [WICKET-5164] - PageStoreManager.SessionEntry keeps outdated sessionId when container changes sessionId
+    * [WICKET-5224] - ModalWindow is not visible in Safari when opened from a link at the bottom of a large page
+    * [WICKET-5250] - Minified css/js gets compressed
+    * [WICKET-5251] - Minified name resolves incorrectly if default resource reference is used
+    * [WICKET-5256] - Allow configuring the resource used by ResourceStreamRequestHandler
+    * [WICKET-5259] - Url can't parse urls with username and password
+    * [WICKET-5260] - UrlRenderer#renderUrl() doesn't preserve the host
+    * [WICKET-5263] - FilenameWithVersionResourceCachingStrategy breaks silently when the versionPrefix is contained in the original filename
+    * [WICKET-5266] - Issue with TomcatWebSocketFilter and Spring Security
+    * [WICKET-5268] - ComponentRenderer.renderComponent fails to render two components with different component IDs
+    * [WICKET-5269] - XmlAjaxResponse restores wrong response
+    * [WICKET-5272] - NPE on unmount in BookmarkableMapper.java:189
+    * [WICKET-5273] - Tabindex overwritten in modal window for IE - Works in FF, Chrome
+    * [WICKET-5279] - o.a.w.a.AtmosphereBehavior onBroadcast should log DEBUG, not INFO
+    * [WICKET-5287] - NumberFormatException when parsing the port from Requests with invalid URIs
+    * [WICKET-5291] - Dependencies of Resource Bundle References are ignored
+    * [WICKET-5294] - MarkupCache ignores enforceReload flag
+    * [WICKET-5298] - Wicket Example for effects with Prototype is broken
+    * [WICKET-5300] - ComponentRenderingRequestHandler does not clear renderedComponents (PrototypeApplication)
+    * [WICKET-5302] - Using InlineEnclosure leads to two re-renderings of the controlling child component
+    * [WICKET-5306] - Dynamic and static extra paramaters not evaluated in ajax submitting behavior in a multipart form
+    * [WICKET-5309] - No page id appended to some stateful pages using repeaters
+    * [WICKET-5310] - if wicket is an external lib, BundleStringResourceLoader doesn't work
+
+** Improvement
+
+    * [WICKET-4993] - Add a minInputLength parameter to AutoCompleteTextField
+    * [WICKET-5270] - Do not set the location.hash when clicking on a link
+    * [WICKET-5276] - JavaDoc & API for IConverter
+    * [WICKET-5277] - PropertiesFactory - customizable properties loading
+    * [WICKET-5289] - setRequired(true) should add the HTML5 "required" attribute on <input> and <textarea> elements
+    * [WICKET-5295] - UrlResourceStream#getData content-type detection relies on flawed logic in URLConnection#getContentType
+    * [WICKET-5296] - OnEventHeaderItem should remove 'on' prefix for the event name
+    * [WICKET-5303] - Static id counter AbstractToolbar prevents stable component paths for testing
+    * [WICKET-5304] - AbstractResource should check for error code first before for modifications
+    * [WICKET-5307] - Export resources' version cache attribute as request cycle metadata
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.9.0
 
 ** Bug
