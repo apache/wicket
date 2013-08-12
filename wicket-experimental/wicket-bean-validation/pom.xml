@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-bean-validation</artifactId>
-	<version>0.11-SNAPSHOT</version>
+	<version>0.12-SNAPSHOT</version>
 	<name>Wicket Bean Validation</name>
 
 	<dependencies>
