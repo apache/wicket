@@ -20,12 +20,12 @@
     <parent>
         <groupId>org.apache.wicket</groupId>
         <artifactId>wicket-native-websocket</artifactId>
-        <version>0.12-SNAPSHOT</version>
+        <version>0.12</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>wicket-native-websocket-jetty</artifactId>
     <packaging>jar</packaging>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.12</version>
     <name>Wicket Native WebSocket Jetty</name>
     <description>Provides the code specific to integrate with Jetty web container</description>
     <dependencies>
