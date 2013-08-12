@@ -152,7 +152,7 @@ public abstract class AbstractAjaxResponse
 
 		// execute the dom ready javascripts as first javascripts
 		// after component replacement
-		List<CharSequence> evaluationScripts = new ArrayList<CharSequence>();
+		List<CharSequence> evaluationScripts = new ArrayList<>();
 		evaluationScripts.addAll(domReadyJavaScripts);
 		evaluationScripts.addAll(appendJavaScripts);
 		writeNormalEvaluations(response, evaluationScripts);
