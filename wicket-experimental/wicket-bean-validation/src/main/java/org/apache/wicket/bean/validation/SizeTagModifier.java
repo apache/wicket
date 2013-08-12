@@ -6,7 +6,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 
 /**
- * A tag modifier that adds the {@code maxlen} attribute to the {@code input} tag with the max value
+ * A tag modifier that adds the {@code maxlength} attribute to the {@code input} tag with the max value
  * from the {@link Size} constraint annotation.
  * 
  * @author igor
@@ -19,8 +19,7 @@ public class SizeTagModifier implements ITagModifier<Size>
 	{
 		if ("input".equalsIgnoreCase(tag.getName()))
 		{
-			Size size = (Size)annotation;
-			tag.put("maxlen", size.max());
+			tag.put("maxlength", annotation.max());
 		}
 	}
 }
