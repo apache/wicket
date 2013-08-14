@@ -25,7 +25,7 @@ import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.ajax.strategies.IAjaxStrategy;
-import org.apache.wicket.ajax.strategies.Wicket7AjaxStrategy;
+import org.apache.wicket.ajax.strategies.Wicket6AjaxStrategy;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -325,7 +325,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 		else
 		{
-			ajaxStrategy = new Wicket7AjaxStrategy();
+			ajaxStrategy = new Wicket6AjaxStrategy();
 		}
 		return ajaxStrategy;
 	}
