@@ -278,7 +278,7 @@ public class PageAccessSynchronizer implements Serializable
 		/** thread that owns the lock */
 		private final Thread thread;
 
-		private boolean released = false;
+		private volatile boolean released = false;
 
 		/**
 		 * Constructor
