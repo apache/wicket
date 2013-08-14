@@ -37,7 +37,13 @@ public class GridViewPage extends BasePage
 		IDataProvider<Contact> dataProvider = new ContactDataProvider();
 		GridView<Contact> gridView = new GridView<Contact>("rows", dataProvider)
 		{
-			@Override
+            @Override
+            protected void populateRowItem(Item<?> item) {
+                super.populateRowItem(item);
+                item.add(new Label("rowHeader", "Category " + (item.getIndex() + 1)));
+            }
+
+            @Override
 			protected void populateItem(Item<Contact> item)
 			{
 				final Contact contact = item.getModelObject();
