@@ -443,6 +443,32 @@
 		},
 
 		/**
+		 * Executes all functions to calculate any dynamic extra parameters
+		 *
+		 * @param attrs The Ajax request attributes
+		 * @returns {String} A query string snippet with any calculated request
+		 *  parameters. An empty string if there are no dynamic parameters in attrs
+		 * @private
+		 */
+		_calculateDynamicParameters: function(attrs) {
+			var deps = attrs.dep,
+				params = [];
+
+			for (var i = 0; i < deps.length; i++) {
+				var dep = deps[i],
+					extraParam;
+				if (jQuery.isFunction(dep)) {
+					extraParam = dep(attrs);
+				} else {
+					extraParam = new Function('attrs', dep)(attrs);
+				}
+				extraParam = this._asParamArray(extraParam);
+				params = params.concat(extraParam);
+			}
+			return jQuery.param(params);
+		},
+
+		/**
 		 * Executes or schedules for execution #doAjax()
 		 *
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
@@ -564,23 +590,10 @@
 
 					// collect the dynamic extra parameters
 					if (jQuery.isArray(attrs.dep)) {
-						var deps = attrs.dep,
-							params = [],
-							queryString,
+						var queryString,
 							separator;
 
-						for (var i = 0; i < deps.length; i++) {
-							var dep = deps[i],
-								extraParam;
-							if (jQuery.isFunction(dep)) {
-								extraParam = dep(attrs);
-							} else {
-								extraParam = new Function('attrs', dep)(attrs);
-							}
-							extraParam = this._asParamArray(extraParam);
-							params = params.concat(extraParam);
-						}
-						queryString = jQuery.param(params);
+						queryString = this._calculateDynamicParameters(attrs);
 						if (settings.type.toLowerCase() === 'post') {
 							separator = settings.data.length > 0 ? '&' : '';
 							settings.data = settings.data + separator + queryString;
@@ -742,14 +755,6 @@
 
 			var attrs = context.attrs;
 
-			this._executeHandlers(attrs.bsh, attrs, null, null);
-			Wicket.Event.publish('/ajax/call/beforeSend', attrs, null, null);
-
-			if (attrs.i) {
-				// show the indicator
-				Wicket.DOM.showIncrementally(attrs.i);
-			}
-
 			var form = Wicket.$(attrs.f);
 			if (!form) {
 				Wicket.Log.error("Wicket.Ajax.Call.submitForm: Trying to submit form with id '" + attrs.f + "' that is not in document.");
@@ -798,6 +803,24 @@
 			form.target = iframe.name;
 			var separator = (attrs.u.indexOf("?")>-1 ? "&" : "?");
 			form.action = attrs.u + separator + "wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(getAjaxBaseUrl());
+
+			// add the static extra parameters
+			if (attrs.ep) {
+				var extraParametersArray = this._asParamArray(attrs.ep);
+				if (extraParametersArray.length > 0) {
+					var extraParametersQueryString = jQuery.param(extraParametersArray);
+					form.action = form.action + '&' + extraParametersQueryString;
+				}
+			}
+
+			// add the dynamic extra parameters
+			if (jQuery.isArray(attrs.dep)) {
+				var dynamicExtraParameters = this._calculateDynamicParameters(attrs);
+				if (dynamicExtraParameters) {
+					form.action = form.action + '&' + dynamicExtraParameters;
+				}
+			}
+
 			form.method = "post";
 			form.enctype = "multipart/form-data";
 			form.encoding = "multipart/form-data";
@@ -806,6 +829,14 @@
 			if (attrs.sc) {
 				var $btn = jQuery("<input type='hidden' name='" + attrs.sc + "' id='" + iframe.id + "-btn' value='1'/>");
 				form.appendChild($btn[0]);
+			}
+
+			this._executeHandlers(attrs.bsh, attrs, null, null);
+			Wicket.Event.publish('/ajax/call/beforeSend', attrs, null, null);
+
+			if (attrs.i) {
+				// show the indicator
+				Wicket.DOM.showIncrementally(attrs.i);
 			}
 
 			//submit the form into the iframe, response will be handled by the onload callback

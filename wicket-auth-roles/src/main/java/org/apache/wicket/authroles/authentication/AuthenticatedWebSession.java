@@ -79,7 +79,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	 *            The password
 	 * @return True if the user was authenticated successfully
 	 */
-	public abstract boolean authenticate(final String username, final String password);
+	protected abstract boolean authenticate(final String username, final String password);
 
 	/**
 	 * Cookie based logins (remember me) may not rely on putting username and password into the

@@ -89,7 +89,8 @@ public class EffectsPage extends BasePage
 			{
 				counter1++;
 				target.add(c1);
-				target.appendJavaScript("new Effect.Shake($('" + c1.getMarkupId() + "'));");
+				target.appendJavaScript(String.format("jQuery('#%s').effect('shake');",
+					c1.getMarkupId()));
 			}
 
 			@Override
@@ -110,7 +111,8 @@ public class EffectsPage extends BasePage
 				if (target != null)
 				{
 					target.add(c2);
-					target.appendJavaScript("new Effect.Highlight($('" + c2.getMarkupId() + "'));");
+					target.appendJavaScript(String.format("jQuery('#%s').effect('highlight');",
+						c2.getMarkupId()));
 				}
 			}
 

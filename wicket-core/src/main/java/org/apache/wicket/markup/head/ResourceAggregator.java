@@ -261,7 +261,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 		else
 		{
-			Set<HeaderItem> depsDone = new LinkedHashSet<HeaderItem>();
+			Set<HeaderItem> depsDone = new LinkedHashSet<>();
 			depsDone.add(item);
 			recordHeaderItem(item, depsDone);
 		}

@@ -17,13 +17,14 @@
 package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.http.WebResponse;
 
 /**
  * Request handler that renders a component
- *
+ * 
  * @author igor.vaynberg
  */
 public class ComponentRenderingRequestHandler implements IComponentRequestHandler
@@ -32,8 +33,9 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param component
+	 *            the component to render
 	 */
 	public ComponentRenderingRequestHandler(Component component)
 	{
@@ -61,7 +63,14 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 			WebResponse response = (WebResponse)requestCycle.getResponse();
 			response.disableCaching();
 		}
+
+		Page page = component.getPage();
+
+		page.startComponentRender(component);
+
 		component.render();
+
+		page.endComponentRender(component);
 	}
 
 	@Override

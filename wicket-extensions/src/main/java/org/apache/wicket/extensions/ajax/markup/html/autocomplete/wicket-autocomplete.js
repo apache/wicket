@@ -72,6 +72,9 @@
 		var localThrottler = new Wicket.Throttler(true);
 		var throttleDelay = cfg.throttleDelay;
 
+		//this is the minimum input length required to display the autocomplete list
+		var minInputLength = cfg.minInputLength || 1;
+
 		function initialize(){
 			var isShowing = false;
 			// Remove the autocompletion menu if still present from
@@ -353,7 +356,13 @@
 			var attrs = {
 				u: callbackUrl,
 				pre: [ function (attributes) {
-					return (document.activeElement === initialElement);
+					var activeIsInitial = (document.activeElement === initialElement);
+					var elementVal =  Wicket.$(elementId).value;
+					var hasMinimumLength = elementVal.length >= minInputLength;
+
+					var result = hasMinimumLength && activeIsInitial;
+					if (!result) hideAutoComplete();
+					return result;
 				}],
 				ep: {},
 				wr: false,
@@ -366,12 +375,17 @@
 
 		function actualUpdateChoices() {
 			showIndicator();
-			
+
 			var paramName = cfg.parameterName;
 			var attrs = {
 				u: callbackUrl,
 				pre: [ function (attributes) {
-					return (document.activeElement === initialElement);
+					var activeIsInitial = (document.activeElement === initialElement);
+					var elementVal =  Wicket.$(elementId).value;
+					var hasMinimumLength = elementVal.length >= minInputLength;
+					var result = hasMinimumLength && activeIsInitial;
+					if (!result) hideAutoComplete();
+					return result;
 				}],
 				ep: {},
 				wr: false,

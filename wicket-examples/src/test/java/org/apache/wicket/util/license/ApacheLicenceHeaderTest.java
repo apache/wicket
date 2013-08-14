@@ -48,18 +48,13 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 */
 		javaScriptIgnore.add("src/main/webapp/prototype.js");
 		/*
-		 * Script.aculo.us, released under MIT. See NOTICE
+		 * jQuery UI, released under MIT. See NOTICE
 		 */
-		javaScriptIgnore.add("src/main/webapp/effects.js");
-		javaScriptIgnore.add("src/main/webapp/scriptaculous.js");
+		javaScriptIgnore.add("src/main/webapp/jquery-ui-1.10.3.custom.js");
 		/*
 		 * Behaviour, released under BSD. See NOTICE
 		 */
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/examples/preview/behaviour.js");
-		/*
-		 * JQuery Dual licensed under the MIT or GPL Version 2 licenses.
-		 */
-		javaScriptIgnore.add("src/main/java/org/apache/wicket/examples/resourcedecoration/jquery-1.4.3.min.js");
 		/*
 		 * DOJO is dual licensed. We use the BSD license. See NOTICE.
 		 */

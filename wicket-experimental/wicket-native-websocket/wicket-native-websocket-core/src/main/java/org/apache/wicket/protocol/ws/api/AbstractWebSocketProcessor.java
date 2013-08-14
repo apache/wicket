@@ -92,7 +92,6 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	public AbstractWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
 	{
 		this.sessionId = request.getSession(true).getId();
-		Session.get().bind();
 
 		String pageId = request.getParameter("pageId");
 		Checks.notEmpty(pageId, "Request parameter 'pageId' is required!");

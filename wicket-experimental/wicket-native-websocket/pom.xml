@@ -33,5 +33,6 @@
 		<module>wicket-native-websocket-jetty</module>
 		<module>wicket-native-websocket-jetty9</module>
 		<module>wicket-native-websocket-tomcat</module>
+		<module>wicket-native-websocket-javax</module>
 	</modules>
 </project>

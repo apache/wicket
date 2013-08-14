@@ -35,6 +35,7 @@ public class JettyTestCaseDecorator extends Assert
 	private Server server;
 	private String contextPath;
 	private String webappLocation;
+	protected int localPort;
 
 	/**
 	 * @throws Exception
@@ -46,9 +47,8 @@ public class JettyTestCaseDecorator extends Assert
 
 		System.setProperty("wicket.configuration", "deployment");
 
-		server = new Server();
+		server = new Server(0);
 		SelectChannelConnector connector = new SelectChannelConnector();
-		connector.setPort(8098);
 		server.setConnectors(new Connector[] { connector });
 
 		WebAppContext web = new WebAppContext();
@@ -74,6 +74,7 @@ public class JettyTestCaseDecorator extends Assert
 		server.setHandler(web);
 
 		server.start();
+		localPort = connector.getLocalPort();
 	}
 
 	/**

@@ -114,6 +114,10 @@ public abstract class WebSocketBehavior extends Behavior
 		Url baseUrl = component.getRequestCycle().getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
 		variables.put("baseUrl", ajaxBaseUrl);
+
+		String contextPath = component.getRequest().getContextPath();
+		variables.put("contextPath", contextPath);
+
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
 
 		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));

@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
@@ -70,18 +67,16 @@ public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 	@Override
 	public void onBeforeRespond(final Map<String, Component> map, final AjaxRequestTarget target)
 	{
-		// We need to iterate over the map, but the map changes if we add an
-		// InlineEnclosure to the target. --> make a copy of the map and iterate that instead.
-		final List<Component> originalComponents = Collections.unmodifiableList(new ArrayList<Component>(
-			map.values()));
-
-		target.getPage().visitChildren(InlineEnclosure.class, new IVisitor<InlineEnclosure, Void>()
+		String key = target.getPage().visitChildren(InlineEnclosure.class, new IVisitor<InlineEnclosure, String>()
 		{
 			@Override
-			public void component(final InlineEnclosure enclosure, final IVisit<Void> visit)
+			public void component(final InlineEnclosure enclosure, final IVisit<String> visit)
 			{
-				for (Component component : originalComponents)
+				for (Map.Entry<String, Component> entry : map.entrySet())
 				{
+					String key = entry.getKey();
+					Component component = entry.getValue();
+
 					if (isControllerOfEnclosure(component, enclosure))
 					{
 						// update the visibility of the enclosure
@@ -89,10 +84,17 @@ public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 
 						// add enclosure to Ajax target
 						target.add(enclosure);
+						visit.stop(key);
+						break;
 					}
 				}
 			}
 		});
+
+		if (key != null)
+		{
+			map.remove(key);
+		}
 	}
 
 	/**

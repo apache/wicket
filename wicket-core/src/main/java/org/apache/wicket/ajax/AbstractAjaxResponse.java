@@ -28,9 +28,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
+import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -152,7 +154,7 @@ public abstract class AbstractAjaxResponse
 
 		// execute the dom ready javascripts as first javascripts
 		// after component replacement
-		List<CharSequence> evaluationScripts = new ArrayList<CharSequence>();
+		List<CharSequence> evaluationScripts = new ArrayList<>();
 		evaluationScripts.addAll(domReadyJavaScripts);
 		evaluationScripts.addAll(appendJavaScripts);
 		writeNormalEvaluations(response, evaluationScripts);
@@ -527,6 +529,16 @@ public abstract class AbstractAjaxResponse
 		@Override
 		public void render(HeaderItem item)
 		{
+			PriorityHeaderItem priorityHeaderItem = null;
+			while (item instanceof IWrappedHeaderItem)
+			{
+				if (item instanceof PriorityHeaderItem)
+				{
+					priorityHeaderItem = (PriorityHeaderItem) item;
+				}
+				item = ((IWrappedHeaderItem) item).getWrapped();
+			}
+
 			if (item instanceof OnLoadHeaderItem)
 			{
 				if (!wasItemRendered(item))
@@ -547,7 +559,14 @@ public abstract class AbstractAjaxResponse
 			{
 				if (!wasItemRendered(item))
 				{
-					AbstractAjaxResponse.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
+					if (priorityHeaderItem != null)
+					{
+						AbstractAjaxResponse.this.domReadyJavaScripts.add(0, ((OnDomReadyHeaderItem)item).getJavaScript());
+					}
+					else
+					{
+						AbstractAjaxResponse.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
+					}
 					markItemRendered(item);
 				}
 			}

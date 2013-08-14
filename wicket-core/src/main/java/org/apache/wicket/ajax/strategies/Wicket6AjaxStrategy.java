@@ -210,8 +210,12 @@ public class Wicket6AjaxStrategy implements IAjaxStrategy
 			if (throttlingSettings != null)
 			{
 				JSONObject throttlingSettingsJson = new JSONObject();
-				throttlingSettingsJson.put(AjaxAttributeName.THROTTLING_ID.jsonName(),
-						throttlingSettings.getId());
+				String throttleId = throttlingSettings.getId();
+				if (throttleId == null)
+				{
+					throttleId = component.getMarkupId();
+				}
+				throttlingSettingsJson.put(AjaxAttributeName.THROTTLING_ID.jsonName(), throttleId);
 				throttlingSettingsJson.put(AjaxAttributeName.THROTTLING_DELAY.jsonName(),
 						throttlingSettings.getDelay().getMilliseconds());
 				if (throttlingSettings.getPostponeTimerOnUpdate())

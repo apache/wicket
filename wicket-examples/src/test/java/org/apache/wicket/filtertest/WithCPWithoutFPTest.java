@@ -31,8 +31,6 @@ public class WithCPWithoutFPTest extends WithoutCPWithoutFPTest
 	@Before
 	public void before() throws Exception
 	{
-		setBaseUrl("http://localhost:8098/somecontext");
-
 		setContextPath("/somecontext");
 		String basedir = System.getProperty("basedir");
 		String path = "";
@@ -42,5 +40,7 @@ public class WithCPWithoutFPTest extends WithoutCPWithoutFPTest
 		setWebappLocation(path);
 
 		super.before();
+
+		setBaseUrl(String.format("http://localhost:%d/somecontext", localPort));
 	}
 }
