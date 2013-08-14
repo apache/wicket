@@ -17,7 +17,9 @@
 package org.apache.wicket.page;
 
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MockPage;
@@ -326,5 +328,61 @@ public class PageAccessSynchronizerTest extends Assert
 		synchronizedPageManager.getPage(pageId);
 		PageLock pageLock2 = locks.get(Integer.valueOf(pageId));
 		assertNotNull(pageLock2);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5316
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void failToReleaseUnderLoad() throws Exception
+	{
+		final ConcurrentLinkedQueue<Exception> errors = new ConcurrentLinkedQueue<Exception>();
+		final long endTime = System.currentTimeMillis() + Duration.seconds(20).getMilliseconds();
+		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(10));
+		final CountDownLatch latch = new CountDownLatch(100);
+		for (int count = 0; count < 100; count++)
+		{
+			new Thread()
+			{
+				@Override
+				public void run()
+				{
+					try
+					{
+						while (System.currentTimeMillis() < endTime)
+						{
+							try
+							{
+								logger.debug(Thread.currentThread().getName() + " locking");
+								sync.lockPage(0);
+								Thread.sleep(1);
+								logger.debug(Thread.currentThread().getName() + " locked");
+								sync.unlockAllPages();
+								logger.debug(Thread.currentThread().getName() + " unlocked");
+								Thread.sleep(5);
+							}
+							catch (InterruptedException e)
+							{
+								throw new RuntimeException(e);
+							}
+						}
+					}
+					catch (Exception e)
+					{
+						logger.error(e.getMessage(), e);
+						errors.add(e);
+					}
+					finally
+					{
+						latch.countDown();
+					}
+				}
+			}.start();
+		}
+		latch.await();
+		if (!errors.isEmpty())
+			throw errors.remove();
 	}
 }
