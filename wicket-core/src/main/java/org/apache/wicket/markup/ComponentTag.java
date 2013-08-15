@@ -650,9 +650,9 @@ public class ComponentTag extends MarkupElement
 		buf.append("</");
 		if (getNamespace() != null)
 		{
-			buf.append(getNamespace()).append(":");
+			buf.append(getNamespace()).append(':');
 		}
-		buf.append(getName()).append(">");
+		buf.append(getName()).append('>');
 
 		return buf;
 	}
