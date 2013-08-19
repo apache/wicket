@@ -18,11 +18,6 @@ package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.markup.html.link.ILinkListener;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -31,6 +26,11 @@ import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.mapper.PackageMapperTest.OuterPage.InnerPage;
+import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.PackageName;
 import org.junit.Test;
@@ -49,6 +49,12 @@ public class PackageMapperTest extends AbstractMapperTest
 		protected IMapperContext getContext()
 		{
 			return context;
+		}
+
+		@Override
+		boolean getRecreateMountedPagesAfterExpiry()
+		{
+			return true;
 		}
 	};
 
