@@ -19,7 +19,6 @@ package org.apache.wicket.core.request.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
@@ -49,21 +48,21 @@ import org.apache.wicket.util.string.Strings;
  * are matched before optional parameters, and optional parameters eager (from left to right).
  * <p>
  * Decodes and encodes the following URLs:
- *
+ * 
  * <pre>
  *  Page Class - Render (BookmarkablePageRequestHandler for mounted pages)
  *  /mount/point
  *  (these will redirect to hybrid alternative if page is not stateless)
- *
+ * 
  *  IPage Instance - Render Hybrid (RenderPageRequestHandler for mounted pages)
  *  /mount/point?2
- *
+ * 
  *  IPage Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler for mounted pages)
  *  /mount/point?2-click-foo-bar-baz
  *  /mount/point?2-5.click.1-foo-bar-baz (1 is behavior index, 5 is render count)
  *  (these will redirect to hybrid if page is not stateless)
  * </pre>
- *
+ * 
  * @author Matej Knopp
  */
 public class MountedMapper extends AbstractBookmarkableMapper
@@ -143,7 +142,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param mountPath
 	 * @param pageClass
 	 */
@@ -154,32 +153,32 @@ public class MountedMapper extends AbstractBookmarkableMapper
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param mountPath
 	 * @param pageClassProvider
 	 */
 	@Deprecated
 	public MountedMapper(String mountPath,
-	                     ClassProvider<? extends IRequestablePage> pageClassProvider)
+		ClassProvider<? extends IRequestablePage> pageClassProvider)
 	{
 		this(mountPath, new ClassReference(pageClassProvider.get()), new PageParametersEncoder());
 	}
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param mountPath
 	 * @param pageClassProvider
 	 */
 	public MountedMapper(String mountPath,
-	                     IProvider<Class<? extends IRequestablePage>> pageClassProvider)
+		IProvider<Class<? extends IRequestablePage>> pageClassProvider)
 	{
 		this(mountPath, pageClassProvider, new PageParametersEncoder());
 	}
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param mountPath
 	 * @param pageClass
 	 * @param pageParametersEncoder
@@ -192,7 +191,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param mountPath
 	 * @param pageClassProvider
 	 * @param pageParametersEncoder
@@ -202,20 +201,19 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		ClassProvider<? extends IRequestablePage> pageClassProvider,
 		IPageParametersEncoder pageParametersEncoder)
 	{
-		this(mountPath, new ClassReference(pageClassProvider.get()),
-				pageParametersEncoder);
+		this(mountPath, new ClassReference(pageClassProvider.get()), pageParametersEncoder);
 	}
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param mountPath
 	 * @param pageClassProvider
 	 * @param pageParametersEncoder
 	 */
 	public MountedMapper(String mountPath,
-	                     IProvider<Class<? extends IRequestablePage>> pageClassProvider,
-	                     IPageParametersEncoder pageParametersEncoder)
+		IProvider<Class<? extends IRequestablePage>> pageClassProvider,
+		IPageParametersEncoder pageParametersEncoder)
 	{
 		Args.notEmpty(mountPath, "mountPath");
 		Args.notNull(pageClassProvider, "pageClassProvider");
@@ -427,11 +425,6 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		return url;
 	}
 
-	boolean getRecreateMountedPagesAfterExpiry()
-	{
-		return Application.get().getPageSettings().getRecreateMountedPagesAfterExpiry();
-	}
-
 	/**
 	 * @see AbstractBookmarkableMapper#buildUrl(AbstractBookmarkableMapper.UrlInfo)
 	 */
@@ -483,7 +476,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	/**
 	 * Check if the URL is for home page and the home page class match mounted class. If so,
 	 * redirect to mounted URL.
-	 *
+	 * 
 	 * @param url
 	 * @return request handler or <code>null</code>
 	 */
@@ -504,7 +497,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * If this method returns <code>true</code> and application home page class is same as the class
 	 * mounted with this encoder, request to home page will result in a redirect to the mounted
 	 * path.
-	 *
+	 * 
 	 * @return whether this encode should respond to home page request when home page class is same
 	 *         as mounted class.
 	 */
