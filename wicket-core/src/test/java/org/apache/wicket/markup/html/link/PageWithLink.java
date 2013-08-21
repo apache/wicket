@@ -41,13 +41,6 @@ public class PageWithLink extends WebPage
 	}
 
 	@Override
-	public boolean isBookmarkable()
-	{
-		// not bookmarkable because ${param} is required
-		return false;
-	}
-
-	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);

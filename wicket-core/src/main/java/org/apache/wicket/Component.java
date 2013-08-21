@@ -3334,7 +3334,8 @@ public abstract class Component
 		Page page = getPage();
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 		IRequestHandler handler;
-		if (page.isBookmarkable())
+		if (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry() &&
+			((page.isBookmarkable() && page.wasCreatedBookmarkable()) || page.isPageStateless()))
 		{
 			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
 		}
@@ -3377,7 +3378,8 @@ public abstract class Component
 		Page page = getPage();
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 		IRequestHandler handler;
-		if (page.isBookmarkable())
+		if (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry() &&
+			((page.isBookmarkable() && page.wasCreatedBookmarkable()) || page.isPageStateless()))
 		{
 			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener);
 		}
