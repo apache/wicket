@@ -27,10 +27,12 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.Url.StringMode;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
@@ -159,7 +161,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 		RenderPageRequestHandler renderPageRequestHandler = new RenderPageRequestHandler(
 			new PageProvider(DummyHomePage.class, expectedParameters));
 		Url url = mapper.mapHandler(renderPageRequestHandler);
-// System.err.println(url.toString());
+		// System.err.println(url.toString());
 		assertEquals(expectedEncrypted, url.toString());
 
 		Request request = getRequest(url);
@@ -200,6 +202,19 @@ public class CryptoMapperTest extends AbstractMapperTest
 		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
 		PageParameters actualParameters = handler.getPageParameters();
 		assertEquals(expectedParameters, actualParameters);
+	}
+
+	/**
+	 * UrlResourceReferences, WICKET-5319
+	 */
+	@Test
+	public void urlResourceReference()
+	{
+		UrlResourceReference resource = new UrlResourceReference(
+			Url.parse("http://wicket.apache.org/"));
+		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
+
+		assertEquals("http://wicket.apache.org/", url.toString(StringMode.FULL));
 	}
 
 	/**
@@ -323,9 +338,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
 
-		assertEquals("foo", ((RequestSettingRequestHandler)requestHandler).getRequest()
-			.getUrl()
-			.getQueryParameterValue("q")
-			.toString());
+		assertEquals("foo", ((RequestSettingRequestHandler)requestHandler).getRequest().getUrl()
+			.getQueryParameterValue("q").toString());
 	}
 }
