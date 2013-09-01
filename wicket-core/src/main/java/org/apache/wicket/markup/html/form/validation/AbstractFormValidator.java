@@ -19,7 +19,10 @@ package org.apache.wicket.markup.html.form.validation;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Classes;
@@ -34,6 +37,22 @@ import org.apache.wicket.validation.ValidationError;
 public abstract class AbstractFormValidator extends Behavior implements IFormValidator
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Can be bound to {@link Form}s only.
+	 * 
+	 * @throws WicketRuntimeException
+	 *             if component is not a form
+	 */
+	@Override
+	public void bind(Component component)
+	{
+		if (!(component instanceof Form))
+		{
+			throw new WicketRuntimeException("Behavior " + getClass().getName()
+				+ " can only be added to an instance of a Form");
+		}
+	}
 
 	/**
 	 * Reports an error against validatable using the map returned by {@link #variablesMap()}for
