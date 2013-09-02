@@ -23,6 +23,7 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.IMarkupCacheKeyProvider;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.Response;
@@ -97,18 +98,25 @@ public class ComponentRenderer
 		final Response originalResponse = requestCycle.getResponse();
 		BufferedWebResponse tempResponse = new BufferedWebResponse(null);
 
+		MarkupContainer oldParent = component.getParent();
+
 		try
 		{
 			requestCycle.setResponse(tempResponse);
 
-			RenderPage page = new RenderPage();
-			page.add(component);
+			// add the component to a dummy page just for the rendering
+			RenderPage page = new RenderPage(component);
 			page.internalInitialize();
 
 			component.render();
 		}
 		finally
 		{
+			if (oldParent != null)
+			{
+				oldParent.add(component); // re-add the child to its old parent
+			}
+
 			requestCycle.setResponse(originalResponse);
 		}
 
@@ -120,22 +128,35 @@ public class ComponentRenderer
 	 */
 	private static class RenderPage extends WebPage implements IMarkupResourceStreamProvider, IMarkupCacheKeyProvider
 	{
-		private static final String MARKUP = "<wicket:container wicket:id='%s'></wicket:container>";
+		/**
+		 * Markup to use when the component to render is not already added to a MarkupContainer
+		 */
+		private static final String DEFAULT_MARKUP = "<wicket:container wicket:id='%s'></wicket:container>";
+
+		/**
+		 * The markup of the component to render
+		 */
+		private final String markup;
+
+		private RenderPage(Component component)
+		{
+			String componentMarkup;
+			try
+			{
+				componentMarkup = component.getMarkup().toString(true);
+			} catch (MarkupNotFoundException mnfx)
+			{
+				componentMarkup = String.format(DEFAULT_MARKUP, component.getId());
+			}
+			this.markup = componentMarkup;
+			add(component); // this changes the component's parent
+		}
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
-			String markupWithId = String.format(MARKUP, findComponentId());
-			return new StringResourceStream(markupWithId);
-		}
 
-		/**
-		 * @return the component id of the single component in RenderPage
-		 */
-		private String findComponentId()
-		{
-			Component component = iterator().next();
-			return component.getId();
+			return new StringResourceStream(markup);
 		}
 
 		@Override
