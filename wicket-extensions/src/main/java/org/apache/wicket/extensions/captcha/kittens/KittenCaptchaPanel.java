@@ -44,6 +44,7 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -193,8 +194,9 @@ public class KittenCaptchaPanel extends Panel
 			{
 				// Get clicked cursor position
 				final Request request = RequestCycle.get().getRequest();
-				final int x = request.getRequestParameters().getParameterValue("x").toInt(0);
-				final int y = request.getRequestParameters().getParameterValue("y").toInt(0);
+				IRequestParameters requestParameters = request.getRequestParameters();
+				final int x = requestParameters.getParameterValue("x").toInt(0);
+				final int y = requestParameters.getParameterValue("y").toInt(0);
 
 				// Force refresh
 				imageResource.clearData();
