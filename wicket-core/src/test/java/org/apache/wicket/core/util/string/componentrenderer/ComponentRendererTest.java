@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.core.util.string;
+package org.apache.wicket.core.util.string.componentrenderer;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.util.string.ComponentRenderer;
 import org.junit.Test;
 
 /**
