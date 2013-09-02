@@ -61,6 +61,12 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 	private Property property_;
 	private final IModel<Class<?>[]> groups_;
 
+	/**
+	 * A flag that indicates whether {@linkplain #setComponentRequiredFlag()}
+	 * has been called for this behavior.
+	 */
+	private boolean requiredFlagSet;
+
 	public PropertyValidator(Class<?>... groups)
 	{
 		this(null, groups);
@@ -130,10 +136,20 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		// @Size on String vs Collection - done but need to add a key for each superclass/interface
 
 		this.component = (FormComponent<T>)component;
-
-		setComponentRequiredFlag();
 	}
 
+	@Override
+	public void onConfigure(Component component)
+	{
+		super.onConfigure(component);
+		if (requiredFlagSet == false)
+		{
+			// "Required" flag is calculated upon component's model property, so we must ensure,
+			// that model object is accessible (i.e. component is already added in a page).
+			requiredFlagSet = true;
+			setComponentRequiredFlag();
+		}
+	}
 
 	@Override
 	public void detach(Component component)
