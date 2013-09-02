@@ -123,10 +123,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param errorCode
 		 *            error code
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setError(Integer errorCode)
+		public ResourceResponse setError(Integer errorCode)
 		{
 			setError(errorCode, null);
+			return this;
 		}
 
 		/**
@@ -137,11 +140,14 @@ public abstract class AbstractResource implements IResource
 		 *            error code
 		 * @param errorMessage
 		 *            error message
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setError(Integer errorCode, String errorMessage)
+		public ResourceResponse setError(Integer errorCode, String errorMessage)
 		{
 			this.errorCode = errorCode;
 			this.errorMessage = errorMessage;
+			return this;
 		}
 
 		/**
@@ -157,10 +163,13 @@ public abstract class AbstractResource implements IResource
 		 *
 		 * @param statusCode
 		 *            status code
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setStatusCode(Integer statusCode)
+		public ResourceResponse setStatusCode(Integer statusCode)
 		{
 			this.statusCode = statusCode;
+			return this;
 		}
 
 		/**
@@ -184,10 +193,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param fileName
 		 *            file name
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setFileName(String fileName)
+		public ResourceResponse setFileName(String fileName)
 		{
 			this.fileName = fileName;
+			return this;
 		}
 
 		/**
@@ -205,11 +217,14 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param contentDisposition
 		 *            content disposition (attachment or inline)
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setContentDisposition(ContentDisposition contentDisposition)
+		public ResourceResponse setContentDisposition(ContentDisposition contentDisposition)
 		{
 			Args.notNull(contentDisposition, "contentDisposition");
 			this.contentDisposition = contentDisposition;
+			return this;
 		}
 
 		/**
@@ -226,10 +241,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param contentType
 		 *            content type (also known as mime type)
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setContentType(String contentType)
+		public ResourceResponse setContentType(String contentType)
 		{
 			this.contentType = contentType;
+			return this;
 		}
 
 		/**
@@ -250,10 +268,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param textEncoding
 		 *            character encoding of text body
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setTextEncoding(String textEncoding)
+		public ResourceResponse setTextEncoding(String textEncoding)
 		{
 			this.textEncoding = textEncoding;
+			return this;
 		}
 
 		/**
@@ -270,10 +291,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param contentLength
 		 *            length of response body
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setContentLength(long contentLength)
+		public ResourceResponse setContentLength(long contentLength)
 		{
 			this.contentLength = contentLength;
+			return this;
 		}
 
 		/**
@@ -287,15 +311,18 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the last modified data of the resource. Even though this method is optional it is
 		 * recommended to set the date. If the date is set properly Wicket can check the
-		 * <code>If-Modified-Since</code> to determine if the actuall data really needs to be sent
+		 * <code>If-Modified-Since</code> to determine if the actual data really needs to be sent
 		 * to client.
 		 * 
 		 * @param lastModified
 		 *            last modification timestamp
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setLastModified(Time lastModified)
+		public ResourceResponse setLastModified(Time lastModified)
 		{
 			this.lastModified = lastModified;
+			return this;
 		}
 
 		/**
@@ -339,34 +366,42 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
-		 * disable caching
+		 * Disables caching.
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void disableCaching()
+		public ResourceResponse disableCaching()
 		{
-			setCacheDuration(Duration.NONE);
+			return setCacheDuration(Duration.NONE);
 		}
 
 		/**
-		 * set caching to maximum available duration
+		 * Sets caching to maximum available duration.
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setCacheDurationToMaximum()
+		public ResourceResponse setCacheDurationToMaximum()
 		{
 			cacheDuration = WebResponse.MAX_CACHE_DURATION;
+			return this;
 		}
 
 		/**
-		 * Controls how long this response may be cached
+		 * Controls how long this response may be cached.
 		 * 
 		 * @param duration
 		 *            caching duration in seconds
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setCacheDuration(Duration duration)
+		public ResourceResponse setCacheDuration(Duration duration)
 		{
 			cacheDuration = Args.notNull(duration, "duration");
+			return this;
 		}
 
 		/**
-		 * returns how long this resource may be cached
+		 * Returns how long this resource may be cached for.
 		 * <p/>
 		 * The special value Duration.NONE means caching is disabled.
 		 * 
@@ -413,10 +448,13 @@ public abstract class AbstractResource implements IResource
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(org.apache.wicket.util.time.Duration)
 		 * @see org.apache.wicket.request.http.WebResponse.CacheScope
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setCacheScope(WebResponse.CacheScope scope)
+		public ResourceResponse setCacheScope(WebResponse.CacheScope scope)
 		{
 			cacheScope = Args.notNull(scope, "scope");
+			return this;
 		}
 
 		/**
@@ -429,11 +467,14 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param writeCallback
 		 *            write callback
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setWriteCallback(final WriteCallback writeCallback)
+		public ResourceResponse setWriteCallback(final WriteCallback writeCallback)
 		{
 			Args.notNull(writeCallback, "writeCallback");
 			this.writeCallback = writeCallback;
+			return this;
 		}
 
 		/**
