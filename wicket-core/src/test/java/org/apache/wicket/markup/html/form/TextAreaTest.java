@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.HTML5Attributes;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -42,6 +43,7 @@ public class TextAreaTest extends WicketTestCase
 		testPage.textArea.setOutputMarkupId(true);
 		testPage.textArea.setType(String.class);
 		testPage.textArea.setRequired(true);
+		testPage.textArea.add(new HTML5Attributes());
 		tester.startPage(testPage);
 
 		TagTester tagTester = tester.getTagById(testPage.textArea.getMarkupId());
@@ -55,7 +57,7 @@ public class TextAreaTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 		Form<Void> form;
 		TextArea<String> textArea;
-		IModel<String> textModel = Model.of((String) null);
+		IModel<String> textModel = Model.of((String)null);
 
 		/** */
 		public TestPage()
@@ -66,9 +68,10 @@ public class TextAreaTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-		                                               Class<?> containerClass)
+			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body>"
+			return new StringResourceStream(
+				"<html><body>"
 					+ "<form wicket:id=\"form\"><textarea wicket:id=\"textarea\"></textarea></form></body></html>");
 		}
 	}
