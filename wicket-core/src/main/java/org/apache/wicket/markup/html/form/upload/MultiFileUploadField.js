@@ -90,6 +90,7 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 				// New file input
 				var new_element = document.createElement( 'input' );
 				new_element.type = 'file';
+				new_element.style.display = "block";
 
 				// Add new element
 				this.parentNode.insertBefore( new_element, this );
