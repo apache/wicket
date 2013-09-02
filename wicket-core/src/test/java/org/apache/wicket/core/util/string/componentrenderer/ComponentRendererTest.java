@@ -37,4 +37,19 @@ public class ComponentRendererTest extends WicketTestCase
 	{
 		ComponentRenderer.renderComponent(new EnclosurePanel("anyId"));
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5325
+	 *
+	 * Tests that ComponentRenderer#renderComponent() will use the component's
+	 * markup if available
+	 */
+	@Test
+	public void renderListViewItems()
+	{
+		PageWithRepeater page = new PageWithRepeater();
+		CharSequence listViewOutput = ComponentRenderer.renderComponent(page.get("listView"));
+		assertEquals("<div wicket:id=\"listView\"><span wicket:id=\"label\">one</span></div>" +
+				"<div wicket:id=\"listView\"><span wicket:id=\"label\">two</span></div>", listViewOutput.toString());
+	}
 }
