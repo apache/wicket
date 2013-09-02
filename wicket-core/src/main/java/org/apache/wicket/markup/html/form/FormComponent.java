@@ -1423,10 +1423,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 	/**
 	 * Called by {@link #onComponentTag(ComponentTag)} when the component is required.
-	 *
+	 * 
 	 * @param tag
 	 *            the tag that is being rendered
 	 */
+	@Deprecated
 	protected void onRequired(final ComponentTag tag)
 	{
 	}
