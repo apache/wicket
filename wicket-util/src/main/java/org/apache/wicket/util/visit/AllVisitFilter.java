@@ -19,8 +19,11 @@ package org.apache.wicket.util.visit;
 /**
  * {@link IVisitFilter} that let visitors visit all.
  * 
- * @author igor.vaynberg
+ * @author svenmeier
+ * 
+ * @deprecated use {@link IVisitFilter#ANY}
  */
+@Deprecated
 public class AllVisitFilter implements IVisitFilter
 {
 	/** {@inheritDoc} */

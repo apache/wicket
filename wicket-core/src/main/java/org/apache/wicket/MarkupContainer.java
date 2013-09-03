@@ -848,7 +848,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            The type that goes into the Visitor.component() method.
 	 * @param <R>
 	 * @param clazz
-	 *            The class of child to visit, or null to visit all children
+	 *            The class of child to visit
 	 * @param visitor
 	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
