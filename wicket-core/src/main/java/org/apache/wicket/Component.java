@@ -87,7 +87,6 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.apache.wicket.util.visit.AllVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitFilter;
 import org.apache.wicket.util.visit.IVisitor;
@@ -3421,7 +3420,7 @@ public abstract class Component
 	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass,
 		final IVisitor<C, R> visitor)
 	{
-		return visitParents(parentClass, visitor, new AllVisitFilter());
+		return visitParents(parentClass, visitor, IVisitFilter.ANY);
 	}
 
 	/**

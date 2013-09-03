@@ -20,7 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Test for {@link AllVisitFilter}.
+ * Test for {@link IVisitFilter#ANY}.
  * 
  * @since 1.5.7
  */
@@ -32,7 +32,7 @@ public class AllVisitFilterTest extends Assert
 	@Test
 	public void visitAll() throws Exception
 	{
-		IVisitFilter filter = new AllVisitFilter();
+		IVisitFilter filter = IVisitFilter.ANY;
 		assertTrue(filter.visitObject("a string"));
 		assertTrue(filter.visitObject(123));
 	}
