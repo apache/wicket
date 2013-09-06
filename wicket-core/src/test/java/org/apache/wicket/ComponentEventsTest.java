@@ -363,7 +363,7 @@ public class ComponentEventsTest
 	}
 
 	@Test
-	public void testBehavior()
+	public void testBehaviorBreadth()
 	{
 		TestComponent c = new TestComponent("c");
 		TestBehavior b1 = new TestBehavior();
@@ -374,6 +374,103 @@ public class ComponentEventsTest
 		assertEquals(0, c.sequence);
 		assertEquals(1, b1.sequence);
 		assertEquals(2, b2.sequence);
+		assertEquals(-1, application.sequence);
+		assertEquals(-1, session.sequence);
+		assertEquals(-1, cycle.sequence);
+		assertEquals(-1, page.sequence);
+	}
+
+	@Test
+	public void testBehaviorExact()
+	{
+		TestComponent c = new TestComponent("c");
+		TestBehavior b1 = new TestBehavior();
+		TestBehavior b2 = new TestBehavior();
+		c.add(b1, b2);
+
+		c.send(c, Broadcast.EXACT, new Payload());
+		assertEquals(0, c.sequence);
+		assertEquals(1, b1.sequence);
+		assertEquals(2, b2.sequence);
+		assertEquals(-1, application.sequence);
+		assertEquals(-1, session.sequence);
+		assertEquals(-1, cycle.sequence);
+		assertEquals(-1, page.sequence);
+	}
+
+	@Test
+	public void testPageExact()
+	{
+		TestComponent c = new TestComponent("c");
+		TestBehavior b1 = new TestBehavior();
+		c.add(b1);
+
+		page.add(c);
+		TestBehavior b2 = new TestBehavior();
+		page.add(b2);
+
+		c.send(page, Broadcast.EXACT, new Payload());
+		assertEquals(-1, c.sequence);
+		assertEquals(-1, b1.sequence);
+		assertEquals(1, b2.sequence);
+		assertEquals(-1, application.sequence);
+		assertEquals(-1, session.sequence);
+		assertEquals(-1, cycle.sequence);
+		assertEquals(0, page.sequence);
+	}
+
+	@Test
+	public void testApplicationExact()
+	{
+		TestComponent c = new TestComponent("c");
+		TestBehavior b1 = new TestBehavior();
+		TestBehavior b2 = new TestBehavior();
+		c.add(b1, b2);
+
+		c.send(c.getApplication(), Broadcast.EXACT, new Payload());
+		assertEquals(-1, c.sequence);
+		assertEquals(-1, b1.sequence);
+		assertEquals(-1, b2.sequence);
+		assertEquals(0, application.sequence);
+		assertEquals(-1, session.sequence);
+		assertEquals(-1, cycle.sequence);
+		assertEquals(-1, page.sequence);
+	}
+
+	@Test
+	public void testSessionExact()
+	{
+		TestComponent c = new TestComponent("c");
+		TestBehavior b1 = new TestBehavior();
+		TestBehavior b2 = new TestBehavior();
+		c.add(b1, b2);
+
+		c.send(c.getSession(), Broadcast.EXACT, new Payload());
+		assertEquals(-1, c.sequence);
+		assertEquals(-1, b1.sequence);
+		assertEquals(-1, b2.sequence);
+		assertEquals(-1, application.sequence);
+		assertEquals(0, session.sequence);
+		assertEquals(-1, cycle.sequence);
+		assertEquals(-1, page.sequence);
+	}
+
+	@Test
+	public void testRequestCycleExact()
+	{
+		TestComponent c = new TestComponent("c");
+		TestBehavior b1 = new TestBehavior();
+		TestBehavior b2 = new TestBehavior();
+		c.add(b1, b2);
+
+		c.send(c.getRequestCycle(), Broadcast.EXACT, new Payload());
+		assertEquals(-1, c.sequence);
+		assertEquals(-1, b1.sequence);
+		assertEquals(-1, b2.sequence);
+		assertEquals(-1, application.sequence);
+		assertEquals(-1, session.sequence);
+		assertEquals(0, cycle.sequence);
+		assertEquals(-1, page.sequence);
 	}
 
 	@Test
