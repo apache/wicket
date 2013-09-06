@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.validation.ValidationError;
 
@@ -95,19 +96,9 @@ public abstract class AbstractFormValidator extends Behavior implements IFormVal
 	 */
 	public void error(FormComponent<?> fc, final String resourceKey, Map<String, Object> vars)
 	{
-		if (fc == null)
-		{
-			throw new IllegalArgumentException("Argument [[fc]] cannot be null");
-		}
-		if (vars == null)
-		{
-			throw new IllegalArgumentException("Argument [[vars]] cannot be null");
-		}
-		if (resourceKey == null)
-		{
-			throw new IllegalArgumentException("Argument [[resourceKey]] cannot be null");
-		}
-
+		Args.notNull(fc, "fc");
+		Args.notNull(vars, "vars");
+		Args.notNull(resourceKey, "resourceKey");
 
 		ValidationError error = new ValidationError().addKey(resourceKey);
 		final String defaultKey = Classes.simpleName(getClass());

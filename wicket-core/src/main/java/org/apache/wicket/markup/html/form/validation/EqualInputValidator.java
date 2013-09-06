@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form.validation;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 
 /**
@@ -34,9 +35,6 @@ import org.apache.wicket.util.lang.Objects;
  */
 public class EqualInputValidator extends AbstractFormValidator
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** form components to be checked. */
@@ -52,29 +50,18 @@ public class EqualInputValidator extends AbstractFormValidator
 	 */
 	public EqualInputValidator(FormComponent<?> formComponent1, FormComponent<?> formComponent2)
 	{
-		if (formComponent1 == null)
-		{
-			throw new IllegalArgumentException("argument formComponent1 cannot be null");
-		}
-		if (formComponent2 == null)
-		{
-			throw new IllegalArgumentException("argument formComponent2 cannot be null");
-		}
+		Args.notNull(formComponent1, "formComponent1");
+		Args.notNull(formComponent2, "formComponent2");
+
 		components = new FormComponent[] { formComponent1, formComponent2 };
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#getDependentFormComponents()
-	 */
 	@Override
 	public FormComponent<?>[] getDependentFormComponents()
 	{
 		return components;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#validate(org.apache.wicket.markup.html.form.Form)
-	 */
 	@Override
 	public void validate(Form<?> form)
 	{
