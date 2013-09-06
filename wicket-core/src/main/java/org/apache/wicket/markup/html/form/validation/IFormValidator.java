@@ -26,10 +26,9 @@ import org.apache.wicket.util.io.IClusterable;
  * {@link IFormValidator#getDependentFormComponents()} have been successfully validated before this
  * validator runs.
  * 
- * TODO post 1.3: remove validate(form) *make IFormValidator extends IValidator where IValidatable's
- * value is form.modelobject and error reports on form - that way IBehaviorProvider can extend
- * IValidator
- * 
+ *
+ * @see AbstractFormValidator
+ * @see org.apache.wicket.validation.IValidator
  * @author Igor Vaynberg (ivaynberg)
  */
 public interface IFormValidator extends IClusterable
@@ -42,6 +41,12 @@ public interface IFormValidator extends IClusterable
 	/**
 	 * This method is ran if all components returned by
 	 * {@link IFormValidator#getDependentFormComponents()} are valid.
+	 *
+	 * <p>
+	 * To report validation error use
+	 * {@link FormComponent#error(org.apache.wicket.validation.IValidationError)} by using any of
+	 * the dependent form components or extend from AbstractFormValidator and use its
+	 * {@link AbstractFormValidator#error(FormComponent, String, java.util.Map)} method.
 	 * 
 	 * @param form
 	 *            form this validator is added to
