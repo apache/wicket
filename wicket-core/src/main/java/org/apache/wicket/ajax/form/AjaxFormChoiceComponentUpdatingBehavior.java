@@ -34,9 +34,25 @@ import org.apache.wicket.request.resource.ResourceReference;
  * This is a Ajax Component Update Behavior that is meant for choices/groups that are not one
  * component in the html but many.
  * <p>
- * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component fields
+ * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component fields.
+ * <p>
+ * When using multiple instances of this behavior on nested groups, you'll have to allow JavaScript
+ * event bubbling by overriding {@link #updateAjaxAttributes(AjaxRequestAttributes)}:
+ * 
+ * <pre>
+ * <code>
+ * &#064;Override
+ * protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+ * {
+ * 	super.updateAjaxAttributes(attributes);
+ * 
+ * 	attributes.setEventPropagation(EventPropagation.BUBBLE);
+ * }
+ * </code>
+ * </pre>
  * 
  * @author jcompagner
+ * @author svenmeier
  * 
  * @see RadioChoice
  * @see CheckBoxMultipleChoice
