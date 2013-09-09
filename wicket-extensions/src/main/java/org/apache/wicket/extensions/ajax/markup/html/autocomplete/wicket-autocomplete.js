@@ -582,8 +582,10 @@
 		}
 
 		function getPosition(obj) {
-			var leftPosition = obj.offsetLeft || 0;
-			var topPosition = obj.offsetTop || 0;
+			var rectangle = obj.getBoundingClientRect();
+			
+			var leftPosition = rectangle.left || 0;
+			var topPosition = rectangle.top || 0;
 			if (!cfg.ignoreBordersWhenPositioning) {
 				topPosition += obj.clientTop || 0;
 				leftPosition += obj.clientLeft || 0;
