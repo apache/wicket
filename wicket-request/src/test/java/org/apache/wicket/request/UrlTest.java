@@ -119,6 +119,19 @@ public class UrlTest extends Assert
 	}
 
 	/**
+	 * Same as #parse5() but with full url and not encoded '=' char in the query string
+	 * WICKET-5157
+	 */
+	@Test
+	public void parse5_1()
+	{
+		String s = "http://host:12345/foo/b%3Dr/b%26z/x%3F?a=b&x%3F%264=y=z";
+		Url url = Url.parse(s);
+		checkSegments(url, "", "foo", "b=r", "b&z", "x?");
+		checkQueryParams(url, "a", "b", "x?&4", "y=z");
+	}
+
+	/**
 	 * 
 	 */
 	@Test
