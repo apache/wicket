@@ -124,9 +124,10 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 	public IResource getResource()
 	{
 		ConcatBundleResource bundleResource = new ConcatBundleResource(providedResources);
-		if (getCompressor() != null)
+		ITextResourceCompressor compressor = getCompressor();
+		if (compressor != null)
 		{
-			bundleResource.setCompressor(getCompressor());
+			bundleResource.setCompressor(compressor);
 		}
 		return bundleResource;
 	}
