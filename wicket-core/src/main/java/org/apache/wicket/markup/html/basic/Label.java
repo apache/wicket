@@ -82,22 +82,6 @@ public class Label extends WebComponent
 	}
 
 	/**
-	 * Convenience constructor. Same as Label(String, new Model&lt;String&gt;(String))
-	 * 
-	 * @param id
-	 *            See Component
-	 * @param label
-	 *            The label text
-	 * 
-	 * @see org.apache.wicket.Component#Component(String, IModel)
-	 */
-	// TODO Wicket 7 remove this constructor. The one with Serializable is the replacement
-	public Label(final String id, String label)
-	{
-		this(id, new Model<String>(label));
-	}
-
-	/**
 	 * Convenience constructor. Same as Label(String, Model.of(Serializable))
 	 * 
 	 * @param id
