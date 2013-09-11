@@ -19,8 +19,6 @@ package org.apache.wicket.validation.validator;
 import java.io.Serializable;
 
 import org.apache.wicket.validation.IValidatable;
-import org.apache.wicket.validation.IValidationError;
-import org.apache.wicket.validation.ValidationError;
 
 /**
  * Validator for checking if a given value falls within [min,max] range.
@@ -113,27 +111,5 @@ public class RangeValidator<Z extends Comparable<? super Z> & Serializable> exte
 	protected Z getValue(IValidatable<Z> validatable)
 	{
 		return validatable.getValue();
-	}
-
-	@Override
-	protected IValidationError decorate(IValidationError error, IValidatable<Z> validatable)
-	{
-		// TODO wicket 7: remove deprecated keys
-		error = super.decorate(error, validatable);
-
-		if (error instanceof ValidationError)
-		{
-			ValidationError ve = (ValidationError) error;
-			switch (getMode())
-			{
-				case MINIMUM :
-					ve.addKey("MinimumValidator");
-					break;
-				case MAXIMUM :
-					ve.addKey("MaximumValidator");
-					break;
-			}
-		}
-		return error;
 	}
 }
