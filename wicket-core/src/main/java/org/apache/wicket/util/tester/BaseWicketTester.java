@@ -95,6 +95,7 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.mock.MockRequestParameters;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
@@ -2041,10 +2042,10 @@ public class BaseWicketTester
 	 */
 	public Result hasNoFeedbackMessage(int level)
 	{
-		List<Serializable> messages = getMessages(level);
+		List<Object> messages = getMessages(level);
 		return isTrue(
 				String.format("expected no %s message, but contains\n%s",
-						new FeedbackMessage(null, "", level).getLevelAsString().toLowerCase(Locale.ENGLISH), WicketTesterHelper.asLined(messages)),
+						new FeedbackMessage(null, Model.of(""), level).getLevelAsString().toLowerCase(Locale.ENGLISH), WicketTesterHelper.asLined(messages)),
 				messages.isEmpty());
 	}
 
@@ -2057,14 +2058,14 @@ public class BaseWicketTester
 	 * @return <code>List</code> of messages (as <code>String</code>s)
 	 * @see FeedbackMessage
 	 */
-	public List<Serializable> getMessages(final int level)
+	public List<Object> getMessages(final int level)
 	{
 		List<FeedbackMessage> messages = getFeedbackMessages(new ExactLevelFeedbackMessageFilter(level));
 
-		List<Serializable> actualMessages = Generics.newArrayList();
+		List<Object> actualMessages = Generics.newArrayList();
 		for (FeedbackMessage message : messages)
 		{
-			actualMessages.add(message.getMessage());
+			actualMessages.add(message.getMessageModel().getObject());
 		}
 		return actualMessages;
 	}
