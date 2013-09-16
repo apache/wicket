@@ -25,6 +25,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * @param <T>
+ *            the type of the object that will be rendered in this column's cells
  * @param <S>
  *            the type of the sort property
  */
