@@ -32,8 +32,8 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -74,7 +74,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  *            Type of model object
  * 
  */
-public class Palette<T> extends GenericPanel<Collection<? extends T>>
+public class Palette<T> extends FormComponentPanel<Collection<T>>
 {
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
@@ -134,7 +134,7 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(final String id, final IModel<? extends Collection<? extends T>> choicesModel,
+	public Palette(final String id, final IModel<? extends Collection<T>> choicesModel,
 		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
@@ -156,11 +156,11 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 	 *            Allow user to move selections up and down
 	 */
 	@SuppressWarnings("unchecked")
-	public Palette(final String id, final IModel<? extends List<? extends T>> model,
+	public Palette(final String id, final IModel<? extends Collection<T>> model,
 		final IModel<? extends Collection<? extends T>> choicesModel,
 		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
-		super(id, (IModel<Collection<? extends T>>)(IModel<?>)model);
+		super(id, (IModel<Collection<T>>)model);
 
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
@@ -231,7 +231,7 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 	 */
 	public Iterator<T> getSelectedChoices()
 	{
-		return getRecorderComponent().getSelectedChoices();
+		return getRecorderComponent().getSelectedList().iterator();
 	}
 
 	/**
@@ -239,7 +239,7 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 	 */
 	public Iterator<T> getUnselectedChoices()
 	{
-		return getRecorderComponent().getUnselectedChoices();
+		return getRecorderComponent().getUnselectedList().iterator();
 	}
 
 
@@ -251,17 +251,7 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 	protected Recorder<T> newRecorderComponent()
 	{
 		// create component that will keep track of selections
-		return new Recorder<T>("recorder", this)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void updateModel()
-			{
-				super.updateModel();
-				Palette.this.updateModel();
-			}
-		};
+		return new Recorder<T>("recorder", this);
 	}
 
 	/**
@@ -508,6 +498,20 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 		return rows;
 	}
 
+	@Override
+	protected void convertInput()
+	{
+		List<T> selectedList = getRecorderComponent().getSelectedList();
+		if (selectedList.isEmpty())
+		{
+			setConvertedInput(null);
+		}
+		else
+		{
+			setConvertedInput(selectedList);
+		}
+	}
+
 	/**
 	 * The model object is assumed to be a Collection, and it is modified in-place. Then
 	 * {@link Model#setObject(Object)} is called with the same instance: it allows the Model to be
@@ -516,26 +520,10 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 	 * 
 	 * @see FormComponent#updateModel()
 	 */
-	protected final void updateModel()
+	@Override
+	public final void updateModel()
 	{
-		// get the selected choices first, since the available choices might depend on the
-		// previously selected objects.
-		Iterator<T> it = getRecorderComponent().getSelectedChoices();
-
-		modelChanging();
-
-		Collection<T> collection = getModelCollection();
-		collection.clear();
-		while (it.hasNext())
-		{
-			collection.add(it.next());
-		}
-
-		modelChanged();
-
-		@SuppressWarnings("unchecked")
-		IModel<Object> defaultModel = (IModel<Object>)getDefaultModel();
-		defaultModel.setObject(collection);
+		FormComponent.updateCollectionModel(this);
 	}
 
 	/**
@@ -547,14 +535,9 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 	 */
 	protected String buildJSCall(final String funcName)
 	{
-		return new StringBuilder(funcName).append("('")
-			.append(getChoicesComponent().getMarkupId())
-			.append("','")
-			.append(getSelectionComponent().getMarkupId())
-			.append("','")
-			.append(getRecorderComponent().getMarkupId())
-			.append("');")
-			.toString();
+		return new StringBuilder(funcName).append("('").append(getChoicesComponent().getMarkupId())
+			.append("','").append(getSelectionComponent().getMarkupId()).append("','")
+			.append(getRecorderComponent().getMarkupId()).append("');").toString();
 	}
 
 
