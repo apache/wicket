@@ -54,7 +54,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 		this(id, provider, null);
 	}
 
-	protected AbstractTree(String id, ITreeProvider<T> provider, IModel<Set<T>> state)
+	protected AbstractTree(String id, ITreeProvider<T> provider, IModel<? extends Set<T>> state)
 	{
 		super(id, state);
 
