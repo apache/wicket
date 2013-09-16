@@ -1216,17 +1216,21 @@ public class Url implements Serializable
 			// drop '.' from path
 			if (".".equals(segment))
 			{
-				continue;
+				// skip
 			}
-
+			else if ("..".equals(segment) && url.segments.isEmpty() == false)
+			{
+				url.segments.remove(url.segments.size() - 1);
+			}
 			// skip segment if following segment is a '..'
-			if ((i + 1) < segments.size() && "..".equals(segments.get(i + 1)))
+			else if ((i + 1) < segments.size() && "..".equals(segments.get(i + 1)))
 			{
 				i++;
-				continue;
 			}
-
-			url.segments.add(segment);
+			else
+			{
+				url.segments.add(segment);
+			}
 		}
 		return url;
 	}

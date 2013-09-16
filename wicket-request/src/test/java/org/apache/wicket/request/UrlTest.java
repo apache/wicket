@@ -798,7 +798,11 @@ public class UrlTest extends Assert
 		assertEquals("a///", Url.parse("a///").canonical().getPath());
 		assertEquals("a//b/c", Url.parse("a//b/c").canonical().getPath());
 		assertEquals("foo/test", Url.parse("foo/bar/../baz/../test").canonical().getPath());
-//		assertEquals("a/d", Url.parse("a/b/c/../../d").canonical().getPath());
+		assertEquals("a/d", Url.parse("a/b/c/../../d").canonical().getPath());
+		assertEquals("a/d", Url.parse("../../a/b/../c/../d").canonical().getPath());
+		assertEquals("a/d", Url.parse("../../a/b/../c/../d/.").canonical().getPath());
+		assertEquals("a", Url.parse("../../a/b/../c/../d/..").canonical().getPath());
+		assertEquals("", Url.parse("../../a/b/../c/../d/../..").canonical().getPath());
 	}
 
 	@Test
