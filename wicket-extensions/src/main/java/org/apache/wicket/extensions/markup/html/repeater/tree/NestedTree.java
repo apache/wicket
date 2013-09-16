@@ -64,7 +64,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 * 
 	 * @see State
 	 */
-	public NestedTree(String id, ITreeProvider<T> provider, IModel<Set<T>> state)
+	public NestedTree(String id, ITreeProvider<T> provider, IModel<? extends Set<T>> state)
 	{
 		super(id, provider, state);
 

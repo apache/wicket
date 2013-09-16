@@ -84,7 +84,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 *            the expansion state
 	 */
 	public TableTree(final String id, final List<? extends IColumn<T, S>> columns,
-		final ITreeProvider<T> provider, final long rowsPerPage, IModel<Set<T>> state)
+		final ITreeProvider<T> provider, final long rowsPerPage, IModel<? extends Set<T>> state)
 	{
 		super(id, provider, state);
 

@@ -79,7 +79,7 @@ public class DefaultTableTree<T, S> extends TableTree<T, S>
 	 *            expansion state
 	 */
 	public DefaultTableTree(String id, List<? extends IColumn<T, S>> columns,
-		ISortableTreeProvider<T, S> provider, int rowsPerPage, IModel<Set<T>> state)
+		ISortableTreeProvider<T, S> provider, int rowsPerPage, IModel<? extends Set<T>> state)
 	{
 		super(id, columns, provider, rowsPerPage, state);
 
