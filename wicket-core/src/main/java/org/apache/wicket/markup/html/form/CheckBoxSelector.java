@@ -71,17 +71,17 @@ public class CheckBoxSelector extends AbstractCheckSelector
 	private String buildMarkupIdJSArrayLiteral(final Iterable<? extends Component> components)
 	{
 		StringBuilder buf = new StringBuilder();
-		buf.append("[");
+		buf.append('[');
 		if (components.iterator().hasNext())
 		{
 			for (Component component : components)
 			{
 				component.setOutputMarkupId(true);
-				buf.append("'").append(component.getMarkupId()).append("', ");
+				buf.append('\'').append(component.getMarkupId()).append("', ");
 			}
 			buf.delete(buf.length() - 2, buf.length());
 		}
-		buf.append("]");
+		buf.append(']');
 		return buf.toString();
 	}
 
