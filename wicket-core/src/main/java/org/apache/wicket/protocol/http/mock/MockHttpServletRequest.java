@@ -30,7 +30,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -57,6 +56,7 @@ import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileUploadBase;
@@ -245,10 +245,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addFile(String fieldName, File file, String contentType)
 	{
-		if (file == null)
-		{
-			throw new IllegalArgumentException("File must not be null");
-		}
+		Args.notNull(file, "file");
 
 		if (file.exists() == false)
 		{
