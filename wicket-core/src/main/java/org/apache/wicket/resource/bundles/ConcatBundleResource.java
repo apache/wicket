@@ -142,7 +142,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		return ret;
 	}
 
-	private String findContentType(List<IResourceStream> resources)
+	protected String findContentType(List<IResourceStream> resources)
 	{
 		for (IResourceStream curStream : resources)
 			if (curStream.getContentType() != null)
@@ -150,7 +150,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		return null;
 	}
 
-	private Time findLastModified(List<IResourceStream> resources)
+	protected Time findLastModified(List<IResourceStream> resources)
 	{
 		Time ret = null;
 		for (IResourceStream curStream : resources)
@@ -162,7 +162,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		return ret;
 	}
 
-	private byte[] readAllResources(List<IResourceStream> resources) throws IOException,
+	protected byte[] readAllResources(List<IResourceStream> resources) throws IOException,
 		ResourceStreamNotFoundException
 	{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
