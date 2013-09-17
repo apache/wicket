@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -169,7 +170,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final ServletContext context;
 
-	private final Map<Cookies.Key,Cookie> cookies = new LinkedHashMap<Cookies.Key, Cookie>();
+	private final Map<Cookies.Key, Cookie> cookies = new LinkedHashMap<Cookies.Key, Cookie>();
 
 	private final ValueMap headers = new ValueMap();
 
@@ -225,7 +226,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addCookie(final Cookie cookie)
 	{
-		cookies.put(Cookies.keyOf(cookie),cookie);
+		cookies.put(Cookies.keyOf(cookie), cookie);
 	}
 
 	/**
@@ -257,8 +258,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (file.exists() == false)
 		{
 			throw new IllegalArgumentException(
-				"File does not exists. You must provide an existing file: " +
-					file.getAbsolutePath());
+				"File does not exists. You must provide an existing file: "
+					+ file.getAbsolutePath());
 		}
 
 		if (file.isFile() == false)
@@ -307,7 +308,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Sets a header to the request. Overrides any previous value of this header.
-	 *
+	 * 
 	 * @param name
 	 *            The name of the header to add
 	 * @param value
@@ -395,7 +396,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		return Charset.forName(characterEncoding);
 	}
-	
+
 	/**
 	 * true will force Request generate multiPart ContentType and ContentLength
 	 * 
@@ -517,8 +518,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 		catch (ParseException e)
 		{
-			throw new IllegalArgumentException("Can't convert header to date " + name + ": " +
-				value);
+			throw new IllegalArgumentException("Can't convert header to date " + name + ": "
+				+ value);
 		}
 	}
 
@@ -1029,18 +1030,18 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Sets the scheme of this request
 	 * <p/>
-	 * set the <code>secure</code> flag accordingly 
-	 * (<code>true</code> for 'https', <code>false</code> otherwise) 
+	 * set the <code>secure</code> flag accordingly (<code>true</code> for 'https',
+	 * <code>false</code> otherwise)
 	 * 
 	 * @param scheme
-	 *          protocol scheme (e.g. https, http, ftp)
+	 *            protocol scheme (e.g. https, http, ftp)
 	 * 
-	 * @see #isSecure() 
+	 * @see #isSecure()
 	 */
 	public void setScheme(String scheme)
 	{
 		this.scheme = scheme;
-		this.secure = "https".equalsIgnoreCase(scheme);
+		secure = "https".equalsIgnoreCase(scheme);
 	}
 
 	/**
@@ -1120,7 +1121,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		HttpSession sess = null;
 		if (session instanceof MockHttpSession)
 		{
-			MockHttpSession mockHttpSession = (MockHttpSession) session;
+			MockHttpSession mockHttpSession = (MockHttpSession)session;
 			if (b)
 			{
 				mockHttpSession.setTemporary(false);
@@ -1439,165 +1440,167 @@ public class MockHttpServletRequest implements HttpServletRequest
 		setUrl(Url.parse(url));
 	}
 
-// /**
-// * Initialize the request parameters to point to the given bookmarkable page.
-// *
-// * @param page
-// * The page to point to
-// * @param params
-// * Additional parameters
-// */
-// public void setRequestToBookmarkablePage(final Page page, final Map<String, Object> params)
-// {
-// parameters.putAll(params);
-// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
-// .getName());
-// }
-//
-// /**
-// * Initialize the request parameters to point to the given component.
-// *
-// * @param component
-// * The component
-// */
-// public void setRequestToComponent(final Component component)
-// {
-// final IPageMap pageMap = component.getPage().getPageMap();
-// final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
-// if (component instanceof BookmarkablePageLink)
-// {
-// final Class<? extends Page> clazz = ((BookmarkablePageLink<?>)component).getPageClass();
-// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
-// ':' + clazz.getName());
-// }
-// else
-// {
-// int version = component.getPage().getCurrentVersionNumber();
-// Class<?> clazz = null;
-// if (component instanceof IRedirectListener)
-// {
-// clazz = IRedirectListener.class;
-// }
-// else if (component instanceof IResourceListener)
-// {
-// clazz = IResourceListener.class;
-// }
-// else if (component instanceof IFormSubmitListener)
-// {
-// clazz = IFormSubmitListener.class;
-// }
-// else if (component instanceof ILinkListener)
-// {
-// clazz = ILinkListener.class;
-// }
-// else if (component instanceof IOnChangeListener)
-// {
-// clazz = IOnChangeListener.class;
-// }
-// else
-// {
-// throw new IllegalArgumentException(
-// "The component class doesn't seem to implement any of the known *Listener interfaces: " +
-// component.getClass());
-// }
-//
-// // manually create the url using default strategy and format
-// parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' +
-// component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
-// Classes.simpleName(clazz) + "::");
-//
-// // see if we can replace our manual listener url with a properly generated one...
-//
-// try
-// {
-// RequestListenerInterface rli = (RequestListenerInterface)clazz.getField("INTERFACE")
-// .get(clazz);
-//
-// String auto = component.getRequestCycle().urlFor(component, rli).toString();
-//
-// // check for crypted strategy
-// if (auto.startsWith("?x="))
-// {
-// auto = auto.substring(3);
-// parameters.put("x", auto);
-// parameters.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
-// }
-// else
-// {
-// int idx = auto.indexOf(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
-// if (idx >= 0)
-// {
-// auto = auto.substring(idx +
-// WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.length() + 1);
-// }
-// else
-// {
-// idx = auto.indexOf("&");
-// if (idx >= 0)
-// {
-// auto = auto.substring(0, idx);
-// }
-// }
-// parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, auto);
-// }
-// }
-// catch (Exception e)
-// {
-// // noop
-// }
-//
-// if (component.isStateless() && component.getPage().isBookmarkable())
-// {
-// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-// pageMapName + ':' + component.getPage().getClass().getName());
-// }
-// }
-// }
+	// /**
+	// * Initialize the request parameters to point to the given bookmarkable page.
+	// *
+	// * @param page
+	// * The page to point to
+	// * @param params
+	// * Additional parameters
+	// */
+	// public void setRequestToBookmarkablePage(final Page page, final Map<String, Object> params)
+	// {
+	// parameters.putAll(params);
+	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
+	// .getName());
+	// }
+	//
+	// /**
+	// * Initialize the request parameters to point to the given component.
+	// *
+	// * @param component
+	// * The component
+	// */
+	// public void setRequestToComponent(final Component component)
+	// {
+	// final IPageMap pageMap = component.getPage().getPageMap();
+	// final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
+	// if (component instanceof BookmarkablePageLink)
+	// {
+	// final Class<? extends Page> clazz = ((BookmarkablePageLink<?>)component).getPageClass();
+	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
+	// ':' + clazz.getName());
+	// }
+	// else
+	// {
+	// int version = component.getPage().getCurrentVersionNumber();
+	// Class<?> clazz = null;
+	// if (component instanceof IRedirectListener)
+	// {
+	// clazz = IRedirectListener.class;
+	// }
+	// else if (component instanceof IResourceListener)
+	// {
+	// clazz = IResourceListener.class;
+	// }
+	// else if (component instanceof IFormSubmitListener)
+	// {
+	// clazz = IFormSubmitListener.class;
+	// }
+	// else if (component instanceof ILinkListener)
+	// {
+	// clazz = ILinkListener.class;
+	// }
+	// else if (component instanceof IOnChangeListener)
+	// {
+	// clazz = IOnChangeListener.class;
+	// }
+	// else
+	// {
+	// throw new IllegalArgumentException(
+	// "The component class doesn't seem to implement any of the known *Listener interfaces: " +
+	// component.getClass());
+	// }
+	//
+	// // manually create the url using default strategy and format
+	// parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' +
+	// component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
+	// Classes.simpleName(clazz) + "::");
+	//
+	// // see if we can replace our manual listener url with a properly generated one...
+	//
+	// try
+	// {
+	// RequestListenerInterface rli = (RequestListenerInterface)clazz.getField("INTERFACE")
+	// .get(clazz);
+	//
+	// String auto = component.getRequestCycle().urlFor(component, rli).toString();
+	//
+	// // check for crypted strategy
+	// if (auto.startsWith("?x="))
+	// {
+	// auto = auto.substring(3);
+	// parameters.put("x", auto);
+	// parameters.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+	// }
+	// else
+	// {
+	// int idx = auto.indexOf(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+	// if (idx >= 0)
+	// {
+	// auto = auto.substring(idx +
+	// WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.length() + 1);
+	// }
+	// else
+	// {
+	// idx = auto.indexOf("&");
+	// if (idx >= 0)
+	// {
+	// auto = auto.substring(0, idx);
+	// }
+	// }
+	// parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, auto);
+	// }
+	// }
+	// catch (Exception e)
+	// {
+	// // noop
+	// }
+	//
+	// if (component.isStateless() && component.getPage().isBookmarkable())
+	// {
+	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+	// pageMapName + ':' + component.getPage().getClass().getName());
+	// }
+	// }
+	// }
 
-// /**
-// * Initialize the request parameters to point to the given form component. The additional map
-// * should contain mappings between individual components that appear in the form and the string
-// * value that should be submitted for each of these components.
-// *
-// * @param form
-// * The for to send the request to
-// * @param values
-// * The values for each of the form components
-// */
-// public void setRequestToFormComponent(final Form<?> form, final Map<String, Object> values)
-// {
-// setRequestToComponent(form);
-//
-// final Map<String, Object> valuesApplied = new HashMap<String, Object>();
-// form.visitChildren(FormComponent.class, new IVisitor<FormComponent<?>>()
-// {
-// public Object component(final FormComponent<?> component)
-// {
-// String value = (String)values.get(component);
-// if (value != null)
-// {
-// parameters.put(component.getInputName(), values.get(component));
-// valuesApplied.put(component.getId(), component);
-// }
-// return CONTINUE_TRAVERSAL;
-// }
-// });
-//
-// if (values.size() != valuesApplied.size())
-// {
-// Map<String, Object> diff = new HashMap<String, Object>();
-// diff.putAll(values);
-//
-// Iterator<String> iter = valuesApplied.keySet().iterator();
-// while (iter.hasNext())
-// {
-// diff.remove(iter.next());
-// }
-//
-// log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': " +
-// diff.keySet());
-// }
-// }
+	// /**
+	// * Initialize the request parameters to point to the given form component. The additional map
+	// * should contain mappings between individual components that appear in the form and the
+	// string
+	// * value that should be submitted for each of these components.
+	// *
+	// * @param form
+	// * The for to send the request to
+	// * @param values
+	// * The values for each of the form components
+	// */
+	// public void setRequestToFormComponent(final Form<?> form, final Map<String, Object> values)
+	// {
+	// setRequestToComponent(form);
+	//
+	// final Map<String, Object> valuesApplied = new HashMap<String, Object>();
+	// form.visitChildren(FormComponent.class, new IVisitor<FormComponent<?>>()
+	// {
+	// public Object component(final FormComponent<?> component)
+	// {
+	// String value = (String)values.get(component);
+	// if (value != null)
+	// {
+	// parameters.put(component.getInputName(), values.get(component));
+	// valuesApplied.put(component.getId(), component);
+	// }
+	// return CONTINUE_TRAVERSAL;
+	// }
+	// });
+	//
+	// if (values.size() != valuesApplied.size())
+	// {
+	// Map<String, Object> diff = new HashMap<String, Object>();
+	// diff.putAll(values);
+	//
+	// Iterator<String> iter = valuesApplied.keySet().iterator();
+	// while (iter.hasNext())
+	// {
+	// diff.remove(iter.next());
+	// }
+	//
+	// log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
+	// +
+	// diff.keySet());
+	// }
+	// }
 
 	/**
 	 * Helper method to create some default headers for the request
@@ -1609,8 +1612,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 			+ "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
 		addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
 		Locale l = Locale.getDefault();
-		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-" +
-			l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
+		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-"
+			+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
 		addHeader("User-Agent",
 			"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
 	}
@@ -1783,7 +1786,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			path = getContextPath() + getServletPath() + '/' + path;
 		}
 		this.url = path;
-		
+
 		if (path.startsWith(getContextPath()))
 		{
 			path = path.substring(getContextPath().length());
@@ -1796,12 +1799,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 		setPath(path);
 
 		//
-		// We can't clear the parameters here because users may have set custom 
-		// parameters in request. An better place to clear they is when tester 
+		// We can't clear the parameters here because users may have set custom
+		// parameters in request. An better place to clear they is when tester
 		// setups the next request cycle
 		//
 		// parameters.clear();
-		
+
 		for (QueryParameter parameter : url.getQueryParameters())
 		{
 			addParameter(parameter.getName(), parameter.getValue());
@@ -1865,7 +1868,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	@Override
-	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException
+	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
+		throws IllegalStateException
 	{
 		return null;
 	}
