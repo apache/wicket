@@ -81,7 +81,7 @@ public class Recorder<T> extends HiddenField<String>
 	}
 
 	/**
-	 * Synchronize ids collection from the palette's model
+	 * Synchronize the ids in this' model from the palette's model.
 	 */
 	private void initIds()
 	{
@@ -113,7 +113,12 @@ public class Recorder<T> extends HiddenField<String>
 	}
 
 	/**
-	 * @return list over selected choices
+	 * Get the selected choices based on the palette's available choices and the current model or
+	 * input data entered by the user.
+	 * 
+	 * @return selected choices
+	 * 
+	 * @see #getValue()
 	 */
 	public List<T> getSelectedList()
 	{
@@ -145,7 +150,12 @@ public class Recorder<T> extends HiddenField<String>
 	}
 
 	/**
-	 * @return list over unselected choices
+	 * Get the unselected choices based on the palette's available choices and the current model or
+	 * input data entered by the user.
+	 * 
+	 * @return unselected choices
+	 * 
+	 * @see #getValue()
 	 */
 	public List<T> getUnselectedList()
 	{
