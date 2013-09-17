@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
@@ -49,24 +50,23 @@ import org.apache.wicket.request.resource.ResourceReference;
  * When creating a Palette object make sure your IChoiceRenderer returns a specific ID, not the
  * index.
  * <p>
- * <strong>Ajaxifying the palette</strong>: The palette itself cannot be ajaxified because it is a
- * panel and therefore does not receive any javascript events. Instead ajax behaviors can be
- * attached to the recorder component which supports the javascript <code>change</code> event. The
- * behavior should be attached by overriding {@link #newRecorderComponent()}
- * 
- * Example:
+ * <strong>Ajaxifying the palette</strong>: If you want to update a Palette with an
+ * {@link AjaxFormComponentUpdatingBehavior}, you have to attach it to the contained
+ * {@link Recorder} by overriding {@link #newRecorderComponent()} and calling
+ * {@link #processInput()}:
  * 
  * <pre>
- *  Form form=new Form(...);
  *  Palette palette=new Palette(...) {
  *    protected Recorder newRecorderComponent()
  *    {
  *      Recorder recorder=super.newRecorderComponent();     
- *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {...});
+ *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {
+ *        processInput() // let palette process input too
+ *        ...
+ *      });
  *      return recorder;
  *    }
  *  }
- * 
  * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )

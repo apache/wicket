@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.wicket.Session;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -34,7 +36,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.ZeroPaddingIntegerConverter;
 import org.apache.wicket.validation.validator.RangeValidator;
@@ -48,6 +49,25 @@ import org.joda.time.format.DateTimeFormat;
  * for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours field
  * depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the visibility
  * of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
+ * <p>
+ * <strong>Ajaxifying the DateTimeField</strong>: If you want to update a DateTimeField with an
+ * {@link AjaxFormComponentUpdatingBehavior}, you have to attach it to the contained
+ * {@link DateTextField} by overriding {@link #newDateTextField(String, PropertyModel)} and calling
+ * {@link #processInput()}:
+ * 
+ * <pre>
+ *  DateTimeField dateTimeField = new DateTimeField(...) {
+ *    protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
+ *    {
+ *      DateTextField dateField = super.newDateTextField(id, dateFieldModel);     
+ *      dateField.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {
+ *        processInput() // let DateTimeField process input too
+ *        ...
+ *      });
+ *      return recorder;
+ *    }
+ *  }
+ * </pre>
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
@@ -379,7 +399,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 
 	/**
 	 * A factory method for the DateTextField's model object.
-	 *
+	 * 
 	 * @return any specialization of java.util.Date
 	 */
 	protected Date newDateInstance()
@@ -389,9 +409,9 @@ public class DateTimeField extends FormComponentPanel<Date>
 
 	/**
 	 * A factory method for the DateTextField's model object.
-	 *
+	 * 
 	 * @param time
-	 *      the time in milliseconds
+	 *            the time in milliseconds
 	 * @return any specialization of java.util.Date
 	 */
 	protected Date newDateInstance(long time)
@@ -498,8 +518,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	protected boolean use12HourFormat()
 	{
 		String pattern = DateTimeFormat.patternForStyle("-S", getLocale());
-		return pattern.indexOf('a') != -1 || pattern.indexOf('h') != -1 ||
-			pattern.indexOf('K') != -1;
+		return pattern.indexOf('a') != -1 || pattern.indexOf('h') != -1
+			|| pattern.indexOf('K') != -1;
 	}
 
 	/**
