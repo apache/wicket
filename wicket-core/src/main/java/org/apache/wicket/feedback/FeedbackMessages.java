@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.string.StringList;
 import org.slf4j.Logger;
@@ -81,10 +83,23 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 * @param level
 	 */
-	public final void add(Component reporter, Serializable message, int level)
+	public final void add(Component reporter, IModel<?> message, int level)
 	{
 		add(new FeedbackMessage(reporter, message, level));
 	}
+
+    /**
+     * Adds a new ui message with level DEBUG to the current messages.
+     *
+     * @param reporter
+     *            the reporting component
+     * @param message
+     *            the actual message
+     */
+    public final void debug(Component reporter, Serializable message)
+    {
+        debug(reporter, Model.of(message));
+    }
 
 	/**
 	 * Adds a new ui message with level DEBUG to the current messages.
@@ -94,10 +109,23 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            the actual message
 	 */
-	public final void debug(Component reporter, Serializable message)
+	public final void debug(Component reporter, IModel<?> message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
 	}
+
+    /**
+     * Adds a new ui message with level INFO to the current messages.
+     *
+     * @param reporter
+     *            The reporting component
+     * @param message
+     *            The actual message
+     */
+    public final void info(Component reporter, Serializable message)
+    {
+        info(reporter, Model.of(message));
+    }
 
 	/**
 	 * Adds a new ui message with level INFO to the current messages.
@@ -107,10 +135,23 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            The actual message
 	 */
-	public final void info(Component reporter, Serializable message)
+	public final void info(Component reporter, IModel<?> message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
 	}
+
+    /**
+     * Adds a new ui message with level SUCCESS to the current messages.
+     *
+     * @param reporter
+     *            The reporting component
+     * @param message
+     *            The actual message
+     */
+    public final void success(Component reporter, Serializable message)
+    {
+        success(reporter, Model.of(message));
+    }
 
 	/**
 	 * Adds a new ui message with level SUCCESS to the current messages.
@@ -120,10 +161,23 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            The actual message
 	 */
-	public final void success(Component reporter, Serializable message)
+	public final void success(Component reporter, IModel<?> message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.SUCCESS));
 	}
+
+    /**
+     * Adds a new ui message with level WARNING to the current messages.
+     *
+     * @param reporter
+     *            the reporting component
+     * @param message
+     *            the actual message
+     */
+    public final void warn(Component reporter, Serializable message)
+    {
+        warn(reporter, Model.of(message));
+    }
 
 	/**
 	 * Adds a new ui message with level WARNING to the current messages.
@@ -133,10 +187,23 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            the actual message
 	 */
-	public final void warn(Component reporter, Serializable message)
+	public final void warn(Component reporter, IModel<?> message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}
+
+    /**
+     * Adds a new ui message with level ERROR to the current messages.
+     *
+     * @param reporter
+     *            the reporting component
+     * @param message
+     *            the actual message
+     */
+    public final void error(Component reporter, Serializable message)
+    {
+        error(reporter, Model.of(message));
+    }
 
 	/**
 	 * Adds a new ui message with level ERROR to the current messages.
@@ -146,10 +213,23 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            the actual message
 	 */
-	public final void error(Component reporter, Serializable message)
+	public final void error(Component reporter, IModel<?> message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR));
 	}
+
+    /**
+     * Adds a new ui message with level FATAL to the current messages.
+     *
+     * @param reporter
+     *            the reporting component
+     * @param message
+     *            the actual message
+     */
+    public final void fatal(Component reporter, Serializable message)
+    {
+        fatal(reporter, Model.of(message));
+    }
 
 	/**
 	 * Adds a new ui message with level FATAL to the current messages.
@@ -159,7 +239,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            the actual message
 	 */
-	public final void fatal(Component reporter, Serializable message)
+	public final void fatal(Component reporter, IModel<?> message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL));
 	}

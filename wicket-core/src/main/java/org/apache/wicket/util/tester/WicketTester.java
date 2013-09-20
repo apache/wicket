@@ -359,10 +359,10 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedMessages
 	 *            expected feedback messages
 	 */
-	public void assertFeedbackMessages(IFeedbackMessageFilter filter, Serializable... expectedMessages)
+	public void assertFeedbackMessages(IFeedbackMessageFilter filter, Object... expectedMessages)
 	{
 		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
-		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
+		List<Object> actualMessages = getActualFeedbackMessages(feedbackMessages);
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedMessages), actualMessages);
 	}
 
@@ -386,7 +386,7 @@ public class WicketTester extends BaseWicketTester
 		String expectedMessage = getApplication().getResourceSettings().getLocalizer().getString(key, component, model);
 
 		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
-		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
+		List<Object> actualMessages = getActualFeedbackMessages(feedbackMessages);
 
 		assertThat(String.format("Feedback message with key '%s' cannot be found", key),
 				actualMessages, IsCollectionContaining.hasItem(expectedMessage));
@@ -400,12 +400,12 @@ public class WicketTester extends BaseWicketTester
 	 *            the feedback messages
 	 * @return the FeedbackMessages' messages
 	 */
-	private List<Serializable> getActualFeedbackMessages(List<FeedbackMessage> feedbackMessages)
+	private List<Object> getActualFeedbackMessages(List<FeedbackMessage> feedbackMessages)
 	{
-		List<Serializable> actualMessages = new ArrayList<>();
+		List<Object> actualMessages = new ArrayList<>();
 		for (FeedbackMessage feedbackMessage : feedbackMessages)
 		{
-			Serializable message = feedbackMessage.getMessage();
+			Object message = feedbackMessage.getMessageModel().getObject();
 			if (message instanceof ValidationErrorFeedback)
 			{
 				actualMessages.add(message.toString());
@@ -430,7 +430,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param messages
 	 *            messages expected to be rendered
 	 */
-	public void assertFeedback(String path, Serializable... messages)
+	public void assertFeedback(String path, Object... messages)
 	{
 		final FeedbackPanel fbp = (FeedbackPanel)getComponentFromLastRenderedPage(path);
 		final IModel<List<FeedbackMessage>> model = fbp.getFeedbackMessagesModel();
@@ -446,11 +446,11 @@ public class WicketTester extends BaseWicketTester
 		}
 		for (int i = 0; i < messages.length && i < renderedMessages.size(); i++)
 		{
-			final Serializable expected = messages[i];
+			final Object expected = messages[i];
 			boolean found = false;
 			for (FeedbackMessage actual : renderedMessages)
 			{
-				if (Objects.equal(expected, actual.getMessage()))
+				if (Objects.equal(expected, actual.getMessageModel().getObject()))
 				{
 					found = true;
 					break;

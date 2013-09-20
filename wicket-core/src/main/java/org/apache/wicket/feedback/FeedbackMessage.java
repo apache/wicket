@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.model.IDetachable;
+import org.apache.wicket.model.IModel;
 
 
 /**
@@ -98,7 +99,7 @@ public class FeedbackMessage implements IDetachable
 	private final int level;
 
 	/** The actual message. */
-	private final Serializable message;
+	private final IModel<?> message;
 
 	/** The reporting component. */
 	private Component reporter;
@@ -116,7 +117,7 @@ public class FeedbackMessage implements IDetachable
 	 * @param level
 	 *            The level of the message
 	 */
-	public FeedbackMessage(final Component reporter, final Serializable message, final int level)
+	public FeedbackMessage(final Component reporter, final IModel<?> message, final int level)
 	{
 		if (message == null)
 		{
@@ -175,8 +176,25 @@ public class FeedbackMessage implements IDetachable
 	 */
 	public final Serializable getMessage()
 	{
-		return message;
+        if(message.getObject() instanceof Serializable)
+        {
+            return (Serializable) message.getObject();
+        }
+        else
+        {
+		    return message.getObject().toString();
+        }
 	}
+
+    /**
+     * Gets the message model.
+     *
+     * @return the message model
+     */
+    public final IModel<?> getMessageModel()
+    {
+        return message;
+    }
 
 	/**
 	 * Gets the reporting component.

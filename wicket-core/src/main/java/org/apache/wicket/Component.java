@@ -68,6 +68,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -1096,9 +1097,20 @@ public abstract class Component
 	 */
 	public final void debug(final Serializable message)
 	{
-		getFeedbackMessages().debug(this, message);
-		addStateChange();
+		debug(Model.of(message));
 	}
+
+    /**
+     * Registers a debug feedback message for this component
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void debug(final IModel<?> message)
+    {
+        getFeedbackMessages().debug(this, message);
+        addStateChange();
+    }
 
 	/**
 	 * Signals this Component that it is removed from the Component hierarchy.
@@ -1219,9 +1231,20 @@ public abstract class Component
 	 */
 	public final void error(final Serializable message)
 	{
-		getFeedbackMessages().error(this, message);
-		addStateChange();
+        error(Model.of(message));
 	}
+
+    /**
+     * Registers an error feedback message for this component
+     *
+     * @param message
+     *            The feedback message model
+     */
+    public final void error(final IModel<?> message)
+    {
+        getFeedbackMessages().error(this, message);
+        addStateChange();
+    }
 
 	/**
 	 * Registers a fatal feedback message for this component
@@ -1231,9 +1254,20 @@ public abstract class Component
 	 */
 	public final void fatal(final Serializable message)
 	{
-		getFeedbackMessages().fatal(this, message);
-		addStateChange();
+		fatal(Model.of(message));
 	}
+
+    /**
+     * Registers a fatal feedback message for this component
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void fatal(final IModel<?> message)
+    {
+        getFeedbackMessages().fatal(this, message);
+        addStateChange();
+    }
 
 	/**
 	 * Finds the first container parent of this component of the given class.
@@ -1988,9 +2022,20 @@ public abstract class Component
 	 */
 	public final void info(final Serializable message)
 	{
-		getFeedbackMessages().info(this, message);
-		addStateChange();
+		info(Model.of(message));
 	}
+
+    /**
+     * Registers an informational feedback message for this component
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void info(final IModel<?> message)
+    {
+        getFeedbackMessages().info(this, message);
+        addStateChange();
+    }
 
 	/**
 	 * Registers an success feedback message for this component
@@ -2000,9 +2045,20 @@ public abstract class Component
 	 */
 	public final void success(final Serializable message)
 	{
-		getFeedbackMessages().success(this, message);
-		addStateChange();
+		success(Model.of(message));
 	}
+
+    /**
+     * Registers an success feedback message for this component
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void success(final IModel<?> message)
+    {
+        getFeedbackMessages().success(this, message);
+        addStateChange();
+    }
 
 	/**
 	 * Authorizes an action for a component.
@@ -3476,9 +3532,20 @@ public abstract class Component
 	 */
 	public final void warn(final Serializable message)
 	{
-		getFeedbackMessages().warn(this, message);
-		addStateChange();
+		warn(Model.of(message));
 	}
+
+    /**
+     * Registers a warning feedback message for this component.
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void warn(final IModel<?> message)
+    {
+        getFeedbackMessages().warn(this, message);
+        addStateChange();
+    }
 
 	/**
 	 * {@link Behavior#beforeRender(Component)} Notify all behaviors that are assigned to this

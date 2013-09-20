@@ -32,6 +32,8 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.request.Request;
@@ -295,8 +297,19 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final void error(final Serializable message)
 	{
-		addFeedbackMessage(message, FeedbackMessage.ERROR);
+		error(Model.of(message));
 	}
+
+    /**
+     * Registers an error feedback message for this session
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void error(final IModel<?> message)
+    {
+        addFeedbackMessage(message, FeedbackMessage.ERROR);
+    }
 
 	/**
 	 * Registers an fatal feedback message for this session
@@ -306,8 +319,19 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final void fatal(final Serializable message)
 	{
-		addFeedbackMessage(message, FeedbackMessage.FATAL);
+		fatal(Model.of(message));
 	}
+
+    /**
+     * Registers an fatal feedback message for this session
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void fatal(final IModel<?> message)
+    {
+        addFeedbackMessage(message, FeedbackMessage.FATAL);
+    }
 
 	/**
 	 * Registers an debug feedback message for this session
@@ -317,8 +341,19 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final void debug(final Serializable message)
 	{
-		addFeedbackMessage(message, FeedbackMessage.DEBUG);
+		debug(Model.of(message));
 	}
+
+    /**
+     * Registers an debug feedback message for this session
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void debug(final IModel<?> message)
+    {
+        addFeedbackMessage(message, FeedbackMessage.DEBUG);
+    }
 
 	/**
 	 * Get the application that is currently working with this session.
@@ -466,8 +501,19 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final void info(final Serializable message)
 	{
-		addFeedbackMessage(message, FeedbackMessage.INFO);
+		info(Model.of(message));
 	}
+
+    /**
+     * Registers an informational feedback message for this session
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void info(final IModel<?> message)
+    {
+        addFeedbackMessage(message, FeedbackMessage.INFO);
+    }
 
 	/**
 	 * Registers an success feedback message for this session
@@ -477,8 +523,19 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final void success(final Serializable message)
 	{
-		addFeedbackMessage(message, FeedbackMessage.SUCCESS);
+		success(Model.of(message));
 	}
+
+    /**
+     * Registers an success feedback message for this session
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void success(final IModel<?> message)
+    {
+        addFeedbackMessage(message, FeedbackMessage.SUCCESS);
+    }
 
 	/**
 	 * Invalidates this session at the end of the current request. If you need to invalidate the
@@ -627,8 +684,19 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final void warn(final Serializable message)
 	{
-		addFeedbackMessage(message, FeedbackMessage.WARNING);
+		addFeedbackMessage(Model.of(message), FeedbackMessage.WARNING);
 	}
+
+    /**
+     * Registers a warning feedback message for this session
+     *
+     * @param message
+     *            The feedback message
+     */
+    public final void warn(final IModel<?> message)
+    {
+        addFeedbackMessage(message, FeedbackMessage.WARNING);
+    }
 
 	/**
 	 * Adds a feedback message to the list of messages
@@ -637,7 +705,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param level
 	 * 
 	 */
-	private void addFeedbackMessage(Serializable message, int level)
+	private void addFeedbackMessage(IModel<?> message, int level)
 	{
 		getFeedbackMessages().add(null, message, level);
 		dirty();
