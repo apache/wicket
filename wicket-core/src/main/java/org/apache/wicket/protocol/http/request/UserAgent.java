@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,22 +16,25 @@
  */
 package org.apache.wicket.protocol.http.request;
 
+import org.apache.wicket.util.string.Strings;
+
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.wicket.util.string.Strings;
 
 /**
  * UserAgent
  */
 enum UserAgent {
 
-	MOZILLA("Opera,AppleWebKit,Konqueror", Arrays.asList("Mozilla", "Gecko")),
+	MOZILLA("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko")),
 
-	FIREFOX("Opera,AppleWebKit,Konqueror", Arrays.asList("Mozilla", "Gecko", "Firefox")),
+	FIREFOX("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko", "Firefox")),
 
-	INTERNET_EXPLORER("Opera", Arrays.asList("Mozilla", "MSIE", "Windows"), Arrays.asList(
-		"Mozilla", "MSIE", "Trident"), Arrays.asList("Mozilla", "MSIE", "Mac_PowerPC")),
+	INTERNET_EXPLORER("Opera",
+		Arrays.asList("Mozilla", "MSIE", "Windows"),
+		Arrays.asList("Mozilla", "MSIE", "Trident"),
+		Arrays.asList("Mozilla", "MSIE", "Mac_PowerPC"),
+		Arrays.asList("Mozilla", "Windows", "Trident", "like Gecko")),
 
 	OPERA(Arrays.asList("Opera")),
 
@@ -55,9 +58,9 @@ enum UserAgent {
 	 * Construct.
 	 * 
 	 * @param notAllowed
-	 *            comma separated list with values which are not allowed in the user agent
+	 *			comma separated list with values which are not allowed in the user agent
 	 * @param detectionStrings
-	 *            a list with strings which has to be in the user agent string
+	 *			a list with strings which has to be in the user agent string
 	 */
 	UserAgent(String notAllowed, List<String>... detectionStrings)
 	{
@@ -69,7 +72,7 @@ enum UserAgent {
 	 * Construct.
 	 * 
 	 * @param detectionStrings
-	 *            list with string which has to be in the user agent string
+	 *			list with string which has to be in the user agent string
 	 */
 	UserAgent(List<String>... detectionStrings)
 	{
@@ -78,7 +81,7 @@ enum UserAgent {
 
 	/**
 	 * @param userAgent
-	 *            The user agent string
+	 *			The user agent string
 	 * @return Whether the user agent matches this enum or not
 	 */
 	public boolean matches(String userAgent)
