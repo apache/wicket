@@ -292,7 +292,8 @@ public class WebClientInfo extends ClientInfo
 				setMajorMinorVersionByPattern("msie (\\d+)\\.(\\d+)");
 			}
 
-            // TODO miha: check whether all these flags are correct or not (especially for browsers >=IE10)
+            // TODO: check whether all these flags are correct or not (especially for browsers >=IE10)
+            //       all these flags should be removed with wicket 7.x
 			properties.setProprietaryIECssExpressionsSupported(true);
 			properties.setQuirkCssPositioningOneSideOnly(true);
 			properties.setQuirkIERepaint(true);
