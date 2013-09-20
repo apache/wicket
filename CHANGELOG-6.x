@@ -2,6 +2,35 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.11.0
+
+** Bug
+
+    * [WICKET-5313] - Wrong HTML attribute used in SizeTagModifier (wicket-bean-validation)
+    * [WICKET-5315] - PriorityHeaderItem+OnDomReadyHeaderItem has no priority in Ajax response
+    * [WICKET-5316] - Wicket Atmosphere CouldNotLockPageException
+    * [WICKET-5319] - CryptoMapper encrypts external URLs in ResourceReferences making the resources inaccessible
+    * [WICKET-5322] - "Source code" link doesn't work at wicket-library.com
+    * [WICKET-5325] - ComponentRenderer.renderComponent does not render markup for ListView
+    * [WICKET-5329] - "Required" flag initialized too early in PropertyValidator
+    * [WICKET-5332] - Autocomplete throws error when initialized in an AjaxLazyLoadPanel
+    * [WICKET-5334] - KittenCaptcha example is broken in IE10
+    * [WICKET-5335] - After selecting a file MultiFileUploadField does not render properly input field
+    * [WICKET-5339] - Broadcast.EXACT does not notify Behaviors of target Component
+    * [WICKET-5343] - AutoCompleteTextField suggestions popup position is wrong when its container has scrollbar
+    * [WICKET-5345] - Url.canonical() breaks when there are two consecutive "parent" segments followed by a normal segment
+    * [WICKET-5348] - JavaDoc for IColumn#getSortProperty() in misleading
+
+** Improvement
+
+    * [WICKET-5327] - CryptoMapper: insecure default encryption provider
+    * [WICKET-5331] - Make html5 form validation configurable
+    * [WICKET-5333] - wicket-bean-validation french translation
+    * [WICKET-5341] - JavaDoc for IFormValidator
+    * [WICKET-5354] - Make ResourceBundles and related classes easier for extension
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.10.0
 
 ** Sub-task
