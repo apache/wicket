@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,6 @@
  */
 package org.apache.wicket.protocol.http.request;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.ClientProperties;
@@ -31,6 +24,12 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -58,7 +57,7 @@ public class WebClientInfo extends ClientInfo
 	 * Construct.
 	 * 
 	 * @param requestCycle
-	 *            the request cycle
+	 *			the request cycle
 	 */
 	public WebClientInfo(RequestCycle requestCycle)
 	{
@@ -70,9 +69,9 @@ public class WebClientInfo extends ClientInfo
 	 * Construct.
 	 * 
 	 * @param requestCycle
-	 *            the request cycle
+	 *			the request cycle
 	 * @param userAgent
-	 *            The User-Agent string
+	 *			The User-Agent string
 	 */
 	public WebClientInfo(final RequestCycle requestCycle, final String userAgent)
 	{
@@ -124,9 +123,9 @@ public class WebClientInfo extends ClientInfo
 	 * If so, the last proxy ip address is returned.
 	 *
 	 * @param requestCycle
-	 *            the request cycle
+	 *			the request cycle
 	 * @return remoteAddr IP address of the client, using the X-Forwarded-For header and defaulting
-	 *         to: getHttpServletRequest().getRemoteAddr()
+	 *		 to: getHttpServletRequest().getRemoteAddr()
 	 */
 	protected String getRemoteAddr(RequestCycle requestCycle)
 	{
@@ -286,8 +285,15 @@ public class WebClientInfo extends ClientInfo
 
 		if (properties.isBrowserInternetExplorer())
 		{
-			setMajorMinorVersionByPattern("msie (\\d+)\\.(\\d+)");
+            // modern IE browsers (>=IE11) uses new user agent format
+			if (getUserAgentStringLc().contains("like gecko")) {
+				setMajorMinorVersionByPattern("rv:(\\d+)\\.(\\d+)");
+			} else {
+				setMajorMinorVersionByPattern("msie (\\d+)\\.(\\d+)");
+			}
 
+            // TODO: check whether all these flags are correct or not (especially for browsers >=IE10)
+            //       all these flags should be removed with wicket 7.x
 			properties.setProprietaryIECssExpressionsSupported(true);
 			properties.setQuirkCssPositioningOneSideOnly(true);
 			properties.setQuirkIERepaint(true);
@@ -311,7 +317,7 @@ public class WebClientInfo extends ClientInfo
 	 * extracts the major and minor version out of the userAgentString string.
 	 * 
 	 * @param patternString
-	 *            The pattern must contain two matching groups
+	 *			The pattern must contain two matching groups
 	 */
 	private void setMajorMinorVersionByPattern(String patternString)
 	{
