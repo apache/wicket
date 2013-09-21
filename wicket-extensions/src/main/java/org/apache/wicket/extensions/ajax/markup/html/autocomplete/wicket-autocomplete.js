@@ -73,7 +73,7 @@
 		var throttleDelay = cfg.throttleDelay;
 
 		//this is the minimum input length required to display the autocomplete list
-		var minInputLength = cfg.minInputLength || 1;
+		var minInputLength = cfg.showListOnEmptyInput === true ? 0 : cfg.minInputLength || 1;
 
 		function initialize(){
 			var isShowing = false;
