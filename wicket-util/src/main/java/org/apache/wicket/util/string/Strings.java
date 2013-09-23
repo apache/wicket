@@ -1209,7 +1209,7 @@ public final class Strings
 				for (int i = 0; i < length; i++)
 				{
 					outputThrowable(al.get(i), sb, true);
-					sb.append("\n");
+					sb.append('\n');
 				}
 			}
 			return sb.toString();
