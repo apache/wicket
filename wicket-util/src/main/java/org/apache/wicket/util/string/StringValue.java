@@ -220,8 +220,7 @@ public class StringValue implements IClusterable
 	 */
 	protected StringValue(final String text)
 	{
-		this.text = text;
-		locale = Locale.getDefault();
+		this(text , Locale.getDefault());
 	}
 
 	/**
