@@ -359,8 +359,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected Component newMessageDisplayComponent(String id, FeedbackMessage message)
 	{
-		Serializable serializable = message.getMessage();
-		Label label = new Label(id, (serializable == null) ? "" : serializable.toString());
+		Serializable rawMessage = message.getMessage();
+		Label label = new Label(id, rawMessage);
 		label.setEscapeModelStrings(FeedbackPanel.this.getEscapeModelStrings());
 		return label;
 	}
