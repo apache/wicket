@@ -29,6 +29,7 @@ import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Mutable class that holds parameters of a Page. Page parameters consist of indexed parameters and
@@ -150,7 +151,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			indexedParameters.add(null);
 		}
 
-		indexedParameters.set(index, object != null ? object.toString() : null);
+		indexedParameters.set(index, Strings.toString(object));
 		return this;
 	}
 
