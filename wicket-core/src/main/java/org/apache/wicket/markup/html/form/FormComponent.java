@@ -113,7 +113,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	private class MessageSource implements IErrorMessageSource
 	{
-		private final Set<String> triedKeys = new LinkedHashSet<String>();
+		private final Set<String> triedKeys = new LinkedHashSet<>();
 
 		/**
 		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(String, java.util.Map)
@@ -260,7 +260,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			}
 			else
 			{
-				fullParams = new HashMap<String, Object>(params.size() + 6);
+				fullParams = new HashMap<>(params.size() + 6);
 				fullParams.putAll(params);
 			}
 
@@ -632,7 +632,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				return true;
 			}
 
-			// peform validation by looking whether the value is null or empty
+			// perform validation by looking whether the value is null or empty
 			return !Strings.isEmpty(input);
 		}
 		return true;
@@ -1602,7 +1602,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		Collection<S> collection = formComponent.getModelObject();
 		if (collection == null)
 		{
-			collection = new ArrayList<S>(convertedInput);
+			collection = new ArrayList<>(convertedInput);
 			formComponent.setDefaultModelObject(collection);
 		}
 		else
