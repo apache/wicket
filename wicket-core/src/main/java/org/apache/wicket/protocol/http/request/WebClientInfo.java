@@ -286,7 +286,15 @@ public class WebClientInfo extends ClientInfo
 
 		if (properties.isBrowserInternetExplorer())
 		{
-			setMajorMinorVersionByPattern("msie (\\d+)\\.(\\d+)");
+			// modern IE browsers (>=IE11) uses new user agent format
+			if (getUserAgentStringLc().contains("like gecko"))
+			{
+				setMajorMinorVersionByPattern("rv:(\\d+)\\.(\\d+)");
+			}
+			else
+			{
+				setMajorMinorVersionByPattern("msie (\\d+)\\.(\\d+)");
+			}
 
 			properties.setProprietaryIECssExpressionsSupported(true);
 			properties.setQuirkCssPositioningOneSideOnly(true);
