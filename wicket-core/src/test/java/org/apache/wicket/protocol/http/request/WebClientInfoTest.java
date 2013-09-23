@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http.request;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
@@ -204,6 +205,63 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
+		}
+	}
+
+	/**
+	 * Test IE 10.x user-agent strings
+	 */
+	@Test
+	public void internetExplorer10()
+	{
+		List<String> userAgents = Arrays.asList(
+			"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
+			"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)",
+			"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/5.0)",
+			"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/4.0; InfoPath.2; SV1; .NET CLR 2.0.50727; WOW64)",
+			"Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)",
+			"Mozilla/4.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/5.0)",
+			"Mozilla/1.22 (compatible; MSIE 10.0; Windows 3.1)");
+
+		for (String userAgent : userAgents)
+		{
+			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(), is(equalTo(10)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(), is(equalTo(true)));
+
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(), is(equalTo(false)));
+		}
+	}
+
+	/**
+	 * Test IE 11.x user-agent strings
+	 */
+	@Test
+	public void internetExplorer11()
+	{
+		List<String> userAgents = Arrays.asList(
+			"Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",
+			"Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.1) like Gecko");
+
+		for (String userAgent : userAgents)
+		{
+			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(), is(equalTo(11)));
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(), is(greaterThan(-1)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(), is(equalTo(true)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(), is(equalTo(false)));
 		}
 	}
 

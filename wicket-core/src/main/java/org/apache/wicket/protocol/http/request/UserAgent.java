@@ -26,12 +26,15 @@ import org.apache.wicket.util.string.Strings;
  */
 enum UserAgent {
 
-	MOZILLA("Opera,AppleWebKit,Konqueror", Arrays.asList("Mozilla", "Gecko")),
+	MOZILLA("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko")),
 
-	FIREFOX("Opera,AppleWebKit,Konqueror", Arrays.asList("Mozilla", "Gecko", "Firefox")),
+	FIREFOX("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko", "Firefox")),
 
-	INTERNET_EXPLORER("Opera", Arrays.asList("Mozilla", "MSIE", "Windows"), Arrays.asList(
-		"Mozilla", "MSIE", "Trident"), Arrays.asList("Mozilla", "MSIE", "Mac_PowerPC")),
+	INTERNET_EXPLORER("Opera",
+		Arrays.asList("Mozilla", "MSIE", "Windows"),
+		Arrays.asList("Mozilla", "MSIE", "Trident"),
+		Arrays.asList("Mozilla", "MSIE", "Mac_PowerPC"),
+		Arrays.asList("Mozilla", "Windows", "Trident", "like Gecko")),
 
 	OPERA(Arrays.asList("Opera")),
 
