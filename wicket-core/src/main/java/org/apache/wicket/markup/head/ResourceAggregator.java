@@ -408,9 +408,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		{
 			return item;
 		}
-		if (item instanceof IHeaderItemWrapper)
+		if (item instanceof IWrappedHeaderItem)
 		{
-			bundle = ((IHeaderItemWrapper)item).wrap(bundle);
+			bundle = ((IWrappedHeaderItem)item).wrap(bundle);
 		}
 		return bundle;
 	}

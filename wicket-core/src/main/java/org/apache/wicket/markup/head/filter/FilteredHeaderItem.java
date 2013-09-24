@@ -20,19 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.head.IHeaderItemWrapper;
+import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.request.Response;
 
 /**
  * {@link HeaderItem} that specifies the filter it belongs to. Dependencies of a
  * {@code FilteredHeaderItem} belong to the same filter. If used in conjunction with
  * {@link JavaScriptFilteredIntoFooterHeaderResponse}, use
- * {@link FilteringHeaderResponse#DEFAULT_HEADER_FILTER_NAME DEFAULT_HEADER_FILTER_NAME} to
- * render items in the header.
+ * {@link FilteringHeaderResponse#DEFAULT_HEADER_FILTER_NAME DEFAULT_HEADER_FILTER_NAME} to render
+ * items in the header.
  * 
  * @author papegaaij
  */
-public class FilteredHeaderItem extends HeaderItem implements IHeaderItemWrapper
+public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 {
 	private HeaderItem wrapped;
 
