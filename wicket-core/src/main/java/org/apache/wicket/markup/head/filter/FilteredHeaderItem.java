@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.head.IWrappedHeaderItem;
+import org.apache.wicket.markup.head.IHeaderItemWrapper;
 import org.apache.wicket.request.Response;
 
 /**
@@ -32,7 +32,7 @@ import org.apache.wicket.request.Response;
  * 
  * @author papegaaij
  */
-public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
+public class FilteredHeaderItem extends HeaderItem implements IHeaderItemWrapper
 {
 	private HeaderItem wrapped;
 
@@ -61,6 +61,12 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 		return wrapped;
 	}
 
+	@Override
+	public FilteredHeaderItem wrap(HeaderItem item)
+	{
+		return new FilteredHeaderItem(item, getFilterName());
+	}
+
 	/**
 	 * @return the name of the filter this item belongs to
 	 */
@@ -87,7 +93,7 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 		List<FilteredHeaderItem> ret = new ArrayList<>();
 		for (HeaderItem curDependency : getWrapped().getDependencies())
 		{
-			ret.add(new FilteredHeaderItem(curDependency, getFilterName()));
+			ret.add(wrap(curDependency));
 		}
 		List<HeaderItem> dependencies = super.getDependencies();
 		dependencies.addAll(ret);

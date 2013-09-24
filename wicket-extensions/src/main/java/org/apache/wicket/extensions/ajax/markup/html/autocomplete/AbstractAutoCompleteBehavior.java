@@ -21,8 +21,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IHeaderItemWrapper;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
@@ -45,7 +45,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 * A plain OnDomReadyItem would be aggregated by {@link ResourceAggregator}, possible coming
 	 * after the event registration of other behaviors.
 	 */
-	private static final class WrappedHeaderItem extends HeaderItem implements IWrappedHeaderItem
+	private static final class WrappedHeaderItem extends HeaderItem implements IHeaderItemWrapper
 	{
 		private final OnDomReadyHeaderItem item;
 
@@ -69,6 +69,14 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		@Override
 		public HeaderItem getWrapped()
 		{
+			return item;
+		}
+
+		@Override
+		public HeaderItem wrap(HeaderItem item)
+		{
+			if (item instanceof OnDomReadyHeaderItem)
+				return new WrappedHeaderItem((OnDomReadyHeaderItem)item);
 			return item;
 		}
 	}

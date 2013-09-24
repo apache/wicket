@@ -14,17 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource.aggregator.bundlepriority;
-
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
+package org.apache.wicket.markup.head;
 
 /**
- *
+ * An interface for all HeaderItems which delegate to another HeaderItem and can re-wrap an existing
+ * item.
+ * 
+ * @since 6.12
  */
-public class ReferenceA extends JavaScriptResourceReference
+public interface IHeaderItemWrapper extends IWrappedHeaderItem
 {
-	public ReferenceA()
-	{
-		super(ReferenceA.class, "a.js");
-	}
+	/**
+	 * Wraps an existing HeaderItem
+	 * 
+	 * @param item
+	 *            The item to wrap
+	 * @return the wrapped header item
+	 */
+	HeaderItem wrap(HeaderItem item);
 }

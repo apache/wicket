@@ -195,7 +195,8 @@ public class ResourceAggregatorTest extends WicketTestCase
 	}
 
 	/**
-	 * bundle {a, b->a} and {c->a, d->c->a}, render [priority(b), d], should render [ab, cd]
+	 * bundle {a, b->a} and {c->a, d->c->a}, render [priority(b), d], should render [priority(ab),
+	 * cd]
 	 */
 	@Test
 	public void testTwoBundlesWithDependenciesAndPriority()
@@ -210,7 +211,7 @@ public class ResourceAggregatorTest extends WicketTestCase
 				new ResourceReferenceD());
 		aggregator.render(new PriorityHeaderItem(forReference(new ResourceReferenceB())));
 		aggregator.render(forReference(new ResourceReferenceD()));
-		assertItems(bundleAB, bundleCD);
+		assertItems(new PriorityHeaderItem(bundleAB), bundleCD);
 	}
 
 	/**
@@ -251,5 +252,20 @@ public class ResourceAggregatorTest extends WicketTestCase
 		aggregator.render(forReference(new ResourceReferenceBun1()));
 		assertItems(forReference(new ResourceReferenceX()), forReference(new ResourceReferenceY()),
 			bundle12);
+	}
+
+	/**
+	 * bundle {a, b -> a}, render [x, priority(a)], should render [priority(ab), x]
+	 */
+	@Test
+	public void testBundleWithPriority()
+	{
+		HeaderItem bundleAB = Application.get()
+			.getResourceBundles()
+			.addJavaScriptBundle(Application.class, "ab.js", new ResourceReferenceA(),
+				new ResourceReferenceB());
+		aggregator.render(forReference(new ResourceReferenceX()));
+		aggregator.render(new PriorityHeaderItem(forReference(new ResourceReferenceA())));
+		assertItems(new PriorityHeaderItem(bundleAB), forReference(new ResourceReferenceX()));
 	}
 }

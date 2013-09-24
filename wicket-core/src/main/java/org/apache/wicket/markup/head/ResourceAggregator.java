@@ -371,6 +371,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		if (wasRendered(item))
 			return false;
 
+		if (item instanceof IWrappedHeaderItem)
+		{
+			getRealResponse().markRendered(((IWrappedHeaderItem)item).getWrapped());
+		}
 		getRealResponse().markRendered(item);
 		for (HeaderItem curProvided : item.getProvidedResources())
 		{
@@ -400,6 +404,14 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 
 		HeaderItem bundle = Application.get().getResourceBundles().findBundle(innerItem);
-		return bundle == null ? item : bundle;
+		if (bundle == null)
+		{
+			return item;
+		}
+		if (item instanceof IHeaderItemWrapper)
+		{
+			bundle = ((IHeaderItemWrapper)item).wrap(bundle);
+		}
+		return bundle;
 	}
 }
