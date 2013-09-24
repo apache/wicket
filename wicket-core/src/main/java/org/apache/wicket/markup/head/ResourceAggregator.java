@@ -126,7 +126,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		public RecordedHeaderItem(HeaderItem item)
 		{
 			this.item = item;
-			locations = new ArrayList<RecordedHeaderItemLocation>();
+			locations = new ArrayList<>();
 		}
 
 		/**
@@ -186,9 +186,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		super(real);
 
-		itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
-		domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
-		loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
+		itemsToBeRendered = new LinkedHashMap<>();
+		domReadyItemsToBeRendered = new ArrayList<>();
+		loadItemsToBeRendered = new ArrayList<>();
 	}
 
 	@Override
@@ -288,7 +288,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private void renderHeaderItems()
 	{
-		List<RecordedHeaderItem> sortedItemsToBeRendered = new ArrayList<RecordedHeaderItem>(
+		List<RecordedHeaderItem> sortedItemsToBeRendered = new ArrayList<>(
 			itemsToBeRendered.values());
 		Comparator<? super RecordedHeaderItem> headerItemComparator = Application.get()
 			.getResourceSettings()
