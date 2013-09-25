@@ -236,9 +236,6 @@ public class WebClientInfo extends ClientInfo
 
 		if (properties.isBrowserMozilla())
 		{
-			properties.setQuirkMozillaTextInputRepaint(true);
-			properties.setQuirkMozillaPerformanceLargeDomRemove(true);
-
 			if (properties.isBrowserMozillaFirefox())
 			{
 				// e.g.: Mozilla/5.0 (X11; U; Linux i686; pl-PL; rv:1.9.0.2) Gecko/20121223
@@ -294,23 +291,6 @@ public class WebClientInfo extends ClientInfo
 			else
 			{
 				setMajorMinorVersionByPattern("msie (\\d+)\\.(\\d+)");
-			}
-
-			properties.setProprietaryIECssExpressionsSupported(true);
-			properties.setQuirkCssPositioningOneSideOnly(true);
-			properties.setQuirkIERepaint(true);
-			properties.setQuirkIESelectZIndex(true);
-			properties.setQuirkIETextareaNewlineObliteration(true);
-			properties.setQuirkIESelectPercentWidth(true);
-			properties.setQuirkIESelectListDomUpdate(true);
-			properties.setQuirkIETablePercentWidthScrollbarError(true);
-			properties.setQuirkCssBackgroundAttachmentUseFixed(true);
-			properties.setQuirkCssBorderCollapseInside(true);
-			properties.setQuirkCssBorderCollapseFor0Padding(true);
-
-			if (properties.getBrowserVersionMajor() < 7)
-			{
-				properties.setProprietaryIEPngAlphaFilterRequired(true);
 			}
 		}
 	}
