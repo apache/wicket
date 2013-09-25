@@ -28,7 +28,7 @@ import org.apache.wicket.request.Response;
  * 
  * @author papegaaij
  */
-public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
+public class PriorityHeaderItem extends HeaderItem implements IHeaderItemWrapper
 {
 	private HeaderItem wrapped;
 
@@ -53,6 +53,12 @@ public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	}
 
 	@Override
+	public PriorityHeaderItem wrap(HeaderItem item)
+	{
+		return new PriorityHeaderItem(item);
+	}
+
+	@Override
 	public Iterable<?> getRenderTokens()
 	{
 		return getWrapped().getRenderTokens();
@@ -70,7 +76,7 @@ public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 		List<PriorityHeaderItem> ret = new ArrayList<PriorityHeaderItem>();
 		for (HeaderItem curDependency : getWrapped().getDependencies())
 		{
-			ret.add(new PriorityHeaderItem(curDependency));
+			ret.add(wrap(curDependency));
 		}
 		return ret;
 	}
