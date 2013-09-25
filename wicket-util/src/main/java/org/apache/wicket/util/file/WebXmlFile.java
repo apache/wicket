@@ -59,7 +59,7 @@ public class WebXmlFile
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param filterConfig
-	 * @return Filter path retrieved from "url-pattern". Null if not found or error occured
+	 * @return Filter path retrieved from "url-pattern". Null if not found or error occurred
 	 */
 	public final String getUniqueFilterPath(final boolean isServlet, final FilterConfig filterConfig)
 	{
@@ -87,15 +87,7 @@ public class WebXmlFile
 			{
 				return getFilterPath(isServlet, filterName, is);
 			}
-			catch (ParserConfigurationException ex)
-			{
-				log.error("Error reading servlet/filter path from web.xml", ex);
-			}
-			catch (SAXException ex)
-			{
-				log.error("Error reading servlet/filter path from web.xml", ex);
-			}
-			catch (IOException ex)
+			catch (ParserConfigurationException | SAXException | IOException ex)
 			{
 				log.error("Error reading servlet/filter path from web.xml", ex);
 			}
@@ -155,7 +147,7 @@ public class WebXmlFile
 
 			for (String path : paths)
 			{
-				err.append(" [" + path + "]");
+				err.append(" [").append(path).append(']');
 			}
 			throw new RuntimeException(err.toString());
 		}
