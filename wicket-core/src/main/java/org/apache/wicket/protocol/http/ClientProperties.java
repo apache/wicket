@@ -254,12 +254,12 @@ public class ClientProperties implements IClusterable
 					// offset which can be parsed by the TimeZone class.
 
 					AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
-					sb.append(offsetHours > 0 ? "+" : "-");
+					sb.append(offsetHours > 0 ? '+' : '-');
 					sb.append(Math.abs(offsetHours));
-					sb.append(":");
+					sb.append(':');
 					if (offsetMins < 10)
 					{
-						sb.append("0");
+						sb.append('0');
 					}
 					sb.append(offsetMins);
 					timeZone = TimeZone.getTimeZone(sb.toString());
@@ -277,7 +277,7 @@ public class ClientProperties implements IClusterable
 				String dstOffset = getUtcDSTOffset();
 				if (timeZone != null && dstOffset != null)
 				{
-					TimeZone dstTimeZone = null;
+					TimeZone dstTimeZone;
 					dotPos = dstOffset.indexOf('.');
 					if (dotPos >= 0)
 					{
@@ -296,12 +296,12 @@ public class ClientProperties implements IClusterable
 						// offset which can be parsed by the TimeZone class.
 
 						AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
-						sb.append(offsetHours > 0 ? "+" : "-");
+						sb.append(offsetHours > 0 ? '+' : '-');
 						sb.append(Math.abs(offsetHours));
 						sb.append(":");
 						if (offsetMins < 10)
 						{
-							sb.append("0");
+							sb.append('0');
 						}
 						sb.append(offsetMins);
 						dstTimeZone = TimeZone.getTimeZone(sb.toString());
@@ -1110,7 +1110,7 @@ public class ClientProperties implements IClusterable
 
 				field.setAccessible(true);
 
-				Object value = null;
+				Object value;
 				try
 				{
 					value = field.get(this);
@@ -1126,7 +1126,7 @@ public class ClientProperties implements IClusterable
 
 				if (field.getType().equals(Integer.TYPE))
 				{
-					if ((Integer) value == -1)
+					if (value == -1)
 					{
 						value = null;
 					}
@@ -1135,9 +1135,9 @@ public class ClientProperties implements IClusterable
 				if (value != null)
 				{
 					b.append(field.getName());
-					b.append("=");
+					b.append('=');
 					b.append(value);
-					b.append("\n");
+					b.append('\n');
 				}
 			}
 		}
