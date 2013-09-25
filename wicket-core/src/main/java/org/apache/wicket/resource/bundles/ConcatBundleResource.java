@@ -129,7 +129,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 
 	private List<IResourceStream> collectResourceStreams()
 	{
-		List<IResourceStream> ret = new ArrayList<IResourceStream>(providedResources.size());
+		List<IResourceStream> ret = new ArrayList<>(providedResources.size());
 		for (IReferenceHeaderItem curItem : providedResources)
 		{
 			IResourceStream stream = ((IStaticCacheableResource)curItem.getReference()
@@ -205,7 +205,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	@Override
 	public Serializable getCacheKey()
 	{
-		ArrayList<Serializable> key = new ArrayList<Serializable>(providedResources.size());
+		ArrayList<Serializable> key = new ArrayList<>(providedResources.size());
 		for (IReferenceHeaderItem curItem : providedResources)
 		{
 			Serializable curKey = ((IStaticCacheableResource)curItem.getReference().getResource()).getCacheKey();
@@ -220,7 +220,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	public IResourceStream getCacheableResourceStream()
 	{
 		List<IResourceStream> resources = collectResourceStreams();
-		byte[] bytes = null;
+		byte[] bytes;
 		try
 		{
 			bytes = readAllResources(resources);
