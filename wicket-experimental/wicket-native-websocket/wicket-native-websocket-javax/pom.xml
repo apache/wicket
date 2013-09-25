@@ -31,6 +31,10 @@
 	<name>Wicket Native WebSocket Javax</name>
 	<description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
 
+    <properties>
+        <jetty.version>9.1.0.M0</jetty.version>
+    </properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -49,19 +53,33 @@
             <scope>provided</scope>
 		</dependency>
 
-	</dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
 
-	<repositories>
-		<repository>
-			<id>tc8</id>
-			<url>https://repository.apache.org/content/repositories/orgapachetomcat-048/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>javax-websocket-server-impl</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
+	</dependencies>
 
 </project>

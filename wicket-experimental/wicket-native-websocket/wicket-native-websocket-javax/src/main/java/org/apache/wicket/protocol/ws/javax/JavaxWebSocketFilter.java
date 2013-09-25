@@ -60,13 +60,13 @@ public class JavaxWebSocketFilter extends AbstractUpgradeFilter
 	{
 		super.init(isServlet, new JavaxWebSocketFilterConfig(filterConfig));
 
-		ServletContext servletContext = filterConfig.getServletContext();
-		ServerContainer sc = (ServerContainer) servletContext.getAttribute(ServerContainer.class.getName());
-
 		try
 		{
 			ServerEndpointConfig config = new WicketServerEndpointConfig(ServerEndpointConfig.Builder.create(WicketEndpoint.class, WICKET_WEB_SOCKET_PATH).build());
 			config.getUserProperties().put(APPLICATION_KEY, getApplication());
+
+			ServletContext servletContext = filterConfig.getServletContext();
+			ServerContainer sc = (ServerContainer) servletContext.getAttribute(ServerContainer.class.getName());
 			sc.addEndpoint(config);
 		}
 		catch (DeploymentException e) {
