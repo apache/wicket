@@ -19,8 +19,6 @@ package org.apache.wicket.request.resource.caching.version;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.time.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Uses the last modified timestamp of a {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} 
@@ -32,8 +30,6 @@ import org.slf4j.LoggerFactory;
  */
 public class LastModifiedResourceVersion implements IResourceVersion
 {
-	private static final Logger log = LoggerFactory.getLogger(LastModifiedResourceVersion.class);
-	
 	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
