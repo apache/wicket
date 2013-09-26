@@ -16,11 +16,10 @@
  */
 package org.apache.wicket.examples.source;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,8 +32,6 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.uwyn.jhighlight.renderer.Renderer;
-import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -55,9 +52,14 @@ import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
-import org.apache.wicket.util.string.*;
+import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.uwyn.jhighlight.renderer.Renderer;
+import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 
 /**
  * Displays the resources in a packages directory in a browsable format.
@@ -88,24 +90,17 @@ public class SourcesPage extends WebPage
 				return "";
 			}
 
-			BufferedReader br = null;
 			String source = null;
+			InputStream resourceAsStream = null;
 			try
 			{
-			    StringBuilder sb = new StringBuilder();
 				source = (name != null) ? name : sourceParam.toString();
-				InputStream resourceAsStream = getPageTargetClass().getResourceAsStream(source);
+				resourceAsStream = getPageTargetClass().getResourceAsStream(source);
 				if (resourceAsStream == null)
 				{
 					return "Unable to read the source for " + source;
 				}
-				br = new BufferedReader(new InputStreamReader(resourceAsStream));
 
-				while (br.ready())
-				{
-					sb.append(br.readLine());
-					sb.append('\n');
-				}
 				int lastDot = source.lastIndexOf('.');
 				if (lastDot != -1)
 				{
@@ -113,10 +108,14 @@ public class SourcesPage extends WebPage
 					Renderer renderer = XhtmlRendererFactory.getRenderer(type);
 					if (renderer != null)
 					{
-						return renderer.highlight(source, sb.toString(), "UTF-8", true);
+						ByteArrayOutputStream output = new ByteArrayOutputStream();
+						renderer.highlight(source, resourceAsStream, output, "UTF-8", true);
+						return output.toString("UTF-8");
 					}
 				}
-				CharSequence escaped = Strings.escapeMarkup(sb.toString(), false, true);
+
+				CharSequence escaped = Strings.escapeMarkup(IOUtils.toString(resourceAsStream),
+					false, true);
 				return Strings.replaceAll(escaped, "\n", "<br />").toString();
 			}
 			catch (IOException e)
@@ -128,7 +127,7 @@ public class SourcesPage extends WebPage
 			}
 			finally
 			{
-				IOUtils.closeQuietly(br);
+				IOUtils.closeQuietly(resourceAsStream);
 			}
 		}
 	}
@@ -149,15 +148,16 @@ public class SourcesPage extends WebPage
 			return get(getPageTargetClass());
 		}
 
-		private final void addResources(final AppendingStringBuffer relativePath, final File dir, List<String> resources)
+		private final void addResources(final AppendingStringBuffer relativePath, final File dir,
+			List<String> resources)
 		{
 			File[] files = dir.listFiles();
 			for (File file : files)
 			{
 				if (file.isDirectory())
 				{
-					addResources(new AppendingStringBuffer(relativePath).append(file.getName()).append('/'),
-						file, resources);
+					addResources(new AppendingStringBuffer(relativePath).append(file.getName())
+						.append('/'), file, resources);
 				}
 				else
 				{
@@ -307,16 +307,16 @@ public class SourcesPage extends WebPage
 						@Override
 						protected CharSequence getURL()
 						{
-							return urlFor(SourcesPage.class,
-								          SourcesPage.generatePageParameters(getPageTargetClass(),
-									      item.getModel().getObject()));
+							return urlFor(SourcesPage.class, SourcesPage.generatePageParameters(
+								getPageTargetClass(), item.getModel().getObject()));
 						}
 
 						@Override
 						protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 						{
 							super.updateAjaxAttributes(attributes);
-							AjaxCallListener ajaxCallListener = new AjaxCallListener() {
+							AjaxCallListener ajaxCallListener = new AjaxCallListener()
+							{
 								@Override
 								public CharSequence getFailureHandler(Component component)
 								{
@@ -419,10 +419,8 @@ public class SourcesPage extends WebPage
 			@Override
 			public String getObject()
 			{
-				return name != null ? name : getPage().getRequest()
-					.getRequestParameters()
-					.getParameterValue(SOURCE)
-					.toOptionalString();
+				return name != null ? name : getPage().getRequest().getRequestParameters()
+					.getParameterValue(SOURCE).toOptionalString();
 			}
 
 		});
@@ -479,8 +477,8 @@ public class SourcesPage extends WebPage
 			{
 				if (log.isErrorEnabled())
 				{
-					log.error("user is trying to access class: " + pageParam +
-						" which is not in the scope of org.apache.wicket.examples");
+					log.error("user is trying to access class: " + pageParam
+						+ " which is not in the scope of org.apache.wicket.examples");
 				}
 				throw new UnauthorizedInstantiationException(getClass());
 			}
@@ -489,8 +487,8 @@ public class SourcesPage extends WebPage
 			if (page == null)
 			{
 				getRequestCycle().replaceAllRequestHandlers(
-						new ErrorCodeRequestHandler(404,
-								"Could not find sources for the page you requested"));
+					new ErrorCodeRequestHandler(404,
+						"Could not find sources for the page you requested"));
 			}
 		}
 		return page;
