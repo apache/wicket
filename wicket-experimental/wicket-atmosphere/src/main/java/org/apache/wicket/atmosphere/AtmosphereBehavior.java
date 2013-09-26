@@ -98,6 +98,16 @@ public class AtmosphereBehavior extends Behavior
 	}
 
 	@Override
+	public void onPreSuspend(AtmosphereResourceEvent event)
+	{
+	}
+
+	@Override
+	public void onClose(AtmosphereResourceEvent event)
+	{
+	}
+
+	@Override
 	public void onResourceRequested()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
@@ -107,16 +117,7 @@ public class AtmosphereBehavior extends Behavior
 		Meteor meteor = Meteor.build(request.getContainerRequest());
 		// Add us to the listener list.
 		meteor.addListener(this);
-
-		String transport = request.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
-		if (HeaderConfig.LONG_POLLING_TRANSPORT.equalsIgnoreCase(transport))
-		{
-			meteor.suspend(-1, false);
-		}
-		else
-		{
-			meteor.suspend(-1);
-		}
+		meteor.suspend(-1);
 
 		String uuid = meteor.getAtmosphereResource().uuid();
 		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
