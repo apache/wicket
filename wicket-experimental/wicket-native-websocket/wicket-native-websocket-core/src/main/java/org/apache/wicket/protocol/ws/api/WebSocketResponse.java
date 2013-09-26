@@ -19,7 +19,11 @@ package org.apache.wicket.protocol.ws.api;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0
  */
-public class WebSocketResponse extends Response
+public class WebSocketResponse extends WebResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(WebSocketResponse.class);
 	
@@ -132,5 +136,83 @@ public class WebSocketResponse extends Response
 	public final IWebSocketConnection getContainerResponse()
 	{
 		return connection;
+	}
+
+	@Override
+	public void addCookie(Cookie cookie)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void clearCookie(Cookie cookie)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setHeader(String name, String value)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void addHeader(String name, String value)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setDateHeader(String name, Time date)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setContentLength(long length)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setContentType(String mimeType)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setStatus(int sc)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void sendError(int sc, String msg)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String encodeRedirectURL(CharSequence url)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void sendRedirect(String url)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean isRedirect()
+	{
+		return false;
+	}
+
+	@Override
+	public void flush()
+	{
+		throw new UnsupportedOperationException();
 	}
 }
