@@ -230,7 +230,7 @@ public class Localizer
 			{
 				message.append(" for component: ");
 				message.append(component.getPageRelativePath());
-				message.append(" [class=").append(component.getClass().getName()).append("]");
+				message.append(" [class=").append(component.getClass().getName()).append(']');
 			}
 			message.append(". Locale: ").append(locale).append(", style: ").append(style);
 
@@ -308,7 +308,7 @@ public class Localizer
 		}
 
 		String cacheKey = null;
-		String value = null;
+		String value;
 
 		// Make sure locale, style and variation have the right values
 		String variation = (component != null ? component.getVariation() : null);
@@ -586,7 +586,7 @@ public class Localizer
 	 */
 	protected Map<String, String> newCache()
 	{
-		return new ConcurrentHashMap<String, String>();
+		return new ConcurrentHashMap<>();
 	}
 
 	/**
