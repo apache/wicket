@@ -24,6 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.HeaderItem;
@@ -48,6 +50,7 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,7 +126,7 @@ public abstract class AbstractAjaxResponse
 	{
 		this.page = page;
 
-		Response response = page.getResponse();
+		WebResponse response = (WebResponse) page.getResponse();
 		encodingBodyResponse = new AjaxResponse(response);
 		encodingHeaderResponse = new AjaxResponse(response);
 	}
@@ -592,13 +595,13 @@ public abstract class AbstractAjaxResponse
 	 *
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	protected static final class AjaxResponse extends Response
+	protected static final class AjaxResponse extends WebResponse
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 
 		private boolean escaped = false;
 
-		private final Response originalResponse;
+		private final WebResponse originalResponse;
 
 		/**
 		 * Constructor.
@@ -606,7 +609,7 @@ public abstract class AbstractAjaxResponse
 		 * @param originalResponse
 		 *      the original request cycle response
 		 */
-		private AjaxResponse(Response originalResponse)
+		private AjaxResponse(WebResponse originalResponse)
 		{
 			this.originalResponse = originalResponse;
 		}
@@ -681,6 +684,84 @@ public abstract class AbstractAjaxResponse
 		public Object getContainerResponse()
 		{
 			return originalResponse.getContainerResponse();
+		}
+
+		@Override
+		public void addCookie(Cookie cookie)
+		{
+			originalResponse.addCookie(cookie);
+		}
+
+		@Override
+		public void clearCookie(Cookie cookie)
+		{
+			originalResponse.clearCookie(cookie);
+		}
+
+		@Override
+		public void setHeader(String name, String value)
+		{
+			originalResponse.setHeader(name, value);
+		}
+
+		@Override
+		public void addHeader(String name, String value)
+		{
+			originalResponse.addHeader(name, value);
+		}
+
+		@Override
+		public void setDateHeader(String name, Time date)
+		{
+			originalResponse.setDateHeader(name, date);
+		}
+
+		@Override
+		public void setContentLength(long length)
+		{
+			originalResponse.setContentLength(length);
+		}
+
+		@Override
+		public void setContentType(String mimeType)
+		{
+			originalResponse.setContentType(mimeType);
+		}
+
+		@Override
+		public void setStatus(int sc)
+		{
+			originalResponse.setStatus(sc);
+		}
+
+		@Override
+		public void sendError(int sc, String msg)
+		{
+			originalResponse.sendError(sc, msg);
+		}
+
+		@Override
+		public String encodeRedirectURL(CharSequence url)
+		{
+			return originalResponse.encodeRedirectURL(url);
+		}
+
+		@Override
+		public void sendRedirect(String url)
+		{
+			originalResponse.sendRedirect(url);
+		}
+
+		@Override
+		public boolean isRedirect()
+		{
+			return originalResponse.isRedirect();
+		}
+
+		@Override
+		public void flush()
+		{
+			originalResponse.flush();
 		}
 	}
 
