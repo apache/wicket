@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.core.util.resource.locator;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +24,6 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.file.WebApplicationPath;
-import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
@@ -171,43 +169,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			}
 		}
 
-		return null;
-	}
-
-
-	/**
-	 * Get the resource
-	 * 
-	 * @param classLoader
-	 * @param path
-	 * @return resource stream
-	 */
-	/* package private for testing */IResourceStream getResourceStream(
-		final ClassLoader classLoader, final String path)
-	{
-		if (classLoader == null)
-		{
-			return null;
-		}
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("Attempting to locate resource '" + path + "' using classloader " +
-				classLoader);
-		}
-
-		// Try loading path using classloader
-		URL url = classLoader.getResource(path);
-		if (url == null)
-		{
-			// maybe it is in the Servlet 3.0 like directory
-			url = classLoader.getResource("META-INF/resources/" + path);
-		}
-
-		if (url != null)
-		{
-			return new UrlResourceStream(url);
-		}
 		return null;
 	}
 
