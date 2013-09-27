@@ -437,7 +437,8 @@ public class WicketFilter implements Filter
 		{
 			// #destroy() might not be called by the web container when #init() fails,
 			// so destroy now
-			log.warn("initialization failed, destroying now");
+			log.error(String.format("The initialization of an application with name '%s' has failed.",
+					filterConfig.getFilterName()), e);
 
 			try
 			{
@@ -445,7 +446,7 @@ public class WicketFilter implements Filter
 			}
 			catch (Exception destroyException)
 			{
-				log.warn("Unable to destroy after initialization failure", destroyException);
+				log.error("Unable to destroy after initialization failure", destroyException);
 			}
 
 			throw new ServletException(e);
