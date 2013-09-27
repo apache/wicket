@@ -59,7 +59,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 
 		delegate = resourceStreamLocator;
 
-		cache = new ConcurrentHashMap<Key, IResourceStreamReference>();
+		cache = new ConcurrentHashMap<>();
 	}
 
 	/**

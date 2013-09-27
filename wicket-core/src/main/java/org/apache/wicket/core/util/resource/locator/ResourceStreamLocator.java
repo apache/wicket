@@ -73,7 +73,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	/** Logging */
 	private static final Logger log = LoggerFactory.getLogger(ResourceStreamLocator.class);
 
-	private static final Iterable<String> NO_EXTENSIONS = new ArrayList<String>(0);
+	private static final Iterable<String> NO_EXTENSIONS = new ArrayList<>(0);
 
 	/** If null, the application registered finder will be used */
 	private List<IResourceFinder> finders;

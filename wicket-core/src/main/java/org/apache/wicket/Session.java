@@ -836,7 +836,7 @@ public abstract class Session implements IClusterable, IEventSink
 			// session instance gets shared across threads
 			if (temporarySessionAttributes == null)
 			{
-				temporarySessionAttributes = new HashMap<String, Serializable>(3);
+				temporarySessionAttributes = new HashMap<>(3);
 			}
 			temporarySessionAttributes.put(name, value);
 		}
