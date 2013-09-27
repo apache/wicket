@@ -291,7 +291,6 @@ public abstract class Session implements IClusterable, IEventSink
 		throw new UnsupportedOperationException("Deprecated, see the javadoc");
 	}
 
-
 	/**
 	 * Removes all pages from the session. Although this method should rarely be needed, it is
 	 * available (possibly for security reasons).
@@ -440,10 +439,12 @@ public abstract class Session implements IClusterable, IEventSink
 	/**
 	 * When a regular request on certain page with certain version is being processed, we don't
 	 * allow ajax requests to same page and version.
-	 * 
+	 *
 	 * @param lockedRequestCycle
 	 * @return whether current request is valid or should be discarded
+	 * @deprecated Not used since Wicket 1.5.0
 	 */
+	@Deprecated
 	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
 	{
 		return true;
