@@ -421,18 +421,6 @@ public abstract class Session implements IClusterable, IEventSink
 	}
 
 	/**
-	 * When a regular request on certain page with certain version is being processed, we don't
-	 * allow ajax requests to same page and version.
-	 * 
-	 * @param lockedRequestCycle
-	 * @return whether current request is valid or should be discarded
-	 */
-	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
-	{
-		return true;
-	}
-
-	/**
 	 * @return The page factory for this session
 	 */
 	public IPageFactory getPageFactory()
