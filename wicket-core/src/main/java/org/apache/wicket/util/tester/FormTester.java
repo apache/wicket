@@ -40,6 +40,7 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
@@ -57,6 +58,11 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public class FormTester
 {
+	/**
+	 * An auto incrementing index used as a suffix for MultiFileUploadField's inputName
+	 */
+	private int multiFileUploadIndex = 0;
+
 	/**
 	 * A selector template for selecting selectable <code>FormComponent</code>s with an index of
 	 * option -- supports <code>RadioGroup</code>, <code>CheckGroup</code>, and
@@ -293,9 +299,9 @@ public class FormTester
 			if (formComponent == null)
 			{
 				fail("Trying to select on null component.");
+				return null;
 			}
-
-			if (formComponent instanceof RadioGroup ||
+			else if (formComponent instanceof RadioGroup ||
 				formComponent instanceof AbstractSingleSelectChoice)
 			{
 				return new SingleChoiceSelector(formComponent);
@@ -420,7 +426,7 @@ public class FormTester
 		{
 			if (formComponent instanceof IFormSubmittingComponent)
 			{
-				// buttons have to be sumitted explicitely
+				// buttons have to be submitted explicitely
 			}
 			else if (formComponent instanceof AbstractTextComponent)
 			{
@@ -565,7 +571,7 @@ public class FormTester
 	{
 		checkClosed();
 
-		if (replace == true)
+		if (replace)
 		{
 			// Reset first
 			setValue(formComponentId, "");
@@ -661,15 +667,23 @@ public class FormTester
 
 		FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
 
-		if (formComponent instanceof FileUploadField == false)
+		MockHttpServletRequest servletRequest = tester.getRequest();
+
+		if (formComponent instanceof FileUploadField)
+		{
+			servletRequest.addFile(formComponent.getInputName(), file, contentType);
+		}
+		else if (formComponent instanceof MultiFileUploadField)
+		{
+			String inputName = formComponent.getInputName() + MultiFileUploadField.MAGIC_SEPARATOR + multiFileUploadIndex++;
+			servletRequest.addFile(inputName, file, contentType);
+		}
+		else
 		{
 			fail("'" + formComponentId + "' is not " +
 				"a FileUploadField. You can only attach a file to form " +
 				"component of this type.");
 		}
-
-		MockHttpServletRequest servletRequest = tester.getRequest();
-		servletRequest.addFile(formComponent.getInputName(), file, contentType);
 
 		return this;
 	}
