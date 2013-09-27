@@ -90,12 +90,10 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 	private static final String NAME_ATTR = "name";
 
-	private static final String MAGIC_SEPARATOR = "_mf_";
-
+	public static final String MAGIC_SEPARATOR = "_mf_";
 
 	public static final ResourceReference JS = new JavaScriptResourceReference(
 		MultiFileUploadField.class, "MultiFileUploadField.js");
-
 
 	private final WebComponent upload;
 	private final WebMarkupContainer container;
