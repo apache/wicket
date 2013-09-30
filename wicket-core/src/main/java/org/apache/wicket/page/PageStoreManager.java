@@ -365,18 +365,13 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		private SessionEntry getSessionEntry(boolean create)
 		{
-			SessionEntry entry = (SessionEntry)getSessionAttribute(getAttributeName());
+			String attributeName = getAttributeName();
+			SessionEntry entry = (SessionEntry)getSessionAttribute(attributeName);
 			if (entry == null && create)
 			{
 				bind();
 				entry = new SessionEntry(applicationName, getSessionId());
-			}
-			if (entry != null)
-			{
-				synchronized (entry)
-				{
-					setSessionAttribute(getAttributeName(), entry);
-				}
+				setSessionAttribute(attributeName, entry);
 			}
 			return entry;
 		}
