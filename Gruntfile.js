@@ -132,6 +132,5 @@ module.exports = function(grunt) {
 	// This plugin provides the "connect" task - starts a web server for the Ajax tests.
 	grunt.loadNpmTasks('grunt-contrib-connect');
 
-	// A convenient task alias.
-	grunt.registerTask('test', ['connect', 'qunit']);
+	grunt.registerTask('default', ['jshint', 'connect', 'qunit']);
 };

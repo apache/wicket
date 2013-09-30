@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true, stop: true */
+/*global ok: true, start: true, stop: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
 
 jQuery(document).ready(function() {
 	"use strict";
@@ -232,7 +232,7 @@ jQuery(document).ready(function() {
 		Wicket.Event.publish(topic);
 
 		Wicket.Event.unsubscribe(topic, subscriber);
-		ok(true, "The subscriber is un-subscribed")
+		ok(true, "The subscriber is un-subscribed");
 
 		Wicket.Event.publish(topic);
 	});
@@ -256,7 +256,7 @@ jQuery(document).ready(function() {
 		Wicket.Event.publish(topic);
 
 		Wicket.Event.unsubscribe(topic);
-		ok(true, "The subscribers are un-subscribed")
+		ok(true, "The subscribers are un-subscribed");
 
 		Wicket.Event.publish(topic);
 	});
@@ -280,7 +280,7 @@ jQuery(document).ready(function() {
 		Wicket.Event.publish(topic);
 
 		Wicket.Event.unsubscribe();
-		ok(true, "The subscribers are un-subscribed")
+		ok(true, "The subscribers are un-subscribed");
 
 		Wicket.Event.publish(topic);
 	});
