@@ -218,6 +218,73 @@ jQuery(document).ready(function() {
 		Wicket.Event.publish('topicName');
 	});
 
+	test('unsubscribe a signle subscriber', function() {
+		expect(2);
+
+		var topic = "someTopicName";
+
+		var subscriber = function() {
+			ok(true, "The subscriber is notified");
+		};
+
+		Wicket.Event.subscribe(topic, subscriber);
+
+		Wicket.Event.publish(topic);
+
+		Wicket.Event.unsubscribe(topic, subscriber);
+		ok(true, "The subscriber is un-subscribed")
+
+		Wicket.Event.publish(topic);
+	});
+
+	test('unsubscribe all subscribers per topic', function() {
+		expect(3);
+
+		var topic = "someTopicName";
+
+		var subscriber1 = function() {
+			ok(true, "Subscriber 1 is notified");
+		};
+
+		var subscriber2 = function() {
+			ok(true, "Subscriber 2 is notified");
+		};
+
+		Wicket.Event.subscribe(topic, subscriber1);
+		Wicket.Event.subscribe(topic, subscriber2);
+
+		Wicket.Event.publish(topic);
+
+		Wicket.Event.unsubscribe(topic);
+		ok(true, "The subscribers are un-subscribed")
+
+		Wicket.Event.publish(topic);
+	});
+
+	test('unsubscribe all subscribers (for all topics)', function() {
+		expect(3);
+
+		var topic = "someTopicName";
+
+		var subscriber1 = function() {
+			ok(true, "Subscriber 1 is notified");
+		};
+
+		var subscriber2 = function() {
+			ok(true, "Subscriber 2 is notified");
+		};
+
+		Wicket.Event.subscribe(topic, subscriber1);
+		Wicket.Event.subscribe(topic, subscriber2);
+
+		Wicket.Event.publish(topic);
+
+		Wicket.Event.unsubscribe();
+		ok(true, "The subscribers are un-subscribed")
+
+		Wicket.Event.publish(topic);
+	});
+
 	test('all topics', function() {
 		expect(8);
 

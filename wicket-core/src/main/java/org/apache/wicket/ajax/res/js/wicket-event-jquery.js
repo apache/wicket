@@ -177,6 +177,25 @@
 			},
 
 			/**
+			 * Un-subscribes a subscriber from a topic.
+			 * @param topic {String} - the topic name. If omitted un-subscribes all
+			 *      subscribers from all topics
+			 * @param subscriber {Function} - the handler to un-subscribe. If omitted then
+			 *      all subscribers are removed from this topic
+			 */
+			unsubscribe: function(topic, subscriber) {
+				if (topic) {
+					if (subscriber) {
+						jQuery(document).off(topic, subscriber);
+					} else {
+						jQuery(document).off(topic);
+					}
+				} else {
+					jQuery(document).off();
+				}
+			},
+
+			/**
 			* Sends a notification to all subscribers for the given topic.
 			* Subscribers for topic '*' receive the actual topic as first parameter,
 			* otherwise the topic is not passed to subscribers which listen for specific
