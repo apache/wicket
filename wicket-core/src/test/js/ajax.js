@@ -69,7 +69,7 @@ jQuery(document).ready(function() {
 		module('Wicket.Ajax', {
 			setup: function() {
 				// unsubscribe all global listeners
-				jQuery(document).off();
+				Wicket.Event.unsubscribe();
 			}
 		});
 
@@ -512,7 +512,7 @@ jQuery(document).ready(function() {
 				equal(attrs.u, attributes.u, 'Complete: attrs');
 
 				// unregister all subscribers
-				jQuery(document).off();
+				Wicket.Event.unsubscribe();
 			});
 
 			Wicket.Ajax.ajax(attrs);
@@ -561,7 +561,7 @@ jQuery(document).ready(function() {
 				equal(attrs.u, attributes.u, 'Complete: attrs');
 
 				// unregister all subscribers
-				jQuery(document).off();
+				Wicket.Event.unsubscribe();
 			});
 
 			Wicket.Ajax.ajax(attrs);
@@ -661,7 +661,7 @@ jQuery(document).ready(function() {
 				ok(settings.url.indexOf('two=2') > 0, 'Parameter "two" with value "2" is found');
 				start();
 
-				jQuery(document).off();
+				Wicket.Event.unsubscribe();
 		});
 
 			Wicket.Ajax.ajax(attrs);
@@ -698,7 +698,7 @@ jQuery(document).ready(function() {
 				ok(settings.data.indexOf('one=dynamic2') > -1, 'Parameter "one" with value "dynamic2" is found');
 				start();
 
-				jQuery(document).off();
+				Wicket.Event.unsubscribe();
 			});
 
 			Wicket.Ajax.ajax(attrs);
@@ -836,7 +836,7 @@ jQuery(document).ready(function() {
 
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
-					jQuery(document).off();
+					Wicket.Event.unsubscribe();
 					jQuery(window).off("event1");
 
 					start();
@@ -943,7 +943,7 @@ jQuery(document).ready(function() {
 
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
-					jQuery(document).off();
+					Wicket.Event.unsubscribe();
 
 					jQuery(window).off("event1");
 
