@@ -359,7 +359,9 @@
 					var hasMinimumLength = elementVal.length >= minInputLength;
 
 					var result = hasMinimumLength && activeIsInitial;
-					if (!result) hideAutoComplete();
+					if (!result) {
+						hideAutoComplete();
+					}
 					return result;
 				}],
 				ep: {},
@@ -382,7 +384,9 @@
 					var elementVal =  Wicket.$(elementId).value;
 					var hasMinimumLength = elementVal.length >= minInputLength;
 					var result = hasMinimumLength && activeIsInitial;
-					if (!result) hideAutoComplete();
+					if (!result) {
+						hideAutoComplete();
+					}
 					return result;
 				}],
 				ep: {},

@@ -18,7 +18,7 @@
 	'use strict';
 
 	if (typeof(Wicket) === "undefined") {
-		Wicket = {};
+		window.Wicket = {};
 	}
 
 	Wicket.Tree = {};

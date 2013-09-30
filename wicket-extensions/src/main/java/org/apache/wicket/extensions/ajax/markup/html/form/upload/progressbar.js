@@ -19,7 +19,7 @@
 	'use strict';
 
 	if (typeof(Wicket) === "undefined") {
-		Wicket = {};
+		window.Wicket = {};
 	}
 
 	Wicket.WUPB = Wicket.Class.create();
