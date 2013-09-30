@@ -522,14 +522,16 @@
 
 					// initialize the array for steps (closures that execute each action)
 					steps: []
-				};
+				},
+				we = Wicket.Event,
+				topic = we.Topic;
 
 			if (Wicket.Focus.lastFocusId) {
 				headers["Wicket-FocusedElementId"] = Wicket.Focus.lastFocusId;
 			}
 
 			self._executeHandlers(attrs.bh, attrs);
-			Wicket.Event.publish('/ajax/call/before', attrs);
+			we.publish(topic.AJAX_CALL_BEFORE, attrs);
 
 			var preconditions = attrs.pre || [];
 			preconditions = defaultPrecondition.concat(preconditions);
@@ -554,7 +556,7 @@
 				}
 			}
 
-			Wicket.Event.publish('/ajax/call/precondition', attrs);
+			we.publish(topic.AJAX_CALL_PRECONDITION, attrs);
 
 			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
 				var ret = self.submitMultipartForm(context);
@@ -605,7 +607,7 @@
 					}
 
 					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
-					Wicket.Event.publish('/ajax/call/beforeSend', attrs, jqXHR, settings);
+					we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, jqXHR, settings);
 
 					if (attrs.i) {
 						// show the indicator
@@ -623,7 +625,7 @@
 						self.processAjaxResponse(data, textStatus, jqXHR, context);
 					} else {
 						self._executeHandlers(attrs.sh, attrs, jqXHR, data, textStatus);
-						Wicket.Event.publish('/ajax/call/success', attrs, jqXHR, data, textStatus);
+						we.publish(topic.AJAX_CALL_SUCCESS, attrs, jqXHR, data, textStatus);
 					}
 				},
 				error: function(jqXHR, textStatus, errorMessage) {
@@ -637,7 +639,7 @@
 						}
 
 						self._executeHandlers(attrs.coh, attrs, jqXHR, textStatus);
-						Wicket.Event.publish('/ajax/call/complete', attrs, jqXHR, textStatus);
+						we.publish(topic.AJAX_CALL_COMPLETE, attrs, jqXHR, textStatus);
 
 						self.done();
 
@@ -650,7 +652,7 @@
 
 			// execute after handlers right after the Ajax request is fired
 			self._executeHandlers(attrs.ah, attrs);
-			Wicket.Event.publish('/ajax/call/after', attrs);
+			we.publish(topic.AJAX_CALL_AFTER, attrs);
 
 			return jqXHR;
 		},
@@ -831,8 +833,11 @@
 				form.appendChild($btn[0]);
 			}
 
+			var we = Wicket.Event;
+			var topic = we.Topic;
+
 			this._executeHandlers(attrs.bsh, attrs, null, null);
-			Wicket.Event.publish('/ajax/call/beforeSend', attrs, null, null);
+			we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, null, null);
 
 			if (attrs.i) {
 				// show the indicator
@@ -843,11 +848,11 @@
 			form.submit();
 
 			this._executeHandlers(attrs.ah, attrs);
-			Wicket.Event.publish('/ajax/call/after', attrs);
+			we.publish(topic.AJAX_CALL_AFTER, attrs);
 
 			// install handler to deal with the ajax response
 			// ... we add the onload event after form submit because chrome fires it prematurely
-			Wicket.Event.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), context);
+			we.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), context);
 
 			// handled, restore state and return true
 			form.action = originalFormAction;
@@ -907,7 +912,7 @@
 				}
 
 				this._executeHandlers(attrs.coh, attrs, null, null);
-				Wicket.Event.publish('/ajax/call/complete', attrs, null, null);
+				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
 
 				this.done();
 			}, this));
@@ -988,7 +993,7 @@
 
 				var attrs = context.attrs;
 				this._executeHandlers(attrs.sh, attrs, null, null, 'success');
-				Wicket.Event.publish('/ajax/call/success', attrs, null, null, 'success');
+				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_SUCCESS, attrs, null, null, 'success');
 
 				// set the focus to the last component
 				window.setTimeout("Wicket.Focus.requestFocus();", 0);
@@ -1006,7 +1011,7 @@
 				}
 				var attrs = context.attrs;
 				this._executeHandlers(attrs.fh, attrs, errorMessage);
-				Wicket.Event.publish('/ajax/call/failure', attrs, jqXHR, errorMessage, textStatus);
+				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_FAILURE, attrs, jqXHR, errorMessage, textStatus);
 
 				notify();
 			}, this));
@@ -1629,7 +1634,10 @@
 			 */
 			replace: function (element, text) {
 
-				Wicket.Event.publish('/dom/node/removing', element);
+				var we = Wicket.Event;
+				var topic = we.Topic;
+
+				we.publish(topic.DOM_NODE_REMOVING, element);
 
 				if (element.tagName.toLowerCase() === "title") {
 					// match the text between the tags
@@ -1646,7 +1654,7 @@
 
 				var newElement = Wicket.$(element.id);
 				if (newElement) {
-					Wicket.Event.publish('/dom/node/added', newElement);
+					we.publish(topic.DOM_NODE_ADDED, newElement);
 				}
 			},
 

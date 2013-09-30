@@ -211,6 +211,21 @@
 					jQuery(document).triggerHandler(topic, args);
 					jQuery(document).triggerHandler('*', args);
 				}
+			},
+
+			/**
+			 * The names of the topics on which Wicket notifies
+			 */
+			Topic: {
+				DOM_NODE_REMOVING      : '/dom/node/removing',
+				DOM_NODE_ADDED         : '/dom/node/added',
+				AJAX_CALL_BEFORE       : '/ajax/call/before',
+				AJAX_CALL_PRECONDITION : '/ajax/call/precondition',
+				AJAX_CALL_BEFORE_SEND  : '/ajax/call/beforeSend',
+				AJAX_CALL_SUCCESS      : '/ajax/call/success',
+				AJAX_CALL_COMPLETE     : '/ajax/call/complete',
+				AJAX_CALL_AFTER        : '/ajax/call/after',
+				AJAX_CALL_FAILURE      : '/ajax/call/failure'
 			}
 		}
 	});
