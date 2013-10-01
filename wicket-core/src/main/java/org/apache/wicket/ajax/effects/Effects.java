@@ -5,27 +5,51 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
+/**
+ * Helper class to replace component in Ajax responses with JavaScript animation effects..
+ */
 public class Effects
 {
+	/**
+	 * Replaces a component by using 'slideUp' effect to hide the component
+	 * and 'slideDown' to show it.
+	 *
+	 * @param target
+	 *          The Ajax request handler
+	 * @param component
+	 *          The component to re-render
+	 */
 	public static void replace(AjaxRequestTarget target, Component component)
 	{
 		replace(target, component, new SlideUp(), new SlideDown());
 	}
 
-	public static void replace(AjaxRequestTarget target, Component component, Effect in, Effect out)
+	/**
+	 * Replaces a component by using the provided effects to hide and show the component
+	 *
+	 * @param target
+	 *          The Ajax request handler
+	 * @param component
+	 *          The component to re-render
+	 * @param hide
+	 *          The effect that will hide the old component
+	 * @param show
+	 *          The effect that will show the new component
+	 */
+	public static void replace(AjaxRequestTarget target, Component component, Effect hide, Effect show)
 	{
 		Args.notNull(target, "target");
 		Args.notNull(component, "component");
-		Args.notNull(in, "in");
-		Args.notNull(out, "out");
+		Args.notNull(hide, "hide");
+		Args.notNull(show, "show");
 
 		component.add(new DisplayNoneBehavior());
 
-		target.prependJavaScript(in.toJavaScript(component));
+		target.prependJavaScript(hide.toJavaScript(component));
 
 		target.add(component);
 
-		target.appendJavaScript(out.toJavaScript(component));
+		target.appendJavaScript(show.toJavaScript(component));
 	}
 
 	/*
