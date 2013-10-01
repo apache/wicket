@@ -2609,6 +2609,28 @@
 				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("button"));
 				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("a"));
 			}
+		},
+
+		Effect: {
+			slideUp: function(componentId, duration, notify) {
+				notify = notify || jQuery.noop;
+				jQuery('#' + componentId).slideUp(duration, notify);
+			},
+
+			slideDown: function(componentId, duration, notify) {
+				notify = notify || jQuery.noop;
+				jQuery('#' + componentId).slideDown(duration, notify);
+			},
+
+			fadeIn: function(componentId, duration, notify) {
+				notify = notify || jQuery.noop;
+				jQuery('#' + componentId).fadeIn(duration, notify);
+			},
+
+			fadeOut: function(componentId, duration, notify) {
+				notify = notify || jQuery.noop;
+				jQuery('#' + componentId).fadeOut(duration, notify);
+			}
 		}
 	});
 
