@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.markup.html.navigation.paging;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
 
@@ -142,5 +143,17 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 	{
 		// Tell the PageableListView which page to print next
 		pageable.setCurrentPage(getPageNumber());
+	}
+
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		// 'onclick' attribute would be set only if this component is attached
+		// to HTML element different than 'a'. This 'onclick' will break Ajax's
+		// event binding so here we remove it.
+		// AjaxFallback is supported only with 'a' HTML element. See WICKET-4862
+		tag.remove("onclick");
 	}
 }
