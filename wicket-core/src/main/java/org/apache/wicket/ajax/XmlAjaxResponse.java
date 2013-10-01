@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax;
 
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -42,6 +43,8 @@ import org.slf4j.LoggerFactory;
 public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlAjaxResponse.class);
+
+	private static final Pattern EVALUATION_WITH_NOTIFY = Pattern.compile("^[a-zA-Z_]\\w*\\|(.|\\n)*;$");
 
 	/**
 	 * The name of the root element in the produced XML document.
@@ -190,7 +193,6 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	protected void writeNormalEvaluations(final Response response, final Collection<CharSequence> scripts)
 	{
 		writeEvaluations(response, "evaluate", scripts);
-
 	}
 
 	@Override
@@ -206,9 +208,25 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 			StringBuilder combinedScript = new StringBuilder(1024);
 			for (CharSequence script : scripts)
 			{
-				combinedScript.append("(function(){").append(script).append("})();");
+				String s = script.toString();
+				if (EVALUATION_WITH_NOTIFY.matcher(s).matches())
+				{
+					if (combinedScript.length() > 0)
+					{
+						writeEvaluation(elementName, response, combinedScript);
+						combinedScript.setLength(0);
+						writeEvaluation(elementName, response, "(function(){" + s + "})();");
+					}
+				}
+				else
+				{
+					combinedScript.append("(function(){").append(s).append("})();");
+				}
 			}
-			writeEvaluation(elementName, response, combinedScript);
+			if (combinedScript.length() > 0)
+			{
+				writeEvaluation(elementName, response, combinedScript);
+			}
 		}
 	}
 

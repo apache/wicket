@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.effects.Effect;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
@@ -169,9 +171,64 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 
 				listenersFrozen = false;
 			}
-
 		};
+
+		addListener(new EffectsListener());
 	}
+
+	/**
+	 * A listener that reorders any Effect prepend/append JavaScripts.
+	 * It also sets notify = true to the last effect. This way any other JavaScripts
+	 * should wait the effect to finish to be executed.
+	 */
+	private class EffectsListener extends AbstractListener
+	{
+		@Override
+		public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
+		{
+			super.onBeforeRespond(map, target);
+
+			Collections.sort(responseObject.prependJavaScripts, new EffectComparator());
+			notifyLast(responseObject.prependJavaScripts);
+
+			Collections.sort(responseObject.appendJavaScripts, new EffectComparator());
+			notifyLast(responseObject.appendJavaScripts);
+		}
+
+		private void notifyLast(List<CharSequence> effects)
+		{
+			if (effects != null && effects.isEmpty() == false)
+			{
+				for (int i = effects.size() - 1; i >= 0; i--)
+				{
+					CharSequence sequence = effects.get(i);
+					if (sequence instanceof Effect)
+					{
+						((Effect) sequence).setNotify(true);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Used to re-order the Effect append/prepend JavaScripts
+	 */
+	private static class EffectComparator implements Comparator<CharSequence>
+	{
+		@Override
+		public int compare(CharSequence o1, CharSequence o2)
+		{
+			if (o1 instanceof Effect && o2 instanceof Effect)
+			{
+				Effect e1 = (Effect) o1;
+				Effect e2 = (Effect) o2;
+				return e1.getDuration().compareTo(e2.getDuration());
+			}
+			return 0;
+		}
+	};
 
 	/**
 	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPage()
