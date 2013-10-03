@@ -452,6 +452,9 @@
 			visible = 0;
 			setSelected(-1);
 			ignoreFocus = false;
+			//WICKET-5382
+			hideIndicator();
+			
 			var container = getAutocompleteContainer();
 			if (container)
 			{
@@ -593,21 +596,6 @@
 			if (!cfg.ignoreBordersWhenPositioning) {
 				topPosition += obj.clientTop || 0;
 				leftPosition += obj.clientLeft || 0;
-			}
-
-			obj = obj.offsetParent;
-			while (obj && obj !== document.documentElement && obj !== document.body) {
-				topPosition += obj.offsetTop || 0;
-				topPosition -= obj.scrollTop || 0;
-				if (!cfg.ignoreBordersWhenPositioning) {
-					topPosition += obj.clientTop || 0;
-				}
-				leftPosition += obj.offsetLeft || 0;
-				leftPosition -= obj.scrollLeft || 0;
-				if (!cfg.ignoreBordersWhenPositioning) {
-					leftPosition += obj.clientLeft || 0;
-				}
-				obj = obj.offsetParent;
 			}
 
 			return [leftPosition,topPosition];
