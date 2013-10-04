@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.protocol.ws.javax;
 
-import org.apache.wicket.util.file.File;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
@@ -25,10 +24,8 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.webapp.WebXmlConfiguration;
-import org.eclipse.jetty.websocket.jsr356.server.WebSocketConfiguration;
+import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
 public class Start
 {
@@ -86,12 +83,10 @@ public class Start
 
 		bb.setServer(server);
 		bb.setContextPath("/");
-		bb.setBaseResource(Resource.newResource(new File("src/test/webapp")));
+		bb.setWar("src/test/webapp");
 
-		bb.setConfigurations(new Configuration[] {
-			new WebSocketConfiguration(),
-			new WebXmlConfiguration()
-		});
+
+		WebSocketServerContainerInitializer.configureContext(bb);
 
 		// START JMX SERVER
 		// MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
@@ -102,6 +97,7 @@ public class Start
 		server.setHandler(bb);
 
 		try {
+//			bb.dumpStdErr();
 			System.out.println(">>> STARTING EMBEDDED JETTY SERVER, PRESS ANY KEY TO STOP");
 			server.start();
 			System.in.read();
