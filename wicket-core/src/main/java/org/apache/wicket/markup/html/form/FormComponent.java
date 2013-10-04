@@ -1463,7 +1463,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param string
 	 * @return trimmed input if {@link #shouldTrimInput()} returns true, unchanged input otherwise
 	 */
-	protected final String trim(String string)
+	protected String trim(String string)
 	{
 		String trimmed = string;
 		if (trimmed != null && shouldTrimInput())
