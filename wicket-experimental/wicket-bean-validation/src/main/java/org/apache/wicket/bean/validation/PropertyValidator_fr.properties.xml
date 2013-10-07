@@ -21,7 +21,7 @@
 	<entry key="javax.validation.constraints.AssertTrue.message">Le champ '${label}' doit être true</entry>
 	<entry key="javax.validation.constraints.DecimalMax.message">Le champ '${label}' doit être inférieur ou égal à ${value}</entry>
 	<entry key="javax.validation.constraints.DecimalMin.message">Le champ '${label}' doit être supérieur ou égal à ${value}</entry>
-	<entry key="javax.validation.constraints.Digits.message">Le champ '${label}' valeur numérique hors limite (<${integer} chiffres>.<${fraction} chiffres> attendu)</entry>
+	<entry key="javax.validation.constraints.Digits.message">Le champ '${label}' valeur numérique hors limite (&lt;${integer} chiffres&gt;.&lt;${fraction} chiffres&gt; attendu)</entry>
 	<entry key="javax.validation.constraints.Future.message">Le champ '${label}' doit être dans le futur</entry>
 	<entry key="javax.validation.constraints.Max.message">Le champ '${label}' doit être inférieur ou égal à ${value}</entry>
 	<entry key="javax.validation.constraints.Min.message">Le champ '${label}' doit être supérieur ou égal à ${value}</entry>
