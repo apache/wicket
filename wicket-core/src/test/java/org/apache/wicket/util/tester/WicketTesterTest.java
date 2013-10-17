@@ -862,9 +862,10 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/" +
 			BlockedResourceLinkPage.class.getSimpleName() + ".html,xml";
-		tester.executeUrl(url);
-		assertNull("Comma separated extensions are not supported and wont find any resource",
-				tester.getLastResponse());
+
+		tester.getRequest().setURL(url);
+		assertFalse("Comma separated extensions are not supported and wont find any resource",
+			tester.processRequest());
 	}
 
 	/**
@@ -1240,5 +1241,29 @@ public class WicketTesterTest extends WicketTestCase
 		tester.startPage(new ComponentFeedbackResourceTestingPage());
 		Component label = tester.getComponentFromLastRenderedPage("label");
 		tester.assertComponentFeedbackMessage(label, "info.msg", null, new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO));
+	}
+
+	/**
+	 * WICKET-XXXX reuse WicketTester after preceeding exception
+	 */
+	@Test
+	public void reuseAfterException()
+	{
+		try
+		{
+			tester.startPage(new MockPageParameterPage(new PageParameters())
+			{
+				@Override
+				protected void onInitialize()
+				{
+					throw new IllegalStateException();
+				}
+			});
+		}
+		catch (Exception expected)
+		{
+		}
+
+		tester.startPage(new MockPageParameterPage(new PageParameters()));
 	}
 }

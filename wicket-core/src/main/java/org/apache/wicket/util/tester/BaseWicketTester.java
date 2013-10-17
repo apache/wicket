@@ -651,19 +651,24 @@ public class BaseWicketTester
 			preHeader = null;
 		}
 
+		applyRequest();
+		requestCycle.scheduleRequestHandlerAfterCurrent(null);
+
 		try
 		{
-			applyRequest();
-			requestCycle.scheduleRequestHandlerAfterCurrent(null);
-
 			if (!requestCycle.processRequestAndDetach())
 			{
 				return false;
 			}
-
+		}
+		finally
+		{
 			recordRequestResponse();
 			setupNextRequestCycle();
+		}
 
+		try
+		{
 			if (followRedirects && lastResponse.isRedirect())
 			{
 				if (redirectCount++ >= 100)
