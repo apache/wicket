@@ -1244,7 +1244,7 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * WICKET-XXXX reuse WicketTester after preceeding exception
+	 * WICKET-5389 reuse WicketTester after preceeding exception
 	 */
 	@Test
 	public void reuseAfterException()
