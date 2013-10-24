@@ -172,7 +172,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
 	@Override
-	protected final void onComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "iframe");
 
