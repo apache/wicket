@@ -406,7 +406,8 @@ public class ModalWindow extends Panel
 	 */
 	protected CharSequence getShowJavaScript()
 	{
-		return "Wicket.Window.create(settings).show();\n";
+		return "window.setTimeout(function(){\n" + "  Wicket.Window.create(settings).show();\n"
+			+ "}, 0);\n";
 	}
 
 	private static String getCloseJavacriptInternal()
