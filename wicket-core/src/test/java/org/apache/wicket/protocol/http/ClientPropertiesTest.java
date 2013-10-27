@@ -118,4 +118,19 @@ public class ClientPropertiesTest extends Assert
 
 		assertEquals(TimeZone.getTimeZone("GMT-3:00"), props.getTimeZone());
 	}
+
+	/**
+	 * WICKET-5396.
+	 */
+	@Test
+	public void integerToString()
+	{
+		ClientProperties props = new ClientProperties();
+
+		assertFalse(props.toString().contains("browserHeight"));
+
+		props.setBrowserHeight(666);
+
+		assertTrue(props.toString().contains("browserHeight=666"));
+	}
 }
