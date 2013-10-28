@@ -446,7 +446,7 @@ public class TagTester
 	/**
 	 * Static factory method for creating a <code>TagTester</code> based on a tag found by an
 	 * attribute with a specific value. Please note that it will return the first tag which matches
-	 * the criteria. It's therefore good for attributes suck as "id" or "wicket:id", but only if
+	 * the criteria. It's therefore good for attributes such as "id" or "wicket:id", but only if
 	 * "wicket:id" is unique in the specified markup.
 	 * 
 	 * @param markup
