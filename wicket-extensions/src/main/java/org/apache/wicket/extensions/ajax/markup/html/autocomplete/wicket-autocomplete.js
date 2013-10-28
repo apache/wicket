@@ -35,7 +35,7 @@
 		enterHidesWithNoSelection : false
 	};
 
-	Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
+	Wicket.AutoComplete=function(elementId, ajaxAttributes, cfg, indicatorId){
 		var KEY_TAB=9;
 		var KEY_ENTER=13;
 		var KEY_ESC=27;
@@ -348,55 +348,37 @@
 		}
 
 		function actualUpdateChoicesShowAll() {
-			showIndicator();
-
-			var paramName = cfg.parameterName;
-			var attrs = {
-				u: callbackUrl,
-				pre: [ function (attributes) {
-					var activeIsInitial = (document.activeElement === initialElement);
-					var elementVal =  Wicket.$(elementId).value;
-					var hasMinimumLength = elementVal.length >= minInputLength;
-
-					var result = hasMinimumLength && activeIsInitial;
-					if (!result) {
-						hideAutoComplete();
-					}
-					return result;
-				}],
-				ep: {},
-				wr: false,
-				dt: 'html',
-				sh: [ doUpdateAllChoices ]
-			};
-			attrs.ep[paramName] = '';
-			Wicket.Ajax.ajax(attrs);
+            prepareAndExecuteAjaxUpdate(doUpdateAllChoices, '');
 		}
 
 		function actualUpdateChoices() {
+            prepareAndExecuteAjaxUpdate(doUpdateChoices, Wicket.$(elementId).value);
+		}
+
+        // WICKET-5314
+        function prepareAndExecuteAjaxUpdate(successHandler, currentInput){
 			showIndicator();
 
-			var paramName = cfg.parameterName;
-			var attrs = {
-				u: callbackUrl,
-				pre: [ function (attributes) {
-					var activeIsInitial = (document.activeElement === initialElement);
-					var elementVal =  Wicket.$(elementId).value;
-					var hasMinimumLength = elementVal.length >= minInputLength;
-					var result = hasMinimumLength && activeIsInitial;
-					if (!result) {
-						hideAutoComplete();
-					}
-					return result;
-				}],
-				ep: {},
-				wr: false,
-				dt: 'html',
-				sh: [ doUpdateChoices ]
-			};
-			attrs.ep[paramName] = Wicket.$(elementId).value;
-			Wicket.Ajax.ajax(attrs);
-		}
+            var settings = jQuery.extend(true, {
+                pre: [ function (attributes) {
+                    var activeIsInitial = (document.activeElement === initialElement);
+                    var elementVal =  Wicket.$(elementId).value;
+                    var hasMinimumLength = elementVal.length >= minInputLength;
+
+                    var result = hasMinimumLength && activeIsInitial;
+                    if (!result) {
+                        hideAutoComplete();
+                    }
+                    return result;
+                }],
+                ep: {},
+                sh: [ successHandler ]
+            }, ajaxAttributes);
+
+            settings.ep[cfg.parameterName] = currentInput;
+
+            Wicket.Ajax.ajax(settings);
+        }
 
 		function showIndicator() {
 			Wicket.DOM.show(indicatorId);
