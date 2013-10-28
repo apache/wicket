@@ -53,7 +53,7 @@ public abstract class AbstractResource implements IResource
 
 	static
 	{
-		INTERNAL_HEADERS = new HashSet<String>();
+		INTERNAL_HEADERS = new HashSet<>();
 		INTERNAL_HEADERS.add("server");
 		INTERNAL_HEADERS.add("date");
 		INTERNAL_HEADERS.add("expires");
@@ -698,25 +698,8 @@ public abstract class AbstractResource implements IResource
 					webResponse.addHeader(name, value);
 				}
 			}
-
-			// 6. Flush the response
-			flushResponseAfterHeaders(webResponse);
 		}
 	}
-
-	/**
-	 * Flushes the response after setting the headers.
-	 * This is necessary for Firefox if this resource is an image,
-	 * otherwise it messes up other images on page.
-	 *
-	 * @param response
-	 *      the current web response
-	 */
-	protected void flushResponseAfterHeaders(final WebResponse response)
-	{
-		response.flush();
-	}
-
 	/**
 	 * Callback invoked when resource data needs to be written to response. Subclass needs to
 	 * implement the {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)}
