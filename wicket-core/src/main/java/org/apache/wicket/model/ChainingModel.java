@@ -17,7 +17,6 @@
 package org.apache.wicket.model;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +40,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 
 	public ChainingModel(final Object modelObject)
 	{
-		Args.notNull(modelObject, "modelObject");
-
 		if (modelObject instanceof Session)
 		{
 			LOG.warn("It is not a good idea to reference the Session instance "
