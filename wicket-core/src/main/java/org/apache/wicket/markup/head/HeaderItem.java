@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * {@code HeaderItem} represents anything that can be rendered into the header. This can, for
@@ -32,7 +33,7 @@ import org.apache.wicket.request.Response;
  * 
  * @author papegaaij
  */
-public abstract class HeaderItem
+public abstract class HeaderItem implements IClusterable
 {
 	/**
 	 * @return The dependencies this {@code HeaderItem} has. Dependencies will always be rendered
