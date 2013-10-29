@@ -194,6 +194,28 @@ public class XmlPullParserTest extends Assert
 	}
 
 	/**
+	 * WICKET-5398 parsing from String
+	 */
+	@Test
+	public void encodingOfString() throws Exception
+	{
+		// use an encoding that is not the system's file encoding
+		final String encoding;
+		if ("UTF-8".equals(System.getProperty("file.encoding")))
+		{
+			encoding = "ISO-8859-1";
+		}
+		else
+		{
+			encoding = "UTF-8";
+		}
+
+		final XmlPullParser parser = new XmlPullParser();
+		parser.parse(String.format("<?xml encoding='%s' ?><span id='umlaut-äöü'></span>", encoding));
+		assertEquals("umlaut-äöü", parser.nextTag().getAttribute("id"));
+	}
+
+	/**
 	 * 
 	 * @throws Exception
 	 */
