@@ -32,8 +32,10 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * The debug bar is for use during development. It allows contributors to add useful functions or
@@ -125,7 +127,7 @@ public class DebugBar extends DevUtilsPanel
 			section.add(AttributeModifier.append("style", "display:none").setSeparator(";"));
 		}
 
-		List<IDebugBarContributor> contributors = getContributors();
+		List<IDebugBarContributor> contributors = getContributors(getApplication());
 
 		section.add(new ListView<IDebugBarContributor>("contributors", contributors)
 		{
@@ -163,7 +165,7 @@ public class DebugBar extends DevUtilsPanel
 	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
-		response.render(CssHeaderItem.forReference(new PackageResourceReference(DebugBar.class,
+		response.render(CssHeaderItem.forReference(new CssResourceReference(DebugBar.class,
 			"wicket-debugbar.css")));
 		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
 			DebugBar.class, "wicket-debugbar.js")));
@@ -192,24 +194,23 @@ public class DebugBar extends DevUtilsPanel
 	public static void registerContributor(final IDebugBarContributor contrib,
 		final Application application)
 	{
-		if (contrib == null)
-		{
-			throw new IllegalArgumentException("contrib can not be null");
-		}
+		Args.notNull(contrib, "contrib");
 
 		List<IDebugBarContributor> contributors = getContributors(application);
 		contributors.add(contrib);
-		application.setMetaData(CONTRIBS_META_KEY, contributors);
+		setContributors(contributors, application);
 	}
 
-	private static List<IDebugBarContributor> getContributors()
-	{
-		return getContributors(Application.get());
-	}
-
-	private static List<IDebugBarContributor> getContributors(final Application application)
+	public static List<IDebugBarContributor> getContributors(final Application application)
 	{
 		List<IDebugBarContributor> list = application.getMetaData(CONTRIBS_META_KEY);
 		return list == null ? new ArrayList<IDebugBarContributor>() : list;
+	}
+
+	public static void setContributors(List<IDebugBarContributor> contributors, Application application)
+	{
+		Args.notNull(application, "application");
+
+		application.setMetaData(CONTRIBS_META_KEY, contributors);
 	}
 }
