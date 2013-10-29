@@ -1071,23 +1071,7 @@
 			 * when there are scripts which require manual call of 'FunctionExecutor#notify()'
 			 * @type {RegExp}
 			 */
-			var scriptSplitterR = new RegExp("(\\(function\\(\\)\\{.*?}\\)\\(\\);)");
-
-			/**
-			 * Removes all empty items from an Array of String's
-			 * @param original The array is empty string elements
-			 * @returns {Array[String]} An array that has no empty elements
-			 */
-			// Needed because String.split(scriptSplitterR) returns something like ["", "script1", "", "script2", ""]
-			var cleanArray = function (original) {
-				var result = [];
-				for(var i = 0; i < original.length; i++){
-					if (original[i]) {
-						result.push(original[i]);
-					}
-				}
-				return result;
-			};
+			var scriptSplitterR = new RegExp("\\(function\\(\\)\\{.*?}\\)\\(\\);", 'gi');
 
 			// get the javascript body
 			var text = Wicket.DOM.text(node);
@@ -1136,7 +1120,11 @@
 			// by invoking identifier();. This allows usage of some asynchronous/deferred logic before the next script
 			// See WICKET-5039
 			if (scriptWithIdentifierR.test(text)) {
-				var scripts = cleanArray(text.split(scriptSplitterR));
+				var scripts = [];
+				var scr;
+				while ( (scr = scriptSplitterR.exec(text) ) != null ) {
+					scripts.push(scr[0]);
+				}
 
 				for (var s = 0; s < scripts.length; s++) {
 					var script = scripts[s];
