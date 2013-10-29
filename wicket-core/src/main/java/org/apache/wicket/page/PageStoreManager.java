@@ -307,6 +307,13 @@ public class PageStoreManager extends AbstractPageManager
 				store.unbind(sessionId);
 			}
 		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			// see https://issues.apache.org/jira/browse/WICKET-5390
+			return false;
+		}
 	}
 
 	/**
