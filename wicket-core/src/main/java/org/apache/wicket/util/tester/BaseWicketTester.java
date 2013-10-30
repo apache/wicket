@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -974,7 +973,7 @@ public class BaseWicketTester
 	 */
 	public List<MockHttpServletRequest> getPreviousRequests()
 	{
-		return Collections.unmodifiableList(previousRequests);
+		return previousRequests;
 	}
 
 	/**
@@ -982,7 +981,7 @@ public class BaseWicketTester
 	 */
 	public List<MockHttpServletResponse> getPreviousResponses()
 	{
-		return Collections.unmodifiableList(previousResponses);
+		return previousResponses;
 	}
 
 	/**
