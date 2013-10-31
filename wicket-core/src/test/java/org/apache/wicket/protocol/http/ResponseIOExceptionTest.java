@@ -125,6 +125,13 @@ public class ResponseIOExceptionTest extends Assert
 		}
 
 		@Override
+		public void write(byte[] array, int offset, int length)
+		{
+			throw new ResponseIOException(new SocketException(
+				"Connection reset by peer: socket write error"));
+		}
+
+		@Override
 		public void write(CharSequence sequence)
 		{
 			throw new ResponseIOException(new SocketException(
