@@ -42,6 +42,9 @@ git tag -d $tag
 
 svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m "Reverting release $version"
 
+find . -name "*.releaseBackup" -exec rm {} \;
+rm release.properties release.txt > /dev/null
+
 echo ""
 echo "Cleaned up the release"
 echo ""
