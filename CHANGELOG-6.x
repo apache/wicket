@@ -2,6 +2,44 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.12.0
+
+** Bug
+
+    * [WICKET-4862] - AjaxPagingNavigationLink and AjaxPagingNavigationIncrementLink output inline onclick attributes in addition to Wicket.Ajax.ajax event registration
+    * [WICKET-5101] - Could not open second modal window after closing first
+    * [WICKET-5356] - AutoCompleteSettings.setShowListOnEmptyInput(true) is not working anymore
+    * [WICKET-5359] - org.apache.wicket.util.string.StringValue#equals broken
+    * [WICKET-5366] - ResourceAggregator looses information about priority/filtering/... when using a bundle
+    * [WICKET-5369] - Can't set a cookie using CookieUtils during an ajax request due to java.lang.ClassCastException: org.apache.wicket.ajax.AbstractAjaxResponse$AjaxResponse cannot be cast to org.apache.wicket.request.http.WebResponse
+    * [WICKET-5374] - SourcesPage fails on resources with non-ASCII characters
+    * [WICKET-5375] - Improve ConcatBundleResource error handling when a resource is missing
+    * [WICKET-5378] - AutoCompleteTextField inside a ModalWindow shows auto complete dropdown in the wrong location
+    * [WICKET-5379] - IE7: AutoCompleteTextField inside a ModalWindow shows auto complete dropdown behind ModalWindow
+    * [WICKET-5380] - Wicket rebinds the SessionEntry session attribute and this causes problems in Glassfish
+    * [WICKET-5382] - AutoComplete JavaScript errors
+    * [WICKET-5385] - wicket-bean-validation PropertyValidator_fr.properties.xml : org.xml.sax.SAXParseException
+    * [WICKET-5386] - ChainingModel should not check if the modelObject given as argument is null
+    * [WICKET-5397] - target.prependJavaScript and JQuery-Animation in IE8
+    * [WICKET-5398] - XmlPullParser fails to properly parse from String with encoding declaration
+
+** Improvement
+
+    * [WICKET-5346] - Support MultiFileUploadField in FormTester
+    * [WICKET-5362] - Add support for parsing IE 11 user agent
+    * [WICKET-5376] - Log the exception if the application cannot start properly
+    * [WICKET-5381] - Add Wicket.Event.unsubscribe method
+    * [WICKET-5384] - Allow form components to trim the input themselves
+    * [WICKET-5388] - Allow DebugBar contributors to be removed
+    * [WICKET-5390] - Session management doesn't work with Jetty's JDBCSessionManager 
+    * [WICKET-5395] - HeaderItem to be Serializable
+
+** Wish
+
+    * [WICKET-5393] - Remove 'final' from InlineFrame#onComponentTag()
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.11.0
 
 ** Bug
