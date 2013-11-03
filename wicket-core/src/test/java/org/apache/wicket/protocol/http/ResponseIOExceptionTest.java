@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.net.SocketException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -79,7 +81,8 @@ public class ResponseIOExceptionTest extends Assert
 		TestRequestCycleListener testRequestCycleListener = new TestRequestCycleListener();
 		tester.getApplication().getRequestCycleListeners().add(testRequestCycleListener);
 		tester.startResource(new ResourceStreamResource(new StringResourceStream("asdf")));
-		assertTrue(testRequestCycleListener.lastExceptionRquestHandlerResolved instanceof EmptyRequestHandler);
+		assertThat(testRequestCycleListener.lastExceptionRquestHandlerResolved,
+				instanceOf(EmptyRequestHandler.class));
 	}
 
 	class TestRequestCycleListener extends AbstractRequestCycleListener
@@ -88,7 +91,7 @@ public class ResponseIOExceptionTest extends Assert
 
 		@Override
 		public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
-			Exception exception)
+				Exception exception)
 		{
 			lastExceptionRquestHandlerResolved = handler;
 		}
@@ -105,7 +108,7 @@ public class ResponseIOExceptionTest extends Assert
 		 * @param httpServletResponse
 		 */
 		public ProblematicResponse(ServletWebRequest webRequest,
-			HttpServletResponse httpServletResponse)
+				HttpServletResponse httpServletResponse)
 		{
 			super(webRequest, httpServletResponse);
 		}
@@ -114,14 +117,14 @@ public class ResponseIOExceptionTest extends Assert
 		public void flush()
 		{
 			throw new ResponseIOException(new SocketException(
-				"Connection reset by peer: socket write error"));
+					"Connection reset by peer: socket write error"));
 		}
 
 		@Override
 		public void write(byte[] array)
 		{
 			throw new ResponseIOException(new SocketException(
-				"Connection reset by peer: socket write error"));
+					"Connection reset by peer: socket write error"));
 		}
 
 		@Override
@@ -135,7 +138,7 @@ public class ResponseIOExceptionTest extends Assert
 		public void write(CharSequence sequence)
 		{
 			throw new ResponseIOException(new SocketException(
-				"Connection reset by peer: socket write error"));
+					"Connection reset by peer: socket write error"));
 		}
 	}
 }

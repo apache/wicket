@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.model;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.junit.Ignore;
@@ -29,15 +31,16 @@ import org.junit.Test;
 public class PropertyModelTest extends WicketTestCase
 {
 	/**
-	 * Interface for testing the property assignment with an <code>null</code> interface property.
+	 * Interface for testing the property assignment with an <code>null</code>
+	 * interface property.
 	 */
 	public static interface IAddress
 	{
 	}
 
 	/**
-	 * Abstract class for testing the property assignment with an <code>null</code> abstract class
-	 * property.
+	 * Abstract class for testing the property assignment with an
+	 * <code>null</code> abstract class property.
 	 */
 	public static abstract class AbstractAddress implements IAddress
 	{
@@ -46,15 +49,16 @@ public class PropertyModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Concrete class for testing the property assignment with an <code>null</code> concrete class
-	 * property.
+	 * Concrete class for testing the property assignment with an
+	 * <code>null</code> concrete class property.
 	 */
 	public static class ConcreteAddress extends AbstractAddress
 	{
 	}
 
 	/**
-	 * Person class for keeping the various different references for use in the test cases.
+	 * Person class for keeping the various different references for use in the
+	 * test cases.
 	 */
 	public static class Person
 	{
@@ -69,9 +73,9 @@ public class PropertyModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests setting a value on a {@link PropertyModel} when a property is <code>null</code> and an
-	 * interface type. This should end in an exception because Wicket can't decide what to
-	 * instantiate on behalf of the program.
+	 * Tests setting a value on a {@link PropertyModel} when a property is
+	 * <code>null</code> and an interface type. This should end in an exception
+	 * because Wicket can't decide what to instantiate on behalf of the program.
 	 */
 	@Test
 	public void setWithNullPathInterface()
@@ -90,9 +94,10 @@ public class PropertyModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests setting a value on a {@link PropertyModel} when a property is <code>null</code> and an
-	 * abstract class type. This should end in an exception because Wicket can't decide what to
-	 * instantiate on behalf of the program.
+	 * Tests setting a value on a {@link PropertyModel} when a property is
+	 * <code>null</code> and an abstract class type. This should end in an
+	 * exception because Wicket can't decide what to instantiate on behalf of
+	 * the program.
 	 */
 	@Test(expected = WicketRuntimeException.class)
 	public void setWithNullPathAbstract()
@@ -103,9 +108,10 @@ public class PropertyModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests setting a value on a {@link PropertyModel} when a property is <code>null</code> and a
-	 * concrete type. This should work because Wicket can decide what to instantiate on behalf of
-	 * the program: the concrete class.
+	 * Tests setting a value on a {@link PropertyModel} when a property is
+	 * <code>null</code> and a concrete type. This should work because Wicket
+	 * can decide what to instantiate on behalf of the program: the concrete
+	 * class.
 	 */
 	@Test
 	public void setWithNullPathConcrete()
@@ -113,18 +119,17 @@ public class PropertyModelTest extends WicketTestCase
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "concreteAddress.street");
 		model.setObject("foo");
-		assertNotNull("concreteAddress", person.concreteAddress);
-		assertTrue(person.concreteAddress instanceof ConcreteAddress);
+		assertThat(person.concreteAddress, instanceOf(ConcreteAddress.class));
 		assertEquals("foo", person.concreteAddress.street);
 	}
 
 	/**
-	 * Tests setting a value on a {@link PropertyModel} when a final (constant!) property is
-	 * <code>null</code> and a concrete type. This should end in an exception because Wicket can't
-	 * assign to the property, since it is final.
+	 * Tests setting a value on a {@link PropertyModel} when a final (constant!)
+	 * property is <code>null</code> and a concrete type. This should end in an
+	 * exception because Wicket can't assign to the property, since it is final.
 	 * 
-	 * This test has been disabled as it doesn't work on Mac OS X's 1.4 jdk (assignment doesn't
-	 * fail).
+	 * This test has been disabled as it doesn't work on Mac OS X's 1.4 jdk
+	 * (assignment doesn't fail).
 	 */
 	@Test(expected = WicketRuntimeException.class)
 	@Ignore
@@ -137,8 +142,9 @@ public class PropertyModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests setting a value on a null, final property using a {@link PropertyModel}. This test
-	 * should pass when run using JDK 1.5 or newer.
+	 * Tests setting a value on a null, final property using a
+	 * {@link PropertyModel}. This test should pass when run using JDK 1.5 or
+	 * newer.
 	 */
 	@Test
 	public void setWithNullPathFinalJdk15()
@@ -147,8 +153,7 @@ public class PropertyModelTest extends WicketTestCase
 		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");
 
 		model.setObject("foo");
-		assertNotNull("finalAddress", person.finalAddress);
-		assertTrue(person.finalAddress instanceof ConcreteAddress);
+		assertThat(person.finalAddress, instanceOf(ConcreteAddress.class));
 		assertEquals("foo", person.finalAddress.street);
 	}
 }

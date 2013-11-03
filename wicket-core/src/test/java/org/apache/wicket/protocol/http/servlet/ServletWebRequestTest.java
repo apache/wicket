@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,9 +43,10 @@ public class ServletWebRequestTest extends Assert
 {
 
 	/**
-	 * Tests that {@link ServletWebRequest#getClientUrl()} returns the current url + the query
-	 * string when this is not error dispatched request. When the request is error dispatched it
-	 * returns just the request uri to the error page without the query string
+	 * Tests that {@link ServletWebRequest#getClientUrl()} returns the current
+	 * url + the query string when this is not error dispatched request. When
+	 * the request is error dispatched it returns just the request uri to the
+	 * error page without the query string
 	 */
 	@Test
 	public void wicket3599()
@@ -57,8 +60,8 @@ public class ServletWebRequestTest extends Assert
 		assertEquals("request/Uri?some=parameter", clientUrl.toString());
 
 		// simulates a request that has errors metadata
-		httpRequest.setAttribute("javax.servlet.error.request_uri",
-			httpRequest.getContextPath() + "/any/source/of/error");
+		httpRequest.setAttribute("javax.servlet.error.request_uri", httpRequest.getContextPath()
+				+ "/any/source/of/error");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
@@ -66,7 +69,8 @@ public class ServletWebRequestTest extends Assert
 	}
 
 	/**
-	 * <a href="https://issues.apache.org/jira/browse/WICKET-4168">WICKET-4168</a>
+	 * <a
+	 * href="https://issues.apache.org/jira/browse/WICKET-4168">WICKET-4168</a>
 	 */
 	@Test
 	public void testClientURLIsContextRelativeInErrorResponses()
@@ -88,7 +92,8 @@ public class ServletWebRequestTest extends Assert
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4138
 	 * 
-	 * Relative Urls should be calculated against 'javax.servlet.forward.request_uri'
+	 * Relative Urls should be calculated against
+	 * 'javax.servlet.forward.request_uri'
 	 */
 	@Test
 	public void parseForwardAttributes()
@@ -142,9 +147,10 @@ public class ServletWebRequestTest extends Assert
 	}
 
 	/**
-	 * Assert that ServletWebRequest#getClientUrl() will throw an AbortWithHttpErrorCodeException
-	 * with error code 400 (Bad Request) when an Ajax request doesn't provide the base url.
-	 *
+	 * Assert that ServletWebRequest#getClientUrl() will throw an
+	 * AbortWithHttpErrorCodeException with error code 400 (Bad Request) when an
+	 * Ajax request doesn't provide the base url.
+	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-4841
 	 */
 	@Test
@@ -166,9 +172,10 @@ public class ServletWebRequestTest extends Assert
 	}
 
 	/**
-	 * Tests that {@link ServletWebRequest#getClientUrl()} returns the current url + the query
-	 * string when this is not forward dispatched request. When the request is error dispatched it
-	 * returns just the request uri to the error page without the query string
+	 * Tests that {@link ServletWebRequest#getClientUrl()} returns the current
+	 * url + the query string when this is not forward dispatched request. When
+	 * the request is error dispatched it returns just the request uri to the
+	 * error page without the query string
 	 */
 	@Test
 	public void wicket5203()
@@ -183,8 +190,8 @@ public class ServletWebRequestTest extends Assert
 		assertEquals("request/Path?some=parameter", clientUrl.toString());
 
 		// simulates a request that has errors metadata
-		httpRequest.setAttribute("javax.servlet.error.request_uri",
-				httpRequest.getContextPath() + '/' + filterPath + "/any/source/of/error");
+		httpRequest.setAttribute("javax.servlet.error.request_uri", httpRequest.getContextPath()
+				+ '/' + filterPath + "/any/source/of/error");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, filterPath);
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
@@ -200,7 +207,8 @@ public class ServletWebRequestTest extends Assert
 		String filterPath = "filterPath";
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
 		String looksLikeFullUrl = "/foo://:/";
-		httpRequest.setURL("http://localhost" + '/' + httpRequest.getContextPath() + '/' + filterPath + looksLikeFullUrl);
+		httpRequest.setURL("http://localhost" + '/' + httpRequest.getContextPath() + '/'
+				+ filterPath + looksLikeFullUrl);
 
 		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, filterPath);
 		assertEquals(looksLikeFullUrl, webRequest.getClientUrl().toString());
@@ -212,12 +220,12 @@ public class ServletWebRequestTest extends Assert
 
 		private CustomRequestPage()
 		{
-			assertTrue(getRequest() instanceof CustomServletWebRequest);
+			assertThat(getRequest(), instanceOf(CustomServletWebRequest.class));
 		}
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+				Class<?> containerClass)
 		{
 			return new StringResourceStream("<html></html>");
 		}

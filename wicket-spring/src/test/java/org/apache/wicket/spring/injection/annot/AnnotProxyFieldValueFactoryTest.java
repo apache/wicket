@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.lang.reflect.Field;
 
 import org.apache.wicket.proxy.ILazyInitProxy;
@@ -89,7 +91,7 @@ public class AnnotProxyFieldValueFactoryTest extends Assert
 		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
 		assertTrue(locator.getBeanType().equals(Bean.class));
 		assertTrue(locator.getSpringContextLocator() == mockCtxLocator);
-		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
+		assertThat(factory.getFieldValue(field, obj), instanceOf(ILazyInitProxy.class));
 
 		field = obj.getClass().getDeclaredField("beanByName");
 		proxy = factory.getFieldValue(field, obj);
@@ -97,11 +99,12 @@ public class AnnotProxyFieldValueFactoryTest extends Assert
 		assertTrue(locator.getBeanName().equals("somebean"));
 		assertTrue(locator.getBeanType().equals(Bean2.class));
 		assertTrue(locator.getSpringContextLocator() == mockCtxLocator);
-		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
+		assertThat(factory.getFieldValue(field, obj), instanceOf(ILazyInitProxy.class));
 	}
 
 	/**
-	 * test the cache, make sure the same proxy is returned for the same dependency it represents
+	 * test the cache, make sure the same proxy is returned for the same
+	 * dependency it represents
 	 * 
 	 * @throws Exception
 	 */
@@ -148,9 +151,10 @@ public class AnnotProxyFieldValueFactoryTest extends Assert
 		{
 			final Bean bean = (Bean)factory.getFieldValue(field, obj);
 			/*
-			 * returned bean will not be null even though the bean is not found. what we get instead
-			 * is a proxy. we invoke a method on the proxy in order to cause it to try to locate the
-			 * bean and that is when it will fail
+			 * returned bean will not be null even though the bean is not found.
+			 * what we get instead is a proxy. we invoke a method on the proxy
+			 * in order to cause it to try to locate the bean and that is when
+			 * it will fail
 			 */
 			bean.method();
 			fail();
