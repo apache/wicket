@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
@@ -85,46 +87,47 @@ public class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
-	 * Tests that {@link CryptoMapper} wraps the original request mapper and encrypts the url
-	 * produced by it
+	 * Tests that {@link CryptoMapper} wraps the original request mapper and
+	 * encrypts the url produced by it
 	 */
 	@Test
 	public void encrypt()
 	{
 		Url url = mapper.mapHandler(new RenderPageRequestHandler(new PageProvider(
-			DummyHomePage.class, new PageParameters())));
+				DummyHomePage.class, new PageParameters())));
 		assertEquals(ENCRYPTED_URL, url.toString());
 	}
 
 	/**
-	 * Tests that {@link CryptoMapper} decrypts the passed url and pass it to the original request
-	 * mapper which resolves the page from the application mounts
+	 * Tests that {@link CryptoMapper} decrypts the passed url and pass it to
+	 * the original request mapper which resolves the page from the application
+	 * mounts
 	 */
 	@Test
 	public void decrypt()
 	{
 		Request request = getRequest(Url.parse(ENCRYPTED_URL));
 		IRequestHandler requestHandler = mapper.mapRequest(request);
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(DummyHomePage.class, handler.getPageClass());
 	}
 
 	/**
-	 * Verifies that the home page can be reached with non-encrypted query parameters.
-	 * https://issues.apache.org/jira/browse/WICKET-4345
+	 * Verifies that the home page can be reached with non-encrypted query
+	 * parameters. https://issues.apache.org/jira/browse/WICKET-4345
 	 */
 	@Test
 	public void decryptHomePageWithNonEncryptedQueryParameters()
 	{
 		Request request = getRequest(Url.parse("?named1=value1"));
 		IRequestHandler requestHandler = mapper.mapRequest(request);
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
@@ -159,16 +162,16 @@ public class CryptoMapperTest extends AbstractMapperTest
 		expectedParameters.set(0, "indexedValue1");
 		expectedParameters.set(1, "indexedValue2");
 		RenderPageRequestHandler renderPageRequestHandler = new RenderPageRequestHandler(
-			new PageProvider(DummyHomePage.class, expectedParameters));
+				new PageProvider(DummyHomePage.class, expectedParameters));
 		Url url = mapper.mapHandler(renderPageRequestHandler);
 		// System.err.println(url.toString());
 		assertEquals(expectedEncrypted, url.toString());
 
 		Request request = getRequest(url);
 		IRequestHandler requestHandler = mapper.mapRequest(request);
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(DummyHomePage.class, handler.getPageClass());
@@ -177,8 +180,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
-	 * When the home page url is requested, with parameters, the url will contain only page
-	 * parameters. It should not be encrypted, otherwise we get needless redirects.
+	 * When the home page url is requested, with parameters, the url will
+	 * contain only page parameters. It should not be encrypted, otherwise we
+	 * get needless redirects.
 	 */
 	@Test
 	public void homePageWithParameters()
@@ -188,15 +192,15 @@ public class CryptoMapperTest extends AbstractMapperTest
 		expectedParameters.add("namedKey1", "namedValue1");
 
 		RenderPageRequestHandler renderPageRequestHandler = new RenderPageRequestHandler(
-			new PageProvider(tester.getApplication().getHomePage(), expectedParameters));
+				new PageProvider(tester.getApplication().getHomePage(), expectedParameters));
 		Url url = mapper.mapHandler(renderPageRequestHandler);
 		assertEquals(expectedEncrypted, url.toString());
 
 		Request request = getRequest(url);
 		IRequestHandler requestHandler = mapper.mapRequest(request);
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
@@ -211,7 +215,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	public void urlResourceReference()
 	{
 		UrlResourceReference resource = new UrlResourceReference(
-			Url.parse("http://wicket.apache.org/"));
+				Url.parse("http://wicket.apache.org/"));
 		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
 
 		assertEquals("http://wicket.apache.org/", url.toString(StringMode.FULL));
@@ -224,16 +228,16 @@ public class CryptoMapperTest extends AbstractMapperTest
 	public void resourceReference()
 	{
 		PackageResourceReference resource = new PackageResourceReference(getClass(),
-			"crypt/crypt.txt");
+				"crypt/crypt.txt");
 		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
 
 		Request request = getRequest(url);
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
@@ -247,7 +251,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	public void resourceReferenceWithModifiedSegments()
 	{
 		PackageResourceReference resource = new PackageResourceReference(getClass(),
-			"crypt/crypt.txt");
+				"crypt/crypt.txt");
 		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
 		url.getSegments().remove(url.getSegments().size() - 1);
 		url.getSegments().add("modified-crypt.txt");
@@ -256,9 +260,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
@@ -272,7 +276,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	public void resourceReferenceWithMoreSegments()
 	{
 		PackageResourceReference resource = new PackageResourceReference(getClass(),
-			"crypt/crypt.txt");
+				"crypt/crypt.txt");
 		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
 		url.getSegments().remove(url.getSegments().size() - 1);
 		url.getSegments().add("more");
@@ -282,9 +286,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
@@ -298,7 +302,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	public void resourceReferenceWithLessSegments()
 	{
 		PackageResourceReference resource = new PackageResourceReference(getClass(),
-			"crypt/crypt.txt");
+				"crypt/crypt.txt");
 		Url url = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
 		url.getSegments().remove(url.getSegments().size() - 1);
 		url.getSegments().remove(url.getSegments().size() - 1);
@@ -308,9 +312,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
@@ -327,7 +331,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
 		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE);
+				ILinkListener.INTERFACE);
 
 		Url url = mapper.mapHandler(handler);
 		url.addQueryParameter("q", "foo");
@@ -336,9 +340,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 
 		assertEquals("foo", ((RequestSettingRequestHandler)requestHandler).getRequest().getUrl()
-			.getQueryParameterValue("q").toString());
+				.getQueryParameterValue("q").toString());
 	}
 }

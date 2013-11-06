@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.util.Arrays;
 
 import org.apache.wicket.Page;
@@ -62,11 +64,9 @@ public class AjaxEditableTest extends WicketTestCase
 		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
 
 		AbstractAjaxBehavior labelBehavior = (AbstractAjaxBehavior)ajaxLabel.get("label")
-			.getBehaviors()
-			.get(0);
+				.getBehaviors().get(0);
 		AbstractAjaxBehavior editorBehavior = (AbstractAjaxBehavior)ajaxLabel.get("editor")
-			.getBehaviors()
-			.get(0);
+				.getBehaviors().get(0);
 
 		// "click" on the label and check for valid visibility
 		tester.executeBehavior(labelBehavior);
@@ -80,8 +80,8 @@ public class AjaxEditableTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests whether disabling/enabling an AjaxEditableLabel also disables/enables the
-	 * <code>LabelBehavior</code>
+	 * Tests whether disabling/enabling an AjaxEditableLabel also
+	 * disables/enables the <code>LabelBehavior</code>
 	 */
 	@SuppressWarnings({ "unchecked" })
 	@Test
@@ -110,8 +110,8 @@ public class AjaxEditableTest extends WicketTestCase
 		// check for the *presence* of the ajax onclick call
 
 		// TODO Wicket.next - re-enable
-// markup = tester.getTagById(ajaxLabel.getMarkupId()).getMarkup();
-// assertTrue(markup.matches(".*onclick=\"var wcall=Wicket.Ajax.get.*"));
+		// markup = tester.getTagById(ajaxLabel.getMarkupId()).getMarkup();
+		// assertTrue(markup.matches(".*onclick=\"var wcall=Wicket.Ajax.get.*"));
 	}
 
 	/**
@@ -123,7 +123,6 @@ public class AjaxEditableTest extends WicketTestCase
 	{
 		Page page = tester.getLastRenderedPage();
 		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
-		AjaxLink<Void> toggle = (AjaxLink<Void>)page.get("toggle");
 
 		tester.assertInvisible("ajaxLabel:editor");
 		tester.assertVisible("ajaxLabel:label");
@@ -148,7 +147,8 @@ public class AjaxEditableTest extends WicketTestCase
 	}
 
 	/**
-	 * <a href="https://issues.apache.org/jira/browse/WICKET-4259">WICKET-4259</a>
+	 * <a
+	 * href="https://issues.apache.org/jira/browse/WICKET-4259">WICKET-4259</a>
 	 */
 	@Test
 	public void testModelObjectClassInference()
@@ -163,17 +163,15 @@ public class AjaxEditableTest extends WicketTestCase
 		}
 		IModel<Integer> integerModel = new IntegerModel();
 		AjaxEditableLabel<Integer> editableLabel = new AjaxEditableLabel<Integer>("test",
-			integerModel);
+				integerModel);
 		editableLabel.getEditor().setVisible(true);
 
-		IWritableRequestParameters postParameters = (IWritableRequestParameters)tester.getRequestCycle()
-			.getRequest()
-			.getPostParameters();
+		IWritableRequestParameters postParameters = (IWritableRequestParameters)tester
+				.getRequestCycle().getRequest().getPostParameters();
 		postParameters.setParameterValues(editableLabel.getEditor().getInputName(),
-			Arrays.asList(new StringValue[] { StringValue.valueOf("5") }));
+				Arrays.asList(new StringValue[] { StringValue.valueOf("5") }));
 		editableLabel.getEditor().processInput();
 
-		assertNotNull(integerModel.getObject());
-		assertTrue(integerModel.getObject() instanceof Integer);
+		assertThat(integerModel.getObject(), instanceOf(Integer.class));
 	}
 }

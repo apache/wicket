@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -24,7 +26,6 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -34,9 +35,11 @@ public class WebPageTest extends WicketTestCase
 {
 
 	/**
-	 * Asserting newly created pages get a new page id in order to be identified latter.
+	 * Asserting newly created pages get a new page id in order to be identified
+	 * latter.
 	 * 
-	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3892">WICKET-3892</a>
+	 * @see <a
+	 *      href="https://issues.apache.org/jira/browse/WICKET-3892">WICKET-3892</a>
 	 */
 	@Test
 	public void increaseNewlyCreatedPageId()
@@ -48,13 +51,13 @@ public class WebPageTest extends WicketTestCase
 		tester.assertRenderedPage(TargetPage.class);
 		int targetPageId = tester.getLastRenderedPage().getPageId();
 
-		Assert.assertTrue(mainPageId != targetPageId);
+		assertTrue(mainPageId != targetPageId);
 
 		IManageablePage mainPage = tester.getSession().getPageManager().getPage(mainPageId);
 		IManageablePage targetPage = tester.getSession().getPageManager().getPage(targetPageId);
 
-		Assert.assertTrue(mainPage instanceof MainPage);
-		Assert.assertTrue(targetPage instanceof TargetPage);
+		assertThat(mainPage, instanceOf(MainPage.class));
+		assertThat(targetPage, instanceOf(TargetPage.class));
 	}
 
 	/** */
@@ -77,10 +80,10 @@ public class WebPageTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+				Class<?> containerClass)
 		{
 			return new StringResourceStream(
-				"<html><body><a wicket:id=\"mainLink\"></a></body></html>");
+					"<html><body><a wicket:id=\"mainLink\"></a></body></html>");
 		}
 	}
 
@@ -89,7 +92,7 @@ public class WebPageTest extends WicketTestCase
 	{
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+				Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body></body></html>");
 		}
