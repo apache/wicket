@@ -82,7 +82,7 @@ public class ResponseIOExceptionTest extends Assert
 		tester.getApplication().getRequestCycleListeners().add(testRequestCycleListener);
 		tester.startResource(new ResourceStreamResource(new StringResourceStream("asdf")));
 		assertThat(testRequestCycleListener.lastExceptionRquestHandlerResolved,
-				instanceOf(EmptyRequestHandler.class));
+			instanceOf(EmptyRequestHandler.class));
 	}
 
 	class TestRequestCycleListener extends AbstractRequestCycleListener

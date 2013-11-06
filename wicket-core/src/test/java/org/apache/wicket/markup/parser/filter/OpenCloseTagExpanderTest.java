@@ -46,27 +46,28 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5237
+	 * 
 	 * @throws ParseException
 	 */
 	@Test
 	public void doNotExpandVoidElements() throws ParseException
 	{
-		String[] htmlVoidElements = new String[] {
-			"area", "base", "br", "col", "command", "embed", "hr", "img", "input",
-			"keygen", "link", "meta", "param", "source", "track", "wbr"
-		};
+		String[] htmlVoidElements = new String[] { "area", "base", "br", "col", "command", "embed",
+				"hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
 
 		for (String htmlVoidElement : htmlVoidElements)
 		{
 
-			OpenCloseTagExpander expander = new OpenCloseTagExpander() {
+			OpenCloseTagExpander expander = new OpenCloseTagExpander()
+			{
 				@Override
 				public IMarkupFilter getNextFilter()
 				{
 					return new AbstractMarkupFilter()
 					{
 						@Override
-						protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+						protected MarkupElement onComponentTag(ComponentTag tag)
+							throws ParseException
 						{
 							return null;
 						}
@@ -92,6 +93,7 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5237
+	 * 
 	 * @throws ParseException
 	 */
 	@Test
@@ -99,14 +101,16 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 	{
 		for (String htmlNonVoidElement : OpenCloseTagExpander.REPLACE_FOR_TAGS)
 		{
-			OpenCloseTagExpander expander = new OpenCloseTagExpander() {
+			OpenCloseTagExpander expander = new OpenCloseTagExpander()
+			{
 				@Override
 				public IMarkupFilter getNextFilter()
 				{
 					return new AbstractMarkupFilter()
 					{
 						@Override
-						protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+						protected MarkupElement onComponentTag(ComponentTag tag)
+							throws ParseException
 						{
 							return null;
 						}
@@ -123,7 +127,7 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 			ComponentTag tag = new ComponentTag(htmlNonVoidElement, XmlTag.TagType.OPEN_CLOSE);
 			expander.onComponentTag(tag);
 
-			ComponentTag markupElement = (ComponentTag) expander.nextElement();
+			ComponentTag markupElement = (ComponentTag)expander.nextElement();
 
 			// assert the next element is returned by the parent
 			assertEquals(htmlNonVoidElement, markupElement.getName());

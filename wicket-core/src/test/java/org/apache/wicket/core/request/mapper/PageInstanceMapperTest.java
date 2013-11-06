@@ -37,7 +37,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author Matej Knopp
  */
 public class PageInstanceMapperTest extends AbstractMapperTest
@@ -214,7 +214,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(request);
 
-		IRequestablePage page = ((IPageRequestHandler) handler).getPage();
+		IRequestablePage page = ((IPageRequestHandler)handler).getPage();
 		checkPage(page, 4);
 	}
 
@@ -259,7 +259,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(request);
 
-		IRequestablePage page = ((IPageRequestHandler) handler).getPage();
+		IRequestablePage page = ((IPageRequestHandler)handler).getPage();
 		checkPage(page, 4);
 	}
 

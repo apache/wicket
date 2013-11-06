@@ -404,7 +404,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
 
-		// mounted pages must render mounted url even for page that has not been created by
+		// mounted pages must render mounted url even for page that has not been
+		// created by
 		// bookmarkable
 		// URL
 
@@ -424,7 +425,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("b", "c");
 		page.setRenderCount(4);
 
-		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
+		// shouldn't make any difference for
+		// BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
@@ -488,7 +490,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("b", "c");
 		page.setRenderCount(5);
 
-		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
+		// shouldn't make any difference for
+		// BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
@@ -833,7 +836,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertEquals("some/path/p2/p3/i1/i2?a=b&b=c", url.toString());
 	}
 
-	/* WICKET-5056 **/
+	/* WICKET-5056 * */
 	@Test
 	public void optionalParameterGetsLowerScore_ThanExactOne() throws Exception
 	{
@@ -843,8 +846,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		Request request = getRequest(url);
 		final int exactCompatScore = exactMount.getCompatibilityScore(request);
 		final int optCompatScore = optionalParameter.getCompatibilityScore(request);
-		assertTrue("exactCompatScore should have greater compatibility score than optional one" +
-			" got exact = " + exactCompatScore + " and optional = " + optCompatScore,
+		assertTrue("exactCompatScore should have greater compatibility score than optional one"
+			+ " got exact = " + exactCompatScore + " and optional = " + optCompatScore,
 			exactCompatScore > optCompatScore);
 	}
 
@@ -857,8 +860,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		Request request = getRequest(url);
 		final int exactCompatScore = exactMount.getCompatibilityScore(request);
 		final int requiredParamScore = requiredParam.getCompatibilityScore(request);
-		assertTrue("exactCompatScore should have greater compatibility score than required one" +
-			" got exact = " + exactCompatScore + " and required= " + requiredParamScore,
+		assertTrue("exactCompatScore should have greater compatibility score than required one"
+			+ " got exact = " + exactCompatScore + " and required= " + requiredParamScore,
 			exactCompatScore > requiredParamScore);
 	}
 
@@ -869,7 +872,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		final MountedMapper exactMount = new MountedMapper("/all/sindex", MockPage.class);
 		final MountedMapper requiredParam = new MountedMapper("/all/${exp}", MockPage.class);
 		final MountedMapper optionalParameter = new MountedMapper("/all/#{exp}", MockPage.class);
-		final MountedMapper requiredOptionalParam = new MountedMapper("/all/${exp}/#{opt}", MockPage.class);
+		final MountedMapper requiredOptionalParam = new MountedMapper("/all/${exp}/#{opt}",
+			MockPage.class);
 
 		Request request = getRequest(url);
 		final int exactCompatScore = exactMount.getCompatibilityScore(request);
@@ -877,16 +881,17 @@ public class MountedMapperTest extends AbstractMapperTest
 		final int optCompatScore = optionalParameter.getCompatibilityScore(request);
 		final int requiredOptCompatScore = requiredOptionalParam.getCompatibilityScore(request);
 
-		assertTrue("exactCompatScore should have greater compatibility score than required one" +
-			" got exact = " + exactCompatScore + " and required= " + requiredParamScore,
-				exactCompatScore > requiredParamScore);
+		assertTrue("exactCompatScore should have greater compatibility score than required one"
+			+ " got exact = " + exactCompatScore + " and required= " + requiredParamScore,
+			exactCompatScore > requiredParamScore);
 
-		assertTrue("exactCompatScore should have greater compatibility score than required+optional one" +
-				" got exact = " + exactCompatScore + " and requiredOptional= " + requiredOptCompatScore,
-				exactCompatScore > requiredOptCompatScore);
+		assertTrue(
+			"exactCompatScore should have greater compatibility score than required+optional one"
+				+ " got exact = " + exactCompatScore + " and requiredOptional= "
+				+ requiredOptCompatScore, exactCompatScore > requiredOptCompatScore);
 
-		assertTrue("exactCompatScore should have greater compatibility score than optional one" +
-			" got exact = " + exactCompatScore + " and optional = " + optCompatScore,
-				requiredParamScore > optCompatScore);
+		assertTrue("exactCompatScore should have greater compatibility score than optional one"
+			+ " got exact = " + exactCompatScore + " and optional = " + optCompatScore,
+			requiredParamScore > optCompatScore);
 	}
 }

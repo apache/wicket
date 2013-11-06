@@ -59,8 +59,8 @@ public class ServletWebRequestTest extends Assert
 		assertEquals("request/Uri?some=parameter", clientUrl.toString());
 
 		// simulates a request that has errors metadata
-		httpRequest.setAttribute("javax.servlet.error.request_uri",
-			httpRequest.getContextPath() + "/any/source/of/error");
+		httpRequest.setAttribute("javax.servlet.error.request_uri", httpRequest.getContextPath()
+			+ "/any/source/of/error");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
@@ -146,7 +146,7 @@ public class ServletWebRequestTest extends Assert
 	/**
 	 * Assert that ServletWebRequest#getClientUrl() will throw an AbortWithHttpErrorCodeException
 	 * with error code 400 (Bad Request) when an Ajax request doesn't provide the base url.
-	 *
+	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-4841
 	 */
 	@Test
@@ -185,8 +185,8 @@ public class ServletWebRequestTest extends Assert
 		assertEquals("request/Path?some=parameter", clientUrl.toString());
 
 		// simulates a request that has errors metadata
-		httpRequest.setAttribute("javax.servlet.error.request_uri",
-				httpRequest.getContextPath() + '/' + filterPath + "/any/source/of/error");
+		httpRequest.setAttribute("javax.servlet.error.request_uri", httpRequest.getContextPath()
+			+ '/' + filterPath + "/any/source/of/error");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, filterPath);
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
@@ -202,7 +202,8 @@ public class ServletWebRequestTest extends Assert
 		String filterPath = "filterPath";
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
 		String looksLikeFullUrl = "/foo://:/";
-		httpRequest.setURL("http://localhost" + '/' + httpRequest.getContextPath() + '/' + filterPath + looksLikeFullUrl);
+		httpRequest.setURL("http://localhost" + '/' + httpRequest.getContextPath() + '/'
+			+ filterPath + looksLikeFullUrl);
 
 		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, filterPath);
 		assertEquals(looksLikeFullUrl, webRequest.getClientUrl().toString());

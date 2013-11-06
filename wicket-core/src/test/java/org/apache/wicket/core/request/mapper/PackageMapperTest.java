@@ -376,7 +376,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
 
-		// never allow bookmarkable render url for page that has not been created by bookmarkable
+		// never allow bookmarkable render url for page that has not been
+		// created by bookmarkable
 		// URL
 
 		assertNull(url);
@@ -394,7 +395,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b");
 		page.getPageParameters().set("b", "c");
 
-		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
+		// shouldn't make any difference for
+		// BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
@@ -421,7 +423,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b");
 		page.getPageParameters().set("b", "c");
 
-		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
+		// shouldn't make any difference for
+		// BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
