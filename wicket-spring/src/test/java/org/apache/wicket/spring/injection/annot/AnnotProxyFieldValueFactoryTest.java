@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.lang.reflect.Field;
 
 import org.apache.wicket.proxy.ILazyInitProxy;
@@ -89,7 +91,7 @@ public class AnnotProxyFieldValueFactoryTest extends Assert
 		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
 		assertTrue(locator.getBeanType().equals(Bean.class));
 		assertTrue(locator.getSpringContextLocator() == mockCtxLocator);
-		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
+		assertThat(factory.getFieldValue(field, obj), instanceOf(ILazyInitProxy.class));
 
 		field = obj.getClass().getDeclaredField("beanByName");
 		proxy = factory.getFieldValue(field, obj);
@@ -97,7 +99,7 @@ public class AnnotProxyFieldValueFactoryTest extends Assert
 		assertTrue(locator.getBeanName().equals("somebean"));
 		assertTrue(locator.getBeanType().equals(Bean2.class));
 		assertTrue(locator.getSpringContextLocator() == mockCtxLocator);
-		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
+		assertThat(factory.getFieldValue(field, obj), instanceOf(ILazyInitProxy.class));
 	}
 
 	/**

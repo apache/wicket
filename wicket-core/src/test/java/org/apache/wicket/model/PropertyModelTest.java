@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.model;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.junit.Ignore;
@@ -114,7 +116,7 @@ public class PropertyModelTest extends WicketTestCase
 		PropertyModel<String> model = new PropertyModel<String>(person, "concreteAddress.street");
 		model.setObject("foo");
 		assertNotNull("concreteAddress", person.concreteAddress);
-		assertTrue(person.concreteAddress instanceof ConcreteAddress);
+		assertThat(person.concreteAddress, instanceOf(ConcreteAddress.class));
 		assertEquals("foo", person.concreteAddress.street);
 	}
 
@@ -147,8 +149,7 @@ public class PropertyModelTest extends WicketTestCase
 		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");
 
 		model.setObject("foo");
-		assertNotNull("finalAddress", person.finalAddress);
-		assertTrue(person.finalAddress instanceof ConcreteAddress);
+		assertThat(person.finalAddress, instanceOf(ConcreteAddress.class));
 		assertEquals("foo", person.finalAddress.street);
 	}
 }

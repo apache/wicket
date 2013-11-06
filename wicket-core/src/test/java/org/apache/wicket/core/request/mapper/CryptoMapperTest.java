@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
@@ -105,9 +107,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 	{
 		Request request = getRequest(Url.parse(ENCRYPTED_URL));
 		IRequestHandler requestHandler = mapper.mapRequest(request);
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(DummyHomePage.class, handler.getPageClass());
@@ -122,9 +124,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 	{
 		Request request = getRequest(Url.parse("?named1=value1"));
 		IRequestHandler requestHandler = mapper.mapRequest(request);
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
@@ -166,9 +168,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		Request request = getRequest(url);
 		IRequestHandler requestHandler = mapper.mapRequest(request);
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(DummyHomePage.class, handler.getPageClass());
@@ -194,9 +196,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		Request request = getRequest(url);
 		IRequestHandler requestHandler = mapper.mapRequest(request);
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
@@ -231,9 +233,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
@@ -256,9 +258,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
@@ -282,9 +284,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
@@ -308,9 +310,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 		requestHandler = ((RequestSettingRequestHandler)requestHandler).getDelegateHandler();
-		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
@@ -336,7 +338,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertTrue(requestHandler instanceof RequestSettingRequestHandler);
+		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
 
 		assertEquals("foo", ((RequestSettingRequestHandler)requestHandler).getRequest().getUrl()
 			.getQueryParameterValue("q").toString());
