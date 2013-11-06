@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.text.ParseException;
 
 import org.apache.wicket.WicketTestCase;
@@ -84,7 +86,7 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 			MarkupElement markupElement = expander.nextElement();
 
 			// assert the next element is returned by the parent
-			assertTrue(markupElement instanceof TestMarkupElement);
+			assertThat(markupElement, instanceOf(TestMarkupElement.class));
 		}
 	}
 

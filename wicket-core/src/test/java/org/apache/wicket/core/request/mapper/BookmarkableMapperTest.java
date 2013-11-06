@@ -18,7 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import java.nio.charset.Charset;
 import java.util.Locale;
-
+import static org.hamcrest.CoreMatchers.instanceOf;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
@@ -69,7 +69,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getName());
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -85,7 +85,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/indexed1?a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getName());
 
@@ -107,7 +107,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 	}
@@ -121,7 +121,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 
@@ -140,7 +140,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
@@ -162,7 +162,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 			"/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
@@ -187,7 +187,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 			"?15-ILinkListener.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
@@ -212,7 +212,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();

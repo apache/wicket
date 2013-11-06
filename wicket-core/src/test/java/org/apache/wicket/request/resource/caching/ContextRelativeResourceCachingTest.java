@@ -16,12 +16,13 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.nio.charset.Charset;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
@@ -39,9 +40,6 @@ public class ContextRelativeResourceCachingTest extends WicketTestCase
 {
 	private static final Charset CHARSET = Charset.forName("UTF-8");
 	private static final String SHARED_NAME = "contextresource";
-
-	private IRequestMapper mapper;
-	private IRequestMapper mapperWithPlaceholder;
 
 	private Request createRequest(final String url)
 	{
@@ -104,8 +102,7 @@ public class ContextRelativeResourceCachingTest extends WicketTestCase
 		final IRequestHandler handler = tester.getApplication()
 			.getRootRequestMapper()
 			.mapRequest(request);
-		assertNotNull(handler);
-		assertTrue(handler instanceof ResourceReferenceRequestHandler);
+		assertThat(handler, instanceOf(ResourceReferenceRequestHandler.class));
 		assertEquals(((ResourceReferenceRequestHandler)handler).getResource(), resource);
 	}
 

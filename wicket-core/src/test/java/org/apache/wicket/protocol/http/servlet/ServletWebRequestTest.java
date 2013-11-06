@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -212,7 +214,7 @@ public class ServletWebRequestTest extends Assert
 
 		private CustomRequestPage()
 		{
-			assertTrue(getRequest() instanceof CustomServletWebRequest);
+			assertThat(getRequest(), instanceOf(CustomServletWebRequest.class));
 		}
 
 		@Override

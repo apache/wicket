@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
@@ -105,7 +107,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -121,7 +123,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path/indexed1?a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		PageParameters p = page.getPageParameters();
@@ -142,7 +144,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path?15");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 	}
@@ -156,7 +158,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path/i1/i2?15&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 
@@ -175,7 +177,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path?15-ILinkListener-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
@@ -196,7 +198,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
@@ -220,7 +222,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path?param1=value1&15-ILinkListener.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
@@ -253,7 +255,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		// capture the home page
 		Url url = Url.parse("");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 	}
 
 	/**
@@ -266,7 +268,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		context.setNextPageRenderCount(5);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
@@ -297,7 +299,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path/i1/i2?-1.ILinkListener-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		IRequestablePage page = h.getPage();
@@ -579,7 +581,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/p1/path/p2");
 		IRequestHandler handler = placeholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -597,7 +599,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/p1/path/p2/indexed1?a=b&b=c");
 		IRequestHandler handler = placeholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		PageParameters p = page.getPageParameters();
@@ -618,7 +620,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/p1/path/p2/p3/p4");
 		IRequestHandler handler = placeholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(2, page.getPageParameters().getIndexedCount());
@@ -707,7 +709,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/p1/path/p2/p3");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -724,7 +726,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/path/path/path");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -742,7 +744,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/p1/path/p2");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -760,7 +762,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/path/p2");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -779,7 +781,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/path/p2/p3/p4");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(1, page.getPageParameters().getIndexedCount());

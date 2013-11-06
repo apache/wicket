@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.util.Arrays;
 
 import org.apache.wicket.Page;
@@ -123,7 +125,6 @@ public class AjaxEditableTest extends WicketTestCase
 	{
 		Page page = tester.getLastRenderedPage();
 		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
-		AjaxLink<Void> toggle = (AjaxLink<Void>)page.get("toggle");
 
 		tester.assertInvisible("ajaxLabel:editor");
 		tester.assertVisible("ajaxLabel:label");
@@ -173,7 +174,6 @@ public class AjaxEditableTest extends WicketTestCase
 			Arrays.asList(new StringValue[] { StringValue.valueOf("5") }));
 		editableLabel.getEditor().processInput();
 
-		assertNotNull(integerModel.getObject());
-		assertTrue(integerModel.getObject() instanceof Integer);
+		assertThat(integerModel.getObject(), instanceOf(Integer.class));
 	}
 }

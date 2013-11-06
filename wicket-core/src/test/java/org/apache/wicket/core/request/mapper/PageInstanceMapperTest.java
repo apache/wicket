@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.nio.charset.Charset;
 import java.util.Locale;
 
@@ -59,7 +61,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/page?4");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
 		checkPage(h.getPage(), 4);
@@ -74,7 +76,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/page/ingore/me?4&a=3&b=3");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
 		checkPage(h.getPage(), 4);
@@ -89,7 +91,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/page?4-ILinkListener-a-b-c");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		checkPage(h.getPage(), 4);
@@ -131,7 +133,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/page?4-ILinkListener.5-a-b-c");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		checkPage(h.getPage(), 4);
@@ -151,7 +153,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		context.setNextPageRenderCount(6);
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		assertEquals(6, h.getPage().getRenderCount());
