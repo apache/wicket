@@ -39,5 +39,11 @@
 				<include>**/*.png</include>
 			</includes>
 		</fileSet>
+		<fileSet filtered="false" packaged="false" encoding="UTF-8">
+			<directory></directory>
+			<includes>
+				<include>jetty*.xml</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 </archetype-descriptor>
