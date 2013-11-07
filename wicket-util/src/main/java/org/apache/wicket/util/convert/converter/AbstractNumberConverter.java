@@ -65,10 +65,9 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 		}
 		else if (value instanceof String)
 		{
-			// Convert spaces to no-break space (U+00A0) to fix problems with
-			// browser conversions.
-			// Space is not valid thousands-separator, but no-br space is.
-			value = ((String)value).replace(' ', '\u00A0');
+			// Convert spaces to no-break space (U+00A0) as required by Java formats:
+			// http://bugs.sun.com/view_bug.do?bug_id=4510618
+			value = ((String)value).replaceAll("(\\d+)\\s(?=\\d)", "$1\u00A0");
 		}
 
 		final NumberFormat numberFormat = getNumberFormat(locale);
