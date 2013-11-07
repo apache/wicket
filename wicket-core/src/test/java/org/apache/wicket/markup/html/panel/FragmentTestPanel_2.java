@@ -16,35 +16,43 @@
  */
 package org.apache.wicket.markup.html.panel;
 
-import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.MarkupNotFoundException;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * 
  */
-public class FragmentTestCase extends WicketTestCase
+public class FragmentTestPanel_2 extends Panel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
+	 * Construct.
 	 * 
+	 * @param id
 	 */
-	public void testFragments()
+	public FragmentTestPanel_2(String id)
 	{
-		tester.startComponentInPage(FragmentTestPanel.class);
+		super(id);
+
+		add(new WebMarkupContainer("testFrag"));
+		add(new TestFragment("test"));
 	}
 
 	/**
 	 * 
 	 */
-	public void testComponentAndFragmentWithSameId()
+	private class TestFragment extends Fragment
 	{
-		try
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 */
+		public TestFragment(String id)
 		{
-			tester.startComponentInPage(FragmentTestPanel_2.class);
-			fail();
-		}
-		catch (MarkupNotFoundException ex)
-		{
-			assertTrue(ex.getMessage().contains("is not a fragment tag"));
+			super(id, "testFrag", FragmentTestPanel_2.this);
 		}
 	}
 }

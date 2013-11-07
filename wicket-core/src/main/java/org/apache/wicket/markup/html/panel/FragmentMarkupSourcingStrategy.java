@@ -21,9 +21,11 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -140,8 +142,18 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 
 		if (childMarkup == null)
 		{
-			throw new MarkupNotFoundException("No Markup found for Fragment " + markupId +
-				" in providing markup container " + getMarkupProvider(container));
+			throw new MarkupNotFoundException("No Markup found for Fragment '" + markupId
+					+ "' in providing markup container " + getMarkupProvider(container));
+		}
+		else
+		{
+			MarkupElement fragmentTag = childMarkup.get(0);
+			if ((fragmentTag instanceof WicketTag && ((WicketTag)fragmentTag).isFragementTag()) == false)
+			{
+				throw new MarkupNotFoundException("Markup found for Fragment '" + markupId
+						+ "' in providing markup container " + getMarkupProvider(container)
+						+ " is not a fragment tag");
+			}
 		}
 
 		if (child == null)
