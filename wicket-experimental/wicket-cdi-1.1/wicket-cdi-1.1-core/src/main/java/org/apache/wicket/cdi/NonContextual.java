@@ -49,14 +49,14 @@ public class NonContextual <T>
 	 */
 	public static void undeploy()
 	{
-		if (cache.containsKey(CDI.current().getBeanManager()))
+		if (cache.containsKey(BeanManagerLookup.lookup()))
 		{
 			synchronized (lock)
 			{
 				// copy-on-write the cache
 				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
 					cache);
-				newCache.remove(CDI.current().getBeanManager());
+				newCache.remove(BeanManagerLookup.lookup());
 				cache = Collections.unmodifiableMap(newCache);
 			}
 		}
@@ -87,12 +87,12 @@ public class NonContextual <T>
 
 	private static ClassMetaCache<NonContextual<?>> getCache()
 	{
-		ClassMetaCache<NonContextual<?>> meta = cache.get(CDI.current().getBeanManager());
+		ClassMetaCache<NonContextual<?>> meta = cache.get(BeanManagerLookup.lookup());
 		if (meta == null)
 		{
 			synchronized (lock)
 			{
-                                BeanManager manager = CDI.current().getBeanManager(); 
+				BeanManager manager = BeanManagerLookup.lookup();
 				meta = cache.get(manager);
 				if (meta == null)
 				{
@@ -112,7 +112,7 @@ public class NonContextual <T>
 	@SuppressWarnings("unchecked")
 	private NonContextual(Class<? extends T> clazz)
 	{
-		BeanManager manager = CDI.current().getBeanManager();
+		BeanManager manager = BeanManagerLookup.lookup();
 		AnnotatedType<? extends T> type = manager.createAnnotatedType(clazz);
 		this.it = (InjectionTarget<T>)manager.createInjectionTarget(type);
 	}
@@ -124,7 +124,7 @@ public class NonContextual <T>
 	 */
 	public void postConstruct(T instance)
 	{
-		CreationalContext<T> cc = CDI.current().getBeanManager().createCreationalContext(null);
+		CreationalContext<T> cc = BeanManagerLookup.lookup().createCreationalContext(null);
 		it.inject(instance, cc);
 		it.postConstruct(instance);
 	}
@@ -136,7 +136,7 @@ public class NonContextual <T>
 	 */
 	public void inject(T instance)
 	{
-		CreationalContext<T> cc = CDI.current().getBeanManager().createCreationalContext(null);
+		CreationalContext<T> cc = BeanManagerLookup.lookup().createCreationalContext(null);
 		it.inject(instance, cc);
 	}
 
