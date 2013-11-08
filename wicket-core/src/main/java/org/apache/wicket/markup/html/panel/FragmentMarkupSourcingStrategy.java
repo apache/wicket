@@ -152,7 +152,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 			{
 				throw new MarkupNotFoundException("Markup found for Fragment '" + markupId
 					+ "' in providing markup container " + getMarkupProvider(container)
-					+ " is not a fragment tag");
+					+ " is not a <wicket:fragment> tag");
 			}
 		}
 

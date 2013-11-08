@@ -23,7 +23,7 @@ import org.junit.Test;
 /**
  * 
  */
-public class FragmentTestCase extends WicketTestCase
+public class FragmentTest extends WicketTestCase
 {
 	@Test
 	public void testFragments()
@@ -31,6 +31,9 @@ public class FragmentTestCase extends WicketTestCase
 		tester.startComponentInPage(FragmentTestPanel.class);
 	}
 
+	/**
+	 * WICKET-5060
+	 */
 	@Test
 	public void testComponentAndFragmentWithSameId()
 	{
@@ -41,7 +44,7 @@ public class FragmentTestCase extends WicketTestCase
 		}
 		catch (MarkupNotFoundException ex)
 		{
-			assertTrue(ex.getMessage().contains("is not a fragment tag"));
+			assertTrue(ex.getMessage().contains("is not a <wicket:fragment> tag"));
 		}
 	}
 }
