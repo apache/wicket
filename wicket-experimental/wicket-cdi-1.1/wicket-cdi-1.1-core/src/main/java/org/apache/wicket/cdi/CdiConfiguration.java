@@ -28,7 +28,6 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 import org.apache.wicket.Application;
@@ -279,6 +278,7 @@ public class CdiConfiguration
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public static CdiConfiguration get()
 	{
 		BeanManager beanManager = BeanManagerLookup.lookup();

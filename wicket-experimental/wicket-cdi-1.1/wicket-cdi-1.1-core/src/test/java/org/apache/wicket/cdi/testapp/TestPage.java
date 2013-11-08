@@ -26,7 +26,8 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public class TestPage extends WebPage
 {
-
+	private static final long serialVersionUID = 1L;
+	
 	@Inject
 	TestAppScope appScope;
 

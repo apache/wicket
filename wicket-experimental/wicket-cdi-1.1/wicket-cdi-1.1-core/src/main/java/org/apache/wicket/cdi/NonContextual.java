@@ -20,10 +20,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionTarget;
 
 import org.apache.wicket.util.collections.ClassMetaCache;

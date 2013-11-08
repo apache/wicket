@@ -57,6 +57,8 @@ public class ComponentInjectorTest extends WicketCdiTestCase
 
 		WebComponent component = new WebComponent("someId")
 		{
+			private static final long serialVersionUID = 1L;
+			
 			@Inject
 			@TestQualifier
 			private String dependency;
@@ -72,7 +74,8 @@ public class ComponentInjectorTest extends WicketCdiTestCase
 
 	private class TestNonStaticComponent extends WebComponent
 	{
-
+		private static final long serialVersionUID = 1L;
+		
 		@Inject
 		@TestQualifier
 		private String dependency;
@@ -85,7 +88,8 @@ public class ComponentInjectorTest extends WicketCdiTestCase
 
 	private static class TestStaticComponent extends WebComponent
 	{
-
+		private static final long serialVersionUID = 1L;
+		
 		@Inject
 		@TestQualifier
 		private String dependency;

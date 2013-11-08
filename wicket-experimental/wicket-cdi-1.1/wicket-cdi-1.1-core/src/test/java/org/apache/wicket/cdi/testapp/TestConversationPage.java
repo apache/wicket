@@ -29,6 +29,7 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class TestConversationPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	@Inject
 	Conversation conversation;
@@ -41,10 +42,12 @@ public class TestConversationPage extends WebPage
 
 		conversation.begin();
 
-		add(new Label("count", new PropertyModel(this, "counter.count")));
+		add(new Label("count", new PropertyModel<Integer>(this, "counter.count")));
 
 		add(new Link<Void>("increment")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick()
 			{
@@ -53,6 +56,8 @@ public class TestConversationPage extends WebPage
 		});
 		add(new Link<Void>("reset")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick()
 			{
