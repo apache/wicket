@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import java.lang.reflect.Modifier;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -59,13 +58,6 @@ class AbstractInjector <T>
         
 	private boolean ignore(Class instanceClass)
 	{
-		if (instanceClass.isAnonymousClass() ||
-				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))
-		{
-			LOG.debug("Skipping non-static inner class '{}' ", instanceClass);
-                        return true;
-		}
-		
 		String packageName = instanceClass.getPackage().getName();
 		for(String ignore:ignorePackages.get())
 		{
