@@ -66,13 +66,12 @@ public class WicketCdiTestCase extends Assert
 	{
 		tester.destroy();
 		tester = null;
+		contextController.closeRequest();
 	}
 
 	private void prepareRequest(HttpServletRequest request)
 	{
 		contextController.openRequest(request);
-		contextController.openSession(request);
-		contextController.openConversation(request);
 	}
 
 }
