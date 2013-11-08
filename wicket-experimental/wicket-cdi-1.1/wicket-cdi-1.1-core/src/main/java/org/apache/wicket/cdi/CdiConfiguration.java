@@ -281,7 +281,7 @@ public class CdiConfiguration
 
 	public static CdiConfiguration get()
 	{
-		BeanManager beanManager = CDI.current().getBeanManager();
+		BeanManager beanManager = BeanManagerLookup.lookup();
 		Iterator<Bean<?>> iter = beanManager.getBeans(CdiConfiguration.class).iterator();
 		if (!iter.hasNext())
 		{
