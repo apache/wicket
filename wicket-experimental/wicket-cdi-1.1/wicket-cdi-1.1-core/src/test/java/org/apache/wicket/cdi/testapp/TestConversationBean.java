@@ -27,7 +27,8 @@ import javax.enterprise.context.ConversationScoped;
 @ConversationScoped
 public class TestConversationBean implements Serializable
 {
-
+	private static final long serialVersionUID = 1L;
+	
 	private AtomicInteger counter = new AtomicInteger();
 
 	public int getCount()

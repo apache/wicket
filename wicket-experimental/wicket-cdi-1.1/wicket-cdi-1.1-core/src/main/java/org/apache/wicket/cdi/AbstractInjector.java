@@ -56,7 +56,7 @@ class AbstractInjector <T>
 	}
         
         
-	private boolean ignore(Class instanceClass)
+	private boolean ignore(Class<?> instanceClass)
 	{
 		String packageName = instanceClass.getPackage().getName();
 		for(String ignore:ignorePackages.get())

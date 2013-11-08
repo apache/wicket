@@ -41,6 +41,7 @@ public class DetachEventEmitter extends AbstractRequestCycleListener implements 
 
 	private static final MetaDataKey<Boolean> DETACH_SCHEDULED_KEY = new MetaDataKey<Boolean>()
 	{
+		private static final long serialVersionUID = 1L;
 	};
 
 	@Inject

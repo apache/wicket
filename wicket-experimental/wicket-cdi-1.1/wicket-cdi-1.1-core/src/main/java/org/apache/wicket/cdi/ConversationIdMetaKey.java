@@ -20,5 +20,7 @@ import org.apache.wicket.MetaDataKey;
 
 final class ConversationIdMetaKey extends MetaDataKey<String>
 {
+	private static final long serialVersionUID = 1L;
+	
 	static final ConversationIdMetaKey INSTANCE = new ConversationIdMetaKey();
 }

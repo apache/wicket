@@ -64,6 +64,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener impleme
 
 	private static final MetaDataKey<Boolean> CONVERSATION_STARTED_KEY = new MetaDataKey<Boolean>()
 	{
+		private static final long serialVersionUID = 1L;
 	};
 
 	static final String CID_ATTR = "cid";
