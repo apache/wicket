@@ -38,9 +38,7 @@ public class ComponentInjectorTest extends WicketCdiTestCase
 	public void innerNonStaticClass()
 	{
 		TestNonStaticComponent component = new TestNonStaticComponent("someId");
-		assertNull(component.dependency);
-		componentInjector.onInstantiation(component);
-		assertNull(component.dependency);
+		assertEquals(component.dependency, "Test String");
 	}
 
 	/**
@@ -50,7 +48,6 @@ public class ComponentInjectorTest extends WicketCdiTestCase
 	public void innerStaticClass()
 	{
 		TestStaticComponent component = new TestStaticComponent("someId");
-		componentInjector.onInstantiation(component);
 		assertEquals(component.dependency, "Test String");
 	}
 
@@ -61,6 +58,7 @@ public class ComponentInjectorTest extends WicketCdiTestCase
 		WebComponent component = new WebComponent("someId")
 		{
 			@Inject
+			@TestQualifier
 			private String dependency;
 
 			@Override
@@ -69,14 +67,14 @@ public class ComponentInjectorTest extends WicketCdiTestCase
 				return dependency;
 			}
 		};
-		componentInjector.onInstantiation(component);
-		assertNull(component.toString());
+		assertEquals(component.toString(), "Test String");
 	}
 
 	private class TestNonStaticComponent extends WebComponent
 	{
 
 		@Inject
+		@TestQualifier
 		private String dependency;
 
 		public TestNonStaticComponent(String id)
