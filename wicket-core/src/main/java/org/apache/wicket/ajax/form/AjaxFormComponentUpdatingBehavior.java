@@ -160,8 +160,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		catch (RuntimeException e)
 		{
 			onError(target, e);
-
 		}
+		formComponent.updateAutoLabels(target);
 	}
 
 	/**
