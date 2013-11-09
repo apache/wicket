@@ -42,13 +42,13 @@ import org.slf4j.LoggerFactory;
  * referenced form component</li>
  * <li>Appends {@code required} css class to the {@code <label>} tag if the referenced form
  * component is required. Name of the css class can be overwritten by having a i18n property defined
- * for key AutoLabelResolver.CSS.required</li>
+ * for key AutoLabel.CSS.required</li>
  * <li>Appends {@code error} css class to the {@code <label>} tag if the referenced form component
  * has failed validation. Name of the css class can be overwritten by having a i18n property defined
- * for key AutoLabelResolver.CSS.error</li>
+ * for key AutoLabel.CSS.error</li>
  * <li>Appends {@code disabled} css class to the {@code <label>} tag if the referenced form
  * component has is not enabled in hierarchy. Name of the css class can be overwritten by having a i18n property defined
- * for key AutoLabelResolver.CSS.disabled</li>
+ * for key AutoLabel.CSS.disabled</li>
  * </ul>
  * 
  * <p>
@@ -72,9 +72,9 @@ public class AutoLabelResolver implements IComponentResolver
 
 	static final String WICKET_FOR = ":for";
 
-	public static final String CSS_REQUIRED_KEY = CssUtils.key(AutoLabelResolver.class, "requried");
-	public static final String CSS_DISABLED_KEY = CssUtils.key(AutoLabelResolver.class, "requried");
-	public static final String CSS_ERROR_KEY = CssUtils.key(AutoLabelResolver.class, "requried");
+	public static final String CSS_REQUIRED_KEY = CssUtils.key(AutoLabel.class, "requried");
+	public static final String CSS_DISABLED_KEY = CssUtils.key(AutoLabel.class, "requried");
+	public static final String CSS_ERROR_KEY = CssUtils.key(AutoLabel.class, "requried");
 	private static final String CSS_DISABLED_DEFAULT = "disabled";
 	private static final String CSS_REQUIRED_DEFAULT = "required";
 	private static final String CSS_ERROR_DEFAULT = "error";

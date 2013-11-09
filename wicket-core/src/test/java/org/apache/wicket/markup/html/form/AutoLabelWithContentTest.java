@@ -45,7 +45,7 @@ public class AutoLabelWithContentTest extends WicketTestCase
 	public void labelWithMessage() throws Exception
 	{
 		tester.startPage(LabelWithMessagePage.class);
-		tester.assertContains("<label wicket:for=\"textfield\" for=\"textfield2\"><wicket:message key=\"foo\">my test text</wicket:message></label>");
+		tester.assertContains("<label wicket:for=\"textfield\" for=\"textfield2\" id=\"textfield2-w-lbl\"><wicket:message key=\"foo\">my test text</wicket:message></label>");
 	}
 
 	public static class LabelWithNestedComponentsPage extends WebPage
@@ -62,6 +62,6 @@ public class AutoLabelWithContentTest extends WicketTestCase
 	public void labelWithNestedComponent()
 	{
 		tester.startPage(LabelWithNestedComponentsPage.class);
-		tester.assertContains("<label wicket:for=\"textfield\" for=\"textfield2\"><input type=\"text\" wicket:id=\"textfield\" value=\"\" name=\"textfield\" id=\"textfield2\"/></label>");
+		tester.assertContains("<label wicket:for=\"textfield\" for=\"textfield2\" id=\"textfield2-w-lbl\"><input type=\"text\" wicket:id=\"textfield\" value=\"\" name=\"textfield\" id=\"textfield2\"/></label>");
 	}
 }
