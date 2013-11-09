@@ -394,10 +394,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Registers a replacement resource for the given javascript resource. This replacement can be
 	 * another {@link JavaScriptResourceReference} for a packaged resource, but it can also be an
-	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
-	 * Registering a replacement will cause the resource to replaced by the given resource
-	 * throughout the application: if {@code base} is added, {@code replacement} will be added
-	 * instead.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a
+	 * resource hosted on a CDN. Registering a replacement will cause the resource to replaced by
+	 * the given resource throughout the application: if {@code base} is added, {@code replacement}
+	 * will be added instead.
 	 * 
 	 * @param base
 	 *            The resource to replace
@@ -415,10 +415,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Registers a replacement resource for the given CSS resource. This replacement can be another
 	 * {@link CssResourceReference} for a packaged resource, but it can also be an
-	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
-	 * Registering a replacement will cause the resource to replaced by the given resource
-	 * throughout the application: if {@code base} is added, {@code replacement} will be added
-	 * instead.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a
+	 * resource hosted on a CDN. Registering a replacement will cause the resource to replaced by
+	 * the given resource throughout the application: if {@code base} is added, {@code replacement}
+	 * will be added instead.
 	 * 
 	 * @param base
 	 *            The resource to replace
@@ -951,9 +951,8 @@ public abstract class WebApplication extends Application
 		return ajaxRequestTargetListeners;
 	}
 
-	private static class DefaultAjaxRequestTargetProvider
-		implements
-			IContextProvider<AjaxRequestTarget, Page>
+	private static class DefaultAjaxRequestTargetProvider implements
+		IContextProvider<AjaxRequestTarget, Page>
 	{
 		@Override
 		public AjaxRequestTarget get(Page page)
@@ -980,5 +979,20 @@ public abstract class WebApplication extends Application
 			filterFactoryManager = new FilterFactoryManager();
 		}
 		return filterFactoryManager;
+	}
+
+	/**
+	 * If true, auto label css classes such as {@code error} and {@code required} will be updated
+	 * after form component processing during an ajax request. This allows auto labels to correctly
+	 * reflect the state of the form component even if they are not part of the ajax markup update.
+	 * 
+	 * TODO in wicket-7 this should move into a settings object. cannot move in 6.x because it
+	 * requires a change to a setting interface.
+	 * 
+	 * @return {@code true} iff enabled
+	 */
+	public boolean getUpdateAutoLabelsOnAjaxRequests()
+	{
+		return true;
 	}
 }

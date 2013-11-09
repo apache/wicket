@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -37,11 +41,14 @@ import org.slf4j.LoggerFactory;
  * <li>Outputs the {@code for} attribute with the value equivalent to the markup id of the
  * referenced form component</li>
  * <li>Appends {@code required} css class to the {@code <label>} tag if the referenced form
- * component is required</li>
+ * component is required. Name of the css class can be overwritten by having a i18n property defined
+ * for key AutoLabel.CSS.required</li>
  * <li>Appends {@code error} css class to the {@code <label>} tag if the referenced form component
- * has failed validation</li>
+ * has failed validation. Name of the css class can be overwritten by having a i18n property defined
+ * for key AutoLabel.CSS.error</li>
  * <li>Appends {@code disabled} css class to the {@code <label>} tag if the referenced form
- * component has is not enabled in hierarchy</li>
+ * component has is not enabled in hierarchy. Name of the css class can be overwritten by having a i18n property defined
+ * for key AutoLabel.CSS.disabled</li>
  * </ul>
  * 
  * <p>
@@ -63,13 +70,15 @@ public class AutoLabelResolver implements IComponentResolver
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
 
-	public static final String REQUIRED_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "required");
-
-	public static final String INVALID_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "invalid");
-
-	public static final String DISABLED_CSS_CLASS_KEY = CssUtils.key(AutoLabel.class, "disabled");
-
 	static final String WICKET_FOR = ":for";
+
+	public static final String CSS_REQUIRED_KEY = CssUtils.key(AutoLabel.class, "requried");
+	public static final String CSS_DISABLED_KEY = CssUtils.key(AutoLabel.class, "requried");
+	public static final String CSS_ERROR_KEY = CssUtils.key(AutoLabel.class, "requried");
+	private static final String CSS_DISABLED_DEFAULT = "disabled";
+	private static final String CSS_REQUIRED_DEFAULT = "required";
+	private static final String CSS_ERROR_DEFAULT = "error";
+
 
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
@@ -104,6 +113,11 @@ public class AutoLabelResolver implements IComponentResolver
 					"Component: {} is referenced via a wicket:for attribute but does not have its outputMarkupId property set to true",
 					component.toString(false));
 			}
+		}
+
+		if (component instanceof FormComponent)
+		{
+			component.setMetaData(MARKER_KEY, new AutoLabelMarker((FormComponent<?>)component));
 		}
 
 		return new AutoLabel("label" + container.getPage().getAutoIndex(), component);
@@ -168,6 +182,100 @@ public class AutoLabelResolver implements IComponentResolver
 		return null;
 	}
 
+	public static final String getLabelIdFor(Component component)
+	{
+		return component.getMarkupId() + "-w-lbl";
+	}
+
+	public static final MetaDataKey<AutoLabelMarker> MARKER_KEY = new MetaDataKey<AutoLabelMarker>()
+	{
+	};
+
+	/**
+	 * Marker used to track whether or not a form component has an associated auto label by its mere
+	 * presense as well as some attributes of the component across requests.
+	 * 
+	 * @author igor
+	 * 
+	 */
+	public static final class AutoLabelMarker implements Serializable
+	{
+		public static final short VALID = 0x01;
+		public static final short REQUIRED = 0x02;
+		public static final short ENABLED = 0x04;
+
+		private short flags;
+
+		public AutoLabelMarker(FormComponent<?> component)
+		{
+			setFlag(VALID, component.isValid());
+			setFlag(REQUIRED, component.isRequired());
+			setFlag(ENABLED, component.isEnabledInHierarchy());
+		}
+
+		public void updateFrom(FormComponent<?> component, AjaxRequestTarget target)
+		{
+			boolean valid = component.isValid(), required = component.isRequired(), enabled = component.isEnabledInHierarchy();
+
+			if (isValid() != valid)
+			{
+				target.appendJavaScript(String.format("$('#%s').toggleClass('%s', %s);",
+					getLabelIdFor(component), component.getString(CSS_ERROR_KEY, null, CSS_ERROR_DEFAULT),
+					!valid));
+			}
+
+			if (isRequired() != required)
+			{
+				target.appendJavaScript(String.format("$('#%s').toggleClass('%s', %s);",
+					getLabelIdFor(component), component.getString(CSS_REQUIRED_KEY, null, CSS_REQUIRED_DEFAULT),
+					required));
+			}
+
+			if (isEnabled() != enabled)
+			{
+				target.appendJavaScript(String.format("$('#%s').toggleClass('%s', %s);",
+					getLabelIdFor(component), component.getString(CSS_DISABLED_KEY, null, CSS_DISABLED_DEFAULT),
+					!enabled));
+			}
+
+			setFlag(VALID, valid);
+			setFlag(REQUIRED, required);
+			setFlag(ENABLED, enabled);
+		}
+
+		public boolean isValid()
+		{
+			return getFlag(VALID);
+		}
+
+		public boolean isEnabled()
+		{
+			return getFlag(ENABLED);
+		}
+
+		public boolean isRequired()
+		{
+			return getFlag(REQUIRED);
+		}
+
+		private boolean getFlag(final int flag)
+		{
+			return (flags & flag) != 0;
+		}
+
+		private void setFlag(final short flag, final boolean set)
+		{
+			if (set)
+			{
+				flags |= flag;
+			}
+			else
+			{
+				flags &= ~flag;
+			}
+		}
+	}
+
 	/**
 	 * Component that is attached to the {@code <label>} tag and takes care of writing out the label
 	 * text as well as setting classes on the {@code <label>} tag
@@ -191,23 +299,24 @@ public class AutoLabelResolver implements IComponentResolver
 		{
 			super.onComponentTag(tag);
 			tag.put("for", component.getMarkupId());
+			tag.put("id", getLabelIdFor(component));
 
 			if (component instanceof FormComponent)
 			{
 				FormComponent<?> fc = (FormComponent<?>)component;
 				if (fc.isRequired())
 				{
-					tag.append("class", getString(REQUIRED_CSS_CLASS_KEY), " ");
+					tag.append("class", component.getString(CSS_REQUIRED_KEY, null, CSS_REQUIRED_DEFAULT), " ");
 				}
 				if (!fc.isValid())
 				{
-					tag.append("class", getString(INVALID_CSS_CLASS_KEY), " ");
+					tag.append("class", component.getString(CSS_ERROR_KEY, null, CSS_ERROR_DEFAULT), " ");
 				}
 			}
 
 			if (!component.isEnabledInHierarchy())
 			{
-				tag.append("class", getString(DISABLED_CSS_CLASS_KEY), " ");
+				tag.append("class", component.getString(CSS_DISABLED_KEY, null, CSS_DISABLED_DEFAULT), " ");
 			}
 		}
 

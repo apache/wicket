@@ -30,6 +30,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -144,10 +145,8 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer
-	implements
-		IFormSubmitListener,
-		IGenericComponent<T>
+public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
+	IGenericComponent<T>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
 
@@ -774,6 +773,20 @@ public class Form<T> extends WebMarkupContainer
 		else if (hasError())
 		{
 			callOnError(submitter);
+		}
+
+
+		if (((WebRequest)getRequest()).isAjax())
+		{
+			final AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
+			visitChildren(FormComponent.class, new IVisitor<FormComponent<?>, Void>()
+			{
+				@Override
+				public void component(FormComponent<?> component, IVisit<Void> visit)
+				{
+					component.updateAutoLabels(target);
+				}
+			});
 		}
 	}
 
@@ -2082,7 +2095,8 @@ public class Form<T> extends WebMarkupContainer
 	 * 
 	 * @author igor
 	 */
-	public static enum MethodMismatchResponse {
+	public static enum MethodMismatchResponse
+	{
 		/**
 		 * Continue processing.
 		 */

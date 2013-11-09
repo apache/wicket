@@ -36,12 +36,15 @@ import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.form.AutoLabelResolver.AutoLabelMarker;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
@@ -98,11 +101,8 @@ import org.slf4j.LoggerFactory;
  *            The model object type
  * 
  */
-public abstract class FormComponent<T> extends LabeledWebMarkupContainer
-	implements
-		IFormVisitorParticipant,
-		IFormModelUpdateListener,
-		IGenericComponent<T>
+public abstract class FormComponent<T> extends LabeledWebMarkupContainer implements
+	IFormVisitorParticipant, IFormModelUpdateListener, IGenericComponent<T>
 {
 	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
 
@@ -1576,6 +1576,25 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+	}
+
+	/**
+	 * Updates auto label css classes such as error/required during ajax updates when the labels may
+	 * not be directly repainted in the response.
+	 * 
+	 * @param target
+	 */
+	public final void updateAutoLabels(AjaxRequestTarget target)
+	{
+		AutoLabelMarker marker = getMetaData(AutoLabelResolver.MARKER_KEY);
+	
+		if (marker == null)
+		{
+			// this component does not have an auto label
+			return;
+		}
+
+		marker.updateFrom(this, target);
 	}
 
 	/**
