@@ -40,9 +40,9 @@
 			</includes>
 		</fileSet>
 		<fileSet filtered="false" packaged="false" encoding="UTF-8">
-			<directory></directory>
+			<directory>src/test/jetty</directory>
 			<includes>
-				<include>jetty*.xml</include>
+				<include>**/*.xml</include>
 			</includes>
 		</fileSet>
 	</fileSets>
