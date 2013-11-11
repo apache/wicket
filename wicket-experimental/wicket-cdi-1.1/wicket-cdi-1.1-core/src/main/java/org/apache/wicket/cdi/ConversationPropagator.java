@@ -374,7 +374,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 						page);
 			}
 		}
-		ConversationPropagation prop = annotation != null ? annotation.prop() : getPropagation();
+		IConversationPropagation prop = annotation != null ? annotation.prop() : getPropagation();
 		// The conversationManager is attached to a conversation so update
 		if (!getConversation().isTransient())
 		{
@@ -490,16 +490,16 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		return getConversationManager().getManageConversation();
 	}
 
-	ConversationPropagation getPropagation()
+	IConversationPropagation getPropagation()
 	{
 		if (getConversation().isTransient())
 		{
 			logger.debug("Getting global Propagation {}.", cdiConfiguration.getPropagation());
-			return (ConversationPropagation)cdiConfiguration.getPropagation();
+			return cdiConfiguration.getPropagation();
 		}
 		logger.debug("Propagation is set to {} with id = {}", getConversationManager()
 				.getPropagation(), getConversation().getId());
-		return (ConversationPropagation)getConversationManager().getPropagation();
+		return getConversationManager().getPropagation();
 	}
 
 }
