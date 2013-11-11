@@ -138,7 +138,7 @@ public class SpringBeanTest extends Assert
 
 		// with no name specified we get IllegalStateException
 		Page page = tester.startPage(new AnnotatedFieldInBehaviorPage());
-		TestBehavior behavior = (TestBehavior)page.getBehaviorById(0);
+		TestBehavior behavior = page.getBehaviors(TestBehavior.class).get(0);
 		assertNotNull(behavior.getBean());
 	}
 }
