@@ -139,7 +139,6 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 	 * do not affect the application dependent global settings.
 	 */
 	@Test
-	@Ignore("The beanmanager cannot be resolved from a different thread")
 	public void testMultiAppLoad()
 	{
 		getTester(); // Bring up app with name mockApp : the default

@@ -31,11 +31,13 @@ public final class BeanManagerLookup
 	{
 		try
 		{
-			return InitialContext.doLookup("java:comp/BeanManager");
+			BeanManager ret = InitialContext.doLookup("java:comp/BeanManager");
+			if (ret != null)
+				return ret;
 		}
 		catch (NamingException e)
 		{
-			return CDI.current().getBeanManager();
 		}
+		return CDI.current().getBeanManager();
 	}
 }
