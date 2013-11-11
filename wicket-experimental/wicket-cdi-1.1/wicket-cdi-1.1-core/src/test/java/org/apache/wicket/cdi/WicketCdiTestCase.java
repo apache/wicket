@@ -42,25 +42,14 @@ import org.junit.runner.RunWith;
  * @author jsarman
  */
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({TestBehaviorInjector.class, TestComponentInjector.class, TestCdiConfiguration.class})
-@AdditionalClasses({
-		CdiWicketTester.class,
-		BehaviorInjector.class,
-		CdiConfiguration.class,
-		CdiShutdownCleaner.class,
-		ComponentInjector.class,
-		ConversationExpiryChecker.class,
-		ConversationPropagator.class,
-		ConversationManager.class,
-		DetachEventEmitter.class,
-		NonContextualManager.class,
-		SessionInjector.class,
-		MockCdiContainer.class,
-		TestAppScope.class,
-		TestConversationBean.class,
-		FilterConfigProducer.class,
-		TestCdiApplication.class,
-		CdiWebApplicationFactory.class})
+@ActivatedAlternatives({ TestBehaviorInjector.class, TestComponentInjector.class,
+		TestCdiConfiguration.class })
+@AdditionalClasses({ CdiWicketTester.class, BehaviorInjector.class, CdiConfiguration.class,
+		CdiShutdownCleaner.class, ComponentInjector.class, ConversationExpiryChecker.class,
+		ConversationPropagator.class, ConversationManager.class, DetachEventEmitter.class,
+		NonContextualManager.class, SessionInjector.class, MockCdiContainer.class,
+		TestAppScope.class, TestConversationBean.class, FilterConfigProducer.class,
+		TestCdiApplication.class, CdiWebApplicationFactory.class })
 public abstract class WicketCdiTestCase extends Assert
 {
 	@Inject

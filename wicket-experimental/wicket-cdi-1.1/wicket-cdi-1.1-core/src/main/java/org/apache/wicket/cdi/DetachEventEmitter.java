@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Request cycle listener that fires the {@link DetachEvent} event
- *
+ * 
  * @author igor
  */
 @SessionScoped
@@ -50,7 +50,7 @@ public class DetachEventEmitter extends AbstractRequestCycleListener implements 
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param container
 	 */
 	public DetachEventEmitter()

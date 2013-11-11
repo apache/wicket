@@ -26,18 +26,19 @@ import org.jboss.weld.context.http.HttpConversationContext;
 
 /**
  * Provides access to CDI features from inside a Wicket request
- *
+ * 
  * @author jsarman
  */
 @ApplicationScoped
 public class WeldCdiContainer extends AbstractCdiContainer
-{	
+{
 	@Inject
 	private HttpConversationContext conversationContext;
 
 	/**
-	 * Activates the conversational context and starts the conversation with the specified cid
-	 *
+	 * Activates the conversational context and starts the conversation with the
+	 * specified cid
+	 * 
 	 * @param cycle
 	 * @param cid
 	 */
@@ -50,7 +51,8 @@ public class WeldCdiContainer extends AbstractCdiContainer
 			conversationContext.invalidate();
 			conversationContext.deactivate();
 			conversationContext.activate(cid);
-		} else
+		}
+		else
 		{
 			conversationContext.activate(cid);
 		}

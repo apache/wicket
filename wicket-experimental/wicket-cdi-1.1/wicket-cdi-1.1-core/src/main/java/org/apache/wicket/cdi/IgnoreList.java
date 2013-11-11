@@ -26,13 +26,12 @@ import javax.inject.Qualifier;
 
 /**
  * Qualifier for injecting the Ignore Package List
- *
+ * 
  * @author jsarman
  */
 @Qualifier
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface IgnoreList
-{
+public @interface IgnoreList {
 
 }

@@ -26,13 +26,13 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 /**
  * Simple POJO bean for storing the initial configuration parameters as well as
  * the state of the dynamic variables used by {@link CdiConfiguration}.
- *
+ * 
  * @author jsarman
  */
 public class ConfigurationParameters implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
 	private boolean injectComponents = true;
 	private boolean injectApplication = true;
@@ -143,7 +143,8 @@ public class ConfigurationParameters implements Serializable
 		return activeComponentOnBeforeRenderListener;
 	}
 
-	void setActiveComponentOnBeforeRenderListener(IComponentOnBeforeRenderListener activeComponentOnBeforeRenderListener)
+	void setActiveComponentOnBeforeRenderListener(
+			IComponentOnBeforeRenderListener activeComponentOnBeforeRenderListener)
 	{
 		this.activeComponentOnBeforeRenderListener = activeComponentOnBeforeRenderListener;
 	}

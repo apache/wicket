@@ -31,8 +31,7 @@ public class TestAppScope
 		return "Test ok";
 	}
 
-	public
-	@Produces
+	public @Produces
 	@TestQualifier
 	String testString()
 	{

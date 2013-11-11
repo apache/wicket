@@ -19,14 +19,15 @@ package org.apache.wicket.cdi;
 import javax.enterprise.util.AnnotationLiteral;
 
 /**
- * Allows for Programmatic lookup of WebApplications based on the Named Annotation.
- *
+ * Allows for Programmatic lookup of WebApplications based on the Named
+ * Annotation.
+ * 
  * @author jsarman
  */
 public class ApplicationQualifier extends AnnotationLiteral<WicketApp> implements WicketApp
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String value;
 
 	public ApplicationQualifier(String value)

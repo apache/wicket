@@ -27,7 +27,7 @@ import org.apache.wicket.cdi.BehaviorInjector;
 
 /**
  * Injects components with CDI dependencies
- *
+ * 
  * @author igor
  */
 @ApplicationScoped
@@ -40,8 +40,9 @@ public class TestBehaviorInjector extends BehaviorInjector
 	public void onInstantiation(Behavior behavior)
 	{
 		Class instanceClass = behavior.getClass();
-		if (instanceClass.isAnonymousClass() ||
-				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))
+		if (instanceClass.isAnonymousClass()
+				|| (instanceClass.isMemberClass() && Modifier
+						.isStatic(instanceClass.getModifiers()) == false))
 		{
 			return;
 		}

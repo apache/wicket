@@ -26,13 +26,12 @@ import javax.inject.Qualifier;
 
 /**
  * Qualifier for injecting the Automatic Conversation begin boolean
- *
+ * 
  * @author jsarman
  */
 @Qualifier
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Auto
-{
+public @interface Auto {
 
 }

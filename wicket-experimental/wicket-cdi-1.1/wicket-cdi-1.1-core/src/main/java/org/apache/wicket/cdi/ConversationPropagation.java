@@ -22,60 +22,58 @@ import org.apache.wicket.request.IRequestHandler;
 
 /**
  * Various modes of propagating persistent conversations across requests.
- *
+ * 
  * @author igor
  */
-public enum ConversationPropagation implements IConversationPropagation
-{
+public enum ConversationPropagation implements IConversationPropagation {
 	/**
 	 * No conversational propagation takes place
 	 */
-	NONE
-			{
-				@Override
-				public boolean propagatesViaPage(Page page, IRequestHandler handler)
-				{
-					return false;
-				}
+	NONE {
+		@Override
+		public boolean propagatesViaPage(Page page, IRequestHandler handler)
+		{
+			return false;
+		}
 
-				@Override
-				public boolean propagatesViaParameters(IRequestHandler handler)
-				{
-					return false;
-				}
-			},
+		@Override
+		public boolean propagatesViaParameters(IRequestHandler handler)
+		{
+			return false;
+		}
+	},
 	/**
-	 * Persistent conversations are propagated between non-bookmarkable pages only
+	 * Persistent conversations are propagated between non-bookmarkable pages
+	 * only
 	 */
-	NONBOOKMARKABLE
-			{
-				@Override
-				public boolean propagatesViaPage(Page page, IRequestHandler handler)
-				{
-					return true;
-				}
+	NONBOOKMARKABLE {
+		@Override
+		public boolean propagatesViaPage(Page page, IRequestHandler handler)
+		{
+			return true;
+		}
 
-				@Override
-				public boolean propagatesViaParameters(IRequestHandler handler)
-				{
-					return false;
-				}
-			},
+		@Override
+		public boolean propagatesViaParameters(IRequestHandler handler)
+		{
+			return false;
+		}
+	},
 	/**
-	 * Persistent conversations are propagated between bookmarkable and non-bookmarkable pages
+	 * Persistent conversations are propagated between bookmarkable and
+	 * non-bookmarkable pages
 	 */
-	ALL
-			{
-				@Override
-				public boolean propagatesViaPage(Page page, IRequestHandler handler)
-				{
-					return true;
-				}
+	ALL {
+		@Override
+		public boolean propagatesViaPage(Page page, IRequestHandler handler)
+		{
+			return true;
+		}
 
-				@Override
-				public boolean propagatesViaParameters(IRequestHandler handler)
-				{
-					return true;
-				}
-			};
+		@Override
+		public boolean propagatesViaParameters(IRequestHandler handler)
+		{
+			return true;
+		}
+	};
 }

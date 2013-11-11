@@ -27,7 +27,7 @@ import org.apache.wicket.cdi.ComponentInjector;
 
 /**
  * Injects components with CDI dependencies
- *
+ * 
  * @author igor
  */
 @ApplicationScoped
@@ -40,8 +40,9 @@ public class TestComponentInjector extends ComponentInjector
 	public void onInstantiation(Component component)
 	{
 		Class instanceClass = component.getClass();
-		if (instanceClass.isAnonymousClass() ||
-				(instanceClass.isMemberClass() && Modifier.isStatic(instanceClass.getModifiers()) == false))
+		if (instanceClass.isAnonymousClass()
+				|| (instanceClass.isMemberClass() && Modifier
+						.isStatic(instanceClass.getModifiers()) == false))
 		{
 			return;
 		}

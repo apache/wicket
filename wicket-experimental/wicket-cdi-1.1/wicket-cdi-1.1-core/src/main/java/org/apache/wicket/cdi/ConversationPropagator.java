@@ -46,8 +46,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A request cycle listener that takes care of propagating persistent conversations.
- *
+ * A request cycle listener that takes care of propagating persistent
+ * conversations.
+ * 
  * @author igor
  */
 @ApplicationScoped
@@ -80,7 +81,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	{
 		Conversation conversation = getConversation();
 		logger.debug("In onRequestHandlerResolved id = {}", conversation.getId());
-		String cid = cycle.getRequest().getRequestParameters().getParameterValue(CID_ATTR).toString();
+		String cid = cycle.getRequest().getRequestParameters().getParameterValue(CID_ATTR)
+				.toString();
 		Page page = getPage(handler);
 
 		if (page == null)
@@ -94,7 +96,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		}
 
 
-		if (cid != null && !conversation.isTransient() && !Objects.isEqual(conversation.getId(), cid))
+		if (cid != null && !conversation.isTransient()
+				&& !Objects.isEqual(conversation.getId(), cid))
 		{
 			logger.info("Conversation {} has expired for {}", cid, page);
 			throw new ConversationExpiredException(null, cid, page, handler);
@@ -106,15 +109,16 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	@Override
 	public IRequestHandler onException(RequestCycle cycle, Exception ex)
 	{
-		// if we are handling a stale page exception then use its conversation since we are most
+		// if we are handling a stale page exception then use its conversation
+		// since we are most
 		// likely about to rerender it.
 
 		if (ex instanceof StalePageException)
 		{
-			IRequestablePage requestable = ((StalePageException) ex).getPage();
+			IRequestablePage requestable = ((StalePageException)ex).getPage();
 			if (requestable instanceof Page)
 			{
-				Page page = (Page) requestable;
+				Page page = (Page)requestable;
 				String cid = container.getConversationMarker(page);
 				if (cid != null)
 				{
@@ -122,7 +126,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 					{
 						activateConversationIfNeeded(page, cycle, null, cid);
 						return null;
-					} catch (ConversationExpiredException e)
+					}
+					catch (ConversationExpiredException e)
 					{
 						// ignore, we will start a new one below
 					}
@@ -134,8 +139,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		return null;
 	}
 
-	private void activateConversationIfNeeded(Page page, RequestCycle cycle, IRequestHandler handler,
-	                                          String cid)
+	private void activateConversationIfNeeded(Page page, RequestCycle cycle,
+			IRequestHandler handler, String cid)
 	{
 		if (!activateForHandler(handler))
 		{
@@ -152,7 +157,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 				container.activateConversationalContext(cycle, cid);
 			}
 
-		} catch (NonexistentConversationException e)
+		}
+		catch (NonexistentConversationException e)
 		{
 			logger.info("Unable to restore conversation with id {}", cid, e.getMessage());
 			logger.debug("Unable to restore conversation", e);
@@ -176,7 +182,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		if (autoEndIfNecessary(page, handler, conversation))
 		{
 			container.activateConversationalContext(cycle, null);
-		} else
+		}
+		else
 		{
 			autoBeginIfNecessary(page, handler);
 		}
@@ -190,7 +197,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	@Override
 	public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
 	{
-		// propagate current non-transient conversation to the newly scheduled page
+		// propagate current non-transient conversation to the newly scheduled
+		// page
 
 		Conversation conversation = getConversation();
 		logger.debug("In onRequestHandlerScheduled id = {}", conversation.getId());
@@ -204,7 +212,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		{
 			if (getPropagation().propagatesViaPage(page, handler))
 			{
-				// propagate a conversation across non-bookmarkable page instances
+				// propagate a conversation across non-bookmarkable page
+				// instances
 				setConversationOnPage(page);
 				propagated = true;
 			}
@@ -237,7 +246,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		if (conversation.isTransient())
 		{
 			clearConversationOnPage(page);
-		} else
+		}
+		else
 		{
 
 			logger.debug("Propagating non-transient conversation {} via meta of page instance {}",
@@ -261,10 +271,11 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	{
 		Conversation conversation = getConversation();
 		logger.debug("In onUrlMapped id = {}", conversation.getId());
-		// no need to propagate the conversation to packaged resources, they should never change
+		// no need to propagate the conversation to packaged resources, they
+		// should never change
 		if (handler instanceof ResourceReferenceRequestHandler)
 		{
-			if (((ResourceReferenceRequestHandler) handler).getResourceReference() instanceof PackageResourceReference)
+			if (((ResourceReferenceRequestHandler)handler).getResourceReference() instanceof PackageResourceReference)
 			{
 				return;
 			}
@@ -283,19 +294,29 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			logger.debug("Propagating non-transient conversation {} via url", conversation.getId());
 
 			url.setQueryParameter(CID_ATTR, conversation.getId());
-		} else
+		}
+		else
 		{
-			//we did not propagate.
-			//Cancel scheduled conversation end if page is auto.
+			// we did not propagate.
+			// Cancel scheduled conversation end if page is auto.
 			Page page = getPage(handler);
 			if (page != null)
 			{
 				Conversational annotation = page.getClass().getAnnotation(Conversational.class);
 				if (annotation != null)
 				{
-					if (annotation.auto() && getConversationManager().isConversationScheduledForEnd())
+					if (annotation.auto()
+							&& getConversationManager().isConversationScheduledForEnd())
 					{
-						getConversationManager().cancelConversationEnd(); //was scheduled to end but next page is auto
+						getConversationManager().cancelConversationEnd(); // was
+																			// scheduled
+																			// to
+																			// end
+																			// but
+																			// next
+																			// page
+																			// is
+																			// auto
 					}
 				}
 			}
@@ -303,10 +324,11 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	}
 
 	/**
-	 * Determines whether or not a conversation should be activated for the specified handler. This
-	 * method is used to filter out conversation activation for utility handlers such as the
+	 * Determines whether or not a conversation should be activated for the
+	 * specified handler. This method is used to filter out conversation
+	 * activation for utility handlers such as the
 	 * {@link BufferedResponseRequestHandler}
-	 *
+	 * 
 	 * @param handler
 	 * @return {@code true} iff a conversation should be activated
 	 */
@@ -316,7 +338,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		{
 			if (handler instanceof BufferedResponseRequestHandler)
 			{
-				// we do not care about pages that are being rendered from a buffer
+				// we do not care about pages that are being rendered from a
+				// buffer
 				return false;
 			}
 		}
@@ -347,7 +370,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			if (auto)
 			{
 				getConversation().begin();
-				logger.debug("Auto-began conversation {} for page {}", getConversation().getId(), page);
+				logger.debug("Auto-began conversation {} for page {}", getConversation().getId(),
+						page);
 			}
 		}
 		ConversationPropagation prop = annotation != null ? annotation.prop() : getPropagation();
@@ -356,7 +380,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		{
 			getConversationManager().setPropagation(prop);
 			getConversationManager().setManageConversation(auto);
-		} else
+		}
+		else
 		{
 			if (prop != getPropagation())
 			{
@@ -366,7 +391,8 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		}
 	}
 
-	protected boolean autoEndIfNecessary(Page page, IRequestHandler handler, Conversation conversation)
+	protected boolean autoEndIfNecessary(Page page, IRequestHandler handler,
+			Conversation conversation)
 	{
 		if (page == null || conversation.isTransient())
 		{
@@ -404,8 +430,9 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	}
 
 	/**
-	 * Resolves a page instance from the request handler iff the page instance is already created
-	 *
+	 * Resolves a page instance from the request handler iff the page instance
+	 * is already created
+	 * 
 	 * @param handler
 	 * @return page or {@code null} if none
 	 */
@@ -413,15 +440,15 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	{
 		while (handler instanceof IRequestHandlerDelegate)
 		{
-			handler = ((IRequestHandlerDelegate) handler).getDelegateHandler();
+			handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
 		}
 
 		if (handler instanceof IPageRequestHandler)
 		{
-			IPageRequestHandler pageHandler = (IPageRequestHandler) handler;
+			IPageRequestHandler pageHandler = (IPageRequestHandler)handler;
 			if (pageHandler.isPageInstanceCreated())
 			{
-				return (Page) pageHandler.getPage();
+				return (Page)pageHandler.getPage();
 			}
 		}
 		return null;
@@ -429,7 +456,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 
 	/**
 	 * Resolves page parameters from a request handler
-	 *
+	 * 
 	 * @param handler
 	 * @return page parameters or {@code null} if none
 	 */
@@ -437,7 +464,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	{
 		if (handler instanceof IPageClassRequestHandler)
 		{
-			IPageClassRequestHandler pageHandler = (IPageClassRequestHandler) handler;
+			IPageClassRequestHandler pageHandler = (IPageClassRequestHandler)handler;
 			return pageHandler.getPageParameters();
 		}
 		return null;
@@ -468,10 +495,11 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		if (getConversation().isTransient())
 		{
 			logger.debug("Getting global Propagation {}.", cdiConfiguration.getPropagation());
-			return (ConversationPropagation) cdiConfiguration.getPropagation();
+			return (ConversationPropagation)cdiConfiguration.getPropagation();
 		}
-		logger.debug("Propagation is set to {} with id = {}", getConversationManager().getPropagation(), getConversation().getId());
-		return (ConversationPropagation) getConversationManager().getPropagation();
+		logger.debug("Propagation is set to {} with id = {}", getConversationManager()
+				.getPropagation(), getConversation().getId());
+		return (ConversationPropagation)getConversationManager().getPropagation();
 	}
 
 }

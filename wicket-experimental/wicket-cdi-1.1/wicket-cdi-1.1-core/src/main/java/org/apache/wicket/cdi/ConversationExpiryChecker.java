@@ -33,11 +33,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Checks for conversation expiration during page render and throws a
- * {@link ConversationExpiredException} when an expired conversation is detected.
+ * {@link ConversationExpiredException} when an expired conversation is
+ * detected.
  * <p/>
- * For example a link that calls {@link Conversation#end()} but does not redirect to a
- * non-conversation-dependent page will be caught by this listener.
- *
+ * For example a link that calls {@link Conversation#end()} but does not
+ * redirect to a non-conversation-dependent page will be caught by this
+ * listener.
+ * 
  * @author igor
  */
 @ApplicationScoped

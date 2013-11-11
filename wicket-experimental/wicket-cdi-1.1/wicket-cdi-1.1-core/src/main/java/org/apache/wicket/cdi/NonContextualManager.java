@@ -23,8 +23,9 @@ import javax.enterprise.context.ApplicationScoped;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Default implementation of {@link INonContextualManager} using {@link NonContextual} helper
- *
+ * Default implementation of {@link INonContextualManager} using
+ * {@link NonContextual} helper
+ * 
  * @author igor
  */
 @ApplicationScoped
@@ -49,8 +50,8 @@ class NonContextualManager implements INonContextualManager
 	}
 
 	/**
-	 * Performs dependency injection on the noncontextual instance and invokes any
-	 * {@link PostConstruct} callbacks
+	 * Performs dependency injection on the noncontextual instance and invokes
+	 * any {@link PostConstruct} callbacks
 	 */
 	@Override
 	public <T> void postConstruct(T instance)
@@ -60,7 +61,8 @@ class NonContextualManager implements INonContextualManager
 	}
 
 	/**
-	 * Invokes any {@link PreDestroy} callbacks and cleans up any injected dependencies
+	 * Invokes any {@link PreDestroy} callbacks and cleans up any injected
+	 * dependencies
 	 */
 	@Override
 	public <T> void preDestroy(T instance)

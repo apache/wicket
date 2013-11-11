@@ -58,7 +58,8 @@ public class ConversationManager implements Serializable
 		logger.debug("Starting new Conversation manager for id = {}", getConversation().getId());
 		propagation = globalPropagation;
 		manageConversation = globalAuto;
-		logger.debug("Setting initial values to auto = {} prop = {}", manageConversation, propagation);
+		logger.debug("Setting initial values to auto = {} prop = {}", manageConversation,
+				propagation);
 	}
 
 	private Conversation getConversation()
@@ -82,8 +83,8 @@ public class ConversationManager implements Serializable
 			return;
 		}
 
-		logger.debug("Changing conversation dependent propagation to {} for id = {}",
-				propagation, getConversation().getId());
+		logger.debug("Changing conversation dependent propagation to {} for id = {}", propagation,
+				getConversation().getId());
 
 		this.propagation = propagation;
 	}

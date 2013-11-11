@@ -33,7 +33,7 @@ public class TestConversationBean implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(TestConversationBean.class);
-	
+
 	private AtomicInteger counter = new AtomicInteger();
 
 	public int getCount()

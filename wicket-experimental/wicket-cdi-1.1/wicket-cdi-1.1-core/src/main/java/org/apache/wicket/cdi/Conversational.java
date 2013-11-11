@@ -33,8 +33,7 @@ import org.apache.wicket.Page;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Typed(Page.class)
-public @interface Conversational
-{
+public @interface Conversational {
 	ConversationPropagation prop() default ConversationPropagation.NONBOOKMARKABLE;
 
 	boolean auto() default true;

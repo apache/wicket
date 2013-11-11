@@ -23,7 +23,7 @@ import org.apache.wicket.Session;
 
 /**
  * Injects components with CDI dependencies
- *
+ * 
  * @author igor
  */
 @ApplicationScoped

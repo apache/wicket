@@ -30,20 +30,21 @@ import javax.inject.Qualifier;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
- * Bean Qualifier for Cdi enable WebApplication. This Qualifier allows for the WebApplication
- * to be named so that the CdiApplicationFactory can select the WebApplication when multiple
- * WebApplication exist in the ClassLoader. This Annotation also marks the WebApplication as Dependent.
- * This prevents the WebApplication from being proxied, which will cause failures in an EE container.
- *
+ * Bean Qualifier for Cdi enable WebApplication. This Qualifier allows for the
+ * WebApplication to be named so that the CdiApplicationFactory can select the
+ * WebApplication when multiple WebApplication exist in the ClassLoader. This
+ * Annotation also marks the WebApplication as Dependent. This prevents the
+ * WebApplication from being proxied, which will cause failures in an EE
+ * container.
+ * 
  * @author jsarman
  */
 @Qualifier
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RUNTIME)
 @Documented
 @Dependent
 @Typed(WebApplication.class)
-public @interface WicketApp
-{
+public @interface WicketApp {
 	String value() default "";
 }

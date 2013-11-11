@@ -23,11 +23,13 @@ import org.apache.wicket.behavior.Behavior;
 
 /**
  * Injects components with CDI dependencies
- *
+ * 
  * @author igor
  */
 @ApplicationScoped
-public class BehaviorInjector extends AbstractInjector<Behavior> implements IBehaviorInstantiationListener
+public class BehaviorInjector extends AbstractInjector<Behavior>
+		implements
+			IBehaviorInstantiationListener
 {
 
 	@Override

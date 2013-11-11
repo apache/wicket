@@ -22,9 +22,10 @@ import org.apache.wicket.protocol.http.IWebApplicationFactory;
 import org.apache.wicket.protocol.http.WicketFilter;
 
 /**
- * CdiWicketFilter is a Cdi Enabled version of WicketFilter. It uses the Managed Version of
- * {@link CdiWebApplicationFactory} therefore the WebApplication is also Managed via the Cdi container.
- *
+ * CdiWicketFilter is a Cdi Enabled version of WicketFilter. It uses the Managed
+ * Version of {@link CdiWebApplicationFactory} therefore the WebApplication is
+ * also Managed via the Cdi container.
+ * 
  * @author jsarman
  */
 

@@ -39,7 +39,7 @@ public class MockCdiContainer extends AbstractCdiContainer
 	/**
 	 * Activates the conversational context and starts the conversation with the
 	 * specified cid
-	 *
+	 * 
 	 * @param cycle
 	 * @param cid
 	 */
@@ -52,7 +52,8 @@ public class MockCdiContainer extends AbstractCdiContainer
 			conversationContext.invalidate();
 			conversationContext.deactivate();
 			conversationContext.activate(cid);
-		} else
+		}
+		else
 		{
 			conversationContext.activate(cid);
 		}

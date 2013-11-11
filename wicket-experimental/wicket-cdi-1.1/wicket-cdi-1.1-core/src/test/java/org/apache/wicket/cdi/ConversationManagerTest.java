@@ -39,8 +39,10 @@ public class ConversationManagerTest extends WicketCdiTestCase
 	{
 		conversation.begin();
 
-		assertTrue(testConversationManagerConversationManagement(!cdiConfiguration.isAutoConversationManagement()));
-		assertTrue(testConversationManagerConversationManagement(cdiConfiguration.isAutoConversationManagement()));
+		assertTrue(testConversationManagerConversationManagement(!cdiConfiguration
+				.isAutoConversationManagement()));
+		assertTrue(testConversationManagerConversationManagement(cdiConfiguration
+				.isAutoConversationManagement()));
 		for (ConversationPropagation cp : ConversationPropagation.values())
 		{
 			assertTrue(testConversationManagerPropagation(cp));
@@ -51,14 +53,17 @@ public class ConversationManagerTest extends WicketCdiTestCase
 	@Test
 	public void testConverationManagerWithoutConversation()
 	{
-		// Transient conversation results in conversationManager using global so test should return false
-		assertFalse(testConversationManagerConversationManagement(!cdiConfiguration.isAutoConversationManagement()));
+		// Transient conversation results in conversationManager using global so
+		// test should return false
+		assertFalse(testConversationManagerConversationManagement(!cdiConfiguration
+				.isAutoConversationManagement()));
 		for (ConversationPropagation cp : ConversationPropagation.values())
 		{
-			//Skip no change test
+			// Skip no change test
 			if (cp != cdiConfiguration.getPropagation())
 			{
-				// Transient conversation results in conversationManager using global is test returns false
+				// Transient conversation results in conversationManager using
+				// global is test returns false
 				assertFalse(testConversationManagerPropagation(cp));
 			}
 		}

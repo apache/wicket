@@ -86,13 +86,15 @@ public class ContextManager
 
 	public void destroy(HttpSession session)
 	{
-		if(currentRequest != null) {
-			currentSession = currentRequest.getSession(false); 
+		if (currentRequest != null)
+		{
+			currentSession = currentRequest.getSession(false);
 		}
-		
-		if(currentSession != null) {
+
+		if (currentSession != null)
+		{
 			lifecycle.sessionDestroyed(currentSession);
-			currentSession = null;	
+			currentSession = null;
 		}
 	}
 }

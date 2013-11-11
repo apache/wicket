@@ -28,9 +28,8 @@ import javax.inject.Qualifier;
  * @author jsarman
  */
 @Qualifier
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TestQualifier
-{
+public @interface TestQualifier {
 
 }

@@ -25,13 +25,12 @@ import javax.inject.Qualifier;
 
 /**
  * Qualifier used to inject the Propagation Method
- *
+ * 
  * @author jsarman
  */
 @Qualifier
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Propagation
-{
+public @interface Propagation {
 
 }

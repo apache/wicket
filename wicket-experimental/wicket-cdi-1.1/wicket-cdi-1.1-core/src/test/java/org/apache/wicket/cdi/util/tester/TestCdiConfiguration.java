@@ -32,11 +32,11 @@ import org.apache.wicket.cdi.Propagation;
 
 /**
  * Specializes the CdiConfigration to allow the ConfigurationParams key to be
- * remapped after the Application is used to construct the WicketTester.
- * This is needed because WicketTester generates the ApplicationKey during construction
- * and does not contain a mechanism to override the name.  In the normal code the WicketFilter
- * sets the key to the filtername so remapping is not necessary.
- *
+ * remapped after the Application is used to construct the WicketTester. This is
+ * needed because WicketTester generates the ApplicationKey during construction
+ * and does not contain a mechanism to override the name. In the normal code the
+ * WicketFilter sets the key to the filtername so remapping is not necessary.
+ * 
  * @author jsarman
  */
 @ApplicationScoped
@@ -52,8 +52,7 @@ public class TestCdiConfiguration extends CdiConfiguration
 		super.init();
 	}
 
-	public
-	@Produces
+	public @Produces
 	@Propagation
 	IConversationPropagation getPropagation()
 	{
@@ -61,8 +60,7 @@ public class TestCdiConfiguration extends CdiConfiguration
 	}
 
 
-	public
-	@Produces
+	public @Produces
 	@Auto
 	@Override
 	Boolean isAutoConversationManagement()
@@ -70,8 +68,7 @@ public class TestCdiConfiguration extends CdiConfiguration
 		return super.isAutoConversationManagement();
 	}
 
-	public
-	@Produces
+	public @Produces
 	@IgnoreList
 	@Override
 	String[] getPackagesToIgnore()

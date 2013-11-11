@@ -48,7 +48,8 @@ public class CdiWicketTester extends WicketTester
 
 
 	@Inject
-	public CdiWicketTester(TestCdiConfiguration cdiConfiguration, CdiWebApplicationFactory factory, @ConfigurationFilter final FilterConfig filterConfig)
+	public CdiWicketTester(TestCdiConfiguration cdiConfiguration, CdiWebApplicationFactory factory,
+			@ConfigurationFilter final FilterConfig filterConfig)
 	{
 		super(factory.createApplication(new WicketFilter()
 		{
@@ -69,7 +70,9 @@ public class CdiWicketTester extends WicketTester
 	{
 		logger.debug("Initialized Cdi Wicket Tester");
 		cdiConfiguration.remapApplicationKey(filterConfig.getFilterName(), getApplication());
-		contextManager.activateContexts(getRequest()); //Start up contexts in case no requests are performed
+		contextManager.activateContexts(getRequest()); // Start up contexts in
+														// case no requests are
+														// performed
 	}
 
 
@@ -85,9 +88,10 @@ public class CdiWicketTester extends WicketTester
 
 	/**
 	 * Process the request by first activating the contexts on initial call.
-	 * This call is called recursively in the super class so keep track of
-	 * the topmost call and only activate and deactivate the contexts during that time.
-	 *
+	 * This call is called recursively in the super class so keep track of the
+	 * topmost call and only activate and deactivate the contexts during that
+	 * time.
+	 * 
 	 * @param forcedRequest
 	 * @param forcedRequestHandler
 	 * @param redirect
@@ -95,7 +99,7 @@ public class CdiWicketTester extends WicketTester
 	 */
 	@Override
 	protected boolean processRequest(final MockHttpServletRequest forcedRequest,
-	                                 final IRequestHandler forcedRequestHandler, final boolean redirect)
+			final IRequestHandler forcedRequestHandler, final boolean redirect)
 	{
 		if (count.getAndIncrement() == 0)
 		{
@@ -103,16 +107,18 @@ public class CdiWicketTester extends WicketTester
 			if (getLastRequest() != null)
 			{
 				contextManager.deactivateContexts(getLastRequest());
-			} else
+			}
+			else
 			{
-				configure();//make sure we are configured for cdi
+				configure();// make sure we are configured for cdi
 			}
 			contextManager.activateContexts(getRequest());
 		}
 		try
 		{
 			return super.processRequest(forcedRequest, forcedRequestHandler, redirect);
-		} finally
+		}
+		finally
 		{
 			count.decrementAndGet();
 		}
@@ -130,7 +136,8 @@ public class CdiWicketTester extends WicketTester
 			}
 			contextManager.destroy(getHttpSession());
 			destroy();
-		} catch (Throwable t)
+		}
+		catch (Throwable t)
 		{
 		}
 	}

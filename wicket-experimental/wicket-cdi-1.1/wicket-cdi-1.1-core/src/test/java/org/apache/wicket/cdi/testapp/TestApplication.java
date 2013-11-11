@@ -37,15 +37,10 @@ public class TestApplication extends WebApplication
 	protected void init()
 	{
 		super.init();
-		//Configure everything to default just to hit that code.
-		CdiConfiguration.get()
-				.setAutoConversationManagement(false)
-				.setInjectApplication(true)
-				.setInjectBehaviors(true)
-				.setInjectComponents(true)
-				.setInjectSession(true)
-				.setPropagation(ConversationPropagation.NONBOOKMARKABLE)
-				.configure(this);
+		// Configure everything to default just to hit that code.
+		CdiConfiguration.get().setAutoConversationManagement(false).setInjectApplication(true)
+				.setInjectBehaviors(true).setInjectComponents(true).setInjectSession(true)
+				.setPropagation(ConversationPropagation.NONBOOKMARKABLE).configure(this);
 	}
 
 

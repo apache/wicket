@@ -39,7 +39,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Override
 	public void init()
 	{
-		//override so we do not initialize tester
+		// override so we do not initialize tester
 	}
 
 	@Test
@@ -77,9 +77,10 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 			tester.clickLink("increment");
 		}
 		tester.clickLink("next");
-		//The conversation should auto end and not create another one
-		//so the next page just keeps getting 1 because the conversationscoped bean
-		//doesnt persist across requests.
+		// The conversation should auto end and not create another one
+		// so the next page just keeps getting 1 because the conversationscoped
+		// bean
+		// doesnt persist across requests.
 		for (i = 0; i < 3; i++)
 		{
 			tester.clickLink("increment");
@@ -91,9 +92,8 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	public void testPropagationAllNonBookmarkable()
 	{
 
-		Map<String, String> params =
-				Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
-						ConversationPropagation.ALL.name());
+		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
+				ConversationPropagation.ALL.name());
 
 		CdiWicketTester tester = getTester(params);
 
@@ -116,9 +116,8 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Test
 	public void testPropagationAllBookmarkable()
 	{
-		Map<String, String> params =
-				Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
-						ConversationPropagation.ALL.name());
+		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
+				ConversationPropagation.ALL.name());
 
 		CdiWicketTester tester = getTester(params);
 
@@ -142,9 +141,8 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Test
 	public void testPropagationNone()
 	{
-		Map<String, String> params =
-				Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
-						ConversationPropagation.NONE.name());
+		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
+				ConversationPropagation.NONE.name());
 
 		CdiWicketTester tester = getTester(params);
 
@@ -168,11 +166,11 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	public void testGlobalAutoSettingNonBookmarkable()
 	{
 
-		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.AUTO_CONVERSATION, "true");
+		Map<String, String> params = Collections.singletonMap(
+				CdiWebApplicationFactory.AUTO_CONVERSATION, "true");
 
 		CdiWicketTester tester = getTester(params);
-		tester.startPage(TestConversationPage.class,
-				new PageParameters().add("auto", true));
+		tester.startPage(TestConversationPage.class, new PageParameters().add("auto", true));
 		int i;
 		for (i = 0; i < 3; i++)
 		{
@@ -190,7 +188,8 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Test
 	public void testGlobalAutoSettingBookmarkable()
 	{
-		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.AUTO_CONVERSATION, "true");
+		Map<String, String> params = Collections.singletonMap(
+				CdiWebApplicationFactory.AUTO_CONVERSATION, "true");
 
 		CdiWicketTester tester = getTester(params);
 		tester.startPage(TestConversationPage.class,
