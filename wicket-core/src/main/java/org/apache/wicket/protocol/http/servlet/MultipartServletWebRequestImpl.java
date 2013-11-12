@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
@@ -296,7 +295,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Subclasses that want to receive upload notifications should return true. By default it takes
-	 * the value from {@link IApplicationSettings#isUploadProgressUpdatesEnabled()}.
+	 * the value from {@link org.apache.wicket.settings.def.ApplicationSettings#isUploadProgressUpdatesEnabled()}.
 	 * 
 	 * @return true if upload status update event should be invoked
 	 */

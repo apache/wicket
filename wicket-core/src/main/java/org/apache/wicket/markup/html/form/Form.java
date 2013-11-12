@@ -52,7 +52,6 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -271,7 +270,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 	/**
 	 * Maximum size of an upload in bytes. If null, the setting
-	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * {@link org.apache.wicket.settings.def.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 */
 	private Bytes maxSize = null;
 
@@ -551,7 +550,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 	/**
 	 * Gets the maximum size for uploads. If null, the setting
-	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * {@link org.apache.wicket.settings.def.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 * 
 	 * 
 	 * @return the maximum size
@@ -1024,7 +1023,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 	/**
 	 * Sets the maximum size for uploads. If null, the setting
-	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * {@link org.apache.wicket.settings.def.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 * 
 	 * @param maxSize
 	 *            The maximum size

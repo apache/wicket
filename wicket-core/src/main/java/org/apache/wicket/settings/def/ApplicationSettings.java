@@ -23,12 +23,22 @@ import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.feedback.DefaultCleanupFeedbackMessageFilter;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * 
+ * * Settings interface for application settings.
+ * <p>
+ * <i>internalErrorPage </i>- You can override this with your own page class to display internal
+ * errors in a different way.
+ * <p>
+ * <i>pageExpiredErrorPage </i>- You can override this with your own bookmarkable page class to
+ * display expired page errors in a different way. You can set property homePageRenderStrategy to
+ * choose from different ways the home page url shows up in your browser.
+ * <p>
+ * <b>A Converter Factory </b>- By overriding getConverterFactory(), you can provide your own
+ * factory which creates locale sensitive Converter instances.
+ *
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -38,7 +48,7 @@ import org.apache.wicket.util.lang.Bytes;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class ApplicationSettings implements IApplicationSettings
+public class ApplicationSettings
 {
 	private WeakReference<Class<? extends Page>> accessDeniedPage;
 
@@ -55,60 +65,72 @@ public class ApplicationSettings implements IApplicationSettings
 	private IFeedbackMessageFilter feedbackMessageCleanupFilter = new DefaultCleanupFeedbackMessageFilter();
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#getAccessDeniedPage()
+	 * Gets the access denied page class.
+	 *
+	 * @return Returns the accessDeniedPage.
 	 */
-	@Override
 	public Class<? extends Page> getAccessDeniedPage()
 	{
 		return accessDeniedPage.get();
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#getClassResolver()
+	 * Gets the default resolver to use when finding classes and resources.
+	 *
+	 * @return Default class resolver
 	 */
-	@Override
 	public IClassResolver getClassResolver()
 	{
 		return classResolver;
 	}
 
-	@Override
+	/**
+	 * Gets the default maximum size for uploads. This is used by {@link org.apache.wicket.markup.html.form.Form#getMaxSize()} if no
+	 * value is explicitly set through {@link org.apache.wicket.markup.html.form.Form#setMaxSize(Bytes)}.
+	 *
+	 * @return the default maximum size for uploads
+	 */
 	public Bytes getDefaultMaximumUploadSize()
 	{
 		return defaultMaximumUploadSize;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#getInternalErrorPage()
+	 * Gets internal error page class.
+	 *
+	 * @return Returns the internalErrorPage.
 	 */
-	@Override
 	public Class<? extends Page> getInternalErrorPage()
 	{
 		return internalErrorPage.get();
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#getPageExpiredErrorPage()
+	 * Gets the page expired page class.
+	 *
+	 * @return Returns the pageExpiredErrorPage.
 	 */
-	@Override
 	public Class<? extends Page> getPageExpiredErrorPage()
 	{
 		return pageExpiredErrorPage.get();
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#isUploadProgressUpdatesEnabled()
+	 * Gets whether wicket is providing updates about the upload progress or not.
+	 *
+	 * @return if true upload progress monitoring is enabled
 	 */
-	@Override
 	public boolean isUploadProgressUpdatesEnabled()
 	{
 		return uploadProgressUpdatesEnabled;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
+	 * Sets the access denied page class. The class must be bookmarkable and must extend Page.
+	 *
+	 * @param accessDeniedPage
+	 *            The accessDeniedPage to set.
 	 */
-	@Override
 	public void setAccessDeniedPage(Class<? extends Page> accessDeniedPage)
 	{
 		if (accessDeniedPage == null)
@@ -121,42 +143,48 @@ public class ApplicationSettings implements IApplicationSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#setClassResolver(org.apache.wicket.application.IClassResolver)
+	 * Sets the default class resolver to use when finding classes and resources.
+	 *
+	 * @param defaultClassResolver
+	 *            The default class resolver
 	 */
-	@Override
 	public void setClassResolver(final IClassResolver defaultClassResolver)
 	{
 		classResolver = defaultClassResolver;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#setDefaultMaximumUploadSize(org.apache.wicket.util.lang.Bytes)
+	 * Sets the default maximum size for uploads. This is used by {@link org.apache.wicket.markup.html.form.Form#getMaxSize()} if no
+	 * value is explicitly set through {@link org.apache.wicket.markup.html.form.Form#setMaxSize(Bytes)}.
+	 *
+	 * @param defaultMaximumUploadSize
+	 *            the default maximum size for uploads
 	 */
-	@Override
 	public void setDefaultMaximumUploadSize(Bytes defaultMaximumUploadSize)
 	{
 		this.defaultMaximumUploadSize = defaultMaximumUploadSize;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#setInternalErrorPage(java.lang.Class)
+	 * Sets internal error page class. The class must be bookmarkable and must extend Page.
+	 *
+	 * @param internalErrorPage
+	 *            The internalErrorPage to set.
 	 */
-	@Override
 	public void setInternalErrorPage(final Class<? extends Page> internalErrorPage)
 	{
-		if (internalErrorPage == null)
-		{
-			throw new IllegalArgumentException("Argument internalErrorPage may not be null");
-		}
+		Args.notNull(internalErrorPage, "internalErrorPage");
 		checkPageClass(internalErrorPage);
 
 		this.internalErrorPage = new WeakReference<Class<? extends Page>>(internalErrorPage);
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#setPageExpiredErrorPage(java.lang.Class)
+	 * Sets the page expired page class. The class must be bookmarkable and must extend Page.
+	 *
+	 * @param pageExpiredErrorPage
+	 *            The pageExpiredErrorPage to set.
 	 */
-	@Override
 	public void setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage)
 	{
 		if (pageExpiredErrorPage == null)
@@ -169,9 +197,11 @@ public class ApplicationSettings implements IApplicationSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#setUploadProgressUpdatesEnabled(boolean)
+	 * Sets whether wicket should provide updates about the upload progress or not.
+	 *
+	 * @param uploadProgressUpdatesEnabled
+	 *            if true upload progress monitoring is enabled
 	 */
-	@Override
 	public void setUploadProgressUpdatesEnabled(boolean uploadProgressUpdatesEnabled)
 	{
 		this.uploadProgressUpdatesEnabled = uploadProgressUpdatesEnabled;
@@ -198,14 +228,25 @@ public class ApplicationSettings implements IApplicationSettings
 		}
 	}
 
-	@Override
+	/**
+	 * Sets the cleanup feedback message filter. see {@link #getFeedbackMessageCleanupFilter()} for
+	 * more details.
+	 *
+	 * @param filter
+	 */
 	public void setFeedbackMessageCleanupFilter(IFeedbackMessageFilter filter)
 	{
 		Args.notNull(filter, "filter");
 		feedbackMessageCleanupFilter = filter;
 	}
 
-	@Override
+	/**
+	 * Returns the cleanup feedack message filter. At the end of request all messages are ran
+	 * through this filter, and the ones accepted are removed. The default implementation accepts
+	 * (and therefore remkoves) all rendered messages.
+	 *
+	 * @return feedback message filter
+	 */
 	public IFeedbackMessageFilter getFeedbackMessageCleanupFilter()
 	{
 		return feedbackMessageCleanupFilter;

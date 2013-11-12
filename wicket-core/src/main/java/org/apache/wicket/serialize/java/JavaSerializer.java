@@ -33,7 +33,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,7 +212,7 @@ public class JavaSerializer implements ISerializer
 				// Should be if serialization happened in thread with application set
 				// (WICKET-2195)
 				Application application = Application.get();
-				IApplicationSettings applicationSettings = application.getApplicationSettings();
+				ApplicationSettings applicationSettings = application.getApplicationSettings();
 				IClassResolver classResolver = applicationSettings.getClassResolver();
 
 				candidate = classResolver.resolveClass(className);

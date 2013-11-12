@@ -34,7 +34,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.JavaSerializer;
-import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
@@ -59,7 +59,6 @@ public class WicketObjects
 	 * @param className
 	 *            Class to resolve
 	 * @return Resolved class
-	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> resolveClass(final String className)
@@ -176,7 +175,7 @@ public class WicketObjects
 			}
 
 			Application application = Application.get();
-			IApplicationSettings applicationSettings = application.getApplicationSettings();
+			ApplicationSettings applicationSettings = application.getApplicationSettings();
 			IClassResolver classResolver = applicationSettings.getClassResolver();
 
 			Class<?> candidate = null;
@@ -328,7 +327,7 @@ public class WicketObjects
 
 
 						Application application = Application.get();
-						IApplicationSettings applicationSettings = application.getApplicationSettings();
+						ApplicationSettings applicationSettings = application.getApplicationSettings();
 						IClassResolver classResolver = applicationSettings.getClassResolver();
 
 						Class<?> candidate = null;

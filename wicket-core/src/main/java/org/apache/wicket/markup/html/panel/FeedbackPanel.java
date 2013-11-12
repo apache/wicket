@@ -33,7 +33,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.settings.IApplicationSettings;
 
 
 /**
@@ -74,7 +73,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				/**
 				 * WICKET-4258 Feedback messages might be cleared already.
 				 * 
-				 * @see IApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)
+				 * @see org.apache.wicket.settings.def.ApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)
 				 */
 				@Override
 				public FeedbackMessage getObject()
