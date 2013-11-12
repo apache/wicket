@@ -27,7 +27,6 @@ import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.settings.IRequestCycleSettings;
 
 
 /**
@@ -39,7 +38,8 @@ import org.apache.wicket.settings.IRequestCycleSettings;
  * </p>
  * <p>
  * This page is being used by the default implementation of {@link org.apache.wicket.Session#getClientInfo()},
- * which in turn uses {@link IRequestCycleSettings#getGatherExtendedBrowserInfo() a setting} to
+ * which in turn uses
+ * {@link org.apache.wicket.settings.def.RequestCycleSettings#getGatherExtendedBrowserInfo() a setting} to
  * determine whether this page should be redirected to (it does when it is true).
  * </p>
  * 

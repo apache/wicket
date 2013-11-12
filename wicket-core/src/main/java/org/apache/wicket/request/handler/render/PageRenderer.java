@@ -23,7 +23,7 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
+import org.apache.wicket.settings.def.RequestCycleSettings;
 
 /**
  * Delegate responsible for rendering the page. Depending on the implementation (web, test, portlet,
@@ -80,17 +80,20 @@ public abstract class PageRenderer
 
 	protected boolean isOnePassRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.ONE_PASS_RENDER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
+				RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER;
 	}
 
 	protected boolean isRedirectToRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
+				RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER;
 	}
 
 	protected boolean isRedirectToBuffer()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
+				RequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
 	/**

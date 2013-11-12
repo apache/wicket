@@ -20,8 +20,8 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
-import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
+import org.apache.wicket.settings.def.RequestCycleSettings;
 import org.junit.Test;
 
 
@@ -40,7 +40,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	{
 		tester.getApplication()
 			.getRequestCycleSettings()
-			.setRenderStrategy(IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
+			.setRenderStrategy(RequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
 		tester.getApplication()
 			.getExceptionSettings()
 			.setUnexpectedExceptionDisplay(ExceptionSettings.SHOW_EXCEPTION_PAGE);

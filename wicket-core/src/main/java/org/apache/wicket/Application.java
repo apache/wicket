@@ -85,7 +85,6 @@ import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.IMarkupSettings;
-import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
@@ -1037,7 +1036,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private PageSettings pageSettings;
 
 	/** The Request Cycle Settings */
-	private IRequestCycleSettings requestCycleSettings;
+	private RequestCycleSettings requestCycleSettings;
 
 	/** The Request Logger Settings */
 	private IRequestLoggerSettings requestLoggerSettings;
@@ -1192,7 +1191,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's request cycle related settings
 	 */
-	public final IRequestCycleSettings getRequestCycleSettings()
+	public final RequestCycleSettings getRequestCycleSettings()
 	{
 		checkSettingsAvailable();
 		if (requestCycleSettings == null)
@@ -1206,7 +1205,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param requestCycleSettings
 	 */
-	public final void setRequestCycleSettings(final IRequestCycleSettings requestCycleSettings)
+	public final void setRequestCycleSettings(final RequestCycleSettings requestCycleSettings)
 	{
 		this.requestCycleSettings = requestCycleSettings;
 	}

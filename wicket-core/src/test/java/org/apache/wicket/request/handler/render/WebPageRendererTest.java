@@ -36,7 +36,6 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.settings.IRequestCycleSettings;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,8 +80,8 @@ public class WebPageRendererTest
 	}
 
 	/**
-	 * Tests that when {@link IRequestCycleSettings.RenderStrategy#ONE_PASS_RENDER} is configured
-	 * there wont be a redirect issued
+	 * Tests that when {@link org.apache.wicket.settings.def.RequestCycleSettings.RenderStrategy#ONE_PASS_RENDER}
+	 * is configured there wont be a redirect issued
 	 */
 	@Test
 	public void testOnePassRender()
@@ -110,8 +109,8 @@ public class WebPageRendererTest
 	}
 
 	/**
-	 * Tests that even when {@link IRequestCycleSettings.RenderStrategy#ONE_PASS_RENDER} is
-	 * configured but the {@link RedirectPolicy} says that it needs to redirect it will redirect.
+	 * Tests that even when {@link org.apache.wicket.settings.def.RequestCycleSettings.RenderStrategy#ONE_PASS_RENDER}
+	 * is configured but the {@link RedirectPolicy} says that it needs to redirect it will redirect.
 	 */
 	@Test
 	public void testOnePassRenderWithAlwaysRedirect()
@@ -145,8 +144,8 @@ public class WebPageRendererTest
 	}
 
 	/**
-	 * Tests that when {@link IRequestCycleSettings.RenderStrategy#ONE_PASS_RENDER} is configured
-	 * but the current request is Ajax then a redirect should be issued
+	 * Tests that when {@link org.apache.wicket.settings.def.RequestCycleSettings.RenderStrategy#ONE_PASS_RENDER}
+	 * is configured but the current request is Ajax then a redirect should be issued
 	 */
 	@Test
 	public void testOnePassRenderAndAjaxRequest()
@@ -212,8 +211,8 @@ public class WebPageRendererTest
 
 	/**
 	 * Tests that when the fromUrl and toUrl are the same and
-	 * {@link IRequestCycleSettings.RenderStrategy#REDIRECT_TO_RENDER} is configured there wont be a
-	 * redirect issued
+	 * {@link org.apache.wicket.settings.def.RequestCycleSettings.RenderStrategy#REDIRECT_TO_RENDER}
+	 * is configured there wont be a redirect issued
 	 */
 	@Test
 	public void testSameUrlsAndRedirectToRender()
@@ -378,8 +377,8 @@ public class WebPageRendererTest
 	}
 
 	/**
-	 * Tests that when {@link IRequestCycleSettings.RenderStrategy#REDIRECT_TO_RENDER} is configured
-	 * then no matter what are the fromUrl and toUrl a redirect will happen
+	 * Tests that when {@link org.apache.wicket.settings.def.RequestCycleSettings.RenderStrategy#REDIRECT_TO_RENDER}
+	 * is configured then no matter what are the fromUrl and toUrl a redirect will happen
 	 */
 	@Test
 	public void testRedirectToRender()
