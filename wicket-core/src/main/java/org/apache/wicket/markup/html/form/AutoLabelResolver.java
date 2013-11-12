@@ -72,9 +72,9 @@ public class AutoLabelResolver implements IComponentResolver
 
 	static final String WICKET_FOR = ":for";
 
-	public static final String CSS_REQUIRED_KEY = CssUtils.key(AutoLabel.class, "requried");
-	public static final String CSS_DISABLED_KEY = CssUtils.key(AutoLabel.class, "requried");
-	public static final String CSS_ERROR_KEY = CssUtils.key(AutoLabel.class, "requried");
+	public static final String CSS_REQUIRED_KEY = CssUtils.key(AutoLabel.class, "required");
+	public static final String CSS_DISABLED_KEY = CssUtils.key(AutoLabel.class, "disabled");
+	public static final String CSS_ERROR_KEY = CssUtils.key(AutoLabel.class, "error");
 	private static final String CSS_DISABLED_DEFAULT = "disabled";
 	private static final String CSS_REQUIRED_DEFAULT = "required";
 	private static final String CSS_ERROR_DEFAULT = "error";
