@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.settings.IFrameworkSettings;
-
 /**
  * Listens to {@link Component#detach()} calls.
  * 
@@ -26,7 +24,7 @@ import org.apache.wicket.settings.IFrameworkSettings;
  * 
  * @author igor.vaynberg
  * 
- * @see IFrameworkSettings#setDetachListener(IDetachListener)
+ * @see org.apache.wicket.settings.def.FrameworkSettings#setDetachListener(IDetachListener)
  */
 public interface IDetachListener
 {

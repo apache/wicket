@@ -19,11 +19,11 @@ package org.apache.wicket;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
-import org.apache.wicket.settings.IFrameworkSettings;
 
 /**
  * Delivers an event to a component. Developers can implement and register their dispatchers in
- * {@link IFrameworkSettings} to create custom strategies for how events get delivered to components
+ * {@link org.apache.wicket.settings.def.FrameworkSettings} to create custom strategies for
+ * how events get delivered to components
  * 
  * @see IEventSink
  * @see IComponentAwareEventSink

@@ -31,7 +31,6 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.resource.loader.InitializerStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
-import org.apache.wicket.settings.IFrameworkSettings;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.def.FrameworkSettings;
 import org.apache.wicket.settings.def.ResourceSettings;
@@ -61,7 +60,7 @@ public class ApplicationSettingsTest
 	@Test
 	public void testFrameworkVersion()
 	{
-		IFrameworkSettings settings = new FrameworkSettings(new MockApplication());
+		FrameworkSettings settings = new FrameworkSettings(new MockApplication());
 		assertEquals("n/a", settings.getVersion());
 	}
 

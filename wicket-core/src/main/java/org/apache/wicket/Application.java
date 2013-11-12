@@ -84,7 +84,6 @@ import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.apache.wicket.settings.IFrameworkSettings;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.settings.IPageSettings;
@@ -1031,7 +1030,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private ExceptionSettings exceptionSettings;
 
 	/** Framework Settings */
-	private IFrameworkSettings frameworkSettings;
+	private FrameworkSettings frameworkSettings;
 
 	/** The Markup Settings */
 	private IMarkupSettings markupSettings;
@@ -1151,7 +1150,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Wicket framework settings
 	 */
-	public final IFrameworkSettings getFrameworkSettings()
+	public final FrameworkSettings getFrameworkSettings()
 	{
 		checkSettingsAvailable();
 		if (frameworkSettings == null)
@@ -1165,7 +1164,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param frameworkSettings
 	 */
-	public final void setFrameworkSettings(final IFrameworkSettings frameworkSettings)
+	public final void setFrameworkSettings(final FrameworkSettings frameworkSettings)
 	{
 		this.frameworkSettings = frameworkSettings;
 	}
