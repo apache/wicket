@@ -29,7 +29,6 @@ import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Packages;
@@ -55,7 +54,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  * 
  * Access to resources can be granted or denied via a {@link IPackageResourceGuard}. Please see
- * {@link IResourceSettings#getPackageResourceGuard()} as well.
+ * {@link org.apache.wicket.settings.def.ResourceSettings#getPackageResourceGuard()} as well.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius

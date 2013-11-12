@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.collections.ReverseListIterator;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -65,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * </table>
  * 
  * @see IPackageResourceGuard
- * @see IResourceSettings#getPackageResourceGuard
+ * @see org.apache.wicket.settings.def.ResourceSettings#getPackageResourceGuard
  * @see PackageResourceGuard
  * 
  * @author Juergen Donnerstag

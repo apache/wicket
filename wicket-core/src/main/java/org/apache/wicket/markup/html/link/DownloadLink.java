@@ -23,7 +23,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -60,7 +59,8 @@ public class DownloadLink extends Link<File>
 	/**
 	 * The duration for which the file resource should be cached by the browser.
 	 * <p>
-	 * By default is {@code null} and {@link IResourceSettings#getDefaultCacheDuration()} is used.
+	 * By default is {@code null} and
+	 * {@link org.apache.wicket.settings.def.ResourceSettings#getDefaultCacheDuration()} is used.
 	 * </p>
 	 */
 	private Duration cacheDuration;

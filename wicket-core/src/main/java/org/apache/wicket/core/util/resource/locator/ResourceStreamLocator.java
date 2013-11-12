@@ -24,7 +24,6 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.file.WebApplicationPath;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -61,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * Resources will be actually loaded by the {@link IResourceFinder}s defined in the resource
  * settings. By default there are finders that look in the classpath and in the classpath in
  * META-INF/resources. You can add more by adding {@link WebApplicationPath}s or {@link Path}s to
- * {@link IResourceSettings#getResourceFinders()}.
+ * {@link org.apache.wicket.settings.def.ResourceSettings#getResourceFinders()}.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke

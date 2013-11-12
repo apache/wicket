@@ -85,7 +85,6 @@ import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.IMarkupSettings;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
@@ -1039,7 +1038,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private RequestLoggerSettings requestLoggerSettings;
 
 	/** The Resource Settings */
-	private IResourceSettings resourceSettings;
+	private ResourceSettings resourceSettings;
 
 	/** The Security Settings */
 	private SecuritySettings securitySettings;
@@ -1254,7 +1253,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's resources related settings
 	 */
-	public final IResourceSettings getResourceSettings()
+	public final ResourceSettings getResourceSettings()
 	{
 		checkSettingsAvailable();
 		if (resourceSettings == null)
@@ -1268,7 +1267,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param resourceSettings
 	 */
-	public final void setResourceSettings(final IResourceSettings resourceSettings)
+	public final void setResourceSettings(final ResourceSettings resourceSettings)
 	{
 		this.resourceSettings = resourceSettings;
 	}

@@ -30,7 +30,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.settings.def.ResourceSettings;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
@@ -72,7 +72,7 @@ public class LocalizerTest extends Assert
 	}
 
 	private WicketTester tester;
-	private IResourceSettings settings;
+	private ResourceSettings settings;
 
 	protected Localizer localizer;
 

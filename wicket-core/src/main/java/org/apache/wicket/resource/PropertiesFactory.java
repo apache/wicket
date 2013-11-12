@@ -25,12 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
@@ -40,11 +39,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link IPropertiesFactory} which uses the
- * {@link IResourceStreamLocator} as defined by {@link IResourceSettings#getResourceStreamLocator()}
+ * {@link IResourceStreamLocator} as defined by
+ * {@link org.apache.wicket.settings.def.ResourceSettings#getResourceStreamLocator()}
  * to load the {@link Properties} objects. Depending on the settings, it will assign
  * {@link ModificationWatcher}s to the loaded resources to support reloading.
  * 
- * @see org.apache.wicket.settings.IResourceSettings#getPropertiesFactory()
+ * @see org.apache.wicket.settings.def.ResourceSettings#getPropertiesFactory()
  * 
  * @author Juergen Donnerstag
  */

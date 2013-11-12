@@ -20,8 +20,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
@@ -31,10 +29,10 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.resource.loader.InitializerStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.def.FrameworkSettings;
 import org.apache.wicket.settings.def.ResourceSettings;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -70,7 +68,7 @@ public class ApplicationSettingsTest
 	@Test
 	public void testExceptionOnMissingResourceDefaultValue() throws Exception
 	{
-		IResourceSettings settings = new ResourceSettings(new MockApplication());
+		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		Assert.assertTrue("exceptionOnMissingResource should default to true",
 			settings.getThrowExceptionOnMissingResource());
 	}
@@ -81,7 +79,7 @@ public class ApplicationSettingsTest
 	@Test
 	public void testExceptionOnMissingResourceSetsCorrectly() throws Exception
 	{
-		IResourceSettings settings = new ResourceSettings(new MockApplication());
+		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertFalse("exceptionOnMissingResource should have been set to false",
 			settings.getThrowExceptionOnMissingResource());
@@ -93,7 +91,7 @@ public class ApplicationSettingsTest
 	@Test
 	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
 	{
-		IResourceSettings settings = new ResourceSettings(new MockApplication());
+		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		Assert.assertTrue("useDefaultOnMissingResource should default to true",
 			settings.getUseDefaultOnMissingResource());
 	}
@@ -104,7 +102,7 @@ public class ApplicationSettingsTest
 	@Test
 	public void testUseDefaultOnMissingResourceSetsCorrectly() throws Exception
 	{
-		IResourceSettings settings = new ResourceSettings(new MockApplication());
+		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		settings.setUseDefaultOnMissingResource(false);
 		Assert.assertFalse("useDefaultOnMissingResource should have been set to false",
 			settings.getUseDefaultOnMissingResource());
@@ -116,7 +114,7 @@ public class ApplicationSettingsTest
 	@Test
 	public void testDefaultStringResourceLoaderSetup()
 	{
-		IResourceSettings settings = new ResourceSettings(new MockApplication());
+		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
 		Assert.assertEquals("There should be 5 default loaders", 5, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
@@ -137,7 +135,7 @@ public class ApplicationSettingsTest
 	@Test
 	public void testOverrideStringResourceLoaderSetup()
 	{
-		IResourceSettings settings = new ResourceSettings(new MockApplication());
+		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		settings.getStringResourceLoaders().clear();
 		settings.getStringResourceLoaders().add(
 			new BundleStringResourceLoader("org.apache.wicket.resource.DummyResources"));

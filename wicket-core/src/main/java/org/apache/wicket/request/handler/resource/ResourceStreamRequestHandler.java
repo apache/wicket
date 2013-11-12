@@ -23,7 +23,6 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
@@ -51,7 +50,8 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 	/**
 	 * The duration fow which the resource will be cached by the browser.
 	 * <p>
-	 * By default is {@code null} and {@link IResourceSettings#getDefaultCacheDuration()} is used.
+	 * By default is {@code null} and
+	 * {@link org.apache.wicket.settings.def.ResourceSettings#getDefaultCacheDuration()} is used.
 	 * </p>
 	 */
 	private Duration cacheDuration;

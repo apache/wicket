@@ -31,7 +31,6 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
@@ -407,8 +406,8 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @return duration for caching
 		 * 
-		 * @see IResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
-		 * @see IResourceSettings#getDefaultCacheDuration()
+		 * @see org.apache.wicket.settings.def.ResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.settings.def.ResourceSettings#getDefaultCacheDuration()
 		 */
 		public Duration getCacheDuration()
 		{
