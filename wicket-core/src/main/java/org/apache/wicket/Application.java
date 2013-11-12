@@ -86,7 +86,6 @@ import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
@@ -1043,7 +1042,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private IResourceSettings resourceSettings;
 
 	/** The Security Settings */
-	private ISecuritySettings securitySettings;
+	private SecuritySettings securitySettings;
 
 	/** The settings for {@link IPageStore}, {@link IDataStore} and {@link IPageManager} */
 	private StoreSettings storeSettings;
@@ -1277,7 +1276,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's security related settings
 	 */
-	public final ISecuritySettings getSecuritySettings()
+	public final SecuritySettings getSecuritySettings()
 	{
 		checkSettingsAvailable();
 		if (securitySettings == null)
@@ -1291,7 +1290,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param securitySettings
 	 */
-	public final void setSecuritySettings(final ISecuritySettings securitySettings)
+	public final void setSecuritySettings(final SecuritySettings securitySettings)
 	{
 		this.securitySettings = securitySettings;
 	}

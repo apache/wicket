@@ -28,8 +28,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.settings.ISecuritySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,10 +38,9 @@ import org.slf4j.LoggerFactory;
  * session.
  * 
  * @see {@link IAuthenticationStrategy}
- * @see {@link ISecuritySettings#getAuthenticationStrategy()}
+ * @see {@link org.apache.wicket.settings.def.SecuritySettings#getAuthenticationStrategy()}
  * @see {@link DefaultAuthenticationStrategy}
- * @see {@link WebSession#authenticate(String, String)}
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius

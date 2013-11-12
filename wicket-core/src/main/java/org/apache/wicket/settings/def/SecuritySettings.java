@@ -23,11 +23,13 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
-import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICryptFactory;
+import org.apache.wicket.util.lang.Args;
 
 /**
+ * Interface for security related settings
+ *
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -37,8 +39,13 @@ import org.apache.wicket.util.crypt.ICryptFactory;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class SecuritySettings implements ISecuritySettings
+public class SecuritySettings
 {
+	/**
+	 * encryption key used by default crypt factory
+	 */
+	public static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-FRAMEwork";
+
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
@@ -81,106 +88,120 @@ public class SecuritySettings implements ISecuritySettings
 	private IUnauthorizedResourceRequestListener unauthorizedResourceRequestListener = DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER;
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#getAuthorizationStrategy()
+	 * Gets the authorization strategy.
+	 *
+	 * @return Returns the authorizationStrategy.
 	 */
-	@Override
 	public IAuthorizationStrategy getAuthorizationStrategy()
 	{
 		return authorizationStrategy;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#getCryptFactory()
+	 * @return crypt factory used to generate crypt objects
 	 */
-	@Override
 	public synchronized ICryptFactory getCryptFactory()
 	{
 		if (cryptFactory == null)
 		{
-			cryptFactory = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY);
+			cryptFactory = new CachingSunJceCryptFactory(DEFAULT_ENCRYPTION_KEY);
 		}
 		return cryptFactory;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#getEnforceMounts()
+	 * Gets whether mounts should be enforced. If true, requests for mounted targets have to done
+	 * through the mounted paths. If, for instance, a bookmarkable page is mounted to a path, a
+	 * request to that same page via the bookmarkablePage parameter will be denied.
+	 *
+	 * @return Whether mounts should be enforced
 	 */
-	@Override
 	public boolean getEnforceMounts()
 	{
 		return enforceMounts;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#getUnauthorizedComponentInstantiationListener()
+	 * @return The listener
+	 * @see IUnauthorizedComponentInstantiationListener
 	 */
-	@Override
 	public IUnauthorizedComponentInstantiationListener getUnauthorizedComponentInstantiationListener()
 	{
 		return unauthorizedComponentInstantiationListener;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#setAuthorizationStrategy(org.apache.wicket.authorization.IAuthorizationStrategy)
+	 * Sets the authorization strategy.
+	 *
+	 * @param strategy
+	 *            new authorization strategy
 	 */
-	@Override
 	public void setAuthorizationStrategy(IAuthorizationStrategy strategy)
 	{
-		if (strategy == null)
-		{
-			throw new IllegalArgumentException("authorization strategy cannot be set to null");
-		}
+		Args.notNull(strategy, "strategy");
 		authorizationStrategy = strategy;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#setCryptFactory(org.apache.wicket.util.crypt.ICryptFactory)
+	 * Sets the factory that will be used to create crypt objects. The crypt object returned from
+	 * the first call is cached.
+	 *
+	 * @param cryptFactory
 	 */
-	@Override
 	public void setCryptFactory(ICryptFactory cryptFactory)
 	{
-		if (cryptFactory == null)
-		{
-			throw new IllegalArgumentException("cryptFactory cannot be null");
-		}
+		Args.notNull(cryptFactory, "cryptFactory");
 		this.cryptFactory = cryptFactory;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#setEnforceMounts(boolean)
+	 * Sets whether mounts should be enforced. If true, requests for mounted targets have to done
+	 * through the mounted paths. If, for instance, a bookmarkable page is mounted to a path, a
+	 * request to that same page via the bookmarkablePage parameter will be denied.
+	 *
+	 * @param enforce
+	 *            Whether mounts should be enforced
 	 */
-	@Override
 	public void setEnforceMounts(boolean enforce)
 	{
 		enforceMounts = enforce;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#setUnauthorizedComponentInstantiationListener(org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener)
+	 * @param listener
+	 *            The listener to set
+	 * @see IUnauthorizedComponentInstantiationListener
 	 */
-	@Override
 	public void setUnauthorizedComponentInstantiationListener(
 		IUnauthorizedComponentInstantiationListener listener)
 	{
 		this.unauthorizedComponentInstantiationListener = listener == null ? DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER : listener;
 	}
 
-	@Override
+	/**
+	 * @return The listener that will be used when a request to an IResource is not allowed for some reason
+	 */
 	public IUnauthorizedResourceRequestListener getUnauthorizedResourceRequestListener()
 	{
 		return unauthorizedResourceRequestListener;
 	}
 
-	@Override
+	/**
+	 * Sets a listener that will be used when a request to an IResource is not allowed for some reason
+	 *
+	 * @param listener
+	 *          The listener
+	 */
 	public void setUnauthorizedResourceRequestListener(IUnauthorizedResourceRequestListener listener)
 	{
 		this.unauthorizedResourceRequestListener = listener == null ? DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER : listener;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#getAuthenticationStrategy()
+	 * Gets the authentication strategy.
+	 *
+	 * @return Returns the authentication strategy.
 	 */
-	@Override
 	public IAuthenticationStrategy getAuthenticationStrategy()
 	{
 		if (authenticationStrategy == null)
@@ -191,9 +212,11 @@ public class SecuritySettings implements ISecuritySettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#setAuthenticationStrategy(org.apache.wicket.authentication.IAuthenticationStrategy)
+	 * Sets the authentication strategy.
+	 *
+	 * @param strategy
+	 *            new authentication strategy
 	 */
-	@Override
 	public void setAuthenticationStrategy(final IAuthenticationStrategy strategy)
 	{
 		authenticationStrategy = strategy;

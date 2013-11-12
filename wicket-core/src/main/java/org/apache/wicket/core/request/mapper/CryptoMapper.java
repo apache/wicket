@@ -24,7 +24,6 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
@@ -57,10 +56,10 @@ public class CryptoMapper implements IRequestMapper
 	private final IProvider<ICrypt> cryptProvider;
 
 	/**
-	 * Encrypt with {@link ISecuritySettings#getCryptFactory()}.
+	 * Encrypt with {@link org.apache.wicket.settings.def.SecuritySettings#getCryptFactory()}.
 	 * <p>
-	 * Note: Encryption is done with {@link ISecuritySettings#DEFAULT_ENCRYPTION_KEY} if you haven't
-	 * configured an alternative {@link ICryptFactory}. Alternatively use
+	 * Note: Encryption is done with {@link org.apache.wicket.settings.def.SecuritySettings#DEFAULT_ENCRYPTION_KEY}
+	 * if you haven't configured an alternative {@link ICryptFactory}. Alternatively use
 	 * {@link CryptoMapper#CryptoMapper(IRequestMapper, IProvider)} with a specific {@link ICrypt}.
 	 * 
 	 * @param wrappedMapper

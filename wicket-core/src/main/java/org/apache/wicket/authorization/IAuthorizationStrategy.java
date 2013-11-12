@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.settings.ISecuritySettings;
 
 /**
  * Authorization strategies specify aspect-like constraints on significant actions taken by the
@@ -71,7 +70,7 @@ public interface IAuthorizationStrategy
 	/**
 	 * Checks whether an instance of the given component class may be created. If this method
 	 * returns false, the {@link IUnauthorizedComponentInstantiationListener} that is configured in
-	 * the {@link ISecuritySettings security settings} will be called. The default implementation of
+	 * the {@link org.apache.wicket.settings.def.SecuritySettings security settings} will be called. The default implementation of
 	 * that listener throws a {@link UnauthorizedInstantiationException}.
 	 * <p>
 	 * If you wish to implement a strategy that authenticates users which cannot access a given Page
