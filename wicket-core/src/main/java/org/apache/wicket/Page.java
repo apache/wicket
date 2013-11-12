@@ -35,8 +35,8 @@ import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IPageSettings;
+import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.StringValue;
@@ -563,7 +563,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final IDebugSettings debugSettings = getApplication().getDebugSettings();
+		final DebugSettings debugSettings = getApplication().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
 		{
 			final List<Component> unrenderedComponents = new ArrayList<Component>();

@@ -16,9 +16,14 @@
  */
 package org.apache.wicket.settings.def;
 
-import org.apache.wicket.settings.IDebugSettings;
-
 /**
+ * Settings interface for various debug settings
+ * <p>
+ * <i>componentUseCheck </i> (defaults to true in development mode) - causes the framework to do a
+ * check after rendering each page to ensure that each component was used in rendering the markup.
+ * If components are found that are not referenced in the markup, an appropriate error will be
+ * displayed
+ *
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -28,7 +33,7 @@ import org.apache.wicket.settings.IDebugSettings;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DebugSettings implements IDebugSettings
+public class DebugSettings
 {
 	/** ajax debug mode status */
 	private boolean ajaxDebugModeEnabled = false;
@@ -51,129 +56,156 @@ public class DebugSettings implements IDebugSettings
 	 */
 	private boolean outputMarkupContainerClassName = false;
 
-	/** @see IDebugSettings#setOutputComponentPath(boolean) */
 	private boolean outputComponentPath = false;
 
-	/** @see IDebugSettings#setDevelopmentUtilitiesEnabled(boolean) */
 	private boolean developmentUtilitiesEnabled = false;
 
 	/**
-	 * @see org.apache.wicket.settings.IDebugSettings#getComponentUseCheck()
+	 * @return true if componentUseCheck is enabled
 	 */
-	@Override
 	public boolean getComponentUseCheck()
 	{
 		return componentUseCheck;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IDebugSettings#isAjaxDebugModeEnabled()
+	 * Returns status of ajax debug mode.
+	 *
+	 * @return true if ajax debug mode is enabled, false otherwise
 	 */
-	@Override
 	public boolean isAjaxDebugModeEnabled()
 	{
 		return ajaxDebugModeEnabled;
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.settings.IDebugSettings#isLinePreciseReportingOnAddComponentEnabled()
+	 * Returns status of line precise error reporting for added components that are not present in
+	 * the markup: it points to the line where the component was added to the hierarchy in your Java
+	 * classes. This can cause a significant decrease in performance, do not use in customer facing
+	 * applications.
+	 *
+	 * @return true if the line precise error reporting is enabled
 	 */
-	@Override
 	public boolean isLinePreciseReportingOnAddComponentEnabled()
 	{
 		return linePreciseReportingOnAddComponentEnabled;
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.settings.IDebugSettings#isLinePreciseReportingOnNewComponentEnabled()
+	 * Returns status of line precise error reporting for new components that are not present in the
+	 * markup: it points to the line where the component was created in your Java classes. This can
+	 * cause a significant decrease in performance, do not use in customer facing applications.
+	 *
+	 * @return true if the line precise error reporting is enabled
 	 */
-	@Override
 	public boolean isLinePreciseReportingOnNewComponentEnabled()
 	{
 		return linePreciseReportingOnNewComponentEnabled;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IDebugSettings#isOutputMarkupContainerClassName()
+	 * Returns whether the output of markup container's should be wrapped by comments containing the
+	 * container's class name.
+	 *
+	 * @return true if the markup container's class name should be written to response
 	 */
-	@Override
 	public boolean isOutputMarkupContainerClassName()
 	{
 		return outputMarkupContainerClassName;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IDebugSettings#setAjaxDebugModeEnabled(boolean)
+	 * Enables or disables ajax debug mode.
+	 *
+	 * @param enable
 	 */
-	@Override
 	public void setAjaxDebugModeEnabled(boolean enable)
 	{
 		ajaxDebugModeEnabled = enable;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IDebugSettings#setComponentUseCheck(boolean)
+	 * Sets componentUseCheck debug settings
+	 *
+	 * @param componentUseCheck
 	 */
-	@Override
 	public void setComponentUseCheck(final boolean componentUseCheck)
 	{
 		this.componentUseCheck = componentUseCheck;
 	}
 
-	@Override
+	/**
+	 * Enables line precise error reporting for added components that are not present in the markup:
+	 * it points to the line where the component was added to the hierarchy in your Java classes.
+	 * This can cause a significant decrease in performance, do not use in customer facing
+	 * applications.
+	 *
+	 * @param enable
+	 */
 	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnAddComponentEnabled = enable;
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.settings.IDebugSettings#setLinePreciseReportingOnNewComponentEnabled(boolean)
+	 * Enables line precise error reporting for new components that are not present in the markup:
+	 * it points to the line where the component was created in your Java classes. This can cause a
+	 * significant decrease in performance, do not use in customer facing applications.
+	 *
+	 * @param enable
 	 */
-	@Override
 	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnNewComponentEnabled = enable;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IDebugSettings#setOutputMarkupContainerClassName(boolean)
+	 * Enables wrapping output of markup container in html comments that contain markup container's
+	 * class name. (Useful for determining which part of page belongs to which markup file).
+	 *
+	 * @param enable
 	 */
-	@Override
 	public void setOutputMarkupContainerClassName(boolean enable)
 	{
 		outputMarkupContainerClassName = enable;
 	}
 
-	/** @see IDebugSettings#isOutputComponentPath() */
-	@Override
+	/**
+	 * @see #setOutputComponentPath(boolean)
+	 * @return <code>true</code> if output component path feature is enabled, <code>false</code>
+	 *         otherwise
+	 */
 	public boolean isOutputComponentPath()
 	{
 		return outputComponentPath;
 	}
 
-	/** @see IDebugSettings#setOutputComponentPath(boolean) */
-	@Override
+	/**
+	 * If set to <code>true</code> wicket will output component path in a <code>wicketpath</code>
+	 * attribute of the component tag. This can be useful for debugging and automating tests.
+	 *
+	 * @param outputComponentPath
+	 */
 	public void setOutputComponentPath(boolean outputComponentPath)
 	{
 		this.outputComponentPath = outputComponentPath;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IDebugSettings#setDevelopmentUtilitiesEnabled(boolean)
+	 * Enables all of the panels and pages, etc, from wicket-devutils package.
+	 *
+	 * @param enable
 	 */
-	@Override
 	public void setDevelopmentUtilitiesEnabled(boolean enable)
 	{
 		developmentUtilitiesEnabled = enable;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IDebugSettings#isDevelopmentUtilitiesEnabled()
+	 * Are all of the panels and pages, etc, from wicket-devutils package enabled?
+	 *
+	 * @return true if all of the panels and pages, etc, from wicket-devutils package are enabled
 	 */
-	@Override
 	public boolean isDevelopmentUtilitiesEnabled()
 	{
 		return developmentUtilitiesEnabled;

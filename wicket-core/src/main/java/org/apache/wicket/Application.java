@@ -84,7 +84,6 @@ import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IFrameworkSettings;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
@@ -1027,7 +1026,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private IJavaScriptLibrarySettings javaScriptLibrarySettings;
 
 	/** Debug Settings */
-	private IDebugSettings debugSettings;
+	private DebugSettings debugSettings;
 
 	/** Exception Settings */
 	private IExceptionSettings exceptionSettings;
@@ -1109,7 +1108,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's debug related settings
 	 */
-	public final IDebugSettings getDebugSettings()
+	public final DebugSettings getDebugSettings()
 	{
 		checkSettingsAvailable();
 		if (debugSettings == null)
@@ -1123,7 +1122,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param debugSettings
 	 */
-	public final void setDebugSettings(final IDebugSettings debugSettings)
+	public final void setDebugSettings(final DebugSettings debugSettings)
 	{
 		this.debugSettings = debugSettings;
 	}

@@ -78,7 +78,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
-import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
@@ -681,7 +681,7 @@ public abstract class Component
 		setId(id);
 		getApplication().getComponentInstantiationListeners().onInstantiation(this);
 
-		final IDebugSettings debugSettings = getApplication().getDebugSettings();
+		final DebugSettings debugSettings = getApplication().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,

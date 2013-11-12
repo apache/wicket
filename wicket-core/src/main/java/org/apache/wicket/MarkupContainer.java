@@ -40,7 +40,7 @@ import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
-import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
@@ -912,7 +912,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		// Set child's parent
 		child.setParent(this);
 
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		final DebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled() &&
 			debugSettings.getComponentUseCheck())
 		{
