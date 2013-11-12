@@ -22,14 +22,21 @@ import java.io.IOException;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * The implementation of {@link IStoreSettings}
+ * An interface for settings related to the the storages where page instances are persisted -
+ * {@link org.apache.wicket.pageStore.IPageStore},
+ * {@link org.apache.wicket.pageStore.IDataStore} and {@link org.apache.wicket.page.IPageManager}.
+ * <p>
+ * For more information about page storages read <a
+ * href="https://cwiki.apache.org/confluence/x/qIaoAQ">Page Storage - Wiki page</a>
+ * </p>
+ *
+ * @since 1.5
  */
-public class StoreSettings implements IStoreSettings
+public class StoreSettings
 {
 	private static final int DEFAULT_CACHE_SIZE = 40;
 
@@ -56,31 +63,56 @@ public class StoreSettings implements IStoreSettings
 	{
 	}
 
-	@Override
+	/**
+	 * @return the number of page instances which will be stored in the application scoped cache for
+	 *         faster retrieval
+	 */
 	public int getInmemoryCacheSize()
 	{
 		return inmemoryCacheSize;
 	}
 
-	@Override
+	/**
+	 * Sets the maximum number of page instances which will be stored in the application scoped
+	 * second level cache for faster retrieval
+	 *
+	 * @param inmemoryCacheSize
+	 *            the maximum number of page instances which will be held in the application scoped
+	 *            cache
+	 */
 	public void setInmemoryCacheSize(int inmemoryCacheSize)
 	{
 		this.inmemoryCacheSize = inmemoryCacheSize;
 	}
 
-	@Override
+	/**
+	 * @return maximum page size. After this size is exceeded,
+	 * the {@link org.apache.wicket.pageStore.DiskDataStore} will start saving the
+	 * pages at the beginning of file.
+	 */
 	public Bytes getMaxSizePerSession()
 	{
 		return maxSizePerSession;
 	}
 
-	@Override
+	/**
+	 * Sets the maximum size of the {@link File} where page instances per session are stored. After
+	 * reaching this size the {@link org.apache.wicket.pageStore.DiskDataStore} will start overriding the
+	 * oldest pages at the beginning of the file.
+	 *
+	 * @param maxSizePerSession
+	 *            the maximum size of the file where page instances are stored per session. In
+	 *            bytes.
+	 */
 	public void setMaxSizePerSession(final Bytes maxSizePerSession)
 	{
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 	}
 
-	@Override
+	/**
+	 * @return the location of the folder where {@link org.apache.wicket.pageStore.DiskDataStore} will store the files with page
+	 *         instances per session
+	 */
 	public File getFileStoreFolder()
 	{
 		if (fileStoreFolder == null)
@@ -108,19 +140,34 @@ public class StoreSettings implements IStoreSettings
 		return fileStoreFolder;
 	}
 
-	@Override
+	/**
+	 * Sets the folder where {@link org.apache.wicket.pageStore.DiskDataStore} will store the files with page instances per
+	 * session
+	 *
+	 * @param fileStoreFolder
+	 *            the new location
+	 */
 	public void setFileStoreFolder(final File fileStoreFolder)
 	{
 		this.fileStoreFolder = Args.notNull(fileStoreFolder, "fileStoreFolder");
 	}
 
-	@Override
+	/**
+	 * @return the capacity of the queue used to store the pages which will be stored asynchronously
+	 * @see org.apache.wicket.pageStore.AsynchronousDataStore
+	 */
 	public int getAsynchronousQueueCapacity()
 	{
 		return asynchronousQueueCapacity;
 	}
 
-	@Override
+	/**
+	 * Sets the capacity of the queue used to store the pages which will be stored asynchronously
+	 *
+	 * @param queueCapacity
+	 *            the capacity of the queue
+	 * @see org.apache.wicket.pageStore.AsynchronousDataStore
+	 */
 	public void setAsynchronousQueueCapacity(int queueCapacity)
 	{
 		if (queueCapacity < 1)
@@ -131,13 +178,22 @@ public class StoreSettings implements IStoreSettings
 		asynchronousQueueCapacity = queueCapacity;
 	}
 
-	@Override
+	/**
+	 * Sets a flag whether to wrap the configured {@link org.apache.wicket.pageStore.IDataStore} with
+	 * {@link org.apache.wicket.pageStore.AsynchronousDataStore}. By doing this the HTTP worker thread will not wait for the
+	 * actual write of the page's bytes into the wrapped {@link org.apache.wicket.pageStore.IDataStore}.
+	 *
+	 * @param async
+	 *            {@code true} to make it asynchronous, {@code false} - otherwise
+	 */
 	public void setAsynchronous(boolean async)
 	{
 		isAsynchronous = async;
 	}
 
-	@Override
+	/**
+	 * @return {@code true} if the storing of page's bytes is asynchronous
+	 */
 	public boolean isAsynchronous()
 	{
 		return isAsynchronous;

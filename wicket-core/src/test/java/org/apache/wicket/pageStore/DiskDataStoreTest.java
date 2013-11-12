@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.lang.Bytes;
@@ -369,7 +368,7 @@ public class DiskDataStoreTest extends Assert
 	{
 		generateFiles();
 
-		IStoreSettings storeSettings = new StoreSettings(null);
+		StoreSettings storeSettings = new StoreSettings(null);
 		java.io.File fileStoreFolder = storeSettings.getFileStoreFolder();
 
 		dataStore = new DiskDataStore("app1", fileStoreFolder, MAX_SIZE_PER_SESSION);
@@ -390,7 +389,7 @@ public class DiskDataStoreTest extends Assert
 	@Test
 	public void sessionFolderName()
 	{
-		IStoreSettings storeSettings = new StoreSettings(null);
+		StoreSettings storeSettings = new StoreSettings(null);
 		java.io.File fileStoreFolder = storeSettings.getFileStoreFolder();
 		DiskDataStore store = new DiskDataStore("sessionFolderName", fileStoreFolder, MAX_SIZE_PER_SESSION);
 

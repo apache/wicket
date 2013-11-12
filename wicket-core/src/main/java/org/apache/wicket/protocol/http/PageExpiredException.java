@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.settings.IStoreSettings;
 
 /**
  * Thrown when a {@link Page} instance cannot be found by its id in the page stores. The page may be
@@ -38,7 +37,7 @@ import org.apache.wicket.settings.IStoreSettings;
  * stacktrace it is not really needed.</p>
  *
  * @see HttpSession#setMaxInactiveInterval(int)
- * @see IStoreSettings#setMaxSizePerSession(org.apache.wicket.util.lang.Bytes)
+ * @see org.apache.wicket.settings.def.StoreSettings#setMaxSizePerSession(org.apache.wicket.util.lang.Bytes)
  * @see NotSerializableException
  * @see IPageProvider#getPageInstance()
  */
