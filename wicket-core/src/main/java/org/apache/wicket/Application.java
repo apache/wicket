@@ -85,7 +85,6 @@ import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.IMarkupSettings;
-import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.settings.IResourceSettings;
@@ -677,7 +676,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	protected void internalInit()
 	{
 		settingsAccessible = true;
-		IPageSettings pageSettings = getPageSettings();
+		PageSettings pageSettings = getPageSettings();
 
 		// Install default component resolvers
 		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
@@ -1035,7 +1034,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private IMarkupSettings markupSettings;
 
 	/** The Page Settings */
-	private IPageSettings pageSettings;
+	private PageSettings pageSettings;
 
 	/** The Request Cycle Settings */
 	private IRequestCycleSettings requestCycleSettings;
@@ -1171,7 +1170,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's page related settings
 	 */
-	public final IPageSettings getPageSettings()
+	public final PageSettings getPageSettings()
 	{
 		checkSettingsAvailable();
 		if (pageSettings == null)
@@ -1185,7 +1184,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param pageSettings
 	 */
-	public final void setPageSettings(final IPageSettings pageSettings)
+	public final void setPageSettings(final PageSettings pageSettings)
 	{
 		this.pageSettings = pageSettings;
 	}

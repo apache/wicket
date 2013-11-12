@@ -23,7 +23,6 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.request.mapper.PageInstanceMapper;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IPageSettings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -106,7 +105,8 @@ public class MountedPageLinkTest extends WicketTestCase
 
 	/**
 	 * Tests if the {@link PageInstanceMapper} is used if
-	 * {@link IPageSettings#getRecreateMountedPagesAfterExpiry()} is disabled
+	 * {@link org.apache.wicket.settings.def.PageSettings#getRecreateMountedPagesAfterExpiry()}
+	 * is disabled
 	 */
 	@Test
 	public void testLinkOnPageWithRecreationDisabled()
