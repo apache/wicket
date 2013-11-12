@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.settings.def;
 
-import org.apache.wicket.settings.IRequestLoggerSettings;
-
 /**
  * @author Jonathan Locke
  * @author Chris Turner
@@ -28,7 +26,7 @@ import org.apache.wicket.settings.IRequestLoggerSettings;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class RequestLoggerSettings implements IRequestLoggerSettings
+public class RequestLoggerSettings
 {
 	private boolean recordSessionSize = true;
 
@@ -37,54 +35,57 @@ public class RequestLoggerSettings implements IRequestLoggerSettings
 	private boolean requestLoggerEnabled;
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestLoggerSettings#getRecordSessionSize()
+	 * @return true if the session size is recorded. (default true)
 	 */
-	@Override
 	public boolean getRecordSessionSize()
 	{
 		return recordSessionSize;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestLoggerSettings#getRequestsWindowSize()
+	 * @return The window size of the recorded requests. (default 2000)
 	 */
-	@Override
 	public int getRequestsWindowSize()
 	{
 		return requestsWindowSize;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestLoggerSettings#isRequestLoggerEnabled()
+	 * @return true if the request Logger is enabled. (default false)
 	 */
-	@Override
 	public boolean isRequestLoggerEnabled()
 	{
 		return requestLoggerEnabled;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestLoggerSettings#setRecordSessionSize(boolean)
+	 * Enable/Disable the recording of the session size for every request.
+	 *
+	 * @param record
 	 */
-	@Override
 	public void setRecordSessionSize(boolean record)
 	{
 		recordSessionSize = record;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestLoggerSettings#setRequestLoggerEnabled(boolean)
+	 * Enable/Disable the request logger.
+	 *
+	 * @param enable
+	 *            boolean.
 	 */
-	@Override
 	public void setRequestLoggerEnabled(boolean enable)
 	{
 		requestLoggerEnabled = enable;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestLoggerSettings#setRequestsWindowSize(int)
+	 * Set the window of all the requests that is kept in memory for viewing. Default is 2000, You
+	 * can set this to 0 then only Sessions data is recorded (number of request, total time, latest
+	 * size)
+	 *
+	 * @param size
 	 */
-	@Override
 	public void setRequestsWindowSize(int size)
 	{
 		requestsWindowSize = size;

@@ -22,7 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.settings.IRequestLoggerSettings;
+import org.apache.wicket.settings.def.RequestLoggerSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -88,7 +88,7 @@ public class RequestLoggerRequestCycleListener extends AbstractRequestCycleListe
 	private boolean isRequestLoggingEnabled()
 	{
 		IRequestLogger requestLogger = Application.get().getRequestLogger();
-		IRequestLoggerSettings settings = Application.get().getRequestLoggerSettings();
+		RequestLoggerSettings settings = Application.get().getRequestLoggerSettings();
 		return requestLogger != null && settings.isRequestLoggerEnabled();
 	}
 

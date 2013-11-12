@@ -31,7 +31,6 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -432,7 +431,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 
 	/**
 	 * Resizes the request buffer to match the
-	 * {@link IRequestLoggerSettings#getRequestsWindowSize() configured window size}
+	 * {@link org.apache.wicket.settings.def.RequestLoggerSettings#getRequestsWindowSize() configured window size}
 	 */
 	private void resizeBuffer()
 	{
