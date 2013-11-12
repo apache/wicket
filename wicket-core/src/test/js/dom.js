@@ -111,6 +111,38 @@ jQuery(document).ready(function() {
 		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
 	});
 
+	test("toggleClass() - single CSS class", function() {
+		var cssClass = 'testCssClass';
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(true, element.hasClass(cssClass), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+	});
+
+	test("toggleClass() - multiple CSS classes", function() {
+		var cssClass1 = 'testCssClass1';
+		var cssClass2 = 'testCssClass2';
+		var cssClass = cssClass1 + ' ' + cssClass2;
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass1), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(true, element.hasClass(cssClass1), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(false, element.hasClass(cssClass1), "The element doesn't have the CSS class");
+	});
+
+	test("toggleClass() - switch argument", function() {
+		var cssClass = 'testCssClass';
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass, true);
+		equal(true, element.hasClass(cssClass), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass, false);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+	});
+
 	test("(show|hide)Incrementally() an element", function() {
 		var el = Wicket.$(existingId);
 		Wicket.DOM.hideIncrementally(el);
