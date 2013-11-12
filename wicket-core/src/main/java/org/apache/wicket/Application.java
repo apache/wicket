@@ -84,7 +84,6 @@ import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IFrameworkSettings;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 import org.apache.wicket.settings.IMarkupSettings;
@@ -304,7 +303,7 @@ public abstract class Application implements UnboundListener, IEventSink
 				getResourceSettings().setUseMinifiedResources(false);
 				getMarkupSettings().setStripWicketTags(false);
 				getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_EXCEPTION_PAGE);
+					ExceptionSettings.SHOW_EXCEPTION_PAGE);
 				getDebugSettings().setComponentUseCheck(true);
 				getDebugSettings().setAjaxDebugModeEnabled(true);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(true);
@@ -317,7 +316,7 @@ public abstract class Application implements UnboundListener, IEventSink
 				getResourceSettings().setJavaScriptCompressor(new DefaultJavaScriptCompressor());
 				getMarkupSettings().setStripWicketTags(true);
 				getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+					ExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 				getDebugSettings().setComponentUseCheck(false);
 				getDebugSettings().setAjaxDebugModeEnabled(false);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(false);
@@ -1029,7 +1028,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private DebugSettings debugSettings;
 
 	/** Exception Settings */
-	private IExceptionSettings exceptionSettings;
+	private ExceptionSettings exceptionSettings;
 
 	/** Framework Settings */
 	private IFrameworkSettings frameworkSettings;
@@ -1130,7 +1129,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's exception handling settings
 	 */
-	public final IExceptionSettings getExceptionSettings()
+	public final ExceptionSettings getExceptionSettings()
 	{
 		checkSettingsAvailable();
 		if (exceptionSettings == null)
@@ -1144,7 +1143,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param exceptionSettings
 	 */
-	public final void setExceptionSettings(final IExceptionSettings exceptionSettings)
+	public final void setExceptionSettings(final ExceptionSettings exceptionSettings)
 	{
 		this.exceptionSettings = exceptionSettings;
 	}

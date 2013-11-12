@@ -29,7 +29,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.settings.IExceptionSettings.AjaxErrorStrategy;
+import org.apache.wicket.settings.def.ExceptionSettings;
 
 
 /**
@@ -178,7 +178,7 @@ public class LinksPage extends BasePage
 				// note: will be set until the "exception" link is clicked or the application is
 				// restarted
 				getApplication().getExceptionSettings().setAjaxErrorHandlingStrategy(
-					AjaxErrorStrategy.INVOKE_FAILURE_HANDLER);
+					ExceptionSettings.AjaxErrorStrategy.INVOKE_FAILURE_HANDLER);
 
 				throw new WicketRuntimeException("Failure link clicked");
 			}
@@ -229,7 +229,7 @@ public class LinksPage extends BasePage
 				// note: will be set until the "failure" link is clicked or the application is
 				// restarted
 				getApplication().getExceptionSettings().setAjaxErrorHandlingStrategy(
-					AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE);
+					ExceptionSettings.AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE);
 
 				throw new RuntimeException("test whether the exception handling works");
 			}

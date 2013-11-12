@@ -16,10 +16,20 @@
  */
 package org.apache.wicket.settings.def;
 
-import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.EnumeratedType;
 
 /**
+ *
+ * Settings interface for configuring exception handling related settings.
+ * <p>
+ * <i>unexpectedExceptionDisplay </i> (defaults to SHOW_EXCEPTION_PAGE) - Determines how exceptions
+ * are displayed to the developer or user
+ * <p>
+ * <i>throwExceptionOnMissingResource </i> (defaults to true) - Set to true to throw a runtime
+ * exception if a required string resource is not found. Set to false to return the requested
+ * resource key surrounded by pairs of question mark characters (e.g. "??missingKey??")
+ *
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -29,8 +39,66 @@ import org.apache.wicket.util.lang.Args;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class ExceptionSettings implements IExceptionSettings
+public class ExceptionSettings
 {
+	/**
+	 * Enumerated type for different ways of displaying unexpected exceptions.
+	 */
+	public static final class UnexpectedExceptionDisplay extends EnumeratedType
+	{
+		private static final long serialVersionUID = 1L;
+
+		UnexpectedExceptionDisplay(final String name)
+		{
+			super(name);
+		}
+	}
+
+	/**
+	 * Indicates that an exception page appropriate to development should be shown when an
+	 * unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_EXCEPTION_PAGE");
+	/**
+	 * Indicates a generic internal error page should be shown when an unexpected exception is
+	 * thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_INTERNAL_ERROR_PAGE");
+
+	/**
+	 * Indicates that no exception page should be shown when an unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_NO_EXCEPTION_PAGE");
+
+	/**
+	 * How to handle errors while processing an Ajax request
+	 *
+	 * @author igor
+	 */
+	public static enum AjaxErrorStrategy {
+		/** redirect to error page, just like a normal requset */
+		REDIRECT_TO_ERROR_PAGE,
+		/** invoke client side failure handler */
+		INVOKE_FAILURE_HANDLER
+	}
+
+	/**
+	 * Which threads' stacktrace to dump when a page lock timeout occurs
+	 *
+	 * @author papegaaij
+	 */
+	public static enum ThreadDumpStrategy {
+		/** Do not dump any stacktraces */
+		NO_THREADS,
+		/** Dump the stacktrace of the thread holding the lock */
+		THREAD_HOLDING_LOCK,
+		/** Dump stacktraces of all threads of the application */
+		ALL_THREADS
+	}
+
 	/** Type of handling for unexpected exceptions */
 	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
 
@@ -45,49 +113,70 @@ public class ExceptionSettings implements IExceptionSettings
 	private ThreadDumpStrategy threadDumpStrategy = ThreadDumpStrategy.THREAD_HOLDING_LOCK;
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()
+	 * @return Returns the unexpectedExceptionDisplay.
 	 */
-	@Override
 	public UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
 	{
 		return unexpectedExceptionDisplay;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.Settings.UnexpectedExceptionDisplay)
+	 * The exception display type determines how the framework displays exceptions to you as a
+	 * developer or user.
+	 * <p>
+	 * The default value for exception display type is SHOW_EXCEPTION_PAGE. When this value is set
+	 * and an unhandled runtime exception is thrown by a page, a redirect to a helpful exception
+	 * display page will occur.
+	 * <p>
+	 * This is a developer feature, however, and you may want to instead show an internal error page
+	 * without developer details that allows a user to start over at the application's home page.
+	 * This can be accomplished by setting the exception display type to SHOW_INTERNAL_ERROR_PAGE.
+	 * <p>
+	 * Finally, if you are having trouble with the exception display pages themselves, you can
+	 * disable exception displaying entirely with the value SHOW_NO_EXCEPTION_PAGE. This will cause
+	 * the framework to re-throw any unhandled runtime exceptions after wrapping them in a
+	 * ServletException wrapper.
+	 *
+	 * @param unexpectedExceptionDisplay
+	 *            The unexpectedExceptionDisplay to set.
 	 */
-	@Override
 	public void setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay)
 	{
 		this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#getAjaxErrorHandlingStrategy()
+	 * @return strategy used to handle errors during Ajax request processing
 	 */
-	@Override
 	public AjaxErrorStrategy getAjaxErrorHandlingStrategy()
 	{
 		return errorHandlingStrategyDuringAjaxRequests;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#setAjaxErrorHandlingStrategy(org.apache.wicket.settings.IExceptionSettings.AjaxErrorStrategy)
+	 * Sets strategy used to handle errors during Ajax request processing
+	 *
+	 * @param errorHandlingStrategyDuringAjaxRequests
 	 */
-	@Override
 	public void setAjaxErrorHandlingStrategy(
 		AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests)
 	{
 		this.errorHandlingStrategyDuringAjaxRequests = errorHandlingStrategyDuringAjaxRequests;
 	}
 
-	@Override
+	/**
+	 * Sets the strategy to use for dumping stack traces of live threads in the JVM.
+	 *
+	 * @param strategy
+	 */
 	public void setThreadDumpStrategy(ThreadDumpStrategy strategy)
 	{
 		threadDumpStrategy = Args.notNull(strategy, "strategy");
 	}
 
-	@Override
+	/**
+	 * @return strategy to use for dumping stack traces of live threads in the JVM.
+	 */
 	public ThreadDumpStrategy getThreadDumpStrategy()
 	{
 		return threadDumpStrategy;

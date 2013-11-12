@@ -34,8 +34,7 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
-import org.apache.wicket.settings.IExceptionSettings;
-import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import org.apache.wicket.settings.def.ExceptionSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,18 +116,18 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		else
 		{
 
-			final UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
+			final ExceptionSettings.UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
 				.getUnexpectedExceptionDisplay();
 
 			logger.error("Unexpected error occurred", e);
 
-			if (IExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
+			if (ExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
 			{
 				Page currentPage = extractCurrentPage();
 				return createPageRequestHandler(new PageProvider(new ExceptionErrorPage(e,
 					currentPage)));
 			}
-			else if (IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
+			else if (ExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
 			{
 				return createPageRequestHandler(new PageProvider(
 					application.getApplicationSettings().getInternalErrorPage()));

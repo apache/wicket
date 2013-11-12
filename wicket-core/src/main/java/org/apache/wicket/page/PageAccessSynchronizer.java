@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.settings.IExceptionSettings.ThreadDumpStrategy;
+import org.apache.wicket.settings.def.ExceptionSettings.ThreadDumpStrategy;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
@@ -50,7 +50,7 @@ public class PageAccessSynchronizer implements Serializable
 		@Override
 		protected ConcurrentMap<Integer, PageLock> createInstance()
 		{
-			return new ConcurrentHashMap<Integer, PageLock>();
+			return new ConcurrentHashMap<>();
 		}
 	};
 
