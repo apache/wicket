@@ -1542,6 +1542,21 @@
 				}
 			},
 
+			/**
+			 * Add or remove one or more classes from each element in the
+			 * set of matched elements, depending on either the class's presence
+			 * or the value of the switch argument.
+			 *
+			 * @param {String} elementId The markup id of the element that will be manipulated.
+			 * @param {String} cssClass One or more class names (separated by spaces)
+			 *        to be toggled for each element in the matched set.
+			 * @param {Boolean} Switch A Boolean (not just truthy/falsy) value to
+			 *        determine whether the class should be added or removed.
+			 */
+			toggleClass: function(elementId, cssClass, Switch) {
+				jQuery('#'+elementId).toggleClass(cssClass, Switch);
+			},
+
 			/** call-counting implementation of Wicket.DOM.show() */
 			showIncrementally: function (e) {
 				e = Wicket.$(e);
