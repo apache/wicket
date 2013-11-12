@@ -21,13 +21,21 @@ import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
 import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
 
 /**
+ * Interface for settings related to the JavaScript libraries that come with and are used by Wicket.
+ * <p>
+ * With these settings the user application can replace the JavaScript libraries used for Wicket's
+ * event and Ajax functionality. By default Wicket uses {@linkplain JQueryResourceReference JQuery}
+ * as a backing library but via this interface the application can replace the implementations of
+ * wicket-event.js, wicket-ajax.js and wicket-ajax-debug.js to use implementations on other
+ * libraries, such as YUI or DOJO. The resource reference implementations need to specify the
+ * {@linkplain ResourceReference#getDependencies() dependency} on the backing library, if needed.
+ *
  * @since 6.0
  */
-public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
+public class JavaScriptLibrarySettings
 {
 	private ResourceReference jQueryReference = JQueryResourceReference.get();
 
@@ -37,49 +45,73 @@ public class JavaScriptLibrarySettings implements IJavaScriptLibrarySettings
 
 	private ResourceReference wicketAjaxDebugReference = WicketAjaxDebugJQueryResourceReference.get();
 
-	@Override
+	/**
+	 * @return the reference to the JQuery JavaScript library used as backing library for
+	 *         wicket-event and wicket-ajax
+	 */
 	public ResourceReference getJQueryReference()
 	{
 		return jQueryReference;
 	}
 
-	@Override
+	/**
+	 * @param jQueryReference
+	 *            a reference to the JQuery JavaScript library used as backing library for
+	 *            wicket-event and wicket-ajax
+	 */
 	public void setJQueryReference(ResourceReference jQueryReference)
 	{
 		this.jQueryReference = Args.notNull(jQueryReference, "jQueryReference");
 	}
 
-	@Override
+	/**
+	 * @return the reference to the implementation of wicket-event.js
+	 */
 	public ResourceReference getWicketEventReference()
 	{
 		return wicketEventReference;
 	}
 
-	@Override
+	/**
+	 * @param wicketEventReference
+	 *            a reference to the implementation of wicket-event.js
+	 */
 	public void setWicketEventReference(ResourceReference wicketEventReference)
 	{
 		this.wicketEventReference = Args.notNull(wicketEventReference, "wicketEventReference");
 	}
 
-	@Override
+	/**
+	 * @return the reference to the implementation of wicket-ajax.js
+	 */
 	public ResourceReference getWicketAjaxReference()
 	{
 		return wicketAjaxReference;
 	}
 
-	@Override
+	/**
+	 * @param wicketAjaxReference
+	 *            a reference to the implementation of wicket-ajax.js
+	 */
 	public void setWicketAjaxReference(ResourceReference wicketAjaxReference)
 	{
 		this.wicketAjaxReference = Args.notNull(wicketAjaxReference, "wicketAjaxReference");
 	}
 
-	@Override
+	/**
+	 * The Wicket Ajax Debug Window.
+	 *
+	 * @return the reference to the implementation of wicket-ajax-debug.js
+	 */
 	public ResourceReference getWicketAjaxDebugReference()
 	{
 		return wicketAjaxDebugReference;
 	}
 
-	@Override
+	/**
+	 * @param wicketAjaxDebugReference
+	 *            a reference to the implementation of wicket-ajax-debug.js
+	 */
 	public void setWicketAjaxDebugReference(ResourceReference wicketAjaxDebugReference)
 	{
 		this.wicketAjaxDebugReference = Args.notNull(wicketAjaxDebugReference,

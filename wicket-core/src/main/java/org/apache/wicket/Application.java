@@ -84,7 +84,6 @@ import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -1021,7 +1020,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private ApplicationSettings applicationSettings;
 
 	/** JavaScriptLibrary settings */
-	private IJavaScriptLibrarySettings javaScriptLibrarySettings;
+	private JavaScriptLibrarySettings javaScriptLibrarySettings;
 
 	/** Debug Settings */
 	private DebugSettings debugSettings;
@@ -1083,7 +1082,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return Application's JavaScriptLibrary settings
 	 * @since 6.0
 	 */
-	public final IJavaScriptLibrarySettings getJavaScriptLibrarySettings()
+	public final JavaScriptLibrarySettings getJavaScriptLibrarySettings()
 	{
 		checkSettingsAvailable();
 		if (javaScriptLibrarySettings == null)
@@ -1098,7 +1097,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param javaScriptLibrarySettings
 	 */
 	public final void setJavaScriptLibrarySettings(
-		final IJavaScriptLibrarySettings javaScriptLibrarySettings)
+		final JavaScriptLibrarySettings javaScriptLibrarySettings)
 	{
 		this.javaScriptLibrarySettings = javaScriptLibrarySettings;
 	}
