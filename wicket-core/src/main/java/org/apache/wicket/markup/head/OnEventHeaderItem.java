@@ -26,6 +26,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.def.JavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for event triggered scripts.
@@ -56,6 +57,19 @@ public class OnEventHeaderItem extends HeaderItem
 	private final CharSequence javaScript;
 
 	/**
+	 * Constructor.
+	 *
+	 * The JavaScript should be provided by overloaded #getJavaScript
+	 *
+	 * @param target
+	 * @param event
+	 */
+	public OnEventHeaderItem(String target, String event)
+	{
+		this(target, event, null);
+	}
+
+	/**
 	 * Construct.
 	 * 
 	 * @param target
@@ -74,7 +88,7 @@ public class OnEventHeaderItem extends HeaderItem
 		}
 		this.event = event;
 
-		this.javaScript = Args.notEmpty(javaScript, "javaScript");
+		this.javaScript = javaScript;
 	}
 
 	/**
@@ -104,7 +118,10 @@ public class OnEventHeaderItem extends HeaderItem
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, getCompleteJavaScript());
+		if (Strings.isEmpty(getJavaScript()) == false)
+		{
+			JavaScriptUtils.writeJavaScript(response, getCompleteJavaScript());
+		}
 	}
 
 	/**
