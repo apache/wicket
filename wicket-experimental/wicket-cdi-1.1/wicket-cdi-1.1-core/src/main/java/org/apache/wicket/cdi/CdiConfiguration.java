@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -53,9 +52,6 @@ import org.slf4j.LoggerFactory;
 public class CdiConfiguration
 {
 	private static final Logger logger = LoggerFactory.getLogger(CdiConfiguration.class);
-	private static final String[] defaultIgnoredPackages = new String[] {
-			"org.apache.wicket.markup", "org.apache.wicket.protocol.http",
-			"org.apache.wicket.behavior", };
 
 	@Inject
 	AbstractCdiContainer container;
@@ -308,85 +304,6 @@ public class CdiConfiguration
 		return getApplicationParameters().isConfigured();
 	}
 
-	public @Produces
-	@IgnoreList
-	String[] getPackagesToIgnore()
-	{
-		ConfigurationParameters params = getApplicationParameters();
-
-		String[] ignore = new String[params.getIgnoredPackages().size()];
-		return params.getIgnoredPackages().toArray(ignore);
-	}
-
-	/**
-	 * Allows for addition of individual classes to be ignored during injection.
-	 * 
-	 * @param classes
-	 * @return {@code this} for easy chaining
-	 */
-	public CdiConfiguration addClassesToIgnore(Class<?>... classes)
-	{
-		if (classes != null && classes.length > 0)
-		{
-			ConfigurationParameters params = getApplicationParameters();
-			for (Class<?> clazz : classes)
-			{
-				params.getIgnoredPackages().add(clazz.getName());
-			}
-		}
-		return this;
-	}
-
-	/**
-	 * Remove one or more Classes from Ignore list
-	 * 
-	 * @param classes
-	 * @return {@code this} for easy chaining
-	 */
-	public CdiConfiguration removeClassesToIgnore(Class<?>... classes)
-	{
-		if (classes != null && classes.length > 0)
-		{
-			ConfigurationParameters params = getApplicationParameters();
-			for (Class<?> clazz : classes)
-			{
-				params.getIgnoredPackages().remove(clazz.getName());
-			}
-		}
-		return this;
-	}
-
-	/**
-	 * Allows for addition of one or more packages to be ignored during
-	 * injection.
-	 * 
-	 * @param packageNames
-	 * @return {@code this} for easy chaining
-	 */
-	public CdiConfiguration addPackagesToIgnore(String... packageNames)
-	{
-		if (packageNames != null && packageNames.length > 0)
-		{
-			getApplicationParameters().getIgnoredPackages().addAll(Arrays.asList(packageNames));
-		}
-		return this;
-	}
-
-	/**
-	 * Remove one or more Package from Ignore list
-	 * 
-	 * @param packageNames
-	 * @return {@code this} for easy chaining
-	 */
-	public CdiConfiguration removePackagesToIgnore(String... packageNames)
-	{
-		if (packageNames != null && packageNames.length > 0)
-		{
-			getApplicationParameters().getIgnoredPackages().removeAll(Arrays.asList(packageNames));
-		}
-		return this;
-	}
-
 	protected ConfigurationParameters getApplicationParameters()
 	{
 		ConfigurationParameters params = parameters.get(Application.get().getApplicationKey());
@@ -447,8 +364,6 @@ public class CdiConfiguration
 		{
 			parameters.put(appKey, params);
 		}
-		params.getIgnoredPackages().addAll(Arrays.asList(defaultIgnoredPackages));
-
 
 		RequestCycleListenerCollection listeners = new RequestCycleListenerCollection();
 		application.getRequestCycleListeners().add(listeners);

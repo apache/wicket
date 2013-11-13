@@ -27,7 +27,6 @@ import org.apache.wicket.cdi.Auto;
 import org.apache.wicket.cdi.CdiConfiguration;
 import org.apache.wicket.cdi.ConfigurationParameters;
 import org.apache.wicket.cdi.IConversationPropagation;
-import org.apache.wicket.cdi.IgnoreList;
 import org.apache.wicket.cdi.Propagation;
 
 /**
@@ -66,14 +65,6 @@ public class TestCdiConfiguration extends CdiConfiguration
 	Boolean isAutoConversationManagement()
 	{
 		return super.isAutoConversationManagement();
-	}
-
-	public @Produces
-	@IgnoreList
-	@Override
-	String[] getPackagesToIgnore()
-	{
-		return super.getPackagesToIgnore();
 	}
 
 	public void remapApplicationKey(String key, Application app)

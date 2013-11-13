@@ -16,11 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Base class for injectors
@@ -29,57 +25,19 @@ import org.slf4j.LoggerFactory;
  */
 public class AbstractInjector<T>
 {
-
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractInjector.class);
-
-	@Inject
-	AbstractCdiContainer cdiContainer;
-
 	@Inject
 	INonContextualManager nonContextualManager;
 
 	@Inject
 	CdiConfiguration cdiConfiguration;
 
-	@Inject
-	@IgnoreList
-	Instance<String[]> ignorePackages;
-
 	protected void postConstruct(T instance)
 	{
-		if (!ignore(instance.getClass()))
-		{
-			nonContextualManager.postConstruct(instance);
-		}
+		nonContextualManager.postConstruct(instance);
 	}
 
 	protected void inject(T instance)
 	{
-
-		if (!ignore(instance.getClass()))
-		{
-			nonContextualManager.inject(instance);
-		}
+		nonContextualManager.inject(instance);
 	}
-
-	protected boolean ignore(Class<?> instanceClass)
-	{
-		String packageName = instanceClass.getPackage().getName();
-		for (String ignore : ignorePackages.get())
-		{
-
-			if (instanceClass.getName().equals(ignore) || packageName.contains(ignore))
-			{
-				LOG.debug("Skipping {} which is set to ignore {}", instanceClass, packageName);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public String[] getIgnorePackages()
-	{
-		return ignorePackages.get();
-	}
-
 }

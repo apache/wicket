@@ -17,8 +17,6 @@
 package org.apache.wicket.cdi;
 
 import java.io.Serializable;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
@@ -41,7 +39,6 @@ public class ConfigurationParameters implements Serializable
 	private boolean autoConversationManagement = false;
 	private boolean configured = false;
 
-	private Set<String> ignoredPackages = new TreeSet<String>();
 	private IRequestCycleListener activeRequestCycleListener;
 	private IComponentOnBeforeRenderListener activeComponentOnBeforeRenderListener;
 
@@ -116,16 +113,6 @@ public class ConfigurationParameters implements Serializable
 	{
 		this.autoConversationManagement = autoConversationManagement;
 		return this;
-	}
-
-	public Set<String> getIgnoredPackages()
-	{
-		return ignoredPackages;
-	}
-
-	void setIgnoredPackages(Set<String> ignoredPackages)
-	{
-		this.ignoredPackages = ignoredPackages;
 	}
 
 	IRequestCycleListener getActiveRequestCycleListener()
