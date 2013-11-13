@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.server.ServletWebSocketRequest;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 
 /**
  * An HttpServletRequest that wraps the original HttpServletRequest
@@ -35,10 +35,10 @@ class Jetty9UpgradeHttpRequest extends HttpServletRequestWrapper
 	{
 		try
 		{
-			REQ = ServletWebSocketRequest.class.getDeclaredField("req");
+			REQ = ServletUpgradeRequest.class.getDeclaredField("req");
 		} catch (NoSuchFieldException nsfx)
 		{
-			throw new IllegalStateException(ServletWebSocketRequest.class.getName() +
+			throw new IllegalStateException(ServletUpgradeRequest.class.getName() +
 					" has no 'req' field!", nsfx);
 		}
 		REQ.setAccessible(true);
@@ -51,13 +51,13 @@ class Jetty9UpgradeHttpRequest extends HttpServletRequestWrapper
 
 	private static HttpServletRequest extractHttpRequest(UpgradeRequest upgradeRequest)
 	{
-		if (upgradeRequest instanceof ServletWebSocketRequest == false)
+		if (upgradeRequest instanceof ServletUpgradeRequest == false)
 		{
 			throw new IllegalArgumentException(Jetty9UpgradeHttpRequest.class.getName() +
-					" can work only with " + ServletWebSocketRequest.class.getName());
+					" can work only with " + ServletUpgradeRequest.class.getName());
 		}
 
-		ServletWebSocketRequest servletWebSocketRequest = (ServletWebSocketRequest) upgradeRequest;
+		ServletUpgradeRequest servletWebSocketRequest = (ServletUpgradeRequest) upgradeRequest;
 		HttpServletRequest request;
 		try
 		{
