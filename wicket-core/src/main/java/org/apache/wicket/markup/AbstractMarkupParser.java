@@ -27,7 +27,7 @@ import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.filter.RootMarkupFilter;
-import org.apache.wicket.settings.IMarkupSettings;
+import org.apache.wicket.settings.def.MarkupSettings;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @see IMarkupFilter
  * @see MarkupFactory
- * @see IMarkupSettings
+ * @see MarkupSettings
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -68,7 +68,7 @@ public abstract class AbstractMarkupParser
 	private final Markup markup;
 
 	/** Temporary variable: Application.get().getMarkupSettings() */
-	private final IMarkupSettings markupSettings;
+	private final MarkupSettings markupSettings;
 
 	private final List<IMarkupFilter> filters;
 

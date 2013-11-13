@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.jmx;
 
-import org.apache.wicket.settings.IMarkupSettings;
-
 /**
  * Markup settings.
  * 
@@ -36,7 +34,7 @@ public interface MarkupSettingsMBean
 
 	/**
 	 * @return Returns the compressWhitespace.
-	 * @see IMarkupSettings#setCompressWhitespace(boolean)
+	 * @see MarkupSettings#setCompressWhitespace(boolean)
 	 */
 	boolean getCompressWhitespace();
 
@@ -49,7 +47,7 @@ public interface MarkupSettingsMBean
 
 	/**
 	 * @return Returns the stripComments.
-	 * @see IMarkupSettings#setStripComments(boolean)
+	 * @see MarkupSettings#setStripComments(boolean)
 	 */
 	boolean getStripComments();
 

@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.watch.IModifiable;
@@ -40,9 +39,9 @@ import org.slf4j.LoggerFactory;
  * removed from the cache and reloaded when needed.
  * <p>
  * MarkupCache is registered with {@link MarkupFactory} which in turn is registered with
- * {@link IMarkupSettings} and thus can be replaced with a subclassed version.
+ * {@link org.apache.wicket.settings.def.MarkupSettings} and thus can be replaced with a sub-classed version.
  * 
- * @see IMarkupSettings
+ * @see org.apache.wicket.settings.def.MarkupSettings
  * @see MarkupFactory
  * 
  * @author Jonathan Locke
@@ -331,7 +330,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param markup
 	 *            Markup.NO_MARKUP
 	 * @return Same as parameter "markup"
-	 * @see org.apache.wicket.settings.IResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
+	 * @see org.apache.wicket.settings.def.ResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
 	 */
 	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer container,
 		final Markup markup)

@@ -17,11 +17,11 @@
 package org.apache.wicket.markup;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.settings.IMarkupSettings;
 
 /**
- * Each Wicket application has a single IMarkupCache associated with it (see {@link IMarkupSettings}
- * ). Via {@link MarkupFactory} the markup cache is used by every Component to get its associated
+ * Each Wicket application has a single IMarkupCache associated with it (see
+ * {@link org.apache.wicket.settings.def.MarkupSettings}). Via {@link MarkupFactory}
+ * the markup cache is used by every Component to get its associated
  * markup stream.
  * 
  * @author Juergen Donnerstag
