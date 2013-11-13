@@ -68,6 +68,11 @@ public class Tomcat7WebSocketFilter extends AbstractUpgradeFilter
 		{
 			return false;
 		}
+		else
+		{
+			resp.setHeader("upgrade", "websocket");
+			resp.setHeader("connection", "upgrade");
+		}
 
 		String key = req.getHeader("Sec-WebSocket-Key");
 		resp.setHeader("Sec-WebSocket-Accept", getWebSocketAccept(key));

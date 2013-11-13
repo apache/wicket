@@ -18,7 +18,6 @@ package org.apache.wicket.protocol.ws;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -31,6 +30,7 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * An extension of WicketFilter that is used to check whether
@@ -78,11 +78,9 @@ public class AbstractUpgradeFilter extends WicketFilter
 		// Information required to send the server handshake message
 		String key;
 		String subProtocol = null;
-		List<String> extensions = Collections.emptyList();
 
 		if (!headerContainsToken(req, "upgrade", "websocket"))
 		{
-//			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return false;
 		}
 
@@ -113,22 +111,16 @@ public class AbstractUpgradeFilter extends WicketFilter
 			return false;
 		}
 
-		List<String> subProtocols = getTokensFromHeader(req,
-				"Sec-WebSocket-Protocol-Client");
+		List<String> subProtocols = getTokensFromHeader(req, "Sec-WebSocket-Protocol-Client");
 		if (!subProtocols.isEmpty())
 		{
 			subProtocol = selectSubProtocol(subProtocols);
-
 		}
-
-		resp.setHeader("upgrade", "websocket");
-		resp.setHeader("connection", "upgrade");
 
 		if (subProtocol != null)
 		{
 			resp.setHeader("Sec-WebSocket-Protocol", subProtocol);
 		}
-
 
 		return true;
 	}
@@ -142,7 +134,7 @@ public class AbstractUpgradeFilter extends WicketFilter
 		Enumeration<String> headers = req.getHeaders(headerName);
 		while (headers.hasMoreElements()) {
 			String header = headers.nextElement();
-			String[] tokens = header.split(",");
+			String[] tokens = Strings.split(header, ',');
 			for (String token : tokens) {
 				if (target.equalsIgnoreCase(token.trim())) {
 					return true;
