@@ -30,6 +30,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mvn.build.java.version>1.7</mvn.build.java.version>
+		<jacoco.version>0.6.3.201306030806</jacoco.version>
 		<jetty.version>8.1.13.v20130916</jetty.version>
 		<jetty9.version>9.0.6.v20130930</jetty9.version>
 		<spring.version>3.2.4.RELEASE</spring.version>
@@ -149,7 +150,7 @@
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.6.3.201306030806</version>
+						<version>${jacoco.version}</version>
 						
 						<executions>
 							<execution>
