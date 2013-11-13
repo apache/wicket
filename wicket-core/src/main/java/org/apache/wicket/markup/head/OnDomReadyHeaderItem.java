@@ -24,6 +24,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for scripts that need to be executed directly after the DOM has been built,
@@ -49,13 +50,23 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	private final CharSequence javaScript;
 
 	/**
+	 * Constructor.
+	 *
+	 * The JavaScript should be provided by overloaded #getJavaScript
+	 */
+	public OnDomReadyHeaderItem()
+	{
+		this(null);
+	}
+
+	/**
 	 * Construct.
 	 * 
 	 * @param javaScript
 	 */
 	public OnDomReadyHeaderItem(CharSequence javaScript)
 	{
-		this.javaScript = Args.notEmpty(javaScript, "javaScript");
+		this.javaScript = javaScript;
 	}
 
 	/**
@@ -69,8 +80,12 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"domready\", " +
-			"function(event) { " + getJavaScript() + ";});");
+		CharSequence js = getJavaScript();
+		if (Strings.isEmpty(js) == false)
+		{
+			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"domready\", " +
+				"function(event) { " + js + ";});");
+		}
 	}
 
 	@Override
