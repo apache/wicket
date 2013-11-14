@@ -576,7 +576,7 @@
 		}
 
 		function getPosition(obj) {
-			var rectangle = obj.getBoundingClientRect();
+			var rectangle = $(obj).offset();
 			
 			var leftPosition = rectangle.left || 0;
 			var topPosition = rectangle.top || 0;

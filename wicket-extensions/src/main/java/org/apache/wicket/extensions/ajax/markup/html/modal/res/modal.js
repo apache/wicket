@@ -1203,7 +1203,8 @@
 						}
 						s+= " frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
 					} else {
-						s+= "<div id='"+idContent+"' class='w_content_container'></div>";
+						var styleIE7 = Wicket.Browser.isIE7() ? "style='z-index: 20001'" : "";
+						s+= "<div id='"+idContent+"' class='w_content_container' " + styleIE7 + "></div>";
 					}
 						s+=
 										"</div>"+
