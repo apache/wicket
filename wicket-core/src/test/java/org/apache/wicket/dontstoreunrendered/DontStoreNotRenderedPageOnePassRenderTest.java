@@ -18,7 +18,7 @@ package org.apache.wicket.dontstoreunrendered;
 
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.settings.def.RequestCycleSettings;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5415
@@ -35,7 +35,7 @@ public class DontStoreNotRenderedPageOnePassRenderTest extends DontStoreNotRende
 			{
 				super.init();
 
-				getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
+				getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
 			}
 		};
 	}
