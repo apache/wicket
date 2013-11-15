@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.context.ConversationScoped;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.request.IRequestHandler;
@@ -23,12 +24,12 @@ import org.apache.wicket.request.IRequestHandler;
 /**
  * Various modes of propagating persistent conversations across requests.
  * 
+ * @see ConversationScoped
+ * 
  * @author igor
  */
 public enum ConversationPropagation implements IConversationPropagation {
-	/**
-	 * No conversational propagation takes place
-	 */
+	/** No conversational propagation takes place */
 	NONE {
 		@Override
 		public boolean propagatesViaPage(Page page, IRequestHandler handler)
@@ -43,8 +44,7 @@ public enum ConversationPropagation implements IConversationPropagation {
 		}
 	},
 	/**
-	 * Persistent conversations are propagated between non-bookmarkable pages
-	 * only
+	 * Pesistent conversations are propagated between non-bookmarkable pages only
 	 */
 	NONBOOKMARKABLE {
 		@Override
@@ -60,8 +60,7 @@ public enum ConversationPropagation implements IConversationPropagation {
 		}
 	},
 	/**
-	 * Persistent conversations are propagated between bookmarkable and
-	 * non-bookmarkable pages
+	 * Persistent conversations are propagated between bookmarkable and non-bookmarkable pages
 	 */
 	ALL {
 		@Override

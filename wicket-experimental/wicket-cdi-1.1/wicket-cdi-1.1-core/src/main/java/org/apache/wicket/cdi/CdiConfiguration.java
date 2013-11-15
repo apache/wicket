@@ -16,278 +16,94 @@
  */
 package org.apache.wicket.cdi;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.application.IComponentOnBeforeRenderListener;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
-import org.apache.wicket.request.cycle.IRequestCycleListener;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 import org.apache.wicket.util.lang.Args;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.seam.conversation.spi.SeamConversationContextFactory;
 
 /**
  * Configures CDI integration
  * 
  * @author igor
- * @author jsarman
+ * 
  */
-@ApplicationScoped
 public class CdiConfiguration
 {
-	private static final Logger logger = LoggerFactory.getLogger(CdiConfiguration.class);
+	private BeanManager beanManager;
+	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
+	private INonContextualManager nonContextualManager;
 
-	@Inject
-	AbstractCdiContainer container;
-
-	@Inject
-	INonContextualManager nonContextualManager;
-
-	@Inject
-	ConversationPropagator conversationPropagator;
-
-	@Inject
-	ConversationExpiryChecker conversationExpiryChecker;
-
-	@Inject
-	DetachEventEmitter detachEventEmitter;
-
-	@Inject
-	BehaviorInjector behaviorInjector;
-
-	@Inject
-	ComponentInjector componentInjector;
-
-	@Inject
-	SessionInjector sessionInjector;
-
-	@Inject
-	ConversationManager conversationManager;
-
-	protected Map<String, ConfigurationParameters> parameters;
+	private boolean injectComponents = true;
+	private boolean injectApplication = true;
+	private boolean injectSession = true;
+	private boolean injectBehaviors = true;
+	private boolean autoConversationManagement = false;
 
 	/**
-	 * Not intended for public use. Use {@link #get()}
-	 */
-	public CdiConfiguration()
-	{
-	}
-
-
-	@PostConstruct
-	public void init()
-	{
-		parameters = new TreeMap<String, ConfigurationParameters>();
-	}
-
-	public boolean isInjectComponents()
-	{
-		return getApplicationParameters().isInjectComponents();
-	}
-
-	/**
-	 * Flag to set if ComponentInjection is enabled.
-	 * <p/>
-	 * This method will throw IllegalStateException if called after configured.
+	 * Constructor
 	 * 
-	 * @param injectComponents
-	 * @return {@code this} for easy chaining
-	 * @deprecated Application Level Configuration replaced with
-	 *             {@link CdiWicketFilter}
+	 * @param beanManager
 	 */
-	@Deprecated
-	public CdiConfiguration setInjectComponents(boolean injectComponents)
+	public CdiConfiguration(BeanManager beanManager)
 	{
-		ConfigurationParameters params = getApplicationParameters();
-		if (params.isConfigured())
-		{
-			throw new IllegalStateException(
-					"Component Injection can only be changed before configure is called");
-		}
-		params.setInjectComponents(injectComponents);
-		return this;
-	}
+		Args.notNull(beanManager, "beanManager");
 
-	public boolean isInjectApplication()
-	{
-		return getApplicationParameters().isInjectApplication();
+		this.beanManager = beanManager;
+		nonContextualManager = new NonContextualManager(beanManager);
 	}
 
 	/**
-	 * Flag to set if ApplicationInjection is enabled.
-	 * <p/>
-	 * This method will throw IllegalStateException if called after configured.
+	 * Gets the configured bean manager
 	 * 
-	 * @param injectApplication
-	 * @return {@code this} for easy chaining
-	 * @deprecated Application Level Configuration replaced with
-	 *             {@link CdiWicketFilter}
+	 * @return bean manager or {@code null} if none
 	 */
-	@Deprecated
-	public CdiConfiguration setInjectApplication(boolean injectApplication)
+	public BeanManager getBeanManager()
 	{
-		ConfigurationParameters params = getApplicationParameters();
-		if (params.isConfigured())
-		{
-			throw new IllegalStateException(
-					"Application Injection can only be changed before configure is called");
-		}
-		params.setInjectApplication(injectApplication);
-		return this;
+		return beanManager;
 	}
 
-	public boolean isInjectSession()
+	public IConversationPropagation getPropagation()
 	{
-		return getApplicationParameters().isInjectSession();
+		return propagation;
 	}
 
 	/**
-	 * Flag to set if SessionInjection is enabled.
-	 * <p/>
-	 * This method will throw IllegalStateException if called after configured.
-	 * 
-	 * @param injectSession
-	 * @return {@code this} for easy chaining
-	 * @deprecated Application Level Configuration replaced with
-	 *             {@link CdiWicketFilter}
+	 * Checks if auto conversation management is enabled. See
+	 * {@link #setAutoConversationManagement(boolean)} for details.
 	 */
-	@Deprecated
-	public CdiConfiguration setInjectSession(boolean injectSession)
+	public boolean isAutoConversationManagement()
 	{
-		ConfigurationParameters params = getApplicationParameters();
-		if (params.isConfigured())
-		{
-			throw new IllegalStateException(
-					"Session Injection can only be changed before configure is called");
-		}
-		params.setInjectSession(injectSession);
-		return this;
-	}
-
-	public boolean isInjectBehaviors()
-	{
-		return getApplicationParameters().isInjectBehaviors();
-	}
-
-	/**
-	 * Flag to set if BehaviorInjection is enabled.
-	 * <p/>
-	 * This method will throw IllegalStateException if called after configured.
-	 * 
-	 * @param injectBehaviors
-	 * @return {@code this} for easy chaining
-	 * @deprecated Application Level Configuration replaced with
-	 *             {@link CdiWicketFilter}
-	 */
-	@Deprecated
-	public CdiConfiguration setInjectBehaviors(boolean injectBehaviors)
-	{
-		ConfigurationParameters params = getApplicationParameters();
-		if (params.isConfigured())
-		{
-			throw new IllegalStateException(
-					"Behavior Injection can only be changed before configure is called");
-		}
-		params.setInjectBehaviors(injectBehaviors);
-		return this;
-	}
-
-
-	public @Produces
-	@Propagation
-	IConversationPropagation getPropagation()
-	{
-		return getApplicationParameters().getPropagation();
-	}
-
-
-	public @Produces
-	@Auto
-	Boolean isAutoConversationManagement()
-	{
-		return getApplicationParameters().isAutoConversationManagement();
+		return autoConversationManagement;
 	}
 
 	/**
 	 * Toggles automatic conversation management feature.
-	 * <p/>
-	 * Automatic conversation management controls the lifecycle of the
-	 * conversation based on presence of components implementing the
-	 * {@link ConversationalComponent} interface. If such components are found
-	 * in the page a conversation is marked persistent, and if they are not the
-	 * conversation is marked transient. This greatly simplifies the management
-	 * of conversation lifecycle.
-	 * <p/>
-	 * ConversationManagement can also be enable per Conversation after
-	 * configured. Once the CdiConfiguration is configured this call is passed
-	 * to {@link ConversationManager#setManageConversation(java.lang.Boolean) }
-	 * for the ConversationManager in the current ConversationScope. This allows
-	 * for ConversationManagement per active Conversation.
-	 * <p/>
+	 * 
+	 * Automatic conversation management controls the lifecycle of the conversation based on
+	 * presence of components implementing the {@link ConversationalComponent} interface. If such
+	 * components are found in the page a conversation is marked persistent, and if they are not the
+	 * conversation is marked transient. This greatly simplifies the management of conversation
+	 * lifecycle.
+	 * 
+	 * Sometimes it is necessary to manually control the application. For these cases, once a
+	 * conversation is started {@link AutoConversation} bean can be used to mark the conversation as
+	 * manually-managed.
 	 * 
 	 * @param enabled
+	 * 
 	 * @return {@code this} for easy chaining
 	 */
 	public CdiConfiguration setAutoConversationManagement(boolean enabled)
 	{
-		ConfigurationParameters params = getApplicationParameters();
-		if (params.isConfigured())
-		{
-			if (container.getCurrentConversation().isTransient())
-			{
-				logger.warn("Not setting AutoConversationManagement because the conversation context is transient.");
-				return this;
-			}
-			conversationManager.setManageConversation(enabled);
-		}
-		else
-		{
-			params.setAutoConversationManagement(enabled);
-		}
+		autoConversationManagement = enabled;
 		return this;
 	}
 
-	/**
-	 * Method to set the ConversationPropagation.
-	 * <p/>
-	 * 
-	 * @param propagation
-	 * @return {@code this} for easy chaining
-	 */
 	public CdiConfiguration setPropagation(IConversationPropagation propagation)
 	{
-		Args.notNull(propagation, "propagation");
-
-		ConfigurationParameters params = getApplicationParameters();
-		if (params.isConfigured())
-		{
-			if (container.getCurrentConversation().isTransient())
-			{
-				logger.warn("Not setting propagation because the conversation context is transient.");
-				return this;
-			}
-			conversationManager.setPropagation(propagation);
-		}
-		else
-		{
-			params.setPropagation(propagation);
-		}
+		this.propagation = propagation;
 		return this;
 	}
 
@@ -296,219 +112,119 @@ public class CdiConfiguration
 		return nonContextualManager;
 	}
 
-	/**
-	 * @return true if configured for Application
-	 */
-	public boolean isConfigured()
+	public CdiConfiguration setNonContextualManager(INonContextualManager nonContextualManager)
 	{
-		return getApplicationParameters().isConfigured();
+		this.nonContextualManager = nonContextualManager;
+		return this;
 	}
 
-	protected ConfigurationParameters getApplicationParameters()
+	public boolean isInjectComponents()
 	{
-		ConfigurationParameters params = parameters.get(Application.get().getApplicationKey());
-		if (params == null)
-		{
-			try
-			{
-				Application app = Application.get();
-				if (app.getApplicationKey() == null)
-				{
-					throw new WicketRuntimeException();
-				}
-				params = new ConfigurationParameters();
-				parameters.put(app.getApplicationKey(), params);
-			}
-			catch (WicketRuntimeException wre)
-			{
-				throw new IllegalStateException("Application is not ready.");
-			}
-		}
-		return params;
+		return injectComponents;
+	}
+
+	public CdiConfiguration setInjectComponents(boolean injectComponents)
+	{
+		this.injectComponents = injectComponents;
+		return this;
+	}
+
+	public boolean isInjectApplication()
+	{
+		return injectApplication;
+	}
+
+	public CdiConfiguration setInjectApplication(boolean injectApplication)
+	{
+		this.injectApplication = injectApplication;
+		return this;
+	}
+
+	public boolean isInjectSession()
+	{
+		return injectSession;
+	}
+
+	public CdiConfiguration setInjectSession(boolean injectSession)
+	{
+		this.injectSession = injectSession;
+		return this;
+	}
+
+	public boolean isInjectBehaviors()
+	{
+		return injectBehaviors;
+	}
+
+	public CdiConfiguration setInjectBehaviors(boolean injectBehaviors)
+	{
+		this.injectBehaviors = injectBehaviors;
+		return this;
 	}
 
 	/**
-	 * Configures the specified application. This method allows for
-	 * CdiConfiguration to be setup at the Application Level. Use the
-	 * {@link CdiWicketFilter} as the filterClass or add the
-	 * {@link CdiWebApplicationFactory} to the Standard WicketFilter with
-	 * init-param applicationFactoryClassName for setup during Application
-	 * Initialization. This allows for Injected classes in the WebApplication to
-	 * be ready before init() is called.
+	 * Configures the specified application
 	 * 
 	 * @param application
 	 * @return
-	 * @deprecated Application Level Configuration replaced with
-	 *             {@link CdiWicketFilter}
 	 */
-	@Deprecated
-	public void configure(Application application)
+	public CdiContainer configure(Application application)
 	{
-		ConfigurationParameters params = getApplicationParameters();
-		configure(application.getApplicationKey(), application, params);
-	}
-
-	protected synchronized void configure(String appKey, Application application,
-			ConfigurationParameters params)
-	{
-
-		if (parameters.containsKey(appKey))
+		if (beanManager == null)
 		{
-			params = parameters.get(appKey);
-			if (params.isConfigured())
-			{
-				throw new IllegalStateException("Cannot configure CdiConfiguration multiple times");
-			}
+			throw new IllegalStateException(
+				"Configuration does not have a BeanManager instance configured");
 		}
-		else
-		{
-			parameters.put(appKey, params);
-		}
+
+		CdiContainer container = new CdiContainer(beanManager, nonContextualManager);
+		container.bind(application);
 
 		RequestCycleListenerCollection listeners = new RequestCycleListenerCollection();
 		application.getRequestCycleListeners().add(listeners);
 
 		// enable conversation propagation
-		if (params.getPropagation() != ConversationPropagation.NONE)
+		if (getPropagation() != ConversationPropagation.NONE)
 		{
-			enablePropagation(params, application);
+			listeners.add(new ConversationPropagator(application, container, getPropagation(),
+				autoConversationManagement));
+			application.getComponentPreOnBeforeRenderListeners().add(
+				new ConversationExpiryChecker(container));
+			SeamConversationContextFactory.setDisableNoopInstance(true);
 		}
 
 		// enable detach event
-		listeners.add(detachEventEmitter);
+		listeners.add(new DetachEventEmitter(container));
 
 
 		// inject application instance
-		if (params.isInjectApplication())
+		if (isInjectApplication())
 		{
-			nonContextualManager.postConstruct(application);
+			container.getNonContextualManager().postConstruct(application);
 		}
 
 		// enable injection of various framework components
 
-		if (params.isInjectSession())
+		if (isInjectSession())
 		{
-			application.getSessionListeners().add(sessionInjector);
+			application.getSessionListeners().add(new SessionInjector(container));
 		}
 
-		if (params.isInjectComponents())
+		if (isInjectComponents())
 		{
-			application.getComponentInstantiationListeners().add(componentInjector);
+			application.getComponentInstantiationListeners().add(new ComponentInjector(container));
 		}
 
-		if (params.isInjectBehaviors())
+		if (isInjectBehaviors())
 		{
-			application.getBehaviorInstantiationListeners().add(behaviorInjector);
+			application.getBehaviorInstantiationListeners().add(new BehaviorInjector(container));
 		}
 
 		// enable cleanup
 
 		application.getApplicationListeners().add(
-				new CdiShutdownCleaner(params.isInjectApplication()));
+			new CdiShutdownCleaner(beanManager, isInjectApplication()));
 
-
-		params.setConfigured(true);
-	}
-
-	/**
-	 * Convenience Method to get an Injected Instance of CdiConfiguration
-	 * programmatically.
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public static CdiConfiguration get()
-	{
-		BeanManager beanManager = BeanManagerLookup.lookup();
-		Iterator<Bean<?>> iter = beanManager.getBeans(CdiConfiguration.class).iterator();
-		if (!iter.hasNext())
-		{
-			throw new IllegalStateException("CDI BeanManager cannot find CdiConfiguration");
-		}
-		Bean<CdiConfiguration> bean = (Bean<CdiConfiguration>)iter.next();
-		CreationalContext<CdiConfiguration> ctx = beanManager.createCreationalContext(bean);
-		return (CdiConfiguration)beanManager.getReference(bean, CdiConfiguration.class, ctx);
-	}
-
-	private void enablePropagation(ConfigurationParameters params, Application application)
-	{
-		disablePropagation(params); // Force remove active listeners if any
-		IRequestCycleListener requestCycleListener = conversationPropagator;// new
-																			// RequestCycleListenerWrapper();
-		application.getRequestCycleListeners().add(requestCycleListener);
-		params.setActiveRequestCycleListener(requestCycleListener);
-
-		IComponentOnBeforeRenderListener componentOnBeforeRenderListener = new ComponentOnBeforeRenderListenerWrapper();
-		application.getComponentPreOnBeforeRenderListeners().add(componentOnBeforeRenderListener);
-		params.setActiveComponentOnBeforeRenderListener(componentOnBeforeRenderListener);
-	}
-
-	private void disablePropagation(ConfigurationParameters params)
-	{
-		IRequestCycleListener requestCycleListener = params.getActiveRequestCycleListener();
-		if (requestCycleListener != null)
-		{
-			Application.get().getRequestCycleListeners().remove(requestCycleListener);
-			params.setActiveRequestCycleListener(null);
-		}
-		IComponentOnBeforeRenderListener componentOnBeforeRenderListener = params
-				.getActiveComponentOnBeforeRenderListener();
-		if (componentOnBeforeRenderListener != null)
-		{
-			Application.get().getComponentPreOnBeforeRenderListeners()
-					.remove(componentOnBeforeRenderListener);
-			params.setActiveComponentOnBeforeRenderListener(null);
-		}
-	}
-
-	/**
-	 * Wrapper for the Current ConversationPropagator which allows the removal
-	 * of the listener.
-	 */
-	class RequestCycleListenerWrapper extends AbstractRequestCycleListener
-	{
-
-		@Override
-		public void onEndRequest(RequestCycle cycle)
-		{
-			conversationPropagator.onEndRequest(cycle);
-		}
-
-		@Override
-		public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
-		{
-			conversationPropagator.onRequestHandlerScheduled(cycle, handler);
-		}
-
-		@Override
-		public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
-		{
-			conversationPropagator.onRequestHandlerResolved(cycle, handler);
-		}
-
-		@Override
-		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
-		{
-			conversationPropagator.onRequestHandlerExecuted(cycle, handler);
-		}
-
-		@Override
-		public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
-		{
-			conversationPropagator.onUrlMapped(cycle, handler, url);
-		}
-
-	}
-
-	class ComponentOnBeforeRenderListenerWrapper implements IComponentOnBeforeRenderListener
-	{
-
-		@Override
-		public void onBeforeRender(Component component)
-		{
-			conversationExpiryChecker.onBeforeRender(component);
-		}
-
+		return container;
 	}
 
 }

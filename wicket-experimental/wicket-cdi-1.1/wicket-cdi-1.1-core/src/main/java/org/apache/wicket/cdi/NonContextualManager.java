@@ -18,25 +18,30 @@ package org.apache.wicket.cdi;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.BeanManager;
 
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Default implementation of {@link INonContextualManager} using
- * {@link NonContextual} helper
+ * Default implementation of {@link INonContextualManager} using {@link NonContextual} helper
  * 
  * @author igor
+ * 
  */
-@ApplicationScoped
 class NonContextualManager implements INonContextualManager
 {
+	private final BeanManager beanManager;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param beanManager
 	 */
-	public NonContextualManager()
+	public NonContextualManager(BeanManager beanManager)
 	{
+		Args.notNull(beanManager, "beanManager");
+
+		this.beanManager = beanManager;
 	}
 
 	/**
@@ -46,29 +51,28 @@ class NonContextualManager implements INonContextualManager
 	public <T> void inject(T instance)
 	{
 		Args.notNull(instance, "instance");
-		NonContextual.of(instance.getClass()).inject(instance);
+		NonContextual.of(instance.getClass(), beanManager).inject(instance);
 	}
 
 	/**
-	 * Performs dependency injection on the noncontextual instance and invokes
-	 * any {@link PostConstruct} callbacks
+	 * Performs dependency injection on the noncontextual instance and invokes any
+	 * {@link PostConstruct} callbacks
 	 */
 	@Override
 	public <T> void postConstruct(T instance)
 	{
 		Args.notNull(instance, "instance");
-		NonContextual.of(instance.getClass()).postConstruct(instance);
+		NonContextual.of(instance.getClass(), beanManager).postConstruct(instance);
 	}
 
 	/**
-	 * Invokes any {@link PreDestroy} callbacks and cleans up any injected
-	 * dependencies
+	 * Invokes any {@link PreDestroy} callbacks and cleans up any injected dependencies
 	 */
 	@Override
 	public <T> void preDestroy(T instance)
 	{
 		Args.notNull(instance, "instance");
-		NonContextual.of(instance.getClass()).preDestroy(instance);
+		NonContextual.of(instance.getClass(), beanManager).preDestroy(instance);
 	}
 
 }

@@ -20,6 +20,7 @@ package org.apache.wicket.cdi;
  * Fired when request cycle is detached
  * 
  * @author igor
+ * 
  */
 public class DetachEvent
 {

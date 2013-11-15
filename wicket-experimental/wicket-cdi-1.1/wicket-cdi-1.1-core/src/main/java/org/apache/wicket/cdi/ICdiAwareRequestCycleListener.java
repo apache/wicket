@@ -16,30 +16,24 @@
  */
 package org.apache.wicket.cdi;
 
-import org.apache.wicket.IBehaviorInstantiationListener;
-import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
 
-/**
- * Injects components with CDI dependencies
- * 
- * @author igor
- * 
- */
-class BehaviorInjector extends AbstractInjector implements IBehaviorInstantiationListener
+public interface ICdiAwareRequestCycleListener extends IRequestCycleListener
 {
 	/**
-	 * Constructor
+	 * Called right after a conversation context for this request is activated
 	 * 
-	 * @param container
+	 * @param cycle
+	 *            request cycle
 	 */
-	public BehaviorInjector(CdiContainer container)
-	{
-		super(container);
-	}
+	void onAfterConversationActivated(RequestCycle cycle);
 
-	@Override
-	public void onInstantiation(Behavior behavior)
-	{
-		inject(behavior);
-	}
+	/**
+	 * Called right before the current conversation context is deactivated
+	 * 
+	 * @param cycle
+	 *            request cycle
+	 */
+	void onBeforeConversationDeactivated(RequestCycle cycle);
 }

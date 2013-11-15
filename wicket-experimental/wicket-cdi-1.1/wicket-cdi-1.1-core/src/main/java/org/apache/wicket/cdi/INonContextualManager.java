@@ -22,10 +22,10 @@ import javax.annotation.PreDestroy;
 import org.apache.wicket.Component;
 
 /**
- * Manages lifecycle of non-contextual objects like {@link Component} instances,
- * etc
+ * Manages lifecycle of non-contextual objects like {@link Component} instances, etc
  * 
  * @author igor
+ * 
  */
 public interface INonContextualManager
 {
@@ -36,10 +36,9 @@ public interface INonContextualManager
 	 * @param instance
 	 */
 	<T> void inject(T instance);
-
+	
 	/**
-	 * Inject a noncontextual instance and invokes any {@link PostConstruct}
-	 * callbacks
+	 * Inject a noncontextual instance and invokes any {@link PostConstruct} callbacks
 	 * 
 	 * @param <T>
 	 * @param instance

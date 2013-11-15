@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import java.io.Serializable;
-
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
@@ -33,27 +30,28 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Checks for conversation expiration during page render and throws a
- * {@link ConversationExpiredException} when an expired conversation is
- * detected.
- * <p/>
- * For example a link that calls {@link Conversation#end()} but does not
- * redirect to a non-conversation-dependent page will be caught by this
- * listener.
+ * {@link ConversationExpiredException} when an expired conversation is detected.
+ * 
+ * For example a link that calls {@link Conversation#end()} but does not redirect to a
+ * non-conversation-dependent page will be caught by this listener.
  * 
  * @author igor
+ * 
  */
-@ApplicationScoped
-public class ConversationExpiryChecker implements IComponentOnBeforeRenderListener, Serializable
+public class ConversationExpiryChecker implements IComponentOnBeforeRenderListener
 {
-	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(ConversationExpiryChecker.class);
-
+	
 	@Inject
-	AbstractCdiContainer container;
+	private Conversation conversation;
 
-	public ConversationExpiryChecker()
+	private final CdiContainer container;
+
+	public ConversationExpiryChecker(CdiContainer container)
 	{
+		this.container = container;
 
+		container.getNonContextualManager().inject(this);
 	}
 
 	@Override
@@ -63,11 +61,11 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 		{
 			Page page = component.getPage();
 			String cid = container.getConversationMarker(page);
-			if (cid != null && !Objects.isEqual(container.getCurrentConversation().getId(), cid))
+			if (cid != null && !Objects.isEqual(conversation.getId(), cid))
 			{
 				logger.info("Conversation {} has expired for {}", cid, page);
 				throw new ConversationExpiredException(null, cid, page, RequestCycle.get()
-						.getActiveRequestHandler());
+					.getActiveRequestHandler());
 			}
 		}
 	}

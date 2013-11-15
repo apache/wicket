@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInstantiationListener;
 
@@ -25,16 +23,24 @@ import org.apache.wicket.application.IComponentInstantiationListener;
  * Injects components with CDI dependencies
  * 
  * @author igor
+ * 
  */
-@ApplicationScoped
-public class ComponentInjector extends AbstractInjector<Component>
-		implements
-			IComponentInstantiationListener
+class ComponentInjector extends AbstractInjector implements IComponentInstantiationListener
 {
+	/**
+	 * Constructor
+	 * 
+	 * @param container
+	 */
+	public ComponentInjector(CdiContainer container)
+	{
+		super(container);
+	}
 
 	@Override
 	public void onInstantiation(Component component)
 	{
 		inject(component);
 	}
+
 }

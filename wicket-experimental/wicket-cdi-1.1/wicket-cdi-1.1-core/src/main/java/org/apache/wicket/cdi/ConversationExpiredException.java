@@ -21,14 +21,12 @@ import org.apache.wicket.request.IRequestHandler;
 
 public class ConversationExpiredException extends RuntimeException
 {
-	private static final long serialVersionUID = 1L;
-
-	private final String cid;
-	private final Page page;
-	private final IRequestHandler handler;
+	private String cid;
+	private Page page;
+	private IRequestHandler handler;
 
 	public ConversationExpiredException(Throwable cause, String cid, Page page,
-			IRequestHandler handler)
+		IRequestHandler handler)
 	{
 		super(cause);
 		this.cid = cid;

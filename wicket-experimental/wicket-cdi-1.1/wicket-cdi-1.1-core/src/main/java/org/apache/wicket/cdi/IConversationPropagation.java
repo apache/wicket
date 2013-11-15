@@ -20,36 +20,32 @@ import org.apache.wicket.Page;
 import org.apache.wicket.request.IRequestHandler;
 
 /**
- * A strategy that specifies how conversations should be propagated between
- * pages/resources. {@link ConversationPropagation} provides sensible default
- * implementations of this interface.
+ * A strategy that specifies how conversations should be propagated between pages/resources.
+ * {@link ConversationPropagation} provides sensible default implementations of this interface.
  * 
  * @author papegaaij
  */
 public interface IConversationPropagation
 {
 	/**
-	 * Indicates if the conversation should be propagated via page metadata (on
-	 * an instance) for the given page and request handler.
+	 * Indicates if the conversation should be propagated via page metadata (on an instance) for the
+	 * given page and request handler.
 	 * 
 	 * @param page
 	 *            The page on which the tag will be set.
 	 * @param handler
 	 *            The current request handler
-	 * @return true if the conversation should be propagated to the given page
-	 *         instance.
+	 * @return true if the conversation should be propagated to the given page instance.
 	 */
 	public boolean propagatesViaPage(Page page, IRequestHandler handler);
 
 	/**
-	 * Indicates if the conversation should be propagated via url-parameters for
-	 * the given request handler. This can either be a get parameter in a
-	 * rendered url, or via page parameters.
+	 * Indicates if the conversation should be propagated via url-parameters for the given request
+	 * handler. This can either be a get parameter in a rendered url, or via page parameters.
 	 * 
 	 * @param handler
 	 *            The current request handler
-	 * @return true if the conversation should be propagated for the given
-	 *         request handler.
+	 * @return true if the conversation should be propagated for the given request handler.
 	 */
 	public boolean propagatesViaParameters(IRequestHandler handler);
 }

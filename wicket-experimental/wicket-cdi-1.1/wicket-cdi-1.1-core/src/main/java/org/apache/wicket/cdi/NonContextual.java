@@ -32,32 +32,33 @@ import org.apache.wicket.util.collections.ClassMetaCache;
 /**
  * Manages lifecycle of non-contextual (non-CDI-managed) objects
  * 
- * @param <T>
  * @author igor
+ * 
+ * @param <T>
  */
 public class NonContextual<T>
 {
 	private static final Object lock = new Object();
-	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections
-			.emptyMap();
+	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections.emptyMap();
 
 	final InjectionTarget<T> it;
+	final BeanManager manager;
 
 	/**
 	 * Undeploys specified bean manager from cache
 	 * 
 	 * @param beanManager
 	 */
-	public static void undeploy()
+	public static void undeploy(BeanManager beanManager)
 	{
-		if (cache.containsKey(BeanManagerLookup.lookup()))
+		if (cache.containsKey(beanManager))
 		{
 			synchronized (lock)
 			{
 				// copy-on-write the cache
 				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
-						cache);
-				newCache.remove(BeanManagerLookup.lookup());
+					cache);
+				newCache.remove(beanManager);
 				cache = Collections.unmodifiableMap(newCache);
 			}
 		}
@@ -71,29 +72,28 @@ public class NonContextual<T>
 	 * @param manager
 	 * @return
 	 */
-	public static <T> NonContextual<T> of(Class<? extends T> clazz)
+	public static <T> NonContextual<T> of(Class<? extends T> clazz, BeanManager manager)
 	{
-		ClassMetaCache<NonContextual<?>> meta = getCache();
+		ClassMetaCache<NonContextual<?>> meta = getCache(manager);
 
 		@SuppressWarnings("unchecked")
 		NonContextual<T> nc = (NonContextual<T>)meta.get(clazz);
 
 		if (nc == null)
 		{
-			nc = new NonContextual<T>(clazz);
+			nc = new NonContextual<T>(manager, clazz);
 			meta.put(clazz, nc);
 		}
 		return nc;
 	}
 
-	private static ClassMetaCache<NonContextual<?>> getCache()
+	private static ClassMetaCache<NonContextual<?>> getCache(BeanManager manager)
 	{
-		ClassMetaCache<NonContextual<?>> meta = cache.get(BeanManagerLookup.lookup());
+		ClassMetaCache<NonContextual<?>> meta = cache.get(manager);
 		if (meta == null)
 		{
 			synchronized (lock)
 			{
-				BeanManager manager = BeanManagerLookup.lookup();
 				meta = cache.get(manager);
 				if (meta == null)
 				{
@@ -101,7 +101,7 @@ public class NonContextual<T>
 
 					// copy-on-write the cache
 					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
-							cache);
+						cache);
 					newCache.put(manager, meta);
 					cache = Collections.unmodifiableMap(newCache);
 				}
@@ -111,9 +111,9 @@ public class NonContextual<T>
 	}
 
 	@SuppressWarnings("unchecked")
-	private NonContextual(Class<? extends T> clazz)
+	private NonContextual(BeanManager manager, Class<? extends T> clazz)
 	{
-		BeanManager manager = BeanManagerLookup.lookup();
+		this.manager = manager;
 		AnnotatedType<? extends T> type = manager.createAnnotatedType(clazz);
 		this.it = (InjectionTarget<T>)manager.createInjectionTarget(type);
 	}
@@ -125,11 +125,11 @@ public class NonContextual<T>
 	 */
 	public void postConstruct(T instance)
 	{
-		CreationalContext<T> cc = BeanManagerLookup.lookup().createCreationalContext(null);
+		CreationalContext<T> cc = manager.createCreationalContext(null);
 		it.inject(instance, cc);
 		it.postConstruct(instance);
 	}
-
+	
 	/**
 	 * Injects the instance
 	 * 
@@ -137,13 +137,13 @@ public class NonContextual<T>
 	 */
 	public void inject(T instance)
 	{
-		CreationalContext<T> cc = BeanManagerLookup.lookup().createCreationalContext(null);
+		CreationalContext<T> cc = manager.createCreationalContext(null);
 		it.inject(instance, cc);
 	}
 
 	/**
-	 * Calls any {@link PreDestroy} methods and destroys any injected
-	 * dependencies that need to be destroyed.
+	 * Calls any {@link PreDestroy} methods and destroys any injected dependencies that need to be
+	 * destroyed.
 	 * 
 	 * @param instance
 	 */

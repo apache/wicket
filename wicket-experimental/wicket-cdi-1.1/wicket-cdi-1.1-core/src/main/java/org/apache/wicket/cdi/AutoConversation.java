@@ -16,25 +16,34 @@
  */
 package org.apache.wicket.cdi;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.enterprise.context.ConversationScoped;
 
-import javax.enterprise.inject.Typed;
-
-import org.apache.wicket.Page;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
- * @author jsarman
+ * A bean that can be used to override whether the lifecycle of the conversation should be managed
+ * automatically or not. See {@link CdiConfiguration#setAutoConversationManagement(boolean)} for
+ * details.
+ * 
+ * @author igor
  */
-@Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Typed(Page.class)
-public @interface Conversational {
-	ConversationPropagation prop() default ConversationPropagation.NONBOOKMARKABLE;
+@ConversationScoped
+public class AutoConversation implements IClusterable
+{
+	private boolean automatic;
 
-	boolean auto() default true;
+	public AutoConversation()
+	{
+		automatic = false;
+	}
+
+	public void setAutomatic(boolean automatic)
+	{
+		this.automatic = automatic;
+	}
+
+	public boolean isAutomatic()
+	{
+		return automatic;
+	}
 }
