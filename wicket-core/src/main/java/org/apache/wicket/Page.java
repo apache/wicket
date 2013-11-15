@@ -284,8 +284,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			setFlag(FLAG_IS_DIRTY, true);
 			setNextAvailableId();
-			pageManager.touchPage(this);
+
+			if (isInitialization == false)
+			{
+				pageManager.touchPage(this);
+			}
 		}
+	}
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		final IPageManager pageManager = getSession().getPageManager();
+		pageManager.touchPage(this);
 	}
 
 	/**
