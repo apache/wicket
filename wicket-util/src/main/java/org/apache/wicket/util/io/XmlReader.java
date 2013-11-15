@@ -70,11 +70,11 @@ public final class XmlReader extends Reader
 
 		if (!inputStream.markSupported())
 		{
-			this.inputStream = new BufferedInputStream(inputStream);
+			this.inputStream = new BufferedInputStream(new BOMInputStream(inputStream));
 		}
 		else
 		{
-			this.inputStream = inputStream;
+			this.inputStream = new BOMInputStream(inputStream);
 		}
 		encoding = defaultEncoding;
 

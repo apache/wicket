@@ -123,13 +123,30 @@ public class XmlReaderTest extends Assert
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void test_7() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_7.html"), null);
+		assertEquals("UTF-8", reader.getEncoding());
+
+		BufferedReader bufReader = new BufferedReader(reader);
+		assertEquals("", bufReader.readLine().trim());
+		assertEquals("<html>", bufReader.readLine());
+		assertNull(bufReader.readLine());
+	}
+
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void ignoreBOM() throws Exception
+	{
+		// test_8.html starts with <U+FEFF> character
+		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_8.html"), null);
 		assertEquals("UTF-8", reader.getEncoding());
 
 		BufferedReader bufReader = new BufferedReader(reader);
