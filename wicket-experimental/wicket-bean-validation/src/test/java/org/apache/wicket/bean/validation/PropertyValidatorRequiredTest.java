@@ -21,7 +21,7 @@ import org.junit.Test;
 
 public class PropertyValidatorRequiredTest {
 	@Rule
-	public WicketTesterScope scope = new WicketTesterScope() {
+	public static WicketTesterScope scope = new WicketTesterScope() {
 		protected WicketTester create() {
 			return new WicketTester(new TestApplication());
 		};
