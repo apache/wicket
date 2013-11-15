@@ -77,14 +77,14 @@ public class ContextManager
 		lifecycle.requestInitialized(currentRequest, null);
 	}
 
-	public void deactivateContexts(HttpServletRequest request)
+	public void deactivateContexts()
 	{
 		lifecycle.requestDestroyed(currentRequest);
 		currentSession = currentRequest.getSession(false);
 		currentRequest = null;
 	}
 
-	public void destroy(HttpSession session)
+	public void destroy()
 	{
 		if (currentRequest != null)
 		{
@@ -96,5 +96,10 @@ public class ContextManager
 			lifecycle.sessionDestroyed(currentSession);
 			currentSession = null;
 		}
+	}
+
+	public boolean isRequestActive()
+	{
+		return currentRequest != null;
 	}
 }

@@ -17,7 +17,6 @@
 package org.apache.wicket.cdi;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -36,6 +35,11 @@ public class MockCdiContainer extends AbstractCdiContainer
 	@Inject
 	private HttpConversationContext conversationContext;
 
+	public MockCdiContainer()
+	{
+		NonContextual.of(MockCdiContainer.class).inject(this);
+	}
+
 	/**
 	 * Activates the conversational context and starts the conversation with the
 	 * specified cid
@@ -46,23 +50,28 @@ public class MockCdiContainer extends AbstractCdiContainer
 	@Override
 	public void activateConversationalContext(RequestCycle cycle, String cid)
 	{
-		conversationContext.associate(getRequest(cycle));
-		if (conversationContext.isActive())
-		{
-			conversationContext.invalidate();
-			conversationContext.deactivate();
-			conversationContext.activate(cid);
-		}
-		else
-		{
-			conversationContext.activate(cid);
-		}
+        conversationContext.associate(getRequest(cycle));
+        if (conversationContext.isActive())
+        {
+                conversationContext.invalidate();
+                conversationContext.deactivate();
+                conversationContext.activate(cid);
+        } else
+        {
+                conversationContext.activate(cid);
+        }
 	}
 
 	@Override
-	public Conversation getCurrentConversation()
+	public void deactivateConversationalContext(RequestCycle cycle)
 	{
-		return conversationContext.getCurrentConversation();
+		// try
+		// {
+		// conversationContext.deactivate();
+		// }
+		// finally
+		// {
+		// conversationContext.dissociate(getRequest(cycle));
+		// }
 	}
-
 }

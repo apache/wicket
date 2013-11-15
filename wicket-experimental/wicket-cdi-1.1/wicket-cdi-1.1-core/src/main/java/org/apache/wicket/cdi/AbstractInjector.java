@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import org.apache.wicket.util.lang.Args;
-
 /**
  * Base class for injectors
  * 
@@ -25,21 +23,17 @@ import org.apache.wicket.util.lang.Args;
  */
 class AbstractInjector
 {
-	private final CdiContainer container;
-
-	public AbstractInjector(CdiContainer container)
+	public AbstractInjector()
 	{
-		Args.notNull(container, "container");
-		this.container = container;
 	}
 
 	protected <T> void postConstruct(T instance)
 	{
-		container.getNonContextualManager().postConstruct(instance);
+		NonContextual.of(instance.getClass()).postConstruct(instance);
 	}
 
 	protected <T> void inject(T instance)
 	{
-		container.getNonContextualManager().inject(instance);
+		NonContextual.of(instance.getClass()).inject(instance);
 	}
 }

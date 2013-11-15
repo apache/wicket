@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.inject.spi.BeanManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
@@ -24,51 +23,24 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
-import org.jboss.seam.conversation.spi.SeamConversationContext;
-import org.jboss.seam.conversation.spi.SeamConversationContextFactory;
 
 /**
  * Provides access to CDI features from inside a Wicket request
  * 
  * @author igor
- * 
  */
-public class CdiContainer
+public abstract class AbstractCdiContainer
 {
-	private static final MetaDataKey<CdiContainer> CONTEXT_KEY = new MetaDataKey<CdiContainer>()
+	private static MetaDataKey<AbstractCdiContainer> CONTEXT_KEY = new MetaDataKey<AbstractCdiContainer>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	protected final BeanManager beanManager;
-	private final SeamConversationContext<HttpServletRequest> conversationContext;
-	private final INonContextualManager nonContextualManager;
-
 	/**
 	 * Constructor
-	 * 
-	 * @param beanManager
-	 *            bean manager
 	 */
-	public CdiContainer(BeanManager beanManager, INonContextualManager nonContextualManager)
+	public AbstractCdiContainer()
 	{
-		Args.notNull(beanManager, "beanManager");
-		Args.notNull(nonContextualManager, "nonContextualManager");
-
-		this.beanManager = beanManager;
-		this.nonContextualManager = nonContextualManager;
-
-		conversationContext = SeamConversationContextFactory.getContext(HttpServletRequest.class);
-		if (conversationContext == null)
-		{
-			throw new IllegalStateException(
-				"Could not resolve conversation context manager. Make sure a Seam-Conversation module for your CDI container implementation is included in your dependencies.");
-		}
-	}
-
-	public INonContextualManager getNonContextualManager()
-	{
-		return nonContextualManager;
 	}
 
 	/**
@@ -76,31 +48,25 @@ public class CdiContainer
 	 * 
 	 * @param cycle
 	 */
-	public void deactivateConversationalContext(RequestCycle cycle)
-	{
-		conversationContext.deactivate();
-		conversationContext.dissociate(getRequest(cycle));
-	}
+	public abstract void deactivateConversationalContext(RequestCycle cycle);
 
 	/**
-	 * Activates the conversational context and starts the conversation with the specified cid
+	 * Activates the conversational context and starts the conversation with the
+	 * specified cid
 	 * 
 	 * @param cycle
 	 * @param cid
 	 */
-	public void activateConversationalContext(RequestCycle cycle, String cid)
-	{
-		conversationContext.associate(getRequest(cycle));
-		conversationContext.activate(cid);
-	}
+	public abstract void activateConversationalContext(RequestCycle cycle, String cid);
 
-	private HttpServletRequest getRequest(RequestCycle cycle)
+	protected HttpServletRequest getRequest(RequestCycle cycle)
 	{
 		return (HttpServletRequest)cycle.getRequest().getContainerRequest();
 	}
 
 	/**
-	 * Retrieves a conversation id, if any, that is associated with a {@link Page} instance
+	 * Retrieves a conversation id, if any, that is associated with a
+	 * {@link Page} instance
 	 * 
 	 * @param page
 	 *            page instance
@@ -112,9 +78,9 @@ public class CdiContainer
 	}
 
 	/**
-	 * Removes conversation marker from the page instance which prevents the conversation from
-	 * propagating to the page. This method should usually be called from page's {@code onDetach()}
-	 * method.
+	 * Removes conversation marker from the page instance which prevents the
+	 * conversation from propagating to the page. This method should usually be
+	 * called from page's {@code onDetach()} method.
 	 * 
 	 * @param page
 	 */
@@ -127,13 +93,19 @@ public class CdiContainer
 	}
 
 	/**
-	 * Binds this container instance to the {@link Application}, making it possible to retrieve it
-	 * later
+	 * Binds this container instance to the {@link Application}, making it
+	 * possible to retrieve it later
 	 * 
 	 * @param application
 	 */
 	protected void bind(Application application)
 	{
+		if (application.getMetaData(CONTEXT_KEY) != null)
+		{
+			throw new IllegalStateException("A CDI container is already bound to this "
+					+ "application, which probably means you tried to configure the "
+					+ "application twice");
+		}
 		application.setMetaData(CONTEXT_KEY, this);
 	}
 
@@ -143,9 +115,9 @@ public class CdiContainer
 	 * @param application
 	 * @return container instance or {@code null} if none
 	 */
-	public static final CdiContainer get(Application application)
+	public static AbstractCdiContainer get(Application application)
 	{
-		CdiContainer ctx = application.getMetaData(CONTEXT_KEY);
+		AbstractCdiContainer ctx = application.getMetaData(CONTEXT_KEY);
 		if (ctx == null)
 		{
 			throw new IllegalStateException("No CDI Context bound to application");
@@ -158,7 +130,7 @@ public class CdiContainer
 	 * 
 	 * @return container instance or {@code null} if none
 	 */
-	public static final CdiContainer get()
+	public static AbstractCdiContainer get()
 	{
 		return get(Application.get());
 	}

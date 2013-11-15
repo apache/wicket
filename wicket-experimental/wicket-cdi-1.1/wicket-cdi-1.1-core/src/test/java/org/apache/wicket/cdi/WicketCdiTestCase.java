@@ -16,106 +16,54 @@
  */
 package org.apache.wicket.cdi;
 
-import java.util.Map;
-
 import javax.enterprise.context.Conversation;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.cdi.testapp.TestAppScope;
 import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationBean;
 import org.apache.wicket.cdi.util.tester.CdiWicketTester;
-import org.apache.wicket.cdi.util.tester.FilterConfigProducer;
-import org.apache.wicket.cdi.util.tester.TestBehaviorInjector;
-import org.apache.wicket.cdi.util.tester.TestCdiConfiguration;
-import org.apache.wicket.cdi.util.tester.TestComponentInjector;
-import org.jglue.cdiunit.ActivatedAlternatives;
+import org.apache.wicket.cdi.util.tester.ContextManager;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
  * @author jsarman
  */
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestBehaviorInjector.class, TestComponentInjector.class,
-		TestCdiConfiguration.class })
 @AdditionalClasses({ CdiWicketTester.class, BehaviorInjector.class, CdiConfiguration.class,
 		CdiShutdownCleaner.class, ComponentInjector.class, ConversationExpiryChecker.class,
-		ConversationPropagator.class, ConversationManager.class, DetachEventEmitter.class,
-		NonContextualManager.class, SessionInjector.class, MockCdiContainer.class,
-		TestAppScope.class, TestConversationBean.class, FilterConfigProducer.class,
-		TestCdiApplication.class, CdiWebApplicationFactory.class })
-public abstract class WicketCdiTestCase extends Assert
+		ConversationPropagator.class, DetachEventEmitter.class, SessionInjector.class,
+		MockCdiContainer.class, TestAppScope.class, TestConversationBean.class,
+		TestCdiApplication.class })
+public abstract class WicketCdiTestCase extends WicketTestCase
 {
 	@Inject
-	private Instance<CdiWicketTester> testers;
-
-	private CdiWicketTester instantiatedTester;
-
-	@Inject
-	Conversation conversation;
-
-	@Inject
-	FilterConfigProducer filterConfigProducer;
-
-	public CdiWicketTester getTester()
+	private ContextManager contextManager;
+	
+	@Override
+	protected WicketTester newWicketTester(WebApplication app)
 	{
-		if (instantiatedTester == null)
-		{
-			instantiatedTester = testers.get();
-		}
-		return instantiatedTester;
+		return new CdiWicketTester(app);
 	}
 
-	public CdiWicketTester getTester(boolean newTest)
+	public void configure(CdiConfiguration configuration)
 	{
-		if (newTest)
-		{
-			return testers.get();
-		}
-		return getTester();
-	}
-
-	public CdiWicketTester getTester(Map<String, String> customParamters)
-	{
-		if (instantiatedTester != null)
-		{
-			throw new IllegalStateException("The Wicket Tester is already initialized.");
-		}
-		filterConfigProducer.addParameters(customParamters);
-		return getTester();
-	}
-
-	public CdiWicketTester getTester(boolean newTest, Map<String, String> customParamters)
-	{
-		if (newTest)
-		{
-			filterConfigProducer.addParameters(customParamters);
-			return testers.get();
-		}
-		return getTester(customParamters);
-	}
-
-	@Before
-	public void init()
-	{
-		getTester();
+		configuration.configure(tester.getApplication(), new MockCdiContainer());
 	}
 
 	@After
 	public void end()
 	{
-		if (instantiatedTester != null)
+		if (contextManager.isRequestActive())
 		{
-			if (!conversation.isTransient())
-			{
-				conversation.end();
-			}
+			contextManager.deactivateContexts();
+			contextManager.destroy();
 		}
 	}
 }

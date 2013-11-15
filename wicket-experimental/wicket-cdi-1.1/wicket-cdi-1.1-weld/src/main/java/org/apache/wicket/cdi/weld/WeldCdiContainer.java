@@ -16,11 +16,10 @@
  */
 package org.apache.wicket.cdi.weld;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
 import org.apache.wicket.cdi.AbstractCdiContainer;
+import org.apache.wicket.cdi.NonContextual;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.jboss.weld.context.http.HttpConversationContext;
 
@@ -29,11 +28,15 @@ import org.jboss.weld.context.http.HttpConversationContext;
  * 
  * @author jsarman
  */
-@ApplicationScoped
 public class WeldCdiContainer extends AbstractCdiContainer
 {
 	@Inject
 	private HttpConversationContext conversationContext;
+
+	public WeldCdiContainer()
+	{
+		NonContextual.of(WeldCdiContainer.class).inject(this);
+	}
 
 	/**
 	 * Activates the conversational context and starts the conversation with the
@@ -59,9 +62,7 @@ public class WeldCdiContainer extends AbstractCdiContainer
 	}
 
 	@Override
-	public Conversation getCurrentConversation()
+	public void deactivateConversationalContext(RequestCycle cycle)
 	{
-		return conversationContext.getCurrentConversation();
 	}
-
 }

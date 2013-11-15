@@ -46,13 +46,10 @@ public class DetachEventEmitter extends AbstractRequestCycleListener
 
 	/**
 	 * Constructor
-	 * 
-	 * @param container
 	 */
-	public DetachEventEmitter(CdiContainer container)
+	public DetachEventEmitter(AbstractCdiContainer container)
 	{
-		Args.notNull(container, "container");
-		container.getNonContextualManager().postConstruct(this);
+		NonContextual.of(DetachEventEmitter.class).postConstruct(this);
 	}
 
 	@Override
@@ -71,7 +68,7 @@ public class DetachEventEmitter extends AbstractRequestCycleListener
 			logger.debug("Firing Detach event {}", cycle.getRequest().getUrl());
 
 			detachEvent.fire(new DetachEvent());
-			
+
 			cycle.setMetaData(DETACH_SCHEDULED_KEY, null);
 		}
 	}

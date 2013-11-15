@@ -16,17 +16,16 @@
  */
 package org.apache.wicket.cdi.testapp;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.cdi.WicketApp;
+import org.apache.wicket.cdi.CdiConfiguration;
+import org.apache.wicket.cdi.MockCdiContainer;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * @author jsarman
  */
-@WicketApp("mockApp")
 public class TestCdiApplication extends WebApplication
 {
 
@@ -41,13 +40,11 @@ public class TestCdiApplication extends WebApplication
 		return TestPage.class;
 	}
 
-
-	@PostConstruct
 	@Override
 	protected void init()
 	{
 		super.init();
-
+		new CdiConfiguration().configure(this, new MockCdiContainer());
 	}
 
 	public String getInjectedTestString()

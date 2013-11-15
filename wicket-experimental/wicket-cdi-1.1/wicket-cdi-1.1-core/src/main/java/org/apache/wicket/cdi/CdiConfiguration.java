@@ -16,12 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.inject.spi.BeanManager;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
-import org.apache.wicket.util.lang.Args;
-import org.jboss.seam.conversation.spi.SeamConversationContextFactory;
 
 /**
  * Configures CDI integration
@@ -31,9 +27,7 @@ import org.jboss.seam.conversation.spi.SeamConversationContextFactory;
  */
 public class CdiConfiguration
 {
-	private BeanManager beanManager;
 	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
-	private INonContextualManager nonContextualManager;
 
 	private boolean injectComponents = true;
 	private boolean injectApplication = true;
@@ -43,25 +37,9 @@ public class CdiConfiguration
 
 	/**
 	 * Constructor
-	 * 
-	 * @param beanManager
 	 */
-	public CdiConfiguration(BeanManager beanManager)
+	public CdiConfiguration()
 	{
-		Args.notNull(beanManager, "beanManager");
-
-		this.beanManager = beanManager;
-		nonContextualManager = new NonContextualManager(beanManager);
-	}
-
-	/**
-	 * Gets the configured bean manager
-	 * 
-	 * @return bean manager or {@code null} if none
-	 */
-	public BeanManager getBeanManager()
-	{
-		return beanManager;
 	}
 
 	public IConversationPropagation getPropagation()
@@ -81,15 +59,16 @@ public class CdiConfiguration
 	/**
 	 * Toggles automatic conversation management feature.
 	 * 
-	 * Automatic conversation management controls the lifecycle of the conversation based on
-	 * presence of components implementing the {@link ConversationalComponent} interface. If such
-	 * components are found in the page a conversation is marked persistent, and if they are not the
-	 * conversation is marked transient. This greatly simplifies the management of conversation
-	 * lifecycle.
+	 * Automatic conversation management controls the lifecycle of the
+	 * conversation based on presence of components implementing the
+	 * {@link ConversationalComponent} interface. If such components are found
+	 * in the page a conversation is marked persistent, and if they are not the
+	 * conversation is marked transient. This greatly simplifies the management
+	 * of conversation lifecycle.
 	 * 
-	 * Sometimes it is necessary to manually control the application. For these cases, once a
-	 * conversation is started {@link AutoConversation} bean can be used to mark the conversation as
-	 * manually-managed.
+	 * Sometimes it is necessary to manually control the application. For these
+	 * cases, once a conversation is started {@link AutoConversation} bean can
+	 * be used to mark the conversation as manually-managed.
 	 * 
 	 * @param enabled
 	 * 
@@ -104,17 +83,6 @@ public class CdiConfiguration
 	public CdiConfiguration setPropagation(IConversationPropagation propagation)
 	{
 		this.propagation = propagation;
-		return this;
-	}
-
-	public INonContextualManager getNonContextualManager()
-	{
-		return nonContextualManager;
-	}
-
-	public CdiConfiguration setNonContextualManager(INonContextualManager nonContextualManager)
-	{
-		this.nonContextualManager = nonContextualManager;
 		return this;
 	}
 
@@ -168,15 +136,8 @@ public class CdiConfiguration
 	 * @param application
 	 * @return
 	 */
-	public CdiContainer configure(Application application)
+	public AbstractCdiContainer configure(Application application, AbstractCdiContainer container)
 	{
-		if (beanManager == null)
-		{
-			throw new IllegalStateException(
-				"Configuration does not have a BeanManager instance configured");
-		}
-
-		CdiContainer container = new CdiContainer(beanManager, nonContextualManager);
 		container.bind(application);
 
 		RequestCycleListenerCollection listeners = new RequestCycleListenerCollection();
@@ -186,10 +147,9 @@ public class CdiConfiguration
 		if (getPropagation() != ConversationPropagation.NONE)
 		{
 			listeners.add(new ConversationPropagator(application, container, getPropagation(),
-				autoConversationManagement));
+					autoConversationManagement));
 			application.getComponentPreOnBeforeRenderListeners().add(
-				new ConversationExpiryChecker(container));
-			SeamConversationContextFactory.setDisableNoopInstance(true);
+					new ConversationExpiryChecker(container));
 		}
 
 		// enable detach event
@@ -199,30 +159,29 @@ public class CdiConfiguration
 		// inject application instance
 		if (isInjectApplication())
 		{
-			container.getNonContextualManager().postConstruct(application);
+			NonContextual.of(application.getClass()).postConstruct(application);
 		}
 
 		// enable injection of various framework components
 
 		if (isInjectSession())
 		{
-			application.getSessionListeners().add(new SessionInjector(container));
+			application.getSessionListeners().add(new SessionInjector());
 		}
 
 		if (isInjectComponents())
 		{
-			application.getComponentInstantiationListeners().add(new ComponentInjector(container));
+			application.getComponentInstantiationListeners().add(new ComponentInjector());
 		}
 
 		if (isInjectBehaviors())
 		{
-			application.getBehaviorInstantiationListeners().add(new BehaviorInjector(container));
+			application.getBehaviorInstantiationListeners().add(new BehaviorInjector());
 		}
 
 		// enable cleanup
 
-		application.getApplicationListeners().add(
-			new CdiShutdownCleaner(beanManager, isInjectApplication()));
+		application.getApplicationListeners().add(new CdiShutdownCleaner(isInjectApplication()));
 
 		return container;
 	}

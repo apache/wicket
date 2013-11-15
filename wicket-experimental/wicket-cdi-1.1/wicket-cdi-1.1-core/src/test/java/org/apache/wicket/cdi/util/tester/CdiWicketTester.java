@@ -18,14 +18,11 @@ package org.apache.wicket.cdi.util.tester;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.servlet.FilterConfig;
 
-import org.apache.wicket.cdi.CdiWebApplicationFactory;
-import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.cdi.NonContextual;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.util.tester.WicketTester;
@@ -35,57 +32,21 @@ import org.slf4j.LoggerFactory;
 /**
  * @author jsarman
  */
-@Dependent
 public class CdiWicketTester extends WicketTester
 {
-
 	private static final Logger logger = LoggerFactory.getLogger(CdiWicketTester.class);
+	
 	@Inject
 	ContextManager contextManager;
 
-	TestCdiConfiguration cdiConfiguration;
-	FilterConfig filterConfig;
-
-
-	@Inject
-	public CdiWicketTester(TestCdiConfiguration cdiConfiguration, CdiWebApplicationFactory factory,
-			@ConfigurationFilter final FilterConfig filterConfig)
-	{
-		super(factory.createApplication(new WicketFilter()
-		{
-
-			@Override
-			public FilterConfig getFilterConfig()
-			{
-				return filterConfig;
-			}
-
-		}));
-		this.cdiConfiguration = cdiConfiguration;
-		this.filterConfig = filterConfig;
-	}
-
-	@PostConstruct
-	public void initializeApp()
-	{
-		logger.debug("Initialized Cdi Wicket Tester");
-		cdiConfiguration.remapApplicationKey(filterConfig.getFilterName(), getApplication());
-		contextManager.activateContexts(getRequest()); // Start up contexts in
-														// case no requests are
-														// performed
-	}
-
-
-	public void configure()
-	{
-		if (!cdiConfiguration.isConfigured())
-		{
-			cdiConfiguration.configure(getApplication());
-		}
-	}
-
 	private AtomicInteger count = new AtomicInteger();
 
+	public CdiWicketTester(WebApplication app)
+	{
+		super(app);
+		NonContextual.of(CdiWicketTester.class).inject(this);
+	}
+	
 	/**
 	 * Process the request by first activating the contexts on initial call.
 	 * This call is called recursively in the super class so keep track of the
@@ -106,11 +67,7 @@ public class CdiWicketTester extends WicketTester
 
 			if (getLastRequest() != null)
 			{
-				contextManager.deactivateContexts(getLastRequest());
-			}
-			else
-			{
-				configure();// make sure we are configured for cdi
+				contextManager.deactivateContexts();
 			}
 			contextManager.activateContexts(getRequest());
 		}
@@ -132,9 +89,9 @@ public class CdiWicketTester extends WicketTester
 			logger.debug("Destroying Cdi Wicket Tester");
 			if (getLastRequest() != null)
 			{
-				contextManager.deactivateContexts(getLastRequest());
+				contextManager.deactivateContexts();
 			}
-			contextManager.destroy(getHttpSession());
+			contextManager.destroy();
 			destroy();
 		}
 		catch (Throwable t)

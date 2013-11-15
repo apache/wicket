@@ -16,49 +16,20 @@
  */
 package org.apache.wicket.cdi;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-
-import javax.inject.Inject;
-
-import org.apache.wicket.cdi.testapp.TestCdiAdditionApplication;
-import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestPage;
-import org.apache.wicket.cdi.util.tester.CdiWicketTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author jsarman
  */
-@AdditionalClasses({ TestCdiAdditionApplication.class })
 public class CdiConfigurationTest extends WicketCdiTestCase
 {
-
-	@Inject
-	ConversationPropagator conversationPropagator;
-	@Inject
-	ComponentInjector componentInjector;
-	@Inject
-	CdiConfiguration cdiConfiguration;
-
-	@Override
-	public void init()
-	{
-
-	}
-
-
 	@Test
 	public void testApplicationScope()
 	{
-		CdiWicketTester tester = getTester();
+		configure(new CdiConfiguration());
 		tester.startPage(TestPage.class);
 		tester.assertLabel("appscope", "Test ok");
 	}
@@ -66,7 +37,7 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 	@Test
 	public void testConversationScope()
 	{
-		CdiWicketTester tester = getTester();
+		configure(new CdiConfiguration());
 		tester.startPage(TestConversationPage.class);
 		for (int i = 0; i < 20; i++)
 		{
@@ -75,21 +46,18 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test(expected = Exception.class)
 	public void testConfigureTwice()
 	{
-		CdiWicketTester tester = getTester();
-		tester.configure();
-		CdiConfiguration.get().configure(tester.getApplication());
+		configure(new CdiConfiguration());
+		new CdiConfiguration().configure(tester.getApplication(), new MockCdiContainer());
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
-	public void testDeprecatedApplicationLevelConfiguration()
+	public void testApplicationLevelConfiguration()
 	{
 		WicketTester tester = new WicketTester();
-		CdiConfiguration config = CdiConfiguration.get();
+		CdiConfiguration config = new CdiConfiguration();
 		config.setAutoConversationManagement(true);
 		assertTrue(config.isAutoConversationManagement());
 		config.setAutoConversationManagement(false);
@@ -115,133 +83,6 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 			config.setPropagation(cp);
 			assertEquals(cp, config.getPropagation());
 		}
-		config.configure(tester.getApplication());
-		assertTrue(config.isConfigured());
+		config.configure(tester.getApplication(), new MockCdiContainer());
 	}
-
-	@Test
-	public void testFilterInitWithInitParam()
-	{
-
-		assertEquals("Test String",
-				((TestCdiApplication)getTester().getApplication()).getInjectedTestString());
-	}
-
-	@Test(expected = Exception.class)
-	public void testFilterInitWithoutInitParam()
-	{
-		filterConfigProducer.removeParameter(CdiWebApplicationFactory.WICKET_APP_NAME);
-		getTester();
-	}
-
-	/**
-	 * Bring up two different apps that are uniquely configured and verify they
-	 * do not affect the application dependent global settings.
-	 */
-	@Test
-	public void testMultiAppLoad()
-	{
-		getTester(); // Bring up app with name mockApp : the default
-		try
-		{
-			Executors.newSingleThreadExecutor().submit(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					Map<String, String> params = new TreeMap<String, String>();
-					params.put(CdiWebApplicationFactory.WICKET_APP_NAME, "test2");
-					// change global default for auto to true
-					params.put(CdiWebApplicationFactory.AUTO_CONVERSATION, "true");
-
-					getTester(true, params); // bring up app 2 with name test2
-					assertTrue(cdiConfiguration.isAutoConversationManagement());
-				}
-
-			}).get();
-		}
-		catch (InterruptedException ex)
-		{
-			fail(ex.getMessage());
-		}
-		catch (ExecutionException ex)
-		{
-			ex.printStackTrace();
-			fail(ex.getMessage());
-		}
-		// now check that app1 auto is still false after app2's auto was set to
-		// true
-		assertFalse(cdiConfiguration.isAutoConversationManagement());
-	}
-
-	@Test
-	public void testFilterParamsBooleansTrue()
-	{
-		testFilterParamsBooleans(true);
-	}
-
-	@Test
-	public void testFilterParamsBooleansFalse()
-	{
-		testFilterParamsBooleans(true);
-	}
-
-	@Test
-	public void testFilterParamPropagationNone()
-	{
-		testFilterParamPropagation(ConversationPropagation.NONE);
-	}
-
-	@Test
-	public void testFilterParamPropagationNonBookmarkable()
-	{
-		testFilterParamPropagation(ConversationPropagation.NONBOOKMARKABLE);
-	}
-
-	@Test
-	public void testFilterParamPropagationAll()
-	{
-		testFilterParamPropagation(ConversationPropagation.ALL);
-	}
-
-	@Test(expected = Exception.class)
-	public void testInvalidNameInFilter()
-	{
-		Map<String, String> params = Collections.singletonMap(
-				CdiWebApplicationFactory.WICKET_APP_NAME, "0xDEADBEEF");
-		getTester(params);
-	}
-
-	public void testFilterParamsBooleans(Boolean val)
-	{
-		Map<String, String> params = new TreeMap<String, String>();
-		params.put(CdiWebApplicationFactory.AUTO_CONVERSATION, val.toString());
-		params.put(CdiWebApplicationFactory.INJECT_APP, val.toString());
-		params.put(CdiWebApplicationFactory.INJECT_BEHAVIOR, val.toString());
-		params.put(CdiWebApplicationFactory.INJECT_COMPONENT, val.toString());
-		params.put(CdiWebApplicationFactory.INJECT_SESSION, val.toString());
-
-		getTester(params);
-		CdiConfiguration cc = CdiConfiguration.get();
-
-		assertFalse(cc.isInjectApplication()); // This is false bacause app is
-												// injected in Filter.
-		assertEquals(val, cc.isInjectBehaviors());
-		assertEquals(val, cc.isInjectComponents());
-		assertEquals(val, cc.isInjectSession());
-		assertEquals(val, cc.isAutoConversationManagement());
-
-	}
-
-	public void testFilterParamPropagation(ConversationPropagation propagation)
-	{
-		Map<String, String> params = Collections.singletonMap(CdiWebApplicationFactory.PROPAGATION,
-				propagation.name());
-		getTester(params);
-		CdiConfiguration cc = CdiConfiguration.get();
-
-		assertEquals(propagation, cc.getPropagation());
-	}
-
-
 }

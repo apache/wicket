@@ -45,13 +45,13 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 	@Inject
 	private Conversation conversation;
 
-	private final CdiContainer container;
+	private final AbstractCdiContainer container;
 
-	public ConversationExpiryChecker(CdiContainer container)
+	public ConversationExpiryChecker(AbstractCdiContainer container)
 	{
 		this.container = container;
 
-		container.getNonContextualManager().inject(this);
+		NonContextual.of(ConversationExpiryChecker.class).inject(this);
 	}
 
 	@Override

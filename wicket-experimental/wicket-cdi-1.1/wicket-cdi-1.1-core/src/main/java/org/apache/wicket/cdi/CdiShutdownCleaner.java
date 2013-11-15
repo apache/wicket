@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.inject.spi.BeanManager;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.IApplicationListener;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Listens to application shutdown and cleans up
@@ -29,14 +26,10 @@ import org.apache.wicket.util.lang.Args;
  */
 class CdiShutdownCleaner implements IApplicationListener
 {
-	private final BeanManager beanManager;
 	private final boolean preDestroyApplication;
 
-	public CdiShutdownCleaner(BeanManager beanManager, boolean preDestroyApplication)
+	public CdiShutdownCleaner(boolean preDestroyApplication)
 	{
-		Args.notNull(beanManager, "beanManager");
-
-		this.beanManager = beanManager;
 		this.preDestroyApplication = preDestroyApplication;
 	}
 
@@ -51,9 +44,9 @@ class CdiShutdownCleaner implements IApplicationListener
 	{
 		if (preDestroyApplication)
 		{
-			NonContextual.of(application.getClass(), beanManager).preDestroy(application);
+			NonContextual.of(application.getClass()).preDestroy(application);
 		}
-		NonContextual.undeploy(beanManager);
+		NonContextual.undeploy();
 	}
 
 }

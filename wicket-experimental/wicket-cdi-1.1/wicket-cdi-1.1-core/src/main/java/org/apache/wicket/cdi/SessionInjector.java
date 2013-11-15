@@ -29,12 +29,9 @@ class SessionInjector extends AbstractInjector implements ISessionListener
 {
 	/**
 	 * Constructor
-	 * 
-	 * @param container
 	 */
-	public SessionInjector(CdiContainer container)
+	public SessionInjector()
 	{
-		super(container);
 	}
 
 	@Override
@@ -42,5 +39,4 @@ class SessionInjector extends AbstractInjector implements ISessionListener
 	{
 		postConstruct(session);
 	}
-
 }

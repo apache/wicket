@@ -14,45 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi.testapp;
+package org.apache.wicket.cdi;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.CDI;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.WicketApp;
-import org.apache.wicket.protocol.http.WebApplication;
-
-/**
- * @author jsarman
- */
-@WicketApp("test2")
-public class TestCdiAdditionApplication extends WebApplication
+public final class BeanManagerLookup
 {
-
-	@Inject
-	@TestQualifier
-	String testString;
-
-
-	@Override
-	public Class<? extends Page> getHomePage()
+	private BeanManagerLookup()
 	{
-		return TestPage.class;
 	}
 
-
-	@PostConstruct
-	@Override
-	protected void init()
-	{
-		super.init();
-
+	public static BeanManager lookup() {
+		try
+		{
+			return InitialContext.doLookup("java:comp/BeanManager");
+		}
+		catch (NamingException e)
+		{
+			return CDI.current().getBeanManager();
+		}
 	}
-
-	public String getInjectedTestString()
-	{
-		return testString;
-	}
-
 }

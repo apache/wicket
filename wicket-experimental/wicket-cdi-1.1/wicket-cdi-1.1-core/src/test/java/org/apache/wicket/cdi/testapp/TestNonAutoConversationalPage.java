@@ -21,8 +21,6 @@ import java.util.Random;
 import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
-import org.apache.wicket.cdi.ConversationPropagation;
-import org.apache.wicket.cdi.Conversational;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -31,11 +29,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author jsarman
  */
-@Conversational(auto = false, prop = ConversationPropagation.ALL)
 public class TestNonAutoConversationalPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;

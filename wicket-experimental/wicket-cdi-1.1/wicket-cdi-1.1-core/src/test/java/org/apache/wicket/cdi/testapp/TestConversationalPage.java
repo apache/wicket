@@ -20,7 +20,7 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
-import org.apache.wicket.cdi.Conversational;
+import org.apache.wicket.cdi.ConversationalComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -29,12 +29,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author jsarman
  */
-@Conversational
-public class TestConversationalPage extends WebPage
+public class TestConversationalPage extends WebPage implements ConversationalComponent
 {
 	private static final long serialVersionUID = 1L;
 
