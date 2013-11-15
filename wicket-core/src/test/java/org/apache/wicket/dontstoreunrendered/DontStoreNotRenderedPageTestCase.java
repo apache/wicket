@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * https://issues.apache.org/jira/browse/WICKET-5415
  */
-public class DontStoreNotRenderedPageTest extends WicketTestCase
+public abstract class DontStoreNotRenderedPageTestCase extends WicketTestCase
 {
 	@Override
 	protected WicketTester newWicketTester(WebApplication app)
