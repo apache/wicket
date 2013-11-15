@@ -20,7 +20,7 @@ public class SessionLocaleInterpolator implements MessageInterpolator
 	 * Constructor
 	 * 
 	 * @param delegate
-	 *      the MessageInterpolator to delegate to
+	 *            the MessageInterpolator to delegate to
 	 */
 	public SessionLocaleInterpolator(MessageInterpolator delegate)
 	{
@@ -28,7 +28,8 @@ public class SessionLocaleInterpolator implements MessageInterpolator
 		this.delegate = delegate;
 	}
 
-	public String interpolate(final String messageTemplate, final MessageInterpolator.Context context)
+	public String interpolate(final String messageTemplate,
+		final MessageInterpolator.Context context)
 	{
 		final Locale locale = getLocale();
 		if (locale != null)
@@ -41,7 +42,8 @@ public class SessionLocaleInterpolator implements MessageInterpolator
 		}
 	}
 
-	public String interpolate(final String message, final MessageInterpolator.Context context, final Locale locale)
+	public String interpolate(final String message, final MessageInterpolator.Context context,
+		final Locale locale)
 	{
 		return delegate.interpolate(message, context, locale);
 	}
