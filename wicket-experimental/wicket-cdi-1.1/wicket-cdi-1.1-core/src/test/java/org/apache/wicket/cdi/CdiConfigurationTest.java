@@ -50,7 +50,7 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 	public void testConfigureTwice()
 	{
 		configure(new CdiConfiguration());
-		new CdiConfiguration().configure(tester.getApplication(), new MockCdiContainer());
+		new CdiConfiguration().configure(tester.getApplication());
 	}
 
 	@Test
@@ -83,6 +83,6 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 			config.setPropagation(cp);
 			assertEquals(cp, config.getPropagation());
 		}
-		config.configure(tester.getApplication(), new MockCdiContainer());
+		config.configure(tester.getApplication());
 	}
 }

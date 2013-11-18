@@ -30,6 +30,8 @@ import org.apache.wicket.util.io.IClusterable;
 @ConversationScoped
 public class AutoConversation implements IClusterable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private boolean automatic;
 
 	public AutoConversation()

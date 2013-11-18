@@ -17,6 +17,7 @@
 package org.apache.wicket.cdi;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 
 /**
@@ -27,7 +28,12 @@ import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
  */
 public class CdiConfiguration
 {
-	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
+	private static final MetaDataKey<CdiConfiguration> CDI_CONFIGURATION_KEY = new MetaDataKey<CdiConfiguration>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	private IConversationPropagation propagation = ConversationPropagation.ALL;
 
 	private boolean injectComponents = true;
 	private boolean injectApplication = true;
@@ -136,9 +142,13 @@ public class CdiConfiguration
 	 * @param application
 	 * @return
 	 */
-	public AbstractCdiContainer configure(Application application, AbstractCdiContainer container)
+	public void configure(Application application)
 	{
-		container.bind(application);
+		if (application.getMetaData(CDI_CONFIGURATION_KEY) != null)
+		{
+			throw new IllegalStateException("Cdi already configured for this application");
+		}
+		application.setMetaData(CDI_CONFIGURATION_KEY, this);
 
 		RequestCycleListenerCollection listeners = new RequestCycleListenerCollection();
 		application.getRequestCycleListeners().add(listeners);
@@ -146,14 +156,14 @@ public class CdiConfiguration
 		// enable conversation propagation
 		if (getPropagation() != ConversationPropagation.NONE)
 		{
-			listeners.add(new ConversationPropagator(application, container, getPropagation(),
+			listeners.add(new ConversationPropagator(application, getPropagation(),
 					autoConversationManagement));
 			application.getComponentPreOnBeforeRenderListeners().add(
-					new ConversationExpiryChecker(container));
+					new ConversationExpiryChecker());
 		}
 
 		// enable detach event
-		listeners.add(new DetachEventEmitter(container));
+		listeners.add(new DetachEventEmitter());
 
 
 		// inject application instance
@@ -182,8 +192,10 @@ public class CdiConfiguration
 		// enable cleanup
 
 		application.getApplicationListeners().add(new CdiShutdownCleaner(isInjectApplication()));
-
-		return container;
 	}
 
+	public static CdiConfiguration get(Application application)
+	{
+		return application.getMetaData(CDI_CONFIGURATION_KEY);
+	}
 }

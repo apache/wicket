@@ -18,7 +18,8 @@ package org.apache.wicket.cdi;
 
 import javax.enterprise.context.ConversationScoped;
 
-import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 
 /**
@@ -32,43 +33,33 @@ public enum ConversationPropagation implements IConversationPropagation {
 	/** No conversational propagation takes place */
 	NONE {
 		@Override
-		public boolean propagatesViaPage(Page page, IRequestHandler handler)
-		{
-			return false;
-		}
-
-		@Override
 		public boolean propagatesViaParameters(IRequestHandler handler)
 		{
 			return false;
 		}
 	},
 	/**
-	 * Pesistent conversations are propagated between non-bookmarkable pages only
+	 * Pesistent conversations are propagated between non-bookmarkable pages
+	 * only
+	 * 
+	 * @deprecated as of cdi-1.1, it is specified that conversations are
+	 *             propagated via the cid query parameter even for
+	 *             non-bookmarkable pages
 	 */
+	@Deprecated
 	NONBOOKMARKABLE {
 		@Override
-		public boolean propagatesViaPage(Page page, IRequestHandler handler)
-		{
-			return true;
-		}
-
-		@Override
 		public boolean propagatesViaParameters(IRequestHandler handler)
 		{
-			return false;
+			return !(handler instanceof BookmarkableListenerInterfaceRequestHandler)
+					&& !(handler instanceof BookmarkablePageRequestHandler);
 		}
 	},
 	/**
-	 * Persistent conversations are propagated between bookmarkable and non-bookmarkable pages
+	 * Persistent conversations are propagated between bookmarkable and
+	 * non-bookmarkable pages
 	 */
 	ALL {
-		@Override
-		public boolean propagatesViaPage(Page page, IRequestHandler handler)
-		{
-			return true;
-		}
-
 		@Override
 		public boolean propagatesViaParameters(IRequestHandler handler)
 		{

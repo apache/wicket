@@ -17,9 +17,6 @@
 package org.apache.wicket.cdi.testapp;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.ConversationPropagation;
-import org.apache.wicket.cdi.MockCdiContainer;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**

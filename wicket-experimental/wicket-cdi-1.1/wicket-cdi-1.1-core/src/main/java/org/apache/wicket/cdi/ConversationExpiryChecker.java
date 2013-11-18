@@ -45,12 +45,8 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 	@Inject
 	private Conversation conversation;
 
-	private final AbstractCdiContainer container;
-
-	public ConversationExpiryChecker(AbstractCdiContainer container)
+	public ConversationExpiryChecker()
 	{
-		this.container = container;
-
 		NonContextual.of(ConversationExpiryChecker.class).inject(this);
 	}
 
@@ -60,7 +56,7 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 		if (component instanceof Page || RequestCycle.get().find(AjaxRequestTarget.class) != null)
 		{
 			Page page = component.getPage();
-			String cid = container.getConversationMarker(page);
+			String cid = ConversationPropagator.getConversationIdFromPage(page);
 			if (cid != null && !Objects.isEqual(conversation.getId(), cid))
 			{
 				logger.info("Conversation {} has expired for {}", cid, page);

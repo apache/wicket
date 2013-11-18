@@ -21,10 +21,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.cdi.CdiConfiguration;
+import org.apache.wicket.cdi.ConversationPropagator;
 import org.apache.wicket.cdi.NonContextual;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class CdiWicketTester extends WicketTester
 {
 	private static final Logger logger = LoggerFactory.getLogger(CdiWicketTester.class);
-	
+
 	@Inject
 	ContextManager contextManager;
 
@@ -46,7 +50,7 @@ public class CdiWicketTester extends WicketTester
 		super(app);
 		NonContextual.of(CdiWicketTester.class).inject(this);
 	}
-	
+
 	/**
 	 * Process the request by first activating the contexts on initial call.
 	 * This call is called recursively in the super class so keep track of the
@@ -69,7 +73,7 @@ public class CdiWicketTester extends WicketTester
 			{
 				contextManager.deactivateContexts();
 			}
-			contextManager.activateContexts(getRequest());
+			contextManager.activateContexts(forcedRequest == null ? getRequest() : forcedRequest);
 		}
 		try
 		{
@@ -79,6 +83,23 @@ public class CdiWicketTester extends WicketTester
 		{
 			count.decrementAndGet();
 		}
+	}
+
+	@Override
+	public Url urlFor(IRequestHandler handler)
+	{
+		Url ret = super.urlFor(handler);
+		final CdiConfiguration configuration = CdiConfiguration.get(getApplication());
+		if (configuration.getPropagation().propagatesViaParameters(handler))
+		{
+			Page page = ConversationPropagator.getPage(handler);
+			if (page != null)
+			{
+				String cid = ConversationPropagator.getConversationIdFromPage(page);
+				ret.addQueryParameter(ConversationPropagator.CID, cid);
+			}
+		}
+		return ret;
 	}
 
 	@PreDestroy

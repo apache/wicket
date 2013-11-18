@@ -20,7 +20,6 @@ import javax.inject.Inject;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.MockCdiContainer;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -44,7 +43,7 @@ public class TestCdiApplication extends WebApplication
 	protected void init()
 	{
 		super.init();
-		new CdiConfiguration().configure(this, new MockCdiContainer());
+		new CdiConfiguration().configure(this);
 	}
 
 	public String getInjectedTestString()

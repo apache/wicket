@@ -30,7 +30,5 @@
 	<description>Wicket CDI 1.1 Parent.</description>
 	<modules>
 		<module>wicket-cdi-1.1-core</module>
-		<module>wicket-cdi-1.1-weld</module>
-		<!--<module>wicket-cdi-1.1-owb</module>-->
 	</modules>
 </project>

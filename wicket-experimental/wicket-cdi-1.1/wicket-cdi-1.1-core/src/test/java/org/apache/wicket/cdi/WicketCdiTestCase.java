@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
 import org.apache.wicket.WicketTestCase;
@@ -39,13 +38,12 @@ import org.junit.runner.RunWith;
 @AdditionalClasses({ CdiWicketTester.class, BehaviorInjector.class, CdiConfiguration.class,
 		CdiShutdownCleaner.class, ComponentInjector.class, ConversationExpiryChecker.class,
 		ConversationPropagator.class, DetachEventEmitter.class, SessionInjector.class,
-		MockCdiContainer.class, TestAppScope.class, TestConversationBean.class,
-		TestCdiApplication.class })
+		TestAppScope.class, TestConversationBean.class, TestCdiApplication.class })
 public abstract class WicketCdiTestCase extends WicketTestCase
 {
 	@Inject
 	private ContextManager contextManager;
-	
+
 	@Override
 	protected WicketTester newWicketTester(WebApplication app)
 	{
@@ -54,7 +52,7 @@ public abstract class WicketCdiTestCase extends WicketTestCase
 
 	public void configure(CdiConfiguration configuration)
 	{
-		configuration.configure(tester.getApplication(), new MockCdiContainer());
+		configuration.configure(tester.getApplication());
 	}
 
 	@After

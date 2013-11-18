@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.request.IRequestHandler;
 
 /**
@@ -27,18 +26,6 @@ import org.apache.wicket.request.IRequestHandler;
  */
 public interface IConversationPropagation
 {
-	/**
-	 * Indicates if the conversation should be propagated via page metadata (on an instance) for the
-	 * given page and request handler.
-	 * 
-	 * @param page
-	 *            The page on which the tag will be set.
-	 * @param handler
-	 *            The current request handler
-	 * @return true if the conversation should be propagated to the given page instance.
-	 */
-	public boolean propagatesViaPage(Page page, IRequestHandler handler);
-
 	/**
 	 * Indicates if the conversation should be propagated via url-parameters for the given request
 	 * handler. This can either be a get parameter in a rendered url, or via page parameters.
