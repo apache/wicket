@@ -31,7 +31,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Ignore("Testcase and auto conversations do not match")
 	public void testAutoConversationNonBookmarkable()
 	{
-		configure(new CdiConfiguration().setAutoConversationManagement(true));
+		configure(new CdiConfiguration());
 
 		tester.startPage(TestConversationalPage.class);
 		int i;
@@ -67,7 +67,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Ignore("Testcase and auto conversations do not match")
 	public void testAutoConversationBookmarkable()
 	{
-		configure(new CdiConfiguration().setAutoConversationManagement(true));
+		configure(new CdiConfiguration());
 
 		tester.startPage(TestConversationalPage.class,
 				new PageParameters().add("pageType", "bookmarkable"));
@@ -158,7 +158,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Ignore("Testcase and auto conversations do not match")
 	public void testGlobalAutoSettingNonBookmarkable()
 	{
-		configure(new CdiConfiguration().setAutoConversationManagement(true));
+		configure(new CdiConfiguration());
 
 		tester.startPage(TestConversationPage.class, new PageParameters().add("auto", true));
 		int i;
@@ -179,7 +179,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	@Ignore("Testcase and auto conversations do not match")
 	public void testGlobalAutoSettingBookmarkable()
 	{
-		configure(new CdiConfiguration().setAutoConversationManagement(true));
+		configure(new CdiConfiguration());
 
 		tester.startPage(TestConversationPage.class,
 				new PageParameters().add("auto", true).add("pageType", "bookmarkable"));

@@ -35,12 +35,6 @@ public class CdiConfiguration
 
 	private IConversationPropagation propagation = ConversationPropagation.ALL;
 
-	private boolean injectComponents = true;
-	private boolean injectApplication = true;
-	private boolean injectSession = true;
-	private boolean injectBehaviors = true;
-	private boolean autoConversationManagement = false;
-
 	/**
 	 * Constructor
 	 */
@@ -53,38 +47,6 @@ public class CdiConfiguration
 		return propagation;
 	}
 
-	/**
-	 * Checks if auto conversation management is enabled. See
-	 * {@link #setAutoConversationManagement(boolean)} for details.
-	 */
-	public boolean isAutoConversationManagement()
-	{
-		return autoConversationManagement;
-	}
-
-	/**
-	 * Toggles automatic conversation management feature.
-	 * 
-	 * Automatic conversation management controls the lifecycle of the
-	 * conversation based on presence of components implementing the
-	 * {@link ConversationalComponent} interface. If such components are found
-	 * in the page a conversation is marked persistent, and if they are not the
-	 * conversation is marked transient. This greatly simplifies the management
-	 * of conversation lifecycle.
-	 * 
-	 * Sometimes it is necessary to manually control the application. For these
-	 * cases, once a conversation is started {@link AutoConversation} bean can
-	 * be used to mark the conversation as manually-managed.
-	 * 
-	 * @param enabled
-	 * 
-	 * @return {@code this} for easy chaining
-	 */
-	public CdiConfiguration setAutoConversationManagement(boolean enabled)
-	{
-		autoConversationManagement = enabled;
-		return this;
-	}
 
 	public CdiConfiguration setPropagation(IConversationPropagation propagation)
 	{
@@ -92,49 +54,6 @@ public class CdiConfiguration
 		return this;
 	}
 
-	public boolean isInjectComponents()
-	{
-		return injectComponents;
-	}
-
-	public CdiConfiguration setInjectComponents(boolean injectComponents)
-	{
-		this.injectComponents = injectComponents;
-		return this;
-	}
-
-	public boolean isInjectApplication()
-	{
-		return injectApplication;
-	}
-
-	public CdiConfiguration setInjectApplication(boolean injectApplication)
-	{
-		this.injectApplication = injectApplication;
-		return this;
-	}
-
-	public boolean isInjectSession()
-	{
-		return injectSession;
-	}
-
-	public CdiConfiguration setInjectSession(boolean injectSession)
-	{
-		this.injectSession = injectSession;
-		return this;
-	}
-
-	public boolean isInjectBehaviors()
-	{
-		return injectBehaviors;
-	}
-
-	public CdiConfiguration setInjectBehaviors(boolean injectBehaviors)
-	{
-		this.injectBehaviors = injectBehaviors;
-		return this;
-	}
 
 	/**
 	 * Configures the specified application
@@ -156,8 +75,7 @@ public class CdiConfiguration
 		// enable conversation propagation
 		if (getPropagation() != ConversationPropagation.NONE)
 		{
-			listeners.add(new ConversationPropagator(application, getPropagation(),
-					autoConversationManagement));
+			listeners.add(new ConversationPropagator(application, getPropagation()));
 			application.getComponentPreOnBeforeRenderListeners().add(
 					new ConversationExpiryChecker());
 		}
@@ -165,33 +83,15 @@ public class CdiConfiguration
 		// enable detach event
 		listeners.add(new DetachEventEmitter());
 
-
-		// inject application instance
-		if (isInjectApplication())
-		{
-			NonContextual.of(application.getClass()).postConstruct(application);
-		}
+		NonContextual.of(application.getClass()).postConstruct(application);
 
 		// enable injection of various framework components
-
-		if (isInjectSession())
-		{
-			application.getSessionListeners().add(new SessionInjector());
-		}
-
-		if (isInjectComponents())
-		{
-			application.getComponentInstantiationListeners().add(new ComponentInjector());
-		}
-
-		if (isInjectBehaviors())
-		{
-			application.getBehaviorInstantiationListeners().add(new BehaviorInjector());
-		}
+		application.getSessionListeners().add(new SessionInjector());
+		application.getComponentInstantiationListeners().add(new ComponentInjector());
+		application.getBehaviorInstantiationListeners().add(new BehaviorInjector());
 
 		// enable cleanup
-
-		application.getApplicationListeners().add(new CdiShutdownCleaner(isInjectApplication()));
+		application.getApplicationListeners().add(new CdiShutdownCleaner());
 	}
 
 	public static CdiConfiguration get(Application application)

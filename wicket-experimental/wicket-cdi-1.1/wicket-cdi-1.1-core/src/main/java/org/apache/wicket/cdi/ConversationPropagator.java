@@ -72,8 +72,6 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 
 	private final Application application;
 
-	private final boolean auto;
-
 	@Inject
 	private Conversation conversation;
 
@@ -88,18 +86,6 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	 */
 	public ConversationPropagator(Application application, IConversationPropagation propagation)
 	{
-		this(application, propagation, false);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param container
-	 * @param propagation
-	 */
-	public ConversationPropagator(Application application, IConversationPropagation propagation,
-			boolean auto)
-	{
 		Args.notNull(application, "application");
 		Args.notNull(propagation, "propagation");
 
@@ -111,11 +97,10 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 
 		this.application = application;
 		this.propagation = propagation;
-		this.auto = auto;
 
 		NonContextual.of(ConversationPropagator.class).postConstruct(this);
 	}
-	
+
 	public IConversationPropagation getPropagation()
 	{
 		return propagation;
@@ -255,7 +240,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	protected void autoBeginIfNecessary(Page page, IRequestHandler handler,
 			Conversation conversation)
 	{
-		if (!auto || conversation == null || !conversation.isTransient() || page == null
+		if (conversation == null || !conversation.isTransient() || page == null
 				|| !hasConversationalComponent(page))
 		{
 			return;
@@ -271,7 +256,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 
 	protected void autoEndIfNecessary(Page page, IRequestHandler handler, Conversation conversation)
 	{
-		if (!auto || conversation == null || conversation.isTransient() || page == null
+		if (conversation == null || conversation.isTransient() || page == null
 				|| hasConversationalComponent(page) || autoConversation.isAutomatic() == false)
 		{
 			return;

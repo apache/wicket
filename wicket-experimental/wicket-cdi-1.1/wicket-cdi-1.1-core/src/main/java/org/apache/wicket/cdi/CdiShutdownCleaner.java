@@ -26,11 +26,8 @@ import org.apache.wicket.IApplicationListener;
  */
 class CdiShutdownCleaner implements IApplicationListener
 {
-	private final boolean preDestroyApplication;
-
-	public CdiShutdownCleaner(boolean preDestroyApplication)
+	public CdiShutdownCleaner()
 	{
-		this.preDestroyApplication = preDestroyApplication;
 	}
 
 	@Override
@@ -42,11 +39,7 @@ class CdiShutdownCleaner implements IApplicationListener
 	@Override
 	public void onBeforeDestroyed(Application application)
 	{
-		if (preDestroyApplication)
-		{
-			NonContextual.of(application.getClass()).preDestroy(application);
-		}
+		NonContextual.of(application.getClass()).preDestroy(application);
 		NonContextual.undeploy();
 	}
-
 }

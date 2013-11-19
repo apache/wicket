@@ -58,26 +58,6 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 	{
 		WicketTester tester = new WicketTester();
 		CdiConfiguration config = new CdiConfiguration();
-		config.setAutoConversationManagement(true);
-		assertTrue(config.isAutoConversationManagement());
-		config.setAutoConversationManagement(false);
-		assertFalse(config.isAutoConversationManagement());
-		config.setInjectApplication(false);
-		assertFalse(config.isInjectApplication());
-		config.setInjectApplication(true);
-		assertTrue(config.isInjectApplication());
-		config.setInjectBehaviors(false);
-		assertFalse(config.isInjectBehaviors());
-		config.setInjectBehaviors(true);
-		assertTrue(config.isInjectBehaviors());
-		config.setInjectComponents(false);
-		assertFalse(config.isInjectComponents());
-		config.setInjectComponents(true);
-		assertTrue(config.isInjectComponents());
-		config.setInjectSession(false);
-		assertFalse(config.isInjectSession());
-		config.setInjectSession(true);
-		assertTrue(config.isInjectSession());
 		for (ConversationPropagation cp : ConversationPropagation.values())
 		{
 			config.setPropagation(cp);
