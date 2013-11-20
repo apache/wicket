@@ -1527,11 +1527,16 @@
 		 */
 		DOM: {
 
-			/** shows an element */
-			show: function (e) {
+			/**
+			 * Shows an element
+			 * @param {HTMLElement} e   The HTML element to show
+			 * @param {String} display  The value of CSS display property to use, e
+			 *                          .g. 'block', 'inline'. Optional
+			 */
+			show: function (e, display) {
 				e = Wicket.$(e);
 				if (e !== null) {
-					e.style.display = "";
+					e.style.display = display || "";
 				}
 			},
 
