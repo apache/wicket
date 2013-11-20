@@ -103,7 +103,7 @@ public class UploadPage extends WicketExamplePage
 		{
 			super(name);
 
-			// set this form to multipart mode (allways needed for uploads!)
+			// set this form to multipart mode (always needed for uploads!)
 			setMultiPart(true);
 
 			// Add one file input field
