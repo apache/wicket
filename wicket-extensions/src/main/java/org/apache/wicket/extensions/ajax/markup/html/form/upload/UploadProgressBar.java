@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 import java.util.Formatter;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -36,10 +37,9 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A panel to show the progress of an HTTP upload.
@@ -71,8 +71,6 @@ import org.slf4j.LoggerFactory;
  */
 public class UploadProgressBar extends Panel
 {
-	private static final Logger log = LoggerFactory.getLogger(UploadProgressBar.class);
-
 	/**
 	 * Resource key used to retrieve starting message for.
 	 * 
@@ -85,26 +83,19 @@ public class UploadProgressBar extends Panel
 	 */
 	public final static class ComponentInitializer implements IInitializer
 	{
-		/**
-		 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
-		 */
 		@Override
 		public void init(final Application application)
 		{
 			// register the upload status resource
-			Application.get().getSharedResources().add(RESOURCE_NAME, new UploadStatusResource());
+			application.getSharedResources().add(RESOURCE_NAME, new UploadStatusResource());
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString()
 		{
 			return "UploadProgressBar initializer";
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void destroy(final Application application)
 		{
@@ -123,9 +114,9 @@ public class UploadProgressBar extends Panel
 
 	private final Form<?> form;
 
-	private final WebMarkupContainer statusDiv;
+	private Component statusDiv;
 
-	private final WebMarkupContainer barDiv;
+	private Component barDiv;
 
 	private final FileUploadField uploadField;
 
@@ -165,28 +156,37 @@ public class UploadProgressBar extends Panel
 			uploadField.setOutputMarkupId(true);
 		}
 
-		this.form = form;
+		this.form = Args.notNull(form, "form");
 		form.setOutputMarkupId(true);
 
 		setRenderBodyOnly(true);
-
-		barDiv = new WebMarkupContainer("bar");
-		barDiv.setOutputMarkupId(true);
-		add(barDiv);
-
-		statusDiv = new WebMarkupContainer("status");
-		statusDiv.setOutputMarkupId(true);
-		add(statusDiv);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onInitialize()
 	{
 		super.onInitialize();
 		getCallbackForm().setOutputMarkupId(true);
+
+		barDiv = newBarComponent("bar");
+		add(barDiv);
+
+		statusDiv = newStatusComponent("status");
+		add(statusDiv);
+	}
+
+	protected Component newStatusComponent(String id)
+	{
+		WebMarkupContainer status = new WebMarkupContainer(id);
+		status.setOutputMarkupId(true);
+		return status;
+	}
+
+	protected Component newBarComponent(String id)
+	{
+		WebMarkupContainer bar = new WebMarkupContainer(id);
+		bar.setOutputMarkupId(true);
+		return bar;
 	}
 
 	/**

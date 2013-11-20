@@ -47,21 +47,17 @@
 		},
 
 		start : function(){
-			this.displayprogress = true;
-			if (this.fileid) {
-				var fileupload = Wicket.$(this.fileid);
-				this.displayprogress = fileupload && fileupload.value && fileupload.value !== '';
-			}
-			if (this.displayprogress) {
+			var fileupload = Wicket.$(this.fileid);
+			if (fileupload && fileupload.value) {
 				this.setPercent(0);
 				this.setStatus(this.initialStatus);
-				Wicket.$(this.statusid).style.display='block';
-				Wicket.$(this.barid).style.display='block';
+				Wicket.DOM.show(this.statusid, 'block');
+				Wicket.DOM.show(this.barid, 'block');
 				this.scheduleUpdate();
 			}
 		},
 
-		setStatus : function(status){
+		setStatus : function(status) {
 			var label = document.createElement("label");
 			label.innerHTML = status;
 			var oldLabel = Wicket.$(this.statusid).firstChild;
@@ -71,7 +67,7 @@
 			Wicket.$(this.statusid).appendChild(label);
 		},
 
-		setPercent : function(progressPercent){
+		setPercent : function(progressPercent) {
 			Wicket.$(this.barid).firstChild.firstChild.style.width = progressPercent + '%';
 		},
 
