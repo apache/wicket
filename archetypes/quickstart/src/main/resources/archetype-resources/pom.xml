@@ -48,6 +48,8 @@
 		<slf4j.version>1.7.5</slf4j.version>
 		<junit.version>4.11</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
+		<wtp.version>none</wtp.version>
 	</properties>
 	<dependencies>
 		<!--  WICKET DEPENDENCIES -->
@@ -177,6 +179,7 @@
 				<version>2.9</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
+					<wtpversion>${wtp.version}</wtpversion>
 				</configuration>
 			</plugin>
 		</plugins>
