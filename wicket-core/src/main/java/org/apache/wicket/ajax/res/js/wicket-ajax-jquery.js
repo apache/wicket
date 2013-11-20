@@ -779,11 +779,12 @@
 
 			if (form.onsubmit && !form.getAttribute(submittingAttribute)) {
 				form.setAttribute(submittingAttribute, submittingAttribute);
-				var retValue = form.onsubmit();
-				if (typeof(retValue) === "undefined") {
-					retValue = true;
+				var retValue = true;
+				try {
+					retValue = form.onsubmit();
+				} finally {
+					form.removeAttribute(submittingAttribute);
 				}
-				form.removeAttribute(submittingAttribute);
 				if (!retValue) {
 					return;
 				}
