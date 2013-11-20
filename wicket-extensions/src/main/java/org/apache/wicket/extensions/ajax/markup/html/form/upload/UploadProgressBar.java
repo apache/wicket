@@ -21,6 +21,7 @@ import java.util.Formatter;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -114,9 +115,9 @@ public class UploadProgressBar extends Panel
 
 	private final Form<?> form;
 
-	private Component statusDiv;
+	private MarkupContainer statusDiv;
 
-	private Component barDiv;
+	private MarkupContainer barDiv;
 
 	private final FileUploadField uploadField;
 
@@ -175,14 +176,28 @@ public class UploadProgressBar extends Panel
 		add(statusDiv);
 	}
 
-	protected Component newStatusComponent(String id)
+	/**
+	 * Creates a component for the status text
+	 *
+	 * @param id
+	 *          The component id
+	 * @return the status component
+	 */
+	protected MarkupContainer newStatusComponent(String id)
 	{
 		WebMarkupContainer status = new WebMarkupContainer(id);
 		status.setOutputMarkupId(true);
 		return status;
 	}
 
-	protected Component newBarComponent(String id)
+	/**
+	 * Creates a component for the bar
+	 *
+	 * @param id
+	 *          The component id
+	 * @return the bar component
+	 */
+	protected MarkupContainer newBarComponent(String id)
 	{
 		WebMarkupContainer bar = new WebMarkupContainer(id);
 		bar.setOutputMarkupId(true);
