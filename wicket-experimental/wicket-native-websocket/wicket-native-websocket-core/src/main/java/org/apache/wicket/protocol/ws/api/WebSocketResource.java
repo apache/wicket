@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
@@ -27,54 +25,40 @@ import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.request.resource.IResource;
 
 /**
- * A behavior that provides optional callbacks for the WebSocket
- * messages (connect, message, close)
- *
- * @since 6.0
+ * An IResource that can be used as WebSocket endpoint
  */
-public abstract class WebSocketBehavior extends BaseWebSocketBehavior
+public abstract class WebSocketResource implements IResource
 {
-	public WebSocketBehavior()
+	void onPayload(WebSocketPayload<?> payload)
 	{
-	}
+		WebSocketRequestHandler webSocketHandler = payload.getHandler();
 
-	@Override
-	public void onEvent(Component component, IEvent<?> event)
-	{
-		super.onEvent(component, event);
-
-		Object payload = event.getPayload();
-		if (payload instanceof WebSocketPayload)
+		if (payload instanceof WebSocketTextPayload)
 		{
-			WebSocketPayload<?> wsPayload = (WebSocketPayload<?>) payload;
-			WebSocketRequestHandler webSocketHandler = wsPayload.getHandler();
-
-			if (payload instanceof WebSocketTextPayload)
-			{
-				WebSocketTextPayload textPayload = (WebSocketTextPayload) payload;
-				TextMessage data = textPayload.getMessage();
-				onMessage(webSocketHandler, data);
-			}
-			else if (wsPayload instanceof WebSocketBinaryPayload)
-			{
-				WebSocketBinaryPayload binaryPayload = (WebSocketBinaryPayload) wsPayload;
-				BinaryMessage binaryData = binaryPayload.getMessage();
-				onMessage(webSocketHandler, binaryData);
-			}
-			else if (wsPayload instanceof WebSocketConnectedPayload)
-			{
-				WebSocketConnectedPayload connectedPayload = (WebSocketConnectedPayload) wsPayload;
-				ConnectedMessage message = connectedPayload.getMessage();
-				onConnect(message);
-			}
-			else if (wsPayload instanceof WebSocketClosedPayload)
-			{
-				WebSocketClosedPayload connectedPayload = (WebSocketClosedPayload) wsPayload;
-				ClosedMessage message = connectedPayload.getMessage();
-				onClose(message);
-			}
+			WebSocketTextPayload textPayload = (WebSocketTextPayload) payload;
+			TextMessage data = textPayload.getMessage();
+			onMessage(webSocketHandler, data);
+		}
+		else if (payload instanceof WebSocketBinaryPayload)
+		{
+			WebSocketBinaryPayload binaryPayload = (WebSocketBinaryPayload) payload;
+			BinaryMessage binaryData = binaryPayload.getMessage();
+			onMessage(webSocketHandler, binaryData);
+		}
+		else if (payload instanceof WebSocketConnectedPayload)
+		{
+			WebSocketConnectedPayload connectedPayload = (WebSocketConnectedPayload) payload;
+			ConnectedMessage message = connectedPayload.getMessage();
+			onConnect(message);
+		}
+		else if (payload instanceof WebSocketClosedPayload)
+		{
+			WebSocketClosedPayload connectedPayload = (WebSocketClosedPayload) payload;
+			ClosedMessage message = connectedPayload.getMessage();
+			onClose(message);
 		}
 	}
 
@@ -91,6 +75,11 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 	}
 
 	protected void onMessage(WebSocketRequestHandler handler, BinaryMessage binaryMessage)
+	{
+	}
+
+	@Override
+	public final void respond(Attributes attributes)
 	{
 	}
 }

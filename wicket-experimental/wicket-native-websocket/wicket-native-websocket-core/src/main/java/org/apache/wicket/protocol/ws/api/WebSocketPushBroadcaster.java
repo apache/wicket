@@ -24,6 +24,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.IWebSocketSettings;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
 import org.apache.wicket.util.lang.Args;
 
@@ -68,8 +69,8 @@ public class WebSocketPushBroadcaster
 
 		Application application = connection.getApplication();
 		String sessionId = connection.getSessionId();
-		Integer pageId = connection.getPageId();
-		IWebSocketConnection wsConnection = registry.getConnection(application, sessionId, pageId);
+		IKey key = connection.getKey();
+		IWebSocketConnection wsConnection = registry.getConnection(application, sessionId, key);
 		if (wsConnection == null)
 		{
 			return;

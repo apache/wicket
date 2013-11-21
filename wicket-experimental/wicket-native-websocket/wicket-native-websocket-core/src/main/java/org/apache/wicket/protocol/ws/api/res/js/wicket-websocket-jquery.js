@@ -46,7 +46,12 @@
 
 				url = protocol + '//' + document.location.host + Wicket.WebSocket.contextPath + '/wicket/websocket';
 
-				url += '?pageId=' + Wicket.WebSocket.pageId;
+				if (Wicket.WebSocket.pageId) {
+					url += '?pageId=' + Wicket.WebSocket.pageId;
+				} else if (Wicket.WebSocket.resourceName) {
+					url += '?resourceName=' + Wicket.WebSocket.resourceName;
+				}
+
 				url += '&wicket-ajax-baseurl=' + Wicket.WebSocket.baseUrl;
 				self.ws = new WebSocket(url);
 

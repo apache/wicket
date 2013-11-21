@@ -25,6 +25,7 @@ import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
@@ -153,7 +154,7 @@ public class WebSocketTesterTest extends Assert
 		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(tester.getApplication());
 		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
 		ConnectedMessage wsMessage = new ConnectedMessage(tester.getApplication(),
-				tester.getHttpSession().getId(), page.getPageId());
+				tester.getHttpSession().getId(), new PageIdKey(page.getPageId()));
 		broadcaster.broadcast(wsMessage, new BroadcastMessage(message));
 
 		assertEquals(true, messageReceived.get());

@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.ws.api;
 
 import java.util.Collection;
 import org.apache.wicket.Application;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 
 /**
  * Tracks all currently connected WebSocket clients
@@ -31,11 +32,12 @@ public interface IWebSocketConnectionRegistry
 	 *      the web application to look in
 	 * @param sessionId
 	 *      the web socket client session id
-	 * @param pageId
-	 *      the web socket client page id
+	 * @param key
+	 *      the web socket client key
 	 * @return the web socket connection used by a client from the specified coordinates
 	 */
-	IWebSocketConnection getConnection(Application application, String sessionId, Integer pageId);
+	IWebSocketConnection getConnection(Application application, String sessionId, IKey key);
+
 
 	/**
 	 * @param application
@@ -51,12 +53,12 @@ public interface IWebSocketConnectionRegistry
 	 *      the web application to look in
 	 * @param sessionId
 	 *      the web socket client session id
-	 * @param pageId
-	 *      the web socket client page id
+	 * @param key
+	 *      the web socket client key
 	 * @param connection
 	 *      the web socket connection to add
 	 */
-	void setConnection(Application application, String sessionId, Integer pageId, IWebSocketConnection connection);
+	void setConnection(Application application, String sessionId, IKey key, IWebSocketConnection connection);
 
 	/**
 	 * Removes a web socket connection from the registry at the specified coordinates (application+session+page)
@@ -65,8 +67,8 @@ public interface IWebSocketConnectionRegistry
 	 *      the web application to look in
 	 * @param sessionId
 	 *      the web socket client session id
-	 * @param pageId
-	 *      the web socket client page id
+	 * @param key
+	 *      the web socket client key
 	 */
-	void removeConnection(Application application, String sessionId, Integer pageId);
+	void removeConnection(Application application, String sessionId, IKey key);
 }
