@@ -154,7 +154,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			return;
 		}
 
-		if (propagation.propagatesViaParameters(handler))
+		if (propagation.propagatesVia(handler, getPage(handler)))
 		{
 			logger.debug(
 					"Propagating non-transient conversation {} via page parameters of handler {}",
@@ -188,7 +188,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			return;
 		}
 
-		if (propagation.propagatesViaParameters(handler))
+		if (propagation.propagatesVia(handler, getPage(handler)))
 		{
 			logger.debug("Propagating non-transient conversation {} via url", conversation.getId());
 			url.setQueryParameter(CID, conversation.getId());
@@ -241,7 +241,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			Conversation conversation)
 	{
 		if (conversation == null || !conversation.isTransient() || page == null
-				|| !hasConversationalComponent(page))
+				|| !hasConversationalComponent(page) || !propagation.propagatesVia(handler, page))
 		{
 			return;
 		}

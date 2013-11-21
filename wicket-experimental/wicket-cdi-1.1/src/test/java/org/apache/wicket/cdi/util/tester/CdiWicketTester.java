@@ -90,9 +90,9 @@ public class CdiWicketTester extends WicketTester
 	{
 		Url ret = super.urlFor(handler);
 		final CdiConfiguration configuration = CdiConfiguration.get(getApplication());
-		if (configuration.getPropagation().propagatesViaParameters(handler))
+		Page page = ConversationPropagator.getPage(handler);
+		if (configuration.getPropagation().propagatesVia(handler, page))
 		{
-			Page page = ConversationPropagator.getPage(handler);
 			if (page != null)
 			{
 				String cid = ConversationPropagator.getConversationIdFromPage(page);

@@ -16,23 +16,31 @@
  */
 package org.apache.wicket.cdi;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 
 /**
- * A strategy that specifies how conversations should be propagated between pages/resources.
- * {@link ConversationPropagation} provides sensible default implementations of this interface.
+ * A strategy that specifies how conversations should be propagated between
+ * pages/resources. {@link ConversationPropagation} provides sensible default
+ * implementations of this interface.
  * 
  * @author papegaaij
  */
 public interface IConversationPropagation
 {
 	/**
-	 * Indicates if the conversation should be propagated via url-parameters for the given request
-	 * handler. This can either be a get parameter in a rendered url, or via page parameters.
+	 * Indicates if the conversation should be propagated via url-parameters for
+	 * the given request handler and page (if any). A conversation is always
+	 * propagated via the cid query parameter.
 	 * 
 	 * @param handler
 	 *            The current request handler
-	 * @return true if the conversation should be propagated for the given request handler.
+	 * @param page
+	 *            The page associated with the request handler, or null if the
+	 *            handler is not an {@link IPageRequestHandler}.
+	 * @return true if the conversation should be propagated for the given
+	 *         request handler.
 	 */
-	public boolean propagatesViaParameters(IRequestHandler handler);
+	public boolean propagatesVia(IRequestHandler handler, Page page);
 }
