@@ -35,10 +35,11 @@ import org.junit.Test;
 
 /**
  * Tests for WebSocketTester.
+ * Uses WebSocketBehavior.
  *
  * @since 6.0
  */
-public class WebSocketTesterTest extends Assert
+public class WebSocketTesterBehaviorTest extends Assert
 {
 	WicketTester tester;
 
@@ -60,11 +61,11 @@ public class WebSocketTesterTest extends Assert
 	 * pushed back the same message but capitalized.
 	 */
 	@Test
-	public void sendTextMessage()
+	public void sendTextMessageBehavior()
 	{
 		final String expectedMessage = "some message";
 
-		WebSocketTestPage page = new WebSocketTestPage(expectedMessage);
+		WebSocketBehaviorTestPage page = new WebSocketBehaviorTestPage(expectedMessage);
 		tester.startPage(page);
 
 		WebSocketTester webSocketTester = new WebSocketTester(tester, page) {
@@ -85,13 +86,13 @@ public class WebSocketTesterTest extends Assert
 	 * pushes back the same message but capitalized, offset plus 1 and length minus 1.
 	 */
 	@Test
-	public void sendBinaryMessage() throws UnsupportedEncodingException
+	public void sendBinaryMessageBehavior() throws UnsupportedEncodingException
 	{
 		final byte[] expectedMessage = "some message".getBytes("UTF-8");
 		final int offset = 1;
 		final int length = 2;
 
-		WebSocketTestPage page = new WebSocketTestPage(expectedMessage, offset, length);
+		WebSocketBehaviorTestPage page = new WebSocketBehaviorTestPage(expectedMessage, offset, length);
 		tester.startPage(page);
 
 		WebSocketTester webSocketTester = new WebSocketTester(tester, page) {
@@ -125,7 +126,7 @@ public class WebSocketTesterTest extends Assert
 
 		final AtomicBoolean messageReceived = new AtomicBoolean(false);
 
-		WebSocketTestPage page = new WebSocketTestPage()
+		WebSocketBehaviorTestPage page = new WebSocketBehaviorTestPage()
 		{
 			@Override
 			public void onEvent(IEvent<?> event)

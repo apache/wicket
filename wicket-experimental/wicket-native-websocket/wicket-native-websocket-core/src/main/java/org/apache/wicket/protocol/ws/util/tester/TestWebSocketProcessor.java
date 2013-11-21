@@ -48,6 +48,17 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	}
 
 	/**
+	 * Constructor.
+	 *
+	 * @param resourceName
+	 *      the name of the shared resource that will handle the web socket messages
+	 */
+	public TestWebSocketProcessor(final WicketTester wicketTester, final String resourceName)
+	{
+		super(createRequest(wicketTester, resourceName),  wicketTester.getApplication());
+	}
+
+	/**
 	 * Creates an HttpServletRequest that is needed by AbstractWebSocketProcessor
 	 *
 	 * @param page
@@ -57,13 +68,40 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	private static HttpServletRequest createRequest(final WicketTester wicketTester, final Page page)
 	{
 		Args.notNull(page, "page");
-		Application application = page.getApplication();
+		MockHttpServletRequest request = createRequest(wicketTester);
+		request.addParameter("pageId", page.getId());
+		return request;
+	}
+
+	/**
+	 * Creates an HttpServletRequest that is needed by AbstractWebSocketProcessor
+	 *
+	 * @param resourceName
+	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
+	 * @return a mock http request
+	 */
+	private static HttpServletRequest createRequest(final WicketTester wicketTester, final String resourceName)
+	{
+		Args.notNull(resourceName, "resourceName");
+		MockHttpServletRequest request = createRequest(wicketTester);
+		request.addParameter("resourceName", resourceName);
+		return request;
+	}
+
+	/**
+	 * Creates an HttpServletRequest that is needed by AbstractWebSocketProcessor
+	 *
+	 * @return a mock http request
+	 */
+	private static MockHttpServletRequest createRequest(final WicketTester wicketTester)
+	{
+		Application application = wicketTester.getApplication();
 		HttpSession httpSession = wicketTester.getHttpSession();
 		MockHttpServletRequest request = new MockHttpServletRequest(application, httpSession, null);
-		request.addParameter("pageId", page.getId());
 		request.addParameter(WebRequest.PARAM_AJAX_BASE_URL, ".");
 		return request;
 	}
+
 
 	/**
 	 * Setups TestWebSocketConnection.

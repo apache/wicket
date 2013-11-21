@@ -29,18 +29,18 @@ import org.apache.wicket.util.string.Strings;
 import org.junit.Assert;
 
 /**
- * A page used for {@link WebSocketTesterTest}
+ * A page used for {@link WebSocketTesterBehaviorTest}
  *
  * @since 6.0
  */
-class WebSocketTestPage extends WebPage implements IMarkupResourceStreamProvider
+class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStreamProvider
 {
-	WebSocketTestPage()
+	WebSocketBehaviorTestPage()
 	{
 		add(new WebSocketBehavior() {});
 	}
 
-	WebSocketTestPage(final String expectedMessage)
+	WebSocketBehaviorTestPage(final String expectedMessage)
 	{
 		add(new WebSocketBehavior()
 		{
@@ -56,7 +56,7 @@ class WebSocketTestPage extends WebPage implements IMarkupResourceStreamProvider
 		});
 	}
 	
-	WebSocketTestPage(final byte[] message, final int offset, final int length)
+	WebSocketBehaviorTestPage(final byte[] message, final int offset, final int length)
 	{
 		add(new WebSocketBehavior()
 		{
