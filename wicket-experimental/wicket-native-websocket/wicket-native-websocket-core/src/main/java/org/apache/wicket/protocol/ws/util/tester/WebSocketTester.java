@@ -47,8 +47,42 @@ public class WebSocketTester
 		WebApplication webApplication = wicketTester.getApplication();
 		webApplication.getWicketFilter().setFilterPath("");
 
-		socketProcessor = new TestWebSocketProcessor(wicketTester, page) {
+		socketProcessor = new TestWebSocketProcessor(wicketTester, page)
+		{
+			@Override
+			protected void onOutMessage(String message)
+			{
+				WebSocketTester.this.onOutMessage(message);
+			}
 
+			@Override
+			protected void onOutMessage(byte[] message, int offset, int length)
+			{
+				WebSocketTester.this.onOutMessage(message, offset, length);
+			}
+		};
+		socketProcessor.onOpen(null);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * Prepares a WebSockConnection that will be used to send messages from the client (the test case)
+	 * to the server.
+	 *
+	 * @param resourceName
+	 *      the name of the shared WebSocketResource that will handle the web socket messages
+	 */
+	public WebSocketTester(final WicketTester wicketTester, final String resourceName)
+	{
+		Args.notNull(wicketTester, "wicketTester");
+		Args.notNull(resourceName, "resourceName");
+
+		WebApplication webApplication = wicketTester.getApplication();
+		webApplication.getWicketFilter().setFilterPath("");
+
+		socketProcessor = new TestWebSocketProcessor(wicketTester, resourceName)
+		{
 			@Override
 			protected void onOutMessage(String message)
 			{

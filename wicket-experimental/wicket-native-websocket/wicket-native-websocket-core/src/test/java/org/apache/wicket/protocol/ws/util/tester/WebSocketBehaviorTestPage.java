@@ -29,18 +29,18 @@ import org.apache.wicket.util.string.Strings;
 import org.junit.Assert;
 
 /**
- * A page used for {@link WebSocketTesterTest}
+ * A page used for {@link WebSocketTesterBehaviorTest}
  *
  * @since 6.0
  */
-class WebSocketTestPage extends WebPage implements IMarkupResourceStreamProvider
+class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStreamProvider
 {
-	WebSocketTestPage()
+	WebSocketBehaviorTestPage()
 	{
 		add(new WebSocketBehavior() {});
 	}
 
-	WebSocketTestPage(final String expectedMessage)
+	WebSocketBehaviorTestPage(final String expectedMessage)
 	{
 		add(new WebSocketBehavior()
 		{
@@ -49,14 +49,14 @@ class WebSocketTestPage extends WebPage implements IMarkupResourceStreamProvider
 			{
 				// assert the inbould message
 				Assert.assertEquals(expectedMessage, message.getText());
-				
+
 				// now send an outbound message
 				handler.push(Strings.capitalize(expectedMessage));
 			}
 		});
 	}
-	
-	WebSocketTestPage(final byte[] message, final int offset, final int length)
+
+	WebSocketBehaviorTestPage(final byte[] message, final int offset, final int length)
 	{
 		add(new WebSocketBehavior()
 		{
@@ -66,10 +66,10 @@ class WebSocketTestPage extends WebPage implements IMarkupResourceStreamProvider
 				Assert.assertArrayEquals(message, binaryMessage.getData());
 				Assert.assertEquals(offset, binaryMessage.getOffset());
 				Assert.assertEquals(length, binaryMessage.getLength());
-				
+
 				String msg = new String(message);
 				byte[] pushedMessage = Strings.capitalize(msg).getBytes();
-				
+
 				handler.push(pushedMessage, offset + 1, length - 1);
 			}
 		});
