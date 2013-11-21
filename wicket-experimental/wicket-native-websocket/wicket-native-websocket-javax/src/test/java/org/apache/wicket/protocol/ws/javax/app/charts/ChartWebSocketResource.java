@@ -14,11 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.javax.app;
+package org.apache.wicket.protocol.ws.javax.app.charts;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.ws.api.WebSocketResource;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 
-//@RequireHttps
-public class HomePage extends WebPage
+/**
+ *
+ */
+public class ChartWebSocketResource extends WebSocketResource
 {
+	public static final String NAME = ChartWebSocketResource.class.getName();
+
+	@Override
+	protected void onConnect(ConnectedMessage message)
+	{
+		super.onConnect(message);
+
+		ChartUpdater.start(message);
+	}
 }

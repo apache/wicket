@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 
@@ -35,26 +36,26 @@ import org.apache.wicket.util.lang.Generics;
  */
 public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRegistry
 {
-	private static final MetaDataKey<ConcurrentMap<String, ConcurrentMap<Integer, IWebSocketConnection>>> KEY =
-			new MetaDataKey<ConcurrentMap<String, ConcurrentMap<Integer, IWebSocketConnection>>>()
+	private static final MetaDataKey<ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>>> KEY =
+			new MetaDataKey<ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>>>()
 	{
 	};
 
 	@Override
-	public IWebSocketConnection getConnection(Application application, String sessionId, Integer pageId)
+	public IWebSocketConnection getConnection(Application application, String sessionId, IKey key)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(sessionId, "sessionId");
-		Args.notNull(pageId, "pageId");
+		Args.notNull(key, "key");
 
 		IWebSocketConnection connection = null;
-		ConcurrentMap<String, ConcurrentMap<Integer, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
+		ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
 		if (connectionsBySession != null)
 		{
-			ConcurrentMap<Integer, IWebSocketConnection> connectionsByPage = connectionsBySession.get(sessionId);
+			ConcurrentMap<IKey, IWebSocketConnection> connectionsByPage = connectionsBySession.get(sessionId);
 			if (connectionsByPage != null)
 			{
-				connection = connectionsByPage.get(pageId);
+				connection = connectionsByPage.get(key);
 			}
 		}
 		return connection;
@@ -71,12 +72,11 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 		Args.notNull(application, "application");
 
 		Collection<IWebSocketConnection> connections = new ArrayList<>();
-		ConcurrentMap<String, ConcurrentMap<Integer, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
+		ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
 		if (connectionsBySession != null)
 		{
-			for (ConcurrentMap<Integer, IWebSocketConnection> connectionsByPage : connectionsBySession.values())
+			for (ConcurrentMap<IKey, IWebSocketConnection> connectionsByPage : connectionsBySession.values())
 			{
-
 				connections.addAll(connectionsByPage.values());
 			}
 		}
@@ -84,13 +84,13 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	}
 
 	@Override
-	public void setConnection(Application application, String sessionId, Integer pageId, IWebSocketConnection connection)
+	public void setConnection(Application application, String sessionId, IKey key, IWebSocketConnection connection)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(sessionId, "sessionId");
-		Args.notNull(pageId, "pageId");
+		Args.notNull(key, "key");
 
-		ConcurrentMap<String, ConcurrentMap<Integer, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
+		ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
 		if (connectionsBySession == null)
 		{
 			synchronized (KEY)
@@ -104,7 +104,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 			}
 		}
 
-		ConcurrentMap<Integer, IWebSocketConnection> connectionsByPage = connectionsBySession.get(sessionId);
+		ConcurrentMap<IKey, IWebSocketConnection> connectionsByPage = connectionsBySession.get(sessionId);
 		if (connectionsByPage == null && connection != null)
 		{
 			synchronized (connectionsBySession)
@@ -120,11 +120,11 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 
 		if (connection != null)
 		{
-			connectionsByPage.put(pageId, connection);
+			connectionsByPage.put(key, connection);
 		}
 		else if (connectionsByPage != null)
 		{
-			connectionsByPage.remove(pageId);
+			connectionsByPage.remove(key);
 			if (connectionsByPage.isEmpty())
 			{
 				connectionsBySession.remove(sessionId);
@@ -133,8 +133,8 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	}
 
 	@Override
-	public void removeConnection(Application application, String sessionId, Integer pageId)
+	public void removeConnection(Application application, String sessionId, IKey key)
 	{
-		setConnection(application, sessionId, pageId, null);
+		setConnection(application, sessionId, key, null);
 	}
 }

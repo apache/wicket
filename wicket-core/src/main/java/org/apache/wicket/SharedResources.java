@@ -22,6 +22,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.Key;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Class which holds shared resources. Resources can be shared by name. An optional scope can be
@@ -44,7 +45,7 @@ public class SharedResources
 	 */
 	public SharedResources(ResourceReferenceRegistry registry)
 	{
-		this.registry = registry;
+		this.registry = Args.notNull(registry, "registry");
 	}
 
 	/**
@@ -120,6 +121,19 @@ public class SharedResources
 	public final void add(final String name, final IResource resource)
 	{
 		add(Application.class, name, null, null, null, resource);
+	}
+
+	/**
+	 * Resolves a {@link ResourceReference} for a shared resource by using
+	 * {@link org.apache.wicket.Application} as a scope and {@code null} for
+	 * locale, style and variation.
+	 *
+	 * @param name
+	 *            Logical name of resource
+	 */
+	public final ResourceReference get(String name)
+	{
+		return get(Application.class, name, null, null, null, false);
 	}
 
 	/**

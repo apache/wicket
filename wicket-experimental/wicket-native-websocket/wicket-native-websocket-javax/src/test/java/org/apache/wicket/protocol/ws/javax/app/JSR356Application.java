@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.ws.javax.app;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
+import org.apache.wicket.protocol.ws.javax.app.charts.ChartWebSocketResource;
 
 /**
  * Application object for your web application. If you want to run this application without deploying, run the Start class.
@@ -44,6 +45,11 @@ public class JSR356Application extends WebApplication
 	{
 		super.init();
 
+		mountPage("/behavior", WebSocketBehaviorDemoPage.class);
+		mountPage("/resource", WebSocketResourceDemoPage.class);
+
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig()));
+
+		getSharedResources().add(ChartWebSocketResource.NAME, new ChartWebSocketResource());
 	}
 }

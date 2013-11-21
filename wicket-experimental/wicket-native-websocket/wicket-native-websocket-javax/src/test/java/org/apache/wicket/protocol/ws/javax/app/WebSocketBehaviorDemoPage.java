@@ -17,8 +17,27 @@
 package org.apache.wicket.protocol.ws.javax.app;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.javax.app.charts.ChartUpdater;
+import org.apache.wicket.protocol.ws.javax.app.charts.WebSocketChart;
 
 //@RequireHttps
-public class HomePage extends WebPage
+public class WebSocketBehaviorDemoPage extends WebPage
 {
+	public WebSocketBehaviorDemoPage()
+	{
+		WebSocketChart chartPanel = new WebSocketChart("chartPanel");
+		chartPanel.add(new WebSocketBehavior()
+		{
+			@Override
+			protected void onConnect(ConnectedMessage message)
+			{
+				super.onConnect(message);
+
+				ChartUpdater.start(message);
+			}
+		});
+		add(chartPanel);
+	}
 }

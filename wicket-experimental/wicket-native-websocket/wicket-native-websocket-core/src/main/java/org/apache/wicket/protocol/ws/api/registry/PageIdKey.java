@@ -14,49 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.api.message;
+package org.apache.wicket.protocol.ws.api.registry;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A {@link IWebSocketMessage message} sent when the web socket connection
- * is closed.
- *
- * @since 6.0
+ * A key based on page's id
  */
-public class ClosedMessage implements IWebSocketMessage
+public class PageIdKey implements IKey
 {
-	private final Application application;
-	private final String sessionId;
-	private final IKey key;
+	private final Integer pageId;
 
-	public ClosedMessage(Application application, String sessionId, IKey key)
+	public PageIdKey(Integer pageId)
 	{
-		this.application = Args.notNull(application, "application");
-		this.sessionId = Args.notNull(sessionId, "sessionId");
-		this.key = Args.notNull(key, "key");
-	}
-
-	public Application getApplication()
-	{
-		return application;
-	}
-
-	public String getSessionId()
-	{
-		return sessionId;
-	}
-
-	public IKey getKey()
-	{
-		return key;
+		this.pageId = Args.notNull(pageId, "pageId");
 	}
 
 	@Override
-	public final String toString()
+	public boolean equals(Object o)
 	{
-		return "The client closed its connection";
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PageIdKey pageIdKey = (PageIdKey) o;
+
+		if (!pageId.equals(pageIdKey.pageId)) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return pageId.hashCode();
 	}
 }
