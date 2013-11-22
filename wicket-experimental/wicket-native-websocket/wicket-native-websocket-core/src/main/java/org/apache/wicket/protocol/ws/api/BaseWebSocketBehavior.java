@@ -91,7 +91,7 @@ public class BaseWebSocketBehavior extends Behavior
 		else
 		{
 			variables.put("resourceName", resourceName);
-			variables.put("pageId", 0);
+			variables.put("pageId", false);
 		}
 
 		Url baseUrl = component.getRequestCycle().getUrlRenderer().getBaseUrl();

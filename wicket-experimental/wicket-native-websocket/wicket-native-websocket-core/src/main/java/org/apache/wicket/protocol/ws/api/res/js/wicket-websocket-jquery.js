@@ -46,7 +46,7 @@
 
 				url = protocol + '//' + document.location.host + Wicket.WebSocket.contextPath + '/wicket/websocket';
 
-				if (Wicket.WebSocket.pageId) {
+				if (Wicket.WebSocket.pageId !== false) {
 					url += '?pageId=' + Wicket.WebSocket.pageId;
 				} else if (Wicket.WebSocket.resourceName) {
 					url += '?resourceName=' + Wicket.WebSocket.resourceName;
