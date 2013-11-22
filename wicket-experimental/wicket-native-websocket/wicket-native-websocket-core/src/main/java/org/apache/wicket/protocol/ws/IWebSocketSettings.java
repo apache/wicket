@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.ws;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.protocol.ws.api.IWebSocketConnectionRegistry;
+import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
 
 /**

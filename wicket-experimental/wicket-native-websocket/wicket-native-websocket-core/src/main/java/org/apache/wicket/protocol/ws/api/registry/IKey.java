@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.ws.api.registry;
 
 /**
  * A marker interface for keys that are used to find a web socket
- * connection in {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionRegistry}
+ * connection in {@link IWebSocketConnectionRegistry}
  */
 public interface IKey
 {}
