@@ -18,8 +18,8 @@ package org.apache.wicket.protocol.ws;
 
 import java.util.concurrent.Callable;
 
-import org.apache.wicket.protocol.ws.api.IWebSocketConnectionRegistry;
-import org.apache.wicket.protocol.ws.api.SimpleWebSocketConnectionRegistry;
+import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
+import org.apache.wicket.protocol.ws.api.registry.SimpleWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
 import org.apache.wicket.util.lang.Args;
 

@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.api;
+package org.apache.wicket.protocol.ws.api.registry;
 
 import java.util.Collection;
+
 import org.apache.wicket.Application;
-import org.apache.wicket.protocol.ws.api.registry.IKey;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 
 /**
  * Tracks all currently connected WebSocket clients

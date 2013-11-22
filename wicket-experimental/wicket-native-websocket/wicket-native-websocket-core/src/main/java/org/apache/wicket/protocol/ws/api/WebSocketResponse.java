@@ -32,7 +32,8 @@ import org.slf4j.LoggerFactory;
  * when Wicket thread locals are available.
  *
  * When the thread locals are not available then you can write directly to the {@link IWebSocketConnection}
- * taken from {@link IWebSocketConnectionRegistry}. In this case the response wont be cached.
+ * taken from {@link org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry}.
+ * In this case the response wont be cached.
  *
  * @since 6.0
  */
