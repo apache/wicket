@@ -24,13 +24,35 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-cdi-1.1</artifactId>
+	<packaging>jar</packaging>
 	<version>0.2-SNAPSHOT</version>
-	<packaging>pom</packaging>
 	<name>Wicket CDI 1.1</name>
-	<description>Wicket CDI 1.1 Parent.</description>
-	<modules>
-		<module>wicket-cdi-1.1-core</module>
-		<module>wicket-cdi-1.1-weld</module>
-		<!--<module>wicket-cdi-1.1-owb</module>-->
-	</modules>
+	<description>
+		Provides integration between Wicket and CDI containers. Enables injection of
+		components and behaviors, as well as other non-contextual object instances.
+		Also enables propagation of conversations between wicket artifacts such as pages
+		and resources.
+	</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jglue.cdi-unit</groupId>
+			<artifactId>cdi-unit</artifactId>
+			<version>2.2.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
