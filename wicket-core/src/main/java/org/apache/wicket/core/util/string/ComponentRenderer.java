@@ -140,6 +140,9 @@ public class ComponentRenderer
 
 		private RenderPage(Component component)
 		{
+			// do not store the page in IPageStore/IDataStore. WICKET-5422
+			setStatelessHint(true);
+
 			String componentMarkup;
 			try
 			{
@@ -155,7 +158,6 @@ public class ComponentRenderer
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
-
 			return new StringResourceStream(markup);
 		}
 
@@ -164,6 +166,13 @@ public class ComponentRenderer
 		{
 			// no caching for this page
 			return null;
+		}
+
+		@Override
+		public boolean isBookmarkable()
+		{
+			// pretend the page is bookmarkable to make it stateless. WICKET-5422
+			return true;
 		}
 	}
 
