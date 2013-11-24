@@ -402,6 +402,11 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 */
 	private static class WebSocketResourcePage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private WebSocketResourcePage()
+		{
+			setStatelessHint(true);
+		}
+
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
