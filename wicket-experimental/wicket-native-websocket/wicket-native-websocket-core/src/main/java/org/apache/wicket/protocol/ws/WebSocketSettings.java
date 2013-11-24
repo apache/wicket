@@ -18,16 +18,53 @@ package org.apache.wicket.protocol.ws;
 
 import java.util.concurrent.Callable;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.SimpleWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
 import org.apache.wicket.util.lang.Args;
 
 /**
+ * Web Socket related settings.
  *
+ * More documentation is available about each setting in the setter method for the property.
  */
-public class WebSocketSettings implements IWebSocketSettings
+public class WebSocketSettings
 {
+	private static final MetaDataKey<WebSocketSettings> KEY = new MetaDataKey<WebSocketSettings>()
+	{
+	};
+
+	/**
+	 * Holds this IWebSocketSettings in the Application's metadata.
+	 * This way wicket-core module doesn't have reference to wicket-native-websocket.
+	 */
+	public static final class Holder
+	{
+		public static WebSocketSettings get(Application application)
+		{
+			WebSocketSettings settings = application.getMetaData(KEY);
+			if (settings == null)
+			{
+				synchronized (application)
+				{
+					if (settings == null)
+					{
+						settings = new WebSocketSettings();
+						set(application, settings);
+					}
+				}
+			}
+			return settings;
+		}
+
+		public static void set(Application application, WebSocketSettings settings)
+		{
+			application.setMetaData(KEY, settings);
+		}
+	}
+
 	/**
 	 * The executor that handles the processing of Web Socket push message broadcasts.
 	 */
@@ -38,29 +75,39 @@ public class WebSocketSettings implements IWebSocketSettings
 	 */
 	private IWebSocketConnectionRegistry connectionRegistry = new SimpleWebSocketConnectionRegistry();
 
-	@Override
-	public IWebSocketSettings setWebSocketPushMessageExecutor(Executor executor)
+	/**
+	 * Set the executor for processing websocket push messages broadcasted to all sessions.
+	 * Default executor does all the processing in the caller thread. Using a proper thread pool is adviced
+	 * for applications that send push events from ajax calls to avoid page level deadlocks.
+	 *
+	 * @param executor
+	 *            The executor used for processing push messages.
+	 */
+	public WebSocketSettings setWebSocketPushMessageExecutor(Executor executor)
 	{
 		Args.notNull(executor, "executor");
 		this.webSocketPushMessageExecutor = executor;
 		return this;
 	}
 
-	@Override
+	/**
+	 * The executor for processing websocket push messages broadcasted to all sessions.
+	 *
+	 * @return
+	 *            The executor used for processing push messages.
+	 */
 	public IWebSocketConnectionRegistry getConnectionRegistry()
 	{
 		return connectionRegistry;
 	}
 
-	@Override
-	public IWebSocketSettings setConnectionRegistry(IWebSocketConnectionRegistry connectionRegistry)
+	public WebSocketSettings setConnectionRegistry(IWebSocketConnectionRegistry connectionRegistry)
 	{
 		Args.notNull(connectionRegistry, "connectionRegistry");
 		this.connectionRegistry = connectionRegistry;
 		return this;
 	}
 
-	@Override
 	public Executor getWebSocketPushMessageExecutor()
 	{
 		return webSocketPushMessageExecutor;

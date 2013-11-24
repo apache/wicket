@@ -21,7 +21,7 @@ import static java.util.Collections.singletonList;
 import java.util.Collection;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.protocol.ws.IWebSocketSettings;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
@@ -53,7 +53,7 @@ public class WebSocketPushBroadcaster
 	 *
 	 * This method can be invoked from any thread, even a non-wicket thread. By default all processing
 	 * is done in the caller thread. Use
-	 * {@link IWebSocketSettings#setWebSocketPushMessageExecutor(org.apache.wicket.protocol.ws.concurrent.Executor)}
+	 * {@link WebSocketSettings#setWebSocketPushMessageExecutor(org.apache.wicket.protocol.ws.concurrent.Executor)}
 	 * to move processing to background threads.
 	 *
 	 * If the given connection is no longer open then the broadcast is silently ignored.
@@ -86,7 +86,7 @@ public class WebSocketPushBroadcaster
 	 *
 	 * This method can be invoked from any thread, even a non-wicket thread. By default all processing
 	 * is done in the caller thread. Use
-	 * {@link IWebSocketSettings#setWebSocketPushMessageExecutor(org.apache.wicket.protocol.ws.concurrent.Executor)}
+	 * {@link WebSocketSettings#setWebSocketPushMessageExecutor(org.apache.wicket.protocol.ws.concurrent.Executor)}
 	 * to move processing to background threads.
 	 *
 	 * If some connections are not in valid state they are silently ignored.
@@ -112,7 +112,7 @@ public class WebSocketPushBroadcaster
 	private void process(final Application application, final Collection<IWebSocketConnection> wsConnections,
 	                     final IWebSocketPushMessage message)
 	{
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
 		Executor executor = webSocketSettings.getWebSocketPushMessageExecutor();
 		for (final IWebSocketConnection wsConnection : wsConnections)
 		{

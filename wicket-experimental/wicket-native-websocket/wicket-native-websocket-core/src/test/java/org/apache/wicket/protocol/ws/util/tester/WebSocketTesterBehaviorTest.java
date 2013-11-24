@@ -20,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.protocol.ws.IWebSocketSettings;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -152,7 +152,7 @@ public class WebSocketTesterBehaviorTest extends Assert
 		tester.getSession().bind();
 
 		new WebSocketTester(tester, page);
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(tester.getApplication());
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(tester.getApplication());
 		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
 		ConnectedMessage wsMessage = new ConnectedMessage(tester.getApplication(),
 				tester.getHttpSession().getId(), new PageIdKey(page.getPageId()));

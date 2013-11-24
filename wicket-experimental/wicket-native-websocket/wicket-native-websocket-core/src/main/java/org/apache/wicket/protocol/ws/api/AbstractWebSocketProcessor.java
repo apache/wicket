@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
-import org.apache.wicket.protocol.ws.IWebSocketSettings;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
@@ -136,7 +136,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request), getFilterPath(wicketFilter));
 
 		this.application = Args.notNull(application, "application");
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 	}
 
