@@ -1159,7 +1159,20 @@ public abstract class Component
 		clearEnabledInHierarchyCache();
 		clearVisibleInHierarchyCache();
 
+		boolean beforeRenderSuperCallVerified = getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
+		boolean initializeSuperCallVerified = getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED);
+
 		requestFlags = 0;
+
+		// preserve the super_call_verified flags if they were set. WICKET-5417
+		if (beforeRenderSuperCallVerified)
+		{
+			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
+		}
+		if (initializeSuperCallVerified)
+		{
+			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
+		}
 
 		detachFeedback();
 
