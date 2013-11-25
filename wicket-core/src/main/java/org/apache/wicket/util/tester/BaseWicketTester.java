@@ -386,7 +386,7 @@ public class BaseWicketTester
 				CookieCollection responseCookies = new CookieCollection();
 
 				// if the last request is a redirect, all cookies from last response should appear
-				// in current reponse
+				// in current response
 				// this call will filter duplicates
 				responseCookies.addAll(lastResponseCookies);
 				for (Cookie cookie : responseCookies.allAsList())
