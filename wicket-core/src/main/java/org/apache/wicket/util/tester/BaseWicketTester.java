@@ -1048,8 +1048,6 @@ public class BaseWicketTester
 			component.getPage(), component), listener);
 
 		Url url = urlFor(handler);
-		MockHttpServletRequest request = new MockHttpServletRequest(application, httpSession,
-			servletContext);
 		request.setUrl(url);
 
 		// Process the request
