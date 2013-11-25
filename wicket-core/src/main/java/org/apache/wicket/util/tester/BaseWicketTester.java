@@ -382,7 +382,7 @@ public class BaseWicketTester
 			{
 				CookieCollection responseCookies = new CookieCollection();
 				
-				// if the last request is a redirect, all cookies from last response should appear in current reponse
+				// if the last request is a redirect, all cookies from last response should appear in current response
 				// this call will filter duplicates
 				responseCookies.addAll(lastResponseCookies);
 				for (Cookie cookie : responseCookies.allAsList())
@@ -394,7 +394,7 @@ public class BaseWicketTester
 				// this way, the cookie will be send to the next requested page
 				if (lastRequest != null)
 				{
-					CookieCollection requestCookies=new CookieCollection();
+					CookieCollection requestCookies = new CookieCollection();
 					// this call will filter duplicates
 					requestCookies.addAll(lastRequest.getCookies());
 					request.addCookies(requestCookies.asList());
