@@ -31,7 +31,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
 
 /**
- * https://issues.apache.org/jira/browse/WICKET-5424
+ * https://issues.apache.org/jira/browse/WICKET-5426
  */
 public class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
 {

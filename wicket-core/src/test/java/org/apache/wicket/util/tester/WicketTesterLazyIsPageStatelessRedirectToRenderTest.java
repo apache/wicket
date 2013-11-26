@@ -21,7 +21,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.def.RequestCycleSettings;
 
 /**
- * https://issues.apache.org/jira/browse/WICKET-5424
+ * https://issues.apache.org/jira/browse/WICKET-5426
  */
 public class WicketTesterLazyIsPageStatelessRedirectToRenderTest extends WicketTesterLazyIsPageStatelessBase
 {
