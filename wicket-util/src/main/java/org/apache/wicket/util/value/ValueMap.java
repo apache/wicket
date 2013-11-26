@@ -789,7 +789,8 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	@Override
 	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass)
 	{
-		return getEnumImpl(key, eClass, null);
+		// explicitly pass T as type to be able to build with JDK 1.8. WICKET-5427
+		return this.<T>getEnumImpl(key, eClass, null);
 	}
 
 	/**
