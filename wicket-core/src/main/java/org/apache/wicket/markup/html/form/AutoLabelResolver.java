@@ -292,6 +292,9 @@ public class AutoLabelResolver implements IComponentResolver
 		{
 			super(id);
 			component = fc;
+			
+			setMarkupId(getLabelIdFor(component));
+			setOutputMarkupId(true);
 		}
 
 		@Override
@@ -299,7 +302,6 @@ public class AutoLabelResolver implements IComponentResolver
 		{
 			super.onComponentTag(tag);
 			tag.put("for", component.getMarkupId());
-			tag.put("id", getLabelIdFor(component));
 
 			if (component instanceof FormComponent)
 			{
