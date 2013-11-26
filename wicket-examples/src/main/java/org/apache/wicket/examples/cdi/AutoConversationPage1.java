@@ -16,29 +16,42 @@
  */
 package org.apache.wicket.examples.cdi;
 
-import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.context.Conversation;
+import javax.inject.Inject;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.jboss.weld.environment.servlet.Listener;
+import org.apache.wicket.cdi.ConversationalComponent;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.PropertyModel;
 
-public class CdiApplication extends WebApplication
+public class AutoConversationPage1 extends CdiExamplePage implements ConversationalComponent
 {
+	@Inject
+	ConversationCounter counter;
 
-	@Override
-	public Class<? extends Page> getHomePage()
+	@Inject
+	Conversation conversation;
+
+	public AutoConversationPage1()
 	{
-		return CdiHomePage.class;
+		add(new Label("count", new PropertyModel(this, "counter.count")));
+
+		add(new Link<Void>("increment")
+		{
+			@Override
+			public void onClick()
+			{
+				counter.increment();
+			}
+		});
+
+		add(new Link<Void>("next")
+		{
+			@Override
+			public void onClick()
+			{
+				setResponsePage(new AutoConversationPage2());
+			}
+		});
 	}
-
-	@Override
-	protected void init()
-	{
-		super.init();
-
-		// configure wicket/cdi
-		new CdiConfiguration().configure(this);
-	}
-
 }
