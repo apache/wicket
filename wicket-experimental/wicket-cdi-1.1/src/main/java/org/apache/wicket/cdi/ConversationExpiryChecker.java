@@ -30,10 +30,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Checks for conversation expiration during page render and throws a
- * {@link ConversationExpiredException} when an expired conversation is detected.
+ * {@link ConversationExpiredException} when an expired conversation is
+ * detected.
  * 
- * For example a link that calls {@link Conversation#end()} but does not redirect to a
- * non-conversation-dependent page will be caught by this listener.
+ * For example a link that calls {@link Conversation#end()} but does not
+ * redirect to a non-conversation-dependent page will be caught by this
+ * listener.
  * 
  * @author igor
  * 
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
 public class ConversationExpiryChecker implements IComponentOnBeforeRenderListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(ConversationExpiryChecker.class);
-	
+
 	@Inject
 	private Conversation conversation;
 
@@ -61,7 +63,7 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 			{
 				logger.info("Conversation {} has expired for {}", cid, page);
 				throw new ConversationExpiredException(null, cid, page, RequestCycle.get()
-					.getActiveRequestHandler());
+						.getActiveRequestHandler());
 			}
 		}
 	}

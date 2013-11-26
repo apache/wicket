@@ -27,7 +27,8 @@ public final class BeanManagerLookup
 	{
 	}
 
-	public static BeanManager lookup() {
+	public static BeanManager lookup()
+	{
 		try
 		{
 			return InitialContext.doLookup("java:comp/BeanManager");

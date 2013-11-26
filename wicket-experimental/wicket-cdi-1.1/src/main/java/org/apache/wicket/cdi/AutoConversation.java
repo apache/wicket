@@ -21,9 +21,9 @@ import javax.enterprise.context.ConversationScoped;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
- * A bean that can be used to override whether the lifecycle of the conversation should be managed
- * automatically or not. See {@link CdiConfiguration#setAutoConversationManagement(boolean)} for
- * details.
+ * A bean that can be used to override whether the lifecycle of the conversation
+ * should be managed automatically or not. See
+ * {@link CdiConfiguration#setAutoConversationManagement(boolean)} for details.
  * 
  * @author igor
  */
@@ -31,7 +31,7 @@ import org.apache.wicket.util.io.IClusterable;
 public class AutoConversation implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean automatic;
 
 	public AutoConversation()
