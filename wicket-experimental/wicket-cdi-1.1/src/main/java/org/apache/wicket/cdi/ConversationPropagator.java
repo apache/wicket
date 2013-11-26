@@ -21,7 +21,6 @@ import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.BufferedResponseRequestHandler;
@@ -37,9 +36,6 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
-import org.apache.wicket.util.visit.Visits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,9 +70,6 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 
 	@Inject
 	private Conversation conversation;
-
-	@Inject
-	private AutoConversation autoConversation;
 
 	/**
 	 * Constructor
@@ -126,22 +119,6 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 				((ICdiAwareRequestCycleListener)listener).onAfterConversationActivated(cycle);
 			}
 		}
-	}
-
-	@Override
-	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
-	{
-		Page page = getPage(handler);
-
-		if (page == null)
-		{
-			return;
-		}
-
-		// apply auto semantics
-
-		autoEndIfNecessary(page, handler, conversation);
-		autoBeginIfNecessary(page, handler, conversation);
 	}
 
 	@Override
@@ -237,59 +214,6 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		return true;
 	}
 
-	protected void autoBeginIfNecessary(Page page, IRequestHandler handler,
-			Conversation conversation)
-	{
-		if (conversation == null || !conversation.isTransient() || page == null
-				|| !hasConversationalComponent(page) || !propagation.propagatesVia(handler, page))
-		{
-			return;
-		}
-
-		// auto activate conversation
-
-		conversation.begin();
-		autoConversation.setAutomatic(true);
-
-		logger.debug("Auto-began conversation {} for page {}", conversation.getId(), page);
-	}
-
-	protected void autoEndIfNecessary(Page page, IRequestHandler handler, Conversation conversation)
-	{
-		if (conversation == null || conversation.isTransient() || page == null
-				|| hasConversationalComponent(page) || autoConversation.isAutomatic() == false)
-		{
-			return;
-		}
-
-		// auto de-activate conversation
-
-		String cid = conversation.getId();
-
-		autoConversation.setAutomatic(false);
-		conversation.end();
-
-		logger.debug("Auto-ended conversation {} for page {}", cid, page);
-	}
-
-
-	protected boolean hasConversationalComponent(Page page)
-	{
-		Boolean hasConversational = Visits.visit(page, new IVisitor<Component, Boolean>()
-		{
-			@Override
-			public void component(Component object, IVisit<Boolean> visit)
-			{
-				if (object instanceof ConversationalComponent)
-				{
-					visit.stop(true);
-				}
-			}
-		});
-
-		return hasConversational == null ? false : hasConversational;
-	}
-
 	public static void markPageWithConversationId(IRequestHandler handler, String cid)
 	{
 		Page page = getPage(handler);
@@ -304,6 +228,11 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 		return page.getMetaData(CONVERSATION_ID_KEY);
 	}
 
+	public static void removeConversationIdFromPage(Page page)
+	{
+		page.setMetaData(CONVERSATION_ID_KEY, null);
+	}
+	
 	/**
 	 * Resolves a page instance from the request handler iff the page instance
 	 * is already created

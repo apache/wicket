@@ -33,7 +33,7 @@ public class CdiConfiguration
 		private static final long serialVersionUID = 1L;
 	};
 
-	private IConversationPropagation propagation = ConversationPropagation.ALL;
+	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
 
 	/**
 	 * Constructor
@@ -47,13 +47,11 @@ public class CdiConfiguration
 		return propagation;
 	}
 
-
 	public CdiConfiguration setPropagation(IConversationPropagation propagation)
 	{
 		this.propagation = propagation;
 		return this;
 	}
-
 
 	/**
 	 * Configures the specified application
@@ -76,6 +74,8 @@ public class CdiConfiguration
 		if (getPropagation() != ConversationPropagation.NONE)
 		{
 			listeners.add(new ConversationPropagator(application, getPropagation()));
+			application.getComponentPreOnBeforeRenderListeners().add(
+					new AutoConversationManager(getPropagation()));
 			application.getComponentPreOnBeforeRenderListeners().add(
 					new ConversationExpiryChecker());
 		}
