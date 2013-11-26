@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.settings.def.RequestCycleSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class WicketTesterLazyIsPageStatelessTest extends WicketTestCase
 			@Override
 			public void init() {
 				super.init();
-				getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
+				getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
 			}
 		};
 	}
