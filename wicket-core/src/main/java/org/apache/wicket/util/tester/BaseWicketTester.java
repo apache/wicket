@@ -41,6 +41,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -2639,17 +2640,34 @@ public class BaseWicketTester
 		}
 
 		@Override
-		public PageRenderer get(RenderPageRequestHandler handler)
+		public PageRenderer get(final RenderPageRequestHandler handler)
 		{
-			Page newPage = (Page)handler.getPageProvider().getPageInstance();
-			if (componentInPage != null && lastPage != null &&
-				lastPage.getPageClass() != newPage.getPageClass())
+			return new PageRenderer(handler)
 			{
-				// WICKET-3913: reset startComponent if a new page type is rendered
-				componentInPage = null;
-			}
-			lastRenderedPage = lastPage = newPage;
-			return delegate.get(handler);
+				@Override
+				public void respond(RequestCycle requestCycle)
+				{
+					delegate.get(handler).respond(requestCycle);
+
+					// WICKET-5424 record page after wrapped renderer has responded
+					if (handler.getPageProvider().hasPageInstance())
+					{
+						Page renderedPage = (Page)handler.getPageProvider().getPageInstance();
+						if (componentInPage != null && lastPage != null
+							&& lastPage.getPageClass() != renderedPage.getPageClass())
+						{
+							// WICKET-3913: reset startComponent if a new page
+							// type is rendered
+							componentInPage = null;
+						}
+						lastRenderedPage = lastPage = renderedPage;
+					}
+					else
+					{
+						lastRenderedPage = null;
+					}
+				}
+			};
 		}
 	}
 
