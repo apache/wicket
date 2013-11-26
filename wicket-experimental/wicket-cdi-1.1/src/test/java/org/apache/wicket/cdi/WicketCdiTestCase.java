@@ -38,7 +38,8 @@ import org.junit.runner.RunWith;
 @AdditionalClasses({ CdiWicketTester.class, BehaviorInjector.class, CdiConfiguration.class,
 		CdiShutdownCleaner.class, ComponentInjector.class, ConversationExpiryChecker.class,
 		ConversationPropagator.class, DetachEventEmitter.class, SessionInjector.class,
-		TestAppScope.class, TestConversationBean.class, TestCdiApplication.class })
+		TestAppScope.class, TestConversationBean.class, TestCdiApplication.class,
+		AutoConversation.class })
 public abstract class WicketCdiTestCase extends WicketTestCase
 {
 	@Inject
