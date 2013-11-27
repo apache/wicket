@@ -69,6 +69,8 @@ major_version=$(expr $current_version : '\(.*\)\..*\..*\-SNAPSHOT')
 minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-SNAPSHOT')
 bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-SNAPSHOT')
 version="$major_version.$minor_version.0"
+previous_version="$major_version.$(expr $minor_version - 1).0"
+
 echo "This script will release version: Apache Wicket $version"
 echo ""
 echo "Press enter to continue or CTRL-C to abort \c"
@@ -254,6 +256,11 @@ echo ""
 echo "To move the release from staging to the mirrors:"
 echo ""
 echo "    svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\""
+echo ""
+
+echo "Remove previous version $previous_version from the mirrors"
+echo ""
+echo "    svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\""
 echo ""
 
 echo "To sign the release tag issue the following three commands: "
