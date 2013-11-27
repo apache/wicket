@@ -19,7 +19,6 @@ package org.apache.wicket.cdi;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -28,7 +27,6 @@ import org.junit.Test;
 public class ConversationPropagatorTest extends WicketCdiTestCase
 {
 	@Test
-	@Ignore("Testcase and auto conversations do not match")
 	public void testAutoConversationNonBookmarkable()
 	{
 		configure(new CdiConfiguration());
@@ -37,34 +35,18 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 		int i;
 		for (i = 0; i < 3; i++)
 		{
-			tester.assertLabel("count", i + "");
+			tester.assertCount(i);
 			tester.clickLink("increment");
 		}
 		tester.clickLink("next");
-		// at this point counter = 3, auto conversation is still enabled and
-		// remains enabled, because TestConversationalPage is part of this
-		// request
 		for (; i < 6; i++)
 		{
-			// first iteration: i == 3, counter == 3, conversation active
-			// second iteration: i == 4, counter == 4, conversation transient
-			// third iteration: i == 5, counter == 1: FAIL
-			tester.assertLabel("count", i + "");
-
-			// first iteration: conversation is still long-running, counter is
-			// incremented, after which auto conversation is disabled and the
-			// conversation ended
-
-			// second iteration: transient conversation, counter starts at 1,
-			// conversation remains transient
 			tester.clickLink("increment");
-
+			tester.assertCount(1);
 		}
-
 	}
 
 	@Test
-	@Ignore("Testcase and auto conversations do not match")
 	public void testAutoConversationBookmarkable()
 	{
 		configure(new CdiConfiguration());
@@ -75,18 +57,14 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 		int i;
 		for (i = 0; i < 3; i++)
 		{
-			tester.assertLabel("count", i + "");
+			tester.assertCount(i);
 			tester.clickLink("increment");
 		}
 		tester.clickLink("next");
-		// The conversation should auto end and not create another one
-		// so the next page just keeps getting 1 because the conversationscoped
-		// bean
-		// doesnt persist across requests.
 		for (i = 0; i < 3; i++)
 		{
 			tester.clickLink("increment");
-			tester.assertLabel("count", 1 + "");
+			tester.assertCount(1);
 		}
 	}
 
@@ -99,16 +77,15 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 		int i;
 		for (i = 0; i < 3; i++)
 		{
-			tester.assertLabel("count", i + "");
+			tester.assertCount(i);
 			tester.clickLink("increment");
 		}
 		tester.clickLink("next");
 		for (; i < 6; i++)
 		{
-			tester.assertLabel("count", i + "");
+			tester.assertCount(i);
 			tester.clickLink("increment");
 		}
-
 	}
 
 	@Test
@@ -121,16 +98,36 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 		int i;
 		for (i = 0; i < 3; i++)
 		{
-			tester.assertLabel("count", i + "");
+			tester.assertCount(i);
 			tester.clickLink("increment");
 		}
 		tester.clickLink("next");
 		for (; i < 6; i++)
 		{
-			tester.assertLabel("count", i + "");
+			tester.assertCount(i);
 			tester.clickLink("increment");
 		}
+	}
 
+	@Test
+	public void testPropagationNonBookmarkable()
+	{
+		configure(new CdiConfiguration());
+
+		tester.startPage(TestConversationPage.class,
+				new PageParameters().add("pageType", "bookmarkable"));
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertCount(i);
+			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.clickLink("increment");
+			tester.assertCount(1);
+		}
 	}
 
 	@Test
@@ -143,57 +140,13 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 		for (i = 0; i < 3; i++)
 		{
 			tester.clickLink("increment");
-			tester.assertLabel("count", "1");
+			tester.assertCount(1);
 		}
 		tester.clickLink("next");
 		for (; i < 6; i++)
 		{
 			tester.clickLink("increment");
-			tester.assertLabel("count", "1");
-		}
-
-	}
-
-	@Test
-	@Ignore("Testcase and auto conversations do not match")
-	public void testGlobalAutoSettingNonBookmarkable()
-	{
-		configure(new CdiConfiguration());
-
-		tester.startPage(TestConversationPage.class, new PageParameters().add("auto", true));
-		int i;
-		for (i = 0; i < 3; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
-		}
-		tester.clickLink("next");
-		for (; i < 6; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
-		}
-	}
-
-	@Test
-	@Ignore("Testcase and auto conversations do not match")
-	public void testGlobalAutoSettingBookmarkable()
-	{
-		configure(new CdiConfiguration());
-
-		tester.startPage(TestConversationPage.class,
-				new PageParameters().add("auto", true).add("pageType", "bookmarkable"));
-		int i;
-		for (i = 0; i < 3; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
-		}
-		tester.clickLink("next");
-		for (i = 0; i < 3; i++)
-		{
-			tester.assertLabel("count", i + "");
-			tester.clickLink("increment");
+			tester.assertCount(1);
 		}
 	}
 }

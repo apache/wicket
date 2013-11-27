@@ -41,7 +41,7 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 		tester.startPage(TestConversationPage.class);
 		for (int i = 0; i < 20; i++)
 		{
-			tester.assertLabel("count", i + "");
+			tester.assertCount(i);
 			tester.clickLink("increment");
 		}
 	}

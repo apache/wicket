@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.cdi.testapp;
 
-import java.util.Random;
-
 import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
@@ -41,8 +39,6 @@ public class TestConversationPage extends WebPage
 	@Inject
 	TestConversationBean counter;
 
-	Random random = new Random();
-
 	public TestConversationPage()
 	{
 		this(new PageParameters());
@@ -52,13 +48,10 @@ public class TestConversationPage extends WebPage
 	{
 		super(parameters);
 
-		if (!parameters.get("auto").toBoolean())
-		{
-			conversation.begin();
+		conversation.begin();
+		System.out.println("Opened Conversion with id = " + conversation.getId());
 
-			System.out.println("Opened Conversion with id = " + conversation.getId());
-		}
-		add(new Label("count", new PropertyModel<Integer>(this, "counter.count")));
+		add(new Label("count", new PropertyModel<String>(this, "counter.countStr")));
 
 		add(new Link<Void>("increment")
 		{

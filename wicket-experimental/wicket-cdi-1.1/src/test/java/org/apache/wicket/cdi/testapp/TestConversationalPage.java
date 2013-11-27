@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.cdi.testapp;
 
-import java.util.Random;
-
 import javax.inject.Inject;
 
 import org.apache.wicket.cdi.ConversationalComponent;
@@ -40,8 +38,6 @@ public class TestConversationalPage extends WebPage implements ConversationalCom
 	@Inject
 	TestConversationBean counter;
 
-	Random random = new Random();
-
 	public TestConversationalPage()
 	{
 		this(new PageParameters());
@@ -52,7 +48,7 @@ public class TestConversationalPage extends WebPage implements ConversationalCom
 	{
 		logger.debug("Starting TestConversationalPage");
 
-		add(new Label("count", new PropertyModel<Integer>(this, "counter.count")));
+		add(new Label("count", new PropertyModel<String>(this, "counter.countStr")));
 
 		add(new Link<Void>("increment")
 		{

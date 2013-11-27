@@ -42,6 +42,11 @@ public class TestConversationBean implements Serializable
 		return counter.get();
 	}
 
+	public String getCountStr()
+	{
+		return "COUNT=x" + getCount() + "x";
+	}
+
 	public void increment()
 	{
 

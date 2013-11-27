@@ -14,9 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi.util.tester;
+package org.apache.wicket.cdi;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -38,12 +42,11 @@ import org.slf4j.LoggerFactory;
  */
 public class CdiWicketTester extends WicketTester
 {
+	private static final Pattern COUNT_PATTERN = Pattern.compile("COUNT=x([0-9]+)x");
 	private static final Logger logger = LoggerFactory.getLogger(CdiWicketTester.class);
 
 	@Inject
 	ContextManager contextManager;
-
-	private AtomicInteger count = new AtomicInteger();
 
 	public CdiWicketTester(WebApplication app)
 	{
@@ -66,23 +69,12 @@ public class CdiWicketTester extends WicketTester
 	protected boolean processRequest(final MockHttpServletRequest forcedRequest,
 			final IRequestHandler forcedRequestHandler, final boolean redirect)
 	{
-		if (count.getAndIncrement() == 0)
+		if (getLastRequest() != null)
 		{
-
-			if (getLastRequest() != null)
-			{
-				contextManager.deactivateContexts();
-			}
-			contextManager.activateContexts(forcedRequest == null ? getRequest() : forcedRequest);
+			contextManager.deactivateContexts();
 		}
-		try
-		{
-			return super.processRequest(forcedRequest, forcedRequestHandler, redirect);
-		}
-		finally
-		{
-			count.decrementAndGet();
-		}
+		contextManager.activateContexts(forcedRequest == null ? getRequest() : forcedRequest);
+		return super.processRequest(forcedRequest, forcedRequestHandler, redirect);
 	}
 
 	@Override
@@ -118,5 +110,22 @@ public class CdiWicketTester extends WicketTester
 		catch (Throwable t)
 		{
 		}
+	}
+
+	/**
+	 * Asserts that the respons contains the right count. This can only be done
+	 * by parsing the markup because models only contain valid values during a
+	 * request, not after.
+	 * 
+	 * @param count
+	 *            TODO
+	 */
+	public void assertCount(int count)
+	{
+		assertTrue("Response does not contain a count",
+				getLastResponseAsString().contains("COUNT=x"));
+		Matcher matcher = COUNT_PATTERN.matcher(getLastResponseAsString());
+		assertTrue(matcher.find());
+		assertEquals(Integer.toString(count), matcher.group(1));
 	}
 }
