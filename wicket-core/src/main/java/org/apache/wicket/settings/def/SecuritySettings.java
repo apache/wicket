@@ -98,12 +98,23 @@ public class SecuritySettings
 	}
 
 	/**
+	 * Note: Prints a warning to stderr if no factory was set and {@link #DEFAULT_ENCRYPTION_KEY} is
+	 * used instead.
+	 * 
 	 * @return crypt factory used to generate crypt objects
 	 */
 	public synchronized ICryptFactory getCryptFactory()
 	{
 		if (cryptFactory == null)
 		{
+			System.err
+				.print("********************************************************************\n"
+					+ "*** WARNING: Wicket is using a DEFAULT_ENCRYPTION_KEY            ***\n"
+					+ "***                            ^^^^^^^^^^^^^^^^^^^^^^            ***\n"
+					+ "*** Do NOT deploy to your live server(s) without changing this.  ***\n"
+					+ "*** See SecuritySettings#setCryptFactory() for more information. ***\n"
+					+ "********************************************************************\n");
+
 			cryptFactory = new CachingSunJceCryptFactory(DEFAULT_ENCRYPTION_KEY);
 		}
 		return cryptFactory;

@@ -35,6 +35,11 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
+import org.apache.wicket.settings.def.SecuritySettings;
+import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import org.apache.wicket.util.crypt.ICrypt;
+import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
@@ -70,11 +75,28 @@ public class CryptoMapperTest extends AbstractMapperTest
 	@Before
 	public void before() throws Exception
 	{
-
 		tester = new WicketTester();
-		WebApplication webApplication = tester.getApplication();
-		webApplication.mountPage(EXPECTED_URL.toString(), DummyHomePage.class);
-		mapper = new CryptoMapper(webApplication.getRootRequestMapper(), webApplication);
+
+		WebApplication application = tester.getApplication();
+		application.mountPage(EXPECTED_URL.toString(), DummyHomePage.class);
+
+		/**
+		 * Use explicit crypt provider to prevent crypt warning output, see
+		 * SecuritySettings#getCryptFactory()
+		 */
+		IProvider<ICrypt> cryptProvider = new IProvider<ICrypt>()
+		{
+			private ICryptFactory cryptFactory = new CachingSunJceCryptFactory(
+				SecuritySettings.DEFAULT_ENCRYPTION_KEY);
+
+			@Override
+			public ICrypt get()
+			{
+				return cryptFactory.newCrypt();
+			}
+		};
+
+		mapper = new CryptoMapper(application.getRootRequestMapper(), cryptProvider);
 	}
 
 	/**
