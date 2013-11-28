@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.wicket.settings.def.StoreSettings;
+import org.apache.wicket.settings.StoreSettings;
 import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.lang.Bytes;
 import org.junit.Assert;

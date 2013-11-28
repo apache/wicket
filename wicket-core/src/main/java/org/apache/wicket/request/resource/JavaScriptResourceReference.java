@@ -22,7 +22,7 @@ import java.util.Locale;
  * Static resource reference for javascript resources. The resources are filtered (stripped comments
  * and whitespace) if there is a registered compressor.
  * 
- * @see org.apache.wicket.settings.def.ResourceSettings#getJavaScriptCompressor()
+ * @see org.apache.wicket.settings.ResourceSettings#getJavaScriptCompressor()
  * @author Matej
  */
 public class JavaScriptResourceReference extends PackageResourceReference

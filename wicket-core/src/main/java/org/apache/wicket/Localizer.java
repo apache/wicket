@@ -29,7 +29,7 @@ import org.apache.wicket.core.util.string.interpolator.ConvertingPropertyVariabl
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.apache.wicket.settings.def.ResourceSettings;
+import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
@@ -45,9 +45,9 @@ import org.slf4j.LoggerFactory;
  * strategy for the properties. E.g. string resource loaders which load the properties from a
  * database. There should be hardly any need to extend Localizer.
  * 
- * @see org.apache.wicket.settings.def.ResourceSettings#getLocalizer()
+ * @see org.apache.wicket.settings.ResourceSettings#getLocalizer()
  * @see org.apache.wicket.resource.loader.IStringResourceLoader
- * @see org.apache.wicket.settings.def.ResourceSettings#getStringResourceLoaders()
+ * @see org.apache.wicket.settings.ResourceSettings#getStringResourceLoaders()
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag

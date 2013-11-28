@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.settings.def.ExceptionSettings.ThreadDumpStrategy;
+import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;

@@ -64,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * </table>
  * 
  * @see IPackageResourceGuard
- * @see org.apache.wicket.settings.def.ResourceSettings#getPackageResourceGuard
+ * @see org.apache.wicket.settings.ResourceSettings#getPackageResourceGuard
  * @see PackageResourceGuard
  * 
  * @author Juergen Donnerstag

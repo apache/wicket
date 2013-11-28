@@ -73,7 +73,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				/**
 				 * WICKET-4258 Feedback messages might be cleared already.
 				 * 
-				 * @see org.apache.wicket.settings.def.ApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)
+				 * @see org.apache.wicket.settings.ApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)
 				 */
 				@Override
 				public FeedbackMessage getObject()

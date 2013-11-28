@@ -35,7 +35,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
-import org.apache.wicket.settings.def.SecuritySettings;
+import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICrypt;

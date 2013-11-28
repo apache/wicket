@@ -123,7 +123,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.apache.wicket.settings.def.RequestCycleSettings.RenderStrategy;
+import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;

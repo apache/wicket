@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.settings.def;
+package org.apache.wicket.settings;
 
 import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.util.lang.Args;

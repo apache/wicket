@@ -34,7 +34,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.JavaSerializer;
-import org.apache.wicket.settings.def.ApplicationSettings;
+import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;

@@ -22,7 +22,7 @@ import org.apache.wicket.event.IEventSink;
 
 /**
  * Delivers an event to a component. Developers can implement and register their dispatchers in
- * {@link org.apache.wicket.settings.def.FrameworkSettings} to create custom strategies for
+ * {@link org.apache.wicket.settings.FrameworkSettings} to create custom strategies for
  * how events get delivered to components
  * 
  * @see IEventSink

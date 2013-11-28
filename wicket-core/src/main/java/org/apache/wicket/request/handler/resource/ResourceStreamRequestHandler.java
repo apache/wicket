@@ -51,7 +51,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 	 * The duration fow which the resource will be cached by the browser.
 	 * <p>
 	 * By default is {@code null} and
-	 * {@link org.apache.wicket.settings.def.ResourceSettings#getDefaultCacheDuration()} is used.
+	 * {@link org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()} is used.
 	 * </p>
 	 */
 	private Duration cacheDuration;

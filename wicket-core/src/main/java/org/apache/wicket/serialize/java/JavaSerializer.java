@@ -33,7 +33,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.settings.def.ApplicationSettings;
+import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

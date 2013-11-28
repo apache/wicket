@@ -20,7 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.settings.def.PageSettings;
+import org.apache.wicket.settings.PageSettings;
 import org.apache.wicket.util.io.IClusterable;
 
 /**

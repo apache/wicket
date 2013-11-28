@@ -20,8 +20,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.def.DebugSettings;
-import org.apache.wicket.settings.def.JavaScriptLibrarySettings;
+import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 
 /**
  * A helper class that contributes all required JavaScript resources needed for Wicket Ajax

@@ -34,7 +34,7 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
-import org.apache.wicket.settings.def.ExceptionSettings;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

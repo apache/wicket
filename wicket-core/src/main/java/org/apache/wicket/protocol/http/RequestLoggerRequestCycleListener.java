@@ -22,7 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.settings.def.RequestLoggerSettings;
+import org.apache.wicket.settings.RequestLoggerSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**

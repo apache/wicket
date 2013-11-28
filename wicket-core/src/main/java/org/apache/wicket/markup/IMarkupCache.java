@@ -20,7 +20,7 @@ import org.apache.wicket.MarkupContainer;
 
 /**
  * Each Wicket application has a single IMarkupCache associated with it (see
- * {@link org.apache.wicket.settings.def.MarkupSettings}). Via {@link MarkupFactory}
+ * {@link org.apache.wicket.settings.MarkupSettings}). Via {@link MarkupFactory}
  * the markup cache is used by every Component to get its associated
  * markup stream.
  * 

@@ -105,7 +105,7 @@ public class MountedPageLinkTest extends WicketTestCase
 
 	/**
 	 * Tests if the {@link PageInstanceMapper} is used if
-	 * {@link org.apache.wicket.settings.def.PageSettings#getRecreateMountedPagesAfterExpiry()}
+	 * {@link org.apache.wicket.settings.PageSettings#getRecreateMountedPagesAfterExpiry()}
 	 * is disabled
 	 */
 	@Test

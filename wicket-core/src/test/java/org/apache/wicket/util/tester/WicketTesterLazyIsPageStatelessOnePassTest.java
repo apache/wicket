@@ -18,7 +18,7 @@ package org.apache.wicket.util.tester;
 
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.def.RequestCycleSettings;
+import org.apache.wicket.settings.RequestCycleSettings;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5426

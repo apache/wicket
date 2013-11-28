@@ -20,8 +20,8 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
-import org.apache.wicket.settings.def.ExceptionSettings;
-import org.apache.wicket.settings.def.RequestCycleSettings;
+import org.apache.wicket.settings.ExceptionSettings;
+import org.apache.wicket.settings.RequestCycleSettings;
 import org.junit.Test;
 
 

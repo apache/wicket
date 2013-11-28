@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.settings.def;
+package org.apache.wicket.settings;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.authentication.IAuthenticationStrategy;

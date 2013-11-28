@@ -431,7 +431,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 
 	/**
 	 * Resizes the request buffer to match the
-	 * {@link org.apache.wicket.settings.def.RequestLoggerSettings#getRequestsWindowSize() configured window size}
+	 * {@link org.apache.wicket.settings.RequestLoggerSettings#getRequestsWindowSize() configured window size}
 	 */
 	private void resizeBuffer()
 	{

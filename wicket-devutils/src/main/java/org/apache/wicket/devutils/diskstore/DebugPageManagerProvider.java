@@ -22,7 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
-import org.apache.wicket.settings.def.StoreSettings;
+import org.apache.wicket.settings.StoreSettings;
 import org.apache.wicket.util.lang.Bytes;
 
 /**

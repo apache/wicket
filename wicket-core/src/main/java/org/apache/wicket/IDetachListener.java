@@ -24,7 +24,7 @@ package org.apache.wicket;
  * 
  * @author igor.vaynberg
  * 
- * @see org.apache.wicket.settings.def.FrameworkSettings#setDetachListener(IDetachListener)
+ * @see org.apache.wicket.settings.FrameworkSettings#setDetachListener(IDetachListener)
  */
 public interface IDetachListener
 {

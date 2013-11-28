@@ -406,8 +406,8 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @return duration for caching
 		 * 
-		 * @see org.apache.wicket.settings.def.ResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
-		 * @see org.apache.wicket.settings.def.ResourceSettings#getDefaultCacheDuration()
+		 * @see org.apache.wicket.settings.ResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()
 		 */
 		public Duration getCacheDuration()
 		{

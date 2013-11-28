@@ -23,7 +23,7 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.settings.def.RequestCycleSettings;
+import org.apache.wicket.settings.RequestCycleSettings;
 
 /**
  * Delegate responsible for rendering the page. Depending on the implementation (web, test, portlet,

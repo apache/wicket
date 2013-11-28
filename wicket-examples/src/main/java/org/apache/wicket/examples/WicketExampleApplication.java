@@ -17,7 +17,7 @@
 package org.apache.wicket.examples;
 
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.def.SecuritySettings;
+import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.util.crypt.ClassCryptFactory;
 import org.apache.wicket.util.crypt.NoCrypt;
 

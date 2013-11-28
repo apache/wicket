@@ -295,7 +295,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Subclasses that want to receive upload notifications should return true. By default it takes
-	 * the value from {@link org.apache.wicket.settings.def.ApplicationSettings#isUploadProgressUpdatesEnabled()}.
+	 * the value from {@link org.apache.wicket.settings.ApplicationSettings#isUploadProgressUpdatesEnabled()}.
 	 * 
 	 * @return true if upload status update event should be invoked
 	 */

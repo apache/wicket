@@ -27,7 +27,7 @@ import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.filter.RootMarkupFilter;
-import org.apache.wicket.settings.def.MarkupSettings;
+import org.apache.wicket.settings.MarkupSettings;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.slf4j.Logger;

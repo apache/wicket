@@ -22,7 +22,7 @@ import java.util.Locale;
  * Static resource reference for css resources. The resources are filtered (stripped comments and
  * whitespace) if there is registered compressor.
  * 
- * @see org.apache.wicket.settings.def.ResourceSettings#getCssCompressor()
+ * @see org.apache.wicket.settings.ResourceSettings#getCssCompressor()
  */
 public class CssResourceReference extends PackageResourceReference
 {

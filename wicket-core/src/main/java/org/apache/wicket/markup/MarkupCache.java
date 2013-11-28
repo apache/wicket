@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
  * removed from the cache and reloaded when needed.
  * <p>
  * MarkupCache is registered with {@link MarkupFactory} which in turn is registered with
- * {@link org.apache.wicket.settings.def.MarkupSettings} and thus can be replaced with a sub-classed version.
+ * {@link org.apache.wicket.settings.MarkupSettings} and thus can be replaced with a sub-classed version.
  * 
- * @see org.apache.wicket.settings.def.MarkupSettings
+ * @see org.apache.wicket.settings.MarkupSettings
  * @see MarkupFactory
  * 
  * @author Jonathan Locke
@@ -330,7 +330,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param markup
 	 *            Markup.NO_MARKUP
 	 * @return Same as parameter "markup"
-	 * @see org.apache.wicket.settings.def.ResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
+	 * @see org.apache.wicket.settings.ResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
 	 */
 	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer container,
 		final Markup markup)

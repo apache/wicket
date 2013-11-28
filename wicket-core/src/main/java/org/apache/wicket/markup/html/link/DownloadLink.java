@@ -60,7 +60,7 @@ public class DownloadLink extends Link<File>
 	 * The duration for which the file resource should be cached by the browser.
 	 * <p>
 	 * By default is {@code null} and
-	 * {@link org.apache.wicket.settings.def.ResourceSettings#getDefaultCacheDuration()} is used.
+	 * {@link org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()} is used.
 	 * </p>
 	 */
 	private Duration cacheDuration;

@@ -35,7 +35,7 @@ import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.def.DebugSettings;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.StringValue;
@@ -67,7 +67,7 @@ import org.slf4j.LoggerFactory;
  * with PageParameters will be used.</li>
  * <li><b>Versioning </b>- Pages support the browser's back button when versioning is enabled via
  * {@link #setVersioned(boolean)}. By default all pages are versioned if not configured differently
- * in {@link org.apache.wicket.settings.def.PageSettings#setVersionPagesByDefault(boolean)}</li>
+ * in {@link org.apache.wicket.settings.PageSettings#setVersionPagesByDefault(boolean)}</li>
  * </ul>
  * 
  * @see org.apache.wicket.markup.html.WebPage

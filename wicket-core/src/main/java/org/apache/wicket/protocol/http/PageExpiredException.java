@@ -37,7 +37,7 @@ import org.apache.wicket.core.request.handler.IPageProvider;
  * stacktrace it is not really needed.</p>
  *
  * @see HttpSession#setMaxInactiveInterval(int)
- * @see org.apache.wicket.settings.def.StoreSettings#setMaxSizePerSession(org.apache.wicket.util.lang.Bytes)
+ * @see org.apache.wicket.settings.StoreSettings#setMaxSizePerSession(org.apache.wicket.util.lang.Bytes)
  * @see NotSerializableException
  * @see IPageProvider#getPageInstance()
  */

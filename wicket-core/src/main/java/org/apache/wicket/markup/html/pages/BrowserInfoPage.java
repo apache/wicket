@@ -39,7 +39,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * <p>
  * This page is being used by the default implementation of {@link org.apache.wicket.Session#getClientInfo()},
  * which in turn uses
- * {@link org.apache.wicket.settings.def.RequestCycleSettings#getGatherExtendedBrowserInfo() a setting} to
+ * {@link org.apache.wicket.settings.RequestCycleSettings#getGatherExtendedBrowserInfo() a setting} to
  * determine whether this page should be redirected to (it does when it is true).
  * </p>
  * 

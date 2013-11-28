@@ -40,11 +40,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Default implementation of {@link IPropertiesFactory} which uses the
  * {@link IResourceStreamLocator} as defined by
- * {@link org.apache.wicket.settings.def.ResourceSettings#getResourceStreamLocator()}
+ * {@link org.apache.wicket.settings.ResourceSettings#getResourceStreamLocator()}
  * to load the {@link Properties} objects. Depending on the settings, it will assign
  * {@link ModificationWatcher}s to the loaded resources to support reloading.
  * 
- * @see org.apache.wicket.settings.def.ResourceSettings#getPropertiesFactory()
+ * @see org.apache.wicket.settings.ResourceSettings#getPropertiesFactory()
  * 
  * @author Juergen Donnerstag
  */

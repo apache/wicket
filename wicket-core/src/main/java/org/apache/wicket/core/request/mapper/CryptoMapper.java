@@ -56,9 +56,9 @@ public class CryptoMapper implements IRequestMapper
 	private final IProvider<ICrypt> cryptProvider;
 
 	/**
-	 * Encrypt with {@link org.apache.wicket.settings.def.SecuritySettings#getCryptFactory()}.
+	 * Encrypt with {@link org.apache.wicket.settings.SecuritySettings#getCryptFactory()}.
 	 * <p>
-	 * Note: Encryption is done with {@link org.apache.wicket.settings.def.SecuritySettings#DEFAULT_ENCRYPTION_KEY}
+	 * Note: Encryption is done with {@link org.apache.wicket.settings.SecuritySettings#DEFAULT_ENCRYPTION_KEY}
 	 * if you haven't configured an alternative {@link ICryptFactory}. Alternatively use
 	 * {@link CryptoMapper#CryptoMapper(IRequestMapper, IProvider)} with a specific {@link ICrypt}.
 	 * 

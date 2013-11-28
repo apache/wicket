@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * session.
  * 
  * @see {@link IAuthenticationStrategy}
- * @see {@link org.apache.wicket.settings.def.SecuritySettings#getAuthenticationStrategy()}
+ * @see {@link org.apache.wicket.settings.SecuritySettings#getAuthenticationStrategy()}
  * @see {@link DefaultAuthenticationStrategy}
  *
  * @author Jonathan Locke

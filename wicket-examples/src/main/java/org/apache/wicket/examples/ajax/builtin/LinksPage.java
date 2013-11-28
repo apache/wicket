@@ -29,7 +29,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.settings.def.ExceptionSettings;
+import org.apache.wicket.settings.ExceptionSettings;
 
 
 /**

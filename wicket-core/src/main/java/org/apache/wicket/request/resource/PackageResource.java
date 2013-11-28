@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  * 
  * Access to resources can be granted or denied via a {@link IPackageResourceGuard}. Please see
- * {@link org.apache.wicket.settings.def.ResourceSettings#getPackageResourceGuard()} as well.
+ * {@link org.apache.wicket.settings.ResourceSettings#getPackageResourceGuard()} as well.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius

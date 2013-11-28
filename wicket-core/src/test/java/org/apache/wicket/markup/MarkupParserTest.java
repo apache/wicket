@@ -624,7 +624,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 	/**
 	 * Tests that IE conditional comments are properly preserved when
-	 * {@link org.apache.wicket.settings.def.MarkupSettings#setStripComments(boolean)} is set to true
+	 * {@link org.apache.wicket.settings.MarkupSettings#setStripComments(boolean)} is set to true
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3648">WICKET-3648</a>
 	 * 

@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * Resources will be actually loaded by the {@link IResourceFinder}s defined in the resource
  * settings. By default there are finders that look in the classpath and in the classpath in
  * META-INF/resources. You can add more by adding {@link WebApplicationPath}s or {@link Path}s to
- * {@link org.apache.wicket.settings.def.ResourceSettings#getResourceFinders()}.
+ * {@link org.apache.wicket.settings.ResourceSettings#getResourceFinders()}.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke

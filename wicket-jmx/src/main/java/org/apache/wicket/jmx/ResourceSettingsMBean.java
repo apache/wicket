@@ -51,13 +51,13 @@ public interface ResourceSettingsMBean
 	 * Gets the resource finder to use when searching for resources.
 	 * 
 	 * @return Returns the resourceFinder.
-	 * @see org.apache.wicket.settings.def.ResourceSettings#getResourceFinders()
+	 * @see org.apache.wicket.settings.ResourceSettings#getResourceFinders()
 	 */
 	String getResourceFinders();
 
 	/**
 	 * @return Returns the resourcePollFrequency.
-	 * @see org.apache.wicket.settings.def.ResourceSettings#setResourcePollFrequency(Duration)
+	 * @see org.apache.wicket.settings.ResourceSettings#setResourcePollFrequency(Duration)
 	 */
 	String getResourcePollFrequency();
 
@@ -72,7 +72,7 @@ public interface ResourceSettingsMBean
 	String[] getStringResourceLoaders();
 
 	/**
-	 * @see org.apache.wicket.settings.def.ResourceSettings#getThrowExceptionOnMissingResource()
+	 * @see org.apache.wicket.settings.ResourceSettings#getThrowExceptionOnMissingResource()
 	 * 
 	 * @return boolean
 	 */
@@ -84,7 +84,7 @@ public interface ResourceSettingsMBean
 	boolean getUseDefaultOnMissingResource();
 
 	/**
-	 * @see org.apache.wicket.settings.def.ResourceSettings#setThrowExceptionOnMissingResource(boolean)
+	 * @see org.apache.wicket.settings.ResourceSettings#setThrowExceptionOnMissingResource(boolean)
 	 * 
 	 * @param throwExceptionOnMissingResource
 	 */

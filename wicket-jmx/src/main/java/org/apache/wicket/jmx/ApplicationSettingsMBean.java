@@ -30,7 +30,7 @@ public interface ApplicationSettingsMBean
 	 * Gets the access denied page class.
 	 * 
 	 * @return Returns the accessDeniedPage.
-	 * @see org.apache.wicket.settings.def.ApplicationSettings#getAccessDeniedPage()
+	 * @see org.apache.wicket.settings.ApplicationSettings#getAccessDeniedPage()
 	 */
 	String getAccessDeniedPage();
 
@@ -53,7 +53,7 @@ public interface ApplicationSettingsMBean
 	 * Gets internal error page class.
 	 * 
 	 * @return Returns the internalErrorPage.
-	 * @see org.apache.wicket.settings.def.ApplicationSettings#getInternalErrorPage()
+	 * @see org.apache.wicket.settings.ApplicationSettings#getInternalErrorPage()
 	 */
 	String getInternalErrorPage();
 
@@ -61,7 +61,7 @@ public interface ApplicationSettingsMBean
 	 * Gets the page expired page class.
 	 * 
 	 * @return Returns the pageExpiredErrorPage.
-	 * @see org.apache.wicket.settings.def.ApplicationSettings#getPageExpiredErrorPage()
+	 * @see org.apache.wicket.settings.ApplicationSettings#getPageExpiredErrorPage()
 	 */
 	String getPageExpiredErrorPage();
 
