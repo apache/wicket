@@ -134,13 +134,13 @@ public class JavaSerializer implements ISerializer
 				}
 			}
 		}
-		catch (ClassNotFoundException e)
+		catch (ClassNotFoundException cnfx)
 		{
-			throw new RuntimeException("Could not deserialize object using: " + ois.getClass(), e);
+			throw new RuntimeException("Could not deserialize object from byte[]", cnfx);
 		}
-		catch (IOException e)
+		catch (IOException iox)
 		{
-			throw new RuntimeException("Could not deserialize object using: " + ois.getClass(), e);
+			throw new RuntimeException("Could not deserialize object from byte[]", iox);
 		}
 		finally
 		{
