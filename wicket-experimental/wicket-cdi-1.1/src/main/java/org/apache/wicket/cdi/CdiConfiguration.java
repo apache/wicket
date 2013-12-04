@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.inject.spi.BeanManager;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
@@ -35,6 +37,8 @@ public class CdiConfiguration
 
 	private IConversationPropagation propagation = ConversationPropagation.NONBOOKMARKABLE;
 
+	private BeanManager fallbackBeanManager;
+
 	/**
 	 * Constructor
 	 */
@@ -50,6 +54,28 @@ public class CdiConfiguration
 	public CdiConfiguration setPropagation(IConversationPropagation propagation)
 	{
 		this.propagation = propagation;
+		return this;
+	}
+
+	public BeanManager getFallbackBeanManager()
+	{
+		return fallbackBeanManager;
+	}
+
+	/**
+	 * Sets a BeanManager that should be used if all strategies to lookup a
+	 * BeanManager fail. This can be used in scenarios where you do not have
+	 * JNDI available and do not want to bootstrap the CDI provider. It should
+	 * be noted that the fallback BeanManager can only be used within the
+	 * context of a Wicket application (ie. Application.get() should return the
+	 * application that was configured with this CdiConfiguration).
+	 * 
+	 * @param fallbackBeanManager
+	 * @return
+	 */
+	public CdiConfiguration setFallbackBeanManager(BeanManager fallbackBeanManager)
+	{
+		this.fallbackBeanManager = fallbackBeanManager;
 		return this;
 	}
 
