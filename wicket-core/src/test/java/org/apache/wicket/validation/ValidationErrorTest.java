@@ -18,6 +18,9 @@ package org.apache.wicket.validation;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.Serializable;
+import java.util.Map;
+
 import org.junit.Test;
 
 /**
@@ -70,13 +73,29 @@ public class ValidationErrorTest
 
 	}
 
+	@Test
+	public void calculateMessageWithoutKeys()
+	{
+		String message = "foo message";
+		ValidationError error = new ValidationError(message);
+		Serializable errorMessage = error.getErrorMessage(new TestMessageSource());
+		assertEquals(message, errorMessage);
+	}
+
 	private static class TestValidator implements IValidator<String>
 	{
-
 		@Override
 		public void validate(IValidatable<String> validatable)
 		{
 		}
+	}
 
+	private static class TestMessageSource implements IErrorMessageSource
+	{
+		@Override
+		public String getMessage(String key, Map<String, Object> vars)
+		{
+			return null;
+		}
 	}
 }
