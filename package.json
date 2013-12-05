@@ -2,12 +2,12 @@
   "name": "wicket-js-unit-tests",
   "version": "0.1.0",
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-cli": "~0.1.9",
-    "grunt-contrib-jshint": "~0.6.4",
+    "grunt": "~0.4.2",
+    "grunt-cli": "~0.1.11",
+    "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-qunit": "~0.3.0",
     "grunt-contrib-connect": "~0.5.0",
-    "grunt-contrib-nodeunit": "~0.2.1"
+    "grunt-contrib-nodeunit": "~0.2.2"
   },
   "scripts": {
     "test": "grunt --verbose"
