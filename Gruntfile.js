@@ -1,14 +1,14 @@
 /*
- * Grunt.js is a tool for automated JavaScript development
- * https://github.com/cowboy/grunt
+ * Grunt.js is a task runner for JavaScript development.
+ * Grunt and its plugins are installed and managed via npm, the Node.js package manager.
+ * http://gruntjs.com/
  *
  * To use it:
- * 1) install node.js - http://nodejs.org/#download. This will install 'npm' (Node Package Manager) too
- * 2) install grunt - 'npm -g install grunt-cli'
- * 3) run: npm install (This will use package.json and install all dependencies)
+ * 1) install node.js - http://nodejs.org/#download. This will install 'npm' (Node Package Manager) too.
+ * 3) run: npm install (This will use package.json and install grunt and all dependencies)
  * 4.1) grunt jshint - checks all JavaScript files with JSHint
  * 4.2) grunt jshint:core - checks only the files in wicket-core
- * 4.3) grunt test - starts a web server and runs all tests (Ajax, non-Ajax and AMD)
+ * 4.3) grunt - starts the registered tasks: starting a web server and running all tests (Ajax, non-Ajax and AMD)
  */
 
  /*global module: true */
