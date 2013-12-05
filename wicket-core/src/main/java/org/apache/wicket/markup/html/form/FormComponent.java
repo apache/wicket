@@ -1218,7 +1218,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 */
 	protected ValidationError newValidationError(ConversionException cause)
 	{
-		ValidationError error = new ValidationError();
+		ValidationError error = new ValidationError(cause.getMessage());
 
 		if (cause.getResourceKey() != null)
 		{
