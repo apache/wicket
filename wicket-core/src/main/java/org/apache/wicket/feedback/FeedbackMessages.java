@@ -229,7 +229,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 *
 	 * @param level
 	 *            The level of the message
-	 * @return <code>true</code> if a message with the specified {@code level} is greater than or equal to the given level
+	 * @return {@code true} if a message with the specified {@code level} is greater than or equal to the given level
 	 */
 	public final boolean hasMessage(final int level)
 	{
