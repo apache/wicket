@@ -223,11 +223,13 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
-	 * Checks if a message of the specified {@code level} was registered
-	 * 
+	 * Checks if a message of the specified {@code level} or greater was registered.<br />
+	 * To check for a precise {@code level} use {@link #hasMessage(IFeedbackMessageFilter)} and pass it a refference to
+	 * {@link org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter}.
+	 *
 	 * @param level
 	 *            The level of the message
-	 * @return {code true} iff a message with the specified {@code level} was registered
+	 * @return {@code true} if a message with the specified {@code level} is greater than or equal to the given level
 	 */
 	public final boolean hasMessage(final int level)
 	{
