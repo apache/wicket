@@ -2,6 +2,41 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.13.0
+
+** Bug
+
+    * [WICKET-4997] - Mounted bookmarkable Page not recreated on Session Expiry
+    * [WICKET-5084] - ClassNotFoundException with Atmosphere on Bookmarkable pages
+    * [WICKET-5379] - IE7: AutoCompleteTextField inside a ModalWindow shows auto complete dropdown behind ModalWindow
+    * [WICKET-5387] - Page#onInitialize called after an exception in the constructor of Page
+    * [WICKET-5400] - Behaviors#internalAdd(Behavior) erroneously gets id for stateless behaviors
+    * [WICKET-5404] - JQuery 1.10.1 does not work well with IE11, upgrade to 1.10.2
+    * [WICKET-5409] - wicket-native-websocket does not work with Safari/Safari iOS
+    * [WICKET-5413] - Positioning AutoCompleteTextField not correct on resized window
+    * [WICKET-5416] - BOM in UTF markup file breaks encoding detection
+    * [WICKET-5418] - PropertyValidator ignoring groups with the @NotNull annotation only
+    * [WICKET-5422] - ComponentRenderer.renderComponent() adds a page to DataStore
+    * [WICKET-5424] - Page.isPageStateless() returning true in regular run but false in WicketTester
+    * [WICKET-5425] - WicketTester doesn't preserve the request cookies when #executeListener() is used
+    * [WICKET-5437] - When a ConversionException is thrown, its message is not used in the ValidationError
+
+** Improvement
+
+    * [WICKET-5367] - migrate Wicket-Atmosphere to Atmosphere 2
+    * [WICKET-5401] - provide no-argument constructor in string based header items
+    * [WICKET-5411] - Improve AutoLabels by updating their CSS classes automatically during Ajax requests
+    * [WICKET-5415] - Do not initialize pages which were not rendered
+    * [WICKET-5420] - Make UploadProgressBar easier to extend
+    * [WICKET-5423] - Create IResource based implementation of Native Web Sockets
+    * [WICKET-5436] - Implement BigIntegerConverter
+
+** Task
+
+    * [WICKET-5431] - Download pages must use ASF mirror system for current releases
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.12.0
 
 ** Bug
