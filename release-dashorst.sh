@@ -62,6 +62,10 @@ echo " - Maven 3.0.4 (older releases are b0rked, just don't bother)"
 echo " - gpg, gpg-agent and pinentry for signing"
 echo ""
 
+export JAVA_HOME=`/usr/libexec/java_home -v1.6`
+echo "Current Java version is: $(java -version 2>&1 | tail -n 2 | head -n 1)"
+echo ""
+
 agentcount=`ps aux|grep gpg-agent|wc -l`
 
 current_version=$(getVersion)
