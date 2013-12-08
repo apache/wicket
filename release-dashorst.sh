@@ -26,6 +26,37 @@ function fail {
 }
 
 function setup_gpg {
+
+	if [ "$agentcount" -ne 1 ]; then
+		echo "Found gpg-agent running, killing all agents"
+		killall gpg-agent
+	fi
+
+	echo ""
+	echo "You are asked twice for your passphrase, one for scripting purposes, and one "
+	echo "for gpg-agent using pinentry such that gpg and git are able to sign things."
+	echo ""
+	echo "Enter your GPG passphrase (input will be hidden) \c"
+	stty_orig=`stty -g` 
+	stty -echo 
+	read passphrase
+	stty $stty_orig
+
+	# test the GPGP passphrase to fail-fast:
+	echo "$passphrase" | gpg --passphrase-fd 0 --armor --output pom.xml.asc --detach-sig pom.xml
+	gpg --verify pom.xml.asc
+	if [ $? -ne 0 ]; then
+	        echo "It appears that you fat-fingered your GPG passphrase"
+			rm pom.xml.asc
+	        exit $?
+	fi
+	rm pom.xml.asc
+
+	echo "Starting new gpg-agent"
+	eval $(gpg-agent --daemon --pinentry-program $(which pinentry))
+	if [ $? -ne 0 ] ; then
+		fail "ERROR: Unable to start gpg-agent"
+	fi
 	gpg --armor --detach-sign --use-agent --sign pom.xml >& $log
 	if [ $? -ne 0 ] ; then
 		fail "ERROR: Unable to run gpg properly"
@@ -83,38 +114,7 @@ read
 branch="build/wicket-$version"
 tag="wicket-$version"
 
-if [ "$agentcount" -ne 1 ]; then
-	echo "Found gpg-agent running, killing all agents"
-	killall gpg-agent
-fi
-
-echo ""
-echo "You are asked twice for your passphrase, one for scripting purposes, and one "
-echo "for gpg-agent using pinentry such that gpg and git are able to sign things."
-echo ""
-echo "Enter your GPG passphrase (input will be hidden) \c"
-stty_orig=`stty -g` 
-stty -echo 
-read passphrase
-stty $stty_orig
-
-# test the GPGP passphrase to fail-fast:
-echo "$passphrase" | gpg --passphrase-fd 0 --armor --output pom.xml.asc --detach-sig pom.xml
-gpg --verify pom.xml.asc
-if [ $? -ne 0 ]; then
-        echo "It appears that you fat-fingered your GPG passphrase"
-		rm pom.xml.asc
-        exit $?
-fi
-rm pom.xml.asc
-
-echo "Starting new gpg-agent"
-eval $(gpg-agent --daemon --pinentry-program $(which pinentry))
-if [ $? -ne 0 ] ; then
-	fail "ERROR: Unable to start gpg-agent"
-fi
-
-setup_gpg
+# setup_gpg
 
 echo "Ensuring we are starting from wicket-6.x"
 # otherwise we can't remove a previous release branch that failed
