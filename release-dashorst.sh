@@ -174,7 +174,7 @@ mvn -q clean -Pall
 
 # package and assemble the release
 echo "Prepare the release"
-mvn --batch-mode release:prepare -DpreparationGoals="clean" -Dtag=$tag
+mvn --batch-mode release:prepare -DpreparationGoals="clean" -Dtag=$tag -Papache-release
 if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:prepare was not successful"
 fi
@@ -189,7 +189,7 @@ fi
 #git tag --sign --force --message "Signed release tag for Apache Wicket $version" $tag >> $log
 
 echo "Performing the release using Maven"
-mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag
+mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag -Papache-release
 if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:perform was not successful"
 fi
