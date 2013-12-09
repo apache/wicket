@@ -337,9 +337,14 @@ public class PageAccessSynchronizerTest extends Assert
 	@Test
 	public void failToReleaseUnderLoad() throws Exception
 	{
+		final Duration duration = Duration.seconds(20); /* seconds */
 		final ConcurrentLinkedQueue<Exception> errors = new ConcurrentLinkedQueue<Exception>();
-		final long endTime = System.currentTimeMillis() + Duration.seconds(20).getMilliseconds();
-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(10));
+		final long endTime = System.currentTimeMillis() + duration.getMilliseconds();
+
+		// set the synchronizer timeout one second longer than the test runs to prevent 
+		// starvation to become an issue
+		final PageAccessSynchronizer sync = new PageAccessSynchronizer(duration.add(Duration.ONE_SECOND));
+
 		final CountDownLatch latch = new CountDownLatch(100);
 		for (int count = 0; count < 100; count++)
 		{
@@ -382,6 +387,9 @@ public class PageAccessSynchronizerTest extends Assert
 		}
 		latch.await();
 		if (!errors.isEmpty())
+		{
+			logger.error("Number of lock errors that occurred: {}", errors.size());
 			throw errors.remove();
+		}
 	}
 }
