@@ -20,6 +20,7 @@ import java.util.TimeZone;
 
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.util.time.Duration;
 
 
@@ -59,7 +60,7 @@ public class WorldClockPage extends BasePage
 
 		// add the timer behavior to the page and make it update all
 		// other components as well
-		add(new AbstractAjaxTimerBehavior(Duration.seconds(1))
+		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1))
 		{
 			/**
 			 * @see org.apache.wicket.ajax.AbstractAjaxTimerBehavior#onTimer(org.apache.wicket.ajax.AjaxRequestTarget)
@@ -72,6 +73,27 @@ public class WorldClockPage extends BasePage
 				target.add(moscow);
 				target.add(prague);
 				target.add(london);
+			}
+		};
+		add(timer);
+
+		add(new AjaxLink<Void>("stop")
+		{
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				timer.stop(target);
+			}
+		});
+
+		add(new AjaxLink<Void>("restart")
+		{
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				timer.restart(target);
 			}
 		});
 	}

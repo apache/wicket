@@ -22,7 +22,6 @@ import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -42,8 +41,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	private Duration updateInterval;
 
 	private boolean stopped = false;
-
-	private boolean headRendered = false;
 
 	/**
 	 * Construct.
@@ -89,11 +86,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		response.render(JavaScriptHeaderItem.forScript("if (typeof(Wicket.TimerHandles) === 'undefined') {Wicket.TimerHandles = {}}",
 				WICKET_TIMERS_ID));
 
-		WebRequest request = (WebRequest) component.getRequest();
-
-		if (!isStopped() && (!headRendered || !request.isAjax()))
+		if (!isStopped())
 		{
-			headRendered = true;
 			response.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 		}
 	}
@@ -180,8 +174,9 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		if (isStopped())
 		{
 			stopped = false;
-			headRendered = false;
-			target.add(getComponent());
+
+			target.getHeaderResponse().render(
+				OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 		}
 	}
 
@@ -190,11 +185,15 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	public final void stop(final AjaxRequestTarget target)
 	{
-		if (headRendered && stopped == false)
+		if (stopped == false)
 		{
 			stopped = true;
+
 			String timeoutHandle = getTimeoutHandle();
-			target.prependJavaScript("clearTimeout("+timeoutHandle+"); delete "+timeoutHandle+";");
+
+			target.getHeaderResponse().render(
+				OnLoadHeaderItem.forScript("clearTimeout(" + timeoutHandle + "); delete "
+					+ timeoutHandle + ";"));
 		}
 	}
 
