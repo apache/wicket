@@ -43,6 +43,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	private boolean stopped = false;
 
 	/**
+	 * Is the timeout present in JavaScript already.
+	 */
+	private boolean hasTimeout = false;
+
+	/**
 	 * Construct.
 	 * 
 	 * @param updateInterval
@@ -83,12 +88,19 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(component, response);
 
-		response.render(JavaScriptHeaderItem.forScript("if (typeof(Wicket.TimerHandles) === 'undefined') {Wicket.TimerHandles = {}}",
-				WICKET_TIMERS_ID));
+		response.render(JavaScriptHeaderItem.forScript(
+			"if (typeof(Wicket.TimerHandles) === 'undefined') {Wicket.TimerHandles = {}}",
+			WICKET_TIMERS_ID));
 
-		if (!isStopped())
+		if (component.getRequestCycle().find(AjaxRequestTarget.class) == null)
 		{
-			response.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+			// complete page is rendered, so timeout has to be rendered again
+			hasTimeout = false;
+		}
+
+		if (isStopped() == false)
+		{
+			addTimeout(response);
 		}
 	}
 
@@ -128,10 +140,16 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 			if (shouldTrigger())
 			{
-				target.getHeaderResponse().render(
-					OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+				// re-add timeout
+				hasTimeout = false;
+
+				addTimeout(target.getHeaderResponse());
+
+				return;
 			}
 		}
+
+		clearTimeout(target.getHeaderResponse());
 	}
 
 	/**
@@ -166,22 +184,51 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	/**
 	 * Re-enables the timer if already stopped
-	 *
+	 * 
 	 * @param target
+	 *            may be null
 	 */
 	public final void restart(final AjaxRequestTarget target)
 	{
-		if (isStopped())
+		if (stopped == true)
 		{
 			stopped = false;
 
-			target.getHeaderResponse().render(
+			if (target != null)
+			{
+				addTimeout(target.getHeaderResponse());
+			}
+		}
+	}
+
+	private void addTimeout(IHeaderResponse headerResponse)
+	{
+		if (hasTimeout == false)
+		{
+			hasTimeout = true;
+
+			headerResponse.render(
 				OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 		}
 	}
 
+	private void clearTimeout(IHeaderResponse headerResponse)
+	{
+		if (hasTimeout)
+		{
+			hasTimeout = false;
+
+			String timeoutHandle = getTimeoutHandle();
+			headerResponse.render(OnLoadHeaderItem.forScript("clearTimeout(" + timeoutHandle
+				+ "); delete " + timeoutHandle + ";"));
+		}
+	}
+
 	/**
-	 * Stops the timer
+	 * Stops the timer.
+	 * 
+	 * @param target
+	 *            may be null
 	 */
 	public final void stop(final AjaxRequestTarget target)
 	{
@@ -189,11 +236,10 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		{
 			stopped = true;
 
-			String timeoutHandle = getTimeoutHandle();
-
-			target.getHeaderResponse().render(
-				OnLoadHeaderItem.forScript("clearTimeout(" + timeoutHandle + "); delete "
-					+ timeoutHandle + ";"));
+			if (target != null)
+			{
+				clearTimeout(target.getHeaderResponse());
+			}
 		}
 	}
 
@@ -203,8 +249,17 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
 		if (target != null)
 		{
-			stop(target);
+			clearTimeout(target.getHeaderResponse());
 		}
-		super.detach(component);
+	}
+
+	@Override
+	protected void onUnbind()
+	{
+		AjaxRequestTarget target = getComponent().getRequestCycle().find(AjaxRequestTarget.class);
+		if (target != null)
+		{
+			clearTimeout(target.getHeaderResponse());
+		}
 	}
 }
