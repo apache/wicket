@@ -79,12 +79,13 @@ public class FilenameWithVersionResourceCachingStrategyTest extends Assert
 			assertEquals(WebResponse.CacheScope.PUBLIC, response.getCacheScope());
 			
 			// version missmatch
-			 requestCycle.setMetaData(IResourceCachingStrategy.URL_VERSION, "foo");
+			requestCycle.setMetaData(IResourceCachingStrategy.URL_VERSION, "foo");
 			 
 			response = new AbstractResource.ResourceResponse();
 			strategy.decorateResponse(response, new TestResource());
 		
 			assertEquals(defaultDuration, response.getCacheDuration());
+			assertEquals(WebResponse.CacheScope.PRIVATE, response.getCacheScope());
         } finally {
         	tester.destroy();
         }
