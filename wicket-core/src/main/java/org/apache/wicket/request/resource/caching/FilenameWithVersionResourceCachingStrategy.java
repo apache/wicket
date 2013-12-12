@@ -196,7 +196,11 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	@Override
 	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
 	{
-		response.setCacheDurationToMaximum();
-		response.setCacheScope(WebResponse.CacheScope.PUBLIC);
+		String requestedVersion = RequestCycle.get().getMetaData(URL_VERSION);
+		if (requestedVersion != null && requestedVersion.equals(this.resourceVersion.getVersion(resource)))
+		{
+			response.setCacheDurationToMaximum();
+			response.setCacheScope(WebResponse.CacheScope.PUBLIC);
+		}
 	}
 }
