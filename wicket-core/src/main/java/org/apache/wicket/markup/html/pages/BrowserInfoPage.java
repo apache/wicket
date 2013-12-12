@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.html.pages;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -28,7 +30,6 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings;
-
 
 /**
  * <p>
@@ -48,6 +49,8 @@ import org.apache.wicket.settings.IRequestCycleSettings;
 public class BrowserInfoPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+
+	private BrowserInfoForm browserInfoForm;
 
 	/**
 	 * Bookmarkable constructor. This is not for normal framework client use. It will be called
@@ -74,9 +77,15 @@ public class BrowserInfoPage extends WebPage
 		continueToOriginalDestination();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		response.render(OnLoadHeaderItem.forScript(
+				String.format("Wicket.BrowserInfo.submitForm('%s')", browserInfoForm.getFormMarkupId())));
+	}
+
 	@Override
 	public boolean isVersioned()
 	{
@@ -117,18 +126,17 @@ public class BrowserInfoPage extends WebPage
 		WebMarkupContainer link = new WebMarkupContainer("link");
 		link.add(AttributeModifier.replace("href", urlModel));
 		add(link);
-		add(new BrowserInfoForm("postback")
+
+		browserInfoForm = new BrowserInfoForm("postback")
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * @see org.apache.wicket.markup.html.pages.BrowserInfoForm#afterSubmit()
-			 */
 			@Override
 			protected void afterSubmit()
 			{
 				continueToOriginalDestination();
 			}
-		});
+		};
+		add(browserInfoForm);
 	}
 }

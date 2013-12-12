@@ -23,7 +23,8 @@ module.exports = function(grunt) {
 			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
 			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
 			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
-			"wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormChoiceComponentUpdatingBehavior.js"
+			"wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormChoiceComponentUpdatingBehavior.js",
+			"wicket-core/src/main/java/org/apache/wicket/markup/html/pages/wicket-browser-info.js"
 		],
 		extensionsJs = [
 			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/progressbar.js",
