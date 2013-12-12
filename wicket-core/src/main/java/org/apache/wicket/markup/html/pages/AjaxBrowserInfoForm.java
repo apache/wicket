@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
 
 /**
  * An extension of BrowserInfoForm that uses AjaxFormSubmitBehavior
@@ -58,7 +59,7 @@ public class AjaxBrowserInfoForm extends BrowserInfoForm
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
 				super.onAfterSubmit(target);
-				ClientInfo info = getSession().getClientInfo();
+				WebClientInfo info = getWebSession().getClientInfo();
 				AjaxBrowserInfoForm.this.onAfterSubmit(target, info);
 			}
 		});
@@ -73,14 +74,14 @@ public class AjaxBrowserInfoForm extends BrowserInfoForm
 	 * @param info
 	 *      The client info
 	 */
-	protected void onAfterSubmit(AjaxRequestTarget target, ClientInfo info)
+	protected void onAfterSubmit(AjaxRequestTarget target, WebClientInfo info)
 	{
 	}
 
 	/**
 	 * Does nothing.
 	 *
-	 * Use {@linkplain #onAfterSubmit(org.apache.wicket.ajax.AjaxRequestTarget, org.apache.wicket.core.request.ClientInfo)}
+	 * Use {@linkplain #onAfterSubmit(org.apache.wicket.ajax.AjaxRequestTarget, org.apache.wicket.protocol.http.request.WebClientInfo)}
 	 */
 	@Override
 	protected final void afterSubmit()
