@@ -87,7 +87,7 @@ public class AjaxHelloBrowser extends WicketExamplePage
 		AjaxBrowserInfoForm form = new AjaxBrowserInfoForm("form")
 		{
 			@Override
-			protected void onAfterSubmit(AjaxRequestTarget target, ClientInfo info)
+			protected void onAfterSubmit(AjaxRequestTarget target, WebClientInfo info)
 			{
 				super.onAfterSubmit(target, info);
 
