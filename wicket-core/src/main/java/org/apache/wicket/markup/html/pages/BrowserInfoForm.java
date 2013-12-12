@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.markup.html.pages;
 
-import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -24,23 +25,24 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Form for posting JavaScript properties.
  */
 public class BrowserInfoForm extends Panel
 {
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(BrowserInfoForm.class);
-
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
+	 * The special form that submits the client/browser info
+	 */
+	private final Form<? extends ClientPropertiesBean> form;
+
+	/**
+	 * Constructor.
 	 * 
 	 * @param id
 	 *            component id
@@ -49,21 +51,32 @@ public class BrowserInfoForm extends Panel
 	{
 		super(id);
 
-		Form<ClientPropertiesBean> form = new Form<ClientPropertiesBean>("postback",
-			new CompoundPropertyModel<ClientPropertiesBean>(new ClientPropertiesBean()))
+		this.form = createForm("postback");
+		form.setOutputMarkupId(true);
+		add(form);
+	}
+
+	/**
+	 * Creates the form
+	 *
+	 * @param componentId
+	 *      the id for the Form component
+	 * @return the Form that will submit the data
+	 */
+	protected Form<? extends ClientPropertiesBean> createForm(String componentId)
+	{
+		Form<ClientPropertiesBean> form = new Form<ClientPropertiesBean>(componentId,
+				new CompoundPropertyModel<ClientPropertiesBean>(new ClientPropertiesBean()))
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-			 */
 			@Override
 			protected void onSubmit()
 			{
 				ClientPropertiesBean propertiesBean = getModelObject();
 
 				RequestCycle requestCycle = getRequestCycle();
-				WebSession session = (WebSession)getSession();
+				WebSession session = getWebSession();
 				WebClientInfo clientInfo = session.getClientInfo();
 
 				if (clientInfo == null)
@@ -94,27 +107,28 @@ public class BrowserInfoForm extends Panel
 		form.add(new TextField<String>("browserWidth"));
 		form.add(new TextField<String>("browserHeight"));
 		form.add(new TextField<String>("hostname"));
-		add(form);
-	}
-
-
-	/**
-	 * Log a warning that for in order to use this page, you should really be using
-	 * {@link WebClientInfo}.
-	 * 
-	 * @param clientInfo
-	 *            the actual client info object
-	 */
-	void warnNotUsingWebClientInfo(ClientInfo clientInfo)
-	{
-		log.warn("using " + getClass().getName() + " makes no sense if you are not using " +
-			WebClientInfo.class.getName() + " (you are using " + clientInfo.getClass().getName() +
-			" instead)");
+		return form;
 	}
 
 	protected void afterSubmit()
 	{
+	}
 
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		response.render(JavaScriptHeaderItem.forReference(
+				new JavaScriptResourceReference(BrowserInfoForm.class, "wicket-browser-info.js")));
+	}
+
+	/**
+	 * @return The markup id of the form that submits the client info
+	 */
+	public String getFormMarkupId()
+	{
+		return form.getMarkupId();
 	}
 
 	/**

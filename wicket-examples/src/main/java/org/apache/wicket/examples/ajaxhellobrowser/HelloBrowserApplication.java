@@ -14,31 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.hellobrowser;
+package org.apache.wicket.examples.ajaxhellobrowser;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * Application class for hello browser example.
- * 
- * @author Eelco Hillenius
+ * Application class for Ajax based browser info extractor.
  */
 public class HelloBrowserApplication extends WicketExampleApplication
 {
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
-		return HelloBrowser.class;
+		return AjaxHelloBrowser.class;
 	}
 
-	@Override
-	protected void init()
-	{
-		super.init();
-
-		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
-
-		mountPage("howdy", HelloBrowser.class);
-	}
 }

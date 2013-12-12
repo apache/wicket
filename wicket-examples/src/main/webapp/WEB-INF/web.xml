@@ -117,6 +117,15 @@
 	</filter>
 
 	<filter>
+		<filter-name>AjaxHelloBrowserApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.ajaxhellobrowser.HelloBrowserApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>StockQuoteApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -567,6 +576,13 @@
 	<filter-mapping>
 		<filter-name>HelloBrowserApplication</filter-name>
 		<url-pattern>/hellobrowser/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>AjaxHelloBrowserApplication</filter-name>
+		<url-pattern>/ajaxhellobrowser/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
