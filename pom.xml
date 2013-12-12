@@ -33,7 +33,7 @@
 		<jacoco.version>0.6.3.201306030806</jacoco.version>
 		<jetty.version>8.1.13.v20130916</jetty.version>
 		<jetty9.version>9.0.6.v20130930</jetty9.version>
-		<spring.version>3.2.4.RELEASE</spring.version>
+		<spring.version>4.0.0.RELEASE</spring.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
 		<maven.javadoc.version>2.9.1</maven.javadoc.version>
 		<maven.surefire.version>2.12.2</maven.surefire.version>

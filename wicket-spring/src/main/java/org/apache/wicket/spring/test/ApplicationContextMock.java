@@ -309,6 +309,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public String[] getBeanNamesForAnnotation(Class<? extends Annotation> aClass)
+	{
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @see org.springframework.beans.factory.BeanFactory#containsBean(java.lang.String)
 	 */
