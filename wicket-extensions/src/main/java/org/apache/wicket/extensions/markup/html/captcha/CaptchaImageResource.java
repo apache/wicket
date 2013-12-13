@@ -158,7 +158,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 */
 	public CaptchaImageResource(final String challengeId)
 	{
-		this(new Model<>(challengeId));
+		this(new Model<String>(challengeId));
 	}
 
 	/**
@@ -197,7 +197,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 */
 	public CaptchaImageResource(final String challengeId, final int fontSize, final int margin)
 	{
-		this(new Model<>(challengeId), fontSize, margin);
+		this(new Model<String>(challengeId), fontSize, margin);
 	}
 
 	protected Random newRandomNumberGenerator()
@@ -245,7 +245,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 		if (data == null)
 		{
 			data = render();
-			imageData = new SoftReference<>(data);
+			imageData = new SoftReference<byte[]>(data);
 			setLastModifiedTime(Time.now());
 		}
 		return data;
@@ -266,7 +266,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 		int width = margin * 2;
 		int height = margin * 2;
 		char[] chars = challengeId.getObject().toCharArray();
-		List<CharAttributes> charAttsList = new ArrayList<>();
+		List<CharAttributes> charAttsList = new ArrayList<CharAttributes>();
 		TextLayout text;
 		AffineTransform textAt;
 		Shape shape;
@@ -379,15 +379,16 @@ public final class CaptchaImageResource extends DynamicImageResource
 			{
 				for (Provider.Service service : provider.getServices())
 				{
-					switch (service.getAlgorithm())
+					final String algorithm = service.getAlgorithm();
+					if ("NativePRNG".equals(algorithm))
 					{
-						case "NativePRNG":
-							return service;
-						case "Windows-PRNG":
-							return service;
-						case "SHA1PRNG":
-							_sha1Service = service;
-							break;
+						return service;
+					} else if ("Windows-PRNG".equals(algorithm))
+					{
+						return service;
+					} else if ("SHA1PRNG".equals(algorithm))
+					{
+						_sha1Service = service;
 					}
 				}
 			}

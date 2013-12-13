@@ -55,7 +55,7 @@ public class CaptchaImageResourceTest
 	@Test
 	public void defaultConstructorCreatesRandomChallengeId()
 	{
-		Set<String> challengeIds = new HashSet<>();
+		Set<String> challengeIds = new HashSet<String>();
 
 		for (int i = 0; i < 100000; ++i)
 		{
