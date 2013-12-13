@@ -369,6 +369,11 @@ public final class CaptchaImageResource extends DynamicImageResource
 		/**
 		 * checks all existing security providers and returns the best fitting service.
 		 *
+		 * This method is different to {@link java.security.SecureRandom#getPrngAlgorithm()} which uses the first PRNG
+		 * algorithm of the first provider that has registered a SecureRandom implementation. {@code detectBestFittingService}
+		 * instead uses a native PRNG if available, then {@code SHA1PRNG} else {@code null} which triggers
+		 * {@link java.security.SecureRandom#getPrngAlgorithm()} when calling {@code new SecureRandom()}.
+		 *
 		 * @return a native pseudo random number generator or sha1 as fallback.
 		 */
 		private Provider.Service detectBestFittingService()
@@ -379,16 +384,20 @@ public final class CaptchaImageResource extends DynamicImageResource
 			{
 				for (Provider.Service service : provider.getServices())
 				{
-					final String algorithm = service.getAlgorithm();
-					if ("NativePRNG".equals(algorithm))
+					if ("SecureRandom".equals(service.getType()))
 					{
-						return service;
-					} else if ("Windows-PRNG".equals(algorithm))
-					{
-						return service;
-					} else if ("SHA1PRNG".equals(algorithm))
-					{
-						_sha1Service = service;
+						final String algorithm = service.getAlgorithm();
+
+						if ("NativePRNG".equals(algorithm))
+						{
+							return service;
+						} else if ("Windows-PRNG".equals(algorithm))
+						{
+							return service;
+						} else if ("SHA1PRNG".equals(algorithm))
+						{
+							_sha1Service = service;
+						}
 					}
 				}
 			}
