@@ -349,7 +349,7 @@ public final class Time extends AbstractTime
 	 */
 	public int getHour(final Calendar calendar)
 	{
-		return get(calendar, Calendar.HOUR);
+		return get(calendar, Calendar.HOUR_OF_DAY);
 	}
 
 	/**
