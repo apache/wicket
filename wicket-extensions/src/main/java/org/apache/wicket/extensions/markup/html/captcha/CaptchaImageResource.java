@@ -27,6 +27,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.lang.ref.SoftReference;
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import java.security.SecureRandom;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +45,7 @@ import org.apache.wicket.util.time.Time;
 
 /**
  * Generates a captcha image.
- * 
+ *
  * @author Joshua Perlow
  */
 public final class CaptchaImageResource extends DynamicImageResource
@@ -64,7 +68,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 		private final double shearY;
 
 		CharAttributes(final char c, final String name, final double rotation, final int rise,
-			final double shearX, final double shearY)
+				final double shearX, final double shearY)
 		{
 			this.c = c;
 			this.name = name;
@@ -107,21 +111,23 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 	private static final long serialVersionUID = 1L;
 
-	private static int randomInt(final int min, final int max)
+	private static int randomInt(final Random rng, final int min, final int max)
 	{
-		return (int)(Math.random() * (max - min) + min);
+		return (int) (rng.nextDouble() * (max - min) + min);
 	}
 
-	private static String randomString(final int min, final int max)
+	private static String randomString(final Random rng, final int min, final int max)
 	{
-		int num = randomInt(min, max);
+		int num = randomInt(rng, min, max);
 		byte b[] = new byte[num];
 		for (int i = 0; i < num; i++)
 		{
-			b[i] = (byte)randomInt('a', 'z');
+			b[i] = (byte) randomInt(rng, 'a', 'z');
 		}
 		return new String(b);
 	}
+
+	private static final RandomNumberGeneratorFactory RNG_FACTORY = new RandomNumberGeneratorFactory();
 
 	private final IModel<String> challengeId;
 
@@ -129,36 +135,38 @@ public final class CaptchaImageResource extends DynamicImageResource
 	private final int fontSize;
 	private final int fontStyle;
 
-	/** Transient image data so that image only needs to be generated once per VM */
+	/**
+	 * Transient image data so that image only needs to be generated once per VM
+	 */
 	private transient SoftReference<byte[]> imageData;
 
 	private final int margin;
+	private final Random rng;
 
 	/**
 	 * Construct.
 	 */
 	public CaptchaImageResource()
 	{
-		this(randomString(6, 8));
+		this(randomString(RNG_FACTORY.newRandomNumberGenerator(), 10, 14));
 	}
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param challengeId
-	 *            The id of the challenge
+	 *          The id of the challenge
 	 */
 	public CaptchaImageResource(final String challengeId)
 	{
-		this(new Model<String>(challengeId));
+		this(Model.of(challengeId));
 	}
 
 	/**
-	 * 
 	 * Construct.
-	 * 
+	 *
 	 * @param challengeId
-	 *            The id of the challenge
+	 *          The id of the challenge
 	 */
 	public CaptchaImageResource(final IModel<String> challengeId)
 	{
@@ -167,42 +175,47 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param challengeId
-	 *            The id of the challenge
+	 *          The id of the challenge
 	 * @param fontSize
-	 *            The font size
+	 *          The font size
 	 * @param margin
-	 *            The image's margin
+	 *          The image's margin
 	 */
 	public CaptchaImageResource(final IModel<String> challengeId, final int fontSize,
-		final int margin)
+	                            final int margin)
 	{
 		this.challengeId = challengeId;
-		fontStyle = 1;
+		this.fontStyle = 1;
 		this.fontSize = fontSize;
 		this.margin = margin;
+		this.rng = newRandomNumberGenerator();
 	}
 
 	/**
-	 * 
 	 * Construct.
-	 * 
+	 *
 	 * @param challengeId
-	 *            The id of the challenge
+	 *          The id of the challenge
 	 * @param fontSize
-	 *            The font size
+	 *          The font size
 	 * @param margin
-	 *            The image's margin
+	 *          The image's margin
 	 */
 	public CaptchaImageResource(final String challengeId, final int fontSize, final int margin)
 	{
-		this(new Model<String>(challengeId), fontSize, margin);
+		this(Model.of(challengeId), fontSize, margin);
+	}
+
+	protected Random newRandomNumberGenerator()
+	{
+		return RNG_FACTORY.newRandomNumberGenerator();
 	}
 
 	/**
 	 * Gets the id for the challenge.
-	 * 
+	 *
 	 * @return The id for the challenge
 	 */
 	public final String getChallengeId()
@@ -212,7 +225,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 	/**
 	 * Gets the id for the challenge
-	 * 
+	 *
 	 * @return The id for the challenge
 	 */
 	public final IModel<String> getChallengeIdModel()
@@ -253,10 +266,10 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 	/**
 	 * Renders this image
-	 * 
+	 *
 	 * @return The image data
 	 */
-	private final byte[] render()
+	private byte[] render()
 	{
 		int width = margin * 2;
 		int height = margin * 2;
@@ -268,12 +281,12 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 		for (char ch : chars)
 		{
-			String fontName = fontNames.get(randomInt(0, fontNames.size()));
-			double rotation = Math.toRadians(randomInt(-35, 35));
-			int rise = randomInt(margin / 2, margin);
-			Random ran = new Random();
-			double shearX = ran.nextDouble() * 0.2;
-			double shearY = ran.nextDouble() * 0.2;
+			String fontName = fontNames.get(randomInt(rng, 0, fontNames.size()));
+			double rotation = Math.toRadians(randomInt(rng, -35, 35));
+			int rise = randomInt(rng, margin / 2, margin);
+
+			double shearX = rng.nextDouble() * 0.2;
+			double shearY = rng.nextDouble() * 0.2;
 			CharAttributes cf = new CharAttributes(ch, fontName, rotation, rise, shearX, shearY);
 			charAttsList.add(cf);
 			text = new TextLayout(ch + "", getFont(fontName), new FontRenderContext(null, false,
@@ -282,15 +295,15 @@ public final class CaptchaImageResource extends DynamicImageResource
 			textAt.rotate(rotation);
 			textAt.shear(shearX, shearY);
 			shape = text.getOutline(textAt);
-			width += (int)shape.getBounds2D().getWidth();
-			if (height < (int)shape.getBounds2D().getHeight() + rise)
+			width += (int) shape.getBounds2D().getWidth();
+			if (height < (int) shape.getBounds2D().getHeight() + rise)
 			{
-				height = (int)shape.getBounds2D().getHeight() + rise;
+				height = (int) shape.getBounds2D().getHeight() + rise;
 			}
 		}
 
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D gfx = (Graphics2D)image.getGraphics();
+		Graphics2D gfx = (Graphics2D) image.getGraphics();
 		gfx.setBackground(Color.WHITE);
 		int curWidth = margin;
 		for (CharAttributes cf : charAttsList)
@@ -308,19 +321,18 @@ public final class CaptchaImageResource extends DynamicImageResource
 		}
 
 		// XOR circle
-		int dx = randomInt(width, 2 * width);
-		int dy = randomInt(width, 2 * height);
-		int x = randomInt(0, width / 2);
-		int y = randomInt(0, height / 2);
+		int dx = randomInt(rng, width, 2 * width);
+		int dy = randomInt(rng, width, 2 * height);
+		int x = randomInt(rng, 0, width / 2);
+		int y = randomInt(rng, 0, height / 2);
 
 		gfx.setXORMode(Color.BLACK);
-		gfx.setStroke(new BasicStroke(randomInt(fontSize / 8, fontSize / 2)));
+		gfx.setStroke(new BasicStroke(randomInt(rng, fontSize / 8, fontSize / 2)));
 		gfx.drawOval(x, y, dx, dy);
 
 		WritableRaster rstr = image.getRaster();
 		int[] vColor = new int[3];
 		int[] oldColor = new int[3];
-		Random vRandom = new Random(System.currentTimeMillis());
 
 		// noise
 		for (x = 0; x < width; x++)
@@ -330,9 +342,9 @@ public final class CaptchaImageResource extends DynamicImageResource
 				rstr.getPixel(x, y, oldColor);
 
 				// hard noise
-				vColor[0] = (int)(Math.floor(vRandom.nextFloat() * 1.03) * 255);
+				vColor[0] = (int) (Math.floor(rng.nextFloat() * 1.03) * 255);
 				// soft noise
-				vColor[0] = vColor[0] ^ (170 + (int)(vRandom.nextFloat() * 80));
+				vColor[0] = vColor[0] ^ (170 + (int) (rng.nextFloat() * 80));
 				// xor to image
 				vColor[0] = vColor[0] ^ oldColor[0];
 				vColor[1] = vColor[0];
@@ -342,5 +354,85 @@ public final class CaptchaImageResource extends DynamicImageResource
 			}
 		}
 		return toImageData(image);
+	}
+
+	/**
+	 * The {@code RandomNumberGeneratorFactory} uses {@link java.security.SecureRandom} as RNG and {@code NativePRNG}
+	 * on unix and {@code Windows-PRNG} on windows if it exists. Else it will fallback to {@code SHA1PRNG}.
+	 * <p/>
+	 * Please keep in mind that {@link java.security.SecureRandom} uses {@code /dev/random} as default on unix systems
+	 * which is a blocking call. It is possible to change this by adding {@code -Djava.security.egd=file:/dev/urandom}
+	 * to your application server startup script.
+	 */
+	private static final class RandomNumberGeneratorFactory
+	{
+		private final Provider.Service service;
+
+		RandomNumberGeneratorFactory()
+		{
+			this.service = detectBestFittingService();
+		}
+
+		/**
+		 * Checks all existing security providers and returns the best fitting service.
+		 *
+		 * This method is different to {@link java.security.SecureRandom#getPrngAlgorithm()} which uses the first PRNG
+		 * algorithm of the first provider that has registered a SecureRandom implementation.
+		 * {@code detectBestFittingService()} instead uses a native PRNG if available, then
+		 * {@code SHA1PRNG} else {@code null} which triggers {@link java.security.SecureRandom#getPrngAlgorithm()}
+		 * when calling {@code new SecureRandom()}.
+		 *
+		 * @return a native pseudo random number generator or sha1 as fallback.
+		 */
+		private Provider.Service detectBestFittingService()
+		{
+			Provider.Service _sha1Service = null;
+
+			for (Provider provider : Security.getProviders())
+			{
+				for (Provider.Service service : provider.getServices())
+				{
+					if ("SecureRandom".equals(service.getType()))
+					{
+						String algorithm = service.getAlgorithm();
+						if ("NativePRNG".equals(algorithm))
+						{
+							return service;
+						}
+						else if ("Windows-PRNG".equals(algorithm))
+						{
+							return service;
+						}
+						else if (_sha1Service == null && "SHA1PRNG".equals(algorithm))
+						{
+							_sha1Service = service;
+						}
+					}
+				}
+			}
+
+			return _sha1Service;
+		}
+
+		/**
+		 * @return new secure random number generator instance using best fitting service
+		 */
+		Random newRandomNumberGenerator()
+		{
+			if (service != null)
+			{
+				try
+				{
+					return SecureRandom.getInstance(service.getAlgorithm(), service.getProvider());
+				}
+				catch (NoSuchAlgorithmException nsax)
+				{
+					// this shouldn't happen, because 'detectBestFittingService' has checked for existing provider and
+					// algorithms.
+				}
+			}
+
+			return new SecureRandom();
+		}
 	}
 }
