@@ -33,6 +33,7 @@ public final class TimeOfDayTest extends Assert
 	public void test()
 	{
 		assertEquals(0, TimeOfDay.MIDNIGHT.hour());
+		assertEquals(21, TimeOfDay.time(9, 30, TimeOfDay.PM).hour());
 		assertEquals(TimeOfDay.MIDNIGHT, TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()));
 
 		final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);

@@ -53,4 +53,15 @@ public final class TimeTest extends Assert
 
 		assertEquals(y2k, Time.valueOf(y2k).toString());
 	}
+
+	/**
+	 */
+	@Test
+	public void hour() throws Exception
+	{
+
+		Time time = Time.valueOf("2000.10.30-9.30PM");
+
+		assertEquals(21, time.getHour());
+	}
 }
