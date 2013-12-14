@@ -257,7 +257,7 @@ public class ClientProperties implements IClusterable
 					{
 						utc = utc.substring(1);
 					}
-					timeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") + utc);
+					timeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? '+' : '-') + utc);
 				}
 
 				String dstOffset = getUtcDSTOffset();
@@ -284,7 +284,7 @@ public class ClientProperties implements IClusterable
 						AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
 						sb.append(offsetHours > 0 ? '+' : '-');
 						sb.append(Math.abs(offsetHours));
-						sb.append(":");
+						sb.append(':');
 						if (offsetMins < 10)
 						{
 							sb.append('0');
@@ -299,7 +299,7 @@ public class ClientProperties implements IClusterable
 						{
 							dstOffset = dstOffset.substring(1);
 						}
-						dstTimeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") +
+						dstTimeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? '+' : '-') +
 							dstOffset);
 					}
 					// if the dstTimezone (1 July) has a different offset then

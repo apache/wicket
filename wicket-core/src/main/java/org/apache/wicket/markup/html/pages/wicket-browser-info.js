@@ -34,6 +34,39 @@
 		window.Wicket.BrowserInfo = {
 
 			/**
+			 * Collects the client information
+			 *
+			 * @returns {Object}
+			 */
+			collect: function() {
+				var info = {};
+				info.navigatorAppName = window.navigator.appName;
+				info.navigatorAppVersion = window.navigator.appVersion;
+				info.navigatorAppCodeName = window.navigator.appCodeName;
+				var cookieEnabled = (window.navigator.cookieEnabled);
+				if (typeof(window.navigator.cookieEnabled) === "undefined" && !cookieEnabled) {
+					document.cookie = "wickettestcookie";
+					cookieEnabled = (document.cookie.indexOf("wickettestcookie") !== -1);
+				}
+				info.navigatorCookieEnabled = cookieEnabled;
+				info.navigatorJavaEnabled =  window.navigator.javaEnabled();
+				info.navigatorLanguage = window.navigator.language ? window.navigator.language : window.navigator.userLanguage;
+				info.navigatorPlatform = window.navigator.platform;
+				info.navigatorUserAgent = window.navigator.userAgent;
+				if (window.screen) {
+					info.screenWidth = window.screen.width;
+					info.screenHeight = window.screen.height;
+					info.screenColorDepth = window.screen.colorDepth;
+				}
+				info.utcOffset = (new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
+				info.utcDSTOffset = (new Date(new Date().getFullYear(), 6, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
+				info.browserWidth =  window.innerWidth || document.body.offsetWidth;
+				info.browserHeight =  window.innerHeight || document.body.offsetHeight;
+				info.hostname =  window.location.hostname;
+				return info;
+			},
+
+			/**
 			 * Populates the form elements with the client info
 			 *
 			 * @param formMarkupId   The markup id of the special form
@@ -41,29 +74,11 @@
 			 */
 			populateFields: function(formMarkupId) {
 				var postbackForm = document.getElementById(formMarkupId);
-				postbackForm.navigatorAppName.value = window.navigator.appName;
-				postbackForm.navigatorAppVersion.value = window.navigator.appVersion;
-				postbackForm.navigatorAppCodeName.value = window.navigator.appCodeName;
-				var cookieEnabled = (window.navigator.cookieEnabled);
-				if (typeof(window.navigator.cookieEnabled) === "undefined" && !cookieEnabled) {
-					document.cookie = "wickettestcookie";
-					cookieEnabled = (document.cookie.indexOf("wickettestcookie") !== -1);
+				var info = Wicket.BrowserInfo.collect();
+				var i;
+				for (i in info) {
+					postbackForm[i].value = info[i];
 				}
-				postbackForm.navigatorCookieEnabled.value = cookieEnabled;
-				postbackForm.navigatorJavaEnabled.value =  window.navigator.javaEnabled();
-				postbackForm.navigatorLanguage.value = window.navigator.language ? window.navigator.language : window.navigator.userLanguage;
-				postbackForm.navigatorPlatform.value = window.navigator.platform;
-				postbackForm.navigatorUserAgent.value = window.navigator.userAgent;
-				if (window.screen) {
-					postbackForm.screenWidth.value = window.screen.width;
-					postbackForm.screenHeight.value = window.screen.height;
-					postbackForm.screenColorDepth.value = window.screen.colorDepth;
-				}
-				postbackForm.utcOffset.value = (new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
-				postbackForm.utcDSTOffset.value = (new Date(new Date().getFullYear(), 6, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
-				postbackForm.browserWidth.value =  window.innerWidth || document.body.offsetWidth;
-				postbackForm.browserHeight.value =  window.innerHeight || document.body.offsetHeight;
-				postbackForm.hostname.value =  window.location.hostname;
 
 				return postbackForm;
 			},

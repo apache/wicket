@@ -21,12 +21,11 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.wicket.ajax.AjaxClientInfoBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
-import org.apache.wicket.markup.html.pages.AjaxBrowserInfoForm;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
@@ -84,20 +83,20 @@ public class AjaxHelloBrowser extends WicketExamplePage
 		clientTime.setOutputMarkupPlaceholderTag(true);
 		clientTime.setVisible(false);
 
-		AjaxBrowserInfoForm form = new AjaxBrowserInfoForm("form")
+		add(new AjaxClientInfoBehavior()
 		{
 			@Override
-			protected void onAfterSubmit(AjaxRequestTarget target, WebClientInfo info)
+			protected void onClientInfo(AjaxRequestTarget target, WebClientInfo info)
 			{
-				super.onAfterSubmit(target, info);
+				super.onClientInfo(target, info);
 
 				clientInfo.setVisible(true);
 				clientTime.setVisible(true);
 				target.add(clientInfo, clientTime);
 			}
-		};
+		});
 
-		add(form, clientInfo, clientTime);
+		add(clientInfo, clientTime);
 	}
 
 	/**
