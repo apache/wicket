@@ -30,7 +30,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.settings.RequestCycleSettings;
 
 
 /**
@@ -107,7 +107,7 @@ public class AjaxHelloBrowser extends WicketExamplePage
 	 */
 	private ClientProperties getClientProperties()
 	{
-		IRequestCycleSettings requestCycleSettings = getApplication().getRequestCycleSettings();
+		RequestCycleSettings requestCycleSettings = getApplication().getRequestCycleSettings();
 		boolean gatherExtendedBrowserInfo = requestCycleSettings.getGatherExtendedBrowserInfo();
 		ClientProperties properties = null;
 		try
