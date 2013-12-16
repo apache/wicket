@@ -16,12 +16,17 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
+import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.time.Duration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -60,11 +65,34 @@ public class QueryStringWithVersionResourceCachingStrategyTest extends Assert
 	@Test
 	public void testDecorateResponse() throws Exception
 	{
-		AbstractResource.ResourceResponse response = new AbstractResource.ResourceResponse();
-		strategy.decorateResponse(response, new TestResource());
-
-		assertEquals(WebResponse.MAX_CACHE_DURATION, response.getCacheDuration());
-		assertEquals(WebResponse.CacheScope.PUBLIC, response.getCacheScope());
+		Duration defaultDuration = Duration.minutes(60);
+		
+		// setup RequestCycle
+		BaseWicketTester tester = new BaseWicketTester();
+        RequestCycle requestCycle = ThreadContext.getRequestCycle();
+		Application.get().getResourceSettings().setDefaultCacheDuration(defaultDuration);
+		
+        try {
+            // version match
+        	requestCycle.setMetaData(IResourceCachingStrategy.URL_VERSION, "9A0364B9E99BB480DD25E1F0284C8555");
+            
+			AbstractResource.ResourceResponse response = new AbstractResource.ResourceResponse();
+			strategy.decorateResponse(response, new TestResource());
+	
+			assertEquals(WebResponse.MAX_CACHE_DURATION, response.getCacheDuration());
+			assertEquals(WebResponse.CacheScope.PUBLIC, response.getCacheScope());
+			
+			// version missmatch
+			requestCycle.setMetaData(IResourceCachingStrategy.URL_VERSION, "foo");
+			 
+			response = new AbstractResource.ResourceResponse();
+			strategy.decorateResponse(response, new TestResource());
+		
+			assertEquals(defaultDuration, response.getCacheDuration());
+			assertEquals(WebResponse.CacheScope.PRIVATE, response.getCacheScope());
+        } finally {
+        	tester.destroy();
+        }
 	}
 
 	@Test
