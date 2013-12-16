@@ -813,7 +813,7 @@ public class DatePicker extends Behavior
 	 */
 	private void appendMapping(final Map<String, Object> map, final StringBuilder json)
 	{
-		json.append("{");
+		json.append('{');
 		for (Iterator<Entry<String, Object>> i = map.entrySet().iterator(); i.hasNext();)
 		{
 			Entry<String, Object> entry = i.next();
@@ -823,7 +823,7 @@ public class DatePicker extends Behavior
 			{
 				json.append(":\"");
 				json.append(Strings.toEscapedUnicode(value.toString()));
-				json.append("\"");
+				json.append('"');
 			}
 			else if (value instanceof CharSequence[])
 			{
@@ -834,34 +834,34 @@ public class DatePicker extends Behavior
 					CharSequence tmpValue = valueArray[j];
 					if (j > 0)
 					{
-						json.append(",");
+						json.append(',');
 					}
 					if (tmpValue != null)
 					{
-						json.append("\"");
+						json.append('"');
 						json.append(Strings.toEscapedUnicode(tmpValue.toString()));
-						json.append("\"");
+						json.append('"');
 					}
 				}
-				json.append("]");
+				json.append(']');
 			}
 			else if (value instanceof Map)
 			{
-				json.append(":");
+				json.append(':');
 				@SuppressWarnings("unchecked")
 				Map<String, Object> nmap = (Map<String, Object>)value;
 				appendMapping(nmap, json);
 			}
 			else
 			{
-				json.append(":");
+				json.append(':');
 				json.append(Strings.toEscapedUnicode(String.valueOf(value)));
 			}
 			if (i.hasNext())
 			{
-				json.append(",");
+				json.append(',');
 			}
 		}
-		json.append("}");
+		json.append('}');
 	}
 }
