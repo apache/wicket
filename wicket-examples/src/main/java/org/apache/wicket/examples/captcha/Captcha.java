@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.captcha;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource;
 import org.apache.wicket.markup.ComponentTag;
@@ -24,7 +26,6 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
 
 
@@ -51,9 +52,23 @@ public class Captcha extends WicketExamplePage
 			super(id);
 
 			captchaImageResource = new CaptchaImageResource(imagePass);
-			add(new Image("captchaImage", captchaImageResource));
-			add(new RequiredTextField<String>("password", new PropertyModel<String>(properties,
-				"password"))
+			final Image captchaImage = new Image("captchaImage", captchaImageResource);
+			captchaImage.setOutputMarkupId(true);
+			add(captchaImage);
+
+			AjaxLink<Void> changeCaptchaLink = new AjaxLink<Void>("changeCaptcha")
+			{
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					captchaImageResource.invalidate();
+					target.add(captchaImage);
+				}
+			};
+			add(changeCaptchaLink);
+
+			add(new RequiredTextField<String>("captchaText", new PropertyModel<String>(properties,
+				"captchaText"), String.class)
 			{
 				@Override
 				protected final void onComponentTag(final ComponentTag tag)
@@ -71,10 +86,10 @@ public class Captcha extends WicketExamplePage
 		@Override
 		public void onSubmit()
 		{
-			if (!imagePass.equals(getPassword()))
+			if (!imagePass.equals(getCaptchaText()))
 			{
-				error("Captcha password '" + getPassword() + "' is wrong.\n" +
-					"Correct password was: " + imagePass);
+				error("Captcha text '" + getCaptchaText() + "' is wrong.\n" +
+					"Correct text was: " + imagePass);
 			}
 			else
 			{
@@ -108,19 +123,17 @@ public class Captcha extends WicketExamplePage
 	private final ValueMap properties = new ValueMap();
 
 	/**
-	 * Construct.
-	 * 
-	 * @param parameters
+	 * Constructor.
 	 */
-	public Captcha(final PageParameters parameters)
+	public Captcha()
 	{
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
 		add(new CaptchaForm<>("captchaForm"));
 	}
 
-	private String getPassword()
+	private String getCaptchaText()
 	{
-		return properties.getString("password");
+		return properties.getString("captchaText");
 	}
 }
