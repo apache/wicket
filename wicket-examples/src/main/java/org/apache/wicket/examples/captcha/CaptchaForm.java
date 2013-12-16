@@ -16,40 +16,38 @@
  */
 package org.apache.wicket.examples.captcha;
 
-import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource;
 
 /**
- * Captcha example page.
- * 
- * @author Joshua Perlow
+ * A demo form that uses Wicket's default captcha image resource
  */
-public class Captcha extends WicketExamplePage
+public class CaptchaForm<T> extends AbstractCaptchaForm<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor.
+	 * Construct.
+	 *
+	 * @param id
+	 *          The component id
 	 */
-	public Captcha()
+	public CaptchaForm(String id)
 	{
-		add(new CaptchaForm<Void>("wicket"));
-
-		add(new KaptchaForm<Void>("kaptcha"));
-
-		add(new CageForm<Void>("cage"));
+		super(id);
 	}
 
-	static int randomInt(int min, int max)
+	@Override
+	protected CaptchaImageResource createCaptchImageResource()
 	{
-		return (int)(Math.random() * (max - min) + min);
-	}
-
-	static String randomString(int min, int max)
-	{
-		int num = randomInt(min, max);
-		byte b[] = new byte[num];
-		for (int i = 0; i < num; i++)
-			b[i] = (byte)randomInt('a', 'z');
-		return new String(b);
+		return new CaptchaImageResource()
+		{
+			@Override
+			protected byte[] render()
+			{
+				randomText = Captcha.randomString(6, 8);
+				getChallengeIdModel().setObject(randomText);
+				return super.render();
+			}
+		};
 	}
 }
