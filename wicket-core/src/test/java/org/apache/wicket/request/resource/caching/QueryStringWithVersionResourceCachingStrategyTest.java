@@ -16,12 +16,17 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
+import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.time.Duration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,6 +35,8 @@ import org.junit.Test;
  */
 public class QueryStringWithVersionResourceCachingStrategyTest extends Assert
 {
+	public static final String TEST_RESOURCE_VERSION = "9A0364B9E99BB480DD25E1F0284C8555";
+
 	private final String versionParameter = "vers";
 	private final IResourceVersion resourceVersion = new MessageDigestResourceVersion();
 	private final IResourceCachingStrategy strategy =
@@ -42,14 +49,14 @@ public class QueryStringWithVersionResourceCachingStrategyTest extends Assert
 		strategy.decorateUrl(resourceUrl, new TestResource());
 
 		assertEquals("some-resource.txt", resourceUrl.getFileName());
-		assertEquals("9A0364B9E99BB480DD25E1F0284C8555", resourceUrl.getParameters().get(versionParameter).toString());
+		assertEquals(TEST_RESOURCE_VERSION, resourceUrl.getParameters().get(versionParameter).toString());
 	}
 
 	@Test
 	public void testUndecorateUrl() throws Exception
 	{
 		PageParameters urlParameters = new PageParameters();
-		urlParameters.add(versionParameter, "9A0364B9E99BB480DD25E1F0284C8555");
+		urlParameters.add(versionParameter, TEST_RESOURCE_VERSION);
 		ResourceUrl resourceUrl = new ResourceUrl("some-resource.txt", urlParameters);
 		strategy.undecorateUrl(resourceUrl);
 
@@ -60,11 +67,37 @@ public class QueryStringWithVersionResourceCachingStrategyTest extends Assert
 	@Test
 	public void testDecorateResponse() throws Exception
 	{
-		AbstractResource.ResourceResponse response = new AbstractResource.ResourceResponse();
-		strategy.decorateResponse(response, new TestResource());
+		Duration defaultDuration = Duration.minutes(60);
 
-		assertEquals(WebResponse.MAX_CACHE_DURATION, response.getCacheDuration());
-		assertEquals(WebResponse.CacheScope.PUBLIC, response.getCacheScope());
+		// setup RequestCycle
+		BaseWicketTester tester = new BaseWicketTester();
+		RequestCycle requestCycle = ThreadContext.getRequestCycle();
+		Application.get().getResourceSettings().setDefaultCacheDuration(defaultDuration);
+
+		try
+		{
+			// version match
+			requestCycle.setMetaData(IResourceCachingStrategy.URL_VERSION, TEST_RESOURCE_VERSION);
+
+			AbstractResource.ResourceResponse response = new AbstractResource.ResourceResponse();
+			strategy.decorateResponse(response, new TestResource());
+
+			assertEquals(WebResponse.MAX_CACHE_DURATION, response.getCacheDuration());
+			assertEquals(WebResponse.CacheScope.PUBLIC, response.getCacheScope());
+
+			// version mismatch
+			requestCycle.setMetaData(IResourceCachingStrategy.URL_VERSION, "foo");
+
+			response = new AbstractResource.ResourceResponse();
+			strategy.decorateResponse(response, new TestResource());
+
+			assertEquals(defaultDuration, response.getCacheDuration());
+			assertEquals(WebResponse.CacheScope.PRIVATE, response.getCacheScope());
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 
 	@Test
