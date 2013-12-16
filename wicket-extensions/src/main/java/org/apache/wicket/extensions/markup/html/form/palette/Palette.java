@@ -160,7 +160,7 @@ public class Palette<T> extends GenericPanel<Collection<? extends T>>
 		final IModel<? extends Collection<? extends T>> choicesModel,
 		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
-		super(id, (IModel<Collection<? extends T>>)model);
+		super(id, (IModel<Collection<? extends T>>)(IModel<?>)model);
 
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
