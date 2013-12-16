@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+
+    <wicket:panel>
+        <form wicket:id="form">
+            <p>
+                <img wicket:id="image" />
+                <a wicket:id="changeLink">change</a>
+            </p>
+            <p>
+                Please replicate the text you see above
+                <br />
+                <input wicket:id="text" type="text" size="40" />
+                <input type="submit" value="submit" />
+            </p>
+
+            <div wicket:id="feedback"></div>
+        </form>
+    </wicket:panel>
+
+</body>
+</html>

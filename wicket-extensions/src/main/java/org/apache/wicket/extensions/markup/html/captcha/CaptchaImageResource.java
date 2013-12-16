@@ -48,14 +48,14 @@ import org.apache.wicket.util.time.Time;
  *
  * @author Joshua Perlow
  */
-public final class CaptchaImageResource extends DynamicImageResource
+public class CaptchaImageResource extends DynamicImageResource
 {
 	/**
 	 * This class is used to encapsulate all the filters that a character will get when rendered.
 	 * The changes are kept so that the size of the shapes can be properly recorded and reproduced
 	 * later, since it dynamically generates the size of the captcha image. The reason I did it this
 	 * way is because none of the JFC graphics classes are serializable, so they cannot be instance
-	 * variables here. If anyone knows a better way to do this, please let me know.
+	 * variables here.
 	 */
 	private static final class CharAttributes implements IClusterable
 	{
@@ -136,7 +136,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	private final int fontStyle;
 
 	/**
-	 * Transient image data so that image only needs to be generated once per VM
+	 * Transient image data so that image only needs to be re-generated after de-serialization
 	 */
 	private transient SoftReference<byte[]> imageData;
 
@@ -269,7 +269,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 *
 	 * @return The image data
 	 */
-	private byte[] render()
+	protected byte[] render()
 	{
 		int width = margin * 2;
 		int height = margin * 2;

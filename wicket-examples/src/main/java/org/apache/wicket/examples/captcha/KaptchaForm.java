@@ -16,41 +16,48 @@
  */
 package org.apache.wicket.examples.captcha;
 
-import org.apache.wicket.examples.WicketExamplePage;
+import java.awt.image.BufferedImage;
+import java.util.Properties;
+
+import org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource;
+
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.util.Config;
 
 /**
- * Captcha example page.
- * 
- * @author Joshua Perlow
+ * A demo form that shows how to use <a href="https://github.com/axet/kaptcha">Kaptcha</a>
+ * library
  */
-public class Captcha extends WicketExamplePage
+public class KaptchaForm<T> extends AbstractCaptchaForm<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor.
+	 *
+	 * @param id
+	 *          The component id
 	 */
-	public Captcha()
+	public KaptchaForm(String id)
 	{
-		add(new CaptchaForm<Void>("wicket"));
-
-		add(new KaptchaForm<Void>("kaptcha"));
-
-		add(new CageForm<Void>("cage"));
+		super(id);
 	}
 
-	static int randomInt(int min, int max)
+	@Override
+	protected CaptchaImageResource createCaptchImageResource()
 	{
-		return (int)(Math.random() * (max - min) + min);
+		return new CaptchaImageResource()
+		{
+			@Override
+			protected byte[] render()
+			{
+				DefaultKaptcha kaptcha = new DefaultKaptcha();
+				Properties properties = new Properties();
+				kaptcha.setConfig(new Config(properties));
+				randomText = Captcha.randomString(6, 8);
+				BufferedImage image = kaptcha.createImage(randomText);
+				return toImageData(image);
+			}
+		};
 	}
-
-	static String randomString(int min, int max)
-	{
-		int num = randomInt(min, max);
-		byte b[] = new byte[num];
-		for (int i = 0; i < num; i++)
-			b[i] = (byte)randomInt('a', 'z');
-		return new String(b);
-	}
-
 }
