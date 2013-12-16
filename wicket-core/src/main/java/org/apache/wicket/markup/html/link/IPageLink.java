@@ -35,7 +35,9 @@ import org.apache.wicket.util.io.IClusterable;
  * 
  * @see Link#linksTo(Page)
  * @author Jonathan Locke
+ * @deprecated Use {@link org.apache.wicket.core.request.handler.PageProvider}
  */
+@Deprecated
 public interface IPageLink extends IClusterable
 {
 	/**
