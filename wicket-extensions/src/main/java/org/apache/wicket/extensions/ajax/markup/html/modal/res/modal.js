@@ -1168,7 +1168,7 @@
 	 */
 	Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idContent, idTop, idTopLeft, idTopRight, idLeft, idRight, idBottomLeft, idBottomRight, idBottom, idCaptionText, isFrame) {
 		var s =
-				"<div class=\"wicket-modal\" id=\""+idWindow+"\" role=\"dialog\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='background-color:transparent;padding:0px;margin:0px;border-width:0px;position:static'>"+
+				"<div class=\"wicket-modal\" id=\""+idWindow+"\" role=\"dialog\" aria-labelledBy=\""+idCaptionText+"\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='background-color:transparent;padding:0px;margin:0px;border-width:0px;position:static'>"+
 				"<div id=\""+idClassElement+"\">"+
 
 					"<div class=\"w_top_1\">"+
