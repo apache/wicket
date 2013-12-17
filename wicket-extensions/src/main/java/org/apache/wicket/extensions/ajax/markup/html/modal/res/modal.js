@@ -731,10 +731,10 @@
 				}
 			}, this);
 
-			// preserve old beforeunload handler
-			this.old_onbeforeunload = window.onbeforeunload;
-
 			if (this.settings.unloadConfirmation) {
+				// preserve old beforeunload handler
+				this.old_onbeforeunload = window.onbeforeunload;
+
 				// new beforeunload handler - ask user before reloading window
 				window.onbeforeunload = function() {
 					return "Reloading this page will cause the modal window to disappear.";
@@ -828,9 +828,11 @@
 			window.onunload = this.old_onunload;
 			this.old_onunload = null;
 
-			// restore old beforeunload handler
-			window.onbeforeunload = this.old_onbeforeunload;
-			this.old_onbeforeunload = null;
+			if (this.old_onbeforeunload) {
+				// restore old beforeunload handler
+				window.onbeforeunload = this.old_onbeforeunload;
+				this.old_onbeforeunload = null;
+			}
 
 			// hids and cleanup the mask
 			this.destroyMask();
