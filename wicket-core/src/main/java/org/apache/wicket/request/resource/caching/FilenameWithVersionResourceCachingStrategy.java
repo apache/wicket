@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import java.util.regex.Pattern;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
@@ -110,12 +112,6 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		// get undecorated filename
 		final String filename = url.getFileName();
 
-		if (filename.contains(getVersionPrefix()))
-		{
-			LOG.error("A resource with name '{}' contains the version prefix '{}' so the un-decoration will not work." +
-					" Either use a different version prefix or rename this resource.", filename, getVersionPrefix());
-		}
-
 		// check if resource name has extension
 		final int extensionAt = filename.lastIndexOf('.');
 
@@ -135,6 +131,14 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		{
 			versionedFilename.append(filename.substring(0, extensionAt));
 		}
+		
+		int pos = versionedFilename.indexOf(getVersionPrefix());
+		if (pos != -1 && isVersion(versionedFilename.substring(pos + versionPrefix.length())))
+		{
+			LOG.error("A resource with name '{}' contains the version prefix '{}' so the un-decoration will not work." +
+					" Either use a different version prefix or rename this resource.", filename, getVersionPrefix());
+		}
+		
 		// add version suffix
 		versionedFilename.append(versionPrefix);
 		
@@ -168,7 +172,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		pos = fullname.lastIndexOf(versionPrefix);
 
 		// remove version string if it exists
-		if (pos != -1)
+		if (pos != -1 && isVersion(fullname.substring(pos + versionPrefix.length())))
 		{
 			// get filename before version string
 			final String basename = fullname.substring(0, pos);
@@ -186,6 +190,11 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 				requestCycle.setMetaData(URL_VERSION, urlVersion);
 			}
 		}
+	}
+
+	private boolean isVersion(String substring) {
+		Pattern versionPattern = resourceVersion.getVersionPattern();
+		return versionPattern == null || versionPattern.matcher(substring).matches();
 	}
 
 	/**

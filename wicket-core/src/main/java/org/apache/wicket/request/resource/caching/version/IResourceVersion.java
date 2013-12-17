@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import java.util.regex.Pattern;
+
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 
 /**
@@ -41,4 +43,12 @@ public interface IResourceVersion
 	 *         if version string could not be calculated
 	 */
 	String getVersion(IStaticCacheableResource resource);
+	
+	/**
+	 * a pattern that matches returned versions
+	 * 
+	 * @return a pattern or <code>null</code> if no pattern
+	 *         is available
+	 */
+	Pattern getVersionPattern();
 }
