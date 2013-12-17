@@ -46,7 +46,7 @@ public class DateTextFieldTest extends WicketTestCase
 	@Test
 	public void validInputType()
 	{
-		String[] validInputTypes = {"date", "datetime", "datetime-local", "month", "time", "week"};
+		String[] validInputTypes = { "text", "date", "datetime", "datetime-local", "month", "time", "week"};
 
 		for (String validType : validInputTypes)
 		{
@@ -65,7 +65,7 @@ public class DateTextFieldTest extends WicketTestCase
 
 		expectedException.expect(MarkupException.class);
 		expectedException.expectMessage("Component [text] (path = [0:form:text]) must be applied to a tag" +
-				" with [type] attribute matching any of [date, datetime, datetime-local, month, time, week], " +
+				" with [type] attribute matching any of [text, date, datetime, datetime-local, month, time, week], " +
 				"not [unsupportedType]");
 		tester.startPage(testPage);
 	}
