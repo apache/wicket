@@ -148,13 +148,13 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onSuspend(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
 			String transport = event.getResource()
 				.getRequest()
 				.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
 			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("Suspending the %s response from ip %s:%s", transport == null
+			log.debug(String.format("Suspending the %s response from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
 	}
@@ -162,11 +162,11 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onResume(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
 			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
 			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("Resuming the %s response from ip %s:%s", transport == null
+			log.debug(String.format("Resuming the %s response from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
 	}
@@ -174,11 +174,11 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onDisconnect(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
 			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
 			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("%s connection dropped from ip %s:%s", transport == null
+			log.debug(String.format("%s connection dropped from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
 		// It is possible that the application has already been destroyed, in which case

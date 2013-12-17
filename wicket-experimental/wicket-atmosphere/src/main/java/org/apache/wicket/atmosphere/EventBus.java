@@ -213,8 +213,12 @@ public class EventBus implements UnboundListener
 		}
 		trackedPages.put(trackingId, pageKey);
 		fireRegistration(trackingId, page);
-		log.info("registered page {} for session {}",
-			new Object[] { pageKey.getPageId(), pageKey.getSessionId() });
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("registered page {} for session {}",
+				pageKey.getPageId(), pageKey.getSessionId());
+		}
 	}
 
 	/**
@@ -225,17 +229,17 @@ public class EventBus implements UnboundListener
 	 */
 	public synchronized void register(Page page, EventSubscription subscription)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
-			log.info(
-				"registering {} for page {} for session {}: {}{}",
-				new Object[] {
-						subscription.getBehaviorIndex() == null ? "component" : "behavior",
-						page.getPageId(),
-						Session.get().getId(),
-						subscription.getComponentPath(),
-						subscription.getBehaviorIndex() == null ? "" : ":" +
-							subscription.getBehaviorIndex() });
+			log.debug(
+					"registering {} for page {} for session {}: {}{}",
+					new Object[]{
+							subscription.getBehaviorIndex() == null ? "component" : "behavior",
+							page.getPageId(),
+							Session.get().getId(),
+							subscription.getComponentPath(),
+							subscription.getBehaviorIndex() == null ? "" : ":" +
+									subscription.getBehaviorIndex()});
 		}
 		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
 		if (!subscriptions.containsEntry(pageKey, subscription))
@@ -255,10 +259,10 @@ public class EventBus implements UnboundListener
 		if (pageKey != null)
 		{
 			fireUnregistration(trackingId);
-			if (log.isInfoEnabled())
+			if (log.isDebugEnabled())
 			{
-				log.info("unregistering page {} for session {}", new Object[] {
-						pageKey.getPageId(), pageKey.getSessionId() });
+				log.debug("unregistering page {} for session {}",
+						pageKey.getPageId(), pageKey.getSessionId());
 			}
 		}
 	}
@@ -372,7 +376,7 @@ public class EventBus implements UnboundListener
 	@Override
 	public synchronized void sessionUnbound(String sessionId)
 	{
-		log.info("Session unbound {}", sessionId);
+		log.debug("Session unbound {}", sessionId);
 		Iterator<Entry<String, PageKey>> pageIt = trackedPages.entrySet().iterator();
 		while (pageIt.hasNext())
 		{
