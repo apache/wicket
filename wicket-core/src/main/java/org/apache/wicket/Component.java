@@ -3856,7 +3856,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Called just before a component is rendered.
+	 * Called just before a component is rendered only if the component is visible.
 	 * <p>
 	 * <strong>NOTE</strong>: If you override this, you *must* call super.onBeforeRender() within
 	 * your implementation.
@@ -3864,6 +3864,11 @@ public abstract class Component
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
 	 * children it is strongly recommended that super call is made at the end of the override.
 	 * </p>
+	 *
+	 * Changes to the component tree can be made only <strong>before</strong> calling
+	 * super.onBeforeRender().
+	 *
+	 * @see org.apache.wicket.MarkupContainer#addOrReplace(Component...) 
 	 */
 	protected void onBeforeRender()
 	{
