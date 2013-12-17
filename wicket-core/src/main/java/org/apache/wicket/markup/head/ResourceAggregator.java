@@ -31,7 +31,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
+import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -408,10 +410,106 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		{
 			return item;
 		}
+
+		bundle = preserveDetails(item, bundle);
+
 		if (item instanceof IHeaderItemWrapper)
 		{
 			bundle = ((IHeaderItemWrapper)item).wrap(bundle);
 		}
 		return bundle;
+	}
+
+	/**
+	 * Preserves the resource reference details for resource replacements.
+	 *
+	 * For example if CSS resource with media <em>screen</em> is replaced with
+	 * {@link org.apache.wicket.protocol.http.WebApplication#addResourceReplacement(org.apache.wicket.request.resource.CssResourceReference, org.apache.wicket.request.resource.ResourceReference)} then the replacement will
+	 * will inherit the media attribute
+	 *
+	 * @param item   The replaced header item
+	 * @param bundle The bundle that represents the replacement
+	 * @return the bundle with the preserved details
+	 */
+	protected HeaderItem preserveDetails(HeaderItem item, HeaderItem bundle)
+	{
+		HeaderItem resultBundle;
+		if (item instanceof CssReferenceHeaderItem && bundle instanceof CssReferenceHeaderItem)
+		{
+			CssReferenceHeaderItem originalHeaderItem = (CssReferenceHeaderItem) item;
+			resultBundle = preserveCssDetails(originalHeaderItem, (CssReferenceHeaderItem) bundle);
+		}
+		else if (item instanceof JavaScriptReferenceHeaderItem && bundle instanceof JavaScriptReferenceHeaderItem)
+		{
+			JavaScriptReferenceHeaderItem originalHeaderItem = (JavaScriptReferenceHeaderItem) item;
+			resultBundle = preserveJavaScriptDetails(originalHeaderItem, (JavaScriptReferenceHeaderItem) bundle);
+		}
+		else
+		{
+			resultBundle = bundle;
+		}
+
+		return resultBundle;
+	}
+
+	/**
+	 * Preserves the resource reference details for JavaScript resource replacements.
+	 *
+	 * For example if CSS resource with media <em>screen</em> is replaced with
+	 * {@link org.apache.wicket.protocol.http.WebApplication#addResourceReplacement(org.apache.wicket.request.resource.JavaScriptResourceReference, org.apache.wicket.request.resource.ResourceReference)} then the replacement will
+	 * will inherit the media attribute
+	 *
+	 * @param item   The replaced header item
+	 * @param bundle The bundle that represents the replacement
+	 * @return the bundle with the preserved details
+	 */
+	private HeaderItem preserveJavaScriptDetails(JavaScriptReferenceHeaderItem item, JavaScriptReferenceHeaderItem bundle)
+	{
+		HeaderItem resultBundle;
+		ResourceReference bundleReference = bundle.getReference();
+		if (bundleReference instanceof ReplacementResourceBundleReference)
+		{
+			resultBundle = JavaScriptHeaderItem.forReference(bundleReference,
+					item.getPageParameters(),
+					item.getId(),
+					item.isDefer(),
+					item.getCharset(),
+					item.getCondition()
+			);
+		}
+		else
+		{
+			resultBundle = bundle;
+		}
+		return resultBundle;
+	}
+
+	/**
+	 * Preserves the resource reference details for CSS resource replacements.
+	 *
+	 * For example if CSS resource with media <em>screen</em> is replaced with
+	 * {@link org.apache.wicket.protocol.http.WebApplication#addResourceReplacement(org.apache.wicket.request.resource.CssResourceReference, org.apache.wicket.request.resource.ResourceReference)} then the replacement will
+	 * will inherit the media attribute
+	 *
+	 * @param item   The replaced header item
+	 * @param bundle The bundle that represents the replacement
+	 * @return the bundle with the preserved details
+	 */
+	protected HeaderItem preserveCssDetails(CssReferenceHeaderItem item, CssReferenceHeaderItem bundle)
+	{
+		HeaderItem resultBundle;
+		ResourceReference bundleReference = bundle.getReference();
+		if (bundleReference instanceof ReplacementResourceBundleReference)
+		{
+			resultBundle = CssHeaderItem.forReference(bundleReference,
+					item.getPageParameters(),
+					item.getMedia(),
+					item.getCondition());
+		}
+		else
+		{
+			resultBundle = bundle;
+		}
+		return resultBundle;
 	}
 }

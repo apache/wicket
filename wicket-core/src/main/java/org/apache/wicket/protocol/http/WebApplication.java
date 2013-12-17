@@ -66,6 +66,7 @@ import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
@@ -407,7 +408,7 @@ public abstract class WebApplication extends Application
 	public final void addResourceReplacement(JavaScriptResourceReference base,
 		ResourceReference replacement)
 	{
-		ResourceBundleReference bundle = new ResourceBundleReference(replacement);
+		ReplacementResourceBundleReference bundle = new ReplacementResourceBundleReference(replacement);
 		bundle.addProvidedResources(JavaScriptHeaderItem.forReference(base));
 		getResourceBundles().addBundle(JavaScriptHeaderItem.forReference(bundle));
 	}
@@ -428,7 +429,7 @@ public abstract class WebApplication extends Application
 	public final void addResourceReplacement(CssResourceReference base,
 		ResourceReference replacement)
 	{
-		ResourceBundleReference bundle = new ResourceBundleReference(replacement);
+		ReplacementResourceBundleReference bundle = new ReplacementResourceBundleReference(replacement);
 		bundle.addProvidedResources(CssHeaderItem.forReference(base));
 		getResourceBundles().addBundle(CssHeaderItem.forReference(bundle));
 	}
