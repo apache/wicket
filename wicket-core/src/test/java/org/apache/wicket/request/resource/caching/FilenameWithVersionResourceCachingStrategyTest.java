@@ -49,6 +49,12 @@ public class FilenameWithVersionResourceCachingStrategyTest extends Assert
 		strategy.decorateUrl(resourceUrl, new TestResource());
 
 		assertEquals("some-resource--vers--"+TEST_RESOURCE_VERSION+".txt", resourceUrl.getFileName());
+
+		// don't issue an error
+		resourceUrl = new ResourceUrl("some-resource--vers--with-prefix.txt", new PageParameters());
+		strategy.decorateUrl(resourceUrl, new TestResource());
+
+		assertEquals("some-resource--vers--with-prefix--vers--"+TEST_RESOURCE_VERSION+".txt", resourceUrl.getFileName());
 	}
 
 	@Test
@@ -58,6 +64,18 @@ public class FilenameWithVersionResourceCachingStrategyTest extends Assert
 		strategy.undecorateUrl(resourceUrl);
 
 		assertEquals("some-resource.txt", resourceUrl.getFileName());
+
+		// test URL with versiton containing prefix in original
+		resourceUrl = new ResourceUrl("some-resource--vers--with-prefix--vers--"+TEST_RESOURCE_VERSION+".txt", new PageParameters());
+		strategy.undecorateUrl(resourceUrl);
+
+		assertEquals("some-resource--vers--with-prefix.txt", resourceUrl.getFileName());
+
+		// test URL without version containing prefix
+		resourceUrl = new ResourceUrl("some-resource--vers--without-version.txt", new PageParameters());
+		strategy.undecorateUrl(resourceUrl);
+
+		assertEquals("some-resource--vers--without-version.txt", resourceUrl.getFileName());
 	}
 
 	@Test

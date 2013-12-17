@@ -20,6 +20,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
@@ -34,9 +35,11 @@ import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
+import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.request.resource.caching.version.StaticResourceVersion;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
@@ -501,7 +504,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		};
 
 		IResourceCachingStrategy strategy = new FilenameWithVersionResourceCachingStrategy(
-			"-version-", new StaticResourceVersion("foobar"));
+			"-version-", new AlphaDigitResourceVersion("foobar"));
 
 		INamedParameters params = new PageParameters();
 		ResourceUrl url = new ResourceUrl("test.js", params);
@@ -547,6 +550,39 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		url = new ResourceUrl("test.txt", params);
 		strategy.decorateUrl(url, resource);
 		assertEquals("test-version-1.0.4-beta.txt", url.getFileName());
+	}
+
+	/**
+	 * A resource version that allows any of: alpha, digit, dash and dot charcters
+	 */
+	private static class AlphaDigitResourceVersion implements IResourceVersion
+	{
+		private static final Pattern pattern = Pattern.compile("[0-9a-z-\\.]*");
+
+		private final String version;
+
+		/**
+		 * create static version provider
+		 *
+		 * @param version
+		 *             static version string to deliver for all queries resources
+		 */
+		public AlphaDigitResourceVersion(String version)
+		{
+			this.version = Args.notNull(version, "version");
+		}
+
+		@Override
+		public String getVersion(IStaticCacheableResource resource)
+		{
+			return version;
+		}
+
+		@Override
+		public Pattern getVersionPattern()
+		{
+			return pattern;
+		}
 	}
 
 	/**

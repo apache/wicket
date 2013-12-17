@@ -98,7 +98,7 @@ public class ContextRelativeResourceCachingTest extends WicketTestCase
 		ContextRelativeResource resource = new ContextRelativeResource("/style.css");
 		init(resource, "/test/resource");
 
-		Request request = createRequest("test/resource-version-4711?bla=123");
+		Request request = createRequest("test/resource-version-123?bla=4567");
 		final IRequestHandler handler = tester.getApplication().getRootRequestMapper()
 			.mapRequest(request);
 		assertThat(handler, instanceOf(ResourceReferenceRequestHandler.class));

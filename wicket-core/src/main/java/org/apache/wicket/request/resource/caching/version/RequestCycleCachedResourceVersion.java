@@ -18,6 +18,7 @@ package org.apache.wicket.request.resource.caching.version;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ThreadContext;
@@ -103,5 +104,11 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 		}
 		
 		return version;
+	}
+
+	@Override
+	public Pattern getVersionPattern()
+	{
+		return delegate.getVersionPattern();
 	}
 }
