@@ -246,7 +246,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		{
 			if (StringResourceModel.this.component != null)
 			{
-				// ignore assignment if component was specified explicitely
+				// ignore assignment if component was specified explicitly
 				return StringResourceModel.this.getObject();
 			}
 			else
