@@ -41,6 +41,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.JQueryPluginResourceReference;
 
 
 /**
@@ -96,6 +97,9 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	/** if reordering of selected items is allowed in */
 	private final boolean allowOrder;
 
+	/** if add all and remove all are allowed */
+	private final boolean allowMoveAll;
+
 	/**
 	 * recorder component used to track user's selection. it is updated by javascript on changes.
 	 */
@@ -114,7 +118,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
+	private static final ResourceReference JAVASCRIPT = new JQueryPluginResourceReference(
 		Palette.class, "palette.js");
 
 	/** reference to the palette's css resource */
@@ -160,12 +164,38 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		final IModel<? extends Collection<? extends T>> choicesModel,
 		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
+		this(id, model, choicesModel, choiceRenderer, rows, allowOrder, false);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param id
+	 *            Component id
+	 * @param choicesModel
+	 *            Model representing collection of all available choices
+	 * @param choiceRenderer
+	 *            Render used to render choices. This must use unique IDs for the objects, not the
+	 *            index.
+	 * @param rows
+	 *            Number of choices to be visible on the screen with out scrolling
+	 * @param allowOrder
+	 *            Allow user to move selections up and down
+	 * @param allowMoveAll
+	 *            Allow user to add or remove all items at once
+	 */
+	public Palette(final String id, final IModel<? extends Collection<T>> model,
+	               final IModel<? extends Collection<? extends T>> choicesModel,
+	               final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder,
+	               boolean allowMoveAll)
+	{
 		super(id, (IModel<Collection<T>>)model);
 
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
 		this.rows = rows;
 		this.allowOrder = allowOrder;
+		this.allowMoveAll = allowMoveAll;
 	}
 
 	@Override
@@ -199,6 +229,8 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		add(newRemoveComponent());
 		add(newUpComponent().setVisible(allowOrder));
 		add(newDownComponent().setVisible(allowOrder));
+		add(newAddAllComponent().setVisible(allowMoveAll));
+		add(newRemoveAllComponent().setVisible(allowMoveAll));
 
 		add(newAvailableHeader(AVAILABLE_HEADER_ID));
 		add(newSelectedHeader(SELECTED_HEADER_ID));
@@ -382,6 +414,45 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 			protected boolean localizeDisplayValues()
 			{
 				return Palette.this.localizeDisplayValues();
+			}
+		};
+	}
+
+	/**
+	 * factory method for the addAll component
+	 *
+	 * @return addAll component
+	 */
+	protected Component newAddAllComponent()
+	{
+		return new PaletteButton("addAllButton")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.getAttributes().put("onclick", Palette.this.getAddAllOnClickJS());
+			}
+		};
+	}
+
+
+	/**
+	 * factory method for the removeAll component
+	 *
+	 * @return removeAll component
+	 */
+	protected Component newRemoveAllComponent()
+	{
+		return new PaletteButton("removeAllButton")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.getAttributes().put("onclick", Palette.this.getRemoveAllOnClickJS());
 			}
 		};
 	}
@@ -587,6 +658,22 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	public String getDownOnClickJS()
 	{
 		return buildJSCall("Wicket.Palette.moveDown");
+	}
+
+	/**
+	 * @return addAll action javascript handler
+	 */
+	public String getAddAllOnClickJS()
+	{
+		return buildJSCall("Wicket.Palette.addAll");
+	}
+
+	/**
+	 * @return removeAll action javascript handler
+	 */
+	public String getRemoveAllOnClickJS()
+	{
+		return buildJSCall("Wicket.Palette.removeAll");
 	}
 
 	@Override

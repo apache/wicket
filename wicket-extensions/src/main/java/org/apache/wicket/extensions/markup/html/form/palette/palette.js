@@ -132,4 +132,36 @@
 			box.options[i].selected=false;
 		}
 	};
+
+	Wicket.Palette.addAll = function(choicesId, selectionId, recorderId) {
+		var palette = Wicket.Palette;
+		var choices = palette.$(choicesId);
+		var selection = palette.$(selectionId);
+
+		if (palette.moveAllHelper(choices, selection)) {
+			var recorder = palette.$(recorderId);
+			palette.updateRecorder(selection, recorder);
+		}
+	}
+
+	Wicket.Palette.removeAll = function(choicesId, selectionId, recorderId) {
+		var palette = Wicket.Palette;
+		var choices = palette.$(choicesId);
+		var selection = palette.$(selectionId);
+
+		if (palette.moveAllHelper(selection, choices)) {
+			var recorder = palette.$(recorderId);
+			palette.updateRecorder(selection, recorder);
+		}
+	}
+
+	Wicket.Palette.moveAllHelper = function(source, dest) {
+		var dirty = false;
+		for (var i = 0;i < source.options.length; i++) {
+			dest.appendChild(source.options[i]);
+			i--;
+			dirty = true;
+		}
+		return dirty;
+	}
 })();
