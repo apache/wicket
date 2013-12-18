@@ -55,7 +55,7 @@ public class WebPageRenderer extends PageRenderer
 		super(renderPageRequestHandler);
 	}
 
-	private boolean isAjax(RequestCycle requestCycle)
+	protected boolean isAjax(RequestCycle requestCycle)
 	{
 		boolean isAjax = false;
 
@@ -190,11 +190,6 @@ public class WebPageRenderer extends PageRenderer
 		// try to get an already rendered buffered response for current URL
 		BufferedWebResponse bufferedResponse = getAndRemoveBufferedResponse(currentUrl);
 
-		boolean isAjax = isAjax(requestCycle);
-
-		boolean shouldPreserveClientUrl = ((WebRequest)requestCycle.getRequest())
-			.shouldPreserveClientUrl();
-
 		if (bufferedResponse != null)
 		{
 			logger
@@ -204,19 +199,7 @@ public class WebPageRenderer extends PageRenderer
 		}
 		else
 		{
-			RedirectPolicy redirectPolicy = getRedirectPolicy();
-
-			boolean onePassRender = isOnePassRender();
-			boolean isRedirectToRender = isRedirectToRender();
-			boolean redirectToBuffer = isRedirectToBuffer();
-
-			boolean targetEqualsCurrentUrl = targetUrl.equals(currentUrl);
-			boolean isNewPageInstance = getPageProvider().isNewPageInstance();
-			boolean isPageStateless = getPage().isPageStateless();
-
-			if (shouldRenderPageAndWriteResponse(isAjax, onePassRender, isRedirectToRender,
-				redirectPolicy, shouldPreserveClientUrl, targetEqualsCurrentUrl, isNewPageInstance,
-				isPageStateless)) //
+			if (shouldRenderPageAndWriteResponse(requestCycle, currentUrl, targetUrl)) //
 			{
 				BufferedWebResponse response = renderPage(currentUrl, requestCycle);
 				if (response != null)
@@ -226,9 +209,7 @@ public class WebPageRenderer extends PageRenderer
 			}
 			else
 			{
-				boolean sessionTemporary = isSessionTemporary();
-				if (shouldRedirectToTargetUrl(isAjax, redirectPolicy, isRedirectToRender,
-					targetEqualsCurrentUrl, isNewPageInstance, isPageStateless, sessionTemporary))
+				if (shouldRedirectToTargetUrl(requestCycle, currentUrl, targetUrl))
 				{
 					redirectTo(targetUrl, requestCycle);
 
@@ -242,15 +223,15 @@ public class WebPageRenderer extends PageRenderer
 				}
 				else
 				{
-					if (redirectToBuffer == false && logger.isDebugEnabled())
+					if (isRedirectToBuffer() == false && logger.isDebugEnabled())
 					{
 						String details = String
 							.format(
 								"redirect strategy: '%s', isAjax: '%s', redirect policy: '%s', "
 									+ "current url: '%s', target url: '%s', is new: '%s', is stateless: '%s', is temporary: '%s'",
 								Application.get().getRequestCycleSettings().getRenderStrategy(),
-								isAjax, redirectPolicy, currentUrl, targetUrl, isNewPageInstance,
-								isPageStateless, sessionTemporary);
+								isAjax(requestCycle), getRedirectPolicy(), currentUrl, targetUrl,
+								isNewPageInstance(), isPageStateless(), isSessionTemporary());
 						logger
 							.debug("Falling back to Redirect_To_Buffer render strategy because none of the conditions "
 								+ "matched. Details: " + details);
@@ -290,7 +271,7 @@ public class WebPageRenderer extends PageRenderer
 						response.writeTo((WebResponse)requestCycle.getResponse());
 					}
 					// if page is still stateless after render
-					else if (isPageStateless && !enableRedirectForStatelessPage())
+					else if (isPageStateless() && !enableRedirectForStatelessPage())
 					{
 						// we don't want the redirect to happen for stateless page
 						// example:
@@ -313,17 +294,30 @@ public class WebPageRenderer extends PageRenderer
 		}
 	}
 
+	protected boolean isPageStateless()
+	{
+		return getPage().isPageStateless();
+	}
+
+	protected boolean isNewPageInstance()
+	{
+		return getPageProvider().isNewPageInstance();
+	}
+
+	protected boolean shouldPreserveClientUrl(RequestCycle requestCycle)
+	{
+		return ((WebRequest)requestCycle.getRequest()).shouldPreserveClientUrl();
+	}
+
 	/**
 	 * Should the client be redirected to target url.
 	 */
-	protected boolean shouldRedirectToTargetUrl(boolean ajax, RedirectPolicy redirectPolicy,
-		boolean redirectToRender, boolean targetEqualsCurrentUrl, boolean newPageInstance,
-		boolean pageStateless, boolean sessionTemporary)
+	protected boolean shouldRedirectToTargetUrl(RequestCycle cycle, Url currentUrl, Url targetUrl)
 	{
-		return alwaysRedirect(redirectPolicy) //
-			|| redirectToRender //
-			|| (ajax && targetEqualsCurrentUrl) || (!targetEqualsCurrentUrl //
-			&& (newPageInstance || (sessionTemporary && pageStateless)));
+		return alwaysRedirect(getRedirectPolicy()) //
+			|| isRedirectToRender() //
+			|| (isAjax(cycle) && targetUrl.equals(currentUrl)) //
+			|| (!targetUrl.equals(currentUrl) && (isNewPageInstance() || (isSessionTemporary() && isPageStateless())));
 		// if target URL is different and session is temporary and page is stateless
 		// this is special case when page is stateless but there is no session so we can't
 		// render it to buffer
@@ -335,14 +329,14 @@ public class WebPageRenderer extends PageRenderer
 	/**
 	 * Should the page be rendered immediately.
 	 */
-	protected boolean shouldRenderPageAndWriteResponse(boolean ajax, boolean onePassRender,
-		boolean redirectToRender, RedirectPolicy redirectPolicy, boolean shouldPreserveClientUrl,
-		boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless)
+	protected boolean shouldRenderPageAndWriteResponse(RequestCycle cycle, Url currentUrl,
+		Url targetUrl)
 	{
-		return neverRedirect(redirectPolicy)
-			|| (!ajax && ((onePassRender && notForcedRedirect(redirectPolicy)) || (targetEqualsCurrentUrl && notNewAndNotStatelessPage(
-				newPageInstance, pageStateless)))) || (targetEqualsCurrentUrl && redirectToRender)
-			|| shouldPreserveClientUrl;
+		return neverRedirect(getRedirectPolicy())
+			|| (!isAjax(cycle) && ((isOnePassRender() && notForcedRedirect(getRedirectPolicy())) || (targetUrl
+				.equals(currentUrl) && notNewAndNotStatelessPage(isNewPageInstance(),
+				isPageStateless())))) || (targetUrl.equals(currentUrl) && isRedirectToRender())
+			|| shouldPreserveClientUrl(cycle);
 	}
 
 	private static boolean notNewAndNotStatelessPage(boolean newPageInstance, boolean pageStateless)

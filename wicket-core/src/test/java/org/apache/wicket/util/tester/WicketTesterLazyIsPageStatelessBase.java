@@ -33,7 +33,7 @@ import org.junit.Test;
 /**
  * https://issues.apache.org/jira/browse/WICKET-5426
  */
-public class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
+public abstract class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
 {
 	/**
 	 * The page must be stateless because the stateful component
@@ -46,9 +46,8 @@ public class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
 	{
 		tester.startPage(MyPage.class);
 
-		// the checks below must be reversed when the bug is fixed
-		tester.assertLabel("isPageStateless", "false"/*"true"*/);
-		assertFalse/*True*/(tester.getLastRenderedPage().isPageStateless());
+		tester.assertLabel("isPageStateless", "true");
+		assertTrue(tester.getLastRenderedPage().isPageStateless());
 	}
 
 	public static class MyPage extends WebPage implements IMarkupResourceStreamProvider

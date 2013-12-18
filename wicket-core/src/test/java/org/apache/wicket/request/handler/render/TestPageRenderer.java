@@ -17,6 +17,7 @@
 package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -26,9 +27,24 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 class TestPageRenderer extends WebPageRenderer
 {
-	public TestPageRenderer(RenderPageRequestHandler renderPageRequestHandler)
+	public RedirectPolicy redirectPolicy;
+	public boolean ajax;
+	public boolean onePassRender;
+	public boolean redirectToRender;
+	public boolean shouldPreserveClientUrl;
+	public boolean newPageInstance;
+	public boolean pageStateless;
+	public boolean redirectToBuffer;
+	public boolean sessionTemporary;
+
+	public TestPageRenderer()
 	{
-		super(renderPageRequestHandler);
+		this(null);
+	}
+
+	public TestPageRenderer(RenderPageRequestHandler handler)
+	{
+		super(handler);
 	}
 
 	@Override
@@ -45,41 +61,55 @@ class TestPageRenderer extends WebPageRenderer
 		return webResponse;
 	}
 
-	// makes it public
 	@Override
-	public boolean shouldRedirectToTargetUrl(boolean ajax, RenderPageRequestHandler.RedirectPolicy redirectPolicy, boolean redirectToRender, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless, boolean sessionTemporary)
+	protected RedirectPolicy getRedirectPolicy()
 	{
-		return super.shouldRedirectToTargetUrl(ajax, redirectPolicy, redirectToRender, targetEqualsCurrentUrl, newPageInstance, pageStateless, sessionTemporary);
+		return redirectPolicy;
 	}
 
-	// makes it public
 	@Override
-	public boolean shouldRenderPageAndWriteResponse(boolean ajax, boolean onePassRender, boolean redirectToRender, RenderPageRequestHandler.RedirectPolicy redirectPolicy, boolean shouldPreserveClientUrl, boolean targetEqualsCurrentUrl, boolean newPageInstance, boolean pageStateless)
+	protected boolean isAjax(RequestCycle requestCycle)
 	{
-		return super.shouldRenderPageAndWriteResponse(ajax, onePassRender, redirectToRender, redirectPolicy, shouldPreserveClientUrl, targetEqualsCurrentUrl, newPageInstance, pageStateless);
+		return ajax;
+	}
+
+	@Override
+	protected boolean shouldPreserveClientUrl(RequestCycle requestCycle)
+	{
+		return shouldPreserveClientUrl;
+	}
+
+	public boolean isNewPageInstance()
+	{
+		return newPageInstance;
+	}
+
+	public boolean isPageStateless()
+	{
+		return pageStateless;
 	}
 
 	@Override
 	protected boolean isOnePassRender()
 	{
-		return false;
+		return onePassRender;
 	}
 
 	@Override
 	protected boolean isRedirectToRender()
 	{
-		return false;
+		return redirectToRender;
 	}
 
 	@Override
 	protected boolean isRedirectToBuffer()
 	{
-		return false;
+		return redirectToBuffer;
 	}
 
 	@Override
 	protected boolean isSessionTemporary()
 	{
-		return false;
+		return sessionTemporary;
 	}
 }
