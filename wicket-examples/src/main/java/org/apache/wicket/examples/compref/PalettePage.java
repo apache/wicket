@@ -47,7 +47,7 @@ public class PalettePage extends WicketExamplePage
 		IChoiceRenderer<Person> renderer = new ChoiceRenderer<Person>("fullName", "fullName");
 
 		final Palette<Person> palette = new Palette<Person>("palette", new ListModel<Person>(
-			new ArrayList<Person>()), new CollectionModel<Person>(persons), renderer, 10, true);
+			new ArrayList<Person>()), new CollectionModel<Person>(persons), renderer, 10, true, true);
 
 
 		Form<Void> form = new Form<Void>("form")

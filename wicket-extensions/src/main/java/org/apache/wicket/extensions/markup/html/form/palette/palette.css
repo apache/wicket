@@ -50,31 +50,50 @@ table.palette td.buttons button {
 }
 
 button.button.add div {
-	background: url("add.gif"); 
-	height: 15px; 
+	height: 15px;
 	width: 15px;
+}
+button.button.add div:after {
+	content: '\21D2';
 }
 
 button.button.remove div {
-	background: url("remove.gif"); 
-	height: 15px; 
+	height: 15px;
 	width: 15px;
+}
+button.button.remove div:after {
+	content: '\21D0';
 }
 
 button.button.up div {
-	background: url("up.gif"); 
-	height: 15px; 
+	height: 15px;
 	width: 15px;
+}
+button.button.up div:after {
+	content: '\21D1';
 }
 
 button.button.down div {
-	background: url("down.gif"); 
-	height: 15px; 
+	height: 15px;
+	width: 15px;
+}
+button.button.down div:after {
+	content: '\21D3';
+}
+
+button.button.addAll div {
+	height: 15px;
 	width: 15px;
 }
 
-/* Fix a firefox (2.0.0.4) bug : https://bugzilla.mozilla.org/show_bug.cgi?id=382600 */
-select::-moz-dummy-option { 
-	visibility: hidden; 
-	content: ""; 
+button.button.addAll div:after {
+	content: '\21DB';
+}
+
+button.button.removeAll div {
+	height: 15px;
+	width: 15px;
+}
+button.button.removeAll div:after {
+	content: '\21DA';
 }
