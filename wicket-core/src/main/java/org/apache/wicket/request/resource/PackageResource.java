@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -28,6 +30,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
@@ -36,6 +39,7 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.resource.ResourceStreamWrapper;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -296,14 +300,10 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			try
 			{
 				// read resource data
-				final byte[] bytes;
-
-				bytes = IOUtils.toByteArray(resourceStream.getInputStream());
-
-				final byte[] processed = processResponse(attributes, bytes);
+				final byte[] bytes = IOUtils.toByteArray(resourceStream.getInputStream());
 
 				// send Content-Length header
-				resourceResponse.setContentLength(processed.length);
+				resourceResponse.setContentLength(bytes.length);
 
 				// send response body with resource data
 				resourceResponse.setWriteCallback(new WriteCallback()
@@ -311,7 +311,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 					@Override
 					public void writeData(Attributes attributes)
 					{
-						attributes.getResponse().write(processed);
+						attributes.getResponse().write(bytes);
 					}
 				});
 			}
@@ -462,7 +462,38 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 						". See IPackageResourceGuard");
 		}
 
-		return resourceStream;
+		return new ProcessingResourceStream(resourceStream);
+	}
+
+	/**
+	 * An IResourceStream that processes the input stream of the original
+	 * IResourceStream
+	 */
+	private class ProcessingResourceStream extends ResourceStreamWrapper
+	{
+		private ProcessingResourceStream(IResourceStream delegate)
+		{
+			super(delegate);
+		}
+
+		@Override
+		public InputStream getInputStream() throws ResourceStreamNotFoundException
+		{
+			byte[] bytes;
+			InputStream inputStream = super.getInputStream();
+			try
+			{
+				bytes = IOUtils.toByteArray(inputStream);
+			} catch (IOException iox)
+			{
+				throw new WicketRuntimeException(iox);
+			}
+
+			RequestCycle cycle = RequestCycle.get();
+			Attributes attributes = new Attributes(cycle.getRequest(), cycle.getResponse());
+			byte[] processedBytes = processResponse(attributes, bytes);
+			return new ByteArrayInputStream(processedBytes);
+		}
 	}
 
 	/**
