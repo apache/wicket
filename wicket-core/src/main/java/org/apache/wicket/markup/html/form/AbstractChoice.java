@@ -246,7 +246,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 				addStateChange();
 			}
 		}
-		this.choices = new WildcardListModel<E>(choices);
+		this.choices = new WildcardListModel<>(choices);
 		return this;
 	}
 
@@ -268,7 +268,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	{
 		if (renderer == null)
 		{
-			renderer = new ChoiceRenderer<E>();
+			renderer = new ChoiceRenderer<>();
 		}
 		this.renderer = renderer;
 		return this;

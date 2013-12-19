@@ -161,7 +161,7 @@ public class Recorder<T> extends HiddenField<String>
 	{
 		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 		final Collection<? extends T> choices = getPalette().getChoices();
-		final List<T> unselected = new ArrayList<T>(choices.size());
+		final List<T> unselected = new ArrayList<>(choices.size());
 		final String ids = getValue();
 
 		for (final T choice : choices)

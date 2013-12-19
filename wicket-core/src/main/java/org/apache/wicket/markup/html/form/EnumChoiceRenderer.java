@@ -116,5 +116,4 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	{
 		return object.name();
 	}
-
 }

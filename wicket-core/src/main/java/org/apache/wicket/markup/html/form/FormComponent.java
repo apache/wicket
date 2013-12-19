@@ -44,7 +44,6 @@ import org.apache.wicket.markup.html.form.AutoLabelResolver.AutoLabelMarker;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
@@ -852,7 +851,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	@SuppressWarnings("unchecked")
 	public final List<IValidator<? super T>> getValidators()
 	{
-		final List<IValidator<? super T>> list = new ArrayList<IValidator<? super T>>();
+		final List<IValidator<? super T>> list = new ArrayList<>();
 
 		for (Behavior behavior : getBehaviors())
 		{
