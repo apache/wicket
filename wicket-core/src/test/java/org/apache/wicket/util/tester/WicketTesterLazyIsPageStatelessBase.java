@@ -25,32 +25,16 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
 
 /**
- * https://issues.apache.org/jira/browse/WICKET-5424
+ * https://issues.apache.org/jira/browse/WICKET-5426
  */
-public class WicketTesterLazyIsPageStatelessTest extends WicketTestCase
+public abstract class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
 {
-	@Override
-	protected WebApplication newApplication()
-	{
-		return new MockApplication()
-		{
-			@Override
-			public void init() {
-				super.init();
-				getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
-			}
-		};
-	}
-
 	/**
 	 * The page must be stateless because the stateful component
 	 * is hidden in #onConfigure
@@ -61,6 +45,7 @@ public class WicketTesterLazyIsPageStatelessTest extends WicketTestCase
 	public void isStateless() throws Exception
 	{
 		tester.startPage(MyPage.class);
+
 		tester.assertLabel("isPageStateless", "true");
 		assertTrue(tester.getLastRenderedPage().isPageStateless());
 	}

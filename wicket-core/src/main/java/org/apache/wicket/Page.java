@@ -802,11 +802,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Make sure it is really empty
 		renderedComponents = null;
 
-		// if the page is stateless, reset the flag so that it is tested again
-		if (Boolean.TRUE.equals(stateless))
-		{
-			stateless = null;
-		}
+		// rendering might remove or add stateful components, so clear flag to
+		// force reevaluation
+		stateless = null;
 
 		super.onBeforeRender();
 
