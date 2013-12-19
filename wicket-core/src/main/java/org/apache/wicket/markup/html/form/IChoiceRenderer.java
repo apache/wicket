@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.List;
+
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -53,4 +55,15 @@ public interface IChoiceRenderer<T> extends IClusterable
 	 * @return String
 	 */
 	String getIdValue(T object, int index);
+
+	/**
+	 * This method is called to get an object back from its id representation.
+	 *
+	 * @param id
+	 *          The id representation of the object
+	 * @param choices
+	 *          The list of all rendered choices
+	 * @return A choice from the list that has this {@code id}
+	 */
+	T getObject(String id, List<? extends T> choices);
 }

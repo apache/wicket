@@ -271,16 +271,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	{
 		final List<? extends T> choices = getChoices();
 		final IChoiceRenderer<? super T> renderer = getChoiceRenderer();
-		for (int index = 0; index < choices.size(); index++)
-		{
-			// Get next choice
-			final T choice = choices.get(index);
-			if (renderer.getIdValue(choice, index).equals(id))
-			{
-				return choice;
-			}
-		}
-		return null;
+		T object = (T) renderer.getObject(id, choices);
+		return object;
 	}
 
 	/**

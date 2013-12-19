@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.List;
+
 import org.apache.wicket.core.util.lang.PropertyResolver;
 
 /**
@@ -151,5 +153,20 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>
 		}
 
 		return returnValue.toString();
+	}
+
+	@Override
+	public T getObject(String id, List<? extends T> choices)
+	{
+		for (int index = 0; index < choices.size(); index++)
+		{
+			// Get next choice
+			final T choice = choices.get(index);
+			if (getIdValue(choice, index).equals(id))
+			{
+				return choice;
+			}
+		}
+		return null;
 	}
 }

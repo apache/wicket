@@ -36,7 +36,7 @@ import org.apache.wicket.util.lang.Classes;
  * 
  * @param <T>
  */
-public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
+public class EnumChoiceRenderer<T extends Enum<T>> extends ChoiceRenderer<T>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -53,7 +53,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	 */
 	public EnumChoiceRenderer()
 	{
-		resourceSource = null;
+		this(null);
 	}
 
 	/**
