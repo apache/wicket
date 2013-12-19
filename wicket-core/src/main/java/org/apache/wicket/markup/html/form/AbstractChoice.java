@@ -388,7 +388,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 
 		buffer.append("\n<option ");
 		setOptionAttributes(buffer, choice, index, selected);
-		buffer.append(">");
+		buffer.append('>');
 
 		String display = displayValue;
 		if (localizeDisplayValues())
@@ -432,7 +432,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 
 		buffer.append("value=\"");
 		buffer.append(Strings.escapeMarkup(renderer.getIdValue(choice, index)));
-		buffer.append("\"");
+		buffer.append('"');
 	}
 
 	/**

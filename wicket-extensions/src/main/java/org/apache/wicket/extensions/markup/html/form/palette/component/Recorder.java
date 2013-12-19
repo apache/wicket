@@ -28,6 +28,7 @@ import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -103,7 +104,7 @@ public class Recorder<T> extends HiddenField<String>
 			modelStringBuffer.append(renderer.getIdValue(selection.next(), i++));
 			if (selection.hasNext())
 			{
-				modelStringBuffer.append(",");
+				modelStringBuffer.append(',');
 			}
 		}
 
@@ -133,7 +134,7 @@ public class Recorder<T> extends HiddenField<String>
 			idForChoice.put(choice, renderer.getIdValue(choice, 0));
 		}
 
-		for (final String id : getValue().split(","))
+		for (final String id : Strings.split(getValue(), ','))
 		{
 			for (final T choice : choices)
 			{
