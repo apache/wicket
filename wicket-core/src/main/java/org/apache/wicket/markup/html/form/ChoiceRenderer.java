@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.util.List;
 
 import org.apache.wicket.core.util.lang.PropertyResolver;
+import org.apache.wicket.model.IModel;
 
 /**
  * Default implementation of {@link org.apache.wicket.markup.html.form.IChoiceRenderer}. Usage:
@@ -156,12 +157,13 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>
 	}
 
 	@Override
-	public T getObject(String id, List<? extends T> choices)
+	public T getObject(String id, IModel<? extends List<? extends T>> choices)
 	{
-		for (int index = 0; index < choices.size(); index++)
+		List<? extends T> _choices = choices.getObject();
+		for (int index = 0; index < _choices.size(); index++)
 		{
 			// Get next choice
-			final T choice = choices.get(index);
+			final T choice = _choices.get(index);
 			if (getIdValue(choice, index).equals(id))
 			{
 				return choice;

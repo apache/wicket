@@ -64,7 +64,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id)
 	{
-		this(id, new WildcardListModel<E>(new ArrayList<E>()), new ChoiceRenderer<E>());
+		this(id, new WildcardListModel<>(new ArrayList<E>()), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -77,7 +77,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, final List<? extends E> choices)
 	{
-		this(id, new WildcardListModel<E>(choices), new ChoiceRenderer<E>());
+		this(id, new WildcardListModel<>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -93,7 +93,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	public AbstractChoice(final String id, final List<? extends E> choices,
 		final IChoiceRenderer<? super E> renderer)
 	{
-		this(id, new WildcardListModel<E>(choices), renderer);
+		this(id, new WildcardListModel<>(choices), renderer);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices)
 	{
-		this(id, model, new WildcardListModel<E>(choices), new ChoiceRenderer<E>());
+		this(id, model, new WildcardListModel<>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -126,7 +126,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices,
 		final IChoiceRenderer<? super E> renderer)
 	{
-		this(id, model, new WildcardListModel<E>(choices), renderer);
+		this(id, model, new WildcardListModel<>(choices), renderer);
 	}
 
 	/**
@@ -208,6 +208,11 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 				"List of choices is null - Was the supplied 'Choices' model empty?");
 		}
 		return choices;
+	}
+
+	public IModel<? extends List<? extends  E>> getChoicesModel()
+	{
+		return this.choices;
 	}
 
 	/**
@@ -351,7 +356,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 			appendOptionHtml(buffer, choice, index, selectedValue);
 		}
 
-		buffer.append("\n");
+		buffer.append('\n');
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 

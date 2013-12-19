@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.List;
 
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -65,5 +66,5 @@ public interface IChoiceRenderer<T> extends IClusterable
 	 *          The list of all rendered choices
 	 * @return A choice from the list that has this {@code id}
 	 */
-	T getObject(String id, List<? extends T> choices);
+	T getObject(String id, IModel<? extends List<? extends T>> choices);
 }
