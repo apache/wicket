@@ -210,6 +210,9 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		return choices;
 	}
 
+	/**
+	 * @return The model with the choices for this component
+	 */
 	public IModel<? extends List<? extends  E>> getChoicesModel()
 	{
 		return this.choices;

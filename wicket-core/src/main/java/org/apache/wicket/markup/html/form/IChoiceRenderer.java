@@ -60,6 +60,9 @@ public interface IChoiceRenderer<T> extends IClusterable
 	/**
 	 * This method is called to get an object back from its id representation.
 	 *
+	 * The {@code id} may be used to find/load the object in a more efficient way
+	 * than loading all {@code choices} and find the one with the same id in the list
+	 *
 	 * @param id
 	 *          The id representation of the object
 	 * @param choices
