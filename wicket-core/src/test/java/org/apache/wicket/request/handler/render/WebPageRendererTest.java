@@ -26,6 +26,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
@@ -361,6 +363,9 @@ public class WebPageRendererTest
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.redirectToRender = true;
+
+		when(provider.getPageInstance()).thenThrow(
+			new AssertionFailedError("no page instance should be created"));
 
 		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("a"));
 

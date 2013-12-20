@@ -19,12 +19,10 @@ package org.apache.wicket.util.tester;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.RequestCycleSettings;
-import org.junit.Ignore;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5426
  */
-@Ignore
 public class WicketTesterLazyIsPageStatelessRedirectToBufferTest extends WicketTesterLazyIsPageStatelessBase
 {
 	@Override
