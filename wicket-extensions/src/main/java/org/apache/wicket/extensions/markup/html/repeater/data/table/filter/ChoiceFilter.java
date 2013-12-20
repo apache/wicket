@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -76,7 +75,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 * @param autoSubmit
 	 */
 	public ChoiceFilter(final String id, final IModel<T> model, final FilterForm<?> form,
-		final List<? extends T> choices, final IChoiceRenderer<T> renderer, final boolean autoSubmit)
+		final List<? extends T> choices, final ChoiceRenderer<T> renderer, final boolean autoSubmit)
 	{
 		this(id, model, form, Model.ofList(choices), renderer, autoSubmit);
 	}
@@ -97,7 +96,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 * @see DropDownChoice
 	 */
 	public ChoiceFilter(final String id, final IModel<T> model, final FilterForm<?> form,
-		final IModel<List<? extends T>> choices, final IChoiceRenderer<T> renderer,
+		final IModel<List<? extends T>> choices, final ChoiceRenderer<T> renderer,
 		final boolean autoSubmit)
 	{
 		super(id, form);
@@ -127,7 +126,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 * @return created drop down component
 	 */
 	protected DropDownChoice<T> newDropDownChoice(final String id, final IModel<T> model,
-		final IModel<List<? extends T>> choices, final IChoiceRenderer<T> renderer)
+		final IModel<List<? extends T>> choices, final ChoiceRenderer<T> renderer)
 	{
 		DropDownChoice<T> dropDownChoice = new DropDownChoice<>(id, model, choices, renderer);
 		dropDownChoice.setNullValid(true);

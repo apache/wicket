@@ -23,8 +23,8 @@ import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
@@ -71,7 +71,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	{
 		StringBuilder buffer = new StringBuilder(128);
 		Iterator<T> options = getOptionsIterator();
-		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		ChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 
 		boolean localizeDisplayValues = localizeDisplayValues();
 

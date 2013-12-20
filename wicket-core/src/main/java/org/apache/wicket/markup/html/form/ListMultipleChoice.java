@@ -92,10 +92,10 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      List,IChoiceRenderer)
+	 *      List,ChoiceRenderer)
 	 */
 	public ListMultipleChoice(final String id, final List<? extends T> choices,
-		final IChoiceRenderer<? super T> renderer)
+		final ChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -116,7 +116,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
-	 *      List,IChoiceRenderer)
+	 *      List,ChoiceRenderer)
 	 * 
 	 * @param id
 	 * @param object
@@ -125,7 +125,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 */
 	@SuppressWarnings("unchecked")
 	public ListMultipleChoice(final String id, IModel<? extends Collection<T>> object,
-		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
+		final List<? extends T> choices, final ChoiceRenderer<? super T> renderer)
 	{
 		super(id, (IModel<Collection<T>>)object, choices, renderer);
 	}
@@ -154,10 +154,10 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel,IChoiceRenderer)
+	 *      IModel,ChoiceRenderer)
 	 */
 	public ListMultipleChoice(String id, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<? super T> renderer)
+		ChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -165,7 +165,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
-	 *      IModel,IChoiceRenderer)
+	 *      IModel,ChoiceRenderer)
 	 * 
 	 * @param id
 	 * @param model
@@ -174,7 +174,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 */
 	@SuppressWarnings("unchecked")
 	public ListMultipleChoice(String id, IModel<? extends Collection<T>> model,
-		IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
+		IModel<? extends List<? extends T>> choices, ChoiceRenderer<? super T> renderer)
 	{
 		super(id, (IModel<Collection<T>>)model, choices, renderer);
 	}

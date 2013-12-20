@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 
@@ -45,7 +44,7 @@ public class PaletteTestPage extends WebPage
 		form = new Form<>("form", new CompoundPropertyModel<Object>("WICKET-5086"));
 		add(form);
 
-		IChoiceRenderer<String> choiceRenderer = new ChoiceRenderer<String>()
+		ChoiceRenderer<String> choiceRenderer = new ChoiceRenderer<String>()
 		{
 			@Override
 			public Object getDisplayValue(String s)

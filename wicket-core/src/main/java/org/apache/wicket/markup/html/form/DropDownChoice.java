@@ -104,7 +104,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 *            The collection of choices in the dropdown
 	 */
 	public DropDownChoice(final String id, final List<? extends T> choices,
-		final IChoiceRenderer<? super T> renderer)
+		final ChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -137,7 +137,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 *            The rendering engine
 	 */
 	public DropDownChoice(final String id, IModel<T> model, final List<? extends T> choices,
-		final IChoiceRenderer<? super T> renderer)
+		final ChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -181,7 +181,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 *            The rendering engine
 	 */
 	public DropDownChoice(String id, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<? super T> renderer)
+		ChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -199,7 +199,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 *            The rendering engine
 	 */
 	public DropDownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<? super T> renderer)
+		ChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}

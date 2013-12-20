@@ -23,17 +23,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.AbstractSingleSelectChoice;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
@@ -48,6 +46,7 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.junit.Assert;
 
 /**
  * A helper class for testing validation and submission of <code>FormComponent</code>s.
@@ -202,7 +201,7 @@ public class FormTester
 				Method getChoiceRendererMethod = formComponent.getClass().getMethod(
 					"getChoiceRenderer", (Class<?>[])null);
 				getChoiceRendererMethod.setAccessible(true);
-				IChoiceRenderer<Object> choiceRenderer = (IChoiceRenderer<Object>)getChoiceRendererMethod.invoke(
+				ChoiceRenderer<Object> choiceRenderer = (ChoiceRenderer<Object>)getChoiceRendererMethod.invoke(
 					formComponent, (Object[])null);
 
 				return choiceRenderer.getIdValue(choices.get(index), index);
