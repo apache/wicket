@@ -81,7 +81,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		}
 	}
 
-	private static final ResourceReference AUTOCOMPLETE_JS = new JavaScriptResourceReference(
+	public static final ResourceReference AUTOCOMPLETE_JS = new JavaScriptResourceReference(
 		AutoCompleteBehavior.class, "wicket-autocomplete.js");
 
 	private static final long serialVersionUID = 1L;
