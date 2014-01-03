@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
@@ -304,7 +303,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = (int)item.getIndex();
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 
@@ -652,15 +651,5 @@ public abstract class ListView<T> extends AbstractRepeater
 	public final void setModelObject(List<T> object)
 	{
 		setDefaultModelObject(object);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#getMarkup(org.apache.wicket.Component)
-	 */
-	@Override
-	public IMarkupFragment getMarkup(Component child)
-	{
-		// The childs markup is always equal to the parents markup.
-		return getMarkup();
 	}
 }
