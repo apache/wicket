@@ -6,11 +6,15 @@ Release Notes - Wicket - Version 6.13.0
 
 ** Bug
 
+    * [WICKET-4294] - AutoCompleteTextField does not show suggestions when it is used on ModalWindow in InternetExplorer
     * [WICKET-4997] - Mounted bookmarkable Page not recreated on Session Expiry
     * [WICKET-5084] - ClassNotFoundException with Atmosphere on Bookmarkable pages
+    * [WICKET-5224] - ModalWindow is not visible in Safari when opened from a link at the bottom of a large page
+    * [WICKET-5321] - Incorporate Wicket Guide into website
     * [WICKET-5379] - IE7: AutoCompleteTextField inside a ModalWindow shows auto complete dropdown behind ModalWindow
     * [WICKET-5387] - Page#onInitialize called after an exception in the constructor of Page
     * [WICKET-5400] - Behaviors#internalAdd(Behavior) erroneously gets id for stateless behaviors
+    * [WICKET-5402] - NullPointerException when logging out with wicket-atmosphere
     * [WICKET-5404] - JQuery 1.10.1 does not work well with IE11, upgrade to 1.10.2
     * [WICKET-5409] - wicket-native-websocket does not work with Safari/Safari iOS
     * [WICKET-5413] - Positioning AutoCompleteTextField not correct on resized window
@@ -19,21 +23,43 @@ Release Notes - Wicket - Version 6.13.0
     * [WICKET-5422] - ComponentRenderer.renderComponent() adds a page to DataStore
     * [WICKET-5424] - Page.isPageStateless() returning true in regular run but false in WicketTester
     * [WICKET-5425] - WicketTester doesn't preserve the request cookies when #executeListener() is used
+    * [WICKET-5426] - Page not recognized as stateless although stateful component is hidden in #onConfigure()
+    * [WICKET-5429] - ResourceReference's properties are not preserved when using reference replacement
     * [WICKET-5437] - When a ConversionException is thrown, its message is not used in the ValidationError
+    * [WICKET-5441] - IResourceCachingStrategy implementations should only set caching if version matches
+    * [WICKET-5442] - TimeOfDay.valueOf(Calendar, Time) and TimeOfDay.valueOf(Time) incorrectly use 12-hour clock
+    * [WICKET-5444] - Make org.apache.wicket.pageStore.memory.PageTable public so custom impls of IDataStoreEvictionStrategy can be made
+    * [WICKET-5447] - TableTree's NodeBorder does not properly close divs
+    * [WICKET-5450] - Double escaping when using EnumChoiceRenderer and DropDownChoice
 
 ** Improvement
 
+    * [WICKET-4268] - Quality of ThumbnailImageResource
+    * [WICKET-4762] - IResourceVersion should be based on final result
+    * [WICKET-4905] - PagingNavigation: possible to call setStartIndex() earlier than onBeforeRender?
+    * [WICKET-4909] - ModalWindow overwrites window.onbeforeunload
+    * [WICKET-5364] - Reduce logging for wicket-atmosphere
     * [WICKET-5367] - migrate Wicket-Atmosphere to Atmosphere 2
     * [WICKET-5401] - provide no-argument constructor in string based header items
     * [WICKET-5411] - Improve AutoLabels by updating their CSS classes automatically during Ajax requests
     * [WICKET-5415] - Do not initialize pages which were not rendered
     * [WICKET-5420] - Make UploadProgressBar easier to extend
     * [WICKET-5423] - Create IResource based implementation of Native Web Sockets
+    * [WICKET-5435] - Ajaxified version of WebSession#getClientInfo should be added
     * [WICKET-5436] - Implement BigIntegerConverter
+    * [WICKET-5443] - Increase randomness and reduce predictability of CaptchaImageResource rendered images
+    * [WICKET-5445] - Make CaptchaImageResource easier to extend and reuse
+    * [WICKET-5455] - Allow access to the JS ResourceReference of AbstractAutoCompleteBehavior
+    * [WICKET-5456] - Make RawMarkup extendable
 
 ** Task
 
     * [WICKET-5431] - Download pages must use ASF mirror system for current releases
+
+** Wish
+
+    * [WICKET-1197] - add/remove all buttons in Palette component
+    * [WICKET-4951] - Wicket-cdi and OpenWebBeans 1.1.x incompatibility
 
 =============================================================================
 
