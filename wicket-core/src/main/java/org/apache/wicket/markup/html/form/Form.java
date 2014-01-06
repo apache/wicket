@@ -778,10 +778,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			callOnError(submitter);
 		}
 
-		// update auto labels if we are inside an ajax request
-		final AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
-		if (target != null)
+
+		if (((WebRequest)getRequest()).isAjax())
 		{
+			final AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
 			visitChildren(FormComponent.class, new IVisitor<FormComponent<?>, Void>()
 			{
 				@Override
