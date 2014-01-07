@@ -142,7 +142,7 @@
 			var recorder = palette.$(recorderId);
 			palette.updateRecorder(selection, recorder);
 		}
-	}
+	};
 
 	Wicket.Palette.removeAll = function(choicesId, selectionId, recorderId) {
 		var palette = Wicket.Palette;
@@ -153,7 +153,7 @@
 			var recorder = palette.$(recorderId);
 			palette.updateRecorder(selection, recorder);
 		}
-	}
+	};
 
 	Wicket.Palette.moveAllHelper = function(source, dest) {
 		var dirty = false;
@@ -163,5 +163,5 @@
 			dirty = true;
 		}
 		return dirty;
-	}
+	};
 })();
