@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -204,8 +205,11 @@ public final class RequestUtils
 
 	/**
 	 * @param request
-	 *      the http servlet request to extract the charset from
-	 * @return the request's charset
+	 *            the http servlet request to extract the charset from
+	 * @return the request's charset or a default it request is {@code null} or has an unsupported
+	 *         character encoding
+	 * 
+	 * @see IRequestCycleSettings#getResponseRequestEncoding()
 	 */
 	public static Charset getCharset(HttpServletRequest request)
 	{
@@ -215,7 +219,13 @@ public final class RequestUtils
 			String charsetName = request.getCharacterEncoding();
 			if (charsetName != null)
 			{
-				charset = Charset.forName(charsetName);
+				try
+				{
+					charset = Charset.forName(charsetName);
+				}
+				catch (UnsupportedCharsetException useDefault)
+				{
+				}
 			}
 		}
 		if (charset == null)
