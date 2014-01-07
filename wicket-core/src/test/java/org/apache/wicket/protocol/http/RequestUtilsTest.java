@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.nio.charset.Charset;
+
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -96,5 +99,17 @@ public class RequestUtilsTest extends Assert
 			"http://aif.ru/blah/");
 		assertEquals(RequestUtils.toAbsolutePath("http://aif.ru/", "./"), "http://aif.ru/");
 
+	}
+
+	@Test
+	public void charset() throws Exception
+	{
+		MockHttpServletRequest request = new MockHttpServletRequest(null, null, null);
+
+		request.setCharacterEncoding("UTF-8");
+		assertEquals(Charset.forName("UTF-8"), RequestUtils.getCharset(request));
+
+		request.setCharacterEncoding("FOO");
+		assertEquals(Charset.forName("UTF-8"), RequestUtils.getCharset(request));
 	}
 }
