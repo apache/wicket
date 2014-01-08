@@ -321,6 +321,10 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		// restart the timer
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
+		assertMatches("setTimeout", 1);
+		// WICKET-5439 label is not updated automatically
+		assertMatches("wicket:id=\"component\"", 0);
+
 		// increment to 2
 		tester.executeBehavior(timerBehavior);
 
