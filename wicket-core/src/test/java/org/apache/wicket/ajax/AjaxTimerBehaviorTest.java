@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLinkAndComponent;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -47,13 +45,14 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 * Tests timer behavior in a component added to an AjaxRequestTarget
 	 */
 	@Test
-	public void addToAjaxUpdate()
+	public void addedInAjaxSetsTimout()
 	{
 		Duration dur = Duration.seconds(20);
-		final MyAjaxSelfUpdatingTimerBehavior timer = new MyAjaxSelfUpdatingTimerBehavior(dur);
+		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 
-		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
+		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID)
+				.setOutputMarkupId(true));
 
 
 		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
@@ -75,8 +74,12 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		tester.startPage(page);
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		validate(timer, false);
+		// first render sets timeout
+		assertMatches("setTimeout", 1);
 
+		tester.executeBehavior(timer);
+
+		assertMatches("setTimeout", 1);
 	}
 
 
@@ -84,10 +87,10 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 * tests timer behavior in a WebPage.
 	 */
 	@Test
-	public void addToWebPage()
+	public void pageRenderSetsTimeout()
 	{
 		Duration dur = Duration.seconds(20);
-		final MyAjaxSelfUpdatingTimerBehavior timer = new MyAjaxSelfUpdatingTimerBehavior(dur);
+		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 		Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
 		page.add(label);
@@ -106,21 +109,150 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		tester.startPage(page);
 
-		validate(timer, true);
+		assertMatches("setTimeout", 1);
 
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		validate(timer, true);
+		assertMatches("setTimeout", 1);
 
+		tester.executeBehavior(timer);
+
+		assertMatches("setTimeout", 1);
 	}
 
 	/**
-	 * Validates the response, then makes sure the timer injects itself again when called.
-	 * Tests {@link AbstractAjaxTimerBehavior#restart(AjaxRequestTarget)} method
+	 * tests timer behavior in a WebPage.
+	 */
+	@Test
+	public void ajaxUpdateDoesNotSetTimeout()
+	{
+		Duration dur = Duration.seconds(20);
+		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
+		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
+		page.add(label);
+		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
+		{
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				target.add(label);
+			}
+		});
+		label.setOutputMarkupId(true);
+		label.add(timer);
+
+		tester.startPage(page);
+
+		assertMatches("setTimeout", 1);
+
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
+
+		// ajax update does not set timeout
+		assertMatches("setTimeout", 0);
+
+		tester.executeBehavior(timer);
+
+		assertMatches("setTimeout", 1);
+	}
+
+
+	/**
+	 */
+	@Test
+	public void setVisibleSetsTimeout()
+	{
+		Duration dur = Duration.seconds(20);
+		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
+		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
+		page.add(label);
+		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+			}
+		});
+		label.setOutputMarkupId(true);
+		label.setVisible(false);
+		label.add(timer);
+
+		tester.startPage(page);
+
+		assertMatches("setTimeout", 0);
+
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
+
+		assertMatches("setTimeout", 0);
+
+		label.setVisible(true);
+
+		tester.startPage(page);
+
+		// no visible, so timeout is set
+		assertMatches("setTimeout", 1);
+	}
+
+	/**
+	 */
+	@Test
+	public void setDisabledClearsTimeout()
+	{
+		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(20))
+		{
+			private boolean enabled = true;
+
+			@Override
+			protected void onTimer(AjaxRequestTarget target)
+			{
+				enabled = false;
+			}
+
+			@Override
+			public boolean isEnabled(Component component)
+			{
+				return enabled;
+			}
+		};
+		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
+		page.add(label);
+		page.add(new Link<Void>(MockPageWithLinkAndComponent.LINK_ID)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+			}
+		});
+		label.setOutputMarkupId(true);
+		label.add(timer);
+
+		tester.startPage(page);
+
+		assertMatches("setTimeout", 1);
+
+		tester.executeBehavior(timer);
+
+		assertMatches("clearTimeout", 1);
+		assertMatches("setTimeout", 0);
+	}
+
+	/**
+	 * Validates the response, then makes sure the timer injects itself again
+	 * when called. Tests
+	 * {@link AbstractAjaxTimerBehavior#restart(AjaxRequestTarget)} method
+	 * 
 	 * WICKET-1525, WICKET-2152
 	 */
-	public void testRestartMethod()
+	@Test
+	public void restartResultsInAddTimeout()
 	{
 		final Integer labelInitialValue = Integer.valueOf(0);
 
@@ -190,6 +322,11 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		// restart the timer
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
+		assertMatches("setTimeout", 1);
+		// label is updated automatically (this will no longer be the case in
+		// Wicket 7.x)
+		assertMatches("wicket:id=\"component\"", 1);
+
 		// increment to 2
 		tester.executeBehavior(timerBehavior);
 
@@ -198,128 +335,33 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	}
 
 	/**
-	 * Validates the reponse, then makes sure the timer injects itself again when called.
+	 * Validates the reponse, then makes sure the timer injects itself again
+	 * when called.
 	 * 
 	 * @param timer
-	 * @param inBodyOnLoad
+	 * @param wasAjax
 	 */
-	private void validate(MyAjaxSelfUpdatingTimerBehavior timer, boolean inBodyOnLoad)
+	private void assertMatches(String string, int count)
 	{
 		String document = tester.getLastResponseAsString();
 
-		String updateScript = timer.getUpdateScript();
-
-		if (inBodyOnLoad)
-		{
-			String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function(event) { \n" +
-				updateScript + ";\n;});";
-			validateTimerScript(document, bodyOnLoadUpdateScript);
-		}
-		else
-		{
-			updateScript = updateScript.replaceAll("]", "]^");
-			validateTimerScript(document, updateScript);
-		}
-
-		tester.executeBehavior(timer);
-
-		if (inBodyOnLoad)
-		{
-			updateScript = timer.getUpdateScript();
-			updateScript = updateScript.replaceAll("]", "]^");
-		}
-
-		// Validate the document
-		document = tester.getLastResponseAsString();
-		validateTimerScript(document, updateScript);
-	}
-
-	/**
-	 * Checks that the timer javascript is in the document once and only once
-	 * 
-	 * @param document
-	 *            the response from the Application
-	 * @param updateScript
-	 *            the timer script
-	 */
-	private void validateTimerScript(String document, String updateScript)
-	{
 		log.debug(document);
-		String quotedRegex;
-		quotedRegex = quote(updateScript);
-		Pattern pat = Pattern.compile(quotedRegex, Pattern.DOTALL);
-		Matcher mat = pat.matcher(document);
 
-		int count = 0;
-		while (mat.find())
+		int found = 0;
+		int lastIndex = 0;
+		while (true)
 		{
-			++count;
-		}
-		// make sure there is only one match
-		assertEquals("There should be 1 and only 1 script in the markup for this behavior," +
-			"but " + count + " were found", 1, count);
-	}
+			lastIndex = document.indexOf(string, lastIndex);
 
-	// quick fix for JDK 5 method
-	private static final String quote(String s)
-	{
-		int slashEIndex = s.indexOf("\\E");
-		if (slashEIndex == -1)
-		{
-			return "\\Q" + s + "\\E";
+			if (lastIndex == -1)
+			{
+				break;
+			}
+
+			found++;
+			lastIndex += string.length();
 		}
 
-		StringBuilder sb = new StringBuilder(s.length() * 2);
-		sb.append("\\Q");
-		slashEIndex = 0;
-		int current = 0;
-		while ((slashEIndex = s.indexOf("\\E", current)) != -1)
-		{
-			sb.append(s.substring(current, slashEIndex));
-			current = slashEIndex + 2;
-			sb.append("\\E\\\\E\\Q");
-		}
-		sb.append(s.substring(current, s.length()));
-		sb.append("\\E");
-		return sb.toString();
-	}
-
-	static class MyAjaxSelfUpdatingTimerBehavior extends AjaxSelfUpdatingTimerBehavior
-	{
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		private final Duration duration;
-		String updateScript;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param updateInterval
-		 */
-		public MyAjaxSelfUpdatingTimerBehavior(Duration updateInterval)
-		{
-			super(updateInterval);
-			duration = updateInterval;
-		}
-
-		@Override
-		protected void onComponentRendered()
-		{
-			super.onComponentRendered();
-			updateScript = getJsTimeoutCall(duration);
-		}
-
-		/**
-		 * @return Update script
-		 */
-		public String getUpdateScript()
-		{
-			return updateScript;
-		}
-
-
+		assertEquals(count, found);
 	}
 }
