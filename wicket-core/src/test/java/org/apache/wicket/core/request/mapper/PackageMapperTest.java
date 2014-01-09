@@ -374,10 +374,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
 
-		// never allow bookmarkable render url for page that has not been created by bookmarkable
-		// URL
-
-		assertNull(url);
+		assertEquals(Url.parse("MockPage/i1/i2?15&a=b&b=c"), url);
 	}
 
 	/**
