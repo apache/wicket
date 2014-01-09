@@ -655,8 +655,25 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		return ret;
 	}
 
-	protected void setPlaceholders(PageParameters parameters, Url url)
+	/**
+	 * Replaces mandatory and optional parameters with their values.
+	 *
+	 * If a mandatory parameter is not provided then the method returns {@code false}
+	 * indicating that there is a problem.
+	 * Optional parameters with missing values are just dropped.
+	 *
+	 * @param parameters
+	 *          The parameters with the values
+	 * @param url
+	 *          The url with the placeholders
+	 * @return
+	 *          {@code true} if all mandatory parameters are properly substituted,
+	 *          {@code false} - otherwise
+	 */
+	protected boolean setPlaceholders(PageParameters parameters, Url url)
 	{
+		boolean mandatoryParametersSet = true;
+
 		int dropped = 0;
 		for (int i = 0; i < mountSegments.length; ++i)
 		{
@@ -664,8 +681,16 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			String optionalPlaceholder = getOptionalPlaceholder(mountSegments[i]);
 			if (placeholder != null)
 			{
-				url.getSegments().set(i - dropped, parameters.get(placeholder).toString(""));
-				parameters.remove(placeholder);
+				if (parameters.getNamedKeys().contains(placeholder))
+				{
+					url.getSegments().set(i - dropped, parameters.get(placeholder).toString());
+					parameters.remove(placeholder);
+				}
+				else
+				{
+					mandatoryParametersSet = false;
+					break;
+				}
 			}
 			else if (optionalPlaceholder != null)
 			{
@@ -681,5 +706,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				}
 			}
 		}
+
+		return mandatoryParametersSet;
 	}
 }

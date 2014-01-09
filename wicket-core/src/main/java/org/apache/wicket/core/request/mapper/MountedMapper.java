@@ -216,36 +216,10 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		encodePageComponentInfo(url, info.getPageComponentInfo());
 
 		PageParameters copy = new PageParameters(info.getPageParameters());
-//		setPlaceholders(copy, url);
-
-		int dropped = 0;
-		for (int i = 0; i < mountSegments.length; ++i)
+		if (setPlaceholders(copy, url) == false)
 		{
-			String placeholder = getPlaceholder(mountSegments[i]);
-			String optionalPlaceholder = getOptionalPlaceholder(mountSegments[i]);
-			if (placeholder != null)
-			{
-				if (!copy.getNamedKeys().contains(placeholder))
-				{
-					// no value for placeholder - cannot mount
-					return null;
-				}
-				url.getSegments().set(i - dropped, copy.get(placeholder).toString(""));
-				copy.remove(placeholder);
-			}
-			else if (optionalPlaceholder != null)
-			{
-				if (copy.getNamedKeys().contains(optionalPlaceholder))
-				{
-					url.getSegments().set(i - dropped, copy.get(optionalPlaceholder).toString(""));
-					copy.remove(optionalPlaceholder);
-				}
-				else
-				{
-					url.getSegments().remove(i - dropped);
-					dropped++;
-				}
-			}
+			// mandatory parameter is not provided => cannot build Url
+			return null;
 		}
 
 		return encodePageParameters(url, copy, pageParametersEncoder);
