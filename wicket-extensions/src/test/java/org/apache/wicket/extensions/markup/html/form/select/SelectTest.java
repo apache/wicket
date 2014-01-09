@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.markup.html.form.select;
 
 import org.apache.wicket.WicketTestCase;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -25,15 +24,6 @@ import org.junit.Test;
  */
 public class SelectTest extends WicketTestCase
 {
-
-	private SelectTestPage page;
-
-	@Before
-	public void setUp() throws Exception
-	{
-		page = new SelectTestPage();
-		tester.startPage(page);
-	}
 
 	/**
 	 * WICKET-4276
@@ -43,15 +33,43 @@ public class SelectTest extends WicketTestCase
 	@Test
 	public void rawInputKeepsSelectionOnError() throws Exception
 	{
+		SelectTestPage page = new SelectTestPage();
+
+		tester.startPage(page);
+
 		tester.getRequest().setParameter("select", page.option1.getValue());
 
-		page.form.onFormSubmitted();
+		tester.submitForm(page.form);
 
 		// form has error ...
-		boolean hasError = page.form.hasError();
-		assertTrue(hasError);
+		assertTrue(page.form.hasError());
 
 		// ... but option1 is selected anyway through rawInput
 		assertTrue(page.select.isSelected(page.option1));
+
+		tester.startPage(page);
+
+		// ... even after re-render
+		assertTrue(page.select.isSelected(page.option1));
+
+		tester.getRequest().setParameter("select", page.option1.getValue());
+		tester.getRequest().setParameter("text", "text is required");
+		tester.submitForm(page.form);
+
+		// ... until successful submit without rawInput
+		assertFalse(page.select.hasRawInput());
+		assertTrue(page.select.isSelected(page.option1));
+	}
+
+	/**
+	 * WICKET-5011 custom equality
+	 */
+	@Test
+	public void selectionWithouEquals()
+	{
+
+		SelectTestPage2 page = new SelectTestPage2();
+
+		assertTrue(page.select.isSelected(page.option0));
 	}
 }

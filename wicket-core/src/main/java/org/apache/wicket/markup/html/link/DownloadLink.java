@@ -23,8 +23,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
-import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -61,7 +59,8 @@ public class DownloadLink extends Link<File>
 	/**
 	 * The duration for which the file resource should be cached by the browser.
 	 * <p>
-	 * By default is {@code null} and {@link IResourceSettings#getDefaultCacheDuration()} is used.
+	 * By default is {@code null} and
+	 * {@link org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()} is used.
 	 * </p>
 	 */
 	private Duration cacheDuration;
@@ -135,7 +134,18 @@ public class DownloadLink extends Link<File>
 	public DownloadLink(String id, IModel<File> fileModel, IModel<String> fileNameModel)
 	{
 		super(id, fileModel);
-		this.fileNameModel = fileNameModel;
+		this.fileNameModel = wrap(fileNameModel);
+	}
+
+	@Override
+	public void detachModels()
+	{
+		super.detachModels();
+
+		if (fileNameModel != null)
+		{
+			fileNameModel.detach();
+		}
 	}
 
 	@Override
@@ -153,8 +163,6 @@ public class DownloadLink extends Link<File>
 		{
 			fileName = file.getName();
 		}
-
-		fileName = UrlEncoder.QUERY_INSTANCE.encode(fileName, getRequest().getCharset());
 
 		IResourceStream resourceStream = new FileResourceStream(
 			new org.apache.wicket.util.file.File(file));

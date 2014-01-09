@@ -46,7 +46,7 @@ public class AutoLabelWithinEnclosureTest extends WicketTestCase
 	{
 		tester.startPage(new LabelWithinEnclosurePage(true));
 		tester.dumpPage();
-		tester.assertContains("<label wicket:for=\"textfield\" for=\"textfield2\">blabla</label>");
+		tester.assertContains("<label wicket:for=\"textfield\" id=\"textfield2-w-lbl\" for=\"textfield2\">blabla</label>");
 	}
 
 	@Test

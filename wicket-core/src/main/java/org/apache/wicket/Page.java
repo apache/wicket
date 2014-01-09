@@ -35,8 +35,7 @@ import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.settings.IPageSettings;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.StringValue;
@@ -68,7 +67,7 @@ import org.slf4j.LoggerFactory;
  * with PageParameters will be used.</li>
  * <li><b>Versioning </b>- Pages support the browser's back button when versioning is enabled via
  * {@link #setVersioned(boolean)}. By default all pages are versioned if not configured differently
- * in {@link IPageSettings#setVersionPagesByDefault(boolean)}</li>
+ * in {@link org.apache.wicket.settings.PageSettings#setVersionPagesByDefault(boolean)}</li>
  * </ul>
  * 
  * @see org.apache.wicket.markup.html.WebPage
@@ -120,11 +119,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private final PageParameters pageParameters;
 
 	/**
-	 * The purpose of render count is to detect stale listener interface links. For example: there
-	 * is a page A rendered in tab 1. Then page A is opened also in tab 2. During render page state
-	 * changes (i.e. some repeater gets rebuilt). This makes all links on tab 1 stale - because they
-	 * no longer match the actual page state. This is done by incrementing render count. When link
-	 * is clicked Wicket checks if it's render count matches the render count value of page
+	 * @see IRequestablePage#getRenderCount()
 	 */
 	private int renderCount = 0;
 
@@ -217,10 +212,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 						" was rendered already. You can render it only once during a render phase. Class relative path: " +
 						component.getClassRelativePath());
 			}
-			if (log.isDebugEnabled())
-			{
-				log.debug("Rendered " + component);
-			}
+			log.debug("Rendered {}", component);
+
 		}
 	}
 
@@ -290,8 +283,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			setFlag(FLAG_IS_DIRTY, true);
 			setNextAvailableId();
-			pageManager.touchPage(this);
+
+			if (isInitialization == false)
+			{
+				pageManager.touchPage(this);
+			}
 		}
+	}
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		final IPageManager pageManager = getSession().getPageManager();
+		pageManager.touchPage(this);
 	}
 
 	/**
@@ -454,6 +460,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		if (stateless == null)
 		{
+			internalInitialize();
+
 			if (isStateless() == false)
 			{
 				stateless = Boolean.FALSE;
@@ -567,7 +575,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final IDebugSettings debugSettings = getApplication().getDebugSettings();
+		final DebugSettings debugSettings = getApplication().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
 		{
 			final List<Component> unrenderedComponents = new ArrayList<Component>();
@@ -590,7 +598,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 							buffer.append(Integer.toString(unrenderedComponents.size()))
 								.append(". ")
 								.append(component)
-								.append("\n");
+								.append('\n');
 							String metadata = component.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{
@@ -703,9 +711,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private void init()
 	{
-		if (isBookmarkable())
+		if (isBookmarkable() == false)
 		{
-			setStatelessHint(true);
+			setStatelessHint(false);
 		}
 
 		// Set versioning of page based on default
@@ -793,11 +801,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Make sure it is really empty
 		renderedComponents = null;
 
-		// if the page is stateless, reset the flag so that it is tested again
-		if (Boolean.TRUE.equals(stateless))
-		{
-			stateless = null;
-		}
+		// rendering might remove or add stateful components, so clear flag to force reevaluation
+		stateless = null;
 
 		super.onBeforeRender();
 
@@ -846,14 +851,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 		{
-			Class<?> klass = getClass();
-			while (klass.isAnonymousClass())
-			{
-				klass = klass.getSuperclass();
-			}
+			String className = Classes.name(getClass());
 			getResponse().write("<!-- Page Class ");
-			getResponse().write(klass.getName());
-			getResponse().write(" -->\n");
+			getResponse().write(className);
+			getResponse().write(" END -->\n");
 		}
 	}
 
@@ -976,9 +977,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return numericId;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.component.IRequestablePage#getRenderCount()
-	 */
 	@Override
 	public int getRenderCount()
 	{
@@ -986,7 +984,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Sets the flag that determins whether or not this page was created using one of its
+	 * Sets the flag that determines whether or not this page was created using one of its
 	 * bookmarkable constructors
 	 * 
 	 * @param wasCreatedBookmarkable
@@ -1019,6 +1017,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			++renderCount;
 			render();
+
+			// stateless = null;
 		}
 		finally
 		{

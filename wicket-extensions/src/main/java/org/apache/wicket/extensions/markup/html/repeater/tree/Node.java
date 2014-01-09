@@ -21,6 +21,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree.State;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -40,6 +41,12 @@ public abstract class Node<T> extends Panel
 {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final String OTHER_CLASS_KEY = CssUtils.key(Node.class, "other");
+
+	public static final String EXPANDED_CLASS_KEY = CssUtils.key(Node.class, "expanded");
+
+	public static final String COLLAPSED_CLASS_KEY = CssUtils.key(Node.class, "collapsed");
 
 	/**
 	 * The component id for the content component.
@@ -180,17 +187,17 @@ public abstract class Node<T> extends Panel
 
 	protected String getExpandedStyleClass(T t)
 	{
-		return "tree-junction-expanded";
+		return getString(EXPANDED_CLASS_KEY);
 	}
 
 	protected String getCollapsedStyleClass()
 	{
-		return "tree-junction-collapsed";
+		return getString(COLLAPSED_CLASS_KEY);
 	}
 
 	protected String getOtherStyleClass()
 	{
-		return "tree-junction";
+		return getString(OTHER_CLASS_KEY);
 	}
 
 	/**

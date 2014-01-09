@@ -25,15 +25,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.EventListener;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.Filter;
+import javax.servlet.FilterRegistration;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.SessionCookieConfig;
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.descriptor.JspConfigDescriptor;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.util.string.Strings;
@@ -217,13 +225,10 @@ public class MockServletContext implements ServletContext
 		return Collections.enumeration(initParameters.keySet());
 	}
 
-	/**
-	 * @return Always 2
-	 */
 	@Override
-	public int getMajorVersion()
+	public boolean setInitParameter(String name, String value)
 	{
-		return 2;
+		return false;
 	}
 
 	/**
@@ -248,13 +253,28 @@ public class MockServletContext implements ServletContext
 		}
 	}
 
-	/**
-	 * @return Always 5
-	 */
+	@Override
+	public int getMajorVersion()
+	{
+		return 3;
+	}
+
 	@Override
 	public int getMinorVersion()
 	{
-		return 5;
+		return 0;
+	}
+
+	@Override
+	public int getEffectiveMajorVersion()
+	{
+		return 3;
+	}
+
+	@Override
+	public int getEffectiveMinorVersion()
+	{
+		return 0;
 	}
 
 	/**
@@ -346,20 +366,25 @@ public class MockServletContext implements ServletContext
 			return null;
 		}
 
+		URL result = null;
+
 		if (name.startsWith("/"))
 		{
 			name = name.substring(1);
 		}
 
 		File f = new File(webappRoot, name);
-		if (!f.exists())
+		if (f.exists())
 		{
-			return null;
+			result = f.toURI().toURL();
 		}
-		else
+
+		if (result == null)
 		{
-			return f.toURI().toURL();
+			result = getClass().getClassLoader().getResource("META-INF/resources/" + name);
 		}
+
+		return result;
 	}
 
 	/**
@@ -505,6 +530,139 @@ public class MockServletContext implements ServletContext
 	public String getServletContextName()
 	{
 		return application.getName();
+	}
+
+	@Override
+	public ServletRegistration.Dynamic addServlet(String servletName, String className)
+	{
+		return null;
+	}
+
+	@Override
+	public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet)
+	{
+		return null;
+	}
+
+	@Override
+	public ServletRegistration.Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass)
+	{
+		return null;
+	}
+
+	@Override
+	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException
+	{
+		return null;
+	}
+
+	@Override
+	public ServletRegistration getServletRegistration(String servletName)
+	{
+		return null;
+	}
+
+	@Override
+	public Map<String, ? extends ServletRegistration> getServletRegistrations()
+	{
+		return null;
+	}
+
+	@Override
+	public FilterRegistration.Dynamic addFilter(String filterName, String className)
+	{
+		return null;
+	}
+
+	@Override
+	public FilterRegistration.Dynamic addFilter(String filterName, Filter filter)
+	{
+		return null;
+	}
+
+	@Override
+	public FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass)
+	{
+		return null;
+	}
+
+	@Override
+	public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException
+	{
+		return null;
+	}
+
+	@Override
+	public FilterRegistration getFilterRegistration(String filterName)
+	{
+		return null;
+	}
+
+	@Override
+	public Map<String, ? extends FilterRegistration> getFilterRegistrations()
+	{
+		return null;
+	}
+
+	@Override
+	public SessionCookieConfig getSessionCookieConfig()
+	{
+		return null;
+	}
+
+	@Override
+	public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes)
+	{
+	}
+
+	@Override
+	public Set<SessionTrackingMode> getDefaultSessionTrackingModes()
+	{
+		return null;
+	}
+
+	@Override
+	public Set<SessionTrackingMode> getEffectiveSessionTrackingModes()
+	{
+		return null;
+	}
+
+	@Override
+	public void addListener(String className)
+	{
+	}
+
+	@Override
+	public <T extends EventListener> void addListener(T t)
+	{
+	}
+
+	@Override
+	public void addListener(Class<? extends EventListener> listenerClass)
+	{
+	}
+
+	@Override
+	public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException
+	{
+		return null;
+	}
+
+	@Override
+	public JspConfigDescriptor getJspConfigDescriptor()
+	{
+		return null;
+	}
+
+	@Override
+	public ClassLoader getClassLoader()
+	{
+		return null;
+	}
+
+	@Override
+	public void declareRoles(String... roleNames)
+	{
 	}
 
 	/**

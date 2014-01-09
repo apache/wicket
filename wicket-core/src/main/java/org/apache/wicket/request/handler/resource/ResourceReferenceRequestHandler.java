@@ -139,4 +139,13 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 	{
 		return getResourceReference().getVariation();
 	}
+
+	@Override
+	public String toString()
+	{
+		return "ResourceReferenceRequestHandler{" +
+				"resourceReference=" + resourceReference +
+				", pageParameters=" + pageParameters +
+				'}';
+	}
 }

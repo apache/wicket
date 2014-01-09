@@ -129,13 +129,27 @@ public class PackageResourceReference extends ResourceReference
 				getVariation());
 		}
 
+		removeCompressFlagIfUnnecessary(resource);
+
+		return resource;
+	}
+
+	/**
+	 * Method allowing to remove the compress flag if the resource has been detected as a minified one
+	 * (i.e. ending with .min.EXT)
+	 * This method is to be called by subclasses overriding <code>getResource</code>
+	 * if they want to rely on default minification detection handling
+	 *
+	 * see WICKET-5250 for further explanation
+	 * @param resource resource to check
+	 */
+	protected final void removeCompressFlagIfUnnecessary(final PackageResource resource)
+	{
 		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
 		if (minifiedName != null && minifiedName != NO_MINIFIED_NAME)
 		{
 			resource.setCompress(false);
 		}
-
-		return resource;
 	}
 
 	private ResourceReference.UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
@@ -173,7 +187,7 @@ public class PackageResourceReference extends ResourceReference
 	private String internalGetMinifiedName()
 	{
 		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
-		if (minifiedName != null && minifiedName != NO_MINIFIED_NAME)
+		if (minifiedName != null)
 		{
 			return minifiedName;
 		}
@@ -207,7 +221,14 @@ public class PackageResourceReference extends ResourceReference
 		if (idxOfExtension > -1)
 		{
 			String extension = name.substring(idxOfExtension);
-			minifiedName = name.substring(0, name.length() - extension.length() + 1) + "min" + extension;
+			final String baseName = name.substring(0, name.length() - extension.length() + 1);
+			if (!".min".equals(extension) && !baseName.endsWith(".min."))
+			{
+				minifiedName = baseName + "min" + extension;
+			} else
+			{
+				minifiedName = name;
+			}
 		} else
 		{
 			minifiedName = name + ".min";

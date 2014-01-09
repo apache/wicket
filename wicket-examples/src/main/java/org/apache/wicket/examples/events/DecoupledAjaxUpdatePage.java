@@ -48,7 +48,7 @@ public class DecoupledAjaxUpdatePage extends BasePage
 		container.add(new CounterLabel("label2"));
 
 		// add a form
-		Form<?> form = new Form<Void>("form");
+		Form<?> form = new Form<>("form");
 		add(form);
 
 		// add the textfield that will update the counter value
@@ -113,7 +113,7 @@ public class DecoupledAjaxUpdatePage extends BasePage
 		 */
 		public CounterLabel(String id)
 		{
-			super(id, new PropertyModel<Integer>(DecoupledAjaxUpdatePage.this, "counter"));
+			super(id, new PropertyModel<>(DecoupledAjaxUpdatePage.this, "counter"));
 			setOutputMarkupId(true);
 		}
 

@@ -19,13 +19,13 @@ package org.apache.wicket.examples.compref;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**
@@ -47,7 +47,7 @@ public class DropDownChoicePage extends WicketExamplePage
 	public DropDownChoicePage()
 	{
 		final Input input = new Input();
-		setDefaultModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -73,7 +73,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// represent this null with key: "id + '.null'". In this case, this is
 		// 'site.null'
 		// which can be found in DropDownChoicePage.properties
-		form.add(new DropDownChoice<String>("site", SITES));
+		form.add(new DropDownChoice<>("site", SITES));
 
 		// Allthough the default behavior of displaying the string
 		// representations of the choices
@@ -84,7 +84,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// like the example below. Don't forget to check out the default
 		// implementation of
 		// IChoiceRenderer, ChoiceRenderer.
-		form.add(new DropDownChoice<Integer>("integer", INTEGERS, new IChoiceRenderer<Integer>()
+		form.add(new DropDownChoice<Integer>("integer", INTEGERS, new ChoiceRenderer<Integer>()
 		{
 			/**
 			 * Gets the display value that is visible to the end user.

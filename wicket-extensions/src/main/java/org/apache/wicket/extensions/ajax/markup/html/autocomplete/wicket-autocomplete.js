@@ -23,8 +23,12 @@
 ;(function (undefined) {
 	'use strict';
 
-	if (typeof(Wicket) === "undefined") {
-		Wicket = {};
+	if (!window.Wicket) {
+		window.Wicket = {};
+	}
+
+	if (Wicket.AutoComplete) {
+		return;
 	}
 
 	Wicket.AutoCompleteSettings = {
@@ -46,16 +50,12 @@
 		var selected=-1;	// index of the currently selected item
 		var elementCount=0; // number of items on the auto complete list
 		var visible=0;		// is the list visible
-		var mouseactive=0;	// is mouse selection active
-		var	hidingAutocomplete=0;		// are we hiding the autocomplete list
+		
+		var ignoreFocus = false;		// ignore focus and gain because menu is showing
+		var	ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
+		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
+		var ignoreChange = false;		// ignore change event because TAB or ENTER event already triggered a change
 
-		// pointers of the browser events
-		var objonkeydown;
-		var objonkeyup;
-		var objonkeypress;
-		var objonchange;
-		var objonchangeoriginal;
-		var objonfocus;
 		var initialElement;
 
 		// holds the eventual margins, padding, etc. of the menu container.
@@ -67,23 +67,19 @@
 		var scrollbarSize = 0;
 		var selChSinceLastRender = false;
 
-		// this are the last visible and non-temporary bounds of the pop-up; the may change position and size several times when showing/updating choices and so on
-		// before it reaches the bounds that will be visible by the user (this is because of height/width settings limits or because it tries to compute preferred size);
-		// used for IE fix with hideShowCovered() - to be able to call it when bounds change while popup is visible.
-		var lastStablePopupBounds = [0, 0, 0, 0];
-
-		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
-
 		// holds a throttler, for not sending many requests if the user types
 		// too quickly.
 		var localThrottler = new Wicket.Throttler(true);
 		var throttleDelay = cfg.throttleDelay;
 
+		//this is the minimum input length required to display the autocomplete list
+		var minInputLength = cfg.showListOnEmptyInput === true ? 0 : cfg.minInputLength || 1;
+
 		function initialize(){
 			var isShowing = false;
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again (using the new stateful 'mouseactive'
+			// the mouse event handler again (using the new stateful 'ignoreFocus'
 			// variable which just gets created)
 			var choiceDiv = document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
@@ -94,63 +90,58 @@
 			var obj = Wicket.$(elementId);
 			initialElement = obj;
 
-			objonkeydown=obj.onkeydown;
-			objonkeyup=obj.onkeyup;
-			objonkeypress=obj.onkeypress;
-			objonfocus=obj.onfocus;
-
-			objonchange=obj.onchange;
-
-			Wicket.Event.add(obj, 'blur', function (event) {
-				if(mouseactive===1){
+			Wicket.Event.add(obj, 'blur', function (jqEvent) {
+				if (ignoreFocus) {
 					ignoreOneFocusGain = true;
 					Wicket.$(elementId).focus();
-					return killEvent(event);
+					return jqEvent.stopPropagation();
 				}
 
-				window.setTimeout( hideAutoComplete, 500);
+				window.setTimeout(hideAutoComplete, 500);
 			});
 
-			Wicket.Event.add(obj, 'focus', function (event) {
-				event = Wicket.Event.fix(event);
-				if (mouseactive===1) {
+			Wicket.Event.add(obj, 'focus', function (jqEvent) {
+				if (ignoreFocus) {
 					ignoreOneFocusGain = false;
-					return killEvent(event);
+					return jqEvent.stopPropagation();
 				}
-				var input = event.target ? event.target : event.srcElement;
+				var input = jqEvent.target;
 				if (!ignoreOneFocusGain && (cfg.showListOnFocusGain || (cfg.showListOnEmptyInput && (!input.value))) && visible === 0) {
 					getAutocompleteMenu().showingAutocomplete = true;
 					if (cfg.showCompleteListOnFocusGain) {
 						updateChoices(true);
 					} else {
-					updateChoices();
+						updateChoices();
 					}
 				}
 				ignoreOneFocusGain = false;
-
-				if(typeof objonfocus==="function") {
-					return objonfocus.apply(this,[event]);
-				}
 			});
 
-			Wicket.Event.add(obj, 'keydown', function(event) {
-				switch(Wicket.Event.keyCode(event)){
+			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
+				switch(Wicket.Event.keyCode(jqEvent)){
 					case KEY_UP:
 						if (selected>-1) {
 							setSelected(selected-1);
 						}
-						if(selected === -1) {
-							hideAutoComplete();
-						} else {
-							render(true, false);
+
+						var searchTerm = Wicket.$(elementId).value;
+						if(selected === -1 && searchTerm) {
+							// select the last element
+							setSelected(elementCount-1);
+							showAutoComplete();
 						}
+						render(true, false);
+
 						if (Wicket.Browser.isSafari()) {
-							return killEvent(event);
+							return jqEvent.stopPropagation();
 						}
 						break;
 					case KEY_DOWN:
-						if(selected<elementCount-1){
+						if (selected < elementCount-1) {
 							setSelected(selected+1);
+						} else if (selected === elementCount-1) {
+							// select the first element
+							setSelected(0);
 						}
 						if (visible===0) {
 							updateChoices();
@@ -158,49 +149,59 @@
 							render(true, false);
 							showAutoComplete();
 						}
-						if(Wicket.Browser.isSafari()) {
-							return killEvent(event);
+						if (Wicket.Browser.isSafari()) {
+							return jqEvent.stopPropagation();
 						}
 						break;
 					case KEY_ESC:
 						if (visible === 1) {
 							hideAutoComplete();
-							return killEvent(event);
+							return jqEvent.stopPropagation();
 						}
 						break;
 					case KEY_TAB:
 					case KEY_ENTER:
-						if(selected > -1) {
+						ignoreChange = false;
+						ignoreKeyEnter = false;
+						
+						if (selected > -1) {
 							var value = getSelectedValue();
 							value = handleSelection(value);
+							
 							hideAutoComplete();
-							hidingAutocomplete = 1;
-							if(value) {
+							
+							if (value) {
 								obj.value = value;
-								if(typeof objonchange==="function") {
-									objonchange.apply(this,[event]);
-								}
+								jQuery(obj).triggerHandler('change');
+								ignoreChange = true;
 							}
+							
+							ignoreKeyEnter = true;
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
 							hideAutoComplete();
-							hidingAutocomplete = 1;
+							
+							ignoreKeyEnter = true;
 						}
-						mouseactive = 0;
-						if (typeof objonkeydown === "function") {
-							return objonkeydown.apply(this,[event]);
-						}
+
 						return true;
 
 					default:
 				}
 			});
 
-			Wicket.Event.add(obj, 'inputchange', function (event) {
-				var kc = Wicket.Event.keyCode(event);
+			Wicket.Event.add(obj, 'change', function (jqEvent) {
+				if (ignoreFocus || ignoreChange) {
+					// don't let any other change handler get this
+					jqEvent.stopImmediatePropagation();
+				}
+			});
+
+			Wicket.Event.add(obj, 'inputchange', function (jqEvent) {
+				var kc = Wicket.Event.keyCode(jqEvent);
 				switch(kc) {
 					case KEY_TAB:
 					case KEY_ENTER:
-						return killEvent(event);
+						return jqEvent.stopImmediatePropagation();
 					case KEY_UP:
 					case KEY_DOWN:
 					case KEY_ESC:
@@ -213,20 +214,12 @@
 					default:
 						updateChoices();
 				}
-				if(typeof objonkeyup === "function") {
-					return objonkeyup.apply(this,[event]);
-				}
 			});
 
-			Wicket.Event.add(obj, 'keypress', function (event) {
-				if(Wicket.Event.keyCode(event) === KEY_ENTER){
-					if(selected>-1 || hidingAutocomplete === 1){
-						hidingAutocomplete=0;
-						return killEvent(event);
-					}
-				}
-				if(typeof objonkeypress==="function") {
-					return objonkeypress.apply(this,[event]);
+			Wicket.Event.add(obj, 'keypress', function (jqEvent) {
+				if(Wicket.Event.keyCode(jqEvent) === KEY_ENTER && ignoreKeyEnter){
+					jqEvent.stopImmediatePropagation();
+					return false;
 				}
 			});
 
@@ -247,7 +240,7 @@
 		{
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again (using the new stateful 'mouseactive'
+			// the mouse event handler again (using the new stateful 'ignoreFocus'
 			// variable which just gets created)
 			var choiceDiv=document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
@@ -298,9 +291,9 @@
 						selectableInd++;
 					}
 				}
-			} else {
-				return firstChild.childNodes[selected];
 			}
+
+			return firstChild.childNodes[selected];
 		}
 
 		function getMenuId() {
@@ -333,8 +326,8 @@
 
 
 				// WICKET-1350/WICKET-1351
-				container.onmouseout=function() {mouseactive=0;};
-				container.onmousemove=function() {mouseactive=1;};
+				container.onmouseout = function() {ignoreFocus = false;};
+				container.onmousemove = function() {ignoreFocus = true;};
 			}
 
 
@@ -345,28 +338,6 @@
 			var node=getAutocompleteMenu().parentNode;
 
 			return node;
-		}
-
-		function killEvent(event){
-			if (!event) {
-				event = window.event;
-			}
-			if (!event) {
-				return false;
-			}
-			if(event.cancelBubble){
-				event.cancelBubble=true;
-			}
-			if(event.returnValue){
-				event.returnValue=false;
-			}
-			if(event.stopPropagation){
-				event.stopPropagation();
-			}
-			if(event.preventDefault){
-				event.preventDefault();
-			}
-			return false;
 		}
 
 		function updateChoices(showAll){
@@ -384,9 +355,20 @@
 			var paramName = cfg.parameterName;
 			var attrs = {
 				u: callbackUrl,
-				dt: 'html',
+				pre: [ function (attributes) {
+					var activeIsInitial = (document.activeElement === initialElement);
+					var elementVal =  Wicket.$(elementId).value;
+					var hasMinimumLength = elementVal.length >= minInputLength;
+
+					var result = hasMinimumLength && activeIsInitial;
+					if (!result) {
+						hideAutoComplete();
+					}
+					return result;
+				}],
 				ep: {},
 				wr: false,
+				dt: 'html',
 				sh: [ doUpdateAllChoices ]
 			};
 			attrs.ep[paramName] = '';
@@ -395,16 +377,26 @@
 
 		function actualUpdateChoices() {
 			showIndicator();
+
 			var paramName = cfg.parameterName;
-			var value = Wicket.$(elementId).value;
 			var attrs = {
 				u: callbackUrl,
-				wr: false,
+				pre: [ function (attributes) {
+					var activeIsInitial = (document.activeElement === initialElement);
+					var elementVal =  Wicket.$(elementId).value;
+					var hasMinimumLength = elementVal.length >= minInputLength;
+					var result = hasMinimumLength && activeIsInitial;
+					if (!result) {
+						hideAutoComplete();
+					}
+					return result;
+				}],
 				ep: {},
+				wr: false,
 				dt: 'html',
 				sh: [ doUpdateChoices ]
 			};
-			attrs.ep[paramName] = value;
+			attrs.ep[paramName] = Wicket.$(elementId).value;
 			Wicket.Ajax.ajax(attrs);
 		}
 
@@ -435,10 +427,7 @@
 
 			calculateAndSetPopupBounds(input, container);
 
-			if (visible === 0) {
-				visible = 1;
-				hideShowCovered(true, lastStablePopupBounds[0], lastStablePopupBounds[1], lastStablePopupBounds[2], lastStablePopupBounds[3]);
-			}
+			visible = 1;
 		}
 
 		function initializeUsefulDimensions(input, container) {
@@ -459,13 +448,15 @@
 		}
 
 		function hideAutoComplete(){
-			visible=0;
+			visible = 0;
 			setSelected(-1);
-			mouseactive=0;
+			ignoreFocus = false;
+			//WICKET-5382
+			hideIndicator();
+			
 			var container = getAutocompleteContainer();
 			if (container)
 			{
-				hideShowCovered(false, lastStablePopupBounds[0], lastStablePopupBounds[1], lastStablePopupBounds[2], lastStablePopupBounds[3]);
 				container.hide();
 				if (!cfg.adjustInputWidth && container.style.width !== "auto") {
 					container.style.width = "auto"; // let browser auto-set width again next time it is shown
@@ -582,29 +573,16 @@
 			}
 			popup.style.left=leftPosition+'px';
 			popup.style.top=topPosition+'px';
-
-			if (visible === 1 &&
-					(lastStablePopupBounds[0] !== popup.offsetLeft ||
-					 lastStablePopupBounds[1] !== popup.offsetTop ||
-					 lastStablePopupBounds[2] !== popup.offsetWidth ||
-					 lastStablePopupBounds[3] !== popup.offsetHeight)) {
-				hideShowCovered(false, lastStablePopupBounds[0], lastStablePopupBounds[1], lastStablePopupBounds[2], lastStablePopupBounds[3]); // show previously hidden
-				hideShowCovered(true, popup.offsetLeft, popup.offsetTop, popup.offsetWidth, popup.offsetHeight); // hide ones under new bounds
-			}
-
-			lastStablePopupBounds = [popup.offsetLeft, popup.offsetTop, popup.offsetWidth, popup.offsetHeight];
 		}
 
 		function getPosition(obj) {
-			var leftPosition = obj.offsetLeft || 0;
-			var topPosition = obj.offsetTop || 0;
-			obj = obj.offsetParent;
-			while (obj && obj !== document.documentElement && obj !== document.body) {
-				topPosition += obj.offsetTop || 0;
-				topPosition -= obj.scrollTop || 0;
-				leftPosition += obj.offsetLeft || 0;
-				leftPosition -= obj.scrollLeft || 0;
-				obj = obj.offsetParent;
+			var rectangle = $(obj).offset();
+			
+			var leftPosition = rectangle.left || 0;
+			var topPosition = rectangle.top || 0;
+			if (!cfg.ignoreBordersWhenPositioning) {
+				topPosition += obj.clientTop || 0;
+				leftPosition += obj.clientLeft || 0;
 			}
 
 			return [leftPosition,topPosition];
@@ -636,23 +614,27 @@
 			}
 			element.innerHTML=resp;
 			var selectableElements = getSelectableElements();
-			if(selectableElements) {
+			if (selectableElements) {
 				elementCount=selectableElements.length;
 
 				var clickFunc = function(event) {
-					mouseactive = 0;
+					ignoreFocus = false;
+					ignoreChange = false;
+					
 					var value = getSelectedValue();
-					var input = Wicket.$(elementId);
 					value = handleSelection(value);
-					if(value) {
-						input.value = value;
-						jQuery(input).trigger('change');
-					}
 					hideAutoComplete();
+					
+					var input = Wicket.$(elementId);
+					if (value) {
+						input.value = value;
+						jQuery(input).triggerHandler('change');
+					}
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
 						input.focus();
 					}
+					return true;
 				};
 
 				var mouseOverFunc = function(event) {
@@ -719,13 +701,13 @@
 		}
 
 		function getSelectedValue(){
-			var element=getAutocompleteMenu();
+			getAutocompleteMenu();
 			var selectableElement = getSelectableElement(selected);
 			var attr=selectableElement.attributes.textvalue;
 			var value;
-			if (attr=== undefined || attr === null) {
+			if (!attr) {
 				value=selectableElement.innerHTML;
-				} else {
+			} else {
 				value=attr.value;
 			}
 			return value;
@@ -839,37 +821,6 @@
 				obj=obj.offsetParent;
 			} while (obj && index === "auto");
 			return index;
-		}
-
-		function hideShowCovered(popupVisible, acLeftX, acTopY, acWidth, acHeight) {
-			if (!cfg.useHideShowCoveredIEFix || (!/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent))) {
-				return;
-			}
-
-			var hideTags=["select","iframe","applet"];
-			var acRightX = acLeftX + acWidth;
-			var acBottomY = acTopY + acHeight;
-
-			for (var j=0;j<hideTags.length;j++) {
-				var tagsFound=document.getElementsByTagName(hideTags[j]);
-				for (var i=0; i<tagsFound.length; i++){
-					var tag=tagsFound[i];
-					var p=getPosition(tag); // maybe determine only visible area of tag somehow? as it could be in a small scrolled container...
-					var leftX=p[0];
-					var rightX=leftX+tag.offsetWidth;
-					var topY=p[1];
-					var bottomY=topY+tag.offsetHeight;
-
-					if (!tag.wicket_element_visibility) {
-						tag.wicket_element_visibility=isVisible(tag);
-					}
-					if (popupVisible === 0 || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
-						tag.style.visibility = tag.wicket_element_visibility;
-					} else {
-						tag.style.visibility = "hidden";
-					}
-				}
-			}
 		}
 
 		initialize();

@@ -31,7 +31,10 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
-import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.model.IDetachable;
+import org.apache.wicket.serialize.ISerializer;
+import org.apache.wicket.serialize.java.JavaSerializer;
+import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
@@ -56,7 +59,6 @@ public class WicketObjects
 	 * @param className
 	 *            Class to resolve
 	 * @return Resolved class
-	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> resolveClass(final String className)
@@ -110,9 +112,6 @@ public class WicketObjects
 	 */
 	public static final class SerializingObjectSizeOfStrategy implements IObjectSizeOfStrategy
 	{
-		/**
-		 * @see org.apache.wicket.core.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable)
-		 */
 		@Override
 		public long sizeOf(Serializable object)
 		{
@@ -120,21 +119,23 @@ public class WicketObjects
 			{
 				return 0;
 			}
-			try
+
+			ISerializer serializer;
+			if (Application.exists())
 			{
-				final ByteCountingOutputStream out = new ByteCountingOutputStream();
-				new ObjectOutputStream(out).writeObject(object);
-				out.close();
-				return out.size();
+				serializer = Application.get().getFrameworkSettings().getSerializer();
 			}
-			catch (IOException e)
+			else
 			{
-				if (log.isWarnEnabled())
-				{
-					log.warn("Unable to determine object size: " + object.toString(), e);
-				}
-				return -1;
+				serializer = new JavaSerializer("SerializingObjectSizeOfStrategy");
 			}
+			byte[] serialized = serializer.serialize(object);
+			int size = -1;
+			if (serialized != null)
+			{
+				size = serialized.length;
+			}
+			return size;
 		}
 
 	}
@@ -174,7 +175,7 @@ public class WicketObjects
 			}
 
 			Application application = Application.get();
-			IApplicationSettings applicationSettings = application.getApplicationSettings();
+			ApplicationSettings applicationSettings = application.getApplicationSettings();
 			IClassResolver classResolver = applicationSettings.getClassResolver();
 
 			Class<?> candidate = null;
@@ -326,7 +327,7 @@ public class WicketObjects
 
 
 						Application application = Application.get();
-						IApplicationSettings applicationSettings = application.getApplicationSettings();
+						ApplicationSettings applicationSettings = application.getApplicationSettings();
 						IClassResolver classResolver = applicationSettings.getClassResolver();
 
 						Class<?> candidate = null;
@@ -415,6 +416,25 @@ public class WicketObjects
 	 */
 	public static long sizeof(final Serializable object)
 	{
-		return objectSizeOfStrategy.sizeOf(object);
+		Serializable target = object;
+
+		if (object instanceof Component)
+		{
+			// clone to not detach the original component (WICKET-5013, 5014)
+			Component clone = (Component) cloneObject(object);
+			clone.detach();
+
+			target = clone;
+		}
+		else if (object instanceof IDetachable)
+		{
+			// clone to not detach the original IDetachable (WICKET-5013, 5014)
+			IDetachable clone = (IDetachable) cloneObject(object);
+			clone.detach();
+
+			target = clone;
+		}
+
+		return objectSizeOfStrategy.sizeOf(target);
 	}
 }

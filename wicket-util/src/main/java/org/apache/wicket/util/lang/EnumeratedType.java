@@ -71,7 +71,7 @@ public abstract class EnumeratedType extends StringValue
 		if (valueList == null)
 		{
 			// create lazily
-			valueList = new ArrayList<EnumeratedType>();
+			valueList = new ArrayList<>();
 			valueListByClass.put(c.getName(), valueList);
 		}
 

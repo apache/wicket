@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.atmosphere;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Predicate;
 
 /**
@@ -23,11 +25,18 @@ import com.google.common.base.Predicate;
  * 
  * @author papegaaij
  */
-public class NoFilterPredicate implements Predicate<Object>
+public class NoFilterPredicate implements Predicate<AtmosphereEvent>
 {
 	@Override
-	public boolean apply(Object input)
+	public boolean apply(@Nullable AtmosphereEvent input)
 	{
 		return true;
 	}
+
+	@Override
+	public boolean equals(@Nullable Object other)
+	{
+		return super.equals(other);
+	}
+
 }

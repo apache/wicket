@@ -35,7 +35,7 @@ public final class User implements IClusterable
 	private String firstName;
 	private String lastName;
 
-	private Set<String> roles = new HashSet<String>();
+	private Set<String> roles = new HashSet<>();
 
 	private String rolesSetName;
 

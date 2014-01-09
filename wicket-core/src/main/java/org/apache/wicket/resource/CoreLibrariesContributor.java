@@ -20,8 +20,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
+import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 
 /**
  * A helper class that contributes all required JavaScript resources needed for Wicket Ajax
@@ -41,7 +41,7 @@ public class CoreLibrariesContributor
 	 */
 	public static void contribute(final Application application, final IHeaderResponse response)
 	{
-		IJavaScriptLibrarySettings jsLibrarySettings = application.getJavaScriptLibrarySettings();
+		JavaScriptLibrarySettings jsLibrarySettings = application.getJavaScriptLibrarySettings();
 		ResourceReference wicketEventReference = jsLibrarySettings.getWicketEventReference();
 		response.render(JavaScriptHeaderItem.forReference(wicketEventReference));
 	}
@@ -57,9 +57,9 @@ public class CoreLibrariesContributor
 	 */
 	public static void contributeAjax(final Application application, final IHeaderResponse response)
 	{
-		IJavaScriptLibrarySettings jsLibrarySettings = application.getJavaScriptLibrarySettings();
+		JavaScriptLibrarySettings jsLibrarySettings = application.getJavaScriptLibrarySettings();
 
-		final IDebugSettings debugSettings = application.getDebugSettings();
+		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
 			response.render(JavaScriptHeaderItem.forReference(jsLibrarySettings.getWicketAjaxDebugReference()));

@@ -69,4 +69,24 @@ public class RedirectRequestHandlerTest
 
 		Mockito.verify(webResponse).sendRedirect(REDIRECT_URL);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5131
+	 */
+	@Test
+	public void seeOtherShouldSetLocationHeader()
+	{
+		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
+				HttpServletResponse.SC_SEE_OTHER);
+
+		IRequestCycle requestCycle = Mockito.mock(IRequestCycle.class);
+		WebResponse webResponse = Mockito.mock(WebResponse.class);
+
+		Mockito.when(requestCycle.getResponse()).thenReturn(webResponse);
+
+		handler.respond(requestCycle);
+
+		Mockito.verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
+		Mockito.verify(webResponse).setHeader("Location", REDIRECT_URL);
+	}
 }

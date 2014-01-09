@@ -43,4 +43,9 @@ public class TestExpirePage extends WebPage
 		});
 	}
 
+	@Override
+	public boolean isBookmarkable()
+	{
+		return false;
+	}
 }

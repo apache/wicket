@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.api.message;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -29,13 +30,13 @@ public class ClosedMessage implements IWebSocketMessage
 {
 	private final Application application;
 	private final String sessionId;
-	private final Integer pageId;
+	private final IKey key;
 
-	public ClosedMessage(Application application, String sessionId, Integer pageId)
+	public ClosedMessage(Application application, String sessionId, IKey key)
 	{
 		this.application = Args.notNull(application, "application");
 		this.sessionId = Args.notNull(sessionId, "sessionId");
-		this.pageId = Args.notNull(pageId, "pageId");
+		this.key = Args.notNull(key, "key");
 	}
 
 	public Application getApplication()
@@ -48,9 +49,9 @@ public class ClosedMessage implements IWebSocketMessage
 		return sessionId;
 	}
 
-	public Integer getPageId()
+	public IKey getKey()
 	{
-		return pageId;
+		return key;
 	}
 
 	@Override

@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -25,17 +27,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Packages;
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.util.resource.ResourceStreamWrapper;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -55,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  * 
  * Access to resources can be granted or denied via a {@link IPackageResourceGuard}. Please see
- * {@link IResourceSettings#getPackageResourceGuard()} as well.
+ * {@link org.apache.wicket.settings.ResourceSettings#getPackageResourceGuard()} as well.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -296,14 +299,10 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			try
 			{
 				// read resource data
-				final byte[] bytes;
-
-				bytes = IOUtils.toByteArray(resourceStream.getInputStream());
-
-				final byte[] processed = processResponse(attributes, bytes);
+				final byte[] bytes = IOUtils.toByteArray(resourceStream.getInputStream());
 
 				// send Content-Length header
-				resourceResponse.setContentLength(processed.length);
+				resourceResponse.setContentLength(bytes.length);
 
 				// send response body with resource data
 				resourceResponse.setWriteCallback(new WriteCallback()
@@ -311,7 +310,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 					@Override
 					public void writeData(Attributes attributes)
 					{
-						attributes.getResponse().write(processed);
+						attributes.getResponse().write(bytes);
 					}
 				});
 			}
@@ -462,27 +461,75 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 						". See IPackageResourceGuard");
 		}
 
-		return resourceStream;
+		return new ProcessingResourceStream(resourceStream);
 	}
 
 	/**
+	 * An IResourceStream that processes the input stream of the original
+	 * IResourceStream
+	 */
+	private class ProcessingResourceStream extends ResourceStreamWrapper
+	{
+		private ProcessingResourceStream(IResourceStream delegate)
+		{
+			super(delegate);
+		}
+
+		@Override
+		public InputStream getInputStream() throws ResourceStreamNotFoundException
+		{
+			byte[] bytes;
+			InputStream inputStream = super.getInputStream();
+			try
+			{
+				bytes = IOUtils.toByteArray(inputStream);
+			} catch (IOException iox)
+			{
+				throw new WicketRuntimeException(iox);
+			}
+
+			RequestCycle cycle = RequestCycle.get();
+			Attributes attributes = new Attributes(cycle.getRequest(), cycle.getResponse());
+			byte[] processedBytes = processResponse(attributes, bytes);
+			return new ByteArrayInputStream(processedBytes);
+		}
+	}
+
+	/**
+	 * Checks whether access is granted for this resource.
+	 *
+	 * By default IPackageResourceGuard is used to check the permissions but
+	 * the resource itself can also make the check.
+	 *
 	 * @param scope
 	 *            resource scope
 	 * @param path
 	 *            resource path
 	 * @return <code>true<code> if resource access is granted
 	 */
-	private boolean accept(Class<?> scope, String path)
+	protected boolean accept(Class<?> scope, String path)
 	{
 		IPackageResourceGuard guard = Application.get()
 			.getResourceSettings()
 			.getPackageResourceGuard();
 
 		return guard.accept(scope, path);
-}
+	}
 
 	/**
-	 * Gets whether a resource for a given set of criteria exists.
+	 * Checks whether a resource for a given set of criteria exists.
+	 *
+	 * @param key
+	 *            The key that contains all attributes about the requested resource
+	 * @return {@code true} if there is a package resource with the given attributes
+	 */
+	public static boolean exists(final ResourceReference.Key key)
+	{
+		return exists(key.getScopeClass(), key.getName(), key.getLocale(), key.getStyle(), key.getVariation());
+	}
+
+	/**
+	 * Checks whether a resource for a given set of criteria exists.
 	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
@@ -496,7 +543,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
 	 * @param variation
 	 *            The component's variation (of the style)
-	 * @return true if a resource could be loaded, false otherwise
+	 * @return {@code true} if a resource could be loaded, {@code false} otherwise
 	 */
 	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation)

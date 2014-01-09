@@ -26,6 +26,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -96,8 +98,8 @@ public class WicketFilter implements Filter
 	private boolean isServlet = false;
 
 	/**
-	 * default constructor, usually invoked through the servlet 
-	 * container by the web.xml configuration
+	 * default constructor, usually invoked through the servlet container by the web.xml
+	 * configuration
 	 */
 	public WicketFilter()
 	{
@@ -106,11 +108,11 @@ public class WicketFilter implements Filter
 	/**
 	 * constructor supporting programmatic setup of the filter
 	 * <p/>
-	 *  this can be useful for programmatically creating and appending the 
-	 *  wicket filter to the servlet context using servlet 3 features.
+	 * this can be useful for programmatically creating and appending the wicket filter to the
+	 * servlet context using servlet 3 features.
 	 * 
 	 * @param application
-	 *           web application
+	 *            web application
 	 */
 	public WicketFilter(WebApplication application)
 	{
@@ -146,15 +148,15 @@ public class WicketFilter implements Filter
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		final ClassLoader newClassLoader = getClassLoader();
 
+		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+
 		try
 		{
 			if (previousClassLoader != newClassLoader)
 			{
 				Thread.currentThread().setContextClassLoader(newClassLoader);
 			}
-
-			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
 			// Make sure getFilterPath() gets called before checkIfRedirectRequired()
 			String filterPath = getFilterPath(httpServletRequest);
@@ -174,6 +176,19 @@ public class WicketFilter implements Filter
 				return false;
 			}
 
+			if ("OPTIONS".equalsIgnoreCase(httpServletRequest.getMethod()))
+			{
+				// handle the OPTIONS request outside of normal request processing.
+				// wicket pages normally only support GET and POST methods, but resources and
+				// special pages acting like REST clients can also support other methods, so
+				// we include them all.
+				httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+				httpServletResponse.setHeader("Allow",
+					"GET,POST,OPTIONS,PUT,HEAD,PATCH,DELETE,TRACE");
+				httpServletResponse.setHeader("Content-Length", "0");
+				return true;
+			}
+
 			String redirectURL = checkIfRedirectRequired(httpServletRequest);
 			if (redirectURL == null)
 			{
@@ -185,18 +200,8 @@ public class WicketFilter implements Filter
 					httpServletResponse);
 
 				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
-				if (!requestCycle.processRequestAndDetach())
-				{
-					if (chain != null)
-					{
-						chain.doFilter(request, response);
-					}
-					res = false;
-				}
-				else
-				{
-					webResponse.flush();
-				}
+				res = processRequestCycle(requestCycle, webResponse, httpServletRequest,
+					httpServletResponse, chain);
 			}
 			else
 			{
@@ -226,10 +231,44 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
 			}
 
-			if (response.isCommitted())
+			if (response.isCommitted() && httpServletRequest.isAsyncStarted() == false)
 			{
 				response.flushBuffer();
 			}
+		}
+		return res;
+	}
+
+	/**
+	 * Process the request cycle
+	 * 
+	 * @param requestCycle
+	 * @param webResponse
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param chain
+	 * @return false, if the request could not be processed
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	protected boolean processRequestCycle(RequestCycle requestCycle, WebResponse webResponse,
+		HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+		final FilterChain chain) throws IOException, ServletException
+	{
+		// Assume we are able to handle the request
+		boolean res = true;
+
+		if (!requestCycle.processRequestAndDetach())
+		{
+			if (chain != null)
+			{
+				chain.doFilter(httpServletRequest, httpServletResponse);
+			}
+			res = false;
+		}
+		else
+		{
+			webResponse.flush();
 		}
 		return res;
 	}
@@ -332,43 +371,8 @@ public class WicketFilter implements Filter
 		this.isServlet = isServlet;
 		initIgnorePaths(filterConfig);
 
-		// locate application instance unless it was already specified during construction
-		if (application == null)
-		{
-			applicationFactory = getApplicationFactory();
-			application = applicationFactory.createApplication(this);
-		}
-
-		application.setName(filterConfig.getFilterName());
-		application.setWicketFilter(this);
-
-		// Allow the filterPath to be preset via setFilterPath()
-		if (filterPath == null)
-		{
-			filterPath = getFilterPathFromConfig(filterConfig);
-		}
-
-		if (filterPath == null)
-		{
-			filterPath = getFilterPathFromWebXml(isServlet, filterConfig);
-		}
-
-		if (filterPath == null)
-		{
-			filterPath = getFilterPathFromAnnotation(isServlet);
-		}
-
-		if (filterPath == null)
-		{
-			log.warn("Unable to determine filter path from filter init-parm, web.xml, "
-				+ "or servlet 3.0 annotations. Assuming user will set filter path "
-				+ "manually by calling setFilterPath(String)");
-		}
-
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		final ClassLoader newClassLoader = getClassLoader();
-
-		ThreadContext.setApplication(application);
 		try
 		{
 			if (previousClassLoader != newClassLoader)
@@ -376,15 +380,79 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(newClassLoader);
 			}
 
-			application.initApplication();
+			// locate application instance unless it was already specified during construction
+			if (application == null)
+			{
+				applicationFactory = getApplicationFactory();
+				application = applicationFactory.createApplication(this);
+			}
 
-			// Give the application the option to log that it is started
-			application.logStarted();
+			application.setName(filterConfig.getFilterName());
+			application.setWicketFilter(this);
+
+			// Allow the filterPath to be preset via setFilterPath()
+			String configureFilterPath = getFilterPath();
+
+			if (configureFilterPath == null)
+			{
+				configureFilterPath = getFilterPathFromConfig(filterConfig);
+
+				if (configureFilterPath == null)
+				{
+					configureFilterPath = getFilterPathFromWebXml(isServlet, filterConfig);
+
+					if (configureFilterPath == null)
+					{
+						configureFilterPath = getFilterPathFromAnnotation(isServlet);
+					}
+				}
+
+				if (configureFilterPath != null)
+				{
+					setFilterPath(configureFilterPath);
+				}
+			}
+
+			if (getFilterPath() == null)
+			{
+				log.warn("Unable to determine filter path from filter init-param, web.xml, "
+					+ "or servlet 3.0 annotations. Assuming user will set filter path "
+					+ "manually by calling setFilterPath(String)");
+			}
+
+			ThreadContext.setApplication(application);
+			try
+			{
+				application.initApplication();
+
+				// Give the application the option to log that it is started
+				application.logStarted();
+			}
+			finally
+			{
+				ThreadContext.detach();
+			}
+		}
+		catch (Exception e)
+		{
+			// #destroy() might not be called by the web container when #init() fails,
+			// so destroy now
+			log.error(String.format("The initialization of an application with name '%s' has failed.",
+					filterConfig.getFilterName()), e);
+
+			try
+			{
+				destroy();
+			}
+			catch (Exception destroyException)
+			{
+				log.error("Unable to destroy after initialization failure", destroyException);
+			}
+
+			throw new ServletException(e);
 		}
 		finally
 		{
-			ThreadContext.detach();
-
 			if (newClassLoader != previousClassLoader)
 			{
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
@@ -400,10 +468,6 @@ public class WicketFilter implements Filter
 	 */
 	protected String getFilterPathFromAnnotation(boolean isServlet)
 	{
-		// @formatter:off
-		/* TODO JAVA6,SERVLET3.0
-		 * the code below is disabled because servlet 3.0 requires java 6 and wicket still supports java 5
-		 * for now the code below will go into a wicket-stuff module
 		String[] patterns = null;
 
 		if (isServlet)
@@ -411,7 +475,14 @@ public class WicketFilter implements Filter
 			WebServlet servlet = getClass().getAnnotation(WebServlet.class);
 			if (servlet != null)
 			{
-				patterns = servlet.urlPatterns();
+				if (servlet.urlPatterns().length > 0)
+				{
+					patterns = servlet.urlPatterns();
+				}
+				else
+				{
+					patterns = servlet.value();
+				}
 			}
 		}
 		else
@@ -419,22 +490,34 @@ public class WicketFilter implements Filter
 			WebFilter filter = getClass().getAnnotation(WebFilter.class);
 			if (filter != null)
 			{
-				patterns = filter.urlPatterns();
+				if (filter.urlPatterns().length > 0)
+				{
+					patterns = filter.urlPatterns();
+				}
+				else
+				{
+					patterns = filter.value();
+				}
 			}
 		}
+
 		if (patterns != null && patterns.length > 0)
 		{
 			String pattern = patterns[0];
 			if (patterns.length > 1)
 			{
 				log.warn(
-					"Multiple url patterns defined for Wicket filter/servlet, using the first: {}",
-					pattern);
+						"Multiple url patterns defined for Wicket filter/servlet, using the first: {}",
+						pattern);
 			}
+
+			if ("/*".equals(pattern))
+			{
+				pattern = "";
+			}
+
 			return pattern;
 		}
-		*/
-		// @formatter:on
 		return null;
 	}
 
@@ -471,6 +554,16 @@ public class WicketFilter implements Filter
 	}
 
 	/**
+	 * Provide a standard getter for filterPath.
+	 * 
+	 * @return The configured filterPath.
+	 */
+	protected String getFilterPath()
+	{
+		return filterPath;
+	}
+
+	/**
 	 * 
 	 * @param filterConfig
 	 * @return filter path
@@ -482,7 +575,7 @@ public class WicketFilter implements Filter
 		{
 			if (result.equals("/*"))
 			{
-				filterPath = "";
+				result = "";
 			}
 			else if (!result.startsWith("/") || !result.endsWith("/*"))
 			{
@@ -492,10 +585,10 @@ public class WicketFilter implements Filter
 			else
 			{
 				// remove leading "/" and trailing "*"
-				filterPath = result.substring(1, result.length() - 1);
+				result = result.substring(1, result.length() - 1);
 			}
 		}
-		return filterPath;
+		return result;
 	}
 
 	/**
@@ -520,7 +613,14 @@ public class WicketFilter implements Filter
 
 		if (applicationFactory != null)
 		{
-			applicationFactory.destroy(this);
+			try
+			{
+				applicationFactory.destroy(this);
+			}
+			finally
+			{
+				applicationFactory = null;
+			}
 		}
 	}
 
@@ -551,19 +651,6 @@ public class WicketFilter implements Filter
 			uriLength = requestURI.length();
 		}
 
-		// We only need to determine it once. It'll not change.
-		if (filterPathLength == -1)
-		{
-			if (filterPath.endsWith("/"))
-			{
-				filterPathLength = filterPath.length() - 1;
-			}
-			else
-			{
-				filterPathLength = filterPath.length();
-			}
-		}
-
 		// request.getContextPath() + "/" + filterPath. But without any trailing "/".
 		int homePathLength = contextPath.length() +
 			(filterPathLength > 0 ? 1 + filterPathLength : 0);
@@ -578,7 +665,7 @@ public class WicketFilter implements Filter
 		String uri = Strings.stripJSessionId(requestURI);
 
 		// home page without trailing slash URI
-		String homePageUri = contextPath + "/" + filterPath;
+		String homePageUri = contextPath + '/' + getFilterPath();
 		if (homePageUri.endsWith("/"))
 		{
 			homePageUri = homePageUri.substring(0, homePageUri.length() - 1);
@@ -603,14 +690,28 @@ public class WicketFilter implements Filter
 	 * 
 	 * @param filterPath
 	 */
-	public final void setFilterPath(final String filterPath)
+	public final void setFilterPath(String filterPath)
 	{
 		// see https://issues.apache.org/jira/browse/WICKET-701
 		if (this.filterPath != null)
 		{
 			throw new IllegalStateException(
 				"Filter path is write-once. You can not change it. Current value='" + filterPath +
-					"'");
+					'\'');
+		}
+		if (filterPath != null)
+		{
+			filterPath = canonicaliseFilterPath(filterPath);
+
+			// We only need to determine it once. It'll not change.
+			if (filterPath.endsWith("/"))
+			{
+				filterPathLength = filterPath.length() - 1;
+			}
+			else
+			{
+				filterPathLength = filterPath.length();
+			}
 		}
 		this.filterPath = filterPath;
 	}
@@ -642,6 +743,7 @@ public class WicketFilter implements Filter
 		// We should always be under the rootPath, except
 		// for the special case of someone landing on the
 		// home page without a trailing slash.
+		String filterPath = getFilterPath();
 		if (!path.startsWith(filterPath))
 		{
 			if (filterPath.equals(path + "/"))
@@ -713,5 +815,60 @@ public class WicketFilter implements Filter
 				ignorePaths.add(path);
 			}
 		}
+	}
+
+	/**
+	 * A filterPath should have all leading slashes removed and exactly one trailing slash. A
+	 * wildcard asterisk character has no special meaning. If your intention is to mean the top
+	 * level "/" then an empty string should be used instead.
+	 * 
+	 * @param filterPath
+	 * @return canonic filter path
+	 */
+	static String canonicaliseFilterPath(String filterPath)
+	{
+		if (Strings.isEmpty(filterPath))
+		{
+			return filterPath;
+		}
+
+		int beginIndex = 0;
+		int endIndex = filterPath.length();
+		while (beginIndex < endIndex)
+		{
+			char c = filterPath.charAt(beginIndex);
+			if (c != '/')
+			{
+				break;
+			}
+			beginIndex++;
+		}
+		int o;
+		int i = o = beginIndex;
+		while (i < endIndex)
+		{
+			char c = filterPath.charAt(i);
+			i++;
+			if (c != '/')
+			{
+				o = i;
+			}
+		}
+		if (o < endIndex)
+		{
+			o++; // include exactly one trailing slash
+			filterPath = filterPath.substring(beginIndex, o);
+		}
+		else
+		{
+			// ensure to append trailing slash
+			filterPath = filterPath.substring(beginIndex) + '/';
+		}
+
+		if (filterPath.equals("/"))
+		{
+			return "";
+		}
+		return filterPath;
 	}
 }

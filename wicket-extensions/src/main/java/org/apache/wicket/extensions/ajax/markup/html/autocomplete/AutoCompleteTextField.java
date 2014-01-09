@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import java.util.Iterator;
 
 import org.apache.wicket.ConverterLocator;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -235,17 +236,32 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		};
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Initializes the {@link AutoCompleteBehavior} if it is not already there.
+	 */
 	@Override
-	protected void onBeforeRender()
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		initializeAutoCompleteBehavior();
+	}
+
+	/**
+	 * The {@link AutoCompleteBehavior} is added lazily instead from the constructor to support an
+	 * overridable factory method.
+	 * 
+	 * @see #onInitialize()
+	 * @see #add(Behavior...)
+	 * @see #newAutoCompleteBehavior(IAutoCompleteRenderer, AutoCompleteSettings)
+	 */
+	private void initializeAutoCompleteBehavior()
 	{
 		// add auto complete behavior to this component if its not already there
 		if (behavior == null)
 		{
-			// we do this here instead of constructor so we can have an overridable factory method
-			add(behavior = newAutoCompleteBehavior(renderer, settings));
+			super.add(behavior = newAutoCompleteBehavior(renderer, settings));
 		}
-		super.onBeforeRender();
 	}
 
 	@Override

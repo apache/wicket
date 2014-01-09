@@ -24,16 +24,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
+import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
+import org.apache.wicket.markup.renderStrategy.IHeaderRenderStrategy;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Response;
@@ -44,8 +50,7 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * A POJO-like that collects the data for the Ajax response written to the client
  * and serializes it to specific String-based format (XML, JSON, ...).
  */
-abstract class AbstractAjaxResponse
+public abstract class AbstractAjaxResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractAjaxResponse.class);
 
@@ -121,7 +126,7 @@ abstract class AbstractAjaxResponse
 	{
 		this.page = page;
 
-		Response response = page.getResponse();
+		WebResponse response = (WebResponse) page.getResponse();
 		encodingBodyResponse = new AjaxResponse(response);
 		encodingHeaderResponse = new AjaxResponse(response);
 	}
@@ -134,7 +139,7 @@ abstract class AbstractAjaxResponse
 	 * @param encoding
 	 *      the encoding for the response
 	 */
-	void writeTo(final Response response, final String encoding)
+	public void writeTo(final Response response, final String encoding)
 	{
 		writeHeader(response, encoding);
 
@@ -152,7 +157,7 @@ abstract class AbstractAjaxResponse
 
 		// execute the dom ready javascripts as first javascripts
 		// after component replacement
-		List<CharSequence> evaluationScripts = new ArrayList<CharSequence>();
+		List<CharSequence> evaluationScripts = new ArrayList<>();
 		evaluationScripts.addAll(domReadyJavaScripts);
 		evaluationScripts.addAll(appendJavaScripts);
 		writeNormalEvaluations(response, evaluationScripts);
@@ -207,7 +212,6 @@ abstract class AbstractAjaxResponse
 		for (Map.Entry<String, Component> stringComponentEntry : markupIdToComponent.entrySet())
 		{
 			final Component component = stringComponentEntry.getValue();
-			// final String markupId = stringComponentEntry.getKey();
 
 			if (!containsAncestorFor(component))
 			{
@@ -300,7 +304,7 @@ abstract class AbstractAjaxResponse
 	 * @param javascript
 	 *      the javascript to execute
 	 */
-	final void appendJavaScript(final CharSequence javascript)
+	public final void appendJavaScript(final CharSequence javascript)
 	{
 		Args.notNull(javascript, "javascript");
 
@@ -313,7 +317,7 @@ abstract class AbstractAjaxResponse
 	 * @param javascript
 	 *      the javascript to execute
 	 */
-	final void prependJavaScript(CharSequence javascript)
+	public final void prependJavaScript(CharSequence javascript)
 	{
 		Args.notNull(javascript, "javascript");
 
@@ -332,7 +336,7 @@ abstract class AbstractAjaxResponse
 	 * @throws IllegalStateException
 	 *      thrown when components no more can be added for replacement.
 	 */
-	final void add(final Component component, final String markupId)
+	public final void add(final Component component, final String markupId)
 			throws IllegalArgumentException, IllegalStateException
 	{
 		Args.notEmpty(markupId, "markupId");
@@ -363,7 +367,7 @@ abstract class AbstractAjaxResponse
 	/**
 	 * @return a read-only collection of all components which have been added for replacement so far.
 	 */
-	final Collection<? extends Component> getComponents()
+	public final Collection<? extends Component> getComponents()
 	{
 		return Collections.unmodifiableCollection(markupIdToComponent.values());
 	}
@@ -374,7 +378,7 @@ abstract class AbstractAjaxResponse
 	 * @param requestCycle
 	 *      the current request cycle
 	 */
-	void detach(IRequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 		Iterator<Component> iterator = markupIdToComponent.values().iterator();
 		while (iterator.hasNext())
@@ -423,7 +427,7 @@ abstract class AbstractAjaxResponse
 	 *
 	 * @return IHeaderResponse instance to use for the header contributions.
 	 */
-	IHeaderResponse getHeaderResponse()
+	public IHeaderResponse getHeaderResponse()
 	{
 		if (headerResponse == null)
 		{
@@ -460,28 +464,9 @@ abstract class AbstractAjaxResponse
 		try {
 			encodingHeaderResponse.reset();
 
-			// render the head of component and all it's children
+			IHeaderRenderStrategy strategy = AbstractHeaderRenderStrategy.get();
 
-			component.renderHead(header);
-
-			if (component instanceof MarkupContainer)
-			{
-				((MarkupContainer)component).visitChildren(new IVisitor<Component, Void>()
-				{
-					@Override
-					public void component(final Component component, final IVisit<Void> visit)
-					{
-						if (component.isVisibleInHierarchy())
-						{
-							component.renderHead(header);
-						}
-						else
-						{
-							visit.dontGoDeeper();
-						}
-					}
-				});
-			}
+			strategy.renderHeader(header, null, component);
 		} finally {
 			// revert to old response
 			requestCycle.setResponse(oldResponse);
@@ -547,6 +532,16 @@ abstract class AbstractAjaxResponse
 		@Override
 		public void render(HeaderItem item)
 		{
+			PriorityHeaderItem priorityHeaderItem = null;
+			while (item instanceof IWrappedHeaderItem)
+			{
+				if (item instanceof PriorityHeaderItem)
+				{
+					priorityHeaderItem = (PriorityHeaderItem) item;
+				}
+				item = ((IWrappedHeaderItem) item).getWrapped();
+			}
+
 			if (item instanceof OnLoadHeaderItem)
 			{
 				if (!wasItemRendered(item))
@@ -555,11 +550,26 @@ abstract class AbstractAjaxResponse
 					markItemRendered(item);
 				}
 			}
+			else if (item instanceof OnEventHeaderItem)
+			{
+				if (!wasItemRendered(item))
+				{
+					AbstractAjaxResponse.this.appendJavaScript(((OnEventHeaderItem) item).getCompleteJavaScript());
+					markItemRendered(item);
+				}
+			}
 			else if (item instanceof OnDomReadyHeaderItem)
 			{
 				if (!wasItemRendered(item))
 				{
-					AbstractAjaxResponse.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
+					if (priorityHeaderItem != null)
+					{
+						AbstractAjaxResponse.this.domReadyJavaScripts.add(0, ((OnDomReadyHeaderItem)item).getJavaScript());
+					}
+					else
+					{
+						AbstractAjaxResponse.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
+					}
 					markItemRendered(item);
 				}
 			}
@@ -569,7 +579,7 @@ abstract class AbstractAjaxResponse
 			}
 			else
 			{
-				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavaScript and renderOnDomReadyJavaScript");
+				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are #render(OnLoadHeaderItem) and #render(OnDomReadyHeaderItem)");
 			}
 		}
 
@@ -585,13 +595,13 @@ abstract class AbstractAjaxResponse
 	 *
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	protected static final class AjaxResponse extends Response
+	protected static final class AjaxResponse extends WebResponse
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 
 		private boolean escaped = false;
 
-		private final Response originalResponse;
+		private final WebResponse originalResponse;
 
 		/**
 		 * Constructor.
@@ -599,7 +609,7 @@ abstract class AbstractAjaxResponse
 		 * @param originalResponse
 		 *      the original request cycle response
 		 */
-		private AjaxResponse(Response originalResponse)
+		private AjaxResponse(WebResponse originalResponse)
 		{
 			this.originalResponse = originalResponse;
 		}
@@ -674,6 +684,84 @@ abstract class AbstractAjaxResponse
 		public Object getContainerResponse()
 		{
 			return originalResponse.getContainerResponse();
+		}
+
+		@Override
+		public void addCookie(Cookie cookie)
+		{
+			originalResponse.addCookie(cookie);
+		}
+
+		@Override
+		public void clearCookie(Cookie cookie)
+		{
+			originalResponse.clearCookie(cookie);
+		}
+
+		@Override
+		public void setHeader(String name, String value)
+		{
+			originalResponse.setHeader(name, value);
+		}
+
+		@Override
+		public void addHeader(String name, String value)
+		{
+			originalResponse.addHeader(name, value);
+		}
+
+		@Override
+		public void setDateHeader(String name, Time date)
+		{
+			originalResponse.setDateHeader(name, date);
+		}
+
+		@Override
+		public void setContentLength(long length)
+		{
+			originalResponse.setContentLength(length);
+		}
+
+		@Override
+		public void setContentType(String mimeType)
+		{
+			originalResponse.setContentType(mimeType);
+		}
+
+		@Override
+		public void setStatus(int sc)
+		{
+			originalResponse.setStatus(sc);
+		}
+
+		@Override
+		public void sendError(int sc, String msg)
+		{
+			originalResponse.sendError(sc, msg);
+		}
+
+		@Override
+		public String encodeRedirectURL(CharSequence url)
+		{
+			return originalResponse.encodeRedirectURL(url);
+		}
+
+		@Override
+		public void sendRedirect(String url)
+		{
+			originalResponse.sendRedirect(url);
+		}
+
+		@Override
+		public boolean isRedirect()
+		{
+			return originalResponse.isRedirect();
+		}
+
+		@Override
+		public void flush()
+		{
+			originalResponse.flush();
 		}
 	}
 

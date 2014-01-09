@@ -17,13 +17,15 @@
 package org.apache.wicket.markup.head;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for scripts that need to be executed after the entire page is loaded.
@@ -48,13 +50,23 @@ public class OnLoadHeaderItem extends HeaderItem
 	private final CharSequence javaScript;
 
 	/**
+	 * Constructor.
+	 *
+	 * The JavaScript should be provided by overloaded #getJavaScript
+	 */
+	public OnLoadHeaderItem()
+	{
+		this(null);
+	}
+
+	/**
 	 * Construct.
 	 * 
 	 * @param javaScript
 	 */
 	public OnLoadHeaderItem(CharSequence javaScript)
 	{
-		this.javaScript = Args.notEmpty(javaScript, "javaScript");
+		this.javaScript = javaScript;
 	}
 
 	/**
@@ -69,8 +81,12 @@ public class OnLoadHeaderItem extends HeaderItem
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
-			"function(event) { " + getJavaScript() + ";});");
+		CharSequence js = getJavaScript();
+		if (Strings.isEmpty(js) == false)
+		{
+			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
+				"function(event) { " + js + ";});");
+		}
 	}
 
 	@Override
@@ -100,10 +116,12 @@ public class OnLoadHeaderItem extends HeaderItem
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		IJavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
+		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
 		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
-		return Collections.singletonList(JavaScriptHeaderItem.forReference(wicketEventReference));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		return dependencies;
 	}
 }

@@ -50,7 +50,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	 */
 	public ConcurrentHashSet()
 	{
-		map = new ConcurrentHashMap<E, Object>();
+		map = new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	 */
 	public ConcurrentHashSet(final Collection<? extends E> c)
 	{
-		map = new ConcurrentHashMap<E, Object>(Math.max((int)(c.size() / .75f) + 1, 16));
+		map = new ConcurrentHashMap<>(Math.max((int)(c.size() / .75f) + 1, 16));
 		addAll(c);
 	}
 
@@ -82,7 +82,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	 */
 	public ConcurrentHashSet(final int initialCapacity, final float loadFactor)
 	{
-		map = new ConcurrentHashMap<E, Object>(initialCapacity, loadFactor, 16);
+		map = new ConcurrentHashMap<>(initialCapacity, loadFactor, 16);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	 */
 	public ConcurrentHashSet(final int initialCapacity)
 	{
-		map = new ConcurrentHashMap<E, Object>(initialCapacity);
+		map = new ConcurrentHashMap<>(initialCapacity);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	{
 		inputStream.defaultReadObject();
 
-		map = new ConcurrentHashMap<E, Object>();
+		map = new ConcurrentHashMap<>();
 
 		int size = inputStream.readInt();
 		for (int i = 0; i < size; i++)

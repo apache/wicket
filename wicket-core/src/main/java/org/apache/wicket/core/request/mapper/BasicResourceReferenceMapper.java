@@ -26,15 +26,17 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,14 +58,14 @@ import org.slf4j.LoggerFactory;
  * @author igor.vaynberg
  * @author Peter Ertl
  */
-class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
+public class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
 	private static final Logger log = LoggerFactory.getLogger(BasicResourceReferenceMapper.class);
 
-	private final IPageParametersEncoder pageParametersEncoder;
+	protected final IPageParametersEncoder pageParametersEncoder;
 
 	/** resource caching strategy */
-	private final IProvider<? extends IResourceCachingStrategy> cachingStrategy;
+	protected final IProvider<? extends IResourceCachingStrategy> cachingStrategy;
 
 	/**
 	 * Construct.
@@ -74,7 +76,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
 		IProvider<? extends IResourceCachingStrategy> cachingStrategy)
 	{
-		this.pageParametersEncoder = pageParametersEncoder;
+		this.pageParametersEncoder = Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 		this.cachingStrategy = cachingStrategy;
 	}
 
@@ -83,22 +85,23 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 	{
 		Url url = request.getUrl();
 
-		// extract the PageParameters from URL if there are any
-		PageParameters pageParameters = extractPageParameters(request, url.getSegments().size(),
-			pageParametersEncoder);
-
-		if (url.getSegments().size() >= 4 &&
-			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
+		if (canBeHandled(url))
 		{
+			final int segmentsSize = url.getSegments().size();
+
+			// extract the PageParameters from URL if there are any
+			PageParameters pageParameters = extractPageParameters(request, segmentsSize,
+					pageParametersEncoder);
+
 			String className = url.getSegments().get(2);
-			StringBuilder name = new StringBuilder();
-			int segmentsSize = url.getSegments().size();
+			StringBuilder name = new StringBuilder(segmentsSize * 2);
+
 			for (int i = 3; i < segmentsSize; ++i)
 			{
 				String segment = url.getSegments().get(i);
 
-				// skip possibly malicious segments
-				if (segment.contains("/"))
+				// ignore invalid segments
+				if (segment.indexOf('/') > -1)
 				{
 					return null;
 				}
@@ -112,15 +115,11 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 					getCachingStrategy().undecorateUrl(resourceUrl);
 					segment = resourceUrl.getFileName();
 
-					if (Strings.isEmpty(segment))
-					{
-						throw new IllegalStateException(
-							"caching strategy returned empty name for " + resourceUrl);
-					}
+					Checks.notEmpty(segment, "Caching strategy returned empty name for '%s'", resourceUrl);
 				}
 				if (name.length() > 0)
 				{
-					name.append("/");
+					name.append('/');
 				}
 				name.append(segment);
 			}
@@ -144,7 +143,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return null;
 	}
 
-	private IResourceCachingStrategy getCachingStrategy()
+	protected final IResourceCachingStrategy getCachingStrategy()
 	{
 		return cachingStrategy.get();
 	}
@@ -169,7 +168,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 			Url url;
 
-			if (reference instanceof ResourceBundleReference)
+			while (reference instanceof ResourceBundleReference)
 			{
 				// unwrap the bundle to render the url for the actual reference
 				reference = ((ResourceBundleReference)reference).getBundleReference();
@@ -185,11 +184,11 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				}
 				// otherwise it has to be served by the standard wicket way
 			}
-			else if (reference instanceof UrlResourceReference)
+
+			if (reference.canBeRegistered())
 			{
-				UrlResourceReference urlReference = (UrlResourceReference)reference;
-				url = urlReference.getUrl();
-				return url;
+				ResourceReferenceRegistry resourceReferenceRegistry = getContext().getResourceReferenceRegistry();
+				resourceReferenceRegistry.registerResourceReference(reference);
 			}
 
 			url = new Url();
@@ -239,11 +238,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 							getCachingStrategy().decorateUrl(resourceUrl, cacheable);
 							token = resourceUrl.getFileName();
 	
-							if (Strings.isEmpty(token))
-							{
-								throw new IllegalStateException(
-									"caching strategy returned empty name for " + resource);
-							}
+						  Checks.notEmpty(token, "Caching strategy returned empty name for '%s'", resource);
 						}
 					}
 				}
@@ -266,12 +261,25 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		Url url = request.getUrl();
 
 		int score = -1;
-		if (url.getSegments().size() >= 4 &&
-			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
+		if (canBeHandled(url))
 		{
 			score = 1;
 		}
 
 		return score;
+	}
+
+	/**
+	 * Checks whether the passed Url can be handled by this mapper
+	 *
+	 * @param url
+	 *      the Url to check
+	 * @return {@code true} - if the Url can be handled, {@code false} - otherwise
+	 */
+	protected boolean canBeHandled(final Url url)
+	{
+		return (url.getSegments().size() >= 4 &&
+				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()));
+
 	}
 }

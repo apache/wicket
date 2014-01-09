@@ -34,8 +34,7 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
-import org.apache.wicket.settings.IExceptionSettings;
-import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			Response response = RequestCycle.get().getResponse();
 			if (response instanceof WebResponse)
 			{
-				// we don't wan't to cache an exceptional reply in the browser
+				// we don't want to cache an exceptional reply in the browser
 				((WebResponse)response).disableCaching();
 			}
 			return internalMap(e);
@@ -92,7 +91,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 		if (e instanceof StalePageException)
 		{
-			// If the page was stale, just rerender it
+			// If the page was stale, just re-render it
 			// (the url should always be updated by an redirect in that case)
 			return new RenderPageRequestHandler(new PageProvider(((StalePageException)e).getPage()));
 		}
@@ -117,18 +116,18 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		else
 		{
 
-			final UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
+			final ExceptionSettings.UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
 				.getUnexpectedExceptionDisplay();
 
 			logger.error("Unexpected error occurred", e);
 
-			if (IExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
+			if (ExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
 			{
 				Page currentPage = extractCurrentPage();
 				return createPageRequestHandler(new PageProvider(new ExceptionErrorPage(e,
 					currentPage)));
 			}
-			else if (IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
+			else if (ExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
 			{
 				return createPageRequestHandler(new PageProvider(
 					application.getApplicationSettings().getInternalErrorPage()));
@@ -167,7 +166,6 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 	private boolean isProcessingAjaxRequest()
 	{
-
 		RequestCycle rc = RequestCycle.get();
 		Request request = rc.getRequest();
 		if (request instanceof WebRequest)

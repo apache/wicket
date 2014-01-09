@@ -18,8 +18,10 @@ package org.apache.wicket.request.resource;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.response.ByteArrayResponse;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.junit.Test;
 
 /**
@@ -52,7 +54,7 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 			MinifiedAwareResourceReferenceTest.class, "b.js");
 		assertEquals("b.min.js", reference.getName());
 		String fileContent = renderResource(reference);
-		assertEquals("//minified-b\n", fileContent);
+		assertEquals("//minified-b", fileContent);
 	}
 
 	/**
@@ -61,11 +63,33 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 	@Test
 	public void noMinifiedResourceAvailable()
 	{
+		MinCountingResourceStreamLocator locator = new MinCountingResourceStreamLocator();
+
+		Application.get().getResourceSettings().setResourceStreamLocator(locator);
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
+
 		ResourceReference reference = new JavaScriptResourceReference(
 			MinifiedAwareResourceReferenceTest.class, "a.js");
 		assertEquals("a.js", reference.getName());
 		String fileContent = renderResource(reference);
-		assertEquals("//a\n", fileContent);
+		assertEquals("//a", fileContent);
+
+		assertEquals(1, locator.minLocated);
+	}
+
+	private class MinCountingResourceStreamLocator extends ResourceStreamLocator
+	{
+		public int minLocated = 0;
+
+		@Override
+		public IResourceStream locate(Class<?> clazz, String path)
+		{
+			if (path.contains(".min."))
+			{
+				minLocated++;
+			}
+
+			return super.locate(clazz, path);
+		}
 	}
 }

@@ -83,26 +83,6 @@ public class AttributeModifier extends Behavior implements IClusterable
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model to replace with. The
-	 * additional boolean flag specifies whether to add the attribute if it is not present.
-	 * 
-	 * @param attribute
-	 *            The attribute name to replace the value for
-	 * @param addAttributeIfNotPresent
-	 *            Whether to add the attribute if it is not present
-	 * @param replaceModel
-	 *            The model to replace the value with
-	 * @deprecated AttributeModifier will now always add the attribute if not present, use
-	 *             {@link #AttributeModifier(String, IModel)} instead
-	 */
-	@Deprecated
-	public AttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
-		final IModel<?> replaceModel)
-	{
-		this(attribute, replaceModel);
-	}
-
-	/**
-	 * Create a new attribute modifier with the given attribute name and model to replace with. The
 	 * attribute will be added with the model value or the value will be replaced with the model
 	 * value if the attribute is already present.
 	 * 

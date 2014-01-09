@@ -24,6 +24,8 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 
 /**
@@ -112,8 +114,8 @@ public class SecondPanel extends BreadCrumbPanel
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
 	 */
 	@Override
-	public String getTitle()
+	public IModel<String> getTitle()
 	{
-		return "second";
+		return Model.of("second");
 	}
 }

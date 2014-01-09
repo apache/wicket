@@ -25,12 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
@@ -40,11 +39,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link IPropertiesFactory} which uses the
- * {@link IResourceStreamLocator} as defined by {@link IResourceSettings#getResourceStreamLocator()}
+ * {@link IResourceStreamLocator} as defined by
+ * {@link org.apache.wicket.settings.ResourceSettings#getResourceStreamLocator()}
  * to load the {@link Properties} objects. Depending on the settings, it will assign
  * {@link ModificationWatcher}s to the loaded resources to support reloading.
  * 
- * @see org.apache.wicket.settings.IResourceSettings#getPropertiesFactory()
+ * @see org.apache.wicket.settings.ResourceSettings#getPropertiesFactory()
  * 
  * @author Juergen Donnerstag
  */
@@ -54,7 +54,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	private static final Logger log = LoggerFactory.getLogger(PropertiesFactory.class);
 
 	/** Listeners will be invoked after changes to property file have been detected */
-	private final List<IPropertiesChangeListener> afterReloadListeners = new ArrayList<IPropertiesChangeListener>();
+	private final List<IPropertiesChangeListener> afterReloadListeners = new ArrayList<>();
 
 	/** Cache for all property files loaded */
 	private final Map<String, Properties> propertiesCache = newPropertiesCache();
@@ -74,7 +74,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	public PropertiesFactory(final IPropertiesFactoryContext context)
 	{
 		this.context = context;
-		this.propertiesLoader = new ArrayList<IPropertiesLoader>();
+		this.propertiesLoader = new ArrayList<>();
 		this.propertiesLoader.add(new IsoPropertiesFilePropertiesLoader("properties"));
 		this.propertiesLoader.add(new UtfPropertiesFilePropertiesLoader("utf8.properties", "utf-8"));
 		this.propertiesLoader.add(new XmlFilePropertiesLoader("properties.xml"));
@@ -96,7 +96,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 */
 	protected Map<String, Properties> newPropertiesCache()
 	{
-		return new ConcurrentHashMap<String, Properties>();
+		return new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * @param resourceStream
 	 * @return properties
 	 */
-	private ValueMap loadFromLoader(final IPropertiesLoader loader,
+	protected ValueMap loadFromLoader(final IPropertiesLoader loader,
 		final IResourceStream resourceStream)
 	{
 		if (log.isInfoEnabled())
@@ -257,7 +257,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * @param resourceStream
 	 * @param watcher
 	 */
-	private void addToWatcher(final String path, final IResourceStream resourceStream,
+	protected void addToWatcher(final String path, final IResourceStream resourceStream,
 		final IModificationWatcher watcher)
 	{
 		watcher.add(resourceStream, new IChangeListener()

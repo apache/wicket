@@ -30,6 +30,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * Tests validator work as validators and behaviors
@@ -42,6 +43,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 	/**
 	 * Tests validators are treated as behaviors
 	 */
+	@Test
 	public void testActAsBehavior()
 	{
 		TestPage page = new TestPage();
@@ -62,6 +64,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 	/**
 	 * Tests validators are treated as validators
 	 */
+	@Test
 	public void testActAsValidator()
 	{
 		TestPage page = new TestPage();
@@ -80,7 +83,8 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		ft.setValue("name", "999999999");
 		ft.submit();
 		assertEquals(1, new FeedbackCollector(page).collect().size());
-		assertEquals("MAX", new FeedbackCollector(page).collect()
+		// WICKET-5115 variables in default message are not substituted (was the case in 1.5.x)
+		assertEquals("MAX ${len}", new FeedbackCollector(page).collect()
 			.get(0)
 			.getMessage()
 			.toString());
@@ -136,7 +140,8 @@ public class ValidatorBehaviorTest extends WicketTestCase
 			if (value.length() > len)
 			{
 				ValidationError error = new ValidationError();
-				error.setMessage("MAX");
+				error.setVariable("len", len);
+				error.setMessage("MAX ${len}");
 				validatable.error(error);
 			}
 		}

@@ -24,13 +24,11 @@ import java.util.Locale;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -41,16 +39,43 @@ import org.apache.wicket.util.string.Strings;
  */
 public class AutoCompletePage extends BasePage
 {
+
+	private StringBuilder values = new StringBuilder();
+
 	/**
 	 * Constructor
 	 */
 	public AutoCompletePage()
 	{
-		Form<Void> form = new Form<Void>("form");
+		Form<Void> form = new Form<>("form");
 		add(form);
 
-		final AutoCompleteTextField<String> field = new AutoCompleteTextField<String>("ac",
-			new Model<String>(""))
+		final IModel<String> model = new IModel<String>()
+		{
+			private String value = null;
+
+			@Override
+			public String getObject()
+			{
+				return value;
+			}
+
+			@Override
+			public void setObject(String object)
+			{
+				value = object;
+
+				values.append("\n");
+				values.append(value);
+			}
+
+			@Override
+			public void detach()
+			{
+			}
+		};
+
+		final AutoCompleteTextField<String> field = new AutoCompleteTextField<String>("ac", model)
 		{
 			@Override
 			protected Iterator<String> getChoices(String input)
@@ -61,7 +86,7 @@ public class AutoCompletePage extends BasePage
 					return emptyList.iterator();
 				}
 
-				List<String> choices = new ArrayList<String>(10);
+				List<String> choices = new ArrayList<>(10);
 
 				Locale[] locales = Locale.getAvailableLocales();
 
@@ -84,7 +109,8 @@ public class AutoCompletePage extends BasePage
 		};
 		form.add(field);
 
-		final Label label = new Label("selectedValue", field.getDefaultModel());
+		final MultiLineLabel label = new MultiLineLabel("history", new PropertyModel<String>(this,
+			"values"));
 		label.setOutputMarkupId(true);
 		form.add(label);
 
@@ -93,10 +119,6 @@ public class AutoCompletePage extends BasePage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				BookmarkablePageRequestHandler bookmarkablePageRequestHandler = new BookmarkablePageRequestHandler(
-					new PageProvider(Index.class));
-				RequestCycle requestCycle = RequestCycle.get();
-				CharSequence urlFor = requestCycle.urlFor(bookmarkablePageRequestHandler);
 				target.add(label);
 			}
 

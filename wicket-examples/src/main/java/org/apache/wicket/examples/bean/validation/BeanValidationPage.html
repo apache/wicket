@@ -1,0 +1,48 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<title>Wicket Examples - Bean Validation</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<style>
+	.note { font-size:.8em; }
+	.required {font-weight: bold;}
+</style>
+</head>
+<body>
+	<span wicket:id="mainNavigation" />
+
+	<div wicket:id="feedback"></div>
+	
+	<form wicket:id="form" novalidate="novalidate">
+		<table cellspacing="0" cellpadding="4">
+			<tr>
+				<td><label wicket:for="name"><wicket:label>Name</wicket:label></label></td>
+				<td><input wicket:id="name" type="text" size="30"/></td>
+				<td><pre class="note">@NotNull @Size(min = 2, max = 30)</pre></td>
+			</tr>
+			<tr>
+				<td><label wicket:for="email"><wicket:label>Email</wicket:label></label></td>
+				<td><input wicket:id="email" type="text" size="30"/></td>
+				<td><pre class="note">@NotNull @Email</pre></td>
+			</tr>
+			<tr>
+				<td><label wicket:for="phone"><wicket:label>Phone</wicket:label></label></td>
+				<td><input wicket:id="phone" type="text" size="20"/></td>
+				<td><pre class="note">@Pattern(regexp = "[0-9]{3}-[0-9]{4}")</pre></td>
+			</tr>
+			<tr>
+				<td><label wicket:for="birthdate"><wicket:label>Birthdate</wicket:label></label></td>
+				<td><input wicket:id="birthdate" type="text" size="10"/></td>
+				<td><pre class="note">m/d/yyyy field with @Past</pre></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<input type="submit" value="Submit"/>
+				</td>
+				<td><span class="note">press to submit the form and run the validation</span></td>
+			</tr>
+		</table>
+	</form>
+
+</body>
+</html>

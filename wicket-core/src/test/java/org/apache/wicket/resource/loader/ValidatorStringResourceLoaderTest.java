@@ -34,7 +34,6 @@ import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
-import org.apache.wicket.validation.validator.AbstractValidator;
 import org.junit.Test;
 
 /**
@@ -108,10 +107,10 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 		}
 	}
 
-	private static class ClassValidator extends AbstractValidator<String>
+	private static class ClassValidator implements IValidator<String>
 	{
 		@Override
-		protected void onValidate(IValidatable<String> validatable)
+		public void validate(IValidatable<String> validatable)
 		{
 			ValidationError error = new ValidationError();
 			error.addKey("testError");

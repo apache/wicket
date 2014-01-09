@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
@@ -183,7 +182,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	/**
 	 * If true re-rendering the list view is more efficient if the windows doesn't get changed at
 	 * all or if it gets scrolled (compared to paging). But if you modify the listView model object,
-	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
+	 * then you must manually call listView.removeAll() in order to rebuild the ListItems. If you
 	 * nest a ListView in a Form, ALLWAYS set this property to true, as otherwise validation will
 	 * not work properly.
 	 * 
@@ -264,7 +263,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = (int)item.getIndex();
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 					addStateChange();
@@ -304,7 +303,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = (int)item.getIndex();
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 
@@ -375,8 +374,8 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * If true re-rendering the list view is more efficient if the windows doesn't get changed at
 	 * all or if it gets scrolled (compared to paging). But if you modify the listView model object,
 	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
-	 * nest a ListView in a Form, ALLWAYS set this property to true, as otherwise validation will
-	 * not work properly.
+	 * nest a ListView in a Form, <strong>always</strong> set this property to true,
+	 * as otherwise validation will not work properly.
 	 * 
 	 * @param reuseItems
 	 *            Whether to reuse the child items.
@@ -446,7 +445,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	protected IModel<T> getListItemModel(final IModel<? extends List<T>> listViewModel,
 		final int index)
 	{
-		return new ListItemModel<T>(this, index);
+		return new ListItemModel<>(this, index);
 	}
 
 	/**
@@ -459,7 +458,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 */
 	protected ListItem<T> newItem(final int index, IModel<T> itemModel)
 	{
-		return new ListItem<T>(index, itemModel);
+		return new ListItem<>(index, itemModel);
 	}
 
 	/**
@@ -483,7 +482,7 @@ public abstract class ListView<T> extends AbstractRepeater
 					final ListItem<?> child = (ListItem<?>)iterator.next();
 					if (child != null)
 					{
-						final int index = (int)child.getIndex();
+						final int index = child.getIndex();
 						if (index < firstIndex || index >= maxIndex)
 						{
 							iterator.remove();
@@ -652,15 +651,5 @@ public abstract class ListView<T> extends AbstractRepeater
 	public final void setModelObject(List<T> object)
 	{
 		setDefaultModelObject(object);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#getMarkup(org.apache.wicket.Component)
-	 */
-	@Override
-	public IMarkupFragment getMarkup(Component child)
-	{
-		// The childs markup is always equal to the parents markup.
-		return getMarkup();
 	}
 }

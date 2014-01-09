@@ -103,7 +103,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 
 		private transient boolean dirty = false;
 
-		private transient int size;
+		private transient int size = 0;
 
 		/**
 		 * Construct.
@@ -131,10 +131,6 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			});
 		}
 
-		/**
-		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbActivated(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant,
-		 *      org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
-		 */
 		@Override
 		public void breadCrumbActivated(final IBreadCrumbParticipant previousParticipant,
 			final IBreadCrumbParticipant breadCrumbParticipant)
@@ -142,17 +138,11 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			signalModelChange();
 		}
 
-		/**
-		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbAdded(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
-		 */
 		@Override
 		public void breadCrumbAdded(final IBreadCrumbParticipant breadCrumbParticipant)
 		{
 		}
 
-		/**
-		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbRemoved(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
-		 */
 		@Override
 		public void breadCrumbRemoved(final IBreadCrumbParticipant breadCrumbParticipant)
 		{
@@ -182,9 +172,6 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			}
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
-		 */
 		@Override
 		protected void populateItem(final ListItem<IBreadCrumbParticipant> item)
 		{
@@ -214,45 +201,30 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	}
 
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#addListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
-	 */
 	@Override
 	public void addListener(final IBreadCrumbModelListener listener)
 	{
 		decorated.addListener(listener);
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#allBreadCrumbParticipants()
-	 */
 	@Override
 	public List<IBreadCrumbParticipant> allBreadCrumbParticipants()
 	{
 		return decorated.allBreadCrumbParticipants();
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#getActive()
-	 */
 	@Override
 	public IBreadCrumbParticipant getActive()
 	{
 		return decorated.getActive();
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#removeListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
-	 */
 	@Override
 	public void removeListener(final IBreadCrumbModelListener listener)
 	{
 		decorated.removeListener(listener);
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#setActive(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
-	 */
 	@Override
 	public void setActive(final IBreadCrumbParticipant breadCrumbParticipant)
 	{
@@ -303,9 +275,6 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			breadCrumbParticipant, enableLink);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onDetach()
-	 */
 	@Override
 	protected void onDetach()
 	{

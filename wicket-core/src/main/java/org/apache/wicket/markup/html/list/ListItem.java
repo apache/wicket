@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.list;
 
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -27,7 +28,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            Model object type
  */
-public class ListItem<T> extends LoopItem
+public class ListItem<T> extends LoopItem implements IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -71,43 +72,27 @@ public class ListItem<T> extends LoopItem
 		super(id, index);
 	}
 
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
+	@Override
 	public final void setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
 	}
 
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
+	@Override
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);

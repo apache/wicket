@@ -33,27 +33,36 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Represents the URL part <b>after Wicket Filter</b>. For example if Wicket Filter is mapped to
- * <code>/app/*</code> then with URL <code>/app/my/url</code> the {@link Url} object would represent
- * part <code>my/url</code>. If Wicket Filter is mapped to <code>/*</code> then with URL
- * <code>/my/url</code> the {@link Url} object would represent <code>my/url</code> (without leading
- * the slash).
+ * Represents the URL to an external resource or internal resource/component.
  * <p>
- * URL consists of segments and query parameters.
- * <p>
+ * A url could be:
+ * <ul>
+ *     <li>full - consists of an optional protocol/scheme, a host name, an optional port,
+ * optional segments and and optional query parameters.</li>
+ *      <li>non-full:
+ *      <ul>
+ *          <li>absolute - a url relative to the host name. Such url may escape from the application by using
+ *          different context path and/or different filter path. For example: <code>/foo/bar</code></li>
+ *          <li>relative - a url relative to the current base url. The base url is the url of the currently rendered page.
+ *          For example: <code>foo/bar</code>, <code>../foo/bar</code></li>
+ *      </ul>
+ * </ul>
+ *
+ * </p>
+ *
  * Example URLs:
  * 
- * <pre>
- * foo/bar/baz?a=1&amp;b=5    - segments: [&quot;foo&quot;,&quot;bar,&quot;baz], query parameters: [&quot;a&quot;=&quot;1&quot;, &quot;b&quot;=&quot;5&quot;]
- * foo/bar//baz?=4&amp;6      - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;baz&quot;], query parameters: [&quot;&quot;=&quot;4&quot;, &quot;6&quot;=&quot;&quot;]
- * /foo/bar/              - segments: [&quot;&quot;, &quot;foo&quot;, &quot;bar&quot;, &quot;&quot;]
- * foo/bar//              - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;&quot;]
- * ?a=b                   - segments: [ ], query parameters: [&quot;a&quot;=&quot;b&quot;]
- * /                      - segments: [&quot;&quot;, &quot;&quot;]   (note that Url represents part after Wicket Filter 
- *                                                - so if Wicket filter is mapped to /* this would be
- *                                                an additional slash, i.e. //
- * </pre>
- * 
+ * <ul>
+ *     <li>http://hostname:1234/foo/bar?a=b - protocol: http, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;] </li>
+ *     <li>//hostname:1234/foo/bar?a=b - protocol: null, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;] </li>
+ *     <li>foo/bar/baz?a=1&amp;b=5    - segments: [&quot;foo&quot;,&quot;bar&quot;,&quot;baz&quot;], query parameters: [&quot;a&quot;=&quot;1&quot;, &quot;b&quot;=&quot;5&quot;]</li>
+ *     <li>foo/bar//baz?=4&amp;6      - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;baz&quot;], query parameters: [&quot;&quot;=&quot;4&quot;, &quot;6&quot;=&quot;&quot;]</li>
+ *     <li>/foo/bar/              - segments: [&quot;&quot;, &quot;foo&quot;, &quot;bar&quot;, &quot;&quot;]</li>
+ *     <li>foo/bar//              - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;&quot;]</li>
+ *     <li>?a=b                   - segments: [ ], query parameters: [&quot;a&quot;=&quot;b&quot;]</li>
+ *     <li></li>
+ * </ul>
+ *
  * The Url class takes care of encoding and decoding of the segments and parameters.
  * 
  * @author Matej Knopp
@@ -81,8 +90,7 @@ public class Url implements Serializable
 	 * 
 	 * @author igor
 	 */
-	public static enum StringMode 
-	{
+	public static enum StringMode {
 		/** local urls are rendered without the host name */
 		LOCAL,
 		/**
@@ -123,13 +131,13 @@ public class Url implements Serializable
 	{
 		Args.notNull(url, "url");
 
-		this.protocol = url.protocol;
-		this.host = url.host;
-		this.port = url.port;
-		this.segments = new ArrayList<String>(url.segments);
-		this.parameters = new ArrayList<QueryParameter>(url.parameters);
-		this.charsetName = url.charsetName;
-		this._charset = url._charset;
+		protocol = url.protocol;
+		host = url.host;
+		port = url.port;
+		segments = new ArrayList<>(url.segments);
+		parameters = new ArrayList<>(url.parameters);
+		charsetName = url.charsetName;
+		_charset = url._charset;
 	}
 
 	/**
@@ -167,8 +175,8 @@ public class Url implements Serializable
 		Args.notNull(segments, "segments");
 		Args.notNull(parameters, "parameters");
 
-		this.segments = new ArrayList<String>(segments);
-		this.parameters = new ArrayList<QueryParameter>(parameters);
+		this.segments = new ArrayList<>(segments);
+		this.parameters = new ArrayList<>(parameters);
 		setCharset(charset);
 	}
 
@@ -193,6 +201,21 @@ public class Url implements Serializable
 	 * @return Url object
 	 */
 	public static Url parse(CharSequence _url, Charset charset)
+	{
+		return parse(_url, charset, true);
+	}
+
+	/**
+	 * Parses the given URL string.
+	 *
+	 * @param _url
+	 *            absolute or relative url with query string
+	 * @param charset
+	 * @param isFullHint
+	 *            a hint whether to try to parse the protocol, host and port part of the url
+	 * @return Url object
+	 */
+	public static Url parse(CharSequence _url, Charset charset, boolean isFullHint)
 	{
 		Args.notNull(_url, "_url");
 
@@ -222,19 +245,28 @@ public class Url implements Serializable
 		// get absolute / relative part of url
 		String relativeUrl;
 
-		// absolute urls contain a scheme://
 		final int idxOfFirstSlash = absoluteUrl.indexOf('/');
 		final int protocolAt = absoluteUrl.indexOf("://");
 
-		if (protocolAt > -1 && (protocolAt < idxOfFirstSlash))
+		// full urls start either with a "scheme://" or with "//"
+		boolean protocolLess = absoluteUrl.startsWith("//");
+		final boolean isFull = (protocolAt > 1 && (protocolAt < idxOfFirstSlash)) || protocolLess;
+
+		if (isFull && isFullHint)
 		{
-			result.protocol = absoluteUrl.substring(0, protocolAt).toLowerCase(Locale.US);
+			if (protocolLess == false)
+			{
+				result.protocol = absoluteUrl.substring(0, protocolAt).toLowerCase(Locale.US);
+			}
 
 			final String afterProto = absoluteUrl.substring(protocolAt + 3);
 			final String hostAndPort;
 
-			final int relativeAt = afterProto.indexOf('/');
-
+			int relativeAt = afterProto.indexOf('/');
+			if (relativeAt == -1)
+			{
+				relativeAt = afterProto.indexOf(';');
+			}
 			if (relativeAt == -1)
 			{
 				relativeUrl = "";
@@ -246,7 +278,8 @@ public class Url implements Serializable
 				hostAndPort = afterProto.substring(0, relativeAt);
 			}
 
-			final int portAt = hostAndPort.lastIndexOf(':');
+			final int credentialsAt = hostAndPort.lastIndexOf('@') + 1;
+			final int portAt = hostAndPort.substring(credentialsAt).lastIndexOf(':');
 
 			if (portAt == -1)
 			{
@@ -255,8 +288,8 @@ public class Url implements Serializable
 			}
 			else
 			{
-				result.host = hostAndPort.substring(0, portAt);
-				result.port = Integer.parseInt(hostAndPort.substring(portAt + 1));
+				result.host = hostAndPort.substring(0, portAt + credentialsAt);
+				result.port = Integer.parseInt(hostAndPort.substring(portAt + credentialsAt + 1));
 			}
 
 			if (relativeAt < 0)
@@ -320,15 +353,16 @@ public class Url implements Serializable
 	 */
 	private static QueryParameter parseQueryParameter(final String qp, final Charset charset)
 	{
-		if (qp.indexOf('=') == -1)
+		int idxOfEquals = qp.indexOf('=');
+		if (idxOfEquals == -1)
 		{
 			// name => empty value
 			return new QueryParameter(decodeParameter(qp, charset), "");
 		}
 
-		String parts[] = Strings.split(qp, '=');
-		return new QueryParameter(decodeParameter(parts[0], charset), decodeParameter(parts[1],
-			charset));
+		String parameterName = qp.substring(0, idxOfEquals);
+		String parameterValue = qp.substring(idxOfEquals + 1);
+		return new QueryParameter(decodeParameter(parameterName, charset), decodeParameter(parameterValue, charset));
 	}
 
 	/**
@@ -412,15 +446,27 @@ public class Url implements Serializable
 	{
 		return parameters;
 	}
+	
+	/**
+	 * Returns whether the Url is context absolute. Absolute Urls start with a '{@literal /}'.
+	 *
+	 * @return <code>true</code> if Url starts with the context path, <code>false</code> otherwise.
+	 */
+	public boolean isContextAbsolute()
+	{
+		return !isFull() && !getSegments().isEmpty() && Strings.isEmpty(getSegments().get(0));
+	}
 
 	/**
-	 * Returns whether the Url is absolute. Absolute Urls start with a '{@literal /}'.
-	 * 
-	 * @return <code>true</code> if Url is absolute, <code>false</code> otherwise.
+	 * Returns whether the Url has a <em>host</em> attribute.
+	 * The scheme is optional because the url may be <code>//host/path</code>.
+	 * The port is also optional because there are defaults for the different protocols.
+	 *
+	 * @return <code>true</code> if Url has a <em>host</em> attribute, <code>false</code> otherwise.
 	 */
-	public boolean isAbsolute()
+	public boolean isFull()
 	{
-		return !getSegments().isEmpty() && Strings.isEmpty(getSegments().get(0));
+		return getHost() != null;
 	}
 
 	/**
@@ -617,7 +663,7 @@ public class Url implements Serializable
 		return toString(getCharset());
 	}
 
-        /**
+	/**
 	 * Stringizes this url
 	 * 
 	 * @param mode
@@ -640,15 +686,15 @@ public class Url implements Serializable
 					StringMode.FULL.name() + " mode because it does not have a host set.");
 			}
 
-			String protocol = this.protocol;
-			if (Strings.isEmpty(protocol))
+			if (Strings.isEmpty(protocol) == false)
 			{
-				protocol = "http";
+				result.append(protocol);
+				result.append("://");
 			}
-
-			// output scheme://host:port if specified
-			result.append(protocol);
-			result.append("://");
+			else if (Strings.isEmpty(protocol) && Strings.isEmpty(host) == false)
+			{
+				result.append("//");
+			}
 			result.append(host);
 
 			if (port != null && port.equals(getDefaultPortForProtocol(protocol)) == false)
@@ -657,7 +703,7 @@ public class Url implements Serializable
 				result.append(port);
 			}
 
-			if (path.contains(".."))
+			if (segments.contains(".."))
 			{
 				throw new IllegalStateException("Cannot render this url in " +
 					StringMode.FULL.name() + " mode because it has a `..` segment: " + toString());
@@ -665,14 +711,18 @@ public class Url implements Serializable
 
 			if (!path.startsWith("/"))
 			{
-				result.append("/");
+				result.append('/');
 			}
 
 		}
 
-
 		result.append(path);
-		result.append(getQueryString(charset));
+
+		final String queryString = getQueryString(charset);
+		if (queryString != null)
+		{
+			result.append('?').append(queryString);
+		}
 		return result.toString();
 	}
 
@@ -687,7 +737,6 @@ public class Url implements Serializable
 	{
 		return toString(mode, getCharset());
 	}
-
 
 	/**
 	 * Stringizes this url using {@link StringMode#LOCAL} and the specified charset
@@ -765,7 +814,7 @@ public class Url implements Serializable
 
 		if (!isAtLeastOneSegmentReal(segments) && !isLastSegmentEmpty(segments))
 		{
-			segments = new ArrayList<String>(segments);
+			segments = new ArrayList<>(segments);
 			segments.add("");
 		}
 
@@ -938,12 +987,12 @@ public class Url implements Serializable
 	{
 		if (getSegments().size() > 0)
 		{
-			// strip the first non-folder segment
+			// strip the first non-folder segment (if it is not empty)
 			getSegments().remove(getSegments().size() - 1);
 		}
 
-		// remove leading './' (current folder) and empty segments, process any ../ segments from the
-		// relative url
+		// remove leading './' (current folder) and empty segments, process any ../ segments from
+		// the relative url
 		while (!relative.getSegments().isEmpty())
 		{
 			if (".".equals(relative.getSegments().get(0)))
@@ -966,6 +1015,11 @@ public class Url implements Serializable
 			{
 				break;
 			}
+		}
+
+		if (!getSegments().isEmpty() && relative.getSegments().isEmpty())
+		{
+			getSegments().add("");
 		}
 
 		// append the remaining relative segments
@@ -1078,62 +1132,79 @@ public class Url implements Serializable
 	 * 
 	 * @param charset
 	 *            character set for encoding
-	 * 
-	 * @return query string
+	 * @since Wicket 7 
+     *            the return value does not contain any "?" and could be null
+	 * @return query string (null if empty)
 	 */
 	public String getQueryString(Charset charset)
 	{
 		Args.notNull(charset, "charset");
 
-		StringBuilder query = new StringBuilder();
+		String queryString = null;
+		List<QueryParameter> queryParameters = getQueryParameters();
 
-		for (QueryParameter parameter : getQueryParameters())
+		if (queryParameters.size() != 0)
 		{
-			query.append(query.length() == 0 ? '?' : '&');
-			query.append(parameter.toString(charset));
+			StringBuilder query = new StringBuilder();
+
+			for (QueryParameter parameter : queryParameters)
+			{
+				if (query.length() != 0)
+				{
+					query.append('&');
+				}
+				query.append(parameter.toString(charset));
+			}
+			queryString = query.toString();
 		}
-		return query.toString();
+		return queryString;
 	}
 
 	/**
 	 * return query string part of url in original encoding
-	 * 
-	 * @return query string
+	 *
+	 * @since Wicket 7
+	 *              the return value does not contain any "?" and could be null
+	 * @return query string (null if empty)
 	 */
 	public String getQueryString()
 	{
 		return getQueryString(getCharset());
 	}
-	
-	
+
 	/**
-	 * Try to reduce url by eliminating '..' and '.' from the path where appropriate
-	 * (this is somehow similar to {@link java.io.File#getCanonicalPath()}).
-	 * Either by different / unexpected browser behavior or by malicious attacks it 
-	 * can happen that these kind of redundant urls are processed by wicket. These urls 
-	 * can cause some trouble when mapping the request.
-	 * <p/> 
+	 * Try to reduce url by eliminating '..' and '.' from the path where appropriate (this is
+	 * somehow similar to {@link java.io.File#getCanonicalPath()}). Either by different / unexpected
+	 * browser behavior or by malicious attacks it can happen that these kind of redundant urls are
+	 * processed by wicket. These urls can cause some trouble when mapping the request.
+	 * <p/>
 	 * <strong>example:</strong>
 	 * 
 	 * the url
 	 * 
-	 * <pre>  /example/..;jsessionid=234792?0</pre> 
+	 * <pre>
+	 * /example/..;jsessionid=234792?0
+	 * </pre>
 	 * 
-	 * will not get normalized by the browser due to the ';jsessionid' string that 
-	 * gets appended by the servlet container. After wicket strips the 
-	 * jsessionid part the resulting internal url will be
+	 * will not get normalized by the browser due to the ';jsessionid' string that gets appended by
+	 * the servlet container. After wicket strips the jsessionid part the resulting internal url
+	 * will be
 	 * 
-	 * <pre>  /example/..</pre>
+	 * <pre>
+	 * /example/..
+	 * </pre>
 	 * 
 	 * instead of
 	 * 
-	 * <pre>  /</pre>
+	 * <pre>
+	 * /
+	 * </pre>
 	 * 
 	 * <p/>
 	 * 
-	 * This code correlates to 
-	 * <a href="https://issues.apache.org/jira/browse/WICKET-4303">WICKET-4303</a>
-	 *
+	 * This code correlates to <a
+	 * href="https://issues.apache.org/jira/browse/WICKET-4303">WICKET-4303</a>
+	 * 
 	 * @return canonical url
 	 */
 	public Url canonical()
@@ -1141,24 +1212,28 @@ public class Url implements Serializable
 		Url url = new Url(this);
 		url.segments.clear();
 
-		for (int i = 0; i < this.segments.size(); i++)
+		for (int i = 0; i < segments.size(); i++)
 		{
-			final String segment = this.segments.get(i);
+			final String segment = segments.get(i);
 
-			// drop '.' from path  
+			// drop '.' from path
 			if (".".equals(segment))
 			{
-				continue;
+				// skip
 			}
-
+			else if ("..".equals(segment) && url.segments.isEmpty() == false)
+			{
+				url.segments.remove(url.segments.size() - 1);
+			}
 			// skip segment if following segment is a '..'
-			if ((i + 1) < this.segments.size() && "..".equals(this.segments.get(i + 1)))
+			else if ((i + 1) < segments.size() && "..".equals(segments.get(i + 1)))
 			{
 				i++;
-				continue;
 			}
-
-			url.segments.add(segment);
+			else
+			{
+				url.segments.add(segment);
+			}
 		}
 		return url;
 	}

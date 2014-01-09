@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
@@ -56,12 +57,6 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	/** The child attribute */
 	public static final String CHILD_ATTRIBUTE = "child";
 
-	static
-	{
-		// register "wicket:enclosure"
-		WicketTagIdentifier.registerWellKnownTagName(ENCLOSURE);
-	}
-
 	/** Stack of <wicket:enclosure> tags */
 	private Stack<ComponentTag> stack;
 
@@ -73,6 +68,12 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	 */
 	public EnclosureHandler()
 	{
+		this(null);
+	}
+
+	public EnclosureHandler(MarkupResourceStream resourceStream)
+	{
+		super(resourceStream);
 	}
 
 	@Override
@@ -125,26 +126,29 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 			}
 		}
 		// Are we inside a wicket:enclosure tag?
-		else if ((tag.getId() != null) && (isWicketTag == false) && (stack != null) &&
-			(!tag.isAutoComponentTag()))
+		else if (stack != null)
 		{
 			ComponentTag lastEnclosure = stack.lastElement();
 
 			// If the enclosure tag has NO child attribute, then ...
 			if (lastEnclosure.getAttribute(CHILD_ATTRIBUTE) == null)
 			{
-				// We encountered more than one child component inside
-				// the enclosure and are not able to automatically
-				// determine the child component to delegate the
-				// isVisible() to => Exception
-				if (childId != null)
+				String id = tag.getAttribute(getWicketNamespace() + ":id");
+				if (id != null)
 				{
-					throw new WicketParseException(
-						"Use <wicket:enclosure child='xxx'> to name the child component:", tag);
+					// We encountered more than one child component inside
+					// the enclosure and are not able to automatically
+					// determine the child component to delegate the
+					// isVisible() to => Exception
+					if (childId != null)
+					{
+						throw new WicketParseException("Use <" + getWicketNamespace() +
+							":enclosure child='xxx'> to name the child component:", tag);
+					}
+					// Remember the child id. The open tag will be updated
+					// once the close tag is found. See above.
+					childId = id;
 				}
-				// Remember the child id. The open tag will be updated
-				// once the close tag is found. See above.
-				childId = tag.getId();
 			}
 		}
 

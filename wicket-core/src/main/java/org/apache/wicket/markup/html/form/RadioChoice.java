@@ -109,10 +109,10 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      List,IChoiceRenderer)
+	 *      List,ChoiceRenderer)
 	 */
 	public RadioChoice(final String id, final List<? extends T> choices,
-		final IChoiceRenderer<? super T> renderer)
+		final ChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -147,10 +147,10 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
-	 *      List,IChoiceRenderer)
+	 *      List,ChoiceRenderer)
 	 */
 	public RadioChoice(final String id, IModel<T> model, final List<? extends T> choices,
-		final IChoiceRenderer<? super T> renderer)
+		final ChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -197,11 +197,11 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param renderer
 	 *            The rendering engine
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel,IChoiceRenderer)
+	 *      IModel,ChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public RadioChoice(String id, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<? super T> renderer)
+		ChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -220,10 +220,10 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
-	 *      IModel,IChoiceRenderer)
+	 *      IModel,ChoiceRenderer)
 	 */
 	public RadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<? super T> renderer)
+		ChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -302,6 +302,32 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	}
 
 	/**
+	 * @param index
+	 *            index of the choice
+	 * @param choice
+	 *            the choice itself
+	 * @return Prefix to use before choice. The default implementation just returns
+	 *         {@link #getPrefix()}. Override to have a prefix dependent on the choice item.
+	 */
+	protected String getPrefix(int index, T choice)
+	{
+		return getPrefix();
+	}
+
+	/**
+	 * @param index
+	 *            index of the choice
+	 * @param choice
+	 *            the choice itself
+	 * @return Separator to use between radio options. The default implementation just returns
+	 *         {@link #getSuffix()}. Override to have a prefix dependent on the choice item.
+	 */
+	protected String getSuffix(int index, T choice)
+	{
+		return getSuffix();
+	}
+
+	/**
 	 * @param prefix
 	 *            Prefix to use before choice
 	 * @return this
@@ -338,7 +364,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -357,132 +382,152 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 			// Get next choice
 			final T choice = choices.get(index);
 
-			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
-			Class<?> objectClass = (displayValue == null ? null : displayValue.getClass());
-
-			// Get label for choice
-			String label = "";
-
-			if (objectClass != null && objectClass != String.class)
-			{
-				@SuppressWarnings("rawtypes")
-				final IConverter converter = getConverter(objectClass);
-				label = converter.convertToString(displayValue, getLocale());
-			}
-			else if (displayValue != null)
-			{
-				label = displayValue.toString();
-			}
-
-			// If there is a display value for the choice, then we know that the
-			// choice is automatic in some way. If label is /null/ then we know
-			// that the choice is a manually created radio tag at some random
-			// location in the page markup!
-			if (label != null)
-			{
-				// Append option suffix
-				buffer.append(getPrefix());
-
-				String id = getChoiceRenderer().getIdValue(choice, index);
-				final String idAttr = getMarkupId() + "-" + id;
-
-				boolean enabled = isEnabledInHierarchy() && !isDisabled(choice, index, selected);
-
-				// Add radio tag
-				buffer.append("<input name=\"")
-					.append(getInputName())
-					.append("\"")
-					.append(" type=\"radio\"")
-					.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-					.append((enabled ? "" : " disabled=\"disabled\""))
-					.append(" value=\"")
-					.append(id)
-					.append("\" id=\"")
-					.append(idAttr)
-					.append("\"");
-
-				// Should a roundtrip be made (have onSelectionChanged called)
-				// when the option is clicked?
-				if (wantOnSelectionChangedNotifications())
-				{
-					CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
-
-					Form<?> form = findParent(Form.class);
-					if (form != null)
-					{
-						buffer.append(" onclick=\"")
-							.append(form.getJsForInterfaceUrl(url))
-							.append(";\"");
-					}
-					else
-					{
-						// NOTE: do not encode the url as that would give
-						// invalid JavaScript
-						buffer.append(" onclick=\"window.location.href='")
-							.append(url)
-							.append((url.toString().indexOf('?') > -1 ? "&" : "?") + getInputName())
-							.append("=")
-							.append(id)
-							.append("';\"");
-					}
-				}
-
-				// Allows user to add attributes to the <input..> tag
-				{
-					IValueMap attrs = getAdditionalAttributes(index, choice);
-					if (attrs != null)
-					{
-						for (Map.Entry<String, Object> attr : attrs.entrySet())
-						{
-							buffer.append(" ")
-								.append(attr.getKey())
-								.append("=\"")
-								.append(attr.getValue())
-								.append("\"");
-						}
-					}
-				}
-
-				if (getApplication().getDebugSettings().isOutputComponentPath())
-				{
-					String path = getPageRelativePath();
-					path = path.replace("_", "__");
-					path = path.replace(":", "_");
-					buffer.append(" wicketpath=\"")
-						.append(path)
-						.append("_input_")
-						.append(index)
-						.append("\"");
-				}
-
-				buffer.append("/>");
-
-				// Add label for radio button
-				String display = label;
-				if (localizeDisplayValues())
-				{
-					display = getLocalizer().getString(label, this, label);
-				}
-
-				CharSequence escaped = display;
-				if (getEscapeModelStrings())
-				{
-					escaped = Strings.escapeMarkup(display);
-				}
-
-				buffer.append("<label for=\"")
-					.append(idAttr)
-					.append("\">")
-					.append(escaped)
-					.append("</label>");
-
-				// Append option suffix
-				buffer.append(getSuffix());
-			}
+			appendOptionHtml(buffer, choice, index, selected);
 		}
 
 		// Replace body
 		replaceComponentTagBody(markupStream, openTag, buffer);
+	}
+
+	/**
+	 * Generates and appends html for a single choice into the provided buffer
+	 * 
+	 * @param buffer
+	 *            Appending string buffer that will have the generated html appended
+	 * @param choice
+	 *            Choice object
+	 * @param index
+	 *            The index of this option
+	 * @param selected
+	 *            The currently selected string value
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void appendOptionHtml(final AppendingStringBuffer buffer, final T choice, int index,
+		final String selected)
+	{
+		Object displayValue = getChoiceRenderer().getDisplayValue(choice);
+		Class<?> objectClass = (displayValue == null ? null : displayValue.getClass());
+
+		// Get label for choice
+		String label = "";
+
+		if (objectClass != null && objectClass != String.class)
+		{
+			@SuppressWarnings("rawtypes")
+			final IConverter converter = getConverter(objectClass);
+			label = converter.convertToString(displayValue, getLocale());
+		}
+		else if (displayValue != null)
+		{
+			label = displayValue.toString();
+		}
+
+		// If there is a display value for the choice, then we know that the
+		// choice is automatic in some way. If label is /null/ then we know
+		// that the choice is a manually created radio tag at some random
+		// location in the page markup!
+		if (label != null)
+		{
+			// Append option suffix
+			buffer.append(getPrefix(index, choice));
+
+			String id = getChoiceRenderer().getIdValue(choice, index);
+			final String idAttr = getMarkupId() + "-" + id;
+
+			boolean enabled = isEnabledInHierarchy() && !isDisabled(choice, index, selected);
+
+			// Add radio tag
+			buffer.append("<input name=\"")
+				.append(getInputName())
+				.append('"')
+				.append(" type=\"radio\"")
+				.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
+				.append((enabled ? "" : " disabled=\"disabled\""))
+				.append(" value=\"")
+				.append(id)
+				.append("\" id=\"")
+				.append(idAttr)
+				.append('"');
+
+			// Should a roundtrip be made (have onSelectionChanged called)
+			// when the option is clicked?
+			if (wantOnSelectionChangedNotifications())
+			{
+				CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
+
+				Form<?> form = findParent(Form.class);
+				if (form != null)
+				{
+					buffer.append(" onclick=\"")
+						.append(form.getJsForInterfaceUrl(url))
+						.append(";\"");
+				}
+				else
+				{
+					// NOTE: do not encode the url as that would give
+					// invalid JavaScript
+					buffer.append(" onclick=\"window.location.href='")
+						.append(url)
+						.append((url.toString().indexOf('?') > -1 ? '&' : '?') + getInputName())
+						.append('=')
+						.append(id)
+						.append("';\"");
+				}
+			}
+
+			// Allows user to add attributes to the <input..> tag
+			{
+				IValueMap attrs = getAdditionalAttributes(index, choice);
+				if (attrs != null)
+				{
+					for (Map.Entry<String, Object> attr : attrs.entrySet())
+					{
+						buffer.append(' ')
+							.append(attr.getKey())
+							.append("=\"")
+							.append(attr.getValue())
+							.append('"');
+					}
+				}
+			}
+
+			if (getApplication().getDebugSettings().isOutputComponentPath())
+			{
+				CharSequence path = getPageRelativePath();
+				path = Strings.replaceAll(path, "_", "__");
+				path = Strings.replaceAll(path, ":", "_");
+				buffer.append(" wicketpath=\"")
+					.append(path)
+					.append("_input_")
+					.append(index)
+					.append('"');
+			}
+
+			buffer.append("/>");
+
+			// Add label for radio button
+			String display = label;
+			if (localizeDisplayValues())
+			{
+				display = getLocalizer().getString(label, this, label);
+			}
+
+			CharSequence escaped = display;
+			if (getEscapeModelStrings())
+			{
+				escaped = Strings.escapeMarkup(display);
+			}
+
+			buffer.append("<label for=\"")
+				.append(idAttr)
+				.append("\">")
+				.append(escaped)
+				.append("</label>");
+
+			// Append option suffix
+			buffer.append(getSuffix(index, choice));
+		}
 	}
 
 	/**

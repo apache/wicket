@@ -37,12 +37,10 @@ import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.settings.IApplicationSettings;
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,17 +123,33 @@ public abstract class Session implements IClusterable, IEventSink
 	private final IProvider<PageAccessSynchronizer> pageAccessSynchronizer;
 
 	/**
-	 * Checks if the <code>Session</code> threadlocal is set in this thread
+	 * Checks existence of a <code>Session</code> associated with the current thread.
 	 * 
-	 * @return true if {@link Session#get()} can return the instance of session, false otherwise
+	 * @return {@code true} if {@link Session#get()} can return the instance of session,
+	 *         {@code false} otherwise
 	 */
 	public static boolean exists()
 	{
-		return ThreadContext.getSession() != null;
+		Session session = ThreadContext.getSession();
+
+		if (session == null)
+		{
+			// no session is available via ThreadContext, so lookup in session store
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle != null)
+			{
+				session = Application.get().getSessionStore().lookup(requestCycle.getRequest());
+				if (session != null)
+				{
+					ThreadContext.setSession(session);
+				}
+			}
+		}
+		return session != null;
 	}
 
 	/**
-	 * Returns session associated to current thread. Should always return a session during a request
+	 * Returns session associated to current thread. Always returns a session during a request
 	 * cycle, even though the session might be temporary
 	 * 
 	 * @return session.
@@ -262,21 +276,6 @@ public abstract class Session implements IClusterable, IEventSink
 	}
 
 	/**
-	 * Cleans up all rendered feedback messages and any unrendered, dangling feedback messages there
-	 * may be left after that.
-	 * 
-	 * @deprecated see
-	 *             {@link IApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)}
-	 *             for cleanup during testing see {@link BaseWicketTester#cleanupFeedbackMessages()}
-	 */
-	@Deprecated
-	public final void cleanupFeedbackMessages()
-	{
-		throw new UnsupportedOperationException("Deprecated, see the javadoc");
-	}
-
-
-	/**
 	 * Removes all pages from the session. Although this method should rarely be needed, it is
 	 * available (possibly for security reasons).
 	 */
@@ -376,11 +375,8 @@ public abstract class Session implements IClusterable, IEventSink
 	{
 		if (id == null)
 		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle != null)
-			{
-				id = getSessionStore().getSessionId(requestCycle.getRequest(), false);
-			}
+			updateId();
+
 			// we have one?
 			if (id != null)
 			{
@@ -388,6 +384,15 @@ public abstract class Session implements IClusterable, IEventSink
 			}
 		}
 		return id;
+	}
+
+	private void updateId()
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle != null)
+		{
+			id = getSessionStore().getSessionId(requestCycle.getRequest(), false);
+		}
 	}
 
 	/**
@@ -413,18 +418,6 @@ public abstract class Session implements IClusterable, IEventSink
 	public synchronized final <M extends Serializable> M getMetaData(final MetaDataKey<M> key)
 	{
 		return key.get(metaData);
-	}
-
-	/**
-	 * When a regular request on certain page with certain version is being processed, we don't
-	 * allow ajax requests to same page and version.
-	 * 
-	 * @param lockedRequestCycle
-	 * @return whether current request is valid or should be discarded
-	 */
-	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
-	{
-		return true;
 	}
 
 	/**
@@ -594,7 +587,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized void setMetaData(final MetaDataKey<?> key, final Serializable object)
+	public final synchronized <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		metaData = key.set(metaData, object);
 		dirty();
@@ -649,6 +642,11 @@ public abstract class Session implements IClusterable, IEventSink
 		if (sessionInvalidated)
 		{
 			invalidateNow();
+		}
+		else
+		{
+			// WICKET-5103 container might have changed id
+			updateId();
 		}
 	}
 
@@ -826,7 +824,7 @@ public abstract class Session implements IClusterable, IEventSink
 			// session instance gets shared across threads
 			if (temporarySessionAttributes == null)
 			{
-				temporarySessionAttributes = new HashMap<String, Serializable>(3);
+				temporarySessionAttributes = new HashMap<>(3);
 			}
 			temporarySessionAttributes.put(name, value);
 		}
@@ -865,6 +863,20 @@ public abstract class Session implements IClusterable, IEventSink
 	/** {@inheritDoc} */
 	@Override
 	public void onEvent(IEvent<?> event)
+	{
+	}
+
+	/**
+	 * A callback method that is executed when the user session is invalidated
+	 * either by explicit call to {@link org.apache.wicket.Session#invalidate()}
+	 * or due to HttpSession expiration.
+	 *
+	 * <p>In case of session expiration this method is called in a non-worker thread, i.e.
+	 * there are no thread locals exported for the Application, RequestCycle and Session.
+	 * The Session is the current instance. The Application can be found by using
+	 * {@link Application#get(String)}. There is no way to get a reference to a RequestCycle</p>
+	 */
+	public void onInvalidate()
 	{
 	}
 

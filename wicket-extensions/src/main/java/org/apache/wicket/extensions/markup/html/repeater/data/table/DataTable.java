@@ -105,13 +105,15 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 
 	private final WebMarkupContainer body;
 
-	private final List<IColumn<T, S>> columns;
+	private final List<? extends IColumn<T, S>> columns;
 
 	private final ToolbarsContainer topToolbars;
 
 	private final ToolbarsContainer bottomToolbars;
 
 	private final Caption caption;
+
+	private long toolbarIdCounter;
 
 	/**
 	 * Constructor
@@ -125,7 +127,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(final String id, final List<IColumn<T, S>> columns,
+	public DataTable(final String id, final List<? extends IColumn<T, S>> columns,
 		final IDataProvider<T> dataProvider, final long rowsPerPage)
 	{
 		super(id);
@@ -238,6 +240,38 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	}
 
 	/**
+	 * @return the container with the toolbars at the top
+	 */
+	public final ToolbarsContainer getTopToolbars()
+	{
+		return topToolbars;
+	}
+
+	/**
+	 * @return the container with the toolbars at the bottom
+	 */
+	public final ToolbarsContainer getBottomToolbars()
+	{
+		return bottomToolbars;
+	}
+
+	/**
+	 * @return the container used for the table body
+	 */
+	public final WebMarkupContainer getBody()
+	{
+		return body;
+	}
+
+	/**
+	 * @return the component used for the table caption
+	 */
+	public final Caption getCaption()
+	{
+		return caption;
+	}
+
+	/**
 	 * @return dataprovider
 	 */
 	public final IDataProvider<T> getDataProvider()
@@ -248,7 +282,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @return array of column objects this table displays
 	 */
-	public final List<IColumn<T, S>> getColumns()
+	public final List<? extends IColumn<T, S>> getColumns()
 	{
 		return columns;
 	}
@@ -360,7 +394,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	protected Item<IColumn<T, S>> newCellItem(final String id, final int index,
 		final IModel<IColumn<T, S>> model)
 	{
-		return new Item<IColumn<T, S>>(id, index, model);
+		return new Item<>(id, index, model);
 	}
 
 	/**
@@ -379,7 +413,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 */
 	protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 	{
-		return new Item<T>(id, index, model);
+		return new Item<>(id, index, model);
 	}
 
 	/**
@@ -402,6 +436,15 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	protected void onPageChanged()
 	{
 		// noop
+	}
+
+	/**
+	 * @see AbstractToolbar
+	 */
+	String newToolbarId()
+	{
+		toolbarIdCounter++;
+		return String.valueOf(toolbarIdCounter).intern();
 	}
 
 	/**

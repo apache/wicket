@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.settings;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
@@ -58,6 +58,14 @@ public class ISecuritySettingsTest extends WicketTestCase
 		tester.assertRenderedPage(UnknownPage.class);
 
 		tester.getApplication().getSecuritySettings().setEnforceMounts(true);
+
+		tester.startPage(pageWithLink);
+		tester.assertRenderedPage(MockPageWithLink.class);
+		tester.clickLink(MockPageWithLink.LINK_ID);
+		tester.assertRenderedPage(UnknownPage.class);
+
+		tester.getApplication().mountPackage("unknown", UnknownPage.class);
+
 		tester.startPage(pageWithLink);
 		tester.assertRenderedPage(MockPageWithLink.class);
 		tester.clickLink(MockPageWithLink.LINK_ID);

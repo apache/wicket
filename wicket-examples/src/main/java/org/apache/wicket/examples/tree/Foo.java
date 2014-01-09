@@ -40,7 +40,7 @@ public class Foo
 
 	private Foo parent;
 
-	private List<Foo> foos = new ArrayList<Foo>();
+	private List<Foo> foos = new ArrayList<>();
 
 	public Foo(String id)
 	{

@@ -119,7 +119,7 @@
 
 					var dx = 0;
 					var dy = 0;
-					if (Wicket.Browser.isIE() || Wicket.Browser.isGecko) {
+					if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
 						dx = Wicket.Window.getScrollX();
 						dy = Wicket.Window.getScrollY();
 					}
@@ -137,7 +137,7 @@
 
 					var dx = 0;
 					var dy = 0;
-					if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+					if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
 						dx = Wicket.Window.getScrollX();
 						dy = Wicket.Window.getScrollY();
 					}
@@ -196,12 +196,6 @@
 	 * or an iframe.
 	 */
 	Wicket.Window = Wicket.Class.create();
-
-	/**
-	 * Display confirmation dialog if the user is about to leave a page (IE and FF).
-	 * @deprecated Use the settings instead. TODO Remove for/after Wicket 7.0
-	 */
-	Wicket.Window.unloadConfirmation = true;
 
 	/**
 	 * Creates a wicket window instance. The advantage of using this is
@@ -317,7 +311,9 @@
 
 				onClose: function() { }, /* called when window is closed */
 
-				mask: "semi-transparent" /* or "transparent" */
+				mask: "semi-transparent", /* or "transparent" */
+
+				unloadConfirmation : true /* Display confirmation dialog if the user is about to leave a page (IE and FF) */
 
 			}, settings || { });
 
@@ -483,7 +479,7 @@
 			var scTop = 0;
 			var scLeft = 0;
 
-			if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+			if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
 				scLeft = Wicket.Window.getScrollX();
 				scTop = Wicket.Window.getScrollY();
 			}
@@ -632,11 +628,7 @@
 
 			try
 			{
-				if(Wicket.Browser.isIELessThan9()){
-					this.content.contentWindow.location.replace(this.settings.ie8_src);
-				}else{
-					this.content.contentWindow.location.replace(this.settings.src);
-				}
+				this.content.contentWindow.location.replace(this.settings.src);
 			}
 			catch(ignore)
 			{
@@ -739,12 +731,10 @@
 				}
 			}, this);
 
-			// preserve old beforeunload handler
-			this.old_onbeforeunload = window.onbeforeunload;
+			if (this.settings.unloadConfirmation) {
+				// preserve old beforeunload handler
+				this.old_onbeforeunload = window.onbeforeunload;
 
-			// Wicket.Window.unloadConfirmation is deprecated but we need to check it
-			// for backward compatibility. Remove it after Wicket 7.0
-			if (this.settings.unloadConfirmation && Wicket.Window.unloadConfirmation) {
 				// new beforeunload handler - ask user before reloading window
 				window.onbeforeunload = function() {
 					return "Reloading this page will cause the modal window to disappear.";
@@ -838,9 +828,11 @@
 			window.onunload = this.old_onunload;
 			this.old_onunload = null;
 
-			// restore old beforeunload handler
-			window.onbeforeunload = this.old_onbeforeunload;
-			this.old_onbeforeunload = null;
+			if (this.old_onbeforeunload) {
+				// restore old beforeunload handler
+				window.onbeforeunload = this.old_onbeforeunload;
+				this.old_onbeforeunload = null;
+			}
 
 			// hids and cleanup the mask
 			this.destroyMask();
@@ -1178,7 +1170,7 @@
 	 */
 	Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idContent, idTop, idTopLeft, idTopRight, idLeft, idRight, idBottomLeft, idBottomRight, idBottom, idCaptionText, isFrame) {
 		var s =
-				"<div class=\"wicket-modal\" id=\""+idWindow+"\" role=\"dialog\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='background-color:transparent;padding:0px;margin:0px;border-width:0px;position:static'>"+
+				"<div class=\"wicket-modal\" id=\""+idWindow+"\" role=\"dialog\" aria-labelledBy=\""+idCaptionText+"\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='background-color:transparent;padding:0px;margin:0px;border-width:0px;position:static'>"+
 				"<div id=\""+idClassElement+"\">"+
 
 					"<div class=\"w_top_1\">"+
@@ -1197,7 +1189,7 @@
 					"<div class=\"w_left\" id='"+idLeft+"'>"+
 						"<div class=\"w_right_1\">"+
 							"<div class=\"w_right\" id='"+idRight+"'>"+
-								"<div class=\"w_content_1\" onmousedown=\"if (Wicket.Browser.isSafari()) { event.ignore = true; }  else { Wicket.Event.stop(event); } \">"+
+								"<div class=\"w_content_1\" onmousedown=\"Wicket.Event.stop(event);\">"+
 									"<div class=\"w_caption\"  id=\""+idCaption+"\">"+
 										"<a class=\"w_close\" style=\"z-index:1\" href=\"#\"></a>"+
 										"<h3 id=\""+idCaptionText+"\" class=\"w_captionText\"></h3>"+
@@ -1213,7 +1205,8 @@
 						}
 						s+= " frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
 					} else {
-						s+= "<div id='"+idContent+"' class='w_content_container'></div>";
+						var styleIE7 = Wicket.Browser.isIE7() ? "style='z-index: 20001'" : "";
+						s+= "<div id='"+idContent+"' class='w_content_container' " + styleIE7 + "></div>";
 					}
 						s+=
 										"</div>"+
@@ -1563,9 +1556,9 @@
 				for (var j = 0; j < this.tabbableTags.length; j++) {
 					var tagElements = doc.getElementsByTagName(this.tabbableTags[j]);
 					for (var k = 0 ; k < tagElements.length; k++) {
-						// if this is not an iframe window and the element is child of window content,
+						// if this is not an iframe window and the element is child of modal window,
 						// don't disable tab on it
-						if (win.isIframe() === true || this.isParent(tagElements[k], win.content) === false) {
+						if (win.isIframe() === true || this.isParent(tagElements[k], win.window) === false) {
 							var element = tagElements[k];
 							element.hiddenTabIndex = element.tabIndex;
 							element.tabIndex="-1";

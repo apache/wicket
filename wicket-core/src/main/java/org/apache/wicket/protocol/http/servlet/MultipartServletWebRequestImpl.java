@@ -28,13 +28,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
 import org.apache.wicket.util.upload.FileItemFactory;
+import org.apache.wicket.util.upload.FileUploadBase;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.ServletFileUpload;
 import org.apache.wicket.util.upload.ServletRequestContext;
@@ -118,7 +118,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		Args.notNull(upload, "upload");
 		this.upload = upload;
 		parameters = new ValueMap();
-		files = new HashMap<String, List<FileItem>>();
+		files = new HashMap<>();
 
 		// Check that request is multipart
 		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
@@ -167,9 +167,14 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			totalBytes = request.getContentLength();
 
 			onUploadStarted(totalBytes);
-			items = fileUpload.parseRequest(ctx);
-			onUploadCompleted();
-
+			try
+			{
+				items = fileUpload.parseRequest(ctx);
+			}
+			finally
+			{
+				onUploadCompleted();
+			}
 		}
 		else
 		{
@@ -208,7 +213,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 				List<FileItem> fileItems = files.get(item.getFieldName());
 				if (fileItems == null)
 				{
-					fileItems = new ArrayList<FileItem>();
+					fileItems = new ArrayList<>();
 					files.put(item.getFieldName(), fileItems);
 				}
 				// Add to file list
@@ -271,13 +276,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	@Override
 	protected Map<String, List<StringValue>> generatePostParameters()
 	{
-		Map<String, List<StringValue>> res = new HashMap<String, List<StringValue>>();
+		Map<String, List<StringValue>> res = new HashMap<>();
 		for (String key : parameters.keySet())
 		{
 			String[] val = (String[])parameters.get(key);
 			if (val != null && val.length > 0)
 			{
-				List<StringValue> items = new ArrayList<StringValue>();
+				List<StringValue> items = new ArrayList<>();
 				for (String s : val)
 				{
 					items.add(StringValue.valueOf(s));
@@ -290,7 +295,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Subclasses that want to receive upload notifications should return true. By default it takes
-	 * the value from {@link IApplicationSettings#isUploadProgressUpdatesEnabled()}.
+	 * the value from {@link org.apache.wicket.settings.ApplicationSettings#isUploadProgressUpdatesEnabled()}.
 	 * 
 	 * @return true if upload status update event should be invoked
 	 */
@@ -402,6 +407,21 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
 		throws FileUploadException
 	{
+		for (Map.Entry<String, List<FileItem>> entry : files.entrySet())
+		{
+			List<FileItem> fileItems = entry.getValue();
+			for (FileItem fileItem : fileItems)
+			{
+				if (fileItem.getSize() > maxSize.bytes())
+				{
+					String fieldName = entry.getKey();
+					FileUploadException fslex = new FileUploadBase.FileSizeLimitExceededException("The field " +
+							fieldName + " exceeds its maximum permitted " + " size of " +
+							maxSize + " characters.", fileItem.getSize(), maxSize.bytes());
+					throw fslex;
+				}
+			}
+		}
 		return this;
 	}
 

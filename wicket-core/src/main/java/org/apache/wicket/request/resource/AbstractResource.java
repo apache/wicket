@@ -31,7 +31,6 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
@@ -53,7 +52,7 @@ public abstract class AbstractResource implements IResource
 
 	static
 	{
-		INTERNAL_HEADERS = new HashSet<String>();
+		INTERNAL_HEADERS = new HashSet<>();
 		INTERNAL_HEADERS.add("server");
 		INTERNAL_HEADERS.add("date");
 		INTERNAL_HEADERS.add("expires");
@@ -90,6 +89,7 @@ public abstract class AbstractResource implements IResource
 	public static class ResourceResponse
 	{
 		private Integer errorCode;
+		private Integer statusCode;
 		private String errorMessage;
 		private String fileName = null;
 		private ContentDisposition contentDisposition = ContentDisposition.INLINE;
@@ -122,10 +122,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param errorCode
 		 *            error code
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setError(Integer errorCode)
+		public ResourceResponse setError(Integer errorCode)
 		{
 			setError(errorCode, null);
+			return this;
 		}
 
 		/**
@@ -136,11 +139,14 @@ public abstract class AbstractResource implements IResource
 		 *            error code
 		 * @param errorMessage
 		 *            error message
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setError(Integer errorCode, String errorMessage)
+		public ResourceResponse setError(Integer errorCode, String errorMessage)
 		{
 			this.errorCode = errorCode;
 			this.errorMessage = errorMessage;
+			return this;
 		}
 
 		/**
@@ -149,6 +155,28 @@ public abstract class AbstractResource implements IResource
 		public Integer getErrorCode()
 		{
 			return errorCode;
+		}
+
+		/**
+		 * Sets the status code for resource.
+		 *
+		 * @param statusCode
+		 *            status code
+		 *
+		 * @return {@code this}, for chaining.
+		 */
+		public ResourceResponse setStatusCode(Integer statusCode)
+		{
+			this.statusCode = statusCode;
+			return this;
+		}
+
+		/**
+		 * @return status code or <code>null</code>
+		 */
+		public Integer getStatusCode()
+		{
+			return statusCode;
 		}
 
 		/**
@@ -164,10 +192,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param fileName
 		 *            file name
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setFileName(String fileName)
+		public ResourceResponse setFileName(String fileName)
 		{
 			this.fileName = fileName;
+			return this;
 		}
 
 		/**
@@ -185,11 +216,14 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param contentDisposition
 		 *            content disposition (attachment or inline)
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setContentDisposition(ContentDisposition contentDisposition)
+		public ResourceResponse setContentDisposition(ContentDisposition contentDisposition)
 		{
 			Args.notNull(contentDisposition, "contentDisposition");
 			this.contentDisposition = contentDisposition;
+			return this;
 		}
 
 		/**
@@ -206,10 +240,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param contentType
 		 *            content type (also known as mime type)
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setContentType(String contentType)
+		public ResourceResponse setContentType(String contentType)
 		{
 			this.contentType = contentType;
+			return this;
 		}
 
 		/**
@@ -230,10 +267,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param textEncoding
 		 *            character encoding of text body
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setTextEncoding(String textEncoding)
+		public ResourceResponse setTextEncoding(String textEncoding)
 		{
 			this.textEncoding = textEncoding;
+			return this;
 		}
 
 		/**
@@ -250,10 +290,13 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param contentLength
 		 *            length of response body
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setContentLength(long contentLength)
+		public ResourceResponse setContentLength(long contentLength)
 		{
 			this.contentLength = contentLength;
+			return this;
 		}
 
 		/**
@@ -267,15 +310,18 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the last modified data of the resource. Even though this method is optional it is
 		 * recommended to set the date. If the date is set properly Wicket can check the
-		 * <code>If-Modified-Since</code> to determine if the actuall data really needs to be sent
+		 * <code>If-Modified-Since</code> to determine if the actual data really needs to be sent
 		 * to client.
 		 * 
 		 * @param lastModified
 		 *            last modification timestamp
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setLastModified(Time lastModified)
+		public ResourceResponse setLastModified(Time lastModified)
 		{
 			this.lastModified = lastModified;
+			return this;
 		}
 
 		/**
@@ -319,41 +365,49 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
-		 * disable caching
+		 * Disables caching.
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void disableCaching()
+		public ResourceResponse disableCaching()
 		{
-			setCacheDuration(Duration.NONE);
+			return setCacheDuration(Duration.NONE);
 		}
 
 		/**
-		 * set caching to maximum available duration
+		 * Sets caching to maximum available duration.
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setCacheDurationToMaximum()
+		public ResourceResponse setCacheDurationToMaximum()
 		{
 			cacheDuration = WebResponse.MAX_CACHE_DURATION;
+			return this;
 		}
 
 		/**
-		 * Controls how long this response may be cached
+		 * Controls how long this response may be cached.
 		 * 
 		 * @param duration
 		 *            caching duration in seconds
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setCacheDuration(Duration duration)
+		public ResourceResponse setCacheDuration(Duration duration)
 		{
 			cacheDuration = Args.notNull(duration, "duration");
+			return this;
 		}
 
 		/**
-		 * returns how long this resource may be cached
+		 * Returns how long this resource may be cached for.
 		 * <p/>
 		 * The special value Duration.NONE means caching is disabled.
 		 * 
 		 * @return duration for caching
 		 * 
-		 * @see IResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
-		 * @see IResourceSettings#getDefaultCacheDuration()
+		 * @see org.apache.wicket.settings.ResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()
 		 */
 		public Duration getCacheDuration()
 		{
@@ -393,10 +447,13 @@ public abstract class AbstractResource implements IResource
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(org.apache.wicket.util.time.Duration)
 		 * @see org.apache.wicket.request.http.WebResponse.CacheScope
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setCacheScope(WebResponse.CacheScope scope)
+		public ResourceResponse setCacheScope(WebResponse.CacheScope scope)
 		{
 			cacheScope = Args.notNull(scope, "scope");
+			return this;
 		}
 
 		/**
@@ -409,11 +466,14 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param writeCallback
 		 *            write callback
+		 *
+		 * @return {@code this}, for chaining.
 		 */
-		public void setWriteCallback(final WriteCallback writeCallback)
+		public ResourceResponse setWriteCallback(final WriteCallback writeCallback)
 		{
 			Args.notNull(writeCallback, "writeCallback");
 			this.writeCallback = writeCallback;
+			return this;
 		}
 
 		/**
@@ -492,7 +552,8 @@ public abstract class AbstractResource implements IResource
 		// set response header
 		setResponseHeaders(data, attributes);
 
-		if (!data.dataNeedsToBeWritten(attributes) || data.getErrorCode() != null)
+		if (!data.dataNeedsToBeWritten(attributes) || data.getErrorCode() != null
+				|| needsBody(data.getStatusCode()) == false)
 		{
 			return;
 		}
@@ -510,6 +571,22 @@ public abstract class AbstractResource implements IResource
 		{
 			throw new WicketRuntimeException(iox);
 		}
+	}
+
+	/**
+	 * Decides whether a response body should be written back to the client depending
+	 * on the set status code
+	 *
+	 * @param statusCode
+	 *      the status code set by the application
+	 * @return {@code true} if the status code allows response body, {@code false} - otherwise
+	 */
+	private boolean needsBody(Integer statusCode)
+	{
+		return statusCode == null ||
+					(statusCode < 300 &&
+					statusCode != HttpServletResponse.SC_NO_CONTENT &&
+					statusCode != HttpServletResponse.SC_RESET_CONTENT);
 	}
 
 	/**
@@ -554,15 +631,21 @@ public abstract class AbstractResource implements IResource
 			// 2. Caching
 			configureCache(data, attributes);
 
-			if (!data.dataNeedsToBeWritten(attributes))
-			{
-				webResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-				return;
-			}
-
 			if (data.getErrorCode() != null)
 			{
 				webResponse.sendError(data.getErrorCode(), data.getErrorMessage());
+				return;
+			}
+
+			if (data.getStatusCode() != null)
+			{
+				webResponse.setStatus(data.getStatusCode());
+				return;
+			}
+			
+			if (!data.dataNeedsToBeWritten(attributes))
+			{
+				webResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 				return;
 			}
 
@@ -614,25 +697,8 @@ public abstract class AbstractResource implements IResource
 					webResponse.addHeader(name, value);
 				}
 			}
-
-			// 6. Flush the response
-			flushResponseAfterHeaders(webResponse);
 		}
 	}
-
-	/**
-	 * Flushes the response after setting the headers.
-	 * This is necessary for Firefox if this resource is an image,
-	 * otherwise it messes up other images on page.
-	 *
-	 * @param response
-	 *      the current web response
-	 */
-	protected void flushResponseAfterHeaders(final WebResponse response)
-	{
-		response.flush();
-	}
-
 	/**
 	 * Callback invoked when resource data needs to be written to response. Subclass needs to
 	 * implement the {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)}

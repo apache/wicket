@@ -37,9 +37,9 @@ class AjaxHeaderContribution extends Panel
 	}
 
 	@Override
-	public void renderHead(HtmlHeaderContainer container)
+	public void internalRenderHead(HtmlHeaderContainer container)
 	{
-		super.renderHead(container);
+		super.internalRenderHead(container);
 
 		container.getHeaderResponse().render(JavaScriptHeaderItem.forUrl("javascripturl"));
 		container.getHeaderResponse().render(OnDomReadyHeaderItem.forScript("domReady();"));

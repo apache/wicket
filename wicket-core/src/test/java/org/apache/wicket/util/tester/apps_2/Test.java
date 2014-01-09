@@ -29,6 +29,7 @@ public class Test extends WicketTestCase
 	/**
 	 * 
 	 */
+	@org.junit.Test
 	public void testRedirect()
 	{
 		final IAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(

@@ -162,7 +162,7 @@ public class PatternValidator implements IValidator<String>
 	 * @param validatable
 	 * @return decorated error
 	 */
-	protected ValidationError decorate(ValidationError error, IValidatable<String> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<String> validatable)
 	{
 		return error;
 	}

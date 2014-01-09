@@ -90,7 +90,7 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 	protected Item<ICellPopulator<T>> newCellItem(final String id, final int index,
 		final IModel<ICellPopulator<T>> model)
 	{
-		return new Item<ICellPopulator<T>>(id, index, model);
+		return new Item<>(id, index, model);
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 	 */
 	protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 	{
-		return new Item<T>(id, index, model);
+		return new Item<>(id, index, model);
 	}
 
 
@@ -149,7 +149,7 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 		for (int i = 0; i < populatorsNumber; i++)
 		{
 			ICellPopulator<T> populator = populators.get(i);
-			IModel<ICellPopulator<T>> populatorModel = new Model<ICellPopulator<T>>(populator);
+			IModel<ICellPopulator<T>> populatorModel = new Model<>(populator);
 			Item<ICellPopulator<T>> cellItem = newCellItem(cells.newChildId(), i, populatorModel);
 			cells.add(cellItem);
 

@@ -63,7 +63,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public TableTree(final String id, final List<IColumn<T, S>> columns,
+	public TableTree(final String id, final List<? extends IColumn<T, S>> columns,
 		final ITreeProvider<T> dataProvider, final long rowsPerPage)
 	{
 		this(id, columns, dataProvider, rowsPerPage, null);
@@ -83,8 +83,8 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * @param state
 	 *            the expansion state
 	 */
-	public TableTree(final String id, final List<IColumn<T, S>> columns,
-		final ITreeProvider<T> provider, final long rowsPerPage, IModel<Set<T>> state)
+	public TableTree(final String id, final List<? extends IColumn<T, S>> columns,
+		final ITreeProvider<T> provider, final long rowsPerPage, IModel<? extends Set<T>> state)
 	{
 		super(id, provider, state);
 
@@ -116,7 +116,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * @param rowsPerPage
 	 * @return nested data table
 	 */
-	protected DataTable<T, S> newDataTable(String id, List<IColumn<T, S>> columns,
+	protected DataTable<T, S> newDataTable(String id, List<? extends IColumn<T, S>> columns,
 		IDataProvider<T> dataProvider, long rowsPerPage)
 	{
 		return new DataTable<T, S>(id, columns, dataProvider, rowsPerPage)
@@ -243,7 +243,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 */
 	protected Item<T> newRowItem(String id, int index, IModel<T> model)
 	{
-		Item<T> item = new Item<T>(id, index, model);
+		Item<T> item = new Item<>(id, index, model);
 
 		return item;
 	}

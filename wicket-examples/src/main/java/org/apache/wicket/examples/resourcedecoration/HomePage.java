@@ -26,8 +26,8 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.filter.FilteredHeaderItem;
+import org.apache.wicket.markup.head.filter.FilteringHeaderResponse;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
-import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -113,7 +113,7 @@ public class HomePage extends WicketExamplePage
 			HomePage.class, "HomePage.js")));
 		response.render(new FilteredHeaderItem(
 			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(HomePage.class,
-				"top.js")), JavaScriptFilteredIntoFooterHeaderResponse.HEADER_FILTER_NAME));
+				"top.js")), FilteringHeaderResponse.DEFAULT_HEADER_FILTER_NAME));
 	}
 
 	private static class AjaxProofContainer extends WebMarkupContainer

@@ -63,7 +63,8 @@ public class PageKey
 	 */
 	public boolean isForSession(String sessionId)
 	{
-		return getSessionId().equals(sessionId);
+		String sid = getSessionId();
+		return sid != null && sid.equals(sessionId);
 	}
 
 	@Override

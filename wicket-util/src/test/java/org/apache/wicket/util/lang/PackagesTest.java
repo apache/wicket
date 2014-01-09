@@ -25,13 +25,23 @@ import org.junit.Test;
 public class PackagesTest extends Assert
 {
 	@Test
+	public void absolutePath0() throws Exception
+	{
+		String packageName = "org.apache.wicket.util.tester";
+		String relativePath = "/org/apache/wicket/util/tester/BlockedResourceLinkPage.html";
+
+		String absolutePath = Packages.absolutePath(packageName, relativePath);
+		assertEquals("org/apache/wicket/util/tester/BlockedResourceLinkPage.html", absolutePath);
+	}
+
+	@Test
 	public void absolutePath1() throws Exception
 	{
 		String packageName = "org.apache.wicket.util.tester";
-		String relativePath = "org/apache/wicket/util/tester/BlockedResourceLinkPage.html";
+		String relativePath = "BlockedResourceLinkPage.html";
 
 		String absolutePath = Packages.absolutePath(packageName, relativePath);
-		assertEquals(relativePath, absolutePath);
+		assertEquals("org/apache/wicket/util/tester/BlockedResourceLinkPage.html", absolutePath);
 	}
 
 	@Test
@@ -62,5 +72,18 @@ public class PackagesTest extends Assert
 
 		String absolutePath = Packages.absolutePath(packageName, relativePath);
 		assertEquals("org/apache/BlockedResourceLinkPage.html", absolutePath);
+	}
+	
+	/**
+	 * WICKET-5054
+	 */
+	@Test
+	public void absolutePath5() throws Exception
+	{
+		String packageName = "com.foo.bar";
+		String relativePath = "baz/foo/qux";
+
+		String absolutePath = Packages.absolutePath(packageName, relativePath);
+		assertEquals("com/foo/bar/baz/foo/qux", absolutePath);
 	}
 }

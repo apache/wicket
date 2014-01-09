@@ -58,7 +58,7 @@ public class DefaultNestedTree<T> extends NestedTree<T>
 	 * @param state
 	 *            expansion state
 	 */
-	public DefaultNestedTree(String id, ITreeProvider<T> provider, IModel<Set<T>> state)
+	public DefaultNestedTree(String id, ITreeProvider<T> provider, IModel<? extends Set<T>> state)
 	{
 		super(id, provider, state);
 
@@ -76,6 +76,6 @@ public class DefaultNestedTree<T> extends NestedTree<T>
 	@Override
 	protected Component newContentComponent(String id, IModel<T> node)
 	{
-		return new Folder<T>(id, this, node);
+		return new Folder<>(id, this, node);
 	}
 }

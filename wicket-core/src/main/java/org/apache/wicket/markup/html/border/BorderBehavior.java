@@ -24,6 +24,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
@@ -32,10 +33,8 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 
 /**
  * This is a behavior implementation that can be used if you have markup that should be around a
@@ -47,13 +46,6 @@ import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
  */
 public class BorderBehavior extends Behavior
 {
-	static
-	{
-		// register "wicket:border" and "wicket:body"
-		WicketTagIdentifier.registerWellKnownTagName(Border.BORDER);
-		WicketTagIdentifier.registerWellKnownTagName(Border.BODY);
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	// markup stream associated with this border. bonus of keeping a reference

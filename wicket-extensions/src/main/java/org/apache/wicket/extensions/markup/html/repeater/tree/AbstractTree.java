@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.tree;
 import java.util.Set;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.util.ProviderSubset;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -40,7 +41,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            the node type
  */
-public abstract class AbstractTree<T> extends Panel
+public abstract class AbstractTree<T> extends Panel implements IGenericComponent<Set<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,7 +54,7 @@ public abstract class AbstractTree<T> extends Panel
 		this(id, provider, null);
 	}
 
-	protected AbstractTree(String id, ITreeProvider<T> provider, IModel<Set<T>> state)
+	protected AbstractTree(String id, ITreeProvider<T> provider, IModel<? extends Set<T>> state)
 	{
 		super(id, state);
 
@@ -133,7 +134,7 @@ public abstract class AbstractTree<T> extends Panel
 	 */
 	protected IModel<Set<T>> newModel()
 	{
-		return new ProviderSubset<T>(provider).createModel();
+		return new ProviderSubset<>(provider).createModel();
 	}
 
 	/**
@@ -141,6 +142,7 @@ public abstract class AbstractTree<T> extends Panel
 	 * 
 	 * @return model
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public IModel<Set<T>> getModel()
 	{
@@ -152,6 +154,7 @@ public abstract class AbstractTree<T> extends Panel
 	 * 
 	 * @return the model object
 	 */
+	@Override
 	public Set<T> getModelObject()
 	{
 		return getModel().getObject();
@@ -163,6 +166,7 @@ public abstract class AbstractTree<T> extends Panel
 	 * @param model
 	 *            the model
 	 */
+	@Override
 	public void setModel(IModel<Set<T>> model)
 	{
 		setDefaultModel(model);
@@ -174,6 +178,7 @@ public abstract class AbstractTree<T> extends Panel
 	 * @param state
 	 *            the model object
 	 */
+	@Override
 	public void setModelObject(Set<T> state)
 	{
 		setDefaultModelObject(state);

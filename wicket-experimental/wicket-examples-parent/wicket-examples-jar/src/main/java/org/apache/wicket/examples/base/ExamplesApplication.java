@@ -34,6 +34,8 @@ public class ExamplesApplication extends WebApplication
 	{
 		super.init();
 
+		getMarkupSettings().setStripWicketTags(true);
+
 		mountPage("/basic", BasicExamplesPage.class);
 		mountPage("/basic/helloworld", HelloWorldPage.class);
 		mountPage("/basic/linkcounter", LinkCounterPage.class);

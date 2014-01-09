@@ -58,7 +58,7 @@ public class StockQuoteLabel extends WebComponent
 	 */
 	public StockQuoteLabel(String id, String symbol)
 	{
-		super(id, new Model<String>(symbol));
+		super(id, new Model<>(symbol));
 	}
 
 	/**

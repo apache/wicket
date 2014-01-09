@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.ws.jetty;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.eclipse.jetty.websocket.WebSocket;
 
@@ -65,7 +65,7 @@ public class JettyWebSocketProcessor extends AbstractWebSocketProcessor
 	 * @param application
 	 *      the current Wicket Application
 	 */
-	public JettyWebSocketProcessor(final HttpServletRequest request, final Application application)
+	public JettyWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
 	{
 		super(request, application);
 	}
@@ -78,6 +78,6 @@ public class JettyWebSocketProcessor extends AbstractWebSocketProcessor
 		{
 			throw new IllegalArgumentException(JettyWebSocketProcessor.class.getName() + " can work only with " + WebSocket.Connection.class.getName());
 		}
-		onConnect(new JettyWebSocketConnection((WebSocket.Connection) connection));
+		onConnect(new JettyWebSocketConnection((WebSocket.Connection) connection, this));
 	}
 }

@@ -33,7 +33,7 @@ public abstract class SortableTreeProvider<T, S> implements ISortableTreeProvide
 {
 	private static final long serialVersionUID = 1L;
 
-	private final SingleSortState<S> state = new SingleSortState<S>();
+	private final SingleSortState<S> state = new SingleSortState<>();
 
 	/**
 	 * @see ISortableDataProvider#getSortState()
@@ -75,7 +75,7 @@ public abstract class SortableTreeProvider<T, S> implements ISortableTreeProvide
 	 */
 	public void setSort(S property, boolean ascending)
 	{
-		setSort(new SortParam<S>(property, ascending));
+		setSort(new SortParam<>(property, ascending));
 	}
 
 	/**

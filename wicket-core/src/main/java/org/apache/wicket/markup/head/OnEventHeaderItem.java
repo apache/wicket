@@ -17,13 +17,16 @@
 package org.apache.wicket.markup.head;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for event triggered scripts.
@@ -38,7 +41,7 @@ public class OnEventHeaderItem extends HeaderItem
 	 * @param target
 	 *            The target of the event handler, for example 'window' or 'document'.
 	 * @param event
-	 *            The event itself, for example 'onclick'.
+	 *            The event itself, for example 'click'.
 	 * @param javaScript
 	 *            The script to execute on the event.
 	 * 
@@ -54,6 +57,19 @@ public class OnEventHeaderItem extends HeaderItem
 	private final CharSequence javaScript;
 
 	/**
+	 * Constructor.
+	 *
+	 * The JavaScript should be provided by overloaded #getJavaScript
+	 *
+	 * @param target
+	 * @param event
+	 */
+	public OnEventHeaderItem(String target, String event)
+	{
+		this(target, event, null);
+	}
+
+	/**
 	 * Construct.
 	 * 
 	 * @param target
@@ -63,8 +79,16 @@ public class OnEventHeaderItem extends HeaderItem
 	public OnEventHeaderItem(String target, String event, CharSequence javaScript)
 	{
 		this.target = Args.notEmpty(target, "target");
-		this.event = Args.notEmpty(event, "event");
-		this.javaScript = Args.notEmpty(javaScript, "javaScript");
+
+		Args.notEmpty(event, "event");
+		event = event.toLowerCase(Locale.ENGLISH);
+		if (event.startsWith("on"))
+		{
+			event = event.substring(2);
+		}
+		this.event = event;
+
+		this.javaScript = javaScript;
 	}
 
 	/**
@@ -94,8 +118,26 @@ public class OnEventHeaderItem extends HeaderItem
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(" + getTarget() + ", \"" +
-			getEvent() + "\", function(event) { " + getJavaScript() + ";});");
+		if (Strings.isEmpty(getJavaScript()) == false)
+		{
+			JavaScriptUtils.writeJavaScript(response, getCompleteJavaScript());
+		}
+	}
+
+	/**
+	 * @return The JavaScript that registers the event handler.
+	 */
+	public CharSequence getCompleteJavaScript()
+	{
+		StringBuilder result = new StringBuilder();
+		result.append("Wicket.Event.add(")
+				.append(getTarget())
+				.append(", \"")
+				.append(getEvent())
+				.append("\", function(event) { ")
+				.append(getJavaScript())
+				.append(";});");
+		return result;
 	}
 
 	@Override
@@ -130,10 +172,12 @@ public class OnEventHeaderItem extends HeaderItem
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		IJavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
+		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
 		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
-		return Collections.singletonList(JavaScriptHeaderItem.forReference(wicketEventReference));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		return dependencies;
 	}
 }

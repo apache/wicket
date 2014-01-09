@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.settings.IExceptionSettings.ThreadDumpStrategy;
+import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
@@ -50,7 +50,7 @@ public class PageAccessSynchronizer implements Serializable
 		@Override
 		protected ConcurrentMap<Integer, PageLock> createInstance()
 		{
-			return new ConcurrentHashMap<Integer, PageLock>();
+			return new ConcurrentHashMap<>();
 		}
 	};
 
@@ -114,23 +114,7 @@ public class PageAccessSynchronizer implements Serializable
 				long remaining = remaining(start, timeout);
 				if (remaining > 0)
 				{
-					synchronized (previous)
-					{
-						if (isDebugEnabled)
-						{
-							logger.debug("{} waiting for lock to page {} for {}", new Object[] {
-									thread.getName(), pageId, Duration.milliseconds(remaining) });
-						}
-						try
-						{
-							previous.wait(remaining);
-						}
-						catch (InterruptedException e)
-						{
-							// TODO better exception
-							throw new RuntimeException(e);
-						}
-					}
+					previous.waitForRelease(remaining, isDebugEnabled);
 				}
 			}
 		}
@@ -212,14 +196,7 @@ public class PageAccessSynchronizer implements Serializable
 						lock.pageId);
 				}
 				// if any locks were removed notify threads waiting for a lock
-				synchronized (lock)
-				{
-					if (isDebugEnabled)
-					{
-						logger.debug("'{}' notifying blocked threads", thread.getName());
-					}
-					lock.notifyAll();
-				}
+				lock.markReleased(isDebugEnabled);
 				if (pageId != null)
 				{
 					// unlock just the page with the specified id
@@ -301,6 +278,8 @@ public class PageAccessSynchronizer implements Serializable
 		/** thread that owns the lock */
 		private final Thread thread;
 
+		private volatile boolean released = false;
+
 		/**
 		 * Constructor
 		 * 
@@ -327,6 +306,47 @@ public class PageAccessSynchronizer implements Serializable
 		public Thread getThread()
 		{
 			return thread;
+		}
+
+		final synchronized void waitForRelease(long remaining, boolean isDebugEnabled)
+		{
+			if (released)
+			{
+				// the thread holding the lock released it before we were able to wait for the
+				// release
+				if (isDebugEnabled)
+				{
+					logger.debug(
+						"lock for page with id {} no longer locked by {}, falling through", pageId,
+						thread.getName());
+				}
+				return;
+			}
+
+			if (isDebugEnabled)
+			{
+				logger.debug("{} waiting for lock to page {} for {}",
+					new Object[] { thread.getName(), pageId, Duration.milliseconds(remaining) });
+			}
+			try
+			{
+				wait(remaining);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO better exception
+				throw new RuntimeException(e);
+			}
+		}
+
+		final synchronized void markReleased(boolean isDebugEnabled)
+		{
+			if (isDebugEnabled)
+			{
+				logger.debug("'{}' notifying blocked threads", thread.getName());
+			}
+			released = true;
+			notifyAll();
 		}
 	}
 }

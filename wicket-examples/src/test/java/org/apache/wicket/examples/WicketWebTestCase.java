@@ -31,7 +31,7 @@ import org.junit.Before;
 public abstract class WicketWebTestCase extends JettyTestCaseDecorator
 {
 	/** The base url used to connect the conversation to */
-	private String baseUrl = "http://localhost:8098/";
+	private String baseUrl;
 
 	/** The web conversation that keeps track of our requests. */
 	private WebConversation conversation;
@@ -52,6 +52,7 @@ public abstract class WicketWebTestCase extends JettyTestCaseDecorator
 	public void before() throws Exception
 	{
 		super.before();
+		setBaseUrl(String.format("http://localhost:%d/", localPort));
 		conversation = new WebConversation();
 	}
 

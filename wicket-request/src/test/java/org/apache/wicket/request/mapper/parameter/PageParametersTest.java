@@ -142,4 +142,34 @@ public class PageParametersTest extends Assert
 		parameters.remove("named1", "value1");
 		assertEquals("value2", parameters.get("named1").toString());
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4775
+	 * 
+	 * Merge PageParameters, also when other has multiple values for the same name
+	 */
+	@Test
+	public void mergeParameters()
+	{
+		PageParameters left = new PageParameters().add("left", "left")
+			.add("both", "both1")
+			.add("both", "both2")
+			.set(0, "val0")
+			.set(1, "val1");
+		PageParameters right = new PageParameters().add("right", "right")
+			.add("both", "both1-r")
+			.add("both", "both2-r")
+			.set(1, "val1-r")
+			.set(2, "val2");
+		left.mergeWith(right);
+
+		assertEquals("val0", left.get(0).toString());
+		assertEquals("val1-r", left.get(1).toString());
+		assertEquals("val2", left.get(2).toString());
+		assertEquals("left", left.get("left").toString());
+		assertEquals("right", left.get("right").toString());
+		assertEquals(2, left.getValues("both").size());
+		assertEquals("both1-r", left.getValues("both").get(0).toString());
+		assertEquals("both2-r", left.getValues("both").get(1).toString());
+	}
 }

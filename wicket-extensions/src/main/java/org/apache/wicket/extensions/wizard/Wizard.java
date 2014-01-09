@@ -323,7 +323,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	protected <E> Form<E> newForm(final String id)
 	{
-		return new Form<E>(id);
+		return new Form<>(id);
 	}
 
 	@Override

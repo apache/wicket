@@ -17,8 +17,8 @@
 -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<entry key="inputForm.urlProperty.IConverter">'${input}' 不是合法的URL</entry>
-	<entry key="inputForm.phoneNumberUS.IConverter">'${input}' 不是一个合法的美国电话号码ุ</entry>
+	<entry key="inputForm.urlProperty.IConverter">'${label}' 不是合法的URL</entry>
+	<entry key="inputForm.phoneNumberUS.IConverter">'${label}' 不是一个合法的美国电话号码ุ</entry>
 	<entry key="use.locale">使用地点:</entry>
 	<entry key="default">缺省</entry>
 	<entry key="input">输入</entry>

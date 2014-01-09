@@ -19,7 +19,6 @@ package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
-import junit.framework.TestCase;
 import org.apache.wicket.Component;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
@@ -27,24 +26,28 @@ import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingSt
 import org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test the annotations package of the auth-roles project.
  * 
  * @author Eelco Hillenius
  */
-public class AnnotationsRoleTest extends TestCase
+public class AnnotationsRoleTest extends Assert
 {
 	WicketTester tester;
 
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	@After
+	public void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
@@ -52,6 +55,7 @@ public class AnnotationsRoleTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testClear() throws Exception
 	{
 		tester.getApplication()
@@ -64,6 +68,7 @@ public class AnnotationsRoleTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testAuthorized() throws Exception
 	{
 		WicketTester tester = new WicketTester();
@@ -78,6 +83,7 @@ public class AnnotationsRoleTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testNotAuthorized() throws Exception
 	{
 		WicketTester tester = new WicketTester();
@@ -126,8 +132,6 @@ public class AnnotationsRoleTest extends TestCase
 
 		/**
 		 * Construct.
-		 * 
-		 * @param roles
 		 */
 		public UserRolesAuthorizer(String roles)
 		{
@@ -135,7 +139,7 @@ public class AnnotationsRoleTest extends TestCase
 		}
 
 		/**
-		 * @see org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy#hasAnyRole(Roles)
+		 * @see IRoleCheckingStrategy#hasAnyRole(Roles)
 		 */
 		@Override
 		public boolean hasAnyRole(Roles roles)

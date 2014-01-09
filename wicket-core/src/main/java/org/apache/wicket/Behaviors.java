@@ -42,17 +42,11 @@ final class Behaviors implements IDetachable
 
 	public void add(Behavior... behaviors)
 	{
-		if (behaviors == null)
-		{
-			throw new IllegalArgumentException("Argument may not be null");
-		}
+		Args.notNull(behaviors, "behaviors");
 
 		for (Behavior behavior : behaviors)
 		{
-			if (behavior == null)
-			{
-				throw new IllegalArgumentException("Argument may not be null");
-			}
+			Args.notNull(behavior, "behavior");
 
 			internalAdd(behavior);
 
@@ -69,7 +63,7 @@ final class Behaviors implements IDetachable
 	private void internalAdd(final Behavior behavior)
 	{
 		component.data_add(behavior);
-		if (behavior.getStatelessHint(component))
+		if (behavior.getStatelessHint(component) == false)
 		{
 			getBehaviorId(behavior);
 		}
@@ -85,7 +79,7 @@ final class Behaviors implements IDetachable
 			return Collections.emptyList();
 		}
 
-		List<M> subset = new ArrayList<M>(len);
+		List<M> subset = new ArrayList<>(len);
 		for (int i = component.data_start(); i < len; i++)
 		{
 			Object obj = component.data_get(i);
@@ -103,10 +97,7 @@ final class Behaviors implements IDetachable
 
 	public void remove(Behavior behavior)
 	{
-		if (behavior == null)
-		{
-			throw new IllegalArgumentException("Argument `behavior` cannot be null");
-		}
+		Args.notNull(behavior, "behavior");
 
 		if (internalRemove(behavior))
 		{
@@ -222,6 +213,28 @@ final class Behaviors implements IDetachable
 			return list;
 		}
 		return null;
+	}
+
+	/**
+	 * Called when the component is going to be removed. Notifies all
+	 * behaviors assigned to this component.
+	 *
+	 * @param component
+	 *      the component that will be removed from its parent
+	 */
+	public void onRemove(Component component)
+	{
+		final int len = component.data_length();
+		for (int i = component.data_start(); i < len; i++)
+		{
+			Object obj = component.data_get(i);
+			if (obj != null && obj instanceof Behavior)
+			{
+				final Behavior behavior = (Behavior)obj;
+
+				behavior.onRemove(component);
+			}
+		}
 	}
 
 	private static class BehaviorIdList extends ArrayList<Behavior>

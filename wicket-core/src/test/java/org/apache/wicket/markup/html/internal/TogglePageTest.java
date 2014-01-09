@@ -21,6 +21,9 @@ import java.util.regex.Pattern;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.junit.Test;
 
 
 /**
@@ -29,10 +32,22 @@ import org.apache.wicket.markup.html.basic.Label;
 public class TogglePageTest extends WicketTestCase
 {
 
+	@Override
+	protected WebApplication newApplication()
+	{
+		WebApplication webApplication = new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				super.init();
+				getMarkupSettings().setStripWicketTags(true);
+			}
+		};
+		return webApplication;
+	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testNoAjaxPage()
 	{
 		{
@@ -60,9 +75,7 @@ public class TogglePageTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testTraditionalAjaxEnclosurePage()
 	{
 		{
@@ -93,9 +106,7 @@ public class TogglePageTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testInlineEnclosureWithAdditionalAjaxTarget()
 	{
 		{
@@ -116,7 +127,9 @@ public class TogglePageTest extends WicketTestCase
 		{
 			// On
 			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester.getLastRenderedPage();
-			tester.assertComponentOnAjaxResponse(ajaxPage.getLabel1());
+			// WICKET-5302 - only the InlineEnclosure is in the Ajax response
+			// Label1 is inside the InlineEncosure
+			tester.assertComponentOnAjaxResponse("wicket_InlineEnclosure-0");
 			tester.assertComponentOnAjaxResponse(ajaxPage.getLabel2());
 			assertVisible(ajaxPage.getLabel1());
 			assertVisible(ajaxPage.getLabel2());
@@ -131,18 +144,16 @@ public class TogglePageTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testInlineEnclosureAjaxPage()
 	{
-		String inlineEnclosureIdPrefix = "wicket_InlineEnclosure-";
+		String inlineEnclosureIdPrefix = "wicket__InlineEnclosure_";
 
 		String inlineEnclosureHiddenPattern = "<tr id=\"" + inlineEnclosureIdPrefix +
-			"1\" style=\"display:none\"></tr>";
+			"\\w+\" style=\"display:none\"></tr>";
 
 		String inlineEnclosureVisiblePattern = "<tr bgcolor=\"red\" id=\"" +
-			inlineEnclosureIdPrefix + "1\">";
+			inlineEnclosureIdPrefix + "\\w+\">";
 
 		{
 			// On

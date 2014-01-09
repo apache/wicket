@@ -19,6 +19,10 @@ package org.apache.wicket.util.encoding;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Adapted from java.net.URLDecoder, but defines instances for query string decoding versus URL path
  * component decoding.
@@ -32,6 +36,8 @@ import java.nio.charset.Charset;
  */
 public class UrlDecoder
 {
+	private static final Logger LOG = LoggerFactory.getLogger(UrlDecoder.class);
+
 	private final boolean decodePlus;
 
 	/**
@@ -84,9 +90,9 @@ public class UrlDecoder
 	 */
 	public String decode(final String s, final String enc)
 	{
-		if (s == null)
+		if (Strings.isEmpty(s))
 		{
-			return null;
+			return s;
 		}
 
 		int numChars = s.length();
@@ -142,8 +148,10 @@ public class UrlDecoder
 						// "%x" will cause an exception to be thrown
 						if ((i < numChars) && (c == '%'))
 						{
-							throw new IllegalArgumentException(
-								"URLDecoder: Incomplete trailing escape (%) pattern");
+							LOG.info("Incomplete trailing escape (%) pattern in '%s'. The escape character (%) will be ignored.",
+									s);
+							i++;
+							break;
 						}
 
 						try
@@ -157,9 +165,10 @@ public class UrlDecoder
 					}
 					catch (NumberFormatException e)
 					{
-						throw new IllegalArgumentException(
-							"URLDecoder: Illegal hex characters in escape (%) pattern - " +
-								e.getMessage());
+						LOG.info("Illegal hex characters in escape (%) pattern in '{}'. " +
+								"The escape character (%) will be ignored. NumberFormatException: {} ",
+							s, e.getMessage());
+						i++;
 					}
 					break;
 

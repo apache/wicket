@@ -2,7 +2,7 @@
 <head>
 <link href="../../test"/>
 <script type="text/javascript" src="../../javascripturl"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
@@ -20,7 +20,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.AjaxHeaderContri
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
 domReady();;
-Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-link","e":"click","c":"link1"});;
+Wicket.Ajax.ajax({"pd":true,"u":"./org.apache.wicket.ajax.AjaxHeaderContributionPage?0-1.IBehaviorListener.0-link","e":"click","c":"link1"});;
 ;});
 /*]]>*/
 </script>
@@ -41,6 +41,6 @@ test
 <span wicket:id="test3" id="test34"><wicket:panel>
 test
 </wicket:panel></span>
-<a href="../page?0-1.ILinkListener-link" wicket:id="link" id="link1">Test</a>
+<a href="./org.apache.wicket.ajax.AjaxHeaderContributionPage?0-1.ILinkListener-link" wicket:id="link" id="link1">Test</a>
 </body>
 </html>

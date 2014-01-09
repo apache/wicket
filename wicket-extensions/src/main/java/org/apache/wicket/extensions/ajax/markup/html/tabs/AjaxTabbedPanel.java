@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
 
 
 /**
@@ -31,6 +32,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            The type of panel to be used for this component's tabs. Just use {@link ITab} if you
+ *            have no special needs here.
  */
 public class AjaxTabbedPanel<T extends ITab> extends TabbedPanel<T>
 {
@@ -44,7 +48,20 @@ public class AjaxTabbedPanel<T extends ITab> extends TabbedPanel<T>
 	 */
 	public AjaxTabbedPanel(final String id, final List<T> tabs)
 	{
-		super(id, tabs);
+		this(id, tabs, null);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param tabs
+	 * @param model
+	 *            model holding the index of the selected tab
+	 */
+	public AjaxTabbedPanel(final String id, final List<T> tabs, IModel<Integer> model)
+	{
+		super(id, tabs, model);
 		setOutputMarkupId(true);
 
 		setVersioned(false);

@@ -82,7 +82,7 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 				{
 					if (component != rootComponent)
 					{
-						component.renderHead(headerContainer);
+						component.internalRenderHead(headerContainer);
 					}
 				}
 

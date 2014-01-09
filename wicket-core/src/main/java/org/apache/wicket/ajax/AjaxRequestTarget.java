@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -43,7 +44,7 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 		 * Triggered before ajax request target begins its response cycle
 		 *
 		 * @param map
-		 *            read-only map:markupId->component of components already added to the target
+		 *            modifiable map (markupId -> component) of components already added to the target
 		 * @param target
 		 *            the target itself. Could be used to add components or to append/prepend
 		 *            javascript
@@ -65,6 +66,37 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 		 *            response object that can be used to output javascript
 		 */
 		void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response);
+
+		/**
+		 * Triggered for every Ajax behavior.
+		 * Can be used to configure common settings.
+		 *
+		 * @param attributes
+		 *            The attributes for the Ajax behavior
+		 */
+		void updateAjaxAttributes(AjaxRequestAttributes attributes);
+	}
+
+	/**
+	 * Empty implementation of an {@link IListener} useful as a starting point for your own
+	 * custom listener.
+	 */
+	class AbstractListener implements IListener
+	{
+		@Override
+		public void updateAjaxAttributes(AjaxRequestAttributes attributes)
+		{
+		}
+
+		@Override
+		public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
+		{
+		}
+
+		@Override
+		public void onAfterRespond(Map<String, Component> map, IJavaScriptResponse response)
+		{
+		}
 	}
 
 	/**
@@ -151,12 +183,28 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 	/**
 	 * Adds javascript that will be evaluated on the client side after components are replaced
 	 *
+	 * <p>If the javascript needs to do something asynchronously (i.e. needs to use window.setTimeout(), for example
+	 * to do animations) then the following special syntax may be used: <code>someFunctionName|myJsLogic(someFunctionName);</code>.
+	 * Wicket will transform it to: <code>function(someFunctionName){myJsLogic(someFunctionName);}</code> and your code
+	 * is responsible to execute <em>someFunctionName()</em> when the asynchronous task is finished. Once <em>someFunctionName</em>
+	 * is executed the next appended script will be executed. <strong>Important</strong>: it is highly recommended to
+	 * execute your code in try/finally to make sure <em>someFunctionName</em> is executed even an error happens in
+	 * your code, otherwise all following scripts wont be executed.</p>
+	 *
 	 * @param javascript
 	 */
 	void appendJavaScript(CharSequence javascript);
 
 	/**
-	 * Adds javascript that will be evaluated on the client side before components are replaced
+	 * Adds javascript that will be evaluated on the client side before components are replaced.
+	 *
+	 * <p>If the javascript needs to do something asynchronously (i.e. needs to use window.setTimeout(), for example
+	 * to do animations) then the following special syntax may be used: <code>someFunctionName|myJsLogic(someFunctionName);</code>.
+	 * Wicket will transform it to: <code>function(someFunctionName){myJsLogic(someFunctionName);}</code> and your code
+	 * is responsible to execute <em>someFunctionName()</em> when the asynchronous task is finished. Once <em>someFunctionName</em>
+	 * is executed the next prepended script will be executed. <strong>Important</strong>: it is highly recommended to
+	 * execute your code in try/finally to make sure <em>someFunctionName</em> is executed even an error happens in
+	 * your code, otherwise all following scripts and component replacements wont be made.</p>
 	 *
 	 * @param javascript
 	 */

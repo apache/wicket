@@ -89,7 +89,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		isOpen();
 		if (cookies == null)
 		{
-			cookies = new ArrayList<Cookie>(2);
+			cookies = new ArrayList<>(2);
 		}
 		cookies.add(cookie);
 	}
@@ -197,7 +197,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		isOpen();
 		if (headers == null)
 		{
-			headers = new MultiMap<String, Object>();
+			headers = new MultiMap<>();
 		}
 	}
 
@@ -286,8 +286,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	@Deprecated
 	public void setStatus(int sc, String sm)
 	{
-		throw new UnsupportedOperationException(
-			"not supported in the buffered http response, use setStatus(int)");
+		setStatus(sc);
 	}
 
 	/**
@@ -629,7 +628,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		{
 			return Collections.emptyList();
 		}
-		List<String> ret = new ArrayList<String>(values.size());
+		List<String> ret = new ArrayList<>(values.size());
 		for (Object value : values)
 		{
 			ret.add(value.toString());

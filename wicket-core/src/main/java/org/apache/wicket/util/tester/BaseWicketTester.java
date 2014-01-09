@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,10 +26,10 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -48,7 +48,6 @@ import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.IRequestListener;
-import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
@@ -69,6 +68,7 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
@@ -94,11 +94,13 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.mock.MockRequestParameters;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.protocol.http.mock.CookieCollection;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockHttpSession;
@@ -115,12 +117,13 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
+import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
@@ -185,8 +188,6 @@ public class BaseWicketTester
 	private IRequestHandler forcedHandler;
 
 	private IFeedbackMessageFilter originalFeedbackMessageCleanupFilter;
-	// Simulates the cookies maintained by the browser
-	private final List<Cookie> browserCookies = Generics.newArrayList();
 
 	private ComponentInPage componentInPage;
 
@@ -371,9 +372,56 @@ public class BaseWicketTester
 			request.setServerPort(lastRequest.getServerPort());
 		}
 
-		transferCookies();
-
 		response = new MockHttpServletResponse(request);
+
+		// Preserve response cookies in redirects
+		// XXX: is this really needed ? Browsers wont do that, but some
+		// Wicket tests assert that a cookie is in the response,
+		// even after redirects (see org.apache.wicket.util.cookies.SetCookieAndRedirectTest.statefulPage())
+		// They should assert that the cookie is in the next *request*
+		if (lastResponse != null)
+		{
+			List<Cookie> lastResponseCookies = lastResponse.getCookies();
+			if (lastResponse.isRedirect())
+			{
+				CookieCollection responseCookies = new CookieCollection();
+
+				// if the last request is a redirect, all cookies from last response should appear
+				// in current response
+				// this call will filter duplicates
+				responseCookies.addAll(lastResponseCookies);
+				for (Cookie cookie : responseCookies.allAsList())
+				{
+					response.addCookie(cookie);
+				}
+
+				// copy all request cookies from last request to the new request because of redirect
+				// handling this way, the cookie will be send to the next requested page
+				if (lastRequest != null)
+				{
+					CookieCollection requestCookies = new CookieCollection();
+					// this call will filter duplicates
+					requestCookies.addAll(lastRequest.getCookies());
+					request.addCookies(requestCookies.asList());
+				}
+			}
+			else
+			{
+				// if the last response is not a redirect
+				// - copy last request cookies to collection
+				// - copy last response cookies to collection
+				// - set only the not expired cookies to the next request
+				CookieCollection cookies = new CookieCollection();
+				if (lastRequest != null)
+				{
+					// this call will filter duplicates
+					cookies.addAll(lastRequest.getCookies());
+				}
+				// this call will filter duplicates
+				cookies.addAll(lastResponseCookies);
+				request.addCookies(cookies.asList());
+			}
+		}
 
 		ServletWebRequest servletWebRequest = newServletWebRequest();
 		requestCycle = application.createRequestCycle(servletWebRequest,
@@ -416,28 +464,6 @@ public class BaseWicketTester
 		getSession().detach();
 		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
 			IFeedbackMessageFilter.NONE);
-	}
-
-	/**
-	 * Copies all cookies with a positive age from the last response to the request that is going to
-	 * be used for the next cycle.
-	 */
-	private void transferCookies()
-	{
-		if (lastResponse != null)
-		{
-			List<Cookie> cookies = lastResponse.getCookies();
-			if (cookies != null)
-			{
-				for (Cookie cookie : cookies)
-				{
-					if (cookie.getMaxAge() > 0)
-					{
-						request.addCookie(cookie);
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -624,29 +650,24 @@ public class BaseWicketTester
 			preHeader = null;
 		}
 
+		applyRequest();
+		requestCycle.scheduleRequestHandlerAfterCurrent(null);
+
 		try
 		{
-			if (getLastResponse() != null)
-			{
-				// transfer cookies from previous response to this request, quirky but how old stuff
-				// worked...
-				for (Cookie cookie : getLastResponse().getCookies())
-				{
-					request.addCookie(cookie);
-				}
-			}
-
-			applyRequest();
-			requestCycle.scheduleRequestHandlerAfterCurrent(null);
-
 			if (!requestCycle.processRequestAndDetach())
 			{
 				return false;
 			}
-
+		}
+		finally
+		{
 			recordRequestResponse();
 			setupNextRequestCycle();
+		}
 
+		try
+		{
 			if (followRedirects && lastResponse.isRedirect())
 			{
 				if (redirectCount++ >= 100)
@@ -665,7 +686,7 @@ public class BaseWicketTester
 					return true;
 				}
 
-				if (newUrl.isAbsolute())
+				if (newUrl.isFull() || newUrl.isContextAbsolute())
 				{
 					request.setUrl(newUrl);
 
@@ -780,16 +801,6 @@ public class BaseWicketTester
 
 		previousRequests.add(request);
 		previousResponses.add(response);
-
-		// transfer cookies from previous request to previous response, quirky but how old stuff
-		// worked...
-		if (lastRequest.getCookies() != null)
-		{
-			for (Cookie cookie : lastRequest.getCookies())
-			{
-				lastResponse.addCookie(cookie);
-			}
-		}
 	}
 
 	/**
@@ -962,7 +973,7 @@ public class BaseWicketTester
 	 */
 	public List<MockHttpServletRequest> getPreviousRequests()
 	{
-		return Collections.unmodifiableList(previousRequests);
+		return previousRequests;
 	}
 
 	/**
@@ -970,7 +981,7 @@ public class BaseWicketTester
 	 */
 	public List<MockHttpServletResponse> getPreviousResponses()
 	{
-		return Collections.unmodifiableList(previousResponses);
+		return previousResponses;
 	}
 
 	/**
@@ -1038,8 +1049,6 @@ public class BaseWicketTester
 			component.getPage(), component), listener);
 
 		Url url = urlFor(handler);
-		MockHttpServletRequest request = new MockHttpServletRequest(application, httpSession,
-			servletContext);
 		request.setUrl(url);
 
 		// Process the request
@@ -1102,8 +1111,8 @@ public class BaseWicketTester
 			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.setUrl(url);
-		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.addHeader("Wicket-Ajax", "true");
+		request.addHeader(WebRequest.HEADER_AJAX_BASE_URL, url.toString());
+		request.addHeader(WebRequest.HEADER_AJAX, "true");
 
 		if (behavior instanceof AjaxFormSubmitBehavior)
 		{
@@ -1111,6 +1120,14 @@ public class BaseWicketTester
 			Form<?> form = formSubmitBehavior.getForm();
 			getRequest().setUseMultiPartContentType(form.isMultiPart());
 			serializeFormToRequest(form);
+
+			// mark behavior's component as the form submitter,
+			String name = Form.getRootFormRelativeId(new PropertyModel<Component>(behavior,
+				"component").getObject());
+			if (!request.getPostParameters().getParameterNames().contains(name))
+			{
+				request.getPostParameters().setParameterValue(name, "marked");
+			}
 		}
 
 		processRequest();
@@ -1223,10 +1240,10 @@ public class BaseWicketTester
 	 * Process a component. A web page will be automatically created with the markup created in
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the instantiated component will have an auto-generated id. To
-	 *     reach any of its children use their relative path to the component itself. For example
-	 *     if the started component has a child a Link component with id "link" then after starting
-	 *     the component you can click it with: <code>tester.clickLink("link")</code>
+	 * <strong>Note</strong>: the instantiated component will have an auto-generated id. To reach
+	 * any of its children use their relative path to the component itself. For example if the
+	 * started component has a child a Link component with id "link" then after starting the
+	 * component you can click it with: <code>tester.clickLink("link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1246,10 +1263,10 @@ public class BaseWicketTester
 	 * provided. In case pageMarkup is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the instantiated component will have an auto-generated id. To
-	 *     reach any of its children use their relative path to the component itself. For example
-	 *     if the started component has a child a Link component with id "link" then after starting
-	 *     the component you can click it with: <code>tester.clickLink("link")</code>
+	 * <strong>Note</strong>: the instantiated component will have an auto-generated id. To reach
+	 * any of its children use their relative path to the component itself. For example if the
+	 * started component has a child a Link component with id "link" then after starting the
+	 * component you can click it with: <code>tester.clickLink("link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1291,10 +1308,10 @@ public class BaseWicketTester
 	 * Process a component. A web page will be automatically created with markup created by the
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the component id is set by the user. To
-	 *     reach any of its children use this id + their relative path to the component itself. For example
-	 *     if the started component has id <em>compId</em> and a Link child component component with id "link"
-	 *     then after starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
+	 * <strong>Note</strong>: the component id is set by the user. To reach any of its children use
+	 * this id + their relative path to the component itself. For example if the started component
+	 * has id <em>compId</em> and a Link child component component with id "link" then after
+	 * starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1314,10 +1331,10 @@ public class BaseWicketTester
 	 * provided. In case {@code pageMarkup} is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
 	 * <p>
-	 *     <strong>Note</strong>: the component id is set by the user. To
-	 *     reach any of its children use this id + their relative path to the component itself. For example
-	 *     if the started component has id <em>compId</em> and a Link child component component with id "link"
-	 *     then after starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
+	 * <strong>Note</strong>: the component id is set by the user. To reach any of its children use
+	 * this id + their relative path to the component itself. For example if the started component
+	 * has id <em>compId</em> and a Link child component component with id "link" then after
+	 * starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
 	 * </p>
 	 * 
 	 * @param <C>
@@ -1460,32 +1477,6 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * A helper method for starting a component for a test without attaching it to a Page.
-	 * 
-	 * Components which are somehow dependent on the page structure can not be currently tested with
-	 * this method.
-	 * 
-	 * Example:
-	 * 
-	 * UserDataView view = new UserDataView("view", new ListDataProvider(userList));
-	 * tester.startComponent(view); assertEquals(4, view.size());
-	 * 
-	 * @param component
-	 * @return the processed component
-	 * @see #startComponentInPage(Class)
-	 */
-	public Component startComponent(final Component component)
-	{
-		if (component instanceof FormComponent)
-		{
-			((FormComponent<?>)component).processInput();
-		}
-		component.beforeRender();
-
-		return component;
-	}
-
-	/**
 	 * Gets the component with the given path from last rendered page. This method fails in case the
 	 * component couldn't be found.
 	 * 
@@ -1504,7 +1495,7 @@ public class BaseWicketTester
 			String componentIdPageId = componentInPage.component.getId() + ':';
 			if (path.startsWith(componentIdPageId) == false)
 			{
-				path =  componentIdPageId + path;
+				path = componentIdPageId + path;
 			}
 		}
 
@@ -1594,7 +1585,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			result = Result.fail("path: '" + path + "' does no exist for page: " +
-					Classes.simpleName(getLastRenderedPage().getClass()));
+				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		else
 		{
@@ -1801,14 +1792,24 @@ public class BaseWicketTester
 					"not be invoked when AJAX (javascript) is disabled.");
 			}
 
-			executeBehavior(WicketTesterHelper.findAjaxEventBehavior(linkComponent, "onclick"));
+			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
+				linkComponent, "onclick");
+			for (AjaxEventBehavior behavior : behaviors)
+			{
+				executeBehavior(behavior);
+			}
 		}
 		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
 		// If it's not handling of the linkComponent is passed through to the
 		// Link.
 		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
 		{
-			executeBehavior(WicketTesterHelper.findAjaxEventBehavior(linkComponent, "onclick"));
+			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
+				linkComponent, "onclick");
+			for (AjaxEventBehavior behavior : behaviors)
+			{
+				executeBehavior(behavior);
+			}
 		}
 		// if the link is an AjaxSubmitLink, we need to find the form
 		// from it using reflection so we know what to submit.
@@ -1839,6 +1840,7 @@ public class BaseWicketTester
 			String pageRelativePath = submitLink.getInputName();
 			request.getPostParameters().setParameterValue(pageRelativePath, "x");
 
+			serializeFormToRequest(submitLink.getForm());
 			submitForm(submitLink.getForm().getPageRelativePath());
 		}
 		// if the link is a normal link (or ResourceLink)
@@ -1855,7 +1857,6 @@ public class BaseWicketTester
 				BookmarkablePageLink<?> bookmarkablePageLink = (BookmarkablePageLink<?>)link;
 				try
 				{
-					BookmarkablePageLink.class.getDeclaredField("parameters");
 					Method getParametersMethod = BookmarkablePageLink.class.getDeclaredMethod(
 						"getPageParameters", (Class<?>[])null);
 					getParametersMethod.setAccessible(true);
@@ -1873,7 +1874,18 @@ public class BaseWicketTester
 			}
 			else if (link instanceof ResourceLink)
 			{
-				executeListener(link, IResourceListener.INTERFACE);
+				try
+				{
+					Method getURL = ResourceLink.class.getDeclaredMethod("getURL", new Class[0]);
+					getURL.setAccessible(true);
+					CharSequence url = (CharSequence)getURL.invoke(link);
+					executeUrl(url.toString());
+				}
+				catch (Exception x)
+				{
+					throw new RuntimeException(
+						"An error occurred while clicking on a ResourceLink", x);
+				}
 			}
 			else
 			{
@@ -1887,8 +1899,12 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * Submit the given form in the last rendered {@link Page}
+	 * <p>
+	 * <strong>Note</strong>: Form request parameters have to be set explicitely.
 	 * 
 	 * @param form
+	 *            path to component
 	 */
 	public void submitForm(Form<?> form)
 	{
@@ -1896,10 +1912,12 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Submits the <code>Form</code> in the last rendered <code>Page</code>.
+	 * Submits the {@link Form} in the last rendered {@link Page}.
+	 * <p>
+	 * <strong>Note</strong>: Form request parameters have to be set explicitely.
 	 * 
 	 * @param path
-	 *            path to <code>Form</code> component
+	 *            path to component
 	 */
 	public void submitForm(String path)
 	{
@@ -1998,31 +2016,43 @@ public class BaseWicketTester
 	 * Asserts no error-level feedback messages.
 	 * 
 	 * @return a <code>Result</code>
+	 * @see #hasNoFeedbackMessage(int)
 	 */
 	public Result hasNoErrorMessage()
 	{
-		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		return isTrue(
-			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+		return hasNoFeedbackMessage(FeedbackMessage.ERROR);
 	}
 
 	/**
 	 * Asserts no info-level feedback messages.
 	 * 
 	 * @return a <code>Result</code>
+	 * @see #hasNoFeedbackMessage(int)
 	 */
 	public Result hasNoInfoMessage()
 	{
-		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
+		return hasNoFeedbackMessage(FeedbackMessage.INFO);
+	}
+
+	/**
+	 * Asserts there are no feedback messages with the given level.
+	 *
+	 * @param level
+	 *              the level of the feedback message
+	 * @return a <code>Result</code>
+	 */
+	public Result hasNoFeedbackMessage(int level)
+	{
+		List<Serializable> messages = getMessages(level);
 		return isTrue(
-			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+				String.format("expected no %s message, but contains\n%s",
+						new FeedbackMessage(null, "", level).getLevelAsString().toLowerCase(Locale.ENGLISH), WicketTesterHelper.asLined(messages)),
+				messages.isEmpty());
 	}
 
 	/**
 	 * Retrieves <code>FeedbackMessages</code>.
-	 * 
+	 *
 	 * @param level
 	 *            level of feedback message, for example:
 	 *            <code>FeedbackMessage.DEBUG or FeedbackMessage.INFO.. etc</code>
@@ -2031,22 +2061,27 @@ public class BaseWicketTester
 	 */
 	public List<Serializable> getMessages(final int level)
 	{
-		List<FeedbackMessage> allMessages = new FeedbackCollector(getLastRenderedPage()).collect(new IFeedbackMessageFilter()
-		{
-
-			@Override
-			public boolean accept(FeedbackMessage message)
-			{
-				return message.getLevel() == level;
-			}
-		});
+		List<FeedbackMessage> messages = getFeedbackMessages(new ExactLevelFeedbackMessageFilter(level));
 
 		List<Serializable> actualMessages = Generics.newArrayList();
-		for (FeedbackMessage message : allMessages)
+		for (FeedbackMessage message : messages)
 		{
 			actualMessages.add(message.getMessage());
 		}
 		return actualMessages;
+	}
+
+	/**
+	 * Retrieves <code>FeedbackMessages</code>.
+	 *
+	 * @param filter
+	 *            A filter that decides which messages to collect
+	 * @return <code>List</code> of messages (as <code>String</code>s)
+	 * @see FeedbackMessage
+	 */
+	public List<FeedbackMessage> getFeedbackMessages(final IFeedbackMessageFilter filter)
+	{
+		return new FeedbackCollector(getLastRenderedPage()).collect(filter);
 	}
 
 	/**
@@ -2173,7 +2208,7 @@ public class BaseWicketTester
 	 * Simulates the firing of all ajax timer behaviors on the page
 	 * 
 	 * @param page
-	 *      the page which timers will be executed
+	 *            the page which timers will be executed
 	 */
 	public void executeAllTimerBehaviors(final MarkupContainer page)
 	{
@@ -2202,7 +2237,8 @@ public class BaseWicketTester
 			{
 				if (log.isDebugEnabled())
 				{
-					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}", component.getClassRelativePath());
+					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}",
+						component.getClassRelativePath());
 				}
 
 				executeBehavior(timer);
@@ -2252,9 +2288,12 @@ public class BaseWicketTester
 
 		checkUsability(component, true);
 
-		AjaxEventBehavior ajaxEventBehavior = WicketTesterHelper.findAjaxEventBehavior(component,
-			event);
-		executeBehavior(ajaxEventBehavior);
+		List<AjaxEventBehavior> ajaxEventBehaviors = WicketTesterHelper.findAjaxEventBehaviors(
+			component, event);
+		for (AjaxEventBehavior ajaxEventBehavior : ajaxEventBehaviors)
+		{
+			executeBehavior(ajaxEventBehavior);
+		}
 	}
 
 	/**
@@ -2601,17 +2640,34 @@ public class BaseWicketTester
 		}
 
 		@Override
-		public PageRenderer get(RenderPageRequestHandler handler)
+		public PageRenderer get(final RenderPageRequestHandler handler)
 		{
-			Page newPage = (Page)handler.getPageProvider().getPageInstance();
-			if (componentInPage != null && lastPage != null &&
-				lastPage.getPageClass() != newPage.getPageClass())
+			return new PageRenderer(handler)
 			{
-				// WICKET-3913: reset startComponent if a new page type is rendered
-				componentInPage = null;
-			}
-			lastRenderedPage = lastPage = newPage;
-			return delegate.get(handler);
+				@Override
+				public void respond(RequestCycle requestCycle)
+				{
+					delegate.get(handler).respond(requestCycle);
+
+					// WICKET-5424 record page after wrapped renderer has responded
+					if (handler.getPageProvider().hasPageInstance())
+					{
+						Page renderedPage = (Page)handler.getPageProvider().getPageInstance();
+						if (componentInPage != null && lastPage != null
+							&& lastPage.getPageClass() != renderedPage.getPageClass())
+						{
+							// WICKET-3913: reset startComponent if a new page
+							// type is rendered
+							componentInPage = null;
+						}
+						lastRenderedPage = lastPage = renderedPage;
+					}
+					else
+					{
+						lastRenderedPage = null;
+					}
+				}
+			};
 		}
 	}
 

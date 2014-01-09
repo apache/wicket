@@ -20,17 +20,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  * A copy of the http servlet request used to create the WebSocket.
@@ -48,9 +57,9 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final String requestUri;
 	private final HttpSessionCopy httpSession;
 	private final StringBuffer requestURL;
-	private final Map<String, Object> attributes = new HashMap<String, Object>();
-	private final Map<String, String> headers = new HashMap<String, String>();
-	private final Map<String, String[]> parameters = new HashMap<String, String[]>();
+	private final Map<String, Object> attributes = new HashMap<>();
+	private final Map<String, String> headers = new HashMap<>();
+	private final Map<String, String[]> parameters = new HashMap<>();
 	private final String method;
 	private final String serverName;
 	private final int serverPort;
@@ -323,6 +332,48 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
+	public ServletContext getServletContext()
+	{
+		return null;
+	}
+
+	@Override
+	public AsyncContext startAsync() throws IllegalStateException
+	{
+		return null;
+	}
+
+	@Override
+	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException
+	{
+		return null;
+	}
+
+	@Override
+	public boolean isAsyncStarted()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isAsyncSupported()
+	{
+		return false;
+	}
+
+	@Override
+	public AsyncContext getAsyncContext()
+	{
+		return null;
+	}
+
+	@Override
+	public DispatcherType getDispatcherType()
+	{
+		return null;
+	}
+
+	@Override
 	public String getContextPath() {
 		return contextPath;
 	}
@@ -405,6 +456,34 @@ public class ServletRequestCopy implements HttpServletRequest
 	public boolean isRequestedSessionIdFromUrl()
 	{
 		return false;
+	}
+
+	@Override
+	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException
+	{
+		return false;
+	}
+
+	@Override
+	public void login(String username, String password) throws ServletException
+	{
+	}
+
+	@Override
+	public void logout() throws ServletException
+	{
+	}
+
+	@Override
+	public Collection<Part> getParts() throws IOException, ServletException
+	{
+		return null;
+	}
+
+	@Override
+	public Part getPart(String name) throws IOException, ServletException
+	{
+		return null;
 	}
 
 	@Override

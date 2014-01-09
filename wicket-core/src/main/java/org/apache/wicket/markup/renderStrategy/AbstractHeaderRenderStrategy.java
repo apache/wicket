@@ -124,7 +124,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 		final HeaderStreamState headerStreamState, final Component rootComponent)
 	{
 		headerContainer.renderHeaderTagBody(headerStreamState);
-		rootComponent.renderHead(headerContainer);
+		rootComponent.internalRenderHead(headerContainer);
 	}
 
 	/**
@@ -148,7 +148,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 		if (Application.exists())
 		{
 			HeaderContributorListenerCollection headerContributorListenerCollection =
-					Application.get().getHeaderContributorListenerCollection();
+					Application.get().getHeaderContributorListeners();
 			IHeaderResponse headerResponse = headerContainer.getHeaderResponse();
 
 			for (IHeaderContributor listener : headerContributorListenerCollection)

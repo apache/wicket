@@ -129,12 +129,12 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		attributes.setFormId(form.getMarkupId());
 
 		String formMethod = form.getMarkupAttributes().getString("method");
-		if ("POST".equalsIgnoreCase(formMethod))
+		if (formMethod == null || "POST".equalsIgnoreCase(formMethod))
 		{
 			attributes.setMethod(Method.POST);
 		}
 
-		if (form.isMultiPart())
+		if (form.getRootForm().isMultiPart())
 		{
 			attributes.setMultipart(true);
 			attributes.setMethod(Method.POST);
@@ -211,16 +211,6 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 */
 	protected void onError(AjaxRequestTarget target)
 	{
-	}
-
-	/**
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
-	 */
-	@Override
-	@Deprecated
-	protected CharSequence getPreconditionScript()
-	{
-		return null;
 	}
 
 	/**

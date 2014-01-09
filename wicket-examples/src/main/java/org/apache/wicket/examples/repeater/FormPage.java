@@ -57,7 +57,7 @@ public class FormPage extends BasePage
 			protected Iterator<IModel<Contact>> getItemModels()
 			{
 				// for simplicity we only show the first 10 contacts
-				SortParam<String> sort = new SortParam<String>("firstName", true);
+				SortParam<String> sort = new SortParam<>("firstName", true);
 				Iterator<Contact> contacts = DatabaseLocator.getDatabase()
 					.find(0, 10, sort)
 					.iterator();
@@ -85,11 +85,11 @@ public class FormPage extends BasePage
 				// populate the row of the repeater
 				IModel<Contact> contact = item.getModel();
 				item.add(new ActionPanel("actions", contact));
-				item.add(new TextField<Long>("id"));
-				item.add(new TextField<String>("firstName"));
-				item.add(new TextField<String>("lastName"));
-				item.add(new TextField<String>("homePhone"));
-				item.add(new TextField<String>("cellPhone"));
+				item.add(new TextField<>("id"));
+				item.add(new TextField<>("firstName"));
+				item.add(new TextField<>("lastName"));
+				item.add(new TextField<>("homePhone"));
+				item.add(new TextField<>("cellPhone"));
 			}
 
 			@Override
@@ -97,7 +97,7 @@ public class FormPage extends BasePage
 			{
 				// this item sets markup class attribute to either 'odd' or
 				// 'even' for decoration
-				return new OddEvenItem<Contact>(id, index, model);
+				return new OddEvenItem<>(id, index, model);
 			}
 		};
 

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
@@ -31,6 +32,15 @@ import org.apache.wicket.util.lang.Args;
 public class FormComponentLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
+
+	public static final String REQUIRED_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
+			"required");
+
+	public static final String INVALID_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
+			"invalid");
+
+	public static final String DISABLED_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
+			"disabled");
 
 	private final LabeledWebMarkupContainer component;
 
@@ -58,8 +68,32 @@ public class FormComponentLabel extends WebMarkupContainer
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
+
 		checkComponentTag(tag, "label");
-		tag.put("for", component.getMarkupId());
+
+		LabeledWebMarkupContainer formComponent = getFormComponent();
+
+		tag.put("for", formComponent.getMarkupId());
+
+		if (formComponent instanceof FormComponent<?>)
+		{
+			FormComponent<?> fc = (FormComponent<?>) formComponent;
+
+			if (fc.isRequired())
+			{
+				tag.append("class", getString(REQUIRED_CSS_CLASS_KEY), " ");
+			}
+			if (fc.isValid() == false)
+			{
+				tag.append("class", getString(INVALID_CSS_CLASS_KEY), " ");
+			}
+		}
+
+		if (formComponent.isEnabledInHierarchy() == false)
+		{
+			tag.append("class", getString(DISABLED_CSS_CLASS_KEY), " ");
+		}
+
 		// always transform the tag to <span></span> so even labels defined as <span/> render
 		tag.setType(TagType.OPEN);
 	}

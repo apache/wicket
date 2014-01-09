@@ -16,14 +16,18 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.List;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.CoreLibrariesContributor;
 
 /**
  * Base class for all Javascript-based "select-all" checkboxes. Provides a simple "select all"
@@ -43,7 +47,25 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	private static final ResourceReference JS = new JavaScriptResourceReference(
-		AbstractCheckSelector.class, "AbstractCheckSelector.js");
+		AbstractCheckSelector.class, "CheckSelector.js")
+	{
+
+		/**
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public List<HeaderItem> getDependencies()
+		{
+			List<HeaderItem> dependencies = super.getDependencies();
+			ResourceReference wicketEventReference = WicketEventJQueryResourceReference.get();
+			if (Application.exists()) {
+				wicketEventReference = Application.get().getJavaScriptLibrarySettings().getWicketEventReference();
+			}
+			dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+			return dependencies;
+		}
+	};
 
 	/**
 	 * Construct.
@@ -70,9 +92,8 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		// make sure we have all the javascript we need
-		CoreLibrariesContributor.contributeAjax(getApplication(), response);
 		response.render(JavaScriptHeaderItem.forReference(JS));
+
 		String findCheckboxes = getFindCheckboxesFunction().toString();
 
 		// initialize the selector

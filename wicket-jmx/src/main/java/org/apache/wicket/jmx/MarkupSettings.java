@@ -55,24 +55,6 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultAfterDisabledLink()
-	 */
-	@Override
-	public String getDefaultAfterDisabledLink()
-	{
-		return application.getMarkupSettings().getDefaultAfterDisabledLink();
-	}
-
-	/**
-	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultBeforeDisabledLink()
-	 */
-	@Override
-	public String getDefaultBeforeDisabledLink()
-	{
-		return application.getMarkupSettings().getDefaultBeforeDisabledLink();
-	}
-
-	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultMarkupEncoding()
 	 */
 	@Override
@@ -115,24 +97,6 @@ public class MarkupSettings implements MarkupSettingsMBean
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		application.getMarkupSettings().setCompressWhitespace(compressWhitespace);
-	}
-
-	/**
-	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultAfterDisabledLink(java.lang.String)
-	 */
-	@Override
-	public void setDefaultAfterDisabledLink(final String defaultAfterDisabledLink)
-	{
-		application.getMarkupSettings().setDefaultAfterDisabledLink(defaultAfterDisabledLink);
-	}
-
-	/**
-	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultBeforeDisabledLink(java.lang.String)
-	 */
-	@Override
-	public void setDefaultBeforeDisabledLink(final String defaultBeforeDisabledLink)
-	{
-		application.getMarkupSettings().setDefaultBeforeDisabledLink(defaultBeforeDisabledLink);
 	}
 
 	/**

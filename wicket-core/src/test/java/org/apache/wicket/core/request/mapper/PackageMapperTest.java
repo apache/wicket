@@ -16,13 +16,10 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.markup.html.link.ILinkListener;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -31,6 +28,11 @@ import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.mapper.PackageMapperTest.OuterPage.InnerPage;
+import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.PackageName;
 import org.junit.Test;
@@ -50,6 +52,12 @@ public class PackageMapperTest extends AbstractMapperTest
 		protected IMapperContext getContext()
 		{
 			return context;
+		}
+
+		@Override
+		boolean getRecreateMountedPagesAfterExpiry()
+		{
+			return true;
 		}
 	};
 
@@ -113,7 +121,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -129,7 +137,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/indexed1?a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
 
@@ -151,7 +159,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 	}
@@ -165,7 +173,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 
@@ -184,7 +192,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
@@ -205,7 +213,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
@@ -229,7 +237,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-ILinkListener.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
@@ -253,7 +261,7 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
@@ -405,10 +413,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
 
-		// never allow bookmarkable render url for page that has not been created by bookmarkable
-		// URL
-
-		assertNull(url);
+		assertEquals(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c", url.toString());
 	}
 
 	/**
@@ -423,7 +428,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b");
 		page.getPageParameters().set("b", "c");
 
-		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
+		// shouldn't make any difference for
+		// BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
@@ -450,7 +456,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b");
 		page.getPageParameters().set("b", "c");
 
-		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
+		// shouldn't make any difference for
+		// BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
@@ -551,7 +558,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + "PackageMapperTest$OuterPage$InnerPage");
 		IRequestHandler handler = innerClassEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals("InnerPage", page.getClass().getSimpleName());
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -586,7 +593,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + ALIAS + "?15");
 		IRequestHandler handler = aliasEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());

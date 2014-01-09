@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
@@ -72,7 +73,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @param <T>
  *            type of model object
  */
-public abstract class Link<T> extends AbstractLink implements ILinkListener
+public abstract class Link<T> extends AbstractLink implements ILinkListener, IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -352,11 +353,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 		super.onComponentTag(tag);
 
 		// If we're disabled
-		if (!isLinkEnabled())
-		{
-			disableLink(tag);
-		}
-		else
+		if (isEnabledInHierarchy())
 		{
 			// Set href to link to this link's linkClicked method
 			CharSequence url = getURL();
@@ -415,45 +412,33 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 				tag.put("onclick", onClickJavaScript);
 			}
 		}
+		else
+		{
+			disableLink(tag);
+		}
 	}
 
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
+	@Override
 	public final void setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
 	}
 
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
+	@Override
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);

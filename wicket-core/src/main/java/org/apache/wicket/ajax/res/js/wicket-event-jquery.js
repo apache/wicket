@@ -25,11 +25,13 @@
 ;(function (undefined) {
 	'use strict';
 
-	if (typeof(Wicket) === 'object') {
-		return;
+	if (typeof(Wicket) === 'undefined') {
+		window.Wicket = {};
 	}
 
-	window.Wicket = {};
+	if (typeof(Wicket.Event) === 'object') {
+		return;
+	}
 
 	jQuery.extend(true, Wicket, {
 
@@ -108,10 +110,17 @@
 
 			/**
 			 * Prevent event from bubbling up in the element hierarchy.
+			 * @param evt {Event} - the event to stop
+			 * @param immediate {Boolean} - true if the event should not be handled by other listeners registered
+			 *      on the same HTML element. Optional
 			 */
-			stop: function (evt) {
+			stop: function (evt, immediate) {
 				evt = Wicket.Event.fix(evt);
-				evt.stopPropagation();
+				if (immediate) {
+					evt.stopImmediatePropagation();
+				} else {
+					evt.stopPropagation();
+				}
 				return evt;
 			},
 
@@ -119,7 +128,8 @@
 			 * If no event is given as argument (IE), window.event is returned.
 			 */
 			fix: function (evt) {
-				return jQuery.event.fix(evt);
+				var evnt = evt || window.event;
+				return jQuery.event.fix(evnt);
 			},
 
 			fire: function (element, event) {
@@ -134,18 +144,20 @@
 				if (type === 'domready') {
 					jQuery(fn);
 				} else {
-					type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
-					
-					var el = element;
-					if (typeof(element) === 'string') {
-						el = Wicket.$(element); // Wicket.$() is wicket-ajax.js. Is this too bad ?
-					}
-					
-					if (!el && Wicket.Log) {
-						Wicket.Log.error('Cannot find element with id: ' + element);
-					}
-					
-					jQuery(el).on(type, data, fn);
+					// try to find the element once the DOM is ready
+					jQuery(function() {
+						type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
+						var el = element;
+						if (typeof(element) === 'string') {
+							el = document.getElementById(element);
+						}
+
+						if (!el && Wicket.Log) {
+							Wicket.Log.error('Cannot find element with id: ' + element);
+						}
+
+						jQuery(el).on(type, data, fn);
+					});
 				}
 				return element;
 			},
@@ -153,9 +165,9 @@
 			/**
 			* Adds a subscriber for the passed topic.
 			*
-			* @param String topic - the channel name for which this subscriber will be notified
+			* @param topic {String} - the channel name for which this subscriber will be notified
 			*        If '*' then it will be notified for all topics
-			* @param Function subscriber - the callback to call when an event with this type is published
+			* @param subscriber {Function} - the callback to call when an event with this type is published
 			*/
 			subscribe: function (topic, subscriber) {
 				
@@ -165,12 +177,31 @@
 			},
 
 			/**
+			 * Un-subscribes a subscriber from a topic.
+			 * @param topic {String} - the topic name. If omitted un-subscribes all
+			 *      subscribers from all topics
+			 * @param subscriber {Function} - the handler to un-subscribe. If omitted then
+			 *      all subscribers are removed from this topic
+			 */
+			unsubscribe: function(topic, subscriber) {
+				if (topic) {
+					if (subscriber) {
+						jQuery(document).off(topic, subscriber);
+					} else {
+						jQuery(document).off(topic);
+					}
+				} else {
+					jQuery(document).off();
+				}
+			},
+
+			/**
 			* Sends a notification to all subscribers for the given topic.
 			* Subscribers for topic '*' receive the actual topic as first parameter,
 			* otherwise the topic is not passed to subscribers which listen for specific
 			* event types.
 			*
-			* @param String topic - the channel name for which all subscribers will be notified.
+			* @param topic {String} - the channel name for which all subscribers will be notified.
 			*/
 			publish: function (topic) {
 				if (topic) {
@@ -180,6 +211,21 @@
 					jQuery(document).triggerHandler(topic, args);
 					jQuery(document).triggerHandler('*', args);
 				}
+			},
+
+			/**
+			 * The names of the topics on which Wicket notifies
+			 */
+			Topic: {
+				DOM_NODE_REMOVING      : '/dom/node/removing',
+				DOM_NODE_ADDED         : '/dom/node/added',
+				AJAX_CALL_BEFORE       : '/ajax/call/before',
+				AJAX_CALL_PRECONDITION : '/ajax/call/precondition',
+				AJAX_CALL_BEFORE_SEND  : '/ajax/call/beforeSend',
+				AJAX_CALL_SUCCESS      : '/ajax/call/success',
+				AJAX_CALL_COMPLETE     : '/ajax/call/complete',
+				AJAX_CALL_AFTER        : '/ajax/call/after',
+				AJAX_CALL_FAILURE      : '/ajax/call/failure'
 			}
 		}
 	});

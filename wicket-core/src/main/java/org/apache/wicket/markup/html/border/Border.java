@@ -29,7 +29,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.BorderMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
@@ -142,13 +141,6 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 
 	/** */
 	public static final String BORDER = "border";
-
-	static
-	{
-		// register "wicket:body" and "wicket:border"
-		WicketTagIdentifier.registerWellKnownTagName(BORDER);
-		WicketTagIdentifier.registerWellKnownTagName(BODY);
-	}
 
 	/** The body component associated with <wicket:body> */
 	private final BorderBodyContainer body;

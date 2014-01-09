@@ -39,11 +39,17 @@ import org.slf4j.LoggerFactory;
  *     </ul>
  * </p>
  */
-abstract class XmlAjaxResponse extends AbstractAjaxResponse
+public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlAjaxResponse.class);
 
-	XmlAjaxResponse(final Page page)
+	/**
+	 * The name of the root element in the produced XML document.
+	 */
+	public static final String START_ROOT_ELEMENT = "<ajax-response>";
+	public static final String END_ROOT_ELEMENT = "</ajax-response>";
+
+	public XmlAjaxResponse(final Page page)
 	{
 		super(page);
 	}
@@ -60,7 +66,7 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 		response.write("<?xml version=\"1.0\" encoding=\"");
 		response.write(encoding);
 		response.write("\"?>");
-		response.write("<ajax-response>");
+		response.write(START_ROOT_ELEMENT);
 	}
 
 	@Override
@@ -75,62 +81,65 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 
 		component.setOutputMarkupId(true);
 
-		// substitute our encoding response for the real one so we can capture
-		// component's markup in a manner safe for transport inside CDATA block
-		encodingBodyResponse.reset();
-		RequestCycle.get().setResponse(encodingBodyResponse);
-
 		// Initialize temporary variables
 		final Page page = component.findParent(Page.class);
 		if (page == null)
 		{
 			// dont throw an exception but just ignore this component, somehow
 			// it got removed from the page.
-			LOG.debug("component: " + component + " with markupid: " + markupId +
-					" not rendered because it was already removed from page");
+			LOG.warn("Component '{}' with markupid: '{}' not rendered because it was already removed from page",
+					component, markupId);
 			return;
 		}
 
-		page.startComponentRender(component);
+		// substitute our encoding response for the old one so we can capture
+		// component's markup in a manner safe for transport inside CDATA block
+		Response oldResponse = RequestCycle.get().setResponse(encodingBodyResponse);
 
 		try
 		{
-			component.prepareForRender();
+			encodingBodyResponse.reset();
+			
+			page.startComponentRender(component);
 
-			// render any associated headers of the component
-			writeHeaderContribution(response, component);
-		}
-		catch (RuntimeException e)
-		{
 			try
 			{
-				component.afterRender();
+				component.prepareForRender();
+
+				// render any associated headers of the component
+				writeHeaderContribution(response, component);
 			}
-			catch (RuntimeException e2)
+			catch (RuntimeException e)
 			{
-				// ignore this one could be a result off.
+				try
+				{
+					component.afterRender();
+				}
+				catch (RuntimeException e2)
+				{
+					// ignore this one could be a result off.
+				}
+				encodingBodyResponse.reset();
+				throw e;
 			}
+
+			try
+			{
+				component.render();
+			}
+			catch (RuntimeException e)
+			{
+				encodingBodyResponse.reset();
+				throw e;
+			}
+
+			page.endComponentRender(component);
+		}
+		finally
+		{
 			// Restore original response
-			RequestCycle.get().setResponse(response);
-			encodingBodyResponse.reset();
-			throw e;
+			RequestCycle.get().setResponse(oldResponse);
 		}
-
-		try
-		{
-			component.render();
-		}
-		catch (RuntimeException e)
-		{
-			RequestCycle.get().setResponse(response);
-			encodingBodyResponse.reset();
-			throw e;
-		}
-
-		page.endComponentRender(component);
-
-		// Restore original response
-		RequestCycle.get().setResponse(response);
 
 		response.write("<component id=\"");
 		response.write(markupId);
@@ -151,7 +160,7 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	@Override
 	protected void writeFooter(Response response, String encoding)
 	{
-		response.write("</ajax-response>");
+		response.write(END_ROOT_ELEMENT);
 	}
 
 	@Override
@@ -192,9 +201,14 @@ abstract class XmlAjaxResponse extends AbstractAjaxResponse
 
 	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
 	{
-		for (CharSequence script : scripts)
+		if (scripts.size() > 0)
 		{
-			writeEvaluation(elementName, response, script);
+			StringBuilder combinedScript = new StringBuilder(1024);
+			for (CharSequence script : scripts)
+			{
+				combinedScript.append("(function(){").append(script).append("})();");
+			}
+			writeEvaluation(elementName, response, combinedScript);
 		}
 	}
 

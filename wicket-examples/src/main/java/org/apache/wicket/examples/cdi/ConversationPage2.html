@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+	<p>
+		This page was reached via a non-bookmarkable link so conversation was propagated. 
+		Notice the conversational counter injected into this page has the same value as in the 
+		previous page, this is because it is the same counter instance.
+	</p>
+	<p>
+		The 'Continue to next page' link below is a bookmarkable link. Conversations do not propagate
+		across bookmarkable links, so the counter on the next page will have the starting value of zero.
+	</p>
+	<p>
+		Current counter value is: <span wicket:id="count">100</span>
+		<a wicket:id="increment">increment</a>
+	</p>
+	<p>
+		<a wicket:id="next">Continue to next page</a>
+	</p>
+</wicket:extend>
+</body>
+</html>

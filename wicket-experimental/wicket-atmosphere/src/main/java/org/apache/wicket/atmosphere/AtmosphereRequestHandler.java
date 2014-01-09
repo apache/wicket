@@ -16,18 +16,16 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the
@@ -39,9 +37,13 @@ public class AtmosphereRequestHandler implements IRequestHandler
 {
 	private PageKey pageKey;
 
-	private Object event;
+	private AtmosphereEvent event;
 
 	private Collection<EventSubscription> subscriptions;
+
+	private EventSubscriptionInvoker eventSubscriptionInvoker;
+
+	private boolean ajaxRequestScheduled = false;
 
 	/**
 	 * Construct.
@@ -49,13 +51,15 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	 * @param pageKey
 	 * @param subscriptions
 	 * @param event
+	 * @param eventSubscriptionInvoker
 	 */
 	public AtmosphereRequestHandler(PageKey pageKey, Collection<EventSubscription> subscriptions,
-		Object event)
+		AtmosphereEvent event, EventSubscriptionInvoker eventSubscriptionInvoker)
 	{
 		this.pageKey = pageKey;
 		this.subscriptions = subscriptions;
 		this.event = event;
+		this.eventSubscriptionInvoker = eventSubscriptionInvoker;
 	}
 
 	@Override
@@ -63,7 +67,6 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	{
 		Page page = (Page)Application.get().getMapperContext().getPageInstance(pageKey.getPageId());
 		AjaxRequestTarget target = WebApplication.get().newAjaxRequestTarget(page);
-		requestCycle.scheduleRequestHandlerAfterCurrent(target);
 		executeHandlers(target, page);
 	}
 
@@ -71,41 +74,34 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	{
 		for (EventSubscription curSubscription : subscriptions)
 		{
-			Component component = page.get(curSubscription.getComponentPath());
-			if (curSubscription.getBehaviorIndex() == null)
-				invokeMethod(target, curSubscription, component);
-			else
-				invokeMethod(target, curSubscription,
-					component.getBehaviorById(curSubscription.getBehaviorIndex()));
+			if (curSubscription.getContextAwareFilter().apply(event))
+			{
+				Component component = page.get(curSubscription.getComponentPath());
+				if (curSubscription.getBehaviorIndex() == null)
+					invokeMethod(target, curSubscription, component);
+				else
+					invokeMethod(target, curSubscription,
+						component.getBehaviorById(curSubscription.getBehaviorIndex()));
+			}
 		}
 	}
 
-	private void invokeMethod(AjaxRequestTarget target, EventSubscription subscription, Object base)
+	private void invokeMethod(final AjaxRequestTarget target, EventSubscription subscription,
+		Object base)
 	{
-		for (Method curMethod : base.getClass().getMethods())
+		AjaxRequestInitializer initializer = new AjaxRequestInitializer()
 		{
-			if (curMethod.isAnnotationPresent(Subscribe.class) &&
-				curMethod.getName().equals(subscription.getMethodName()))
+			@Override
+			public void initialize()
 			{
-				try
+				if (!ajaxRequestScheduled)
 				{
-					curMethod.setAccessible(true);
-					curMethod.invoke(base, target, event);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-				catch (IllegalArgumentException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-				catch (InvocationTargetException e)
-				{
-					throw new WicketRuntimeException(e);
+					RequestCycle.get().scheduleRequestHandlerAfterCurrent(target);
+					ajaxRequestScheduled = true;
 				}
 			}
-		}
+		};
+		eventSubscriptionInvoker.invoke(target, subscription, base, event, initializer);
 	}
 
 	@Override

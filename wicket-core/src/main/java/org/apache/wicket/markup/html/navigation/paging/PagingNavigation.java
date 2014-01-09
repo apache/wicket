@@ -115,7 +115,6 @@ public class PagingNavigation extends Loop
 {
 	private static final long serialVersionUID = 1L;
 
-
 	/** The PageableListView this navigation is navigating. */
 	protected IPageable pageable;
 
@@ -238,10 +237,10 @@ public class PagingNavigation extends Loop
 		this.separator = separator;
 	}
 
-
 	@Override
-	protected void onBeforeRender()
+	protected void onConfigure()
 	{
+		super.onConfigure();
 		setDefaultModel(new Model<Integer>(
 			(int)Math.max(Integer.MAX_VALUE, pageable.getPageCount())));
 		// PagingNavigation itself (as well as the PageableListView)
@@ -250,7 +249,6 @@ public class PagingNavigation extends Loop
 		// The index of the first page link depends on the PageableListView's
 		// page currently printed.
 		setStartIndex();
-		super.onBeforeRender();
 	}
 
 	/**

@@ -27,8 +27,8 @@ import org.apache.wicket.request.Response;
  * {@link HeaderItem} that specifies the filter it belongs to. Dependencies of a
  * {@code FilteredHeaderItem} belong to the same filter. If used in conjunction with
  * {@link JavaScriptFilteredIntoFooterHeaderResponse}, use
- * {@link JavaScriptFilteredIntoFooterHeaderResponse#HEADER_FILTER_NAME HEADER_FILTER_NAME} to
- * render items in the header.
+ * {@link FilteringHeaderResponse#DEFAULT_HEADER_FILTER_NAME DEFAULT_HEADER_FILTER_NAME} to render
+ * items in the header.
  * 
  * @author papegaaij
  */
@@ -61,6 +61,12 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 		return wrapped;
 	}
 
+	@Override
+	public FilteredHeaderItem wrap(HeaderItem item)
+	{
+		return new FilteredHeaderItem(item, getFilterName());
+	}
+
 	/**
 	 * @return the name of the filter this item belongs to
 	 */
@@ -82,14 +88,16 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		List<FilteredHeaderItem> ret = new ArrayList<FilteredHeaderItem>();
+		List<FilteredHeaderItem> ret = new ArrayList<>();
 		for (HeaderItem curDependency : getWrapped().getDependencies())
 		{
-			ret.add(new FilteredHeaderItem(curDependency, getFilterName()));
+			ret.add(wrap(curDependency));
 		}
-		return ret;
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.addAll(ret);
+		return dependencies;
 	}
 
 	@Override

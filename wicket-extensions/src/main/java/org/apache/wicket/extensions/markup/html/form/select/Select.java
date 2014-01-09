@@ -34,8 +34,7 @@ import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Component that represents a <code>&lt;select&gt;</code> box. Elements are provided by one or more
- * <code>SelectOptions</code> components in the hierarchy below the
- * <code>Select</code> component.
+ * <code>SelectOptions</code> components in the hierarchy below the <code>Select</code> component.
  * 
  * Advantages to the standard choice components is that the user has a lot more control over the
  * markup between the &lt;select&gt; tag and its children &lt;option&gt; tags: allowing for such
@@ -65,10 +64,10 @@ import org.apache.wicket.util.visit.IVisitor;
  * SelectOptions
  * </p>
  * <p>
- *     <strong>Note</strong>: due to the usage of a SelectOption for each &lt;option&gt; the memory footprint
- *     of the page will grow with the number of &lt;option&gt;s you need. Consider using
- *     {@link org.apache.wicket.markup.html.form.DropDownChoice} component if it is able to fulfill your
- *     requirements.
+ * <strong>Note</strong>: due to the usage of a SelectOption for each &lt;option&gt; the memory
+ * footprint of the page will grow with the number of &lt;option&gt;s you need. Consider using
+ * {@link org.apache.wicket.markup.html.form.DropDownChoice} component if it is able to fulfill your
+ * requirements.
  * </p>
  * 
  * @see SelectOption
@@ -104,6 +103,30 @@ public class Select<T> extends FormComponent<T>
 	}
 
 	@Override
+	protected String getModelValue()
+	{
+		final StringBuilder builder = new StringBuilder();
+
+		visitChildren(SelectOption.class, new IVisitor<SelectOption<T>, Void>()
+		{
+			@Override
+			public void component(SelectOption<T> option, IVisit<Void> visit)
+			{
+				if (isSelected(option.getDefaultModel()))
+				{
+					if (builder.length() > 0)
+					{
+						builder.append(VALUE_SEPARATOR);
+					}
+					builder.append(option.getValue());
+				}
+			}
+		});
+
+		return builder.toString();
+	}
+
+	@Override
 	protected void convertInput()
 	{
 		boolean supportsMultiple = getModelObject() instanceof Collection;
@@ -128,7 +151,7 @@ public class Select<T> extends FormComponent<T>
 					"] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
 		}
 
-		List<Object> converted = new ArrayList<Object>(values.length);
+		List<Object> converted = new ArrayList<>(values.length);
 
 		/*
 		 * if the input is null we do not need to do anything since the model collection has already
@@ -247,7 +270,19 @@ public class Select<T> extends FormComponent<T>
 			return false;
 		}
 
-		return compareModels(getDefaultModelObject(), option.getDefaultModelObject());
+		return isSelected(option.getDefaultModel());
+	}
+
+	/**
+	 * Does the given model contain a selected value.
+	 * 
+	 * @param model
+	 *            model to test on selection
+	 * @return selected
+	 */
+	protected boolean isSelected(IModel<?> model)
+	{
+		return compareModels(getDefaultModelObject(), model.getObject());
 	}
 
 	private boolean compareModels(final Object selected, final Object value)

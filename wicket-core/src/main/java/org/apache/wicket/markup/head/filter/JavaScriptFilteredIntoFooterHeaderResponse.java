@@ -33,7 +33,8 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 	/**
 	 * The name of the filter that renders the head section of the page
 	 */
-	public static final String HEADER_FILTER_NAME = "headerBucket";
+	@Deprecated // Remove in Wicket 8.0
+	public static final String HEADER_FILTER_NAME = DEFAULT_HEADER_FILTER_NAME;
 
 	/**
 	 * Construct.
@@ -47,26 +48,25 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 	public JavaScriptFilteredIntoFooterHeaderResponse(IHeaderResponse response,
 		String footerBucketName)
 	{
-		super(response, HEADER_FILTER_NAME, null);
+		super(response);
 		setFilters(createFilters(footerBucketName));
 	}
 
-	protected Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
+	private Iterable<? extends IHeaderResponseFilter> createFilters(String footerBucketName)
 	{
-		IHeaderResponseFilter header = createHeaderFilter(HEADER_FILTER_NAME);
-		IHeaderResponseFilter footer = createFooterFilter(footerBucketName, header);
+		IHeaderResponseFilter footer = createFooterFilter(footerBucketName);
+		IHeaderResponseFilter header = createHeaderFilter(DEFAULT_HEADER_FILTER_NAME, footer);
 		return Arrays.asList(header, footer);
 	}
 
-	protected IHeaderResponseFilter createFooterFilter(String footerBucketName,
-		IHeaderResponseFilter header)
+	private IHeaderResponseFilter createFooterFilter(String footerBucketName)
 	{
-		return new OppositeHeaderResponseFilter(footerBucketName, header);
+		return new JavaScriptAcceptingHeaderResponseFilter(footerBucketName);
 	}
 
-	protected IHeaderResponseFilter createHeaderFilter(String headerFilterName)
+	private IHeaderResponseFilter createHeaderFilter(String headerFilterName, IHeaderResponseFilter footerFilter)
 	{
-		return new CssAndPageAcceptingHeaderResponseFilter(HEADER_FILTER_NAME);
+		return new OppositeHeaderResponseFilter(headerFilterName, footerFilter);
 	}
 
 }

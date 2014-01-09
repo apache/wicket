@@ -44,7 +44,7 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 	private static final Logger logger = LoggerFactory.getLogger(ListenerCollection.class);
 
 	/** list of listeners */
-	private final List<T> listeners = new CopyOnWriteArrayList<T>();
+	private final List<T> listeners = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Adds a listener to this set of listeners.
@@ -137,7 +137,7 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 	 */
 	protected void reversedNotify(final INotifier<T> notifier)
 	{
-		Iterator<T> it = new ReverseListIterator<T>(listeners);
+		Iterator<T> it = new ReverseListIterator<>(listeners);
 		while (it.hasNext())
 		{
 			T listener = it.next();

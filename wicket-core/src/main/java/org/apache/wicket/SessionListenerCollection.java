@@ -45,4 +45,17 @@ public class SessionListenerCollection extends ListenerCollection<ISessionListen
 		});
 	}
 
+	@Override
+	public void onUnbound(final String sessionId)
+	{
+		notify(new INotifier<ISessionListener>()
+		{
+			@Override
+			public void notify(ISessionListener listener)
+			{
+				listener.onUnbound(sessionId);
+			}
+		});
+	}
+
 }

@@ -16,10 +16,15 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import java.util.regex.Pattern;
+
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * resource caching strategy that adds a version for the 
@@ -28,7 +33,7 @@ import org.apache.wicket.util.lang.Args;
  * versioned_filename := [basename][version-prefix][version](.extension)
  * <p/>
  * the <code>version</code> must not contain the <code>version-prefix</code> so
- * please use an unambigous value for the <code>version-prefix</code>. The default
+ * please use an unambiguous value for the <code>version-prefix</code>. The default
  * <code>version-prefix</code> is <code>{@value #DEFAULT_VERSION_PREFIX}</code>.
  * <p/> 
  * Since browsers and proxies use the versioned filename of the resource 
@@ -43,6 +48,8 @@ import org.apache.wicket.util.lang.Args;
  */
 public class FilenameWithVersionResourceCachingStrategy implements IResourceCachingStrategy
 {
+	private static final Logger LOG = LoggerFactory.getLogger(FilenameWithVersionResourceCachingStrategy.class);
+
 	private static final String DEFAULT_VERSION_PREFIX = "-ver-";
 	
 	/** string that marks the beginning the of the version in the decorated filename */
@@ -124,6 +131,14 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		{
 			versionedFilename.append(filename.substring(0, extensionAt));
 		}
+
+		int pos = versionedFilename.indexOf(getVersionPrefix());
+		if (pos != -1 && isVersion(versionedFilename.substring(pos + versionPrefix.length())))
+		{
+			LOG.error("A resource with name '{}' contains the version prefix '{}' so the un-decoration will not work." +
+					" Either use a different version prefix or rename this resource.", filename, getVersionPrefix());
+		}
+
 		// add version suffix
 		versionedFilename.append(versionPrefix);
 		
@@ -157,7 +172,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		pos = fullname.lastIndexOf(versionPrefix);
 
 		// remove version string if it exists
-		if (pos != -1)
+		if (pos != -1 && isVersion(fullname.substring(pos + versionPrefix.length())))
 		{
 			// get filename before version string
 			final String basename = fullname.substring(0, pos);
@@ -165,7 +180,22 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 			// create filename without version string 
 			// (required for working resource lookup)
 			url.setFileName(extension == null? basename : basename + extension);
+
+			// store the version in the request cycle
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle != null)
+			{
+				int idx = fullname.indexOf(versionPrefix);
+				String urlVersion = fullname.substring(idx + versionPrefix.length());
+				requestCycle.setMetaData(URL_VERSION, urlVersion);
+			}
 		}
+	}
+
+	private boolean isVersion(String substring)
+	{
+		Pattern versionPattern = resourceVersion.getVersionPattern();
+		return versionPattern == null || versionPattern.matcher(substring).matches();
 	}
 
 	/**
@@ -176,7 +206,12 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	@Override
 	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
 	{
-		response.setCacheDurationToMaximum();
-		response.setCacheScope(WebResponse.CacheScope.PUBLIC);
+		String requestedVersion = RequestCycle.get().getMetaData(URL_VERSION);
+		String calculatedVersion = this.resourceVersion.getVersion(resource);
+		if (calculatedVersion != null && calculatedVersion.equals(requestedVersion))
+		{
+			response.setCacheDurationToMaximum();
+			response.setCacheScope(WebResponse.CacheScope.PUBLIC);
+		}
 	}
 }

@@ -39,7 +39,7 @@ public abstract class Injector
 		private static final long serialVersionUID = 1L;
 	};
 
-	private final ClassMetaCache<Field[]> cache = new ClassMetaCache<Field[]>();
+	private final ClassMetaCache<Field[]> cache = new ClassMetaCache<>();
 
 	/**
 	 * Binds current instance of the injector to the Application. After this method is called this
@@ -138,7 +138,7 @@ public abstract class Injector
 	 */
 	private Field[] findFields(Class<?> clazz, final IFieldValueFactory factory)
 	{
-		List<Field> matched = new ArrayList<Field>();
+		List<Field> matched = new ArrayList<>();
 
 		while (clazz != null)
 		{

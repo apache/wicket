@@ -82,6 +82,9 @@ public class ChoicePage extends WebPage
 	public List<Book> listMultipleChoice = new ArrayList<Book>();
 
 	/** test multiple button */
+	public boolean buttonPressed;
+
+	/** test multiple button */
 	public boolean anotherButtonPressed;
 
 	/**
@@ -128,6 +131,16 @@ public class ChoicePage extends WebPage
 		form.add(new CheckBoxMultipleChoice<Book>("checkBoxMultipleChoice", candidateChoices,
 			bookChoiceRenderer));
 		form.add(newCheckGroup("checkGroup", candidateChoices));
+		form.add(new Button("buttonWithModel", Model.of("ButtonWithModel"))
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSubmit()
+			{
+				buttonPressed = true;
+			}
+		});
 		form.add(new Button("anotherButton")
 		{
 			private static final long serialVersionUID = 1L;

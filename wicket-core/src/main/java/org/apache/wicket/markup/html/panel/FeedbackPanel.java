@@ -33,8 +33,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebSession;
 
 
 /**
@@ -75,7 +73,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				/**
 				 * WICKET-4258 Feedback messages might be cleared already.
 				 * 
-				 * @see WebSession#cleanupFeedbackMessages()
+				 * @see org.apache.wicket.settings.ApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)
 				 */
 				@Override
 				public FeedbackMessage getObject()
@@ -95,32 +93,30 @@ public class FeedbackPanel extends Panel implements IFeedback
 		@Override
 		protected void populateItem(final ListItem<FeedbackMessage> listItem)
 		{
-			final IModel<String> replacementModel = new Model<String>()
-			{
-				private static final long serialVersionUID = 1L;
-
-				/**
-				 * Returns feedbackPanel + the message level, eg 'feedbackPanelERROR'. This is used
-				 * as the class of the li / span elements.
-				 * 
-				 * @see org.apache.wicket.model.IModel#getObject()
-				 */
-				@Override
-				public String getObject()
-				{
-					return getCSSClass(listItem.getModelObject());
-				}
-			};
-
 			final FeedbackMessage message = listItem.getModelObject();
 			message.markRendered();
 			final Component label = newMessageDisplayComponent("message", message);
-			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
-			label.add(levelModifier);
+			final AttributeModifier levelModifier = AttributeModifier.append("class",
+				getCSSClass(message));
 			listItem.add(levelModifier);
 			listItem.add(label);
 		}
-	}
+
+		/**
+		 * WICKET-4831 - Overridable to allow customization
+		 * 
+		 * @param index
+		 *            The index of the item
+		 * @param itemModel
+		 *            object in the list that the item represents
+		 * @return
+		 */
+		@Override
+		protected ListItem<FeedbackMessage> newItem(int index, IModel<FeedbackMessage> itemModel)
+		{
+			return FeedbackPanel.this.newMessageItem(index, itemModel);
+		}
+    }
 
 	private static final long serialVersionUID = 1L;
 
@@ -294,7 +290,34 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected String getCSSClass(final FeedbackMessage message)
 	{
-		return "feedbackPanel" + message.getLevelAsString();
+		String cssClass;
+		switch (message.getLevel())
+		{
+			case FeedbackMessage.UNDEFINED:
+				cssClass = getString(FeedbackMessage.UNDEFINED_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.DEBUG:
+				cssClass = getString(FeedbackMessage.DEBUG_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.INFO:
+				cssClass = getString(FeedbackMessage.INFO_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.SUCCESS:
+				cssClass = getString(FeedbackMessage.SUCCESS_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.WARNING:
+				cssClass = getString(FeedbackMessage.WARNING_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.ERROR:
+				cssClass = getString(FeedbackMessage.ERROR_CSS_CLASS_KEY);
+				break;
+			case FeedbackMessage.FATAL:
+				cssClass = getString(FeedbackMessage.FATAL_CSS_CLASS_KEY);
+				break;
+			default:
+				cssClass = "feedbackPanel" + message.getLevelAsString();
+		}
+		return cssClass;
 	}
 
 	/**
@@ -335,9 +358,22 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected Component newMessageDisplayComponent(String id, FeedbackMessage message)
 	{
-		Serializable serializable = message.getMessage();
-		Label label = new Label(id, (serializable == null) ? "" : serializable.toString());
+		Serializable rawMessage = message.getMessage();
+		Label label = new Label(id, rawMessage);
 		label.setEscapeModelStrings(FeedbackPanel.this.getEscapeModelStrings());
 		return label;
 	}
+
+	/**
+	 * Allows to define the listItem to use in the feedback's message list.
+	 * 
+	 * @param index
+	 *            The index of the item
+	 * @param itemModel
+	 *            The model object of the item
+	 * @return Container that holds components of the feedback MessageListView.
+	 */
+	protected ListItem<FeedbackMessage> newMessageItem(int index, IModel<FeedbackMessage> itemModel) {
+        return new ListItem<>(index, itemModel);
+    }
 }

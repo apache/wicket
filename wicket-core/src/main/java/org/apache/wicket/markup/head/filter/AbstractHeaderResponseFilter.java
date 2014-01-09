@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head.filter;
 
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.markup.head.filter.FilteringHeaderResponse.IHeaderResponseFilter;
 
 /**
@@ -50,6 +51,15 @@ public abstract class AbstractHeaderResponseFilter implements IHeaderResponseFil
 
 	@Override
 	public boolean accepts(HeaderItem item)
+	{
+		while (item instanceof IWrappedHeaderItem)
+		{
+			item = ((IWrappedHeaderItem)item).getWrapped();
+		}
+		return acceptsWrapped(item);
+	}
+
+	protected boolean acceptsWrapped(HeaderItem item)
 	{
 		return true;
 	}

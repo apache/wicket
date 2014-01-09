@@ -17,8 +17,9 @@
 package org.apache.wicket.markup.head;
 
 /**
- * An interface for all HeaderItems which delegate to another HeaderItem
- *
+ * An interface for all HeaderItems which delegate to another HeaderItem and can re-wrap an existing
+ * item.
+ * 
  * @since 6.0
  */
 public interface IWrappedHeaderItem
@@ -27,4 +28,13 @@ public interface IWrappedHeaderItem
 	 * @return the wrapped header item
 	 */
 	HeaderItem getWrapped();
+
+	/**
+	 * Wraps an existing HeaderItem
+	 * 
+	 * @param item
+	 *            The item to wrap
+	 * @return the wrapped header item
+	 */
+	HeaderItem wrap(HeaderItem item);
 }

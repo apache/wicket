@@ -19,13 +19,13 @@ package org.apache.wicket.extensions.markup.html.form.palette.component;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 
@@ -71,7 +71,9 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	{
 		StringBuilder buffer = new StringBuilder(128);
 		Iterator<T> options = getOptionsIterator();
-		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		ChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+
+		boolean localizeDisplayValues = localizeDisplayValues();
 
 		while (options.hasNext())
 		{
@@ -99,7 +101,10 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 				@SuppressWarnings("unchecked")
 				IConverter<Object> converter = (IConverter<Object>)getConverter(displayClass);
 				String displayString = converter.convertToString(displayValue, getLocale());
-				displayString = getLocalizer().getString(displayString, this, displayString);
+				if (localizeDisplayValues)
+				{
+					displayString = getLocalizer().getString(displayString, this, displayString);
+				}
 
 				if (getEscapeModelStrings())
 				{
@@ -132,6 +137,16 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		buffer.append("\n");
 
 		replaceComponentTagBody(markupStream, openTag, buffer);
+	}
+
+	/**
+	 * Should display values be localized.
+	 * 
+	 * @return default {@code true}
+	 */
+	protected boolean localizeDisplayValues()
+	{
+		return true;
 	}
 
 	/**
@@ -183,5 +198,14 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	@Override
 	public void updateModel()
 	{
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getModelValue()
+	{
+		return null;
 	}
 }

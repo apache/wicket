@@ -22,6 +22,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.HtmlSpecialTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
@@ -43,8 +44,9 @@ public final class RootMarkupFilter extends AbstractMarkupFilter
 	 * 
 	 * @param parser
 	 */
-	public RootMarkupFilter(final IXmlPullParser parser)
+	public RootMarkupFilter(final IXmlPullParser parser, MarkupResourceStream resourceStream)
 	{
+		super(resourceStream);
 		this.parser = parser;
 	}
 

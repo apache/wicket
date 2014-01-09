@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.attributes.AjaxAttributeName;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.junit.Assert;
@@ -25,7 +26,7 @@ import org.mockito.Mockito;
 
 /**
  * Tests for AbstractDefaultAjaxBehavior
- *
+ * 
  * @since 6.0
  */
 public class AbstractDefaultAjaxBehaviorTest extends Assert
@@ -65,7 +66,18 @@ public class AbstractDefaultAjaxBehaviorTest extends Assert
 
 		CharSequence json = behavior.renderAjaxAttributes(component, attributes);
 
-		String expected = "{\"coh\":[function(attrs, jqXHR, textStatus){alert('Complete!');}],\"u\":\"some/url\",\"pre\":[function(attrs){return somePrecondition();}],\"fh\":[function(attrs, jqXHR, errorMessage, textStatus){alert('Failure!');}],\"bh\":[function(attrs){alert('Before!');}],\"sh\":[function(attrs, jqXHR, data, textStatus){alert('Success!');}],\"ah\":[function(attrs){alert('After!');}]}";
+		String expected = "{\"" + AjaxAttributeName.COMPLETE_HANDLER +
+			"\":[function(attrs, jqXHR, textStatus){alert('Complete!');}],\"" +
+			AjaxAttributeName.URL + "\":\"some/url\",\"" +
+			AjaxAttributeName.PRECONDITION +
+			"\":[function(attrs){return somePrecondition();}],\"" +
+			AjaxAttributeName.FAILURE_HANDLER +
+			"\":[function(attrs, jqXHR, errorMessage, textStatus){alert('Failure!');}],\"" +
+			AjaxAttributeName.BEFORE_HANDLER +
+			"\":[function(attrs){alert('Before!');}],\"" +
+			AjaxAttributeName.SUCCESS_HANDLER +
+			"\":[function(attrs, jqXHR, data, textStatus){alert('Success!');}],\"" +
+			AjaxAttributeName.AFTER_HANDLER + "\":[function(attrs){alert('After!');}]}";
 		assertEquals(expected, json);
 	}
 }

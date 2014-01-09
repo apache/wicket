@@ -77,7 +77,7 @@ public class LinkPage extends WicketExamplePage
 			}
 		};
 		add(linkWithStateChange);
-		linkWithStateChange.add(new Label("label", new PropertyModel<Integer>(count2, "count")));
+		linkWithStateChange.add(new Label("label", new PropertyModel<>(count2, "count")));
 
 		// we can attach Link components to any HTML tag we want. If it is an anchor (<a href...),
 		// the url to this component is put in the href attribute. For other components, a onclick

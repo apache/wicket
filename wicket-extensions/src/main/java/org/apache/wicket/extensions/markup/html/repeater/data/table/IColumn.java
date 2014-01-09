@@ -25,6 +25,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulato
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * @param <T>
+ *     the type of the object that will be rendered in this column's cells
  * @param <S>
  *     the type of the sorting parameter
  */
@@ -43,8 +44,8 @@ public interface IColumn<T, S> extends ICellPopulator<T>
 	Component getHeader(String componentId);
 
 	/**
-	 * Returns the name of the property that this header sorts. If null is returned the header will
-	 * be unsortable.
+	 * Returns the property that this header sorts on.
+	 * If {@code null} is returned the header will be not sortable.
 	 * 
 	 * @return the sort property
 	 */

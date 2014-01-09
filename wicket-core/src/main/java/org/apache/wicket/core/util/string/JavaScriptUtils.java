@@ -22,36 +22,36 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Provide some helpers to write javascript related tags to the response object.
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class JavaScriptUtils
 {
-	/** Script open tag */
-	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\">\n/*<![CDATA[*/\n";
-
-	/** Script close tag */
-	public final static String SCRIPT_CLOSE_TAG = "\n/*]]>*/\n</script>\n";
-
 	/**
-	 * Script open tag. If this tag is changed, also update Wicket.Head.Contributor.processScript()
-	 * function from wicket-ajax.js
+	 * Prefix for JavaScript CDATA content. If this is changed, also update
+	 * Wicket.Head.Contributor.processScript() function from wicket-ajax-jquery.js
 	 */
 	public final static String SCRIPT_CONTENT_PREFIX = "\n/*<![CDATA[*/\n";
 
 	/**
-	 * Script close tag. If this tag is changed, also update Wicket.Head.Contributor.processScript()
-	 * function from wicket-ajax.js
+	 * Suffix for JavaScript CDATA content. If this is changed, also update
+	 * Wicket.Head.Contributor.processScript() function from wicket-ajax-jquery.js
 	 */
 	public final static String SCRIPT_CONTENT_SUFFIX = "\n/*]]>*/\n";
 
+	/** Script open tag including content prefix */
+	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\">" +
+		SCRIPT_CONTENT_PREFIX;
+
+	/** Script close tag including content suffix */
+	public final static String SCRIPT_CLOSE_TAG = SCRIPT_CONTENT_SUFFIX + "</script>\n";
 
 	/** The response object */
 	private final Response response;
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param response
 	 *            The response object
 	 * @param id
@@ -64,7 +64,7 @@ public class JavaScriptUtils
 
 	/**
 	 * Constructor without id for backward compatibility
-	 *
+	 * 
 	 * @param response
 	 *            The response object
 	 */
@@ -77,9 +77,9 @@ public class JavaScriptUtils
 
 	/**
 	 * Escape single and double quotes so that they can be part of e.g. an alert call.
-	 *
+	 * 
 	 * Note: JSON values need to escape only the double quote, so this method wont help.
-	 *
+	 * 
 	 * @param input
 	 *            the JavaScript which needs to be escaped
 	 * @return Escaped version of the input
@@ -97,7 +97,7 @@ public class JavaScriptUtils
 
 	/**
 	 * Write a reference to a javascript file to the response object
-	 *
+	 * 
 	 * @param response
 	 *            The HTTP response
 	 * @param url
@@ -113,7 +113,7 @@ public class JavaScriptUtils
 
 	/**
 	 * Write a reference to a javascript file to the response object
-	 *
+	 * 
 	 * @param response
 	 *            The HTTP response
 	 * @param url
@@ -143,14 +143,14 @@ public class JavaScriptUtils
 			response.write("charset=\"" + Strings.escapeMarkup(charset) + "\" ");
 		}
 		response.write("src=\"");
-		response.write(Strings.escapeMarkup(url));
+		response.write(url);
 		response.write("\"></script>");
 		response.write("\n");
 	}
 
 	/**
 	 * Write a reference to a javascript file to the response object
-	 *
+	 * 
 	 * @param response
 	 *            The HTTP response
 	 * @param url
@@ -163,7 +163,7 @@ public class JavaScriptUtils
 
 	/**
 	 * Write the simple text to the response object surrounded by a script tag.
-	 *
+	 * 
 	 * @param response
 	 *            The HTTP: response
 	 * @param text
@@ -174,13 +174,13 @@ public class JavaScriptUtils
 	public static void writeJavaScript(final Response response, final CharSequence text, String id)
 	{
 		writeOpenTag(response, id);
-		response.write(text);
+		response.write(Strings.replaceAll(text, "</", "<\\/"));
 		writeCloseTag(response);
 	}
 
 	/**
 	 * Write the simple text to the response object surrounded by a script tag.
-	 *
+	 * 
 	 * @param response
 	 *            The HTTP: response
 	 * @param text
@@ -192,7 +192,7 @@ public class JavaScriptUtils
 	}
 
 	/**
-	 *
+	 * 
 	 * @param response
 	 * @param id
 	 */
@@ -201,14 +201,14 @@ public class JavaScriptUtils
 		response.write("<script type=\"text/javascript\" ");
 		if (id != null)
 		{
-			response.write("id=\"" + id + "\"");
+			response.write("id=\"" + Strings.escapeMarkup(id) + "\"");
 		}
 		response.write(">");
 		response.write(SCRIPT_CONTENT_PREFIX);
 	}
 
 	/**
-	 *
+	 * 
 	 * @param response
 	 */
 	public static void writeOpenTag(final Response response)
@@ -217,7 +217,7 @@ public class JavaScriptUtils
 	}
 
 	/**
-	 *
+	 * 
 	 * @param response
 	 */
 	public static void writeCloseTag(final Response response)

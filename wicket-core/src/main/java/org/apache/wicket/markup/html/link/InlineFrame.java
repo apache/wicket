@@ -17,7 +17,8 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.Session;
+import org.apache.wicket.core.request.handler.IPageProvider;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -36,8 +37,8 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The link. */
-	private final IPageLink pageLink;
+	/** The provider of the page. */
+	private final IPageProvider pageProvider;
 
 	/**
 	 * Constructs an inline frame that instantiates the given Page class when the content of the
@@ -71,31 +72,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	public <C extends Page> InlineFrame(final String id, final Class<C> c,
 		final PageParameters params)
 	{
-		this(id, new IPageLink()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Page getPage()
-			{
-				// TODO use PageProvider instead
-				if (params == null)
-				{
-					// Create page using page factory
-					return (Page)Session.get().getPageFactory().newPage(c);
-				}
-				else
-				{
-					return (Page)Session.get().getPageFactory().newPage(c, params);
-				}
-			}
-
-			@Override
-			public Class<? extends Page> getPageIdentity()
-			{
-				return c;
-			}
-		});
+		this(id, new PageProvider(c, params));
 
 		// Ensure that c is a subclass of Page
 		if (!Page.class.isAssignableFrom(c))
@@ -115,24 +92,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public InlineFrame(final String id, final Page page)
 	{
-		this(id, new IPageLink()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Page getPage()
-			{
-				// use given page
-				return page;
-			}
-
-			@Override
-			public Class<? extends Page> getPageIdentity()
-			{
-				return page.getClass();
-			}
-
-		});
+		this(id, new PageProvider(page.getPageId(), page.getClass(), page.getRenderCount()));
 	}
 
 	/**
@@ -144,14 +104,15 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param pageLink
-	 *            An implementation of IPageLink which will create the page to be contained in the
-	 *            inline frame if and when the content is requested
+	 * @param pageProvider
+	 *            the provider of the page to be contained in the inline frame if and when the
+	 *            content is requested
 	 */
-	public InlineFrame(final String id, IPageLink pageLink)
+	public InlineFrame(final String id, IPageProvider pageProvider)
 	{
 		super(id);
-		this.pageLink = pageLink;
+
+		this.pageProvider = pageProvider;
 	}
 
 	/**
@@ -172,7 +133,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
 	@Override
-	protected final void onComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "iframe");
 
@@ -191,7 +152,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	@Override
 	public final void onLinkClicked()
 	{
-		setResponsePage(pageLink.getPage());
+		setResponsePage(pageProvider.getPageInstance());
 	}
 
 

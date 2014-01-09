@@ -93,11 +93,11 @@ public class Home extends WicketExamplePage
 			"onClickLinkClickCount")));
 
 		// Link to Page1 is a simple external page link
-		add(new BookmarkablePageLink<Void>("page1Link", Page1.class));
+		add(new BookmarkablePageLink<>("page1Link", Page1.class));
 
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
-		BookmarkablePageLink<Void> page3Link = new BookmarkablePageLink<Void>("page3Link", Page3.class);
+		BookmarkablePageLink<Void> page3Link = new BookmarkablePageLink<>("page3Link", Page3.class);
 		page3Link.getPageParameters()
 				.add("bookmarkparameter", "3++2 & 5 � >< space + �");
 		add(page3Link);
@@ -136,10 +136,10 @@ public class Home extends WicketExamplePage
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings("popuppagemap").setHeight(500)
 			.setWidth(500);
-		add(new BookmarkablePageLink<Void>("popupLink", Popup.class).setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink<>("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// Popup example
-		add(new BookmarkablePageLink<Void>("popupButtonLink", Popup.class).setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink<>("popupButtonLink", Popup.class).setPopupSettings(popupSettings));
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
@@ -151,7 +151,7 @@ public class Home extends WicketExamplePage
 			"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
 
 		// Shared resource link
-		add(new ResourceLink<Void>("cancelButtonLink", new SharedResourceReference("cancelButton")));
+		add(new ResourceLink<>("cancelButtonLink", new SharedResourceReference("cancelButton")));
 
 		add(new DownloadLink("downloadLink", new AbstractReadOnlyModel<File>()
 		{
@@ -176,7 +176,7 @@ public class Home extends WicketExamplePage
 
 				return tempFile;
 			}
-		}).setCacheDuration(Duration.NONE).setDeleteAfterDownload(true));
+		}, "Downlöad\"here now.tmp").setCacheDuration(Duration.NONE).setDeleteAfterDownload(true));
 
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -233,8 +233,8 @@ public class Home extends WicketExamplePage
 		public RedirectForm(String id)
 		{
 			super(id);
-			setDefaultModel(new CompoundPropertyModel<RedirectForm>(this));
-			add(new TextField<String>("redirectUrl"));
+			setDefaultModel(new CompoundPropertyModel<>(this));
+			add(new TextField<>("redirectUrl"));
 		}
 
 		/**

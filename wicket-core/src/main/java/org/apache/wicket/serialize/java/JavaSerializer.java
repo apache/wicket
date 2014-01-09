@@ -30,10 +30,11 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
+import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.util.io.IOUtils;
-import org.apache.wicket.core.util.io.SerializableChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +57,7 @@ public class JavaSerializer implements ISerializer
 	 * Construct.
 	 * 
 	 * @param applicationKey
+	 *      the name of the application
 	 */
 	public JavaSerializer(final String applicationKey)
 	{
@@ -132,13 +134,13 @@ public class JavaSerializer implements ISerializer
 				}
 			}
 		}
-		catch (ClassNotFoundException e)
+		catch (ClassNotFoundException cnfx)
 		{
-			throw new RuntimeException("Could not deserialize object using: " + ois.getClass(), e);
+			throw new RuntimeException("Could not deserialize object from byte[]", cnfx);
 		}
-		catch (IOException e)
+		catch (IOException iox)
 		{
-			throw new RuntimeException("Could not deserialize object using: " + ois.getClass(), e);
+			throw new RuntimeException("Could not deserialize object from byte[]", iox);
 		}
 		finally
 		{
@@ -171,7 +173,7 @@ public class JavaSerializer implements ISerializer
 	 */
 	protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 	{
-		return new CheckerObjectOutputStream(out);
+		return new SerializationCheckerObjectOutputStream(out);
 	}
 
 	/**
@@ -210,7 +212,7 @@ public class JavaSerializer implements ISerializer
 				// Should be if serialization happened in thread with application set
 				// (WICKET-2195)
 				Application application = Application.get();
-				IApplicationSettings applicationSettings = application.getApplicationSettings();
+				ApplicationSettings applicationSettings = application.getApplicationSettings();
 				IClassResolver classResolver = applicationSettings.getClassResolver();
 
 				candidate = classResolver.resolveClass(className);
@@ -231,15 +233,23 @@ public class JavaSerializer implements ISerializer
 	}
 	/**
 	 * Write objects to the wrapped output stream and log a meaningful message for serialization
-	 * problems
+	 * problems.
+	 *
+	 *  <p>
+	 *     Note: the checking functionality is used only if the serialization fails with NotSerializableException.
+	 *     This is done so to save some CPU time to make the checks for no reason.
+	 * </p>
 	 */
-	private static class CheckerObjectOutputStream extends ObjectOutputStream
+	private static class SerializationCheckerObjectOutputStream extends ObjectOutputStream
 	{
+		private final OutputStream outputStream;
+
 		private final ObjectOutputStream oos;
 
-		public CheckerObjectOutputStream(OutputStream out) throws IOException
+		private SerializationCheckerObjectOutputStream(OutputStream outputStream) throws IOException
 		{
-			oos = new ObjectOutputStream(out);
+			this.outputStream = outputStream;
+			oos = new ObjectOutputStream(outputStream);
 		}
 
 		@Override
@@ -251,13 +261,14 @@ public class JavaSerializer implements ISerializer
 			}
 			catch (NotSerializableException nsx)
 			{
-				if (SerializableChecker.isAvailable())
+				if (CheckingObjectOutputStream.isAvailable())
 				{
-					// trigger serialization again, but this time gather
-					// some more info
-					new SerializableChecker(nsx).writeObject(obj);
-					// if we get here, we didn't fail, while we
-					// should;
+					// trigger serialization again, but this time gather some more info
+					CheckingObjectOutputStream checkingObjectOutputStream =
+							new CheckingObjectOutputStream(outputStream, new ObjectSerializationChecker(nsx));
+					checkingObjectOutputStream.writeObject(obj);
+
+					// if we get here, we didn't fail, while we should
 					throw nsx;
 				}
 				throw nsx;

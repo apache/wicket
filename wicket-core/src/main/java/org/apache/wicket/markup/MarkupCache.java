@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.watch.IModifiable;
@@ -40,9 +39,9 @@ import org.slf4j.LoggerFactory;
  * removed from the cache and reloaded when needed.
  * <p>
  * MarkupCache is registered with {@link MarkupFactory} which in turn is registered with
- * {@link IMarkupSettings} and thus can be replaced with a subclassed version.
+ * {@link org.apache.wicket.settings.MarkupSettings} and thus can be replaced with a sub-classed version.
  * 
- * @see IMarkupSettings
+ * @see org.apache.wicket.settings.MarkupSettings
  * @see MarkupFactory
  * 
  * @author Jonathan Locke
@@ -331,7 +330,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param markup
 	 *            Markup.NO_MARKUP
 	 * @return Same as parameter "markup"
-	 * @see org.apache.wicket.settings.IResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
+	 * @see org.apache.wicket.settings.ResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
 	 */
 	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer container,
 		final Markup markup)
@@ -495,19 +494,22 @@ public class MarkupCache implements IMarkupCache
 		final String cacheKey = markupResourceStream.getCacheKey();
 		if (cacheKey != null)
 		{
-			// get the location String
-			String locationString = markupResourceStream.locationAsString();
-			if (locationString == null)
+			if (enforceReload == false)
 			{
-				// set the cache key as location string, because location string
-				// couldn't be resolved.
-				locationString = cacheKey;
-			}
-			Markup markup = markupCache.get(locationString);
-			if (markup != null)
-			{
-				markupKeyCache.put(cacheKey, locationString);
-				return markup;
+				// get the location String
+				String locationString = markupResourceStream.locationAsString();
+				if (locationString == null)
+				{
+					// set the cache key as location string, because location string
+					// couldn't be resolved.
+					locationString = cacheKey;
+				}
+				Markup markup = markupCache.get(locationString);
+				if (markup != null)
+				{
+					markupKeyCache.put(cacheKey, locationString);
+					return markup;
+				}
 			}
 
 			// Watch file in the future

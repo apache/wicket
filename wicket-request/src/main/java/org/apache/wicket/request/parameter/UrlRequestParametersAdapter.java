@@ -56,7 +56,7 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 	@Override
 	public Set<String> getParameterNames()
 	{
-		Set<String> result = new LinkedHashSet<String>();
+		Set<String> result = new LinkedHashSet<>();
 		for (QueryParameter parameter : url.getQueryParameters())
 		{
 			result.add(parameter.getName());
@@ -86,7 +86,7 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 			{
 				if (values == null)
 				{
-					values = new ArrayList<StringValue>();
+					values = new ArrayList<>();
 				}
 				values.add(StringValue.valueOf(parameter.getValue()));
 			}

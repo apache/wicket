@@ -1,0 +1,52 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 3.2 Final//NL">
+<html>
+<head>
+<title>Wicket Bean Validation Package</title>
+</head>
+<body>
+
+	<p>This package integrates bean validation framework into Wicket.</p>
+
+	<p>The integration is configured using BeanValidationConfiguration.
+		Usually this is done in Application's init method. Once the
+		configuration is intialized and customized, the final step is to call
+		configure passing in the application instance to be configured.</p>
+
+	<p>The configuration can be customized using the following
+		integration points:</p>
+	<ul>
+		<li><code>IPropertyResolver</code> - used to automatically figure
+			out which property is being validated given the form component
+			instance. By default all components using an
+			IPropertyReflectionAwareModel are supported.</li>
+		<li><code>IViolationTranslator</code> - converts bean validation
+			constraint violations to Wicket validation errors that are reported
+			on form components when validation fails.</li>
+		<li><code>ITagModifier</code> - An object that can modify the
+			form component's markup tag. Can be used to add html attributes to
+			tags based on constaint annotations.</li>
+		<li><code>Provider&lt;Validator&gt;</code> - used as a factory
+			for the main Validator object instance that will be used to perform
+			the validation</li>
+	</ul>
+
+	<p>Once the application is configured form components can be
+		validated by adding a PropertyValidator.</p>
+</body>
+</html>

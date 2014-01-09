@@ -29,8 +29,8 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.util.string.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,7 +141,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				if (tag.getId() == null)
 				{
-					tag.setId(getWicketRelativePathPrefix());
+					tag.setId(getWicketRelativePathPrefix(null));
 					tag.setAutoComponentTag(true);
 				}
 				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
@@ -157,7 +157,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		if ((tag != null) && (tag.getId().equals(getWicketRelativePathPrefix())))
+		if ((tag != null) && (tag.getId().equals(getWicketRelativePathPrefix(markupStream))))
 		{
 			String id = tag.getId() + container.getPage().getAutoIndex();
 
@@ -169,8 +169,8 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		return null;
 	}
 
-	private String getWicketRelativePathPrefix()
+	private String getWicketRelativePathPrefix(final MarkupStream markupStream)
 	{
-		return getWicketNamespace() + WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID;
+		return getWicketNamespace(markupStream) + WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID;
 	}
 }

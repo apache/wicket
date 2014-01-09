@@ -9,19 +9,18 @@
 	<body>
 		<span wicket:id="mainNavigation" />
 
-		<form wicket:id="captchaForm">
-			<p>
-				<img wicket:id="captchaImage" />
-			</p>
-			<p>
-				Please replicate the text you see above
-				<br />
-				<input wicket:id="password" id="password" type="text" size="40" />
-				<input type="submit" value="submit" />
-			</p>
-		</form>
-		<p>
-			<span wicket:id="feedback">[feedback is rendered here]</span>
-		</p>
+		<h3>Demo of Wicket's default: <em>org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource</em> </h3>
+		<wicket:container wicket:id="wicket"></wicket:container>
+
+		<hr/>
+
+		<h3>Demo using <a href="https://github.com/axet/kaptcha">Kaptcha</a> library</h3>
+		<wicket:container wicket:id="kaptcha"></wicket:container>
+
+		<hr/>
+
+		<h3>Demo using <a href="https://github.com/akiraly/cage">Cage</a> library</h3>
+		<wicket:container wicket:id="cage"></wicket:container>
+
 	</body>
 </html>

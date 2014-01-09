@@ -44,7 +44,7 @@ public class UrlTest extends Assert
 
 	private void checkQueryParams(Url url, String... params)
 	{
-		List<QueryParameter> list = new ArrayList<QueryParameter>();
+		List<QueryParameter> list = new ArrayList<>();
 		for (int i = 0; i < params.length; i += 2)
 		{
 			QueryParameter p = new QueryParameter(params[i], params[i + 1]);
@@ -86,7 +86,10 @@ public class UrlTest extends Assert
 	{
 		String s = "//foo/bar/";
 		Url url = Url.parse(s);
-		checkSegments(url, "", "", "foo", "bar", "");
+		assertNull(url.getProtocol());
+		assertEquals("foo", url.getHost());
+		assertNull(url.getPort());
+		checkSegments(url, "", "bar", "");
 		checkQueryParams(url);
 	}
 
@@ -98,6 +101,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/foo/bar//";
 		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "foo", "bar", "", "");
 		checkQueryParams(url);
 	}
@@ -111,6 +115,19 @@ public class UrlTest extends Assert
 		String s = "foo/b%3Dr/b%26z/x%3F?a=b&x%3F%264=y%3Dz";
 		Url url = Url.parse(s);
 		checkSegments(url, "foo", "b=r", "b&z", "x?");
+		checkQueryParams(url, "a", "b", "x?&4", "y=z");
+	}
+
+	/**
+	 * Same as #parse5() but with full url and not encoded '=' char in the query string
+	 * WICKET-5157
+	 */
+	@Test
+	public void parse5_1()
+	{
+		String s = "http://host:12345/foo/b%3Dr/b%26z/x%3F?a=b&x%3F%264=y=z";
+		Url url = Url.parse(s);
+		checkSegments(url, "", "foo", "b=r", "b&z", "x?");
 		checkQueryParams(url, "a", "b", "x?&4", "y=z");
 	}
 
@@ -146,6 +163,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/";
 		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url);
 	}
@@ -158,6 +176,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b";
 		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b");
 	}
@@ -170,6 +189,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a";
 		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "");
 	}
@@ -182,6 +202,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=";
 		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "");
 	}
@@ -194,6 +215,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?=b";
 		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "", "b");
 	}
@@ -206,6 +228,7 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b&";
 		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b");
 	}
@@ -218,8 +241,61 @@ public class UrlTest extends Assert
 	{
 		String s = "/?a=b&+";
 		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b", " ", "");
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4877
+	 */
+	@Test
+	public void testParse15()
+	{
+		String s = "http://localhost:56704;jsessionid=8kxeo3reannw1qjtxgkju8yiu";
+		Url url = Url.parse(s);
+		assertEquals(Integer.valueOf(56704), url.getPort());
+		checkSegments(url, ";jsessionid=8kxeo3reannw1qjtxgkju8yiu");
+	}
+
+	/**
+	 * Make it possible to use full url without protocol
+	 * https://issues.apache.org/jira/browse/WICKET-5065
+	 */
+	@Test
+	public void parse16()
+	{
+		String s = "//localhost:56704;jsessionid=8kxeo3reannw1qjtxgkju8yiu";
+		Url url = Url.parse(s);
+		assertNull(url.getProtocol());
+		assertEquals("localhost", url.getHost());
+		assertEquals(Integer.valueOf(56704), url.getPort());
+		checkSegments(url, ";jsessionid=8kxeo3reannw1qjtxgkju8yiu");
+	}
+
+	/**
+	 * WICKET-5259
+	 */
+	@Test
+	public void parse17()
+	{
+		String s = "http://me:secret@localhost";
+		Url url = Url.parse(s);
+		assertEquals("http", url.getProtocol());
+		assertEquals("me:secret@localhost", url.getHost());
+	}
+
+	/**
+	 * WICKET-5259
+	 */
+	@Test
+	public void parse18()
+	{
+		String s = "http://me:secret@localhost:8080";
+		Url url = Url.parse(s);
+		assertEquals("http", url.getProtocol());
+		assertEquals("me:secret@localhost", url.getHost());
+		assertEquals(Integer.valueOf(8080), url.getPort());
 	}
 
 	/**
@@ -258,7 +334,7 @@ public class UrlTest extends Assert
 	{
 		String s = "//absolute/url";
 		Url url = Url.parse(s);
-		assertEquals(url.toString(), s);
+		assertEquals(url.toString(StringMode.FULL), s);
 	}
 
 	/**
@@ -295,7 +371,8 @@ public class UrlTest extends Assert
 	public void absolute1()
 	{
 		Url url = Url.parse("abc/efg");
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isFull());
+		assertFalse(url.isContextAbsolute());
 	}
 
 	/**
@@ -305,7 +382,8 @@ public class UrlTest extends Assert
 	public void absolute2()
 	{
 		Url url = Url.parse("");
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isFull());
+		assertFalse(url.isContextAbsolute());
 	}
 
 	/**
@@ -315,7 +393,8 @@ public class UrlTest extends Assert
 	public void absolute3()
 	{
 		Url url = Url.parse("/");
-		assertTrue(url.isAbsolute());
+		assertFalse(url.isFull());
+		assertTrue(url.isContextAbsolute());
 	}
 
 	/**
@@ -325,7 +404,8 @@ public class UrlTest extends Assert
 	public void absolute4()
 	{
 		Url url = Url.parse("/abc/efg");
-		assertTrue(url.isAbsolute());
+		assertFalse(url.isFull());
+		assertTrue(url.isContextAbsolute());
 	}
 
 	/**
@@ -335,7 +415,8 @@ public class UrlTest extends Assert
 	public void absolute5()
 	{
 		Url url = Url.parse("http://www.domain.com");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
+		assertFalse(url.isContextAbsolute());
 	}
 
 
@@ -491,6 +572,32 @@ public class UrlTest extends Assert
 	}
 
 	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4789">WICKET-4789</a>
+	 */
+	@Test
+	public void resolveRelative_EmptyTrailingSegmentInBase()
+	{
+		Url relative = Url.parse("./?0-1.ILinkListener-link");
+		Url baseUrl = Url.parse("Home/");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("Home/?0-1.ILinkListener-link", baseUrl.toString());
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4789">WICKET-4789</a>
+	 */
+	@Test
+	public void resolveRelative_EmptyTrailingSegmentInBase2()
+	{
+		Url relative = Url.parse("./foo/?0-1.ILinkListener-link");
+		Url baseUrl = Url.parse("Home/");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("Home/foo/?0-1.ILinkListener-link", baseUrl.toString());
+	}
+
+	/**
 	 * Tries to resolve a relative url against a base that has no segments
 	 */
 	@Test
@@ -544,8 +651,7 @@ public class UrlTest extends Assert
 		Url baseUrl = Url.parse("bar/baz");
 		baseUrl.resolveRelative(relative);
 
-		assertEquals("bar?a=b", baseUrl.toString());
-		assertEquals("no empty segment", 1, baseUrl.getSegments().size());
+		assertEquals("bar/?a=b", baseUrl.toString());
 	}
 
 	/**
@@ -600,25 +706,25 @@ public class UrlTest extends Assert
 	{
 		Url url = Url.parse("foo");
 		checkUrl(url, null, null, null, "foo");
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isContextAbsolute());
 
 		url = Url.parse("foo/bar/baz");
 		checkUrl(url, null, null, null, "foo", "bar", "baz");
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isContextAbsolute());
 
 		url = Url.parse("?foobar");
 		checkUrl(url, null, null, null);
 		assertEquals("", url.getQueryParameter("foobar").getValue());
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isContextAbsolute());
 
 		url = Url.parse("foo?a=123");
 		checkUrl(url, null, null, null, "foo");
 		assertEquals("123", url.getQueryParameter("a").getValue());
-		assertFalse(url.isAbsolute());
+		assertFalse(url.isContextAbsolute());
 
 		url = Url.parse("/foo");
 		checkUrl(url, null, null, null, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isContextAbsolute());
 	}
 
 	/**
@@ -629,62 +735,62 @@ public class UrlTest extends Assert
 	{
 		Url url = Url.parse("ftp://myhost:8081");
 		checkUrl(url, "ftp", "myhost", 8081, "", "");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://myhost:8081/", url.toString(StringMode.FULL));
 
 		url = Url.parse("gopher://myhost:8081/foo");
 		checkUrl(url, "gopher", "myhost", 8081, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("gopher://myhost:8081/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost:80/foo");
 		checkUrl(url, "http", "myhost", 80, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("http://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost:81/foo");
 		checkUrl(url, "http", "myhost", 81, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("http://myhost:81/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost/foo");
 		checkUrl(url, "http", "myhost", 80, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("http://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("https://myhost:443/foo");
 		checkUrl(url, "https", "myhost", 443, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("https://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("HTTPS://myhost/foo:123");
 		checkUrl(url, "https", "myhost", 443, "", "foo:123");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("https://myhost/foo:123", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://myhost/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://myhost:21/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://user:pass@myhost:21/foo");
 		checkUrl(url, "ftp", "user:pass@myhost", 21, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://user:pass@myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("FTp://myhost/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("unknown://myhost/foo");
 		checkUrl(url, "unknown", "myhost", null, "", "foo");
-		assertTrue(url.isAbsolute());
+		assertTrue(url.isFull());
 		assertEquals("unknown://myhost/foo", url.toString(StringMode.FULL));
 	}
 
@@ -710,6 +816,11 @@ public class UrlTest extends Assert
 		assertEquals("a///", Url.parse("a///").canonical().getPath());
 		assertEquals("a//b/c", Url.parse("a//b/c").canonical().getPath());
 		assertEquals("foo/test", Url.parse("foo/bar/../baz/../test").canonical().getPath());
+		assertEquals("a/d", Url.parse("a/b/c/../../d").canonical().getPath());
+		assertEquals("a/d", Url.parse("../../a/b/../c/../d").canonical().getPath());
+		assertEquals("a/d", Url.parse("../../a/b/../c/../d/.").canonical().getPath());
+		assertEquals("a", Url.parse("../../a/b/../c/../d/..").canonical().getPath());
+		assertEquals("", Url.parse("../../a/b/../c/../d/../..").canonical().getPath());
 	}
 
 	@Test
@@ -848,4 +959,73 @@ public class UrlTest extends Assert
 
 		url.removeLeadingSegments(3);
 	}
+
+	@Test
+	public void wicket_5114_allowtoStringFullWhenContainingTwoDots()
+	{
+		Url url = Url.parse("/mountPoint/whatever.../");
+		url.setHost("wicketHost");
+		assertEquals("//wicketHost/mountPoint/whatever.../", url.toString(StringMode.FULL));
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void wicket_5114_throwExceptionWhenToStringFullContainsRelativePathSegment()
+	{
+		Url url = Url.parse("/mountPoint/../whatever/");
+		url.setHost("wicketHost");
+		url.toString(StringMode.FULL);
+	}
+
+	@Test
+	public void isContextAbsolute()
+	{
+		Url url = Url.parse("");
+		assertFalse(url.isContextAbsolute());
+
+		url = Url.parse("http://www.example.com/path");
+		assertFalse(url.isContextAbsolute());
+
+		url = Url.parse("//www.example.com/path");
+		assertFalse(url.isContextAbsolute());
+
+		url = Url.parse("path");
+		assertFalse(url.isContextAbsolute());
+
+		url = Url.parse("/path");
+		assertTrue(url.isContextAbsolute());
+	}
+
+	@Test
+	public void isFull()
+	{
+		Url url = Url.parse("");
+		assertFalse(url.isFull());
+
+		url = Url.parse("http://www.example.com/path");
+		assertTrue(url.isFull());
+
+		url = Url.parse("//www.example.com/path");
+		assertTrue(url.isFull());
+
+		url = Url.parse("path");
+		assertFalse(url.isFull());
+
+		url = Url.parse("/path");
+		assertFalse(url.isFull());
+	}
+
+	/**
+	 * Should accept parameter values containing equals sign(s)
+	 * https://issues.apache.org/jira/browse/WICKET-5157
+	 */
+	@Test
+	public void parseQueryStringWithEqualsSignInParameterValue()
+	{
+		String s = "/?a=b=c&d=e=f";
+		Url url = Url.parse(s);
+		assertTrue(url.isContextAbsolute());
+		checkSegments(url, "", "");
+		checkQueryParams(url, "a", "b=c", "d", "e=f");
+	}
+
 }

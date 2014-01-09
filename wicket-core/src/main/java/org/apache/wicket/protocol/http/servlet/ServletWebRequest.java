@@ -27,22 +27,22 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.core.util.string.UrlUtils;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.upload.FileItemFactory;
 import org.apache.wicket.util.upload.FileUploadException;
@@ -101,20 +101,7 @@ public class ServletWebRequest extends WebRequest
 
 		forwardAttributes = ForwardAttributes.of(httpServletRequest, filterPrefix);
 
-		if (forwardAttributes != null || errorAttributes != null)
-		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Setting filterPrefix('{}') to '' because there is either an error or a forward. {}, {}",
-						new Object[] {filterPrefix, forwardAttributes, errorAttributes});
-			}
-			// the filter prefix is not needed when the current request is internal
-			// see WICKET-4387
-			this.filterPrefix = "";
-		} else
-		{
-			this.filterPrefix = filterPrefix;
-		}
+		this.filterPrefix = filterPrefix;
 
 		if (url != null)
 		{
@@ -168,7 +155,11 @@ public class ServletWebRequest extends WebRequest
 				base = getRequestParameters().getParameterValue(PARAM_AJAX_BASE_URL).toString(null);
 			}
 
-			Checks.notNull(base, "Current ajax request is missing the base url header or parameter");
+			if (base == null)
+			{
+				throw new AbortWithHttpErrorCodeException(HttpServletResponse.SC_BAD_REQUEST,
+					"Current ajax request is missing the base url header or parameter");
+			}
 
 			return setParameters(Url.parse(base, getCharset()));
 		}
@@ -214,7 +205,7 @@ public class ServletWebRequest extends WebRequest
 			}
 		}
 
-		return setParameters(Url.parse(url.toString(), getCharset()));
+		return setParameters(Url.parse(url.toString(), getCharset(), false));
 	}
 
 	/**
@@ -285,15 +276,9 @@ public class ServletWebRequest extends WebRequest
 
 	private Map<String, List<StringValue>> postParameters = null;
 
-	private static boolean isMultiPart(ServletRequest request)
-	{
-		String contentType = request.getContentType();
-		return contentType != null && contentType.toLowerCase().contains("multipart");
-	}
-
 	protected Map<String, List<StringValue>> generatePostParameters()
 	{
-		Map<String, List<StringValue>> postParameters = new HashMap<String, List<StringValue>>();
+		Map<String, List<StringValue>> postParameters = new HashMap<>();
 
 		IRequestParameters queryParams = getQueryParameters();
 
@@ -304,38 +289,41 @@ public class ServletWebRequest extends WebRequest
 			final String name = param.getKey();
 			final String[] values = param.getValue();
 
-			// build a mutable list of query params that have the same name as the post param
-			List<StringValue> queryValues = queryParams.getParameterValues(name);
-			if (queryValues == null)
+			if (name != null && values != null)
 			{
-				queryValues = Collections.emptyList();
-			}
-			else
-			{
-				queryValues = new ArrayList<StringValue>(queryValues);
-			}
-
-			// the list that will contain accepted post param values
-			List<StringValue> postValues = new ArrayList<StringValue>();
-
-			for (String value : values)
-			{
-				StringValue val = StringValue.valueOf(value);
-				if (queryValues.contains(val))
+				// build a mutable list of query params that have the same name as the post param
+				List<StringValue> queryValues = queryParams.getParameterValues(name);
+				if (queryValues == null)
 				{
-					// if a query param with this value exists remove it and continue
-					queryValues.remove(val);
+					queryValues = Collections.emptyList();
 				}
 				else
 				{
-					// there is no query param with this value, assume post
-					postValues.add(val);
+					queryValues = new ArrayList<>(queryValues);
 				}
-			}
 
-			if (!postValues.isEmpty())
-			{
-				postParameters.put(name, postValues);
+				// the list that will contain accepted post param values
+				List<StringValue> postValues = new ArrayList<>();
+
+				for (String value : values)
+				{
+					StringValue val = StringValue.valueOf(value);
+					if (queryValues.contains(val))
+					{
+						// if a query param with this value exists remove it and continue
+						queryValues.remove(val);
+					}
+					else
+					{
+						// there is no query param with this value, assume post
+						postValues.add(val);
+					}
+				}
+
+				if (!postValues.isEmpty())
+				{
+					postParameters.put(name, postValues);
+				}
 			}
 		}
 		return postParameters;
@@ -413,6 +401,12 @@ public class ServletWebRequest extends WebRequest
 	{
 		return new ServletWebRequest(httpServletRequest, filterPrefix, url)
 		{
+			@Override
+			public Url getOriginalUrl()
+			{
+			    return ServletWebRequest.this.getOriginalUrl();
+			}
+
 			@Override
 			public IRequestParameters getPostParameters()
 			{

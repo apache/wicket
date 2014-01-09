@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.Map;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.BigDecimalConverter;
+import org.apache.wicket.util.convert.converter.BigIntegerConverter;
 import org.apache.wicket.util.convert.converter.BooleanConverter;
 import org.apache.wicket.util.convert.converter.ByteConverter;
 import org.apache.wicket.util.convert.converter.CalendarConverter;
@@ -74,7 +76,7 @@ public class ConverterLocator implements IConverterLocator
 		 */
 		private DefaultConverter(Class<C> type)
 		{
-			this.type = new WeakReference<Class<C>>(type);
+			this.type = new WeakReference<>(type);
 		}
 
 		/**
@@ -105,16 +107,19 @@ public class ConverterLocator implements IConverterLocator
 				{
 					return converted;
 				}
-				else
+
+				if (theType.isInstance(value))
 				{
-					throw new ConversionException("Could not convert value: " + value +
-						" to type: " + theType.getName() + ". Could not find compatible converter.").setSourceValue(value);
+					return theType.cast(value);
 				}
 			}
 			catch (Exception e)
 			{
 				throw new ConversionException(e.getMessage(), e).setSourceValue(value);
 			}
+
+			throw new ConversionException("Could not convert value: " + value + " to type: " +
+				theType.getName() + ". Could not find compatible converter.").setSourceValue(value);
 		}
 
 		/**
@@ -170,12 +175,13 @@ public class ConverterLocator implements IConverterLocator
 		set(Long.class, LongConverter.INSTANCE);
 		set(Short.TYPE, ShortConverter.INSTANCE);
 		set(Short.class, ShortConverter.INSTANCE);
+		set(BigDecimal.class, new BigDecimalConverter());
+		set(BigInteger.class, new BigIntegerConverter());
 		set(Date.class, new DateConverter());
-		set(Calendar.class, new CalendarConverter());
 		set(java.sql.Date.class, new SqlDateConverter());
 		set(java.sql.Time.class, new SqlTimeConverter());
 		set(java.sql.Timestamp.class, new SqlTimestampConverter());
-		set(BigDecimal.class, new BigDecimalConverter());
+		set(Calendar.class, new CalendarConverter());
 	}
 
 	/**
@@ -190,9 +196,7 @@ public class ConverterLocator implements IConverterLocator
 	 */
 	public final <C> IConverter<C> get(Class<C> c)
 	{
-		@SuppressWarnings("unchecked")
-		IConverter<C> converter = (IConverter<C>)classToConverter.get(c.getName());
-		return converter;
+		return  (IConverter<C>) classToConverter.get(c.getName());
 	}
 
 	/**

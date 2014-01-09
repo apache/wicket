@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http.request;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
@@ -31,7 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Tests the WebClientInfo class
@@ -39,6 +42,8 @@ import org.junit.Test;
 public class WebClientInfoTest
 {
 	private RequestCycle requestCycleMock;
+	private ServletWebRequest webRequest;
+	private HttpServletRequest servletRequest;
 
 	/**
 	 * Prepare RequestCycle to be able to extract the remote address of the client
@@ -48,10 +53,10 @@ public class WebClientInfoTest
 	{
 		requestCycleMock = mock(RequestCycle.class);
 
-		ServletWebRequest webRequest = mock(ServletWebRequest.class);
+		webRequest = mock(ServletWebRequest.class);
 		when(requestCycleMock.getRequest()).thenReturn(webRequest);
 
-		HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+		servletRequest = mock(HttpServletRequest.class);
 		when(webRequest.getContainerRequest()).thenReturn(servletRequest);
 	}
 
@@ -200,6 +205,63 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
+		}
+	}
+
+	/**
+	 * Test IE 10.x user-agent strings
+	 */
+	@Test
+	public void internetExplorer10()
+	{
+		List<String> userAgents = Arrays.asList(
+			"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
+			"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)",
+			"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/5.0)",
+			"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/4.0; InfoPath.2; SV1; .NET CLR 2.0.50727; WOW64)",
+			"Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)",
+			"Mozilla/4.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/5.0)",
+			"Mozilla/1.22 (compatible; MSIE 10.0; Windows 3.1)");
+
+		for (String userAgent : userAgents)
+		{
+			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(), is(equalTo(10)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(), is(equalTo(true)));
+
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(), is(equalTo(false)));
+		}
+	}
+
+	/**
+	 * Test IE 11.x user-agent strings
+	 */
+	@Test
+	public void internetExplorer11()
+	{
+		List<String> userAgents = Arrays.asList(
+			"Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",
+			"Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.1) like Gecko");
+
+		for (String userAgent : userAgents)
+		{
+			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(), is(equalTo(11)));
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(), is(greaterThan(-1)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(), is(equalTo(true)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(), is(equalTo(false)));
 		}
 	}
 
@@ -729,4 +791,77 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 		}
 	}
+
+	/**
+	 * Test X-Forwarded-For ip address extraction.
+	 */
+	@Test
+	public void testExtractFromXForwardedForHeader()
+	{
+		String expected = "127.0.0.1";
+		when(webRequest.getHeader("X-Forwarded-For")).thenReturn(expected);
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+		Mockito.verifyZeroInteractions(servletRequest);
+	}
+
+	/**
+	 * Test X-Forwarded-For ip address extraction with fallback when no ip is contained.
+	 *
+	 * Note mgrigorov: this test could fail in network setups where unknown addresses, like "blah",
+	 * will resolve to some DNS service saying "'blah' domain is free. Buy it."
+	 */
+	@Test
+	@Ignore
+	public void testExtractFromContainerRequestUnknownXForwardedFor()
+	{
+		String expected = "10.17.37.8";
+		when(servletRequest.getRemoteAddr()).thenReturn(expected);
+		when(webRequest.getHeader("X-Forwarded-For")).thenReturn("unknown");
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	/**
+	 * Test default ip address extraction for container request.
+	 */
+	@Test
+	public void testExtractFromContainerRequestNoXForwardedFor()
+	{
+		String expected = "10.17.37.8";
+		when(servletRequest.getRemoteAddr()).thenReturn(expected);
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	/**
+	 * Test X-Forwarded-For ip address extraction when proxy chain is given.
+	 */
+	@Test
+	public void testExtractFromXForwardedForHeaderChainedIps()
+	{
+		String expected = "10.17.37.156";
+		when(servletRequest.getRemoteAddr()).thenReturn("10.17.1.1");
+		when(webRequest.getHeader("X-Forwarded-For")).thenReturn(expected + ", 10.17.37.1");
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	/**
+	 * Test X-Forwarded-For ipv6 address extraction.
+	 */
+	@Test
+	public void testExtractFromXForwardedForHeaderIPv6()
+	{
+		String expected = "2001:db8::1428:57";
+		when(webRequest.getHeader("X-Forwarded-For")).thenReturn("2001:db8::1428:57");
+		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
+		String actual = clientInfo.getRemoteAddr(requestCycleMock);
+		assertThat(actual, is(equalTo(expected)));
+	}
+
 }

@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.validation.validator;
 
+import java.util.Locale;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
 
 /**
@@ -34,13 +37,11 @@ import org.apache.wicket.validation.ValidationError;
  * <p>
  * Resource keys:
  * <ul>
- * <li>{@code RangeValidator.exact} if min==max ({@link #exactLength(int)})</li>
- * <li>{@code RangeValidator.range} if both min and max are not {@code null}</li>
- * <li>{@code RangeValidator.minimum} if max is {@code null} ({@link #minimumLength(int)})</li>
- * <li>{@code RangeValidator.maximum} if min is {@code null} ({@link #maximumLength(int)})</li>
+ * <li>{@code StringValidator.exact} if min==max ({@link #exactLength(int)})</li>
+ * <li>{@code StringValidator.range} if both min and max are not {@code null}</li>
+ * <li>{@code StringValidator.minimum} if max is {@code null} ({@link #minimumLength(int)})</li>
+ * <li>{@code StringValidator.maximum} if min is {@code null} ({@link #maximumLength(int)})</li>
  * </ul>
- * (for backwards compatibility reasons resource keys of form {@code StringValidator.*} are still
- * checked)
  * </p>
  * 
  * <p>
@@ -51,7 +52,7 @@ import org.apache.wicket.validation.ValidationError;
  * {@code FormComponent.labelModel} or resource key {@code <form-id>.<form-component-id>}</li>
  * <li>{@code input}: the input value</li>
  * <li>{@code length}: the length of the entered</li>
- * <li>{@code minimum}: the minimum alloed length</li>
+ * <li>{@code minimum}: the minimum allowed length</li>
  * <li>{@code maximum}: the maximum allowed length</li>
  * </ul>
  * </p>
@@ -66,7 +67,7 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 	 * Constructor that sets the minimum and maximum length values.
 	 * 
 	 * @param minimum
-	 *            the minimum lenghh
+	 *            the minimum length
 	 * @param maximum
 	 *            the maximum length
 	 */
@@ -90,10 +91,13 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 	}
 
 	@Override
-	protected ValidationError decorate(ValidationError error, IValidatable<String> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<String> validatable)
 	{
 		error = super.decorate(error, validatable);
-		error.setVariable("length", validatable.getValue().length());
+		if (error instanceof ValidationError)
+		{
+			((ValidationError)error).setVariable("length", validatable.getValue().length());
+		}
 		return error;
 	}
 
@@ -101,7 +105,7 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 	public void onComponentTag(Component component, ComponentTag tag)
 	{
 		super.onComponentTag(component, tag);
-		if (getMaximum() != null && "input".equalsIgnoreCase(tag.getName()))
+		if (getMaximum() != null && "input".equalsIgnoreCase(tag.getName().toLowerCase(Locale.ENGLISH)))
 		{
 			tag.put("maxlength", getMaximum());
 		}

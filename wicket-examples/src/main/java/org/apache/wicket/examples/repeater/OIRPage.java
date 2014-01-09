@@ -122,7 +122,7 @@ public class OIRPage extends BasePage
 			@Override
 			protected Item<Contact> newItem(String id, int index, IModel<Contact> model)
 			{
-				return new HighlitableDataItem<Contact>(id, index, model);
+				return new HighlitableDataItem<>(id, index, model);
 			}
 		};
 

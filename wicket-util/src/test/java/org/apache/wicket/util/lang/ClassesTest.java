@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @since
+ * @since 1.5.8
  */
 public class ClassesTest extends Assert
 {
@@ -38,4 +38,19 @@ public class ClassesTest extends Assert
 		// anonymous interface impl
 		assertEquals("Object", Classes.simpleName(new Cloneable() {}.getClass()));
 	}
+
+	@Test
+	public void name() throws Exception
+	{
+
+		assertEquals("java.lang.String", Classes.name(String.class));
+		assertEquals("java.lang.String", Classes.name("".getClass()));
+
+		assertEquals("java.text.SimpleDateFormat", Classes.name(new SimpleDateFormat() {}.getClass()));
+
+		// anonymous interface impl
+		assertEquals("java.lang.Object", Classes.name(new Cloneable() {}.getClass()));
+	}
+
+
 }

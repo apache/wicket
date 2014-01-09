@@ -50,7 +50,7 @@ public class MockHttpServletRequestTest extends WicketTestCase
 		assertEquals("myhost.mydomain.org", url.getHost());
 		assertEquals(new Integer(1234), url.getPort());
 		assertEquals("/foo/bar/baz.html", url.getPath());
-		assertEquals("?a=123&b=456", url.getQueryString());
+		assertEquals("a=123&b=456", url.getQueryString());
 
 		String pathInfo = request.getPathInfo();
 		assertEquals("/foo/bar/baz.html", pathInfo);
@@ -75,7 +75,7 @@ public class MockHttpServletRequestTest extends WicketTestCase
 		assertEquals("localhost", url.getHost());
 		assertEquals(new Integer(80), url.getPort());
 		assertEquals("/foo/bar/baz.html", url.getPath());
-		assertEquals("?a=123&b=456", url.getQueryString());
+		assertEquals("a=123&b=456", url.getQueryString());
 
 		String pathInfo = request.getPathInfo();
 		assertEquals("/foo/bar/baz.html", pathInfo);
@@ -100,11 +100,25 @@ public class MockHttpServletRequestTest extends WicketTestCase
 		assertEquals("localhost", url.getHost());
 		assertEquals(new Integer(80), url.getPort());
 		assertEquals(request.getContextPath() + request.getServletPath() + "/foo/bar/baz.html", url.getPath());
-		assertEquals("?a=123&b=456", url.getQueryString());
+		assertEquals("a=123&b=456", url.getQueryString());
 
 		String pathInfo = request.getPathInfo();
 		assertEquals("/foo/bar/baz.html", pathInfo);
 	}
+
+    /**
+     * WICKET-4664 - no query string returns null as per HttpServletRequest
+     */
+    @Test
+    public void testNoQueryString_returnsNull()
+    {
+        WicketTester tester = new WicketTester();
+        MockHttpServletRequest request = tester.getRequest();
+        request.setURL("my/servlet/without/query/param");
+        
+        Url url = request.getUrl();
+        assertNull(url.getQueryString());
+    }
 	
 	@Test
 	public void getSessionFromNonMockHttpSession()

@@ -45,7 +45,7 @@ public abstract class WebRequest extends Request
 	/** marker for Ajax-relative url */
 	public static final String HEADER_AJAX_BASE_URL = "Wicket-Ajax-BaseURL";
 	/** anti-cache query parameter added by Wicket.Ajax.Request at its URL */
-	public static final String PARAM_AJAX_REQUEST_ANTI_CACHE = "random";
+	public static final String PARAM_AJAX_REQUEST_ANTI_CACHE = "_";
 
 	/**
 	 * @return request cookies
@@ -151,6 +151,12 @@ public abstract class WebRequest extends Request
 			public Url getUrl()
 			{
 				return url;
+			}
+
+			@Override
+			public Url getOriginalUrl()
+			{
+				return WebRequest.this.getOriginalUrl();
 			}
 
 			@Override

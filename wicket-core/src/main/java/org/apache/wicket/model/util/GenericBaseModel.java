@@ -91,8 +91,8 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 	public String toString()
 	{
 	 StringBuilder sb = new StringBuilder("Model:classname=[");
-		sb.append(getClass().getName()).append("]");
-		sb.append(":object=[").append(object).append("]");
+		sb.append(getClass().getName()).append(']');
+		sb.append(":object=[").append(object).append(']');
 		return sb.toString();
 	}
 

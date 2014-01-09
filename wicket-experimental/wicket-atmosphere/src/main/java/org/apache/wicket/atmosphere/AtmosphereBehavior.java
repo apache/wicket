@@ -18,9 +18,11 @@ package org.apache.wicket.atmosphere;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
@@ -65,13 +67,22 @@ public class AtmosphereBehavior extends Behavior
 
 	private static final long serialVersionUID = 1L;
 
+	private String applicationKey;
+
 	private Component component;
+
 
 	/**
 	 * Construct.
 	 */
 	public AtmosphereBehavior()
 	{
+		applicationKey = Application.get().getApplicationKey();
+	}
+
+	private EventBus findEventBus()
+	{
+		return EventBus.get(Application.get(applicationKey));
 	}
 
 	@Override
@@ -87,6 +98,16 @@ public class AtmosphereBehavior extends Behavior
 	}
 
 	@Override
+	public void onPreSuspend(AtmosphereResourceEvent event)
+	{
+	}
+
+	@Override
+	public void onClose(AtmosphereResourceEvent event)
+	{
+	}
+
+	@Override
 	public void onResourceRequested()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
@@ -94,30 +115,22 @@ public class AtmosphereBehavior extends Behavior
 
 		// Grab a Meteor
 		Meteor meteor = Meteor.build(request.getContainerRequest());
-		String uuid = getUUID(meteor.getAtmosphereResource());
-		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
-		EventBus.get().registerPage(uuid, component.getPage());
-
 		// Add us to the listener list.
 		meteor.addListener(this);
+		meteor.suspend(-1);
 
-		String transport = request.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
-		if (HeaderConfig.LONG_POLLING_TRANSPORT.equalsIgnoreCase(transport))
-		{
-			// request.getContainerRequest().setAttribute(ApplicationConfig.RESUME_ON_BROADCAST,
-			// Boolean.TRUE);
-			meteor.suspend(-1, false);
-		}
-		else
-		{
-			meteor.suspend(-1);
-		}
+		String uuid = meteor.getAtmosphereResource().uuid();
+		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
+		findEventBus().registerPage(uuid, component.getPage());
 	}
 
 	@Override
 	public void onBroadcast(AtmosphereResourceEvent event)
 	{
-		log.info("onBroadcast: {}", event.getMessage());
+		if (log.isDebugEnabled())
+		{
+			log.debug("onBroadcast: {}", event.getMessage());
+		}
 
 		// If we are using long-polling, resume the connection as soon as we get
 		// an event.
@@ -135,13 +148,13 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onSuspend(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
 			String transport = event.getResource()
 				.getRequest()
 				.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
 			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("Suspending the %s response from ip %s:%s", transport == null
+			log.debug(String.format("Suspending the %s response from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
 	}
@@ -149,11 +162,11 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onResume(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
 			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
 			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("Resuming the %s response from ip %s:%s", transport == null
+			log.debug(String.format("Resuming the %s response from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
 		}
 	}
@@ -161,12 +174,18 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onDisconnect(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
 			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
 			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("%s connection dropped from ip %s:%s", transport == null
+			log.debug(String.format("%s connection dropped from ip %s:%s", transport == null
 				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+		}
+		// It is possible that the application has already been destroyed, in which case
+		// unregistration is no longer needed
+		if (Application.get(applicationKey) != null)
+		{
+			findEventBus().unregisterConnection(event.getResource().uuid());
 		}
 	}
 
@@ -184,7 +203,7 @@ public class AtmosphereBehavior extends Behavior
 			CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
 
 			response.render(JavaScriptHeaderItem.forReference(JQueryWicketAtmosphereResourceReference.get()));
-			JSONObject options = new JSONObject();
+			JSONObject options = findEventBus().getParameters().toJSON();
 			options.put("url",
 				component.urlFor(this, IResourceListener.INTERFACE, new PageParameters())
 					.toString());
@@ -198,14 +217,25 @@ public class AtmosphereBehavior extends Behavior
 	}
 
 	/**
+	 * Find the Atmosphere UUID for the suspended connection for the given page (if any).
+	 * 
+	 * @param page
+	 * @return The UUID of the Atmosphere Resource, or null if no resource is suspended for the
+	 *         page.
+	 */
+	public static String getUUID(Page page)
+	{
+		return page.getMetaData(ATMOSPHERE_UUID);
+	}
+
+	/**
 	 * @param resource
 	 * @return the unique id for the given suspended connection
+	 * @deprecated use {@link AtmosphereResource#uuid()}
 	 */
+	@Deprecated
 	public static String getUUID(AtmosphereResource resource)
 	{
-		String trackingId = resource.getRequest().getHeader(HeaderConfig.X_ATMOSPHERE_TRACKING_ID);
-		if (trackingId != null)
-			return trackingId;
-		return resource.getRequest().getHeader("Sec-WebSocket-Key");
+		return resource.uuid();
 	}
 }

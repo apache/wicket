@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.resource;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
@@ -69,7 +69,7 @@ public class JQueryPluginResourceReference extends JavaScriptResourceReference
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
 		final ResourceReference backingLibraryReference;
 		if (Application.exists())
@@ -82,6 +82,8 @@ public class JQueryPluginResourceReference extends JavaScriptResourceReference
 		{
 			backingLibraryReference = JQueryResourceReference.get();
 		}
-		return Arrays.asList(JavaScriptHeaderItem.forReference(backingLibraryReference));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(JavaScriptHeaderItem.forReference(backingLibraryReference));
+		return dependencies;
 	}
 }

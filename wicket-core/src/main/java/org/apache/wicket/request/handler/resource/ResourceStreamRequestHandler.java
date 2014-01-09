@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.request.handler.resource;
 
+import org.apache.wicket.core.request.handler.logger.ResourceStreamLogData;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.core.request.handler.logger.ResourceStreamLogData;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
@@ -51,7 +50,8 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 	/**
 	 * The duration fow which the resource will be cached by the browser.
 	 * <p>
-	 * By default is {@code null} and {@link IResourceSettings#getDefaultCacheDuration()} is used.
+	 * By default is {@code null} and
+	 * {@link org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()} is used.
 	 * </p>
 	 */
 	private Duration cacheDuration;
@@ -133,6 +133,20 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 			requestCycle.getResponse());
 
 		ResourceStreamResource resource = new ResourceStreamResource(resourceStream);
+
+		configure(resource);
+
+		resource.respond(attributes);
+	}
+
+	/**
+	 * Configures the ResourceStreamResource used by this request handler
+	 *
+	 * @param resource
+	 *          the resource to configure
+	 */
+	protected void configure(ResourceStreamResource resource)
+	{
 		resource.setFileName(fileName);
 		if (contentDisposition != null)
 		{
@@ -141,7 +155,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 		else
 		{
 			resource.setContentDisposition(Strings.isEmpty(fileName) ? ContentDisposition.INLINE
-				: ContentDisposition.ATTACHMENT);
+					: ContentDisposition.ATTACHMENT);
 		}
 
 		final Duration cacheDuration = getCacheDuration();
@@ -149,8 +163,6 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 		{
 			resource.setCacheDuration(cacheDuration);
 		}
-
-		resource.respond(attributes);
 	}
 
 	@Override

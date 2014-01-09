@@ -17,6 +17,7 @@
 package org.apache.wicket.validation.validator;
 
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
@@ -146,7 +147,7 @@ public class CreditCardValidator implements IValidator<String>
 	 * @param validatable
 	 * @return decorated error
 	 */
-	protected ValidationError decorate(ValidationError error, IValidatable<String> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<String> validatable)
 	{
 		return error;
 	}

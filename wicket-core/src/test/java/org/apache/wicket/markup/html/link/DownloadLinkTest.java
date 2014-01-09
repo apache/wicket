@@ -19,7 +19,12 @@ package org.apache.wicket.markup.html.link;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IComponentAssignedModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -97,5 +102,67 @@ public class DownloadLinkTest extends WicketTestCase
 		File temporary = page.getTemporaryFile();
 		tester.clickLink(DownloadPage.DELETE_DOWNLOAD_LINK);
 		assertFalse(temporary.exists());
+	}
+
+	/**
+	 * WICKET-4738 wrapOnAssigment and detach on fileName
+	 */
+	@Test
+	public void fileNameModel()
+	{
+
+		FileNameModel fileNameModel = new FileNameModel();
+
+		DownloadLink link = new DownloadLink("test", new AbstractReadOnlyModel<File>()
+		{
+			@Override
+			public File getObject()
+			{
+				return null;
+			}
+		}, fileNameModel);
+
+		assertTrue(fileNameModel.wrapOnAssignmentCalled);
+
+		link.detach();
+
+		assertTrue(fileNameModel.detachCalled);
+	}
+
+	private class FileNameModel extends AbstractReadOnlyModel<String>
+		implements
+			IComponentAssignedModel<String>,
+			IWrapModel<String>
+	{
+		private static final long serialVersionUID = 1L;
+
+		boolean detachCalled = false;
+		boolean wrapOnAssignmentCalled;
+
+		@Override
+		public String getObject()
+		{
+			return null;
+		}
+
+		@Override
+		public IWrapModel<String> wrapOnAssignment(Component component)
+		{
+			wrapOnAssignmentCalled = true;
+
+			return this;
+		}
+
+		@Override
+		public void detach()
+		{
+			detachCalled = true;
+		}
+
+		@Override
+		public IModel<?> getWrappedModel()
+		{
+			return null;
+		}
 	}
 }

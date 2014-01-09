@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.HTML5Attributes;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -26,6 +27,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.TagTester;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.junit.Test;
 
 /**
@@ -60,6 +63,42 @@ public class TextFieldTest extends WicketTestCase
 		assertTrue(tester.getLastResponseAsString().contains(Strings.escapeMarkup(text)));
 	}
 
+	/**
+	 * Assert that null input is not validated.
+	 */
+	@Test
+	public void nullIsNotValidated()
+	{
+		TestPage testPage = new TestPage();
+		testPage.textField.setType(String.class);
+		testPage.textField.setRequired(false);
+		testPage.textField.add(StringValidator.minimumLength(2));
+		tester.startPage(testPage);
+		FormTester formTester = tester.newFormTester(testPage.form.getId());
+		formTester.setValue(testPage.textField.getId(), "");
+		formTester.submit();
+		assertEquals(null, testPage.textField.getDefaultModelObject());
+		assertTrue(testPage.textField.isValid());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5289
+	 */
+	@Test
+	public void requiredAttribute()
+	{
+		TestPage testPage = new TestPage();
+		testPage.textField.setOutputMarkupId(true);
+		testPage.textField.setType(String.class);
+		testPage.textField.setRequired(true);
+		testPage.textField.add(new HTML5Attributes());
+		tester.startPage(testPage);
+
+		TagTester tagTester = tester.getTagById(testPage.textField.getMarkupId());
+		String required = tagTester.getAttribute("required");
+		assertEquals("required", required);
+	}
+
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
@@ -71,8 +110,8 @@ public class TextFieldTest extends WicketTestCase
 		/** */
 		public TestPage()
 		{
-			add(form = new Form<Void>("form"));
-			form.add(textField = new TextField<String>("text", textModel));
+			add(form = new Form<>("form"));
+			form.add(textField = new TextField<>("text", textModel));
 		}
 
 		@Override

@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.redirect.abort;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.junit.Test;
 
 /**
  * Testcase for WICKET-1418, throwing an abortexception during rendering.
@@ -35,6 +36,7 @@ public class AbortExceptionTest extends WicketTestCase
 	/**
 	 * Test page without throwing abort.
 	 */
+	@Test
 	public void testNoAbort()
 	{
 		tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", false));
@@ -44,6 +46,7 @@ public class AbortExceptionTest extends WicketTestCase
 	/**
 	 * Test page with throwing abort.
 	 */
+	@Test
 	public void testAbort()
 	{
 		try

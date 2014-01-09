@@ -16,7 +16,11 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.util.List;
+
 import org.apache.wicket.Application;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -27,21 +31,21 @@ import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 
 /**
  * Decodes and encodes the following URLs:
- *
+ * 
  * <pre>
  *  Page Class - Render (BookmarkablePageRequestHandler)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage
  *  (will redirect to hybrid alternative if page is not stateless)
- *
+ * 
  *  Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2
- *
+ * 
  *  Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click.1-foo-bar-baz (1 is behavior index)
  *  (these will redirect to hybrid if page is not stateless)
  * </pre>
- *
+ * 
  * @author Matej Knopp
  */
 public class BookmarkableMapper extends AbstractBookmarkableMapper
@@ -80,26 +84,49 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
-		if (Application.exists())
+		if (matches(request))
 		{
-			if (Application.get().getSecuritySettings().getEnforceMounts())
-			{
-				return null;
-			}
-		}
+			Url url = request.getUrl();
 
-		Url url = request.getUrl();
-		if (matches(url))
-		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 
+			List<String> segments = url.getSegments();
+
 			// load the page class
-			String className = url.getSegments().get(2);
+			String className;
+			if (segments.size() >= 3)
+			{
+				className = segments.get(2);
+			}
+			else
+			{
+				className = segments.get(1);
+			}
+
 			Class<? extends IRequestablePage> pageClass = getPageClass(className);
 
 			if (pageClass != null && IRequestablePage.class.isAssignableFrom(pageClass))
 			{
+				if (Application.exists())
+				{
+					Application application = Application.get();
+
+					if (application.getSecuritySettings().getEnforceMounts())
+					{
+						// we make an exception if the homepage itself was mounted, see WICKET-1898
+						if (!pageClass.equals(application.getHomePage()))
+						{
+							// WICKET-5094 only enforce mount if page is mounted
+							Url reverseUrl = application.getRootRequestMapper().mapHandler(
+								new RenderPageRequestHandler(new PageProvider(pageClass)));
+							if (!matches(request.cloneWithUrl(reverseUrl)))
+							{
+								return null;
+							}
+						}
+					}
+				}
 
 				// extract the PageParameters from URL if there are any
 				PageParameters pageParameters = extractPageParameters(request, 3,
@@ -121,17 +148,42 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	public int getCompatibilityScore(Request request)
 	{
 		int score = 0;
-		Url url = request.getUrl();
-		if (matches(url))
+		if (matches(request))
 		{
 			score = Integer.MAX_VALUE;
 		}
 		return score;
 	}
 
-	private boolean matches(final Url url)
+	private boolean matches(final Request request)
 	{
-		return (url.getSegments().size() >= 3 && urlStartsWith(url, getContext().getNamespace(),
-			getContext().getBookmarkableIdentifier()));
+		boolean matches = false;
+		Url url = request.getUrl();
+		Url baseUrl = request.getClientUrl();
+		String namespace = getContext().getNamespace();
+		String bookmarkableIdentifier = getContext().getBookmarkableIdentifier();
+		String pageIdentifier = getContext().getPageIdentifier();
+
+		if (url.getSegments().size() >= 3 && urlStartsWith(url, namespace, bookmarkableIdentifier))
+		{
+			matches = true;
+		}
+		// baseUrl = 'wicket/bookmarkable/com.example.SomePage[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
+		else if (baseUrl.getSegments().size() == 3 && urlStartsWith(baseUrl, namespace, bookmarkableIdentifier) && url.getSegments().size() >= 2 && urlStartsWith(url, bookmarkableIdentifier))
+		{
+			matches = true;
+		}
+		// baseUrl = 'bookmarkable/com.example.SomePage', requestUrl = 'bookmarkable/com.example.SomePage'
+		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, bookmarkableIdentifier) && url.getSegments().size() == 2 && urlStartsWith(url, bookmarkableIdentifier))
+		{
+			matches = true;
+		}
+		// baseUrl = 'wicket/page[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
+		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, namespace, pageIdentifier) && url.getSegments().size() >= 2 && urlStartsWith(url, bookmarkableIdentifier))
+		{
+			matches = true;
+		}
+
+		return matches;
 	}
 }

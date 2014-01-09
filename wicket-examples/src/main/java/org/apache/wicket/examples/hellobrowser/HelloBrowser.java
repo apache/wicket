@@ -43,13 +43,8 @@ public class HelloBrowser extends WicketExamplePage
 	 */
 	public HelloBrowser()
 	{
-		// add a label that outputs a the client info object; it will result in
-		// the calls RequestCycle.getClientInfo -> Session.getClientInfo ->
-		// RequestCycle.newClientInfo. this is done once by default and
-		// afterwards cached in the session object. This application uses
-		// a custom requestcycle that overrides newClientInfo to not only
-		// look at the user-agent request header, but also snoops javascript
-		// properties by redirecting to a special page.
+		// Add a label that outputs the client info object; it will result in
+		// the calls Session.getClientInfo.
 
 		// don't use a property model here or anything else that is resolved
 		// during rendering, as changing the request target during rendering
@@ -73,15 +68,15 @@ public class HelloBrowser extends WicketExamplePage
 					Locale locale = getLocale();
 					DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.LONG, locale);
 					String calAsString = dateFormat.format(cal.getTime());
-				 StringBuilder b = new StringBuilder("Based on your settings, your time is: ");
+					StringBuilder b = new StringBuilder("Based on your settings, your time is: ");
 					b.append(calAsString);
 					b.append(" (and your time zone is ");
 					b.append(timeZone.getDisplayName(getLocale()));
-					b.append(")");
+					b.append(')');
 					return b.toString();
 				}
 				return "Unfortunately, we were not able to figure out what your time zone is, so we have"
-					+ "no idea what your time is";
+					+ " no idea what your time is";
 			}
 		};
 		add(new Label("clienttime", clientTimeModel));

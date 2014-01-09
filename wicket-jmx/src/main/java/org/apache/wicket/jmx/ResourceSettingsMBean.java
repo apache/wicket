@@ -17,8 +17,6 @@
 package org.apache.wicket.jmx;
 
 import org.apache.wicket.markup.html.PackageResourceGuard;
-import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -53,13 +51,13 @@ public interface ResourceSettingsMBean
 	 * Gets the resource finder to use when searching for resources.
 	 * 
 	 * @return Returns the resourceFinder.
-	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
+	 * @see org.apache.wicket.settings.ResourceSettings#getResourceFinders()
 	 */
 	String getResourceFinders();
 
 	/**
 	 * @return Returns the resourcePollFrequency.
-	 * @see IResourceSettings#setResourcePollFrequency(Duration)
+	 * @see org.apache.wicket.settings.ResourceSettings#setResourcePollFrequency(Duration)
 	 */
 	String getResourcePollFrequency();
 
@@ -74,7 +72,7 @@ public interface ResourceSettingsMBean
 	String[] getStringResourceLoaders();
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#getThrowExceptionOnMissingResource()
+	 * @see org.apache.wicket.settings.ResourceSettings#getThrowExceptionOnMissingResource()
 	 * 
 	 * @return boolean
 	 */
@@ -86,7 +84,7 @@ public interface ResourceSettingsMBean
 	boolean getUseDefaultOnMissingResource();
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
+	 * @see org.apache.wicket.settings.ResourceSettings#setThrowExceptionOnMissingResource(boolean)
 	 * 
 	 * @param throwExceptionOnMissingResource
 	 */

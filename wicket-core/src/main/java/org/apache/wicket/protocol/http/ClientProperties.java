@@ -22,10 +22,10 @@ import java.util.TimeZone;
 
 import javax.servlet.http.Cookie;
 
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
@@ -73,20 +73,6 @@ public class ClientProperties implements IClusterable
 	private String navigatorLanguage;
 	private String navigatorPlatform;
 	private String navigatorUserAgent;
-	private boolean proprietaryIECssExpressionsSupported;
-	private boolean proprietaryIEPngAlphaFilterRequired;
-	private boolean quirkCssBackgroundAttachmentUseFixed;
-	private boolean quirkCssBorderCollapseFor0Padding;
-	private boolean quirkCssBorderCollapseInside;
-	private boolean quirkCssPositioningOneSideOnly;
-	private boolean quirkIERepaint;
-	private boolean quirkIESelectListDomUpdate;
-	private boolean quirkIESelectPercentWidth;
-	private boolean quirkIESelectZIndex;
-	private boolean quirkIETablePercentWidthScrollbarError;
-	private boolean quirkIETextareaNewlineObliteration;
-	private boolean quirkMozillaPerformanceLargeDomRemove;
-	private boolean quirkMozillaTextInputRepaint;
 	private String remoteAddress;
 	private int screenColorDepth = -1;
 	private int screenHeight = -1;
@@ -254,12 +240,12 @@ public class ClientProperties implements IClusterable
 					// offset which can be parsed by the TimeZone class.
 
 					AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
-					sb.append(offsetHours > 0 ? "+" : "-");
+					sb.append(offsetHours > 0 ? '+' : '-');
 					sb.append(Math.abs(offsetHours));
-					sb.append(":");
+					sb.append(':');
 					if (offsetMins < 10)
 					{
-						sb.append("0");
+						sb.append('0');
 					}
 					sb.append(offsetMins);
 					timeZone = TimeZone.getTimeZone(sb.toString());
@@ -271,13 +257,13 @@ public class ClientProperties implements IClusterable
 					{
 						utc = utc.substring(1);
 					}
-					timeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") + utc);
+					timeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? '+' : '-') + utc);
 				}
 
 				String dstOffset = getUtcDSTOffset();
 				if (timeZone != null && dstOffset != null)
 				{
-					TimeZone dstTimeZone = null;
+					TimeZone dstTimeZone;
 					dotPos = dstOffset.indexOf('.');
 					if (dotPos >= 0)
 					{
@@ -296,12 +282,12 @@ public class ClientProperties implements IClusterable
 						// offset which can be parsed by the TimeZone class.
 
 						AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
-						sb.append(offsetHours > 0 ? "+" : "-");
+						sb.append(offsetHours > 0 ? '+' : '-');
 						sb.append(Math.abs(offsetHours));
-						sb.append(":");
+						sb.append(':');
 						if (offsetMins < 10)
 						{
-							sb.append("0");
+							sb.append('0');
 						}
 						sb.append(offsetMins);
 						dstTimeZone = TimeZone.getTimeZone(sb.toString());
@@ -313,7 +299,7 @@ public class ClientProperties implements IClusterable
 						{
 							dstOffset = dstOffset.substring(1);
 						}
-						dstTimeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") +
+						dstTimeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? '+' : '-') +
 							dstOffset);
 					}
 					// if the dstTimezone (1 July) has a different offset then
@@ -458,242 +444,6 @@ public class ClientProperties implements IClusterable
 	public boolean isJavaEnabled()
 	{
 		return javaEnabled;
-	}
-
-	/**
-	 * A proprietary feature flag indicating support for IE-style CSS expressions.
-	 * <p>
-	 * This proprietary feature is provided by:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if support for IE-style CSS expressions.
-	 */
-	public boolean isProprietaryIECssExpressionsSupported()
-	{
-		return proprietaryIECssExpressionsSupported;
-	}
-
-	/**
-	 * A proprietary feature flag indicating that PNG alpha channel support is available only by
-	 * using a 'filter'.
-	 * <p>
-	 * This proprietary feature is provided by:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if PNG alpha channel support is available only by using a 'filter'.
-	 */
-	public boolean isProprietaryIEPngAlphaFilterRequired()
-	{
-		return proprietaryIEPngAlphaFilterRequired;
-	}
-
-	/**
-	 * A quirk flag indicating that the 'fixed' attribute should be used to for fixed-to-element
-	 * background attachment.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if the 'fixed' attribute should be used to for fixed-to-element background
-	 *         attachment.
-	 */
-	public boolean isQuirkCssBackgroundAttachmentUseFixed()
-	{
-		return quirkCssBackgroundAttachmentUseFixed;
-	}
-
-	/**
-	 * A quirk flag indicating the only means of achieving 0 padding in table cells is to use 0px
-	 * padding.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if the only means of achieving 0 padding in table cells is to use 0px padding.
-	 */
-	public boolean isQuirkCssBorderCollapseFor0Padding()
-	{
-		return quirkCssBorderCollapseFor0Padding;
-	}
-
-	/**
-	 * A quirk flag indicating whether the client will incorrectly render CSS collapsed borders such
-	 * that they reside entirely within the region of a component.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if the client will incorrectly render CSS collapsed borders such that they
-	 *         reside entirely within the region of a component.
-	 */
-	public boolean isQuirkCssBorderCollapseInside()
-	{
-		return quirkCssBorderCollapseInside;
-	}
-
-	/**
-	 * A quirk flag indicating that CSS positioning values do not work correctly when either both
-	 * "top" and "bottom" or "left" and "right" positions are set at the same time.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if CSS positioning values do not work correctly when either both "top" and
-	 *         "bottom" or "left" and "right" positions are set at the same time.
-	 */
-	public boolean isQuirkCssPositioningOneSideOnly()
-	{
-		return quirkCssPositioningOneSideOnly;
-	}
-
-	/**
-	 * A quirk flag describing the curious repaint behavior found in Internet Explorer 6, where
-	 * repaints may be excessively delayed. This quirky behavior is most visible when the DOM
-	 * hierarchy is large and complex. The unlikely workaround for this quirky behavior is to
-	 * "tickle" (adjust and then reset) the CSS width of an element, which will force an immediate
-	 * repaint.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if means needs to be taken against weird Internet Explorer repaint behaviors.
-	 */
-	public boolean isQuirkIERepaint()
-	{
-		return quirkIERepaint;
-	}
-
-	/**
-	 * A quirk flag indicating that listbox-style select fields cannot be reliably manipulated using
-	 * the client DOM API.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if listbox-style select fields cannot be reliably manipulated using the client
-	 *         DOM API.
-	 */
-	public boolean isQuirkIESelectListDomUpdate()
-	{
-		return quirkIESelectListDomUpdate;
-	}
-
-	/**
-	 * A quirk flag indicating that select fields with percentage widths are not reliably rendered.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if select fields with percentage widths are not reliably rendered.
-	 */
-	public boolean isQuirkIESelectPercentWidth()
-	{
-		return quirkIESelectPercentWidth;
-	}
-
-	/**
-	 * A quirk flag describing the issue of "windowed" select fields in Internet Explorer, which do
-	 * not render correctly with regard to z-index value. See
-	 * http://support.microsoft.com/kb/q177378/ for an explanation of the underlying issue.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if the browser do not render correctly with regard to z-index value.
-	 */
-	public boolean isQuirkIESelectZIndex()
-	{
-		return quirkIESelectZIndex;
-	}
-
-	/**
-	 * A quirk flag indicating incorrect calculation of 100% table widths when within a vertically
-	 * scrolling region.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if incorrect calculation of 100% table widths when within a vertically scrolling
-	 *         region.
-	 */
-	public boolean isQuirkIETablePercentWidthScrollbarError()
-	{
-		return quirkIETablePercentWidthScrollbarError;
-	}
-
-	/**
-	 * A quirk flag indicating the incorrect parsing of newlines in the content of a 'textarea'.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Internet Explorer 6 (Windows)</li>
-	 * </ul>
-	 * 
-	 * @return True if the browser has incorrect parsing of newlines in the content of a 'textarea'.
-	 */
-	public boolean isQuirkIETextareaNewlineObliteration()
-	{
-		return quirkIETextareaNewlineObliteration;
-	}
-
-	/**
-	 * A quirk flag indicating whether the client has poor performance when attempting to remove
-	 * large element hierarchies from a DOM. This quirk can be alleviated by removing the hierarchy
-	 * in smaller chunks.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Mozilla (all platforms)</li>
-	 * <li>Mozilla Firefox ((all platforms)</li>
-	 * </ul>
-	 * 
-	 * @return True if the client has poor performance when attempting to remove large element
-	 *         hierarchies from a DOM.
-	 */
-	public boolean isQuirkMozillaPerformanceLargeDomRemove()
-	{
-		return quirkMozillaPerformanceLargeDomRemove;
-	}
-
-	/**
-	 * A quirk flag describing a Mozilla-specific behavior where the text contained within text
-	 * input fields may be drawn outside of text input component due to the component having shifted
-	 * its location on the page.
-	 * <p>
-	 * This quirk occurs with:
-	 * <ul>
-	 * <li>Mozilla (all platforms)</li>
-	 * <li>Mozilla Firefox ((all platforms)</li>
-	 * </ul>
-	 * 
-	 * @return True if the text contained within text input fields may be drawn outside of text
-	 *         input component due to the component having shifted its location on the page.
-	 */
-	public boolean isQuirkMozillaTextInputRepaint()
-	{
-		return quirkMozillaTextInputRepaint;
 	}
 
 	/**
@@ -884,143 +634,6 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * @param proprietaryIECssExpressionsSupported
-	 *            True if support for IE-style CSS expressions.
-	 */
-	public void setProprietaryIECssExpressionsSupported(boolean proprietaryIECssExpressionsSupported)
-	{
-		this.proprietaryIECssExpressionsSupported = proprietaryIECssExpressionsSupported;
-	}
-
-	/**
-	 * @param proprietaryIEPngAlphaFilterRequired
-	 *            True if PNG alpha channel support is available only by using a 'filter'.
-	 */
-	public void setProprietaryIEPngAlphaFilterRequired(boolean proprietaryIEPngAlphaFilterRequired)
-	{
-		this.proprietaryIEPngAlphaFilterRequired = proprietaryIEPngAlphaFilterRequired;
-	}
-
-	/**
-	 * @param quirkCssBackgroundAttachmentUseFixed
-	 *            True if the 'fixed' attribute should be used to for fixed-to-element background
-	 *            attachment.
-	 */
-	public void setQuirkCssBackgroundAttachmentUseFixed(boolean quirkCssBackgroundAttachmentUseFixed)
-	{
-		this.quirkCssBackgroundAttachmentUseFixed = quirkCssBackgroundAttachmentUseFixed;
-	}
-
-	/**
-	 * @param quirkCssBorderCollapseFor0Padding
-	 *            True if the only means of achieving 0 padding in table cells is to use 0px
-	 *            padding.
-	 */
-	public void setQuirkCssBorderCollapseFor0Padding(boolean quirkCssBorderCollapseFor0Padding)
-	{
-		this.quirkCssBorderCollapseFor0Padding = quirkCssBorderCollapseFor0Padding;
-	}
-
-	/**
-	 * @param quirkCssBorderCollapseInside
-	 *            True if the client will incorrectly render CSS collapsed borders such that they
-	 *            reside entirely within the region of a component.
-	 */
-	public void setQuirkCssBorderCollapseInside(boolean quirkCssBorderCollapseInside)
-	{
-		this.quirkCssBorderCollapseInside = quirkCssBorderCollapseInside;
-	}
-
-	/**
-	 * @param quirkCssPositioningOneSideOnly
-	 *            True if CSS positioning values do not work correctly when either both "top" and
-	 *            "bottom" or "left" and "right" positions are set at the same time.
-	 */
-	public void setQuirkCssPositioningOneSideOnly(boolean quirkCssPositioningOneSideOnly)
-	{
-		this.quirkCssPositioningOneSideOnly = quirkCssPositioningOneSideOnly;
-	}
-
-	/**
-	 * @param quirkIERepaint
-	 *            True if means needs to be taken against weird Internet Explorer repaint behaviors.
-	 */
-	public void setQuirkIERepaint(boolean quirkIERepaint)
-	{
-		this.quirkIERepaint = quirkIERepaint;
-	}
-
-	/**
-	 * @param quirkIESelectListDomUpdate
-	 *            True if listbox-style select fields cannot be reliably manipulated using the
-	 *            client DOM API.
-	 */
-	public void setQuirkIESelectListDomUpdate(boolean quirkIESelectListDomUpdate)
-	{
-		this.quirkIESelectListDomUpdate = quirkIESelectListDomUpdate;
-	}
-
-	/**
-	 * @param quirkIESelectPercentWidth
-	 *            True if select fields with percentage widths are not reliably rendered.
-	 */
-	public void setQuirkIESelectPercentWidth(boolean quirkIESelectPercentWidth)
-	{
-		this.quirkIESelectPercentWidth = quirkIESelectPercentWidth;
-	}
-
-	/**
-	 * @param quirkIESelectZIndex
-	 *            True if the browser do not render correctly with regard to z-index value.
-	 */
-	public void setQuirkIESelectZIndex(boolean quirkIESelectZIndex)
-	{
-		this.quirkIESelectZIndex = quirkIESelectZIndex;
-	}
-
-	/**
-	 * @param quirkIETablePercentWidthScrollbarError
-	 *            True if incorrect calculation of 100% table widths when within a vertically
-	 *            scrolling region.
-	 */
-	public void setQuirkIETablePercentWidthScrollbarError(
-		boolean quirkIETablePercentWidthScrollbarError)
-	{
-		this.quirkIETablePercentWidthScrollbarError = quirkIETablePercentWidthScrollbarError;
-	}
-
-	/**
-	 * @param quirkIETextareaNewlineObliteration
-	 *            True if the browser has incorrect parsing of newlines in the content of a
-	 *            'textarea'.
-	 */
-	public void setQuirkIETextareaNewlineObliteration(boolean quirkIETextareaNewlineObliteration)
-	{
-		this.quirkIETextareaNewlineObliteration = quirkIETextareaNewlineObliteration;
-	}
-
-	/**
-	 * @param quirkMozillaPerformanceLargeDomRemove
-	 *            True if the client has poor performance when attempting to remove large element
-	 *            hierarchies from a DOM.
-	 */
-	public void setQuirkMozillaPerformanceLargeDomRemove(
-		boolean quirkMozillaPerformanceLargeDomRemove)
-	{
-		this.quirkMozillaPerformanceLargeDomRemove = quirkMozillaPerformanceLargeDomRemove;
-	}
-
-	/**
-	 * @param quirkMozillaTextInputRepaint
-	 *            True if the text contained within text input fields may be drawn outside of text
-	 *            input component due to the component having shifted its location on the page.
-	 */
-	public void setQuirkMozillaTextInputRepaint(boolean quirkMozillaTextInputRepaint)
-	{
-		this.quirkMozillaTextInputRepaint = quirkMozillaTextInputRepaint;
-	}
-
-	/**
 	 * @param remoteAddress
 	 *            The client's remote/ip address.
 	 */
@@ -1096,7 +709,7 @@ public class ClientProperties implements IClusterable
 	@Override
 	public String toString()
 	{
-	 StringBuilder b = new StringBuilder();
+		StringBuilder b = new StringBuilder();
 
 		Field[] fields = ClientProperties.class.getDeclaredFields();
 
@@ -1110,7 +723,7 @@ public class ClientProperties implements IClusterable
 
 				field.setAccessible(true);
 
-				Object value = null;
+				Object value;
 				try
 				{
 					value = field.get(this);
@@ -1126,7 +739,7 @@ public class ClientProperties implements IClusterable
 
 				if (field.getType().equals(Integer.TYPE))
 				{
-					if ((Integer) value == -1)
+					if (Integer.valueOf(-1).equals(value))
 					{
 						value = null;
 					}
@@ -1135,9 +748,9 @@ public class ClientProperties implements IClusterable
 				if (value != null)
 				{
 					b.append(field.getName());
-					b.append("=");
+					b.append('=');
 					b.append(value);
-					b.append("\n");
+					b.append('\n');
 				}
 			}
 		}

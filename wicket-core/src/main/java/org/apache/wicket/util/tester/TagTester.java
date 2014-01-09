@@ -19,6 +19,7 @@ package org.apache.wicket.util.tester;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlPullParser;
@@ -50,6 +51,9 @@ import org.apache.wicket.util.value.IValueMap;
  */
 public class TagTester
 {
+	private static final Pattern AJAX_COMPONENT_CDATA_OPEN = Pattern.compile("<component.*?><!\\[CDATA\\[");
+	private static final Pattern AJAX_COMPONENT_CDATA_CLOSE = Pattern.compile("\\]\\]></component>");
+
 	private final XmlTag openTag;
 
 	private final XmlTag closeTag;
@@ -341,7 +345,7 @@ public class TagTester
 	/**
 	 * Static factory method for creating a <code>TagTester</code> based on a tag found by an
 	 * attribute with a specific value. Please note that it will return the first tag which matches
-	 * the criteria. It's therefore good for attributes suck as "id" or "wicket:id", but only if
+	 * the criteria. It's therefore good for attributes such as "id" or "wicket:id", but only if
 	 * "wicket:id" is unique in the specified markup.
 	 * 
 	 * @param markup
@@ -362,10 +366,15 @@ public class TagTester
 		{
 			try
 			{
+				// remove the CDATA and
+				// the id attribute of the component because it is often the same as the element's id
+				markup = AJAX_COMPONENT_CDATA_OPEN.matcher(markup).replaceAll("<component>");
+				markup = AJAX_COMPONENT_CDATA_CLOSE.matcher(markup).replaceAll("</component>");
+
 				XmlPullParser parser = new XmlPullParser();
 				parser.parse(markup);
 
-				XmlTag elm = null;
+				XmlTag elm;
 				XmlTag openTag = null;
 				XmlTag closeTag = null;
 				int level = 0;
@@ -437,7 +446,7 @@ public class TagTester
 	/**
 	 * Static factory method for creating a <code>TagTester</code> based on a tag found by an
 	 * attribute with a specific value. Please note that it will return the first tag which matches
-	 * the criteria. It's therefore good for attributes suck as "id" or "wicket:id", but only if
+	 * the criteria. It's therefore good for attributes such as "id" or "wicket:id", but only if
 	 * "wicket:id" is unique in the specified markup.
 	 * 
 	 * @param markup
@@ -479,13 +488,18 @@ public class TagTester
 	public static List<TagTester> createTagsByAttribute(String markup, String attribute,
 		String value, boolean stopAfterFirst)
 	{
-		List<TagTester> testers = new ArrayList<TagTester>();
+		List<TagTester> testers = new ArrayList<>();
 
 		if ((Strings.isEmpty(markup) == false) && (Strings.isEmpty(attribute) == false) &&
 			(Strings.isEmpty(value) == false))
 		{
 			try
 			{
+				// remove the CDATA and
+				// the id attribute of the component because it is often the same as the element's id
+				markup = AJAX_COMPONENT_CDATA_OPEN.matcher(markup).replaceAll("<component>");
+				markup = AJAX_COMPONENT_CDATA_CLOSE.matcher(markup).replaceAll("</component>");
+
 				XmlPullParser parser = new XmlPullParser();
 				parser.parse(markup);
 

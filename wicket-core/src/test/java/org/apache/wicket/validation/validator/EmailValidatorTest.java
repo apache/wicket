@@ -16,36 +16,20 @@
  */
 package org.apache.wicket.validation.validator;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests a couple of valid and invalid email patterns.
  * 
  * @author Maurice Marrink
  */
-public class EmailValidatorTest extends TestCase
+public class EmailValidatorTest extends Assert
 {
-	/**
-	 * Constructor.
-	 */
-	public EmailValidatorTest()
-	{
-		super();
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param name
-	 */
-	public EmailValidatorTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Tests a couple of emails that should be valid.
 	 */
+	@Test
 	public void testValidEmails()
 	{
 		EmailAddressValidator test = new EmailAddressValidator();
@@ -60,6 +44,7 @@ public class EmailValidatorTest extends TestCase
 	/**
 	 * Tests a couple of emails that should not be valid.
 	 */
+	@Test
 	public void testInvalidEmails()
 	{
 		EmailAddressValidator test = new EmailAddressValidator();

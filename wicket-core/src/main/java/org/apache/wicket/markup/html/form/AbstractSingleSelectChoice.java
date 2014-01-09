@@ -22,8 +22,6 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +37,6 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LoggerFactory.getLogger(AbstractSingleSelectChoice.class);
 
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
@@ -82,7 +79,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *            The collection of choices in the dropdown
 	 */
 	public AbstractSingleSelectChoice(final String id, final List<? extends T> choices,
-		final IChoiceRenderer<? super T> renderer)
+		final ChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -116,7 +113,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *            The rendering engine
 	 */
 	public AbstractSingleSelectChoice(final String id, IModel<T> model,
-		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
+		final List<? extends T> choices, final ChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -161,7 +158,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *            The rendering engine
 	 */
 	public AbstractSingleSelectChoice(String id, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<? super T> renderer)
+		ChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -179,7 +176,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *            The rendering engine
 	 */
 	public AbstractSingleSelectChoice(String id, IModel<T> model,
-		IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
+		IModel<? extends List<? extends T>> choices, ChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -227,8 +224,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-	 * /** Determines whether or not the null value should be included in the list of choices when
-	 * the field's model value is nonnull, and whether or not the null_valid string property (e.g.
+	 * Determines whether or not the null value should be included in the list of choices when the
+	 * field's model value is nonnull, and whether or not the null_valid string property (e.g.
 	 * "Choose One") should be displayed until a nonnull value is selected.
 	 * 
 	 * If set to false, then "Choose One" will be displayed when the value is null. After a value is
@@ -272,18 +269,10 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 */
 	protected T convertChoiceIdToChoice(String id)
 	{
-		final List<? extends T> choices = getChoices();
-		final IChoiceRenderer<? super T> renderer = getChoiceRenderer();
-		for (int index = 0; index < choices.size(); index++)
-		{
-			// Get next choice
-			final T choice = choices.get(index);
-			if (renderer.getIdValue(choice, index).equals(id))
-			{
-				return choice;
-			}
-		}
-		return null;
+		final IModel<? extends List<? extends T>> choices = getChoicesModel();
+		final ChoiceRenderer<? super T> renderer = getChoiceRenderer();
+		T object = (T) renderer.getObject(id, choices);
+		return object;
 	}
 
 	/**
@@ -311,12 +300,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			String option = getLocalizer().getStringIgnoreSettings(getNullValidKey(), this, null,
-				null);
-			if (Strings.isEmpty(option))
-			{
-				option = getLocalizer().getString("nullValid", this, "");
-			}
+			String option = getNullValidDisplayValue();
 
 			// The <option> tag buffer
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(64 + option.length());
@@ -340,18 +324,27 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			if ("".equals(selectedValue))
 			{
 				// Force the user to pick a non-null value
-				String option = getLocalizer().getStringIgnoreSettings(getNullKey(), this, null,
-					null);
-
-				if (Strings.isEmpty(option))
-				{
-					option = getLocalizer().getString("null", this, CHOOSE_ONE);
-				}
-
+				String option = getNullKeyDisplayValue();
 				return "\n<option selected=\"selected\" value=\"\">" + option + "</option>";
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * Returns the display value for the null value. The default behavior is to look the value up by
+	 * using the key from <code>getNullValidKey()</code>.
+	 *
+	 * @return The value to display for null
+	 */
+	protected String getNullValidDisplayValue()
+	{
+		String option = getLocalizer().getStringIgnoreSettings(getNullValidKey(), this, null, null);
+		if (Strings.isEmpty(option))
+		{
+			option = getLocalizer().getString("nullValid", this, "");
+		}
+		return option;
 	}
 
 	/**
@@ -362,6 +355,23 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	protected String getNullValidKey()
 	{
 		return getId() + ".nullValid";
+	}
+
+	/**
+	 * Returns the display value if null is not valid but is selected. The default behavior is to
+	 * look the value up by using the key from <code>getNullKey()</code>.
+	 *
+	 * @return The value to display if null is not value but selected, e.g. "Choose One"
+	 */
+	protected String getNullKeyDisplayValue()
+	{
+		String option = getLocalizer().getStringIgnoreSettings(getNullKey(), this, null, null);
+
+		if (Strings.isEmpty(option))
+		{
+			option = getLocalizer().getString("null", this, CHOOSE_ONE);
+		}
+		return option;
 	}
 
 	/**

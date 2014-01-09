@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.validation.validator;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * {@link UrlValidator} test
  * 
  * @author igor.vaynberg
  */
-public class UrlValidatorTest extends TestCase
+public class UrlValidatorTest extends Assert
 {
 	private final boolean printStatus = false;
 
@@ -35,8 +37,8 @@ public class UrlValidatorTest extends TestCase
 	/**
 	 * 
 	 */
-	@Override
-	protected void setUp()
+	@Before
+	public void setUp()
 	{
 		for (int index = 0; index < testPartsIndex.length - 1; index++)
 		{
@@ -45,16 +47,20 @@ public class UrlValidatorTest extends TestCase
 	}
 
 	/**
-	 * 
+	 * WICKET-5112
 	 */
-	@Override
-	protected void tearDown()
+	@Test
+	public void testParentheses()
 	{
+		String[] schemes = { "http" };
+		UrlValidator urlValidator = new UrlValidator(schemes);
+		assertTrue(urlValidator.isValid("http://en.wikipedia.org/wiki/Genus_(mathematics)"));
 	}
 
 	/**
 	 * test
 	 */
+	@Test
 	public void testIsValid()
 	{
 		testIsValid(testUrlParts, UrlValidator.ALLOW_ALL_SCHEMES);
@@ -68,6 +74,7 @@ public class UrlValidatorTest extends TestCase
 	/**
 	 * test
 	 */
+	@Test
 	public void testIsValidScheme()
 	{
 		if (printStatus)
@@ -107,7 +114,7 @@ public class UrlValidatorTest extends TestCase
 	 *            Used to create a url.
 	 * @param options
 	 */
-	public void testIsValid(Object[] testObjects, int options)
+	private void testIsValid(Object[] testObjects, int options)
 	{
 		UrlValidator urlVal = new UrlValidator(null, options);
 		assertTrue(urlVal.isValid("http://www.google.com"));
@@ -187,6 +194,7 @@ public class UrlValidatorTest extends TestCase
 	/**
 	 * test
 	 */
+	@Test
 	public void testValidator202()
 	{
 		String[] schemes = { "http", "https" };
@@ -197,6 +205,7 @@ public class UrlValidatorTest extends TestCase
 	/**
 	 * test
 	 */
+	@Test
 	public void testValidator204()
 	{
 		String[] schemes = { "http", "https" };
@@ -207,6 +216,7 @@ public class UrlValidatorTest extends TestCase
 	/**
 	 * test
 	 */
+	@Test
 	public void testValidator206()
 	{
 		UrlValidator urlVal = new UrlValidator(null, UrlValidator.ALLOW_ALL_SCHEMES);
@@ -270,14 +280,6 @@ public class UrlValidatorTest extends TestCase
 		}
 		return carryMsg.toString();
 
-	}
-
-	/**
-	 * test
-	 */
-	public void testValidateUrl()
-	{
-		assertTrue(true);
 	}
 
 	// -------------------- Test data for creating a composite URL

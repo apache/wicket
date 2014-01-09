@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
+/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
+
 jQuery(document).ready(function() {
+	"use strict";
 
 	var existingId = 'testElement',
 		nonExistingId = 'nonExistingElement',
@@ -56,9 +60,11 @@ jQuery(document).ready(function() {
 	});
 
 	test("Wicket.$$ looks for element in iframe", function() {
-		var iframeEl = Wicket.$(iframeId); 
+		var iframeEl = Wicket.$(iframeId);
 		var iframeDocument = (iframeEl.contentWindow || iframeEl.contentDocument);
-		if (iframeDocument.document) iframeDocument = iframeDocument.document;
+		if (iframeDocument.document) {
+			iframeDocument = iframeDocument.document;
+		}
 		var el = iframeDocument.createElement('span');
 		equal( Wicket.$$(el), false, "Wicket.$$ should return false for elements created in different documents." );
 	});
@@ -103,6 +109,38 @@ jQuery(document).ready(function() {
 		Wicket.DOM.show(existingId);
 		var el = Wicket.$(existingId);
 		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
+	});
+
+	test("toggleClass() - single CSS class", function() {
+		var cssClass = 'testCssClass';
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(true, element.hasClass(cssClass), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+	});
+
+	test("toggleClass() - multiple CSS classes", function() {
+		var cssClass1 = 'testCssClass1';
+		var cssClass2 = 'testCssClass2';
+		var cssClass = cssClass1 + ' ' + cssClass2;
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass1), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(true, element.hasClass(cssClass1), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(false, element.hasClass(cssClass1), "The element doesn't have the CSS class");
+	});
+
+	test("toggleClass() - switch argument", function() {
+		var cssClass = 'testCssClass';
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass, true);
+		equal(true, element.hasClass(cssClass), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass, false);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
 	});
 
 	test("(show|hide)Incrementally() an element", function() {
@@ -172,12 +210,10 @@ jQuery(document).ready(function() {
 	test("replace - test event notifications", function() {
 
 		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
-			start();
 			equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
 		});
 
 		Wicket.Event.subscribe('/dom/node/added', function(jqEvent, addedElement) {
-			start();
 			equal(jQuery(addedElement).text(), "New One", "The added element text match!");
 		});
 
@@ -195,7 +231,6 @@ jQuery(document).ready(function() {
 		expect(1);
 
 		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
-			start();
 			equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
 		});
 
@@ -207,5 +242,34 @@ jQuery(document).ready(function() {
 		var newElementMarkup = '';
 		Wicket.DOM.replace(toReplace, newElementMarkup);
 		jQuery(document).off();
+	});
+
+	test("text - read text from a node with single text type child", function() {
+
+		var node = jQuery("<div></div>")[0];
+		var doc = node.ownerDocument;
+		var textNode = doc.createTextNode("some text");
+		node.appendChild(textNode);
+
+		var text = Wicket.DOM.text(node);
+		equal(text, "some text", "Single text child text");
+	});
+
+	test("text - read text from a node with several text type children", function() {
+
+		var document = Wicket.Xml.parse("<root><![CDATA[text1]]>|<![CDATA[text2]]>|<![CDATA[text3]]></root>");
+		var node = document.documentElement;
+
+		var text = Wicket.DOM.text(node);
+		equal(text, "text1|text2|text3", "Several text children");
+	});
+
+	test("text - read text from a node with several children (text and elements)", function() {
+
+		var document = Wicket.Xml.parse("<root><![CDATA[text1|]]><child1>child1text|<![CDATA[text2|]]></child1><![CDATA[text3|]]><child2>child2Test</child2></root>");
+		var node = document.documentElement;
+
+		var text = Wicket.DOM.text(node);
+		equal(text, "text1|child1text|text2|text3|child2Test", "Several text and element children");
 	});
 });

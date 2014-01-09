@@ -69,28 +69,40 @@ public class MockAjaxFormPage extends WebPage
 	 */
 	public MockAjaxFormPage()
 	{
-		Form<MockDomainObject> form = new Form<MockDomainObject>("form",
-			new CompoundPropertyModel<MockDomainObject>(new MockDomainObject()));
+		Form<MockDomainObject> form = new Form<>("form",
+			new CompoundPropertyModel<>(new MockDomainObject()));
 		add(form);
 		final Button submit = new Button("submit");
 		submit.setOutputMarkupId(true);
 		submit.setEnabled(false);
 		form.add(submit);
-		final TextField<String> text = new TextField<String>("text");
+		final TextField<String> text = new TextField<>("text");
+		form.add(text);
 		text.setRequired(true);
 		text.add(new StringValidator(4, null));
-		text.add(new AjaxFormValidatingBehavior(form, "onkeyup")
+		text.add(new AjaxFormValidatingBehavior("keyup")
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onEvent(AjaxRequestTarget target)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
+				super.onSubmit(target);
+
+				text.validate();
+				submit.setEnabled(text.isValid());
+				target.add(submit);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target)
+			{
+				super.onError(target);
+
 				text.validate();
 				submit.setEnabled(text.isValid());
 				target.add(submit);
 			}
 		});
-		form.add(text);
 	}
 }

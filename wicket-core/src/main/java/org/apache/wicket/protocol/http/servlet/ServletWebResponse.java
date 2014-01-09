@@ -19,9 +19,13 @@ package org.apache.wicket.protocol.http.servlet;
 import java.io.IOException;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.UrlRenderer;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
@@ -168,33 +172,60 @@ public class ServletWebResponse extends WebResponse
 	public String encodeURL(CharSequence url)
 	{
 		Args.notNull(url, "url");
-		if (url.length() > 0 && url.charAt(0) == '?')
-		{
-			// there is a bug in apache tomcat 5.5 where tomcat doesn't put sessionid to url
-			// when the URL starts with '?'. So we prepend the URL with ./ and remove it
-			// afterwards (unless some container prepends session id before './' or mangles
-			// the URL otherwise
 
-			String encoded = httpServletResponse.encodeURL("./" + url.toString());
-			if (encoded.startsWith("./"))
-			{
-				return encoded.substring(2);
-			}
-			else
-			{
-				return encoded;
-			}
+		/*
+		  WICKET-4645 - always pass absolute url to the web container for encoding
+		  because when REDIRECT_TO_BUFFER is in use Wicket may render PageB when
+		  PageA is actually the requested one and the web container cannot resolve
+		  the base url properly
+		 */
+		UrlRenderer urlRenderer = RequestCycle.get().getUrlRenderer();
+		Url relativeUrl = Url.parse(url);
+		String fullUrl = urlRenderer.renderFullUrl(relativeUrl);
+		String encodedFullUrl = httpServletResponse.encodeURL(fullUrl);
+		final String encodedRelativeUrl;
+		if (fullUrl.equals(encodedFullUrl))
+		{
+			// no encoding happened so just reuse the relative url
+			encodedRelativeUrl = url.toString();
 		}
 		else
 		{
-			return httpServletResponse.encodeURL(url.toString());
+			// get the relative url with the jsessionid encoded in it
+			Url _encoded = Url.parse(encodedFullUrl);
+			encodedRelativeUrl = urlRenderer.renderRelativeUrl(_encoded);
 		}
+		return encodedRelativeUrl;
 	}
 
 	@Override
 	public String encodeRedirectURL(CharSequence url)
 	{
-		return httpServletResponse.encodeRedirectURL(url.toString());
+		Args.notNull(url, "url");
+
+		/*
+		  WICKET-4854 - always pass absolute url to the web container for encoding
+		  because when REDIRECT_TO_BUFFER is in use Wicket may render PageB when
+		  PageA is actually the requested one and the web container cannot resolve
+		  the base url properly
+		 */
+		UrlRenderer urlRenderer = new UrlRenderer(webRequest);
+		Url relativeUrl = Url.parse(url);
+		String fullUrl = urlRenderer.renderFullUrl(relativeUrl);
+		String encodedFullUrl = httpServletResponse.encodeRedirectURL(fullUrl);
+		final String encodedRelativeUrl;
+		if (fullUrl.equals(encodedFullUrl))
+		{
+			// no encoding happened so just reuse the relative url
+			encodedRelativeUrl = url.toString();
+		}
+		else
+		{
+			// get the relative url with the jsessionid encoded in it
+			Url _encoded = Url.parse(encodedFullUrl);
+			encodedRelativeUrl = urlRenderer.renderRelativeUrl(_encoded);
+		}
+		return encodedRelativeUrl;
 	}
 
 	@Override
@@ -210,7 +241,7 @@ public class ServletWebResponse extends WebResponse
 
 			if (webRequest.isAjax())
 			{
-				httpServletResponse.addHeader("Ajax-Location", url);
+				httpServletResponse.setHeader("Ajax-Location", url);
 
 				/*
 				 * usually the Ajax-Location header is enough and we do not need to the redirect url
@@ -255,7 +286,11 @@ public class ServletWebResponse extends WebResponse
 	{
 		try
 		{
-			httpServletResponse.flushBuffer();
+			HttpServletRequest httpServletRequest = webRequest.getContainerRequest();
+			if (httpServletRequest.isAsyncStarted() == false)
+			{
+				httpServletResponse.flushBuffer();
+			}
 		}
 		catch (IOException e)
 		{

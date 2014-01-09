@@ -65,9 +65,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 */
 	public Button(String id)
 	{
-		super(id);
-		setVersioned(true);
-		setOutputMarkupId(true);
+		this(id, null);
 	}
 
 	/**
@@ -86,8 +84,12 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	public Button(final String id, final IModel<String> model)
 	{
 		super(id, model);
+
 		setVersioned(true);
 		setOutputMarkupId(true);
+
+		// don't double encode the value. it is encoded by ComponentTag.writeOutput()
+		setEscapeModelStrings(false);
 	}
 
 	/**
@@ -191,17 +193,10 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 		// Default handling for component tag
 		super.onComponentTag(tag);
 
-		try
+		String value = getDefaultModelObjectAsString();
+		if (value != null && !"".equals(value))
 		{
-			String value = getDefaultModelObjectAsString();
-			if (value != null && !"".equals(value))
-			{
-				tag.put("value", value);
-			}
-		}
-		catch (Exception e)
-		{
-			// ignore.
+			tag.put("value", value);
 		}
 
 		// If the subclass specified javascript, use that

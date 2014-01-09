@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -186,6 +186,7 @@ public class VisitorTest extends WicketTestCase
 	 * 
 	 * Visit parents with arbitrary type
 	 */
+	@Test
 	public void testVisitParents()
 	{
 		TestContainer testContainer = new TestContainer();

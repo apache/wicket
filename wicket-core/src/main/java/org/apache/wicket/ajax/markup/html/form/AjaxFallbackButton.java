@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -89,12 +87,6 @@ public abstract class AjaxFallbackButton extends Button
 			}
 
 			@Override
-			protected AjaxChannel getChannel()
-			{
-				return AjaxFallbackButton.this.getChannel();
-			}
-
-			@Override
 			public boolean getDefaultProcessing()
 			{
 				return AjaxFallbackButton.this.getDefaultFormProcessing();
@@ -104,6 +96,7 @@ public abstract class AjaxFallbackButton extends Button
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+				attributes.setPreventDefault(true);
 				AjaxFallbackButton.this.updateAjaxAttributes(attributes);
 			}
 
@@ -182,17 +175,6 @@ public abstract class AjaxFallbackButton extends Button
 	 */
 	protected void onAfterSubmit(final AjaxRequestTarget target, final Form<?> form)
 	{
-	}
-
-	/**
-	 * @return the channel that manages how Ajax calls are executed
-	 * @see AbstractDefaultAjaxBehavior#getChannel()
-	 * @deprecated Use #updateAjaxAttributes() instead
-	 */
-	@Deprecated
-	protected AjaxChannel getChannel()
-	{
-		return null;
 	}
 
 	/**

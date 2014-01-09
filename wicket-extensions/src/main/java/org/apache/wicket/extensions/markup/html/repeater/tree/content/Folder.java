@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.tree.content;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree;
 import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree.State;
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
@@ -35,6 +36,14 @@ public class Folder<T> extends StyledLinkLabel<T>
 {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final String OTHER_CSS_CLASS_KEY = CssUtils.key(Folder.class, "other");
+
+	public static final String CLOSED_CSS_CLASS_KEY = CssUtils.key(Folder.class, "closed");
+
+	public static final String OPEN_CSS_CLASS_KEY = CssUtils.key(Folder.class, "open");
+
+	public static final String SELECTED_CSS_CLASS_KEY = CssUtils.key(Folder.class, "selected");
 
 	private AbstractTree<T> tree;
 
@@ -128,30 +137,52 @@ public class Folder<T> extends StyledLinkLabel<T>
 	}
 
 	/**
-	 * Get a style class for anything other than closed or open folders.
+	 * Get a style class for nodes without children.
+	 * 
+	 * @param t
+	 *            node
+	 * @return CSS style class
+	 * 
+	 * @see ITreeProvider#hasChildren(Object)
 	 */
 	protected String getOtherStyleClass(T t)
 	{
-		return "tree-folder-other";
+		return getString(OTHER_CSS_CLASS_KEY);
 	}
 
+	/**
+	 * Get a style class for anything other than closed or open folders.
+	 * 
+	 * @return CSS style class
+	 * 
+	 * @see State#CLOSED
+	 */
 	protected String getClosedStyleClass()
 	{
-		return "tree-folder-closed";
+		return getString(CLOSED_CSS_CLASS_KEY);
 	}
 
+	/**
+	 * Get a style class for anything other than closed or open folders.
+	 * 
+	 * @return CSS style class
+	 * 
+	 * @see State#OPEN
+	 */
 	protected String getOpenStyleClass()
 	{
-		return "tree-folder-open";
+		return getString(OPEN_CSS_CLASS_KEY);
 	}
 
 	/**
 	 * Get a style class to render for a selected folder.
 	 * 
+	 * @return CSS style class
+	 * 
 	 * @see #isSelected()
 	 */
 	protected String getSelectedStyleClass()
 	{
-		return "selected";
+		return getString(SELECTED_CSS_CLASS_KEY);
 	}
 }

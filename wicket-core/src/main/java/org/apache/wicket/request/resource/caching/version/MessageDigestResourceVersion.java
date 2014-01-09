@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
@@ -52,6 +53,11 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	private static final String DEFAULT_ALGORITHM = "MD5";
 	private static final int DEFAULT_BUFFER_BYTES = 8192; // needed for javadoc {@value ..}
 	private static final Bytes DEFAULT_BUFFER_SIZE = Bytes.bytes(DEFAULT_BUFFER_BYTES);
+
+	/**
+	 * A valid pattern is a sequence of digits and upper cased English letters A-F
+	 */
+	private static final Pattern DIGEST_PATTERN = Pattern.compile("[0-9A-F]+");
 
 	/** 
 	 * message digest algorithm for computing hashes 
@@ -151,6 +157,12 @@ public class MessageDigestResourceVersion implements IResourceVersion
 			log.warn("unable to locate resource for " + resource, e);
 			return null;
 		}
+	}
+
+	@Override
+	public Pattern getVersionPattern()
+	{
+		return DIGEST_PATTERN;
 	}
 
 	/**

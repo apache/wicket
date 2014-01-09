@@ -23,7 +23,7 @@ import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationSt
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
+import org.apache.wicket.settings.RequestCycleSettings;
 
 
 /**
@@ -67,7 +67,7 @@ public final class LibraryApplication extends WicketExampleApplication
 		super.init();
 
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
+		getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER);
 
 		// Install a simple page authorization strategy, that checks all pages
 		// of type AuthenticatedWebPage.

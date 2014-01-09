@@ -22,18 +22,22 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.MissingResourceException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.PackageResource;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.resource.ITextResourceCompressor;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -43,8 +47,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A {@linkplain IResource resource} that concatenates several resources into one download. This
- * resource can only bundle {@link PackageResource}s. The content type of the resource will be that
- * of the first resource that specifies its content type.
+ * resource can only bundle {@link IStaticCacheableResource}s. The content type of the resource will
+ * be that of the first resource that specifies its content type.
  * 
  * @author papegaaij
  */
@@ -53,8 +57,15 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	private static final Logger log = LoggerFactory.getLogger(ConcatBundleResource.class);
 
 	private static final long serialVersionUID = 1L;
-	private List<? extends IReferenceHeaderItem> providedResources;
+
+	private final List<? extends IReferenceHeaderItem> providedResources;
+
 	private boolean cachingEnabled;
+
+	/**
+	 * An optional compressor that will be used to compress the bundle resources
+	 */
+	private ITextResourceCompressor compressor;
 
 	/**
 	 * Construct.
@@ -64,7 +75,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	public ConcatBundleResource(List<? extends IReferenceHeaderItem> providedResources)
 	{
 		this.providedResources = Args.notNull(providedResources, "providedResources");
-		this.cachingEnabled = true;
+		cachingEnabled = true;
 	}
 
 	@Override
@@ -122,19 +133,23 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 
 	private List<IResourceStream> collectResourceStreams()
 	{
-		List<IResourceStream> ret = new ArrayList<IResourceStream>(providedResources.size());
+		List<IResourceStream> ret = new ArrayList<>(providedResources.size());
 		for (IReferenceHeaderItem curItem : providedResources)
 		{
-			IResourceStream stream = ((PackageResource)curItem.getReference().getResource()).getResourceStream();
+			IResourceStream stream = ((IStaticCacheableResource)curItem.getReference()
+				.getResource()).getCacheableResourceStream();
 			if (stream == null)
+			{
+				reportError(curItem.getReference(), "Cannot get resource stream for ");
 				return null;
+			}
 
 			ret.add(stream);
 		}
 		return ret;
 	}
 
-	private String findContentType(List<IResourceStream> resources)
+	protected String findContentType(List<IResourceStream> resources)
 	{
 		for (IResourceStream curStream : resources)
 			if (curStream.getContentType() != null)
@@ -142,7 +157,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		return null;
 	}
 
-	private Time findLastModified(List<IResourceStream> resources)
+	protected Time findLastModified(List<IResourceStream> resources)
 	{
 		Time ret = null;
 		for (IResourceStream curStream : resources)
@@ -154,21 +169,32 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		return ret;
 	}
 
-	private byte[] readAllResources(List<IResourceStream> resources) throws IOException,
+	protected byte[] readAllResources(List<IResourceStream> resources) throws IOException,
 		ResourceStreamNotFoundException
 	{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		for (IResourceStream curStream : resources)
 			IOUtils.copy(curStream.getInputStream(), output);
-		return output.toByteArray();
+
+		byte[] bytes = output.toByteArray();
+
+		if (getCompressor() != null)
+		{
+			String nonCompressed = new String(bytes, "UTF-8");
+			bytes = getCompressor().compress(nonCompressed).getBytes("UTF-8");
+		}
+
+		return bytes;
 	}
 
 	private ResourceResponse sendResourceError(ResourceResponse resourceResponse, int errorCode,
 		String errorMessage)
 	{
-		String msg = String.format("bundled resource: %s (status=%d)", errorMessage, errorCode);
-
-		log.warn(msg);
+		if (log.isWarnEnabled())
+		{
+			String msg = String.format("Bundled resource: %s (status=%d)", errorMessage, errorCode);
+			log.warn(msg);
+		}
 
 		resourceResponse.setError(errorCode, errorMessage);
 		return resourceResponse;
@@ -182,28 +208,63 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 
 	public void setCachingEnabled(final boolean enabled)
 	{
-		this.cachingEnabled = enabled;
+		cachingEnabled = enabled;
 	}
 
 	@Override
 	public Serializable getCacheKey()
 	{
-		ArrayList<Serializable> key = new ArrayList<Serializable>(providedResources.size());
+		ArrayList<Serializable> key = new ArrayList<>(providedResources.size());
 		for (IReferenceHeaderItem curItem : providedResources)
 		{
-			Serializable curKey = ((PackageResource)curItem.getReference().getResource()).getCacheKey();
+			Serializable curKey = ((IStaticCacheableResource)curItem.getReference().getResource()).getCacheKey();
 			if (curKey == null)
+			{
+				reportError(curItem.getReference(), "Unable to get cache key for ");
 				return null;
+			}
 			key.add(curKey);
 		}
 		return key;
+	}
+
+	/**
+	 * If a bundle resource is missing then throws a {@link MissingResourceException} if
+	 * {@link org.apache.wicket.settings.IResourceSettings#getThrowExceptionOnMissingResource()}
+	 * says so, or logs a warning message if the logging level allows
+	 * @param reference
+	 *              The resource reference to the missing resource
+	 * @param prefix
+	 *              The error message prefix
+	 */
+	private void reportError(ResourceReference reference, String prefix)
+	{
+		String scope = Classes.name(reference.getScope());
+		String name = reference.getName();
+		StringBuilder message = new StringBuilder(prefix);
+		message.append(scope).append('/').append(name);
+
+		if (getThrowExceptionOnMissingResource())
+		{
+			throw new MissingResourceException(message.toString(), scope, name);
+		}
+		else if (log.isWarnEnabled())
+		{
+			log.warn(message.toString());
+		}
 	}
 
 	@Override
 	public IResourceStream getCacheableResourceStream()
 	{
 		List<IResourceStream> resources = collectResourceStreams();
-		byte[] bytes = null;
+
+		if (resources == null)
+		{
+			return null;
+		}
+
+		byte[] bytes;
 		try
 		{
 			bytes = readAllResources(resources);
@@ -256,5 +317,23 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 			}
 		};
 		return ret;
+	}
+
+	public void setCompressor(ITextResourceCompressor compressor)
+	{
+		this.compressor = compressor;
+	}
+
+	public ITextResourceCompressor getCompressor()
+	{
+		return compressor;
+	}
+
+	/**
+	 * @return the result of {@link org.apache.wicket.settings.IResourceSettings#getThrowExceptionOnMissingResource()}
+	 */
+	protected boolean getThrowExceptionOnMissingResource()
+	{
+		return Application.get().getResourceSettings().getThrowExceptionOnMissingResource();
 	}
 }

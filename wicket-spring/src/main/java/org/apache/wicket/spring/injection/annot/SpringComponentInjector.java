@@ -69,17 +69,14 @@ public class SpringComponentInjector extends Injector
 	/**
 	 * Constructor used when spring application context is declared in the spring standard way and
 	 * can be located through
-	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
+	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}.
 	 * 
 	 * @param webapp
 	 *            wicket web application
 	 */
 	public SpringComponentInjector(final WebApplication webapp)
 	{
-		// locate application context through spring's default location
-		// mechanism and pass it on to the proper constructor
-		this(webapp,
-			WebApplicationContextUtils.getRequiredWebApplicationContext(webapp.getServletContext()));
+		this(webapp, getDefaultContext(webapp));
 	}
 
 	/**
@@ -163,4 +160,38 @@ public class SpringComponentInjector extends Injector
 
 	}
 
+	/**
+	 * Try to use an already pre-configured application context or locate it through Spring's default
+	 * location mechanism.
+	 * 
+	 * @param webapp
+	 * @return the application context to use for injection
+	 */
+	private static ApplicationContext getDefaultContext(final WebApplication webapp)
+	{
+		ApplicationContext context = webapp.getMetaData(CONTEXT_KEY);
+		if (context == null)
+		{
+			context = WebApplicationContextUtils.getRequiredWebApplicationContext(webapp.getServletContext());
+		}
+		return context;
+	}
+
+	/**
+	 * Set the default context for the given webapp.
+	 * 
+	 * @param webapp
+	 *            web application
+	 * @param context
+	 *            context to use as default if non is explicitely specified for the injector
+	 */
+	public static void setDefaultContext(final WebApplication webapp, ApplicationContext context)
+	{
+		Args.notNull(context, "context");
+
+		if (webapp.getMetaData(CONTEXT_KEY) == null)
+		{
+			webapp.setMetaData(CONTEXT_KEY, context);
+		}
+	}
 }

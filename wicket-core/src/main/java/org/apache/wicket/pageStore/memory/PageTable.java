@@ -29,7 +29,7 @@ import org.apache.wicket.util.io.IClusterable;
  * <p>
  * Additionally it has an index of the least recently used pages
  */
-class PageTable implements IClusterable
+public class PageTable implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ class PageTable implements IClusterable
 		index = new ConcurrentLinkedQueue<Integer>();
 	}
 
-	void storePage(Integer pageId, byte[] pageAsBytes)
+	public void storePage(Integer pageId, byte[] pageAsBytes)
 	{
 		synchronized (index)
 		{
@@ -68,7 +68,7 @@ class PageTable implements IClusterable
 		}
 	}
 
-	byte[] getPage(final Integer pageId)
+	public byte[] getPage(final Integer pageId)
 	{
 		synchronized (index)
 		{
@@ -102,7 +102,7 @@ class PageTable implements IClusterable
 		return pages.size();
 	}
 
-	Integer getOldest()
+	public Integer getOldest()
 	{
 		return index.peek();
 	}

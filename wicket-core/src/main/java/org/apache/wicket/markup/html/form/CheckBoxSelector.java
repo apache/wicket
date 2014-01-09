@@ -19,10 +19,6 @@ package org.apache.wicket.markup.html.form;
 import java.util.Arrays;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 
 /**
@@ -36,9 +32,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 public class CheckBoxSelector extends AbstractCheckSelector
 {
 	private static final long serialVersionUID = 1L;
-
-	private final static ResourceReference JS = new JavaScriptResourceReference(
-		CheckBoxSelector.class, "CheckBoxSelector.js");
 
 	/**
 	 * Javascript array literal containing the markup IDs of the checkboxes we want to
@@ -56,24 +49,16 @@ public class CheckBoxSelector extends AbstractCheckSelector
 	public CheckBoxSelector(String id, CheckBox... boxes)
 	{
 		super(id);
-		setOutputMarkupId(true);
+
 		checkBoxIdArrayLiteral = buildMarkupIdJSArrayLiteral(Arrays.asList(boxes));
 	}
 
 	@Override
 	protected CharSequence getFindCheckboxesFunction()
 	{
-		return "Wicket.CheckboxSelector.Checkboxes.findCheckboxesFunction(" +
-			checkBoxIdArrayLiteral + ")";
+		return String.format("Wicket.CheckboxSelector.getCheckboxesFunction(%s)",
+			checkBoxIdArrayLiteral);
 	}
-
-	@Override
-	public void renderHead(IHeaderResponse response)
-	{
-		super.renderHead(response);
-		response.render(JavaScriptHeaderItem.forReference(JS));
-	}
-
 
 	/**
 	 * Builds a JavaScript array literal containing the markup IDs of the given components. Example:
@@ -86,17 +71,17 @@ public class CheckBoxSelector extends AbstractCheckSelector
 	private String buildMarkupIdJSArrayLiteral(final Iterable<? extends Component> components)
 	{
 		StringBuilder buf = new StringBuilder();
-		buf.append("[");
+		buf.append('[');
 		if (components.iterator().hasNext())
 		{
 			for (Component component : components)
 			{
 				component.setOutputMarkupId(true);
-				buf.append("'").append(component.getMarkupId()).append("', ");
+				buf.append('\'').append(component.getMarkupId()).append("', ");
 			}
 			buf.delete(buf.length() - 2, buf.length());
 		}
-		buf.append("]");
+		buf.append(']');
 		return buf.toString();
 	}
 

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -54,25 +52,11 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	 * @param id
 	 * @param sortProperty
 	 * @param stateLocator
-	 * @param cssProvider
-	 */
-	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final ICssProvider<S> cssProvider)
-	{
-		this(id, sortProperty, stateLocator, cssProvider, null);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param sortProperty
-	 * @param stateLocator
 	 */
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, sortProperty, stateLocator, new DefaultCssProvider<S>(), null);
+		this(id, sortProperty, stateLocator, null);
 	}
 
 	/**
@@ -86,23 +70,7 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
 	{
-		this(id, sortProperty, stateLocator, new DefaultCssProvider<S>(), ajaxCallListener);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param sortProperty
-	 * @param stateLocator
-	 * @param cssProvider
-	 * @param ajaxCallListener
-	 */
-	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final ICssProvider<S> cssProvider,
-		final IAjaxCallListener ajaxCallListener)
-	{
-		super(id, sortProperty, stateLocator, cssProvider);
+		super(id, sortProperty, stateLocator);
 
 		this.ajaxCallListener = ajaxCallListener;
 	}
@@ -137,27 +105,14 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+				attributes.setPreventDefault(true);
 				if (ajaxCallListener != null) {
 					attributes.getAjaxCallListeners().add(ajaxCallListener);
 				}
 			}
 
-			@Override
-			protected AjaxChannel getChannel()
-			{
-				return AjaxFallbackOrderByLink.this.getChannel();
-			}
 		};
 
-	}
-
-	/**
-	 * @return the channel that manages how Ajax calls are executed
-	 * @see AbstractDefaultAjaxBehavior#getChannel()
-	 */
-	protected AjaxChannel getChannel()
-	{
-		return null;
 	}
 
 	/**

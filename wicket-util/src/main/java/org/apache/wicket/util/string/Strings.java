@@ -22,6 +22,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,6 +63,20 @@ public final class Strings
 	private static final Pattern HTML_NUMBER_REGEX = Pattern.compile("&#\\d+;");
 	
 	private static final String[] NO_STRINGS = new String[0];
+
+	/**
+	 * The name of the parameter used to keep the session id.
+	 * The Servlet specification mandates <em>jsessionid</em> but the web containers
+	 * provide ways to set a custom one, e.g. <em>sid</em>.
+	 * Since Wicket doesn't have access to the web container internals the name should be set explicitly.
+	 */
+	public static final String SESSION_ID_PARAM_NAME = System.getProperty("wicket.jsessionid.name", "jsessionid");
+
+	/**
+	 * Constructs something like <em>;jsessionid=</em>. This is what {@linkplain Strings#stripJSessionId(String)}
+	 * actually uses.
+	 */
+	private static final String SESSION_ID_PARAM = ';' + SESSION_ID_PARAM_NAME + '=';
 
 	static
 	{
@@ -112,8 +127,8 @@ public final class Strings
 	 * Gets everything after the first path component of a path using a given separator. If the
 	 * separator cannot be found, an empty String is returned.
 	 * <p>
-	 * For example, afterFirstPathComponent("foo.bar.baz", '.') would return "bar.baz" and
-	 * afterFirstPathComponent("foo", '.') would return "".
+	 * For example, afterFirstPathComponent("foo:bar:baz", ':') would return "bar:baz" and
+	 * afterFirstPathComponent("foo", ':') would return "".
 	 * 
 	 * @param path
 	 *            The path to parse
@@ -834,7 +849,7 @@ public final class Strings
 		{
 			return NO_STRINGS;
 		}
-		final List<String> strings = new ArrayList<String>();
+		final List<String> strings = new ArrayList<>();
 		int pos = 0;
 		while (true)
 		{
@@ -906,19 +921,19 @@ public final class Strings
 	 */
 	public static String stripJSessionId(final String url)
 	{
-		if (url == null)
+		if (Strings.isEmpty(url))
 		{
-			return null;
+			return url;
 		}
 
 		// http://.../abc;jsessionid=...?param=...
-		int ixSemiColon = url.indexOf(";");
+		int ixSemiColon = url.toLowerCase(Locale.ENGLISH).indexOf(SESSION_ID_PARAM);
 		if (ixSemiColon == -1)
 		{
 			return url;
 		}
 
-		int ixQuestionMark = url.indexOf("?");
+		int ixQuestionMark = url.indexOf('?');
 		if (ixQuestionMark == -1)
 		{
 			// no query paramaters; cut off at ";"
@@ -1166,7 +1181,7 @@ public final class Strings
 	{
 		if (throwable != null)
 		{
-			List<Throwable> al = new ArrayList<Throwable>();
+			List<Throwable> al = new ArrayList<>();
 			Throwable cause = throwable;
 			al.add(cause);
 			while ((cause.getCause() != null) && (cause != cause.getCause()))
@@ -1194,7 +1209,7 @@ public final class Strings
 				for (int i = 0; i < length; i++)
 				{
 					outputThrowable(al.get(i), sb, true);
-					sb.append("\n");
+					sb.append('\n');
 				}
 			}
 			return sb.toString();

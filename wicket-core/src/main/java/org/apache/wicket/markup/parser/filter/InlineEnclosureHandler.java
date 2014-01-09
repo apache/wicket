@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
@@ -58,16 +59,28 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 	public final static String INLINE_ENCLOSURE_ID_PREFIX = "InlineEnclosure-";
 
 	/** Attribute to identify inline enclosures */
-	public final static String INLINE_ENCLOSURE_ATTRIBUTE_NAME = "wicket:enclosure";
+	public final static String INLINE_ENCLOSURE_ATTRIBUTE_NAME = "enclosure";
 
 	/** enclosures inside enclosures */
 	private Stack<ComponentTag> enclosures;
+
+	/**
+	 * InlineEnclosures are not removed after render as other auto-components,
+	 * thus they have to have a stable id.
+	 */
+	private int counter;
 
 	/**
 	 * Construct.
 	 */
 	public InlineEnclosureHandler()
 	{
+		this(null);
+	}
+
+	public InlineEnclosureHandler(MarkupResourceStream resourceStream)
+	{
+		super(resourceStream);
 	}
 
 	@Override
@@ -80,7 +93,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		}
 
 		// Has wicket:enclosure attribute?
-		String enclosureAttr = getInlineEnclosureAttribute(tag);
+		String enclosureAttr = getAttribute(tag, null);
 		if (enclosureAttr != null)
 		{
 			if (tag.isOpen())
@@ -100,7 +113,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 				{
 					if (Strings.isEmpty(htmlId))
 					{
-						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX;
+						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX + (counter++);
 						tag.setId(id);
 					}
 					else
@@ -137,10 +150,10 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 				for (int i = enclosures.size() - 1; i >= 0; i--)
 				{
 					ComponentTag lastEnclosure = enclosures.get(i);
-					String attr = getInlineEnclosureAttribute(lastEnclosure);
+					String attr = getAttribute(lastEnclosure, null);
 					if (Strings.isEmpty(attr) == true)
 					{
-						lastEnclosure.getAttributes().put(INLINE_ENCLOSURE_ATTRIBUTE_NAME,
+						lastEnclosure.getAttributes().put(getInlineEnclosureAttributeName(null),
 							tag.getId());
 						lastEnclosure.setModified(true);
 					}
@@ -149,7 +162,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 			else if (tag.isClose() && tag.closes(enclosures.peek()))
 			{
 				ComponentTag lastEnclosure = enclosures.pop();
-				String attr = getInlineEnclosureAttribute(lastEnclosure);
+				String attr = getAttribute(lastEnclosure, null);
 				if (Strings.isEmpty(attr) == true)
 				{
 					throw new ParseException("Did not find any child for InlineEnclosure. Tag:" +
@@ -163,25 +176,23 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 
 	/**
 	 * @param tag
-	 * @return The wicket:enclosure attribute or null if not found
+	 *      The ComponentTag of the markup element with wicket:enclosure attribute
+	 * @return The value of wicket:enclosure attribute or null if not found
 	 */
-	public final static String getInlineEnclosureAttribute(final ComponentTag tag)
+	private String getAttribute(final ComponentTag tag, MarkupStream markupStream)
 	{
-		return tag.getAttributes().getString(INLINE_ENCLOSURE_ATTRIBUTE_NAME);
+		return tag.getAttributes().getString(getInlineEnclosureAttributeName(markupStream));
 	}
 
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		String inlineEnclosureChildId = getInlineEnclosureAttribute(tag);
+		String inlineEnclosureChildId = getAttribute(tag, markupStream);
 		if (Strings.isEmpty(inlineEnclosureChildId) == false)
 		{
 			String id = tag.getId();
-			if (id.startsWith(getWicketNamespace()))
-			{
-				id = id + container.getPage().getAutoIndex();
-			}
+
 			// Yes, we handled the tag
 			return new InlineEnclosure(id, inlineEnclosureChildId);
 		}
@@ -189,4 +200,9 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		// We were not able to handle the tag
 		return null;
 	}
+
+	private String getInlineEnclosureAttributeName(MarkupStream markupStream) {
+		return getWicketNamespace(markupStream) + ':' + INLINE_ENCLOSURE_ATTRIBUTE_NAME;
+	}
+
 }

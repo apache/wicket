@@ -27,6 +27,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 import org.junit.Test;
 
 /**
@@ -40,11 +43,10 @@ public class PaletteTest extends WicketTestCase
 	@Test
 	public void standard()
 	{
-		IModel<List<String>> selected = new ListModel<String>(new ArrayList<String>(Arrays.asList(
-			"A", "D")));
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<>(Arrays.asList("A", "D")));
 
-		IModel<List<String>> all = new ListModel<String>(new ArrayList<String>(Arrays.asList("A",
-			"B", "C", "D")));
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(
+			Arrays.asList("A", "B", "C", "D")));
 
 		PaletteTestPage testPage = new PaletteTestPage(selected, all);
 
@@ -67,11 +69,9 @@ public class PaletteTest extends WicketTestCase
 	@Test
 	public void choicesModelMissingSelected()
 	{
-		IModel<List<String>> selected = new ListModel<String>(new ArrayList<String>(
-			Arrays.asList("D")));
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<>(Arrays.asList("D")));
 
-		IModel<List<String>> all = new ListModel<String>(new ArrayList<String>(Arrays.asList("A",
-			"B", "C")));
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(Arrays.asList("A", "B", "C")));
 
 		PaletteTestPage testPage = new PaletteTestPage(selected, all);
 
@@ -91,9 +91,9 @@ public class PaletteTest extends WicketTestCase
 	@Test
 	public void choicesModelAccountingForSelected()
 	{
-		final List<String> list = new ArrayList<String>(Arrays.asList("D"));
+		final List<String> list = new ArrayList<>(Arrays.asList("D"));
 
-		IModel<List<String>> selected = new ListModel<String>(list);
+		IModel<List<String>> selected = new ListModel<>(list);
 
 		IModel<List<String>> all = new LoadableDetachableModel<List<String>>()
 		{
@@ -102,7 +102,7 @@ public class PaletteTest extends WicketTestCase
 			{
 				List<String> fromDB = Arrays.asList("A", "B", "C"); // normally coming from DB
 
-				List<String> result = new ArrayList<String>();
+				List<String> result = new ArrayList<>();
 				result.addAll(fromDB);
 
 				// include already selected
@@ -131,14 +131,73 @@ public class PaletteTest extends WicketTestCase
 	@Test
 	public void choicesModelSingleNotSelected()
 	{
-		IModel<List<String>> selected = new ListModel<String>(new ArrayList<String>());
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<String>());
 
-		IModel<List<String>> all = new ListModel<String>(new ArrayList<String>(Arrays.asList("A")));
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(Arrays.asList("A")));
 
 		PaletteTestPage testPage = new PaletteTestPage(selected, all);
 
 		tester.startPage(testPage);
 
 		tester.assertContains("<option value=\"A\">A</option>");
+	}
+
+	@Test
+	public void required()
+	{
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<String>());
+
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(Arrays.asList("A")));
+
+		PaletteTestPage testPage = new PaletteTestPage(selected, all);
+		testPage.palette.setRequired(true);
+
+		tester.startPage(testPage);
+
+		FormTester formTester = tester.newFormTester(testPage.form.getId());
+		formTester.submit();
+
+		assertTrue(testPage.form.hasError());
+	}
+
+	@Test
+	public void validationErrorRawInput()
+	{
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<String>());
+
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(Arrays.asList("A", "B")));
+
+		PaletteTestPage testPage = new PaletteTestPage(selected, all);
+		testPage.palette.add(new IValidator<Collection<String>>()
+		{
+			@Override
+			public void validate(IValidatable<Collection<String>> validatable)
+			{
+				if (validatable.getValue().contains("A"))
+				{
+					validatable.error(new ValidationError("A not allowed"));
+				}
+			}
+		});
+
+		tester.startPage(testPage);
+
+		FormTester formTester = tester.newFormTester(testPage.form.getId());
+		formTester.setValue("palette:recorder", "A");
+		formTester.submit();
+
+		assertTrue(testPage.form.hasError());
+
+		// with RAW_INPUT
+		tester.assertContains("<option value=\"B\">B</option>\\s*</select>");
+		tester.assertContains("<option value=\"A\">A</option>\\s*</select>");
+
+		testPage.form.clearInput();
+
+		tester.startPage(testPage);
+
+		// without RAW_INPUT
+		tester
+			.assertContains("<option value=\"A\">A</option>\\s*<option value=\"B\">B</option>\\s*</select>");
 	}
 }

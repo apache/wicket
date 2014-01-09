@@ -3,12 +3,13 @@
 
 <wicket:panel>
 	<div wicket:id="test">[test fragment goes here]</div>
-</wicket:panel>
+	
+	<wicket:fragment wicket:id="testFrag">
+		<wicket:message key="message.test">[test message]</wicket:message>
+		<span wicket:id="label">[test label]</span>
+	</wicket:fragment>
 
-<wicket:fragment wicket:id="testFrag">
-	<wicket:message key="message.test">[test message]</wicket:message>
-	<span wicket:id="label">[test label]</span>
-</wicket:fragment>
+</wicket:panel>
 
 </body>
 </html>

@@ -33,7 +33,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
 			"function () {\n" //
-				+ "var attrs = {\"u\":\"./wicket/page?0-1.IBehaviorListener.0-\"};\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = {};\n" //
 				+ "attrs.ep = params;\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
@@ -47,7 +47,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
 			"function (context) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/page?0-1.IBehaviorListener.0-\"};\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = {};\n" //
 				+ "attrs.ep = params;\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
@@ -61,7 +61,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
 			"function (explicit) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/page?0-1.IBehaviorListener.0-\"};\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = {'explicit': explicit};\n" //
 				+ "attrs.ep = params;\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
@@ -75,7 +75,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
 			"function () {\n" //
-				+ "var attrs = {\"u\":\"./wicket/page?0-1.IBehaviorListener.0-\"};\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = {'resolved': window.location.href};\n" //
 				+ "attrs.ep = params;\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
@@ -92,7 +92,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		assertEquals(
 			//
 			"function (converted) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/page?0-1.IBehaviorListener.0-\"};\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = {'converted': converted.substring(0, 3)};\n" //
 				+ "attrs.ep = params;\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
@@ -109,7 +109,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		assertEquals(
 			//
 			"function (context,explicit,converted) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/page?0-1.IBehaviorListener.0-\"};\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = {'explicit': explicit,'resolved': window.location.href,'converted': converted.substring(0, 3)};\n" //
 				+ "attrs.ep = params;\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
@@ -128,7 +128,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		assertEquals(
 			//
 			"function (event,ui) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/page?0-1.IBehaviorListener.0-\"};\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = {'sortIndex': $(this).find(':data(sortable-item)').index(ui.item),'sortItemId': $(ui.item).attr('id'),'sortSenderId': $(ui.sender).attr('id')};\n" //
 				+ "attrs.ep = params;\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //

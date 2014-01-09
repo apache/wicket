@@ -104,8 +104,8 @@ public class Multiply extends FormComponentPanel<Integer>
 
 	private void init()
 	{
-		add(left = new TextField<Integer>("left", new PropertyModel<Integer>(this, "lhs")));
-		add(right = new TextField<Integer>("right", new PropertyModel<Integer>(this, "rhs")));
+		add(left = new TextField<>("left", new PropertyModel<Integer>(this, "lhs")));
+		add(right = new TextField<>("right", new PropertyModel<Integer>(this, "rhs")));
 		left.setRequired(true);
 		right.setRequired(true);
 	}

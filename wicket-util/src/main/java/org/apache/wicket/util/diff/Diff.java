@@ -303,7 +303,7 @@ public class Diff extends ToString
 	 */
 	public static Object[] randomEdit(final Object[] text, final long seed)
 	{
-		List<Object> result = new ArrayList<Object>(Arrays.asList(text));
+		List<Object> result = new ArrayList<>(Arrays.asList(text));
 		Random r = new Random(seed);
 		int nops = r.nextInt(10);
 		for (int i = 0; i < nops; i++)
@@ -349,7 +349,7 @@ public class Diff extends ToString
 	 */
 	public static Object[] shuffle(final Object[] text, final long seed)
 	{
-		List<Object> result = new ArrayList<Object>(Arrays.asList(text));
+		List<Object> result = new ArrayList<>(Arrays.asList(text));
 		Collections.shuffle(result);
 		return result.toArray();
 	}

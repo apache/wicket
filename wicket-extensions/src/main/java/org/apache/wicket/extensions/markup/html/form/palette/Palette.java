@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
@@ -31,15 +32,15 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.JQueryPluginResourceReference;
 
 
 /**
@@ -49,24 +50,23 @@ import org.apache.wicket.request.resource.ResourceReference;
  * When creating a Palette object make sure your IChoiceRenderer returns a specific ID, not the
  * index.
  * <p>
- * <strong>Ajaxifying the palette</strong>: The palette itself cannot be ajaxified because it is a
- * panel and therefore does not receive any javascript events. Instead ajax behaviors can be
- * attached to the recorder component which supports the javascript <code>onchange</code> event. The
- * behavior should be attached by overriding {@link #newRecorderComponent()}
- * 
- * Example:
+ * <strong>Ajaxifying the palette</strong>: If you want to update a Palette with an
+ * {@link AjaxFormComponentUpdatingBehavior}, you have to attach it to the contained
+ * {@link Recorder} by overriding {@link #newRecorderComponent()} and calling
+ * {@link #processInput()}:
  * 
  * <pre>
- *  Form form=new Form(...);
  *  Palette palette=new Palette(...) {
  *    protected Recorder newRecorderComponent()
  *    {
  *      Recorder recorder=super.newRecorderComponent();     
- *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {
+ *        processInput() // let palette process input too
+ *        ...
+ *      });
  *      return recorder;
  *    }
  *  }
- * 
  * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -74,7 +74,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  *            Type of model object
  * 
  */
-public class Palette<T> extends Panel
+public class Palette<T> extends FormComponentPanel<Collection<T>>
 {
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
@@ -88,13 +88,16 @@ public class Palette<T> extends Panel
 	/**
 	 * choice render used to render the choices in both available and selected collections
 	 */
-	private final IChoiceRenderer<T> choiceRenderer;
+	private final ChoiceRenderer<T> choiceRenderer;
 
 	/** number of rows to show in the select boxes */
 	private final int rows;
 
 	/** if reordering of selected items is allowed in */
 	private final boolean allowOrder;
+
+	/** if add all and remove all are allowed */
+	private final boolean allowMoveAll;
 
 	/**
 	 * recorder component used to track user's selection. it is updated by javascript on changes.
@@ -114,7 +117,7 @@ public class Palette<T> extends Panel
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
+	private static final ResourceReference JAVASCRIPT = new JQueryPluginResourceReference(
 		Palette.class, "palette.js");
 
 	/** reference to the palette's css resource */
@@ -134,8 +137,8 @@ public class Palette<T> extends Panel
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(final String id, final IModel<? extends Collection<? extends T>> choicesModel,
-		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
+	public Palette(final String id, final IModel<? extends Collection<T>> choicesModel,
+		final ChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
 	}
@@ -155,16 +158,43 @@ public class Palette<T> extends Panel
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(final String id, final IModel<? extends List<? extends T>> model,
+	@SuppressWarnings("unchecked")
+	public Palette(final String id, final IModel<? extends Collection<T>> model,
 		final IModel<? extends Collection<? extends T>> choicesModel,
-		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
+		final ChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
-		super(id, model);
+		this(id, model, choicesModel, choiceRenderer, rows, allowOrder, false);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param id
+	 *            Component id
+	 * @param choicesModel
+	 *            Model representing collection of all available choices
+	 * @param choiceRenderer
+	 *            Render used to render choices. This must use unique IDs for the objects, not the
+	 *            index.
+	 * @param rows
+	 *            Number of choices to be visible on the screen with out scrolling
+	 * @param allowOrder
+	 *            Allow user to move selections up and down
+	 * @param allowMoveAll
+	 *            Allow user to add or remove all items at once
+	 */
+	public Palette(final String id, final IModel<? extends Collection<T>> model,
+	               final IModel<? extends Collection<? extends T>> choicesModel,
+	               final ChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder,
+	               boolean allowMoveAll)
+	{
+		super(id, (IModel<Collection<T>>)model);
 
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
 		this.rows = rows;
 		this.allowOrder = allowOrder;
+		this.allowMoveAll = allowMoveAll;
 	}
 
 	@Override
@@ -198,6 +228,8 @@ public class Palette<T> extends Panel
 		add(newRemoveComponent());
 		add(newUpComponent().setVisible(allowOrder));
 		add(newDownComponent().setVisible(allowOrder));
+		add(newAddAllComponent().setVisible(allowMoveAll));
+		add(newRemoveAllComponent().setVisible(allowMoveAll));
 
 		add(newAvailableHeader(AVAILABLE_HEADER_ID));
 		add(newSelectedHeader(SELECTED_HEADER_ID));
@@ -230,7 +262,7 @@ public class Palette<T> extends Panel
 	 */
 	public Iterator<T> getSelectedChoices()
 	{
-		return getRecorderComponent().getSelectedChoices();
+		return getRecorderComponent().getSelectedList().iterator();
 	}
 
 	/**
@@ -238,7 +270,7 @@ public class Palette<T> extends Panel
 	 */
 	public Iterator<T> getUnselectedChoices()
 	{
-		return getRecorderComponent().getUnselectedChoices();
+		return getRecorderComponent().getUnselectedList().iterator();
 	}
 
 
@@ -250,17 +282,7 @@ public class Palette<T> extends Panel
 	protected Recorder<T> newRecorderComponent()
 	{
 		// create component that will keep track of selections
-		return new Recorder<T>("recorder", this)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void updateModel()
-			{
-				super.updateModel();
-				Palette.this.updateModel();
-			}
-		};
+		return new Recorder<>("recorder", this);
 	}
 
 	/**
@@ -386,6 +408,51 @@ public class Palette<T> extends Panel
 			{
 				return Palette.this.getAdditionalAttributesForSelection(choice);
 			}
+
+			@Override
+			protected boolean localizeDisplayValues()
+			{
+				return Palette.this.localizeDisplayValues();
+			}
+		};
+	}
+
+	/**
+	 * factory method for the addAll component
+	 *
+	 * @return addAll component
+	 */
+	protected Component newAddAllComponent()
+	{
+		return new PaletteButton("addAllButton")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.getAttributes().put("onclick", Palette.this.getAddAllOnClickJS());
+			}
+		};
+	}
+
+
+	/**
+	 * factory method for the removeAll component
+	 *
+	 * @return removeAll component
+	 */
+	protected Component newRemoveAllComponent()
+	{
+		return new PaletteButton("removeAllButton")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.getAttributes().put("onclick", Palette.this.getRemoveAllOnClickJS());
+			}
 		};
 	}
 
@@ -415,7 +482,24 @@ public class Palette<T> extends Panel
 			{
 				return Palette.this.getAdditionalAttributesForChoices(choice);
 			}
+
+			@Override
+			protected boolean localizeDisplayValues()
+			{
+				return Palette.this.localizeDisplayValues();
+			}
 		};
+	}
+
+	/**
+	 * Override this method if you do <strong>not</strong> want to localize the display values of
+	 * the generated options. By default true is returned.
+	 * 
+	 * @return true If you want to localize the display values, default == true
+	 */
+	protected boolean localizeDisplayValues()
+	{
+		return true;
 	}
 
 	/**
@@ -470,7 +554,7 @@ public class Palette<T> extends Panel
 	/**
 	 * @return choice renderer
 	 */
-	public IChoiceRenderer<T> getChoiceRenderer()
+	public ChoiceRenderer<T> getChoiceRenderer()
 	{
 		return choiceRenderer;
 	}
@@ -484,6 +568,20 @@ public class Palette<T> extends Panel
 		return rows;
 	}
 
+	@Override
+	protected void convertInput()
+	{
+		List<T> selectedList = getRecorderComponent().getSelectedList();
+		if (selectedList.isEmpty())
+		{
+			setConvertedInput(null);
+		}
+		else
+		{
+			setConvertedInput(selectedList);
+		}
+	}
+
 	/**
 	 * The model object is assumed to be a Collection, and it is modified in-place. Then
 	 * {@link Model#setObject(Object)} is called with the same instance: it allows the Model to be
@@ -492,26 +590,10 @@ public class Palette<T> extends Panel
 	 * 
 	 * @see FormComponent#updateModel()
 	 */
-	protected final void updateModel()
+	@Override
+	public final void updateModel()
 	{
-		// get the selected choices first, since the available choices might depend on the
-		// previously selected objects.
-		Iterator<T> it = getRecorderComponent().getSelectedChoices();
-
-		modelChanging();
-
-		Collection<T> collection = getModelCollection();
-		collection.clear();
-		while (it.hasNext())
-		{
-			collection.add(it.next());
-		}
-
-		modelChanged();
-
-		@SuppressWarnings("unchecked")
-		IModel<Object> defaultModel = (IModel<Object>)getDefaultModel();
-		defaultModel.setObject(collection);
+		FormComponent.updateCollectionModel(this);
 	}
 
 	/**
@@ -523,14 +605,9 @@ public class Palette<T> extends Panel
 	 */
 	protected String buildJSCall(final String funcName)
 	{
-		return new StringBuilder(funcName).append("('")
-			.append(getChoicesComponent().getMarkupId())
-			.append("','")
-			.append(getSelectionComponent().getMarkupId())
-			.append("','")
-			.append(getRecorderComponent().getMarkupId())
-			.append("');")
-			.toString();
+		return new StringBuilder(funcName).append("('").append(getChoicesComponent().getMarkupId())
+			.append("','").append(getSelectionComponent().getMarkupId()).append("','")
+			.append(getRecorderComponent().getMarkupId()).append("');").toString();
 	}
 
 
@@ -582,6 +659,22 @@ public class Palette<T> extends Panel
 		return buildJSCall("Wicket.Palette.moveDown");
 	}
 
+	/**
+	 * @return addAll action javascript handler
+	 */
+	public String getAddAllOnClickJS()
+	{
+		return buildJSCall("Wicket.Palette.addAll");
+	}
+
+	/**
+	 * @return removeAll action javascript handler
+	 */
+	public String getRemoveAllOnClickJS()
+	{
+		return buildJSCall("Wicket.Palette.removeAll");
+	}
+
 	@Override
 	protected void onDetach()
 	{
@@ -612,6 +705,8 @@ public class Palette<T> extends Panel
 		@Override
 		protected void onComponentTag(final ComponentTag tag)
 		{
+			super.onComponentTag(tag);
+
 			if (!isPaletteEnabled())
 			{
 				tag.getAttributes().put("disabled", "disabled");
@@ -627,11 +722,13 @@ public class Palette<T> extends Panel
 	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
-		response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT));
 		ResourceReference css = getCSS();
 		if (css != null)
 		{
 			response.render(CssHeaderItem.forReference(css));
 		}
+		response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT));
 	}
+
+
 }

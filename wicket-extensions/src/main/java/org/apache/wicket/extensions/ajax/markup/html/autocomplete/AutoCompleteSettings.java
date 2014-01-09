@@ -57,7 +57,7 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private boolean useSmartPositioning = false;
 
-	private boolean useHideShowCoveredIEFix = true;
+	private boolean ignoreBordersWhenPositioning = true;
 
 	private String cssClassName = null;
 
@@ -70,6 +70,8 @@ public final class AutoCompleteSettings implements IClusterable
 	private int throttleDelay = 300;
 
 	private String parameterName = "q";
+
+	private int minInputLength = 1;
 
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
@@ -156,6 +158,33 @@ public final class AutoCompleteSettings implements IClusterable
 	}
 
 	/**
+	 * Indicates whether the popup positioning will take into account the borders of the input
+	 * element and its ancestors.
+	 * 
+	 * @return true if borders are ignored, false otherwise.
+	 */
+	public boolean getIgnoreBordersWhenPositioning()
+	{
+		return ignoreBordersWhenPositioning;
+	}
+
+	/**
+	 * Sets whether the popup positioning will take into account the borders of the input element
+	 * and its ancestors (by including the <code>clientLeft</code> and <code>clientTop</code> DOM
+	 * properties in the computation).
+	 * 
+	 * @param ignoreBordersWhenPositioning
+	 *            the flag
+	 * @return this {@link AutoCompleteSettings}.
+	 */
+	public AutoCompleteSettings setIgnoreBordersWhenPositioning(
+		final boolean ignoreBordersWhenPositioning)
+	{
+		this.ignoreBordersWhenPositioning = ignoreBordersWhenPositioning;
+		return this;
+	}
+
+	/**
 	 * Indicates whether the popup positioning will take into account browser window visible area or
 	 * not. (so always show popup bottom-right or not)
 	 * 
@@ -164,18 +193,6 @@ public final class AutoCompleteSettings implements IClusterable
 	public boolean getUseSmartPositioning()
 	{
 		return useSmartPositioning;
-	}
-
-	/**
-	 * Indicates whether in case of IE (and Opera), "select" "iframe" and "applet" tags should be
-	 * hidden if covered by popup. (as they might appear on top)<br>
-	 * By default this is true (before this flag was added).
-	 * 
-	 * @return true if the fix/workaround should be used for IE and Opera, false otherwise.
-	 */
-	public boolean getUseHideShowCoveredIEFix()
-	{
-		return useHideShowCoveredIEFix;
 	}
 
 	/**
@@ -323,25 +340,10 @@ public final class AutoCompleteSettings implements IClusterable
 	}
 
 	/**
-	 * Indicates whether in case of IE (and Opera), "select" "iframe" and "applet" tags should be
-	 * hidden if covered by popup. (as they might appear on top)<br>
-	 * By default this is true (before this flag was added).
-	 * 
-	 * @param useHideShowCoveredIEFix
-	 *            the flag
-	 * @return this {@link AutoCompleteSettings}.
-	 */
-	public AutoCompleteSettings setUseHideShowCoveredIEFix(final boolean useHideShowCoveredIEFix)
-	{
-		this.useHideShowCoveredIEFix = useHideShowCoveredIEFix;
-		return this;
-	}
-
-	/**
 	 * Sets the name of the request parameter that will bring the value of the user input
-	 *
+	 * 
 	 * @param parameterName
-	 *      the name of the request parameter that will bring the value of the user input
+	 *            the name of the request parameter that will bring the value of the user input
 	 * @return this {@link AutoCompleteSettings}
 	 */
 	public AutoCompleteSettings setParameterName(final String parameterName)
@@ -356,5 +358,26 @@ public final class AutoCompleteSettings implements IClusterable
 	public String getParameterName()
 	{
 		return parameterName;
+	}
+
+	/**
+	 * @return the minimum input length required to display the autocomplete list
+	 */
+	public int getMinInputLength()
+	{
+		return minInputLength;
+	}
+
+	/**
+	 * Set the minimum input length required to display the autocomplete list
+	 *
+	 * @param minInputLength
+	 *            the minimum input length required to display the autocomplete list
+	 * @return this {@link AutoCompleteSettings}
+	 */
+	public AutoCompleteSettings setMinInputLength(int minInputLength)
+	{
+		this.minInputLength = minInputLength;
+		return this;
 	}
 }

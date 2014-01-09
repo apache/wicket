@@ -30,7 +30,7 @@ import org.apache.wicket.util.io.IClusterable;
 public class Word implements IClusterable
 {
 	/** The word */
-	final List<Letter> letters = new ArrayList<Letter>();
+	final List<Letter> letters = new ArrayList<>();
 
 	/**
 	 * Constructor

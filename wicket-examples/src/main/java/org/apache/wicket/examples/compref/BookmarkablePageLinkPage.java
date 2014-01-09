@@ -39,7 +39,7 @@ public class BookmarkablePageLinkPage extends WicketExamplePage
 
 		// Here, we add a link to a bookmarkable page without passing any
 		// parameters
-		add(new BookmarkablePageLink<Void>("pageLinkNoArgs", BookmarkablePage.class));
+		add(new BookmarkablePageLink<>("pageLinkNoArgs", BookmarkablePage.class));
 
 		// And here, we add a link to a bookmarkable page with passing a
 		// parameter that holds
@@ -49,7 +49,7 @@ public class BookmarkablePageLinkPage extends WicketExamplePage
 		PageParameters parameters = new PageParameters();
 		parameters.set("message",
 			"This message was passed as a page parameter argument");
-		add(new BookmarkablePageLink<Void>("pageLinkWithArgs", BookmarkablePage.class, parameters));
+		add(new BookmarkablePageLink<>("pageLinkWithArgs", BookmarkablePage.class, parameters));
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class BookmarkablePageLinkPage extends WicketExamplePage
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Note that any arguments are passed as request parameters, and should thus be strings\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PageParameters parameters = new PageParameters();\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters.put(\"message\", \"This message was passed as a page parameter argument\");\n"
-			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new BookmarkablePageLink<Void>(\"pageLinkWithArgs\", BookmarkablePage.class, parameters));";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new BookmarkablePageLink<>(\"pageLinkWithArgs\", BookmarkablePage.class, parameters));";
 		add(new ExplainPanel(html, code));
 
 	}

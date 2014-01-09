@@ -23,17 +23,16 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
-import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
@@ -42,8 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This is a tag resolver which handles &lt;wicket:message key="myKey"&gt;Default
  * Text&lt;/wicket:message&gt;. The resolver will replace the whole tag with the message found in
- * the properties file associated with the Page. If no message is found, the default body text will
- * remain.
+ * the properties file associated with the Page.
  * <p>
  * You can also nest child components inside a wicket:message and then reference them from the
  * properties file. For example in the html
@@ -85,7 +83,8 @@ import org.slf4j.LoggerFactory;
  * 
  * It is possible to switch between logging a warning and throwing an exception if either the
  * property key/value or any of the variables can not be found.
- * 
+ *
+ * @see org.apache.wicket.settings.IResourceSettings#setThrowExceptionOnMissingResource(boolean)
  * @author Juergen Donnerstag
  * @author John Ray
  */
@@ -97,12 +96,6 @@ public class WicketMessageResolver implements IComponentResolver
 
 	/** */
 	public static final String MESSAGE = "message";
-
-	static
-	{
-		// register "wicket:message"
-		WicketTagIdentifier.registerWellKnownTagName(MESSAGE);
-	}
 
 	/**
 	 * If the key can't be resolved and the default is null, an exception will be thrown. Instead,
@@ -218,10 +211,10 @@ public class WicketMessageResolver implements IComponentResolver
 
 				log.warn("No value found for wicket:message tag with key: {}", key);
 
-				String formatedNotFound = String.format(NOT_FOUND, key);
 				// If open tag was open-close
 				if (markupStream.hasMore() == false)
 				{
+					String formatedNotFound = String.format(NOT_FOUND, key);
 					getResponse().write(formatedNotFound);
 				}
 				super.onComponentTagBody(markupStream, openTag);

@@ -189,5 +189,5 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	{
 		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
 		return this;
-	}
+	};
 }

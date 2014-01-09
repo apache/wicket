@@ -1,6 +1,6 @@
 package org.apache.wicket.examples.base;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.bootstrap.Bootstrap;
 import org.apache.wicket.examples.base.prettify.Prettify;
@@ -27,7 +27,13 @@ public class Examples extends JavaScriptResourceReference {
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies() {
-		return Arrays.asList(JavaScriptHeaderItem.forReference(Bootstrap.get()), JavaScriptHeaderItem.forReference(Prettify.get()));
+	public List<HeaderItem> getDependencies() {
+		HeaderItem bootstrap = JavaScriptHeaderItem.forReference(Bootstrap
+				.responsive());
+		HeaderItem prettify = JavaScriptHeaderItem.forReference(Prettify.get());
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(bootstrap);
+		dependencies.add(prettify);
+		return dependencies;
 	}
 }

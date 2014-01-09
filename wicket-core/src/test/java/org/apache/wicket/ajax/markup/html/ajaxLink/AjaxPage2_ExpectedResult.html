@@ -1,5 +1,5 @@
 <html>
-<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery.js"></script>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
@@ -10,34 +10,24 @@ Wicket.Ajax.DebugWindow.enabled=true;
 </script>
 <script type="text/javascript" id="wicket-ajax-base-url">
 /*<![CDATA[*/
-Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.markup.html.ajaxLink.AjaxPage2";
+Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.markup.html.ajaxLink.AjaxPage2?0";
 /*]]>*/
 </script>
 <script type="text/javascript" >
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-pageLayout-pageLayout_body-ajaxLink","e":"click","c":"ajaxLink1"});;
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.markup.html.ajaxLink.AjaxPage2?0-1.IBehaviorListener.0-pageLayout-pageLayout_body-ajaxLink","e":"click","c":"ajaxLink1"});;
 ;});
 /*]]>*/
 </script>
 </head><body>
   <span wicket:id="pageLayout"><wicket:border>
-        <table width = "0%" border = "0" cellspacing = "0" cellpadding = "1" bgcolor = "black">
-            <tr>
-                <td width = "100%" valign = "top">
-                    <table width = "100%" border = "0" cellspacing = "0" cellpadding = "4" bgcolor = "white">
-                        <tr>
-                            <td width = "100%">
-                                <wicket:body>
+			<span>Marker for border start</span>
+			<wicket:body>
 	  <span wicket:id="ajaxLabel" id="ajaxLabel2">AAAAAAA</span>
-	  <a href="#" wicket:id="ajaxLink" id="ajaxLink1">Update</a>
+	  <a href="javascript:;" wicket:id="ajaxLink" id="ajaxLink1">Update</a>
   </wicket:body>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </wicket:border></span>
+			<span>Marker for border end</span>
+		</wicket:border></span>
 </body>
 </html>

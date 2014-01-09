@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.core.util.resource.locator;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,8 +24,6 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.file.WebApplicationPath;
-import org.apache.wicket.core.util.resource.UrlResourceStream;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -63,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * Resources will be actually loaded by the {@link IResourceFinder}s defined in the resource
  * settings. By default there are finders that look in the classpath and in the classpath in
  * META-INF/resources. You can add more by adding {@link WebApplicationPath}s or {@link Path}s to
- * {@link IResourceSettings#getResourceFinders()}.
+ * {@link org.apache.wicket.settings.ResourceSettings#getResourceFinders()}.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -73,7 +70,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	/** Logging */
 	private static final Logger log = LoggerFactory.getLogger(ResourceStreamLocator.class);
 
-	private static final Iterable<String> NO_EXTENSIONS = new ArrayList<String>(0);
+	private static final Iterable<String> NO_EXTENSIONS = new ArrayList<>(0);
 
 	/** If null, the application registered finder will be used */
 	private List<IResourceFinder> finders;
@@ -146,7 +143,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	public IResourceStream locate(final Class<?> clazz, String path, final String style,
 		final String variation, Locale locale, final String extension, final boolean strict)
 	{
-		// If path contains a locale, than it'll replace the locale provided to this method
+		// If path contains a locale, then it'll replace the locale provided to this method
 		PathLocale data = ResourceUtils.getLocaleFromFilename(path);
 		if ((data != null) && (data.locale != null))
 		{
@@ -171,43 +168,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			}
 		}
 
-		return null;
-	}
-
-
-	/**
-	 * Get the resource
-	 * 
-	 * @param classLoader
-	 * @param path
-	 * @return resource stream
-	 */
-	/* package private for testing */IResourceStream getResourceStream(
-		final ClassLoader classLoader, final String path)
-	{
-		if (classLoader == null)
-		{
-			return null;
-		}
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("Attempting to locate resource '" + path + "' using classloader " +
-				classLoader);
-		}
-
-		// Try loading path using classloader
-		URL url = classLoader.getResource(path);
-		if (url == null)
-		{
-			// maybe it is in the Servlet 3.0 like directory
-			url = classLoader.getResource("META-INF/resources/" + path);
-		}
-
-		if (url != null)
-		{
-			return new UrlResourceStream(url);
-		}
 		return null;
 	}
 
@@ -251,6 +211,13 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			}
 		}
 
-		return new ResourceNameIterator(realPath, style, variation, locale, extensions, strict);
+		return newResourceNameIterator(realPath, locale, style, variation, extensions, strict);
+	}
+
+	// TODO Wicket 7 Add this method to IResourceStreamLocator interface.
+	public IResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
+		final String style, final String variation, final Iterable<String> extensions, final boolean strict)
+	{
+		return new ResourceNameIterator(path, style, variation, locale, extensions, strict);
 	}
 }

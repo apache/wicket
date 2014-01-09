@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
@@ -34,7 +35,7 @@ import org.apache.wicket.util.lang.Classes;
  * @param <T>
  *            enum type
  */
-public class EnumLabel<T extends Enum<T>> extends WebComponent
+public class EnumLabel<T extends Enum<T>> extends WebComponent implements IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -120,43 +121,27 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent
 		tag.setType(TagType.OPEN);
 	}
 
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
+	@Override
 	public final void setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
 	}
 
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
+	@Override
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);

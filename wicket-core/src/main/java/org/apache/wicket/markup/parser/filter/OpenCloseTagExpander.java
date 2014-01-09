@@ -37,7 +37,11 @@ import org.apache.wicket.markup.parser.XmlTag.TagType;
  */
 public class OpenCloseTagExpander extends AbstractMarkupFilter
 {
-	private static final List<String> replaceForTags = Arrays.asList("a", "q", "sub", "sup",
+	// A list of elements which should not be expanded from TagType.OPEN_CLOSE to TagType.OPEN + TagType.CLOSE
+	// http://www.w3.org/TR/html-markup/syntax.html#void-element
+	// area, base, br, col, command, embed, hr, img, input, keygen, link, meta, param, source, track, wbr
+
+	static final List<String> REPLACE_FOR_TAGS = Arrays.asList("a", "q", "sub", "sup",
 		"abbr", "acronym", "cite", "code", "del", "dfn", "em", "ins", "kbd", "samp", "var",
 		"label", "textarea", "tr", "td", "th", "caption", "thead", "tbody", "tfoot", "dl", "dt",
 		"dd", "li", "ol", "ul", "h1", "h2", "h3", "h4", "h5", "h6", "i",
@@ -45,19 +49,16 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 		"title",
 		"div",
 
-		// tags from pre 1.5 days, shouldnt really be here but make this release more backwards
+		// tags from pre 1.5 days, shouldn't really be here but make this release more backwards
 		// compatible
 		"span", "p",
 		"strong",
 		"b",
 		"e",
 		"select",
-		"col",
 
-		// New HTML5 elements (exlucding: open-close tags:
-		// wbr, source, time, embed, keygen
 		// @TODO by now an exclude list is probably shorter
-		"article", "aside", "command", "details", "summary", "figure", "figcaption", "footer",
+		"article", "aside", "details", "summary", "figure", "figcaption", "footer",
 		"header", "hgroup", "mark", "meter", "nav", "progress", "ruby", "rt", "rp", "section",
 		"audio", "video", "canvas", "datalist", "output");
 
@@ -130,6 +131,6 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 	 */
 	protected boolean contains(final String name)
 	{
-		return replaceForTags.contains(name.toLowerCase());
+		return REPLACE_FOR_TAGS.contains(name.toLowerCase());
 	}
 }

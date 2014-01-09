@@ -29,8 +29,8 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.core.util.string.UrlUtils;
 import org.apache.wicket.util.time.Time;
 
 /**

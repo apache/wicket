@@ -1,8 +1,9 @@
 ;(function(undefined) {
 	'use strict';
 
-	if (!Wicket.WebSocket.pageId) {
-		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId} });
+	if (!Wicket.WebSocket.key) {
+		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId}, resourceName: '${resourceName}',
+			baseUrl: '${baseUrl}', contextPath: '${contextPath}' });
 		Wicket.WebSocket.createDefaultConnection();
 	}
 })();

@@ -17,6 +17,8 @@
 package org.apache.wicket.atmosphere;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -24,6 +26,10 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.behavior.Behavior;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Collects {@linkplain Subscribe event subscriptions} on components. Subscriptions are refreshed on
@@ -35,6 +41,7 @@ import org.apache.wicket.behavior.Behavior;
  */
 public class AtmosphereEventSubscriptionCollector implements IComponentOnBeforeRenderListener
 {
+	private Cache<Class<?>, Iterable<Method>> subscribedMethodsCache;
 	private EventBus eventBus;
 
 	/**
@@ -45,29 +52,50 @@ public class AtmosphereEventSubscriptionCollector implements IComponentOnBeforeR
 	public AtmosphereEventSubscriptionCollector(EventBus eventBus)
 	{
 		this.eventBus = eventBus;
+		subscribedMethodsCache = CacheBuilder.newBuilder().build();
 	}
 
 	@Override
 	public void onBeforeRender(Component component)
 	{
-		for (Method curMethod : component.getClass().getMethods())
+		for (Method curMethod : findSubscribedMethods(component.getClass()))
 		{
-			if (curMethod.isAnnotationPresent(Subscribe.class))
-			{
-				verifyMethodParameters(curMethod);
-				subscribeComponent(component, null, curMethod);
-			}
+			subscribeComponent(component, null, curMethod);
 		}
 		for (Behavior curBehavior : component.getBehaviors())
 		{
-			for (Method curMethod : curBehavior.getClass().getMethods())
+			for (Method curMethod : findSubscribedMethods(curBehavior.getClass()))
 			{
-				if (curMethod.isAnnotationPresent(Subscribe.class))
-				{
-					verifyMethodParameters(curMethod);
-					subscribeComponent(component, curBehavior, curMethod);
-				}
+				subscribeComponent(component, curBehavior, curMethod);
 			}
+		}
+	}
+
+	private Iterable<Method> findSubscribedMethods(final Class<?> clazz)
+	{
+		try
+		{
+			return subscribedMethodsCache.get(clazz, new Callable<Iterable<Method>>()
+			{
+				@Override
+				public Iterable<Method> call() throws Exception
+				{
+					ImmutableList.Builder<Method> ret = ImmutableList.builder();
+					for (Method curMethod : clazz.getMethods())
+					{
+						if (curMethod.isAnnotationPresent(Subscribe.class))
+						{
+							verifyMethodParameters(curMethod);
+							ret.add(curMethod);
+						}
+					}
+					return ret.build();
+				}
+			});
+		}
+		catch (ExecutionException e)
+		{
+			throw new WicketRuntimeException(e);
 		}
 	}
 
@@ -77,7 +105,7 @@ public class AtmosphereEventSubscriptionCollector implements IComponentOnBeforeR
 		if (params.length != 2 || !params[0].equals(AjaxRequestTarget.class))
 			throw new WicketRuntimeException("@Subscribe can only be used on " +
 				"methods with 2 params, of which the first is AjaxRequestTarget. " + method +
-				" does conform to this signature.");
+				" does not conform to this signature.");
 	}
 
 	private void subscribeComponent(Component component, Behavior behavior, Method method)

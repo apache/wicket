@@ -20,34 +20,33 @@ package org.apache.wicket.util.tester;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import junit.framework.Assert;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.html.form.AbstractSingleSelectChoice;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.CheckGroup;
-import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.junit.Assert;
 
 /**
  * A helper class for testing validation and submission of <code>FormComponent</code>s.
@@ -58,6 +57,11 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public class FormTester
 {
+	/**
+	 * An auto incrementing index used as a suffix for MultiFileUploadField's inputName
+	 */
+	private int multiFileUploadIndex = 0;
+
 	/**
 	 * A selector template for selecting selectable <code>FormComponent</code>s with an index of
 	 * option -- supports <code>RadioGroup</code>, <code>CheckGroup</code>, and
@@ -197,7 +201,7 @@ public class FormTester
 				Method getChoiceRendererMethod = formComponent.getClass().getMethod(
 					"getChoiceRenderer", (Class<?>[])null);
 				getChoiceRendererMethod.setAccessible(true);
-				IChoiceRenderer<Object> choiceRenderer = (IChoiceRenderer<Object>)getChoiceRendererMethod.invoke(
+				ChoiceRenderer<Object> choiceRenderer = (ChoiceRenderer<Object>)getChoiceRendererMethod.invoke(
 					formComponent, (Object[])null);
 
 				return choiceRenderer.getIdValue(choices.get(index), index);
@@ -294,10 +298,10 @@ public class FormTester
 			if (formComponent == null)
 			{
 				fail("Trying to select on null component.");
+				return null;
 			}
-
-			if (formComponent instanceof RadioGroup || formComponent instanceof DropDownChoice ||
-				formComponent instanceof RadioChoice)
+			else if (formComponent instanceof RadioGroup ||
+				formComponent instanceof AbstractSingleSelectChoice)
 			{
 				return new SingleChoiceSelector(formComponent);
 			}
@@ -355,6 +359,8 @@ public class FormTester
 
 	/** <code>FormComponent</code> to be tested */
 	private final Form<?> workingForm;
+
+	private boolean clearFeedbackMessagesBeforeSubmit = true;
 
 	/**
 	 * @see WicketTester#newFormTester(String)
@@ -414,77 +420,25 @@ public class FormTester
 	 */
 	public static String[] getInputValue(FormComponent<?> formComponent)
 	{
-		// do nothing for invisible or disabled component -- the browser would not send any
-		// parameter for a disabled component
-		if (!(formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy()))
+		// the browser sends parameters for visible and enabled components only
+		if (formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy())
 		{
-			return new String[] { };
-		}
-
-		// if component is text field and do not have exist value, fill
-		// blank String if required
-		if (formComponent instanceof AbstractTextComponent)
-		{
-			return new String[] { getFormComponentValue(formComponent) };
-		}
-		else if ((formComponent instanceof DropDownChoice) ||
-			(formComponent instanceof RadioChoice) || (formComponent instanceof CheckBox))
-		{
-			return new String[] { getFormComponentValue(formComponent) };
-		}
-		else if (formComponent instanceof ListMultipleChoice)
-		{
-			return getFormComponentValue(formComponent).split(FormComponent.VALUE_SEPARATOR);
-		}
-		else if (formComponent instanceof CheckGroup)
-		{
-			final Collection<?> checkGroupValues = (Collection<?>)formComponent.getDefaultModelObject();
-			final List<String> result = new ArrayList<String>();
-			formComponent.visitChildren(Check.class, new IVisitor<Component, Void>()
+			if (formComponent instanceof IFormSubmittingComponent)
 			{
-				@Override
-				public void component(final Component component, final IVisit<Void> visit)
-				{
-					if (checkGroupValues.contains(component.getDefaultModelObject()))
-					{
-						result.add(getFormComponentValue((Check<?>)component));
-					}
-				}
-			});
-			return result.toArray(new String[result.size()]);
-		}
-		else if (formComponent instanceof RadioGroup)
-		{
-			// TODO 1.5: see if all these transformations can be factored out into
-			// checkgroup/radiogroup by them implementing some sort of interface {
-			// getValue(); } otherwise all these implementation details leak into the tester
-			final Object value = formComponent.getDefaultModelObject();
-			String result = null;
-			if (value != null)
-			{
-				result = formComponent.visitChildren(Radio.class, new IVisitor<Component, String>()
-				{
-					@Override
-					public void component(final Component component, final IVisit<String> visit)
-					{
-						if (value.equals(component.getDefaultModelObject()))
-						{
-							visit.stop(getFormComponentValue((Radio<?>)component));
-						}
-						else
-						{
-							visit.dontGoDeeper();
-						}
-					}
-				});
+				// buttons have to be submitted explicitely
 			}
-			if (result == null)
+			else if (formComponent instanceof AbstractTextComponent)
 			{
-				return new String[] { };
+				return new String[] { getFormComponentValue(formComponent) };
 			}
 			else
 			{
-				return new String[] { result };
+				// TODO is it safe to assume that all other components' values can be split?
+				String value = getFormComponentValue(formComponent);
+				if (!Strings.isEmpty(value))
+				{
+					return value.split(FormComponent.VALUE_SEPARATOR);
+				}
 			}
 		}
 		return new String[] { };
@@ -492,24 +446,6 @@ public class FormTester
 
 
 	private static String getFormComponentValue(final FormComponent<?> formComponent)
-	{
-		boolean oldEscape = formComponent.getEscapeModelStrings();
-		formComponent.setEscapeModelStrings(false);
-		String val = formComponent.getValue();
-		formComponent.setEscapeModelStrings(oldEscape);
-		return val;
-	}
-
-	private static String getFormComponentValue(final Check<?> formComponent)
-	{
-		boolean oldEscape = formComponent.getEscapeModelStrings();
-		formComponent.setEscapeModelStrings(false);
-		String val = formComponent.getValue();
-		formComponent.setEscapeModelStrings(oldEscape);
-		return val;
-	}
-
-	private static String getFormComponentValue(final Radio<?> formComponent)
 	{
 		boolean oldEscape = formComponent.getEscapeModelStrings();
 		formComponent.setEscapeModelStrings(false);
@@ -634,7 +570,7 @@ public class FormTester
 	{
 		checkClosed();
 
-		if (replace == true)
+		if (replace)
 		{
 			// Reset first
 			setValue(formComponentId, "");
@@ -730,15 +666,23 @@ public class FormTester
 
 		FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
 
-		if (formComponent instanceof FileUploadField == false)
+		MockHttpServletRequest servletRequest = tester.getRequest();
+
+		if (formComponent instanceof FileUploadField)
+		{
+			servletRequest.addFile(formComponent.getInputName(), file, contentType);
+		}
+		else if (formComponent instanceof MultiFileUploadField)
+		{
+			String inputName = formComponent.getInputName() + MultiFileUploadField.MAGIC_SEPARATOR + multiFileUploadIndex++;
+			servletRequest.addFile(inputName, file, contentType);
+		}
+		else
 		{
 			fail("'" + formComponentId + "' is not " +
 				"a FileUploadField. You can only attach a file to form " +
 				"component of this type.");
 		}
-
-		MockHttpServletRequest servletRequest = tester.getRequest();
-		servletRequest.addFile(formComponent.getInputName(), file, contentType);
 
 		return this;
 	}
@@ -753,7 +697,10 @@ public class FormTester
 		checkClosed();
 		try
 		{
-			tester.clearFeedbackMessages();
+			if (clearFeedbackMessagesBeforeSubmit)
+			{
+				tester.clearFeedbackMessages();
+			}
 			tester.getRequest().setUseMultiPartContentType(workingForm.isMultiPart());
 			tester.submitForm(path);
 		}
@@ -762,6 +709,17 @@ public class FormTester
 			closed = true;
 		}
 
+		return this;
+	}
+
+	public boolean isClearFeedbackMessagesBeforeSubmit()
+	{
+		return clearFeedbackMessagesBeforeSubmit;
+	}
+
+	public FormTester setClearFeedbackMessagesBeforeSubmit(boolean clearFeedbackMessagesBeforeSubmit)
+	{
+		this.clearFeedbackMessagesBeforeSubmit = clearFeedbackMessagesBeforeSubmit;
 		return this;
 	}
 

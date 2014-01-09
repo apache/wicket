@@ -17,13 +17,13 @@
 package org.apache.wicket.resource;
 
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
 
 
 /**
  * The resource reference for the jquery javascript library as released with Wicket. To add a JQuery
  * resource reference to a component, do not use this reference, but use
- * {@link IJavaScriptLibrarySettings#getJQueryReference()} to prevent version conflicts.
+ * {@link org.apache.wicket.settings.JavaScriptLibrarySettings#getJQueryReference()}
+ * to prevent version conflicts.
  * 
  * @author papegaaij
  */
@@ -31,11 +31,17 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * jQuery ver. 1.x - works on modern browsers and IE 6/7/8
+	 */
+	public static final String VERSION_1 = "jquery/jquery-1.10.2.js";
+
 	private static final JQueryResourceReference INSTANCE = new JQueryResourceReference();
 
 	/**
 	 * Normally you should not use this method, but use
-	 * {@link IJavaScriptLibrarySettings#getJQueryReference()} to prevent version conflicts.
+	 * {@link org.apache.wicket.settings.JavaScriptLibrarySettings#getJQueryReference()}
+	 * to prevent version conflicts.
 	 * 
 	 * @return the single instance of the resource reference
 	 */
@@ -44,8 +50,8 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 		return INSTANCE;
 	}
 
-	private JQueryResourceReference()
+	protected JQueryResourceReference()
 	{
-		super(JQueryResourceReference.class, "jquery/jquery.js");
+		super(JQueryResourceReference.class, VERSION_1);
 	}
 }

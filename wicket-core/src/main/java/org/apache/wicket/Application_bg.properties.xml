@@ -18,34 +18,34 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<entry key="Required">Полето '${label}' е задължително.</entry>
-	<entry key="IConverter">'${input}' не е валиден ${type}.</entry>
-	<entry key="RangeValidator.range">${input} трябва да бъде между ${minimum} и ${maximum}.</entry>
-	<entry key="RangeValidator.exact">${input} трябва да бъде точно ${minimum}.</entry>
-	<entry key="RangeValidator.minimum">'${input}' трябва да бъде най-малко ${minimum}.</entry>
-	<entry key="RangeValidator.maximum">'${input}' трябва да бъде най-много ${maximum}.</entry>
+	<entry key="IConverter">Стойността в поле '${label}' е с невалиден тип (${type}).</entry>
+	<entry key="RangeValidator.range">Стойността на поле ${label} трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="RangeValidator.exact">Стойността на поле ${label} трябва да бъде точно ${minimum}.</entry>
+	<entry key="RangeValidator.minimum">Стойността на поле '${label}' трябва да бъде най-малко ${minimum}.</entry>
+	<entry key="RangeValidator.maximum">Стойността на поле '${label}' трябва да бъде най-много ${maximum}.</entry>
 
-	<entry key="StringValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum} символа.</entry>
-	<entry key="StringValidator.minimum">'${input}' трябва да бъде поне ${minimum} символа.</entry>
-	<entry key="StringValidator.maximum">'${input}' трябва да бъде най-много ${maximum} символа.</entry>
-	<entry key="StringValidator.exact">'${input}' трябва да бъде точно ${exact} символа.</entry>
+	<entry key="StringValidator.range">Стойността на поле '${label}' трябва да бъде между ${minimum} и ${maximum} символа.</entry>
+	<entry key="StringValidator.minimum">Стойността на поле '${label}' трябва да бъде поне ${minimum} символа.</entry>
+	<entry key="StringValidator.maximum">Стойността на поле '${label}' трябва да бъде най-много ${maximum} символа.</entry>
+	<entry key="StringValidator.exact">Стойността на поле '${label}' трябва да бъде точно ${exact} символа.</entry>
 
-	<entry key="DateValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum}.</entry>
-	<entry key="DateValidator.minimum">'${input}' не трябва да бъде преди ${minimum}.</entry>
-	<entry key="DateValidator.maximum">'${input}' не трябва да бъде след ${maximum}.</entry>
+	<entry key="DateValidator.range">Стойността на поле '${label}' трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="DateValidator.minimum">Стойността на поле '${label}' не трябва да бъде преди ${minimum}.</entry>
+	<entry key="DateValidator.maximum">Стойността на поле '${label}' не трябва да бъде след ${maximum}.</entry>
 
-	<entry key="NumberValidator.positive">'${input}' трябва да е положително число.</entry>
-	<entry key="NumberValidator.negative">'${input}' трябва да е отрицателно число.</entry>
-	<entry key="NumberValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum}.</entry>
-	<entry key="NumberValidator.minimum">'${input}' трябва да бъде най-малко ${minimum}.</entry>
-	<entry key="NumberValidator.maximum">'${input}' трябва да бъде най-много ${maximum}.</entry>
+	<entry key="NumberValidator.positive">Стойността на поле '${label}' трябва да е положително число.</entry>
+	<entry key="NumberValidator.negative">Стойността на поле '${label}' трябва да е отрицателно число.</entry>
+	<entry key="NumberValidator.range">Стойността на поле '${label}' трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="NumberValidator.minimum">Стойността на поле '${label}' трябва да бъде най-малко ${minimum}.</entry>
+	<entry key="NumberValidator.maximum">Стойността на поле '${label}' трябва да бъде най-много ${maximum}.</entry>
 
-	<entry key="PatternValidator">'${input}' не отговаря на шаблона '${pattern}'.</entry>
-	<entry key="EmailAddressValidator">'${input}' не е валиден адрес на електронна поща.</entry>
+	<entry key="PatternValidator">Стойността на поле '${label}' не отговаря на шаблона '${pattern}'.</entry>
+	<entry key="EmailAddressValidator">Стойността на поле '${label}' не е валиден адрес на електронна поща.</entry>
 	<entry key="CreditCardValidator">Номерът на кредитната карта не е валиден.</entry>
-	<entry key="UrlValidator">'${input}' не е валиден уеб адрес.</entry>
+	<entry key="UrlValidator">Стойността на поле '${label}' не е валиден уеб адрес.</entry>
 
 	<entry key="EqualInputValidator">'${input0}' от ${label0} и '${input1}' от ${label1} трябва да бъдат еднакви.</entry>
-	<entry key="EqualPasswordInputValidator">${label0} и ${label1} трябва да съвпадат.</entry>
+	<entry key="EqualPasswordInputValidator">Стойностите на полета ${label0} и ${label1} трябва да бъдат еднакви.</entry>
 
 	<entry key="null">Изберете едно</entry>
 	<entry key="nullValid"></entry>
@@ -55,4 +55,9 @@
 	<entry key="PagingNavigator.next">Към следващата страница</entry>
 	<entry key="PagingNavigator.last">Към последната страница</entry>
 	<entry key="PagingNavigation.page">Към страница ${page}</entry>
+
+    <entry key="org.apache.wicket.mfu.caption.unlimited">Файлове:</entry>
+    <entry key="org.apache.wicket.mfu.caption.limited">Файлове (максимум ${max}):</entry>
+    <entry key="org.apache.wicket.mfu.delete">Изтрий</entry>
+
 </properties>

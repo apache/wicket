@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
@@ -45,7 +46,7 @@ import org.apache.wicket.model.PropertyModel;
  * @param <S>
  *            the type of the sort property
  */
-public class PropertyColumn<T, S> extends AbstractColumn<T, S>
+public class PropertyColumn<T, S> extends AbstractColumn<T, S> implements IExportableColumn<T, S, Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -93,21 +94,7 @@ public class PropertyColumn<T, S> extends AbstractColumn<T, S>
 	public void populateItem(final Item<ICellPopulator<T>> item, final String componentId,
 		final IModel<T> rowModel)
 	{
-		item.add(new Label(componentId, createLabelModel(rowModel)));
-	}
-
-	/**
-	 * Factory method for generating a model that will generated the displayed value. Typically the
-	 * model is a property model using the {@link #propertyExpression} specified in the constructor.
-	 * 
-	 * @param rowModel
-	 * @return model
-	 */
-	protected IModel<?> createLabelModel(final IModel<T> rowModel)
-	{
-		@SuppressWarnings("rawtypes")
-		PropertyModel<?> propertyModel = new PropertyModel(rowModel, propertyExpression);
-		return propertyModel;
+		item.add(new Label(componentId, getDataModel(rowModel)));
 	}
 
 	/**
@@ -118,4 +105,17 @@ public class PropertyColumn<T, S> extends AbstractColumn<T, S>
 		return propertyExpression;
 	}
 
+	/**
+	 * Factory method for generating a model that will generated the displayed value. Typically the
+	 * model is a property model using the {@link #propertyExpression} specified in the constructor.
+	 *
+	 * @param rowModel
+	 * @return model
+	 */
+	@Override
+	public IModel<Object> getDataModel(IModel<T> rowModel)
+	{
+		PropertyModel<Object> propertyModel = new PropertyModel<>(rowModel, propertyExpression);
+		return propertyModel;
+	}
 }

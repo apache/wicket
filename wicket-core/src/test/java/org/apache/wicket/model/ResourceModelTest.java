@@ -65,7 +65,7 @@ public class ResourceModelTest extends WicketTestCase
 
 		final boolean[] detached = { false };
 
-		ResourceModel model = new ResourceModel("test")
+		ResourceModel model = new ResourceModel("testlabel")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -78,8 +78,8 @@ public class ResourceModelTest extends WicketTestCase
 			}
 		};
 
-		IModel<String> wrapped = model.wrapOnAssignment(null);
-
+		IModel<String> wrapped = model.wrapOnAssignment(new TestPage());
+		wrapped.getObject();
 		wrapped.detach();
 
 		assertTrue(null, detached[0]);

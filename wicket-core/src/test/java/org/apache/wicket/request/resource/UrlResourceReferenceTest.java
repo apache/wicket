@@ -32,6 +32,7 @@ import org.junit.Test;
  */
 public class UrlResourceReferenceTest extends WicketTestCase
 {
+	@Test
 	public void relativeUrl()
 	{
 		Url url = Url.parse("some/relative/url");
@@ -56,6 +57,19 @@ public class UrlResourceReferenceTest extends WicketTestCase
 		assertNull(reference.getResource());
 	}
 
+	@Test
+	public void contextAbsoluteUrl()
+	{
+		Url url = Url.parse("/some/path.ext");
+		UrlResourceReference reference = new UrlResourceReference(url);
+		assertEquals(url, reference.getUrl());
+		assertNull(reference.getResource());
+
+		CharSequence _url = tester.getRequestCycle().urlFor(reference, null);
+		assertEquals(url.toString(), _url);
+		assertNull(reference.getResource());
+	}
+
 	@Test(expected = IllegalStateException.class)
 	public void cannotMakeAnAbsoluteUrlContextRelative()
 	{
@@ -70,13 +84,13 @@ public class UrlResourceReferenceTest extends WicketTestCase
 		tester.getApplication().mountPage("/some/mount/path", TestPage.class);
 		tester.startPage(new TestPage());
 
-		tester.assertContains("<script type=\"text/javascript\" src=\"../../::/::/some/relative/url\"></script>");
+		tester.assertContains("<script type=\"text/javascript\" src=\"../../some/relative/url\"></script>");
 	}
 
 	/**
 	 * A test page for #contextRelativeUrl()
 	 */
-	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		@Override
 		public void renderHead(IHeaderResponse response)

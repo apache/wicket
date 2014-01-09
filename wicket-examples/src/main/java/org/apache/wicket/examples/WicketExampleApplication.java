@@ -17,7 +17,7 @@
 package org.apache.wicket.examples;
 
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.ISecuritySettings;
+import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.util.crypt.ClassCryptFactory;
 import org.apache.wicket.util.crypt.NoCrypt;
 
@@ -62,7 +62,7 @@ public abstract class WicketExampleApplication extends WebApplication
 		// and we want them to be able to run the examples out of the
 		// box.
 		getSecuritySettings().setCryptFactory(
-			new ClassCryptFactory(NoCrypt.class, ISecuritySettings.DEFAULT_ENCRYPTION_KEY));
+			new ClassCryptFactory(NoCrypt.class, SecuritySettings.DEFAULT_ENCRYPTION_KEY));
 
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 	}

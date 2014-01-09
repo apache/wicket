@@ -18,6 +18,7 @@ package org.apache.wicket.session;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.IPageFactory;
@@ -61,7 +62,7 @@ public final class DefaultPageFactory implements IPageFactory
 		{
 			// throw an exception in case default constructor is missing
 			// => improved error message
-			Constructor<C> constructor = pageClass.getConstructor((Class<?>[])null);
+			Constructor<C> constructor = pageClass.getDeclaredConstructor((Class<?>[]) null);
 
 			return processPage(newPage(constructor, null), null);
 		}
@@ -77,7 +78,7 @@ public final class DefaultPageFactory implements IPageFactory
 			else
 			{
 				throw new WicketRuntimeException("Unable to create page from " + pageClass +
-					". Class does not have a visible default contructor.", e);
+					". Class does not have a visible default constructor.", e);
 			}
 		}
 	}
@@ -124,7 +125,7 @@ public final class DefaultPageFactory implements IPageFactory
 			try
 			{
 				// Try to find the constructor
-				constructor = pageClass.getConstructor(new Class[] { argumentType });
+				constructor = pageClass.getDeclaredConstructor(new Class[] { argumentType });
 
 				// Store it in the cache
 				Constructor<C> tmpConstructor = (Constructor<C>) constructorForClass.putIfAbsent(pageClass, constructor);
@@ -210,18 +211,31 @@ public final class DefaultPageFactory implements IPageFactory
 
 	private String createDescription(final Constructor<?> constructor, final Object argument)
 	{
-		String msg;
+		StringBuilder msg = new StringBuilder();
+		msg.append("Can't instantiate page using constructor '").append(constructor).append('\'');
 		if (argument != null)
 		{
-			msg = "Can't instantiate page using constructor '" + constructor + "' and argument '" +
-				argument;
+			msg.append(" and argument '").append(argument).append('\'');
+		}
+		msg.append('.');
+
+		if (constructor != null)
+		{
+			if (Modifier.isPrivate(constructor.getModifiers()))
+			{
+				msg.append(" This constructor is private!");
+			}
+			else
+			{
+				msg.append(" An exception has been thrown during construction!");
+			}
 		}
 		else
 		{
-			msg = "Can't instantiate page using constructor '" + constructor;
+			msg.append(" There is no such constructor!");
 		}
 
-		return msg + "'. Might be it doesn't exist, may be it is not visible (public).";
+		return msg.toString();
 	}
 
 	@Override
@@ -232,7 +246,7 @@ public final class DefaultPageFactory implements IPageFactory
 		{
 			try
 			{
-				if (pageClass.getConstructor(new Class[] { }) != null)
+				if (pageClass.getDeclaredConstructor(new Class[] { }) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -241,7 +255,7 @@ public final class DefaultPageFactory implements IPageFactory
 			{
 				try
 				{
-					if (pageClass.getConstructor(new Class[] { PageParameters.class }) != null)
+					if (pageClass.getDeclaredConstructor(new Class[] { PageParameters.class }) != null)
 					{
 						bookmarkable = Boolean.TRUE;
 					}

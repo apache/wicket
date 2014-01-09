@@ -108,9 +108,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 		while (iterator.hasNext())
 		{
 			Cookie old = iterator.next();
-			if (cookie.getName().equals(old.getName()) &&
-				((cookie.getPath() == null && old.getPath() == null) || (cookie.getPath().equals(old.getPath()))) &&
-				((cookie.getDomain() == null && old.getDomain() == null) || (cookie.getDomain().equals(old.getDomain()))))
+			if (Cookies.isEqual(cookie, old))
 			{
 				iterator.remove();
 			}
@@ -296,7 +294,12 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 */
 	public List<Cookie> getCookies()
 	{
-		return cookies;
+		List<Cookie> copies = new ArrayList<Cookie>();
+		for (Cookie cookie : cookies)
+		{
+			copies.add(Cookies.copyOf(cookie));
+		}
+		return copies;
 	}
 
 	/**
@@ -833,16 +836,6 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	public void setStatus(final int status, final String msg)
 	{
 		setStatus(status);
-	}
-
-	/**
-	 * @deprecated use {@link #getDocument()}
-	 * @return response as String
-	 */
-	@Deprecated
-	public String getTextResponse()
-	{
-		return getDocument();
 	}
 
 	/**

@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,18 +47,41 @@ public final class RequestUtils
 	 */
 	public static void decodeParameters(String queryString, PageParameters params)
 	{
+		decodeParameters(queryString, params, getCurrentCharset());
+	}
+
+	/**
+	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
+	 * value map.
+	 *
+	 * @param queryString
+	 *            string to decode, uses '&' to separate parameters and '=' to separate key from
+	 *            value
+	 * @param params
+	 *            parameters map to write the found key/ value pairs to
+	 * @param currentCharset
+	 *            charset resolved via current requestCycle
+	 */
+	static void decodeParameters(String queryString, PageParameters params, Charset currentCharset)
+	{
+        
+        if (Strings.indexOf(queryString, '?') == 0)
+        {
+            queryString = queryString.substring(1);
+        }
+        
 		for (String paramTuple : Strings.split(queryString, '&'))
 		{
 			final String[] bits = Strings.split(paramTuple, '=');
 
 			if (bits.length == 2)
 			{
-				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()),
-					UrlDecoder.QUERY_INSTANCE.decode(bits[1], getCurrentCharset()));
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset),
+					UrlDecoder.QUERY_INSTANCE.decode(bits[1], currentCharset));
 			}
 			else
 			{
-				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()), "");
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset), "");
 			}
 		}
 	}
@@ -71,7 +95,7 @@ public final class RequestUtils
 	public static String removeDoubleDots(String path)
 	{
 		String[] segments = Strings.split(path, '/');
-		List<String> newcomponents = new ArrayList<String>(Arrays.asList(segments));
+		List<String> newcomponents = new ArrayList<>(Arrays.asList(segments));
 
 		for (int i = 0; i < newcomponents.size(); i++)
 		{
@@ -181,8 +205,11 @@ public final class RequestUtils
 
 	/**
 	 * @param request
-	 *      the http servlet request to extract the charset from
-	 * @return the request's charset
+	 *            the http servlet request to extract the charset from
+	 * @return the request's charset or a default it request is {@code null} or has an unsupported
+	 *         character encoding
+	 * 
+	 * @see IRequestCycleSettings#getResponseRequestEncoding()
 	 */
 	public static Charset getCharset(HttpServletRequest request)
 	{
@@ -192,7 +219,13 @@ public final class RequestUtils
 			String charsetName = request.getCharacterEncoding();
 			if (charsetName != null)
 			{
-				charset = Charset.forName(charsetName);
+				try
+				{
+					charset = Charset.forName(charsetName);
+				}
+				catch (UnsupportedCharsetException useDefault)
+				{
+				}
 			}
 		}
 		if (charset == null)

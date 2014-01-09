@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import java.util.Collections;
+import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
@@ -52,15 +52,19 @@ public class WicketWebSocketJQueryResourceReference extends JavaScriptResourceRe
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
 		final ResourceReference wicketAjaxReference;
-		if (Application.exists()) {
+		if (Application.exists())
+		{
 			wicketAjaxReference = Application.get().getJavaScriptLibrarySettings().getWicketAjaxReference();
 		}
-		else {
+		else
+		{
 			wicketAjaxReference = WicketAjaxJQueryResourceReference.get();
 		}
-		return Collections.singletonList(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+		return dependencies;
 	}
 }

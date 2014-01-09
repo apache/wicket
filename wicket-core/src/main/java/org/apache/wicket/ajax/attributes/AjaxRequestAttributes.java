@@ -32,11 +32,11 @@ import org.apache.wicket.util.time.Duration;
  */
 public final class AjaxRequestAttributes
 {
-
 	/**
 	 * The method to be used when submitting a form
 	 */
-	public static enum Method {
+	public static enum Method
+	{
 		/** get */
 		GET,
 
@@ -50,6 +50,28 @@ public final class AjaxRequestAttributes
 		}
 	}
 
+	/**
+	 * The JavaScript event propagation type
+	 */
+	public static enum EventPropagation
+	{
+		/**
+		 * Stops the propagation of the JavaScript event to the parent of its target
+		 */
+		STOP,
+
+		/**
+		 * Stops the propagation of the JavaScript event to the parent of its target and all other
+		 * event listeners registered on the same target
+		 */
+		STOP_IMMEDIATE,
+
+		/**
+		 * Do not stop the propagation of the JavaScript event
+		 */
+		BUBBLE
+	}
+
 	public static final String XML_DATA_TYPE = "xml";
 
 	private boolean multipart = false;
@@ -58,7 +80,9 @@ public final class AjaxRequestAttributes
 
 	private Duration requestTimeout;
 
-	private boolean allowDefault = false;
+	private boolean preventDefault = false;
+
+	private EventPropagation eventPropagation = EventPropagation.BUBBLE;
 
 	/**
 	 * The names of the events which will trigger the Ajax call
@@ -98,9 +122,8 @@ public final class AjaxRequestAttributes
 	private boolean async = true;
 
 	/**
-	 * The settings to use if the Ajax call should be throttled.
-	 * Throttled behaviors only execute once within the given delay
-	 * even though they are triggered multiple times.
+	 * The settings to use if the Ajax call should be throttled. Throttled behaviors only execute
+	 * once within the given delay even though they are triggered multiple times.
 	 * <p>
 	 * For example, this is useful when attaching a behavior to the keypress event. It is not
 	 * desirable to have an ajax call made every time the user types so we throttle that call to a
@@ -159,7 +182,7 @@ public final class AjaxRequestAttributes
 	 * the URL parameters are longer than maximal URL length.
 	 * 
 	 * @param method
-	 *      the type of the Ajax request
+	 *            the type of the Ajax request
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setMethod(final Method method)
@@ -195,8 +218,8 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * @return a list of {@link IAjaxCallListener}s which will be notified during the
-	 *  the execution of the Ajax call.
+	 * @return a list of {@link IAjaxCallListener}s which will be notified during the the execution
+	 *         of the Ajax call.
 	 */
 	public List<IAjaxCallListener> getAjaxCallListeners()
 	{
@@ -209,9 +232,9 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * Map that contains additional (static) URL parameters. These will be appended to the request
-	 * URL. If you need more than one value for a key then use a java.util.List or an Object[] as
-	 * a value of that key.
-	 *
+	 * URL. If you need more than one value for a key then use a java.util.List or an Object[] as a
+	 * value of that key.
+	 * 
 	 * @return a map with additional URL arguments
 	 * @see #getDynamicExtraParameters()
 	 */
@@ -226,32 +249,33 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * Array of JavaScript functions that produce additional URL arguments.
-	 *
-	 * <p>If there are no multivalued parameters then the function can return a
-	 * simple JavaScript object. Example:
-	 *
+	 * 
+	 * <p>
+	 * If there are no multivalued parameters then the function can return a simple JavaScript
+	 * object. Example:
+	 * 
 	 * <pre>
 	 *  return {
 	 *      'param1': document.body.tagName,
 	 *      'param2': calculateParam2()
 	 *  }
 	 * </pre>
-	 *
+	 * 
 	 * </p>
-	 * <p>If there are multivalued parameters then an array of objects may be used.
-	 * Example:
-	 *
+	 * <p>
+	 * If there are multivalued parameters then an array of objects may be used. Example:
+	 * 
 	 * <pre>
 	 *  return [
 	 *      { name: 'param1', value: document.body.tagName },
 	 *      { name: 'param1', value: calculateSecondValueForParam1() },
 	 *      { name: 'param2', value: calculateParam2() }
 	 *  ]
-	 *
+	 * 
 	 * </pre>
-	 *
+	 * 
 	 * </p>
-	 *
+	 * 
 	 * @return a list of functions that produce additional URL arguments.
 	 * @see #getExtraParameters()
 	 */
@@ -267,32 +291,54 @@ public final class AjaxRequestAttributes
 	/**
 	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
 	 * handler to be invoked. For example if the behavior is attached to a link and
-	 * {@link #isAllowDefault()} returns <code>false</code> (which is default value), the link's URL
-	 * will not be followed. If the Ajax behavior is attached to a checkbox or a radio button then
-	 * the default behavior should be allowed to actually check the box or radio button, i.e.
+	 * {@link #isPreventDefault()} returns <code>false</code> (which is default value), the link's
+	 * URL will not be followed. If the Ajax behavior is attached to a checkbox or a radio button
+	 * then the default behavior should be allowed to actually check the box or radio button, i.e.
 	 * this method should return <code>true</code>.
 	 * 
-	 * @return {@code true} if the default event handler should be invoked, {@code false}
-	 *         otherwise.
+	 * @return {@code true} if the default event handler should be invoked, {@code false} otherwise.
 	 */
-	public boolean isAllowDefault()
+	public boolean isPreventDefault()
 	{
-		return allowDefault;
+		return preventDefault;
+	}
+
+	/**
+	 * Only applies for event behaviors. Returns whether the behavior should allow the JavaScript
+	 * event to propagate to the parent of its target.
+	 */
+	public EventPropagation getEventPropagation()
+	{
+		return eventPropagation;
 	}
 
 	/**
 	 * Only applies for event behaviors. Determines whether the behavior should allow the default
 	 * event handler to be invoked.
 	 * 
-	 * @see #isAllowDefault()
+	 * @see #isPreventDefault()
 	 * 
-	 * @param allowDefault
+	 * @param preventDefault
 	 * @return {@code this} object for chaining
-	 * @see #isAllowDefault()
+	 * @see #isPreventDefault()
 	 */
-	public AjaxRequestAttributes setAllowDefault(boolean allowDefault)
+	public AjaxRequestAttributes setPreventDefault(boolean preventDefault)
 	{
-		this.allowDefault = allowDefault;
+		this.preventDefault = preventDefault;
+		return this;
+	}
+
+	/**
+	 * Only applies to event behaviors. Determines whether the behavior should allow the JavaScript
+	 * event to propagate to the parent of its target.
+	 * 
+	 * @param eventPropagation
+	 *            the type of the stop
+	 * @return {@code this} object, for chaining
+	 */
+	public AjaxRequestAttributes setEventPropagation(EventPropagation eventPropagation)
+	{
+		this.eventPropagation = Args.notNull(eventPropagation, "eventPropagation");
 		return this;
 	}
 
@@ -325,8 +371,8 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param channel
-	 *      the Ajax channel to use. Pass {@code null} to use the default channel
-	 *      with name <em>0</em> and queueing type.
+	 *            the Ajax channel to use. Pass {@code null} to use the default channel with name
+	 *            <em>0</em> and queueing type.
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setChannel(final AjaxChannel channel)
@@ -394,8 +440,8 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * @return a flag indicating whether the Ajax response should be processed by
-	 *  Wicket (i.e. to replace components, execute scripts, etc.). Default: {@code true}.
+	 * @return a flag indicating whether the Ajax response should be processed by Wicket (i.e. to
+	 *         replace components, execute scripts, etc.). Default: {@code true}.
 	 */
 	public boolean isWicketAjaxResponse()
 	{
@@ -404,8 +450,8 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param wicketAjaxResponse
-	 *      a flag indicating whether the Ajax response should be processed by
-	 *       Wicket (i.e. to replace components, execute scripts, etc.).
+	 *            a flag indicating whether the Ajax response should be processed by Wicket (i.e. to
+	 *            replace components, execute scripts, etc.).
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setWicketAjaxResponse(final boolean wicketAjaxResponse)
@@ -417,7 +463,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * Returns the type of the data in the Ajax response. For example: 'xml', 'json', 'html', etc.
 	 * See the documentation of jQuery.ajax() method for more information.
-	 *
+	 * 
 	 * @return the type of the data in the Ajax response.
 	 */
 	public String getDataType()
@@ -427,7 +473,7 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param dataType
-	 *      the type of the data in the Ajax response.
+	 *            the type of the data in the Ajax response.
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setDataType(final String dataType)
@@ -446,7 +492,8 @@ public final class AjaxRequestAttributes
 
 	/**
 	 * @param throttlingSettings
-	 *      the settings to use when throttling is needed. Pass {@code null} to disable throttling.
+	 *            the settings to use when throttling is needed. Pass {@code null} to disable
+	 *            throttling.
 	 * @return {@code this} object for chaining
 	 */
 	public AjaxRequestAttributes setThrottlingSettings(ThrottlingSettings throttlingSettings)

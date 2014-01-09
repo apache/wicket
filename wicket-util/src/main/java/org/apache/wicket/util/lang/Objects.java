@@ -278,8 +278,8 @@ public final class Objects
 	}
 
 	/**
-	 * Returns the value converted numerically to the given class type
-	 * 
+	 * Convert between basic Java types, i.e. primitives and their wrappers, numbers and strings.
+	 * <p>
 	 * This method also detects when arrays are being converted and converts the components of one
 	 * array to the type of the other.
 	 * 

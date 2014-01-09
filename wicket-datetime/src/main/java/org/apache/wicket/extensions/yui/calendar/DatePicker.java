@@ -224,7 +224,7 @@ public class DatePicker extends Behavior
 		renderHeadInit(response);
 
 		// variables for the initialization script
-		Map<String, Object> variables = new HashMap<String, Object>();
+		Map<String, Object> variables = new HashMap<>();
 		String widgetId = getEscapedComponentMarkupId();
 		variables.put("componentId", getComponentMarkupId());
 		variables.put("widgetId", widgetId);
@@ -243,7 +243,7 @@ public class DatePicker extends Behavior
 		}
 
 		// print out the initialization properties
-		Map<String, Object> p = new LinkedHashMap<String, Object>();
+		Map<String, Object> p = new LinkedHashMap<>();
 		configure(p, response, variables);
 		if (!p.containsKey("navigator") && enableMonthYearSelection())
 		{
@@ -299,7 +299,7 @@ public class DatePicker extends Behavior
 		}
 
 		// variables for YUILoader
-		Map<String, Object> variables = new HashMap<String, Object>();
+		Map<String, Object> variables = new HashMap<>();
 		variables.put("basePath",
 			Strings.stripJSessionId(RequestCycle.get().urlFor(YUI, null).toString()) + "/");
 		variables.put("Wicket.DateTimeInit.DatePath", RequestCycle.get().urlFor(WICKET_DATE, null));
@@ -415,7 +415,7 @@ public class DatePicker extends Behavior
 			return null;
 		}
 
-		List<String> list = new ArrayList<String>(stringArray.length);
+		List<String> list = new ArrayList<>(stringArray.length);
 		for (String string : stringArray)
 		{
 			if (!Strings.isEmpty(string))
@@ -539,7 +539,7 @@ public class DatePicker extends Behavior
 
 	/**
 	 * Configure the localized strings for the datepicker widget. This implementation uses
-	 * {@link DateFormatSymbols} and some slight string manupilation to get the strings for months
+	 * {@link DateFormatSymbols} and some slight string manipulation to get the strings for months
 	 * and week days. Also, the first week day is set according to the {@link Locale} returned by
 	 * {@link #getLocale()}. It should work well for most locales.
 	 * <p>
@@ -580,14 +580,14 @@ public class DatePicker extends Behavior
 			dfSymbols = new DateFormatSymbols(locale);
 		}
 
-		Map<String, Object> i18nVariables = new LinkedHashMap<String, Object>();
+		Map<String, Object> i18nVariables = new LinkedHashMap<>();
 		setWidgetProperty(i18nVariables, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
 		setWidgetProperty(i18nVariables, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
 		setWidgetProperty(i18nVariables, "WEEKDAYS_MEDIUM",
 			filterEmpty(dfSymbols.getShortWeekdays()));
 		setWidgetProperty(i18nVariables, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
 
-		i18nVariables.put("START_WEEKDAY", Calendar.getInstance(locale).getFirstDayOfWeek() - 1);
+		i18nVariables.put("START_WEEKDAY", getFirstDayOfWeek(locale));
 
 		if (Locale.SIMPLIFIED_CHINESE.equals(locale) || Locale.TRADITIONAL_CHINESE.equals(locale))
 		{
@@ -612,6 +612,16 @@ public class DatePicker extends Behavior
 		response.render(OnDomReadyHeaderItem.forScript(i18n.toString()));
 
 		response.wasRendered(key);
+	}
+
+	/**
+	  * Gets the first day of week of a given locale.
+	  *
+	  * @return By default the first day of week accordingly to Calendar class.
+	  */
+	protected int getFirstDayOfWeek(Locale locale)
+	{
+		return Calendar.getInstance(locale).getFirstDayOfWeek() - 1;
 	}
 
 	/**
@@ -803,7 +813,7 @@ public class DatePicker extends Behavior
 	 */
 	private void appendMapping(final Map<String, Object> map, final StringBuilder json)
 	{
-		json.append("{");
+		json.append('{');
 		for (Iterator<Entry<String, Object>> i = map.entrySet().iterator(); i.hasNext();)
 		{
 			Entry<String, Object> entry = i.next();
@@ -813,7 +823,7 @@ public class DatePicker extends Behavior
 			{
 				json.append(":\"");
 				json.append(Strings.toEscapedUnicode(value.toString()));
-				json.append("\"");
+				json.append('"');
 			}
 			else if (value instanceof CharSequence[])
 			{
@@ -824,34 +834,34 @@ public class DatePicker extends Behavior
 					CharSequence tmpValue = valueArray[j];
 					if (j > 0)
 					{
-						json.append(",");
+						json.append(',');
 					}
 					if (tmpValue != null)
 					{
-						json.append("\"");
+						json.append('"');
 						json.append(Strings.toEscapedUnicode(tmpValue.toString()));
-						json.append("\"");
+						json.append('"');
 					}
 				}
-				json.append("]");
+				json.append(']');
 			}
 			else if (value instanceof Map)
 			{
-				json.append(":");
+				json.append(':');
 				@SuppressWarnings("unchecked")
 				Map<String, Object> nmap = (Map<String, Object>)value;
 				appendMapping(nmap, json);
 			}
 			else
 			{
-				json.append(":");
+				json.append(':');
 				json.append(Strings.toEscapedUnicode(String.valueOf(value)));
 			}
 			if (i.hasNext())
 			{
-				json.append(",");
+				json.append(',');
 			}
 		}
-		json.append("}");
+		json.append('}');
 	}
 }

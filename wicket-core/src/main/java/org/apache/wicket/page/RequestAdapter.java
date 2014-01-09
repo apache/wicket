@@ -160,7 +160,17 @@ public abstract class RequestAdapter
 					log.error("Error detaching page", e);
 				}
 
-				if (!page.isPageStateless())
+				boolean isPageStateless;
+				try
+				{
+					isPageStateless = page.isPageStateless();
+				}
+				catch (Exception x)
+				{
+					log.warn("An error occurred while checking whether a page is stateless. Assuming it is stateful.", x);
+					isPageStateless = false;
+				}
+				if (isPageStateless == false)
 				{
 					statefulPages.add(page);
 				}

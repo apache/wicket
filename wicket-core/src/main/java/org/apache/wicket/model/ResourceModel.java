@@ -128,7 +128,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		}
 
 		@Override
-		public void detach()
+		protected void onDetach()
 		{
 			ResourceModel.this.detach();
 		}

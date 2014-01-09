@@ -16,11 +16,10 @@
  */
 package org.apache.wicket.examples.source;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,8 +32,6 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.uwyn.jhighlight.renderer.Renderer;
-import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -43,21 +40,26 @@ import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.io.IOUtils;
-import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.uwyn.jhighlight.renderer.Renderer;
+import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 
 /**
  * Displays the resources in a packages directory in a browsable format.
@@ -71,15 +73,8 @@ public class SourcesPage extends WebPage
 	/**
 	 * Model for retrieving the source code from the classpath of a packaged resource.
 	 */
-	public class SourceModel extends AbstractReadOnlyModel<String>
+	private class SourceModel extends AbstractReadOnlyModel<String>
 	{
-		/**
-		 * Constructor.
-		 */
-		public SourceModel()
-		{
-		}
-
 		/**
 		 * Returns the contents of the file loaded from the classpath.
 		 * 
@@ -89,35 +84,23 @@ public class SourcesPage extends WebPage
 		public String getObject()
 		{
 			// name contains the name of the selected file
-			if (Strings.isEmpty(name) &&
-				Strings.isEmpty(getPage().getRequest()
-					.getRequestParameters()
-					.getParameterValue(SOURCE)
-					.toOptionalString()))
+			StringValue sourceParam = getPageParameters().get(SOURCE);
+			if (Strings.isEmpty(name) && sourceParam.isEmpty())
 			{
 				return "";
 			}
-			BufferedReader br = null;
+
 			String source = null;
+			InputStream resourceAsStream = null;
 			try
 			{
-			 StringBuilder sb = new StringBuilder();
-				source = (name != null) ? name : getPage().getRequest()
-					.getRequestParameters()
-					.getParameterValue(SOURCE)
-					.toOptionalString();
-				InputStream resourceAsStream = getPageTargetClass().getResourceAsStream(source);
+				source = (name != null) ? name : sourceParam.toString();
+				resourceAsStream = getPageTargetClass().getResourceAsStream(source);
 				if (resourceAsStream == null)
 				{
 					return "Unable to read the source for " + source;
 				}
-				br = new BufferedReader(new InputStreamReader(resourceAsStream));
 
-				while (br.ready())
-				{
-					sb.append(br.readLine());
-					sb.append("\n");
-				}
 				int lastDot = source.lastIndexOf('.');
 				if (lastDot != -1)
 				{
@@ -125,12 +108,15 @@ public class SourcesPage extends WebPage
 					Renderer renderer = XhtmlRendererFactory.getRenderer(type);
 					if (renderer != null)
 					{
-						return renderer.highlight(source, sb.toString(), "UTF-8", true);
+						ByteArrayOutputStream output = new ByteArrayOutputStream();
+						renderer.highlight(source, resourceAsStream, output, "UTF-8", true);
+						return output.toString("UTF-8");
 					}
 				}
-				return Strings.escapeMarkup(sb.toString(), false, true)
-					.toString()
-					.replaceAll("\n", "<br />");
+
+				CharSequence escaped = Strings.escapeMarkup(IOUtils.toString(resourceAsStream),
+					false, true);
+				return Strings.replaceAll(escaped, "\n", "<br />").toString();
 			}
 			catch (IOException e)
 			{
@@ -141,7 +127,7 @@ public class SourcesPage extends WebPage
 			}
 			finally
 			{
-				IOUtils.closeQuietly(br);
+				IOUtils.closeQuietly(resourceAsStream);
 			}
 		}
 	}
@@ -149,119 +135,33 @@ public class SourcesPage extends WebPage
 	/**
 	 * Model for retrieving the contents of a package directory from the class path.
 	 */
-	public class PackagedResourcesModel extends AbstractReadOnlyModel<List<String>>
+	public class PackagedResourcesModel extends LoadableDetachableModel<List<String>>
 	{
-		private final List<String> resources = new ArrayList<String>();
-
-		/**
-		 * Constructor.
-		 */
-		public PackagedResourcesModel()
-		{
-		}
-
-		/**
-		 * Clears the list to save space.
-		 */
-		protected void onDetach()
-		{
-			resources.clear();
-		}
-
 		/**
 		 * Returns the list of resources found in the package of the page.
 		 * 
 		 * @return the list of resources found in the package of the page.
 		 */
 		@Override
-		public List<String> getObject()
+		protected List<String> load()
 		{
-			if (resources.isEmpty())
-			{
-				get(getPageTargetClass());
-// PackageName name = PackageName.forClass(page);
-// ClassLoader loader = page.getClassLoader();
-// String path = Strings.replaceAll(name.getName(), ".", "/").toString();
-// try
-// {
-// // gives the urls for each place where the package
-// // path could be found. There could be multiple
-// // jar files containing the same package, so each
-// // jar file has its own url.
-//
-// Enumeration<URL> urls = loader.getResources(path);
-// while (urls.hasMoreElements())
-// {
-// URL url = urls.nextElement();
-//
-// // the url points to the directory structure
-// // embedded in the classpath.
-//
-// getPackageContents(url);
-// }
-// }
-// catch (IOException e)
-// {
-// log.error("Unable to read resource for: " + path, e);
-// }
-			}
-			return resources;
+			return get(getPageTargetClass());
 		}
 
-		/**
-		 * Retrieves the package contents for the given URL.
-		 * 
-		 * @param packageListing
-		 *            the url to list.
-		 */
-		private void getPackageContents(URL packageListing)
-		{
-			BufferedReader br = null;
-			try
-			{
-				InputStream openStream = Streams.readNonCaching(packageListing);
-				if (openStream == null)
-				{
-					return;
-				}
-				br = new BufferedReader(new InputStreamReader(openStream));
-
-				while (br.ready())
-				{
-					String listing = br.readLine();
-					String extension = Strings.afterLast(listing, '.');
-					if (!listing.endsWith("class"))
-					{
-						resources.add(listing);
-					}
-				}
-			}
-			catch (IOException e)
-			{
-				log.error("Unable to get package content: " + packageListing.toString(), e);
-			}
-			finally
-			{
-				IOUtils.closeQuietly(br);
-			}
-		}
-
-		private final void addResources(final Class<?> scope,
-			final AppendingStringBuffer relativePath, final File dir)
+		private final void addResources(final AppendingStringBuffer relativePath, final File dir,
+			List<String> resources)
 		{
 			File[] files = dir.listFiles();
 			for (File file : files)
 			{
 				if (file.isDirectory())
 				{
-					addResources(scope,
-						new AppendingStringBuffer(relativePath).append(file.getName()).append('/'),
-						file);
+					addResources(new AppendingStringBuffer(relativePath).append(file.getName())
+						.append('/'), file, resources);
 				}
 				else
 				{
 					String name = file.getName();
-					String extension = Strings.afterLast(name, '.');
 					if (!name.endsWith("class"))
 					{
 						resources.add(relativePath + name);
@@ -270,8 +170,10 @@ public class SourcesPage extends WebPage
 			}
 		}
 
-		private void get(Class<?> scope)
+		private List<String> get(Class<?> scope)
 		{
+			List<String> resources = new ArrayList<String>();
+
 			String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
 				.toString();
 			ClassLoader loader = scope.getClassLoader();
@@ -286,7 +188,7 @@ public class SourcesPage extends WebPage
 					if (connection instanceof JarURLConnection)
 					{
 						JarFile jf = ((JarURLConnection)connection).getJarFile();
-						scanJarFile(scope, packageRef, jf);
+						scanJarFile(packageRef, jf, resources);
 					}
 					else
 					{
@@ -328,15 +230,15 @@ public class SourcesPage extends WebPage
 							// ".zip"
 							log.debug("trying the filename: " + filename + " to load as a zip/jar.");
 							JarFile jarFile = new JarFile(filename, false);
-							scanJarFile(scope, packageRef, jarFile);
-							return;
+							scanJarFile(packageRef, jarFile, resources);
+							return resources;
 						}
 						if (!basedir.isDirectory())
 						{
 							throw new IllegalStateException(
 								"unable to read resources from directory " + basedir);
 						}
-						addResources(scope, new AppendingStringBuffer(), basedir);
+						addResources(new AppendingStringBuffer(), basedir, resources);
 					}
 				}
 			}
@@ -345,9 +247,11 @@ public class SourcesPage extends WebPage
 				throw new WicketRuntimeException(e);
 			}
 			Collections.sort(resources);
+
+			return resources;
 		}
 
-		private void scanJarFile(Class<?> scope, String packageRef, JarFile jf)
+		private void scanJarFile(String packageRef, JarFile jf, List<String> resources)
 		{
 			Enumeration<JarEntry> enumeration = jf.entries();
 			while (enumeration.hasMoreElements())
@@ -357,7 +261,6 @@ public class SourcesPage extends WebPage
 				if (name.startsWith(packageRef))
 				{
 					name = name.substring(packageRef.length() + 1);
-					String extension = Strings.afterLast(name, '.');
 					if (!name.endsWith("class"))
 					{
 						resources.add(name);
@@ -404,16 +307,16 @@ public class SourcesPage extends WebPage
 						@Override
 						protected CharSequence getURL()
 						{
-							return urlFor(SourcesPage.class,
-								          SourcesPage.generatePageParameters(getPageTargetClass(),
-									      item.getModel().getObject()));
+							return urlFor(SourcesPage.class, SourcesPage.generatePageParameters(
+								getPageTargetClass(), item.getModel().getObject()));
 						}
 
 						@Override
 						protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 						{
 							super.updateAjaxAttributes(attributes);
-							AjaxCallListener ajaxCallListener = new AjaxCallListener() {
+							AjaxCallListener ajaxCallListener = new AjaxCallListener()
+							{
 								@Override
 								public CharSequence getFailureHandler(Component component)
 								{
@@ -504,21 +407,20 @@ public class SourcesPage extends WebPage
 	 * 
 	 * Construct.
 	 * 
-	 * @param <C>
 	 * @param params
 	 */
-	public <C extends Page> SourcesPage(final PageParameters params)
+	public SourcesPage(final PageParameters params)
 	{
+		super(params);
+
 		filename = new Label("filename", new AbstractReadOnlyModel<String>()
 		{
 
 			@Override
 			public String getObject()
 			{
-				return name != null ? name : getPage().getRequest()
-					.getRequestParameters()
-					.getParameterValue(SOURCE)
-					.toOptionalString();
+				return name != null ? name : getPage().getRequest().getRequestParameters()
+					.getParameterValue(SOURCE).toOptionalString();
 			}
 
 		});
@@ -532,7 +434,7 @@ public class SourcesPage extends WebPage
 	/**
 	 * 
 	 * @param page
-	 * @return PageParamets for reconstructing the bookmarkable page.
+	 * @return PageParameters for reconstructing the bookmarkable page.
 	 */
 	public static PageParameters generatePageParameters(Page page)
 	{
@@ -550,47 +452,39 @@ public class SourcesPage extends WebPage
 		PageParameters p = new PageParameters();
 		p.set(PAGE_CLASS, clazz.getName());
 		if (fileName != null)
+		{
 			p.set(SOURCE, fileName);
+		}
 		return p;
-	}
-
-	private String getPageParam()
-	{
-		return getPage().getRequest()
-			.getRequestParameters()
-			.getParameterValue(PAGE_CLASS)
-			.toOptionalString();
 	}
 
 	private Class<? extends Page> getPageTargetClass()
 	{
 		if (page == null)
 		{
-			try
+			String pageParam = getPageParameters().get(PAGE_CLASS).toOptionalString();
+			if (pageParam == null)
 			{
-				String pageParam = getPageParam();
-				if (pageParam == null)
+				if (log.isErrorEnabled())
 				{
-					if (log.isErrorEnabled())
-					{
-						log.error("key: " + PAGE_CLASS + " is null.");
-					}
-					getRequestCycle().replaceAllRequestHandlers(
-						new ErrorCodeRequestHandler(404,
-							"Could not find sources for the page you requested"));
+					log.error("key: " + PAGE_CLASS + " is null.");
 				}
-				if (!pageParam.startsWith("org.apache.wicket.examples"))
-				{
-					if (log.isErrorEnabled())
-					{
-						log.error("user is trying to access class: " + pageParam +
-							" which is not in the scope of org.apache.wicket.examples");
-					}
-					throw new UnauthorizedInstantiationException(getClass());
-				}
-				page = (Class<? extends Page>)Class.forName(getPageParam());
+				getRequestCycle().replaceAllRequestHandlers(
+					new ErrorCodeRequestHandler(404,
+						"Could not find sources for the page you requested"));
 			}
-			catch (ClassNotFoundException e)
+			else if (!pageParam.startsWith("org.apache.wicket.examples"))
+			{
+				if (log.isErrorEnabled())
+				{
+					log.error("user is trying to access class: " + pageParam
+						+ " which is not in the scope of org.apache.wicket.examples");
+				}
+				throw new UnauthorizedInstantiationException(getClass());
+			}
+			page = WicketObjects.resolveClass(pageParam);
+
+			if (page == null)
 			{
 				getRequestCycle().replaceAllRequestHandlers(
 					new ErrorCodeRequestHandler(404,

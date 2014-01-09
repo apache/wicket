@@ -27,8 +27,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -50,10 +52,10 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -142,9 +144,12 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
+public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
+	IGenericComponent<T>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
+
+	public static final String ENCTYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 
 	/**
 	 * Visitor used for validation
@@ -165,8 +170,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				return;
 			}
 
-			if (formComponent.isVisibleInHierarchy() && formComponent.isValid() &&
-				formComponent.isEnabledInHierarchy())
+			if (formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy())
 			{
 				validate(formComponent);
 			}
@@ -217,8 +221,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					{
 						if (form.isEnabledInHierarchy())
 						{
-							if (component.isVisibleInHierarchy() &&
-								component.isEnabledInHierarchy())
+							if (component.isVisibleInHierarchy()
+								&& component.isEnabledInHierarchy())
 							{
 								((IFormModelUpdateListener)component).updateModel();
 							}
@@ -266,7 +270,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Maximum size of an upload in bytes. If null, the setting
-	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * {@link org.apache.wicket.settings.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 */
 	private Bytes maxSize = null;
 
@@ -435,20 +439,20 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					{
 						String name = submittingComponent.getInputName();
 						IRequestParameters parameters = getRequest().getRequestParameters();
-						if ((!parameters.getParameterValue(name).isNull()) ||
-							!parameters.getParameterValue(name + ".x").isNull())
+						if ((!parameters.getParameterValue(name).isNull())
+							|| !parameters.getParameterValue(name + ".x").isNull())
 						{
 							if (!component.isVisibleInHierarchy())
 							{
-								throw new WicketRuntimeException("Submit Button " +
-									submittingComponent.getInputName() + " (path=" +
-									component.getPageRelativePath() + ") is not visible");
+								throw new WicketRuntimeException("Submit Button "
+									+ submittingComponent.getInputName() + " (path="
+									+ component.getPageRelativePath() + ") is not visible");
 							}
 							if (!component.isEnabledInHierarchy())
 							{
-								throw new WicketRuntimeException("Submit Button " +
-									submittingComponent.getInputName() + " (path=" +
-									component.getPageRelativePath() + ") is not enabled");
+								throw new WicketRuntimeException("Submit Button "
+									+ submittingComponent.getInputName() + " (path="
+									+ component.getPageRelativePath() + ") is not enabled");
 							}
 							visit.stop(submittingComponent);
 						}
@@ -493,7 +497,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final Collection<IFormValidator> getFormValidators()
 	{
-		List<IFormValidator> validators = new ArrayList<IFormValidator>();
+		List<IFormValidator> validators = new ArrayList<>();
 
 		for (Behavior behavior : getBehaviors())
 		{
@@ -538,18 +542,15 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		}
 
 		Form<?> root = getRootForm();
-		return new AppendingStringBuffer("document.getElementById('").append(
-			root.getHiddenFieldId())
-			.append("').value='")
-			.append(url)
-			.append("';document.getElementById('")
-			.append(root.getMarkupId())
+		return new AppendingStringBuffer("document.getElementById('")
+			.append(root.getHiddenFieldId()).append("').value='").append(url)
+			.append("';document.getElementById('").append(root.getMarkupId())
 			.append("').submit();");
 	}
 
 	/**
 	 * Gets the maximum size for uploads. If null, the setting
-	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * {@link org.apache.wicket.settings.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 * 
 	 * 
 	 * @return the maximum size
@@ -679,7 +680,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
 		{
 			String desiredMethod = getMethod();
-			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
+			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest())
+				.getMethod();
 			if (!actualMethod.equalsIgnoreCase(desiredMethod))
 			{
 				MethodMismatchResponse response = onMethodMismatch();
@@ -690,8 +692,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					case CONTINUE :
 						break;
 					default :
-						throw new IllegalStateException("Invalid " +
-							MethodMismatchResponse.class.getName() + " value: " + response);
+						throw new IllegalStateException("Invalid "
+							+ MethodMismatchResponse.class.getName() + " value: " + response);
 				}
 			}
 		}
@@ -731,8 +733,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			String url = getRequest().getRequestParameters()
-				.getParameterValue(getHiddenFieldId())
+			String url = getRequest().getRequestParameters().getParameterValue(getHiddenFieldId())
 				.toString();
 			if (!Strings.isEmpty(url))
 			{
@@ -771,6 +772,20 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		else if (hasError())
 		{
 			callOnError(submitter);
+		}
+
+		// update auto labels if we are inside an ajax request
+		final AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
+		if (target != null)
+		{
+			visitChildren(FormComponent.class, new IVisitor<FormComponent<?>, Void>()
+			{
+				@Override
+				public void component(FormComponent<?> component, IVisit<Void> visit)
+				{
+					component.updateAutoLabels(target);
+				}
+			});
 		}
 	}
 
@@ -1008,7 +1023,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Sets the maximum size for uploads. If null, the setting
-	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * {@link org.apache.wicket.settings.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 * 
 	 * @param maxSize
 	 *            The maximum size
@@ -1066,7 +1081,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 *            The visitor interface to call
 	 * @return user provided in callback
 	 */
-	public final <R> R visitFormComponents(final IVisitor<? extends FormComponent<?>, R> visitor)
+	public final <R> R visitFormComponents(final IVisitor<FormComponent<?>, R> visitor)
 	{
 		return visitChildren(FormComponent.class, visitor);
 	}
@@ -1161,16 +1176,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * will do a form submit using this component. This method is overridable as what we do is best
 	 * effort only, and may not what you want in specific situations. So if you have specific
 	 * usability concerns, or want to follow another strategy, you may override this method.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 * @param openTag
-	 *            The open tag for the body
 	 */
-	protected void appendDefaultButtonField(final MarkupStream markupStream,
-		final ComponentTag openTag)
+	protected void appendDefaultButtonField()
 	{
-
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		// div that is not visible (but not display:none either)
@@ -1185,7 +1193,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
-		buffer.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
+		buffer
+			.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
 		// close div
@@ -1226,14 +1235,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		final Form<?> processingForm = findFormToProcess(submittingComponent);
 
-		// process submitting component (if specified)
-		if (submittingComponent != null)
-		{
-			// invoke submit on component
-			submittingComponent.onSubmit();
-		}
-
-		// invoke Form#onSubmit(..) going from innermost to outermost
+		// collect all forms innermost to outermost before any hierarchy is changed
+		final List<Form<?>> forms = Generics.newArrayList(3);
 		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
 		{
 			@Override
@@ -1241,10 +1244,23 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			{
 				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
-					form.onSubmit();
+					forms.add(form);
 				}
 			}
 		}, new ClassVisitFilter(Form.class));
+
+		// process submitting component (if specified)
+		if (submittingComponent != null)
+		{
+			// invoke submit on component
+			submittingComponent.onSubmit();
+		}
+
+		// invoke Form#onSubmit(..)
+		for (Form<?> form : forms)
+		{
+			form.onSubmit();
+		}
 
 		if (submittingComponent != null)
 		{
@@ -1363,7 +1379,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			catch (final FileUploadException fux)
 			{
 				// Create model with exception and maximum size values
-				final Map<String, Object> model = new HashMap<String, Object>();
+				final Map<String, Object> model = new HashMap<>();
 				model.put("exception", fux);
 				model.put("maxSize", getMaxSize());
 
@@ -1391,20 +1407,12 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		if (e instanceof SizeLimitExceededException)
 		{
-			// Resource key should be <form-id>.uploadTooLarge to
-			// override default message
-			final String defaultValue = "Upload must be less than " + getMaxSize();
-			String msg = getString(getId() + '.' + UPLOAD_TOO_LARGE_RESOURCE_KEY,
-				Model.ofMap(model), defaultValue);
+			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 		}
 		else
 		{
-			// Resource key should be <form-id>.uploadFailed to override
-			// default message
-			final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-			String msg = getString(getId() + '.' + UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model),
-				defaultValue);
+			String msg = getString(UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 
 			log.warn(msg, e);
@@ -1540,7 +1548,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					tag.put("method", METHOD_POST.toLowerCase(Locale.ENGLISH));
 				}
 
-				tag.put("enctype", "multipart/form-data");
+				tag.put("enctype", ENCTYPE_MULTIPART_FORM_DATA);
 				//
 				// require the application-encoding for multipart/form-data to be sure to
 				// get multipart-uploaded characters with the proper encoding on the following
@@ -1555,7 +1563,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			{
 				// sanity check
 				String enctype = (String)tag.getAttributes().get("enctype");
-				if ("multipart/form-data".equalsIgnoreCase(enctype))
+				if (ENCTYPE_MULTIPART_FORM_DATA.equalsIgnoreCase(enctype))
 				{
 					// though not set explicitly in Java, this is a multipart
 					// form
@@ -1630,44 +1638,52 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		if (isRootForm())
 		{
 			// get the hidden field id
-			String nameAndId = getHiddenFieldId();
-
-			// render the hidden field
-			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
-				"<input type=\"hidden\" name=\"")
-				.append(nameAndId)
-				.append("\" id=\"")
-				.append(nameAndId)
-				.append("\" />");
-
-			// if it's a get, did put the parameters in the action attribute,
-			// and have to write the url parameters as hidden fields
-			if (encodeUrlInHiddenFields())
-			{
-				String url = getActionUrl().toString();
-				int i = url.indexOf('?');
-				String queryString = (i > -1) ? url.substring(i + 1) : url;
-				String[] params = Strings.split(queryString, '&');
-
-				writeParamsAsHiddenFields(params, buffer);
-			}
-			buffer.append("</div>");
-			getResponse().write(buffer);
-
-			// if a default submitting component was set, handle the rendering of that
-			if (defaultSubmittingComponent instanceof Component)
-			{
-				final Component submittingComponent = (Component)defaultSubmittingComponent;
-				if (submittingComponent.isVisibleInHierarchy() &&
-					submittingComponent.isEnabledInHierarchy())
-				{
-					appendDefaultButtonField(markupStream, openTag);
-				}
-			}
+			writeHiddenFields();
 		}
 
 		// do the rest of the processing
 		super.onComponentTagBody(markupStream, openTag);
+	}
+
+	/*
+	 * Writes the markup for the hidden input field and default button field if applicable to the current response.
+	 */
+	public final void writeHiddenFields()
+	{
+		// get the hidden field id
+		String nameAndId = getHiddenFieldId();
+
+		AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
+			"<input type=\"hidden\" name=\"")
+			.append(nameAndId)
+			.append("\" id=\"")
+			.append(nameAndId)
+			.append("\" />");
+
+		// if it's a get, did put the parameters in the action attribute,
+		// and have to write the url parameters as hidden fields
+		if (encodeUrlInHiddenFields())
+		{
+			String url = getActionUrl().toString();
+			int i = url.indexOf('?');
+			String queryString = (i > -1) ? url.substring(i + 1) : url;
+			String[] params = Strings.split(queryString, '&');
+
+			writeParamsAsHiddenFields(params, buffer);
+		}
+		buffer.append("</div>");
+		getResponse().write(buffer);
+
+		// if a default submitting component was set, handle the rendering of that
+		if (defaultSubmittingComponent instanceof Component)
+		{
+			final Component submittingComponent = (Component)defaultSubmittingComponent;
+			if (submittingComponent.isVisibleInHierarchy()
+					&& submittingComponent.isEnabledInHierarchy())
+			{
+				appendDefaultButtonField();
+			}
+		}
 	}
 
 	/**
@@ -1681,20 +1697,18 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			String[] pair = Strings.split(param, '=');
 
-			buffer.append("<input type=\"hidden\" name=\"")
-				.append(recode(pair[0]))
-				.append("\" value=\"")
-				.append(pair.length > 1 ? recode(pair[1]) : "")
+			buffer.append("<input type=\"hidden\" name=\"").append(recode(pair[0]))
+				.append("\" value=\"").append(pair.length > 1 ? recode(pair[1]) : "")
 				.append("\" />");
 		}
 	}
 
 	/**
-	 * Take URL-encoded query string value, unencode it and return HTML-escaped version
+	 * Take URL-encoded query string value, decode it and return HTML-escaped version
 	 * 
 	 * @param s
-	 *            value to reencode
-	 * @return reencoded value
+	 *            value to decode
+	 * @return URL decoded and HTML escaped value
 	 */
 	private String recode(String s)
 	{
@@ -1826,7 +1840,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * containing illegal values. However, with external frameworks there may not be an alternate
 	 * way to validate the model object. A good example of this is a JSR303 Bean Validator
 	 * validating the model object to check any class-level constraints, in order to check such
-	 * constaints the model object must contain the values set by the user.
+	 * constraints the model object must contain the values set by the user.
 	 */
 	protected void onValidateModelObjects()
 	{
@@ -1900,10 +1914,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				{
 					if (log.isWarnEnabled())
 					{
-						log.warn("IFormValidator in form `" +
-							getPageRelativePath() +
-							"` depends on a component that has been removed from the page or is no longer visible. " +
-							"Offending component id `" + dependent.getId() + "`.");
+						log.warn("IFormValidator in form `"
+							+ getPageRelativePath()
+							+ "` depends on a component that has been removed from the page or is no longer visible. "
+							+ "Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;
 					break;
@@ -1971,43 +1985,27 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		return "";
 	}
 
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
+	@Override
 	public final void setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
 	}
 
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
+	@Override
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);
@@ -2031,8 +2029,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// register some metadata so we can later properly handle multipart ajax posts for
 			// embedded forms
 			registerJavaScriptNamespaces(response);
-			response.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId() +
-				"\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId() + ".metadata"));
+			response
+				.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId()
+					+ "\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId()
+					+ ".metadata"));
 		}
 	}
 
@@ -2043,9 +2043,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void registerJavaScriptNamespaces(IHeaderResponse response)
 	{
-		response.render(JavaScriptHeaderItem.forScript(
-			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
-			Form.class.getName()));
+		response
+			.render(JavaScriptHeaderItem
+				.forScript(
+					"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
+					Form.class.getName()));
 	}
 
 	/**
@@ -2064,8 +2066,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			inputName.prepend(id);
 			c = c.getParent();
-			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm()) ||
-				c instanceof Page)
+			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm())
+				|| c instanceof Page)
 			{
 				break;
 			}
@@ -2092,7 +2094,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @author igor
 	 */
-	public static enum MethodMismatchResponse {
+	public static enum MethodMismatchResponse
+	{
 		/**
 		 * Continue processing.
 		 */
@@ -2101,6 +2104,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		/**
 		 * Abort processing.
 		 */
-		ABORT;
+		ABORT
 	}
 }

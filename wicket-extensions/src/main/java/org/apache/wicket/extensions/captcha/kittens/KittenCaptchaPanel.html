@@ -19,20 +19,25 @@
 <wicket:head>
 	<script type="text/javascript">
 		function getEventX(element, event) {
+			var result;
 			if (event.offsetX != null) {
-				return event.offsetX;
+				result = event.offsetX;
+			} else {
+				result = event.pageX - element.offsetLeft;
 			}
-			return event.pageX - element.offsetLeft;
+			return parseInt(result, 10);
 		}
 		function getEventY(element, event) {
+			var result;
 			if (event.offsetY != null) {
-				return event.offsetY;
+				result = event.offsetY;
+			} else {
+				result = event.pageY - element.offsetTop;
 			}
-			return event.pageY - element.offsetTop;
+			return parseInt(result, 10);
 		}
 		function getImage() {
 			return Wicket.$("imageContainer").getElementsByTagName("img")[0];
-			
 		}
 		function showLoadingIndicator() {
 			Wicket.$('loading').style.visibility="visible";
@@ -47,7 +52,7 @@
 	<div wicket:id="animalSelectionLabel"></div>
 	<p/>
 	<div id="imageContainer">
-		<img src="" wicket:id="image"></img>
+		<img wicket:id="image"/>
 		<p/>
 		<div id="loading">
 			<wicket:message key="pleaseWait"></wicket:message>

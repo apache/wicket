@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -58,101 +57,6 @@ public abstract class AbstractLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Simple insertion string to allow disabled links to look like <i>Disabled link </i>.
-	 */
-	private String beforeDisabledLink;
-
-	/**
-	 * Simple insertion string to allow disabled links to look like <i>Disabled link </i>.
-	 */
-	private String afterDisabledLink;
-
-
-	/**
-	 * Sets the insertion string to allow disabled links to look like <i>Disabled link </i>.
-	 * 
-	 * @param afterDisabledLink
-	 *            The insertion string
-	 * @return this
-	 */
-	public AbstractLink setAfterDisabledLink(final String afterDisabledLink)
-	{
-		if (afterDisabledLink == null)
-		{
-			throw new IllegalArgumentException(
-				"Value cannot be null.  For no text, specify an empty String instead.");
-		}
-		this.afterDisabledLink = afterDisabledLink;
-		return this;
-	}
-
-	/**
-	 * Gets the insertion string to allow disabled links to look like <i>Disabled link </i>.
-	 * 
-	 * @return The insertion string
-	 */
-	public String getAfterDisabledLink()
-	{
-		return afterDisabledLink;
-	}
-
-	/**
-	 * Sets the insertion string to allow disabled links to look like <i>Disabled link </i>.
-	 * 
-	 * @param beforeDisabledLink
-	 *            The insertion string
-	 * @return this
-	 */
-	public AbstractLink setBeforeDisabledLink(final String beforeDisabledLink)
-	{
-		if (beforeDisabledLink == null)
-		{
-			throw new IllegalArgumentException(
-				"Value cannot be null.  For no text, specify an empty String instead.");
-		}
-		this.beforeDisabledLink = beforeDisabledLink;
-		return this;
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
-	@Override
-	protected void onBeforeRender()
-	{
-		super.onBeforeRender();
-
-		// Set default for before/after link text
-		if (beforeDisabledLink == null)
-		{
-			final Application app = getApplication();
-			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
-			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
-		}
-	}
-
-	/**
-	 * Gets the insertion string to allow disabled links to look like <i>Disabled link </i>.
-	 * 
-	 * @return The insertion string
-	 */
-	public String getBeforeDisabledLink()
-	{
-		return beforeDisabledLink;
-	}
-
-	/**
-	 * Helper methods that both checks whether the link is enabled and whether the action ENABLE is
-	 * allowed.
-	 * 
-	 * @return whether the link should be rendered as enabled
-	 */
-	protected boolean isLinkEnabled()
-	{
-		return isEnabledInHierarchy();
-	}
-
-	/**
 	 * Renders this link's body.
 	 * 
 	 * @param markupStream
@@ -164,12 +68,6 @@ public abstract class AbstractLink extends WebMarkupContainer
 	@Override
 	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		// Draw anything before the body?
-		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
-		{
-			getResponse().write(getBeforeDisabledLink());
-		}
-
 		// Get a copy of the body model from the getBody() method. This method could be overridden.
 		IModel<?> tmpBodyModel = getBody();
 
@@ -183,11 +81,6 @@ public abstract class AbstractLink extends WebMarkupContainer
 			// Render the body of the link
 			super.onComponentTagBody(markupStream, openTag);
 		}
-		// Draw anything after the body?
-		if (!isLinkEnabled() && getAfterDisabledLink() != null)
-		{
-			getResponse().write(getAfterDisabledLink());
-		}
 	}
 
 	/**
@@ -200,23 +93,17 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 */
 	protected void disableLink(final ComponentTag tag)
 	{
-		// if the tag is an anchor proper
-		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-			tag.getName().equalsIgnoreCase("area"))
+		// if the tag is a button or input
+		if ("button".equalsIgnoreCase(tag.getName()) || "input".equalsIgnoreCase(tag.getName()))
 		{
-			// Change anchor link to span tag
-			tag.setName("span");
-
+			tag.put("disabled", "disabled");
+		}
+		else
+		{
 			// Remove any href from the old link
 			tag.remove("href");
 
 			tag.remove("onclick");
-		}
-		// if the tag is a button or input
-		else if ("button".equalsIgnoreCase(tag.getName()) ||
-			"input".equalsIgnoreCase(tag.getName()))
-		{
-			tag.put("disabled", "disabled");
 		}
 	}
 

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -79,12 +80,19 @@ public class TabbedPanel<T extends ITab> extends Panel
 	/** id used for child panels */
 	public static final String TAB_PANEL_ID = "panel";
 
+	public static final String CONTAINER_CSS_CLASS_KEY = CssUtils.key(TabbedPanel.class,
+			"container");
+
+	public static final String SELECTED_CSS_CLASS_KEY = CssUtils.key(TabbedPanel.class, "selected");
+
+	public static final String LAST_CSS_CLASS_KEY = CssUtils.key(TabbedPanel.class, "last");
+
 	private final List<T> tabs;
 
 	/** the current tab */
 	private int currentTab = -1;
 
-	private transient Boolean[] tabsVisibilityCache;
+	private transient VisibilityCache visibilityCache;
 
 	/**
 	 * Constructor
@@ -157,20 +165,15 @@ public class TabbedPanel<T extends ITab> extends Panel
 	}
 
 	/**
-	 * Initialize the component's model.
+	 * Override of the default initModel behaviour. This component <strong>will not</strong> use any
+	 * compound model of a parent.
 	 * 
-	 * @return a new model containing {@code -1} if the super implementation doesn't supply one
+	 * @see org.apache.wicket.Component#initModel()
 	 */
 	@Override
 	protected IModel<?> initModel()
 	{
-		IModel<?> model = super.initModel();
-		if (model == null)
-		{
-			model = new Model<Integer>(-1);
-		}
-
-		return model;
+		return new Model<>(-1);
 	}
 
 	/**
@@ -209,9 +212,18 @@ public class TabbedPanel<T extends ITab> extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+
+				setVisible(getVisiblityCache().isVisible(tabIndex));
+			}
+
+			@Override
 			protected void onComponentTag(final ComponentTag tag)
 			{
 				super.onComponentTag(tag);
+
 				String cssClass = tag.getAttribute("class");
 				if (cssClass == null)
 				{
@@ -221,38 +233,29 @@ public class TabbedPanel<T extends ITab> extends Panel
 
 				if (getIndex() == getSelectedTab())
 				{
-					cssClass += " selected";
+					cssClass += ' ' + getSelectedTabCssClass();
 				}
-				if (getIndex() == getTabs().size() - 1)
+				if (getVisiblityCache().getLastVisible() == getIndex())
 				{
-					cssClass += " last";
+					cssClass += ' ' + getLastTabCssClass();
 				}
 				tag.put("class", cssClass.trim());
-			}
-
-			@Override
-			public boolean isVisible()
-			{
-				return getTabs().get(tabIndex).isVisible();
 			}
 		};
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onBeforeRender()
 	{
 		int index = getSelectedTab();
 
-		if ((index == -1) || (isTabVisible(index) == false))
+		if ((index == -1) || (getVisiblityCache().isVisible(index) == false))
 		{
 			// find first visible tab
 			index = -1;
 			for (int i = 0; i < tabs.size(); i++)
 			{
-				if (isTabVisible(i))
+				if (getVisiblityCache().isVisible(i))
 				{
 					index = i;
 					break;
@@ -261,9 +264,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 
 			if (index != -1)
 			{
-				/*
-				 * found a visible tab, so select it
-				 */
+				// found a visible tab, so select it
 				setSelectedTab(index);
 			}
 		}
@@ -279,7 +280,25 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 */
 	protected String getTabContainerCssClass()
 	{
-		return "tab-row";
+		return getString(CONTAINER_CSS_CLASS_KEY);
+	}
+
+	/**
+	 * @return the value of css class attribute that will be added to last tab. The default value is
+	 *         <code>last</code>
+	 */
+	protected String getLastTabCssClass()
+	{
+		return getString(LAST_CSS_CLASS_KEY);
+	}
+
+	/**
+	 * @return the value of css class attribute that will be added to selected tab. The default
+	 *         value is <code>selected</code>
+	 */
+	protected String getSelectedTabCssClass()
+	{
+		return getString(SELECTED_CSS_CLASS_KEY);
 	}
 
 	/**
@@ -362,7 +381,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 *            index of the tab to select
 	 * @return this for chaining
 	 * @throws IndexOutOfBoundsException
-	 *             if index is not {@code -1} or in the range of available tabs
+	 *             if index is not in the range of available tabs
 	 */
 	public TabbedPanel<T> setSelectedTab(final int index)
 	{
@@ -391,7 +410,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 
 		final Component component;
 
-		if (currentTab == -1 || (tabs.size() == 0) || !isTabVisible(currentTab))
+		if (currentTab == -1 || (tabs.size() == 0) || !getVisiblityCache().isVisible(currentTab))
 		{
 			// no tabs or the current tab is not visible
 			component = newPanel();
@@ -433,45 +452,84 @@ public class TabbedPanel<T extends ITab> extends Panel
 		return (Integer)getDefaultModelObject();
 	}
 
-	/**
-	 * 
-	 * @param tabIndex
-	 * @return visible
-	 */
-	private boolean isTabVisible(final int tabIndex)
-	{
-		if (tabsVisibilityCache == null)
-		{
-			tabsVisibilityCache = new Boolean[tabs.size()];
-		}
-
-		if (tabsVisibilityCache.length < tabIndex + 1)
-		{
-			Boolean[] resized = new Boolean[tabIndex + 1];
-			System.arraycopy(tabsVisibilityCache, 0, resized, 0, tabsVisibilityCache.length);
-			tabsVisibilityCache = resized;
-		}
-
-		if (tabsVisibilityCache.length > 0)
-		{
-			Boolean visible = tabsVisibilityCache[tabIndex];
-			if (visible == null)
-			{
-				visible = tabs.get(tabIndex).isVisible();
-				tabsVisibilityCache[tabIndex] = visible;
-			}
-			return visible;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	@Override
 	protected void onDetach()
 	{
-		tabsVisibilityCache = null;
+		visibilityCache = null;
+
 		super.onDetach();
+	}
+
+	private VisibilityCache getVisiblityCache()
+	{
+		if (visibilityCache == null)
+		{
+			visibilityCache = new VisibilityCache();
+		}
+
+		return visibilityCache;
+	}
+
+	/**
+	 * A cache for visibilities of {@link ITab}s.
+	 */
+	private class VisibilityCache
+	{
+
+		/**
+		 * Visibility for each tab.
+		 */
+		private Boolean[] visibilities;
+
+		/**
+		 * Last visible tab.
+		 */
+		private int lastVisible = -1;
+
+		public VisibilityCache()
+		{
+			visibilities = new Boolean[tabs.size()];
+		}
+
+		public int getLastVisible()
+		{
+			if (lastVisible == -1)
+			{
+				for (int t = 0; t < tabs.size(); t++)
+				{
+					if (isVisible(t))
+					{
+						lastVisible = t;
+					}
+				}
+			}
+
+			return lastVisible;
+		}
+
+		public boolean isVisible(int index)
+		{
+			if (visibilities.length < index + 1)
+			{
+				Boolean[] resized = new Boolean[index + 1];
+				System.arraycopy(visibilities, 0, resized, 0, visibilities.length);
+				visibilities = resized;
+			}
+
+			if (visibilities.length > 0)
+			{
+				Boolean visible = visibilities[index];
+				if (visible == null)
+				{
+					visible = tabs.get(index).isVisible();
+					visibilities[index] = visible;
+				}
+				return visible;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 }

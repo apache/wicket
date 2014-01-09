@@ -47,9 +47,21 @@ import com.google.common.base.Predicate;
 public @interface Subscribe {
 	/**
 	 * An optional filter on events to be received by the method. The filter cannot rely on any
-	 * context. For example, the {@link RequestCycle} may not be available.
+	 * context. For example, the {@link RequestCycle} may not be available. For events filtered by
+	 * this filter, Wicket-Atmosphere will not have to setup initiate the Wicket request cycle,
+	 * which is quite expensive.
 	 * 
 	 * @return The filter on events, defaults to no filter.
 	 */
-	Class<? extends Predicate<?>> filter() default NoFilterPredicate.class;
+	Class<? extends Predicate<AtmosphereEvent>> filter() default NoFilterPredicate.class;
+
+	/**
+	 * An optional filter on events to be received by the method. This filter has access to the
+	 * Wicket context, such as the {@link Session} and the {@link RequestCycle}. If your filter does
+	 * not require this context, you should use {@link #filter()} to prevent unnecessary setup of
+	 * the request cycle.
+	 * 
+	 * @return The filter on events, defaults to no filter.
+	 */
+	Class<? extends Predicate<AtmosphereEvent>> contextAwareFilter() default NoFilterPredicate.class;
 }

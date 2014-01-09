@@ -83,21 +83,16 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 */
 	protected PageComponentInfo getPageComponentInfo(final Url url)
 	{
-		if (url == null)
+		Args.notNull(url, "url");
+
+		for (QueryParameter queryParameter : url.getQueryParameters())
 		{
-			throw new IllegalStateException("Argument 'url' may not be null.");
-		}
-		else
-		{
-			for (QueryParameter queryParameter : url.getQueryParameters())
+			if (Strings.isEmpty(queryParameter.getValue()))
 			{
-				if (Strings.isEmpty(queryParameter.getValue()))
+				PageComponentInfo pageComponentInfo = PageComponentInfo.parse(queryParameter.getName());
+				if (pageComponentInfo != null)
 				{
-					PageComponentInfo pageComponentInfo = PageComponentInfo.parse(queryParameter.getName());
-					if (pageComponentInfo != null)
-					{
-						return pageComponentInfo;
-					}
+					return pageComponentInfo;
 				}
 			}
 		}

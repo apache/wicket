@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -47,6 +48,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	/**
 	 * Test that an AjaxLink's onClick method is actually invoked.
 	 */
+	@Test
 	public void testBasicAjaxLinkClick()
 	{
 		// Create a link, which we test is actually invoked
@@ -77,6 +79,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 * AjaxFallbackLinks should be clicked and interpreted as an AjaxLink, which means that
 	 * AjaxRequestTarget is not null.
 	 */
+	@Test
 	public void testAjaxFallbackLinkClick()
 	{
 		final Page page = new MockPageWithLink();
@@ -105,6 +108,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 * Test that when AJAX is disabled, the AjaxFallbackLink is invoked with null as
 	 * AjaxRequestTarget.
 	 */
+	@Test
 	public void testFallbackLinkWithAjaxDisabled()
 	{
 		final Page page = new MockPageWithLink();

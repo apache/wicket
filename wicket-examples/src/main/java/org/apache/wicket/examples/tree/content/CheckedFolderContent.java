@@ -36,7 +36,7 @@ public class CheckedFolderContent extends Content
 
 	public CheckedFolderContent(ITreeProvider<Foo> provider)
 	{
-		checked = new ProviderSubset<Foo>(provider, false);
+		checked = new ProviderSubset<>(provider, false);
 	}
 
 	@Override

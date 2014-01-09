@@ -16,21 +16,28 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
+import java.nio.charset.Charset;
+import java.util.Locale;
+
 import org.apache.wicket.MockPage;
-import org.apache.wicket.markup.html.link.ILinkListener;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author Matej Knopp
  */
 public class PageInstanceMapperTest extends AbstractMapperTest
@@ -54,7 +61,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/page?4");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
 		checkPage(h.getPage(), 4);
@@ -69,7 +76,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/page/ingore/me?4&a=3&b=3");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
 		checkPage(h.getPage(), 4);
@@ -84,7 +91,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/page?4-ILinkListener-a-b-c");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		checkPage(h.getPage(), 4);
@@ -126,7 +133,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		Url url = Url.parse("wicket/page?4-ILinkListener.5-a-b-c");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		checkPage(h.getPage(), 4);
@@ -146,7 +153,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		context.setNextPageRenderCount(6);
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
 
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		assertEquals(6, h.getPage().getRenderCount());
@@ -165,6 +172,95 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		((IPageRequestHandler)handler).getPage();
+	}
+
+	@Test
+	public void decode9()
+	{
+		final Url url = Url.parse("page?4");
+
+		Request request = new Request()
+		{
+			@Override
+			public Url getUrl()
+			{
+				return url;
+			}
+
+			@Override
+			public Locale getLocale()
+			{
+				return null;
+			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return Charset.forName("UTF-8");
+			}
+
+			@Override
+			public Url getClientUrl()
+			{
+				return Url.parse("wicket/page");
+			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return null;
+			}
+		};
+
+		IRequestHandler handler = encoder.mapRequest(request);
+
+		IRequestablePage page = ((IPageRequestHandler)handler).getPage();
+		checkPage(page, 4);
+	}
+
+
+	@Test
+	public void decode10()
+	{
+		final Url url = Url.parse("page?4");
+
+		Request request = new Request()
+		{
+			@Override
+			public Url getUrl()
+			{
+				return url;
+			}
+
+			@Override
+			public Locale getLocale()
+			{
+				return null;
+			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return Charset.forName("UTF-8");
+			}
+
+			@Override
+			public Url getClientUrl()
+			{
+				return Url.parse("page");
+			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return null;
+			}
+		};
+
+		IRequestHandler handler = encoder.mapRequest(request);
+
+		IRequestablePage page = ((IPageRequestHandler)handler).getPage();
+		checkPage(page, 4);
 	}
 
 	/**

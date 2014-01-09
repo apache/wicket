@@ -71,9 +71,31 @@ final class ComponentEventSender implements IEventSource
 				depth(event);
 				break;
 			case EXACT :
-				dispatcher.dispatchEvent(event.getSink(), event, ((sink instanceof Component)
-					? (Component)sink : null));
+				exact(event);
 				break;
+		}
+	}
+
+	/**
+	 * Exact broadcast
+	 *
+	 * Broadcasts the event only to the sink. In case the sink is a Component
+	 * then all its behaviors are notified as well.
+	 *
+	 * @param event
+	 *          The event with the payload
+	 */
+	private void exact(ComponentEvent<?> event)
+	{
+		IEventSink sink = event.getSink();
+
+		if (sink instanceof Component)
+		{
+			dispatchToComponent(dispatcher, (Component) sink, event);
+		}
+		else
+		{
+			dispatcher.dispatchEvent(sink, event, null);
 		}
 	}
 

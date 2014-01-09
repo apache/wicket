@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.border.Border;
  */
 public class BorderMarkupSourcingStrategy extends AssociatedMarkupSourcingStrategy
 {
+
 	/**
 	 * Constructor.
 	 */

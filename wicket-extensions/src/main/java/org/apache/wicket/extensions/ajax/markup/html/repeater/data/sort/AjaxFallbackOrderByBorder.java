@@ -49,25 +49,8 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, sortProperty, stateLocator, new AjaxFallbackOrderByLink.DefaultCssProvider<S>(),
-			null);
+		this(id, sortProperty, stateLocator, null);
 	}
-
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param sortProperty
-	 * @param stateLocator
-	 * @param cssProvider
-	 */
-	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final AjaxFallbackOrderByLink.ICssProvider<S> cssProvider)
-	{
-		this(id, sortProperty, stateLocator, cssProvider, null);
-	}
-
 
 	/**
 	 * Constructor
@@ -80,27 +63,9 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
 	{
-		this(id, sortProperty, stateLocator, new AjaxFallbackOrderByLink.DefaultCssProvider<S>(),
-			ajaxCallListener);
-	}
-
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param sortProperty
-	 * @param stateLocator
-	 * @param cssProvider
-	 * @param ajaxCallListener
-	 */
-	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator,
-		final AjaxFallbackOrderByLink.ICssProvider<S> cssProvider, final IAjaxCallListener ajaxCallListener)
-	{
 		super(id);
 		AjaxFallbackOrderByLink<S> link = new AjaxFallbackOrderByLink<S>("orderByLink", sortProperty,
-			stateLocator, cssProvider, ajaxCallListener)
+			stateLocator, ajaxCallListener)
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -119,7 +84,6 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 			}
 		};
 		addToBorder(link);
-		add(new AjaxFallbackOrderByLink.CssModifier<S>(link, cssProvider));
 		link.add(getBodyContainer());
 	}
 

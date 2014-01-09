@@ -187,7 +187,7 @@ public abstract class Request
 			@Override
 			public Url getClientUrl()
 			{
-				return getUrl();
+				return Request.this.getClientUrl();
 			}
 
 			@Override

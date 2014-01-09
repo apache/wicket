@@ -21,9 +21,12 @@ import java.util.List;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.ExportToolbar;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -43,9 +46,9 @@ public class DataTablePage extends BasePage
 	 */
 	public DataTablePage()
 	{
-		List<IColumn<Contact, String>> columns = new ArrayList<IColumn<Contact, String>>();
+		List<IColumn<Contact, String>> columns = new ArrayList<>();
 
-		columns.add(new AbstractColumn<Contact, String>(new Model<String>("Actions"))
+		columns.add(new AbstractColumn<Contact, String>(new Model<>("Actions"))
 		{
 			@Override
 			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
@@ -55,7 +58,7 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model<String>("ID"), "id")
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("ID"), "id")
 		{
 			@Override
 			public String getCssClass()
@@ -64,9 +67,9 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model<String>("First Name"), "firstName", "firstName"));
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("First Name"), "firstName", "firstName"));
 
-		columns.add(new PropertyColumn(new Model<String>("Last Name"), "lastName", "lastName")
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Last Name"), "lastName", "lastName")
 		{
 			@Override
 			public String getCssClass()
@@ -75,9 +78,13 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model<String>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn(new Model<String>("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Cell Phone"), "cellPhone"));
 
-		add(new DefaultDataTable("table", columns, new SortableContactDataProvider(), 8));
+		DataTable dataTable = new DefaultDataTable<>("table", columns,
+				new SortableContactDataProvider(), 8);
+		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter()));
+
+		add(dataTable);
 	}
 }

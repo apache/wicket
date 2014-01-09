@@ -19,16 +19,11 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A session subclass for the HTTP protocol.
@@ -39,42 +34,10 @@ public class WebSession extends Session
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(WebSession.class);
-
 	public static WebSession get()
 	{
 		return (WebSession)Session.get();
 	}
-
-	/**
-	 * Filter that returns all component scoped messages ({@link FeedbackMessage#getReporter()} !=
-	 * null).
-	 */
-	private static final IFeedbackMessageFilter MESSAGES_FOR_COMPONENTS = new IFeedbackMessageFilter()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public boolean accept(FeedbackMessage message)
-		{
-			return message.getReporter() != null;
-		}
-	};
-
-	/**
-	 * Filter that returns all session scoped messages ({@link FeedbackMessage#getReporter()} ==
-	 * null).
-	 */
-	private static final IFeedbackMessageFilter RENDERED_SESSION_SCOPED_MESSAGES = new IFeedbackMessageFilter()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public boolean accept(FeedbackMessage message)
-		{
-			return message.getReporter() == null && message.isRendered();
-		}
-	};
 
 	private static final MetaDataKey<Boolean> BROWSER_WAS_POLLED_KEY = new MetaDataKey<Boolean>()
 	{
@@ -107,22 +70,6 @@ public class WebSession extends Session
 
 			super.invalidate();
 		}
-	}
-
-	/**
-	 * Note: You must subclass WebSession and implement your own. We didn't want to make it abstract
-	 * to force every application to implement it. Instead we throw an exception.
-	 * 
-	 * @param username
-	 *            The username
-	 * @param password
-	 *            The password
-	 * @return True if the user was authenticated successfully
-	 */
-	public boolean authenticate(final String username, final String password)
-	{
-		throw new WicketRuntimeException(
-			"You must subclass WebSession and implement your own authentication method for all Wicket applications using authentication.");
 	}
 
 	/**

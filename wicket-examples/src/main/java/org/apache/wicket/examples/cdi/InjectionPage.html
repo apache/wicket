@@ -1,0 +1,16 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+<p>
+	This page demonstrates injection of a application-scoped Counter service
+</p>
+<p>
+	Current counter value is: <span wicket:id="count">100</span>
+	<a wicket:id="increment">increment</a>
+</p>
+<p>
+	Notice as you navigate away and come back to this page the value persists or is larger because it is shared across all users in application scope
+</p>
+</wicket:extend>
+</body>
+</html>

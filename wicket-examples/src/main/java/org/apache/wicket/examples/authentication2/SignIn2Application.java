@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.examples.authentication2;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
-import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.request.Request;
@@ -70,14 +68,8 @@ public final class SignIn2Application extends WicketExampleApplication
 		super.init();
 
 		// Register the authorization strategy
-		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
+		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 		{
-			public boolean isActionAuthorized(Component component, Action action)
-			{
-				// authorize everything
-				return true;
-			}
-
 			public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 				Class<T> componentClass)
 			{

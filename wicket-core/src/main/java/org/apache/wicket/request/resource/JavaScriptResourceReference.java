@@ -18,13 +18,11 @@ package org.apache.wicket.request.resource;
 
 import java.util.Locale;
 
-import org.apache.wicket.settings.IResourceSettings;
-
 /**
  * Static resource reference for javascript resources. The resources are filtered (stripped comments
  * and whitespace) if there is a registered compressor.
  * 
- * @see IResourceSettings#getJavaScriptCompressor()
+ * @see org.apache.wicket.settings.ResourceSettings#getJavaScriptCompressor()
  * @author Matej
  */
 public class JavaScriptResourceReference extends PackageResourceReference
@@ -53,7 +51,7 @@ public class JavaScriptResourceReference extends PackageResourceReference
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param scope
 	 *            mandatory parameter
 	 * @param name
@@ -64,10 +62,23 @@ public class JavaScriptResourceReference extends PackageResourceReference
 		super(scope, name);
 	}
 
+	/**
+	 * Construct.
+	 *
+	 * @param key
+	 *            mandatory parameter
+	 */
+	public JavaScriptResourceReference(Key key)
+	{
+		super(key);
+	}
+
 	@Override
 	public JavaScriptPackageResource getResource()
 	{
-		return new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
-			getVariation());
+		final JavaScriptPackageResource resource = new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
+				getVariation());
+		removeCompressFlagIfUnnecessary(resource);
+		return resource;
 	}
 }

@@ -198,7 +198,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	private final String resourceKey;
 
 	/** The default value of the message. */
-	private final String defaultValue;
+	private final IModel<String> defaultValue;
 
 	@Override
 	public IWrapModel<String> wrapOnAssignment(Component component)
@@ -246,7 +246,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		{
 			if (StringResourceModel.this.component != null)
 			{
-				// ignore assignment if component was specified explicitely
+				// ignore assignment if component was specified explicitly
 				return StringResourceModel.this.getObject();
 			}
 			else
@@ -321,7 +321,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The parameters to substitute using a Java MessageFormat object
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
-		final IModel<?> model, final String defaultValue, final Object... parameters)
+		final IModel<?> model, final IModel<String> defaultValue, final Object... parameters)
 	{
 		if (resourceKey == null)
 		{
@@ -373,7 +373,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The default value if the resource key is not found.
 	 */
 	public StringResourceModel(final String resourceKey, final IModel<?> model,
-		final String defaultValue, final Object... parameters)
+		final IModel<String> defaultValue, final Object... parameters)
 	{
 		this(resourceKey, null, model, defaultValue, parameters);
 	}
@@ -388,7 +388,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 		return Application.get().getResourceSettings().getLocalizer();
 	}
-
 
 	/**
 	 * Gets the string currently represented by this model. The string that is returned may vary for
@@ -424,20 +423,22 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		{
 			// Get the string resource, doing any property substitutions as part
 			// of the get operation
-			value = localizer.getString(getResourceKey(), component, model, defaultValue);
+			String defaultVal = defaultValue != null ? defaultValue.getObject() : null;
+			value = localizer.getString(getResourceKey(), component, model, defaultVal);
 			if (value == null)
 			{
-				value = defaultValue;
+				value = defaultVal;
 			}
 		}
 		else
 		{
 			// Get the string resource, doing not any property substitutions
 			// that has to be done later after MessageFormat
-			value = localizer.getString(getResourceKey(), component, null, defaultValue);
+			String defaultVal = defaultValue != null ? defaultValue.getObject() : null;
+			value = localizer.getString(getResourceKey(), component, null, defaultVal);
 			if (value == null)
 			{
-				value = defaultValue;
+				value = defaultVal;
 			}
 			if (value != null)
 			{
@@ -578,20 +579,21 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 
 	/**
 	 * Gets the string that this string resource model currently represents.
+	 * <p>
+	 * Note: This method is used only if this model is used directly without assignment to a
+	 * component, it is not called by the assignment wrapper returned from
+	 * {@link #wrapOnAssignment(Component)}.
 	 */
 	@Override
-	protected String load()
+	protected final String load()
 	{
 		return getString();
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
-	protected final void onDetach()
+	public final void detach()
 	{
-		super.onDetach();
+		super.detach();
 
 		// detach any model
 		if (model != null)
@@ -609,6 +611,11 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 					((IDetachable)parameter).detach();
 				}
 			}
+		}
+
+		if (defaultValue != null)
+		{
+			defaultValue.detach();
 		}
 	}
 

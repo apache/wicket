@@ -202,7 +202,7 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	protected static interface IWriteReplace
+	public static interface IWriteReplace
 	{
 		/**
 		 * write replace method as defined by Serializable
@@ -431,6 +431,7 @@ public class LazyInitProxyFactory
 			}
 			try
 			{
+				method.setAccessible(true);
 				return method.invoke(target, args);
 			}
 			catch (InvocationTargetException e)

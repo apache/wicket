@@ -46,7 +46,7 @@ import org.apache.wicket.util.lang.Args;
 public abstract class AbstractHierarchyIterator<N, I extends N> implements Iterator<I>, Iterable<I>
 {
 	// An iterator for each level we are down from root
-	private ArrayListStack<LevelIterator<N>> stack = new ArrayListStack<LevelIterator<N>>();
+	private ArrayListStack<LevelIterator<N>> stack = new ArrayListStack<>();
 
 	// The current level iterator
 	private LevelIterator<N> data;
@@ -74,7 +74,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 
 		if (hasChildren(root))
 		{
-			data = new LevelIterator<N>(root, newIterator(root));
+			data = new LevelIterator<>(root, newIterator(root));
 		}
 	}
 
@@ -163,7 +163,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 		stack.push(data);
 
 		// Initialize the data for the next level
-		data = new LevelIterator<N>(node, newIterator(node));
+		data = new LevelIterator<>(node, newIterator(node));
 
 		// Get the next node on the current level. If it's a container, than move downwards. If
 		// there are no more elements, than move up again.
@@ -281,7 +281,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 		// Move up one level
 		data = stack.pop();
 
-		// If we are on childFirst, than it's now time to handle the parent
+		// If we are on childFirst, then it's now time to handle the parent
 		if (childFirst)
 		{
 			hasNextWasLast = true;
@@ -291,7 +291,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 			}
 			return nextNode();
 		}
-		// If we are on parent first, than get the next element
+		// If we are on parent first, then get the next element
 		else if (data.hasNext())
 		{
 			return nextNode();
@@ -381,14 +381,14 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 			.append(childFirst)
 			.append("; hasNextWasLast=")
 			.append(hasNextWasLast)
-			.append("\n");
+			.append('\n');
 
 		msg.append("data.node=")
 			.append(data.node)
-			.append("\n")
+			.append('\n')
 			.append("data.lastNode=")
 			.append(data.lastNode)
-			.append("\n");
+			.append('\n');
 
 		msg.append("stack.size=").append(stack.size());
 
@@ -450,10 +450,10 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 			StringBuilder msg = new StringBuilder(500);
 			msg.append("node=")
 				.append(node)
-				.append("\n")
+				.append('\n')
 				.append("lastNode=")
 				.append(lastNode)
-				.append("\n");
+				.append('\n');
 
 			return msg.toString();
 		}

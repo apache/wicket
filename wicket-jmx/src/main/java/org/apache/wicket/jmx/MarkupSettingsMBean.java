@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.jmx;
 
-import org.apache.wicket.settings.IMarkupSettings;
-
 /**
  * Markup settings.
  * 
@@ -36,19 +34,9 @@ public interface MarkupSettingsMBean
 
 	/**
 	 * @return Returns the compressWhitespace.
-	 * @see IMarkupSettings#setCompressWhitespace(boolean)
+	 * @see MarkupSettings#setCompressWhitespace(boolean)
 	 */
 	boolean getCompressWhitespace();
-
-	/**
-	 * @return Returns the defaultAfterDisabledLink.
-	 */
-	String getDefaultAfterDisabledLink();
-
-	/**
-	 * @return Returns the defaultBeforeDisabledLink.
-	 */
-	String getDefaultBeforeDisabledLink();
 
 	/**
 	 * @since 1.1
@@ -59,7 +47,7 @@ public interface MarkupSettingsMBean
 
 	/**
 	 * @return Returns the stripComments.
-	 * @see IMarkupSettings#setStripComments(boolean)
+	 * @see MarkupSettings#setStripComments(boolean)
 	 */
 	boolean getStripComments();
 
@@ -98,18 +86,6 @@ public interface MarkupSettingsMBean
 	 *            The compressWhitespace to set.
 	 */
 	void setCompressWhitespace(final boolean compressWhitespace);
-
-	/**
-	 * @param defaultAfterDisabledLink
-	 *            The defaultAfterDisabledLink to set.
-	 */
-	void setDefaultAfterDisabledLink(String defaultAfterDisabledLink);
-
-	/**
-	 * @param defaultBeforeDisabledLink
-	 *            The defaultBeforeDisabledLink to set.
-	 */
-	void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink);
 
 	/**
 	 * Set default encoding for markup files. If null, the encoding provided by the operating system

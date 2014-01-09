@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -86,7 +87,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
 		return getReference().getDependencies();
 	}
@@ -114,7 +115,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public String toString()
 	{
-		return "CSSReferenceHeaderItem(" + getUrl() + ")";
+		return "CSSReferenceHeaderItem(" + getReference() + ", " + getPageParameters() + ")";
 	}
 
 	private String getUrl()

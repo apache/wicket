@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
+
 import org.apache.wicket.pageStore.IPageStore;
 
 /**
@@ -59,8 +62,8 @@ public class PageStoreManager extends AbstractPageManager
 
 		if (managers.containsKey(applicationName))
 		{
-			throw new IllegalStateException("Manager for application with key '" + applicationName +
-				"' already exists.");
+			throw new IllegalStateException("Manager for application with key '" + applicationName
+				+ "' already exists.");
 		}
 		managers.put(applicationName, this);
 	}
@@ -71,12 +74,18 @@ public class PageStoreManager extends AbstractPageManager
 	 * 
 	 * @author Matej Knopp
 	 */
-	private static class SessionEntry implements Serializable
+	private static class SessionEntry implements Serializable, HttpSessionBindingListener
 	{
 		private static final long serialVersionUID = 1L;
 
 		private final String applicationName;
 
+		/**
+		 * The id handed to the {@link IPageStore} to identify the session.
+		 * <p>
+		 * Note: If the container changes a session's id, this field remains unchanged on its
+		 * initial value.
+		 */
 		private final String sessionId;
 
 		private transient List<IManageablePage> sessionCache;
@@ -281,6 +290,30 @@ public class PageStoreManager extends AbstractPageManager
 				afterReadObject.add(page);
 			}
 		}
+
+		@Override
+		public void valueBound(HttpSessionBindingEvent event)
+		{
+		}
+
+		@Override
+		public void valueUnbound(HttpSessionBindingEvent event)
+		{
+			// WICKET-5164 use the original sessionId
+			IPageStore store = getPageStore();
+			// store might be null if destroyed already
+			if (store != null)
+			{
+				store.unbind(sessionId);
+			}
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			// see https://issues.apache.org/jira/browse/WICKET-5390
+			return false;
+		}
 	}
 
 	/**
@@ -339,18 +372,13 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		private SessionEntry getSessionEntry(boolean create)
 		{
-			SessionEntry entry = (SessionEntry)getSessionAttribute(getAttributeName());
+			String attributeName = getAttributeName();
+			SessionEntry entry = (SessionEntry)getSessionAttribute(attributeName);
 			if (entry == null && create)
 			{
 				bind();
 				entry = new SessionEntry(applicationName, getSessionId());
-			}
-			if (entry != null)
-			{
-				synchronized (entry)
-				{
-					setSessionAttribute(getAttributeName(), entry);
-				}
+				setSessionAttribute(attributeName, entry);
 			}
 			return entry;
 		}
@@ -380,7 +408,8 @@ public class PageStoreManager extends AbstractPageManager
 				entry.setSessionCache(touchedPages);
 				for (IManageablePage page : touchedPages)
 				{
-					pageStore.storePage(getSessionId(), page);
+					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
+					pageStore.storePage(entry.sessionId, page);
 				}
 			}
 		}
@@ -410,7 +439,7 @@ public class PageStoreManager extends AbstractPageManager
 	@Override
 	public void sessionExpired(String sessionId)
 	{
-		pageStore.unbind(sessionId);
+		// nothing to do, the SessionEntry will listen for it to become unbound by itself
 	}
 
 	/**

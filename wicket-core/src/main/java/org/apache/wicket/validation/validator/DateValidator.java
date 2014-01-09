@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
 
 /**
@@ -173,25 +174,29 @@ public class DateValidator extends RangeValidator<Date>
 	}
 
 	@Override
-	protected ValidationError decorate(ValidationError error, IValidatable<Date> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<Date> validatable)
 	{
 		error = super.decorate(error, validatable);
 
-		error.setVariable("inputdate", validatable.getValue());
-
-		// format variables if format has been specified
-		if (format != null)
+		if (error instanceof ValidationError)
 		{
-			SimpleDateFormat sdf = new SimpleDateFormat(format);
-			if (getMinimum() != null)
+			ValidationError ve = (ValidationError) error;
+			ve.setVariable("inputdate", validatable.getValue());
+
+			// format variables if format has been specified
+			if (format != null)
 			{
-				error.setVariable("minimum", sdf.format(getMinimum()));
+				SimpleDateFormat sdf = new SimpleDateFormat(format);
+				if (getMinimum() != null)
+				{
+					ve.setVariable("minimum", sdf.format(getMinimum()));
+				}
+				if (getMaximum() != null)
+				{
+					ve.setVariable("maximum", sdf.format(getMaximum()));
+				}
+				ve.setVariable("inputdate", sdf.format(validatable.getValue()));
 			}
-			if (getMaximum() != null)
-			{
-				error.setVariable("maximum", sdf.format(getMaximum()));
-			}
-			error.setVariable("inputdate", sdf.format(validatable.getValue()));
 		}
 
 		return error;

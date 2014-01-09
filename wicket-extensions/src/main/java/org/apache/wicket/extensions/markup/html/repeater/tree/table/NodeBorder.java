@@ -73,7 +73,7 @@ public class NodeBorder extends Behavior
 	@Override
 	public void onComponentTag(Component component, ComponentTag tag)
 	{
-		tag.put("class", "tree-node");
+		tag.append("class", "tree-node", " ");
 	}
 
 	@Override
@@ -83,6 +83,10 @@ public class NodeBorder extends Behavior
 
 		for (int i = 0; i < branches.length; i++)
 		{
+			if (i > 0)
+			{
+				response.write("</div>");
+			}
 			response.write("</div>");
 		}
 	}

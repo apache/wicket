@@ -32,16 +32,16 @@ public class SelectTestPage extends WebPage
 
 	public SelectTestPage()
 	{
-		form = new Form<Void>("form");
+		form = new Form<>("form");
 		add(form);
 
-		select = new Select<String>("select", new Model<String>(null));
+		select = new Select<>("select", new Model<String>(null));
 		form.add(select);
 
-		select.add(new SelectOption<String>("option0", new Model<String>("OPTION_0")));
-		select.add(option1 = new SelectOption<String>("option1", new Model<String>("OPTION_1")));
-		select.add(new SelectOption<String>("option2", new Model<String>("OPTION_2")));
+		select.add(new SelectOption<>("option0", new Model<>("OPTION_0")));
+		select.add(option1 = new SelectOption<>("option1", new Model<>("OPTION_1")));
+		select.add(new SelectOption<>("option2", new Model<>("OPTION_2")));
 
-		form.add(new TextField<String>("text", new Model<String>(null)).setRequired(true));
+		form.add(new TextField<>("text", new Model<>(null)).setRequired(true));
 	}
 }

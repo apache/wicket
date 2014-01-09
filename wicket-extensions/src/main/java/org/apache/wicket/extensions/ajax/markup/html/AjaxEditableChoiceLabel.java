@@ -19,14 +19,15 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -50,7 +51,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	private IModel<? extends List<? extends T>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
-	private IChoiceRenderer<T> renderer;
+	private ChoiceRenderer<T> renderer;
 
 	/**
 	 * Construct.
@@ -119,7 +120,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
-		final IModel<? extends List<? extends T>> choices, final IChoiceRenderer<T> renderer)
+		final IModel<? extends List<? extends T>> choices, final ChoiceRenderer<T> renderer)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -155,7 +156,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
-		final List<? extends T> choices, final IChoiceRenderer<T> renderer)
+		final List<? extends T> choices, final ChoiceRenderer<T> renderer)
 	{
 		this(id, model, Model.ofList(choices), renderer);
 	}
@@ -208,10 +209,29 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				attributes.setEventNames("change");
-				attributes.getExtraParameters().put("save", "true");
-				List<CharSequence> dynamicParameters = attributes.getDynamicExtraParameters();
-				dynamicParameters.add("return Wicket.Form.serializeElement(attrs.c)");
+				attributes.setEventNames("change", "blur", "keyup");
+
+				CharSequence dynamicExtraParameters = "var result = [], "
+						+ "kc=Wicket.Event.keyCode(attrs.event),"
+						+ "evtType=attrs.event.type;"
+						+ "if (evtType === 'blur' || (evtType === 'keyup' && kc===27)) {"
+						+ "  result.push( { name: 'save', value: false } );"
+						+ "}"
+						+ "else {"
+						+ "  result = Wicket.Form.serializeElement(attrs.c);"
+						+ "  result.push( { name: 'save', value: true } );"
+						+ "}"
+						+ "return result;";
+				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
+
+				CharSequence precondition = "var kc=Wicket.Event.keyCode(attrs.event),"
+						+ "evtType=attrs.event.type,"
+						+ "ret=false;"
+						+ "if(evtType==='blur' || evtType==='change' || (evtType==='keyup' && kc===27)) ret = true;"
+						+ "return ret;";
+				AjaxCallListener ajaxCallListener = new AjaxCallListener();
+				ajaxCallListener.onPrecondition(precondition);
+				attributes.getAjaxCallListeners().add(ajaxCallListener);
 			}
 		});
 		return editor;

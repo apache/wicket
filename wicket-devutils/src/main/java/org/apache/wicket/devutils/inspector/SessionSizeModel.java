@@ -17,40 +17,39 @@
 package org.apache.wicket.devutils.inspector;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
- * 
+ * Calculates
  */
-public class SessionSizeModel extends LoadableDetachableModel<Bytes>
+public class SessionSizeModel extends AbstractReadOnlyModel<Bytes>
 {
 	private static final long serialVersionUID = 1L;
-
-	private Session session;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param session
 	 */
-	public SessionSizeModel(final Session session)
+	public SessionSizeModel()
 	{
-		this.session = session;
 	}
 
 	@Override
-	protected Bytes load()
+	public Bytes getObject()
 	{
-		long sizeOfSession = WicketObjects.sizeof(session);
-		return sizeOfSession > -1 ? Bytes.bytes(sizeOfSession) : null;
-	}
+		Bytes result = null;
+		if (Session.exists())
+		{
+			long sizeOfSession = WicketObjects.sizeof(Session.get());
+			if (sizeOfSession > -1)
+			{
+				result = Bytes.bytes(sizeOfSession);
+			}
+		}
 
-	@Override
-	protected void onDetach()
-	{
-		super.onDetach();
-		session = null;
+
+		return result;
 	}
 }

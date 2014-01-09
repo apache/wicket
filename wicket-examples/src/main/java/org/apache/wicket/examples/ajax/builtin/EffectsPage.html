@@ -2,14 +2,17 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 	<wicket:head>
-		<script language="JavaScript" type="text/javascript" src="prototype.js"></script>
-		<script language="JavaScript" type="text/javascript" src="scriptaculous.js"></script>
-		<script language="JavaScript" type="text/javascript" src="effects.js"></script>
+		<script language="JavaScript" type="text/javascript" src="jquery-ui-1.10.3.custom.js"></script>
 	</wicket:head>
 </head>
 <wicket:extend>
 <style>
 	div.container { font-size: 14pt; }
+	
+	/* make effects work nicely with inline elements */
+    .ui-effects-wrapper {
+        display:inline;
+    }
 </style>
 <div class="container">
 counter 1:<span wicket:id="c1"></span> 

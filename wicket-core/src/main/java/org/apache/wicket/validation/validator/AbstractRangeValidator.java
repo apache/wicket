@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
@@ -57,7 +58,7 @@ import org.apache.wicket.validation.ValidationError;
  * 
  * @author igor
  */
-public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializable, V extends Serializable>
+public abstract class AbstractRangeValidator<R extends Comparable<? super R> & Serializable, V extends Serializable>
 	extends Behavior implements IValidator<V>
 {
 	private static final long serialVersionUID = 1L;
@@ -109,7 +110,8 @@ public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializa
 		final R max = getMaximum();
 		if ((min != null && value.compareTo(min) < 0) || (max != null && value.compareTo(max) > 0))
 		{
-			ValidationError error = new ValidationError(this, getMode().getVariation());
+			Mode mode = getMode();
+			ValidationError error = new ValidationError(this, mode.getVariation());
 			if (min != null)
 			{
 				error.setVariable("minimum", min);
@@ -117,6 +119,10 @@ public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializa
 			if (max != null)
 			{
 				error.setVariable("maximum", max);
+			}
+			if (mode == Mode.EXACT)
+			{
+				error.setVariable("exact", max);
 			}
 			validatable.error(decorate(error, validatable));
 		}
@@ -157,7 +163,7 @@ public abstract class AbstractRangeValidator<R extends Comparable<R> & Serializa
 	 * @param validatable
 	 * @return decorated error
 	 */
-	protected ValidationError decorate(ValidationError error, IValidatable<V> validatable)
+	protected IValidationError decorate(IValidationError error, IValidatable<V> validatable)
 	{
 		return error;
 	}

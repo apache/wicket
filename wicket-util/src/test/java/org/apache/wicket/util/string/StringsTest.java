@@ -77,6 +77,11 @@ public class StringsTest extends Assert
 		assertEquals(url + "?param", Strings.stripJSessionId(url + ";jsessionid=12345?param"));
 		assertEquals(url + "?param=a;b",
 			Strings.stripJSessionId(url + ";jsessionid=12345?param=a;b"));
+
+		// WICKET-4816
+		assertEquals(url + ";a=b;c=d", Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345"));
+		assertEquals(url + ";a=b;c=d?param=a;b",
+			Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345?param=a;b"));
 	}
 
 	/**
@@ -85,20 +90,20 @@ public class StringsTest extends Assert
 	@Test
 	public void test()
 	{
-		Assert.assertEquals("foo", Strings.lastPathComponent("bar.garply.foo", '.'));
-		Assert.assertEquals("foo", Strings.lastPathComponent("foo", '.'));
-		Assert.assertEquals("bar", Strings.firstPathComponent("bar.garply.foo", '.'));
-		Assert.assertEquals("foo", Strings.lastPathComponent("foo", '.'));
-		Assert.assertEquals("garply.foo", Strings.afterFirstPathComponent("bar.garply.foo", '.'));
-		Assert.assertEquals("", Strings.afterFirstPathComponent("foo", '.'));
-		Assert.assertEquals("bar.baz", Strings.beforeLast("bar.baz.foo", '.'));
-		Assert.assertEquals("", Strings.beforeLast("bar", '.'));
-		Assert.assertEquals("bar", Strings.beforeFirst("bar.baz.foo", '.'));
-		Assert.assertEquals("", Strings.beforeFirst("bar", '.'));
-		Assert.assertEquals("baz.foo", Strings.afterFirst("bar.baz.foo", '.'));
-		Assert.assertEquals("", Strings.afterFirst("bar", '.'));
-		Assert.assertEquals("foo", Strings.afterLast("bar.baz.foo", '.'));
-		Assert.assertEquals("", Strings.afterLast("bar", '.'));
+		Assert.assertEquals("foo", Strings.lastPathComponent("bar:garply:foo", ':'));
+		Assert.assertEquals("foo", Strings.lastPathComponent("foo", ':'));
+		Assert.assertEquals("bar", Strings.firstPathComponent("bar:garply:foo", ':'));
+		Assert.assertEquals("foo", Strings.lastPathComponent("foo", ':'));
+		Assert.assertEquals("garply:foo", Strings.afterFirstPathComponent("bar:garply:foo", ':'));
+		Assert.assertEquals("", Strings.afterFirstPathComponent("foo", ':'));
+		Assert.assertEquals("bar:baz", Strings.beforeLast("bar:baz:foo", ':'));
+		Assert.assertEquals("", Strings.beforeLast("bar", ':'));
+		Assert.assertEquals("bar", Strings.beforeFirst("bar:baz:foo", ':'));
+		Assert.assertEquals("", Strings.beforeFirst("bar", ':'));
+		Assert.assertEquals("baz:foo", Strings.afterFirst("bar:baz:foo", ':'));
+		Assert.assertEquals("", Strings.afterFirst("bar", ':'));
+		Assert.assertEquals("foo", Strings.afterLast("bar:baz:foo", ':'));
+		Assert.assertEquals("", Strings.afterLast("bar", ':'));
 		Assert.assertEquals("foo", Strings.replaceAll("afaooaaa", "a", "").toString());
 		Assert.assertEquals("fuzzyffuzzyoofuzzyfuzzyfuzzy",
 			Strings.replaceAll("afaooaaa", "a", "fuzzy").toString());
@@ -495,6 +500,13 @@ public class StringsTest extends Assert
 		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\r\ndef").toString());
 		assertEquals("<p>abc<br/>def<br/>ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi")
 			.toString());
+
+		// WICKET-4837
+		assertEquals(
+			"<p><a href=\"mailto:john@doe.com\">john@doe.com</a><br/><a href=\"http://apache.wicket.org\">http://apache.wicket.org</a></p>",
+			Strings.toMultilineMarkup(
+				"<a href=\"mailto:john@doe.com\">john@doe.com</a>\n<a href=\"http://apache.wicket.org\">http://apache.wicket.org</a>")
+				.toString());
 
 		assertEquals("<p>abc</p><p>def</p><p>ghi</p>",
 			Strings.toMultilineMarkup("abc\n\ndef\n\nghi").toString());

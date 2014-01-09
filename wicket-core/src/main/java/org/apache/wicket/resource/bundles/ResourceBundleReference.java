@@ -92,9 +92,9 @@ public class ResourceBundleReference extends ResourceReference implements IResou
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		Set<HeaderItem> ret = new LinkedHashSet<HeaderItem>();
+		Set<HeaderItem> ret = new LinkedHashSet<>();
 		for (HeaderItem curProvided : providedResources)
 		{
 			for (HeaderItem curDependency : curProvided.getDependencies())
@@ -104,6 +104,8 @@ public class ResourceBundleReference extends ResourceReference implements IResou
 		{
 			ret.remove(curProvided);
 		}
-		return ret;
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.addAll(ret);
+		return dependencies;
 	}
 }

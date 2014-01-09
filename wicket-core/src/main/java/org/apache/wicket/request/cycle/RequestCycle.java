@@ -22,6 +22,11 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.core.request.handler.IPageProvider;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.protocol.http.IRequestLogger;
@@ -35,17 +40,12 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +69,13 @@ import org.slf4j.LoggerFactory;
 public class RequestCycle implements IRequestCycle, IEventSink
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
+
+	/**
+	 * An additional logger which is used to log extra information.
+	 * Could be disabled separately than the main logger if the application developer
+	 * does not want to see this extra information.
+	 */
+	private static final Logger logExtra = LoggerFactory.getLogger("RequestCycleExtra");
 
 	/**
 	 * Returns request cycle associated with current thread.
@@ -188,7 +195,12 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	protected int getExceptionRetryCount()
 	{
-		return 10;
+		int retries = 10;
+		if (Application.exists())
+		{
+			retries = Application.get().getRequestCycleSettings().getExceptionRetryCount();
+		}
+		return retries;
 	}
 
 	/**
@@ -324,6 +336,18 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	protected IRequestHandler handleException(final Exception e)
 	{
+
+		if (Application.exists() && Application.get().usesDevelopmentConfig())
+		{
+			/*
+			 * Call out the fact that we are processing an exception in a loud way, helps to notice
+			 * them when developing even if they get wrapped or processed in a custom handler.
+			 */
+			logExtra.warn("********************************");
+			logExtra.warn("Handling the following exception", e);
+			logExtra.warn("********************************");
+		}
+
 		IRequestHandler handler = listeners.onException(this, e);
 		if (handler != null)
 		{
@@ -394,8 +418,14 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	/**
 	 * Returns URL for the request handler or <code>null</code> if the handler couldn't have been
 	 * encoded.
+	 * <p>
+	 * <strong>Note</strong>: The produced URL is relative to the filter path. Application code most
+	 * probably need URL relative to the currently used page, for this use
+	 * {@linkplain #urlFor(org.apache.wicket.request.IRequestHandler)}
+	 * </p>
 	 * 
 	 * @param handler
+	 *            the {@link IRequestHandler request handler} for which to create a callback url
 	 * @return Url instance or <code>null</code>
 	 */
 	public Url mapUrlFor(IRequestHandler handler)
@@ -407,6 +437,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 
 	/**
 	 * Returns a {@link Url} for the resource reference
+	 * <p>
+	 * <strong>Note</strong>: The produced URL is relative to the filter path. Application code most
+	 * probably need URL relative to the currently used page, for this use
+	 * {@linkplain #urlFor(org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.PageParameters)}
+	 * </p>
 	 * 
 	 * @param reference
 	 *            resource reference
@@ -423,9 +458,14 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * Returns a bookmarkable URL that references a given page class using a given set of page
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
+	 * <p>
+	 * <strong>Note</strong>: The produced URL is relative to the filter path. Application code most
+	 * probably need URL relative to the currently used page, for this use
+	 * {@linkplain #urlFor(Class, org.apache.wicket.request.mapper.parameter.PageParameters)}
+	 * </p>
 	 * 
 	 * @param <C>
-	 * 
+	 *            The type of the page
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -488,9 +528,18 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public CharSequence urlFor(IRequestHandler handler)
 	{
-		Url mappedUrl = mapUrlFor(handler);
-		CharSequence url = renderUrl(mappedUrl, handler);
-		return url;
+		try
+		{
+			Url mappedUrl = mapUrlFor(handler);
+			CharSequence url = renderUrl(mappedUrl, handler);
+			return url;
+		}
+		catch (Exception x)
+		{
+			throw new WicketRuntimeException(String.format(
+				"An error occurred while generating an Url for handler '%s'", handler), x);
+		}
+
 	}
 
 	private String renderUrl(Url url, IRequestHandler handler)
@@ -498,14 +547,15 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		if (url != null)
 		{
 			boolean shouldEncodeStaticResource = Application.exists() &&
-					Application.get().getResourceSettings().isEncodeJSessionId();
+				Application.get().getResourceSettings().isEncodeJSessionId();
 
 			String renderedUrl = getUrlRenderer().renderUrl(url);
 			if (handler instanceof ResourceReferenceRequestHandler)
 			{
 				ResourceReferenceRequestHandler rrrh = (ResourceReferenceRequestHandler)handler;
 				IResource resource = rrrh.getResource();
-				if (resource != null && !(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
+				if (resource != null && !(resource instanceof IStaticCacheableResource) ||
+					shouldEncodeStaticResource)
 				{
 					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
 				}
@@ -514,7 +564,8 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			{
 				ResourceRequestHandler rrh = (ResourceRequestHandler)handler;
 				IResource resource = rrh.getResource();
-				if (resource != null && !(resource instanceof IStaticCacheableResource) || shouldEncodeStaticResource)
+				if (resource != null && !(resource instanceof IStaticCacheableResource) ||
+					shouldEncodeStaticResource)
 				{
 					renderedUrl = getOriginalResponse().encodeURL(renderedUrl);
 				}
@@ -641,36 +692,6 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
 			RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT));
-	}
-
-	/**
-	 * Gets whether or not feedback messages are to be cleaned up on detach.
-	 * 
-	 * @return true if they are
-	 * @deprecated see {@link IApplicationSettings#getFeedbackMessageCleanupFilter()}
-	 * 
-	 *             TODO 7.0 remove
-	 */
-	@Deprecated
-	public final boolean isCleanupFeedbackMessagesOnDetach()
-	{
-		throw new UnsupportedOperationException("Deprecated, see javadoc");
-	}
-
-	/**
-	 * Sets whether or not feedback messages should be cleaned up on detach.
-	 * 
-	 * @param cleanupFeedbackMessagesOnDetach
-	 *            true if you want them to be cleaned up
-	 * 
-	 * @deprecated see {@link #isCleanupFeedbackMessagesOnDetach()}
-	 * 
-	 *             TODO 7.0 remove
-	 */
-	@Deprecated
-	public final void setCleanupFeedbackMessagesOnDetach(boolean cleanupFeedbackMessagesOnDetach)
-	{
-		throw new UnsupportedOperationException("Deprecated, see javadoc");
 	}
 
 	/**

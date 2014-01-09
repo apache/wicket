@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -90,10 +90,10 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 	@Override
 	public Component getFilter(final String componentId, final FilterForm<?> form)
 	{
-		ChoiceFilter<Y> filter = new ChoiceFilter<Y>(componentId, getFilterModel(form), form,
+		ChoiceFilter<Y> filter = new ChoiceFilter<>(componentId, getFilterModel(form), form,
 			filterChoices, enableAutoSubmit());
 
-		IChoiceRenderer<Y> renderer = getChoiceRenderer();
+		ChoiceRenderer<Y> renderer = getChoiceRenderer();
 		if (renderer != null)
 		{
 			filter.getChoice().setChoiceRenderer(renderer);
@@ -111,7 +111,7 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 	 */
 	protected IModel<Y> getFilterModel(final FilterForm<?> form)
 	{
-		return new PropertyModel<Y>(form.getDefaultModel(), getPropertyExpression());
+		return new PropertyModel<>(form.getDefaultModel(), getPropertyExpression());
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 	 * 
 	 * @return choice renderer that will be used to create the choice filter
 	 */
-	protected IChoiceRenderer<Y> getChoiceRenderer()
+	protected ChoiceRenderer<Y> getChoiceRenderer()
 	{
 		return null;
 	}

@@ -84,30 +84,18 @@ import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.apache.wicket.settings.IApplicationSettings;
-import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.settings.IExceptionSettings;
-import org.apache.wicket.settings.IFrameworkSettings;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
-import org.apache.wicket.settings.IMarkupSettings;
-import org.apache.wicket.settings.IPageSettings;
-import org.apache.wicket.settings.IRequestCycleSettings;
-import org.apache.wicket.settings.IRequestLoggerSettings;
-import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.settings.ISecuritySettings;
-import org.apache.wicket.settings.IStoreSettings;
-import org.apache.wicket.settings.def.ApplicationSettings;
-import org.apache.wicket.settings.def.DebugSettings;
-import org.apache.wicket.settings.def.ExceptionSettings;
-import org.apache.wicket.settings.def.FrameworkSettings;
-import org.apache.wicket.settings.def.JavaScriptLibrarySettings;
-import org.apache.wicket.settings.def.MarkupSettings;
-import org.apache.wicket.settings.def.PageSettings;
-import org.apache.wicket.settings.def.RequestCycleSettings;
-import org.apache.wicket.settings.def.RequestLoggerSettings;
-import org.apache.wicket.settings.def.ResourceSettings;
-import org.apache.wicket.settings.def.SecuritySettings;
-import org.apache.wicket.settings.def.StoreSettings;
+import org.apache.wicket.settings.ApplicationSettings;
+import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.settings.ExceptionSettings;
+import org.apache.wicket.settings.FrameworkSettings;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
+import org.apache.wicket.settings.MarkupSettings;
+import org.apache.wicket.settings.PageSettings;
+import org.apache.wicket.settings.RequestCycleSettings;
+import org.apache.wicket.settings.RequestLoggerSettings;
+import org.apache.wicket.settings.ResourceSettings;
+import org.apache.wicket.settings.SecuritySettings;
+import org.apache.wicket.settings.StoreSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
@@ -306,7 +294,7 @@ public abstract class Application implements UnboundListener, IEventSink
 				getResourceSettings().setUseMinifiedResources(false);
 				getMarkupSettings().setStripWicketTags(false);
 				getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_EXCEPTION_PAGE);
+					ExceptionSettings.SHOW_EXCEPTION_PAGE);
 				getDebugSettings().setComponentUseCheck(true);
 				getDebugSettings().setAjaxDebugModeEnabled(true);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(true);
@@ -319,7 +307,7 @@ public abstract class Application implements UnboundListener, IEventSink
 				getResourceSettings().setJavaScriptCompressor(new DefaultJavaScriptCompressor());
 				getMarkupSettings().setStripWicketTags(true);
 				getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+					ExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 				getDebugSettings().setComponentUseCheck(false);
 				getDebugSettings().setAjaxDebugModeEnabled(false);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(false);
@@ -478,6 +466,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	public void sessionUnbound(final String sessionId)
 	{
 		internalGetPageManager().sessionExpired(sessionId);
+
+		getSessionListeners().onUnbound(sessionId);
 	}
 
 
@@ -680,7 +670,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	protected void internalInit()
 	{
 		settingsAccessible = true;
-		IPageSettings pageSettings = getPageSettings();
+		PageSettings pageSettings = getPageSettings();
 
 		// Install default component resolvers
 		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
@@ -916,16 +906,16 @@ public abstract class Application implements UnboundListener, IEventSink
 	private final ComponentInitializationListenerCollection componentInitializationListeners = new ComponentInitializationListenerCollection();
 
 	/** list of {@link IHeaderContributor}s. */
-	private final HeaderContributorListenerCollection headerContributorListenerCollection = new HeaderContributorListenerCollection();
+	private final HeaderContributorListenerCollection headerContributorListeners = new HeaderContributorListenerCollection();
 
 	private final BehaviorInstantiationListenerCollection behaviorInstantiationListeners = new BehaviorInstantiationListenerCollection();
 
 	/**
 	 * @return Gets the application's {@link HeaderContributorListenerCollection}
 	 */
-	public final HeaderContributorListenerCollection getHeaderContributorListenerCollection()
+	public final HeaderContributorListenerCollection getHeaderContributorListeners()
 	{
-		return headerContributorListenerCollection;
+		return headerContributorListeners;
 	}
 
 	/**
@@ -1020,40 +1010,40 @@ public abstract class Application implements UnboundListener, IEventSink
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/** Application settings */
-	private IApplicationSettings applicationSettings;
+	private ApplicationSettings applicationSettings;
 
 	/** JavaScriptLibrary settings */
-	private IJavaScriptLibrarySettings javaScriptLibrarySettings;
+	private JavaScriptLibrarySettings javaScriptLibrarySettings;
 
 	/** Debug Settings */
-	private IDebugSettings debugSettings;
+	private DebugSettings debugSettings;
 
 	/** Exception Settings */
-	private IExceptionSettings exceptionSettings;
+	private ExceptionSettings exceptionSettings;
 
 	/** Framework Settings */
-	private IFrameworkSettings frameworkSettings;
+	private FrameworkSettings frameworkSettings;
 
 	/** The Markup Settings */
-	private IMarkupSettings markupSettings;
+	private MarkupSettings markupSettings;
 
 	/** The Page Settings */
-	private IPageSettings pageSettings;
+	private PageSettings pageSettings;
 
 	/** The Request Cycle Settings */
-	private IRequestCycleSettings requestCycleSettings;
+	private RequestCycleSettings requestCycleSettings;
 
 	/** The Request Logger Settings */
-	private IRequestLoggerSettings requestLoggerSettings;
+	private RequestLoggerSettings requestLoggerSettings;
 
 	/** The Resource Settings */
-	private IResourceSettings resourceSettings;
+	private ResourceSettings resourceSettings;
 
 	/** The Security Settings */
-	private ISecuritySettings securitySettings;
+	private SecuritySettings securitySettings;
 
 	/** The settings for {@link IPageStore}, {@link IDataStore} and {@link IPageManager} */
-	private IStoreSettings storeSettings;
+	private StoreSettings storeSettings;
 
 	/** can the settings object be set/used. */
 	private boolean settingsAccessible;
@@ -1062,7 +1052,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return Application's application-wide settings
 	 * @since 1.2
 	 */
-	public final IApplicationSettings getApplicationSettings()
+	public final ApplicationSettings getApplicationSettings()
 	{
 		checkSettingsAvailable();
 		if (applicationSettings == null)
@@ -1076,7 +1066,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param applicationSettings
 	 */
-	public final void setApplicationSettings(final IApplicationSettings applicationSettings)
+	public final void setApplicationSettings(final ApplicationSettings applicationSettings)
 	{
 		this.applicationSettings = applicationSettings;
 	}
@@ -1085,7 +1075,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return Application's JavaScriptLibrary settings
 	 * @since 6.0
 	 */
-	public final IJavaScriptLibrarySettings getJavaScriptLibrarySettings()
+	public final JavaScriptLibrarySettings getJavaScriptLibrarySettings()
 	{
 		checkSettingsAvailable();
 		if (javaScriptLibrarySettings == null)
@@ -1100,7 +1090,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param javaScriptLibrarySettings
 	 */
 	public final void setJavaScriptLibrarySettings(
-		final IJavaScriptLibrarySettings javaScriptLibrarySettings)
+		final JavaScriptLibrarySettings javaScriptLibrarySettings)
 	{
 		this.javaScriptLibrarySettings = javaScriptLibrarySettings;
 	}
@@ -1108,7 +1098,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's debug related settings
 	 */
-	public final IDebugSettings getDebugSettings()
+	public final DebugSettings getDebugSettings()
 	{
 		checkSettingsAvailable();
 		if (debugSettings == null)
@@ -1122,7 +1112,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param debugSettings
 	 */
-	public final void setDebugSettings(final IDebugSettings debugSettings)
+	public final void setDebugSettings(final DebugSettings debugSettings)
 	{
 		this.debugSettings = debugSettings;
 	}
@@ -1130,7 +1120,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's exception handling settings
 	 */
-	public final IExceptionSettings getExceptionSettings()
+	public final ExceptionSettings getExceptionSettings()
 	{
 		checkSettingsAvailable();
 		if (exceptionSettings == null)
@@ -1144,7 +1134,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param exceptionSettings
 	 */
-	public final void setExceptionSettings(final IExceptionSettings exceptionSettings)
+	public final void setExceptionSettings(final ExceptionSettings exceptionSettings)
 	{
 		this.exceptionSettings = exceptionSettings;
 	}
@@ -1152,7 +1142,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Wicket framework settings
 	 */
-	public final IFrameworkSettings getFrameworkSettings()
+	public final FrameworkSettings getFrameworkSettings()
 	{
 		checkSettingsAvailable();
 		if (frameworkSettings == null)
@@ -1166,7 +1156,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param frameworkSettings
 	 */
-	public final void setFrameworkSettings(final IFrameworkSettings frameworkSettings)
+	public final void setFrameworkSettings(final FrameworkSettings frameworkSettings)
 	{
 		this.frameworkSettings = frameworkSettings;
 	}
@@ -1174,7 +1164,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's page related settings
 	 */
-	public final IPageSettings getPageSettings()
+	public final PageSettings getPageSettings()
 	{
 		checkSettingsAvailable();
 		if (pageSettings == null)
@@ -1188,7 +1178,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param pageSettings
 	 */
-	public final void setPageSettings(final IPageSettings pageSettings)
+	public final void setPageSettings(final PageSettings pageSettings)
 	{
 		this.pageSettings = pageSettings;
 	}
@@ -1196,7 +1186,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's request cycle related settings
 	 */
-	public final IRequestCycleSettings getRequestCycleSettings()
+	public final RequestCycleSettings getRequestCycleSettings()
 	{
 		checkSettingsAvailable();
 		if (requestCycleSettings == null)
@@ -1210,7 +1200,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param requestCycleSettings
 	 */
-	public final void setRequestCycleSettings(final IRequestCycleSettings requestCycleSettings)
+	public final void setRequestCycleSettings(final RequestCycleSettings requestCycleSettings)
 	{
 		this.requestCycleSettings = requestCycleSettings;
 	}
@@ -1218,7 +1208,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's markup related settings
 	 */
-	public IMarkupSettings getMarkupSettings()
+	public MarkupSettings getMarkupSettings()
 	{
 		checkSettingsAvailable();
 		if (markupSettings == null)
@@ -1232,7 +1222,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param markupSettings
 	 */
-	public final void setMarkupSettings(final IMarkupSettings markupSettings)
+	public final void setMarkupSettings(final MarkupSettings markupSettings)
 	{
 		this.markupSettings = markupSettings;
 	}
@@ -1240,7 +1230,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's request logger related settings
 	 */
-	public final IRequestLoggerSettings getRequestLoggerSettings()
+	public final RequestLoggerSettings getRequestLoggerSettings()
 	{
 		checkSettingsAvailable();
 		if (requestLoggerSettings == null)
@@ -1254,7 +1244,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param requestLoggerSettings
 	 */
-	public final void setRequestLoggerSettings(final IRequestLoggerSettings requestLoggerSettings)
+	public final void setRequestLoggerSettings(final RequestLoggerSettings requestLoggerSettings)
 	{
 		this.requestLoggerSettings = requestLoggerSettings;
 	}
@@ -1262,7 +1252,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's resources related settings
 	 */
-	public final IResourceSettings getResourceSettings()
+	public final ResourceSettings getResourceSettings()
 	{
 		checkSettingsAvailable();
 		if (resourceSettings == null)
@@ -1276,7 +1266,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param resourceSettings
 	 */
-	public final void setResourceSettings(final IResourceSettings resourceSettings)
+	public final void setResourceSettings(final ResourceSettings resourceSettings)
 	{
 		this.resourceSettings = resourceSettings;
 	}
@@ -1284,7 +1274,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's security related settings
 	 */
-	public final ISecuritySettings getSecuritySettings()
+	public final SecuritySettings getSecuritySettings()
 	{
 		checkSettingsAvailable();
 		if (securitySettings == null)
@@ -1298,7 +1288,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param securitySettings
 	 */
-	public final void setSecuritySettings(final ISecuritySettings securitySettings)
+	public final void setSecuritySettings(final SecuritySettings securitySettings)
 	{
 		this.securitySettings = securitySettings;
 	}
@@ -1306,7 +1296,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return Application's stores related settings
 	 */
-	public final IStoreSettings getStoreSettings()
+	public final StoreSettings getStoreSettings()
 	{
 		checkSettingsAvailable();
 		if (storeSettings == null)
@@ -1320,7 +1310,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param storeSettings
 	 */
-	public final void setStoreSettings(final IStoreSettings storeSettings)
+	public final void setStoreSettings(final StoreSettings storeSettings)
 	{
 		this.storeSettings = storeSettings;
 	}

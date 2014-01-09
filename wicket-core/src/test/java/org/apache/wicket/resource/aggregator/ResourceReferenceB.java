@@ -18,10 +18,10 @@ package org.apache.wicket.resource.aggregator;
 
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
-import java.util.Collections;
+import java.util.List;
 
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
  * js resource with dep on A
@@ -39,8 +39,10 @@ public class ResourceReferenceB extends JavaScriptResourceReference
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		return Collections.singletonList(forReference(new ResourceReferenceA()));
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.add(forReference(new ResourceReferenceA()));
+		return dependencies;
 	}
 }

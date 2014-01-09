@@ -46,5 +46,6 @@ public class EnclosurePage_1 extends WebPage
 		add(container);
 		container.add(new Label("label8", "Test Label 2"));
 		add(new Label("label9", "Test Label 2"));
+		add(new Label("label10", "Test Label 3"));
 	}
 }

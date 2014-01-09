@@ -21,8 +21,7 @@ import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.resource.DummyApplication;
-import org.apache.wicket.settings.IExceptionSettings;
-import org.apache.wicket.settings.IExceptionSettings.AjaxErrorStrategy;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
@@ -40,8 +39,8 @@ public class InternalErrorCallsAjaxOnFailureTest extends WicketTestCase
 {
 
 	/**
-	 * The default {@link IExceptionSettings#getAjaxErrorHandlingStrategy()} is
-	 * {@link AjaxErrorStrategy#REDIRECT_TO_ERROR_PAGE}
+	 * The default {@link org.apache.wicket.settings.ExceptionSettings#getAjaxErrorHandlingStrategy()} is
+	 * {@link org.apache.wicket.settings.ExceptionSettings.AjaxErrorStrategy#REDIRECT_TO_ERROR_PAGE}
 	 */
 	@Test
 	public void showsInternalErrorPage()
@@ -64,9 +63,9 @@ public class InternalErrorCallsAjaxOnFailureTest extends WicketTestCase
 
 
 	/**
-	 * Setup {@link AjaxErrorStrategy#INVOKE_FAILURE_HANDLER} so Wicket will not redirect to the
-	 * configured {@link InternalErrorPage}/{@link ExceptionErrorPage} but will preserve the current
-	 * page and send http status 500 to wicket-ajax.js
+	 * Setup {@link org.apache.wicket.settings.ExceptionSettings.AjaxErrorStrategy#INVOKE_FAILURE_HANDLER}
+	 * so Wicket will not redirect to the configured {@link InternalErrorPage}/{@link ExceptionErrorPage}
+	 * but will preserve the current page and send http status 500 to wicket-ajax.js
 	 */
 	@Test
 	public void callsOnFailure()
@@ -84,7 +83,7 @@ public class InternalErrorCallsAjaxOnFailureTest extends WicketTestCase
 				super.init();
 
 				getExceptionSettings().setAjaxErrorHandlingStrategy(
-					AjaxErrorStrategy.INVOKE_FAILURE_HANDLER);
+					ExceptionSettings.AjaxErrorStrategy.INVOKE_FAILURE_HANDLER);
 			}
 
 		});

@@ -31,7 +31,6 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -108,9 +107,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 */
 	public AbstractRequestLogger()
 	{
-		int requestsWindowSize = Application.get()
-			.getRequestLoggerSettings()
-			.getRequestsWindowSize();
+		int requestsWindowSize = getRequestsWindowSize();
 		requestWindow = new RequestData[requestsWindowSize];
 		liveSessions = new ConcurrentHashMap<String, SessionData>();
 	}
@@ -184,7 +181,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 */
 	private boolean hasBufferRolledOver()
 	{
-		return requestWindow[requestWindow.length - 1] != null;
+		return requestWindow.length > 0 && requestWindow[requestWindow.length - 1] != null;
 	}
 
 	@Override
@@ -226,7 +223,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			requestdata.setSessionInfo(sessionInfo);
 
 			long sizeInBytes = -1;
-			if (Application.get().getRequestLoggerSettings().getRecordSessionSize())
+			if (Application.exists() &&
+				Application.get().getRequestLoggerSettings().getRecordSessionSize())
 			{
 				try
 				{
@@ -433,11 +431,11 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 
 	/**
 	 * Resizes the request buffer to match the
-	 * {@link IRequestLoggerSettings#getRequestsWindowSize() configured window size}
+	 * {@link org.apache.wicket.settings.RequestLoggerSettings#getRequestsWindowSize() configured window size}
 	 */
 	private void resizeBuffer()
 	{
-		int newCapacity = Application.get().getRequestLoggerSettings().getRequestsWindowSize();
+		int newCapacity = getRequestsWindowSize();
 
 		// do nothing if the capacity requirement hasn't changed
 		if (newCapacity == requestWindow.length)
@@ -493,7 +491,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 *            the date to format
 	 * @return the formatted date
 	 */
-	protected final String formatDate(final Date date)
+	protected String formatDate(final Date date)
 	{
 		Args.notNull(date, "date");
 
@@ -525,5 +523,17 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 		buf.append(String.format("%03d", millis));
 
 		return buf.toString();
+	}
+
+	private int getRequestsWindowSize()
+	{
+		int requestsWindowSize = 0;
+		if (Application.exists())
+		{
+			requestsWindowSize = Application.get()
+				.getRequestLoggerSettings()
+				.getRequestsWindowSize();
+		}
+		return requestsWindowSize;
 	}
 }

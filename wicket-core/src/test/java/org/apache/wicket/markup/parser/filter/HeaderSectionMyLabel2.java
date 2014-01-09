@@ -45,7 +45,7 @@ public class HeaderSectionMyLabel2 extends Label
 	 * @param container
 	 */
 	@Override
-	public void renderHead(HtmlHeaderContainer container)
+	public void internalRenderHead(HtmlHeaderContainer container)
 	{
 		this.getResponse().write("text added by contributor");
 	}

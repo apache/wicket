@@ -17,11 +17,12 @@
 package org.apache.wicket.extensions.ajax.markup.html.modal;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -33,12 +34,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -60,13 +60,14 @@ import org.apache.wicket.util.string.Strings;
  * <code>{@link #setPageCreator(ModalWindow.PageCreator)}</code> method.
  * </ul>
  * In case the content is a component, it is not rendered until the window is shown (method
- * <code>{@link #show(org.apache.wicket.ajax.AjaxRequestTarget)})</code>. The window can be made visible from an ajax
- * handler using <code>{@link #show(org.apache.wicket.ajax.AjaxRequestTarget)}</code>.
+ * <code>{@link #show(org.apache.wicket.ajax.AjaxRequestTarget)})</code>. The window can be made
+ * visible from an ajax handler using
+ * <code>{@link #show(org.apache.wicket.ajax.AjaxRequestTarget)}</code>.
  * <p>
  * To close the window there are multiple options. Static method
- * <code>{@link #close(org.apache.wicket.ajax.AjaxRequestTarget)}</code> can be used to close the window from a handler of
- * ajax link inside the window. By default the close button in the upper right corner of the window
- * closes it. This behavior can be altered using
+ * <code>{@link #close(org.apache.wicket.ajax.AjaxRequestTarget)}</code> can be used to close the
+ * window from a handler of ajax link inside the window. By default the close button in the upper
+ * right corner of the window closes it. This behavior can be altered using
  * <code>{@link #setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>. If you want to be
  * notified when the window is closed (either using the close button or calling
  * <code>{@link #close(org.apache.wicket.ajax.AjaxRequestTarget)})</code>, you can use
@@ -189,10 +190,12 @@ public class ModalWindow extends Panel
 	{
 		/**
 		 * Methods invoked after the button has been clicked. The invocation is done using an ajax
-		 * call, so <code>{@link org.apache.wicket.ajax.AjaxRequestTarget}</code> instance is available.
+		 * call, so <code>{@link org.apache.wicket.ajax.AjaxRequestTarget}</code> instance is
+		 * available.
 		 * 
 		 * @param target
-		 *            <code>{@link org.apache.wicket.ajax.AjaxRequestTarget}</code> instance bound with the ajax request.
+		 *            <code>{@link org.apache.wicket.ajax.AjaxRequestTarget}</code> instance bound
+		 *            with the ajax request.
 		 * 
 		 * @return True if the window can be closed (will close the window), false otherwise
 		 */
@@ -212,7 +215,8 @@ public class ModalWindow extends Panel
 		 * Called after the window has been closed.
 		 * 
 		 * @param target
-		 *            <code>{@link org.apache.wicket.ajax.AjaxRequestTarget}</code> instance bound with the ajax request.
+		 *            <code>{@link org.apache.wicket.ajax.AjaxRequestTarget}</code> instance bound
+		 *            with the ajax request.
 		 */
 		public void onClose(AjaxRequestTarget target);
 	}
@@ -402,27 +406,26 @@ public class ModalWindow extends Panel
 	 */
 	protected CharSequence getShowJavaScript()
 	{
-		return "Wicket.Window.create(settings).show();\n";
+		return "window.setTimeout(function(){\n" + "  Wicket.Window.create(settings).show();\n"
+			+ "}, 0);\n";
 	}
 
 	private static String getCloseJavacriptInternal()
 	{
 		return "var win;\n" //
-			+ "try {\n"
-			+ "	win = window.parent.Wicket.Window;\n"
+			+ "try {\n" + "	win = window.parent.Wicket.Window;\n"
 			+ "} catch (ignore) {\n"
 			+ "}\n"
 			+ "if (typeof(win) == \"undefined\" || typeof(win.current) == \"undefined\") {\n"
-			+ "  try {\n"
-			+ "     win = window.Wicket.Window;\n"
+			+ "  try {\n" + "     win = window.Wicket.Window;\n"
 			+ "  } catch (ignore) {\n"
 			+ "  }\n"
 			+ "}\n"
 			+ "if (win && win.current) {\n"
 			+ " var close = function(w) { w.setTimeout(function() {\n"
 			+ "		win.current.close();\n"
-			+ "	}, 0);  } \n"
-			+ "	try { close(window.parent); } catch (ignore) { close(window); };\n" + "}";
+			+ "	}, 0);  };\n"
+			+ "	try { close(window.parent); } catch (ignore) { close(window); }\n" + "}";
 	}
 
 	/**
@@ -630,7 +633,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Sets a flag whether to ask the user before leaving the page.
-	 *
+	 * 
 	 * @param unloadConfirmation
 	 *            a flag whether to ask the user before leaving the page
 	 * @return {@code this} instance, for chaining
@@ -643,9 +646,9 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns whether the user should be asked before leaving the page.
-	 *
-	 * @return {@code true} if the user should be asked if the last action
-	 *  causes leaving the page, {@code false} otherwise
+	 * 
+	 * @return {@code true} if the user should be asked if the last action causes leaving the page,
+	 *         {@code false} otherwise
 	 */
 	public boolean showUnloadConfirmation()
 	{
@@ -739,7 +742,7 @@ public class ModalWindow extends Panel
 	 */
 	public ModalWindow setTitle(final String title)
 	{
-		this.title = new Model<String>(title);
+		this.title = new Model<>(title);
 		return this;
 	}
 
@@ -1078,22 +1081,18 @@ public class ModalWindow extends Panel
 			{
 				throw new WicketRuntimeException("Error creating page for modal dialog.");
 			}
-			CharSequence pageUrl = null;
+			CharSequence pageUrl;
 			RequestCycle requestCycle = RequestCycle.get();
 
+			page.internalInitialize();
 			if (page.isPageStateless())
 			{
 				pageUrl = requestCycle.urlFor(page.getClass(), page.getPageParameters());
-				appendAssignment(buffer, "settings.ie8_src", pageUrl);
 			}
 			else
 			{
 				IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
-
 				pageUrl = requestCycle.urlFor(handler);
-				String ie8_pageUrl = requestCycle.getUrlRenderer().renderRelativeUrl(
-					requestCycle.mapUrlFor(handler));
-				appendAssignment(buffer, "settings.ie8_src", ie8_pageUrl);
 			}
 
 			appendAssignment(buffer, "settings.src", pageUrl);
@@ -1149,7 +1148,7 @@ public class ModalWindow extends Panel
 			CloseButtonBehavior behavior = getBehaviors(CloseButtonBehavior.class).get(0);
 			buffer.append("settings.onCloseButton = function() { ");
 			buffer.append(behavior.getCallbackScript());
-			buffer.append("};\n");
+			buffer.append(";return false;};\n");
 		}
 
 		postProcessSettings(buffer);
@@ -1252,7 +1251,8 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Gives the possibility to provide custom {@link org.apache.wicket.ajax.attributes.IAjaxCallListener}
+	 * Gives the possibility to provide custom
+	 * {@link org.apache.wicket.ajax.attributes.IAjaxCallListener}
 	 * 
 	 * @return the behavior that should be used for the window close button
 	 */

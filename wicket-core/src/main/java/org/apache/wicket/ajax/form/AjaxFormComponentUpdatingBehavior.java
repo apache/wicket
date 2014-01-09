@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -45,7 +46,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
-	private static final Logger log = LoggerFactory.getLogger(AjaxFormComponentUpdatingBehavior.class);
+	private static final Logger log = LoggerFactory
+		.getLogger(AjaxFormComponentUpdatingBehavior.class);
 
 	/**
 	 * 
@@ -72,18 +74,35 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		super.onBind();
 
-		if (!(getComponent() instanceof FormComponent))
+		Component component = getComponent();
+		if (!(component instanceof FormComponent))
 		{
-			throw new WicketRuntimeException("Behavior " + getClass().getName() +
-				" can only be added to an instance of a FormComponent");
+			throw new WicketRuntimeException("Behavior " + getClass().getName()
+				+ " can only be added to an instance of a FormComponent");
 		}
-		else if (Application.get().usesDevelopmentConfig() &&
-			AjaxFormChoiceComponentUpdatingBehavior.appliesTo(getComponent()))
+
+		checkComponent((FormComponent<?>)component);
+	}
+
+	/**
+	 * Check the component this behavior is bound to.
+	 * <p>
+	 * Logs a warning in development mode when an {@link AjaxFormChoiceComponentUpdatingBehavior}
+	 * should be used.
+	 * 
+	 * @param component
+	 *            bound component
+	 */
+	protected void checkComponent(FormComponent<?> component)
+	{
+		if (Application.get().usesDevelopmentConfig()
+			&& AjaxFormChoiceComponentUpdatingBehavior.appliesTo(component))
 		{
-			log.warn(String.format(
-				"AjaxFormComponentUpdatingBehavior is not supposed to be added in the form component at path: \"%s\". "
-					+ "Use the AjaxFormChoiceComponentUpdatingBehavior instead, that is meant for choices/groups that are not one component in the html but many",
-				getComponent().getPageRelativePath()));
+			log.warn(String
+				.format(
+					"AjaxFormComponentUpdatingBehavior is not supposed to be added in the form component at path: \"%s\". "
+						+ "Use the AjaxFormChoiceComponentUpdatingBehavior instead, that is meant for choices/groups that are not one component in the html but many",
+					component.getPageRelativePath()));
 		}
 	}
 
@@ -102,7 +121,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		super.updateAjaxAttributes(attributes);
 
 		attributes.setMethod(Method.POST);
-		attributes.setAllowDefault(true);
 	}
 
 	/**
@@ -123,13 +141,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			formComponent.inputChanged();
 			formComponent.validate();
-			if (formComponent.hasErrorMessage())
-			{
-				formComponent.invalid();
-
-				onError(target, null);
-			}
-			else
+			if (formComponent.isValid())
 			{
 				formComponent.valid();
 				if (getUpdateModel())
@@ -139,12 +151,18 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 
 				onUpdate(target);
 			}
+			else
+			{
+				formComponent.invalid();
+
+				onError(target, null);
+			}
 		}
 		catch (RuntimeException e)
 		{
 			onError(target, e);
-
 		}
+		formComponent.updateAutoLabels(target);
 	}
 
 	/**
@@ -171,7 +189,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * has been updated.
 	 * 
 	 * @param target
-	 *      the current request handler
+	 *            the current request handler
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
@@ -183,9 +201,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * FormComponent
 	 * 
 	 * @param target
-	 *       the current request handler
+	 *            the current request handler
 	 * @param e
-	 *      the error that occurred during the update of the component
+	 *            the error that occurred during the update of the component
 	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{

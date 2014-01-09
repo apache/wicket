@@ -36,6 +36,7 @@ public class HomePage extends WicketExamplePage
 
 	private Component timeLabel;
 	private Component messageLabel;
+	private TextField<String> receiver;
 	private TextField<String> input;
 
 	public HomePage(final PageParameters parameters)
@@ -45,9 +46,10 @@ public class HomePage extends WicketExamplePage
 		add(timeLabel = new Label("time", Model.of("start")).setOutputMarkupId(true));
 		add(messageLabel = new Label("message", Model.of("-")).setOutputMarkupId(true));
 
-		Form<Void> form = new Form<Void>("form");
+		Form<Void> form = new Form<>("form");
 		add(form);
-		form.add(input = new TextField<String>("input", Model.of("")));
+		form.add(receiver = new TextField<>("receiver", Model.of("")));
+		form.add(input = new TextField<>("input", Model.of("")));
 		form.add(new AjaxSubmitLink("send", form)
 		{
 			private static final long serialVersionUID = 1L;
@@ -55,7 +57,8 @@ public class HomePage extends WicketExamplePage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				EventBus.get().post(input.getModelObject());
+				EventBus.get().post(
+					new ChatMessage(receiver.getModelObject(), input.getModelObject()));
 			}
 
 			@Override
@@ -74,10 +77,10 @@ public class HomePage extends WicketExamplePage
 		target.add(timeLabel);
 	}
 
-	@Subscribe
-	public void receiveMessage(AjaxRequestTarget target, String message)
+	@Subscribe(contextAwareFilter = ReceiverFilter.class)
+	public void receiveMessage(AjaxRequestTarget target, ChatMessage message)
 	{
-		messageLabel.setDefaultModelObject(message);
+		messageLabel.setDefaultModelObject(message.getMessage());
 		target.add(messageLabel);
 	}
 }

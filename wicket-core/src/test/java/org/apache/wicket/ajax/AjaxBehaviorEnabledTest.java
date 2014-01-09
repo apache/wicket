@@ -25,10 +25,8 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -41,7 +39,7 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	 * 
 	 * @author marrink
 	 */
-	private static final class CustomStrategy implements IAuthorizationStrategy
+	private static final class CustomStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 	{
 		/**
 		 * 
@@ -57,18 +55,6 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 			}
 			return true;
 		}
-
-		/**
-		 * 
-		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
-		 */
-		@Override
-		public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
-			Class<T> componentClass)
-		{
-			return true;
-		}
-
 	}
 
 	/**
@@ -103,19 +89,9 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1575">1575</a>
 	 */
 	@Test
-	@Ignore
-	// TODO Wicket.next re-enable
-	public void disabledBehavior()
+	public void disabledBehavior() throws Exception
 	{
-		tester.startPage(AjaxBehaviorEnabledPage.class);
-		tester.assertRenderedPage(AjaxBehaviorEnabledPage.class);
-		System.out.println(tester.getLastResponseAsString());
-		tester.assertVisible("enabled");
-		tester.assertVisible("disabled");
-		assertTrue(tester.getTagByWicketId("enabled").hasAttribute("onclick"));
-		assertFalse("disabled behaviors should not generate onclick",
-			tester.getTagByWicketId("disabled").hasAttribute("onclick"));
-
+		executeTest(AjaxBehaviorEnabledPage.class, "AjaxBehaviorEnabled_expected.html");
 	}
 
 }

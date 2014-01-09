@@ -1,0 +1,106 @@
+<html xmlns:w="http://wicket.apache.org/">
+<body>
+
+<!-- nested inline enclosures with separate child depths. -->
+<div w:enclosure="label1"><span w:id="label1">Test</span>
+	<div w:enclosure="label2">
+		<table>
+			<tr>
+				<td><span w:id="label2">Test</span></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<!-- nested inline enclosures with same child depth. -->
+<div w:enclosure="label3">
+	<div w:enclosure="label4">
+		<span w:id="label3">Test</span>
+		<span w:id="label4">Test</span>
+	</div>
+</div>
+
+<!-- enclosure tag nested inside inline enclosure with separate child depths. -->
+<div w:enclosure="label5"> <span w:id="label5">Test</span>
+	<w:enclosure child="label6">
+		<table>
+			<tr>
+				<td>
+					<span w:id="label6">Test</span>
+				</td>
+			</tr>
+		</table>
+	</w:enclosure>
+</div>
+
+<!-- enclosure tag nested inside inline enclosure with same child depth. -->
+<div w:enclosure="label7">
+	<w:enclosure child="label8">
+		<table>
+			<tr>
+				<td>
+					<span w:id="label7">Test</span>
+					<span w:id="label8">Test</span>
+				</td>
+			</tr>
+		</table>
+	</w:enclosure>
+</div>
+
+<!--  inline enclosure nested inside enclosure tag with separate child depths. -->
+<w:enclosure child="label9">
+	<div w:enclosure="label10"> <span w:id="label9">Test</span>
+		<table>
+			<tr>
+				<td><span w:id="label10">Test</span></td>
+			</tr>
+		</table>
+	</div>
+</w:enclosure>
+
+<!--  inline enclosure nested inside enclosure tag with same child depth. -->
+<div w:enclosure="label11">
+	<w:enclosure child="label12">
+		<table>
+			<tr>
+				<td>
+					<span w:id="label11">Test</span>
+					<span w:id="label12">Test</span>
+				</td>
+			</tr>
+		</table>
+	</w:enclosure>
+</div>
+
+<!--  inline enclosure nested inside enclosure tag with same child depth inside a wicket container. -->
+<w:enclosure child="container:label14">
+	<div w:enclosure="container:label13">
+		<div w:id="container">
+			<table>
+				<tr>
+					<td>
+						<span w:id="label13">Test</span>
+						<span w:id="label14">Test</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</w:enclosure>
+
+
+<!-- nested inline enclosures without explicitly determining children -->
+<div w:enclosure="">
+	<div w:enclosure="">
+		<table>
+			<tr>
+				<td>
+					<span w:id="label15">Test</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>

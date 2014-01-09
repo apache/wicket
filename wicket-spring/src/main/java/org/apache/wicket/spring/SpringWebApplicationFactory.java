@@ -23,6 +23,7 @@ import javax.servlet.ServletContext;
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
@@ -69,8 +70,9 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * </pre>
  * 
  * <p>
- * This factory is also capable of creating an additional application context (path to which is
- * specified via the {@code contextConfigLocation} filter param) and chaining it to the global one
+ * This factory is also capable of creating a {@link WebApplication}-specific application context
+ * (path to which is specified via the {@code contextConfigLocation} filter param) and chaining it
+ * to the global one
  * </p>
  * 
  * <pre>
@@ -95,12 +97,12 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 public class SpringWebApplicationFactory implements IWebApplicationFactory
 {
 
-	/** additional context created for this filter, if any */
-	private ConfigurableWebApplicationContext additionalContext;
+	/** web application context created for this filter, if any */
+	private ConfigurableWebApplicationContext webApplicationContext;
 
 	/**
-	 * Returns location of context config that will be used to create an additional application
-	 * context for this application
+	 * Returns location of context config that will be used to create a {@link WebApplication}
+	 * -specific application context.
 	 * 
 	 * @param filter
 	 * @return location of context config
@@ -111,8 +113,8 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	}
 
 	/**
-	 * Factory method used to create a new instance of the additional application context, by
-	 * default an instance o {@link XmlWebApplicationContext} will be created.
+	 * Factory method used to create a new instance of the web application context, by default an
+	 * instance o {@link XmlWebApplicationContext} will be created.
 	 * 
 	 * @return application context instance
 	 */
@@ -127,34 +129,36 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	@Override
 	public WebApplication createApplication(final WicketFilter filter)
 	{
-		ServletContext sc = filter.getFilterConfig().getServletContext();
+		ServletContext servletContext = filter.getFilterConfig().getServletContext();
 
-		WebApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(sc);
+		WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
 
 		if (getContextConfigLocation(filter) != null)
 		{
-			additionalContext = createWebApplicationContext(ac, filter);
+			applicationContext = createWebApplicationContext(applicationContext, filter);
 		}
 
 		String beanName = filter.getFilterConfig().getInitParameter("applicationBean");
-		return createApplication((additionalContext != null) ? additionalContext : ac, beanName);
+		return createApplication(applicationContext, beanName);
 	}
 
-	private WebApplication createApplication(final ApplicationContext ac, final String beanName)
+	private WebApplication createApplication(final ApplicationContext applicationContext,
+		final String beanName)
 	{
+		WebApplication application;
+
 		if (beanName != null)
 		{
-			WebApplication application = (WebApplication)ac.getBean(beanName);
+			application = (WebApplication)applicationContext.getBean(beanName);
 			if (application == null)
 			{
 				throw new IllegalArgumentException(
 					"Unable to find WebApplication bean with name [" + beanName + "]");
 			}
-			return application;
 		}
 		else
 		{
-			Map<?, ?> beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(ac,
+			Map<?, ?> beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext,
 				WebApplication.class, false, false);
 			if (beans.size() == 0)
 			{
@@ -166,8 +170,13 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 				throw new IllegalStateException("More than one bean of type [" +
 					WebApplication.class.getName() + "] found, must have only one");
 			}
-			return (WebApplication)beans.values().iterator().next();
+			application = (WebApplication)beans.values().iterator().next();
 		}
+
+		// make the application context default for SpringComponentInjectors
+		SpringComponentInjector.setDefaultContext(application, applicationContext);
+
+		return application;
 	}
 
 	/**
@@ -178,21 +187,21 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	 *            parent application context
 	 * @param filter
 	 *            wicket filter
-	 * @return instance of additional application context
+	 * @return instance of web application context
 	 * @throws BeansException
 	 */
 	protected final ConfigurableWebApplicationContext createWebApplicationContext(
 		final WebApplicationContext parent, final WicketFilter filter) throws BeansException
 	{
-		ConfigurableWebApplicationContext wac = newApplicationContext();
-		wac.setParent(parent);
-		wac.setServletContext(filter.getFilterConfig().getServletContext());
-		wac.setConfigLocation(getContextConfigLocation(filter));
+		webApplicationContext = newApplicationContext();
+		webApplicationContext.setParent(parent);
+		webApplicationContext.setServletContext(filter.getFilterConfig().getServletContext());
+		webApplicationContext.setConfigLocation(getContextConfigLocation(filter));
 
-		postProcessWebApplicationContext(wac, filter);
-		wac.refresh();
+		postProcessWebApplicationContext(webApplicationContext, filter);
+		webApplicationContext.refresh();
 
-		return wac;
+		return webApplicationContext;
 	}
 
 	/**
@@ -214,9 +223,9 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	@Override
 	public void destroy(final WicketFilter filter)
 	{
-		if (additionalContext != null)
+		if (webApplicationContext != null)
 		{
-			additionalContext.close();
+			webApplicationContext.close();
 		}
 	}
 }

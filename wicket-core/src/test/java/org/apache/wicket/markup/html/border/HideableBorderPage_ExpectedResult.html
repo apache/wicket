@@ -1,5 +1,5 @@
 <html xmlns:wicket>
-<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery.js"></script>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
@@ -10,19 +10,19 @@ Wicket.Ajax.DebugWindow.enabled=true;
 </script>
 <script type="text/javascript" id="wicket-ajax-base-url">
 /*<![CDATA[*/
-Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.border.HideableBorderPage";
+Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.border.HideableBorderPage?0";
 /*]]>*/
 </script>
 <script type="text/javascript" >
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Ajax.ajax({"u":"../page?0-1.IBehaviorListener.0-hideable-hideLink","e":"click","c":"hideLink1"});;
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.border.HideableBorderPage?0-1.IBehaviorListener.0-hideable-hideLink","e":"click","c":"hideLink1"});;
 ;});
 /*]]>*/
 </script>
 </head><body>
   <div wicket:id="hideable"><wicket:border>
-  <a wicket:id="hideLink" id="hideLink1" href="#">Hide contents</a>
+  <a wicket:id="hideLink" id="hideLink1" href="javascript:;">Hide contents</a>
   <div wicket:id="wrapper" id="wrapper2">
   <wicket:body>
     Contents <span wicket:id="content">label</span>

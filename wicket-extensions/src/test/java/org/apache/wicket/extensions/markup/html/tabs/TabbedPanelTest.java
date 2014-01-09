@@ -44,7 +44,7 @@ public class TabbedPanelTest extends WicketTestCase
 		 */
 		public TestPage()
 		{
-			List<ITab> defaultTabs = new ArrayList<ITab>();
+			List<ITab> defaultTabs = new ArrayList<>();
 			defaultTabs.add(new AbstractTab(Model.of("default 1"))
 			{
 				private static final long serialVersionUID = 1L;
@@ -73,7 +73,7 @@ public class TabbedPanelTest extends WicketTestCase
 
 	TabbedPanel<ITab> newTabbedPanel(List<ITab> defaultTabs)
 	{
-		return new TabbedPanel<ITab>("tabpanel", defaultTabs);
+		return new TabbedPanel<>("tabpanel", defaultTabs);
 	}
 
 	/**

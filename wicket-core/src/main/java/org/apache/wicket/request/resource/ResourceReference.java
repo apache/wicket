@@ -17,15 +17,16 @@
 package org.apache.wicket.request.resource;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.core.util.lang.WicketObjects;
 
 /**
  * Reference to a resource. Can be used to reference global resources.
@@ -493,8 +494,8 @@ public abstract class ResourceReference implements IClusterable
 	/**
 	 * @return the resources this ResourceReference depends on.
 	 */
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 }

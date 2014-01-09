@@ -90,7 +90,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	private List<AjaxRequestTarget.IListener> listeners = null;
 
 	/** */
-	private final Set<ITargetRespondListener> respondListeners = new HashSet<ITargetRespondListener>();
+	private final Set<ITargetRespondListener> respondListeners = new HashSet<>();
 
 	/** see https://issues.apache.org/jira/browse/WICKET-3564 */
 	protected transient boolean respondersFrozen;
@@ -161,11 +161,9 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 
 				if (listeners != null)
 				{
-					final Map<String, Component> components = Collections.unmodifiableMap(markupIdToComponent);
-
 					for (AjaxRequestTarget.IListener listener : listeners)
 					{
-						listener.onBeforeRespond(components, AjaxRequestHandler.this);
+						listener.onBeforeRespond(markupIdToComponent, AjaxRequestHandler.this);
 					}
 				}
 
@@ -192,7 +190,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 
 		if (listeners == null)
 		{
-			listeners = new LinkedList<AjaxRequestTarget.IListener>();
+			listeners = new LinkedList<>();
 		}
 
 		if (!listeners.contains(listener))
@@ -357,18 +355,10 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		// Make sure it is not cached by a client
 		response.disableCaching();
 
-		try
-		{
-			final StringResponse bodyResponse = new StringResponse();
-			responseObject.writeTo(bodyResponse, encoding);
-			CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
-			response.write(filteredResponse);
-		}
-		finally
-		{
-			// restore the original response
-			rc.setResponse(response);
-		}
+		final StringResponse bodyResponse = new StringResponse();
+		responseObject.writeTo(bodyResponse, encoding);
+		CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
+		response.write(filteredResponse);
 	}
 
 	/**

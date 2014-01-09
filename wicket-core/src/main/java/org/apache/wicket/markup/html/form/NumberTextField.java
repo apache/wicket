@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.text.NumberFormat;
 import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.converter.AbstractDecimalConverter;
-import org.apache.wicket.util.lang.Numbers;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.validation.validator.RangeValidator;
 
@@ -33,8 +32,8 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * <p>
  * Automatically validates the input against the configured {@link #setMinimum(N) min} and
  * {@link #setMaximum(N) max} attributes. If any of them is <code>null</code> then respective
- * MIN_VALUE or MAX_VALUE for the number type is used. If the number type has no minimum and/or maximum
- * value then {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
+ * MIN_VALUE or MAX_VALUE for the number type is used. If the number type has no minimum and/or
+ * maximum value then {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
  * 
  * @param <N>
  *            the type of the number
@@ -43,18 +42,13 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * A special locale which is used to render decimal number formats that are HTML5 compliant.
-	 *
-	 * See <a href="http://dev.w3.org/html5/markup/datatypes.html#common.data.float">HTML5 number format</a>
-	 */
-	private static final Locale HTML5_LOCALE = new Locale("en", "", "wicket-html5");
-
 	private RangeValidator<N> validator;
 
 	private N minimum;
 
 	private N maximum;
+
+	private N step;
 
 	/**
 	 * Construct.
@@ -114,7 +108,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 	/**
 	 * Sets the maximum allowed value
-	 * 
+	 *
 	 * @param maximum
 	 *            the maximum allowed value
 	 * @return this instance
@@ -122,6 +116,19 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	public NumberTextField<N> setMaximum(final N maximum)
 	{
 		this.maximum = maximum;
+		return this;
+	}
+
+	/**
+	 * Sets the step attribute
+	 *
+	 * @param step
+	 *            the step attribute
+	 * @return this instance
+	 */
+	public NumberTextField<N> setStep(final N step)
+	{
+		this.step = step;
 		return this;
 	}
 
@@ -133,40 +140,14 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		if (validator != null)
 		{
 			remove(validator);
+			validator = null;
 		}
 
-		validator = new RangeValidator<N>(getMinValue(), getMaxValue());
-		add(validator);
-	}
-
-	private N getMinValue()
-	{
-		N result;
-		if (minimum != null)
+		if (minimum != null || maximum != null)
 		{
-			result = minimum;
+			validator = RangeValidator.range(minimum, maximum);
+			add(validator);
 		}
-		else
-		{
-			Class<N> numberType = getNumberType();
-			result = (N) Numbers.getMinValue(numberType);
-		}
-		return result;
-	}
-
-	private N getMaxValue()
-	{
-		N result;
-		if (maximum != null)
-		{
-			result = maximum;
-		}
-		else
-		{
-			Class<N> numberType = getNumberType();
-			result = (N) Numbers.getMaxValue(numberType);
-		}
-		return result;
 	}
 
 	private Class<N> getNumberType()
@@ -174,7 +155,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		Class<N> numberType = getType();
 		if (numberType == null && getModelObject() != null)
 		{
-			numberType = (Class<N>) getModelObject().getClass();
+			numberType = (Class<N>)getModelObject().getClass();
 		}
 		return numberType;
 	}
@@ -188,8 +169,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		if (minimum != null)
 		{
-			IConverter<N> converter = getConverter(getNumberType());
-			attributes.put("min", converter.convertToString(minimum, HTML5_LOCALE));
+			attributes.put("min", Objects.stringValue(minimum));
 		}
 		else
 		{
@@ -198,50 +178,64 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		if (maximum != null)
 		{
-			IConverter<N> converter = getConverter(getNumberType());
-			attributes.put("max", converter.convertToString(maximum, HTML5_LOCALE));
+			attributes.put("max", Objects.stringValue(maximum));
 		}
 		else
 		{
 			attributes.remove("max");
 		}
-	}
 
-	@Override
-	protected String getInputType()
-	{
-		return "number";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * WICKET-3591 Browsers support only formatting in English
-	 */
-	@Override
-	public Locale getLocale()
-	{
-		return HTML5_LOCALE;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * WICKET-4501 NumberTextField&lt;BigDecimal> renders its value in unsupported number format
-	 */
-	@Override
-	public <C> IConverter<C> getConverter(Class<C> type)
-	{
-		IConverter<C> converter = super.getConverter(type);
-		if (converter instanceof AbstractDecimalConverter<?>)
+		if (step != null)
 		{
-			AbstractDecimalConverter<?> adc = (AbstractDecimalConverter<?>)converter;
-			NumberFormat numberFormat = adc.getNumberFormat(HTML5_LOCALE);
-			// do not use grouping for HTML5 number/range fields because
-			// it is not supported by browsers
-			numberFormat.setGroupingUsed(false);
-			adc.setNumberFormat(HTML5_LOCALE, numberFormat);
+			attributes.put("step", Objects.stringValue(step));
 		}
-		return converter;
+		else
+		{
+			attributes.remove("step");
+		}
+	}
+
+	@Override
+	protected String[] getInputTypes()
+	{
+		return new String[] {"number"};
+	}
+
+	/**
+	 * The formatting for {@link Locale#ENGLISH} might not be compatible with HTML (e.g. group
+	 * digits), thus use {@link Objects#stringValue(Object)} instead.
+	 * 
+	 * @return value
+	 */
+	@Override
+	protected String getModelValue()
+	{
+		N value = getModelObject();
+		if (value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return Objects.stringValue(value);
+		}
+	}
+
+	/**
+	 * Always use {@link Locale#ENGLISH} to parse the input.
+	 */
+	@Override
+	protected void convertInput()
+	{
+		IConverter<N> converter = getConverter(getNumberType());
+
+		try
+		{
+			setConvertedInput(converter.convertToObject(getInput(), Locale.ENGLISH));
+		}
+		catch (ConversionException e)
+		{
+			error(newValidationError(e));
+		}
 	}
 }

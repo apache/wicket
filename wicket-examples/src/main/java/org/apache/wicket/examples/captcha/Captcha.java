@@ -17,16 +17,6 @@
 package org.apache.wicket.examples.captcha;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.RequiredTextField;
-import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.value.ValueMap;
-
 
 /**
  * Captcha example page.
@@ -35,92 +25,31 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class Captcha extends WicketExamplePage
 {
-	private final class CaptchaForm<T> extends Form<T>
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final CaptchaImageResource captchaImageResource;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 */
-		public CaptchaForm(String id)
-		{
-			super(id);
-
-			captchaImageResource = new CaptchaImageResource(imagePass);
-			add(new Image("captchaImage", captchaImageResource));
-			add(new RequiredTextField<String>("password", new PropertyModel<String>(properties,
-				"password"))
-			{
-				@Override
-				protected final void onComponentTag(final ComponentTag tag)
-				{
-					super.onComponentTag(tag);
-					// clear the field after each render
-					tag.put("value", "");
-				}
-			});
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
-		@Override
-		public void onSubmit()
-		{
-			if (!imagePass.equals(getPassword()))
-			{
-				error("Captcha password '" + getPassword() + "' is wrong.\n" +
-					"Correct password was: " + imagePass);
-			}
-			else
-			{
-				info("Success!");
-			}
-
-			// force redrawing
-			captchaImageResource.invalidate();
-		}
-	}
-
 	private static final long serialVersionUID = 1L;
 
-	private static int randomInt(int min, int max)
+	/**
+	 * Constructor.
+	 */
+	public Captcha()
+	{
+		add(new CaptchaForm<Void>("wicket"));
+
+		add(new KaptchaForm<Void>("kaptcha"));
+
+		add(new CageForm<Void>("cage"));
+	}
+
+	static int randomInt(int min, int max)
 	{
 		return (int)(Math.random() * (max - min) + min);
 	}
 
-	private static String randomString(int min, int max)
+	static String randomString(int min, int max)
 	{
 		int num = randomInt(min, max);
 		byte b[] = new byte[num];
 		for (int i = 0; i < num; i++)
 			b[i] = (byte)randomInt('a', 'z');
 		return new String(b);
-	}
-
-	/** Random captcha password to match against. */
-	private final String imagePass = randomString(6, 8);
-
-	private final ValueMap properties = new ValueMap();
-
-	/**
-	 * Construct.
-	 * 
-	 * @param parameters
-	 */
-	public Captcha(final PageParameters parameters)
-	{
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-		add(feedback);
-		add(new CaptchaForm<Void>("captchaForm"));
-	}
-
-	private String getPassword()
-	{
-		return properties.getString("password");
 	}
 }

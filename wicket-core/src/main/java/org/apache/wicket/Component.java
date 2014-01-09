@@ -78,7 +78,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
-import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
@@ -87,7 +87,6 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.apache.wicket.util.visit.AllVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitFilter;
 import org.apache.wicket.util.visit.IVisitor;
@@ -437,7 +436,7 @@ public abstract class Component
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
-		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED;
+		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED | FLAG_RESERVED5 /* page's stateless hint */;
 
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE = 0x1;
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET = 0x2;
@@ -682,8 +681,8 @@ public abstract class Component
 		setId(id);
 		getApplication().getComponentInstantiationListeners().onInstantiation(this);
 
-		final IDebugSettings debugSettings = getApplication().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
+		final DebugSettings debugSettings = getApplication().getDebugSettings();
+		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
 				ComponentStrings.toString(this, new MarkupException("constructed")));
@@ -1082,6 +1081,14 @@ public abstract class Component
 	}
 
 	/**
+	 * Clears any data about previously intercepted page.
+	 */
+	public final void clearOriginalDestination()
+	{
+		RestartResponseAtInterceptPageException.clearOriginalDestination();
+	}
+
+	/**
 	 * Registers a debug feedback message for this component
 	 * 
 	 * @param message
@@ -1107,6 +1114,7 @@ public abstract class Component
 				getClass().getName() +
 				" has not called super.onRemove() in the override of onRemove() method");
 		}
+		new Behaviors(this).onRemove(this);
 		removeChildren();
 	}
 
@@ -1151,7 +1159,20 @@ public abstract class Component
 		clearEnabledInHierarchyCache();
 		clearVisibleInHierarchyCache();
 
+		boolean beforeRenderSuperCallVerified = getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
+		boolean initializeSuperCallVerified = getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED);
+
 		requestFlags = 0;
+
+		// preserve the super_call_verified flags if they were set. WICKET-5417
+		if (beforeRenderSuperCallVerified)
+		{
+			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
+		}
+		if (initializeSuperCallVerified)
+		{
+			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
+		}
 
 		detachFeedback();
 
@@ -1488,7 +1509,7 @@ public abstract class Component
 		}
 
 		String markupIdPrefix = "id";
-		if (!getApplication().usesDeploymentConfig())
+		if (getApplication().usesDevelopmentConfig())
 		{
 			// in non-deployment mode we make the markup id include component id
 			// so it is easier to debug
@@ -1729,7 +1750,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the path to this component relative to its containing page, i.e. without trailing page
+	 * Gets the path to this component relative to its containing page, i.e. without leading page
 	 * id.
 	 * 
 	 * @return The path to this component relative to the page it is in
@@ -2219,7 +2240,11 @@ public abstract class Component
 				Component[] feedbacksCopy = feedbacks.toArray(new Component[feedbacks.size()]);
 				for (Component feedback : feedbacksCopy)
 				{
-					feedback.internalBeforeRender();
+					// render it only if it is still in the page hierarchy (WICKET-4895)
+					if (feedback.findPage() != null)
+					{
+						feedback.internalBeforeRender();
+					}
 				}
 			}
 			getRequestCycle().setMetaData(FEEDBACK_LIST, null);
@@ -2652,13 +2677,13 @@ public abstract class Component
 	 * @param container
 	 *            The HtmlHeaderContainer
 	 */
-	public void renderHead(final HtmlHeaderContainer container)
+	public void internalRenderHead(final HtmlHeaderContainer container)
 	{
 		if (isVisibleInHierarchy() && isRenderAllowed())
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("renderHead: {}", toString(false));
+				log.debug("internalRenderHead: {}", toString(false));
 			}
 
 			IHeaderResponse response = container.getHeaderResponse();
@@ -2690,7 +2715,7 @@ public abstract class Component
 				response.markRendered(this);
 			}
 
-			// Than ask all behaviors
+			// Then ask all behaviors
 			for (Behavior behavior : getBehaviors())
 			{
 				if (isBehaviorAccepted(behavior))
@@ -2912,7 +2937,7 @@ public abstract class Component
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final <M> void setMetaData(final MetaDataKey<M> key, final M object)
+	public final <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		MetaDataEntry<?>[] old = getMetaData();
 
@@ -3166,7 +3191,7 @@ public abstract class Component
 	 * 
 	 * @see RequestCycle#setResponsePage(org.apache.wicket.request.component.IRequestablePage)
 	 */
-	public final void setResponsePage(final Page page)
+	public final void setResponsePage(final IRequestablePage page)
 	{
 		getRequestCycle().setResponsePage(page);
 	}
@@ -3322,7 +3347,8 @@ public abstract class Component
 		Page page = getPage();
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 		IRequestHandler handler;
-		if (page.isPageStateless())
+		if (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry() &&
+			((page.isBookmarkable() && page.wasCreatedBookmarkable()) || page.isPageStateless()))
 		{
 			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
 		}
@@ -3365,7 +3391,8 @@ public abstract class Component
 		Page page = getPage();
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 		IRequestHandler handler;
-		if (page.isPageStateless())
+		if (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry() &&
+			((page.isBookmarkable() && page.wasCreatedBookmarkable()) || page.isPageStateless()))
 		{
 			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener);
 		}
@@ -3408,7 +3435,7 @@ public abstract class Component
 	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass,
 		final IVisitor<C, R> visitor)
 	{
-		return visitParents(parentClass, visitor, new AllVisitFilter());
+		return visitParents(parentClass, visitor, IVisitFilter.ANY);
 	}
 
 	/**
@@ -3544,22 +3571,36 @@ public abstract class Component
 	 *            The tag
 	 * @param key
 	 *            The attribute key
-	 * @param value
+	 * @param values
 	 *            The required value for the attribute key
 	 * @throws MarkupException
 	 *             Thrown if the tag does not have the required attribute value
 	 */
 	protected final void checkComponentTagAttribute(final ComponentTag tag, final String key,
-		final String value)
+		final String... values)
 	{
 		if (key != null)
 		{
 			final String tagAttributeValue = tag.getAttributes().getString(key);
-			if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
+
+			boolean found = false;
+			if (tagAttributeValue != null)
+			{
+				for (String value : values)
+				{
+					if (value.equalsIgnoreCase(tagAttributeValue))
+					{
+						found = true;
+						break;
+					}
+				}
+			}
+
+			if (found == false)
 			{
 				String msg = String.format("Component [%s] (path = [%s]) must be applied to a tag "
-					+ "with [%s] attribute matching [%s], not [%s]", getId(), getPath(), key,
-					value, tagAttributeValue);
+						+ "with [%s] attribute matching any of %s, not [%s]", getId(), getPath(), key,
+						Arrays.toString(values), tagAttributeValue);
 
 				findMarkupStream().throwMarkupException(msg);
 			}
@@ -3637,16 +3678,16 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the subset of the currently coupled {@link Behavior}s that are of the provided type as a
-	 * unmodifiable list. Returns an empty list rather than null if there are no behaviors coupled
-	 * to this component.
+	 * Gets the subset of the currently coupled {@link Behavior}s that are of the provided type as
+	 * an unmodifiable list. Returns an empty list if there are no behaviors coupled to this
+	 * component.
 	 * 
 	 * @param type
 	 *            The type or null for all
-	 * @return The subset of the currently coupled behaviors that are of the provided type as a
-	 *         unmodifiable list or null
+	 * @return The subset of the currently coupled behaviors that are of the provided type as an
+	 *         unmodifiable list
 	 * @param <M>
-	 *            A class derived from IBehavior
+	 *            A class derived from Behavior
 	 */
 	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
@@ -3815,7 +3856,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Called just before a component is rendered.
+	 * Called just before a component is rendered only if the component is visible.
 	 * <p>
 	 * <strong>NOTE</strong>: If you override this, you *must* call super.onBeforeRender() within
 	 * your implementation.
@@ -3823,6 +3864,11 @@ public abstract class Component
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
 	 * children it is strongly recommended that super call is made at the end of the override.
 	 * </p>
+	 *
+	 * Changes to the component tree can be made only <strong>before</strong> calling
+	 * super.onBeforeRender().
+	 *
+	 * @see org.apache.wicket.MarkupContainer#addOrReplace(Component...) 
 	 */
 	protected void onBeforeRender()
 	{
@@ -4154,15 +4200,10 @@ public abstract class Component
 	 */
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
-		if (setRenderingFlag)
-		{
-			setFlag(FLAG_PREPARED_FOR_RENDER, false);
-			setFlag(FLAG_RENDERING, true);
-		}
-		else
-		{
-			setFlag(FLAG_RENDERING, false);
-		}
+		// WICKET-5460 no longer prepared for render
+		setFlag(FLAG_PREPARED_FOR_RENDER, false);
+
+		setFlag(FLAG_RENDERING, setRenderingFlag);
 	}
 
 	/**
@@ -4507,7 +4548,7 @@ public abstract class Component
 	 */
 	public final List<? extends Behavior> getBehaviors()
 	{
-		return getBehaviors(Behavior.class);
+		return getBehaviors(null);
 	}
 
 }

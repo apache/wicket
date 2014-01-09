@@ -64,7 +64,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 * 
 	 * @see State
 	 */
-	public NestedTree(String id, ITreeProvider<T> provider, IModel<Set<T>> state)
+	public NestedTree(String id, ITreeProvider<T> provider, IModel<? extends Set<T>> state)
 	{
 		super(id, provider, state);
 
@@ -82,11 +82,11 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 */
 	public Component newSubtree(String id, IModel<T> model)
 	{
-		return new Subtree<T>(id, this, model);
+		return new Subtree<>(id, this, model);
 	}
 
 	/**
-	 * Overriden to let the node output its markup id.
+	 * Overridden to let the node output its markup id.
 	 * 
 	 * @see #updateNode(Object, AjaxRequestTarget)
 	 * @see Component#setOutputMarkupId(boolean)

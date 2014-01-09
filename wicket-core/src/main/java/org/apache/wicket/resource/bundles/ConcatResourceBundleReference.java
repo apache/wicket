@@ -29,14 +29,14 @@ import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.resource.ITextResourceCompressor;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Classes;
 
 /**
  * A resource bundle that automatically concatenates the given resources. These resources should all
- * be of the same type (javascript or css) and all have {@link PackageResourceReference} (or
+ * be of the same type (javascript or css) and all have {@link IStaticCacheableResource} (or
  * subclasses). After creating the bundle, you normally have to register it in the
  * {@link ResourceBundles} under {@link Application#getResourceBundles()}. {@link ResourceBundles}
  * has two utility methods to create instances of this class:
@@ -56,6 +56,11 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 	private static final long serialVersionUID = 1L;
 
 	private final List<T> providedResources;
+
+	/**
+	 * An optional compressor that will be used to compress the bundle resources
+	 */
+	private ITextResourceCompressor compressor;
 
 	/**
 	 * Creates a new {@link ConcatResourceBundleReference} for the given resources.
@@ -113,29 +118,18 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 	{
 		super(scope, name, locale, style, variation);
 		providedResources = Args.notNull(resources, "resources");
-		checkProvidedResources();
-	}
-
-	/* check if all provided resources are package resources */
-	private void checkProvidedResources()
-	{
-		for (T curProvidedResource : providedResources)
-		{
-			ResourceReference reference = curProvidedResource.getReference();
-			if (!(reference instanceof CssResourceReference || reference instanceof JavaScriptResourceReference))
-			{
-				throw new IllegalArgumentException(
-					"ConcatResourceBundleReference only works with CssResourceReference and JavaScriptResourceReference, " +
-						curProvidedResource + " provides a " +
-						Classes.simpleName(reference.getClass()));
-			}
-		}
 	}
 
 	@Override
 	public IResource getResource()
 	{
-		return new ConcatBundleResource(providedResources);
+		ConcatBundleResource bundleResource = new ConcatBundleResource(providedResources);
+		ITextResourceCompressor compressor = getCompressor();
+		if (compressor != null)
+		{
+			bundleResource.setCompressor(compressor);
+		}
+		return bundleResource;
 	}
 
 	@Override
@@ -145,9 +139,9 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 	}
 
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies()
+	public List<HeaderItem> getDependencies()
 	{
-		Set<HeaderItem> ret = new LinkedHashSet<HeaderItem>();
+		Set<HeaderItem> ret = new LinkedHashSet<>();
 		for (HeaderItem curProvided : providedResources)
 		{
 			for (HeaderItem curDependency : curProvided.getDependencies())
@@ -157,6 +151,18 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 		{
 			ret.remove(curProvided);
 		}
-		return ret;
+		List<HeaderItem> dependencies = super.getDependencies();
+		dependencies.addAll(ret);
+		return dependencies;
+	}
+
+	public void setCompressor(ITextResourceCompressor compressor)
+	{
+		this.compressor = compressor;
+	}
+
+	public ITextResourceCompressor getCompressor()
+	{
+		return compressor;
 	}
 }

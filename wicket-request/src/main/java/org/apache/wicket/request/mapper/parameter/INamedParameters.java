@@ -68,6 +68,28 @@ public interface INamedParameters
 		{
 			return value;
 		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			NamedPair namedPair = (NamedPair) o;
+
+			if (key != null ? !key.equals(namedPair.key) : namedPair.key != null) return false;
+			if (value != null ? !value.equals(namedPair.value) : namedPair.value != null) return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			int result = key != null ? key.hashCode() : 0;
+			result = 31 * result + (value != null ? value.hashCode() : 0);
+			return result;
+		}
 	}
 
 

@@ -65,6 +65,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
@@ -378,18 +379,24 @@ public abstract class WebApplication extends Application
 	 * @param path
 	 *            the path to unmount
 	 */
-	public final void unmount(final String path)
+	public final void unmount(String path)
 	{
+		Args.notNull(path, "path");
+
+		if (path.charAt(0) == '/')
+		{
+			path = path.substring(1);
+		}
 		getRootRequestMapperAsCompound().unmount(path);
 	}
 
 	/**
 	 * Registers a replacement resource for the given javascript resource. This replacement can be
 	 * another {@link JavaScriptResourceReference} for a packaged resource, but it can also be an
-	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
-	 * Registering a replacement will cause the resource to replaced by the given resource
-	 * throughout the application: if {@code base} is added, {@code replacement} will be added
-	 * instead.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a
+	 * resource hosted on a CDN. Registering a replacement will cause the resource to replaced by
+	 * the given resource throughout the application: if {@code base} is added, {@code replacement}
+	 * will be added instead.
 	 * 
 	 * @param base
 	 *            The resource to replace
@@ -399,7 +406,7 @@ public abstract class WebApplication extends Application
 	public final void addResourceReplacement(JavaScriptResourceReference base,
 		ResourceReference replacement)
 	{
-		ResourceBundleReference bundle = new ResourceBundleReference(replacement);
+		ReplacementResourceBundleReference bundle = new ReplacementResourceBundleReference(replacement);
 		bundle.addProvidedResources(JavaScriptHeaderItem.forReference(base));
 		getResourceBundles().addBundle(JavaScriptHeaderItem.forReference(bundle));
 	}
@@ -407,10 +414,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Registers a replacement resource for the given CSS resource. This replacement can be another
 	 * {@link CssResourceReference} for a packaged resource, but it can also be an
-	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
-	 * Registering a replacement will cause the resource to replaced by the given resource
-	 * throughout the application: if {@code base} is added, {@code replacement} will be added
-	 * instead.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a
+	 * resource hosted on a CDN. Registering a replacement will cause the resource to replaced by
+	 * the given resource throughout the application: if {@code base} is added, {@code replacement}
+	 * will be added instead.
 	 * 
 	 * @param base
 	 *            The resource to replace
@@ -420,7 +427,7 @@ public abstract class WebApplication extends Application
 	public final void addResourceReplacement(CssResourceReference base,
 		ResourceReference replacement)
 	{
-		ResourceBundleReference bundle = new ResourceBundleReference(replacement);
+		ReplacementResourceBundleReference bundle = new ReplacementResourceBundleReference(replacement);
 		bundle.addProvidedResources(CssHeaderItem.forReference(base));
 		getResourceBundles().addBundle(CssHeaderItem.forReference(bundle));
 	}
@@ -943,9 +950,8 @@ public abstract class WebApplication extends Application
 		return ajaxRequestTargetListeners;
 	}
 
-	private static class DefaultAjaxRequestTargetProvider
-		implements
-			IContextProvider<AjaxRequestTarget, Page>
+	private static class DefaultAjaxRequestTargetProvider implements
+		IContextProvider<AjaxRequestTarget, Page>
 	{
 		@Override
 		public AjaxRequestTarget get(Page page)
@@ -972,5 +978,20 @@ public abstract class WebApplication extends Application
 			filterFactoryManager = new FilterFactoryManager();
 		}
 		return filterFactoryManager;
+	}
+
+	/**
+	 * If true, auto label css classes such as {@code error} and {@code required} will be updated
+	 * after form component processing during an ajax request. This allows auto labels to correctly
+	 * reflect the state of the form component even if they are not part of the ajax markup update.
+	 * 
+	 * TODO in wicket-7 this should move into a settings object. cannot move in 6.x because it
+	 * requires a change to a setting interface.
+	 * 
+	 * @return {@code true} iff enabled
+	 */
+	public boolean getUpdateAutoLabelsOnAjaxRequests()
+	{
+		return true;
 	}
 }

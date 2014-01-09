@@ -26,7 +26,7 @@ import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.junit.Test;
 
 /**
- * Testcases for resource bundles
+ * Test cases for resource bundles
  * 
  * @author papegaaij
  */
@@ -45,7 +45,7 @@ public class ResouceBundleTest extends WicketTestCase
 				ResouceBundleTest.class, "b.js"))));
 
 		tester.startResource(bundle);
-		assertEquals("//a\n//b\n", tester.getLastResponseAsString());
+		assertEquals("//a//b", tester.getLastResponseAsString());
 	}
 
 	/**

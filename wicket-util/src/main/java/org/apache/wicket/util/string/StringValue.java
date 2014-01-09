@@ -220,8 +220,7 @@ public class StringValue implements IClusterable
 	 */
 	protected StringValue(final String text)
 	{
-		this.text = text;
-		locale = Locale.getDefault();
+		this(text , Locale.getDefault());
 	}
 
 	/**
@@ -318,56 +317,56 @@ public class StringValue implements IClusterable
 
 		if (type == String.class)
 		{
-			return (T) toString();
+			return (T)toString();
 		}
 
 		if ((type == Integer.TYPE) || (type == Integer.class))
 		{
-			return (T) toInteger();
+			return (T)toInteger();
 		}
 
 		if ((type == Long.TYPE) || (type == Long.class))
 		{
-			return (T) toLongObject();
+			return (T)toLongObject();
 		}
 
 		if ((type == Boolean.TYPE) || (type == Boolean.class))
 		{
-			return (T) toBooleanObject();
+			return (T)toBooleanObject();
 		}
 
 		if ((type == Double.TYPE) || (type == Double.class))
 		{
-			return (T) toDoubleObject();
+			return (T)toDoubleObject();
 		}
 
 		if ((type == Character.TYPE) || (type == Character.class))
 		{
-			return (T) toCharacter();
+			return (T)toCharacter();
 		}
 
 		if (type == Time.class)
 		{
-			return (T) toTime();
+			return (T)toTime();
 		}
 
 		if (type == Duration.class)
 		{
-			return (T) toDuration();
+			return (T)toDuration();
 		}
 
 		if (type.isEnum())
 		{
-			return (T) toEnum((Class) type);
+			return (T)toEnum((Class)type);
 		}
 
-		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type " +
-			type);
+		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type "
+			+ type);
 	}
 
 	/**
 	 * Converts this StringValue to a given type or {@code null} if the value is empty.
-	 *
+	 * 
 	 * @param type
 	 *            The type to convert to
 	 * @return The converted value
@@ -377,7 +376,7 @@ public class StringValue implements IClusterable
 	{
 		return Strings.isEmpty(text) ? null : to(type);
 	}
-	
+
 	/**
 	 * Convert this text to a boolean.
 	 * 
@@ -394,8 +393,9 @@ public class StringValue implements IClusterable
 	 * 
 	 * @param defaultValue
 	 *            the default value
-	 * @return the converted text as a boolean or the default value if text is empty or inconvertible
-	 * @see Strings#isTrue(String) 
+	 * @return the converted text as a boolean or the default value if text is empty or
+	 *         inconvertible
+	 * @see Strings#isTrue(String)
 	 */
 	public final boolean toBoolean(final boolean defaultValue)
 	{
@@ -410,7 +410,8 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a boolean: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a boolean: %s", text,
+						x.getMessage()), x);
 				}
 			}
 		}
@@ -444,7 +445,8 @@ public class StringValue implements IClusterable
 	 * 
 	 * @param defaultValue
 	 *            the default value
-	 * @return the converted text as a primitive char or the default value if text is not a single character
+	 * @return the converted text as a primitive char or the default value if text is not a single
+	 *         character
 	 */
 	public final char toChar(final char defaultValue)
 	{
@@ -459,7 +461,8 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a character: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a character: %s", text,
+						x.getMessage()), x);
 				}
 			}
 		}
@@ -491,8 +494,8 @@ public class StringValue implements IClusterable
 		}
 		catch (ParseException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text +
-				"' to a double value", e);
+			throw new StringValueConversionException("Unable to convert '" + text
+				+ "' to a double value", e);
 		}
 	}
 
@@ -516,7 +519,8 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a double: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a double: %s", text,
+						x.getMessage()), x);
 				}
 			}
 		}
@@ -539,7 +543,7 @@ public class StringValue implements IClusterable
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
-	 * @see Duration#valueOf(String, java.util.Locale) 
+	 * @see Duration#valueOf(String, java.util.Locale)
 	 */
 	public final Duration toDuration() throws StringValueConversionException
 	{
@@ -551,8 +555,9 @@ public class StringValue implements IClusterable
 	 * 
 	 * @param defaultValue
 	 *            the default value
-	 * @return the converted text as a duration or the default value if text is empty or inconvertible
-	 * @see Duration#valueOf(String, java.util.Locale) 
+	 * @return the converted text as a duration or the default value if text is empty or
+	 *         inconvertible
+	 * @see Duration#valueOf(String, java.util.Locale)
 	 */
 	public final Duration toDuration(final Duration defaultValue)
 	{
@@ -567,7 +572,8 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a Duration: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a Duration: %s", text,
+						x.getMessage()), x);
 				}
 			}
 		}
@@ -588,8 +594,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text +
-				"' to an int value", e);
+			throw new StringValueConversionException("Unable to convert '" + text
+				+ "' to an int value", e);
 		}
 	}
 
@@ -613,7 +619,8 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to an integer: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to an integer: %s", text,
+						x.getMessage()), x);
 				}
 			}
 		}
@@ -634,8 +641,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text +
-				"' to an Integer value", e);
+			throw new StringValueConversionException("Unable to convert '" + text
+				+ "' to an Integer value", e);
 		}
 	}
 
@@ -653,8 +660,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text +
-				"' to a long value", e);
+			throw new StringValueConversionException("Unable to convert '" + text
+				+ "' to a long value", e);
 		}
 	}
 
@@ -663,7 +670,8 @@ public class StringValue implements IClusterable
 	 * 
 	 * @param defaultValue
 	 *            the default value
-	 * @return the converted text as a long integer or the default value if text is empty or inconvertible
+	 * @return the converted text as a long integer or the default value if text is empty or
+	 *         inconvertible
 	 */
 	public final long toLong(final long defaultValue)
 	{
@@ -678,7 +686,8 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a long: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a long: %s", text,
+						x.getMessage()), x);
 				}
 			}
 		}
@@ -699,8 +708,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text +
-				"' to a Long value", e);
+			throw new StringValueConversionException("Unable to convert '" + text
+				+ "' to a Long value", e);
 		}
 	}
 
@@ -826,8 +835,8 @@ public class StringValue implements IClusterable
 		}
 		catch (ParseException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text +
-				"' to a Time value", e);
+			throw new StringValueConversionException("Unable to convert '" + text
+				+ "' to a Time value", e);
 		}
 	}
 
@@ -851,7 +860,8 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a Time: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a Time: %s", text,
+						x.getMessage()), x);
 				}
 			}
 		}
@@ -860,7 +870,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to an enum.
-	 *
+	 * 
 	 * @param eClass
 	 *            enum type
 	 * @return The value as an enum
@@ -874,7 +884,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to an enum.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            This will be returned if there is an error converting the value
 	 * @return The value as an enum
@@ -887,7 +897,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to an enum.
-	 *
+	 * 
 	 * @param eClass
 	 *            enum type
 	 * @param defaultValue
@@ -916,10 +926,10 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to enum, returning null if text is null or empty.
-	 *
+	 * 
 	 * @param eClass
 	 *            enum type
-	 *
+	 * 
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
@@ -968,8 +978,7 @@ public class StringValue implements IClusterable
 		if (obj instanceof StringValue)
 		{
 			StringValue stringValue = (StringValue)obj;
-			return Objects.isEqual(text, stringValue.text) &&
-				Objects.isEqual(locale, stringValue.locale);
+			return Objects.isEqual(text, stringValue.text) && locale.equals(stringValue.locale);
 		}
 		else
 		{

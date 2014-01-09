@@ -430,11 +430,11 @@ public class ComponentTag extends MarkupElement
 		}
 		if (behaviors != null)
 		{
-			dest.behaviors = new ArrayList<Behavior>(behaviors);
+			dest.behaviors = new ArrayList<>(behaviors);
 		}
 		if (userData != null)
 		{
-			dest.userData = new HashMap<String, Object>(userData);
+			dest.userData = new HashMap<>(userData);
 		}
 	}
 
@@ -650,9 +650,9 @@ public class ComponentTag extends MarkupElement
 		buf.append("</");
 		if (getNamespace() != null)
 		{
-			buf.append(getNamespace()).append(":");
+			buf.append(getNamespace()).append(':');
 		}
-		buf.append(getName()).append(">");
+		buf.append(getName()).append('>');
 
 		return buf;
 	}
@@ -917,7 +917,7 @@ public class ComponentTag extends MarkupElement
 	{
 		if (userData == null)
 		{
-			userData = new HashMap<String, Object>();
+			userData = new HashMap<>();
 		}
 		userData.put(key, value);
 	}

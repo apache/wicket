@@ -17,11 +17,11 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -42,7 +42,10 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	private boolean stopped = false;
 
-	private boolean headRendered = false;
+	/**
+	 * Is the timeout present in JavaScript already.
+	 */
+	private boolean hasTimeout = false;
 
 	/**
 	 * Construct.
@@ -85,15 +88,19 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(component, response);
 
-		response.render(JavaScriptHeaderItem.forScript("if (typeof(Wicket.TimerHandles) === 'undefined') {Wicket.TimerHandles = {}}",
-				WICKET_TIMERS_ID));
+		response.render(JavaScriptHeaderItem.forScript(
+			"if (typeof(Wicket.TimerHandles) === 'undefined') {Wicket.TimerHandles = {}}",
+			WICKET_TIMERS_ID));
 
-		WebRequest request = (WebRequest) component.getRequest();
-
-		if (!isStopped() && (!headRendered || !request.isAjax()))
+		if (component.getRequestCycle().find(AjaxRequestTarget.class) == null)
 		{
-			headRendered = true;
-			response.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+			// complete page is rendered, so timeout has to be rendered again
+			hasTimeout = false;
+		}
+
+		if (isStopped() == false)
+		{
+			addTimeout(response);
 		}
 	}
 
@@ -127,13 +134,36 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		if (!isStopped() && isEnabled(getComponent()))
+		if (shouldTrigger())
 		{
 			onTimer(target);
 
-			target.getHeaderResponse().render(
-			OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+			if (shouldTrigger())
+			{
+				// re-add timeout
+				hasTimeout = false;
+
+				addTimeout(target.getHeaderResponse());
+
+				return;
+			}
 		}
+
+		clearTimeout(target.getHeaderResponse());
+	}
+
+	/**
+	 * Decides whether the timer behavior should render its JavaScript to re-trigger
+	 * it after the update interval.
+	 *
+	 * @return {@code true} if the behavior is not stopped, it is enabled and still attached to
+	 *      any component in the page or to the page itself
+	 */
+	protected boolean shouldTrigger()
+	{
+		return isStopped() == false &&
+				isEnabled(getComponent()) &&
+				(getComponent() instanceof Page || getComponent().findParent(Page.class) != null);
 	}
 
 	/**
@@ -154,26 +184,82 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	/**
 	 * Re-enables the timer if already stopped
-	 *
+	 * 
 	 * @param target
+	 *            may be null
 	 */
 	public final void restart(final AjaxRequestTarget target)
 	{
-		if (isStopped())
+		if (stopped == true)
 		{
 			stopped = false;
-			headRendered = false;
-			target.add(getComponent());
+
+			if (target != null)
+			{
+				addTimeout(target.getHeaderResponse());
+			}
+		}
+	}
+
+	private void addTimeout(IHeaderResponse headerResponse)
+	{
+		if (hasTimeout == false)
+		{
+			hasTimeout = true;
+
+			headerResponse.render(
+				OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+		}
+	}
+
+	private void clearTimeout(IHeaderResponse headerResponse)
+	{
+		if (hasTimeout)
+		{
+			hasTimeout = false;
+
+			String timeoutHandle = getTimeoutHandle();
+			headerResponse.render(OnLoadHeaderItem.forScript("clearTimeout(" + timeoutHandle
+				+ "); delete " + timeoutHandle + ";"));
 		}
 	}
 
 	/**
-	 * Stops the timer
+	 * Stops the timer.
+	 * 
+	 * @param target
+	 *            may be null
 	 */
 	public final void stop(final AjaxRequestTarget target)
 	{
-		stopped = true;
-		String timeoutHandle = getTimeoutHandle();
-		target.prependJavaScript("clearTimeout("+timeoutHandle+"); delete "+timeoutHandle+";");
+		if (stopped == false)
+		{
+			stopped = true;
+
+			if (target != null)
+			{
+				clearTimeout(target.getHeaderResponse());
+			}
+		}
+	}
+
+	@Override
+	public void onRemove(Component component)
+	{
+		AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
+		if (target != null)
+		{
+			clearTimeout(target.getHeaderResponse());
+		}
+	}
+
+	@Override
+	protected void onUnbind()
+	{
+		AjaxRequestTarget target = getComponent().getRequestCycle().find(AjaxRequestTarget.class);
+		if (target != null)
+		{
+			clearTimeout(target.getHeaderResponse());
+		}
 	}
 }

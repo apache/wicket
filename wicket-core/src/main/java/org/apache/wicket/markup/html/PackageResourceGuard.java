@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +41,10 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	private static final Logger log = LoggerFactory.getLogger(PackageResourceGuard.class);
 
 	/** Set of extensions that are denied access. */
-	private Set<String> blockedExtensions = new HashSet<String>(4);
+	private Set<String> blockedExtensions = new HashSet<>(4);
 
 	/** Set of filenames that are denied access. */
-	private Set<String> blockedFiles = new HashSet<String>(4);
+	private Set<String> blockedFiles = new HashSet<>(4);
 
 	private boolean allowAccessToRootResources = false;
 
@@ -65,10 +65,9 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.Class,
 	 *      java.lang.String)
 	 */
-	@Override
-	public boolean accept(Class<?> scope, String path)
+	public boolean accept(Class<?> scope, String absolutePath)
 	{
-		String absolutePath = Packages.absolutePath(scope, path);
+		// path is already absolute
 		return acceptAbsolutePath(absolutePath);
 	}
 
@@ -85,7 +84,8 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		int ixExtension = path.lastIndexOf('.');
 		int len = path.length();
 		final String ext;
-		if (ixExtension <= 0 || ixExtension == len || (path.lastIndexOf('/') + 1) == ixExtension)
+		if (ixExtension <= 0 || ixExtension == len ||
+			(path.lastIndexOf(File.separator) + 1) == ixExtension)
 		{
 			ext = null;
 		}
@@ -94,12 +94,28 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			ext = path.substring(ixExtension + 1).toLowerCase().trim();
 		}
 
-		if ("html".equals(ext) &&
-			getClass().getClassLoader().getResource(path.replaceAll("\\.html", ".class")) != null)
+		if ("html".equals(ext))
 		{
-			log.warn("Access denied to shared (static) resource because it is a Wicket markup file: " +
-				path);
-			return false;
+			String prefix = path.substring(0, ixExtension);
+
+			ClassLoader classLoader = getClass().getClassLoader();
+			while (true)
+			{
+				if (classLoader.getResource(prefix + ".class") != null)
+				{
+					log.warn("Access denied to shared (static) resource because it is a Wicket markup file: " +
+						path);
+					return false;
+				}
+
+				int ixUnderscore = prefix.lastIndexOf('_');
+				if (ixUnderscore == -1)
+				{
+					break;
+				}
+
+				prefix = prefix.substring(0, ixUnderscore);
+			}
 		}
 
 		if (acceptExtension(ext) == false)
@@ -109,7 +125,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			return false;
 		}
 
-		String filename = Strings.lastPathComponent(path, '/');
+		String filename = Strings.lastPathComponent(path, File.separatorChar);
 		if (acceptFile(filename) == false)
 		{
 			log.warn("Access denied to shared (static) resource because of the file name: " + path);
@@ -127,14 +143,35 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			}
 		}
 
+		//
+		// for windows we have to check both File.separator ('\') and the usual '/' since both can
+		// be used and are used interchangeably
+		//
+
 		if (!allowAccessToRootResources)
 		{
 			String absolute = path;
-			if (absolute.startsWith("/"))
+			if ("\\".equals(File.separator))
+			{
+				// handle a windows path which may have a drive letter in it
+
+				int drive = absolute.indexOf(":\\");
+				if (drive < 0)
+				{
+					drive = absolute.indexOf(":/");
+				}
+				if (drive > 0)
+				{
+					// strip the drive letter off the path
+					absolute = absolute.substring(drive + 2);
+				}
+			}
+
+			if (absolute.startsWith(File.separator) || absolute.startsWith("/"))
 			{
 				absolute = absolute.substring(1);
 			}
-			if (!absolute.contains("/"))
+			if (!absolute.contains(File.separator) && !absolute.contains("/"))
 			{
 				log.warn("Access to root directory is by default disabled for shared resources: " +
 					path);

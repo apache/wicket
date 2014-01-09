@@ -18,13 +18,11 @@ package org.apache.wicket.request.resource;
 
 import java.util.Locale;
 
-import org.apache.wicket.settings.IResourceSettings;
-
 /**
  * Static resource reference for css resources. The resources are filtered (stripped comments and
  * whitespace) if there is registered compressor.
  * 
- * @see IResourceSettings#getCssCompressor()
+ * @see org.apache.wicket.settings.ResourceSettings#getCssCompressor()
  */
 public class CssResourceReference extends PackageResourceReference
 {
@@ -63,11 +61,23 @@ public class CssResourceReference extends PackageResourceReference
 		super(scope, name);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param key
+	 */
+	public CssResourceReference(Key key)
+	{
+		super(key);
+	}
+
 	@Override
 	public CssPackageResource getResource()
 	{
-		return new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
-			getVariation());
+		final CssPackageResource resource = new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
+				getVariation());
+		removeCompressFlagIfUnnecessary(resource);
+		return resource;
 	}
 
 }

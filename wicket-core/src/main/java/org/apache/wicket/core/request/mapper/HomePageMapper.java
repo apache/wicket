@@ -20,7 +20,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
-import org.apache.wicket.util.ClassProvider;
+import org.apache.wicket.util.IProvider;
 
 /**
  * A mapper that is used when a request to the home page ("/") is made
@@ -45,7 +45,7 @@ public class HomePageMapper extends MountedMapper
 	 * @param pageClassProvider
 	 *            the class of the page which should handle requests to "/"
 	 */
-	public HomePageMapper(ClassProvider<? extends IRequestablePage> pageClassProvider)
+	public HomePageMapper(IProvider<Class<? extends IRequestablePage>> pageClassProvider)
 	{
 		super("/", pageClassProvider);
 	}
@@ -62,20 +62,6 @@ public class HomePageMapper extends MountedMapper
 		IPageParametersEncoder pageParametersEncoder)
 	{
 		super("/", pageClass, pageParametersEncoder);
-	}
-
-	/**
-	 * Construct.
-	 *
-	 * @param pageClassProvider
-	 *            the class of the page which should handle requests to "/"
-	 * @param pageParametersEncoder
-	 *            the encoder that will be used to encode/decode the page parameters
-	 */
-	public HomePageMapper(final ClassProvider<? extends IRequestablePage> pageClassProvider,
-		IPageParametersEncoder pageParametersEncoder)
-	{
-		super("/", pageClassProvider, pageParametersEncoder);
 	}
 
 	/**

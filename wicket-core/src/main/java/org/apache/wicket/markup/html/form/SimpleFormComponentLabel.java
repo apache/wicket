@@ -21,7 +21,7 @@ import org.apache.wicket.markup.MarkupStream;
 
 /**
  * A form component label that replaces its body with the contents of
- * {@link FormComponent#getLabel()}
+ * {@link LabeledWebMarkupContainer#getLabel() labelProvider's label}
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -58,4 +58,5 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	{
 		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
 	}
+
 }

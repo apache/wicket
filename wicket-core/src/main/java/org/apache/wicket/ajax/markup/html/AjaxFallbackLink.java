@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -100,22 +98,17 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// only render handler if link is enabled
-				if (isLinkEnabled())
+				if (isEnabledInHierarchy())
 				{
 					super.onComponentTag(tag);
 				}
 			}
 
 			@Override
-			protected AjaxChannel getChannel()
-			{
-				return AjaxFallbackLink.this.getChannel();
-			}
-
-			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+				attributes.setPreventDefault(true);
 				AjaxFallbackLink.this.updateAjaxAttributes(attributes);
 			}
 		};
@@ -126,16 +119,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 */
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
-	}
-
-	/**
-	 * @return the channel that manages how Ajax calls are executed
-	 * @see AbstractDefaultAjaxBehavior#getChannel()
-	 */
-	@Deprecated
-	protected AjaxChannel getChannel()
-	{
-		return null;
 	}
 
 	/**
@@ -173,7 +156,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 		tag.remove("onclick");
 
 		String tagName = tag.getName();
-		if (isLinkEnabled() &&
+		if (isEnabledInHierarchy() &&
 			!("a".equalsIgnoreCase(tagName) || "area".equalsIgnoreCase(tagName) || "link".equalsIgnoreCase(tagName)))
 		{
 			String msg = String.format(

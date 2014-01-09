@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxChannel;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -35,7 +34,7 @@ import org.apache.wicket.model.IModel;
  *            type of model object
  * 
  */
-public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
+public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -86,16 +85,6 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 			}
 
 			@Override
-			protected void onComponentTag(ComponentTag tag)
-			{
-				// add the onclick handler only if link is enabled
-				if (isLinkEnabled())
-				{
-					super.onComponentTag(tag);
-				}
-			}
-
-			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
@@ -108,28 +97,18 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 	{
 	}
 
-	/**
-	 * @return the channel that manages how Ajax calls are executed
-	 * @see AbstractDefaultAjaxBehavior#getChannel()
-	 */
-	@Deprecated
-	protected AjaxChannel getChannel()
-	{
-		return null;
-	}
-
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 
-		if (isLinkEnabled())
+		if (isEnabledInHierarchy())
 		{
 			// disable any href attr in markup
 			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
 				tag.getName().equalsIgnoreCase("area"))
 			{
-				tag.put("href", "#");
+				tag.put("href", "javascript:;");
 			}
 		}
 		else
@@ -147,43 +126,27 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
 
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final IModel<T> getModel()
 	{
 		return (IModel<T>)getDefaultModel();
 	}
 
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
+	@Override
 	public final void setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
 	}
 
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final T getModelObject()
 	{
 		return (T)getDefaultModelObject();
 	}
 
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
+	@Override
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);

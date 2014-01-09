@@ -24,6 +24,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -59,12 +60,6 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 	/** The id of autolink components */
 	public static final String AUTOLINK_ID = "_autolink_";
 
-	static
-	{
-		// register "wicket:link"
-		WicketTagIdentifier.registerWellKnownTagName(LINK);
-	}
-
 	/** Allow to have link regions within link regions */
 	private ArrayListStack<Boolean> autolinkStatus;
 
@@ -76,6 +71,12 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 	 */
 	public WicketLinkTagHandler()
 	{
+		this(null);
+	}
+
+	public WicketLinkTagHandler(MarkupResourceStream resourceStream)
+	{
+		super(resourceStream);
 		setAutomaticLinking(Application.get().getMarkupSettings().getAutomaticLinking());
 	}
 

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -74,6 +74,8 @@ public class FormHasErrorPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			private transient IFormSubmitter submittingComponent;
+
 			@Override
 			protected void onError()
 			{
@@ -92,6 +94,15 @@ public class FormHasErrorPage extends WebPage
 			@Override
 			public void process(IFormSubmitter submittingComponent)
 			{
+				// keep submitting component for #onValidate()
+				this.submittingComponent = submittingComponent;
+
+				super.process(submittingComponent);
+			}
+
+			@Override
+			protected void onValidate()
+			{
 				// set the error based on which link submitted the form
 				if (submittingComponent == submitFormComponent)
 				{
@@ -105,8 +116,6 @@ public class FormHasErrorPage extends WebPage
 				{
 					error("Form validation error");
 				}
-
-				super.process(submittingComponent);
 			}
 		};
 		add(form);

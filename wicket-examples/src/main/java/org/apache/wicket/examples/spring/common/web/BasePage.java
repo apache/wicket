@@ -31,6 +31,6 @@ public class BasePage extends WicketExamplePage
 	 */
 	public BasePage()
 	{
-		add(new BookmarkablePageLink<Void>("home-link", HomePage.class));
+		add(new BookmarkablePageLink<>("home-link", HomePage.class));
 	}
 }

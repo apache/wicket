@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.util.tester;
 
-import junit.framework.Assert;
+import javax.servlet.http.Cookie;
 
-import org.apache.wicket.util.cookies.CookieUtils;
+import org.junit.Assert;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * A test page for https://issues.apache.org/jira/browse/WICKET-4289
@@ -42,15 +44,6 @@ public class CookiePage extends DummyHomePage
 	{
 		cookieName = name;
 		cookieValue = value;
-
-		doAssert();
-	}
-
-	private void doAssert()
-	{
-		CookieUtils utils = new CookieUtils();
-		String v = utils.load(cookieName);
-		Assert.assertEquals(cookieValue, v);
 	}
 
 	@Override
@@ -58,7 +51,11 @@ public class CookiePage extends DummyHomePage
 	{
 		super.onConfigure();
 
-		doAssert();
+		Cookie cookie = ((WebRequest) getRequest()).getCookie(cookieName);
+		Assert.assertEquals(cookieValue, cookie.getValue());
+
+		WebResponse response = (WebResponse) getResponse();
+		response.addCookie(cookie);
 	}
 
 

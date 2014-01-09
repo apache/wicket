@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -86,8 +84,19 @@ public abstract class AjaxButton extends Button
 	{
 		super(id, model);
 		this.form = form;
+	}
 
-		add(new AjaxFormSubmitBehavior(form, "click")
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		add(newAjaxFormSubmitBehavior("click"));
+	}
+
+	protected AjaxFormSubmitBehavior newAjaxFormSubmitBehavior(String event)
+	{
+		return new AjaxFormSubmitBehavior(form, event)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -110,15 +119,13 @@ public abstract class AjaxButton extends Button
 			}
 
 			@Override
-			protected AjaxChannel getChannel()
-			{
-				return AjaxButton.this.getChannel();
-			}
-
-			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+
+				// do not allow normal form submit to happen
+				attributes.setPreventDefault(true);
+
 				AjaxButton.this.updateAjaxAttributes(attributes);
 			}
 
@@ -127,7 +134,7 @@ public abstract class AjaxButton extends Button
 			{
 				return AjaxButton.this.getDefaultFormProcessing();
 			}
-		});
+		};
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
@@ -151,16 +158,6 @@ public abstract class AjaxButton extends Button
 		{
 			return super.getForm();
 		}
-	}
-
-	/**
-	 * @return the channel that manages how Ajax calls are executed
-	 * @see AbstractDefaultAjaxBehavior#getChannel()
-	 */
-	@Deprecated
-	protected AjaxChannel getChannel()
-	{
-		return null;
 	}
 
 	/**

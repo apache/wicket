@@ -19,8 +19,8 @@ package org.apache.wicket.markup.head;
 import java.util.Arrays;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.util.string.UrlUtils;
 
 /**
  * {@link HeaderItem} for style tags that are rendered using a fixed URL, for example resources from

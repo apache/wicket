@@ -54,7 +54,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	private IModel<? extends List<? extends E>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
-	private IChoiceRenderer<? super E> renderer;
+	private ChoiceRenderer<? super E> renderer;
 
 	/**
 	 * Constructor.
@@ -64,7 +64,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id)
 	{
-		this(id, new WildcardListModel<E>(new ArrayList<E>()), new ChoiceRenderer<E>());
+		this(id, new WildcardListModel<>(new ArrayList<E>()), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -77,7 +77,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, final List<? extends E> choices)
 	{
-		this(id, new WildcardListModel<E>(choices), new ChoiceRenderer<E>());
+		this(id, new WildcardListModel<>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -91,9 +91,9 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The collection of choices in the dropdown
 	 */
 	public AbstractChoice(final String id, final List<? extends E> choices,
-		final IChoiceRenderer<? super E> renderer)
+		final ChoiceRenderer<? super E> renderer)
 	{
-		this(id, new WildcardListModel<E>(choices), renderer);
+		this(id, new WildcardListModel<>(choices), renderer);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices)
 	{
-		this(id, model, new WildcardListModel<E>(choices), new ChoiceRenderer<E>());
+		this(id, model, new WildcardListModel<>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -124,9 +124,9 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The rendering engine
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices,
-		final IChoiceRenderer<? super E> renderer)
+		final ChoiceRenderer<? super E> renderer)
 	{
-		this(id, model, new WildcardListModel<E>(choices), renderer);
+		this(id, model, new WildcardListModel<>(choices), renderer);
 	}
 
 	/**
@@ -153,7 +153,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The collection of choices in the dropdown
 	 */
 	public AbstractChoice(final String id, final IModel<? extends List<? extends E>> choices,
-		final IChoiceRenderer<? super E> renderer)
+		final ChoiceRenderer<? super E> renderer)
 	{
 		super(id);
 		this.choices = wrap(choices);
@@ -189,7 +189,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The drop down choices
 	 */
 	public AbstractChoice(final String id, IModel<T> model,
-		final IModel<? extends List<? extends E>> choices, final IChoiceRenderer<? super E> renderer)
+		final IModel<? extends List<? extends E>> choices, final ChoiceRenderer<? super E> renderer)
 	{
 		super(id, model);
 		this.choices = wrap(choices);
@@ -208,6 +208,14 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 				"List of choices is null - Was the supplied 'Choices' model empty?");
 		}
 		return choices;
+	}
+
+	/**
+	 * @return The model with the choices for this component
+	 */
+	public IModel<? extends List<? extends  E>> getChoicesModel()
+	{
+		return this.choices;
 	}
 
 	/**
@@ -246,14 +254,14 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 				addStateChange();
 			}
 		}
-		this.choices = new WildcardListModel<E>(choices);
+		this.choices = new WildcardListModel<>(choices);
 		return this;
 	}
 
 	/**
 	 * @return The IChoiceRenderer used for rendering the data objects
 	 */
-	public final IChoiceRenderer<? super E> getChoiceRenderer()
+	public final ChoiceRenderer<? super E> getChoiceRenderer()
 	{
 		return renderer;
 	}
@@ -264,11 +272,11 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * @param renderer
 	 * @return this for chaining
 	 */
-	public final AbstractChoice<T, E> setChoiceRenderer(IChoiceRenderer<? super E> renderer)
+	public final AbstractChoice<T, E> setChoiceRenderer(ChoiceRenderer<? super E> renderer)
 	{
 		if (renderer == null)
 		{
-			renderer = new ChoiceRenderer<E>();
+			renderer = new ChoiceRenderer<>();
 		}
 		this.renderer = renderer;
 		return this;
@@ -351,7 +359,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 			appendOptionHtml(buffer, choice, index, selectedValue);
 		}
 
-		buffer.append("\n");
+		buffer.append('\n');
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
@@ -388,7 +396,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 
 		buffer.append("\n<option ");
 		setOptionAttributes(buffer, choice, index, selected);
-		buffer.append(">");
+		buffer.append('>');
 
 		String display = displayValue;
 		if (localizeDisplayValues())
@@ -432,7 +440,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 
 		buffer.append("value=\"");
 		buffer.append(Strings.escapeMarkup(renderer.getIdValue(choice, index)));
-		buffer.append("\"");
+		buffer.append('"');
 	}
 
 	/**

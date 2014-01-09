@@ -23,9 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.collections.ReverseListIterator;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * </table>
  * 
  * @see IPackageResourceGuard
- * @see IResourceSettings#getPackageResourceGuard
+ * @see org.apache.wicket.settings.ResourceSettings#getPackageResourceGuard
  * @see PackageResourceGuard
  * 
  * @author Juergen Donnerstag
@@ -80,7 +78,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	private static final char PATH_SEPARATOR = '/';
 
 	/** The list of pattern. Note that the order is important, hence a list */
-	private List<SearchPattern> pattern = new ArrayList<SearchPattern>();
+	private List<SearchPattern> pattern = new ArrayList<>();
 
 	/** A cache to speed up the checks */
 	private final ConcurrentMap<String, Boolean> cache;
@@ -95,10 +93,10 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param cache
-	 *      the internal cache that will hold the results for all already checked resources.
-	 *      Use {@code null} to disable caching.
+	 *            the internal cache that will hold the results for all already checked resources.
+	 *            Use {@code null} to disable caching.
 	 */
 	public SecurePackageResourceGuard(final ConcurrentMap<String, Boolean> cache)
 	{
@@ -113,6 +111,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.jpeg");
 		addPattern("+*.gif");
 		addPattern("+*.ico");
+		addPattern("+*.cur");
 
 		// WICKET-208 non page templates may be served
 		addPattern("+*.html");
@@ -120,20 +119,13 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.txt");
 		addPattern("+*.swf");
 		addPattern("+*.bmp");
-	}
+		addPattern("+*.svg");
 
-	/**
-	 * Get a new cache implementation. Subclasses may return null to disable caching. More advanced
-	 * caches (e.h. ehcache) should be used in production environments to limit the size and remove
-	 * "old" entries.
-	 * 
-	 * @return the cache implementation
-	 * @deprecated Pass the cache as a parameter to the constructor
-	 */
-	@Deprecated
-	public ConcurrentHashMap<String, Boolean> newCache()
-	{
-		return new SimpleCache(100);
+		// allow web fonts
+		addPattern("+*.eot");
+		addPattern("+*.ttf");
+		addPattern("+*.woff");
+
 	}
 
 	/**
@@ -176,7 +168,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 
 		// Check against the pattern
 		boolean hit = false;
-		for (SearchPattern pattern : new ReverseListIterator<SearchPattern>(this.pattern))
+		for (SearchPattern pattern : new ReverseListIterator<>(this.pattern))
 		{
 			if ((pattern != null) && pattern.isActive())
 			{
@@ -417,7 +409,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final ConcurrentLinkedQueue<String> fifo = new ConcurrentLinkedQueue<String>();
+		private final ConcurrentLinkedQueue<String> fifo = new ConcurrentLinkedQueue<>();
 
 		private final int maxSize;
 

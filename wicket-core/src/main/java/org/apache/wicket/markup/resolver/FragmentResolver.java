@@ -22,7 +22,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * Usually you either have a markup file or a xml tag with wicket:id="myComponent" to associate
@@ -42,12 +41,6 @@ public class FragmentResolver implements IComponentResolver
 
 	/** */
 	public static final String FRAGMENT = "fragment";
-
-	static
-	{
-		// register "wicket:fragment"
-		WicketTagIdentifier.registerWellKnownTagName(FRAGMENT);
-	}
 
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,

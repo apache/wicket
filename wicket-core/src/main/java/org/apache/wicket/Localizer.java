@@ -25,12 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
+import org.apache.wicket.core.util.string.interpolator.ConvertingPropertyVariableInterpolator;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
@@ -46,9 +45,9 @@ import org.slf4j.LoggerFactory;
  * strategy for the properties. E.g. string resource loaders which load the properties from a
  * database. There should be hardly any need to extend Localizer.
  * 
- * @see org.apache.wicket.settings.IResourceSettings#getLocalizer()
+ * @see org.apache.wicket.settings.ResourceSettings#getLocalizer()
  * @see org.apache.wicket.resource.loader.IStringResourceLoader
- * @see org.apache.wicket.settings.IResourceSettings#getStringResourceLoaders()
+ * @see org.apache.wicket.settings.ResourceSettings#getStringResourceLoaders()
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag
@@ -197,7 +196,7 @@ public class Localizer
 		final Locale locale, final String style, final String defaultValue)
 		throws MissingResourceException
 	{
-		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
+		final ResourceSettings resourceSettings = Application.get().getResourceSettings();
 
 		String value = getStringIgnoreSettings(key, component, model, locale, style, null);
 		if ((value == null) && (defaultValue != null))
@@ -225,13 +224,13 @@ public class Localizer
 		{
 			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find property: '");
 			message.append(key);
-			message.append("'");
+			message.append('\'');
 
 			if (component != null)
 			{
 				message.append(" for component: ");
 				message.append(component.getPageRelativePath());
-				message.append(" [class=").append(component.getClass().getName()).append("]");
+				message.append(" [class=").append(component.getClass().getName()).append(']');
 			}
 			message.append(". Locale: ").append(locale).append(", style: ").append(style);
 
@@ -309,7 +308,7 @@ public class Localizer
 		}
 
 		String cacheKey = null;
-		String value = null;
+		String value;
 
 		// Make sure locale, style and variation have the right values
 		String variation = (component != null ? component.getVariation() : null);
@@ -516,11 +515,11 @@ public class Localizer
 		}
 	}
 
-	/**
+/**
 	 * Helper method to handle property variable substitution in strings.
 	 * 
 	 * @param component
-	 *            The component requesting a model value
+	 *            The component requesting a model value or {@code null]
 	 * @param string
 	 *            The string to substitute into
 	 * @param model
@@ -532,38 +531,29 @@ public class Localizer
 	{
 		if ((string != null) && (model != null))
 		{
-			return new PropertyVariableInterpolator(string, model.getObject())
+			final IConverterLocator locator;
+			final Locale locale;
+			if (component == null)
 			{
-				@SuppressWarnings({ "rawtypes", "unchecked" })
-				@Override
-				protected String toString(Object value)
+				locator = Application.get().getConverterLocator();
+
+				if (Session.exists())
 				{
-					IConverter converter;
-					Locale locale;
-					if (component == null)
-					{
-						converter = Application.get()
-							.getConverterLocator()
-							.getConverter(value.getClass());
-
-						if (Session.exists())
-						{
-							locale = Session.get().getLocale();
-						}
-						else
-						{
-							locale = Locale.getDefault();
-						}
-					}
-					else
-					{
-						converter = component.getConverter(value.getClass());
-						locale = component.getLocale();
-					}
-
-					return converter.convertToString(value, locale);
+					locale = Session.get().getLocale();
 				}
-			}.toString();
+				else
+				{
+					locale = Locale.getDefault();
+				}
+			}
+			else
+			{
+				locator = component;
+				locale = component.getLocale();
+			}
+
+			return new ConvertingPropertyVariableInterpolator(string, model.getObject(), locator,
+				locale).toString();
 		}
 		return string;
 	}
@@ -596,7 +586,7 @@ public class Localizer
 	 */
 	protected Map<String, String> newCache()
 	{
-		return new ConcurrentHashMap<String, String>();
+		return new ConcurrentHashMap<>();
 	}
 
 	/**

@@ -34,9 +34,19 @@ public final class Classes
 	 *            The class
 	 * @return The class name
 	 */
-	public static String name(final Class<?> c)
+	public static String name(Class<?> c)
 	{
-		return (c != null) ? c.getName() : null;
+		String name = null;
+		if (c != null)
+		{
+			while (c.isAnonymousClass())
+			{
+				c = c.getSuperclass();
+			}
+			name = c.getName();
+		}
+
+		return name;
 	}
 
 	/**
@@ -46,23 +56,16 @@ public final class Classes
 	 *            The class
 	 * @return The class simple name
 	 */
-	public static String simpleName(final Class<?> c)
+	public static String simpleName(Class<?> c)
 	{
-		String simpleName;
+		String simpleName = null;
 		if (c != null)
 		{
-			if (c.isAnonymousClass())
+			while (c.isAnonymousClass())
 			{
-				simpleName = c.getSuperclass().getSimpleName();
+				c = c.getSuperclass();
 			}
-			else
-			{
-				simpleName = c.getSimpleName();
-			}
-		}
-		else
-		{
-			simpleName = null;
+			simpleName = c.getSimpleName();
 		}
 
 		return simpleName;

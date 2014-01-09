@@ -40,7 +40,7 @@ public class CssAndPageAcceptingHeaderResponseFilter extends AbstractHeaderRespo
 	}
 
 	@Override
-	public boolean accepts(HeaderItem item)
+	protected boolean acceptsWrapped(HeaderItem item)
 	{
 		return item instanceof CssHeaderItem || item instanceof PageHeaderItem;
 	}

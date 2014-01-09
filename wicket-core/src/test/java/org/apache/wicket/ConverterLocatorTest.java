@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import org.junit.Assert;
@@ -28,8 +29,7 @@ import org.junit.Test;
  */
 public final class ConverterLocatorTest extends Assert
 {
-	/** Dutch locale for localized testing. */
-	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
+	private final ConverterLocator locator = new ConverterLocator();
 
 	/**
 	 * Test generalized conversion
@@ -37,11 +37,22 @@ public final class ConverterLocatorTest extends Assert
 	@Test
 	public void test()
 	{
-		final IConverterLocator locator = new ConverterLocator();
 		assertNotNull(locator.getConverter(Integer.class));
 		assertNotNull(locator.getConverter(Double.class));
 
 		// default converter
 		assertNotNull(locator.getConverter(String.class).convertToObject("", Locale.US));
 	}
+
+	/**
+	 * WICKET-4755
+	 */
+	@Test
+	public void isInstance()
+	{
+		assertEquals("test",
+			locator.getConverter(Serializable.class).convertToObject("test", Locale.US));
+		assertEquals("test", locator.getConverter(Object.class).convertToObject("test", Locale.US));
+	}
+
 }

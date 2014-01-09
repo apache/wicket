@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+	<p>
+		This page demonstrates conversational propagation between
+		non-bookmarkable pages. Below is a counter that is
+		conversation-scoped. Click increment a couple of times and then click
+		the 'Continue to next page', the counter value should persist on the
+		next page.
+	</p>
+	<p>
+		Current counter value is: <span wicket:id="count">100</span>
+		<a wicket:id="increment">increment</a>
+	</p>
+	<p>
+		<a wicket:id="next">Continue to next page</a>
+	</p>
+</wicket:extend>
+</body>
+</html>

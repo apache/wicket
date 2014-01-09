@@ -18,10 +18,7 @@ package org.apache.wicket.markup.html.autolink;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.autolink.sub.PageB;
-import org.apache.wicket.markup.resolver.AutoLinkResolver;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,13 +26,11 @@ import org.slf4j.LoggerFactory;
  */
 public class AutolinkTest extends WicketTestCase
 {
-	/** Logging */
-	private static final Logger log = LoggerFactory.getLogger(AutoLinkResolver.class);
-
 	/**
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		executeTest(MyPage.class, "MyPageExpectedResult.html");

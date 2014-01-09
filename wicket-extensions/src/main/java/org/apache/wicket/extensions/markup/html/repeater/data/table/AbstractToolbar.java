@@ -31,8 +31,6 @@ public abstract class AbstractToolbar extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	private static int counter = 0;
-
 	private final DataTable<?, ?> table;
 
 	/**
@@ -45,7 +43,7 @@ public abstract class AbstractToolbar extends Panel
 	 */
 	public AbstractToolbar(final IModel<?> model, final DataTable<?, ?> table)
 	{
-		super("" + (counter++), model);
+		super(table.newToolbarId(), model);
 		this.table = table;
 	}
 

@@ -24,8 +24,6 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.value.ValueMap;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -36,8 +34,6 @@ import org.slf4j.LoggerFactory;
  */
 public class SimplePageTest extends WicketTestCase
 {
-	private static final Logger log = LoggerFactory.getLogger(SimplePageTest.class);
-
 	/**
 	 * @throws Exception
 	 */

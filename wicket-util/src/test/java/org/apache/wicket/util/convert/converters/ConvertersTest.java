@@ -17,6 +17,7 @@
 package org.apache.wicket.util.convert.converters;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -57,7 +58,31 @@ public final class ConvertersTest extends Assert
 
 		DoubleConverter dc = new DoubleConverter();
 		assertEquals(3000, dc.convertToObject("3 000", Locale.FRENCH), 0.001);
+	}
 
+	/**
+	 * WICKET-4988 nbsp between digits only
+	 */
+	@Test
+	public void thousandSeperatorWithCurrency() throws Exception
+	{
+		FloatConverter fc = new FloatConverter()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected NumberFormat newNumberFormat(Locale locale)
+			{
+				return NumberFormat.getCurrencyInstance(locale);
+			}
+		};
+
+		// \u00A0 = nbsp
+		// \u00A4 = currency symbol (unspecified currency)
+		String string = "1\u00A0234,00 \u00A4";
+
+		assertEquals(string, fc.convertToString(Float.valueOf(1234f), Locale.FRENCH));
+		assertEquals(Float.valueOf(1234f), fc.convertToObject(string, Locale.FRENCH));
 	}
 
 	/**
@@ -416,7 +441,8 @@ public final class ConvertersTest extends Assert
 
 	/**
 	 * See WICKET-2878 and
-	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
+	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal
+	 * .html#BigDecimal%28double%29
 	 */
 	@Test
 	public void bigDecimalsDoubles()

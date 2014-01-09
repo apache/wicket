@@ -16,13 +16,18 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.request.mapper.PageInstanceMapper;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IPageSettings;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Testcases for links on mounted pages. These links are special, because they refer the page by id
@@ -31,15 +36,30 @@ import org.junit.Test;
  * 
  * @author papegaaij
  */
+@RunWith(Parameterized.class)
 public class MountedPageLinkTest extends WicketTestCase
 {
+	@Parameters
+	public static Collection<Object[]> data()
+	{
+		return Arrays.asList(new Object[][] { { true }, { false } });
+	}
+
+	private boolean mount;
+
+	public MountedPageLinkTest(boolean mount)
+	{
+		this.mount = mount;
+	}
+
 	/**
 	 * Mount the page
 	 */
 	@Before
 	public void mountPage()
 	{
-		tester.getApplication().mountPage("mount/${param}/part2", PageWithLink.class);
+		if (mount)
+			tester.getApplication().mountPage("mount/${param}/part2", PageWithLink.class);
 	}
 
 	/**
@@ -52,8 +72,12 @@ public class MountedPageLinkTest extends WicketTestCase
 			new PageParameters().add("param", "value"));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
-		assertTrue("URL for link should contain 'mount/value/part2': " + url, url.toString()
-			.contains("mount/value/part2"));
+		if (mount)
+			assertTrue("URL for link should contain 'mount/value/part2': " + url, url.toString()
+				.contains("mount/value/part2"));
+		else
+			assertTrue("URL for link should contain 'param=value': " + url, url.toString()
+				.contains("param=value"));
 		tester.executeUrl(url);
 	}
 
@@ -71,16 +95,18 @@ public class MountedPageLinkTest extends WicketTestCase
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
 		// simulate a page expiry
-		url = url.replace("part2?0", "part2?3");
+		url = url.replace("?0", "?3");
 		tester.executeUrl(url);
 
-		// request parameters to callback urls should be ignored for the re-created page (WICKET-4594)
+		// request parameters to callback urls should be ignored for the re-created page
+		// (WICKET-4594)
 		tester.assertContainsNot("param=value");
 	}
 
 	/**
 	 * Tests if the {@link PageInstanceMapper} is used if
-	 * {@link IPageSettings#getRecreateMountedPagesAfterExpiry()} is disabled
+	 * {@link org.apache.wicket.settings.PageSettings#getRecreateMountedPagesAfterExpiry()}
+	 * is disabled
 	 */
 	@Test
 	public void testLinkOnPageWithRecreationDisabled()

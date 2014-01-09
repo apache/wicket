@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -26,6 +29,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
@@ -47,20 +51,20 @@ public class ServletWebRequestTest extends Assert
 	public void wicket3599()
 	{
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
-		httpRequest.setURL("/" + httpRequest.getContextPath() + "/request/Uri");
+		httpRequest.setURL(httpRequest.getContextPath() + "/request/Uri");
 		httpRequest.setParameter("some", "parameter");
 
-		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, "/");
+		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, "");
 		Url clientUrl = webRequest.getClientUrl();
 		assertEquals("request/Uri?some=parameter", clientUrl.toString());
 
 		// simulates a request that has errors metadata
-		httpRequest.setAttribute("javax.servlet.error.request_uri",
-			"/" + httpRequest.getContextPath() + "/any/source/of/error");
-		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "/");
+		httpRequest.setAttribute("javax.servlet.error.request_uri", httpRequest.getContextPath()
+			+ "/any/source/of/error");
+		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
-		assertEquals("/any/source/of/error", errorClientUrl.toString());
+		assertEquals("any/source/of/error", errorClientUrl.toString());
 	}
 
 	/**
@@ -81,7 +85,6 @@ public class ServletWebRequestTest extends Assert
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
 		assertEquals("any/source/of/error", errorClientUrl.toString());
-
 	}
 
 	/**
@@ -130,7 +133,80 @@ public class ServletWebRequestTest extends Assert
 		};
 
 		WicketTester tester = new WicketTester(application);
-		tester.startPage(new CustomRequestPage());
+		try
+		{
+			tester.startPage(new CustomRequestPage());
+		}
+		finally
+		{
+			tester.destroy();
+		}
+	}
+
+	/**
+	 * Assert that ServletWebRequest#getClientUrl() will throw an AbortWithHttpErrorCodeException
+	 * with error code 400 (Bad Request) when an Ajax request doesn't provide the base url.
+	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-4841
+	 */
+	@Test
+	public void getClientUrlAjaxWithoutBaseUrl()
+	{
+
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
+		httpRequest.setHeader(ServletWebRequest.HEADER_AJAX, "true");
+		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, "");
+		try
+		{
+			webRequest.getClientUrl();
+			fail("Should not be possible to get the request client url in Ajax request without base url");
+		}
+		catch (AbortWithHttpErrorCodeException awhex)
+		{
+			assertEquals(HttpServletResponse.SC_BAD_REQUEST, awhex.getErrorCode());
+		}
+	}
+
+	/**
+	 * Tests that {@link ServletWebRequest#getClientUrl()} returns the current url + the query
+	 * string when this is not forward dispatched request. When the request is error dispatched it
+	 * returns just the request uri to the error page without the query string
+	 */
+	@Test
+	public void wicket5203()
+	{
+		String filterPath = "filterPath";
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
+		httpRequest.setURL(httpRequest.getContextPath() + '/' + filterPath + "/request/Path");
+		httpRequest.setParameter("some", "parameter");
+
+		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, filterPath);
+		Url clientUrl = webRequest.getClientUrl();
+		assertEquals("request/Path?some=parameter", clientUrl.toString());
+
+		// simulates a request that has errors metadata
+		httpRequest.setAttribute("javax.servlet.error.request_uri", httpRequest.getContextPath()
+			+ '/' + filterPath + "/any/source/of/error");
+		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, filterPath);
+		Url errorClientUrl = errorWebRequest.getClientUrl();
+
+		assertEquals("any/source/of/error", errorClientUrl.toString());
+	}
+
+	/**
+	 * WICKET-5287
+	 */
+	@Test
+	public void parseUrlWhichLooksLikeFullInItsContextRelativePart()
+	{
+		String filterPath = "filterPath";
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
+		String looksLikeFullUrl = "/foo://:/";
+		httpRequest.setURL("http://localhost" + '/' + httpRequest.getContextPath() + '/'
+			+ filterPath + looksLikeFullUrl);
+
+		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, filterPath);
+		assertEquals(looksLikeFullUrl, webRequest.getClientUrl().toString());
 	}
 
 	private static class CustomRequestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -139,7 +215,7 @@ public class ServletWebRequestTest extends Assert
 
 		private CustomRequestPage()
 		{
-			assertTrue(getRequest() instanceof CustomServletWebRequest);
+			assertThat(getRequest(), instanceOf(CustomServletWebRequest.class));
 		}
 
 		@Override

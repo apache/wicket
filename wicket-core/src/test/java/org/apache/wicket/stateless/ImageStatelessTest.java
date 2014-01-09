@@ -16,10 +16,15 @@
  */
 package org.apache.wicket.stateless;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
 
 /**
@@ -33,8 +38,10 @@ public class ImageStatelessTest extends WicketTestCase
 	@Test
 	public void resourceReference()
 	{
+		ImageStatelessPage page = new ImageStatelessPage();
 		final Image i = new Image("test", new PackageResourceReference("test"));
-		tester.startComponent(i);
+		page.add(i);
+		tester.startPage(page);
 		assertTrue("image with resource reference should be stateless", i.isStateless());
 	}
 
@@ -44,8 +51,20 @@ public class ImageStatelessTest extends WicketTestCase
 	@Test
 	public void resource()
 	{
+		ImageStatelessPage page = new ImageStatelessPage();
 		final Image i = new Image("test", new ByteArrayResource("text/text", new byte[0]));
-		tester.startComponent(i);
-		assertTrue("image with resource should be statefull", !i.isStateless());
+		page.add(i);
+		tester.startPage(page);
+		assertTrue("image with resource should be stateful", !i.isStateless());
+	}
+
+	private static class ImageStatelessPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body><img wicket:id='test'/></body></html>");
+		}
 	}
 }

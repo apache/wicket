@@ -16,15 +16,18 @@
  */
 package org.apache.wicket.devutils.stateless;
 
-import junit.framework.TestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Marat Radchenko
  */
-public class StatelessCheckerTest extends TestCase
+public class StatelessCheckerTest extends Assert
 {
 	/**
 	 * 
@@ -55,7 +58,7 @@ public class StatelessCheckerTest extends TestCase
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	@Override
+	@Before
 	public void setUp()
 	{
 		tester = new WicketTester();
@@ -64,15 +67,13 @@ public class StatelessCheckerTest extends TestCase
 	/**
 	 * @see junit.framework.TestCase#tearDown()
 	 */
-	@Override
+	@After
 	public void tearDown()
 	{
 		tester.destroy();
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testNonBookmarkablePage()
 	{
 		boolean hit = false;
@@ -88,12 +89,10 @@ public class StatelessCheckerTest extends TestCase
 		assertTrue("Expected exception", hit);
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testPositive()
 	{
 		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-		tester.startComponent(new StatelessLabel("foo"));
+		tester.startComponentInPage(new StatelessLabel("foo"));
 	}
 }

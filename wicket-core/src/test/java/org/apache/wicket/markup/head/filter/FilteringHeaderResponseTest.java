@@ -16,17 +16,15 @@
  */
 package org.apache.wicket.markup.head.filter;
 
-import org.apache.wicket.MarkupContainer;
+import java.util.Collections;
+
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.StringHeaderItem;
+import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Ignore;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.response.StringResponse;
 import org.junit.Test;
 
 /**
@@ -36,60 +34,6 @@ import org.junit.Test;
  */
 public class FilteringHeaderResponseTest extends WicketTestCase
 {
-	@Override
-	protected WebApplication newApplication()
-	{
-		MockApplication application = new MockApplication()
-		{
-			@Override
-			protected void init()
-			{
-				super.init();
-
-				setHeaderResponseDecorator(new IHeaderResponseDecorator()
-				{
-					@Override
-					public IHeaderResponse decorate(IHeaderResponse response)
-					{
-						return new JavaScriptFilteredIntoFooterHeaderResponse(response, "headerJS");
-					}
-				});
-			}
-		};
-
-		return application;
-	}
-
-	/**
-	 * Tests using FilteredResponseContainer in <head>
-	 * 
-	 * https://issues.apache.org/jira/browse/WICKET-4396
-	 */
-	@Test
-	@Ignore
-	public void filter()
-	{
-		HeaderFilteringPage page = new HeaderFilteringPage();
-		tester.startPage(page);
-	}
-
-	private static class HeaderFilteringPage extends WebPage
-		implements
-			IMarkupResourceStreamProvider
-	{
-		private HeaderFilteringPage()
-		{
-			add(new HeaderResponseContainer("headerJS", "headerJS"));
-		}
-
-		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
-		{
-			return new StringResourceStream(
-				"<html><head><wicket:container wicket:id='headerJS'/></head></html>");
-		}
-	}
 
 	@Test
 	public void footerDependsOnHeadItem() throws Exception
@@ -105,5 +49,29 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 			}
 		});
 		executeTest(FilteredHeaderPage.class, "FilteredHeaderPageExpected.html");
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5057
+	 * @throws Exception
+	 */
+	@Test
+	public void createBucketOnTheFlyForFilteredHeaderItem() throws Exception
+	{
+		FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
+		{
+			@Override
+			protected Response getRealResponse()
+			{
+				return new StringResponse();
+			}
+		}, "headerBucketName", Collections.EMPTY_LIST);
+
+		String filterName = "filterName";
+		String headerContent = "content";
+		FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
+		headerResponse.render(item);
+		CharSequence realContent = headerResponse.getContent(filterName);
+		assertEquals(headerContent, realContent.toString());
 	}
 }

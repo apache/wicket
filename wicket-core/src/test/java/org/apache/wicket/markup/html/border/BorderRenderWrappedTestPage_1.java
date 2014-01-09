@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.border;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.resolver.border.BaseBorder;
 
 /**
  * Mock page for testing.
@@ -33,7 +34,7 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 	 */
 	public BorderRenderWrappedTestPage_1()
 	{
-		BoxBorder border = new BoxBorder("box");
+		Border border = new BaseBorder("box");
 		border.getBodyContainer().setVisible(false);
 
 		add(border);

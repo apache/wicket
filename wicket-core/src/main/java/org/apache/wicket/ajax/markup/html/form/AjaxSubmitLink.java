@@ -36,6 +36,8 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
 
+	private final Form<?> form;
+
 	/**
 	 * Construct.
 	 * 
@@ -56,7 +58,20 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	{
 		super(id, form);
 
-		add(new AjaxFormSubmitBehavior(form, "click")
+		this.form = form;
+	}
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		add(newAjaxFormSubmitBehavior("click"));
+	}
+
+	protected AjaxFormSubmitBehavior newAjaxFormSubmitBehavior(String event)
+	{
+		return new AjaxFormSubmitBehavior(form, event)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -76,7 +91,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// write the onclick handler only if link is enabled
-				if (isLinkEnabled())
+				if (isEnabledInHierarchy())
 				{
 					super.onComponentTag(tag);
 				}
@@ -106,8 +121,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			{
 				AjaxSubmitLink.this.onAfterSubmit(target, getForm());
 			}
-		});
-
+		};
 	}
 
 	/**
@@ -135,11 +149,11 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	{
 		super.onComponentTag(tag);
 
-		if (isLinkEnabled())
+		if (isEnabledInHierarchy())
 		{
 			if (tag.getName().toLowerCase().equals("a"))
 			{
-				tag.put("href", "#");
+				tag.put("href", "javascript:;");
 			}
 		}
 		else

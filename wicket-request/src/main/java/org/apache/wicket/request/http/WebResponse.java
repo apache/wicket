@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
@@ -110,28 +111,46 @@ public abstract class WebResponse extends Response
 	 * Convenience method for setting the content-disposition:attachment header. This header is used
 	 * if the response should prompt the user to download it as a file instead of opening in a
 	 * browser.
-	 * 
+	 * <p>
+	 * The file name will be <a href="http://greenbytes.de/tech/tc2231/">encoded</a>
+	 *
 	 * @param filename
 	 *            file name of the attachment
 	 */
 	public void setAttachmentHeader(final String filename)
 	{
-		setHeader("Content-Disposition", "attachment" +
-			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+		setHeader("Content-Disposition", "attachment" + encodeDispositionHeaderValue(filename));
 	}
 
 	/**
 	 * Convenience method for setting the content-disposition:inline header. This header is used if
 	 * the response should be shown embedded in browser window while having custom file name when
 	 * user saves the response. browser.
-	 * 
+	 * <p>
+	 * The file name will be <a href="http://greenbytes.de/tech/tc2231/">encoded</a>
+	 *
 	 * @param filename
 	 *            file name of the attachment
 	 */
 	public void setInlineHeader(final String filename)
 	{
-		setHeader("Content-Disposition", "inline" +
-			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+		setHeader("Content-Disposition", "inline" + encodeDispositionHeaderValue(filename));
+	}
+
+	/**
+	 * <a href="http://greenbytes.de/tech/tc2231/">Encodes</a> the value of the filename
+	 * used in "Content-Disposition" response header
+	 *
+	 * @param filename
+	 *          the non-encoded file name
+	 * @return encoded filename
+	 */
+	private String encodeDispositionHeaderValue(final String filename)
+	{
+		return 	(Strings.isEmpty(filename) ?
+						"" :
+						String.format("; filename=\"%1$s\"; filename*=UTF-8''%1$s",
+								UrlEncoder.PATH_INSTANCE.encode(filename, "UTF-8")));
 	}
 
 	/**

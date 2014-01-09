@@ -22,10 +22,17 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
+import org.apache.wicket.util.upload.FileItemFactory;
+import org.apache.wicket.util.upload.FileUploadException;
 
 /**
  * Internal request to signal the processing of an event. This request will be mapped by
@@ -34,19 +41,20 @@ import org.apache.wicket.util.time.Time;
  * 
  * @author papegaaij
  */
-class AtmosphereWebRequest extends WebRequest
+class AtmosphereWebRequest extends ServletWebRequest
 {
-	private WebRequest wrappedRequest;
+	private ServletWebRequest wrappedRequest;
 
 	private PageKey pageKey;
 
 	private Collection<EventSubscription> subscriptions;
 
-	private Object event;
+	private AtmosphereEvent event;
 
-	AtmosphereWebRequest(WebRequest wrappedRequest, PageKey pageKey,
-		Collection<EventSubscription> subscriptions, Object event)
+	AtmosphereWebRequest(ServletWebRequest wrappedRequest, PageKey pageKey,
+		Collection<EventSubscription> subscriptions, AtmosphereEvent event)
 	{
+		super(wrappedRequest.getContainerRequest(), wrappedRequest.getFilterPrefix());
 		this.wrappedRequest = wrappedRequest;
 		this.pageKey = pageKey;
 		this.subscriptions = subscriptions;
@@ -63,7 +71,7 @@ class AtmosphereWebRequest extends WebRequest
 		return subscriptions;
 	}
 
-	public Object getEvent()
+	public AtmosphereEvent getEvent()
 	{
 		return event;
 	}
@@ -113,12 +121,119 @@ class AtmosphereWebRequest extends WebRequest
 	@Override
 	public Charset getCharset()
 	{
+		// called from the super constructor, when wrappedRequest is still null
+		if (wrappedRequest == null)
+			return RequestUtils.getCharset(super.getContainerRequest());
 		return wrappedRequest.getCharset();
 	}
 
 	@Override
-	public Object getContainerRequest()
+	public Cookie getCookie(String cookieName)
+	{
+		return wrappedRequest.getCookie(cookieName);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return wrappedRequest.hashCode();
+	}
+
+	@Override
+	public Url getOriginalUrl()
+	{
+		return wrappedRequest.getOriginalUrl();
+	}
+
+	@Override
+	public IRequestParameters getQueryParameters()
+	{
+		return wrappedRequest.getQueryParameters();
+	}
+
+	@Override
+	public IRequestParameters getRequestParameters()
+	{
+		return wrappedRequest.getRequestParameters();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return wrappedRequest.equals(obj);
+	}
+
+	@Override
+	public String getFilterPrefix()
+	{
+		return wrappedRequest.getFilterPrefix();
+	}
+
+	@Override
+	public String toString()
+	{
+		return wrappedRequest.toString();
+	}
+
+	@Override
+	public IRequestParameters getPostParameters()
+	{
+		return wrappedRequest.getPostParameters();
+	}
+
+	@Override
+	public ServletWebRequest cloneWithUrl(Url url)
+	{
+		return wrappedRequest.cloneWithUrl(url);
+	}
+
+	@Override
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
+		throws FileUploadException
+	{
+		return wrappedRequest.newMultipartWebRequest(maxSize, upload);
+	}
+
+	@Override
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload,
+		FileItemFactory factory) throws FileUploadException
+	{
+		return wrappedRequest.newMultipartWebRequest(maxSize, upload, factory);
+	}
+
+	@Override
+	public String getPrefixToContextPath()
+	{
+		return wrappedRequest.getPrefixToContextPath();
+	}
+
+	@Override
+	public HttpServletRequest getContainerRequest()
 	{
 		return wrappedRequest.getContainerRequest();
+	}
+
+	@Override
+	public String getContextPath()
+	{
+		return wrappedRequest.getContextPath();
+	}
+
+	@Override
+	public String getFilterPath()
+	{
+		return wrappedRequest.getFilterPath();
+	}
+
+	@Override
+	public boolean shouldPreserveClientUrl()
+	{
+		return wrappedRequest.shouldPreserveClientUrl();
+	}
+
+	@Override
+	public boolean isAjax()
+	{
+		return true;
 	}
 }

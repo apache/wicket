@@ -23,6 +23,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * see WICKET-2015
@@ -53,63 +54,69 @@ public class FileUploadErrorTest extends WicketTestCase
 	/**
 	 * FileUpload is empty on submit: Validation fails to see that TextField is also required.
 	 */
+	@Test
 	public void testSubmit_NoInput()
 	{
 		formTester.submit();
-		tester.assertErrorMessages("Field 'textField' is required.");
+		tester.assertErrorMessages("'textField' is required.");
 	}
 
 	/**
 	 * FileUpload is filled on submit: TexttField is required.
 	 */
+	@Test
 	public void testSubmit_NoInput_FileUploaded()
 	{
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
 		formTester.submit();
 
-		tester.assertErrorMessages("Field 'textField' is required.");
+		tester.assertErrorMessages("'textField' is required.");
 	}
 
 	/**
 	 * FileUpload is empty on submit: Validation fails to report too short TextField input.
 	 */
+	@Test
 	public void testSubmit_NotValidTextFieldValue()
 	{
 		formTester.setValue(textFieldId, "te");
 		formTester.submit();
 
-		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
-			textFieldId));
+		tester.assertErrorMessages(String.format(
+			"The value of '%1$s' is not between 3 and 10 characters long.", textFieldId));
 	}
 
 	/**
 	 * FileUpload is empty on submit: Validation fails to report too short TextField input.
 	 */
+	@Test
 	public void testSubmit_NotValidTextFieldValue2()
 	{
 		formTester.setValue(textFieldId, "12345678901");
 		formTester.submit();
 
-		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
-			textFieldId));
+		tester.assertErrorMessages(String.format(
+			"The value of '%1$s' is not between 3 and 10 characters long.", textFieldId));
 	}
 
 	/**
 	 * FileUpload is filled on submit: Validation reports too short TextField input.
 	 */
+	@Test
 	public void testSubmit_NotValidTextFieldValue_FileUploaded()
 	{
 		formTester.setValue(textFieldId, "te");
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
 		formTester.submit();
 
-		tester.assertErrorMessages(String.format("'%1$s' is not between 3 and 10 characters long.",
-			textFieldId));
+		tester.assertErrorMessages(String.format(
+			"The value of '%1$s' is not between 3 and 10 characters long.", textFieldId));
 	}
 
 	/**
 	 * Throwing exception confirms that value is received.
 	 */
+	@Test
 	public void testSubmit_ValidTextField_NoFile()
 	{
 		formTester.setValue(textFieldId, FileUploadError.THIS_VALUE_SHOULD_THROW_EXCEPTION);
@@ -126,8 +133,7 @@ public class FileUploadErrorTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 */
+	@Test
 	public void testSubmit_ValidTextField_WithFile()
 	{
 		formTester.setValue(textFieldId, "test value");
@@ -137,8 +143,7 @@ public class FileUploadErrorTest extends WicketTestCase
 		tester.assertNoErrorMessage();
 	}
 
-	/**
-	 */
+	@Test
 	public void testSubmit_RequiredFileUpload_Ok()
 	{
 		((FileUploadField)tester.getLastRenderedPage().get("form:" + fileUploadId)).setRequired(true);
@@ -150,8 +155,7 @@ public class FileUploadErrorTest extends WicketTestCase
 		tester.assertNoErrorMessage();
 	}
 
-	/**
-	 */
+	@Test
 	public void testSubmit_RequiredFileUpload_ShouldFailWithValidationError()
 	{
 		((FileUploadField)tester.getLastRenderedPage().get("form:" + fileUploadId)).setRequired(true);
@@ -159,6 +163,6 @@ public class FileUploadErrorTest extends WicketTestCase
 		formTester.setValue(textFieldId, "test value");
 
 		formTester.submit();
-		tester.assertErrorMessages("Field 'fileUpload' is required.");
+		tester.assertErrorMessages("'fileUpload' is required.");
 	}
 }

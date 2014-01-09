@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
@@ -39,13 +40,12 @@ import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
-import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
@@ -57,12 +57,12 @@ import org.slf4j.LoggerFactory;
 /**
  * A MarkupContainer holds a map of child components.
  * <ul>
- * <li><b>Children </b>- Children can be added by calling the {@link #add(Component...)} method, and they can be looked
- * up using a colon separated path. For example, if a container called "a" held a nested container "b" which
- * held a nested component "c", then a.get("b:c") would return the Component with id "c". The number
- * of children in a MarkupContainer can be determined by calling size(), and the whole hierarchy of
- * children held by a MarkupContainer can be traversed by calling visitChildren(), passing in an
- * implementation of IVisitor.
+ * <li><b>Children </b>- Children can be added by calling the {@link #add(Component...)} method, and
+ * they can be looked up using a colon separated path. For example, if a container called "a" held a
+ * nested container "b" which held a nested component "c", then a.get("b:c") would return the
+ * Component with id "c". The number of children in a MarkupContainer can be determined by calling
+ * size(), and the whole hierarchy of children held by a MarkupContainer can be traversed by calling
+ * visitChildren(), passing in an implementation of IVisitor.
  * 
  * <li><b>Markup Rendering </b>- A MarkupContainer also holds/references associated markup which is
  * used to render the container. As the markup stream for a container is rendered, component
@@ -75,20 +75,21 @@ import org.slf4j.LoggerFactory;
  * graphic designers may be setting attributes on component tags that affect visual presentation.
  * <p>
  * The type of markup held in a given container subclass can be determined by calling
- * {@link #getMarkupType()}. Markup is accessed via a MarkupStream object which allows a component to
- * traverse ComponentTag and RawMarkup MarkupElements while rendering a response. Markup in the
+ * {@link #getMarkupType()}. Markup is accessed via a MarkupStream object which allows a component
+ * to traverse ComponentTag and RawMarkup MarkupElements while rendering a response. Markup in the
  * stream may be HTML or some other kind of markup, such as VXML, as determined by the specific
  * container subclass.
  * <p>
  * A markup stream may be directly associated with a container via setMarkupStream. However, a
  * container which does not have a markup stream (its getMarkupStream() returns null) may inherit a
- * markup stream from a container above it in the component hierarchy. The {@link #findMarkupStream()} method
- * will locate the first container at or above this container which has a markup stream.
+ * markup stream from a container above it in the component hierarchy. The
+ * {@link #findMarkupStream()} method will locate the first container at or above this container
+ * which has a markup stream.
  * <p>
  * All Page containers set a markup stream before rendering by calling the method
- * {@link #getAssociatedMarkupStream(boolean)} to load the markup associated with the page. Since Page is at the top
- * of the container hierarchy, it is guaranteed that {@link #findMarkupStream()} will always return a valid
- * markup stream.
+ * {@link #getAssociatedMarkupStream(boolean)} to load the markup associated with the page. Since
+ * Page is at the top of the container hierarchy, it is guaranteed that {@link #findMarkupStream()}
+ * will always return a valid markup stream.
  * 
  * @see MarkupStream
  * @author Jonathan Locke
@@ -152,7 +153,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					if (child instanceof Border.BorderBodyContainer)
 					{
 						msg += ". Please consider using Border.addToBorder(new " +
-								Classes.simpleName(this.getClass()) + "(\"" + this.getId() +
+							Classes.simpleName(this.getClass()) + "(\"" + this.getId() +
 							"\", ...) instead of add(...)";
 					}
 
@@ -233,10 +234,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public final boolean autoAdd(final Component component, MarkupStream markupStream)
 	{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("argument component may not be null");
-		}
+		Args.notNull(component, "component");
 
 		// Replace strategy
 		component.setAuto(true);
@@ -308,9 +306,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Get a child component by looking it up with the given path.
+	 * <p>
+	 * A component path consists of component ids separated by colons, e.g. "b:c" identifies a
+	 * component "c" inside container "b" inside this container.
 	 * 
 	 * @param path
-	 *            Path to component
+	 *            path to component
 	 * @return The component at the path
 	 */
 	@Override
@@ -679,12 +680,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				.isOutputMarkupContainerClassName();
 			if (outputClassName)
 			{
-				Class<?> klass = getClass();
-				while (klass.isAnonymousClass())
-				{
-					klass = klass.getSuperclass();
-				}
-				className = klass.getName();
+				className = Classes.name(getClass());
 				getResponse().write("<!-- MARKUP FOR ");
 				getResponse().write(className);
 				getResponse().write(" BEGIN -->");
@@ -718,12 +714,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public MarkupContainer replace(final Component child)
 	{
-		checkHierarchyChange(child);
+		Args.notNull(child, "child");
 
-		if (child == null)
-		{
-			throw new IllegalArgumentException("argument child must be not null");
-		}
+		checkHierarchyChange(child);
 
 		if (log.isDebugEnabled())
 		{
@@ -855,7 +848,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            The type that goes into the Visitor.component() method.
 	 * @param <R>
 	 * @param clazz
-	 *            The class of child to visit, or null to visit all children
+	 *            The class of child to visit
 	 * @param visitor
 	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
@@ -905,7 +898,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 *            Component being added
 	 */
-	private final void addedComponent(final Component child)
+	private void addedComponent(final Component child)
 	{
 		// Check for degenerate case
 		Args.notNull(child, "child");
@@ -919,8 +912,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		// Set child's parent
 		child.setParent(this);
 
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
+		final DebugSettings debugSettings = Application.get().getDebugSettings();
+		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled() &&
+			debugSettings.getComponentUseCheck())
 		{
 			child.setMetaData(ADDED_AT_KEY,
 				ComponentStrings.toString(child, new MarkupException("added")));
@@ -973,7 +967,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 *            Child to add
 	 */
-	private final void children_add(final Component child)
+	private void children_add(final Component child)
 	{
 		if (children == null)
 		{
@@ -1007,7 +1001,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param index
 	 * @return The child component
 	 */
-	private final Component children_get(int index)
+	private Component children_get(int index)
 	{
 		return (Component)children_get(index, true);
 	}
@@ -1018,7 +1012,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param reconstruct
 	 * @return the child component
 	 */
-	private final Object children_get(int index, boolean reconstruct)
+	private Object children_get(int index, boolean reconstruct)
 	{
 		Object component = null;
 		if (children != null)
@@ -1061,7 +1055,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param object
 	 * @return The id of the object (object can be component)
 	 */
-	private final String getId(Object object)
+	private String getId(Object object)
 	{
 		if (object instanceof Component)
 		{
@@ -1078,7 +1072,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param id
 	 * @return The child component
 	 */
-	private final Component children_get(final String id)
+	private Component children_get(final String id)
 	{
 		if (children == null)
 		{
@@ -1123,7 +1117,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 * @return The index of the given child component
 	 */
-	private final int children_indexOf(Component child)
+	private int children_indexOf(Component child)
 	{
 		if (children == null)
 		{
@@ -1167,7 +1161,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param component
 	 * @return The component that is removed.
 	 */
-	private final Component children_remove(Component component)
+	private Component children_remove(Component component)
 	{
 		int index = children_indexOf(component);
 		if (index != -1)
@@ -1182,7 +1176,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param index
 	 * @return The component that is removed
 	 */
-	private final Component children_remove(int index)
+	private Component children_remove(int index)
 	{
 		if (children == null)
 		{
@@ -1244,7 +1238,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param reconstruct
 	 * @return The replaced child
 	 */
-	private final Object children_set(int index, Object child, boolean reconstruct)
+	private Object children_set(int index, Object child, boolean reconstruct)
 	{
 		Object replaced;
 		if (index >= 0 && index < children_size())
@@ -1281,7 +1275,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 * @return The component that is replaced
 	 */
-	private final Component children_set(int index, Component child)
+	private Component children_set(int index, Component child)
 	{
 		return (Component)children_set(index, child, true);
 	}
@@ -1290,7 +1284,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @return The size of the children
 	 */
-	private final int children_size()
+	private int children_size()
 	{
 		if (children == null)
 		{
@@ -1317,7 +1311,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            The child to put into the map
 	 * @return Any component that was replaced
 	 */
-	private final Component put(final Component child)
+	private Component put(final Component child)
 	{
 		int index = children_indexOf(child);
 		if (index == -1)
@@ -1335,7 +1329,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param component
 	 *            Component being removed
 	 */
-	private final void removedComponent(final Component component)
+	private void removedComponent(final Component component)
 	{
 		// Notify Page that component is being removed
 		final Page page = component.findPage();
@@ -1431,7 +1425,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				msg.append(this.toString());
 				msg.append("\n\tExpected: '");
 				msg.append(getPageRelativePath());
-				msg.append(".");
+				msg.append(PATH_SEPARATOR);
 				msg.append(id);
 				msg.append("'.\n\tFound with similar names: '");
 				msg.append(Strings.join("', ", names));
@@ -1509,8 +1503,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param openTag
 	 *            The open tag
 	 */
-	private final void renderComponentTagBody(final MarkupStream markupStream,
-		final ComponentTag openTag)
+	private void renderComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		if ((markupStream != null) && (markupStream.getCurrentIndex() > 0))
 		{

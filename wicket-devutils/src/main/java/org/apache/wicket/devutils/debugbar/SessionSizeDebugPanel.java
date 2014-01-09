@@ -18,7 +18,6 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.Session;
 import org.apache.wicket.devutils.inspector.LiveSessionsPage;
 import org.apache.wicket.devutils.inspector.SessionSizeModel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -54,6 +53,7 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 	 * Construct.
 	 * 
 	 * @param id
+	 *      the component id
 	 */
 	public SessionSizeDebugPanel(final String id)
 	{
@@ -80,7 +80,7 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 		{
 			private static final long serialVersionUID = 1L;
 
-			private final IModel<Bytes> size = new SessionSizeModel(Session.get());
+			private final IModel<Bytes> size = new SessionSizeModel();
 
 			@Override
 			public String getObject()

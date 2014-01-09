@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import java.util.regex.Pattern;
+
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.time.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Uses the last modified timestamp of a {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} 
@@ -32,8 +32,11 @@ import org.slf4j.LoggerFactory;
  */
 public class LastModifiedResourceVersion implements IResourceVersion
 {
-	private static final Logger log = LoggerFactory.getLogger(LastModifiedResourceVersion.class);
-	
+	/**
+	 * A valid pattern is a sequence of digits
+	 */
+	private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("[0-9]+");
+
 	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
@@ -55,5 +58,11 @@ public class LastModifiedResourceVersion implements IResourceVersion
 		}
 		// version string = last modified timestamp converted to milliseconds
 		return String.valueOf(lastModified.getMilliseconds());
+	}
+
+	@Override
+	public Pattern getVersionPattern()
+	{
+		return TIMESTAMP_PATTERN;
 	}
 }

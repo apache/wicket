@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.request.handler.resource;
 
+import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.resource.ContentDisposition;
-import org.apache.wicket.core.util.resource.WebExternalResourceStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,9 +36,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WebExternalResourceRequestHandler extends ResourceStreamRequestHandler
 {
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceRequestHandler.class);
-
 	/** the relative url of the external resource. */
 	private final String uri;
 

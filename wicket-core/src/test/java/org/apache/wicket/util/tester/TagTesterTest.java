@@ -25,8 +25,23 @@ import org.junit.Test;
 public class TagTesterTest extends Assert
 {
 	/** Mock markup 1 */
-	public static final String MARKUP_1 = "<p id=\"test\" class=\"class1\"><span class=\"class2\" id=\"test2\">mock</span></p>";
+	private static final String MARKUP_1 = "<p id=\"test\" class=\"class1\"><span class=\"class2\" id=\"test2\">mock</span></p>";
 
+	private static final String AJAX_MARKUP_1 = "<?xml version='1.0' encoding='UTF-8'?>" +
+			"<ajax-response><component id='comp1'><![CDATA[<div class='cls' id='compId'></div>]]></component></ajax-response>";
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5137
+	 */
+	@Test
+	public void getTagInAjaxResponse()
+	{
+		TagTester tester = TagTester.createTagByAttribute(AJAX_MARKUP_1, "id", "compId");
+		assertNotNull(tester);
+
+		String cls = tester.getAttribute("class");
+		assertEquals("cls", cls);
+	}
 
 	/**
 	 * Test the static factory method

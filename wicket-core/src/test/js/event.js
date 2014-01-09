@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
+/*global ok: true, start: true, stop: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, module: true, expect: true */
+
 jQuery(document).ready(function() {
+	"use strict";
 
 	module('Wicket.Event.getId');
 
@@ -61,10 +65,17 @@ jQuery(document).ready(function() {
 		var evt = jQuery.Event("keydown", { keyCode: 123 });
 
 		equal(evt.isPropagationStopped(), false);
+		equal(evt.isImmediatePropagationStopped(), false);
 
 		Wicket.Event.stop(evt);
 
 		equal(evt.isPropagationStopped(), true);
+		equal(evt.isImmediatePropagationStopped(), false);
+
+		Wicket.Event.stop(evt, true);
+
+		equal(evt.isPropagationStopped(), true);
+		equal(evt.isImmediatePropagationStopped(), true);
 	});
 
 
@@ -76,7 +87,7 @@ jQuery(document).ready(function() {
 
 		var evt = jQuery.Event("keydown", { keyCode: 123 });
 		jQuery(document)
-			.bind('keydown', function(event) {				
+			.bind('keydown', function(event) {
 				var fixedEvt = Wicket.Event.fix(event);
 				deepEqual(fixedEvt, evt);
 			})
@@ -171,7 +182,7 @@ jQuery(document).ready(function() {
 		};
 
 		var handler = function(jqEvent) {
-			deepEqual(jqEvent.data, expectedData, "Wicket.Event.add should be able to pass data to the event.")
+			deepEqual(jqEvent.data, expectedData, "Wicket.Event.add should be able to pass data to the event.");
 		};
 
 		Wicket.Event.add($el[0], 'dummy', handler, expectedData);
@@ -207,7 +218,73 @@ jQuery(document).ready(function() {
 		Wicket.Event.publish('topicName');
 	});
 
-	
+	test('unsubscribe a signle subscriber', function() {
+		expect(2);
+
+		var topic = "someTopicName";
+
+		var subscriber = function() {
+			ok(true, "The subscriber is notified");
+		};
+
+		Wicket.Event.subscribe(topic, subscriber);
+
+		Wicket.Event.publish(topic);
+
+		Wicket.Event.unsubscribe(topic, subscriber);
+		ok(true, "The subscriber is un-subscribed");
+
+		Wicket.Event.publish(topic);
+	});
+
+	test('unsubscribe all subscribers per topic', function() {
+		expect(3);
+
+		var topic = "someTopicName";
+
+		var subscriber1 = function() {
+			ok(true, "Subscriber 1 is notified");
+		};
+
+		var subscriber2 = function() {
+			ok(true, "Subscriber 2 is notified");
+		};
+
+		Wicket.Event.subscribe(topic, subscriber1);
+		Wicket.Event.subscribe(topic, subscriber2);
+
+		Wicket.Event.publish(topic);
+
+		Wicket.Event.unsubscribe(topic);
+		ok(true, "The subscribers are un-subscribed");
+
+		Wicket.Event.publish(topic);
+	});
+
+	test('unsubscribe all subscribers (for all topics)', function() {
+		expect(3);
+
+		var topic = "someTopicName";
+
+		var subscriber1 = function() {
+			ok(true, "Subscriber 1 is notified");
+		};
+
+		var subscriber2 = function() {
+			ok(true, "Subscriber 2 is notified");
+		};
+
+		Wicket.Event.subscribe(topic, subscriber1);
+		Wicket.Event.subscribe(topic, subscriber2);
+
+		Wicket.Event.publish(topic);
+
+		Wicket.Event.unsubscribe();
+		ok(true, "The subscribers are un-subscribed");
+
+		Wicket.Event.publish(topic);
+	});
+
 	test('all topics', function() {
 		expect(8);
 
@@ -222,5 +299,33 @@ jQuery(document).ready(function() {
 
 		Wicket.Event.publish('topicName1', "arg1", "arg2");
 		Wicket.Event.publish('topicName2', "arg1", "arg2");
+	});
+
+	module("Custom events");
+
+	test('inputchange', function() {
+
+		stop();
+
+		if (Wicket.Browser.isIE()) {
+			expect(3);
+		} else {
+			expect(1);
+		}
+
+		var $input = jQuery("#inputChangeInput");
+		$input.on("inputchange", function() {
+			ok(true, "inputchange event is triggered!");
+		});
+
+		if (Wicket.Browser.isIE()) {
+			$input.trigger("paste");
+			$input.trigger("keyup");
+			$input.trigger("cut");
+		} else {
+			$input.trigger("input");
+		}
+		start();
+
 	});
 });

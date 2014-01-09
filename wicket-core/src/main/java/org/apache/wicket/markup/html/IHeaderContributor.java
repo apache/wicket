@@ -16,29 +16,36 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
- * An interface to be implemented by components or application level listeners that wish to
- * contribute to the header section of the page.
- * 
- * Example:
+ * An interface to be implemented by application level listeners or other entities that wish to
+ * contribute to the header section of the page. Class {@link org.apache.wicket.Component} already
+ * implements it. <br/>
+ * Example: <br/>
+ * <br/>
  * 
  * <pre>
- * class MyPanel extends Panel implements IHeaderContributor
+ * class MyPanel extends Panel
  * {
  * 	public MyPanel(String id)
  * 	{
  * 		super(id);
  * 	}
  * 
- * 	public void renderHead(Component component, IHeaderResponse response)
+ * 	public void renderHead(IHeaderResponse response)
  * 	{
- * 		response.renderOnLoadJavaScript(&quot;alert('page loaded!');&quot;);
+ * 		response.render(JavaScriptHeaderItem.forScript(&quot;alert('page loaded!');&quot;));
  * 	}
  * }
  * </pre>
+ * 
+ * @see IHeaderResponse
+ * @see HeaderItem
+ * @see Application#getHeaderContributorListeners()
  * 
  * @author Juergen Donnerstag
  * @author Matej Knopp

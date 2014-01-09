@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link IChoiceRenderer} implementation that makes it easy to work with java 5 enums. This
@@ -37,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @param <T>
  */
-public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
+public class EnumChoiceRenderer<T extends Enum<T>> extends ChoiceRenderer<T>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -54,7 +53,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	 */
 	public EnumChoiceRenderer()
 	{
-		resourceSource = null;
+		this(null);
 	}
 
 	/**
@@ -108,7 +107,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	 */
 	protected CharSequence postprocess(String value)
 	{
-		return Strings.escapeMarkup(value);
+		return value;
 	}
 
 	/** {@inheritDoc} */
@@ -117,5 +116,4 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	{
 		return object.name();
 	}
-
 }

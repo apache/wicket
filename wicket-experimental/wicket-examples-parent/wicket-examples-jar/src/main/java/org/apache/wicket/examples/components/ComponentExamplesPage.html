@@ -1,144 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:wicket>
 <head>
 	<meta charset="utf-8" />
-	<title>Apache Wicket Examples</title>
+	<title>Components&mdash;Apache Wicket Examples</title>
 </head>
-<body data-spy="scroll" data-target=".subnav">
-	<div wicket:id="topnavbar">
-	</div>
-	<div class="container">
-		<header class="jumbotron subhead">
+<body data-spy="scroll" data-target=".aw-docs-sidebar">
+	<wicket:extend>
+	<header class="jumbotron subhead">
+		<div class="container">
 			<h1>Component Reference</h1>
 			<p class="lead">A comprehensive list of Apache Wicket's components.</p>
-			<div class="subnav">
-				<ul class="nav nav-pills">
-					<li><a href="#labels">Labels</a></li>
-					<li><a href="#links">Links</a></li>
-					<li><a href="#lists">Lists</a></li>
-					<li><a href="#forms">Forms</a></li>
-					<li><a href="#feedback">Feedback</a></li>
-					<li><a href="#i18n">Internationalization</a></li>
-					<li><a href="#layout">Layout &amp; Grouping</a></li>
+		</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span3 aw-docs-sidebar">
+				<ul class="nav nav-list aw-docs-sidenav affix-top">
+					<li wicket:id="menuitems"><a wicket:id="menuitem" href="#Labels">Labels</a></li>
 				</ul>
 			</div>
-		</header>
-		<section id="labels">
-			<div class="page-header">
-				<h1>Labels <small>Displaying text using labels, MultiLineLabels and escaping markup</small></h1>
+			<div class="span9">
+				<article wicket:id="articles"></article>
 			</div>
-			<div class="row">
-				<div class="span6">
-					<h3>Labels</h3>
-					<p>
-						With <code>Label</code> components you can display dynamic
-						text in your pages and components.
-					</p>
-					<pre class="prettyprint linenums" lang="java">add(new Label&lt;String&gt;("text", "Hello, World!"));</pre>
-					<p>
-						Like all Wicket components, the label needs a counterpart in the markup with the same <code>wicket:id</code>:
-					</p>
-					<pre class="prettyprint linenums" lang="html">&lt;span wicket:id="text"&gt;gets replaced&lt;/span&gt;</pre>
-					<p>
-						Using models you can display fields from your entities in your
-						pages:
-					</p>
-					<pre class="prettyprint linenums" lang="java">Person person = ...;
-add(new Label&lt;String&gt;("text",
-        new PropertyModel&lt;String&gt;(person, "name")));</pre>
-				</div>
-				<div class="span6">
-					<h3>Multi-line text</h3>
-					<p>
-						HTML notoriously strips newlines from your text and renders everything
-						like it is just one line of text. With <code>MultiLineLabel</code> you
-						can render text like it is supposed to look with paragraphs and 
-						line-breaks.
-					</p>
-					<pre class="prettyprint linenums">add(new Label("txt", "Hello,\nWorld!"));
-add(new MultiLineLabel("multi", "Hello,\nWorld!"));</pre>
-					<p>
-						Will render the following markup:
-					</p>
-					<pre class="prettyprint linenums">&lt;p&gt;Hello,
-World!&lt;/p&gt;
-&lt;p&gt;Hello,&lt;br /&gt;World!&lt;/p&gt;</pre>
-					<p>And that will result in text like:</p>
-					<pre class="prettyprint linenums">Hello, World!
-Hello,
-World!</pre>
-					<p>
-						Notice that the first label is displayed on a single line, while the 
-						<code>MultiLineLabel</code> correctly renders the text across multiple
-						lines. 
-				</div>
-				<div class="span6">
-					<h2>Label tags</h2>
-					<p>
-						The associated markup tag can be anything: a <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>nchor, 
-						<code>&lt;p&gt;</code>aragraph, or even if you don't want a surrounding tag in the final markup 
-						a <code>&lt;wicket:container&gt;</code>. So for example:
-					</p>
-					<pre class="prettyprint linenums" lang="html">&lt;span wicket:id="t1"&gt;&lt;/span&gt;
-&lt;p wicket:id="t2"&gt;&lt;/p&gt;
-&lt;wicket:container wicket:id="t3"&gt;&lt;/wicket:container&gt;</pre>
-					<p>Will render as:</p>
-					<pre class="prettyprint linenums" lang="html">&lt;span&gt;Hello, World!&lt;/span&gt;
-&lt;p&gt;Hello, World!&lt;/p&gt;
-Hello, World!</pre>
-					<p>
-						You can also use <code>label.setRenderBodyOnly(true)</code> to instruct Wicket to
-						just render the body.</p>
-				</div>
-				<div class="span6">
-					<h2>Escaping markup</h2>
-					<p>
-						By default, Wicket escapes all rendered text, preventing JavaScript injection attacks:
-					</p>
-					<pre class="prettyprint linenums">add(new Label("bad", 
-      "&lt;a onclick=\"alert('Booh')\">Click me&lt;/a>"));
-					</pre>
-					<p>
-						Will render safely as the following markup:
-					</p>
-					<pre class="prettyprint linenums">&amp;lt;a onclick=\&amp;quot;alert(&amp;#x27;Booh&amp;#x27;)\&amp;quot;&amp;gt;Click me&amp;lt;/a&amp;gt;</pre>
-					<p>
-						Which displays in the browser as:
-					</p>
-					<pre class="prettyprint linenums">&lt;a onclick=\&quot;alert(&#x27;Booh&#x27;)\&quot;&gt;Click me&lt;/a&gt;</pre>
-				</div>
-			</div>
-		</section>
-		<section id="links">
-			<div class="page-header">
-				<h1>Links <small>Action links, page links, bookmarks and external links</small></h1>
-			</div>
-		</section>
-		<section id="lists">
-			<div class="page-header">
-				<h1>Lists <small>Repeating content with Repeaters, ListViews and DataViews</small></h1>
-			</div>
-		</section>
-		<section id="forms">
-			<div class="page-header">
-				<h1>Forms <small>Form components, fields and other input devices</small></h1>
-			</div>
-		</section>
-		<section id="feedback">
-			<div class="page-header">
-				<h1>Feedback</h1>
-			</div>
-		</section>
-		<section id="i18n">
-			<div class="page-header">
-				<h1>Internationalization</h1>
-			</div>
-		</section>
-		<section id="layout">
-			<div class="page-header">
-				<h1>Layout &amp; grouping <small>Panels, borders, fragments, tabs and markup inheritance</small></h1>
-			</div>
-		</section>
+		</div>
 	</div>
+	</wicket:extend>
 </body>
 </html>

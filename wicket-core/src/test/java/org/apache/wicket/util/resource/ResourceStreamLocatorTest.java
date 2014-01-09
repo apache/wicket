@@ -189,6 +189,6 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 
 	public static String getFilename(IResourceStream resource)
 	{
-		return Strings.afterLast(getPath(resource), File.separatorChar);
+		return Strings.afterLast(getPath(resource), '/');
 	}
 }

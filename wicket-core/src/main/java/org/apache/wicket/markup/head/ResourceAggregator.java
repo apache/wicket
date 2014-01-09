@@ -31,7 +31,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
+import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -126,7 +128,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		public RecordedHeaderItem(HeaderItem item)
 		{
 			this.item = item;
-			this.locations = new ArrayList<RecordedHeaderItemLocation>();
+			locations = new ArrayList<>();
 		}
 
 		/**
@@ -186,9 +188,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		super(real);
 
-		this.itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
-		this.domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
-		this.loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
+		itemsToBeRendered = new LinkedHashMap<>();
+		domReadyItemsToBeRendered = new ArrayList<>();
+		loadItemsToBeRendered = new ArrayList<>();
 	}
 
 	@Override
@@ -232,6 +234,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		for (HeaderItem curDependency : item.getDependencies())
 		{
+			curDependency = getItemToBeRendered(curDependency);
 			if (depsDone.add(curDependency))
 			{
 				recordHeaderItem(curDependency, depsDone);
@@ -247,6 +250,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	@Override
 	public void render(HeaderItem item)
 	{
+		item = getItemToBeRendered(item);
 		if (item instanceof OnDomReadyHeaderItem)
 		{
 			renderDependencies(item, new LinkedHashSet<HeaderItem>());
@@ -259,7 +263,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 		else
 		{
-			Set<HeaderItem> depsDone = new LinkedHashSet<HeaderItem>();
+			Set<HeaderItem> depsDone = new LinkedHashSet<>();
 			depsDone.add(item);
 			recordHeaderItem(item, depsDone);
 		}
@@ -286,7 +290,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private void renderHeaderItems()
 	{
-		List<RecordedHeaderItem> sortedItemsToBeRendered = new ArrayList<RecordedHeaderItem>(
+		List<RecordedHeaderItem> sortedItemsToBeRendered = new ArrayList<>(
 			itemsToBeRendered.values());
 		Comparator<? super RecordedHeaderItem> headerItemComparator = Application.get()
 			.getResourceSettings()
@@ -297,7 +301,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 		for (RecordedHeaderItem curRenderItem : sortedItemsToBeRendered)
 		{
-			getRealResponse().render(getItemToBeRendered(curRenderItem.getItem()));
+			if (markItemRendered(curRenderItem.getItem()))
+			{
+				getRealResponse().render(curRenderItem.getItem());
+			}
 		}
 	}
 
@@ -309,43 +316,33 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		StringBuilder combinedScript = new StringBuilder();
 		for (OnDomReadyHeaderItem curItem : domReadyItemsToBeRendered)
 		{
-			HeaderItem itemToBeRendered = getItemToBeRendered(curItem);
-			if (itemToBeRendered == curItem)
+			if (markItemRendered(curItem))
 			{
-				combinedScript.append("\n");
+				combinedScript.append('\n');
 				combinedScript.append(curItem.getJavaScript());
-				combinedScript.append(";");
-			}
-			else
-			{
-				getRealResponse().render(itemToBeRendered);
+				combinedScript.append(';');
 			}
 		}
 		if (combinedScript.length() > 0)
 		{
 			getRealResponse().render(
-				OnDomReadyHeaderItem.forScript(combinedScript.append("\n").toString()));
+				OnDomReadyHeaderItem.forScript(combinedScript.append('\n').toString()));
 		}
 
 		combinedScript.setLength(0);
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
 		{
-			HeaderItem itemToBeRendered = getItemToBeRendered(curItem);
-			if (itemToBeRendered == curItem)
+			if (markItemRendered(curItem))
 			{
-				combinedScript.append("\n");
+				combinedScript.append('\n');
 				combinedScript.append(curItem.getJavaScript());
-				combinedScript.append(";");
-			}
-			else
-			{
-				getRealResponse().render(itemToBeRendered);
+				combinedScript.append(';');
 			}
 		}
 		if (combinedScript.length() > 0)
 		{
 			getRealResponse().render(
-				OnLoadHeaderItem.forScript(combinedScript.append("\n").toString()));
+				OnLoadHeaderItem.forScript(combinedScript.append('\n').toString()));
 		}
 	}
 
@@ -356,13 +353,36 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		for (OnDomReadyHeaderItem curItem : domReadyItemsToBeRendered)
 		{
-			getRealResponse().render(getItemToBeRendered(curItem));
+			if (markItemRendered(curItem))
+			{
+				getRealResponse().render(curItem);
+			}
 		}
 
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
 		{
-			getRealResponse().render(getItemToBeRendered(curItem));
+			if (markItemRendered(curItem))
+			{
+				getRealResponse().render(curItem);
+			}
 		}
+	}
+
+	private boolean markItemRendered(HeaderItem item)
+	{
+		if (wasRendered(item))
+			return false;
+
+		if (item instanceof IWrappedHeaderItem)
+		{
+			getRealResponse().markRendered(((IWrappedHeaderItem)item).getWrapped());
+		}
+		getRealResponse().markRendered(item);
+		for (HeaderItem curProvided : item.getProvidedResources())
+		{
+			getRealResponse().markRendered(curProvided);
+		}
+		return true;
 	}
 
 	/**
@@ -375,23 +395,121 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private HeaderItem getItemToBeRendered(HeaderItem item)
 	{
-		if (getRealResponse().wasRendered(item))
+		HeaderItem innerItem = item;
+		while (innerItem instanceof IWrappedHeaderItem)
+		{
+			innerItem = ((IWrappedHeaderItem)innerItem).getWrapped();
+		}
+		if (getRealResponse().wasRendered(innerItem))
 		{
 			return NoHeaderItem.get();
 		}
 
-		getRealResponse().markRendered(item);
-		HeaderItem bundle = Application.get().getResourceBundles().findBundle(item);
+		HeaderItem bundle = Application.get().getResourceBundles().findBundle(innerItem);
 		if (bundle == null)
 		{
 			return item;
 		}
 
-		for (HeaderItem curProvided : bundle.getProvidedResources())
+		bundle = preserveDetails(item, bundle);
+
+		if (item instanceof IWrappedHeaderItem)
 		{
-			getRealResponse().markRendered(curProvided);
+			bundle = ((IWrappedHeaderItem)item).wrap(bundle);
+		}
+		return bundle;
+	}
+
+	/**
+	 * Preserves the resource reference details for resource replacements.
+	 *
+	 * For example if CSS resource with media <em>screen</em> is replaced with
+	 * {@link org.apache.wicket.protocol.http.WebApplication#addResourceReplacement(org.apache.wicket.request.resource.CssResourceReference, org.apache.wicket.request.resource.ResourceReference)} then the replacement will
+	 * will inherit the media attribute
+	 *
+	 * @param item   The replaced header item
+	 * @param bundle The bundle that represents the replacement
+	 * @return the bundle with the preserved details
+	 */
+	protected HeaderItem preserveDetails(HeaderItem item, HeaderItem bundle)
+	{
+		HeaderItem resultBundle;
+		if (item instanceof CssReferenceHeaderItem && bundle instanceof CssReferenceHeaderItem)
+		{
+			CssReferenceHeaderItem originalHeaderItem = (CssReferenceHeaderItem) item;
+			resultBundle = preserveCssDetails(originalHeaderItem, (CssReferenceHeaderItem) bundle);
+		}
+		else if (item instanceof JavaScriptReferenceHeaderItem && bundle instanceof JavaScriptReferenceHeaderItem)
+		{
+			JavaScriptReferenceHeaderItem originalHeaderItem = (JavaScriptReferenceHeaderItem) item;
+			resultBundle = preserveJavaScriptDetails(originalHeaderItem, (JavaScriptReferenceHeaderItem) bundle);
+		}
+		else
+		{
+			resultBundle = bundle;
 		}
 
-		return bundle;
+		return resultBundle;
+	}
+
+	/**
+	 * Preserves the resource reference details for JavaScript resource replacements.
+	 *
+	 * For example if CSS resource with media <em>screen</em> is replaced with
+	 * {@link org.apache.wicket.protocol.http.WebApplication#addResourceReplacement(org.apache.wicket.request.resource.JavaScriptResourceReference, org.apache.wicket.request.resource.ResourceReference)} then the replacement will
+	 * will inherit the media attribute
+	 *
+	 * @param item   The replaced header item
+	 * @param bundle The bundle that represents the replacement
+	 * @return the bundle with the preserved details
+	 */
+	private HeaderItem preserveJavaScriptDetails(JavaScriptReferenceHeaderItem item, JavaScriptReferenceHeaderItem bundle)
+	{
+		HeaderItem resultBundle;
+		ResourceReference bundleReference = bundle.getReference();
+		if (bundleReference instanceof ReplacementResourceBundleReference)
+		{
+			resultBundle = JavaScriptHeaderItem.forReference(bundleReference,
+					item.getPageParameters(),
+					item.getId(),
+					item.isDefer(),
+					item.getCharset(),
+					item.getCondition()
+			);
+		}
+		else
+		{
+			resultBundle = bundle;
+		}
+		return resultBundle;
+	}
+
+	/**
+	 * Preserves the resource reference details for CSS resource replacements.
+	 *
+	 * For example if CSS resource with media <em>screen</em> is replaced with
+	 * {@link org.apache.wicket.protocol.http.WebApplication#addResourceReplacement(org.apache.wicket.request.resource.CssResourceReference, org.apache.wicket.request.resource.ResourceReference)} then the replacement will
+	 * will inherit the media attribute
+	 *
+	 * @param item   The replaced header item
+	 * @param bundle The bundle that represents the replacement
+	 * @return the bundle with the preserved details
+	 */
+	protected HeaderItem preserveCssDetails(CssReferenceHeaderItem item, CssReferenceHeaderItem bundle)
+	{
+		HeaderItem resultBundle;
+		ResourceReference bundleReference = bundle.getReference();
+		if (bundleReference instanceof ReplacementResourceBundleReference)
+		{
+			resultBundle = CssHeaderItem.forReference(bundleReference,
+					item.getPageParameters(),
+					item.getMedia(),
+					item.getCondition());
+		}
+		else
+		{
+			resultBundle = bundle;
+		}
+		return resultBundle;
 	}
 }

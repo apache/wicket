@@ -16,14 +16,10 @@
  */
 package org.apache.wicket.util.tester;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-
-import junit.framework.AssertionFailedError;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
@@ -41,6 +37,8 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -59,7 +57,9 @@ import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
@@ -72,11 +72,12 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
+import org.apache.wicket.util.tester.apps_8.ComponentFeedbackResourceTestingPage;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ * @see WicketTesterCookieTest for cookie related test
  * @author Juergen Donnerstag
  */
 public class WicketTesterTest extends WicketTestCase
@@ -242,7 +243,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.clickLink("ajaxLinkWithSetResponsePageClass");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -266,7 +267,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "onclick");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -284,13 +285,13 @@ public class WicketTesterTest extends WicketTestCase
 		tester.assertRenderedPage(LinkPage.class);
 
 		tester.getComponentFromLastRenderedPage("ajaxLinkWithSetResponsePageClass").setEnabled(
-			false);
+				false);
 		try
 		{
 			tester.assertEnabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be enabled.");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -314,7 +315,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertDisabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be disabled.");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -342,7 +343,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertRequired("createForm:id");
 			fail("Book ID component must not be required anymore!");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -352,7 +353,7 @@ public class WicketTesterTest extends WicketTestCase
 			// test #3: "createForm" is not a FormComponent
 			tester.assertRequired("createForm");
 		}
-		catch (AssertionFailedError _)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -697,7 +698,7 @@ public class WicketTesterTest extends WicketTestCase
 		FormTester form = tester.newFormTester("form");
 		form.setValue("name", "New name");
 		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
-			"onclick");
+				"onclick");
 
 		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester.getLastRenderedPage();
 		Pojo pojo = page.getPojo();
@@ -849,7 +850,7 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/test.html";
 		tester.executeUrl(url);
-		assertEquals("This is a test!\n", tester.getLastResponseAsString());
+		assertEquals("This is a test!", tester.getLastResponseAsString());
 	}
 
 	/**
@@ -861,9 +862,10 @@ public class WicketTesterTest extends WicketTestCase
 	{
 		String url = "wicket/resource/" + BlockedResourceLinkPage.class.getName() + "/" +
 			BlockedResourceLinkPage.class.getSimpleName() + ".html,xml";
-		tester.executeUrl(url);
-		assertNull("Comma separated extensions are not supported and wont find any resource",
-			tester.getLastResponse());
+
+		tester.getRequest().setURL(url);
+		assertFalse("Comma separated extensions are not supported and wont find any resource",
+			tester.processRequest());
 	}
 
 	/**
@@ -902,56 +904,6 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 *
-	 */
-	@Test
-	public void cookieIsFoundWhenAddedToRequest()
-	{
-		tester.getRequest().addCookie(new Cookie("name", "value"));
-		assertEquals("value", tester.getRequest().getCookie("name").getValue());
-	}
-
-	/**
-	 *
-	 */
-	@Test
-	public void cookieIsFoundWhenAddedToResponse()
-	{
-		tester.startPage(CreateBook.class);
-		tester.getLastResponse().addCookie(new Cookie("name", "value"));
-		Collection<Cookie> cookies = tester.getLastResponse().getCookies();
-		assertEquals(cookies.iterator().next().getValue(), "value");
-	}
-
-	/**
-	 *
-	 */
-	@Test
-	public void cookieIsFoundOnNextRequestWhenAddedToResponse()
-	{
-		// Test that maxAge == -1 (Default) works properly
-		tester.startPage(CreateBook.class);
-		Cookie cookie = new Cookie("name", "value");
-		tester.getLastResponse().addCookie(cookie);
-		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
-
-		tester.startPage(CreateBook.class);
-		cookie = new Cookie("name", "value");
-		cookie.setMaxAge(60);
-		tester.getLastResponse().addCookie(cookie);
-		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
-
-		// Should copy persisted cookie from browser
-		tester.startPage(CreateBook.class);
-		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
-			"value");
-	}
-
-	/**
 	 * Test for WICKET-3123
 	 */
 	@Test
@@ -965,7 +917,7 @@ public class WicketTesterTest extends WicketTestCase
 
 	private void setTextFieldAndAssertSubmit(boolean expected)
 	{
-		tester.executeAjaxEvent("form:text", "onkeyup");
+		tester.executeAjaxEvent("form:text", "keyup");
 		Button submit = getSubmitButton();
 // System.out.println(Session.get().getFeedbackMessages());
 		assertEquals(expected, submit.isEnabled());
@@ -1052,81 +1004,6 @@ public class WicketTesterTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests that setting a cookie with age > 0 before creating the page will survive after the
-	 * rendering of the page and it will be used for the next request cycle.
-	 */
-	@Test
-	public void transferCookies()
-	{
-		String cookieName = "wicket4289Name";
-		String cookieValue = "wicket4289Value";
-		int cookieAge = 1; // age > 0 => the cookie will be preserved for the the next request cycle
-
-		Cookie cookie = new Cookie(cookieName, cookieValue);
-		cookie.setMaxAge(cookieAge);
-		tester.getRequest().addCookie(cookie);
-
-		CookiePage page = new CookiePage(cookieName, cookieValue);
-
-		tester.startPage(page);
-
-		// assert that the cookie was in the response
-		List<Cookie> cookies = tester.getLastResponse().getCookies();
-		assertEquals(1, cookies.size());
-		Cookie cookie2 = cookies.get(0);
-		assertEquals(cookieName, cookie2.getName());
-		assertEquals(cookieValue, cookie2.getValue());
-		assertEquals(cookieAge, cookie2.getMaxAge());
-
-		// assert that the cookie will be preserved for the next request
-		assertEquals(cookieValue, tester.getRequest().getCookie(cookieName).getValue());
-	}
-
-	/**
-	 * Tests that setting a cookie with age < 0 will not be stored after the request cycle.
-	 */
-	@Test
-	public void dontTransferCookiesWithNegativeAge()
-	{
-		String cookieName = "wicket4289Name";
-		String cookieValue = "wicket4289Value";
-		int cookieAge = -1; // age < 0 => do not store it
-
-		Cookie cookie = new Cookie(cookieName, cookieValue);
-		cookie.setMaxAge(cookieAge);
-		tester.getRequest().addCookie(cookie);
-
-		CookiePage page = new CookiePage(cookieName, cookieValue);
-
-		tester.startPage(page);
-
-		// assert that the cookie is not preserved for the next request cycle
-		assertNull(tester.getRequest().getCookies());
-	}
-
-	/**
-	 * Tests that setting a cookie with age < 0 will not be stored after the request cycle.
-	 */
-	@Test
-	public void dontTransferCookiesWithZeroAge()
-	{
-		String cookieName = "wicket4289Name";
-		String cookieValue = "wicket4289Value";
-		int cookieAge = 0; // age == 0 => delete the cookie
-
-		Cookie cookie = new Cookie(cookieName, cookieValue);
-		cookie.setMaxAge(cookieAge);
-		tester.getRequest().addCookie(cookie);
-
-		CookiePage page = new CookiePage(cookieName, cookieValue);
-
-		tester.startPage(page);
-
-		// assert that the cookie is not preserved for the next request cycle
-		assertNull(tester.getRequest().getCookies());
-	}
-
-	/**
 	 * Tests if the access-denied-page is rendered if a page is rerendered for which you don't have
 	 * permission anymore
 	 */
@@ -1134,7 +1011,7 @@ public class WicketTesterTest extends WicketTestCase
 	public void rerenderNotAllowed()
 	{
 		tester.setExposeExceptions(false);
-		class YesNoPageAuthorizationStrategy implements IAuthorizationStrategy
+		class YesNoPageAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 		{
 			private boolean allowed = true;
 
@@ -1172,13 +1049,41 @@ public class WicketTesterTest extends WicketTestCase
 	 * Clicking on ResourceLink should deliver the resource content
 	 */
 	@Test
-	public void clickResourceLink()
+	public void clickResourceLinkWithResource()
 	{
 		MockPageWithLink page = new MockPageWithLink();
 		String content = "content";
 		ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
 			"fileName.txt");
 		ResourceLink<Void> link = new ResourceLink<Void>(MockPageWithLink.LINK_ID, resource);
+		page.add(link);
+		tester.startPage(page);
+		tester.clickLink(MockPageWithLink.LINK_ID, false);
+		assertEquals(tester.getContentTypeFromResponseHeader(), "text/plain");
+		assertEquals(content, tester.getLastResponseAsString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4810
+	 *
+	 * Clicking on ResourceLink should deliver the resource reference's content
+	 */
+	@Test
+	public void clickResourceLinkWithResourceReference()
+	{
+		MockPageWithLink page = new MockPageWithLink();
+		String content = "content";
+		final ByteArrayResource resource = new ByteArrayResource("text/plain", content.getBytes(),
+				"fileName.txt");
+		ResourceReference reference = new ResourceReference(WicketTesterTest.class, "resourceLinkWithResourceReferenceTest")
+		{
+			@Override
+			public IResource getResource()
+			{
+				return resource;
+			}
+		};
+		ResourceLink<Void> link = new ResourceLink<Void>(MockPageWithLink.LINK_ID, reference);
 		page.add(link);
 		tester.startPage(page);
 		tester.clickLink(MockPageWithLink.LINK_ID, false);
@@ -1245,7 +1150,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertRedirectUrl("http://this.did.not.happen");
 			caught = false;
 		}
-		catch (AssertionFailedError e)
+		catch (AssertionError e)
 		{
 			caught = true;
 		}
@@ -1283,10 +1188,82 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void redirectToAbsoluteUrlTest()
 	{
-		WicketTester tester = new WicketTester();
 		tester.setFollowRedirects(false);
 		tester.startPage(AlwaysRedirectPage.class);
 		tester.assertRedirectUrl("http://localhost:4333/");
 		assertEquals(HttpServletResponse.SC_FOUND, tester.getLastResponse().getStatus());
+	}
+
+	/**
+	 * WICKET-5017
+	 */
+	@Test
+	public void formSubmitSendsFormInputInRequest()
+	{
+		MockFormSubmitsPage page = new MockFormSubmitsPage();
+
+		tester.startPage(page);
+
+		tester.newFormTester("form").submit();
+		assertEquals("a text value", page.text);
+
+		tester.executeAjaxEvent(page.get("form:ajaxButton"), "click");
+		assertEquals("a text value", page.text);
+
+		tester.clickLink("form:ajaxlink");
+		assertEquals("a text value", page.text);
+
+		tester.clickLink("form:link");
+		assertEquals("a text value", page.text);
+
+		// this one doesn't
+		tester.submitForm(page.form);
+		assertEquals(null, page.text);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5128
+	 */
+	@Test
+	public void renderComponentRelativeErrorMessage()
+	{
+		tester.startPage(new ComponentFeedbackResourceTestingPage());
+		Component label = tester.getComponentFromLastRenderedPage("label");
+		tester.assertComponentFeedbackMessage(label, "error.msg", null, new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5128
+	 */
+	@Test
+	public void renderComponentRelativeInfoMessage()
+	{
+		tester.startPage(new ComponentFeedbackResourceTestingPage());
+		Component label = tester.getComponentFromLastRenderedPage("label");
+		tester.assertComponentFeedbackMessage(label, "info.msg", null, new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO));
+	}
+
+	/**
+	 * WICKET-5389 reuse WicketTester after preceeding exception
+	 */
+	@Test
+	public void reuseAfterException()
+	{
+		try
+		{
+			tester.startPage(new MockPageParameterPage(new PageParameters())
+			{
+				@Override
+				protected void onInitialize()
+				{
+					throw new IllegalStateException();
+				}
+			});
+		}
+		catch (Exception expected)
+		{
+		}
+
+		tester.startPage(new MockPageParameterPage(new PageParameters()));
 	}
 }

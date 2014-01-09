@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.navomatic;
 
+import org.apache.wicket.examples.compref.MyBorder;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.markup.html.border.BoxBorder;
 
 /**
  * Border component.
@@ -35,7 +35,7 @@ public class NavomaticBorder extends Border
 	public NavomaticBorder(final String id)
 	{
 		super(id);
-		addToBorder(new BoxBorder("navigationBorder"));
-		addToBorder(new BoxBorder("bodyBorder"));
+		addToBorder(new MyBorder("navigationBorder"));
+		addToBorder(new MyBorder("bodyBorder"));
 	}
 }

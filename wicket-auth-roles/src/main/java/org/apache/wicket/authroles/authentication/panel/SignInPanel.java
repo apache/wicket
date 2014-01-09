@@ -28,8 +28,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.settings.ISecuritySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,10 +38,9 @@ import org.slf4j.LoggerFactory;
  * session.
  * 
  * @see {@link IAuthenticationStrategy}
- * @see {@link ISecuritySettings#getAuthenticationStrategy()}
+ * @see {@link org.apache.wicket.settings.SecuritySettings#getAuthenticationStrategy()}
  * @see {@link DefaultAuthenticationStrategy}
- * @see {@link WebSession#authenticate(String, String)}
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
@@ -108,10 +105,12 @@ public class SignInPanel extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
+	 * Try to sign-in with remembered credentials.
+	 * 
+	 * @see #setRememberMe(boolean)
 	 */
 	@Override
-	protected void onBeforeRender()
+	protected void onConfigure()
 	{
 		// logged in already?
 		if (isSignedIn() == false)
@@ -129,11 +128,7 @@ public class SignInPanel extends Panel
 					username = data[0];
 					password = data[1];
 
-					// logon successful. Continue to the original destination
-					continueToOriginalDestination();
-					// Ups, no original destination. Go to the home page
-					throw new RestartResponseException(getSession().getPageFactory().newPage(
-						getApplication().getHomePage()));
+					onSignInRemembered();
 				}
 				else
 				{
@@ -143,8 +138,7 @@ public class SignInPanel extends Panel
 			}
 		}
 
-		// don't forget
-		super.onBeforeRender();
+		super.onConfigure();
 	}
 
 	/**
@@ -251,6 +245,26 @@ public class SignInPanel extends Panel
 	}
 
 	/**
+	 * Called when sign-in was remembered.
+	 * <p>
+	 * By default tries to continue to the original destination or switches to the application's
+	 * home page.
+	 * <p>
+	 * Note: This method will be called during rendering of this panel, thus a
+	 * {@link RestartResponseException} has to be used to switch to a different page.
+	 * 
+	 * @see #onConfigure()
+	 */
+	protected void onSignInRemembered()
+	{
+		// logon successful. Continue to the original destination
+		continueToOriginalDestination();
+
+		// Ups, no original destination. Go to the home page
+		throw new RestartResponseException(getApplication().getHomePage());
+	}
+
+	/**
 	 * Sign in form.
 	 */
 	public final class SignInForm extends StatelessForm<SignInPanel>
@@ -267,10 +281,10 @@ public class SignInPanel extends Panel
 		{
 			super(id);
 
-			setModel(new CompoundPropertyModel<SignInPanel>(SignInPanel.this));
+			setModel(new CompoundPropertyModel<>(SignInPanel.this));
 
 			// Attach textfields for username and password
-			add(new TextField<String>("username"));
+			add(new TextField<>("username"));
 			add(new PasswordTextField("password"));
 
 			// MarkupContainer row for remember me checkbox

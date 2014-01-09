@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
@@ -24,9 +25,7 @@ import org.apache.wicket.WicketTestCase;
 public class TestHomePage extends WicketTestCase
 {
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testRenderMyPage_1()
 	{
 		// start and render the test page
@@ -41,7 +40,7 @@ public class TestHomePage extends WicketTestCase
 
 		String href = "href=\"../resource/org.apache.wicket.markup.resolver.HomePage_1/main.css\"";
 
-		String doc = tester.getLastResponseAsString();
+//		String doc = tester.getLastResponseAsString();
 		tester.assertContains(href);
 
 		// When rendered the 2nd time, the result should be same. The href must not contain the
@@ -50,9 +49,7 @@ public class TestHomePage extends WicketTestCase
 		tester.assertContains(href);
 	}
 
-	/**
-	 * 
-	 */
+	@Test
 	public void testRenderMyPage_2()
 	{
 		// start and render the test page
@@ -60,7 +57,7 @@ public class TestHomePage extends WicketTestCase
 
 		String href = "href=\"../resource/org.apache.wicket.markup.resolver.HomePage_2/main.css\"";
 
-		String doc = tester.getLastResponseAsString();
+//		String doc = tester.getLastResponseAsString();
 		tester.assertContains(href);
 
 		// When rendered the 2nd time, the result should be same. The href must not contain the

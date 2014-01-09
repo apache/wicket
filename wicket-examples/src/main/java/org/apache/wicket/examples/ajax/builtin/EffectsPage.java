@@ -74,11 +74,11 @@ public class EffectsPage extends BasePage
 	 */
 	public EffectsPage()
 	{
-		final Label c1 = new Label("c1", new PropertyModel<Integer>(this, "counter1"));
+		final Label c1 = new Label("c1", new PropertyModel<>(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label c2 = new Label("c2", new PropertyModel<Integer>(this, "counter2"));
+		final Label c2 = new Label("c2", new PropertyModel<>(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
@@ -89,7 +89,8 @@ public class EffectsPage extends BasePage
 			{
 				counter1++;
 				target.add(c1);
-				target.appendJavaScript("new Effect.Shake($('" + c1.getMarkupId() + "'));");
+				target.appendJavaScript(String.format("jQuery('#%s').effect('shake');",
+					c1.getMarkupId()));
 			}
 
 			@Override
@@ -110,7 +111,8 @@ public class EffectsPage extends BasePage
 				if (target != null)
 				{
 					target.add(c2);
-					target.appendJavaScript("new Effect.Highlight($('" + c2.getMarkupId() + "'));");
+					target.appendJavaScript(String.format("jQuery('#%s').effect('highlight');",
+						c2.getMarkupId()));
 				}
 			}
 

@@ -59,9 +59,9 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
-		Url url = request.getUrl();
-		if (matches(url))
+		if (matches(request))
 		{
+			Url url = request.getUrl();
 			PageComponentInfo info = getPageComponentInfo(url);
 			if (info != null && info.getPageInfo().getPageId() != null)
 			{
@@ -153,16 +153,45 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	public int getCompatibilityScore(final Request request)
 	{
 		int score = 0;
-		Url url = request.getUrl();
-		if (matches(url))
+		if (matches(request))
 		{
 			score = Integer.MAX_VALUE;
 		}
 		return score;
 	}
 
-	private boolean matches(final Url url)
+	/**
+	 * Matches when the request url starts with
+	 * {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}/{@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
+	 * or when the base url starts with
+	 * {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}/{@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
+	 * and the request url with {@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
+
+	 * @param request
+	 *      the request to check
+	 * @return {@code true} if the conditions match
+	 */
+	private boolean matches(final Request request)
 	{
-		return urlStartsWith(url, getContext().getNamespace(), getContext().getPageIdentifier());
+		boolean matches = false;
+		Url url = request.getUrl();
+		Url baseUrl = request.getClientUrl();
+		String namespace = getContext().getNamespace();
+		String pageIdentifier = getContext().getPageIdentifier();
+
+		if (urlStartsWith(url, namespace, pageIdentifier))
+		{
+			matches = true;
+		}
+		else if (urlStartsWith(baseUrl, namespace, pageIdentifier) && urlStartsWith(url, pageIdentifier))
+		{
+			matches = true;
+		}
+		else if (urlStartsWith(baseUrl, pageIdentifier) && urlStartsWith(url, pageIdentifier))
+		{
+			matches = true;
+		}
+
+		return matches;
 	}
 }

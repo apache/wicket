@@ -37,14 +37,26 @@
 			if (('WebSocket' in window)) {
 
 				var self = this,
-					url;
+					url,
+					protocol;
 
-				url = document.location.toString().replace('http://', 'ws://');
-				url += '&pageId=' + Wicket.WebSocket.pageId;
+				protocol = document.location.protocol
+					.replace('https:', 'wss:')
+					.replace('http:', 'ws:');
+
+				url = protocol + '//' + document.location.host + Wicket.WebSocket.contextPath + '/wicket/websocket';
+
+				if (Wicket.WebSocket.pageId !== false) {
+					url += '?pageId=' + Wicket.WebSocket.pageId;
+				} else if (Wicket.WebSocket.resourceName) {
+					url += '?resourceName=' + Wicket.WebSocket.resourceName;
+				}
+
+				url += '&wicket-ajax-baseurl=' + Wicket.WebSocket.baseUrl;
 				self.ws = new WebSocket(url);
 
-				self.ws.onopen = function () {
-					Wicket.Event.publish('/websocket/open');
+				self.ws.onopen = function (evt) {
+					Wicket.Event.publish('/websocket/open', evt);
 				};
 
 				self.ws.onmessage = function (event) {
@@ -59,19 +71,19 @@
 					}
 				};
 
-				self.ws.onclose = function (event) {
+				self.ws.onclose = function (evt) {
 					if (self.ws) {
 						self.ws.close();
 						self.ws = null;
-						Wicket.Event.publish('/websocket/closed');
+						Wicket.Event.publish('/websocket/closed', evt);
 					}
 				};
 
-				self.ws.onerror = function (e) {
+				self.ws.onerror = function (evt) {
 					if (self.ws) {
 						self.ws.close();
 						self.ws = null;
-						Wicket.Event.publish('/websocket/error');
+						Wicket.Event.publish('/websocket/error', evt);
 					}
 				};
 			} else {

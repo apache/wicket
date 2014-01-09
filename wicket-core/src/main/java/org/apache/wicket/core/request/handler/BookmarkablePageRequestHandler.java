@@ -95,4 +95,12 @@ public class BookmarkablePageRequestHandler
 	{
 		return logData;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "BookmarkablePageRequestHandler{" +
+				"pageProvider=" + pageProvider +
+				'}';
+	}
 }

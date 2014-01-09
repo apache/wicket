@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
@@ -194,6 +195,26 @@ public class ResourceAggregatorTest extends WicketTestCase
 	}
 
 	/**
+	 * bundle {a, b->a} and {c->a, d->c->a}, render [priority(b), d], should render [priority(ab),
+	 * cd]
+	 */
+	@Test
+	public void testTwoBundlesWithDependenciesAndPriority()
+	{
+		HeaderItem bundleAB = Application.get()
+			.getResourceBundles()
+			.addJavaScriptBundle(Application.class, "ab.js", new ResourceReferenceA(),
+				new ResourceReferenceB());
+		HeaderItem bundleCD = Application.get()
+			.getResourceBundles()
+			.addJavaScriptBundle(Application.class, "cd.js", new ResourceReferenceC(),
+				new ResourceReferenceD());
+		aggregator.render(new PriorityHeaderItem(forReference(new ResourceReferenceB())));
+		aggregator.render(forReference(new ResourceReferenceD()));
+		assertItems(new PriorityHeaderItem(bundleAB), bundleCD);
+	}
+
+	/**
 	 * bundle {a, b->a} and {a, c->a}, should give exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -216,5 +237,35 @@ public class ResourceAggregatorTest extends WicketTestCase
 	public void testCircularDependency()
 	{
 		aggregator.render(forReference(new ResourceReferenceCirc1()));
+	}
+
+	/**
+	 * bundle {bun1 -> x, bun2 -> y}, render [bun1], should render [x, y, bun12]
+	 */
+	@Test
+	public void testTwoResourcesWithBundleAsDependency()
+	{
+		HeaderItem bundle12 = Application.get()
+			.getResourceBundles()
+			.addJavaScriptBundle(Application.class, "bun12.js", new ResourceReferenceBun1(),
+				new ResourceReferenceBun2());
+		aggregator.render(forReference(new ResourceReferenceBun1()));
+		assertItems(forReference(new ResourceReferenceX()), forReference(new ResourceReferenceY()),
+			bundle12);
+	}
+
+	/**
+	 * bundle {a, b -> a}, render [x, priority(a)], should render [priority(ab), x]
+	 */
+	@Test
+	public void testBundleWithPriority()
+	{
+		HeaderItem bundleAB = Application.get()
+			.getResourceBundles()
+			.addJavaScriptBundle(Application.class, "ab.js", new ResourceReferenceA(),
+				new ResourceReferenceB());
+		aggregator.render(forReference(new ResourceReferenceX()));
+		aggregator.render(new PriorityHeaderItem(forReference(new ResourceReferenceA())));
+		assertItems(new PriorityHeaderItem(bundleAB), forReference(new ResourceReferenceX()));
 	}
 }
