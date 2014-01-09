@@ -20,12 +20,12 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-experimental</artifactId>
-		<version>6.13.0-SNAPSHOT</version>
+		<version>6.14.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-cdi-1.1</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.3-SNAPSHOT</version>
 	<name>Wicket CDI 1.1</name>
 	<description>
 		Provides integration between Wicket and CDI containers. Enables injection of
