@@ -16,10 +16,12 @@
  */
 package org.apache.wicket.request.mapper;
 
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.mapper.CompoundRequestMapper.MapperWithScore;
-import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -58,6 +60,40 @@ public class CompoundRequestMapperTest extends Assert
 		assertTrue(
 			"Mount path 3 should match",
 			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_3))) instanceof EmptyRequestHandler);
+	}
+
+	private static class MountMapper implements IRequestMapper
+	{
+		private final String path;
+		private final IRequestHandler handler;
+
+		public MountMapper(String path, EmptyRequestHandler handler)
+		{
+			this.path = path;
+			this.handler = handler;
+		}
+
+		@Override
+		public IRequestHandler mapRequest(Request request)
+		{
+			if (request.getUrl().toString().equals(path))
+			{
+				return handler;
+			}
+			return null;
+		}
+
+		@Override
+		public int getCompatibilityScore(Request request)
+		{
+			return 0;
+		}
+
+		@Override
+		public Url mapHandler(IRequestHandler requestHandler)
+		{
+			return null;
+		}
 	}
 
 	/**
