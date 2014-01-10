@@ -312,7 +312,6 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	{
 		UrlInfo urlInfo = parseRequest(request);
 
-		// check if the URL is long enough and starts with the proper segments
 		if (urlInfo != null)
 		{
 			PageComponentInfo info = urlInfo.getPageComponentInfo();
@@ -321,7 +320,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 			if (info == null)
 			{
-				// if there are is no page instance information (only page map name - optionally)
+				// if there are is no page instance information (only page name - optionally)
 				// then this is a simple bookmarkable URL
 				return processBookmarkable(pageClass, pageParameters);
 			}
