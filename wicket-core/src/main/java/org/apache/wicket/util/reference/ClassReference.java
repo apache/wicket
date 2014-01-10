@@ -41,6 +41,7 @@ public class ClassReference<T> implements Serializable, IProvider<Class<T>>
 	 * Constructor
 	 * 
 	 * @param clazz
+	 *          The referenced class
 	 */
 	public ClassReference(Class<T> clazz)
 	{
@@ -68,17 +69,18 @@ public class ClassReference<T> implements Serializable, IProvider<Class<T>>
 
 	private void cache(Class<T> clazz)
 	{
-		cache = new WeakReference<Class<T>>(clazz);
+		cache = new WeakReference<>(clazz);
 	}
 
 	/**
 	 * Diamond operator factory
 	 * 
 	 * @param clazz
+	 *          The referenced class
 	 * @return class reference
 	 */
 	public static <T> ClassReference<T> of(Class<T> clazz)
 	{
-		return new ClassReference<T>(clazz);
+		return new ClassReference<>(clazz);
 	}
 }
