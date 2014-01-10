@@ -259,12 +259,6 @@ public class PageProvider implements IPageProvider
 		if (pageId != null)
 		{
 			page = getStoredPage(pageId);
-
-			if (page == null)
-			{
-				// WICKET-4594 - ignore the parsed parameters for stateful pages
-				pageParameters = null;
-			}
 		}
 
 		if (page == null)

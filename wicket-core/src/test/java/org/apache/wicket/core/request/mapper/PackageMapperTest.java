@@ -222,7 +222,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
-		PageParameters p = page.getPageParameters();
+		PageParameters p = h.getPageParameters();
 		assertEquals(0, p.getIndexedCount());
 
 		assertEquals(0, p.getNamedKeys().size());
@@ -290,17 +290,14 @@ public class PackageMapperTest extends AbstractMapperTest
 	@Test
 	public void decodeNamedParameters()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/fooValue/barValue/" + PAGE_CLASS_NAME + "/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse(MOUNT_PATH + "/fooValue/barValue/" + PAGE_CLASS_NAME + "/i1/i2?a=b&b=c");
 		IRequestHandler handler = namedParametersEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
-		checkPage(page, 15);
-
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
-		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
+		checkPage(page, 1);
 
 		PageParameters p = h.getPageParameters();
 		assertEquals(2, p.getIndexedCount());
