@@ -77,15 +77,6 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 		{
 			return 0;
 		}
-
-		@Override
-		protected IRequestHandler processHybrid(PageInfo pageInfo,
-			Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
-			Integer renderCount)
-		{
-			return super.processHybrid(pageInfo, pageClass, pageParameters, renderCount);
-		}
-
 	}
 
 }
