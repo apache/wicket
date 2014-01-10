@@ -237,7 +237,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		if (url.getSegments().isEmpty() && url.getQueryParameters().isEmpty())
 		{
 			// this is home page
-			if (getPageClass().equals(getContext().getHomePageClass()) && redirectFromHomePage())
+			if (getPageClass().equals(getContext().getHomePageClass()))
 			{
 				return true;
 			}
