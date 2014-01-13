@@ -68,7 +68,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 
 	/** {@inheritDoc} */
 	@Override
-	public final Object getDisplayValue(T object)
+	public Object getDisplayValue(T object)
 	{
 		final String value;
 
@@ -99,12 +99,13 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	}
 
 	/**
-	 * Postprocesses the {@code value} after it is retrieved from the localizer. Default
-	 * implementation escapes any markup found in the {@code value}.
-	 * 
+	 * Postprocesses the {@code value} after it is retrieved from the localizer.
+	 *
 	 * @param value
 	 * @return postprocessed value
+	 * @deprecated Override #getDisplayValue() method and do the postprocessing after calling super.getDisplayValue().
 	 */
+	@Deprecated
 	protected CharSequence postprocess(String value)
 	{
 		return value;
