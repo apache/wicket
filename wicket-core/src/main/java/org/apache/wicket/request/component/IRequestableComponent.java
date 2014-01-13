@@ -34,21 +34,21 @@ public interface IRequestableComponent
 	 * 
 	 * @return Colon separated path to this component in the component hierarchy
 	 */
-	public String getPageRelativePath();
+	String getPageRelativePath();
 
 	/**
 	 * Gets the id of this component.
 	 * 
 	 * @return The id of this component
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * Returns page this component belongs to.
 	 * 
 	 * @return page instance or <code>null</code>
 	 */
-	public IRequestablePage getPage();
+	IRequestablePage getPage();
 
 	/**
 	 * Gets the component at the given path.
@@ -57,7 +57,7 @@ public interface IRequestableComponent
 	 *            Path to component
 	 * @return The component at the path
 	 */
-	public IRequestableComponent get(String path);
+	IRequestableComponent get(String path);
 
 	/**
 	 * Gets a stable id for the specified behavior. The id remains stable from the point this method
@@ -66,7 +66,7 @@ public interface IRequestableComponent
 	 * @param behavior
 	 * @return a stable id for the specified behavior
 	 */
-	public int getBehaviorId(Behavior behavior);
+	int getBehaviorId(Behavior behavior);
 
 	/**
 	 * Gets the behavior for the specified id
@@ -76,7 +76,7 @@ public interface IRequestableComponent
 	 * @throws InvalidBehaviorIdException
 	 *             when behavior with this id cannot be found
 	 */
-	public Behavior getBehaviorById(int id);
+	Behavior getBehaviorById(int id);
 
 	/**
 	 * Detaches the component.
@@ -104,5 +104,5 @@ public interface IRequestableComponent
 	 * 
 	 * </p>
 	 */
-	public void detach();
+	void detach();
 }
