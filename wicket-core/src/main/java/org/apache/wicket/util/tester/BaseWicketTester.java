@@ -1793,7 +1793,7 @@ public class BaseWicketTester
 			}
 
 			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
-				linkComponent, "onclick");
+				linkComponent, "click");
 			for (AjaxEventBehavior behavior : behaviors)
 			{
 				executeBehavior(behavior);
@@ -1805,7 +1805,7 @@ public class BaseWicketTester
 		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
 		{
 			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
-				linkComponent, "onclick");
+				linkComponent, "click");
 			for (AjaxEventBehavior behavior : behaviors)
 			{
 				executeBehavior(behavior);

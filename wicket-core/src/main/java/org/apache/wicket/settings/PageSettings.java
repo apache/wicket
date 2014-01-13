@@ -124,7 +124,7 @@ public class PageSettings
 
 	public boolean canCallListenerInterfaceAfterExpiry()
 	{
-		return canCallListenerInterfaceAfterExpiry;
+		return recreateMountedPagesAfterExpiry && canCallListenerInterfaceAfterExpiry;
 	}
 
 	public void setCanCallListenerInterfaceAfterExpiry(boolean canCallListenerInterfaceAfterExpiry)
