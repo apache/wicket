@@ -105,4 +105,10 @@ public interface IRequestableComponent
 	 * </p>
 	 */
 	void detach();
+
+	/**
+	 * @return {@code true} if it is save to call the listener interface on this component
+	 *      when the owner page is freshly created after expiration
+	 */
+	boolean canCallListenerInterfaceAfterExpiry();
 }

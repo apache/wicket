@@ -98,9 +98,7 @@ public class MountedPageLinkTest extends WicketTestCase
 		url = url.replace("?0", "?3");
 		tester.executeUrl(url);
 
-		// request parameters to callback urls should be ignored for the re-created page
-		// (WICKET-4594)
-		tester.assertContainsNot("param=value");
+		tester.assertContains("param=value");
 	}
 
 	/**

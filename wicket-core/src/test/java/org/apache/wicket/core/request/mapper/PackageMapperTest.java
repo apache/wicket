@@ -239,9 +239,9 @@ public class PackageMapperTest extends AbstractMapperTest
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
 		PageParameters p = h.getPageParameters();
-		assertEquals(0, p.getIndexedCount());
+		assertEquals(2, p.getIndexedCount());
 
-		assertEquals(0, p.getNamedKeys().size());
+		assertEquals(2, p.getNamedKeys().size());
 	}
 
 	/**

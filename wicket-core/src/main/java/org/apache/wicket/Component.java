@@ -4551,4 +4551,9 @@ public abstract class Component
 		return getBehaviors(null);
 	}
 
+	@Override
+	public boolean canCallListenerInterfaceAfterExpiry()
+	{
+		return getApplication().getPageSettings().canCallListenerInterfaceAfterExpiry();
+	}
 }

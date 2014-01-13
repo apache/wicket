@@ -137,6 +137,12 @@ public class MockComponent implements IRequestableComponent
 	{
 	}
 
+	@Override
+	public boolean canCallListenerInterfaceAfterExpiry()
+	{
+		return false;
+	}
+
 	public boolean canCallListenerInterface()
 	{
 		return true;

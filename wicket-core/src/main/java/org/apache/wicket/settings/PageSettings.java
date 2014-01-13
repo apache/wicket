@@ -45,6 +45,12 @@ public class PageSettings
 	private boolean recreateMountedPagesAfterExpiry = true;
 
 	/**
+	 * determines whether component's listener interface can be executed
+	 * when its owner page is freshly created after expiration
+	 */
+	private boolean canCallListenerInterfaceAfterExpiry = false;
+
+	/**
 	 * Adds a component resolver to the list.
 	 *
 	 * @param resolver
@@ -114,5 +120,15 @@ public class PageSettings
 	public void setRecreateMountedPagesAfterExpiry(boolean recreateMountedPagesAfterExpiry)
 	{
 		this.recreateMountedPagesAfterExpiry = recreateMountedPagesAfterExpiry;
+	}
+
+	public boolean canCallListenerInterfaceAfterExpiry()
+	{
+		return canCallListenerInterfaceAfterExpiry;
+	}
+
+	public void setCanCallListenerInterfaceAfterExpiry(boolean canCallListenerInterfaceAfterExpiry)
+	{
+		this.canCallListenerInterfaceAfterExpiry = canCallListenerInterfaceAfterExpiry;
 	}
 }
