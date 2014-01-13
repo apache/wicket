@@ -21,7 +21,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Classes;
 
 /**
- * {@link IChoiceRenderer} implementation that makes it easy to work with java 5 enums. This
+ * {@link ChoiceRenderer} implementation that makes it easy to work with java 5 enums. This
  * renderer will attempt to lookup strings used for the display value using a localizer of a given
  * component. If the component is not specified, the global instance of localizer will be used for
  * lookups.
@@ -68,7 +68,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> extends ChoiceRenderer<T>
 
 	/** {@inheritDoc} */
 	@Override
-	public final Object getDisplayValue(T object)
+	public Object getDisplayValue(T object)
 	{
 		final String value;
 
@@ -83,7 +83,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> extends ChoiceRenderer<T>
 			value = Application.get().getResourceSettings().getLocalizer().getString(key, null);
 		}
 
-		return postprocess(value);
+		return value;
 	}
 
 	/**
@@ -96,18 +96,6 @@ public class EnumChoiceRenderer<T extends Enum<T>> extends ChoiceRenderer<T>
 	protected String resourceKey(T object)
 	{
 		return Classes.simpleName(object.getDeclaringClass()) + '.' + object.name();
-	}
-
-	/**
-	 * Postprocesses the {@code value} after it is retrieved from the localizer. Default
-	 * implementation escapes any markup found in the {@code value}.
-	 * 
-	 * @param value
-	 * @return postprocessed value
-	 */
-	protected CharSequence postprocess(String value)
-	{
-		return value;
 	}
 
 	/** {@inheritDoc} */
