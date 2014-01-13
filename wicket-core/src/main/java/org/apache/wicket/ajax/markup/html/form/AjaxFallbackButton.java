@@ -96,7 +96,10 @@ public abstract class AjaxFallbackButton extends Button
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+
+				// do not allow normal form submit to happen
 				attributes.setPreventDefault(true);
+
 				AjaxFallbackButton.this.updateAjaxAttributes(attributes);
 			}
 
