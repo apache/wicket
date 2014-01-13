@@ -56,6 +56,14 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	private static Logger logger = LoggerFactory.getLogger(AbstractBookmarkableMapper.class);
 
 	/**
+	 * A flag that is used when comparing the mounted paths' segments against
+	 * the request's url ones.
+	 *
+	 * @see #setCaseSensitiveMatch(boolean)
+	 */
+	private boolean isCaseSensitive = true;
+
+	/**
 	 * Represents information stored in URL.
 	 * 
 	 * @author Matej Knopp
@@ -631,9 +639,8 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 			for (int count = max - 1; count >= 0; count--)
 			{
-				if (url.getSegments()
-						.get(segmentIndex + count)
-						.equals(curPathSegment.getFixedPart()))
+				if (segmentsMatch(url.getSegments()
+						.get(segmentIndex + count), curPathSegment.getFixedPart()))
 				{
 					foundFixedPart = true;
 					segmentIndex += count + 1;
@@ -652,6 +659,57 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		ret[pathSegmentIndex] = Math.min(lastSegment.getMaxParameters(), url.getSegments().size() -
 				segmentIndex + lastSegment.getMinParameters());
 		return ret;
+	}
+
+	/**
+	 * Decides whether a segment from the mounted path matches with a segment
+	 * from the requested url.
+	 *
+	 * A custom implementation of this class may use more complex logic to handle
+	 * spelling errors
+	 *
+	 * @param mountedSegment
+	 *          the segment from the mounted path
+	 * @param urlSegment
+	 *          the segment from the request url
+	 * @return {@code true} if the segments match
+	 */
+	protected boolean segmentsMatch(String mountedSegment, String urlSegment)
+	{
+		final boolean result;
+		if (isCaseSensitiveMatch())
+		{
+			result = mountedSegment.equals(urlSegment);
+		}
+		else
+		{
+			result = mountedSegment.equalsIgnoreCase(urlSegment);
+		}
+		return result;
+	}
+
+	/**
+	 * @return whether the matching of mounted segments against request's url ones should be
+	 *      case sensitive or not
+	 */
+	protected boolean isCaseSensitiveMatch()
+	{
+		return isCaseSensitive;
+	}
+
+	/**
+	 * Sets whether the matching of mounted segments against request's url ones should be
+	 * case sensitive or not.
+	 *
+	 * @param isCaseSensitive
+	 *          a flag indicating whether the matching of mounted segments against request's
+	 *          url ones should be case sensitive or not
+	 * @return this instance, for chaining
+	 */
+	public AbstractBookmarkableMapper setCaseSensitiveMatch(boolean isCaseSensitive)
+	{
+		this.isCaseSensitive = isCaseSensitive;
+		return this;
 	}
 
 	/**

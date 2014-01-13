@@ -115,6 +115,22 @@ public class MountedMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4994
+	 */
+	@Test
+	public void decode1CaseInsensitively()
+	{
+		Url url = Url.parse("somE/moUnt/paTh");
+		IRequestHandler handler = encoder.setCaseSensitiveMatch(false).mapRequest(getRequest(url));
+
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
+	}
+
+	/**
 	 *
 	 */
 	@Test

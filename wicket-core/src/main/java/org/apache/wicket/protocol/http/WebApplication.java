@@ -106,14 +106,14 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * 
  * @see WicketFilter
- * @see org.apache.wicket.settings.IApplicationSettings
- * @see org.apache.wicket.settings.IDebugSettings
- * @see org.apache.wicket.settings.IExceptionSettings
- * @see org.apache.wicket.settings.IMarkupSettings
- * @see org.apache.wicket.settings.IPageSettings
- * @see org.apache.wicket.settings.IRequestCycleSettings
- * @see org.apache.wicket.settings.IResourceSettings
- * @see org.apache.wicket.settings.ISecuritySettings
+ * @see org.apache.wicket.settings.ApplicationSettings
+ * @see org.apache.wicket.settings.DebugSettings
+ * @see org.apache.wicket.settings.ExceptionSettings
+ * @see org.apache.wicket.settings.MarkupSettings
+ * @see org.apache.wicket.settings.PageSettings
+ * @see org.apache.wicket.settings.RequestCycleSettings
+ * @see org.apache.wicket.settings.ResourceSettings
+ * @see org.apache.wicket.settings.SecuritySettings
  * @see javax.servlet.Filter
  * @see javax.servlet.FilterConfig
  * @see javax.servlet.ServletContext
@@ -331,9 +331,11 @@ public abstract class WebApplication extends Application
 	 * @param pageClass
 	 *            the page class to be mounted
 	 */
-	public final <T extends Page> void mountPage(final String path, final Class<T> pageClass)
+	public final <T extends Page> MountedMapper mountPage(final String path, final Class<T> pageClass)
 	{
-		mount(new MountedMapper(path, pageClass));
+		MountedMapper mapper = new MountedMapper(path, pageClass);
+		mount(mapper);
+		return mapper;
 	}
 
 	/**
@@ -344,13 +346,15 @@ public abstract class WebApplication extends Application
 	 * @param reference
 	 *            resource reference to be mounted
 	 */
-	public final void mountResource(final String path, final ResourceReference reference)
+	public final ResourceMapper mountResource(final String path, final ResourceReference reference)
 	{
 		if (reference.canBeRegistered())
 		{
 			getResourceReferenceRegistry().registerResourceReference(reference);
 		}
-		mount(new ResourceMapper(path, reference));
+		ResourceMapper mapper = new ResourceMapper(path, reference);
+		mount(mapper);
+		return mapper;
 	}
 
 	/**
@@ -364,10 +368,11 @@ public abstract class WebApplication extends Application
 	 * @param pageClass
 	 *            the page class to be mounted
 	 */
-	public final <P extends Page> void mountPackage(final String path, final Class<P> pageClass)
+	public final <P extends Page> PackageMapper mountPackage(final String path, final Class<P> pageClass)
 	{
 		PackageMapper packageMapper = new PackageMapper(path, PackageName.forClass(pageClass));
 		mount(packageMapper);
+		return packageMapper;
 	}
 
 	/**

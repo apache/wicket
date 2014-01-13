@@ -129,6 +129,22 @@ public class PackageMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4994
+	 */
+	@Test
+	public void decode1CaseInsensitively()
+	{
+		Url url = Url.parse(MOUNT_PATH.replace('o', 'O').replace('p', 'P') + '/' + PAGE_CLASS_NAME);
+		IRequestHandler handler = encoder.setCaseSensitiveMatch(false).mapRequest(getRequest(url));
+
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
+	}
+
+	/**
 	 *
 	 */
 	@Test
