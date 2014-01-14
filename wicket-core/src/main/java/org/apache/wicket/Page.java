@@ -967,6 +967,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		setStatelessHint(false);
 
+		internalInitialize();
+
 		return new PageReference(numericId);
 	}
 
