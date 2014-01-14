@@ -246,6 +246,13 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		}
 		else
 		{
+			PageParameters constructionPageParameters = provider.getPageInstance().getPageParameters();
+			if (PageParameters.equals(constructionPageParameters, pageParameters) == false)
+			{
+				// create a fresh page instance because the request page parameters are different than the ones
+				// when the resolved page by id has been created
+				return new RenderPageRequestHandler(new PageProvider(pageClass, pageParameters));
+			}
 			return new RenderPageRequestHandler(provider);
 		}
 	}

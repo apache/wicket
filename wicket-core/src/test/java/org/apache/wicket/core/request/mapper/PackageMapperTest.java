@@ -167,7 +167,11 @@ public class PackageMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * The tests resolves pages by id as if they were existed in the page store.
+	 * These pages have no page parameters (i.e. page.getPageParameters() == null).
 	 *
+	 * The request that the encoder does also has no parameters (neither in the path
+	 * nor in the query string) so the resolved page is assumed to be valid.
 	 */
 	@Test
 	public void decode3()
@@ -181,7 +185,18 @@ public class PackageMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * The tests resolves pages by id as if they were existed in the page store.
+	 * These pages have no page parameters (i.e. page.getPageParameters() == null).
 	 *
+	 * Since Wicket 7.0.0 (WICKET-4441) if a new request to hybrid url
+	 * (a url with both mount path and pageId) has different page parameters
+	 * than the resolved page then a new page instance with the new parameters
+	 * is created.
+	 * This way if a user manipulates manually the product id in url like:
+	 * /mount/path/Products/23?3
+	 * to
+	 * /mount/path/Products/24?3
+	 * then Wicket will create a new page that will show product=24
 	 */
 	@Test
 	public void decode4()
@@ -190,13 +205,15 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
-		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
-		checkPage(page, 15);
+		RenderPageRequestHandler h = (RenderPageRequestHandler) handler;
+		((PageProvider) h.getPageProvider()).setPageSource(context);
+		IRequestablePage page = h.getPage();
+		checkPage(page, 1);
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(0, p.getIndexedCount());
+		assertEquals(2, p.getIndexedCount());
 
-		assertEquals(0, p.getNamedKeys().size());
+		assertEquals(2, p.getNamedKeys().size());
 	}
 
 	/**
