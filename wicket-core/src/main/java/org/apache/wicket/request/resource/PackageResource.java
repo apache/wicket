@@ -462,7 +462,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 						". See IPackageResourceGuard");
 		}
 
-		return new ProcessingResourceStream(resourceStream);
+		if (resourceStream != null)
+		{
+			resourceStream = new ProcessingResourceStream(resourceStream);
+		}
+		return resourceStream;
 	}
 
 	/**

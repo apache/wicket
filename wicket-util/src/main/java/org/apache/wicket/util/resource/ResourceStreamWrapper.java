@@ -36,7 +36,7 @@ public class ResourceStreamWrapper implements IResourceStream
 		this.delegate = Args.notNull(delegate, "delegate");
 	}
 
-	protected IResourceStream getDelegate()
+	public IResourceStream getDelegate()
 	{
 		return delegate;
 	}
