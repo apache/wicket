@@ -834,11 +834,9 @@
 			window.onunload = this.old_onunload;
 			this.old_onunload = null;
 
-			if (this.old_onbeforeunload) {
-				// restore old beforeunload handler
-				window.onbeforeunload = this.old_onbeforeunload;
-				this.old_onbeforeunload = null;
-			}
+			// restore old beforeunload handler
+			window.onbeforeunload = this.old_onbeforeunload;
+			this.old_onbeforeunload = null;
 
 			// hids and cleanup the mask
 			this.destroyMask();
