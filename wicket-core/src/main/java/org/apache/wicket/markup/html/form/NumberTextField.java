@@ -42,6 +42,13 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Use this as a marker of step attribute value "any"
+	 * Because the w3c spec requires step to be a non-negative digit
+	 * greater than zero we use zero as delegate for "any" keyword.
+	 */
+	public static final Double ANY = Double.valueOf(0d);
+
 	private RangeValidator<N> validator;
 
 	private N minimum;
@@ -187,7 +194,14 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		if (step != null)
 		{
-			attributes.put("step", Objects.stringValue(step));
+			if (step.doubleValue() == ANY)
+			{
+				attributes.put("step", "any");
+			}
+			else
+			{
+				attributes.put("step", Objects.stringValue(step));
+			}
 		}
 		else
 		{

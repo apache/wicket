@@ -104,6 +104,38 @@ public class NumberTextFieldTest extends WicketTestCase
 	}
 
 	/**
+	 * WICKET-5467
+	 */
+	@Test
+	public void respectStepAny()
+	{
+		TestPage<Double> testPage = new TestPage<Double>();
+		testPage.textField.setType(Double.class);
+		testPage.textField.setStep(NumberTextField.ANY);
+		testPage.textField.setModelObject(new Double("1000.0"));
+		tester.startPage(testPage);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("<input wicket:id=\"number\" step=\"any\" type=\"number\" value=\"1000.0\" name=\"number\"/>"));
+	}
+
+	/**
+	 * WICKET-5467
+	 */
+	@Test
+	public void respectStepWithNumberValue()
+	{
+		TestPage<Double> testPage = new TestPage<Double>();
+		testPage.textField.setType(Double.class);
+		testPage.textField.setStep(Double.valueOf(0.3d));
+		testPage.textField.setModelObject(new Double("1000.0"));
+		tester.startPage(testPage);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("<input wicket:id=\"number\" step=\"0.3\" type=\"number\" value=\"1000.0\" name=\"number\"/>"));
+	}
+
+	/**
 	 * @param <N>
 	 *            type parameter
 	 */
@@ -138,7 +170,7 @@ public class NumberTextFieldTest extends WicketTestCase
 		{
 			return new StringResourceStream(
 				"<html><body>"
-					+ "<form wicket:id=\"form\"><input wicket:id=\"number\" type=\"number\" /></form></body></html>");
+					+ "<form wicket:id=\"form\"><input wicket:id=\"number\" step=\"any\" type=\"number\" /></form></body></html>");
 		}
 	}
 }
