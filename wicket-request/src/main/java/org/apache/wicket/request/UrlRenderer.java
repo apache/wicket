@@ -290,8 +290,8 @@ public class UrlRenderer
 			renderedUrl = "./" + renderedUrl;
 		}
 
-		// sanitize end
-		if (renderedUrl.endsWith(".."))
+		// add trailing slash if the url has no query string and ends with ..
+		if (renderedUrl.indexOf('?') == -1 && renderedUrl.endsWith(".."))
 		{
 			// WICKET-4401
 			renderedUrl = renderedUrl + '/';

@@ -214,6 +214,17 @@ public class UrlRendererTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5468
+	 */
+	@Test
+	public void renderUrlWithTrailingDotsInQueryString()
+	{
+		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("some/path")));
+
+		assertEquals("./path?a=b..", r1.renderUrl(Url.parse("some/path?a=b..")));
+	}
+
+	/**
 	 * Verify that absolute urls are rendered as is, ignoring the current client url and base url
 	 * completely.
 	 * 
