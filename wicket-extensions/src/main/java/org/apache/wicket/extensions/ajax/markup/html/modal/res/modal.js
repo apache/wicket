@@ -738,17 +738,15 @@
 			// Wicket.Window.unloadConfirmation is deprecated but we need to check it
 			// for backward compatibility. Remove it after Wicket 7.0
 			if (this.settings.unloadConfirmation && Wicket.Window.unloadConfirmation) {
-				// preserve old beforeunload handler
-				this.old_onbeforeunload = window.onbeforeunload;
-
-				// new beforeunload handler - ask user before reloading window
-				window.onbeforeunload = function() {
-					return "Reloading this page will cause the modal window to disappear.";
-				};
+				Wicket.Event.add(window, 'beforeunload',this.onbeforeunload);
 			}
 
 			// create the mask that covers the background
 			this.createMask();
+		},
+
+		onbeforeunload: function() {
+			return "Reloading this page will cause the modal window to disappear.";
 		},
 
 		adjustOpenWindowZIndexesOnShow: function() {
@@ -834,9 +832,7 @@
 			window.onunload = this.old_onunload;
 			this.old_onunload = null;
 
-			// restore old beforeunload handler
-			window.onbeforeunload = this.old_onbeforeunload;
-			this.old_onbeforeunload = null;
+			Wicket.Event.remove(window, 'beforeunload',this.onbeforeunload);
 
 			// hids and cleanup the mask
 			this.destroyMask();
