@@ -298,7 +298,7 @@ public class PageAccessSynchronizerTest extends Assert
 
 		// make sure we can serialize the synchronizer
 
-		final PageAccessSynchronizer sync2 = (PageAccessSynchronizer)WicketObjects.cloneObject(sync);
+		final PageAccessSynchronizer sync2 = WicketObjects.cloneObject(sync);
 		assertTrue(sync != sync2);
 
 		// make sure the clone does not retain locks by attempting to lock page locked by locker1 in

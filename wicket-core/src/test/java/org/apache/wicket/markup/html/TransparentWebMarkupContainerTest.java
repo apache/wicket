@@ -115,7 +115,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 							@Override
 							public void touchPage(IManageablePage page)
 							{
-								page = (IManageablePage)WicketObjects.cloneObject(page);
+								page = WicketObjects.cloneObject(page);
 								super.touchPage(page);
 							}
 						};

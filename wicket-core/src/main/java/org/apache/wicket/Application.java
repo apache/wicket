@@ -570,7 +570,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	private void addInitializer(final String className)
 	{
-		IInitializer initializer = (IInitializer)WicketObjects.newInstance(className);
+		IInitializer initializer = WicketObjects.newInstance(className);
 		if (initializer != null)
 		{
 			initializers.add(initializer);

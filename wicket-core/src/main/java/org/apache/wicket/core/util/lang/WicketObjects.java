@@ -127,7 +127,7 @@ public class WicketObjects
 			}
 			else
 			{
-				serializer = new JavaSerializer("SerializingObjectSizeOfStrategy");
+				serializer = new JavaSerializer(SerializingObjectSizeOfStrategy.class.getName());
 			}
 			byte[] serialized = serializer.serialize(object);
 			int size = -1;
@@ -240,11 +240,15 @@ public class WicketObjects
 	 * serializable to be cloned. This method will not clone wicket Components, it will just reuse
 	 * those instances so that the complete component tree is not copied over only the model data.
 	 *
+	 * <strong>Warning</strong>: this method uses Java Serialization APIs to be able to avoid cloning
+	 * of {@link org.apache.wicket.Component} instances. If the application uses custom
+	 * {@link org.apache.wicket.serialize.ISerializer} then most probably this method cannot be used.
+	 *
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
 	 */
-	public static Object cloneModel(final Object object)
+	public static <T> T cloneModel(final T object)
 	{
 		if (object == null)
 		{
@@ -260,13 +264,9 @@ public class WicketObjects
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(
 					out.toByteArray()), replacedObjects, object.getClass().getClassLoader());
-				return ois.readObject();
+				return (T) ois.readObject();
 			}
-			catch (ClassNotFoundException e)
-			{
-				throw new WicketRuntimeException("Internal error cloning object", e);
-			}
-			catch (IOException e)
+			catch (ClassNotFoundException | IOException e)
 			{
 				throw new WicketRuntimeException("Internal error cloning object", e);
 			}
@@ -290,7 +290,7 @@ public class WicketObjects
 	 * @return A deep copy of the object
 	 * @see #cloneModel(Object)
 	 */
-	public static Object cloneObject(final Object object)
+	public static <T> T cloneObject(final T object)
 	{
 		if (object == null)
 		{
@@ -298,67 +298,10 @@ public class WicketObjects
 		}
 		else
 		{
-			try
-			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				ObjectOutputStream oos = new ObjectOutputStream(out);
-				oos.writeObject(object);
-				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(
-					out.toByteArray()))
-				{
-					// This override is required to resolve classes inside in different bundle, i.e.
-					// The classes can be resolved by OSGI classresolver implementation
-					@Override
-					protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
-						ClassNotFoundException
-					{
-						String className = desc.getName();
-
-						try
-						{
-							return Class.forName(className, true, object.getClass()
-								.getClassLoader());
-						}
-						catch (ClassNotFoundException ex1)
-						{
-							// ignore this exception.
-							log.debug("Class not found by using objects own classloader, trying the IClassResolver");
-						}
-
-
-						Application application = Application.get();
-						ApplicationSettings applicationSettings = application.getApplicationSettings();
-						IClassResolver classResolver = applicationSettings.getClassResolver();
-
-						Class<?> candidate = null;
-						try
-						{
-							candidate = classResolver.resolveClass(className);
-							if (candidate == null)
-							{
-								candidate = super.resolveClass(desc);
-							}
-						}
-						catch (WicketRuntimeException ex)
-						{
-							if (ex.getCause() instanceof ClassNotFoundException)
-							{
-								throw (ClassNotFoundException)ex.getCause();
-							}
-						}
-						return candidate;
-					}
-				};
-				return ois.readObject();
-			}
-			catch (ClassNotFoundException e)
-			{
-				throw new WicketRuntimeException("Internal error cloning object", e);
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException("Internal error cloning object", e);
-			}
+			ISerializer serializer = Application.get().getFrameworkSettings().getSerializer();
+			byte[] serialized = serializer.serialize(object);
+			Object deserialized = serializer.deserialize(serialized);
+			return (T) deserialized;
 		}
 	}
 
@@ -370,14 +313,14 @@ public class WicketObjects
 	 *            The full class name
 	 * @return The new object instance
 	 */
-	public static Object newInstance(final String className)
+	public static <T> T newInstance(final String className)
 	{
 		if (!Strings.isEmpty(className))
 		{
 			try
 			{
 				Class<?> c = WicketObjects.resolveClass(className);
-				return c.newInstance();
+				return (T) c.newInstance();
 			}
 			catch (Exception e)
 			{

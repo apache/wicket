@@ -94,7 +94,7 @@ public class GuiceInjectorTest extends Assert
 			doChecksForComponent(testComponent);
 
 			// Serialize and deserialize the object, and check it still works.
-			TestComponentInterface clonedComponent = (TestComponentInterface)WicketObjects.cloneObject(testComponent);
+			TestComponentInterface clonedComponent = WicketObjects.cloneObject(testComponent);
 			doChecksForComponent(clonedComponent);
 
 			// Test injection of a class that does not extend Component

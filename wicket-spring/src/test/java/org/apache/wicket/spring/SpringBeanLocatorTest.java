@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.spring;
 
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.spring.test.SpringContextLocatorMock;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +39,15 @@ public class SpringBeanLocatorTest extends Assert
 
 	private ISpringContextLocator ctxLocator;
 
+	private MockApplication application;
+
+	@After
+	public void after()
+	{
+		application.internalDestroy();
+		ThreadContext.detach();
+	}
+
 	/**
 	 * 
 	 */
@@ -43,6 +56,13 @@ public class SpringBeanLocatorTest extends Assert
 	{
 		ctx = new ApplicationContextMock();
 		ctxLocator = new SpringContextLocatorMock(ctx);
+
+		// the application is needed for WicketObjects#cloneObject() calls
+		application = new MockApplication();
+		ThreadContext.setApplication(application);
+		application.setName(SpringBeanLocatorTest.class.getName());
+		application.setServletContext(new MockServletContext(application, "/"));
+		application.initApplication();
 	}
 
 	/**
@@ -69,7 +89,7 @@ public class SpringBeanLocatorTest extends Assert
 
 		ctx.putBean("bean", bean);
 
-		SpringBeanLocator locator = (SpringBeanLocator)WicketObjects.cloneObject(new SpringBeanLocator(
+		SpringBeanLocator locator = WicketObjects.cloneObject(new SpringBeanLocator(
 			Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
@@ -139,7 +159,7 @@ public class SpringBeanLocatorTest extends Assert
 		Bean bean = new Bean();
 		ctx.putBean("bean", bean);
 
-		SpringBeanLocator locator = (SpringBeanLocator)WicketObjects.cloneObject(new SpringBeanLocator(
+		SpringBeanLocator locator = WicketObjects.cloneObject(new SpringBeanLocator(
 			"bean", Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());

@@ -83,9 +83,9 @@ public class WicketObjectsTest extends WicketTestCase
 	@Test
 	public void componentClone()
 	{
-		PropertyModel<String> pm = new PropertyModel<String>(new TextField<String>("test",
-			new Model<String>("test")), "modelObject");
-		PropertyModel<String> pm2 = (PropertyModel<String>)WicketObjects.cloneModel(pm);
+		PropertyModel<String> pm = new PropertyModel<String>(new TextField<>("test",
+			Model.of("test")), "modelObject");
+		PropertyModel<String> pm2 = WicketObjects.cloneModel(pm);
 		assertTrue(pm.getObject() == pm2.getObject());
 	}
 
