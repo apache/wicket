@@ -139,7 +139,7 @@ public class PageSettings
 	 *
 	 * @param callListenerInterfaceAfterExpiry
 	 *          {@code true} if Wicket should execute the listener interface
-	 * @see #setRecreateMountedPagesAfterExpiry(boolean) 
+	 * @see #setRecreateMountedPagesAfterExpiry(boolean)
 	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerInterfaceAfterExpiry()
 	 */
 	public void setCallListenerInterfaceAfterExpiry(boolean callListenerInterfaceAfterExpiry)
