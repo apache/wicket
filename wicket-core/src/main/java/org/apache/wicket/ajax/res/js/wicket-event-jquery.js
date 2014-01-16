@@ -137,9 +137,18 @@
 				jQuery(element).trigger(event);
 			},
 
-			// adds an event of specified type to the element
-			// also supports the domready event on window
-			// domready is event fired when the DOM is complete, but before loading external resources (images, ...)
+			/**
+			 * Binds an event listener for an element
+			 *
+			 * Also supports the special 'domready' event on window.
+			 * 'domready' is event fired when the DOM is complete, but
+			 * before loading external resources (images, scripts, ...)
+			 *
+			 * @param element {HTMLElement} The host HTML element
+			 * @param type {String} The type of the DOM event
+			 * @param fn {Function} The event handler to unbind
+			 * @param data {Object} Extra data for the event
+			 */
 			add: function (element, type, fn, data) {
 				if (type === 'domready') {
 					jQuery(fn);
@@ -160,6 +169,17 @@
 					});
 				}
 				return element;
+			},
+
+			/**
+			 * Unbinds an event listener for an element
+			 *
+			 * @param element {HTMLElement} The host HTML element
+			 * @param type {String} The type of the DOM event
+			 * @param fn {Function} The event handler to unbind
+			 */
+			remove: function (element, type, fn) {
+				jQuery(element).off(type, fn);
 			},
 
 			/**

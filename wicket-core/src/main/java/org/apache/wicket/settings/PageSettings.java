@@ -48,7 +48,7 @@ public class PageSettings
 	 * determines whether component's listener interface can be executed
 	 * when its owner page is freshly created after expiration
 	 */
-	private boolean canCallListenerInterfaceAfterExpiry = false;
+	private boolean callListenerInterfaceAfterExpiry = false;
 
 	/**
 	 * Adds a component resolver to the list.
@@ -122,13 +122,28 @@ public class PageSettings
 		this.recreateMountedPagesAfterExpiry = recreateMountedPagesAfterExpiry;
 	}
 
-	public boolean canCallListenerInterfaceAfterExpiry()
+	/**
+	 * @return {@code true} if Wicket should execute the listener interface of a component
+	 *      which owner page is freshly created after expiration of the old one
+	 * @see #getRecreateMountedPagesAfterExpiry()
+	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerInterfaceAfterExpiry()
+	 */
+	public boolean getCallListenerInterfaceAfterExpiry()
 	{
-		return recreateMountedPagesAfterExpiry && canCallListenerInterfaceAfterExpiry;
+		return recreateMountedPagesAfterExpiry && callListenerInterfaceAfterExpiry;
 	}
 
-	public void setCanCallListenerInterfaceAfterExpiry(boolean canCallListenerInterfaceAfterExpiry)
+	/**
+	 * Sets a setting that determines whether Wicket should execute the listener interface of a component
+	 * which owner page is freshly created after expiration of the old one
+	 *
+	 * @param callListenerInterfaceAfterExpiry
+	 *          {@code true} if Wicket should execute the listener interface
+	 * @see #setRecreateMountedPagesAfterExpiry(boolean)
+	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerInterfaceAfterExpiry()
+	 */
+	public void setCallListenerInterfaceAfterExpiry(boolean callListenerInterfaceAfterExpiry)
 	{
-		this.canCallListenerInterfaceAfterExpiry = canCallListenerInterfaceAfterExpiry;
+		this.callListenerInterfaceAfterExpiry = callListenerInterfaceAfterExpiry;
 	}
 }

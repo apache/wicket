@@ -965,6 +965,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		setStatelessHint(false);
 
+		// make sure the page will be available on following request
+		getSession().getPageManager().touchPage(this);
+
 		return new PageReference(numericId);
 	}
 
