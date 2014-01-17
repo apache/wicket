@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
@@ -915,6 +916,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** list of {@link IComponentInitializationListener}s. */
 	private final ComponentInitializationListenerCollection componentInitializationListeners = new ComponentInitializationListenerCollection();
 
+	/** list of {@link org.apache.wicket.application.IComponentOnConfigureListener}s. */
+	private final ComponentOnConfigureListenerCollection componentOnConfigureListeners = new ComponentOnConfigureListenerCollection();
+
 	/** list of {@link IHeaderContributor}s. */
 	private final HeaderContributorListenerCollection headerContributorListenerCollection = new HeaderContributorListenerCollection();
 
@@ -975,6 +979,14 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final ComponentInitializationListenerCollection getComponentInitializationListeners()
 	{
 		return componentInitializationListeners;
+	}
+
+	/**
+	 * @return Gets the application's ComponentOnConfigureListeners
+	 */
+	public final ComponentOnConfigureListenerCollection getComponentOnConfigureListeners()
+	{
+		return componentOnConfigureListeners;
 	}
 
 	/**
