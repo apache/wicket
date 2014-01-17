@@ -399,6 +399,27 @@ public final class MarkupParserTest extends WicketTestCase
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5288
+	 * Verifies that &lt;script&gt; with custom type can contain child nodes
+	 *
+	 * @throws ParseException
+	 * @throws ResourceStreamNotFoundException
+	 * @throws IOException
+	 */
+	@Test
+	public void scriptWithTemplateSingleQuotes() throws ParseException, ResourceStreamNotFoundException, IOException
+	{
+		final MarkupParser parser = new MarkupParser(
+				"<html wicket:id=\"test\"><script type='text/x-jquery-tmpl' language=\"JavaScript\">... <x a/> ...</script></html>");
+
+		IMarkupFragment markup = parser.parse();
+		assertEquals(5, markup.size());
+		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
+		assertEquals("html", ((ComponentTag)markup.get(4)).getName());
+		assertEquals("... <x a/> ...", markup.get(2).toString());
+	}
+
+	/**
 	 * 
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
