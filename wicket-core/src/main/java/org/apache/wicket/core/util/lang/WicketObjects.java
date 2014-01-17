@@ -300,7 +300,15 @@ public class WicketObjects
 		}
 		else
 		{
-			ISerializer serializer = Application.get().getFrameworkSettings().getSerializer();
+			ISerializer serializer;
+			if (Application.exists())
+			{
+				serializer = Application.get().getFrameworkSettings().getSerializer();
+			}
+			else
+			{
+				serializer = new JavaSerializer(WicketObjects.class.getName());
+			}
 			byte[] serialized = serializer.serialize(object);
 			Object deserialized = serializer.deserialize(serialized);
 			return (T) deserialized;

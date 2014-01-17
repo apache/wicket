@@ -161,5 +161,6 @@ public class ApplicationSettingsTest
 		dummy.initApplication();
 		Localizer localizer = dummy.getResourceSettings().getLocalizer();
 		Assert.assertNotNull("Localizer should be available", localizer);
+		dummy.internalDestroy();
 	}
 }

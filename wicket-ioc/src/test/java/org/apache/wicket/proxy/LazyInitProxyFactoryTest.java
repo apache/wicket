@@ -20,19 +20,14 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 
 import java.lang.reflect.Proxy;
 
-import org.apache.wicket.ThreadContext;
 import org.apache.wicket.core.util.lang.WicketObjects;
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import org.apache.wicket.proxy.util.ConcreteObject;
 import org.apache.wicket.proxy.util.IInterface;
 import org.apache.wicket.proxy.util.IObjectMethodTester;
 import org.apache.wicket.proxy.util.InterfaceObject;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -79,26 +74,6 @@ public class LazyInitProxyFactoryTest extends Assert
 			return "StringLiteral";
 		}
 	};
-
-	private MockApplication application;
-
-	@Before
-	public void before()
-	{
-		// the application is needed for WicketObjects#cloneObject() calls
-		application = new MockApplication();
-		ThreadContext.setApplication(application);
-		application.setName(LazyInitProxyFactoryTest.class.getName());
-		application.setServletContext(new MockServletContext(application, "/"));
-		application.initApplication();
-	}
-
-	@After
-	public void after()
-	{
-		application.internalDestroy();
-		ThreadContext.detach();
-	}
 
 	/**
 	 * Tests lazy init proxy to represent interfaces
