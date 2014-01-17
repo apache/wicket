@@ -256,13 +256,15 @@ public final class XmlPullParser implements IXmlPullParser
 			if ((tagText.length() > STYLE.length()) &&
 				((tagText.charAt(0) == 's') || (tagText.charAt(0) == 'S')))
 			{
-				final String lowerCase = tagText.substring(0, 6).toLowerCase();
+				final String lowerCase = tagText.toLowerCase();
 				if (lowerCase.startsWith(SCRIPT))
 				{
-					int idxOfType = lowerCase.indexOf("type=\"");
+					String typeAttr = "type=";
+					int idxOfType = lowerCase.indexOf(typeAttr);
 					if (idxOfType > 0)
 					{
-						String typePrefix = lowerCase.substring(idxOfType);
+						// +1 to remove the ' or "
+						String typePrefix = lowerCase.substring(idxOfType + typeAttr.length() + 1);
 						if (typePrefix.startsWith("text/javascript"))
 						{
 							// prepare to skip everything between the open and close tag
