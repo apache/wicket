@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.image;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -37,6 +38,7 @@ public class ContextImage extends WebComponent
 	 * Constructor
 	 * 
 	 * @param id
+	 *            the component id
 	 * @param contextRelativePath
 	 *            context-relative path eg <code>images/border.jpg</code>
 	 */
@@ -50,6 +52,7 @@ public class ContextImage extends WebComponent
 	 * Constructor
 	 * 
 	 * @param id
+	 *            the component id
 	 * @param contextRelativePath
 	 *            context-relative path eg <code>images/border.jpg</code>
 	 */
@@ -59,6 +62,20 @@ public class ContextImage extends WebComponent
 		add(new ContextPathGenerator(contextRelativePath));
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * Uses the url from the <em>src</em> markup attribute and makes
+	 * it relative to the context path
+	 *
+	 * @param id
+	 *           the component id
+	 */
+	public ContextImage(String id)
+	{
+		super(id);
+		add(RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR);
+	}
 
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)

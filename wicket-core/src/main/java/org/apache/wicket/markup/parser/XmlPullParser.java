@@ -259,8 +259,24 @@ public final class XmlPullParser implements IXmlPullParser
 				final String lowerCase = tagText.substring(0, 6).toLowerCase();
 				if (lowerCase.startsWith(SCRIPT))
 				{
-					// prepare to skip everything between the open and close tag
-					skipUntilText = SCRIPT;
+					int idxOfType = lowerCase.indexOf("type=\"");
+					if (idxOfType > 0)
+					{
+						String typePrefix = lowerCase.substring(idxOfType);
+						if (typePrefix.startsWith("text/javascript"))
+						{
+							// prepare to skip everything between the open and close tag
+							skipUntilText = SCRIPT;
+						}
+						// any other type is assumed to be a template so it can contain child nodes.
+						// See WICKET-5288
+					}
+					else
+					{
+						// no type attribute so it is 'text/javascript'
+						// prepare to skip everything between the open and close tag
+						skipUntilText = SCRIPT;
+					}
 				}
 				else if (lowerCase.startsWith(STYLE))
 				{
