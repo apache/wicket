@@ -247,7 +247,9 @@ public class WicketObjects
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
+	 * @deprecated Use {@linkplain #cloneObject(Object)} instead
 	 */
+	@Deprecated
 	public static <T> T cloneModel(final T object)
 	{
 		if (object == null)

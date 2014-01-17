@@ -71,7 +71,7 @@ public class GoAndClearFilter extends GoFilter
 	public GoAndClearFilter(final String id, final FilterForm<?> form,
 		final IModel<String> goModel, final IModel<String> clearModel)
 	{
-		this(id, goModel, clearModel, WicketObjects.cloneModel(form.getDefaultModelObject()));
+		this(id, goModel, clearModel, WicketObjects.cloneObject(form.getDefaultModelObject()));
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class GoAndClearFilter extends GoFilter
 	protected void onClearSubmit(final Button button)
 	{
 		Form<Object> form = (Form<Object>)button.getForm();
-		form.setDefaultModelObject(WicketObjects.cloneModel(originalState));
+		form.setDefaultModelObject(WicketObjects.cloneObject(originalState));
 	}
 
 }
