@@ -1038,6 +1038,8 @@ public abstract class Component
 
 			internalOnAfterConfigure();
 
+			getApplication().getComponentOnConfigureListeners().onConfigure(this);
+
 			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
 	}
