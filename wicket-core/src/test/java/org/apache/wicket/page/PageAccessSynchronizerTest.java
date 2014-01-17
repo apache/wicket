@@ -55,7 +55,6 @@ public class PageAccessSynchronizerTest extends Assert
 	public void testReentrant() throws Exception
 	{
 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(5));
-		final Duration hold = Duration.seconds(1);
 		sync.lockPage(0);
 		sync.lockPage(0);
 	}
