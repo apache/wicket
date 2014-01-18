@@ -20,6 +20,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -39,10 +40,11 @@ public class GlobalUpdateAjaxAttributesTest extends WicketTestCase
 		application.getAjaxRequestTargetListeners().add(new AjaxRequestTarget.AbstractListener()
 		{
 			@Override
-			public void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			public void updateAjaxAttributes(Behavior behavior, AjaxRequestAttributes attributes)
 			{
-				super.updateAjaxAttributes(attributes);
-				attributes.setChannel(new AjaxChannel("globalAjaxChannel", AjaxChannel.Type.ACTIVE));
+				super.updateAjaxAttributes(behavior, attributes);
+				attributes
+					.setChannel(new AjaxChannel("globalAjaxChannel", AjaxChannel.Type.ACTIVE));
 			}
 		});
 		return application;
