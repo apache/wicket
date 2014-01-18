@@ -123,7 +123,7 @@ public class DiskDataStore implements IDataStore
 		if (log.isDebugEnabled())
 		{
 			log.debug("Returning data{} for page with id '{}' in session with id '{}'",
-					pageData != null ? "" : "(null)", id, sessionId);
+					new Object[] {pageData != null ? "" : "(null)", id, sessionId});
 		}
 		return pageData;
 	}
