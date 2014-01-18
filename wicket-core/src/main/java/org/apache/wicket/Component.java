@@ -2548,7 +2548,22 @@ public abstract class Component
 		try
 		{
 			// Render open tag
-			if (getRenderBodyOnly() == false)
+			if (getRenderBodyOnly())
+			{
+				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
+				{
+					log.warn(String.format(
+						"Markup id set on a component that renders its body only. "
+							+ "Markup id: %s, component id: %s.", getMarkupId(), getId()));
+				}
+				if (getFlag(FLAG_PLACEHOLDER))
+				{
+					log.warn(String.format(
+						"Placeholder tag set on a component that renders its body only. "
+							+ "Component id: %s.", getId()));
+				}
+			}
+			else
 			{
 				renderComponentTag(tag);
 			}
