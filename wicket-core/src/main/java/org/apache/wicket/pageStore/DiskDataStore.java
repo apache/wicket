@@ -120,8 +120,11 @@ public class DiskDataStore implements IDataStore
 			pageData = sessionEntry.loadPage(id);
 		}
 
-		log.debug("Returning data{} for page with id '{}' in session with id '{}'", new Object[] {
-				pageData != null ? "" : "(null)", id, sessionId });
+		if (log.isDebugEnabled())
+		{
+			log.debug("Returning data{} for page with id '{}' in session with id '{}'",
+					pageData != null ? "" : "(null)", id, sessionId);
+		}
 		return pageData;
 	}
 
@@ -143,8 +146,10 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
 		if (sessionEntry != null)
 		{
-			log.debug("Removing data for page with id '{}' in session with id '{}'", new Object[] {
-					id, sessionId });
+			if (log.isDebugEnabled())
+			{
+				log.debug("Removing data for page with id '{}' in session with id '{}'", id, sessionId);
+			}
 			sessionEntry.removePage(id);
 		}
 	}
@@ -176,8 +181,10 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, true);
 		if (sessionEntry != null)
 		{
-			log.debug("Storing data for page with id '{}' in session with id '{}'", new Object[] {
-					id, sessionId });
+			if (log.isDebugEnabled())
+			{
+				log.debug("Storing data for page with id '{}' in session with id '{}'", id, sessionId);
+			}
 			sessionEntry.savePage(id, data);
 		}
 	}
