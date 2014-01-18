@@ -219,19 +219,6 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 
-		// put group id into the class so we can easily identify all radios belonging to the group
-		final String marker = "wicket-" + getGroup().getMarkupId();
-		String clazz = tag.getAttribute("class");
-		if (Strings.isEmpty(clazz))
-		{
-			clazz = marker;
-		}
-		else
-		{
-			clazz = clazz + " " + marker;
-		}
-		tag.put("class", clazz);
-
 	}
 
 	/**
