@@ -20,13 +20,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IStyledColumn;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -118,6 +122,27 @@ public class FilterToolbar extends AbstractToolbar
 								getId() +
 								"] generating column [" + col.toString() + "] ");
 					}
+				}
+
+				if (col instanceof IStyledColumn)
+				{
+					filter.add(new Behavior()
+					{
+						private static final long serialVersionUID = 1L;
+
+						/**
+						 * @see Behavior#onComponentTag(Component, ComponentTag)
+						 */
+						@Override
+						public void onComponentTag(final Component component, final ComponentTag tag)
+						{
+							String className = ((IStyledColumn<?, S>)col).getCssClass();
+							if (!Strings.isEmpty(className))
+							{
+								tag.append("class", className, " ");
+							}
+						}
+					});
 				}
 
 				item.add(filter);
