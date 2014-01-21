@@ -130,13 +130,7 @@ import org.slf4j.LoggerFactory;
  * public void testRenderYourPage()
  * {
  * 	// provide page instance source for WicketTester
- * 	tester.startPage(new TestPageSource()
- * 	{
- * 		public Page getTestPage()
- * 		{
- * 			return new YourPage(&quot;mock message&quot;);
- * 		}
- * 	});
+ * 	tester.startPage(new YourPage(&quot;mock message&quot;));
  * 	tester.assertRenderedPage(YourPage.class);
  * 	tester.assertLabel(&quot;yourMessage&quot;, &quot;mock message&quot;);
  * 	// assert feedback messages in INFO Level
