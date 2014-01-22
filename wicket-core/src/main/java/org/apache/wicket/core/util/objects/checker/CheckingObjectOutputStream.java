@@ -292,19 +292,19 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 	private final ObjectOutputStream out;
 
 	/** object stack with the trace path. */
-	private final LinkedList<TraceSlot> traceStack = new LinkedList<TraceSlot>();
+	private final LinkedList<TraceSlot> traceStack = new LinkedList<>();
 
 	/** set for checking circular references. */
-	private final Map<Object, Object> checked = new IdentityHashMap<Object, Object>();
+	private final Map<Object, Object> checked = new IdentityHashMap<>();
 
 	/** string stack with current names pushed. */
-	private final LinkedList<CharSequence> nameStack = new LinkedList<CharSequence>();
+	private final LinkedList<CharSequence> nameStack = new LinkedList<>();
 
 	/** root object being analyzed. */
 	private Object root;
 
 	/** set of classes that had no writeObject methods at lookup (to avoid repeated checking) */
-	private final Set<Class<?>> writeObjectMethodMissing = new HashSet<Class<?>>();
+	private final Set<Class<?>> writeObjectMethodMissing = new HashSet<>();
 
 	/** current simple field name. */
 	private CharSequence simpleName = "";
@@ -404,11 +404,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 				}
 				cls = repCl;
 			}
-			catch (IllegalAccessException e)
-			{
-				throw new RuntimeException(e);
-			}
-			catch (InvocationTargetException e)
+			catch (IllegalAccessException | InvocationTargetException e)
 			{
 				throw new RuntimeException(e);
 			}
@@ -583,11 +579,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 		{
 			numFields = (Integer)GET_NUM_OBJ_FIELDS_METHOD.invoke(desc, (Object[])null);
 		}
-		catch (IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (InvocationTargetException e)
+		catch (IllegalAccessException | InvocationTargetException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -602,11 +594,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 			{
 				GET_OBJ_FIELD_VALUES_METHOD.invoke(desc, obj, objVals);
 			}
-			catch (IllegalAccessException e)
-			{
-				throw new RuntimeException(e);
-			}
-			catch (InvocationTargetException e)
+			catch (IllegalAccessException | InvocationTargetException e)
 			{
 				throw new RuntimeException(e);
 			}
@@ -632,11 +620,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 				{
 					field = (Field)GET_FIELD_METHOD.invoke(fieldDesc, (Object[])null);
 				}
-				catch (IllegalAccessException e)
-				{
-					throw new RuntimeException(e);
-				}
-				catch (InvocationTargetException e)
+				catch (IllegalAccessException | InvocationTargetException e)
 				{
 					throw new RuntimeException(e);
 				}
