@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 import org.apache.wicket.Component;
@@ -58,7 +60,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	public static final String CHILD_ATTRIBUTE = "child";
 
 	/** Stack of <wicket:enclosure> tags */
-	private Stack<ComponentTag> stack;
+	private Deque<ComponentTag> stack;
 
 	/** The id of the first wicket tag inside the enclosure */
 	private String childId;
@@ -90,7 +92,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 			{
 				if (stack == null)
 				{
-					stack = new Stack<ComponentTag>();
+					stack = new ArrayDeque<>();
 				}
 				stack.push(tag);
 			}
@@ -128,7 +130,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 		// Are we inside a wicket:enclosure tag?
 		else if (stack != null)
 		{
-			ComponentTag lastEnclosure = stack.lastElement();
+			ComponentTag lastEnclosure = stack.getLast();
 
 			// If the enclosure tag has NO child attribute, then ...
 			if (lastEnclosure.getAttribute(CHILD_ATTRIBUTE) == null)

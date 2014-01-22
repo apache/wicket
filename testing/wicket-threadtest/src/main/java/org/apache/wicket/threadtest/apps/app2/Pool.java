@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.threadtest.apps.app2;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class Pool
 
 	private final Connection[] allConnections;
 
-	private final Stack<Connection> available = new Stack<Connection>();
+	private final Deque<Connection> available = new ArrayDeque<Connection>();
 
 	private final ThreadLocal<Connection> locks = new ThreadLocal<Connection>();
 

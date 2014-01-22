@@ -27,14 +27,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayDeque;
 import java.util.Date;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -311,7 +312,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 	/** current full field description. */
 	private String fieldDescription;
 
-	private final Stack<Object> stack = new Stack<Object>();
+	private final Deque<Object> stack = new ArrayDeque<>();
 
 	/**
 	 * Constructor.
