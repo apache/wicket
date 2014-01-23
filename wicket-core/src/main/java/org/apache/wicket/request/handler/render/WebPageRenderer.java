@@ -200,15 +200,15 @@ public class WebPageRenderer extends PageRenderer
 			// if there is saved response for this URL render it
 			bufferedResponse.writeTo((WebResponse)requestCycle.getResponse());
 		}
-		else if (getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT ||
-			(isOnePassRender() && isAjax == false && getRedirectPolicy() != RedirectPolicy.ALWAYS_REDIRECT) //
-			||
-			(!isAjax //
-				&&
-				(targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage().isPageStateless()) //
-			|| (targetUrl.equals(currentUrl) && isRedirectToRender()) //
-			) //
-			|| shouldPreserveClientUrl) //
+		else if (isAjax == false && (//
+							getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT //
+						|| (isOnePassRender() && getRedirectPolicy() != RedirectPolicy.ALWAYS_REDIRECT) //
+						|| ((targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage()
+								.isPageStateless()) //
+						|| (targetUrl.equals(currentUrl) && isRedirectToRender()) //
+						) //
+				|| shouldPreserveClientUrl) //
+		) //
 		{
 			// if the policy is never to redirect
 			// or one pass render mode is on

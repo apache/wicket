@@ -725,6 +725,63 @@ public class WebPageRendererTest
 	}
 
 	/**
+	 * Tests that when {@link WebRequest#shouldPreserveClientUrl()} returns
+	 * {@code true} and the current request is Ajax then a redirect should be
+	 * issued
+	 */
+	@Test
+	public void testShouldPreserveClientUrlAndAjaxRequest()
+	{
+		PageRenderer renderer = new TestPageRenderer(handler);
+
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("base"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("base/a"));
+
+		when(request.isAjax()).thenReturn(true);
+
+		when(request.shouldPreserveClientUrl()).thenReturn(true);
+
+		when(provider.isNewPageInstance()).thenReturn(true);
+
+		renderer.respond(requestCycle);
+
+		verify(response).sendRedirect(anyString());
+		verify(response, never()).write(any(byte[].class));
+
+	}
+
+	/**
+	 * Tests that when {@link RedirectPolicy#NEVER_REDIRECT} is configured but
+	 * the current request is Ajax then a redirect should still be issued
+	 */
+	@Test
+	public void testNeverRedirectButAjaxRequest()
+	{
+		PageRenderer renderer = new TestPageRenderer(handler)
+		{
+			protected RedirectPolicy getRedirectPolicy()
+			{
+				return RedirectPolicy.NEVER_REDIRECT;
+			}
+		};
+
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("base"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("base/a"));
+
+		when(request.isAjax()).thenReturn(true);
+
+		when(provider.isNewPageInstance()).thenReturn(true);
+
+		renderer.respond(requestCycle);
+
+		verify(response).sendRedirect(anyString());
+		verify(response, never()).write(any(byte[].class));
+
+	}
+
+	/**
 	 * Configures common methods which are used by all tests
 	 */
 	private static class TestPageRenderer extends WebPageRenderer
