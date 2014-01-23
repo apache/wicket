@@ -1898,8 +1898,23 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	@Override
 	final void buildComponentTree()
 	{
-		ComponentTreeBuilder builder = new ComponentTreeBuilder();
-		builder.rebuild(this);
+		if (isMarkupDrivenComponentTreeEnabled())
+		{
+			ComponentTreeBuilder builder = new ComponentTreeBuilder();
+			builder.rebuild(this);
+		}
+	}
+
+	protected boolean isMarkupDrivenComponentTreeEnabled()
+	{
+		// TODO this method is called once per MarkupContainer's life
+		// Check whether this traversal to the parent is causing perf regression
+		MarkupContainer parent = getParent();
+		if (parent != null)
+		{
+			return parent.isMarkupDrivenComponentTreeEnabled();
+		}
+		return false;
 	}
 
 	/**

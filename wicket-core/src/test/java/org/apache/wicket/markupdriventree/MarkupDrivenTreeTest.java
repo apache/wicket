@@ -24,6 +24,8 @@ import org.apache.wicket.markupdriventree.components.ComponentA;
 import org.apache.wicket.markupdriventree.components.ComponentB;
 import org.apache.wicket.markupdriventree.components.ComponentC;
 import org.apache.wicket.markupdriventree.components.PanelA;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -32,6 +34,21 @@ import org.junit.Test;
  */
 public class MarkupDrivenTreeTest extends WicketTestCase
 {
+	@Override
+	protected WebApplication newApplication()
+	{
+		WebApplication application = new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				super.init();
+				getPageSettings().setMarkupDrivenComponentTreeEnabled(true);
+			}
+		};
+		return application;
+	}
+
 	@Test
 	public void page1()
 	{

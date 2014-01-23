@@ -1042,4 +1042,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return renderedComponents != null && renderedComponents.contains(component);
 	}
+
+	@Override
+	protected boolean isMarkupDrivenComponentTreeEnabled()
+	{
+		return getApplication().getPageSettings().isMarkupDrivenComponentTreeEnabled();
+	}
 }

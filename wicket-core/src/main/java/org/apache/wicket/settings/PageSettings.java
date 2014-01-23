@@ -51,6 +51,12 @@ public class PageSettings
 	private boolean callListenerInterfaceAfterExpiry = false;
 
 	/**
+	 * determines whether Wicket should (re)construct the Java component
+	 * tree by reading the markup before {@link org.apache.wicket.Component#onInitialize()}
+	 */
+	private boolean markupDrivenComponentTreeEnabled = false;
+
+	/**
 	 * Adds a component resolver to the list.
 	 *
 	 * @param resolver
@@ -146,4 +152,15 @@ public class PageSettings
 	{
 		this.callListenerInterfaceAfterExpiry = callListenerInterfaceAfterExpiry;
 	}
+
+	public boolean isMarkupDrivenComponentTreeEnabled()
+	{
+		return markupDrivenComponentTreeEnabled;
+	}
+
+	public void setMarkupDrivenComponentTreeEnabled(boolean markupDrivenComponentTreeEnabled)
+	{
+		this.markupDrivenComponentTreeEnabled = markupDrivenComponentTreeEnabled;
+	}
+
 }
