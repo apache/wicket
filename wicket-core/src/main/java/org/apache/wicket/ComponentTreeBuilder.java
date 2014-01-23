@@ -3,10 +3,10 @@ package org.apache.wicket;
 import java.lang.reflect.Field;
 
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkup;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.resolver.ComponentResolvers;
 
 /**
  *
@@ -30,28 +30,47 @@ class ComponentTreeBuilder
 			while (stream.skipUntil(ComponentTag.class))
 			{
 				ComponentTag tag = stream.getTag();
+
 				if (!tag.isAutoComponentTag() && (tag.isOpen() || tag.isOpenClose()))
 				{
 					String componentId = tag.getId();
-					Component component = container.get(componentId);
-					if (component == null)
+
+					if (tag instanceof WicketTag)
 					{
-						try
+						Component component = ComponentResolvers.resolve(container, stream, tag, null);
+						if ((component != null) && (component.getParent() == null))
 						{
-							component = findAutoAnnotatedComponent(container, componentId);
-
-							if (component != null)
+							if (component.getId().equals(tag.getId()) == false)
 							{
-								container.add(component);
+								// make sure we are able to get() the component during rendering
+								tag.setId(component.getId());
+								tag.setModified(true);
 							}
-
-						} catch (Exception e)
-						{
-							throw new WicketRuntimeException(e);
+							container.add(component);
 						}
 					}
+					else
+					{
+						Component component = container.get(componentId);
+						if (component == null)
+						{
+							try
+							{
+								component = findAutoAnnotatedComponent(container, componentId);
 
-					print(tag);
+								if (component != null)
+								{
+									container.add(component);
+								}
+
+							} catch (Exception e)
+							{
+								throw new WicketRuntimeException(e);
+							}
+						}
+
+						print(tag);
+					}
 				}
 
 				if (tag.isOpen())

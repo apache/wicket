@@ -178,6 +178,12 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	{
 		String fullChildId = getChildId();
 
+		Component child = get(fullChildId);
+		if (child != null)
+		{
+			return child;
+		}
+
 		Component controller = enclosureParent.get(fullChildId);
 		if (controller == null)
 		{

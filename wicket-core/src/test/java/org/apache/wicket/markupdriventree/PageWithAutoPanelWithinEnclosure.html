@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>Page with panel</title>
+	</head>
+	<body>
+		<div id="hd">
+			<div id="logo">
+				<img src="logo.png" width="50px" height="50px" alt="Wicket Logo" />
+				<h1>Apache Wicket</h1>
+			</div>
+		</div>
+		<div id="bd">
+
+            <div wicket:id="c">
+            </div>
+
+            <div wicket:id="b">
+                <div wicket:id="a"></div>
+            </div>
+
+            <wicket:enclosure child="panelA">
+                <div wicket:id="panelA"></div>
+            </wicket:enclosure>
+
+        </div>
+
+	</body>
+</html>
