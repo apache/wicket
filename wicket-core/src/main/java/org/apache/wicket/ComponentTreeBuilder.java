@@ -1,6 +1,8 @@
 package org.apache.wicket;
 
 import java.lang.reflect.Field;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -12,11 +14,13 @@ import org.apache.wicket.markup.MarkupElement;
  */
 class ComponentTreeBuilder
 {
+	private static final String USER_DATA_CURSOR_CHANGE = "cursorChanged";
+
 	void rebuild(Page page)
 	{
 		MarkupContainer cursor = page;
 
-		boolean entered = false;
+		Deque<MarkupContainer> cursors = new ArrayDeque<>();
 
 		IMarkupFragment markup = page.getMarkup();
 		Iterator<MarkupElement> markupElementIterator = markup.iterator();
@@ -30,7 +34,6 @@ class ComponentTreeBuilder
 
 				if (!tag.isAutoComponentTag() && (tag.isOpen() || tag.isOpenClose()))
 				{
-
 					String componentId = tag.getId();
 					Component component = cursor.get(componentId);
 					if (component == null)
@@ -39,12 +42,16 @@ class ComponentTreeBuilder
 						{
 							component = findAutoAnnotatedComponent(cursor, componentId);
 
-							if (component instanceof MarkupContainer)
+							if (component != null)
 							{
 								cursor.add(component);
 
-								entered = true;
-								cursor = (MarkupContainer) component;
+								if (component instanceof MarkupContainer)
+								{
+									tag.setUserData(USER_DATA_CURSOR_CHANGE, Boolean.TRUE);
+									cursors.add(cursor);
+									cursor = (MarkupContainer) component;
+								}
 							}
 
 						} catch (Exception e)
@@ -55,10 +62,14 @@ class ComponentTreeBuilder
 
 					print(tag);
 				}
-				else if (entered && tag.isClose())
+				else if (tag.isClose())
 				{
-					entered = false;
-					cursor = cursor.getParent();
+					ComponentTag openTag = tag.getOpenTag();
+					Object cursorChanged = openTag.getUserData(USER_DATA_CURSOR_CHANGE);
+					if (cursorChanged != null)
+					{
+						cursor = cursors.pop();
+					}
 				}
 			}
 
