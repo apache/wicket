@@ -24,6 +24,8 @@ import java.util.Set;
 
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
@@ -294,10 +296,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	protected void onInitialize()
 	{
+		constructComponentTree();
+
 		super.onInitialize();
 
 		final IPageManager pageManager = getSession().getPageManager();
 		pageManager.touchPage(this);
+	}
+
+	private void constructComponentTree()
+	{
+		ComponentTreeBuilder builder = new ComponentTreeBuilder();
+		builder.rebuild(this);
 	}
 
 	/**

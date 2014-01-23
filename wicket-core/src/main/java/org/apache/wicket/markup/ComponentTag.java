@@ -64,13 +64,13 @@ public class ComponentTag extends MarkupElement
 	/** If true, then the tag contain an automatically created wicket id */
 	private final static int AUTO_COMPONENT = 0x0008;
 
-	/** Some HTML tags are allow to have no close tag, e.g. 'br' */
+	/** Some HTML tags are allowed to have no close tag, e.g. 'br' */
 	private final static int NO_CLOSE_TAG = 0x0010;
 
 	/** Render the tag as RawMarkup even if no Component can be found */
 	public final static int RENDER_RAW = 0x0020;
 
-	/** If close tag, than reference to the corresponding open tag */
+	/** If close tag, then reference to the corresponding open tag */
 	private ComponentTag openTag;
 
 	/** The underlying xml tag */

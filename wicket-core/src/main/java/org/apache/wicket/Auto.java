@@ -1,0 +1,13 @@
+package org.apache.wicket;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+/**
+ *
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Auto
+{
+	String id() default "";
+}
