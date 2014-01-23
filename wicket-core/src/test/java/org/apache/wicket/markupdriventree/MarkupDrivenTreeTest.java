@@ -43,9 +43,23 @@ public class MarkupDrivenTreeTest extends WicketTestCase
 	}
 
 	@Test
-	public void pageWithPanel()
+	public void pageWithAutoPanel()
 	{
-		tester.startPage(PageWithPanel.class);
+		tester.startPage(PageWithAutoPanel.class);
+
+		tester.assertComponent("c", ComponentC.class);
+		tester.assertComponent("b", ComponentB.class);
+		tester.assertComponent("b:a", ComponentA.class);
+
+		tester.assertComponent("panelA", PanelA.class);
+		tester.assertComponent("panelA:a", ComponentA.class);
+	}
+
+
+	@Test
+	public void pageWithManuallyAddedPanel()
+	{
+		tester.startPage(PageWithManuallyAddedPanel.class);
 
 		tester.assertComponent("c", ComponentC.class);
 		tester.assertComponent("b", ComponentB.class);

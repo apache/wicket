@@ -1895,6 +1895,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
+	@Override
 	final void buildComponentTree()
 	{
 		ComponentTreeBuilder builder = new ComponentTreeBuilder();

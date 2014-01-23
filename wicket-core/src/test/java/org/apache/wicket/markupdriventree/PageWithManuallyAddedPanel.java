@@ -6,13 +6,11 @@ import org.apache.wicket.markupdriventree.components.PanelA;
 /**
  *
  */
-public class PageWithPanel extends BasePage
+public class PageWithManuallyAddedPanel extends BasePageWithPanel
 {
-	@Auto
-	PanelA panelA;
-
-	public PageWithPanel()
+	public PageWithManuallyAddedPanel()
 	{
-		panelA = new PanelA("panelA");
+		PanelA panelA = new PanelA("panelA");
+		add(panelA);
 	}
 }
