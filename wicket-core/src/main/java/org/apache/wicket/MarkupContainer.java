@@ -472,28 +472,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
-	 * Adds a child component to this container.
-	 * 
-	 * @param child
-	 *            The child
-	 * @throws IllegalArgumentException
-	 *             Thrown if a child with the same id is replaced by the add operation.
-	 */
-	public void internalAdd(final Component child)
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("internalAdd " + child.getId() + " to " + this);
-		}
-
-		// Add to map
-		addedComponent(child);
-		put(child);
-	}
-
-	/**
 	 * @return Iterator that iterates through children in the order they were added
 	 */
 	@Override
@@ -1916,54 +1894,4 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		return false;
 	}
-
-	/**
-	 * Automatically create components for <wicket:xxx> tag.
-	 */
-	// to use it call it from #onInitialize()
-	private void createAndAddComponentsForWicketTags()
-	{
-		// Markup must be available
-		IMarkupFragment markup = getMarkup();
-		if ((markup != null) && (markup.size() > 1))
-		{
-			MarkupStream stream = new MarkupStream(markup);
-
-			// Skip the first component tag which already belongs to 'this' container
-			if (stream.skipUntil(ComponentTag.class))
-			{
-				stream.next();
-			}
-
-			// Search for <wicket:xxx> in the remaining markup and try to resolve the component
-			while (stream.skipUntil(ComponentTag.class))
-			{
-				ComponentTag tag = stream.getTag();
-				if (tag.isOpen() || tag.isOpenClose())
-				{
-					if (tag instanceof WicketTag)
-					{
-						Component component = ComponentResolvers.resolve(this, stream, tag, null);
-						if ((component != null) && (component.getParent() == null))
-						{
-							if (component.getId().equals(tag.getId()) == false)
-							{
-								// make sure we are able to get() the component during rendering
-								tag.setId(component.getId());
-								tag.setModified(true);
-							}
-							add(component);
-						}
-					}
-
-					if (tag.isOpen())
-					{
-						stream.skipToMatchingCloseTag(tag);
-					}
-				}
-				stream.next();
-			}
-		}
-	}
-
 }
