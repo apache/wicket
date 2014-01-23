@@ -1,9 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket;
 
 import java.lang.reflect.Field;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
@@ -27,26 +44,29 @@ class ComponentTreeBuilder
 				stream.next();
 			}
 
-			while (stream.skipUntil(ComponentTag.class))
+			ComponentTag tag;
+			while ((tag = stream.nextOpenTag()) != null)
 			{
-				ComponentTag tag = stream.getTag();
-
-				if (!tag.isAutoComponentTag() && (tag.isOpen() || tag.isOpenClose()))
+				if (!tag.isAutoComponentTag())
 				{
 					String componentId = tag.getId();
 
 					if (tag instanceof WicketTag)
 					{
-						Component component = ComponentResolvers.resolve(container, stream, tag, null);
-						if ((component != null) && (component.getParent() == null))
+						WicketTag wicketTag = (WicketTag) tag;
+						if (wicketTag.isEnclosureTag())
 						{
-							if (component.getId().equals(tag.getId()) == false)
+							Component component = ComponentResolvers.resolve(container, stream, tag, null);
+							if ((component != null) && (component.getParent() == null))
 							{
-								// make sure we are able to get() the component during rendering
-								tag.setId(component.getId());
-								tag.setModified(true);
+								if (component.getId().equals(tag.getId()) == false)
+								{
+									// make sure we are able to get() the component during rendering
+									tag.setId(component.getId());
+									tag.setModified(true);
+								}
+								container.add(component);
 							}
-							container.add(component);
 						}
 					}
 					else
@@ -68,12 +88,11 @@ class ComponentTreeBuilder
 								throw new WicketRuntimeException(e);
 							}
 						}
-
-						print(tag);
+//						print(tag);
 					}
 				}
 
-				if (tag.isOpen())
+				if (tag.isOpen() && tag.hasNoCloseTag() == false)
 				{
 					stream.skipToMatchingCloseTag(tag);
 				}
@@ -97,7 +116,14 @@ class ComponentTreeBuilder
 		IMarkupFragment markup = container.getAssociatedMarkup();
 		if (markup == null)
 		{
-			markup = container.getMarkup();
+			try
+			{
+				markup = container.getMarkup();
+			}
+			catch (MarkupNotFoundException mnfx)
+			{
+				//
+			}
 		}
 		return markup;
 	}

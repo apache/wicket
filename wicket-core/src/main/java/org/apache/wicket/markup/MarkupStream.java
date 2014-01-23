@@ -307,7 +307,7 @@ public class MarkupStream
 	 * 
 	 * @return The next markup element in the stream
 	 */
-	public MarkupElement nextOpenTag()
+	public ComponentTag nextOpenTag()
 	{
 		while (next() != null)
 		{
@@ -317,7 +317,7 @@ public class MarkupStream
 				ComponentTag tag = (ComponentTag)elem;
 				if (tag.isOpen() || tag.isOpenClose())
 				{
-					return current = get(currentIndex);
+					return tag;
 				}
 			}
 		}
