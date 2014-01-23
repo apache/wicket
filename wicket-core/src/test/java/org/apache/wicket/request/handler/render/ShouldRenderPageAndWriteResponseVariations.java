@@ -41,16 +41,16 @@ public class ShouldRenderPageAndWriteResponseVariations extends AbstractVariatio
 	public boolean getResult()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(null);
-		renderer.ajax = ajax.next();
-		renderer.onePassRender = onePassRender.next();
-		renderer.redirectToRender = redirectToRender.next();
-		renderer.redirectPolicy = redirectPolicy.next();
-		renderer.shouldPreserveClientUrl = shouldPreserveClientUrl.next();
-		renderer.newPageInstance = newPageInstance.next();
-		renderer.pageStateless = pageStateless.next();
+		renderer.ajax = ajax.current();
+		renderer.onePassRender = onePassRender.current();
+		renderer.redirectToRender = redirectToRender.current();
+		renderer.redirectPolicy = redirectPolicy.current();
+		renderer.shouldPreserveClientUrl = shouldPreserveClientUrl.current();
+		renderer.newPageInstance = newPageInstance.current();
+		renderer.pageStateless = pageStateless.current();
 
 		return renderer.shouldRenderPageAndWriteResponse(null, Url.parse("test"),
-			targetEqualsCurrentUrl.next() ? Url.parse("test") : Url.parse("test2"));
+			targetEqualsCurrentUrl.current() ? Url.parse("test") : Url.parse("test2"));
 	}
 
 	@Override

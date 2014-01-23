@@ -717,7 +717,7 @@ public class WebPageRendererTest
 						"        XXXXXXXX" +
 						"    XXXXXXXXXXXX" +
 						"        XXXXXXXX" +
-						"    XXXXXXXXXXX";
+						"    XXXXXXXXXXXX";
 
 		checkVariations(match,new ShouldRenderPageAndWriteResponseVariations());
 	}
@@ -743,7 +743,7 @@ public class WebPageRendererTest
 						"   XXXXXXXXXXXXX" +
 						"XXXXXXXXXXXXXXXX" +
 						"   XXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXX";
+						"XXXXXXXXXXXXXXXX";
 
 		checkVariations(match,new ShouldRedirectToTargetUrl());
 	}
@@ -831,7 +831,7 @@ public class WebPageRendererTest
 	}
 
 	private int countVariations(AbstractVariations variations) {
-		int count=1;
+		int count = 0;
 		while (variations.hasNextVariation()) {
 			count++;
 			variations.nextVariation();
@@ -842,8 +842,8 @@ public class WebPageRendererTest
 	private void checkVariations(String match, AbstractVariations variations) {
 		int idx=0;
 		while (variations.hasNextVariation()) {
-			Assert.assertEquals(variations.toString(), match.charAt(idx) == 'X', variations.getResult());
 			variations.nextVariation();
+			Assert.assertEquals(variations.toString(), match.charAt(idx) == 'X', variations.getResult());
 			idx++;
 		}
 	}
