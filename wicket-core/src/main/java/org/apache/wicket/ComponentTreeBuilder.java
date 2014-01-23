@@ -1,57 +1,48 @@
 package org.apache.wicket;
 
 import java.lang.reflect.Field;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Iterator;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkup;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.MarkupStream;
 
 /**
  *
  */
 class ComponentTreeBuilder
 {
-	private static final String USER_DATA_CURSOR_CHANGE = "cursorChanged";
-
-	void rebuild(Page page)
+	void rebuild(final MarkupContainer container)
 	{
-		MarkupContainer cursor = page;
+		IMarkupFragment markup = getMarkup(container);
 
-		Deque<MarkupContainer> cursors = new ArrayDeque<>();
-
-		IMarkupFragment markup = page.getMarkup();
-		Iterator<MarkupElement> markupElementIterator = markup.iterator();
-		while (markupElementIterator.hasNext())
+		if (markup != null && markup.size() > 1)
 		{
-			MarkupElement element = markupElementIterator.next();
+			MarkupStream stream = new MarkupStream(markup);
 
-			if (element instanceof ComponentTag)
+			// Skip the first component tag which already belongs to 'this' container
+			if (stream.skipUntil(ComponentTag.class))
 			{
-				ComponentTag tag = (ComponentTag) element;
+				stream.next();
+			}
 
+			while (stream.skipUntil(ComponentTag.class))
+			{
+				ComponentTag tag = stream.getTag();
 				if (!tag.isAutoComponentTag() && (tag.isOpen() || tag.isOpenClose()))
 				{
 					String componentId = tag.getId();
-					Component component = cursor.get(componentId);
+					Component component = container.get(componentId);
 					if (component == null)
 					{
 						try
 						{
-							component = findAutoAnnotatedComponent(cursor, componentId);
+							component = findAutoAnnotatedComponent(container, componentId);
 
 							if (component != null)
 							{
-								cursor.add(component);
-
-								if (component instanceof MarkupContainer)
-								{
-									tag.setUserData(USER_DATA_CURSOR_CHANGE, Boolean.TRUE);
-									cursors.add(cursor);
-									cursor = (MarkupContainer) component;
-								}
+								container.add(component);
 							}
 
 						} catch (Exception e)
@@ -62,18 +53,34 @@ class ComponentTreeBuilder
 
 					print(tag);
 				}
-				else if (tag.isClose())
+
+				if (tag.isOpen())
 				{
-					ComponentTag openTag = tag.getOpenTag();
-					Object cursorChanged = openTag.getUserData(USER_DATA_CURSOR_CHANGE);
-					if (cursorChanged != null)
-					{
-						cursor = cursors.pop();
-					}
+					stream.skipToMatchingCloseTag(tag);
 				}
+
+				stream.next();
 			}
 
 		}
+	}
+
+	/**
+	 * Find the markup of the container.
+	 * If there is associated markup (Panel, Border) then it is preferred.
+	 *
+	 * @param container
+	 *              The container which markup should be get
+	 * @return the container's markup
+	 */
+	private IMarkupFragment getMarkup(MarkupContainer container)
+	{
+		IMarkupFragment markup = container.getAssociatedMarkup();
+		if (markup == null)
+		{
+			markup = container.getMarkup();
+		}
+		return markup;
 	}
 
 	/**

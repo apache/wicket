@@ -859,6 +859,7 @@ public abstract class Component
 		{
 			setFlag(FLAG_INITIALIZED, true);
 			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
+			buildComponentTree();
 			onInitialize();
 			if (!getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED))
 			{
@@ -871,6 +872,10 @@ public abstract class Component
 
 			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
+	}
+
+	void buildComponentTree()
+	{
 	}
 
 	/**

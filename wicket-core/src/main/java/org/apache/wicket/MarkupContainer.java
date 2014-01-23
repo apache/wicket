@@ -1895,6 +1895,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
+	final void buildComponentTree()
+	{
+		ComponentTreeBuilder builder = new ComponentTreeBuilder();
+		builder.rebuild(this);
+	}
+
 	/**
 	 * Automatically create components for <wicket:xxx> tag.
 	 */

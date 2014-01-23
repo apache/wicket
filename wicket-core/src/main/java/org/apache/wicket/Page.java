@@ -296,19 +296,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	protected void onInitialize()
 	{
-		constructComponentTree();
-
 		super.onInitialize();
 
 		final IPageManager pageManager = getSession().getPageManager();
 		pageManager.touchPage(this);
 	}
 
-	private void constructComponentTree()
-	{
-		ComponentTreeBuilder builder = new ComponentTreeBuilder();
-		builder.rebuild(this);
-	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.

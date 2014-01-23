@@ -1,7 +1,10 @@
 package org.apache.wicket.markupdriventree;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markupdriventree.components.ComponentA;
+import org.apache.wicket.markupdriventree.components.ComponentB;
+import org.apache.wicket.markupdriventree.components.ComponentC;
+import org.apache.wicket.markupdriventree.components.PanelA;
 import org.junit.Test;
 
 /**
@@ -14,9 +17,9 @@ public class MarkupDrivenTreeTest extends WicketTestCase
 	{
 		tester.startPage(Page1.class);
 
-		tester.assertComponent("a", WebMarkupContainer.class);
-		tester.assertComponent("a:b", WebMarkupContainer.class);
-		tester.assertComponent("a:b:c", WebMarkupContainer.class);
+		tester.assertComponent("a", ComponentA.class);
+		tester.assertComponent("a:b", ComponentB.class);
+		tester.assertComponent("a:b:c", ComponentC.class);
 	}
 
 	@Test
@@ -24,9 +27,9 @@ public class MarkupDrivenTreeTest extends WicketTestCase
 	{
 		tester.startPage(Page2.class);
 
-		tester.assertComponent("c", WebMarkupContainer.class);
-		tester.assertComponent("c:b", WebMarkupContainer.class);
-		tester.assertComponent("c:b:a", WebMarkupContainer.class);
+		tester.assertComponent("c", ComponentC.class);
+		tester.assertComponent("c:b", ComponentB.class);
+		tester.assertComponent("c:b:a", ComponentA.class);
 	}
 
 	@Test
@@ -34,8 +37,21 @@ public class MarkupDrivenTreeTest extends WicketTestCase
 	{
 		tester.startPage(Page3.class);
 
-		tester.assertComponent("c", WebMarkupContainer.class);
-		tester.assertComponent("b", WebMarkupContainer.class);
-		tester.assertComponent("b:a", WebMarkupContainer.class);
+		tester.assertComponent("c", ComponentC.class);
+		tester.assertComponent("b", ComponentB.class);
+		tester.assertComponent("b:a", ComponentA.class);
+	}
+
+	@Test
+	public void pageWithPanel()
+	{
+		tester.startPage(PageWithPanel.class);
+
+		tester.assertComponent("c", ComponentC.class);
+		tester.assertComponent("b", ComponentB.class);
+		tester.assertComponent("b:a", ComponentA.class);
+
+		tester.assertComponent("panelA", PanelA.class);
+		tester.assertComponent("panelA:a", ComponentA.class);
 	}
 }
