@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -32,19 +31,6 @@ import org.apache.wicket.markup.resolver.ComponentResolvers;
  */
 class ComponentTreeBuilder
 {
-	private static final Field MARKUP_CONTAINER_QUEUED_COMPONENTS;
-	static
-	{
-		try
-		{
-			MARKUP_CONTAINER_QUEUED_COMPONENTS = MarkupContainer.class.getDeclaredField("queuedComponents");
-			MARKUP_CONTAINER_QUEUED_COMPONENTS.setAccessible(true);
-		} catch (NoSuchFieldException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-
 	void rebuild(final MarkupContainer container)
 	{
 		IMarkupFragment markup = getMarkup(container);
@@ -158,11 +144,9 @@ class ComponentTreeBuilder
 			return null;
 		}
 
-		@SuppressWarnings("unchecked")
-		List<Component> queuedComponents = (List<Component>) MARKUP_CONTAINER_QUEUED_COMPONENTS.get(cursor);
-		if (queuedComponents != null)
+		if (cursor.queuedComponents != null)
 		{
-			Iterator<Component> iterator = queuedComponents.iterator();
+			Iterator<Component> iterator = cursor.queuedComponents.iterator();
 			while (iterator.hasNext())
 			{
 				Component queued = iterator.next();

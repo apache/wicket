@@ -105,7 +105,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/** List of children or single child */
 	private Object children;
 
-	private List<Component> queuedComponents = null;
+	List<Component> queuedComponents = null;
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
