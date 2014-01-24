@@ -121,18 +121,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		return childId.toString();
 	}
 
-	@Override
-	protected void onConfigure()
-	{
-		super.onConfigure();
-
-		if (childComponent == null)
-		{
-			// get Child Component. If not "added", ask a resolver to find it.
-			childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
-		}
-	}
-
 	protected final Component getChild()
 	{
 		return childComponent;
@@ -141,7 +129,12 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	@Override
 	public boolean isVisible()
 	{
-		return childComponent.determineVisibility() && super.isVisible();
+		if (childComponent == null)
+		{
+			// get Child Component. If not "added", ask a resolver to find it.
+			childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
+		}
+		return childComponent != null && childComponent.determineVisibility() && super.isVisible();
 	}
 
 	/**

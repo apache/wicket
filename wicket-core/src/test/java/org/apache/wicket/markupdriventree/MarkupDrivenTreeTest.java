@@ -18,6 +18,7 @@ package org.apache.wicket.markupdriventree;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.MarkupDrivenComponentTreeBehavior;
 import org.apache.wicket.MarkupDrivenTreeInitializionListener;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.internal.Enclosure;
@@ -45,7 +46,8 @@ public class MarkupDrivenTreeTest extends WicketTestCase
 			{
 				super.init();
 				getPageSettings().setMarkupDrivenComponentTreeEnabled(true);
-				getComponentInitializationListeners().add(new MarkupDrivenTreeInitializionListener());
+//				getComponentInitializationListeners().add(new MarkupDrivenTreeInitializionListener());
+				getComponentInstantiationListeners().add(MarkupDrivenComponentTreeBehavior.LISTENER);
 			}
 		};
 		return application;
