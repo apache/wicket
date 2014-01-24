@@ -17,6 +17,8 @@
 package org.apache.wicket;
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -30,6 +32,19 @@ import org.apache.wicket.markup.resolver.ComponentResolvers;
  */
 class ComponentTreeBuilder
 {
+	private static final Field MARKUP_CONTAINER_QUEUED_COMPONENTS;
+	static
+	{
+		try
+		{
+			MARKUP_CONTAINER_QUEUED_COMPONENTS = MarkupContainer.class.getDeclaredField("queuedComponents");
+			MARKUP_CONTAINER_QUEUED_COMPONENTS.setAccessible(true);
+		} catch (NoSuchFieldException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
 	void rebuild(final MarkupContainer container)
 	{
 		IMarkupFragment markup = getMarkup(container);
@@ -136,41 +151,27 @@ class ComponentTreeBuilder
 	 * @return
 	 * @throws IllegalAccessException
 	 */
-	private Component findAutoAnnotatedComponent(MarkupContainer cursor, String componentId) throws IllegalAccessException
+	private Component findAutoAnnotatedComponent(MarkupContainer cursor, String componentId) throws Exception
 	{
 		if (cursor == null)
 		{
 			return null;
 		}
 
-		Class<?> cursorClass = cursor.getClass();
-
-		while (cursorClass != null)
+		@SuppressWarnings("unchecked")
+		List<Component> queuedComponents = (List<Component>) MARKUP_CONTAINER_QUEUED_COMPONENTS.get(cursor);
+		if (queuedComponents != null)
 		{
-			for (Field field : cursorClass.getDeclaredFields())
+			Iterator<Component> iterator = queuedComponents.iterator();
+			while (iterator.hasNext())
 			{
-				Auto annotation = field.getAnnotation(Auto.class);
-				if (annotation != null)
+				Component queued = iterator.next();
+				if (componentId.equals(queued.getId()))
 				{
-					String annId = annotation.id();
-					if (componentId.equals(annId) || componentId.equals(field.getName()))
-					{
-						boolean accessible = field.isAccessible();
-						try
-						{
-							field.setAccessible(true);
-							return (Component) field.get(cursor);
-						}
-						finally
-						{
-							field.setAccessible(accessible);
-						}
-
-					}
+					iterator.remove();
+					return queued;
 				}
 			}
-
-			cursorClass = cursorClass.getSuperclass();
 		}
 
 		return findAutoAnnotatedComponent(cursor.getParent(), componentId);

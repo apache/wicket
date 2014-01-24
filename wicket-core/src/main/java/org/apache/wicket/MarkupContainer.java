@@ -105,6 +105,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/** List of children or single child */
 	private Object children;
 
+	private List<Component> queuedComponents = null;
+
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
@@ -1883,6 +1885,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
+	@Override
+	protected void onDetach()
+	{
+		super.onDetach();
+
+		if (isInitialized())
+		{
+			// the queued components should be preserved for pages which
+			// will be rendered in a following request
+			queuedComponents = null;
+		}
+	}
+
 	protected boolean isMarkupDrivenComponentTreeEnabled()
 	{
 		// TODO this method is called once per MarkupContainer's life
@@ -1893,5 +1908,28 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			return parent.isMarkupDrivenComponentTreeEnabled();
 		}
 		return false;
+	}
+
+	/**
+	 * Adds component(s) that will be available for markup driven
+	 * component tree construction
+	 *
+	 * @param components
+	 *          the components
+	 */
+	public final void enqueue(Component... components)
+	{
+		if (components != null)
+		{
+			if (queuedComponents == null)
+			{
+				queuedComponents = new ArrayList<>();
+			}
+
+			for (Component c : components)
+			{
+				queuedComponents.add(c);
+			}
+		}
 	}
 }
