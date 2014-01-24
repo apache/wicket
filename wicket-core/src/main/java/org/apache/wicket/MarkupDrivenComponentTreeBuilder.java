@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.lang.reflect.Field;
 import java.util.Iterator;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -29,7 +28,7 @@ import org.apache.wicket.markup.resolver.ComponentResolvers;
 /**
  *
  */
-class ComponentTreeBuilder
+class MarkupDrivenComponentTreeBuilder
 {
 	void rebuild(final MarkupContainer container)
 	{

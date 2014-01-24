@@ -1880,7 +1880,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		if (isMarkupDrivenComponentTreeEnabled())
 		{
-			ComponentTreeBuilder builder = new ComponentTreeBuilder();
+			MarkupDrivenComponentTreeBuilder builder = new MarkupDrivenComponentTreeBuilder();
 			builder.rebuild(this);
 		}
 	}
