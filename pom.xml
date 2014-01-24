@@ -61,6 +61,8 @@
 		<module>wicket-experimental</module>
 		<module>archetypes/quickstart</module>
 		<module>testing/wicket-common-tests</module>
+		<module>wicket-native-websocket</module>
+		<module>wicket-bean-validation</module>
   </modules>
 	<profiles>
 		<profile>
@@ -322,31 +324,31 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bean-validation</artifactId>
-				<version>0.9-SNAPSHOT</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-core</artifactId>
-				<version>0.16-SNAPSHOT</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-jetty</artifactId>
-				<version>0.16-SNAPSHOT</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-jetty9</artifactId>
-				<version>0.16-SNAPSHOT</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-tomcat</artifactId>
-				<version>0.16-SNAPSHOT</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
