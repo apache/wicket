@@ -869,7 +869,7 @@ public abstract class Component
 			}
 			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 
-			buildComponentTree();
+//			buildComponentTree();
 			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
 	}
