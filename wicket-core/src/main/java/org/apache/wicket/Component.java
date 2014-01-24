@@ -859,7 +859,6 @@ public abstract class Component
 		{
 			setFlag(FLAG_INITIALIZED, true);
 			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
-			buildComponentTree();
 			onInitialize();
 			if (!getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED))
 			{
@@ -870,6 +869,7 @@ public abstract class Component
 			}
 			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 
+			buildComponentTree();
 			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
 	}

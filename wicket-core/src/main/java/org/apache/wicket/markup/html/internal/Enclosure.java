@@ -87,8 +87,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = LoggerFactory.getLogger(Enclosure.class);
-
 	/** The child component to delegate the isVisible() call to */
 	private Component childComponent;
 
@@ -124,12 +122,15 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	}
 
 	@Override
-	protected void onInitialize()
+	protected void onConfigure()
 	{
-		super.onInitialize();
+		super.onConfigure();
 
-		// get Child Component. If not "added", ask a resolver to find it.
-		childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
+		if (childComponent == null)
+		{
+			// get Child Component. If not "added", ask a resolver to find it.
+			childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
+		}
 	}
 
 	protected final Component getChild()
