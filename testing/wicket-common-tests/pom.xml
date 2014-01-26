@@ -100,6 +100,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-javax</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-atmosphere</artifactId>
 			<scope>test</scope>
 		</dependency>
