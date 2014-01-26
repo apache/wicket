@@ -20,8 +20,10 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.markup.ComponentTag;
@@ -105,7 +107,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/** List of children or single child */
 	private Object children;
 
-	List<Component> queuedComponents = null;
+	Map<String, Component> queuedComponents = null;
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
@@ -1923,12 +1925,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			if (queuedComponents == null)
 			{
-				queuedComponents = new ArrayList<>();
+				queuedComponents = new HashMap<>();
 			}
 
 			for (Component c : components)
 			{
-				queuedComponents.add(c);
+				queuedComponents.put(c.getId(), c);
 			}
 		}
 	}

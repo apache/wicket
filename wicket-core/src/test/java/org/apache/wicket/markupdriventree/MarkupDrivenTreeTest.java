@@ -46,8 +46,8 @@ public class MarkupDrivenTreeTest extends WicketTestCase
 			{
 				super.init();
 				getPageSettings().setMarkupDrivenComponentTreeEnabled(true);
-//				getComponentInitializationListeners().add(new MarkupDrivenTreeInitializionListener());
-				getComponentInstantiationListeners().add(MarkupDrivenComponentTreeBehavior.LISTENER);
+				getComponentInitializationListeners().add(new MarkupDrivenTreeInitializionListener());
+//				getComponentInstantiationListeners().add(MarkupDrivenComponentTreeBehavior.LISTENER);
 			}
 		};
 		return application;

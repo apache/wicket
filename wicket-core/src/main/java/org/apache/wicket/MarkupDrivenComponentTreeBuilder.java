@@ -145,16 +145,11 @@ class MarkupDrivenComponentTreeBuilder
 
 		if (cursor.queuedComponents != null)
 		{
-			Iterator<Component> iterator = cursor.queuedComponents.iterator();
-			while (iterator.hasNext())
-			{
-				Component queued = iterator.next();
-				if (componentId.equals(queued.getId()))
-				{
-					iterator.remove();
-					return queued;
-				}
-			}
+			Component queuedComponent = cursor.queuedComponents.remove(componentId);
+			if (queuedComponent != null)
+            {
+                return queuedComponent;
+            }
 		}
 
 		return findAutoAnnotatedComponent(cursor.getParent(), componentId);
