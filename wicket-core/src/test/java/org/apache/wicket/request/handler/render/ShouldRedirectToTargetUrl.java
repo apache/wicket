@@ -56,15 +56,15 @@ public class ShouldRedirectToTargetUrl extends AbstractVariations
 	public boolean getResult()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(null);
-		renderer.ajax = ajax.next();
-		renderer.redirectPolicy = redirectPolicy.next();
-		renderer.redirectToRender = redirectToRender.next();
-		renderer.newPageInstance = newPageInstance.next();
-		renderer.pageStateless = pageStateless.next();
-		renderer.sessionTemporary = sessionTemporary.next();
+		renderer.ajax = ajax.current();
+		renderer.redirectPolicy = redirectPolicy.current();
+		renderer.redirectToRender = redirectToRender.current();
+		renderer.newPageInstance = newPageInstance.current();
+		renderer.pageStateless = pageStateless.current();
+		renderer.sessionTemporary = sessionTemporary.current();
 
 
 		return renderer.shouldRedirectToTargetUrl(null, Url.parse("test1"),
-			targetEqualsCurrentUrl.next() ? Url.parse("test1") : Url.parse("test2"));
+			targetEqualsCurrentUrl.current() ? Url.parse("test1") : Url.parse("test2"));
 	}
 }

@@ -20,41 +20,27 @@
     <parent>
         <groupId>org.apache.wicket</groupId>
         <artifactId>wicket-native-websocket</artifactId>
-        <version>0.16-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>wicket-native-websocket-tomcat</artifactId>
+    <artifactId>wicket-native-websocket-jetty</artifactId>
     <packaging>jar</packaging>
-    <name>Wicket Native WebSocket Tomcat 7.x</name>
-    <description>Provides the code specific to integrate with Tomcat web container</description>
-
-    <properties>
-        <tomcat.version>7.0.27</tomcat.version>
-    </properties>
-
+    <name>Wicket Native WebSocket Jetty</name>
+    <description>Provides the code specific to integrate with Jetty web container</description>
     <dependencies>
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-native-websocket-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-catalina</artifactId>
-            <version>${tomcat.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-coyote</artifactId>
-            <version>${tomcat.version}</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-websocket</artifactId>
+            <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
 
     </dependencies>
-
     <build>
     	<pluginManagement>
     		<plugins>

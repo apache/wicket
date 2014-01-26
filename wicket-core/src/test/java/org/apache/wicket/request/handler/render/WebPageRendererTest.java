@@ -574,7 +574,7 @@ public class WebPageRendererTest
 		// if
 		// the policy is never to redirect
 		renderer.redirectPolicy = RedirectPolicy.NEVER_REDIRECT;
-		renderer.ajax = true;
+		renderer.ajax = false;
 		renderer.onePassRender = true;
 		renderer.redirectToRender = true;
 		renderer.shouldPreserveClientUrl = true;
@@ -635,7 +635,7 @@ public class WebPageRendererTest
 		renderer.shouldPreserveClientUrl = true;
 
 		renderer.redirectPolicy = RedirectPolicy.AUTO_REDIRECT;
-		renderer.ajax = true;
+		renderer.ajax = false;
 		renderer.onePassRender = false;
 		renderer.redirectToRender = false;
 		renderer.newPageInstance = true;
@@ -698,26 +698,26 @@ public class WebPageRendererTest
 						"    XXXXXXXXXXXX" +
 						"    X   XXXXXXXX" +
 						"    XXXXXXXXXXXX" +
-						"        XXXXXXXX" +
-						"    XXXXXXXXXXXX" +
-						"        XXXXXXXX" +
-						"    XXXXXXXXXXXX" +
+						"                " +
+						"                " +
+						"                " +
+						"                " +
 						"XXXXXXXXXXXXXXXX" +
 						"XXXXXXXXXXXXXXXX" +
 						"XXXXXXXXXXXXXXXX" +
 						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
+						"                " +
+						"                " +
+						"                " +
+						"                " +
 						"    X   XXXXXXXX" +
 						"    XXXXXXXXXXXX" +
 						"XXXXXXXXXXXXXXXX" +
 						"XXXXXXXXXXXXXXXX" +
-						"        XXXXXXXX" +
-						"    XXXXXXXXXXXX" +
-						"        XXXXXXXX" +
-						"    XXXXXXXXXXX";
+						"                " +
+						"                " +
+						"                " +
+						"                ";
 
 		checkVariations(match,new ShouldRenderPageAndWriteResponseVariations());
 	}
@@ -743,7 +743,7 @@ public class WebPageRendererTest
 						"   XXXXXXXXXXXXX" +
 						"XXXXXXXXXXXXXXXX" +
 						"   XXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXX";
+						"XXXXXXXXXXXXXXXX";
 
 		checkVariations(match,new ShouldRedirectToTargetUrl());
 	}
@@ -831,7 +831,7 @@ public class WebPageRendererTest
 	}
 
 	private int countVariations(AbstractVariations variations) {
-		int count=1;
+		int count = 0;
 		while (variations.hasNextVariation()) {
 			count++;
 			variations.nextVariation();
@@ -842,8 +842,8 @@ public class WebPageRendererTest
 	private void checkVariations(String match, AbstractVariations variations) {
 		int idx=0;
 		while (variations.hasNextVariation()) {
-			Assert.assertEquals(variations.toString(), match.charAt(idx) == 'X', variations.getResult());
 			variations.nextVariation();
+			Assert.assertEquals(variations.toString(), match.charAt(idx) == 'X', variations.getResult());
 			idx++;
 		}
 	}
@@ -955,5 +955,52 @@ public class WebPageRendererTest
 		verify(response, never()).write(any(byte[].class));
 		verify(response).sendRedirect(anyString());
 		Assert.assertTrue(stored.get());
+	}
+
+	/**
+	 * Tests that when {@link WebRequest#shouldPreserveClientUrl()} returns {@code true} and the
+	 * current request is Ajax then a redirect should be issued
+	 */
+	@Test
+	public void testShouldPreserveClientUrlAndAjaxRequest()
+	{
+		TestPageRenderer renderer = new TestPageRenderer(handler);
+		renderer.ajax = true;
+		renderer.newPageInstance = true;
+
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("base"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("base/a"));
+
+		when(request.shouldPreserveClientUrl()).thenReturn(true);
+
+		renderer.respond(requestCycle);
+
+		verify(response).sendRedirect(anyString());
+		verify(response, never()).write(any(byte[].class));
+
+	}
+
+	/**
+	 * Tests that when {@link RedirectPolicy#NEVER_REDIRECT} is configured but the current request
+	 * is Ajax then a redirect should still be issued
+	 */
+	@Test
+	public void testNeverRedirectButAjaxRequest()
+	{
+		TestPageRenderer renderer = new TestPageRenderer(handler);
+		renderer.redirectPolicy = RedirectPolicy.NEVER_REDIRECT;
+		renderer.ajax = true;
+		renderer.newPageInstance = true;
+
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("base"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("base/a"));
+
+		renderer.respond(requestCycle);
+
+		verify(response).sendRedirect(anyString());
+		verify(response, never()).write(any(byte[].class));
+
 	}
 }
