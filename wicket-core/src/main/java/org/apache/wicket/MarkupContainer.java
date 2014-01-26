@@ -39,6 +39,7 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
@@ -97,7 +98,8 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan Locke
  * 
  */
-public abstract class MarkupContainer extends Component implements Iterable<Component>
+public abstract class MarkupContainer extends Component
+        implements Iterable<Component>, IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -1934,4 +1936,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 		}
 	}
+
+    @Override
+    public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag) {
+        if (queuedComponents != null)
+        {
+            Component queuedComponent = queuedComponents.remove(tag.getId());
+            if (queuedComponent != null)
+            {
+                return queuedComponent;
+            }
+        }
+        return null;
+    }
 }

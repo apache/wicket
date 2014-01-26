@@ -16,13 +16,10 @@
  */
 package org.apache.wicket;
 
-import java.util.Iterator;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 
 /**
@@ -50,45 +47,20 @@ class MarkupDrivenComponentTreeBuilder
 				if (!tag.isAutoComponentTag())
 				{
 					String componentId = tag.getId();
-
-					if (tag instanceof WicketTag)
+					Component component = container.get(componentId);
+					if (component == null)
 					{
-						WicketTag wicketTag = (WicketTag) tag;
-						if (wicketTag.isEnclosureTag())
+						component = ComponentResolvers.resolve(container, stream, tag, null);
+						if ((component != null) && (component.getParent() == null))
 						{
-							Component component = ComponentResolvers.resolve(container, stream, tag, null);
-							if ((component != null) && (component.getParent() == null))
+							if (component.getId().equals(componentId) == false)
 							{
-								if (component.getId().equals(tag.getId()) == false)
-								{
-									// make sure we are able to get() the component during rendering
-									tag.setId(component.getId());
-									tag.setModified(true);
-								}
-								container.add(component);
+								// make sure we are able to get() the component during rendering
+								tag.setId(component.getId());
+								tag.setModified(true);
 							}
+							container.add(component);
 						}
-					}
-					else
-					{
-						Component component = container.get(componentId);
-						if (component == null)
-						{
-							try
-							{
-								component = findAutoAnnotatedComponent(container, componentId);
-
-								if (component != null)
-								{
-									container.add(component);
-								}
-
-							} catch (Exception e)
-							{
-								throw new WicketRuntimeException(e);
-							}
-						}
-//						print(tag);
 					}
 				}
 
@@ -126,33 +98,6 @@ class MarkupDrivenComponentTreeBuilder
 			}
 		}
 		return markup;
-	}
-
-	/**
-	 * Searches for a member field that is a Component with the expected component id
-	 *
-	 * @param cursor
-	 * @param componentId
-	 * @return
-	 * @throws IllegalAccessException
-	 */
-	private Component findAutoAnnotatedComponent(MarkupContainer cursor, String componentId) throws Exception
-	{
-		if (cursor == null)
-		{
-			return null;
-		}
-
-		if (cursor.queuedComponents != null)
-		{
-			Component queuedComponent = cursor.queuedComponents.remove(componentId);
-			if (queuedComponent != null)
-            {
-                return queuedComponent;
-            }
-		}
-
-		return findAutoAnnotatedComponent(cursor.getParent(), componentId);
 	}
 
 	private void print(ComponentTag tag)

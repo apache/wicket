@@ -106,17 +106,13 @@ public class ComponentResolvers
 	private static Component resolveByComponentHierarchy(final MarkupContainer container,
 		final MarkupStream markupStream, final ComponentTag tag)
 	{
-		Component cursor = container;
+		MarkupContainer cursor = container;
 		while (cursor != null)
 		{
-			if (cursor instanceof IComponentResolver)
+			Component component = cursor.resolve(container, markupStream, tag);
+			if (component != null)
 			{
-				IComponentResolver resolver = (IComponentResolver)cursor;
-				Component component = resolver.resolve(container, markupStream, tag);
-				if (component != null)
-				{
-					return component;
-				}
+				return component;
 			}
 			cursor = cursor.getParent();
 		}
