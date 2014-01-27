@@ -1927,12 +1927,23 @@ public abstract class MarkupContainer extends Component
 		{
 			if (queuedComponents == null)
 			{
-				queuedComponents = new HashMap<>();
+				queuedComponents = Generics.newHashMap();
 			}
 
 			for (Component c : components)
 			{
-				queuedComponents.put(c.getId(), c);
+				if (c.getParent() != null)
+				{
+					throw new IllegalStateException(
+					"You can not queue components which are already added to a parent: " +
+						c.toString());
+				}
+
+				Component old = queuedComponents.put(c.getId(), c);
+				if (old != null)
+				{
+					throw new IllegalStateException("You can not add multiple components with the same ID for queueing: " + old.getId());
+				}
 			}
 		}
 	}
