@@ -141,3 +141,4 @@ popd
 
 ### POST VOTE
 # svn mv https://mgrigorov@dist.apache.org/repos/dist/dev/wicket/$version https://mgrigorov@dist.apache.org/repos/dist/release/wicket
+# svn rm  https://mgrigorov@dist.apache.org/repos/dist/release/wicket/$version-1
