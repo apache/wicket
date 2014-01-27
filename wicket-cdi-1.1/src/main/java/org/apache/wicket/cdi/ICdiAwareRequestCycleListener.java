@@ -14,29 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.cdi;
+package org.apache.wicket.cdi;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.ConversationPropagation;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
 
-public class CdiApplication extends WebApplication {
+public interface ICdiAwareRequestCycleListener extends IRequestCycleListener
+{
+	/**
+	 * Called right after a conversation context for this request is activated
+	 * 
+	 * @param cycle
+	 *            request cycle
+	 */
+	void onAfterConversationActivated(RequestCycle cycle);
 
-	@Override
-	public Class<? extends Page> getHomePage() {
-		return CdiHomePage.class;
-	}
-
-	@Override
-	protected void init() {
-		super.init();
-
-		new CdiConfiguration().setPropagation(
-				ConversationPropagation.NONBOOKMARKABLE).configure(this);
-
-		mountPage("injection", InjectionPage.class);
-		mountPage("conversation", ConversationPage1.class);
-	}
-
+	/**
+	 * Called right before the current conversation context is deactivated
+	 * 
+	 * @param cycle
+	 *            request cycle
+	 */
+	void onBeforeConversationDeactivated(RequestCycle cycle);
 }

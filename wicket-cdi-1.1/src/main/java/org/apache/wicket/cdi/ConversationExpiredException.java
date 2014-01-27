@@ -14,29 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.cdi;
+package org.apache.wicket.cdi;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.ConversationPropagation;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestHandler;
 
-public class CdiApplication extends WebApplication {
+public class ConversationExpiredException extends RuntimeException
+{
+	private static final long serialVersionUID = 1L;
+	private String cid;
+	private Page page;
+	private IRequestHandler handler;
 
-	@Override
-	public Class<? extends Page> getHomePage() {
-		return CdiHomePage.class;
+	public ConversationExpiredException(Throwable cause, String cid, Page page,
+			IRequestHandler handler)
+	{
+		super(cause);
+		this.cid = cid;
+		this.page = page;
+		this.handler = handler;
 	}
 
-	@Override
-	protected void init() {
-		super.init();
-
-		new CdiConfiguration().setPropagation(
-				ConversationPropagation.NONBOOKMARKABLE).configure(this);
-
-		mountPage("injection", InjectionPage.class);
-		mountPage("conversation", ConversationPage1.class);
+	public String getCid()
+	{
+		return cid;
 	}
 
+	public Page getPage()
+	{
+		return page;
+	}
+
+	public IRequestHandler getHandler()
+	{
+		return handler;
+	}
 }

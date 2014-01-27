@@ -23,26 +23,35 @@
 		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-experimental</artifactId>
-	<packaging>pom</packaging>
-	<name>Wicket-Experimental</name>
-	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
-	<modules>
-		<module>wicket-atmosphere</module>
-		<module>wicket-bootstrap</module>
-		<module>wicket-examples-parent</module>
-	</modules>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>clirr-maven-plugin</artifactId>
-					<configuration>
-						<skip>true</skip>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+	<artifactId>wicket-cdi-1.1</artifactId>
+	<packaging>jar</packaging>
+	<name>Wicket CDI 1.1</name>
+	<description>
+		Provides integration between Wicket and CDI containers. Enables injection of
+		components and behaviors, as well as other non-contextual object instances.
+		Also enables propagation of conversations between wicket artifacts such as pages
+		and resources.
+	</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jglue.cdi-unit</groupId>
+			<artifactId>cdi-unit</artifactId>
+			<version>2.2.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

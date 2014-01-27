@@ -134,12 +134,11 @@
 		<dependency>
 			<groupId>org.jboss.weld.servlet</groupId>
 			<artifactId>weld-servlet</artifactId>
-			<version>2.1.0.Final</version>
+			<version>2.1.2.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-cdi-1.1-weld</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<artifactId>wicket-cdi-1.1</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.el</groupId>

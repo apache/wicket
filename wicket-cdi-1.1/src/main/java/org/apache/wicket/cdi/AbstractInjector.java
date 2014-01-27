@@ -14,29 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.cdi;
+package org.apache.wicket.cdi;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.ConversationPropagation;
-import org.apache.wicket.protocol.http.WebApplication;
-
-public class CdiApplication extends WebApplication {
-
-	@Override
-	public Class<? extends Page> getHomePage() {
-		return CdiHomePage.class;
+/**
+ * Base class for injectors
+ * 
+ * @author igor
+ */
+class AbstractInjector
+{
+	public AbstractInjector()
+	{
 	}
 
-	@Override
-	protected void init() {
-		super.init();
-
-		new CdiConfiguration().setPropagation(
-				ConversationPropagation.NONBOOKMARKABLE).configure(this);
-
-		mountPage("injection", InjectionPage.class);
-		mountPage("conversation", ConversationPage1.class);
+	protected <T> void postConstruct(T instance)
+	{
+		NonContextual.of(instance.getClass()).postConstruct(instance);
 	}
 
+	protected <T> void inject(T instance)
+	{
+		NonContextual.of(instance.getClass()).inject(instance);
+	}
 }
