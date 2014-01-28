@@ -34,6 +34,7 @@ import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import org.apache.wicket.request.resource.PackageResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +105,11 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		{
 			logger.error("Connection lost, give up responding.", e);
 			return new EmptyRequestHandler();
+		}
+		else if (e instanceof PackageResource.PackageResourceBlockedException && application.usesDeploymentConfig())
+		{
+			logger.debug(e.getMessage(), e);
+			return new ErrorCodeRequestHandler(404);
 		}
 		else
 		{
