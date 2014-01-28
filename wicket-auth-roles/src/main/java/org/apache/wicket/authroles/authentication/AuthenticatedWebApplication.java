@@ -97,7 +97,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			}
 			else
 			{
-				onUnauthorizedPage((Page)component);
+				onUnauthorizedPage(component);
 			}
 		}
 		else
@@ -153,11 +153,10 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 * application's home page.
 	 * 
 	 * @param page
-	 *            The page
+	 *            The partially constructed page (only the component id is guaranteed to be valid).
 	 */
-	protected void onUnauthorizedPage(final Page page)
+	protected void onUnauthorizedPage(final Component page)
 	{
-		// The component was not a page, so throw an exception
 		throw new UnauthorizedInstantiationException(page.getClass());
 	}
 }
