@@ -34,6 +34,7 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
+import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.settings.ExceptionSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +113,11 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		{
 			logger.error("Connection lost, give up responding.", e);
 			return new EmptyRequestHandler();
+		}
+		else if (e instanceof PackageResource.PackageResourceBlockedException && application.usesDeploymentConfig())
+		{
+			logger.debug(e.getMessage(), e);
+			return new ErrorCodeRequestHandler(404);
 		}
 		else
 		{
