@@ -125,7 +125,7 @@
 		if (window.innerHeight) {// all browsers except IE
 			viewPortHeight = window.innerHeight;
 		} else if (document.documentElement && document.documentElement.clientHeight) {// IE 6 strict mode
-			viewPortHeight = document.documentElement.height;
+			viewPortHeight = document.documentElement.clientHeight;
 		} else if (document.body) {// other IEs
 			viewPortHeight = document.body.clientHeight;
 		}
