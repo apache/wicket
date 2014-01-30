@@ -23,8 +23,6 @@ import javax.websocket.Session;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An {@link org.apache.wicket.protocol.ws.api.IWebSocketProcessor processor} that integrates with
@@ -34,8 +32,6 @@ import org.slf4j.LoggerFactory;
  */
 public class JavaxWebSocketProcessor extends AbstractWebSocketProcessor
 {
-	private static final Logger LOG = LoggerFactory.getLogger(JavaxWebSocketProcessor.class);
-
 	/**
 	 * Constructor.
 	 *

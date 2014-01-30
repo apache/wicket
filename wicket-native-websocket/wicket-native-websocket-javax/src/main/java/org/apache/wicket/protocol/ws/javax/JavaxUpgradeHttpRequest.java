@@ -59,25 +59,29 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	private final String requestUri;
 	private final Map<String, String[]> parametersMap;
 	private final Map<String, List<String>> headers;
-	private final String contextPath = ""; // artificial
 
 	public JavaxUpgradeHttpRequest(final Session session)
 	{
 		Map<String, Object> userProperties = session.getUserProperties();
+
 		this.httpSession = (HttpSession) userProperties.get("session");
 		this.headers = (Map<String, List<String>>) userProperties.get("headers");
-		this.queryString = (String) userProperties.get("queryString");
-		this.userPrincipal = (Principal) userProperties.get("userPrincipal");
-		this.requestUri = userProperties.get("requestURI").toString();
+		this.queryString = session.getQueryString();
+		this.userPrincipal = session.getUserPrincipal();
+		Object requestURI = session.getRequestURI();
+		this.requestUri = requestURI != null ? requestURI.toString() : "";
 
 		this.parametersMap = new HashMap<>();
 
-		Map<String, List<String>> parameters = (Map<String, List<String>>) userProperties.get("parameterMap");
-		for (Map.Entry<String, List<String>> entry : parameters.entrySet())
+		Map<String, List<String>> parameters = session.getRequestParameterMap();
+		if (parameters != null)
 		{
-			String name = entry.getKey();
-			List<String> value = entry.getValue();
-			parametersMap.put(name, value.toArray(new String[value.size()]));
+			for (Map.Entry<String, List<String>> entry : parameters.entrySet())
+			{
+				String name = entry.getKey();
+				List<String> value = entry.getValue();
+				parametersMap.put(name, value.toArray(new String[value.size()]));
+			}
 		}
 	}
 
@@ -107,7 +111,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 		if (headers != null)
 		{
 			List<String> headerValues = headers.get(name);
-			if (headerValues.isEmpty() == false)
+			if (headerValues != null && !headerValues.isEmpty())
 			{
 				value = headerValues.get(0);
 			}
@@ -122,7 +126,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 		if (headers != null)
 		{
 			List<String> headerValues = headers.get(name);
-			if (headerValues.isEmpty() == false)
+			if (headerValues != null && !headerValues.isEmpty())
 			{
 				final Iterator<String> iterator = headerValues.iterator();
 				values = new Enumeration<String>()
@@ -151,7 +155,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 		if (headers != null)
 		{
 			Set<String> headerNames = headers.keySet();
-			if (headerNames.isEmpty() == false)
+			if (!headerNames.isEmpty())
 			{
 				final Iterator<String> iterator = headerNames.iterator();
 				names = new Enumeration<String>()
@@ -201,7 +205,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	@Override
 	public String getContextPath()
 	{
-		return contextPath;
+		return "";
 	}
 
 	@Override

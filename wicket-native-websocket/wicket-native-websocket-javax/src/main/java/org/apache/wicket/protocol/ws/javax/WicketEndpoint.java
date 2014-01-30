@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.ws.javax;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.websocket.CloseReason;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
@@ -23,6 +26,8 @@ import javax.websocket.Session;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +38,19 @@ public class WicketEndpoint extends Endpoint
 {
 	private static final Logger LOG = LoggerFactory.getLogger(WicketEndpoint.class);
 
+	/**
+	 * The name of the request parameter that holds the application name
+	 */
+	private static final String WICKET_APP_PARAM_NAME = "wicket-app-name";
+
 	private JavaxWebSocketProcessor javaxWebSocketProcessor;
 
 	@Override
 	public void onOpen(Session session, EndpointConfig endpointConfig)
 	{
-		WebApplication app = (WebApplication) session.getUserProperties().get(JavaxWebSocketFilter.APPLICATION_KEY);
+		String appName = getApplicationName(session);
+
+		WebApplication app = (WebApplication) WebApplication.get(appName);
 
 		try
 		{
@@ -49,7 +61,6 @@ public class WicketEndpoint extends Endpoint
 		{
 			ThreadContext.detach();
 		}
-
 	}
 
 	@Override
@@ -63,8 +74,41 @@ public class WicketEndpoint extends Endpoint
 	@Override
 	public void onError(Session session, Throwable t)
 	{
-		super.onError(session, t);
-
 		LOG.error("An error occurred in web socket connection with id : " + session.getId(), t);
+		super.onError(session, t);
 	}
+
+	private String getApplicationName(Session session)
+	{
+		String appName = null;
+
+		@SuppressWarnings("unchecked")
+		Map<String, List<String>> parameters = session.getRequestParameterMap();
+		if (parameters != null)
+		{
+			appName = parameters.get(WICKET_APP_PARAM_NAME).get(0);
+		}
+		else
+		{
+			// Glassfish 4 has null parameters map and non-null query string ...
+			String queryString = session.getQueryString();
+			if (!Strings.isEmpty(queryString))
+			{
+				String[] params = Strings.split(queryString, '&');
+				for (String paramPair : params)
+				{
+					String[] nameValues = Strings.split(paramPair, '=');
+					if (WICKET_APP_PARAM_NAME.equals(nameValues[0]))
+					{
+						appName = nameValues[1];
+					}
+				}
+			}
+		}
+
+		Checks.notNull(appName, "The application name cannot be read from the upgrade request's parameters");
+
+		return appName;
+	}
+
 }
