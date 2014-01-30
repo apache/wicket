@@ -316,7 +316,6 @@ public class WebPageRendererTest
 	@Test
 	public void testRedirectPolicyAlways()
 	{
-
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.redirectPolicy = RedirectPolicy.ALWAYS_REDIRECT;
 
@@ -324,7 +323,7 @@ public class WebPageRendererTest
 
 		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("base/a"));
 
-		when(request.shouldPreserveClientUrl()).thenReturn(false);
+		when(request.shouldPreserveClientUrl()).thenReturn(true);
 
 		renderer.respond(requestCycle);
 
