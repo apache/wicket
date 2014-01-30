@@ -837,6 +837,10 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public synchronized int nextSequenceValue()
 	{
+		if (isTemporary() == false)
+		{
+			dirty();
+		}
 		return sequence++;
 	}
 
@@ -846,6 +850,10 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public synchronized int nextPageId()
 	{
+		if (isTemporary() == false)
+		{
+			dirty();
+		}
 		return pageId++;
 	}
 
