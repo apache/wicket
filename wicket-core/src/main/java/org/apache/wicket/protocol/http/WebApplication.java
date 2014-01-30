@@ -695,7 +695,8 @@ public abstract class WebApplication extends Application
 			}
 			catch (SecurityException e)
 			{
-				// Ignore - we're not allowed to read system properties.
+				log.warn("SecurityManager doesn't allow to read the configuration type from " +
+						"the system properties. The configuration type will be read from the web.xml.");
 			}
 
 			// If no system parameter check filter/servlet <init-param> and <context-param>
