@@ -3,7 +3,7 @@
 
 	if (!Wicket.WebSocket.key) {
 		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId}, resourceName: '${resourceName}',
-			baseUrl: '${baseUrl}', contextPath: '${contextPath}' });
+			baseUrl: '${baseUrl}', contextPath: '${contextPath}', appName: '${applicationName}' });
 		Wicket.WebSocket.createDefaultConnection();
 	}
 })();

@@ -101,6 +101,9 @@ public class BaseWebSocketBehavior extends Behavior
 		String contextPath = component.getRequest().getContextPath();
 		variables.put("contextPath", contextPath);
 
+		// preserve the application name for JSR356 based impl
+		variables.put("applicationName", component.getApplication().getName());
+
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
 
 		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import java.lang.reflect.Method;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
@@ -80,19 +78,6 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 */
 	private static final int NO_PAGE_ID = -1;
 
-	private static final Method GET_FILTER_PATH_METHOD;
-	static
-	{
-		try
-		{
-			GET_FILTER_PATH_METHOD = WicketFilter.class.getDeclaredMethod("getFilterPath", new Class[]{});
-		} catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
-		GET_FILTER_PATH_METHOD.setAccessible(true);
-	}
-
 	private final WebRequest webRequest;
 	private final int pageId;
 	private final String resourceName;
@@ -133,24 +118,11 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.baseUrl = Url.parse(baseUrl);
 
 		WicketFilter wicketFilter = application.getWicketFilter();
-		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request), getFilterPath(wicketFilter));
+		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request), wicketFilter.getFilterPath());
 
 		this.application = Args.notNull(application, "application");
 		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
-	}
-
-	private String getFilterPath(WicketFilter wicketFilter)
-	{
-		String filterPath;
-		try
-		{
-			filterPath = (String) GET_FILTER_PATH_METHOD.invoke(wicketFilter);
-		} catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
-		return filterPath;
 	}
 
 	@Override
