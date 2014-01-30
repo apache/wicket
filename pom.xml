@@ -709,7 +709,6 @@
 					<configuration>
 						<useDefaultManifestFile>true</useDefaultManifestFile>
 						<archive>
-							<index>true</index>
 							<manifest>
 								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
