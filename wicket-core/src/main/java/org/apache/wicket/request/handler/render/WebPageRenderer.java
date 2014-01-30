@@ -207,7 +207,7 @@ public class WebPageRenderer extends PageRenderer
 								.isPageStateless()) //
 						|| (targetUrl.equals(currentUrl) && isRedirectToRender()) //
 						) //
-				|| shouldPreserveClientUrl) //
+				|| (shouldPreserveClientUrl && getRedirectPolicy() != RedirectPolicy.ALWAYS_REDIRECT)) //
 		) //
 		{
 			// if the policy is never to redirect
