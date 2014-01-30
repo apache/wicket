@@ -28,6 +28,9 @@ import javax.websocket.HandshakeResponse;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A ServerEndpointConfig that uses custom Configurator to collect
  * all available information from the passed HandshakeRequest
@@ -107,6 +110,8 @@ class WicketServerEndpointConfig implements ServerEndpointConfig
 	 */
 	private static class JavaxWebSocketConfigurator extends ServerEndpointConfig.Configurator
 	{
+		private static final Logger LOG = LoggerFactory.getLogger(JavaxWebSocketConfigurator.class);
+
 		private final ServerEndpointConfig.Configurator delegate;
 
 		public JavaxWebSocketConfigurator(ServerEndpointConfig.Configurator delegate)
@@ -123,12 +128,14 @@ class WicketServerEndpointConfig implements ServerEndpointConfig
 
 			Map<String, Object> userProperties = sec.getUserProperties();
 			Object httpSession = request.getHttpSession();
+			LOG.trace("httpSession: {}", httpSession);
 			if (httpSession != null)
 			{
 				userProperties.put("session", httpSession);
 			}
 
 			Map<String, List<String>> headers = request.getHeaders();
+			LOG.trace("headers: {}", headers);
 			if (headers != null)
 			{
 				userProperties.put("headers", headers);
@@ -136,6 +143,7 @@ class WicketServerEndpointConfig implements ServerEndpointConfig
 
 
 			Map<String, List<String>> parameterMap = request.getParameterMap();
+			LOG.trace("parameterMap: {}", parameterMap);
 			if (parameterMap != null)
 			{
 				userProperties.put("parameterMap", parameterMap);
@@ -143,6 +151,7 @@ class WicketServerEndpointConfig implements ServerEndpointConfig
 
 
 			String queryString = request.getQueryString();
+			LOG.trace("queryString: {}", queryString);
 			if (queryString != null)
 			{
 				userProperties.put("queryString", queryString);
@@ -150,12 +159,14 @@ class WicketServerEndpointConfig implements ServerEndpointConfig
 
 
 			URI requestURI = request.getRequestURI();
+			LOG.trace("requestURI: {}", requestURI);
 			if (requestURI != null)
 			{
 				userProperties.put("requestURI", requestURI);
 			}
 
 			Principal userPrincipal = request.getUserPrincipal();
+			LOG.trace("userPrincipal: {}", userPrincipal);
 			if (userPrincipal != null)
 			{
 				userProperties.put("userPrincipal", userPrincipal);
