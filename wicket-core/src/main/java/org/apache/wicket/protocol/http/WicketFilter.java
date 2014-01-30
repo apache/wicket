@@ -558,7 +558,7 @@ public class WicketFilter implements Filter
 	 * 
 	 * @return The configured filterPath.
 	 */
-	protected String getFilterPath()
+	public String getFilterPath()
 	{
 		return filterPath;
 	}
