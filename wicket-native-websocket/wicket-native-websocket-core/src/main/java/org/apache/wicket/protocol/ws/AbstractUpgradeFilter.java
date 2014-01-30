@@ -79,20 +79,20 @@ public class AbstractUpgradeFilter extends WicketFilter
 		String key;
 		String subProtocol = null;
 
-		if (!headerContainsToken(req, "upgrade", "websocket"))
+		if (!headerContainsToken(req, "Upgrade", "websocket"))
 		{
 			return false;
 		}
 
-		if (!headerContainsToken(req, "connection", "upgrade"))
+		if (!headerContainsToken(req, "Connection", "upgrade"))
 		{
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return false;
 		}
 
-		if (!headerContainsToken(req, "sec-websocket-version", "13"))
+		if (!headerContainsToken(req, "Sec-websocket-version", "13"))
 		{
-			resp.setStatus(426);
+			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // http://tools.ietf.org/html/rfc6455#section-4.4
 			resp.setHeader("Sec-WebSocket-Version", "13");
 			return false;
 		}

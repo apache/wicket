@@ -47,12 +47,13 @@
 				url = protocol + '//' + document.location.host + Wicket.WebSocket.contextPath + '/wicket/websocket';
 
 				if (Wicket.WebSocket.pageId !== false) {
-					url += '?pageId=' + Wicket.WebSocket.pageId;
+					url += '?pageId=' + encodeURIComponent(Wicket.WebSocket.pageId);
 				} else if (Wicket.WebSocket.resourceName) {
-					url += '?resourceName=' + Wicket.WebSocket.resourceName;
+					url += '?resourceName=' + encodeURIComponent(Wicket.WebSocket.resourceName);
 				}
 
-				url += '&wicket-ajax-baseurl=' + Wicket.WebSocket.baseUrl;
+				url += '&wicket-ajax-baseurl=' + encodeURIComponent(Wicket.WebSocket.baseUrl);
+				url += '&wicket-app-name=' + encodeURIComponent(Wicket.WebSocket.appName);
 				self.ws = new WebSocket(url);
 
 				self.ws.onopen = function (evt) {

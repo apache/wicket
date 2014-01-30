@@ -68,31 +68,24 @@ public class ServletRequestCopy implements HttpServletRequest
 		HttpSession session = request.getSession(true);
 		httpSession = new HttpSessionCopy(session);
 
-		Enumeration<String> e = request.getHeaderNames();
 		String s;
-		while (e.hasMoreElements()) {
+		Enumeration<String> e = request.getHeaderNames();
+		while (e != null && e.hasMoreElements()) {
 			s = e.nextElement();
 			headers.put(s, request.getHeader(s));
 		}
 
 		e = request.getAttributeNames();
-		while (e.hasMoreElements()) {
+		while (e != null && e.hasMoreElements()) {
 			s = e.nextElement();
 			attributes.put(s, request.getAttribute(s));
 		}
 
 		e = request.getParameterNames();
-		while (e.hasMoreElements()) {
+		while (e != null && e.hasMoreElements()) {
 			s = e.nextElement();
 			parameters.put(s, request.getParameterValues(s));
 		}
-	}
-
-	public void destroy() {
-		attributes.clear();
-		headers.clear();
-		parameters.clear();
-		httpSession.destroy();
 	}
 
 	@Override

@@ -86,12 +86,14 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		try
 		{
 			GET_FILTER_PATH_METHOD = WicketFilter.class.getDeclaredMethod("getFilterPath", new Class[]{});
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}
 		GET_FILTER_PATH_METHOD.setAccessible(true);
 	}
+
 
 	private final WebRequest webRequest;
 	private final int pageId;
@@ -146,12 +148,14 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		try
 		{
 			filterPath = (String) GET_FILTER_PATH_METHOD.invoke(wicketFilter);
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}
 		return filterPath;
 	}
+
 
 	@Override
 	public void onMessage(final String message)
