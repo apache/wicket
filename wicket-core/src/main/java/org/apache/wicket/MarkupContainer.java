@@ -193,10 +193,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		for (Component child : childs)
 		{
-			if (child == null)
-			{
-				throw new IllegalArgumentException("argument child must be not null");
-			}
+			Args.notNull(child, "child");
 
 			checkHierarchyChange(child);
 
@@ -269,10 +266,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public boolean contains(final Component component, final boolean recurse)
 	{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("argument component may not be null");
-		}
+		Args.notNull(component, "component");
 
 		if (recurse)
 		{

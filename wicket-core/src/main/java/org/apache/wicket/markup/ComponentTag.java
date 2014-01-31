@@ -30,6 +30,7 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
@@ -178,10 +179,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final void addBehavior(final Behavior behavior)
 	{
-		if (behavior == null)
-		{
-			throw new IllegalArgumentException("Argument [behavior] cannot be null");
-		}
+		Args.notNull(behavior, "behavior");
 
 		if (behaviors == null)
 		{
