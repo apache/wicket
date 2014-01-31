@@ -1402,7 +1402,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					if (((WicketTag)tag).isChildTag())
 					{
 						markupStream.throwMarkupException("Found " + tag.toString() +
-							" but no <wicket:extend>");
+							" but no <wicket:extend>. Container: " + toString());
 					}
 					else
 					{
@@ -1411,14 +1411,15 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 							". It might be that no resolver has been registered to handle this special tag. " +
 							" But it also could be that you declared wicket:id=" + id +
 							" in your markup, but that you either did not add the " +
-							"component to your page at all, or that the hierarchy does not match.");
+							"component to your page at all, or that the hierarchy does not match. " +
+							"Container: " + toString());
 					}
 				}
 
 				List<String> names = findSimilarComponents(id);
 
 				// No one was able to handle the component id
-				StringBuffer msg = new StringBuffer(500);
+				StringBuilder msg = new StringBuilder(500);
 				msg.append("Unable to find component with id '");
 				msg.append(id);
 				msg.append("' in ");
@@ -1429,7 +1430,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				msg.append(id);
 				msg.append("'.\n\tFound with similar names: '");
 				msg.append(Strings.join("', ", names));
-				msg.append("'");
+				msg.append('\'');
 
 				log.error(msg.toString());
 				markupStream.throwMarkupException(msg.toString());
