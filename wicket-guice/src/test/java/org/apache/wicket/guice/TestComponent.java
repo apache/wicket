@@ -50,6 +50,14 @@ public class TestComponent extends Component implements TestComponentInterface
 	@Inject
 	private Map<String, String> injectedTypeLiteralField;
 
+	@Inject()
+	@Named("named1")
+	private String named1;
+
+	@Inject()
+	@Named("named2")
+	private String named2;
+
 	private final TestNoComponent noComponent;
 
 	/**
@@ -109,6 +117,18 @@ public class TestComponent extends Component implements TestComponentInterface
 	public String getInjectedOptionalField()
 	{
 		return injectedOptionalField;
+	}
+
+	@Override
+	public String getNamed1()
+	{
+		return named1;
+	}
+
+	@Override
+	public String getNamed2()
+	{
+		return named2;
 	}
 
 	/**

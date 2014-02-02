@@ -20,6 +20,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import javax.inject.Qualifier;
+
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
 import org.apache.wicket.WicketRuntimeException;
@@ -120,7 +122,8 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		// Work out if we have a BindingAnnotation on this parameter.
 		for (Annotation annotation : annotations)
 		{
-			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null)
+			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null ||
+				annotation.annotationType().getAnnotation(Qualifier.class) != null)
 			{
 				if (bindingAnnotation != null)
 				{
