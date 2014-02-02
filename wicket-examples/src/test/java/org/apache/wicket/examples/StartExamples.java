@@ -37,10 +37,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class StartExamples
 {
 	/**
-	 * Used for logging.
-	 */
-
-	/**
 	 * Main function, starts the jetty server.
 	 * 
 	 * @param args
