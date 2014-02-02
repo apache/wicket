@@ -289,18 +289,54 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
+	 * Only applies for event behaviors. Returns whether the behavior should prevent the default event
 	 * handler to be invoked. For example if the behavior is attached to a link and
-	 * {@link #isPreventDefault()} returns <code>false</code> (which is default value), the link's
+	 * isPreventDefault() returns <code>true</code>, the link's
 	 * URL will not be followed. If the Ajax behavior is attached to a checkbox or a radio button
 	 * then the default behavior should be allowed to actually check the box or radio button, i.e.
-	 * this method should return <code>true</code>.
+	 * this method should return <code>false</code>.
 	 * 
-	 * @return {@code true} if the default event handler should be invoked, {@code false} otherwise.
+	 * @return {@code false} if the default event handler should be invoked
 	 */
 	public boolean isPreventDefault()
 	{
 		return preventDefault;
+	}
+
+	/**
+	 * Only applies for event behaviors. Determines whether the behavior should prevent the default
+	 * event handler to be invoked.
+	 *
+	 * @see #isPreventDefault()
+	 *
+	 * @param preventDefault
+	 * @return {@code this} object for chaining
+	 * @see #isPreventDefault()
+	 */
+	public AjaxRequestAttributes setPreventDefault(boolean preventDefault)
+	{
+		this.preventDefault = preventDefault;
+		return this;
+	}
+
+	/**
+	 * @return {@code this} object for chaining
+	 * @deprecated Use #setPreventDefault() instead
+	 */
+	@Deprecated
+	public AjaxRequestAttributes setAllowDefault(boolean allowDefault)
+	{
+		this.preventDefault = !allowDefault;
+		return this;
+	}
+
+	/**
+	 * @deprecated Use #isPreventDefault() instead
+	 */
+	@Deprecated
+	public boolean isAllowDefault()
+	{
+		return !preventDefault;
 	}
 
 	/**
@@ -310,22 +346,6 @@ public final class AjaxRequestAttributes
 	public EventPropagation getEventPropagation()
 	{
 		return eventPropagation;
-	}
-
-	/**
-	 * Only applies for event behaviors. Determines whether the behavior should allow the default
-	 * event handler to be invoked.
-	 * 
-	 * @see #isPreventDefault()
-	 * 
-	 * @param preventDefault
-	 * @return {@code this} object for chaining
-	 * @see #isPreventDefault()
-	 */
-	public AjaxRequestAttributes setPreventDefault(boolean preventDefault)
-	{
-		this.preventDefault = preventDefault;
-		return this;
 	}
 
 	/**
