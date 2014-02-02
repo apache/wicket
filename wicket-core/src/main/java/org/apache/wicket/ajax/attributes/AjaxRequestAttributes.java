@@ -242,7 +242,7 @@ public final class AjaxRequestAttributes
 	{
 		if (extraParameters == null)
 		{
-			extraParameters = new HashMap<String, Object>();
+			extraParameters = new HashMap<>();
 		}
 		return extraParameters;
 	}
@@ -283,7 +283,7 @@ public final class AjaxRequestAttributes
 	{
 		if (dynamicExtraParameters == null)
 		{
-			dynamicExtraParameters = new ArrayList<CharSequence>();
+			dynamicExtraParameters = new ArrayList<>();
 		}
 		return dynamicExtraParameters;
 	}
