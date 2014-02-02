@@ -16,13 +16,17 @@
  */
 package org.apache.wicket.guice;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Named;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.mock.MockApplication;
@@ -31,6 +35,7 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.util.lang.Args;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -83,6 +88,12 @@ public class GuiceInjectorTest extends Assert
 							return strings;
 						}
 					});
+
+					binder.bind(String.class).annotatedWith(Names.named("named1")).toInstance("NAMED_1");
+					binder.bind(String.class).annotatedWith(Names.named("named2")).toInstance("NAMED_2");
+
+					binder.bind(String.class).annotatedWith(new Jsr330Named("named1")).toInstance("NAMED_1");
+					binder.bind(String.class).annotatedWith(new Jsr330Named("named2")).toInstance("NAMED_2");
 				}
 
 			});
@@ -125,6 +136,9 @@ public class GuiceInjectorTest extends Assert
 
 		assertEquals(ITestService.RESULT,
 			component.getInjectedTypeLiteralField().get(ITestService.RESULT));
+
+		assertEquals("NAMED_1", component.getNamed1());
+		assertEquals("NAMED_2", component.getNamed2());
 	}
 
 	protected TestNoComponentInterface newTestNoComponent()
@@ -135,5 +149,30 @@ public class GuiceInjectorTest extends Assert
 	protected TestComponentInterface newTestComponent(String id)
 	{
 		return new TestComponent(id);
+	}
+
+	/**
+	 * Helper class to make binding of an instance of javax.inject.Named less verbose
+	 */
+	private static class Jsr330Named implements Named
+	{
+		private final String name;
+
+		private Jsr330Named(String name)
+		{
+			this.name = name;
+		}
+
+		@Override
+		public String value()
+		{
+			return name;
+		}
+
+		@Override
+		public Class<? extends Annotation> annotationType()
+		{
+			return Named.class;
+		}
 	}
 }
