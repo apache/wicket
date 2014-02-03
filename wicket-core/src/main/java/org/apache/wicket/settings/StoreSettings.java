@@ -79,10 +79,12 @@ public class StoreSettings
 	 * @param inmemoryCacheSize
 	 *            the maximum number of page instances which will be held in the application scoped
 	 *            cache
+	 * @return {@code this} object for chaining
 	 */
-	public void setInmemoryCacheSize(int inmemoryCacheSize)
+	public StoreSettings setInmemoryCacheSize(int inmemoryCacheSize)
 	{
 		this.inmemoryCacheSize = inmemoryCacheSize;
+		return this;
 	}
 
 	/**
@@ -103,10 +105,12 @@ public class StoreSettings
 	 * @param maxSizePerSession
 	 *            the maximum size of the file where page instances are stored per session. In
 	 *            bytes.
+	 * @return {@code this} object for chaining
 	 */
-	public void setMaxSizePerSession(final Bytes maxSizePerSession)
+	public StoreSettings setMaxSizePerSession(final Bytes maxSizePerSession)
 	{
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
+		return this;
 	}
 
 	/**
@@ -146,10 +150,12 @@ public class StoreSettings
 	 *
 	 * @param fileStoreFolder
 	 *            the new location
+	 * @return {@code this} object for chaining
 	 */
-	public void setFileStoreFolder(final File fileStoreFolder)
+	public StoreSettings setFileStoreFolder(final File fileStoreFolder)
 	{
 		this.fileStoreFolder = Args.notNull(fileStoreFolder, "fileStoreFolder");
+		return this;
 	}
 
 	/**
@@ -167,8 +173,9 @@ public class StoreSettings
 	 * @param queueCapacity
 	 *            the capacity of the queue
 	 * @see org.apache.wicket.pageStore.AsynchronousDataStore
+	 * @return {@code this} object for chaining
 	 */
-	public void setAsynchronousQueueCapacity(int queueCapacity)
+	public StoreSettings setAsynchronousQueueCapacity(int queueCapacity)
 	{
 		if (queueCapacity < 1)
 		{
@@ -176,6 +183,7 @@ public class StoreSettings
 				"The capacity of the asynchronous queue should be at least 1.");
 		}
 		asynchronousQueueCapacity = queueCapacity;
+		return this;
 	}
 
 	/**
@@ -185,10 +193,12 @@ public class StoreSettings
 	 *
 	 * @param async
 	 *            {@code true} to make it asynchronous, {@code false} - otherwise
+	 * @return {@code this} object for chaining
 	 */
-	public void setAsynchronous(boolean async)
+	public StoreSettings setAsynchronous(boolean async)
 	{
 		isAsynchronous = async;
+		return this;
 	}
 
 	/**

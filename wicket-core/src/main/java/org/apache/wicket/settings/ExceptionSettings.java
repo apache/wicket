@@ -139,10 +139,12 @@ public class ExceptionSettings
 	 *
 	 * @param unexpectedExceptionDisplay
 	 *            The unexpectedExceptionDisplay to set.
+	 * @return {@code this} object for chaining
 	 */
-	public void setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay)
+	public ExceptionSettings setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay)
 	{
 		this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
+		return this;
 	}
 
 	/**
@@ -157,21 +159,25 @@ public class ExceptionSettings
 	 * Sets strategy used to handle errors during Ajax request processing
 	 *
 	 * @param errorHandlingStrategyDuringAjaxRequests
+	 * @return {@code this} object for chaining
 	 */
-	public void setAjaxErrorHandlingStrategy(
+	public ExceptionSettings setAjaxErrorHandlingStrategy(
 		AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests)
 	{
 		this.errorHandlingStrategyDuringAjaxRequests = errorHandlingStrategyDuringAjaxRequests;
+		return this;
 	}
 
 	/**
 	 * Sets the strategy to use for dumping stack traces of live threads in the JVM.
 	 *
 	 * @param strategy
+	 * @return {@code this} object for chaining
 	 */
-	public void setThreadDumpStrategy(ThreadDumpStrategy strategy)
+	public ExceptionSettings setThreadDumpStrategy(ThreadDumpStrategy strategy)
 	{
 		threadDumpStrategy = Args.notNull(strategy, "strategy");
+		return this;
 	}
 
 	/**

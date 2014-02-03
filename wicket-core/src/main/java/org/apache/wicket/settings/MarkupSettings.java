@@ -148,10 +148,12 @@ public class MarkupSettings
 	 *            The automaticLinking to set.
 	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver
 	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler
+	 * @return {@code this} object for chaining
 	 */
-	public void setAutomaticLinking(boolean automaticLinking)
+	public MarkupSettings setAutomaticLinking(boolean automaticLinking)
 	{
 		this.automaticLinking = automaticLinking;
+		return this;
 	}
 
 	/**
@@ -169,10 +171,12 @@ public class MarkupSettings
 	 *
 	 * @param compressWhitespace
 	 *            The compressWhitespace to set.
+	 * @return {@code this} object for chaining
 	 */
-	public void setCompressWhitespace(final boolean compressWhitespace)
+	public MarkupSettings setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
+		return this;
 	}
 
 	/**
@@ -181,21 +185,25 @@ public class MarkupSettings
 	 *
 	 * @since 1.1
 	 * @param encoding
+	 * @return {@code this} object for chaining
 	 */
-	public void setDefaultMarkupEncoding(final String encoding)
+	public MarkupSettings setDefaultMarkupEncoding(final String encoding)
 	{
 		defaultMarkupEncoding = encoding;
+		return this;
 	}
 
 	/**
 	 * Set a new markup factory
 	 *
 	 * @param factory
+	 * @return {@code this} object for chaining
 	 */
-	public void setMarkupFactory(final MarkupFactory factory)
+	public MarkupSettings setMarkupFactory(final MarkupFactory factory)
 	{
 		Args.notNull(factory, "markup factory");
 		markupFactory = factory;
+		return this;
 	}
 
 	/**
@@ -203,10 +211,12 @@ public class MarkupSettings
 	 *
 	 * @param stripComments
 	 *            True to strip markup comments from rendered pages
+	 * @return {@code this} object for chaining
 	 */
-	public void setStripComments(boolean stripComments)
+	public MarkupSettings setStripComments(boolean stripComments)
 	{
 		this.stripComments = stripComments;
+		return this;
 	}
 
 	/**
@@ -214,10 +224,12 @@ public class MarkupSettings
 	 *
 	 * @param stripWicketTags
 	 *            whether to remove wicket tags from the output
+	 * @return {@code this} object for chaining
 	 */
-	public void setStripWicketTags(boolean stripWicketTags)
+	public MarkupSettings setStripWicketTags(boolean stripWicketTags)
 	{
 		this.stripWicketTags = stripWicketTags;
+		return this;
 	}
 
 	/**
@@ -225,9 +237,11 @@ public class MarkupSettings
 	 *
 	 * @since 1.3
 	 * @param throwException
+	 * @return {@code this} object for chaining
 	 */
-	public void setThrowExceptionOnMissingXmlDeclaration(boolean throwException)
+	public MarkupSettings setThrowExceptionOnMissingXmlDeclaration(boolean throwException)
 	{
 		throwExceptionOnMissingXmlDeclaration = throwException;
+		return this;
 	}
 }

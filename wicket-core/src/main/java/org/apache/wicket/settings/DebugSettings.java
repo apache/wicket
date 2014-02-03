@@ -118,20 +118,24 @@ public class DebugSettings
 	 * Enables or disables ajax debug mode.
 	 *
 	 * @param enable
+	 * @return {@code this} object for chaining
 	 */
-	public void setAjaxDebugModeEnabled(boolean enable)
+	public DebugSettings setAjaxDebugModeEnabled(boolean enable)
 	{
 		ajaxDebugModeEnabled = enable;
+		return this;
 	}
 
 	/**
 	 * Sets componentUseCheck debug settings
 	 *
 	 * @param componentUseCheck
+	 * @return {@code this} object for chaining
 	 */
-	public void setComponentUseCheck(final boolean componentUseCheck)
+	public DebugSettings setComponentUseCheck(final boolean componentUseCheck)
 	{
 		this.componentUseCheck = componentUseCheck;
+		return this;
 	}
 
 	/**
@@ -141,10 +145,12 @@ public class DebugSettings
 	 * applications.
 	 *
 	 * @param enable
+	 * @return {@code this} object for chaining
 	 */
-	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable)
+	public DebugSettings setLinePreciseReportingOnAddComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnAddComponentEnabled = enable;
+		return this;
 	}
 
 	/**
@@ -153,10 +159,12 @@ public class DebugSettings
 	 * significant decrease in performance, do not use in customer facing applications.
 	 *
 	 * @param enable
+	 * @return {@code this} object for chaining
 	 */
-	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
+	public DebugSettings setLinePreciseReportingOnNewComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnNewComponentEnabled = enable;
+		return this;
 	}
 
 	/**
@@ -164,10 +172,12 @@ public class DebugSettings
 	 * class name. (Useful for determining which part of page belongs to which markup file).
 	 *
 	 * @param enable
+	 * @return {@code this} object for chaining
 	 */
-	public void setOutputMarkupContainerClassName(boolean enable)
+	public DebugSettings setOutputMarkupContainerClassName(boolean enable)
 	{
 		outputMarkupContainerClassName = enable;
+		return this;
 	}
 
 	/**
@@ -185,20 +195,24 @@ public class DebugSettings
 	 * attribute of the component tag. This can be useful for debugging and automating tests.
 	 *
 	 * @param outputComponentPath
+	 * @return {@code this} object for chaining
 	 */
-	public void setOutputComponentPath(boolean outputComponentPath)
+	public DebugSettings setOutputComponentPath(boolean outputComponentPath)
 	{
 		this.outputComponentPath = outputComponentPath;
+		return this;
 	}
 
 	/**
 	 * Enables all of the panels and pages, etc, from wicket-devutils package.
 	 *
 	 * @param enable
+	 * @return {@code this} object for chaining
 	 */
-	public void setDevelopmentUtilitiesEnabled(boolean enable)
+	public DebugSettings setDevelopmentUtilitiesEnabled(boolean enable)
 	{
 		developmentUtilitiesEnabled = enable;
+		return this;
 	}
 
 	/**

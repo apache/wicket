@@ -29,7 +29,7 @@ import org.apache.wicket.util.time.Duration;
  * <p>
  * <i>bufferResponse </i> (defaults to true) - True if the application should buffer responses. This
  * does require some additional memory, but helps keep exception displays accurate because the whole
- * rendering process completes before the page is sent to the user, thus avoiding the possibility of
+ * rendering process completes before the page is sent to the user, thus aRequestCycleSettingsing the possibility of
  * a partially rendered page.
  * <p>
  * <i>renderStrategy </i>- Sets in what way the render part of a request is handled. Basically,
@@ -182,14 +182,16 @@ public class RequestCycleSettings
 	 *
 	 * @param responseFilter
 	 *            The {@link IResponseFilter} that is added
+	 * @return {@code this} object for chaining
 	 */
-	public void addResponseFilter(IResponseFilter responseFilter)
+	public RequestCycleSettings addResponseFilter(IResponseFilter responseFilter)
 	{
 		if (responseFilters == null)
 		{
-			responseFilters = new ArrayList<IResponseFilter>(3);
+			responseFilters = new ArrayList<>(3);
 		}
 		responseFilters.add(responseFilter);
+		return this;
 	}
 
 	/**
@@ -287,10 +289,12 @@ public class RequestCycleSettings
 	 *
 	 * @param bufferResponse
 	 *            {@code true} if the application should buffer response's headers.
+	 * @return {@code this} object for chaining
 	 */
-	public void setBufferResponse(boolean bufferResponse)
+	public RequestCycleSettings setBufferResponse(boolean bufferResponse)
 	{
 		this.bufferResponse = bufferResponse;
+		return this;
 	}
 
 	/**
@@ -313,10 +317,12 @@ public class RequestCycleSettings
 	 *
 	 * @param gatherExtendedBrowserInfo
 	 *            Whether to gather extensive client info
+	 * @return {@code this} object for chaining
 	 */
-	public void setGatherExtendedBrowserInfo(boolean gatherExtendedBrowserInfo)
+	public RequestCycleSettings setGatherExtendedBrowserInfo(boolean gatherExtendedBrowserInfo)
 	{
 		this.gatherExtendedBrowserInfo = gatherExtendedBrowserInfo;
+		return this;
 	}
 
 	/**
@@ -351,10 +357,12 @@ public class RequestCycleSettings
 	 *
 	 * @param renderStrategy
 	 *            the render strategy that should be used by default.
+	 * @return {@code this} object for chaining
 	 */
-	public void setRenderStrategy(RequestCycleSettings.RenderStrategy renderStrategy)
+	public RequestCycleSettings setRenderStrategy(RequestCycleSettings.RenderStrategy renderStrategy)
 	{
 		this.renderStrategy = renderStrategy;
+		return this;
 	}
 
 	/**
@@ -366,11 +374,13 @@ public class RequestCycleSettings
 	 *
 	 * @param encoding
 	 *            The request and response encoding to be used.
+	 * @return {@code this} object for chaining
 	 */
-	public void setResponseRequestEncoding(final String encoding)
+	public RequestCycleSettings setResponseRequestEncoding(final String encoding)
 	{
 		Args.notNull(encoding, "encoding");
 		this.responseRequestEncoding = encoding;
+		return this;
 	}
 
 	/**
@@ -378,11 +388,13 @@ public class RequestCycleSettings
 	 * handled before giving up.
 	 *
 	 * @param timeout
+	 * @return {@code this} object for chaining
 	 */
-	public void setTimeout(Duration timeout)
+	public RequestCycleSettings setTimeout(Duration timeout)
 	{
 		Args.notNull(timeout, "timeout");
 		this.timeout = timeout;
+		return this;
 	}
 
 	/**
@@ -390,10 +402,12 @@ public class RequestCycleSettings
 	 *         giving up.
 	 * @param retries
 	 *      the number of attempts
+	 * @return {@code this} object for chaining
 	 */
-	public void setExceptionRetryCount(int retries)
+	public RequestCycleSettings setExceptionRetryCount(int retries)
 	{
 		this.exceptionRetryCount = retries;
+		return this;
 	}
 
 	/**

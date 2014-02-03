@@ -146,11 +146,13 @@ public class SecuritySettings
 	 *
 	 * @param strategy
 	 *            new authorization strategy
+	 * @return {@code this} object for chaining
 	 */
-	public void setAuthorizationStrategy(IAuthorizationStrategy strategy)
+	public SecuritySettings setAuthorizationStrategy(IAuthorizationStrategy strategy)
 	{
 		Args.notNull(strategy, "strategy");
 		authorizationStrategy = strategy;
+		return this;
 	}
 
 	/**
@@ -158,11 +160,13 @@ public class SecuritySettings
 	 * the first call is cached.
 	 *
 	 * @param cryptFactory
+	 * @return {@code this} object for chaining
 	 */
-	public void setCryptFactory(ICryptFactory cryptFactory)
+	public SecuritySettings setCryptFactory(ICryptFactory cryptFactory)
 	{
 		Args.notNull(cryptFactory, "cryptFactory");
 		this.cryptFactory = cryptFactory;
+		return this;
 	}
 
 	/**
@@ -172,21 +176,27 @@ public class SecuritySettings
 	 *
 	 * @param enforce
 	 *            Whether mounts should be enforced
+	 * @return {@code this} object for chaining
 	 */
-	public void setEnforceMounts(boolean enforce)
+	public SecuritySettings setEnforceMounts(boolean enforce)
 	{
 		enforceMounts = enforce;
+		return this;
 	}
 
 	/**
 	 * @param listener
 	 *            The listener to set
 	 * @see IUnauthorizedComponentInstantiationListener
+	 * @return {@code this} object for chaining
 	 */
-	public void setUnauthorizedComponentInstantiationListener(
+	public SecuritySettings setUnauthorizedComponentInstantiationListener(
 		IUnauthorizedComponentInstantiationListener listener)
 	{
-		this.unauthorizedComponentInstantiationListener = listener == null ? DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER : listener;
+		this.unauthorizedComponentInstantiationListener = listener == null ?
+				DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER :
+				listener;
+		return this;
 	}
 
 	/**
@@ -202,10 +212,14 @@ public class SecuritySettings
 	 *
 	 * @param listener
 	 *          The listener
+	 * @return {@code this} object for chaining
 	 */
-	public void setUnauthorizedResourceRequestListener(IUnauthorizedResourceRequestListener listener)
+	public SecuritySettings setUnauthorizedResourceRequestListener(IUnauthorizedResourceRequestListener listener)
 	{
-		this.unauthorizedResourceRequestListener = listener == null ? DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER : listener;
+		this.unauthorizedResourceRequestListener = listener == null ?
+				DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER :
+				listener;
+		return this;
 	}
 
 	/**
@@ -227,9 +241,11 @@ public class SecuritySettings
 	 *
 	 * @param strategy
 	 *            new authentication strategy
+	 * @return {@code this} object for chaining
 	 */
-	public void setAuthenticationStrategy(final IAuthenticationStrategy strategy)
+	public SecuritySettings setAuthenticationStrategy(final IAuthenticationStrategy strategy)
 	{
 		authenticationStrategy = strategy;
+		return this;
 	}
 }

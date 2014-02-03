@@ -62,10 +62,12 @@ public class RequestLoggerSettings
 	 * Enable/Disable the recording of the session size for every request.
 	 *
 	 * @param record
+	 * @return {@code this} object for chaining
 	 */
-	public void setRecordSessionSize(boolean record)
+	public RequestLoggerSettings setRecordSessionSize(boolean record)
 	{
 		recordSessionSize = record;
+		return this;
 	}
 
 	/**
@@ -73,10 +75,12 @@ public class RequestLoggerSettings
 	 *
 	 * @param enable
 	 *            boolean.
+	 * @return {@code this} object for chaining
 	 */
-	public void setRequestLoggerEnabled(boolean enable)
+	public RequestLoggerSettings setRequestLoggerEnabled(boolean enable)
 	{
 		requestLoggerEnabled = enable;
+		return this;
 	}
 
 	/**
@@ -85,9 +89,11 @@ public class RequestLoggerSettings
 	 * size)
 	 *
 	 * @param size
+	 * @return {@code this} object for chaining
 	 */
-	public void setRequestsWindowSize(int size)
+	public RequestLoggerSettings setRequestsWindowSize(int size)
 	{
 		requestsWindowSize = size;
+		return this;
 	}
 }

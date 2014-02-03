@@ -58,10 +58,12 @@ public class JavaScriptLibrarySettings
 	 * @param jQueryReference
 	 *            a reference to the JQuery JavaScript library used as backing library for
 	 *            wicket-event and wicket-ajax
+	 * @return {@code this} object for chaining
 	 */
-	public void setJQueryReference(ResourceReference jQueryReference)
+	public JavaScriptLibrarySettings setJQueryReference(ResourceReference jQueryReference)
 	{
 		this.jQueryReference = Args.notNull(jQueryReference, "jQueryReference");
+		return this;
 	}
 
 	/**
@@ -75,10 +77,12 @@ public class JavaScriptLibrarySettings
 	/**
 	 * @param wicketEventReference
 	 *            a reference to the implementation of wicket-event.js
+	 * @return {@code this} object for chaining
 	 */
-	public void setWicketEventReference(ResourceReference wicketEventReference)
+	public JavaScriptLibrarySettings setWicketEventReference(ResourceReference wicketEventReference)
 	{
 		this.wicketEventReference = Args.notNull(wicketEventReference, "wicketEventReference");
+		return this;
 	}
 
 	/**
@@ -92,10 +96,12 @@ public class JavaScriptLibrarySettings
 	/**
 	 * @param wicketAjaxReference
 	 *            a reference to the implementation of wicket-ajax.js
+	 * @return {@code this} object for chaining
 	 */
-	public void setWicketAjaxReference(ResourceReference wicketAjaxReference)
+	public JavaScriptLibrarySettings setWicketAjaxReference(ResourceReference wicketAjaxReference)
 	{
 		this.wicketAjaxReference = Args.notNull(wicketAjaxReference, "wicketAjaxReference");
+		return this;
 	}
 
 	/**
@@ -111,11 +117,13 @@ public class JavaScriptLibrarySettings
 	/**
 	 * @param wicketAjaxDebugReference
 	 *            a reference to the implementation of wicket-ajax-debug.js
+	 * @return {@code this} object for chaining
 	 */
-	public void setWicketAjaxDebugReference(ResourceReference wicketAjaxDebugReference)
+	public JavaScriptLibrarySettings setWicketAjaxDebugReference(ResourceReference wicketAjaxDebugReference)
 	{
 		this.wicketAjaxDebugReference = Args.notNull(wicketAjaxDebugReference,
 			"wicketAjaxDebugReference");
+		return this;
 	}
 
 }

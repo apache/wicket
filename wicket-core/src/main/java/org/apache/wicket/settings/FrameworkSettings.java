@@ -101,28 +101,32 @@ public class FrameworkSettings implements IEventDispatcher
 	 *
 	 * @param detachListener
 	 *            listener or <code>null</code> to remove
+	 * @return {@code this} object for chaining
 	 */
-	public void setDetachListener(IDetachListener detachListener)
+	public FrameworkSettings setDetachListener(IDetachListener detachListener)
 	{
 		this.detachListener = detachListener;
+		return this;
 	}
 
 	/**
 	 * Registers a new event dispatcher
 	 *
 	 * @param dispatcher
+	 * @return {@code this} object for chaining
 	 */
-	public void add(IEventDispatcher dispatcher)
+	public FrameworkSettings add(IEventDispatcher dispatcher)
 	{
 		Args.notNull(dispatcher, "dispatcher");
 		if (eventDispatchers == null)
 		{
-			eventDispatchers = new ArrayList<IEventDispatcher>();
+			eventDispatchers = new ArrayList<>();
 		}
 		if (!eventDispatchers.contains(dispatcher))
 		{
 			eventDispatchers.add(dispatcher);
 		}
+		return this;
 	}
 
 	/**
@@ -163,10 +167,12 @@ public class FrameworkSettings implements IEventDispatcher
 	 *
 	 * @param serializer
 	 *            the {@link ISerializer} to use
+	 * @return {@code this} object for chaining
 	 */
-	public void setSerializer(ISerializer serializer)
+	public FrameworkSettings setSerializer(ISerializer serializer)
 	{
 		this.serializer = Args.notNull(serializer, "serializer");
+		return this;
 	}
 
 	/**

@@ -130,8 +130,9 @@ public class ApplicationSettings
 	 *
 	 * @param accessDeniedPage
 	 *            The accessDeniedPage to set.
+	 * @return {@code this} object for chaining
 	 */
-	public void setAccessDeniedPage(Class<? extends Page> accessDeniedPage)
+	public ApplicationSettings setAccessDeniedPage(Class<? extends Page> accessDeniedPage)
 	{
 		if (accessDeniedPage == null)
 		{
@@ -140,6 +141,7 @@ public class ApplicationSettings
 		checkPageClass(accessDeniedPage);
 
 		this.accessDeniedPage = new WeakReference<Class<? extends Page>>(accessDeniedPage);
+		return this;
 	}
 
 	/**
@@ -147,10 +149,12 @@ public class ApplicationSettings
 	 *
 	 * @param defaultClassResolver
 	 *            The default class resolver
+	 * @return {@code this} object for chaining
 	 */
-	public void setClassResolver(final IClassResolver defaultClassResolver)
+	public ApplicationSettings setClassResolver(final IClassResolver defaultClassResolver)
 	{
 		classResolver = defaultClassResolver;
+		return this;
 	}
 
 	/**
@@ -159,10 +163,12 @@ public class ApplicationSettings
 	 *
 	 * @param defaultMaximumUploadSize
 	 *            the default maximum size for uploads
+	 * @return {@code this} object for chaining
 	 */
-	public void setDefaultMaximumUploadSize(Bytes defaultMaximumUploadSize)
+	public ApplicationSettings setDefaultMaximumUploadSize(Bytes defaultMaximumUploadSize)
 	{
 		this.defaultMaximumUploadSize = defaultMaximumUploadSize;
+		return this;
 	}
 
 	/**
@@ -170,13 +176,15 @@ public class ApplicationSettings
 	 *
 	 * @param internalErrorPage
 	 *            The internalErrorPage to set.
+	 * @return {@code this} object for chaining
 	 */
-	public void setInternalErrorPage(final Class<? extends Page> internalErrorPage)
+	public ApplicationSettings setInternalErrorPage(final Class<? extends Page> internalErrorPage)
 	{
 		Args.notNull(internalErrorPage, "internalErrorPage");
 		checkPageClass(internalErrorPage);
 
 		this.internalErrorPage = new WeakReference<Class<? extends Page>>(internalErrorPage);
+		return this;
 	}
 
 	/**
@@ -184,8 +192,9 @@ public class ApplicationSettings
 	 *
 	 * @param pageExpiredErrorPage
 	 *            The pageExpiredErrorPage to set.
+	 * @return {@code this} object for chaining
 	 */
-	public void setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage)
+	public ApplicationSettings setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage)
 	{
 		if (pageExpiredErrorPage == null)
 		{
@@ -194,6 +203,7 @@ public class ApplicationSettings
 		checkPageClass(pageExpiredErrorPage);
 
 		this.pageExpiredErrorPage = new WeakReference<Class<? extends Page>>(pageExpiredErrorPage);
+		return this;
 	}
 
 	/**
@@ -201,10 +211,12 @@ public class ApplicationSettings
 	 *
 	 * @param uploadProgressUpdatesEnabled
 	 *            if true upload progress monitoring is enabled
+	 * @return {@code this} object for chaining
 	 */
-	public void setUploadProgressUpdatesEnabled(boolean uploadProgressUpdatesEnabled)
+	public ApplicationSettings setUploadProgressUpdatesEnabled(boolean uploadProgressUpdatesEnabled)
 	{
 		this.uploadProgressUpdatesEnabled = uploadProgressUpdatesEnabled;
+		return this;
 	}
 
 	/**
@@ -233,11 +245,13 @@ public class ApplicationSettings
 	 * more details.
 	 *
 	 * @param filter
+	 * @return {@code this} object for chaining
 	 */
-	public void setFeedbackMessageCleanupFilter(IFeedbackMessageFilter filter)
+	public ApplicationSettings setFeedbackMessageCleanupFilter(IFeedbackMessageFilter filter)
 	{
 		Args.notNull(filter, "filter");
 		feedbackMessageCleanupFilter = filter;
+		return this;
 	}
 
 	/**

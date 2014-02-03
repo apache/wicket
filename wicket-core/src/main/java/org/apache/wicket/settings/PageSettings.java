@@ -55,10 +55,12 @@ public class PageSettings
 	 *
 	 * @param resolver
 	 *            The {@link IComponentResolver} that is added
+	 * @return {@code this} object for chaining
 	 */
-	public void addComponentResolver(IComponentResolver resolver)
+	public PageSettings addComponentResolver(IComponentResolver resolver)
 	{
 		componentResolvers.add(resolver);
+		return this;
 	}
 
 	/**
@@ -91,10 +93,12 @@ public class PageSettings
 	 * @param pagesVersionedByDefault
 	 *      a flag that indicates whether pages should increase their page id when
 	 *      their component hierarchy changes somehow.
+	 * @return {@code this} object for chaining
 	 */
-	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
+	public PageSettings setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		versionPagesByDefault = pagesVersionedByDefault;
+		return this;
 	}
 
 	/**
@@ -116,10 +120,12 @@ public class PageSettings
 	 * Sets the recreateMountedPagesAfterExpiry setting
 	 *
 	 * @param recreateMountedPagesAfterExpiry
+	 * @return {@code this} object for chaining
 	 */
-	public void setRecreateMountedPagesAfterExpiry(boolean recreateMountedPagesAfterExpiry)
+	public PageSettings setRecreateMountedPagesAfterExpiry(boolean recreateMountedPagesAfterExpiry)
 	{
 		this.recreateMountedPagesAfterExpiry = recreateMountedPagesAfterExpiry;
+		return this;
 	}
 
 	/**
@@ -141,9 +147,11 @@ public class PageSettings
 	 *          {@code true} if Wicket should execute the listener interface
 	 * @see #setRecreateMountedPagesAfterExpiry(boolean)
 	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerInterfaceAfterExpiry()
+	 * @return {@code this} object for chaining
 	 */
-	public void setCallListenerInterfaceAfterExpiry(boolean callListenerInterfaceAfterExpiry)
+	public PageSettings setCallListenerInterfaceAfterExpiry(boolean callListenerInterfaceAfterExpiry)
 	{
 		this.callListenerInterfaceAfterExpiry = callListenerInterfaceAfterExpiry;
+		return this;
 	}
 }

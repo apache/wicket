@@ -232,10 +232,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *            The name to give to the factory
 	 * @param resourceFactory
 	 *            The resource factory to add
+	 * @return {@code this} object for chaining
 	 */
-	public void addResourceFactory(final String name, IResourceFactory resourceFactory)
+	public ResourceSettings addResourceFactory(final String name, IResourceFactory resourceFactory)
 	{
 		nameToResourceFactory.put(name, resourceFactory);
+		return this;
 	}
 
 	public Localizer getLocalizer()
@@ -337,10 +339,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * Sets the resource watcher
 	 *
 	 * @param watcher
+	 * @return {@code this} object for chaining
 	 */
-	public void setResourceWatcher(IModificationWatcher watcher)
+	public ResourceSettings setResourceWatcher(IModificationWatcher watcher)
 	{
 		resourceWatcher = watcher;
+		return this;
 	}
 
 	/**
@@ -358,10 +362,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param fileUploadCleaner
 	 *            the actual cleaner implementation. Can be <code>null</code>
+	 * @return {@code this} object for chaining
 	 */
-	public void setFileCleaner(IFileCleaner fileUploadCleaner)
+	public ResourceSettings setFileCleaner(IFileCleaner fileUploadCleaner)
 	{
 		fileCleaner = fileUploadCleaner;
+		return this;
 	}
 
 	/**
@@ -390,10 +396,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param localizer
 	 * @since 1.3.0
+	 * @return {@code this} object for chaining
 	 */
-	public void setLocalizer(final Localizer localizer)
+	public ResourceSettings setLocalizer(final Localizer localizer)
 	{
 		this.localizer = localizer;
+		return this;
 	}
 
 	/**
@@ -401,20 +409,24 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param packageResourceGuard
 	 *            The package resource guard
+	 * @return {@code this} object for chaining
 	 */
-	public void setPackageResourceGuard(IPackageResourceGuard packageResourceGuard)
+	public ResourceSettings setPackageResourceGuard(IPackageResourceGuard packageResourceGuard)
 	{
 		this.packageResourceGuard = Args.notNull(packageResourceGuard, "packageResourceGuard");
+		return this;
 	}
 
 	/**
 	 * Set the property factory which will be used to load property files
 	 *
 	 * @param factory
+	 * @return {@code this} object for chaining
 	 */
-	public void setPropertiesFactory(org.apache.wicket.resource.IPropertiesFactory factory)
+	public ResourceSettings setPropertiesFactory(org.apache.wicket.resource.IPropertiesFactory factory)
 	{
 		propertiesFactory = factory;
+		return this;
 	}
 
 	/**
@@ -425,14 +437,16 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param resourceFinders
 	 *            The resourceFinders to set
+	 * @return {@code this} object for chaining
 	 */
-	public void setResourceFinders(final List<IResourceFinder> resourceFinders)
+	public ResourceSettings setResourceFinders(final List<IResourceFinder> resourceFinders)
 	{
 		Args.notNull(resourceFinders, "resourceFinders");
 		this.resourceFinders = resourceFinders;
 
 		// Cause resource locator to get recreated
 		resourceStreamLocator = null;
+		return this;
 	}
 
 	/**
@@ -443,10 +457,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @param resourcePollFrequency
 	 *            Frequency at which to poll resources or <code>null</code> if polling should be
 	 *            disabled
+	 * @return {@code this} object for chaining
 	 */
-	public void setResourcePollFrequency(final Duration resourcePollFrequency)
+	public ResourceSettings setResourcePollFrequency(final Duration resourcePollFrequency)
 	{
 		this.resourcePollFrequency = resourcePollFrequency;
+		return this;
 	}
 
 	/**
@@ -460,24 +476,33 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *            new resource stream locator
 	 *
 	 * @see #getResourceStreamLocator()
+	 * @return {@code this} object for chaining
 	 */
-	public void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator)
+	public ResourceSettings setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator)
 	{
 		this.resourceStreamLocator = resourceStreamLocator;
+		return this;
 	}
 
-	public void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource)
+	/**
+	 * @param throwExceptionOnMissingResource
+	 * @return {@code this} object for chaining
+	 */
+	public ResourceSettings setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource)
 	{
 		this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
+		return this;
 	}
 
 	/**
 	 * @param useDefaultOnMissingResource
 	 *            Whether to use a default value (if available) when a missing resource is requested
+	 * @return {@code this} object for chaining
 	 */
-	public void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
+	public ResourceSettings setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
 	{
 		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
+		return this;
 	}
 
 	/**
@@ -504,11 +529,13 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @see org.apache.wicket.util.time.Duration#NONE
 	 * @see org.apache.wicket.request.http.WebResponse#MAX_CACHE_DURATION
+	 * @return {@code this} object for chaining
 	 */
-	public final void setDefaultCacheDuration(Duration duration)
+	public final ResourceSettings setDefaultCacheDuration(Duration duration)
 	{
 		Args.notNull(duration, "duration");
 		defaultCacheDuration = duration;
+		return this;
 	}
 
 	/**
@@ -532,6 +559,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @param compressor
 	 *            The implementation to be used
 	 * @return The old value
+	 * @return {@code this} object for chaining
 	 */
 	public IJavaScriptCompressor setJavaScriptCompressor(IJavaScriptCompressor compressor)
 	{
@@ -561,6 +589,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @param compressor
 	 *            The implementation to be used
 	 * @return The old value
+	 * @return {@code this} object for chaining
 	 */
 	public ICssCompressor setCssCompressor(ICssCompressor compressor)
 	{
@@ -598,10 +627,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param sequence
 	 *            character sequence which must not be ambiguous within urls
+	 * @return {@code this} object for chaining
 	 */
-	public void setParentFolderPlaceholder(final String sequence)
+	public ResourceSettings setParentFolderPlaceholder(final String sequence)
 	{
 		parentFolderPlaceholder = sequence;
+		return this;
 	}
 
 	/**
@@ -644,8 +675,9 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *            instance of resource caching strategy
 	 *
 	 * @see IResourceCachingStrategy
+	 * @return {@code this} object for chaining
 	 */
-	public void setCachingStrategy(IResourceCachingStrategy strategy)
+	public ResourceSettings setCachingStrategy(IResourceCachingStrategy strategy)
 	{
 		if (strategy == null)
 		{
@@ -654,6 +686,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 					"Please use " + NoOpResourceCachingStrategy.class.getName() + " instead.");
 		}
 		resourceCachingStrategy = strategy;
+		return this;
 	}
 
 	/**
@@ -665,10 +698,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param useMinifiedResources
 	 *            The new value for the setting
+	 * @return {@code this} object for chaining
 	 */
-	public void setUseMinifiedResources(boolean useMinifiedResources)
+	public ResourceSettings setUseMinifiedResources(boolean useMinifiedResources)
 	{
 		this.useMinifiedResources = useMinifiedResources;
+		return this;
 	}
 
 	/**
@@ -696,10 +731,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @param headerItemComparator
 	 *            The comparator used to sort header items, when null, header items will not be
 	 *            sorted.
+	 * @return {@code this} object for chaining
 	 */
-	public void setHeaderItemComparator(Comparator<? super RecordedHeaderItem> headerItemComparator)
+	public ResourceSettings setHeaderItemComparator(Comparator<? super RecordedHeaderItem> headerItemComparator)
 	{
 		this.headerItemComparator = headerItemComparator;
+		return this;
 	}
 
 	/**
@@ -723,9 +760,11 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param encodeJSessionId
 	 *            {@code true} when the jsessionid should be encoded, {@code false} - otherwise
+	 * @return {@code this} object for chaining
 	 */
-	public void setEncodeJSessionId(boolean encodeJSessionId)
+	public ResourceSettings setEncodeJSessionId(boolean encodeJSessionId)
 	{
 		this.encodeJSessionId = encodeJSessionId;
+		return this;
 	}
 }
