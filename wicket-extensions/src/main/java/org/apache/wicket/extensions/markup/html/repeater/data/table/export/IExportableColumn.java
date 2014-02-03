@@ -28,12 +28,10 @@ import org.apache.wicket.model.IModel;
  *           The type of each row in the table.
  * @param <S>
  *           The type of the sort property of the table.
- * @param <D>
- *           The type of the data displayed by this column.
  * @see IDataExporter
  * @see ExportToolbar
  */
-public interface IExportableColumn<T, S, D> extends IColumn<T, S>
+public interface IExportableColumn<T, S> extends IColumn<T, S>
 {
 	/**
 	 * Returns an {@link IModel} of the data displayed by this column for the {@code rowModel} provided.
@@ -42,7 +40,7 @@ public interface IExportableColumn<T, S, D> extends IColumn<T, S>
 	 *      An {@link IModel} of the row data.
 	 * @return an {@link IModel} of the data displayed by this column for the {@code rowModel} provided.
 	 */
-	IModel<D> getDataModel(IModel<T> rowModel);
+	IModel<?> getDataModel(IModel<T> rowModel);
 
 	/**
 	 * Returns a model of the column header. The content of this model is used as a heading for the column

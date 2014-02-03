@@ -276,6 +276,8 @@ public class ExportToolbar extends AbstractToolbar
 		 *
 		 * @param dataExporter
 		 *      The {@link IDataExporter} to use to export data.
+		 * @param dataTable
+		 *      The {@link DataTable} from which to export.
 		 */
 		public DataExportResourceStreamWriter(IDataExporter dataExporter, DataTable<?, ?> dataTable)
 		{
@@ -332,12 +334,12 @@ public class ExportToolbar extends AbstractToolbar
 			throws IOException
 		{
 			IDataProvider<T> dataProvider = dataTable.getDataProvider();
-			List<IExportableColumn<T, ?, ?>> exportableColumns = new LinkedList<>();
+			List<IExportableColumn<T, ?>> exportableColumns = new LinkedList<>();
 			for (IColumn<T, S> col : dataTable.getColumns())
 			{
 				if (col instanceof IExportableColumn)
 				{
-					exportableColumns.add((IExportableColumn<T, ?, ?>)col);
+					exportableColumns.add((IExportableColumn<T, ?>)col);
 				}
 			}
 			dataExporter.exportData(dataProvider, exportableColumns, outputStream);
