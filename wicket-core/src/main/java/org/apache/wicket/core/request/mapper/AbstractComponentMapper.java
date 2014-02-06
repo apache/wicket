@@ -96,6 +96,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 				}
 			}
 		}
+
 		return null;
 	}
 
