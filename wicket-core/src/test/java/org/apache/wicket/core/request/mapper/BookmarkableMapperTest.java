@@ -77,6 +77,22 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5500
+	 */
+	@Test
+	public void decodePageClassWithPathParameters()
+	{
+		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + ";something=else");
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+		assertEquals(PAGE_CLASS_NAME, page.getClass().getName());
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
+	}
+
+	/**
 	 *
 	 */
 	@Test

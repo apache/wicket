@@ -115,6 +115,21 @@ public class PackageMapperTest extends AbstractMapperTest
 		assertEquals(0, page.getPageParameters().getIndexedCount());
 		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
 	}
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5500
+	 */
+	@Test
+	public void decodePageClassWithPathParameters()
+	{
+		Url url = Url.parse(PAGE_CLASS_NAME + ";something=else");
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
+	}
 
 	/**
 	 *
