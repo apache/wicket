@@ -24,6 +24,8 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
@@ -31,8 +33,6 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
-import org.apache.wicket.util.upload.FileItemFactory;
-import org.apache.wicket.util.upload.FileUploadException;
 
 /**
  * Internal request to signal the processing of an event. This request will be mapped by

@@ -16,68 +16,44 @@
  */
 package org.apache.wicket.util.file;
 
-import java.io.File;
-import java.io.IOException;
 
+import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FileDeleteStrategy;
+import org.apache.wicket.util.lang.Args;
 
 /**
- * A {@link FileDeleteStrategy} that can delete folders.
+ * Adapts IFileCleaner to FileCleaningTracker
  */
-public class FolderDeleteStrategy extends FileDeleteStrategy
+public class FileCleanerTrackerAdapter extends FileCleaningTracker
 {
-	/**
-	 * Construct.
-	 */
-	protected FolderDeleteStrategy()
+	private final IFileCleaner fileCleaner;
+
+	public FileCleanerTrackerAdapter(IFileCleaner fileCleaner)
 	{
-		super("folder");
+		this.fileCleaner = Args.notNull(fileCleaner, "fileCleaner");
 	}
 
 	@Override
-	public boolean deleteQuietly(final File folder)
+	public void track(java.io.File file, Object marker)
 	{
-		if (folder == null || folder.isFile())
-		{
-			return false;
-		}
-
-		File[] files = folder.listFiles();
-		if (files != null)
-		{
-			for (File file : files)
-			{
-				if (file.isDirectory())
-				{
-					deleteQuietly(file);
-				}
-				else
-				{
-					super.deleteQuietly(file);
-				}
-			}
-		}
-
-		return super.deleteQuietly(folder);
+		fileCleaner.track(file, marker);
 	}
 
 	@Override
-	public void delete(final File folder) throws IOException
+	public void track(java.io.File file, Object marker, FileDeleteStrategy deleteStrategy)
 	{
-		if (folder == null || folder.isFile())
-		{
-			return;
-		}
-
-		File[] files = folder.listFiles();
-		if (files != null)
-		{
-			for (File file : files)
-			{
-				super.delete(file);
-			}
-		}
+		fileCleaner.track(file, marker, deleteStrategy);
 	}
 
+	@Override
+	public void track(String path, Object marker)
+	{
+		fileCleaner.track(new File(path), marker);
+	}
 
+	@Override
+	public void track(String path, Object marker, FileDeleteStrategy deleteStrategy)
+	{
+		fileCleaner.track(new File(path), marker, deleteStrategy);
+	}
 }

@@ -26,18 +26,21 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.servlet.ServletRequestContext;
+import org.apache.commons.io.FileCleaningTracker;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
+import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.upload.DiskFileItemFactory;
-import org.apache.wicket.util.upload.FileItem;
-import org.apache.wicket.util.upload.FileItemFactory;
-import org.apache.wicket.util.upload.FileUploadBase;
-import org.apache.wicket.util.upload.FileUploadException;
-import org.apache.wicket.util.upload.ServletFileUpload;
-import org.apache.wicket.util.upload.ServletRequestContext;
 import org.apache.wicket.util.value.ValueMap;
 
 
@@ -87,9 +90,17 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
 		Bytes maxSize, String upload) throws FileUploadException
 	{
-		this(request, filterPrefix, maxSize, upload, new DiskFileItemFactory(Application.get()
-			.getResourceSettings()
-			.getFileCleaner()));
+		this(request, filterPrefix, maxSize, upload, new DiskFileItemFactory()
+		{
+			@Override
+			public FileCleaningTracker getFileCleaningTracker()
+			{
+				IFileCleaner fileCleaner = Application.get()
+						.getResourceSettings()
+						.getFileCleaner();
+				return new FileCleanerTrackerAdapter(fileCleaner);
+			}
+		});
 	}
 
 	/**

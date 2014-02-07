@@ -21,10 +21,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.util.upload.FileItem;
 
 /**
  * Servlet specific WebRequest subclass for multipart content uploads.

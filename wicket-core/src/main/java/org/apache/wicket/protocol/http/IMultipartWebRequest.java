@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.http;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.util.upload.FileItem;
+import org.apache.commons.fileupload.FileItem;
 
 
 /**

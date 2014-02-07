@@ -26,6 +26,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Page;
@@ -60,8 +62,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
-import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.value.LongValue;
 import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
@@ -1405,7 +1405,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	protected void onFileUploadException(final FileUploadException e,
 		final Map<String, Object> model)
 	{
-		if (e instanceof SizeLimitExceededException)
+		if (e instanceof FileUploadBase.SizeLimitExceededException)
 		{
 			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
