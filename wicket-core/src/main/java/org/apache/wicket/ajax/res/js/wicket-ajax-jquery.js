@@ -1027,16 +1027,6 @@
 			context.steps.push(function (notify) {
 				// get the component id
 				var compId = node.getAttribute("id");
-				var text = jQuery(node).text();
-
-				// if the text was escaped, unascape it
-				// (escaping is done when the component body contains a CDATA section)
-				var encoding = node.getAttribute("encoding");
-				if (encoding) {
-					text = Wicket.Head.Contributor.decode(encoding, text);
-				}
-
-				// get existing component
 				var element = Wicket.$(compId);
 
 				if (isUndef(element)) {
@@ -1044,6 +1034,15 @@
 						compId + "]] was not found while trying to perform markup update. " +
 						"Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
 				} else {
+					var text = jQuery(node).text();
+
+					// if the text was escaped, unescape it
+					// (escaping is done when the component body contains a CDATA section)
+					var encoding = node.getAttribute("encoding");
+					if (encoding) {
+						text = Wicket.Head.Contributor.decode(encoding, text);
+					}
+
 					// replace the component
 					Wicket.DOM.replace(element, text);
 				}
