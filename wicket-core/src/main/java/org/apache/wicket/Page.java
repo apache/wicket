@@ -528,7 +528,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param value
 	 *            whether the page should try to be stateless
 	 */
-	public final void setStatelessHint(boolean value)
+	public final Page setStatelessHint(boolean value)
 	{
 		if (value && !isBookmarkable())
 		{
@@ -537,6 +537,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					this);
 		}
 		setFlag(FLAG_STATELESS_HINT, value);
+		return this;
 	}
 
 	/**
@@ -987,6 +988,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF WICKET API. DO NOT USE!
+	 *
 	 * Sets the flag that determines whether or not this page was created using one of its
 	 * bookmarkable constructors
 	 * 

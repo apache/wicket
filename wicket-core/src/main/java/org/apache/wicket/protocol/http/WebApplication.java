@@ -669,7 +669,7 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param configurationType
 	 */
-	public void setConfigurationType(RuntimeConfigurationType configurationType)
+	public Application setConfigurationType(RuntimeConfigurationType configurationType)
 	{
 		if (this.configurationType != null)
 		{
@@ -678,6 +678,7 @@ public abstract class WebApplication extends Application
 					"Current value='" + configurationType + "'");
 		}
 		this.configurationType = Args.notNull(configurationType, "configurationType");
+		return this;
 	}
 
 	/**
@@ -940,10 +941,11 @@ public abstract class WebApplication extends Application
 	 * @param ajaxRequestTargetProvider
 	 *            the new provider
 	 */
-	public void setAjaxRequestTargetProvider(
+	public Application setAjaxRequestTargetProvider(
 		IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
 	{
 		this.ajaxRequestTargetProvider = ajaxRequestTargetProvider;
+		return this;
 	}
 
 	/**

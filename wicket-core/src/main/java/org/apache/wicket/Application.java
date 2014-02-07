@@ -559,9 +559,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized <T> void setMetaData(final MetaDataKey<T> key, final Object object)
+	public final synchronized <T> Application setMetaData(final MetaDataKey<T> key, final Object object)
 	{
 		metaData = key.set(metaData, object);
+		return this;
 	}
 
 	/**
@@ -734,9 +735,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param sessionStoreProvider
 	 */
-	public final void setSessionStoreProvider(final IProvider<ISessionStore> sessionStoreProvider)
+	public final Application setSessionStoreProvider(final IProvider<ISessionStore> sessionStoreProvider)
 	{
 		this.sessionStoreProvider = sessionStoreProvider;
+		return this;
 	}
 
 	/**
@@ -790,9 +792,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param rootRequestMapper
 	 */
-	public final void setRootRequestMapper(final IRequestMapper rootRequestMapper)
+	public final Application setRootRequestMapper(final IRequestMapper rootRequestMapper)
 	{
 		this.rootRequestMapper = rootRequestMapper;
+		return this;
 	}
 
 	/**
@@ -1078,9 +1081,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param applicationSettings
 	 */
-	public final void setApplicationSettings(final ApplicationSettings applicationSettings)
+	public final Application setApplicationSettings(final ApplicationSettings applicationSettings)
 	{
 		this.applicationSettings = applicationSettings;
+		return this;
 	}
 
 	/**
@@ -1101,10 +1105,11 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param javaScriptLibrarySettings
 	 */
-	public final void setJavaScriptLibrarySettings(
+	public final Application setJavaScriptLibrarySettings(
 		final JavaScriptLibrarySettings javaScriptLibrarySettings)
 	{
 		this.javaScriptLibrarySettings = javaScriptLibrarySettings;
+		return this;
 	}
 
 	/**
@@ -1124,9 +1129,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param debugSettings
 	 */
-	public final void setDebugSettings(final DebugSettings debugSettings)
+	public final Application setDebugSettings(final DebugSettings debugSettings)
 	{
 		this.debugSettings = debugSettings;
+		return this;
 	}
 
 	/**
@@ -1146,9 +1152,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param exceptionSettings
 	 */
-	public final void setExceptionSettings(final ExceptionSettings exceptionSettings)
+	public final Application setExceptionSettings(final ExceptionSettings exceptionSettings)
 	{
 		this.exceptionSettings = exceptionSettings;
+		return this;
 	}
 
 	/**
@@ -1168,9 +1175,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param frameworkSettings
 	 */
-	public final void setFrameworkSettings(final FrameworkSettings frameworkSettings)
+	public final Application setFrameworkSettings(final FrameworkSettings frameworkSettings)
 	{
 		this.frameworkSettings = frameworkSettings;
+		return this;
 	}
 
 	/**
@@ -1190,9 +1198,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param pageSettings
 	 */
-	public final void setPageSettings(final PageSettings pageSettings)
+	public final Application setPageSettings(final PageSettings pageSettings)
 	{
 		this.pageSettings = pageSettings;
+		return this;
 	}
 
 	/**
@@ -1212,9 +1221,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param requestCycleSettings
 	 */
-	public final void setRequestCycleSettings(final RequestCycleSettings requestCycleSettings)
+	public final Application setRequestCycleSettings(final RequestCycleSettings requestCycleSettings)
 	{
 		this.requestCycleSettings = requestCycleSettings;
+		return this;
 	}
 
 	/**
@@ -1234,9 +1244,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param markupSettings
 	 */
-	public final void setMarkupSettings(final MarkupSettings markupSettings)
+	public final Application setMarkupSettings(final MarkupSettings markupSettings)
 	{
 		this.markupSettings = markupSettings;
+		return this;
 	}
 
 	/**
@@ -1256,9 +1267,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param requestLoggerSettings
 	 */
-	public final void setRequestLoggerSettings(final RequestLoggerSettings requestLoggerSettings)
+	public final Application setRequestLoggerSettings(final RequestLoggerSettings requestLoggerSettings)
 	{
 		this.requestLoggerSettings = requestLoggerSettings;
+		return this;
 	}
 
 	/**
@@ -1278,9 +1290,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param resourceSettings
 	 */
-	public final void setResourceSettings(final ResourceSettings resourceSettings)
+	public final Application setResourceSettings(final ResourceSettings resourceSettings)
 	{
 		this.resourceSettings = resourceSettings;
+		return this;
 	}
 
 	/**
@@ -1300,9 +1313,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param securitySettings
 	 */
-	public final void setSecuritySettings(final SecuritySettings securitySettings)
+	public final Application setSecuritySettings(final SecuritySettings securitySettings)
 	{
 		this.securitySettings = securitySettings;
+		return this;
 	}
 
 	/**
@@ -1322,9 +1336,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param storeSettings
 	 */
-	public final void setStoreSettings(final StoreSettings storeSettings)
+	public final Application setStoreSettings(final StoreSettings storeSettings)
 	{
 		this.storeSettings = storeSettings;
+		return this;
 	}
 
 	/**
@@ -1363,9 +1378,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param provider
 	 */
-	public synchronized final void setPageManagerProvider(final IPageManagerProvider provider)
+	public synchronized final Application setPageManagerProvider(final IPageManagerProvider provider)
 	{
 		pageManagerProvider = provider;
+		return this;
 	}
 
 	/**
@@ -1423,10 +1439,11 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param pageRendererProvider
 	 */
-	public final void setPageRendererProvider(final IPageRendererProvider pageRendererProvider)
+	public final Application setPageRendererProvider(final IPageRendererProvider pageRendererProvider)
 	{
 		Args.notNull(pageRendererProvider, "pageRendererProvider");
 		this.pageRendererProvider = pageRendererProvider;
+		return this;
 	}
 
 
@@ -1581,9 +1598,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param requestCycleProvider
 	 */
-	public final void setRequestCycleProvider(final IRequestCycleProvider requestCycleProvider)
+	public final Application setRequestCycleProvider(final IRequestCycleProvider requestCycleProvider)
 	{
 		this.requestCycleProvider = requestCycleProvider;
+		return this;
 	}
 
 	private static class DefaultExceptionMapperProvider implements IProvider<IExceptionMapper>
@@ -1654,10 +1672,11 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param headerResponseDecorator
 	 *            your custom decorator
 	 */
-	public final void setHeaderResponseDecorator(
+	public final Application setHeaderResponseDecorator(
 		final IHeaderResponseDecorator headerResponseDecorator)
 	{
 		this.headerResponseDecorator = headerResponseDecorator;
+		return this;
 	}
 
 	/**

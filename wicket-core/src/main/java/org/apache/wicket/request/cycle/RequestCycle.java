@@ -394,9 +394,10 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final <T> void setMetaData(final MetaDataKey<T> key, final T object)
+	public final <T> RequestCycle setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
+		return this;
 	}
 
 	/**

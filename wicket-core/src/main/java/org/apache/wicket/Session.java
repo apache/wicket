@@ -550,10 +550,11 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param clientInfo
 	 *            the client info object
 	 */
-	public final void setClientInfo(ClientInfo clientInfo)
+	public final Session setClientInfo(ClientInfo clientInfo)
 	{
 		this.clientInfo = clientInfo;
 		dirty();
+		return this;
 	}
 
 	/**
@@ -562,7 +563,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param locale
 	 *            New locale
 	 */
-	public void setLocale(final Locale locale)
+	public Session setLocale(final Locale locale)
 	{
 		if (locale == null)
 		{
@@ -573,6 +574,7 @@ public abstract class Session implements IClusterable, IEventSink
 			dirty();
 		}
 		this.locale = locale;
+		return this;
 	}
 
 	/**
@@ -587,10 +589,11 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
+	public final synchronized <M extends Serializable> Session setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		metaData = key.set(metaData, object);
 		dirty();
+		return this;
 	}
 
 	/**
@@ -785,7 +788,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param value
 	 *            The value of the attribute
 	 */
-	public final void setAttribute(String name, Serializable value)
+	public final Session setAttribute(String name, Serializable value)
 	{
 		if (!isTemporary())
 		{
@@ -828,6 +831,7 @@ public abstract class Session implements IClusterable, IEventSink
 			}
 			temporarySessionAttributes.put(name, value);
 		}
+		return this;
 	}
 
 	/**

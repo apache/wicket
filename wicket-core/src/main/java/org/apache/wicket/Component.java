@@ -767,9 +767,10 @@ public abstract class Component
 	 * 
 	 * @param markup
 	 */
-	public final void setMarkup(final IMarkupFragment markup)
+	public final Component setMarkup(final IMarkupFragment markup)
 	{
 		this.markup = markup;
+		return this;
 	}
 
 	/**
@@ -2954,7 +2955,7 @@ public abstract class Component
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
+	public final <M extends Serializable> Component setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		MetaDataEntry<?>[] old = getMetaData();
 
@@ -2979,6 +2980,7 @@ public abstract class Component
 		{
 			data_remove(index);
 		}
+		return this;
 	}
 
 	/**
@@ -4103,9 +4105,10 @@ public abstract class Component
 	 * @param auto
 	 *            True to put component into auto-add mode
 	 */
-	protected final void setAuto(final boolean auto)
+	protected final Component setAuto(final boolean auto)
 	{
 		setFlag(FLAG_AUTO, auto);
+		return this;
 	}
 
 	/**
@@ -4116,7 +4119,7 @@ public abstract class Component
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	protected final void setFlag(final int flag, final boolean set)
+	protected final Component setFlag(final int flag, final boolean set)
 	{
 		if (set)
 		{
@@ -4126,6 +4129,7 @@ public abstract class Component
 		{
 			flags &= ~flag;
 		}
+		return this;
 	}
 
 	/**
@@ -4136,7 +4140,7 @@ public abstract class Component
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	protected final void setRequestFlag(final short flag, final boolean set)
+	protected final Component setRequestFlag(final short flag, final boolean set)
 	{
 		if (set)
 		{
@@ -4146,6 +4150,7 @@ public abstract class Component
 		{
 			requestFlags &= ~flag;
 		}
+		return this;
 	}
 
 	/**
@@ -4300,14 +4305,12 @@ public abstract class Component
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
 	 * Sets the id of this component.
 	 * 
 	 * @param id
 	 *            The non-null id of this component
 	 */
-	final void setId(final String id)
+	final Component setId(final String id)
 	{
 		if (!(this instanceof Page))
 		{
@@ -4323,6 +4326,7 @@ public abstract class Component
 		}
 
 		this.id = id;
+		return this;
 	}
 
 	/**
