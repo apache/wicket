@@ -859,7 +859,16 @@ public abstract class FileUploadBase
 
 			notifier = new MultipartFormInputStream.ProgressNotifier(listener,
 				ctx.getContentLength());
-			multi = new MultipartFormInputStream(input, boundary, notifier);
+			try
+			{
+				multi = new MultipartFormInputStream(input, boundary, notifier);
+			}
+			catch (IllegalArgumentException iae)
+			{
+				throw new InvalidContentTypeException(String.format(
+					"The boundary specified in the %s header is too long",
+					CONTENT_TYPE), iae);
+			}
 			multi.setHeaderEncoding(charEncoding);
 
 			skipPreamble = true;
@@ -1075,6 +1084,20 @@ public abstract class FileUploadBase
 		public InvalidContentTypeException(final String message)
 		{
 			super(message);
+		}
+
+		/**
+		 * Constructs an <code>InvalidContentTypeException</code> with the specified detail message
+		 * and cause.
+		 *
+		 * @param message
+		 *            The detail message.
+		 * @param cause
+		 *            The real cause
+		 */
+		public InvalidContentTypeException(final String message, Throwable cause)
+		{
+			super(message, cause);
 		}
 	}
 
