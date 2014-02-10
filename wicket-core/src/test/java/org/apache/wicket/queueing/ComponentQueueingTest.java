@@ -136,7 +136,9 @@ public class ComponentQueueingTest extends WicketTestCase
 		assertThat(p, hasPath(new Path(a, c)));
 	}
 
-	/** {@code [a,b,c] -> [a[b,c]] } */
+	/** {@code [a,b,c] -> [a[b,c]] }
+	 * TODO WICKET-3335 Fix the javadoc above
+	 * */
 	@Test
 	public void dequeue7()
 	{

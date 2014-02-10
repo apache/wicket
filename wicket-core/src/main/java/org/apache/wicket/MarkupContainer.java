@@ -941,6 +941,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			cursor = cursor.getParent();
 		}
 
+		// TODO WICKET-3335: queueRegion is always non-null if page is non-null
 		if (queueRegion != null && page != null)
 		{
 			if (!queueRegion.dequeuing)
@@ -2008,6 +2009,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (queue != null && !queue.isEmpty())
 		{
+			// TODO WICKET-3335: Print the queue ?!
 			throw new WicketRuntimeException("Detach called on component: " + getId()
 				+ " while it had a non-empty queue");
 		}
@@ -2044,6 +2046,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (page != null)
 		{
+			// TODO WICKET-3335: should we check if (!region.dequeueing) ?
 			region.dequeue();
 		}
 	}
