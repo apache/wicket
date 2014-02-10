@@ -36,11 +36,13 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
@@ -170,13 +172,22 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				log.debug("Add " + child.getId() + " to " + this);
 			}
 
+			// remove child from existing parent
+			parent = child.getParent();
+			if (parent != null)
+			{
+				parent.remove(child);
+			}
+
 			// Add to map
-			addedComponent(child);
 			if (put(child) != null)
 			{
-				throw new IllegalArgumentException(exceptionMessage("A child with id '" +
-					child.getId() + "' already exists"));
+				throw new IllegalArgumentException(exceptionMessage("A child with id '"
+					+ child.getId() + "' already exists"));
 			}
+
+			addedComponent(child);
+
 		}
 		return this;
 	}
@@ -483,8 +494,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 		// Add to map
-		addedComponent(child);
 		put(child);
+		addedComponent(child);
 	}
 
 	/**
@@ -907,14 +918,37 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		child.setParent(this);
 
 		final DebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled() &&
-			debugSettings.getComponentUseCheck())
+		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled()
+			&& debugSettings.getComponentUseCheck())
 		{
 			child.setMetaData(ADDED_AT_KEY,
 				ComponentStrings.toString(child, new MarkupException("added")));
 		}
 
-		final Page page = findPage();
+		Page page = null;
+		MarkupContainer queueRegion = null;
+		Component cursor = this;
+		while (cursor != null)
+		{
+			if (queueRegion == null && (cursor instanceof IQueueRegion))
+			{
+				queueRegion = (MarkupContainer)cursor;
+			}
+			if (cursor instanceof Page)
+			{
+				page = (Page)cursor;
+			}
+			cursor = cursor.getParent();
+		}
+
+		if (queueRegion != null && page != null)
+		{
+			if (!queueRegion.dequeuing)
+			{
+				queueRegion.dequeue();
+			}
+		}
+
 		if (page != null)
 		{
 			// tell the page a component has been added first, to allow it to initialize
@@ -1479,6 +1513,34 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		renderComponentTagBody(markupStream, openTag);
 	}
 
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		if (this instanceof IQueueRegion)
+		{
+			// dequeue auto components
+			Markup markup = getAssociatedMarkup();
+			if (markup != null)
+			{
+				// make sure we have markup, when running inside tests we wont
+				for (int i = 0; i < markup.size(); i++)
+				{
+					MarkupElement element = markup.get(i);
+					if (element instanceof ComponentTag)
+					{
+						ComponentTag tag = (ComponentTag)element;
+						if (tag.getAutoComponentFactory() != null)
+						{
+							Component auto = tag.getAutoComponentFactory().newComponent(tag);
+							queue(auto);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * @see org.apache.wicket.Component#onRender()
 	 */
@@ -1939,4 +2001,274 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
+	@Override
+	protected void onDetach()
+	{
+		super.onDetach();
+
+		if (queue != null && !queue.isEmpty())
+		{
+			throw new WicketRuntimeException("Detach called on component: " + getId()
+				+ " while it had a non-empty queue");
+		}
+		queue = null;
+	}
+
+	private transient ComponentQueue queue;
+
+	public void queue(Component... components)
+	{
+		if (queue == null)
+		{
+			queue = new ComponentQueue();
+		}
+		queue.add(components);
+
+		MarkupContainer region = null;
+		Page page = null;
+
+		MarkupContainer cursor = this;
+
+		while (cursor != null)
+		{
+			if (region == null && cursor instanceof IQueueRegion)
+			{
+				region = cursor;
+			}
+			if (cursor instanceof Page)
+			{
+				page = (Page)cursor;
+			}
+			cursor = cursor.getParent();
+		}
+
+		if (page != null)
+		{
+			region.dequeue();
+		}
+	}
+
+	ComponentQueue getQueue()
+	{
+		return queue;
+	}
+
+	private boolean dequeuing = false;
+
+	void dequeue()
+	{
+		if (!(this instanceof IQueueRegion))
+		{
+			// TODO queueing mesage
+			throw new UnsupportedOperationException();
+		}
+
+		if (dequeuing)
+		{
+			throw new IllegalStateException();
+		}
+
+		dequeuing = true;
+		try
+		{
+			internalDequeue();
+		}
+		finally
+		{
+			dequeuing = false;
+		}
+	}
+
+	private void internalDequeue()
+	{
+		class Repeater
+		{
+			int parentMarkupIndex;
+			Iterator<Component> renderIterator;
+			ComponentTag tag;
+
+			Repeater(int parentMarkupIndex, Iterator<Component> renderIterator, ComponentTag tag)
+			{
+				this.parentMarkupIndex = parentMarkupIndex;
+				this.renderIterator = renderIterator;
+				this.tag = tag;
+			}
+		}
+
+		Markup markup = getAssociatedMarkup();
+		if (markup == null)
+		{
+			// markup not found, skip dequeuing
+			// this sometimes happens when we are in a unit test
+			return;
+		}
+		// use arraydeque?
+		ArrayListStack<ComponentTag> tags = new ArrayListStack<ComponentTag>();
+		ArrayListStack<MarkupContainer> containers = new ArrayListStack<MarkupContainer>();
+		ArrayListStack<Repeater> repeaters = new ArrayListStack<Repeater>();
+
+		containers.push(this);
+
+		for (int i = 0; i < markup.size(); i++)
+		{
+			MarkupElement element = markup.get(i);
+
+			if (!(element instanceof ComponentTag))
+			{
+				continue;
+			}
+
+			ComponentTag tag = (ComponentTag)element;
+
+			if (tag instanceof WicketTag)
+			{
+				ComponentTag openTag = tag.getOpenTag() == null ? tag : tag.getOpenTag();
+				if (openTag.getAutoComponentFactory() == null)
+				{
+					// wicket tags that do not produce auto components can be ignored
+					continue;
+				}
+			}
+
+			if (tag.isClose())
+			{
+				ComponentTag closeTag = tags.pop();
+				containers.pop();
+
+				if (containers.peek() instanceof AbstractRepeater)
+				{
+					Repeater repeater = repeaters.peek();
+					if (repeater.renderIterator.hasNext())
+					{
+						containers.push((MarkupContainer)repeater.renderIterator.next());
+						tags.push(repeater.tag);
+						i = repeater.parentMarkupIndex;
+						continue;
+					}
+					else
+					{
+						// we rendered the last item, now time to close the repeater
+						repeaters.pop();
+						tags.pop();
+						containers.pop();
+					}
+				}
+			}
+			else
+			{
+				String id = tag.getId();
+				Component child = containers.peek().get(id);
+
+				// see if child is already added to parent
+				if (child == null)
+				{
+					// the container does not yet have a child with this id, see if we can
+					// dequeue
+					for (int j = containers.size() - 1; j >= 0; j--)
+					{
+						MarkupContainer container = containers.get(j);
+						child = container.getQueue() != null
+							? container.getQueue().remove(id)
+							: null;
+						if (child != null)
+						{
+							break;
+						}
+					}
+
+					if (child != null)
+					{
+						containers.peek().add(child);
+
+						if (child instanceof IQueueRegion)
+						{
+							((MarkupContainer)child).dequeue();
+						}
+
+					}
+				}
+				if (child == null)
+				{
+					// could not dequeue, skip until closing tag
+
+					if (tag.isOpen())
+					{
+						for (i = i + 1; i < markup.size(); i++)
+						{
+							MarkupElement e = markup.get(i);
+							if (e instanceof ComponentTag && ((ComponentTag)e).closes(tag))
+							{
+								break;
+							}
+						}
+					}
+
+					// if (dequeueSites == null)
+					// {
+					// dequeueSites = new HashSet<String>();
+					// }
+					// dequeueSites.add(id);
+
+				}
+				else
+				{
+					if (tag.isOpen())
+					{
+						if (child instanceof MarkupContainer)
+						{
+							containers.push((MarkupContainer)child);
+							tags.push(tag);
+
+							if (child instanceof AbstractRepeater)
+							{
+								Repeater repeater = new Repeater(i,
+									((AbstractRepeater)child).iterator(), tag);
+								if (repeater.renderIterator.hasNext())
+								{
+									repeaters.push(repeater);
+									containers
+										.push((MarkupContainer)repeater.renderIterator.next());
+									tags.push(tag);
+								}
+								else
+								{
+									// empty repeater, skip until closing tag
+									for (i = i + 1; i < markup.size(); i++)
+									{
+										MarkupElement e = markup.get(i);
+										if (e instanceof ComponentTag
+											&& ((ComponentTag)e).closes(tag))
+										{
+											break;
+										}
+									}
+									i--;
+									continue;
+								}
+							}
+						}
+						else
+						{
+							// web component, skip until closing tag
+							for (i = i + 1; i < markup.size(); i++)
+							{
+								MarkupElement e = markup.get(i);
+								if (e instanceof ComponentTag && ((ComponentTag)e).closes(tag))
+								{
+									break;
+								}
+							}
+						}
+					}
+					else
+					{
+						// openclose tag, nothing to do
+					}
+
+				}
+			}
+		}
+
+
+	}
 }

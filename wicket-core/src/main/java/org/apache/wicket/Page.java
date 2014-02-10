@@ -41,6 +41,7 @@ import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.visit.Visits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +82,11 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * 
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener, IRequestablePage
+public abstract class Page extends MarkupContainer
+	implements
+		IRedirectListener,
+		IRequestablePage,
+		IQueueRegion
 {
 	/** True if the page hierarchy has been modified in the current request. */
 	private static final int FLAG_IS_DIRTY = FLAG_RESERVED3;
@@ -1042,4 +1047,5 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return renderedComponents != null && renderedComponents.contains(component);
 	}
+
 }

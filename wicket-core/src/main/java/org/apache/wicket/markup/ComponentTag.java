@@ -50,6 +50,25 @@ import org.slf4j.LoggerFactory;
  */
 public class ComponentTag extends MarkupElement
 {
+	/**
+	 * Factory that creates component during markup root container's initialization. These
+	 * components get queued, which allows other components to be dequeued under these auto
+	 * components.
+	 * 
+	 * TODO queueing javadoc improvements describing the process in more detail
+	 * 
+	 * @author igor
+	 * 
+	 */
+	public interface IAutoComponentFactory
+	{
+		/**
+		 * Creates a new instance of auto component to be queued
+		 */
+		Component newComponent(ComponentTag tag);
+	}
+
+
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(ComponentTag.class);
 
@@ -98,6 +117,8 @@ public class ComponentTag extends MarkupElement
 
 	/** Filters and Handlers may add their own attributes to the tag */
 	private Map<String, Object> userData;
+
+	private IAutoComponentFactory autoComponentFactory;
 
 	/**
 	 * Automatically create a XmlTag, assign the name and the type, and construct a ComponentTag
@@ -422,6 +443,8 @@ public class ComponentTag extends MarkupElement
 	{
 		dest.id = id;
 		dest.flags = flags;
+		dest.autoComponentFactory = autoComponentFactory;
+
 		if (markupClassRef != null)
 		{
 			dest.setMarkupClass(markupClassRef.get());
@@ -933,4 +956,16 @@ public class ComponentTag extends MarkupElement
 	public void onBeforeRender(final Component component, final MarkupStream markupStream)
 	{
 	}
+
+	public IAutoComponentFactory getAutoComponentFactory()
+	{
+		return autoComponentFactory;
+	}
+
+	public void setAutoComponentFactory(IAutoComponentFactory autoComponentFactory)
+	{
+		this.autoComponentFactory = autoComponentFactory;
+	}
+
+
 }

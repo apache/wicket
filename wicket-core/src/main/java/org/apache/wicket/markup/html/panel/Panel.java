@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -50,7 +50,7 @@ import org.apache.wicket.model.IModel;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public abstract class Panel extends WebMarkupContainer
+public abstract class Panel extends WebMarkupContainer implements IQueueRegion
 {
 	private static final long serialVersionUID = 1L;
 

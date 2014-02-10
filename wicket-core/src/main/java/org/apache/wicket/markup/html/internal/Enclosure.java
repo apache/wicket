@@ -29,8 +29,6 @@ import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.markup.resolver.ComponentResolvers.ResolverFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -80,6 +78,7 @@ import org.slf4j.LoggerFactory;
  * @see EnclosureHandler
  * @see EnclosureContainer
  * 
+ * @author igor
  * @author Juergen Donnerstag
  * @since 1.3
  */
@@ -87,13 +86,11 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = LoggerFactory.getLogger(Enclosure.class);
-
 	/** The child component to delegate the isVisible() call to */
 	private Component childComponent;
 
 	/** Id of the child component that will control visibility of the enclosure */
-	private final CharSequence childId;
+	private final String childId;
 
 	/**
 	 * Construct.
@@ -101,7 +98,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	 * @param id
 	 * @param childId
 	 */
-	public Enclosure(final String id, final CharSequence childId)
+	public Enclosure(final String id, final String childId)
 	{
 		super(id);
 
@@ -123,26 +120,36 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		return childId.toString();
 	}
 
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-
-		// get Child Component. If not "added", ask a resolver to find it.
-		childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
-	}
-
 	protected final Component getChild()
 	{
+		if (childComponent == null)
+		{
+			// try to find child when queued
+			childComponent = get(childId);
+		}
+		if (childComponent == null)
+		{
+			// try to find child when resolved
+			childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
+		}
 		return childComponent;
 	}
 
 	@Override
 	public boolean isVisible()
 	{
-		return childComponent.determineVisibility() && super.isVisible();
+		return getChild().determineVisibility();
 	}
 
+
+	@Override
+	protected void onDetach()
+	{
+		super.onDetach();
+
+		// necessary when queued and lives with the page instead of just during render
+		childComponent = null;
+	}
 	/**
 	 * Get the real parent container
 	 * 
@@ -232,6 +239,12 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
+		// only resolved when auto, not when queued
+		// if (!isAuto())
+		// {
+		// return null;
+		// }
+
 		if (childId.equals(tag.getId()))
 		{
 			return childComponent;

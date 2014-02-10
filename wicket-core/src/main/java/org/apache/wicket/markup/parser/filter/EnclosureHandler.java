@@ -19,11 +19,12 @@ package org.apache.wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Stack;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ComponentTag.IAutoComponentFactory;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
@@ -53,6 +54,18 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final IAutoComponentFactory FACTORY = new IAutoComponentFactory()
+	{
+
+
+		@Override
+		public Component newComponent(ComponentTag tag)
+		{
+			return new Enclosure(tag.getId(), tag
+				.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
+		}
+	};
+
 	/** */
 	public static final String ENCLOSURE = "enclosure";
 
@@ -61,6 +74,14 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 
 	/** Stack of <wicket:enclosure> tags */
 	private Deque<ComponentTag> stack;
+
+	/**
+	 * Used to assign unique ids to enclosures
+	 * 
+	 * TODO queueing: there has to be a better way of doing this, perhaps some merged-markup-unique
+	 * counter
+	 */
+	private static final AtomicLong index = new AtomicLong();
 
 	/** The id of the first wicket tag inside the enclosure */
 	private String childId;
@@ -90,6 +111,10 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 			// If open tag, than put the tag onto the stack
 			if (tag.isOpen())
 			{
+				tag.setId(tag.getId() + index.getAndIncrement());
+				tag.setModified(true);
+				tag.setAutoComponentFactory(FACTORY);
+
 				if (stack == null)
 				{
 					stack = new ArrayDeque<>();
