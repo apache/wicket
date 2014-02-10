@@ -2009,9 +2009,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (queue != null && !queue.isEmpty())
 		{
-			// TODO WICKET-3335: Print the queue ?!
-			throw new WicketRuntimeException("Detach called on component: " + getId()
-				+ " while it had a non-empty queue");
+			throw new WicketRuntimeException(
+					String.format("Detach called on component with id '%s' while it had a non-empty queue: %s",
+							getId(), queue));
 		}
 		queue = null;
 	}

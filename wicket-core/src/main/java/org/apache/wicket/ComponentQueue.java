@@ -144,4 +144,13 @@ class ComponentQueue
 		}
 		return null;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "ComponentQueue{" +
+				"queueSize=" + queueSize +
+				", queue=" + Arrays.toString(queue) +
+				'}';
+	}
 }
