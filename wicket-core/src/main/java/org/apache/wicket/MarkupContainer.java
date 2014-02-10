@@ -2053,6 +2053,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return queue;
 	}
 
+	// TODO queuing: convert into a flag
 	private boolean dequeuing = false;
 
 	void dequeue()
