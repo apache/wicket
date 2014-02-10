@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -132,7 +133,7 @@ import org.apache.wicket.util.lang.Args;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public abstract class Border extends WebMarkupContainer implements IComponentResolver
+public abstract class Border extends WebMarkupContainer implements IComponentResolver, IQueueRegion
 {
 	private static final long serialVersionUID = 1L;
 
@@ -212,6 +213,13 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 
 	@Override
+	public Border queue(Component... components)
+	{
+		getBodyContainer().queue(components);
+		return this;
+	}
+
+	@Override
 	public Border remove(final Component component)
 	{
 		if (component == body)
@@ -259,6 +267,19 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	public Border addToBorder(final Component... children)
 	{
 		super.add(children);
+		return this;
+	}
+
+	/**
+	 * Queues children components to the Border itself
+	 *
+	 * @param children
+	 *            the children components to queue
+	 * @return this
+	 */
+	public Border queueToBorder(final Component... children)
+	{
+		super.queue(children);
 		return this;
 	}
 

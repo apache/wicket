@@ -2018,7 +2018,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	private transient ComponentQueue queue;
 
-	public void queue(Component... components)
+	public MarkupContainer queue(Component... components)
 	{
 		if (queue == null)
 		{
@@ -2049,6 +2049,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// TODO WICKET-3335: should we check if (!region.dequeueing) ?
 			region.dequeue();
 		}
+
+		return this;
 	}
 
 	ComponentQueue getQueue()
@@ -2107,9 +2109,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			return;
 		}
 		// use arraydeque?
-		ArrayListStack<ComponentTag> tags = new ArrayListStack<ComponentTag>();
-		ArrayListStack<MarkupContainer> containers = new ArrayListStack<MarkupContainer>();
-		ArrayListStack<Repeater> repeaters = new ArrayListStack<Repeater>();
+		ArrayListStack<ComponentTag> tags = new ArrayListStack<>();
+		ArrayListStack<MarkupContainer> containers = new ArrayListStack<>();
+		ArrayListStack<Repeater> repeaters = new ArrayListStack<>();
 
 		containers.push(this);
 
@@ -2182,7 +2184,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 					if (child != null)
 					{
-						containers.peek().add(child);
+						MarkupContainer parentContainer = containers.peek();
+//						boolean isInBorder = isInBorder(tags, parentContainer);
+						if (parentContainer instanceof Border) //(isInBorder)
+						{
+							((Border) parentContainer).addToBorder(child);
+						}
+						else
+						{
+							parentContainer.add(child);
+						}
 
 						if (child instanceof IQueueRegion)
 						{
@@ -2200,7 +2211,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 						for (i = i + 1; i < markup.size(); i++)
 						{
 							MarkupElement e = markup.get(i);
-							if (e instanceof ComponentTag && ((ComponentTag)e).closes(tag))
+							if (e instanceof ComponentTag && e.closes(tag))
 							{
 								break;
 							}
@@ -2240,8 +2251,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 									for (i = i + 1; i < markup.size(); i++)
 									{
 										MarkupElement e = markup.get(i);
-										if (e instanceof ComponentTag
-											&& ((ComponentTag)e).closes(tag))
+										if (e instanceof ComponentTag && e.closes(tag))
 										{
 											break;
 										}
@@ -2257,7 +2267,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 							for (i = i + 1; i < markup.size(); i++)
 							{
 								MarkupElement e = markup.get(i);
-								if (e instanceof ComponentTag && ((ComponentTag)e).closes(tag))
+								if (e instanceof ComponentTag && e.closes(tag))
 								{
 									break;
 								}
@@ -2274,5 +2284,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 
+	}
+
+	private boolean isInBorder(ArrayListStack<ComponentTag> tags, MarkupContainer parentContainer)
+	{
+		boolean result = false;
+		if (parentContainer instanceof Border && tags.empty() == false)
+		{
+			ComponentTag parentsTag = tags.peek();
+			if (parentsTag instanceof WicketTag && ((WicketTag)parentsTag).isBorderTag())
+			{
+				result = true;
+			}
+		}
+		return result;
 	}
 }

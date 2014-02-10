@@ -28,6 +28,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -37,6 +38,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ComponentQueueingTest extends WicketTestCase
@@ -255,6 +257,7 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(p);
 
 		assertThat(p, hasPath(new Path(q, r)));
+		tester.assertContains("<meta/>"); // contributed by <wicket:head>
 	}
 
 	@Test
@@ -544,6 +547,26 @@ public class ComponentQueueingTest extends WicketTestCase
 		assertEquals("<div id=\"wicket__InlineEnclosure_01\" style=\"display:none\"></div>", tester.getLastResponseAsString());
 	}
 
+	@Ignore
+	@Test
+	public void dequeueWithBorder1()
+	{
+		MarkupContainer a = new A(), b = new B(), r = new R(), s = new S();
+
+		TestBorder border = new TestBorder("border");
+		border.setBorderMarkup("<wicket:border><p wicket:id='r'><p wicket:id='s'>" +
+				"<wicket:body/></p></p></wicket:border>");
+		border.queueToBorder(r, s);
+
+		TestPage p = new TestPage();
+		p.setPageMarkup("<p wicket:id='a'><p wicket:id='border'><p wicket:id='b'></p></p></p>");
+
+		p.queue(a, border, b);
+
+		tester.startPage(p);
+
+		assertThat(p, hasPath(new Path(a, border, r, s)));
+	}
 
 	private static class A extends WebMarkupContainer
 	{
@@ -624,7 +647,7 @@ public class ComponentQueueingTest extends WicketTestCase
 			ArrayList<Integer> values = new ArrayList<Integer>();
 			for (int i = 0; i < size; i++)
 				values.add(i);
-			setModel(new Model<ArrayList<Integer>>(values));
+			setModel(new Model<>(values));
 		}
 	}
 
@@ -684,7 +707,6 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class TestPanel extends Panel implements IMarkupResourceStreamProvider
 	{
-
 		private String markup;
 
 		public TestPanel(String id)
@@ -713,6 +735,39 @@ public class ComponentQueueingTest extends WicketTestCase
 			Class<?> containerClass)
 		{
 			return new StringResourceStream(getPanelMarkup());
+		}
+	}
+
+	private static class TestBorder extends Border implements IMarkupResourceStreamProvider
+	{
+		private String markup;
+
+		public TestBorder(String id)
+		{
+			super(id);
+		}
+
+		public TestBorder(String id, String markup)
+		{
+			super(id);
+			this.markup = markup;
+		}
+
+		protected void setBorderMarkup(String markup)
+		{
+			this.markup = markup;
+		}
+
+		protected String getBorderMarkup()
+		{
+			return markup;
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+		                                               Class<?> containerClass)
+		{
+			return new StringResourceStream(getBorderMarkup());
 		}
 	}
 }
