@@ -45,7 +45,6 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
  * enclosure is identified by the 'child' attribute value which must be equal to the relative child
  * id path.
  * 
- * @see EnclosureResolver
  * @see Enclosure
  * 
  * @author Juergen Donnerstag
@@ -56,8 +55,6 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 
 	private static final IAutoComponentFactory FACTORY = new IAutoComponentFactory()
 	{
-
-
 		@Override
 		public Component newComponent(ComponentTag tag)
 		{

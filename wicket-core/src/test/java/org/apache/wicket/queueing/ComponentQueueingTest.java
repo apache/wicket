@@ -515,6 +515,36 @@ public class ComponentQueueingTest extends WicketTestCase
 		assertEquals("", tester.getLastResponseAsString());
 	}
 
+	/**
+	 * Test InlineEnclosure
+	 */
+	@Test
+	public void autos6()
+	{
+		TestPage p = new TestPage();
+		p.setPageMarkup("<div wicket:enclosure='a'><div wicket:id='a'></div><div wicket:id='b'></div></div>");
+		A a = new A();
+		B b = new B();
+		p.queue(a, b);
+		tester.startPage(p);
+
+		assertTrue(a.getParent() instanceof Enclosure);
+		assertTrue(b.getParent() instanceof Enclosure);
+
+		// A is visible, enclosure renders
+
+		assertEquals(
+				"<div wicket:enclosure=\"a\" id=\"wicket__InlineEnclosure_01\"><div wicket:id=\"a\"></div><div wicket:id=\"b\"></div></div>",
+				tester.getLastResponseAsString());
+
+		// A is not visible, enclosure does not render
+
+		a.setVisible(false);
+		tester.startPage(p);
+		assertEquals("<div id=\"wicket__InlineEnclosure_01\" style=\"display:none\"></div>", tester.getLastResponseAsString());
+	}
+
+
 	private static class A extends WebMarkupContainer
 	{
 		public A()
