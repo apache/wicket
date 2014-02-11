@@ -137,7 +137,6 @@ public class WebSession extends Session
 					setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
 
 					WebPage browserInfoPage = newBrowserInfoPage();
-					getPageManager().touchPage(browserInfoPage);
 					throw new RestartResponseAtInterceptPageException(browserInfoPage);
 				}
 				// if we get here, the redirect already has been done; clear
