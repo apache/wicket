@@ -2,6 +2,56 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.14.0
+
+** Bug
+
+    * [WICKET-4697] - Autolinking not working as soon as component gets a wicket:id
+    * [WICKET-5043] - Page not mounted with WebApplication#mountPackage
+    * [WICKET-5449] - Missing chapter 2 is causing off-by-one page names in the guides URL links
+    * [WICKET-5460] - onBeforeRender called too early on stateless page
+    * [WICKET-5462] - Ajax form-component-label repainting fails when setResponsePage() is used to navigate away from the page that has previously failed form validaiton
+    * [WICKET-5464] - AbstractAjaxTimerBehavior does not work in combination with Wizards
+    * [WICKET-5466] - ListenerInterfaceRequestHandler#respond throws ComponentNotFoundException as a side-effect
+    * [WICKET-5467] - NumberTextField should support "any" as valid step attribute value
+    * [WICKET-5468] - UrlRenderer#renderRelativeUrl potentially appends "/" after query parameters
+    * [WICKET-5469] - ModalWindow unload warning always displayed (even if window is closed)
+    * [WICKET-5472] - PackageResource#internalGetResourceStream() should return ProcessingResourceStream only when the resource is existing
+    * [WICKET-5473] - Wicket does not handle non in-memory Httpsessions correctly
+    * [WICKET-5477] - CSS class is not applied to <TD> for data filter
+    * [WICKET-5478] - Wrong JavaDoc for WicketTester
+    * [WICKET-5480] - AutoLabelResolver creates null pointer exception in 6.13
+    * [WICKET-5482] - Wicket-guice doesn't support @javax.inject.Named annotations
+    * [WICKET-5484] - WebPageRenderer must not render full page in Ajax requests
+    * [WICKET-5486] - WebPageRenderer should honor RedirectPolicy.ALWAYS_REDIRECT more consistently
+    * [WICKET-5491] - Wicket.DateTime.getViewportHeight() returning undefined on IE8, positions calendar out of viewport
+    * [WICKET-5492] - WebApplication ignores a SecurityException when reading the configuration type
+    * [WICKET-5496] - Wrong translation of RangeValidator.minimum and RangeValidator.maximum
+    * [WICKET-5497] - NPE in JsonUtils when the value is null
+    * [WICKET-5499] - Page is not touched during initialization
+    * [WICKET-5500] - Ignore the path parameters when reading the page class
+    * [WICKET-5502] - Patch FileUploadBase to fix CVE-2014-0050
+
+** Improvement
+
+    * [WICKET-5288] - Allow <script>-Tags act as WebMarkUpContainer to add Child-Components
+    * [WICKET-5439] - Allow restarting AbstractAjaxTimerBehavior without updating its hosting component
+    * [WICKET-5463] - RequestUtil.getCharset(HttpServletRequest request) Resilience against unsupported Charsets in Request
+    * [WICKET-5470] - Remove 'final' from org.apache.wicket.markup.html.form.EnumChoiceRenderer#getDisplayValue
+    * [WICKET-5471] - Store the page if it is known that it will be used in a following request
+    * [WICKET-5493] - Disable jar indexing
+
+** New Feature
+
+    * [WICKET-3491] - Introduce IComponentOnConfigureListener
+
+** Task
+
+    * [WICKET-5488] - Promote experimental modules to become stable
+    * [WICKET-5494] - Upgrade JQuery to latest stable - 1.11.0 and 2.1.0
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.13.0
 
 ** Bug
