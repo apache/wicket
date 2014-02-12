@@ -17,7 +17,6 @@
 package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.request.ILoggableRequestHandler;
@@ -107,16 +106,10 @@ public class RenderPageRequestHandler
 
 		if (pageProvider.hasPageInstance())
 		{
-			IRequestablePage page = pageProvider.getPageInstance();
-			if (page instanceof Page)
-			{
-				((Page) page).setStatelessHint(false);
-			}
-
 			if (Session.exists())
 			{
 				// WICKET-5499
-				Session.get().getPageManager().touchPage(page);
+				Session.get().getPageManager().touchPage(pageProvider.getPageInstance());
 			}
 		}
 	}

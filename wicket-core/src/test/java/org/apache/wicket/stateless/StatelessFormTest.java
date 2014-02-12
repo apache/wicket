@@ -103,4 +103,29 @@ public class StatelessFormTest extends WicketTestCase
 		parameters.add("second", "bar");
 		executeTest(StatelessPageWithForm.class, parameters, "StatelessPageWithForm_expected.html");
 	}
+
+	/**
+	 * Tests that the session remains temporary (i.e. not bound) after submitting
+	 * stateless form
+	 */
+	@Test
+	public void submitStatelessFormDoesntBindSession()
+	{
+		StatelessPageWithForm.FORM_SUBMITTED.set(false);
+		try
+		{
+			tester.startPage(StatelessPageWithForm.class);
+			tester.assertRenderedPage(StatelessPageWithForm.class);
+			FormTester form = tester.newFormTester("form");
+			assertTrue(tester.getSession().isTemporary());
+			form.submit();
+			tester.assertRenderedPage(StatelessPageWithForm.class);
+			assertTrue(StatelessPageWithForm.FORM_SUBMITTED.get());
+			assertTrue(tester.getSession().isTemporary());
+		}
+		finally
+		{
+			StatelessPageWithForm.FORM_SUBMITTED.set(false);
+		}
+	}
 }
