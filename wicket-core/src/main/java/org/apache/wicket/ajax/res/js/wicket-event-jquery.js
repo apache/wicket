@@ -162,7 +162,8 @@
 						}
 
 						if (!el && Wicket.Log) {
-							Wicket.Log.error('Cannot find element with id: ' + element);
+							Wicket.Log.error('Cannot bind a listener for event "' + type +
+								'" on element "' + element + '" because the element is not in the DOM');
 						}
 
 						jQuery(el).on(type, data, fn);
