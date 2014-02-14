@@ -547,7 +547,6 @@ public class ComponentQueueingTest extends WicketTestCase
 		assertEquals("<div id=\"wicket__InlineEnclosure_01\" style=\"display:none\"></div>", tester.getLastResponseAsString());
 	}
 
-	@Ignore
 	@Test
 	public void dequeueWithBorder1()
 	{

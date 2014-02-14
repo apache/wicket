@@ -2129,7 +2129,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			if (tag instanceof WicketTag)
 			{
 				ComponentTag openTag = tag.getOpenTag() == null ? tag : tag.getOpenTag();
-				if (openTag.getAutoComponentFactory() == null)
+				if (((WicketTag) tag).isBorderTag())
+				{
+					if (tag.isOpen())
+					{
+						tags.push(tag);
+					}
+					else if (tag.isClose())
+					{
+						tags.pop();
+					}
+					continue;
+				}
+				else if (openTag.getAutoComponentFactory() == null)
 				{
 					// wicket tags that do not produce auto components can be ignored
 					continue;
@@ -2185,8 +2197,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					if (child != null)
 					{
 						MarkupContainer parentContainer = containers.peek();
-//						boolean isInBorder = isInBorder(tags, parentContainer);
-						if (parentContainer instanceof Border) //(isInBorder)
+						boolean isInBorder = isInBorder(tags, parentContainer);
+						if (isInBorder)
 						{
 							((Border) parentContainer).addToBorder(child);
 						}
