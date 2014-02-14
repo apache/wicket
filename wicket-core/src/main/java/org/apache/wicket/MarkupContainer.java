@@ -2148,7 +2148,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			if (tag.isClose())
 			{
-				ComponentTag closeTag = tags.pop();
+				tags.pop();
 				containers.pop();
 
 				if (containers.peek() instanceof AbstractRepeater)

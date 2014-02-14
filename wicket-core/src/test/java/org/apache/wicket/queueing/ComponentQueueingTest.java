@@ -35,6 +35,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.queueing.nestedborders.InnerBorder;
+import org.apache.wicket.queueing.nestedborders.OuterBorder;
+import org.apache.wicket.queueing.nestedpanels.InnerPanel;
+import org.apache.wicket.queueing.nestedpanels.OuterPanel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Assert;
@@ -263,21 +267,15 @@ public class ComponentQueueingTest extends WicketTestCase
 	/**
 	 * test with inner panels
 	 */
-	@Ignore
 	@Test
 	public void dequeueWithNestedPanels()
 	{
 		MarkupContainer r = new R(), s = new S();
 
-		TestPanel innerPanel = new TestPanel("inner");
-		innerPanel.setPanelMarkup("<html><head><wicket:head><meta 2/></wicket:head></head>"
-				+ "<body><wicket:panel><p wicket:id='s'></p></wicket:panel></body></html>");
+		Panel innerPanel = new InnerPanel("inner");
 		innerPanel.queue(s);
 
-		TestPanel outerPanel = new TestPanel("outer");
-		outerPanel.setPanelMarkup("<html><head><wicket:head><meta/></wicket:head></head>"
-				+ "<body><wicket:panel><p wicket:id='r'></p><p wicket:id='inner'></p>" +
-				"</wicket:panel></body></html>");
+		Panel outerPanel = new OuterPanel("outer");
 
 		outerPanel.queue(r, innerPanel);
 
@@ -290,7 +288,7 @@ public class ComponentQueueingTest extends WicketTestCase
 		assertThat(p, hasPath(new Path(outerPanel, r)));
 		assertThat(p, hasPath(new Path(outerPanel, innerPanel, s)));
 		tester.assertContains("<meta/>"); // contributed by <wicket:head> in outer
-		tester.assertContains("<meta 2/>"); // contributed by <wicket:head> in inner
+		tester.assertContains("<meta2/>"); // contributed by <wicket:head> in inner
 	}
 
 	@Test
@@ -607,17 +605,15 @@ public class ComponentQueueingTest extends WicketTestCase
 	{
 		MarkupContainer a = new A(), b = new B(), c= new C(), d = new D(), r = new R(), s = new S();
 
-		TestBorder outerBorder = new TestBorder("outerBorder");
-		outerBorder.setBorderMarkup("<wicket:border><p wicket:id='r'><p wicket:id='innerBorder'>" +
-				"<p wicket='s'></p></p><wicket:body/></p></wicket:border>");
+		Border outerBorder = new OuterBorder("outerBorder");
 
-		TestBorder innerBorder = new TestBorder("innerBorder");
-		innerBorder.setBorderMarkup("<wicket:border><p wicket:id='c'><p wicket:id='d'>" +
-				"<wicket:body/></p></p></wicket:border>");
+		Border innerBorder = new InnerBorder("innerBorder");
 
 		outerBorder.queueToBorder(r, innerBorder);
 
 		innerBorder.queueToBorder(c, d);
+
+		// TODO WICKET-3335 Where to queue 's' to make it work ?!
 		outerBorder.queue(s);
 
 		TestPage p = new TestPage();
@@ -627,8 +623,9 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		tester.startPage(p);
 
-		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, s)));
-		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, innerBorder.getBodyContainer(), c, d)));
+		assertThat(p, hasPath(new Path(a, outerBorder, outerBorder.getBodyContainer(), b)));
+		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, c, d)));
+		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, innerBorder.getBodyContainer(), s)));
 	}
 
 	private static class A extends WebMarkupContainer
