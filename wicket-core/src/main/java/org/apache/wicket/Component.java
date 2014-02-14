@@ -446,6 +446,7 @@ public abstract class Component
 	private static final short RFLAG_CONFIGURED = 0x10;
 	private static final short RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED = 0x20;
 	private static final short RFLAG_INITIALIZE_SUPER_CALL_VERIFIED = 0x40;
+	protected static final short RFLAG_CONTAINER_DEQUEING = 0x80;
 
 	/**
 	 * Flags that only keep their value during the request. Useful for cache markers, etc. At the

@@ -943,7 +943,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (page != null)
 		{
-			if (!queueRegion.dequeuing)
+			if (!queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
 				queueRegion.dequeue();
 			}
@@ -2045,7 +2045,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (page != null)
 		{
-			if (!region.dequeuing)
+			if (!region.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
 				region.dequeue();
 			}
@@ -2059,9 +2059,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return queue;
 	}
 
-	// TODO queuing: convert into a flag
-	private boolean dequeuing = false;
-
 	void dequeue()
 	{
 		if (!(this instanceof IQueueRegion))
@@ -2070,19 +2067,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					"Only implementations of IQueueRegion can use component queueing");
 		}
 
-		if (dequeuing)
+		if (getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 		{
 			throw new IllegalStateException("This container is already dequeing: " + this);
 		}
 
-		dequeuing = true;
+		setRequestFlag(RFLAG_CONTAINER_DEQUEING, true);
 		try
 		{
 			internalDequeue();
 		}
 		finally
 		{
-			dequeuing = false;
+			setRequestFlag(RFLAG_CONTAINER_DEQUEING, false);
 		}
 	}
 
