@@ -260,6 +260,39 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.assertContains("<meta/>"); // contributed by <wicket:head>
 	}
 
+	/**
+	 * test with inner panels
+	 */
+	@Ignore
+	@Test
+	public void dequeueWithNestedPanels()
+	{
+		MarkupContainer r = new R(), s = new S();
+
+		TestPanel innerPanel = new TestPanel("inner");
+		innerPanel.setPanelMarkup("<html><head><wicket:head><meta 2/></wicket:head></head>"
+				+ "<body><wicket:panel><p wicket:id='s'></p></wicket:panel></body></html>");
+		innerPanel.queue(s);
+
+		TestPanel outerPanel = new TestPanel("outer");
+		outerPanel.setPanelMarkup("<html><head><wicket:head><meta/></wicket:head></head>"
+				+ "<body><wicket:panel><p wicket:id='r'></p><p wicket:id='inner'></p>" +
+				"</wicket:panel></body></html>");
+
+		outerPanel.queue(r, innerPanel);
+
+		TestPage p = new TestPage();
+		p.setPageMarkup("<html><head></head><body><p wicket:id='outer'></p></body></html>");
+		p.queue(outerPanel);
+
+		tester.startPage(p);
+
+		assertThat(p, hasPath(new Path(outerPanel, r)));
+		assertThat(p, hasPath(new Path(outerPanel, innerPanel, s)));
+		tester.assertContains("<meta/>"); // contributed by <wicket:head> in outer
+		tester.assertContains("<meta 2/>"); // contributed by <wicket:head> in inner
+	}
+
 	@Test
 	public void dequeueWithRepeater1()
 	{
