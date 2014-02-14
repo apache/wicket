@@ -941,8 +941,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			cursor = cursor.getParent();
 		}
 
-		// TODO WICKET-3335: queueRegion is always non-null if page is non-null
-		if (queueRegion != null && page != null)
+		if (page != null)
 		{
 			if (!queueRegion.dequeuing)
 			{
@@ -2046,8 +2045,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (page != null)
 		{
-			// TODO WICKET-3335: should we check if (!region.dequeueing) ?
-			region.dequeue();
+			if (!region.dequeuing)
+			{
+				region.dequeue();
+			}
 		}
 
 		return this;
@@ -2065,13 +2066,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		if (!(this instanceof IQueueRegion))
 		{
-			// TODO queueing mesage
-			throw new UnsupportedOperationException();
+			throw new UnsupportedOperationException(
+					"Only implementations of IQueueRegion can use component queueing");
 		}
 
 		if (dequeuing)
 		{
-			throw new IllegalStateException();
+			throw new IllegalStateException("This container is already dequeing: " + this);
 		}
 
 		dequeuing = true;
