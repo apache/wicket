@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.ws.javax;
 
 import java.nio.ByteBuffer;
 
+import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
@@ -38,11 +39,11 @@ public class JavaxWebSocketProcessor extends AbstractWebSocketProcessor
 	 * @param session
 	 *            the WebSocket session
 	 * @param application
-	 *            the current Wicket Application
+	 * @param endpointConfig
 	 */
-	public JavaxWebSocketProcessor(final Session session, final WebApplication application)
+	public JavaxWebSocketProcessor(final Session session, final WebApplication application, EndpointConfig endpointConfig)
 	{
-		super(new JavaxUpgradeHttpRequest(session), application);
+		super(new JavaxUpgradeHttpRequest(session, endpointConfig), application);
 
 		onConnect(new JavaxWebSocketConnection(session, this));
 

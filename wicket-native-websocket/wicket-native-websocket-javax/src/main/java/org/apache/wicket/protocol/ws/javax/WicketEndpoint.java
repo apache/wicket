@@ -55,7 +55,7 @@ public class WicketEndpoint extends Endpoint
 		try
 		{
 			ThreadContext.setApplication(app);
-			javaxWebSocketProcessor = new JavaxWebSocketProcessor(session, app);
+			javaxWebSocketProcessor = new JavaxWebSocketProcessor(session, app, endpointConfig);
 		}
 		finally
 		{

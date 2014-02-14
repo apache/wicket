@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
+import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 
 import org.apache.wicket.util.string.StringValue;
@@ -60,9 +61,15 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	private final Map<String, String[]> parametersMap;
 	private final Map<String, List<String>> headers;
 
-	public JavaxUpgradeHttpRequest(final Session session)
+	public JavaxUpgradeHttpRequest(final Session session, EndpointConfig endpointConfig)
 	{
 		Map<String, Object> userProperties = session.getUserProperties();
+
+		if (userProperties == null || userProperties.isEmpty())
+		{
+			// workaround for JBoss Wildfly 8.0.Final
+			userProperties = endpointConfig.getUserProperties();
+		}
 
 		this.httpSession = (HttpSession) userProperties.get("session");
 		this.headers = (Map<String, List<String>>) userProperties.get("headers");
