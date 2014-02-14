@@ -94,8 +94,8 @@ import org.slf4j.LoggerFactory;
  * <li><b>Page Factory</b> - A pluggable implementation of {@link IPageFactory} is used to
  * instantiate pages for the session.
  * 
- * <li><b>Removal</b> - Pages can be removed from the Session forcibly by calling remove(Page) or
- * removeAll(), although such an action should rarely be necessary.
+ * <li><b>Removal</b> - Pages can be removed from the Session forcibly by calling clear(),
+ * although such an action should rarely be necessary.
  * 
  * <li><b>Flash Messages</b> - Flash messages are messages that are stored in session and are removed
  * after they are displayed to the user. Session acts as a store for these messages because they can

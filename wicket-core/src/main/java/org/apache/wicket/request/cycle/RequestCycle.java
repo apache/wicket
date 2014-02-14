@@ -654,6 +654,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public void setResponsePage(IRequestablePage page)
 	{
+		if (page instanceof Page)
+		{
+			((Page) page).setStatelessHint(false);
+		}
+
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new PageProvider(page),
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}
