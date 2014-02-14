@@ -35,11 +35,14 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(SlowTests.class)
 public class ComponentQueueingPerformanceTest extends WicketTestCase
 {
 	private void run(Class<? extends Page> pageClass)
@@ -49,7 +52,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 		tester.destroy();
 	}
 
-	// @Test
+	@Test
 	public void performance()
 	{
 		final int warmup = 30;

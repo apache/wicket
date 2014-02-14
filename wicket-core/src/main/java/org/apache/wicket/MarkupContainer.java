@@ -2054,11 +2054,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return this;
 	}
 
-	ComponentQueue getQueue()
-	{
-		return queue;
-	}
-
 	void dequeue()
 	{
 		if (!(this instanceof IQueueRegion))
@@ -2183,8 +2178,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					for (int j = containers.size() - 1; j >= 0; j--)
 					{
 						MarkupContainer container = containers.get(j);
-						child = container.getQueue() != null
-							? container.getQueue().remove(id)
+						child = container.queue != null
+							? container.queue.remove(id)
 							: null;
 						if (child != null)
 						{
