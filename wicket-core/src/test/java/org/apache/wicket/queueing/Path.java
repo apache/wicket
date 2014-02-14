@@ -29,7 +29,7 @@ class Path implements Iterable<Path.Segment>
 
 	public Path()
 	{
-		segments = new ArrayList<Segment>();
+		segments = new ArrayList<>();
 	}
 
 	public Path(Component... components)
