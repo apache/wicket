@@ -398,7 +398,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	/**
 	 * The container to be associated with the &lt;wicket:body&gt; tag
 	 */
-	public class BorderBodyContainer extends WebMarkupContainer
+	public class BorderBodyContainer extends WebMarkupContainer implements IQueueRegion
 	{
 		private static final long serialVersionUID = 1L;
 

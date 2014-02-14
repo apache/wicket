@@ -565,24 +565,27 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(p);
 
 		assertThat(p, hasPath(new Path(a, border, r, s)));
+		assertThat(p, hasPath(new Path(a, border, border.getBodyContainer(), b)));
 	}
 
 	@Ignore
 	@Test
 	public void dequeueWithNestedBorders()
 	{
-		MarkupContainer a = new A(), b = new B(), c= new C(), d = new D(), r = new R();
+		MarkupContainer a = new A(), b = new B(), c= new C(), d = new D(), r = new R(), s = new S();
 
 		TestBorder outerBorder = new TestBorder("outerBorder");
 		outerBorder.setBorderMarkup("<wicket:border><p wicket:id='r'><p wicket:id='innerBorder'>" +
-				"<wicket:body/></p></p></wicket:border>");
+				"<p wicket='s'></p></p><wicket:body/></p></wicket:border>");
 
 		TestBorder innerBorder = new TestBorder("innerBorder");
 		innerBorder.setBorderMarkup("<wicket:border><p wicket:id='c'><p wicket:id='d'>" +
 				"<wicket:body/></p></p></wicket:border>");
-		innerBorder.queueToBorder(c, d);
 
 		outerBorder.queueToBorder(r, innerBorder);
+
+		innerBorder.queueToBorder(c, d);
+		outerBorder.queue(s);
 
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='outerBorder'><p wicket:id='b'></p></p></p>");
@@ -591,7 +594,8 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		tester.startPage(p);
 
-		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, c, d)));
+		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, s)));
+		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, innerBorder.getBodyContainer(), c, d)));
 	}
 
 	private static class A extends WebMarkupContainer
