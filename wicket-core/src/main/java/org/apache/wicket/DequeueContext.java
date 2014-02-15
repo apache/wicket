@@ -1,13 +1,14 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.collections.ArrayListStack;
 
 public class DequeueContext
 {
-	private final Markup markup;
+	private final IMarkupFragment markup;
 	private int index;
 	private ComponentTag next;
 	private ArrayListStack<ComponentTag> tags = new ArrayListStack<>();
@@ -37,7 +38,7 @@ public class DequeueContext
 		}
 	}
 	
-	public DequeueContext(Markup markup, MarkupContainer root)
+	public DequeueContext(IMarkupFragment markup, MarkupContainer root)
 	{
 		this.markup = markup;
 		containers.push(root);

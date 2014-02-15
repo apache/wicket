@@ -2080,7 +2080,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	private void internalDequeue()
 	{
-		Markup markup = getAssociatedMarkup();
+		IMarkupFragment markup = getDequeueMarkup();
 		if (markup == null)
 		{
 			// markup not found, skip dequeuing
@@ -2121,7 +2121,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	
 				if (child != null)
 				{
-					add(child);
+					addDequeuedComponent(child, tag);
 					if (child instanceof IQueueRegion)
 					{
 						((MarkupContainer)child).dequeue();
@@ -2159,6 +2159,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 	}
+	
+	protected IMarkupFragment getDequeueMarkup() {
+		return getAssociatedMarkup();
+	}
+	
 	protected boolean supportsDequeueingFrom(ComponentTag tag) {
 		if (tag instanceof WicketTag) {
 			WicketTag wicketTag=(WicketTag)tag;
@@ -2172,7 +2177,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return true;
 	}
 	
-	protected Component findComponentToDequeue(ComponentTag tag)
+	public Component findComponentToDequeue(ComponentTag tag)
 	{
 		return queue == null ? null : queue.remove(tag.getId());
 	}

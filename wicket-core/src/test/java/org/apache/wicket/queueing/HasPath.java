@@ -48,11 +48,14 @@ class HasPath extends TypeSafeMatcher<Component>
 				return false;
 			}
 
-			cursor = ((MarkupContainer)cursor).get(path.get(i).getId());
-			if (cursor == null)
+			String id = path.get(i).getId();
+			Component child = ((MarkupContainer)cursor).get(id);
+			if (child== null)
 			{
 				return false;
 			}
+			
+			cursor=child;
 			if (!path.get(i).getType().isAssignableFrom(cursor.getClass()))
 			{
 				return false;

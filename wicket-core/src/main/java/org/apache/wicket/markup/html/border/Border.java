@@ -26,6 +26,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.BorderMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -162,7 +163,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		super(id, model);
 
 		body = new BorderBodyContainer(id + "_" + BODY);
-		addToBorder(body);
+		queueToBorder(body);
 	}
 
 	/**
@@ -398,7 +399,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	/**
 	 * The container to be associated with the &lt;wicket:body&gt; tag
 	 */
-	public class BorderBodyContainer extends WebMarkupContainer
+	public class BorderBodyContainer extends WebMarkupContainer implements IQueueRegion
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -535,5 +536,102 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 
 			return markup.find(child.getId());
 		}
+		
+		protected IMarkupFragment getDequeueMarkup() {
+			Border border=findParent(Border.class);
+			IMarkupFragment fragment=findParent(Border.class).getMarkup();
+			/*
+			 * we want to get the contents of the border here (the markup that
+			 * is represented by the body tag) to do this we need to strip the
+			 * tag that the border is attached to (usually the first tag)
+			 */
+
+			int i=0;
+			while (i<fragment.size()) {
+				MarkupElement element=fragment.get(i);
+				if (element instanceof ComponentTag&&((ComponentTag)element).getId().equals(border.getId()) ){
+					break;
+				}
+				i++;
+			}
+
+			if (i>=fragment.size()) {
+				throw new IllegalStateException("Could not find starting border tag for border: "+border.getId()+" in markup: "+fragment);
+			}
+
+			
+			/*
+			 *  (i) is now at the border tag, find the next component tag which 
+			 */
+
+			i++;
+			while (i<fragment.size()) {
+				MarkupElement element = fragment.get(i);
+				if (element instanceof ComponentTag) {
+					break;
+				}
+				i++;
+			}
+			
+			ComponentTag tag=(ComponentTag) fragment.get(i);
+			if (tag.isClose()) {
+				// this closes the border tag, border only has raw markup
+				return null;
+			} 
+			
+			return new MarkupFragment(fragment, i);
+
+			
+		}
+		
+		@Override
+		public Component findComponentToDequeue(ComponentTag tag) {
+			/* the body container is allowed to search for queued components 
+			 * all the way to the page even though it is an IQueueRegion so it can
+			 * find components queueud below the border
+			 */
+			
+			Component component=super.findComponentToDequeue(tag);
+			if (component!=null) {
+				return component;
+			}
+			
+			MarkupContainer cursor=getParent();
+			while (cursor!=null) {
+				component=cursor.findComponentToDequeue(tag);
+				if (component!=null) {
+					return component;
+				}
+				if (cursor instanceof BorderBodyContainer) {
+					// optimization - find call above wouldve already recursed to page
+					break;
+				}
+				cursor=cursor.getParent();
+			}
+			return null;
+		}
+	}
+	
+	
+	@Override
+	protected boolean supportsDequeueingFrom(ComponentTag tag) {
+		if ((tag instanceof WicketTag)&&((WicketTag)tag).isBodyTag()) {
+			return true;
+		}
+
+		return super.supportsDequeueingFrom(tag);
+	}
+	
+	@Override
+	public Component findComponentToDequeue(ComponentTag tag) {
+		if ((tag instanceof WicketTag)&&((WicketTag)tag).isBodyTag()) {
+			return getBodyContainer();
+		}
+		return super.findComponentToDequeue(tag);
+	}
+	
+	@Override
+	protected void addDequeuedComponent(Component component, ComponentTag tag) {
+		addToBorder(component);
 	}
 }

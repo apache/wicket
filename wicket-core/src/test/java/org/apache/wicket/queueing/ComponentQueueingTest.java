@@ -584,22 +584,21 @@ public class ComponentQueueingTest extends WicketTestCase
 		MarkupContainer a = new A(), b = new B(), r = new R(), s = new S();
 
 		TestBorder border = new TestBorder("border");
-		border.setBorderMarkup("<wicket:border><p wicket:id='r'><p wicket:id='s'>" +
-				"<wicket:body/></p></p></wicket:border>");
+		border.setBorderMarkup("<wicket:border><b1 wicket:id='r'><b2 wicket:id='s'>" +
+				"<wicket:body/></b2></b1></wicket:border>");
 		border.queueToBorder(r, s);
 
 		TestPage p = new TestPage();
-		p.setPageMarkup("<p wicket:id='a'><p wicket:id='border'><p wicket:id='b'></p></p></p>");
+		p.setPageMarkup("<out1 wicket:id='a'><p wicket:id='border'><in1 wicket:id='b'></in1></p></out1>");
 
 		p.queue(a, border, b);
 
 		tester.startPage(p);
 
-		assertThat(p, hasPath(new Path(a, border, r, s)));
-		assertThat(p, hasPath(new Path(a, border, border.getBodyContainer(), b)));
+		assertThat(p, hasPath(new Path(a, border, r, s, border.getBodyContainer(), b)));
 	}
 
-	@Ignore
+
 	@Test
 	public void dequeueWithNestedBorders()
 	{
@@ -613,19 +612,18 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		innerBorder.queueToBorder(c, d);
 
-		// TODO WICKET-3335 Where to queue 's' to make it work ?!
-		outerBorder.queue(s);
+		outerBorder.queueToBorder(s);
+
 
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='outerBorder'><p wicket:id='b'></p></p></p>");
-
+		
 		p.queue(b, outerBorder, a);
 
 		tester.startPage(p);
-
-		assertThat(p, hasPath(new Path(a, outerBorder, outerBorder.getBodyContainer(), b)));
-		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, c, d)));
-		assertThat(p, hasPath(new Path(a, outerBorder, r, innerBorder, innerBorder.getBodyContainer(), s)));
+		
+		assertThat(p, hasPath(new Path(a, outerBorder,  r, innerBorder, c, d, innerBorder.getBodyContainer(), s)));
+		assertThat(p, hasPath(new Path(a, outerBorder, r, outerBorder.getBodyContainer(), b)));
 	}
 
 	private static class A extends WebMarkupContainer
