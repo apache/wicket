@@ -2080,20 +2080,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	private void internalDequeue()
 	{
-		class Repeater
-		{
-			int parentMarkupIndex;
-			Iterator<Component> renderIterator;
-			ComponentTag tag;
-
-			Repeater(int parentMarkupIndex, Iterator<Component> renderIterator, ComponentTag tag)
-			{
-				this.parentMarkupIndex = parentMarkupIndex;
-				this.renderIterator = renderIterator;
-				this.tag = tag;
-			}
-		}
-
 		Markup markup = getAssociatedMarkup();
 		if (markup == null)
 		{
@@ -2101,207 +2087,97 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// this sometimes happens when we are in a unit test
 			return;
 		}
-		// use arraydeque?
-		ArrayListStack<ComponentTag> tags = new ArrayListStack<>();
-		ArrayListStack<MarkupContainer> containers = new ArrayListStack<>();
-		ArrayListStack<Repeater> repeaters = new ArrayListStack<>();
 
-		containers.push(this);
+		DequeueContext dequeue = new DequeueContext(markup, this);
 
-		for (int i = 0; i < markup.size(); i++)
+		if (dequeue.peekTag() != null)
 		{
-			MarkupElement element = markup.get(i);
-
-			if (!(element instanceof ComponentTag))
-			{
-				continue;
-			}
-
-			ComponentTag tag = (ComponentTag)element;
-
-			if (tag instanceof WicketTag)
-			{
-				ComponentTag openTag = tag.getOpenTag() == null ? tag : tag.getOpenTag();
-				if (((WicketTag) tag).isBorderTag())
-				{
-					if (tag.isOpen())
-					{
-						tags.push(tag);
-					}
-					else if (tag.isClose())
-					{
-						tags.pop();
-					}
-					continue;
-				}
-				else if (openTag.getAutoComponentFactory() == null)
-				{
-					// wicket tags that do not produce auto components can be ignored
-					continue;
-				}
-			}
-
-			if (tag.isClose())
-			{
-				tags.pop();
-				containers.pop();
-
-				if (containers.peek() instanceof AbstractRepeater)
-				{
-					Repeater repeater = repeaters.peek();
-					if (repeater.renderIterator.hasNext())
-					{
-						containers.push((MarkupContainer)repeater.renderIterator.next());
-						tags.push(repeater.tag);
-						i = repeater.parentMarkupIndex;
-						continue;
-					}
-					else
-					{
-						// we rendered the last item, now time to close the repeater
-						repeaters.pop();
-						tags.pop();
-						containers.pop();
-					}
-				}
-			}
-			else
-			{
-				String id = tag.getId();
-				Component child = containers.peek().get(id);
-
-				// see if child is already added to parent
-				if (child == null)
-				{
-					// the container does not yet have a child with this id, see if we can
-					// dequeue
-					for (int j = containers.size() - 1; j >= 0; j--)
-					{
-						MarkupContainer container = containers.get(j);
-						child = container.queue != null
-							? container.queue.remove(id)
-							: null;
-						if (child != null)
-						{
-							break;
-						}
-					}
-
-					if (child != null)
-					{
-						MarkupContainer parentContainer = containers.peek();
-						boolean isInBorder = isInBorder(tags, parentContainer);
-						if (isInBorder)
-						{
-							((Border) parentContainer).addToBorder(child);
-						}
-						else
-						{
-							parentContainer.add(child);
-						}
-
-						if (child instanceof IQueueRegion)
-						{
-							((MarkupContainer)child).dequeue();
-						}
-
-					}
-				}
-				if (child == null)
-				{
-					// could not dequeue, skip until closing tag
-
-					if (tag.isOpen())
-					{
-						for (i = i + 1; i < markup.size(); i++)
-						{
-							MarkupElement e = markup.get(i);
-							if (e instanceof ComponentTag && e.closes(tag))
-							{
-								break;
-							}
-						}
-					}
-
-					// if (dequeueSites == null)
-					// {
-					// dequeueSites = new HashSet<String>();
-					// }
-					// dequeueSites.add(id);
-
-				}
-				else
-				{
-					if (tag.isOpen())
-					{
-						if (child instanceof MarkupContainer)
-						{
-							containers.push((MarkupContainer)child);
-							tags.push(tag);
-
-							if (child instanceof AbstractRepeater)
-							{
-								Repeater repeater = new Repeater(i,
-									((AbstractRepeater)child).iterator(), tag);
-								if (repeater.renderIterator.hasNext())
-								{
-									repeaters.push(repeater);
-									containers
-										.push((MarkupContainer)repeater.renderIterator.next());
-									tags.push(tag);
-								}
-								else
-								{
-									// empty repeater, skip until closing tag
-									for (i = i + 1; i < markup.size(); i++)
-									{
-										MarkupElement e = markup.get(i);
-										if (e instanceof ComponentTag && e.closes(tag))
-										{
-											break;
-										}
-									}
-									i--;
-									continue;
-								}
-							}
-						}
-						else
-						{
-							// web component, skip until closing tag
-							for (i = i + 1; i < markup.size(); i++)
-							{
-								MarkupElement e = markup.get(i);
-								if (e instanceof ComponentTag && e.closes(tag))
-								{
-									break;
-								}
-							}
-						}
-					}
-					else
-					{
-						// openclose tag, nothing to do
-					}
-
-				}
-			}
+			dequeue(dequeue);
 		}
 
 
 	}
-
-	private boolean isInBorder(ArrayListStack<ComponentTag> tags, MarkupContainer parentContainer)
+	public void dequeue(DequeueContext dequeue)
 	{
-		boolean result = false;
-		if (parentContainer instanceof Border && tags.empty() == false)
+		
+
+		while (dequeue.isAtOpenOrOpenCloseTag())
 		{
-			ComponentTag parentsTag = tags.peek();
-			if (parentsTag instanceof WicketTag && ((WicketTag)parentsTag).isBorderTag())
+		
+			ComponentTag tag = dequeue.popTag();
+	
+			// see if child is already added to parent
+	
+
+			Component child = get(tag.getId()); // TODO queueing add this into findInQueue and
+												// rename it to dequeue
+	
+			if (child == null)
 			{
-				result = true;
+				// the container does not yet have a child with this id, see if we can
+				// dequeue
+				
+				child = dequeue.dequeue(tag);
+	
+				if (child != null)
+				{
+					add(child);
+					if (child instanceof IQueueRegion)
+					{
+						((MarkupContainer)child).dequeue();
+					}
+				}
+			}
+					
+			if (child == null || tag.isOpenClose() || !(child instanceof MarkupContainer))
+			{
+				// could not dequeue, or does not contain children
+	
+				dequeue.skipToCloseTag();
+			}
+			else
+			{
+				MarkupContainer container = (MarkupContainer)child;
+				dequeue.pushContainer(container);
+				container.dequeue(dequeue);
+				dequeue.popContainer();
+			}
+
+			if (tag.isOpen())
+			{
+				// pull the close tag off
+				ComponentTag close = dequeue.popTag();
+				if (!close.closes(tag))
+				{
+					// sanity check
+					// FIXME queueing message
+					throw new IllegalStateException();
+				}
+			}
+
+
+		}
+
+	}
+	protected boolean supportsDequeueingFrom(ComponentTag tag) {
+		if (tag instanceof WicketTag) {
+			WicketTag wicketTag=(WicketTag)tag;
+			if (wicketTag.getAutoComponentFactory() != null)
+			{
+				return true;
+			} else {
+				return false;
 			}
 		}
-		return result;
+		return true;
+	}
+	
+	protected Component findComponentToDequeue(ComponentTag tag)
+	{
+		return queue == null ? null : queue.remove(tag.getId());
+	}
+
+	protected void addDequeuedComponent(Component component, ComponentTag tag) {
+		add(component);
 	}
 }

@@ -25,6 +25,8 @@ import org.apache.wicket.util.lang.Args;
  * Manages the component queue.
  * 
  * @author igor
+ * 
+ * @deprecated uses too much memory compared to ComponentQueue
  */
 class ComponentQueue2
 {

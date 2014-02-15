@@ -21,6 +21,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.DequeueContext;
+import org.apache.wicket.DequeueContext.Bookmark;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -150,4 +153,22 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 * Callback to let the repeater know it should populate itself with its items.
 	 */
 	protected abstract void onPopulate();
+	
+	@Override
+	public void dequeue(DequeueContext dequeue) {
+		if (size()>0) {
+			Bookmark bookmark=dequeue.save();
+			
+			for (Component child:this) {
+				if (child instanceof MarkupContainer) {
+					dequeue.popContainer(); // pop the repeater
+					MarkupContainer container=(MarkupContainer) child;
+					dequeue.pushContainer(container);
+					container.dequeue(dequeue);
+					dequeue.restore(bookmark);
+				}
+			}	
+		}
+		dequeue.skipToCloseTag();
+	}
 }
