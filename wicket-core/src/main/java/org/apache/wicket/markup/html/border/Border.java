@@ -537,7 +537,8 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			return markup.find(child.getId());
 		}
 		
-		protected IMarkupFragment getDequeueMarkup() {
+		public IMarkupFragment getDequeueMarkup()
+		{
 			Border border=findParent(Border.class);
 			IMarkupFragment fragment=findParent(Border.class).getMarkup();
 			/*
@@ -614,12 +615,12 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	
 	
 	@Override
-	protected boolean supportsDequeueingFrom(ComponentTag tag) {
+	protected boolean canDequeueTag(ComponentTag tag) {
 		if ((tag instanceof WicketTag)&&((WicketTag)tag).isBodyTag()) {
 			return true;
 		}
 
-		return super.supportsDequeueingFrom(tag);
+		return super.canDequeueTag(tag);
 	}
 	
 	@Override
@@ -632,6 +633,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	
 	@Override
 	protected void addDequeuedComponent(Component component, ComponentTag tag) {
+		// components queued in border get dequeued into the border not into the body container
 		addToBorder(component);
 	}
 }

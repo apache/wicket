@@ -157,6 +157,10 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	@Override
 	public void dequeue(DequeueContext dequeue) {
 		if (size()>0) {
+			// essentially what we do is for every child replace the repeater with the child in
+			// dequeue container stack and run the dequeue on the child. we also take care to reset
+			// the state of the dequeue context after we process every child.
+
 			Bookmark bookmark=dequeue.save();
 			
 			for (Component child:this) {

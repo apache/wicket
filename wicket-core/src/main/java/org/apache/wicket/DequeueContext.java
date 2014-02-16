@@ -2,19 +2,26 @@ package org.apache.wicket;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.collections.ArrayListStack;
 
-public class DequeueContext
+/**
+ * Context for component dequeueing. Keeps track of markup position and container stack.
+ * 
+ * @author igor
+ *
+ */
+public final class DequeueContext
 {
 	private final IMarkupFragment markup;
 	private int index;
 	private ComponentTag next;
 	private ArrayListStack<ComponentTag> tags = new ArrayListStack<>();
+
 	private ArrayListStack<MarkupContainer> containers = new ArrayListStack<>();
 
-	public static class Bookmark
+	/** A bookmark for the DequeueContext stack */
+	public static final class Bookmark
 	{
 		private final int index;
 		private final ComponentTag next;
@@ -45,21 +52,39 @@ public class DequeueContext
 		next=nextTag();
 	}
 	
+	/**
+	 * Saves the state of the context into a bookmark which can later be used to restore it.
+	 */
 	public Bookmark save()
 	{
 		return new Bookmark(this);
 	}
 
+	/**
+	 * Restores the state of the context from the bookmark
+	 * 
+	 * @param bookmark
+	 */
 	public void restore(Bookmark bookmark)
 	{
 		bookmark.restore(this);
 	}
 
+	/**
+	 * Peeks markup tag that would be retrieved by call to {@link #popTag()}
+	 * 
+	 * @return
+	 */
 	public ComponentTag peekTag()
 	{
 		return next;
 	}
 	
+	/**
+	 * Retrieves the next markup tag
+	 * 
+	 * @return
+	 */
 	public ComponentTag popTag()
 	{
 		ComponentTag taken=next;
@@ -68,6 +93,9 @@ public class DequeueContext
 		return taken;
 	}
 	
+	/**
+	 * Skips to the closing tag of the tag retrieved from last call to {@link #popTag()}
+	 */
 	public void skipToCloseTag()
 	{
 		if (tags.peek().isOpen())
@@ -89,7 +117,7 @@ public class DequeueContext
 			{
 				ComponentTag tag = (ComponentTag)element;
 				ComponentTag open = tag.isClose() ? tag.getOpenTag() : tag;
-				if (canDequeue(open))
+				if (canDequeueTag(open))
 				{
 					index++;
 					return tag;
@@ -99,7 +127,7 @@ public class DequeueContext
 		return null;
 	}
 	
-	private boolean canDequeue(ComponentTag open)
+	private boolean canDequeueTag(ComponentTag open)
 	{
 		if (containers.size() < 1)
 		{
@@ -108,7 +136,7 @@ public class DequeueContext
 		}
 		for (int i = containers.size() - 1; i >= 0; i--)
 		{
-			if (containers.get(i).supportsDequeueingFrom((open)))
+			if (containers.get(i).canDequeueTag((open)))
 			{
 				return true;
 			}
@@ -116,27 +144,53 @@ public class DequeueContext
 		return false;
 	}
 
+	/**
+	 * Checks if the tag returned by {@link #peekTag()} is either open or open-close.
+	 * 
+	 * @return
+	 */
 	public boolean isAtOpenOrOpenCloseTag()
 	{
 		return peekTag() != null && (peekTag().isOpen() || peekTag().isOpenClose());
 	}
 
+	/**
+	 * Retrieves the container on the top of the containers stack
+	 * 
+	 * @return
+	 */
 	public MarkupContainer peekContainer()
 	{
 		return containers.peek();
 	}
 
+	/**
+	 * Pushes a container onto the container stack
+	 * 
+	 * @param container
+	 */
 	public void pushContainer(MarkupContainer container)
 	{
 		containers.push(container);
 	}
 
+	/**
+	 * Pops a container from the container stack
+	 * 
+	 * @return
+	 */
 	public MarkupContainer popContainer()
 	{
 		return containers.pop();
 	}
 
-	public Component dequeue(ComponentTag tag)
+	/**
+	 * Searches the container stack for a component that can be dequeud
+	 * 
+	 * @param tag
+	 * @return
+	 */
+	public Component findComponentToDequeue(ComponentTag tag)
 	{
 		for (int j = containers.size() - 1; j >= 0; j--)
 		{

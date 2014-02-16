@@ -36,13 +36,11 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
-import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.DebugSettings;
-import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
@@ -1519,22 +1517,28 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		super.onInitialize();
 		if (this instanceof IQueueRegion)
 		{
-			// dequeue auto components
-			Markup markup = getAssociatedMarkup();
-			if (markup != null)
+			// if this container is a queue region dequeue any queued up auto components
+			dequeueAutoComponents();
+		}
+	}
+
+	private void dequeueAutoComponents()
+	{
+		// dequeue auto components
+		IMarkupFragment markup = getDequeueMarkup();
+		if (markup != null)
+		{
+			// make sure we have markup, when running inside tests we wont
+			for (int i = 0; i < markup.size(); i++)
 			{
-				// make sure we have markup, when running inside tests we wont
-				for (int i = 0; i < markup.size(); i++)
+				MarkupElement element = markup.get(i);
+				if (element instanceof ComponentTag)
 				{
-					MarkupElement element = markup.get(i);
-					if (element instanceof ComponentTag)
+					ComponentTag tag = (ComponentTag)element;
+					if (tag.getAutoComponentFactory() != null)
 					{
-						ComponentTag tag = (ComponentTag)element;
-						if (tag.getAutoComponentFactory() != null)
-						{
-							Component auto = tag.getAutoComponentFactory().newComponent(tag);
-							queue(auto);
-						}
+						Component auto = tag.getAutoComponentFactory().newComponent(tag);
+						queue(auto);
 					}
 				}
 			}
@@ -1952,55 +1956,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	/**
-	 * Automatically create components for <wicket:xxx> tag.
-	 */
-	// to use it call it from #onInitialize()
-	private void createAndAddComponentsForWicketTags()
-	{
-		// Markup must be available
-		IMarkupFragment markup = getMarkup();
-		if ((markup != null) && (markup.size() > 1))
-		{
-			MarkupStream stream = new MarkupStream(markup);
-
-			// Skip the first component tag which already belongs to 'this' container
-			if (stream.skipUntil(ComponentTag.class))
-			{
-				stream.next();
-			}
-
-			// Search for <wicket:xxx> in the remaining markup and try to resolve the component
-			while (stream.skipUntil(ComponentTag.class))
-			{
-				ComponentTag tag = stream.getTag();
-				if (tag.isOpen() || tag.isOpenClose())
-				{
-					if (tag instanceof WicketTag)
-					{
-						Component component = ComponentResolvers.resolve(this, stream, tag, null);
-						if ((component != null) && (component.getParent() == null))
-						{
-							if (component.getId().equals(tag.getId()) == false)
-							{
-								// make sure we are able to get() the component during rendering
-								tag.setId(component.getId());
-								tag.setModified(true);
-							}
-							add(component);
-						}
-					}
-
-					if (tag.isOpen())
-					{
-						stream.skipToMatchingCloseTag(tag);
-					}
-				}
-				stream.next();
-			}
-		}
-	}
-
 	@Override
 	protected void onDetach()
 	{
@@ -2017,6 +1972,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	private transient ComponentQueue queue;
 
+	/**
+	 * Queues a component to be dequeued later. The advantage of this method over the
+	 * {@link #add(Component...)} method is that the component does not have to be added to its
+	 * direct parent, only to a parent upstream; it will be dequeued into the correct parent using
+	 * the hierarchy defined in the markup. This allows the component hiearchy to be maintined only
+	 * in markup instead of in markup and in java code; affording designers and developers more
+	 * freedom when moving components in markup.
+	 * 
+	 * @param components
+	 * @return
+	 */
 	public MarkupContainer queue(Component... components)
 	{
 		if (queue == null)
@@ -2054,7 +2020,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return this;
 	}
 
-	void dequeue()
+	/**
+	 * @see IQueueRegion#dequeue()
+	 */
+	public void dequeue()
 	{
 		if (!(this instanceof IQueueRegion))
 		{
@@ -2070,7 +2039,20 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		setRequestFlag(RFLAG_CONTAINER_DEQUEING, true);
 		try
 		{
-			internalDequeue();
+			IMarkupFragment markup = getDequeueMarkup();
+			if (markup == null)
+			{
+				// markup not found, skip dequeuing
+				// this sometimes happens when we are in a unit test
+				return;
+			}
+
+			DequeueContext dequeue = new DequeueContext(markup, this);
+
+			if (dequeue.peekTag() != null)
+			{
+				dequeue(dequeue);
+			}
 		}
 		finally
 		{
@@ -2078,29 +2060,23 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	private void internalDequeue()
-	{
-		IMarkupFragment markup = getDequeueMarkup();
-		if (markup == null)
-		{
-			// markup not found, skip dequeuing
-			// this sometimes happens when we are in a unit test
-			return;
-		}
-
-		DequeueContext dequeue = new DequeueContext(markup, this);
-
-		if (dequeue.peekTag() != null)
-		{
-			dequeue(dequeue);
-		}
-
-
-	}
+	/**
+	 * Dequeues components. The default implementation iterates direct children of this container
+	 * found in the markup (retrieved via {@link #getDequeueMarkup()}) and tries to find matching
+	 * components in queues filled by a call to {@link #queue(Component...)}. It then delegates the
+	 * dequeing to these children.
+	 * 
+	 * The provided {@link DequeueContext} is used to maintain the place in markup as well as the
+	 * stack of components whose queues will be searched. For example, before delegating the call to
+	 * a child the container will push the child onto the stack of components.
+	 * 
+	 * Certain components that implement custom markup behaviors (such as repeaters and borders)
+	 * override this method to bring dequeuing in line with their custom markup handling.
+	 * 
+	 * @param dequeue
+	 */
 	public void dequeue(DequeueContext dequeue)
 	{
-		
-
 		while (dequeue.isAtOpenOrOpenCloseTag())
 		{
 		
@@ -2117,7 +2093,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// the container does not yet have a child with this id, see if we can
 				// dequeue
 				
-				child = dequeue.dequeue(tag);
+				child = dequeue.findComponentToDequeue(tag);
 	
 				if (child != null)
 				{
@@ -2154,17 +2130,28 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					throw new IllegalStateException();
 				}
 			}
-
-
 		}
 
 	}
 	
-	protected IMarkupFragment getDequeueMarkup() {
+	/** @see IQueueRegion#getDequeueMarkup() */
+	public IMarkupFragment getDequeueMarkup()
+	{
 		return getAssociatedMarkup();
 	}
 	
-	protected boolean supportsDequeueingFrom(ComponentTag tag) {
+	/**
+	 * Checks if this container can dequeue a child represented by the specified tag. This method
+	 * should be overridden when containers can dequeue components represented by non-standard tags.
+	 * For example, borders override this method and dequeue their body container when processing
+	 * the body tag.
+	 * 
+	 * By default all {@link ComponentTag}s are supported as well as {@link WicketTag}s that return
+	 * a non-null value from {@link WicketTag#getAutoComponentFactory()} method.
+	 * 
+	 * @param tag
+	 */
+	protected boolean canDequeueTag(ComponentTag tag) {
 		if (tag instanceof WicketTag) {
 			WicketTag wicketTag=(WicketTag)tag;
 			if (wicketTag.getAutoComponentFactory() != null)
@@ -2177,11 +2164,30 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return true;
 	}
 	
+	/**
+	 * Queries this container to find a child that can be dequeued that matches the specified tag.
+	 * The default implementation will check if there is a component in the queue that has the same
+	 * id as a tag, but sometimes custom tags can be dequeued and in those situations this method
+	 * should be overridden.
+	 * 
+	 * @param tag
+	 * @return
+	 */
 	public Component findComponentToDequeue(ComponentTag tag)
 	{
 		return queue == null ? null : queue.remove(tag.getId());
 	}
 
+	/**
+	 * Adds a dequeued component to this container. This method should rarely be overridden becase
+	 * the common case of simply forwarding the component to
+	 * {@link MarkupContainer#add(Component...))} method should cover most cases. Components that
+	 * implement a custom hierarchy, such as borders, may wish to override it to support edge-case
+	 * non-standard behavior.
+	 * 
+	 * @param component
+	 * @param tag
+	 */
 	protected void addDequeuedComponent(Component component, ComponentTag tag) {
 		add(component);
 	}
