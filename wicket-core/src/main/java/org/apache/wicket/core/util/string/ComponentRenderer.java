@@ -19,8 +19,8 @@ package org.apache.wicket.core.util.string;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.IMarkupCacheKeyProvider;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupNotFoundException;
@@ -29,7 +29,6 @@ import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
-import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
@@ -48,11 +47,7 @@ public class ComponentRenderer
 	 */
 	public static CharSequence renderPage(final PageProvider pageProvider)
 	{
-		final RenderPageRequestHandler handler = new RenderPageRequestHandler(pageProvider,
-				RenderPageRequestHandler.RedirectPolicy.NEVER_REDIRECT);
-
 		Application application = Application.get();
-		final PageRenderer pageRenderer = application.getPageRendererProvider().get(handler);
 
 		RequestCycle originalRequestCycle = RequestCycle.get();
 
@@ -62,16 +57,14 @@ public class ComponentRenderer
 				tempResponse, application.getRootRequestMapper(), application.getExceptionMapperProvider().get());
 		RequestCycle tempRequestCycle = new RequestCycle(requestCycleContext);
 
-		final Response oldResponse = originalRequestCycle.getResponse();
-
 		try
 		{
-			originalRequestCycle.setResponse(tempResponse);
-			pageRenderer.respond(tempRequestCycle);
+			ThreadContext.setRequestCycle(tempRequestCycle);
+			pageProvider.getPageInstance().renderPage();
 		}
 		finally
 		{
-			originalRequestCycle.setResponse(oldResponse);
+			ThreadContext.setRequestCycle(originalRequestCycle);
 		}
 
 		return tempResponse.getText();
