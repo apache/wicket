@@ -56,8 +56,7 @@
 
 		_getIframe()
 			.off('load')
-			.on('load', function() {
-				$(this).off('load');
+			.one('load', function() {
 
 				var newIframe, $$;
 
