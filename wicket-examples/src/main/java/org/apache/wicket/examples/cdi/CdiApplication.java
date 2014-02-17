@@ -16,27 +16,29 @@
  */
 package org.apache.wicket.examples.cdi;
 
+import javax.enterprise.inject.spi.BeanManager;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.ConversationPropagation;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.jboss.weld.environment.servlet.Listener;
 
-public class CdiApplication extends WebApplication {
+public class CdiApplication extends WebApplication
+{
 
 	@Override
-	public Class<? extends Page> getHomePage() {
+	public Class<? extends Page> getHomePage()
+	{
 		return CdiHomePage.class;
 	}
 
 	@Override
-	protected void init() {
+	protected void init()
+	{
 		super.init();
 
-		new CdiConfiguration().setPropagation(
-				ConversationPropagation.NONBOOKMARKABLE).configure(this);
-
-		mountPage("injection", InjectionPage.class);
-		mountPage("conversation", ConversationPage1.class);
+		// configure wicket/cdi
+		new CdiConfiguration().configure(this);
 	}
 
 }
