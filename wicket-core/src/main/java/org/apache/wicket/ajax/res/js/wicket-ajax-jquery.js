@@ -1072,7 +1072,7 @@
 			 * when there are scripts which require manual call of 'FunctionExecutor#notify()'
 			 * @type {RegExp}
 			 */
-			var scriptSplitterR = new RegExp("\\(function\\(\\)\\{.*?}\\)\\(\\);", 'gi');
+			var scriptSplitterR = new RegExp("\\(function\\(\\)\\{[\\s\\S]*?}\\)\\(\\);", 'gi');
 
 			// get the javascript body
 			var text = Wicket.DOM.text(node);
