@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+/*global module: true, ok: true, asyncTest: true, equal: true, expect: true, $q: true,
+ gym: true, start: true */
+
 $q(document).ready(function() {
 	"use strict";
 

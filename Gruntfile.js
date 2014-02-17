@@ -53,6 +53,17 @@ module.exports = function(grunt) {
 			"./wicket-core/src/test/js/amd.js"
 		],
 		gymTestsJs = [
+			"wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
+			"wicket-examples/src/main/webapp/js-test/tests/bean-validation/birthdate.js",
+			"wicket-examples/src/main/webapp/js-test/tests/bean-validation/email.js",
+			"wicket-examples/src/main/webapp/js-test/tests/bean-validation/name.js",
+			"wicket-examples/src/main/webapp/js-test/tests/bean-validation/phone.js",
+			"wicket-examples/src/main/webapp/js-test/tests/cdi/auto-conversation.js",
+			"wicket-examples/src/main/webapp/js-test/tests/cdi/conversation.js",
+			"wicket-examples/src/main/webapp/js-test/tests/cdi/injection.js",
+			"wicket-examples/src/main/webapp/js-test/tests/echo.js",
+			"wicket-examples/src/main/webapp/js-test/tests/forminput.js",
+			"wicket-examples/src/main/webapp/js-test/tests/helloworld.js",
 			"wicket-examples/src/main/webapp/js-test/tests/mailtemplate.js"
 		],
 		gruntJs = [
