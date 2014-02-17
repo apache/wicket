@@ -52,6 +52,9 @@ module.exports = function(grunt) {
 			"./wicket-core/src/test/js/event.js",
 			"./wicket-core/src/test/js/amd.js"
 		],
+		gymTestsJs = [
+			"wicket-examples/src/main/webapp/js-test/tests/mailtemplate.js"
+		],
 		gruntJs = [
 			"Gruntfile.js"
 		];
@@ -67,6 +70,7 @@ module.exports = function(grunt) {
 			nativeWebSocket: nativeWebSocketJs,
 			atmosphere: atmosphereJs,
 			testsJs: testsJs,
+			gymTestsJs: gymTestsJs,
 			grunt: gruntJs,
 
 			options: {
