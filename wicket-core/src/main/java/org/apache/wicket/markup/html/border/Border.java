@@ -540,8 +540,8 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		@Override
 		public IMarkupFragment getDequeueMarkup()
 		{
-			Border border=findParent(Border.class);
-			IMarkupFragment fragment=findParent(Border.class).getMarkup();
+			Border border = findParent(Border.class);
+			IMarkupFragment fragment = border.getMarkup();
 			/*
 			 * we want to get the contents of the border here (the markup that
 			 * is represented by the body tag) to do this we need to strip the
