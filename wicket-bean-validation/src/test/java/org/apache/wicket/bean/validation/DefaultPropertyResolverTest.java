@@ -61,8 +61,8 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<BooleanBean>(new BooleanBean(),
-				"foo"));
+		TextField<BooleanBean> component = new TextField<BooleanBean>("id",
+				new PropertyModel<BooleanBean>(new BooleanBean(), "foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
 		assertThat(property.getName(), is("foo"));
