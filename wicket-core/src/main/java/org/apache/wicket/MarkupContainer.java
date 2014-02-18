@@ -2079,12 +2079,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		while (dequeue.isAtOpenOrOpenCloseTag())
 		{
-		
 			ComponentTag tag = dequeue.popTag();
-	
-			// see if child is already added to parent
-	
 
+			// see if child is already added to parent
 			Component child = get(tag.getId()); // TODO queueing add this into findInQueue and
 												// rename it to dequeue
 	
@@ -2094,7 +2091,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// dequeue
 				
 				child = dequeue.findComponentToDequeue(tag);
-	
+
 				if (child != null)
 				{
 					addDequeuedComponent(child, tag);
@@ -2104,11 +2101,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					}
 				}
 			}
-					
+
 			if (child == null || tag.isOpenClose() || !(child instanceof MarkupContainer))
 			{
 				// could not dequeue, or does not contain children
-	
 				dequeue.skipToCloseTag();
 			}
 			else
