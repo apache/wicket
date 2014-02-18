@@ -35,18 +35,18 @@ public interface IQueueRegion
 	/**
 	 * Gets the markup that will be used to dequeue components in this container. Usually containers
 	 * will return their associated markup by simply delegating to
-	 * {@link MarkupContainer#getAssociatedMarkup()}, but compoennts that do not render markup in a
+	 * {@link MarkupContainer#getAssociatedMarkup()}, but components that do not render markup in a
 	 * standard way (such as repeaters and borders) may choose to override this method to implement
-	 * custom behavior for the dequeuing process.
+	 * custom behavior for the dequeueing process.
 	 */
 	public IMarkupFragment getDequeueMarkup();
 
 	/**
 	 * Starts component dequeueing on this {@link IQueueRegion}. This is the entry point into the
-	 * dequeuing process, it creates the {@link DequeueContext} and delegates the opreation to the
-	 * {@link #dequeue(DequeueContext)} method which performs the actual dequeuing. The context's
-	 * markup is retrieved using the {@link #getDequeueMarkup()} method which allows subclasses to
-	 * provide dequeueing-specific markup.
+	 * dequeuing process, it creates the {@link DequeueContext} and delegates the operation to the
+	 * {@link org.apache.wicket.MarkupContainer#dequeue(DequeueContext)} method which performs the
+	 * actual dequeueing. The context's markup is retrieved using the {@link #getDequeueMarkup()}
+	 * method which allows subclasses to provide dequeueing-specific markup.
 	 */
 	public void dequeue();
 }
