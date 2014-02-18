@@ -1027,6 +1027,8 @@
 			context.steps.push(function (notify) {
 				// get the component id
 				var compId = node.getAttribute("id");
+
+				// get existing component
 				var element = Wicket.$(compId);
 
 				if (isUndef(element)) {
@@ -1034,7 +1036,7 @@
 						compId + "]] was not found while trying to perform markup update. " +
 						"Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
 				} else {
-					var text = jQuery(node).text();
+					var text = Wicket.DOM.text(node);
 
 					// if the text was escaped, unescape it
 					// (escaping is done when the component body contains a CDATA section)
@@ -1146,7 +1148,7 @@
 
 		// Adds a closure that processes a redirect
 		processRedirect: function (context, node) {
-			var text = jQuery(node).text();
+			var text = Wicket.DOM.text(node);
 			Wicket.Log.info("Redirecting to: " + text);
 			window.location = text;
 		},
@@ -1748,8 +1750,10 @@
 			},
 
 			/**
-			 * Reads the text from the node's children nodes
-			 * @param node the root node
+			 * Reads the text from the node's children nodes.
+			 * Used instead of jQuery.text() because it is very slow in IE10/11.
+			 * WICKET-5132, WICKET-5510
+			 * @param node {DOMElement} the root node
 			 */
 			text: function (node) {
 				if (isUndef(node)) {
@@ -1913,7 +1917,7 @@
 					// need to replace that first
 
 					// get the header contribution text and unescape it if necessary
-					var text = jQuery(headerNode).text();
+					var text = Wicket.DOM.text(headerNode);
 					var encoding = headerNode.getAttribute("encoding");
 
 					if (encoding !== null && encoding !== "") {
