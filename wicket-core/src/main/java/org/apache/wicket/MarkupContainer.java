@@ -1976,7 +1976,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * Queues a component to be dequeued later. The advantage of this method over the
 	 * {@link #add(Component...)} method is that the component does not have to be added to its
 	 * direct parent, only to a parent upstream; it will be dequeued into the correct parent using
-	 * the hierarchy defined in the markup. This allows the component hiearchy to be maintined only
+	 * the hierarchy defined in the markup. This allows the component hierarchy to be maintained only
 	 * in markup instead of in markup and in java code; affording designers and developers more
 	 * freedom when moving components in markup.
 	 * 
@@ -2064,14 +2064,14 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * Dequeues components. The default implementation iterates direct children of this container
 	 * found in the markup (retrieved via {@link #getDequeueMarkup()}) and tries to find matching
 	 * components in queues filled by a call to {@link #queue(Component...)}. It then delegates the
-	 * dequeing to these children.
+	 * dequeueing to these children.
 	 * 
 	 * The provided {@link DequeueContext} is used to maintain the place in markup as well as the
 	 * stack of components whose queues will be searched. For example, before delegating the call to
 	 * a child the container will push the child onto the stack of components.
 	 * 
 	 * Certain components that implement custom markup behaviors (such as repeaters and borders)
-	 * override this method to bring dequeuing in line with their custom markup handling.
+	 * override this method to bring dequeueing in line with their custom markup handling.
 	 * 
 	 * @param dequeue
 	 */
@@ -2151,7 +2151,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		if (tag instanceof WicketTag)
 		{
-			WicketTag wicketTag=(WicketTag)tag;
+			WicketTag wicketTag = (WicketTag)tag;
 			if (wicketTag.getAutoComponentFactory() != null)
 			{
 				return true;
@@ -2163,7 +2163,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Queries this container to find a child that can be dequeued that matches the specified tag.
 	 * The default implementation will check if there is a component in the queue that has the same
@@ -2179,7 +2179,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * Adds a dequeued component to this container. This method should rarely be overridden becase
+	 * Adds a dequeued component to this container. This method should rarely be overridden because
 	 * the common case of simply forwarding the component to
 	 * {@link MarkupContainer#add(Component...))} method should cover most cases. Components that
 	 * implement a custom hierarchy, such as borders, may wish to override it to support edge-case

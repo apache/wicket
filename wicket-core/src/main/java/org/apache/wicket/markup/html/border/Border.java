@@ -627,19 +627,18 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			return null;
 		}
 	}
-	
-	
+
 	@Override
 	protected boolean canDequeueTag(ComponentTag tag)
 	{
-		if ((tag instanceof WicketTag)&&((WicketTag)tag).isBodyTag())
+		if ((tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag())
 		{
 			return true;
 		}
 
 		return super.canDequeueTag(tag);
 	}
-	
+
 	@Override
 	public Component findComponentToDequeue(ComponentTag tag)
 	{
@@ -649,7 +648,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		}
 		return super.findComponentToDequeue(tag);
 	}
-	
+
 	@Override
 	protected void addDequeuedComponent(Component component, ComponentTag tag)
 	{
