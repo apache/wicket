@@ -100,7 +100,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('processEvaluation with identifier|code.', function () {
 
-			expect(3);
+			expect(5);
 
 			var attrs = {
 				u: 'data/ajax/evaluationIdentifierAndCodeId.xml',
