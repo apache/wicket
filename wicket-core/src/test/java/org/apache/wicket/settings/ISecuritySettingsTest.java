@@ -28,7 +28,7 @@ import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.junit.Test;
 
 /**
- * Tests for {@link ISecuritySettings}
+ * Tests for {@link SecuritySettings}
  */
 public class ISecuritySettingsTest extends WicketTestCase
 {

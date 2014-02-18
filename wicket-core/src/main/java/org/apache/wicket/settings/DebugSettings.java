@@ -58,6 +58,8 @@ public class DebugSettings
 
 	private boolean outputComponentPath = false;
 
+	private String componentPathAttributeName = null;
+
 	private boolean developmentUtilitiesEnabled = false;
 
 	/**
@@ -184,7 +186,9 @@ public class DebugSettings
 	 * @see #setOutputComponentPath(boolean)
 	 * @return <code>true</code> if output component path feature is enabled, <code>false</code>
 	 *         otherwise
+	 * @deprecated Use #getComponentPathAttributeName() instead
 	 */
+	@Deprecated
 	public boolean isOutputComponentPath()
 	{
 		return outputComponentPath;
@@ -196,12 +200,46 @@ public class DebugSettings
 	 *
 	 * @param outputComponentPath
 	 * @return {@code this} object for chaining
+	 * @deprecated Use #setComponentPathAttributeName() with a non-empty value
 	 */
+	@Deprecated
 	public DebugSettings setOutputComponentPath(boolean outputComponentPath)
 	{
 		this.outputComponentPath = outputComponentPath;
 		return this;
 	}
+
+	/**
+	 * If the parameter value is non-empty then Wicket will use it as the name of an attribute of the
+	 * component tag to print the {@link org.apache.wicket.Component}'s path.
+	 * This can be useful for debugging and automating tests.
+	 *
+	 * For example: if {@code componentPathAttributeName} is 'data-wicket-path' then Wicket will add
+	 * an attribute to the {@link org.apache.wicket.markup.ComponentTag} for each component with name
+	 * 'data-wicket-path' and as a value the component's
+	 * {@link org.apache.wicket.Component#getPageRelativePath() page relative path}.
+	 *
+	 * @param componentPathAttributeName
+	 *          The name of the attribute for the {@link org.apache.wicket.markup.ComponentTag}.
+	 *          If {@code null} or empty then the attribute won't be rendered
+	 * @return {@code this} object for chaining
+	 */
+	public DebugSettings setComponentPathAttributeName(String componentPathAttributeName)
+	{
+		this.componentPathAttributeName = componentPathAttributeName;
+		return this;
+	}
+
+	/**
+	 * @see #setComponentPathAttributeName(String)
+	 * @return The name of the attribute for the {@link org.apache.wicket.markup.ComponentTag}.
+	 *         If {@code null} or empty then the attribute won't be rendered
+	 */
+	public String getComponentPathAttributeName()
+	{
+		return componentPathAttributeName;
+	}
+
 
 	/**
 	 * Enables all of the panels and pages, etc, from wicket-devutils package.
