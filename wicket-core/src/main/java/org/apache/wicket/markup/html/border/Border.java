@@ -551,6 +551,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			int i = 0;
 			while (i < fragment.size())
 			{
+				// TODO queueing Use fragment.find(border.getId()); instead ?!
 				MarkupElement element = fragment.get(i);
 				if (element instanceof ComponentTag
 						&& ((ComponentTag)element).getId().equals(border.getId()))
@@ -567,7 +568,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			}
 
 
-			/*
+			/* TODO queueing The comment is not finished
 			 * (i) is now at the border tag, find the next component tag which
 			 */
 
@@ -590,8 +591,6 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			}
 
 			return new MarkupFragment(fragment, i);
-
-
 		}
 
 		@Override
@@ -600,7 +599,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			/*
 			 * the body container is allowed to search for queued components all
 			 * the way to the page even though it is an IQueueRegion so it can
-			 * find components queueud below the border
+			 * find components queued below the border
 			 */
 
 			Component component = super.findComponentToDequeue(tag);
@@ -619,7 +618,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 				}
 				if (cursor instanceof BorderBodyContainer)
 				{
-					// optimization - find call above wouldve already recursed
+					// optimization - find call above would've already recursed
 					// to page
 					break;
 				}
@@ -631,8 +630,10 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	
 	
 	@Override
-	protected boolean canDequeueTag(ComponentTag tag) {
-		if ((tag instanceof WicketTag)&&((WicketTag)tag).isBodyTag()) {
+	protected boolean canDequeueTag(ComponentTag tag)
+	{
+		if ((tag instanceof WicketTag)&&((WicketTag)tag).isBodyTag())
+		{
 			return true;
 		}
 
@@ -640,15 +641,18 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 	
 	@Override
-	public Component findComponentToDequeue(ComponentTag tag) {
-		if ((tag instanceof WicketTag)&&((WicketTag)tag).isBodyTag()) {
+	public Component findComponentToDequeue(ComponentTag tag)
+	{
+		if ((tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag())
+		{
 			return getBodyContainer();
 		}
 		return super.findComponentToDequeue(tag);
 	}
 	
 	@Override
-	protected void addDequeuedComponent(Component component, ComponentTag tag) {
+	protected void addDequeuedComponent(Component component, ComponentTag tag)
+	{
 		// components queued in border get dequeued into the border not into the body container
 		addToBorder(component);
 	}
