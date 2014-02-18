@@ -42,7 +42,6 @@ import org.apache.wicket.queueing.nestedpanels.OuterPanel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ComponentQueueingTest extends WicketTestCase
@@ -702,7 +701,7 @@ public class ComponentQueueingTest extends WicketTestCase
 		public LV(int size)
 		{
 			super("lv");
-			ArrayList<Integer> values = new ArrayList<Integer>();
+			ArrayList<Integer> values = new ArrayList<>();
 			for (int i = 0; i < size; i++)
 				values.add(i);
 			setModel(new Model<>(values));
@@ -772,12 +771,6 @@ public class ComponentQueueingTest extends WicketTestCase
 			super(id);
 		}
 
-		public TestPanel(String id, String markup)
-		{
-			super(id);
-			this.markup = markup;
-		}
-
 		protected void setPanelMarkup(String markup)
 		{
 			this.markup = markup;
@@ -803,12 +796,6 @@ public class ComponentQueueingTest extends WicketTestCase
 		public TestBorder(String id)
 		{
 			super(id);
-		}
-
-		public TestBorder(String id, String markup)
-		{
-			super(id);
-			this.markup = markup;
 		}
 
 		protected void setBorderMarkup(String markup)

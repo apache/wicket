@@ -2147,13 +2147,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @param tag
 	 */
-	protected boolean canDequeueTag(ComponentTag tag) {
-		if (tag instanceof WicketTag) {
+	protected boolean canDequeueTag(ComponentTag tag)
+	{
+		if (tag instanceof WicketTag)
+		{
 			WicketTag wicketTag=(WicketTag)tag;
 			if (wicketTag.getAutoComponentFactory() != null)
 			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -2184,7 +2188,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param component
 	 * @param tag
 	 */
-	protected void addDequeuedComponent(Component component, ComponentTag tag) {
+	protected void addDequeuedComponent(Component component, ComponentTag tag)
+	{
 		add(component);
 	}
 }

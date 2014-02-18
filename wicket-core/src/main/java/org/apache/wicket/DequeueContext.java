@@ -40,8 +40,8 @@ public final class DequeueContext
 		{
 			parser.index = index;
 			parser.next = next;
-			parser.tags = new ArrayListStack<ComponentTag>(tags);
-			parser.containers = new ArrayListStack<MarkupContainer>(containers);
+			parser.tags = new ArrayListStack<>(tags);
+			parser.containers = new ArrayListStack<>(containers);
 		}
 	}
 	
@@ -87,9 +87,9 @@ public final class DequeueContext
 	 */
 	public ComponentTag popTag()
 	{
-		ComponentTag taken=next;
+		ComponentTag taken = next;
 		tags.push(taken);
-		next=nextTag();
+		next = nextTag();
 		return taken;
 	}
 	

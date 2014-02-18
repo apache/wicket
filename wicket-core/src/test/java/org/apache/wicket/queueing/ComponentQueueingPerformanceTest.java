@@ -48,8 +48,14 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 	private void run(Class<? extends Page> pageClass)
 	{
 		WicketTester tester = new WicketTester(new MockApplication());
-		tester.startPage(pageClass);
-		tester.destroy();
+		try
+		{
+			tester.startPage(pageClass);
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 
 	@Test
@@ -287,9 +293,9 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 					IModel<Contact> model = item.getModel();
 					item.add(new Label("first", new PropertyModel(model, "first")));
 					item.add(new Label("last", new PropertyModel(model, "first")));
-					item.add(new AddAddressPanel("addr", new PropertyModel(model, "address")));
-					item.add(new AddPhonePanel("work", new PropertyModel(model, "work")));
-					item.add(new AddPhonePanel("cell", new PropertyModel(model, "cell")));
+					item.add(new AddAddressPanel("addr", new PropertyModel<Address>(model, "address")));
+					item.add(new AddPhonePanel("work", new PropertyModel<PhoneNumber>(model, "work")));
+					item.add(new AddPhonePanel("cell", new PropertyModel<PhoneNumber>(model, "cell")));
 				}
 			});
 
@@ -321,9 +327,9 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 					IModel<Contact> model = item.getModel();
 					item.queue(new Label("first", new PropertyModel(model, "first")));
 					item.queue(new Label("last", new PropertyModel(model, "first")));
-					item.queue(new AddAddressPanel("addr", new PropertyModel(model, "address")));
-					item.queue(new AddPhonePanel("work", new PropertyModel(model, "work")));
-					item.queue(new AddPhonePanel("cell", new PropertyModel(model, "cell")));
+					item.queue(new AddAddressPanel("addr", new PropertyModel<Address>(model, "address")));
+					item.queue(new AddPhonePanel("work", new PropertyModel<PhoneNumber>(model, "work")));
+					item.queue(new AddPhonePanel("cell", new PropertyModel<PhoneNumber>(model, "cell")));
 				}
 			});
 
@@ -370,12 +376,6 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 		public TestPanel(String id)
 		{
 			super(id);
-		}
-
-		public TestPanel(String id, String markup)
-		{
-			super(id);
-			this.markup = markup;
 		}
 
 		protected void setPanelMarkup(String markup)
