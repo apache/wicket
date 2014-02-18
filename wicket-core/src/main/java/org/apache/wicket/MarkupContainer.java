@@ -2115,7 +2115,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				dequeue.popContainer();
 			}
 
-			if (tag.isOpen())
+			if (tag.isOpen() && tag.hasNoCloseTag() == false)
 			{
 				// pull the close tag off
 				ComponentTag close = dequeue.popTag();
