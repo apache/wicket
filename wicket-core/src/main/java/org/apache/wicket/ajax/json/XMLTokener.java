@@ -28,9 +28,10 @@ SOFTWARE.
  * The XMLTokener extends the JSONTokener to provide additional methods
  * for the parsing of XML texts.
  * @author JSON.org
- * @version 2010-12-24
+ * @version 2012-11-13
  */
-public class XMLTokener extends JSONTokener {
+public class XMLTokener extends JSONTokener
+{
 
 
    /** The table of entity values. It initially contains Character values for
@@ -60,7 +61,8 @@ public class XMLTokener extends JSONTokener {
      * @return The string up to the <code>]]&gt;</code>.
      * @throws JSONException If the <code>]]&gt;</code> is not found.
      */
-    public String nextCDATA() throws JSONException {
+    public String nextCDATA() throws JSONException
+    {
         char         c;
         int          i;
         StringBuffer sb = new StringBuffer();
@@ -290,8 +292,8 @@ public class XMLTokener extends JSONTokener {
             }
         }
     }
-    
-    
+
+
     /**
      * Skip characters until past the requested string.
      * If it is not found, we are left at the end of the source with a result of false.
@@ -306,12 +308,12 @@ public class XMLTokener extends JSONTokener {
         int offset = 0;
         int length = to.length();
         char[] circle = new char[length];
-        
+
         /*
          * First fill the circle buffer with as many characters as are in the
          * to string. If we reach an early end, bail.
          */
-        
+
         for (i = 0; i < length; i += 1) {
             c = next();
             if (c == 0) {
@@ -319,15 +321,15 @@ public class XMLTokener extends JSONTokener {
             }
             circle[i] = c;
         }
-        /*
-         * We will loop, possibly for all of the remaining characters.
-         */
+
+        /* We will loop, possibly for all of the remaining characters. */
+
         for (;;) {
             j = offset;
             b = true;
-            /*
-             * Compare the circle buffer with the to string. 
-             */
+
+            /* Compare the circle buffer with the to string. */
+
             for (i = 0; i < length; i += 1) {
                 if (circle[j] != to.charAt(i)) {
                     b = false;
@@ -338,21 +340,21 @@ public class XMLTokener extends JSONTokener {
                     j -= length;
                 }
             }
-            /*
-             * If we exit the loop with b intact, then victory is ours.
-             */
+
+            /* If we exit the loop with b intact, then victory is ours. */
+
             if (b) {
                 return true;
             }
-            /*
-             * Get the next character. If there isn't one, then defeat is ours.
-             */
+
+            /* Get the next character. If there isn't one, then defeat is ours. */
+
             c = next();
             if (c == 0) {
                 return false;
             }
             /*
-             * Shove the character in the circle buffer and advance the 
+             * Shove the character in the circle buffer and advance the
              * circle offset. The offset is mod n.
              */
             circle[offset] = c;

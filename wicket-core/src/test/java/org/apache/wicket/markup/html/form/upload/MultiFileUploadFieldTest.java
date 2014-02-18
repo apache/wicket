@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
@@ -48,7 +50,7 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 	public void submitMultiFileUploadFields()
 	{
 		final AtomicBoolean submitted = new AtomicBoolean(false);
-		final ListModel<FileUpload> filesModel = new ListModel<FileUpload>(new ArrayList<FileUpload>());
+		final ListModel<FileUpload> filesModel = new ListModel<>(new ArrayList<FileUpload>());
 
 		TestPage page = new TestPage(filesModel)
 		{
@@ -63,13 +65,14 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 				for (int i = 1; i < 2; i++)
 				{
 					FileUpload fileUpload = uploads.get(i);
-					assertEquals(MultiFileUploadFieldTest.class.getSimpleName()+i+".txt", fileUpload.getClientFileName());
+					String clientFileName = fileUpload.getClientFileName();
+					String id = clientFileName.replaceAll(MultiFileUploadFieldTest.class.getSimpleName() + "(\\d).txt", "$1");
 					try
 					{
-						assertEquals("Test"+i, IOUtils.toString(fileUpload.getInputStream()));
+						assertEquals("Test"+id, IOUtils.toString(fileUpload.getInputStream()));
 					} catch (IOException e)
 					{
-						fail("Reading file upload '"+i+"' failed: " + e.getMessage());
+						fail("Reading file upload '"+id+"' failed: " + e.getMessage());
 					}
 				}
 				submitted.set(true);

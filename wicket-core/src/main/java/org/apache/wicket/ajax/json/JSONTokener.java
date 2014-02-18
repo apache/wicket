@@ -70,7 +70,8 @@ public class JSONTokener {
     /**
      * Construct a JSONTokener from an InputStream.
      */
-    public JSONTokener(InputStream inputStream) throws JSONException {
+    public JSONTokener(InputStream inputStream) throws JSONException
+    {
         this(new InputStreamReader(inputStream));
     }
 
@@ -439,7 +440,6 @@ public class JSONTokener {
      *
      * @return " at {index} [character {character} line {line}]"
      */
-    @Override
     public String toString() {
         return " at " + this.index + " [character " + this.character + " line " +
             this.line + "]";

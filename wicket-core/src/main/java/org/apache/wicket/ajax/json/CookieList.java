@@ -26,6 +26,8 @@ SOFTWARE.
 
 import java.util.Iterator;
 
+import org.apache.wicket.ajax.json.Cookie;
+
 /**
  * Convert a web browser cookie list string to a JSONObject and back.
  * @author JSON.org
@@ -46,7 +48,8 @@ public class CookieList {
      * @return A JSONObject
      * @throws JSONException
      */
-    public static JSONObject toJSONObject(String string) throws JSONException {
+    public static JSONObject toJSONObject(String string) throws JSONException
+    {
         JSONObject jo = new JSONObject();
         JSONTokener x = new JSONTokener(string);
         while (x.more()) {
@@ -68,7 +71,8 @@ public class CookieList {
      * @return A cookie list string
      * @throws JSONException
      */
-    public static String toString(JSONObject jo) throws JSONException {
+    public static String toString(JSONObject jo) throws JSONException
+    {
         boolean      b = false;
         Iterator     keys = jo.keys();
         String       string;

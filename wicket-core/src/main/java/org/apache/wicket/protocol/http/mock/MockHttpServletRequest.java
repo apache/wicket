@@ -270,7 +270,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		if (uploadedFiles == null)
 		{
-			uploadedFiles = new HashMap<String, List<UploadedFile>>();
+			uploadedFiles = new HashMap<>();
 		}
 
 		UploadedFile uf = new UploadedFile(fieldName, file, contentType);
@@ -278,7 +278,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		List<UploadedFile> filesPerField = uploadedFiles.get(fieldName);
 		if (filesPerField == null)
 		{
-			filesPerField = new ArrayList<UploadedFile>();
+			filesPerField = new ArrayList<>();
 			uploadedFiles.put(fieldName, filesPerField);
 		}
 
@@ -300,7 +300,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		List<String> list = (List<String>)headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList<String>(1);
+			list = new ArrayList<>(1);
 			headers.put(name, list);
 		}
 		list.add(value);
@@ -729,7 +729,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public Map<String, String[]> getParameterMap()
 	{
-		Map<String, String[]> params = new HashMap<String, String[]>(parameters);
+		Map<String, String[]> params = new HashMap<>(parameters);
 
 		for (String name : post.getParameterNames())
 		{
