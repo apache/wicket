@@ -548,67 +548,82 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			 * tag that the border is attached to (usually the first tag)
 			 */
 
-			int i=0;
-			while (i<fragment.size()) {
-				MarkupElement element=fragment.get(i);
-				if (element instanceof ComponentTag&&((ComponentTag)element).getId().equals(border.getId()) ){
+			int i = 0;
+			while (i < fragment.size())
+			{
+				MarkupElement element = fragment.get(i);
+				if (element instanceof ComponentTag
+						&& ((ComponentTag)element).getId().equals(border.getId()))
+				{
 					break;
 				}
 				i++;
 			}
 
-			if (i>=fragment.size()) {
-				throw new IllegalStateException("Could not find starting border tag for border: "+border.getId()+" in markup: "+fragment);
+			if (i >= fragment.size())
+			{
+				throw new IllegalStateException("Could not find starting border tag for border: "
+						+ border.getId() + " in markup: " + fragment);
 			}
 
-			
+
 			/*
-			 *  (i) is now at the border tag, find the next component tag which 
+			 * (i) is now at the border tag, find the next component tag which
 			 */
 
 			i++;
-			while (i<fragment.size()) {
+			while (i < fragment.size())
+			{
 				MarkupElement element = fragment.get(i);
-				if (element instanceof ComponentTag) {
+				if (element instanceof ComponentTag)
+				{
 					break;
 				}
 				i++;
 			}
-			
-			ComponentTag tag=(ComponentTag) fragment.get(i);
-			if (tag.isClose()) {
+
+			ComponentTag tag = (ComponentTag)fragment.get(i);
+			if (tag.isClose())
+			{
 				// this closes the border tag, border only has raw markup
 				return null;
-			} 
-			
+			}
+
 			return new MarkupFragment(fragment, i);
 
-			
+
 		}
-		
+
 		@Override
-		public Component findComponentToDequeue(ComponentTag tag) {
-			/* the body container is allowed to search for queued components 
-			 * all the way to the page even though it is an IQueueRegion so it can
+		public Component findComponentToDequeue(ComponentTag tag)
+		{
+			/*
+			 * the body container is allowed to search for queued components all
+			 * the way to the page even though it is an IQueueRegion so it can
 			 * find components queueud below the border
 			 */
-			
-			Component component=super.findComponentToDequeue(tag);
-			if (component!=null) {
+
+			Component component = super.findComponentToDequeue(tag);
+			if (component != null)
+			{
 				return component;
 			}
-			
-			MarkupContainer cursor=getParent();
-			while (cursor!=null) {
-				component=cursor.findComponentToDequeue(tag);
-				if (component!=null) {
+
+			MarkupContainer cursor = getParent();
+			while (cursor != null)
+			{
+				component = cursor.findComponentToDequeue(tag);
+				if (component != null)
+				{
 					return component;
 				}
-				if (cursor instanceof BorderBodyContainer) {
-					// optimization - find call above wouldve already recursed to page
+				if (cursor instanceof BorderBodyContainer)
+				{
+					// optimization - find call above wouldve already recursed
+					// to page
 					break;
 				}
-				cursor=cursor.getParent();
+				cursor = cursor.getParent();
 			}
 			return null;
 		}
