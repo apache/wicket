@@ -265,11 +265,7 @@ public class UrlEncoder
 		{
 			charset = Charset.forName(charsetName);
 		}
-		catch (IllegalCharsetNameException e)
-		{
-			throw new RuntimeException(new UnsupportedEncodingException(charsetName));
-		}
-		catch (UnsupportedCharsetException e)
+		catch (IllegalCharsetNameException | UnsupportedCharsetException e)
 		{
 			throw new RuntimeException(new UnsupportedEncodingException(charsetName));
 		}
@@ -285,7 +281,7 @@ public class UrlEncoder
 			}
 
 			// System.out.println("Examining character: " + c);
-			if ((stopEncoding == true) || dontNeedEncoding.get(c))
+			if (stopEncoding || dontNeedEncoding.get(c))
 			{
 				if (c == ' ')
 				{
