@@ -3919,7 +3919,7 @@ public abstract class Component
 		{
 			String path = getPageRelativePath();
 			path = path.replace("_", "__");
-			path = path.replace(":", "_");
+			path = path.replace(':', '_');
 			tag.put("wicketpath", path);
 		}
 

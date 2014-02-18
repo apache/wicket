@@ -211,7 +211,7 @@ public class CookieUtils
 		// cookie names cannot contain ':',
 		// we replace ':' with '.' but first we have to encode '.' as '..'
 		key = key.replace(".", "..");
-		key = key.replace(":", ".");
+		key = key.replace(':', '.');
 		return key;
 	}
 
