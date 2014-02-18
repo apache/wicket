@@ -3,6 +3,7 @@ package org.apache.wicket.bean.validation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
@@ -50,11 +51,26 @@ public class DefaultPropertyResolver implements IPropertyResolver
 			return new Property(field.getDeclaringClass(), field.getName());
 		}
 
+		String name;
 		Method getter = delegate.getPropertyGetter();
 		if (getter != null)
 		{
-			String name = getter.getName().substring(3, 4).toLowerCase() +
-				getter.getName().substring(4);
+			String methodName = getter.getName();
+			if (methodName.startsWith("get"))
+			{
+				name = methodName.substring(3, 4).toLowerCase() +
+					methodName.substring(4);
+			}
+			else if (methodName.startsWith("is"))
+			{
+				name = methodName.substring(2, 3).toLowerCase() +
+						methodName.substring(3);
+			}
+			else
+			{
+				throw new WicketRuntimeException("Invalid name for a getter method: '"
+						+ methodName + "'. It must start either with 'get' or 'is'.");
+			}
 			return new Property(getter.getDeclaringClass(), name);
 		}
 
