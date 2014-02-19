@@ -148,8 +148,11 @@
 			 * @param type {String} The type of the DOM event
 			 * @param fn {Function} The event handler to unbind
 			 * @param data {Object} Extra data for the event
+			 * @param selector {String} A selector string to filter the descendants of the selected
+			 *      elements that trigger the event. If the selector is null or omitted,
+			 *      the event is always triggered when it reaches the selected element.
 			 */
-			add: function (element, type, fn, data) {
+			add: function (element, type, fn, data, selector) {
 				if (type === 'domready') {
 					jQuery(fn);
 				} else {
@@ -166,7 +169,7 @@
 								'" on element "' + element + '" because the element is not in the DOM');
 						}
 
-						jQuery(el).on(type, data, fn);
+						jQuery(el).on(type, selector, data, fn);
 					});
 				}
 				return element;
