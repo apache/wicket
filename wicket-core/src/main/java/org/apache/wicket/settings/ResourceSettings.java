@@ -140,7 +140,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	private IFileCleaner fileCleaner;
 
 	/** Chain of string resource loaders to use */
-	private final List<IStringResourceLoader> stringResourceLoaders = Generics.newArrayList(4);
+	private final List<IStringResourceLoader> stringResourceLoaders = Generics.newArrayList(6);
 
 	/** Flags used to determine how to behave if resources are not found */
 	private boolean throwExceptionOnMissingResource = true;
