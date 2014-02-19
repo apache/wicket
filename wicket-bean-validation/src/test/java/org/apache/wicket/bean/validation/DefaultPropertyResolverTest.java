@@ -53,6 +53,22 @@ public class DefaultPropertyResolverTest
 		assertThat(property.getOwner().getName(), is(Bean1.class.getName()));
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5505
+	 */
+	@Test
+	public void booleanHasFieldAndGetter()
+	{
+		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
+
+		TextField<BooleanBean> component = new TextField<BooleanBean>("id",
+				new PropertyModel<BooleanBean>(new BooleanBean(), "foo"));
+		Property property = resolver.resolveProperty(component);
+		assertThat(property, not(nullValue()));
+		assertThat(property.getName(), is("foo"));
+		assertThat(property.getOwner().getName(), is(BooleanBean.class.getName()));
+	}
+
 	@Test
 	public void hasOnlyField()
 	{
@@ -90,6 +106,17 @@ public class DefaultPropertyResolverTest
 		public String getFoo()
 		{
 			return "foo";
+		}
+	}
+
+	/**
+	 * WICKET-5505
+	 */
+	public static class BooleanBean
+	{
+		public boolean isFoo()
+		{
+			return false;
 		}
 	}
 

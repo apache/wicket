@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -41,6 +43,7 @@ import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.time.Duration;
@@ -116,10 +119,10 @@ public abstract class Session implements IClusterable, IEventSink
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
 	/** a sequence used for whenever something session-specific needs a unique value */
-	private int sequence = 1;
+	private final AtomicInteger sequence = new AtomicInteger(1);
 
 	/** a sequence used for generating page IDs */
-	private int pageId = 0;
+	private final AtomicInteger pageId = new AtomicInteger(0);
 
 	/** synchronize page's access by session */
 	private final IProvider<PageAccessSynchronizer> pageAccessSynchronizer;
@@ -176,7 +179,7 @@ public abstract class Session implements IClusterable, IEventSink
 	protected ClientInfo clientInfo;
 
 	/** True if session state has been changed */
-	private transient boolean dirty = false;
+	private transient volatile boolean dirty = false;
 
 	/** feedback messages */
 	private final FeedbackMessages feedbackMessages = new FeedbackMessages();
@@ -185,13 +188,13 @@ public abstract class Session implements IClusterable, IEventSink
 	private String id = null;
 
 	/** The locale to use when loading resources for this session. */
-	private Locale locale;
+	private final AtomicReference<Locale> locale;
 
 	/** Application level meta data. */
 	private MetaDataEntry<?>[] metaData;
 
 	/** True, if session has been invalidated */
-	private transient boolean sessionInvalidated = false;
+	private transient volatile boolean sessionInvalidated = false;
 
 	/**
 	 * Temporary instance of the session store. Should be set on each request as it is not supposed
@@ -200,7 +203,7 @@ public abstract class Session implements IClusterable, IEventSink
 	private transient ISessionStore sessionStore;
 
 	/** Any special "skin" style to use when loading resources. */
-	private String style;
+	private final AtomicReference<String> style = new AtomicReference<String>();
 
 	/**
 	 * Holds attributes for sessions that are still temporary/ not bound to a session store. Only
@@ -221,12 +224,13 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public Session(Request request)
 	{
-		locale = request.getLocale();
+		Locale locale = request.getLocale();
 		if (locale == null)
 		{
 			throw new IllegalStateException(
 				"Request#getLocale() cannot return null, request has to have a locale set on it");
 		}
+		this.locale = new AtomicReference<Locale>(locale);
 
 		pageAccessSynchronizer = new PageAccessSynchronizerProvider();
 	}
@@ -418,7 +422,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public Locale getLocale()
 	{
-		return locale;
+		return locale.get();
 	}
 
 	/**
@@ -473,7 +477,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final String getStyle()
 	{
-		return style;
+		return style.get();
 	}
 
 	/**
@@ -594,15 +598,13 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void setLocale(final Locale locale)
 	{
-		if (locale == null)
+		Args.notNull(locale, "locale");
+
+		if (!Objects.equal(getLocale(), locale))
 		{
-			throw new IllegalArgumentException("Argument 'locale' must not be null");
-		}
-		if (!Objects.equal(this.locale, locale))
-		{
+			this.locale.set(locale);
 			dirty();
 		}
-		this.locale = locale;
 	}
 
 	/**
@@ -632,8 +634,11 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final Session setStyle(final String style)
 	{
-		this.style = style;
-		dirty();
+		if (!Objects.equal(getStyle(), style))
+		{
+			this.style.set(style);
+			dirty();
+		}
 		return this;
 	}
 
@@ -709,11 +714,36 @@ public abstract class Session implements IClusterable, IEventSink
 	}
 
 	/**
-	 * Marks session state as dirty so that it will be flushed at the end of the request.
+	 * Marks session state as dirty so that it will be (re)stored in the ISessionStore
+	 * at the end of the request.
+	 * <strong>Note</strong>: binds the session if it is temporary
 	 */
 	public final void dirty()
 	{
-		dirty = true;
+		dirty(true);
+	}
+
+	/**
+	 * Marks session state as dirty so that it will be re-stored in the ISessionStore
+	 * at the end of the request.
+	 *
+	 * @param forced
+	 *          A flag indicating whether the session should be marked as dirty even
+	 *          when it is temporary. If {@code true} the Session will be bound.
+	 */
+	public final void dirty(boolean forced)
+	{
+		if (isTemporary())
+		{
+			if (forced)
+			{
+				dirty = true;
+			}
+		}
+		else
+		{
+			dirty = true;
+		}
 	}
 
 	/**
@@ -865,26 +895,20 @@ public abstract class Session implements IClusterable, IEventSink
 	 * 
 	 * @return session-unique value
 	 */
-	public synchronized int nextSequenceValue()
+	public int nextSequenceValue()
 	{
-		if (isTemporary() == false)
-		{
-			dirty();
-		}
-		return sequence++;
+		dirty(false);
+		return sequence.getAndIncrement();
 	}
 
 	/**
 	 * 
 	 * @return the next page id
 	 */
-	public synchronized int nextPageId()
+	public int nextPageId()
 	{
-		if (isTemporary() == false)
-		{
-			dirty();
-		}
-		return pageId++;
+		dirty(false);
+		return pageId.getAndIncrement();
 	}
 
 	/**

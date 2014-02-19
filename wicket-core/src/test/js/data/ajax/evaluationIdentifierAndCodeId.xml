@@ -15,4 +15,5 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<ajax-response><evaluate>(function(){ignored|start(); ok(true, 'Evaluation with identifier must be executed!'); equal(typeof(ignored), 'function', 'The passed identifier must be a function'); arguments[0]();})();</evaluate></ajax-response>
+<ajax-response><evaluate>(function(){ignored|ok(true, 'Evaluation with identifier (with newlines, WICKET-5504) must be executed!');
+    equal(typeof(ignored), 'function', 'The passed identifier must be a function'); arguments[0]();})();</evaluate><evaluate>(function(){ignored|start(); ok(true, 'Evaluation with identifier (without newlines) 2 must be executed!');equal(typeof(ignored), 'function', 'The passed identifier must be a function'); arguments[0]();})();</evaluate></ajax-response>
