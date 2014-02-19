@@ -1868,7 +1868,7 @@
 							call.ajax(attributes);
 						}
 						Wicket.Ajax._handleEventCancelation(attributes);
-					});
+					}, null, attrs.sel);
 				});
 			},
 			

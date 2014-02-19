@@ -218,7 +218,12 @@ public enum AjaxAttributeName {
 	/**
 	 * @see AbstractDefaultAjaxBehavior#getCallbackUrl();
 	 */
-	URL("u");
+	URL("u"),
+
+	/**
+	 * @see org.apache.wicket.ajax.attributes.AjaxRequestAttributes#childSelector
+	 */
+	CHILD_SELECTOR("sel");
 
 	private final String jsonName;
 

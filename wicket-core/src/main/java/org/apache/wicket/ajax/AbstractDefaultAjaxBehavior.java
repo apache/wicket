@@ -251,6 +251,13 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 					submittingComponentId);
 			}
 
+			CharSequence childSelector = attributes.getChildSelector();
+			if (Strings.isEmpty(childSelector) == false)
+			{
+				attributesJson.put(AjaxAttributeName.CHILD_SELECTOR.jsonName(),
+						childSelector);
+			}
+
 			String indicatorId = findIndicatorId();
 			if (Strings.isEmpty(indicatorId) == false)
 			{

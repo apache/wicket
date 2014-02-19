@@ -58,7 +58,7 @@ public class AjaxAttributeNameTest
 		}
 
 		Assert.assertEquals("all known json parameter names",
-			"tr|p|d|id|dt|wr|rt|ad|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|i|sc|mp|f|c|m|u|",
+			"tr|p|d|id|dt|wr|rt|ad|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|i|sc|mp|f|c|m|u|sel|",
 			sb.toString());
 	}
 }

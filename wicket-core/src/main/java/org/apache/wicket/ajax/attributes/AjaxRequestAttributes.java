@@ -133,6 +133,34 @@ public final class AjaxRequestAttributes
 	private ThrottlingSettings throttlingSettings;
 
 	/**
+	 * A selector string to filter the descendants of the selected
+	 * elements that trigger the event. If the selector is null or empty,
+	 * the event is always triggered when it reaches the selected HTML element.
+	 *
+	 * @see <a href="http://api.jquery.com/on/">jQuery#on's selector</a>
+	 */
+	private CharSequence childSelector;
+
+	/**
+	 * @see #childSelector
+	 * @return The selector string that filters the descendants
+	 */
+	public CharSequence getChildSelector()
+	{
+		return childSelector;
+	}
+
+	/**
+	 * @see #childSelector
+	 * @param childSelector
+	 *            The selector string that filters the descendants
+	 */
+	public void setChildSelector(CharSequence childSelector)
+	{
+		this.childSelector = childSelector;
+	}
+
+	/**
 	 * Returns whether the form submit is multipart.
 	 * <p>
 	 * Note that for multipart AJAX requests a hidden IFRAME will be used and that can have negative
