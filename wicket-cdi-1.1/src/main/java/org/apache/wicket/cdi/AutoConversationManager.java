@@ -60,8 +60,9 @@ public class AutoConversationManager implements IComponentOnBeforeRenderListener
 		if (component instanceof Page)
 		{
 			Page page = (Page)component;
-			autoEndIfNecessary(page, RequestCycle.get().getActiveRequestHandler());
-			autoBeginIfNecessary(page, RequestCycle.get().getActiveRequestHandler());
+			IRequestHandler activeRequestHandler = page.getRequestCycle().getActiveRequestHandler();
+			autoEndIfNecessary(page, activeRequestHandler);
+			autoBeginIfNecessary(page, activeRequestHandler);
 		}
 	}
 
@@ -78,7 +79,7 @@ public class AutoConversationManager implements IComponentOnBeforeRenderListener
 		conversation.begin();
 		autoConversation.setAutomatic(true);
 
-		logger.debug("Auto-began conversation {} for page {}", conversation.getId(), page);
+		logger.debug("Auto-began conversation '{}' for page '{}'", conversation.getId(), page);
 	}
 
 	protected void autoEndIfNecessary(Page page, IRequestHandler handler)
@@ -98,7 +99,7 @@ public class AutoConversationManager implements IComponentOnBeforeRenderListener
 		conversation.end();
 		ConversationPropagator.removeConversationIdFromPage(page);
 
-		logger.debug("Auto-ended conversation {} for page {}", cid, page);
+		logger.debug("Auto-ended conversation '{}' for page '{}'", cid, page);
 	}
 
 	protected boolean hasConversationalComponent(Page page)
