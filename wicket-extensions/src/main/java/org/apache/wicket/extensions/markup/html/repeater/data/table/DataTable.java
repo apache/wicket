@@ -113,6 +113,8 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 
 	private final Caption caption;
 
+	private final ColGroup colGroup;
+
 	private long toolbarIdCounter;
 
 	/**
@@ -138,6 +140,8 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		this.columns = columns;
 		this.caption = new Caption("caption", getCaptionModel());
 		add(caption);
+		this.colGroup = new ColGroup("colGroup");
+		add(colGroup);
 		body = newBodyContainer("body");
 		datagrid = new DataGridView<T>("rows", columns, dataProvider)
 		{
@@ -189,6 +193,11 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	protected IModel<String> getCaptionModel()
 	{
 		return null;
+	}
+
+	public final ColGroup getColGroup()
+	{
+		return colGroup;
 	}
 
 	/**
@@ -512,7 +521,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 * A caption for the table. It renders itself only if {@link DataTable#getCaptionModel()} has
 	 * non-empty value.
 	 */
-	private static class Caption extends Label
+	public static class Caption extends Label
 	{
 		/**
 		 */

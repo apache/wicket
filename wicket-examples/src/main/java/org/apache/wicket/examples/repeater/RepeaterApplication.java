@@ -47,6 +47,8 @@ public class RepeaterApplication extends WebApplication
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+
+		getMarkupSettings().setStripWicketTags(true);
 	}
 
 	/**

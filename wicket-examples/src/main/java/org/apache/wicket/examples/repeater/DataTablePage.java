@@ -19,8 +19,10 @@ package org.apache.wicket.examples.repeater;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.ColGroup;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -86,5 +88,18 @@ public class DataTablePage extends BasePage
 		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter()));
 
 		add(dataTable);
+
+		DataTable tableWithColGroup = new DataTable<>("tableWithColGroup", columns,
+				new SortableContactDataProvider(), 8);
+		add(tableWithColGroup);
+
+		ColGroup colgroup = tableWithColGroup.getColGroup();
+		colgroup.add(AttributeModifier.append("style", "border: solid 1px green;"));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: lightblue;")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: lightgreen")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: pink")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: yellow")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("span", "2"),
+				AttributeModifier.append("style", "background-color: #CC6633")));
 	}
 }
