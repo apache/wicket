@@ -18,12 +18,15 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.AbstractMapper;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -229,8 +232,16 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 	
 					if (Strings.isEmpty(cacheUrl.getFileName()))
 					{
-						throw new IllegalStateException("caching strategy returned empty name for " +
-							resource);
+						if (Application.exists() && Application.get().usesDeploymentConfig())
+						{
+							throw new AbortWithHttpErrorCodeException(HttpServletResponse.SC_NOT_FOUND,
+								"caching strategy returned empty name for " + resource);
+						}
+						else
+						{
+							throw new IllegalStateException(
+									"caching strategy returned empty name for " + resource);
+						}
 					}
 					segments.set(lastSegmentAt, cacheUrl.getFileName());
 				}
