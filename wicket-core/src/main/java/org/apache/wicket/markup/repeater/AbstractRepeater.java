@@ -153,7 +153,7 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 * Callback to let the repeater know it should populate itself with its items.
 	 */
 	protected abstract void onPopulate();
-	
+
 	@Override
 	public void dequeue(DequeueContext dequeue)
 	{
@@ -175,10 +175,10 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 					container.dequeue(dequeue);
 					dequeue.restore(bookmark);
 				}
-			}	
+			}
 		}
 
-			dequeue.skipToCloseTag();
+		dequeue.skipToCloseTag();
 
 	}
 }
