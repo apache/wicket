@@ -177,6 +177,8 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 				}
 			}	
 		}
-		dequeue.skipToCloseTag();
+
+			dequeue.skipToCloseTag();
+
 	}
 }

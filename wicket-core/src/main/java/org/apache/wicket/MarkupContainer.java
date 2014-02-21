@@ -1715,6 +1715,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return result;
 	}
 
+	@Override
+	protected void onBeforeRender()
+	{
+		super.onBeforeRender();
+		// if (this instanceof IQueueRegion)
+		// {
+		// dequeue();
+		// }
+	}
+
+
 	/**
 	 * 
 	 * @see org.apache.wicket.Component#onBeforeRenderChildren()
@@ -2079,9 +2090,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		while (dequeue.isAtOpenOrOpenCloseTag())
 		{
-			ComponentTag tag = dequeue.popTag();
-
+			ComponentTag tag = dequeue.takeTag();
+	
 			// see if child is already added to parent
+
 			Component child = get(tag.getId()); // TODO queueing add this into findInQueue and
 												// rename it to dequeue
 	
@@ -2101,24 +2113,40 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					}
 				}
 			}
-
-			if (child == null || tag.isOpenClose() || !(child instanceof MarkupContainer))
+			if (child == null || !(child instanceof MarkupContainer))
 			{
 				// could not dequeue, or does not contain children
-				dequeue.skipToCloseTag();
+	
+				if (tag.isOpen())
+				{
+					dequeue.skipToCloseTag();
+				}
 			}
 			else
 			{
 				MarkupContainer container = (MarkupContainer)child;
-				dequeue.pushContainer(container);
-				container.dequeue(dequeue);
-				dequeue.popContainer();
+				if (container instanceof IQueueRegion)
+				{
+					// if this is a dequeue container we do not process its markup, it will do so
+					// itself when it is dequeued for the first time
+					if (tag.isOpen())
+					{
+						dequeue.skipToCloseTag();
+					}
+				}
+				else if (tag.isOpen())
+				{
+					// this component has more markup and possibly more children to dequeue
+					dequeue.pushContainer(container);
+					container.dequeue(dequeue);
+					dequeue.popContainer();
+				}
 			}
 
-			if (tag.isOpen() && tag.hasNoCloseTag() == false)
+			if (tag.isOpen() && !tag.hasNoCloseTag())
 			{
 				// pull the close tag off
-				ComponentTag close = dequeue.popTag();
+				ComponentTag close = dequeue.takeTag();
 				if (!close.closes(tag))
 				{
 					// sanity check

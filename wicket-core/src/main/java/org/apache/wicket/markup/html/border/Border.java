@@ -163,7 +163,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		super(id, model);
 
 		body = new BorderBodyContainer(id + "_" + BODY);
-		queueToBorder(body);
+		addToBorder(body);
 	}
 
 	/**
@@ -540,8 +540,14 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		@Override
 		public IMarkupFragment getDequeueMarkup()
 		{
-			Border border = findParent(Border.class);
-			IMarkupFragment fragment = border.getMarkup();
+			Border border=findParent(Border.class);
+			IMarkupFragment fragment=findParent(Border.class).getMarkup();
+
+			if (fragment == null)
+			{
+				return null;
+			}
+
 			/*
 			 * we want to get the contents of the border here (the markup that
 			 * is represented by the body tag) to do this we need to strip the

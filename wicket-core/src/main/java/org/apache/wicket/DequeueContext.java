@@ -1,9 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.collections.ArrayListStack;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Context for component dequeueing. Keeps track of markup position and container stack.
@@ -71,7 +88,7 @@ public final class DequeueContext
 	}
 
 	/**
-	 * Peeks markup tag that would be retrieved by call to {@link #popTag()}
+	 * Peeks markup tag that would be retrieved by call to {@link #takeTag()}
 	 * 
 	 * @return
 	 */
@@ -85,27 +102,30 @@ public final class DequeueContext
 	 * 
 	 * @return
 	 */
-	public ComponentTag popTag()
+	public ComponentTag takeTag()
 	{
-		ComponentTag taken = next;
-		tags.push(taken);
-		next = nextTag();
+		ComponentTag taken=next;
+		if (taken.isOpen() && !taken.hasNoCloseTag())
+		{
+			tags.push(taken);
+		}
+		else if (tags.size() > 0 && taken.closes(tags.peek()))
+		{
+			tags.pop();
+		}
+		next=nextTag();
 		return taken;
 	}
 	
 	/**
-	 * Skips to the closing tag of the tag retrieved from last call to {@link #popTag()}
+	 * Skips to the closing tag of the tag retrieved from last call to {@link #takeTag()}
 	 */
 	public void skipToCloseTag()
 	{
-		if (tags.peek().isOpen())
-		{
 			while (!next.closes(tags.peek()))
 			{
 				next = nextTag();
 			}
-			tags.pop();
-		}
 	}
 	
 	private ComponentTag nextTag()
@@ -117,7 +137,7 @@ public final class DequeueContext
 			{
 				ComponentTag tag = (ComponentTag)element;
 				ComponentTag open = tag.isClose() ? tag.getOpenTag() : tag;
-				if (canDequeueTag(open))
+				if (open != null && canDequeueTag(open))
 				{
 					index++;
 					return tag;
@@ -129,6 +149,8 @@ public final class DequeueContext
 	
 	private boolean canDequeueTag(ComponentTag open)
 	{
+		Args.notNull(open, "open");
+
 		if (containers.size() < 1)
 		{
 			// TODO queueing message: called too early
