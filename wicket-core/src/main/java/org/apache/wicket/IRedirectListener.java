@@ -20,7 +20,9 @@ package org.apache.wicket;
  * Request listener called on page redirects.
  * 
  * @author Jonathan Locke
+ * @deprecated Removed in Wicket 7.0. As replacement use {@link org.apache.wicket.request.cycle.RequestCycle#urlFor}.
  */
+@Deprecated
 public interface IRedirectListener extends IRequestListener
 {
 	/** Redirect listener interface */
