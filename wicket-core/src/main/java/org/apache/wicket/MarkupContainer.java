@@ -1715,17 +1715,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return result;
 	}
 
-	@Override
-	protected void onBeforeRender()
-	{
-		super.onBeforeRender();
-		// if (this instanceof IQueueRegion)
-		// {
-		// dequeue();
-		// }
-	}
-
-
 	/**
 	 * 
 	 * @see org.apache.wicket.Component#onBeforeRenderChildren()
