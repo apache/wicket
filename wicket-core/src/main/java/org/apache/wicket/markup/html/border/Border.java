@@ -541,7 +541,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		public IMarkupFragment getDequeueMarkup()
 		{
 			Border border=findParent(Border.class);
-			IMarkupFragment fragment=findParent(Border.class).getMarkup();
+			IMarkupFragment fragment = border.getMarkup();
 
 			if (fragment == null)
 			{
@@ -574,8 +574,9 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			}
 
 
-			/* TODO queueing The comment is not finished
-			 * (i) is now at the border tag, find the next component tag which
+			/*
+			 * (i) is now at the border tag, find the next component tag (the tag that will belong
+			 * to the first direct child
 			 */
 
 			i++;
