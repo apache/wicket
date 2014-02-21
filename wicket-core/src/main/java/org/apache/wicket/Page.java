@@ -41,7 +41,6 @@ import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.apache.wicket.util.visit.Visits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,7 +83,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Page extends MarkupContainer
 	implements
-		IRedirectListener,
 		IRequestablePage,
 		IQueueRegion
 {
@@ -499,16 +497,6 @@ public abstract class Page extends MarkupContainer
 		}
 
 		return stateless;
-	}
-
-	/**
-	 * Redirect to this page.
-	 * 
-	 * @see org.apache.wicket.IRedirectListener#onRedirect()
-	 */
-	@Override
-	public final void onRedirect()
-	{
 	}
 
 	/**

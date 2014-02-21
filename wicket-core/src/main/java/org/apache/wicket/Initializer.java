@@ -41,7 +41,6 @@ public class Initializer implements IInitializer
 		IFormSubmitListener.INTERFACE.register();
 		ILinkListener.INTERFACE.register();
 		IOnChangeListener.INTERFACE.register();
-		IRedirectListener.INTERFACE.register();
 		IResourceListener.INTERFACE.register();
 	}
 
