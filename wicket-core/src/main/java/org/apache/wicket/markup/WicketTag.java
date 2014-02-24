@@ -159,7 +159,7 @@ public class WicketTag extends ComponentTag
 	/**
 	 * @return True if &lt;wicket:fragment&gt;
 	 */
-	public final boolean isFragementTag()
+	public final boolean isFragmentTag()
 	{
 		return FragmentResolver.FRAGMENT.equalsIgnoreCase(getName());
 	}

@@ -148,7 +148,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 		else
 		{
 			MarkupElement fragmentTag = childMarkup.get(0);
-			if ((fragmentTag instanceof WicketTag && ((WicketTag)fragmentTag).isFragementTag()) == false)
+			if ((fragmentTag instanceof WicketTag && ((WicketTag)fragmentTag).isFragmentTag()) == false)
 			{
 				throw new MarkupNotFoundException("Markup found for Fragment '" + markupId
 					+ "' in providing markup container " + getMarkupProvider(container)

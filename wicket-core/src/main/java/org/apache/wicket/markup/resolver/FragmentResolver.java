@@ -52,7 +52,7 @@ public class FragmentResolver implements IComponentResolver
 			final WicketTag wTag = (WicketTag)tag;
 
 			// If <wicket:fragment ...>
-			if (wTag.isFragementTag())
+			if (wTag.isFragmentTag())
 			{
 				return new WebComponent(wTag.getId()).setVisible(false);
 			}
