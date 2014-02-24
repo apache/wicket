@@ -686,11 +686,11 @@ public class WebPageRendererTest
 	@Test
 	public void testShouldRenderPageAndWriteResponseVariationIntegrity() {
 		int count = countVariations(new ShouldRenderPageAndWriteResponseVariations());
-		Assert.assertEquals(2*2*2*2*2*2*2*3,count);
+		Assert.assertEquals(2 * 2 * 2 * 2 * 2 * 2 * 2 * 3, count);
 	}
 
 	@Test
-	public void testShouldRenderPageAndWriteResponseVariation() {
+	public void shouldRenderPageAndWriteResponseVariation() {
 
 		String match =
 						"    X   XXXXXXXX" +
@@ -718,13 +718,13 @@ public class WebPageRendererTest
 						"                " +
 						"                ";
 
-		checkVariations(match,new ShouldRenderPageAndWriteResponseVariations());
+		checkVariations(match, new ShouldRenderPageAndWriteResponseVariations());
 	}
 
 	@Test
 	public void testShouldRedirectToTargetUrlIntegrity() {
 		int count = countVariations(new ShouldRedirectToTargetUrl());
-		Assert.assertEquals(2*3*2*2*2*2*2,count);
+		Assert.assertEquals(2 * 3 * 2 * 2 * 2 * 2 * 2, count);
 	}
 
 	@Test
@@ -744,7 +744,7 @@ public class WebPageRendererTest
 						"   XXXXXXXXXXXXX" +
 						"XXXXXXXXXXXXXXXX";
 
-		checkVariations(match,new ShouldRedirectToTargetUrl());
+		checkVariations(match, new ShouldRedirectToTargetUrl());
 	}
 
 	@Test
@@ -826,7 +826,7 @@ public class WebPageRendererTest
 		renderer.sessionTemporary=false;
 
 		Assert.assertFalse(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
-			Url.parse("test2")));
+				Url.parse("test2")));
 	}
 
 	private int countVariations(AbstractVariations variations) {
