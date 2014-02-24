@@ -275,6 +275,30 @@ public class WebPageRendererTest
 		verify(response, never()).sendRedirect(anyString());
 	}
 
+    /**
+     * Tests that when {@link WebRequest#shouldPreserveClientUrl()} is <code>true</code>
+     * but {@link RenderPageRequestHandler#getRedirectPolicy()} is
+     * {@link RedirectPolicy#ALWAYS_REDIRECT} a redirect must be issued
+     *
+     * https://issues.apache.org/jira/browse/WICKET-5486
+     */
+    @Test
+    public void testShouldPreserveClientUrlOverruledByRedirectPolicyAlwaysRedirect()
+    {
+        TestPageRenderer renderer = new TestPageRenderer(handler);
+        renderer.shouldPreserveClientUrl = true;
+        renderer.redirectPolicy = RedirectPolicy.ALWAYS_REDIRECT;
+
+        when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("something"));
+
+        when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("different"));
+
+        renderer.respond(requestCycle);
+
+        verify(response, never()).write(any(byte[].class));
+        verify(response).sendRedirect(anyString());
+    }
+
 	/**
 	 * Tests that when there is already saved buffered response then it will be used without
 	 * checking the rendering strategies or redirect policies
@@ -693,10 +717,10 @@ public class WebPageRendererTest
 	public void shouldRenderPageAndWriteResponseVariation() {
 
 		String match =
-						"    X   XXXXXXXX" +
-						"    XXXXXXXXXXXX" +
-						"    X   XXXXXXXX" +
-						"    XXXXXXXXXXXX" +
+						"    X       X   " +
+						"    XXXX    XXXX" +
+						"    X       X   " +
+						"    XXXX    XXXX" +
 						"                " +
 						"                " +
 						"                " +
