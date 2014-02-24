@@ -2169,6 +2169,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		if (tag instanceof WicketTag)
 		{
 			WicketTag wicketTag = (WicketTag)tag;
+			if (wicketTag.isContainerTag())
+			{
+				return true;
+			}
 			if (wicketTag.getAutoComponentFactory() != null)
 			{
 				return true;

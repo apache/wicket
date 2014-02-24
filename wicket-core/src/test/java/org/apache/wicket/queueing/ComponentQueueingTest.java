@@ -33,6 +33,7 @@ import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.queueing.nestedborders.InnerBorder;
@@ -205,7 +206,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** {@code [a,q[r,s]] - > [a[q[r[s]]]] } */
 	@Test
-	public void dequeueWithPanel1()
+	public void panel1()
 	{
 		MarkupContainer a = new A(), r = new R(), s = new S();
 
@@ -225,7 +226,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** panel has leading markup */
 	@Test
-	public void dequeueWithPanel2()
+	public void panel2()
 	{
 		MarkupContainer r = new R();
 
@@ -244,7 +245,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** panel with a static header section */
 	@Test
-	public void dequeueWithPanel3()
+	public void panel3()
 	{
 		MarkupContainer r = new R();
 
@@ -267,7 +268,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * test with inner panels
 	 */
 	@Test
-	public void dequeueWithNestedPanels()
+	public void nestedPanels()
 	{
 		MarkupContainer r = new R(), s = new S();
 
@@ -291,7 +292,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void dequeueWithRepeater1()
+	public void repeater1()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='lv'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -318,7 +319,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** repeater */
 	@Test
-	public void dequeueWithRepeater2()
+	public void repeater2()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='lv'><p wicket:id='b'><p wicket:id='c'></p></p></p></p>");
@@ -346,7 +347,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** repeater with a panel inside */
 	@Test
-	public void dequeueWithRepeater3()
+	public void repeater3()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='lv'><p wicket:id='b'><p wicket:id='q'></p></p></p></p>");
@@ -378,7 +379,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** dequeue, then rerender the page instance after a callback is executed */
 	@Test
-	public void dequeueWithCallback()
+	public void callback()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><a wicket:id='l'><p wicket:id='b'></p></a></p>");
@@ -578,7 +579,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void dequeueWithBorder1()
+	public void border1()
 	{
 		MarkupContainer a = new A(), b = new B(), r = new R(), s = new S();
 
@@ -599,7 +600,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 
 	@Test
-	public void dequeueWithNestedBorders()
+	public void nestedBorders()
 	{
 		MarkupContainer a = new A(), b = new B(), c= new C(), d = new D(), r = new R(), s = new S();
 
@@ -623,6 +624,38 @@ public class ComponentQueueingTest extends WicketTestCase
 		
 		assertThat(p, hasPath(new Path(a, outerBorder,  r, innerBorder, c, d, innerBorder.getBodyContainer(), s)));
 		assertThat(p, hasPath(new Path(a, outerBorder, r, outerBorder.getBodyContainer(), b)));
+	}
+
+	@Test
+	public void fragment1() {
+		MarkupContainer a = new A(), b = new B(), r = new R(), s = new S();
+		
+		TestPage page = new TestPage();
+		page.setPageMarkup("<a wicket:id='a'></a><f wicket:id='fragment'></f><b wicket:id='b'></b>"
+			+ "<wicket:fragment wicket:id='f'><r wicket:id='r'></r><s wicket:id='s'></s></wicket:fragment>");
+		
+		Fragment fragment = new Fragment("fragment", "f", page);
+
+		fragment.queue(r, s);
+		page.queue(a, b, fragment);
+		
+		assertThat(page, hasPath(new Path(a)));
+		assertThat(page, hasPath(new Path(b)));
+		assertThat(page, hasPath(new Path(fragment, r)));
+		assertThat(page, hasPath(new Path(fragment, s)));
+	}
+	
+	@Test
+	public void containerTag1()
+	{
+		MarkupContainer a = new A(), b = new B();
+
+		TestPage page = new TestPage();
+		page.setPageMarkup("<wicket:container wicket:id='a'><b wicket:id='b'></b></wicket:container>");
+
+		page.queue(a, b);
+
+		assertThat(page, hasPath(new Path(a, b)));
 	}
 
 	private static class A extends WebMarkupContainer
