@@ -79,6 +79,13 @@
 				return Wicket.Browser.isIE() && version < 9;
 			},
 
+			isIE11: function () {
+				var userAgent = window.navigator.userAgent;
+				var isTrident = userAgent.indexOf("Trident");
+				var is11 = userAgent.indexOf("rv:11");
+				return isTrident && is11;
+			},
+
 			isGecko: function () {
 				return (/Gecko/).test(window.navigator.userAgent) && !Wicket.Browser.isSafari();
 			}
