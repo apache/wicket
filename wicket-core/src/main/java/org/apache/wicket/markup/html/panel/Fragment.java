@@ -136,7 +136,7 @@ public class Fragment extends WebMarkupContainer implements IQueueRegion
 	@Override
 	public DequeueContext newDequeueContext()
 	{
-		IMarkupFragment markup = newMarkupSourcingStrategy().getMarkup(this, null);
+		IMarkupFragment markup = getMarkupSourcingStrategy().getMarkup(this, null);
 		if (markup == null)
 		{
 			return null;
