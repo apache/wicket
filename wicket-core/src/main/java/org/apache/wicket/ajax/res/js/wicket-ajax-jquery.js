@@ -2062,7 +2062,7 @@
 						style.id = node.getAttribute("id");
 
 						// create stylesheet
-						if (Wicket.Browser.isIE()) {
+						if (Wicket.Browser.isIELessThan11()) {
 							try  {
 								document.createStyleSheet().cssText = content;
 							}
@@ -2648,7 +2648,7 @@
 
 		setup: function () {
 
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 
 				jQuery(this).on('keydown', function (event) {
 					jQuery.event.special.inputchange.keyDownPressed = true;
