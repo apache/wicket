@@ -119,7 +119,7 @@
 
 					var dx = 0;
 					var dy = 0;
-					if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
+					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
 						dx = Wicket.Window.getScrollX();
 						dy = Wicket.Window.getScrollY();
 					}
@@ -137,7 +137,7 @@
 
 					var dx = 0;
 					var dy = 0;
-					if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
+					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
 						dx = Wicket.Window.getScrollX();
 						dy = Wicket.Window.getScrollY();
 					}
@@ -369,7 +369,7 @@
 			this.bottom = _(idBottom);
 			this.captionText = _(idCaptionText);
 
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				// IE stupid 3px bug - not fixed even in IE7 quirks!
 				if (Wicket.Browser.isIE7() === false || Wicket.Browser.isIEQuirks()) {
 					this.topLeft.style.marginRight = "-3px";
@@ -382,7 +382,7 @@
 			// HACK - IE doesn't support position:fixed. Gecko does, however for a reason
 			// we need to have background position: absolute, which makes the movement of
 			// the window really jerky if the window stays position: fixed
-			if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 				this.window.style.position = "absolute";
 			}
 
@@ -479,7 +479,7 @@
 			var scTop = 0;
 			var scLeft = 0;
 
-			if (Wicket.Browser.isIE() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
+			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
 				scLeft = Wicket.Window.getScrollX();
 				scTop = Wicket.Window.getScrollY();
 			}
@@ -838,7 +838,7 @@
 
 			this.adjustOpenWindowsStatusAndZIndexesOnClose();
 
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				// There's a strange focus problem in IE that disables focus on entire page,
 				// unless something focuses an input
 				var e = document.createElement("input");
@@ -902,7 +902,7 @@
 		 * Called when dragging has started.
 		 */
 		onBegin: function(object) {
-			if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIE() || Wicket.Browser.isSafari())) {
+			if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIELessThan11() || Wicket.Browser.isSafari())) {
 				this.revertList = [];
 				Wicket.Iframe.documentFix(document, this.revertList);
 			}
@@ -1289,7 +1289,7 @@
 				// HACK - it really sucks that we have to set this to absolute even for gecko.
 				// however background with position:fixed makes the text cursor in textfieds
 				// in modal window disappear
-				if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+				if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 					e.style.position = "absolute";
 				}
 
@@ -1449,7 +1449,7 @@
 				return;
 			}
 
-			if (Wicket.Browser.isIE() && Wicket.Browser.isIE7() === false) {
+			if (Wicket.Browser.isIELessThan11() && Wicket.Browser.isIE7() === false) {
 				this.boxes = [];
 				var selects = doc.getElementsByTagName("select");
 				for (var i = 0; i < selects.length; i++) {
@@ -1507,7 +1507,7 @@
 			}
 			// explorer doesn't need this, because for IE disableTabs() is called.
 			// plus in IE this causes problems because it scrolls document		);
-			if (Wicket.Browser.isIE() === false) {
+			if (Wicket.Browser.isIELessThan11() === false) {
 				this.focusRevertList = [];
 				var body = doc.getElementsByTagName("body")[0];
 				for (var i = 0; i < body.childNodes.length; ++i) {
@@ -1545,7 +1545,7 @@
 			if (typeof (this.tabbableTags) === "undefined") {
 				this.tabbableTags = ["A", "BUTTON", "TEXTAREA", "INPUT", "IFRAME", "SELECT"];
 			}
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				this.disabledTabsRevertList = [];
 				for (var j = 0; j < this.tabbableTags.length; j++) {
 					var tagElements = doc.getElementsByTagName(this.tabbableTags[j]);

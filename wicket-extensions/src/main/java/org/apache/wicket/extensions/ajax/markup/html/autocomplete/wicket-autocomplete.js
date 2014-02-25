@@ -683,7 +683,7 @@
 			hideIndicator();
 
 			// hack for a focus issue in IE, WICKET-2279
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				var range = document.selection.createRange();
 				if (range !== null) {
 					range.select();
