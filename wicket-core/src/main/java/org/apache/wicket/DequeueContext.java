@@ -175,7 +175,7 @@ public final class DequeueContext
 							for (; index < markup.size(); index++)
 							{
 								if ((markup.get(index) instanceof ComponentTag)
-									&& ((ComponentTag)markup.get(index)).closes(tag))
+									&& markup.get(index).closes(tag))
 								{
 									found = true;
 									break;
@@ -184,7 +184,8 @@ public final class DequeueContext
 							if (!found)
 							{
 								throw new IllegalStateException(
-									"Could not find close tag for tag: " + tag);
+									String.format("Could not find close tag for tag '%s' in markup: %s ",
+											tag, markup));
 							}
 
 					}
@@ -208,7 +209,8 @@ public final class DequeueContext
 							continue;
 						case SKIP :
 							throw new IllegalStateException(
-								"Should not see closed tag of skipped open tag: " + tag);
+								String.format("Should not see closed tag of skipped open tag '%s' in markup:%s",
+										tag, markup));
 					}
 				}
 			}
@@ -220,13 +222,13 @@ public final class DequeueContext
 	{
 		Args.notNull(open, "open");
 
-		DequeueTagAction action = null;
-
 		if (containers.size() < 1)
 		{
 			// TODO queueing message: called too early
 			throw new IllegalStateException();
 		}
+
+		DequeueTagAction action;
 		for (int i = containers.size() - 1; i >= 0; i--)
 		{
 			action = containers.get(i).canDequeueTag((open));
