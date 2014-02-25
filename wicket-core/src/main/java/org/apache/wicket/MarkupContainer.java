@@ -939,11 +939,18 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			cursor = cursor.getParent();
 		}
 
+		// if we have a path to page dequeue any children
 		if (page != null)
 		{
+			// if we are already dequeueing there is no need to dequeue again
 			if (!queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
-				queueRegion.dequeue();
+				// do not dequeue auto components since they are added
+				// during render phase
+				if (!child.isAuto())
+				{
+					queueRegion.dequeue();
+				}
 			}
 		}
 
