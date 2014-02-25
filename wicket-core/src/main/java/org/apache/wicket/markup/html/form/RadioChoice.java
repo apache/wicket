@@ -521,7 +521,26 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			buffer.append("<label for=\"")
 				.append(idAttr)
-				.append("\">")
+				.append('"');
+
+			// Allows user to add attributes to the <label..> tag
+			{
+				IValueMap labelAttrs = getAdditionalAttributesForLabel(index, choice);
+				if (labelAttrs != null)
+				{
+					for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
+					{
+						buffer.append(' ')
+								.append(attr.getKey())
+								.append("=\"")
+								.append(attr.getValue())
+								.append('"');
+					}
+				}
+			}
+
+			buffer
+				.append('>')
 				.append(escaped)
 				.append("</label>");
 
@@ -531,10 +550,26 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	}
 
 	/**
+	 * You may subclass this method to provide additional attributes to the &lt;label ..&gt; tag.
+	 *
+	 @param index
+	  *            index of the choice
+	  * @param choice
+	 *            the choice itself
+	 * @return tag attribute name/value pairs.
+	 */
+	protected IValueMap getAdditionalAttributesForLabel(int index, T choice)
+	{
+		return null;
+	}
+
+	/**
 	 * You may subclass this method to provide additional attributes to the &lt;input ..&gt; tag.
 	 * 
 	 * @param index
+	 *            index of the choice
 	 * @param choice
+	 *            the choice itself
 	 * @return tag attribute name/value pairs.
 	 */
 	protected IValueMap getAdditionalAttributes(final int index, final T choice)
