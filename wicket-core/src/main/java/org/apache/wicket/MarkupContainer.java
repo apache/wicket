@@ -2052,7 +2052,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Dequeues components. The default implementation iterates direct children of this container
-	 * found in the markup (retrieved via {@link #getDequeueMarkup()}) and tries to find matching
+	 * found in its markup and tries to find matching
 	 * components in queues filled by a call to {@link #queue(Component...)}. It then delegates the
 	 * dequeueing to these children.
 	 * 
