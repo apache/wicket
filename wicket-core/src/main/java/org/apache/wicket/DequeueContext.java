@@ -220,8 +220,6 @@ public final class DequeueContext
 	
 	private DequeueTagAction canDequeueTag(ComponentTag open)
 	{
-		Args.notNull(open, "open");
-
 		if (containers.size() < 1)
 		{
 			// TODO queueing message: called too early
