@@ -1525,21 +1525,14 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private void dequeueAutoComponents()
 	{
 		// dequeue auto components
-		IMarkupFragment markup = getDequeueMarkup();
-		if (markup != null)
+		DequeueContext context = newDequeueContext();
+		if (context != null && context.peekTag() != null)
 		{
-			// make sure we have markup, when running inside tests we wont
-			for (int i = 0; i < markup.size(); i++)
+			for (ComponentTag tag = context.takeTag(); tag != null; tag = context.takeTag())
 			{
-				MarkupElement element = markup.get(i);
-				if (element instanceof ComponentTag)
+				if (tag.getAutoComponentFactory() != null)
 				{
-					ComponentTag tag = (ComponentTag)element;
-					if (tag.getAutoComponentFactory() != null)
-					{
-						Component auto = tag.getAutoComponentFactory().newComponent(tag);
-						queue(auto);
-					}
+					queue(tag.getAutoComponentFactory().newComponent(tag));
 				}
 			}
 		}
@@ -2039,15 +2032,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		setRequestFlag(RFLAG_CONTAINER_DEQUEING, true);
 		try
 		{
-			IMarkupFragment markup = getDequeueMarkup();
-			if (markup == null)
+			DequeueContext dequeue = newDequeueContext();
+			if (dequeue == null)
 			{
-				// markup not found, skip dequeuing
-				// this sometimes happens when we are in a unit test
+				// not ready to dequeue yet
 				return;
 			}
-
-			DequeueContext dequeue = new DequeueContext(markup, this);
 
 			if (dequeue.peekTag() != null)
 			{
@@ -2083,9 +2073,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	
 			// see if child is already added to parent
 
-			Component child = get(tag.getId()); // TODO queueing add this into findInQueue and
-												// rename it to dequeue
-	
+			Component child = get(tag.getId());
+
 			if (child == null)
 			{
 				// the container does not yet have a child with this id, see if we can
@@ -2147,12 +2136,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	}
 	
-	/** @see IQueueRegion#getDequeueMarkup() */
-	public IMarkupFragment getDequeueMarkup()
+	/** @see IQueueRegion#newDequeueContext() */
+	public DequeueContext newDequeueContext()
 	{
-		return getAssociatedMarkup();
+		Markup markup = getAssociatedMarkup();
+		if (markup == null)
+		{
+			return null;
+		}
+		return new DequeueContext(markup, this, false);
 	}
-	
+
 	/**
 	 * Checks if this container can dequeue a child represented by the specified tag. This method
 	 * should be overridden when containers can dequeue components represented by non-standard tags.
@@ -2164,25 +2158,30 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @param tag
 	 */
-	protected boolean canDequeueTag(ComponentTag tag)
+	protected DequeueTagAction canDequeueTag(ComponentTag tag)
 	{
 		if (tag instanceof WicketTag)
 		{
 			WicketTag wicketTag = (WicketTag)tag;
 			if (wicketTag.isContainerTag())
 			{
-				return true;
+				return DequeueTagAction.DEQUEUE;
 			}
+			else
 			if (wicketTag.getAutoComponentFactory() != null)
 			{
-				return true;
+				return DequeueTagAction.DEQUEUE;
+			}
+			else if (wicketTag.isFragmentTag())
+			{
+				return DequeueTagAction.SKIP;
 			}
 			else
 			{
-				return false;
+				return null; // dont know
 			}
 		}
-		return true;
+		return DequeueTagAction.DEQUEUE;
 	}
 
 	/**

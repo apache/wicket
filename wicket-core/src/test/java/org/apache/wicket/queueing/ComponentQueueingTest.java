@@ -18,6 +18,7 @@ package org.apache.wicket.queueing;
 
 import static org.apache.wicket.queueing.WicketMatchers.hasPath;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.util.ArrayList;
 
@@ -56,10 +57,8 @@ public class ComponentQueueingTest extends WicketTestCase
 		MarkupContainer a = new A(), b = new B(), c = new C();
 
 		p.queue(b, c, a);
-
-		tester.startPage(p);
-
 		assertThat(p, hasPath(a, b, c));
+		tester.startPage(p);
 	}
 
 	/** {@code [a[b,c]] -> [a[b[c]]] } */
@@ -600,7 +599,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 
 	@Test
-	public void nestedBorders()
+	public void border_nested()
 	{
 		MarkupContainer a = new A(), b = new B(), c= new C(), d = new D(), r = new R(), s = new S();
 
@@ -644,6 +643,23 @@ public class ComponentQueueingTest extends WicketTestCase
 		assertThat(page, hasPath(new Path(fragment, r)));
 		assertThat(page, hasPath(new Path(fragment, s)));
 	}
+
+	@Test
+	public void fragment_doesNotDequeueAcrossRegion()
+	{
+		MarkupContainer a = new A();
+
+		TestPage page = new TestPage();
+		page.setPageMarkup("<f wicket:id='fragment'></f><wicket:fragment wicket:id='f'><a wicket:id='a'></a></wicket:fragment>");
+
+		Fragment fragment = new Fragment("fragment", "f", page);
+
+		page.queue(a, fragment);
+
+		assertThat(page, hasPath(new Path(fragment)));
+		assertThat(a.getParent(), is(nullValue()));
+	}
+
 	
 	@Test
 	public void containerTag1()

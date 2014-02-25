@@ -34,6 +34,8 @@ public final class DequeueContext
 	private int index;
 	private ComponentTag next;
 	private ArrayListStack<ComponentTag> tags = new ArrayListStack<>();
+	private final boolean skipFirst;
+	private ComponentTag first;
 
 	private ArrayListStack<MarkupContainer> containers = new ArrayListStack<>();
 
@@ -62,9 +64,10 @@ public final class DequeueContext
 		}
 	}
 	
-	public DequeueContext(IMarkupFragment markup, MarkupContainer root)
+	public DequeueContext(IMarkupFragment markup, MarkupContainer root, boolean skipFirst)
 	{
 		this.markup = markup;
+		this.skipFirst = skipFirst;
 		containers.push(root);
 		next=nextTag();
 	}
@@ -105,6 +108,12 @@ public final class DequeueContext
 	public ComponentTag takeTag()
 	{
 		ComponentTag taken=next;
+
+		if (taken == null)
+		{
+			return null;
+		}
+
 		if (taken.isOpen() && !taken.hasNoCloseTag())
 		{
 			tags.push(taken);
@@ -130,26 +139,88 @@ public final class DequeueContext
 	
 	private ComponentTag nextTag()
 	{
+		if (skipFirst && first == null)
+		{
+			for (; index < markup.size(); index++)
+			{
+				MarkupElement element = markup.get(index);
+				if (element instanceof ComponentTag)
+				{
+					first = (ComponentTag)element;
+					index++;
+					break;
+				}
+			}
+		}
+
 		for (; index < markup.size(); index++)
 		{
 			MarkupElement element = markup.get(index);
 			if (element instanceof ComponentTag)
 			{
 				ComponentTag tag = (ComponentTag)element;
-				ComponentTag open = tag.isClose() ? tag.getOpenTag() : tag;
-				if (open != null && canDequeueTag(open))
+
+				if (tag.isOpen() || tag.isOpenClose())
 				{
-					index++;
-					return tag;
+					DequeueTagAction action = canDequeueTag(tag);
+					switch (action)
+					{
+						case IGNORE :
+							continue;
+						case DEQUEUE :
+							index++;
+							return tag;
+						case SKIP : // skip to close tag
+							boolean found = false;
+							for (; index < markup.size(); index++)
+							{
+								if ((markup.get(index) instanceof ComponentTag)
+									&& ((ComponentTag)markup.get(index)).closes(tag))
+								{
+									found = true;
+									break;
+								}
+							}
+							if (!found)
+							{
+								throw new IllegalStateException(
+									"Could not find close tag for tag: " + tag);
+							}
+
+					}
+				}
+				else
+				{
+					// closed tag
+					ComponentTag open = tag.isClose() ? tag.getOpenTag() : tag;
+
+					if (skipFirst && first != null && open == first)
+					{
+						continue;
+					}
+
+					switch (canDequeueTag(open))
+					{
+						case DEQUEUE :
+							index++;
+							return tag;
+						case IGNORE :
+							continue;
+						case SKIP :
+							throw new IllegalStateException(
+								"Should not see closed tag of skipped open tag: " + tag);
+					}
 				}
 			}
 		}
 		return null;
 	}
 	
-	private boolean canDequeueTag(ComponentTag open)
+	private DequeueTagAction canDequeueTag(ComponentTag open)
 	{
 		Args.notNull(open, "open");
+
+		DequeueTagAction action = null;
 
 		if (containers.size() < 1)
 		{
@@ -158,12 +229,13 @@ public final class DequeueContext
 		}
 		for (int i = containers.size() - 1; i >= 0; i--)
 		{
-			if (containers.get(i).canDequeueTag((open)))
+			action = containers.get(i).canDequeueTag((open));
+			if (action != null)
 			{
-				return true;
+				return action;
 			}
 		}
-		return false;
+		return DequeueTagAction.IGNORE;
 	}
 
 	/**

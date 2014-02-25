@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.markup.IMarkupFragment;
 
 /**
  * Demarcates components that act as a root can dequeue children. These are usually components with
@@ -33,13 +32,14 @@ import org.apache.wicket.markup.IMarkupFragment;
 public interface IQueueRegion
 {
 	/**
-	 * Gets the markup that will be used to dequeue components in this container. Usually containers
-	 * will return their associated markup by simply delegating to
+	 * Creates a new {@link DequeueContext} that will be used to dequeue children of this region.
+	 * 
+	 * Usually containers will create a context with their associated markup by getting it via
 	 * {@link MarkupContainer#getAssociatedMarkup()}, but components that do not render markup in a
 	 * standard way (such as repeaters and borders) may choose to override this method to implement
 	 * custom behavior for the dequeueing process.
 	 */
-	public IMarkupFragment getDequeueMarkup();
+	public DequeueContext newDequeueContext();
 
 	/**
 	 * Starts component dequeueing on this {@link IQueueRegion}. This is the entry point into the

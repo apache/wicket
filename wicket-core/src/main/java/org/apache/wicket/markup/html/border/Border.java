@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.DequeueContext;
+import org.apache.wicket.DequeueTagAction;
 import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
@@ -538,7 +540,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		}
 
 		@Override
-		public IMarkupFragment getDequeueMarkup()
+		public DequeueContext newDequeueContext()
 		{
 			Border border=findParent(Border.class);
 			IMarkupFragment fragment = border.getMarkup();
@@ -548,56 +550,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 				return null;
 			}
 
-			/*
-			 * we want to get the contents of the border here (the markup that
-			 * is represented by the body tag) to do this we need to strip the
-			 * tag that the border is attached to (usually the first tag)
-			 */
-
-			int i = 0;
-			while (i < fragment.size())
-			{
-				// TODO queueing Use fragment.find(border.getId()); instead ?!
-				MarkupElement element = fragment.get(i);
-				if (element instanceof ComponentTag
-						&& ((ComponentTag)element).getId().equals(border.getId()))
-				{
-					break;
-				}
-				i++;
-			}
-
-			if (i >= fragment.size())
-			{
-				throw new IllegalStateException("Could not find starting border tag for border: "
-						+ border.getId() + " in markup: " + fragment);
-			}
-
-
-			/*
-			 * (i) is now at the border tag, find the next component tag (the tag that will belong
-			 * to the first direct child
-			 */
-
-			i++;
-			while (i < fragment.size())
-			{
-				MarkupElement element = fragment.get(i);
-				if (element instanceof ComponentTag)
-				{
-					break;
-				}
-				i++;
-			}
-
-			ComponentTag tag = (ComponentTag)fragment.get(i);
-			if (tag.isClose())
-			{
-				// this closes the border tag, border only has raw markup
-				return null;
-			}
-
-			return new MarkupFragment(fragment, i);
+			return new DequeueContext(fragment, this, true);
 		}
 
 		@Override
@@ -636,11 +589,11 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 
 	@Override
-	protected boolean canDequeueTag(ComponentTag tag)
+	protected DequeueTagAction canDequeueTag(ComponentTag tag)
 	{
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag())
 		{
-			return true;
+			return DequeueTagAction.DEQUEUE;
 		}
 
 		return super.canDequeueTag(tag);

@@ -17,12 +17,10 @@
 package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.DequeueContext;
 import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.MarkupFragment;
-import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
@@ -134,8 +132,16 @@ public class Fragment extends WebMarkupContainer implements IQueueRegion
 		return associatedMarkupId;
 	}
 
+
 	@Override
-	public IMarkupFragment getDequeueMarkup() {
-		return newMarkupSourcingStrategy().getMarkup(this, null);
+	public DequeueContext newDequeueContext()
+	{
+		IMarkupFragment markup = newMarkupSourcingStrategy().getMarkup(this, null);
+		if (markup == null)
+		{
+			return null;
+		}
+
+		return new DequeueContext(markup, this, true);
 	}
 }
