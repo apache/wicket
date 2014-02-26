@@ -1625,7 +1625,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		}
 		else
 		{
-			Exception failure;
+			boolean modified = false;
 
 			formComponent.modelChanging();
 			
@@ -1635,33 +1635,27 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 				{
 					collection.addAll(convertedInput);
 				}
-				failure = null;
+				modified = true;
 			} catch (UnsupportedOperationException unmodifiable) {
-				logger.debug("An error occurred while trying to change the collection attached to " + formComponent, unmodifiable);
+				logger.debug("An error occurred while trying to modify the collection attached to " + formComponent, unmodifiable);
 
-				failure = unmodifiable;
 				collection = new ArrayList<>(convertedInput); 
 			}
 			
 			try
 			{
 				formComponent.getModel().setObject(collection);
-				failure = null;
 			}
 			catch (Exception noSetter)
 			{
-				logger.debug("An error occurred while trying to set the collection attached to " + formComponent, noSetter);
-				
-				if (failure != null) {
-					failure = noSetter;
+				if (modified) {
+					logger.debug("An error occurred while trying to set the collection attached to " + formComponent, noSetter);
+				} else {
+					throw new WicketRuntimeException("An error occurred while trying to set the collection attached to " + formComponent, noSetter); 
 				}
 			}
 			
-			if (failure == null) {
-				formComponent.modelChanged();
-			} else {
-				throw new WicketRuntimeException("Unable to update the collection attached to " + formComponent); 
-			}
+			formComponent.modelChanged();
 		}
 	}
 }
