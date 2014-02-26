@@ -1621,23 +1621,30 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		if (collection == null)
 		{
 			collection = new ArrayList<>(convertedInput);
-			formComponent.setDefaultModelObject(collection);
+			formComponent.setModelObject(collection);
 		}
 		else
 		{
 			boolean modified = false;
 
 			formComponent.modelChanging();
-			
-			try {
+
+			try
+			{
 				collection.clear();
 				if (convertedInput != null)
 				{
 					collection.addAll(convertedInput);
 				}
 				modified = true;
-			} catch (UnsupportedOperationException unmodifiable) {
-				logger.debug("An error occurred while trying to modify the collection attached to " + formComponent, unmodifiable);
+			}
+			catch (UnsupportedOperationException unmodifiable)
+			{
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("An error occurred while trying to modify the collection attached to "
+							+ formComponent, unmodifiable);
+				}
 
 				collection = new ArrayList<>(convertedInput); 
 			}
@@ -1648,10 +1655,15 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			}
 			catch (Exception noSetter)
 			{
-				if (modified) {
-					logger.debug("An error occurred while trying to set the collection attached to " + formComponent, noSetter);
-				} else {
-					throw new WicketRuntimeException("An error occurred while trying to set the collection attached to " + formComponent, noSetter); 
+				if (modified && logger.isDebugEnabled())
+				{
+					logger.debug("An error occurred while trying to set the collection attached to "
+							+ formComponent, noSetter);
+				}
+				else
+				{
+					throw new WicketRuntimeException("An error occurred while trying to set the collection attached to "
+							+ formComponent, noSetter);
 				}
 			}
 			
