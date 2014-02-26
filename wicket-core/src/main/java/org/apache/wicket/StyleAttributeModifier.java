@@ -16,55 +16,59 @@
  */
 package org.apache.wicket;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * An AttributeModifier specialized in managing the <em>CSS class</em>
+ * An AttributeModifier specialized in managing the <em>CSS style</em>
  * attribute
  */
-public abstract class ClassAttributeModifier extends AttributeAppender
+public abstract class StyleAttributeModifier extends AttributeAppender
 {
-	private static final Pattern SPLITTER = Pattern.compile("\\s+");
+	private static final Pattern STYLES_SPLITTER = Pattern.compile("\\s*;\\s*");
+	private static final Pattern KEY_VALUE_SPLITTER = Pattern.compile("\\s*:\\s*");
 
 	/**
 	 * Constructor.
 	 */
-	public ClassAttributeModifier()
+	public StyleAttributeModifier()
 	{
-		super("class", null, " ");
+		super("style", null, ";");
 	}
 
 	@Override
 	protected final String newValue(String currentValue, String appendValue)
 	{
-		String[] classes;
+		String[] styles;
 		if (Strings.isEmpty(currentValue))
 		{
-			classes = new String[0];
+			styles = new String[0];
 		}
 		else
 		{
-			classes = SPLITTER.split(currentValue.trim());
+			styles = STYLES_SPLITTER.split(currentValue.trim());
 		}
-		Set<String> oldClasses = new TreeSet<>();
-		Collections.addAll(oldClasses, classes);
+		Map<String, String> oldStyles = new LinkedHashMap<>();
+		for (String style : styles)
+		{
+			String[] keyValue = KEY_VALUE_SPLITTER.split(style, 2);
+			oldStyles.put(keyValue[0], keyValue[1]);
+		}
 
-		Set<String> newClasses = update(oldClasses);
+		Map<String, String> newStyles = update(oldStyles);
 
 		StringBuilder result = new StringBuilder();
-		for (String cls : newClasses)
+		for (Map.Entry<String, String> entry : newStyles.entrySet())
 		{
-			if (result.length() > 0)
-			{
-				result.append(getSeparator());
-			}
-			result.append(cls);
+			result
+				.append(entry.getKey())
+				.append(':')
+				.append(entry.getValue())
+				.append(getSeparator());
 		}
 		return result.length() > 0 ? result.toString() : VALUELESS_ATTRIBUTE_REMOVE;
 	}
@@ -72,9 +76,9 @@ public abstract class ClassAttributeModifier extends AttributeAppender
 	/**
 	 * Callback to update the CSS class values for a tag.
 	 *
-	 * @param oldClasses
-	 *          A set with the old class values
-	 * @return A set with the new class values
+	 * @param oldStyles
+	 *          A map with the old style key/values
+	 * @return A map with the new style key/values
 	 */
-	protected abstract Set<String> update(Set<String> oldClasses);
+	protected abstract Map<String, String> update(Map<String, String> oldStyles);
 }

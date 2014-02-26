@@ -17,7 +17,6 @@
 package org.apache.wicket;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -25,24 +24,24 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests for ClassAttributeModifier
+ * Tests for StyleAttributeModifier
  */
-public class ClassAttributeModifierTest extends Assert
+public class StyleAttributeModifierTest extends Assert
 {
 	/**
-	 * Adds two values
+	 * Adds two style properties
 	 */
 	@Test
-	public void addCssClasses()
+	public void addCssStyles()
 	{
-		ClassAttributeModifier cam = new ClassAttributeModifier()
+		StyleAttributeModifier cam = new StyleAttributeModifier()
 		{
 			@Override
-			protected Set<String> update(Set<String> oldClasses)
+			protected Map<String, String> update(Map<String, String> oldStyles)
 			{
-				oldClasses.add("one");
-				oldClasses.add("two");
-				return oldClasses;
+				oldStyles.put("color", "white");
+				oldStyles.put("font-size", "9px");
+				return oldStyles;
 			}
 		};
 		ComponentTag tag = createTag();
@@ -51,58 +50,58 @@ public class ClassAttributeModifierTest extends Assert
 
 		cam.replaceAttributeValue(null, tag);
 
-		String classes = (String) attributes.get(cam.getAttribute());
-		assertEquals("one two", classes);
+		String styles = (String) attributes.get(cam.getAttribute());
+		assertEquals("color:white;font-size:9px;", styles);
 	}
 
 	/**
-	 * Adds 'three' and removes 'two'
+	 * Modifies one style, removes another and adds a new style
 	 */
 	@Test
-	public void addRemoveCssClasses()
+	public void addRemoveCssStyles()
 	{
-		ClassAttributeModifier cam = new ClassAttributeModifier()
+		StyleAttributeModifier cam = new StyleAttributeModifier()
 		{
 			@Override
-			protected Set<String> update(Set<String> oldClasses)
+			protected Map<String, String> update(Map<String, String> oldStyles)
 			{
-				oldClasses.add("one");
-				oldClasses.remove("two");
-				oldClasses.add("three");
-				return oldClasses;
+				oldStyles.put("color", "black");           // modify the value
+				oldStyles.remove("font-size");             // remove
+				oldStyles.put("background-color", "red");  // add
+				return oldStyles;
 			}
 		};
 		ComponentTag tag = createTag();
 
 		Map<String, Object> attributes = tag.getAttributes();
-		attributes.put(cam.getAttribute(), "one two    ");
+		attributes.put(cam.getAttribute(), "color:white;font-size:9px;");
 
 		cam.replaceAttributeValue(null, tag);
 
 		String classes = (String) attributes.get(cam.getAttribute());
-		assertEquals("one three", classes);
+		assertEquals("color:black;background-color:red;", classes);
 	}
 
 	/**
-	 * Removes all CSS class values
+	 * Removes all CSS style values and the attribute itself
 	 */
 	@Test
-	public void removeAllCssClasses()
+	public void removeAllCssStyles()
 	{
-		ClassAttributeModifier cam = new ClassAttributeModifier()
+		StyleAttributeModifier cam = new StyleAttributeModifier()
 		{
 			@Override
-			protected Set<String> update(Set<String> oldClasses)
+			protected Map<String, String> update(Map<String, String> oldStyles)
 			{
-				oldClasses.remove("one");
-				oldClasses.remove("two");
-				return oldClasses;
+				oldStyles.remove("color");
+				oldStyles.remove("font-size");
+				return oldStyles;
 			}
 		};
 		ComponentTag tag = createTag();
 
 		Map<String, Object> attributes = tag.getAttributes();
-		attributes.put(cam.getAttribute(), "two    one");
+		attributes.put(cam.getAttribute(), "color:white ;   font-size:99999px; ");
 
 		cam.replaceAttributeValue(null, tag);
 
@@ -114,7 +113,7 @@ public class ClassAttributeModifierTest extends Assert
 	{
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
-		tag.setId("ClassAttributeModifier");
+		tag.setId("StyleAttributeModifier");
 		tag.setName("test");
 		return tag;
 	}
