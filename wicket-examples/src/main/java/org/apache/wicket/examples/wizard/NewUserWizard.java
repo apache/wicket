@@ -19,6 +19,8 @@ package org.apache.wicket.examples.wizard;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.extensions.wizard.AjaxWizardButtonBar;
 import org.apache.wicket.extensions.wizard.StaticContentStep;
 import org.apache.wicket.extensions.wizard.Wizard;
 import org.apache.wicket.extensions.wizard.WizardModel;
@@ -46,6 +48,8 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
  * domain object ({@link User}) as it's subject. Also, the user roles step}is an optional step, that
  * will only be executed when assignRoles is true (and that value is edited in the user details
  * step).
+ * <br>
+ * Buttons are using Ajax requests.
  * 
  * @author Eelco Hillenius
  */
@@ -199,6 +203,15 @@ public class NewUserWizard extends Wizard
 
 		// initialize the wizard with the wizard model we just built
 		init(model);
+	}
+
+	/**
+	 * Use Ajax buttons.
+	 */
+	@Override
+	protected Component newButtonBar(String id)
+	{
+		return new AjaxWizardButtonBar(id, this);
 	}
 
 	/**
