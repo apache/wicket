@@ -38,7 +38,7 @@ public class AttributeModifierTest extends Assert
 	@Test(expected = IllegalArgumentException.class)
 	public void nullAttributeFailsConstruction()
 	{
-		new AttributeModifier(null, new Model<String>("model"));
+		new AttributeModifier(null, new Model<>("model"));
 	}
 
 	/**

@@ -173,7 +173,11 @@ public class AttributeModifier extends Behavior implements IClusterable
 			{
 				final String value = toStringOrNull(attributes.get(attribute));
 				final String newValue = newValue(value, toStringOrNull(replacementValue));
-				if (newValue != null)
+				if (newValue == VALUELESS_ATTRIBUTE_REMOVE)
+				{
+					attributes.remove(attribute);
+				}
+				else if (newValue != null)
 				{
 					attributes.put(attribute, newValue);
 				}
