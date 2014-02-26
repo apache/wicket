@@ -1655,14 +1655,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			}
 			catch (Exception noSetter)
 			{
-				if (modified && logger.isDebugEnabled())
-				{
-					logger.debug("An error occurred while trying to set the collection attached to "
-							+ formComponent, noSetter);
-				}
-				else
+				if (!modified)
 				{
 					throw new WicketRuntimeException("An error occurred while trying to set the collection attached to "
+							+ formComponent, noSetter);
+				}
+				else if (logger.isDebugEnabled())
+				{
+					logger.debug("An error occurred while trying to set the collection attached to "
 							+ formComponent, noSetter);
 				}
 			}
