@@ -1616,8 +1616,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * @param formComponent
 	 *            the form component to update
 	 * @see FormComponent#updateModel()
-	 * @throws UnsupportedOperationException
-	 *             if the existing model object Collection cannot be modified
+	 * @throws WicketRuntimeException
+	 *             if the existing model object collection is unmodifiable and no setter exists
 	 */
 	public static <S> void updateCollectionModel(FormComponent<Collection<S>> formComponent)
 	{
@@ -1627,30 +1627,53 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		if (collection == null)
 		{
 			collection = new ArrayList<S>(convertedInput);
-			formComponent.setDefaultModelObject(collection);
+			formComponent.setModelObject(collection);
 		}
 		else
 		{
-			formComponent.modelChanging();
-			collection.clear();
-			if (convertedInput != null)
-			{
-				collection.addAll(convertedInput);
-			}
-			formComponent.modelChanged();
+			boolean modified = false;
 
+			formComponent.modelChanging();
+
+			try
+			{
+				collection.clear();
+				if (convertedInput != null)
+				{
+					collection.addAll(convertedInput);
+				}
+				modified = true;
+			}
+			catch (UnsupportedOperationException unmodifiable)
+			{
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("An error occurred while trying to modify the collection attached to "
+							+ formComponent, unmodifiable);
+				}
+
+				collection = new ArrayList<S>(convertedInput);
+			}
+			
 			try
 			{
 				formComponent.getModel().setObject(collection);
 			}
-			catch (Exception e)
+			catch (Exception noSetter)
 			{
-				// ignore this exception because it could be that there
-				// is not setter for this collection.
-				logger.info(
-					"An error occurred while trying to set the new value for the property attached to " +
-						formComponent, e);
+				if (!modified)
+				{
+					throw new WicketRuntimeException("An error occurred while trying to set the collection attached to "
+							+ formComponent, noSetter);
+				}
+				else if (logger.isDebugEnabled())
+				{
+					logger.debug("An error occurred while trying to set the collection attached to "
+							+ formComponent, noSetter);
+				}
 			}
+			
+			formComponent.modelChanged();
 		}
 	}
 }
