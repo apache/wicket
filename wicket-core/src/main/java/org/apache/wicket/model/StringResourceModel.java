@@ -83,7 +83,7 @@ import org.apache.wicket.util.string.Strings;
  * In its simplest form, the model can be used as follows:
  * 
  * <pre>
- * public MyPage extends WebPage&lt;Void&gt;
+ * public class MyPage extends WebPage&lt;Void&gt;
  * {
  *    public MyPage(final PageParameters parameters)
  *    {
@@ -99,13 +99,13 @@ import org.apache.wicket.util.string.Strings;
  * In this example, the resource key is selected based on the evaluation of a property expression:
  * 
  * <pre>
- * public MyPage extends WebPage&lt;Void&gt;
+ * public class MyPage extends WebPage&lt;Void&gt;
  * {
  *     public MyPage(final PageParameters parameters)
  *     {
  *         WeatherStation ws = new WeatherStation();
  *         add(new Label(&quot;weatherMessage&quot;,
- *             new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model&lt;String&gt;(ws)));
+ *             new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model&lt;WeatherStation&gt;(ws)));
  *     }
  * }
  * </pre>
@@ -127,13 +127,13 @@ import org.apache.wicket.util.string.Strings;
  * the model:
  * 
  * <pre>
- * public MyPage extends WebPage&lt;Void&gt;
+ * public class MyPage extends WebPage&lt;Void&gt;
  * {
  *     public MyPage(final PageParameters parameters)
  *     {
  *         WeatherStation ws = new WeatherStation();
  *         add(new Label(&quot;weatherMessage&quot;,
- *             new StringResourceModel(&quot;weather.message&quot;, this, new Model&lt;String&gt;(ws)));
+ *             new StringResourceModel(&quot;weather.message&quot;, this, new Model&lt;WeatherStation&gt;(ws)));
  *     }
  * }
  * </pre>
@@ -147,7 +147,7 @@ import org.apache.wicket.util.string.Strings;
  * string. This is an example of the most complex and powerful use of the string resource model:
  * 
  * <pre>
- * public MyPage extends WebPage&lt;Void&gt;
+ * public class MyPage extends WebPage&lt;Void&gt;
  * {
  *     public MyPage(final PageParameters parameters)
  *     {
