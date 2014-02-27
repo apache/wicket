@@ -3335,19 +3335,30 @@ public abstract class Component
 		final RequestListenerInterface listener, final PageParameters parameters)
 	{
 		int id = getBehaviorId(behaviour);
+		IRequestHandler handler = createRequestHandler(listener, parameters, id);
+		return getRequestCycle().urlFor(handler);
+	}
+
+	/**
+	 * Create a suitable request handler depending whether the page is stateless or bookmarkable.
+	 */
+	private IRequestHandler createRequestHandler(RequestListenerInterface listener,
+		PageParameters parameters, Integer id)
+	{
 		Page page = getPage();
+
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
-		IRequestHandler handler;
-		if (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry() &&
-			((page.isBookmarkable() && page.wasCreatedBookmarkable()) || page.isPageStateless()))
+
+		if (page.isPageStateless()
+			|| (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry()
+				&& page.isBookmarkable() && page.wasCreatedBookmarkable()))
 		{
-			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
+			return new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
 		}
 		else
 		{
-			handler = new ListenerInterfaceRequestHandler(provider, listener, id);
+			return new ListenerInterfaceRequestHandler(provider, listener, id);
 		}
-		return getRequestCycle().urlFor(handler);
 	}
 
 	/**
@@ -3379,18 +3390,7 @@ public abstract class Component
 	public final CharSequence urlFor(final RequestListenerInterface listener,
 		final PageParameters parameters)
 	{
-		Page page = getPage();
-		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
-		IRequestHandler handler;
-		if (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry() &&
-			((page.isBookmarkable() && page.wasCreatedBookmarkable()) || page.isPageStateless()))
-		{
-			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener);
-		}
-		else
-		{
-			handler = new ListenerInterfaceRequestHandler(provider, listener);
-		}
+		IRequestHandler handler = createRequestHandler(listener, parameters, null);
 		return getRequestCycle().urlFor(handler);
 	}
 
