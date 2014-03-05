@@ -98,20 +98,34 @@
 	};
 
 	/**
-	 * Functions executer takes array of functions and executes them. Each function gets
-	 * the notify object, which needs to be called for the next function to be executed.
-	 * This way the functions can be executed synchronously.
+	 * Functions executer takes array of functions and executes them.
+	 * The functions are executed one by one as far as the return value is FunctionsExecuter.DONE.
+	 * If the return value is FunctionsExecuter.ASYNC or undefined then the execution of
+	 * the functions will be resumed once the `notify` callback function is called.
 	 * This is needed because header contributions need to do asynchronous download of JS and/or CSS
 	 * and they have to let next function to run only after the download.
-	 * Each function has to call the notify object at some point, otherwise the functions after it wont be executed.
-	 * After the FunctionsExecuter is initiatialized, the start methods triggers the first function.
+	 * After the FunctionsExecuter is initialized, the start methods triggers the first function.
+	 *
+	 * @param functions {Array} - an array of functions to execute
 	 */
 	var FunctionsExecuter = function (functions) {
 
 		this.functions = functions;
 
+		/**
+		 * The index of the currently executed function
+		 * @type {number}
+		 */
 		this.current = 0;
 
+		/**
+		 * Tracks the depth of the call stack when `notify` is used for
+		 * asynchronous notification that a function execution has finished.
+		 * Should be reset to 0 when at some point to avoid problems like
+		 * "too much recursion". The reset may break the atomicity by allowing
+		 * another instance of FunctionExecuter to run its functions
+		 * @type {number}
+		 */
 		this.depth = 0; // we need to limit call stack depth
 
 		this.processNext = function () {
@@ -122,35 +136,71 @@
 				run = function () {
 					try {
 						var n = jQuery.proxy(this.notify, this);
-						f(n);
+						return f(n);
 					}
 					catch (e) {
 						Wicket.Log.error("FunctionsExecuter.processNext: " + e);
+						return FunctionsExecuter.FAIL;
 					}
 				};
 				run = jQuery.proxy(run, this);
 				this.current++;
 
-				if (this.depth > 1000) {
+				if (this.depth > FunctionsExecuter.DEPTH_LIMIT) {
 					// to prevent stack overflow (see WICKET-4675)
 					this.depth = 0;
 					window.setTimeout(run, 1);
 				} else {
-					this.depth ++;
-					run();
+					var retValue = run();
+					if (isUndef(retValue) || retValue === FunctionsExecuter.ASYNC) {
+						this.depth++;
+					}
+					return retValue;
 				}
 			}
 		};
 
 		this.start = function () {
-			this.processNext();
+			var retValue = FunctionsExecuter.DONE;
+			while (retValue === FunctionsExecuter.DONE) {
+				retValue = this.processNext();
+			}
 		};
 
 		this.notify = function () {
-			this.processNext();
+			this.start();
 		};
 	};
 
+	/**
+	 * Response that should be used by a function when it finishes successfully
+	 * in synchronous manner
+	 * @type {number}
+	 */
+	FunctionsExecuter.DONE = 1;
+
+	/**
+	 * Response that should be used by a function when it finishes abnormally
+	 * in synchronous manner
+	 * @type {number}
+	 */
+	FunctionsExecuter.FAIL = 2;
+
+	/**
+	 * Response that may be used by a function when it executes asynchronous
+	 * code and must wait `notify()` to be executed.
+	 * @type {number}
+	 */
+	FunctionsExecuter.ASYNC = 3;
+
+	/**
+	 * An artificial number used as a limit of the call stack depth to avoid
+	 * problems like "too much recursion" in the browser.
+	 * The depth is not easy to be calculated because the memory used by the
+	 * stack depends on many factors
+	 * @type {number}
+	 */
+	FunctionsExecuter.DEPTH_LIMIT = 1000;
 
 	// API start
 
@@ -642,7 +692,7 @@
 						we.publish(topic.AJAX_CALL_COMPLETE, attrs, jqXHR, textStatus);
 
 						self.done();
-
+						return FunctionsExecuter.DONE;
 					}, self));
 
 					var executer = new FunctionsExecuter(context.steps);
@@ -916,6 +966,7 @@
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
 
 				this.done();
+				return FunctionsExecuter.DONE;
 			}, this));
 
 			var executer = new FunctionsExecuter(context.steps);
@@ -1005,7 +1056,7 @@
 				window.setTimeout("Wicket.Focus.requestFocus();", 0);
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
-				notify();
+				return FunctionsExecuter.DONE;
 			}, this));
 		},
 
@@ -1019,7 +1070,7 @@
 				this._executeHandlers(attrs.fh, attrs, errorMessage);
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_FAILURE, attrs, jqXHR, errorMessage, textStatus);
 
-				notify();
+				return FunctionsExecuter.DONE;
 			}, this));
 		},
 
@@ -1053,7 +1104,7 @@
 					Wicket.DOM.replace(element, text);
 				}
 				// continue to next step
-				notify();
+				return FunctionsExecuter.DONE;
 			});
 		},
 
@@ -1099,6 +1150,7 @@
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
+					return FunctionsExecuter.ASYNC;
 				};
 			};
 
@@ -1112,7 +1164,7 @@
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
 					// continue to next step
-					notify();
+					return FunctionsExecuter.DONE;
 				};
 			};
 
@@ -1163,7 +1215,7 @@
 				Wicket.Focus.markFocusedComponent();
 
 				// continue to next step
-				notify();
+				return FunctionsExecuter.DONE;
 			});
 		},
 
@@ -1174,7 +1226,7 @@
 				Wicket.Focus.checkFocusedComponentReplaced();
 
 				// continue to next step
-				notify();
+				return FunctionsExecuter.DONE;
 			});
 		}
 	};
@@ -2007,8 +2059,7 @@
 					context.steps.push(function (notify) {
 						// if the element is already in head, skip it
 						if (Wicket.Head.containsElement(node, "href")) {
-							notify();
-							return;
+							return FunctionsExecuter.DONE;
 						}
 						// create link element
 						var css = Wicket.Head.createElement("link");
@@ -2041,6 +2092,8 @@
 							notify();
 						  }
 						}
+
+						return FunctionsExecuter.ASYNC;
 					});
 				},
 
@@ -2049,22 +2102,16 @@
 					context.steps.push(function (notify) {
 						// if element with same id is already in document, skip it
 						if (Wicket.DOM.containsElement(node)) {
-							notify();
-							return;
+							return FunctionsExecuter.DONE;
 						}
 						// serialize the style to string
 						var content = Wicket.DOM.serializeNodeChildren(node);
-
-						// create style element
-						var style = Wicket.Head.createElement("style");
-
-						// copy id attribute
-						style.id = node.getAttribute("id");
 
 						// create stylesheet
 						if (Wicket.Browser.isIE()) {
 							try  {
 								document.createStyleSheet().cssText = content;
+								return FunctionsExecuter.DONE;
 							}
 							catch (ignore) {
 								var run = function() {
@@ -2074,17 +2121,26 @@
 									catch(e) {
 										Wicket.Log.error("Wicket.Head.Contributor.processStyle: " + e);
 									}
+									notify();
 								};
 								window.setTimeout(run, 1);
+								return FunctionsExecuter.ASYNC;
 							}
 						} else {
+							// create style element
+							var style = Wicket.Head.createElement("style");
+
+							// copy id attribute
+							style.id = node.getAttribute("id");
+
 							var textNode = document.createTextNode(content);
 							style.appendChild(textNode);
+
+							Wicket.Head.addElement(style);
 						}
-						Wicket.Head.addElement(style);
 
 						// continue to next step
-						notify();
+						return FunctionsExecuter.DONE;
 					});
 				},
 
@@ -2095,8 +2151,7 @@
 						// or element with same src attribute is in document, skip it
 						if (Wicket.DOM.containsElement(node) ||
 							Wicket.Head.containsElement(node, "src")) {
-							notify();
-							return;
+							return FunctionsExecuter.DONE;
 						}
 
 						// determine whether it is external javascript (has src attribute set)
@@ -2136,6 +2191,7 @@
 
 							Wicket.Head.addElement(scriptDomNode);
 
+							return FunctionsExecuter.ASYNC;
 						} else {
 							// serialize the element content to string
 							var text = Wicket.DOM.serializeNodeChildren(node);
@@ -2158,7 +2214,7 @@
 							}
 
 							// continue to next step
-							notify();
+							return FunctionsExecuter.DONE;
 						}
 					});
 				},
@@ -2168,7 +2224,7 @@
 					context.steps.push(function (notify) {
 						var comment = document.createComment(node.nodeValue);
 						Wicket.Head.addElement(comment);
-						notify();
+						return FunctionsExecuter.DONE;
 					});
 				}
 			},
