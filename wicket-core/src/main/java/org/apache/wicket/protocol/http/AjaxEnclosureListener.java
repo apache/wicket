@@ -107,6 +107,7 @@ public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 	private boolean isControllerOfEnclosure(final Component component,
 		final InlineEnclosure enclosure)
 	{
-		return enclosure.getParent().get(enclosure.getChildId()) == component;
+		return (enclosure.get(enclosure.getChildId()) == component || // #queue()
+				enclosure.getParent().get(enclosure.getChildId()) == component); // #add()
 	}
 }
