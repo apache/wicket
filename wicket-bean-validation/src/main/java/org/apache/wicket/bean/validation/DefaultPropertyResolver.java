@@ -45,12 +45,6 @@ public class DefaultPropertyResolver implements IPropertyResolver
 
 		IPropertyReflectionAwareModel<?> delegate = (IPropertyReflectionAwareModel<?>)model;
 
-		Field field = delegate.getPropertyField();
-		if (field != null)
-		{
-			return new Property(field.getDeclaringClass(), field.getName());
-		}
-
 		String name;
 		Method getter = delegate.getPropertyGetter();
 		if (getter != null)
@@ -72,6 +66,12 @@ public class DefaultPropertyResolver implements IPropertyResolver
 						+ methodName + "'. It must start either with 'get' or 'is'.");
 			}
 			return new Property(getter.getDeclaringClass(), name);
+		}
+
+		Field field = delegate.getPropertyField();
+		if (field != null)
+		{
+			return new Property(field.getDeclaringClass(), field.getName());
 		}
 
 		return null;
