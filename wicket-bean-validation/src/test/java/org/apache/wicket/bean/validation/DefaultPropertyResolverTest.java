@@ -108,7 +108,7 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean4>(new Bean4(),
+		TextField<?> component = new TextField<Bean4>("id", new PropertyModel<Bean4>(new Bean4(),
 				"foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
