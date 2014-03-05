@@ -1620,7 +1620,7 @@
 				var count = e.getAttribute("showIncrementallyCount");
 				count = parseInt(isUndef(count) ? 0 : count, 10);
 				if (count >= 0) {
-					Wicket.DOM.show(e);
+					Wicket.DOM.show(e, 'block');
 				}
 				e.setAttribute("showIncrementallyCount", count + 1);
 			},

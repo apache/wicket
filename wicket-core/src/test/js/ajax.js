@@ -573,7 +573,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('show/hide incrementally (WICKET-4364)', function() {
 
-			expect(4);
+			expect(6);
 
 			var $indicator = jQuery('<div id="indicator"></div>');
 			var $el = jQuery('<div id="elementId"></div>');
@@ -591,6 +591,7 @@ jQuery(document).ready(function() {
 			var successFailureHandler = function () {
 				var count = getCurrentCount();
 				ok(count === 1 || count === 2, "'showIncrementallyCount' must be 1 or 2. Value is: " + count);
+				equal('block', $indicator.css('display'), "Indicator's display must be 'block'");
 			};
 
 			var attrs = {

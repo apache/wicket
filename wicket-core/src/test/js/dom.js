@@ -152,7 +152,7 @@ jQuery(document).ready(function() {
 		Wicket.DOM.showIncrementally(el);
 		equal( el.style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(el);
-		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
+		equal( el.style.display, 'block', "Wicket.DOM.show should set .style.display to 'block'." );
 	});
 
 	test("(show|hide)Incrementally() an element by id ", function() {
@@ -163,7 +163,7 @@ jQuery(document).ready(function() {
 		Wicket.DOM.showIncrementally(existingId);
 		equal( Wicket.$(existingId).style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(existingId);
-		equal( Wicket.$(existingId).style.display, '', "Wicket.DOM.show should set .style.display to ''." );
+		equal( Wicket.$(existingId).style.display, 'block', "Wicket.DOM.show should set .style.display to 'block'." );
 	});
 
 	test("hide() an element", function() {
