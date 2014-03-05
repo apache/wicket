@@ -1554,7 +1554,7 @@ public final class Strings
 		catch (Exception e)
 		{
 			throw new StringValueConversionException(
-					String.format("Cannot convert '{}' to enum constant of type '{}'.", value, enumClass),					e);
+					String.format("Cannot convert '%s' to enum constant of type '%s'.", value, enumClass), e);
 		}
 	}
 }
