@@ -139,38 +139,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		this.caption = new Caption("caption", getCaptionModel());
 		add(caption);
 		body = newBodyContainer("body");
-		datagrid = new DataGridView<T>("rows", columns, dataProvider)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@SuppressWarnings({ "rawtypes", "unchecked" })
-			@Override
-			protected Item newCellItem(final String id, final int index, final IModel model)
-			{
-				Item item = DataTable.this.newCellItem(id, index, model);
-				final IColumn<T, S> column = DataTable.this.columns.get(index);
-				if (column instanceof IStyledColumn)
-				{
-					item.add(new CssAttributeBehavior()
-					{
-						private static final long serialVersionUID = 1L;
-
-						@Override
-						protected String getCssClass()
-						{
-							return ((IStyledColumn<T, S>)column).getCssClass();
-						}
-					});
-				}
-				return item;
-			}
-
-			@Override
-			protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
-			{
-				return DataTable.this.newRowItem(id, index, model);
-			}
-		};
+		datagrid = newDataGridView("rows", columns, dataProvider);
 		datagrid.setItemsPerPage(rowsPerPage);
 		body.add(datagrid);
 		add(body);
@@ -178,6 +147,22 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		bottomToolbars = new ToolbarsContainer("bottomToolbars");
 		add(topToolbars);
 		add(bottomToolbars);
+	}
+
+	/**
+	 * Factory method for the DataGridView
+	 *
+	 * @param id
+	 *          The component id
+	 * @param columns
+	 *            list of IColumn objects
+	 * @param dataProvider
+	 *            imodel for data provider
+	 * @return the data grid view
+	 */
+	protected DataGridView<T> newDataGridView(String id, List<? extends IColumn<T, S>> columns, IDataProvider<T> dataProvider)
+	{
+		return new DefaultDataGridView(id, columns, dataProvider);
 	}
 
 	/**
@@ -544,6 +529,42 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		{
 			// don't try to find the model in the parent
 			return null;
+		}
+	}
+
+	private class DefaultDataGridView extends DataGridView<T>
+	{
+		public DefaultDataGridView(String id, List<? extends IColumn<T, S>> columns, IDataProvider<T> dataProvider)
+		{
+			super(id, columns, dataProvider);
+		}
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@Override
+		protected Item newCellItem(final String id, final int index, final IModel model)
+		{
+			Item item = DataTable.this.newCellItem(id, index, model);
+			final IColumn<T, S> column = DataTable.this.columns.get(index);
+			if (column instanceof IStyledColumn)
+			{
+				item.add(new CssAttributeBehavior()
+				{
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected String getCssClass()
+					{
+						return ((IStyledColumn<T, S>)column).getCssClass();
+					}
+				});
+			}
+			return item;
+		}
+
+		@Override
+		protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
+		{
+			return DataTable.this.newRowItem(id, index, model);
 		}
 	}
 }
