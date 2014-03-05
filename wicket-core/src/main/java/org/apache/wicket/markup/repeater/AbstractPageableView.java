@@ -282,7 +282,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getPageCount()
 	 */
 	@Override
-	public final long getPageCount()
+	public long getPageCount()
 	{
 		long total = getRowCount();
 		long itemsPerPage = getItemsPerPage();
