@@ -100,6 +100,22 @@ public class DefaultPropertyResolverTest
 		assertThat(property.getOwner().getName(), is(Bean3.class.getName()));
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5506
+	 */
+	@Test
+	public void getterHasPriorityOverField()
+	{
+		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
+
+		TextField<?> component = new TextField<>("id", new PropertyModel<Bean4>(new Bean4(),
+				"foo"));
+		Property property = resolver.resolveProperty(component);
+		assertThat(property, not(nullValue()));
+		assertThat(property.getName(), is("foo"));
+		assertThat(property.getOwner().getName(), is(Bean4.class.getName()));
+	}
+
 
 	public static class Bean3
 	{
@@ -120,4 +136,11 @@ public class DefaultPropertyResolverTest
 		}
 	}
 
+	public static class Bean4 extends Bean2
+	{
+		public String getFoo()
+		{
+			return "foo4";
+		}
+	}
 }
