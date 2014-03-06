@@ -418,8 +418,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				(!pageMustHaveBeenCreatedBookmarkable() || page.wasCreatedBookmarkable()))
 			{
 				PageInfo info = getPageInfo(handler);
-				PageComponentInfo pageComponentInfo = info != null ? new PageComponentInfo(info,
-					null) : null;
+				PageComponentInfo pageComponentInfo = new PageComponentInfo(info, null);
 
 				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(),
 					handler.getPageParameters());
