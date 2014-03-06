@@ -83,6 +83,7 @@ public class JavaScriptUtils
 	 * @param input
 	 *            the JavaScript which needs to be escaped
 	 * @return Escaped version of the input
+	 * @see org.apache.wicket.ajax.json.JSONObject#quote(String)
 	 */
 	public static CharSequence escapeQuotes(final CharSequence input)
 	{
