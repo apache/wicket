@@ -224,7 +224,7 @@ public final class Task
 	 * 
 	 * @return the log
 	 */
-	protected Logger getLog()
+	protected synchronized Logger getLog()
 	{
 		if (log == null)
 		{
