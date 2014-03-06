@@ -408,7 +408,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * Set of supported extensions for creating bookmarkable page links. Anything that is not in
 		 * this list will be handled as a resource reference.
 		 */
-		private final Set<String> supportedPageExtensions = new HashSet<String>(4);
+		private final Set<String> supportedPageExtensions = new HashSet<>(4);
 
 		/**
 		 * Construct.
@@ -749,13 +749,13 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * Autolink resolver delegates for constructing new autolinks reference keyed on tag name (such
 	 * as &lt;script&gt; or &lt;a&gt;.
 	 */
-	private final Map<String, IAutolinkResolverDelegate> tagNameToAutolinkResolverDelegates = new HashMap<String, IAutolinkResolverDelegate>();
+	private final Map<String, IAutolinkResolverDelegate> tagNameToAutolinkResolverDelegates = new HashMap<>();
 
 	/**
 	 * Resolver objects that know what attribute to read for getting the reference keyed on tag name
 	 * (such as &lt;script&gt; or &lt;a&gt;.
 	 */
-	private final Map<String, ITagReferenceResolver> tagNameToTagReferenceResolvers = new HashMap<String, ITagReferenceResolver>();
+	private final Map<String, ITagReferenceResolver> tagNameToTagReferenceResolvers = new HashMap<>();
 
 	/**
 	 * Construct.

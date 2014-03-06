@@ -421,7 +421,7 @@ public class DefaultPageStore implements IPageStore
 		public SerializedPagesCache(final int size)
 		{
 			this.size = size;
-			cache = new ArrayList<SoftReference<SerializedPage>>(size);
+			cache = new ArrayList<>(size);
 		}
 
 		/**
