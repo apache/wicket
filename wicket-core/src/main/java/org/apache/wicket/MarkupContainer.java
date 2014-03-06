@@ -666,7 +666,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		// Check for required open tag name
 		ComponentTag associatedMarkupOpenTag = (ComponentTag)elem;
-		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
+		if (!(associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -1055,13 +1055,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				if (index != 0)
 				{
 					throw new ArrayIndexOutOfBoundsException("index " + index +
-						" is greater then 0");
+						" is greater than 0");
 				}
 				component = children;
-				if (children != component)
-				{
-					children = component;
-				}
 			}
 			else
 			{
