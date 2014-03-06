@@ -476,7 +476,7 @@ public class XmlTag
 	{
 		if (isMutable)
 		{
-			this.namespace = namespace.intern();
+			this.namespace = namespace != null ? namespace.intern() : null;
 		}
 		else
 		{
@@ -597,7 +597,7 @@ public class XmlTag
 				if ((key != null) &&
 					((attributeToBeIgnored == null) || !key.equalsIgnoreCase(attributeToBeIgnored)))
 				{
-					buffer.append(" ");
+					buffer.append(' ');
 					buffer.append(key);
 					CharSequence value = getAttribute(key);
 
@@ -607,7 +607,7 @@ public class XmlTag
 						buffer.append("=\"");
 						value = Strings.escapeMarkup(value);
 						buffer.append(value);
-						buffer.append("\"");
+						buffer.append('"');
 					}
 				}
 			}
