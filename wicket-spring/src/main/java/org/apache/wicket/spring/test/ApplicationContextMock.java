@@ -446,8 +446,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public String getId()
 	{
-		throw null;
-
+		return null;
 	}
 
 	@Override
