@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.atmosphere;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Predicate;
 
 /**
@@ -41,14 +39,8 @@ public class EventFilter implements Predicate<EventSubscription>
 	}
 
 	@Override
-	public boolean apply(@Nullable EventSubscription input)
+	public boolean apply(EventSubscription input)
 	{
 		return input.getFilter().apply(event);
-	}
-
-	@Override
-	public boolean equals(@Nullable Object other)
-	{
-		return super.equals(other);
 	}
 }
