@@ -18,9 +18,8 @@ package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
@@ -411,7 +410,7 @@ public class DefaultPageStore implements IPageStore
 	{
 		private final int size;
 
-		private final List<SoftReference<SerializedPage>> cache;
+		private final ConcurrentLinkedDeque<SoftReference<SerializedPage>> cache;
 
 		/**
 		 * Construct.
@@ -421,7 +420,7 @@ public class DefaultPageStore implements IPageStore
 		public SerializedPagesCache(final int size)
 		{
 			this.size = size;
-			cache = new ArrayList<>(size);
+			cache = new ConcurrentLinkedDeque<>();
 		}
 
 		/**
@@ -436,18 +435,15 @@ public class DefaultPageStore implements IPageStore
 
 			if (size > 0)
 			{
-				synchronized (cache)
+				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
 				{
-					for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
+					SoftReference<SerializedPage> ref = i.next();
+					SerializedPage entry = ref.get();
+					if (entry != null && entry.getPageId() == id &&
+						entry.getSessionId().equals(sessionId))
 					{
-						SoftReference<SerializedPage> ref = i.next();
-						SerializedPage entry = ref.get();
-						if (entry != null && entry.getPageId() == id &&
-							entry.getSessionId().equals(sessionId))
-						{
-							i.remove();
-							return entry;
-						}
+						i.remove();
+						return entry;
 					}
 				}
 			}
@@ -466,16 +462,13 @@ public class DefaultPageStore implements IPageStore
 
 			if (size > 0)
 			{
-				synchronized (cache)
+				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
 				{
-					for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
+					SoftReference<SerializedPage> ref = i.next();
+					SerializedPage entry = ref.get();
+					if (entry != null && entry.getSessionId().equals(sessionId))
 					{
-						SoftReference<SerializedPage> ref = i.next();
-						SerializedPage entry = ref.get();
-						if (entry != null && entry.getSessionId().equals(sessionId))
-						{
-							i.remove();
-						}
+						i.remove();
 					}
 				}
 			}
@@ -497,26 +490,23 @@ public class DefaultPageStore implements IPageStore
 			SerializedPage result = null;
 			if (size > 0)
 			{
-				synchronized (cache)
+				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
 				{
-					for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
+					SoftReference<SerializedPage> ref = i.next();
+					SerializedPage entry = ref.get();
+					if (entry != null && entry.getPageId() == pageId &&
+						entry.getSessionId().equals(sessionId))
 					{
-						SoftReference<SerializedPage> ref = i.next();
-						SerializedPage entry = ref.get();
-						if (entry != null && entry.getPageId() == pageId &&
-							entry.getSessionId().equals(sessionId))
-						{
-							i.remove();
-							result = entry;
-							break;
-						}
+						i.remove();
+						result = entry;
+						break;
 					}
+				}
 
-					if (result != null)
-					{
-						// move to top
-						storePage(result);
-					}
+				if (result != null)
+				{
+					// move to top
+					storePage(result);
 				}
 			}
 			return result;
@@ -530,28 +520,23 @@ public class DefaultPageStore implements IPageStore
 		 */
 		void storePage(SerializedPage page)
 		{
-			SoftReference<SerializedPage> ref = new SoftReference<SerializedPage>(page);
-
 			if (size > 0)
 			{
-				synchronized (cache)
+				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
 				{
-					for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
+					SoftReference<SerializedPage> r = i.next();
+					SerializedPage entry = r.get();
+					if (entry != null && entry.equals(page))
 					{
-						SoftReference<SerializedPage> r = i.next();
-						SerializedPage entry = r.get();
-						if (entry != null && entry.equals(page))
-						{
-							i.remove();
-							break;
-						}
+						i.remove();
+						break;
 					}
+				}
 
-					cache.add(ref);
-					if (cache.size() > size)
-					{
-						cache.remove(0);
-					}
+				cache.add(new SoftReference<>(page));
+				if (cache.size() > size)
+				{
+					cache.remove(0);
 				}
 			}
 		}
