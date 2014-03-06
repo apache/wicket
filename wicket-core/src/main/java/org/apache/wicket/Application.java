@@ -403,7 +403,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final <T> T getMetaData(final MetaDataKey<T> key)
+	public final synchronized <T> T getMetaData(final MetaDataKey<T> key)
 	{
 		return key.get(metaData);
 	}
