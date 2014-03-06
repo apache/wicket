@@ -458,7 +458,7 @@ public class XmlTag
 	{
 		if (isMutable)
 		{
-			this.name = name;
+			this.name = name.intern();
 		}
 		else
 		{
@@ -476,7 +476,7 @@ public class XmlTag
 	{
 		if (isMutable)
 		{
-			this.namespace = namespace;
+			this.namespace = namespace.intern();
 		}
 		else
 		{

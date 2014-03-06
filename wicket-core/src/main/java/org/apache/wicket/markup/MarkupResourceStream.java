@@ -261,7 +261,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	public final void setWicketNamespace(final String wicketNamespace)
 	{
 		this.wicketNamespace = wicketNamespace;
-		wicketId = wicketNamespace + ":id";
+		wicketId = (wicketNamespace + ":id").intern();
 
 		if (!MarkupParser.WICKET.equals(wicketNamespace) && log.isDebugEnabled())
 		{
