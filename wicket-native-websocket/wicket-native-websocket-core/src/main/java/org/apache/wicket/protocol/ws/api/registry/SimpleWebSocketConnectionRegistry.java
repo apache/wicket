@@ -65,7 +65,8 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	 * Returns a collection of currently active websockets. The connections might close at any time.
 	 *
 	 * @param application
-	 * @return
+	 *          The application
+	 * @return a collection of currently active websockets
 	 */
 	public Collection<IWebSocketConnection> getConnections(Application application)
 	{
@@ -107,13 +108,14 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 		ConcurrentMap<IKey, IWebSocketConnection> connectionsByPage = connectionsBySession.get(sessionId);
 		if (connectionsByPage == null && connection != null)
 		{
-			synchronized (connectionsBySession)
+			connectionsByPage = connectionsBySession.get(sessionId);
+			if (connectionsByPage == null)
 			{
-				connectionsByPage = connectionsBySession.get(sessionId);
-				if (connectionsByPage == null)
+				connectionsByPage = Generics.newConcurrentHashMap();
+				ConcurrentMap<IKey, IWebSocketConnection> old = connectionsBySession.putIfAbsent(sessionId, connectionsByPage);
+				if (old != null)
 				{
-					connectionsByPage = Generics.newConcurrentHashMap();
-					connectionsBySession.put(sessionId, connectionsByPage);
+					connectionsByPage = old;
 				}
 			}
 		}
