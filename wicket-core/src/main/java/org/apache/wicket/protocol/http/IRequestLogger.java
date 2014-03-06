@@ -303,7 +303,7 @@ public interface IRequestLogger
 
 		private long startDate;
 		private long timeTaken;
-		private final List<String> entries = new ArrayList<String>(5);
+		private final List<String> entries = new ArrayList<>(5);
 		private String requestedUrl;
 		private IRequestHandler eventTarget;
 		private IRequestHandler responseTarget;

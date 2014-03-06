@@ -212,7 +212,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setFont(Font font)
 	{
-		fontAttributes = new HashMap<TextAttribute, Object>(font.getAttributes());
+		fontAttributes = new HashMap<>(font.getAttributes());
 		invalidate();
 	}
 

@@ -54,8 +54,8 @@ public class PageTable implements IClusterable
 
 	public PageTable()
 	{
-		pages = new ConcurrentHashMap<Integer, byte[]>();
-		index = new ConcurrentLinkedQueue<Integer>();
+		pages = new ConcurrentHashMap<>();
+		index = new ConcurrentLinkedQueue<>();
 	}
 
 	public void storePage(Integer pageId, byte[] pageAsBytes)
