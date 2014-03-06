@@ -101,10 +101,10 @@ public class ClientSideImageMap extends Panel
 				case PathIterator.SEG_MOVETO :
 					if (sb.length() != 0)
 					{
-						sb.append(",");
+						sb.append(',');
 					}
 					sb.append(Math.round(coords[0]));
-					sb.append(",");
+					sb.append(',');
 					sb.append(Math.round(coords[1]));
 					lastMove[0] = coords[0];
 					lastMove[1] = coords[1];
@@ -112,19 +112,19 @@ public class ClientSideImageMap extends Panel
 				case PathIterator.SEG_LINETO :
 					if (sb.length() != 0)
 					{
-						sb.append(",");
+						sb.append(',');
 					}
 					sb.append(Math.round(coords[0]));
-					sb.append(",");
+					sb.append(',');
 					sb.append(Math.round(coords[1]));
 					break;
 				case PathIterator.SEG_CLOSE :
 					if (sb.length() != 0)
 					{
-						sb.append(",");
+						sb.append(',');
 					}
 					sb.append(Math.round(lastMove[0]));
-					sb.append(",");
+					sb.append(',');
 					sb.append(Math.round(lastMove[1]));
 					break;
 			}
