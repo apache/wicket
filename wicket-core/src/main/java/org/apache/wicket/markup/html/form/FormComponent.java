@@ -1503,37 +1503,37 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 
 		IValidator<T> validator = null;
 
-		try
+		for (Behavior behavior : getBehaviors())
 		{
-			for (Behavior behavior : getBehaviors())
+			validator = null;
+			if (behavior instanceof ValidatorAdapter)
 			{
-				validator = null;
-				if (behavior instanceof ValidatorAdapter)
+				validator = ((ValidatorAdapter<T>)behavior).getValidator();
+			}
+			else if (behavior instanceof IValidator)
+			{
+				validator = (IValidator<T>)behavior;
+			}
+			if (validator != null)
+			{
+				if (isNull == false || validator instanceof INullAcceptingValidator<?>)
 				{
-					validator = ((ValidatorAdapter<T>)behavior).getValidator();
-				}
-				else if (behavior instanceof IValidator)
-				{
-					validator = (IValidator<T>)behavior;
-				}
-				if (validator != null)
-				{
-					if (isNull == false || validator instanceof INullAcceptingValidator<?>)
+					try
 					{
 						validator.validate(validatable);
 					}
-					if (!isValid())
+					catch (Exception e)
 					{
-						break;
+						throw new WicketRuntimeException("Exception '" + e.getMessage() +
+								"' occurred during validation " + validator.getClass().getName() +
+								" on component " + getPath(), e);
 					}
 				}
+				if (!isValid())
+				{
+					break;
+				}
 			}
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("Exception '" + e.getMessage() +
-				"' occurred during validation " + validator.getClass().getName() +
-				" on component " + getPath(), e);
 		}
 	}
 
