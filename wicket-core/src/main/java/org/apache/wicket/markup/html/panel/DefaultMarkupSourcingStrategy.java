@@ -35,7 +35,7 @@ public final class DefaultMarkupSourcingStrategy extends AbstractMarkupSourcingS
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(DefaultMarkupSourcingStrategy.class);
 
-	private static DefaultMarkupSourcingStrategy instance = new DefaultMarkupSourcingStrategy();
+	private static final DefaultMarkupSourcingStrategy instance = new DefaultMarkupSourcingStrategy();
 
 	/**
 	 * 
