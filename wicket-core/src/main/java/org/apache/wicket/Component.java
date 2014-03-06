@@ -1196,7 +1196,7 @@ public abstract class Component
 		FeedbackMessages feedback = getMetaData(FEEDBACK_KEY);
 		if (feedback != null)
 		{
-			final int removed = feedback.clear(getApplication().getApplicationSettings()
+			feedback.clear(getApplication().getApplicationSettings()
 				.getFeedbackMessageCleanupFilter());
 
 			if (feedback.isEmpty())
