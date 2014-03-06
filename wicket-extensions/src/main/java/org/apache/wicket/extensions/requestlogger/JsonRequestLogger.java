@@ -57,7 +57,7 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	 * Specify that the 'default' filter should be used for serialization. This filter will prevent
 	 * jackson from serializing the request handlers.
 	 */
-	private final class FilteredIntrospector extends JacksonAnnotationIntrospector
+	private static final class FilteredIntrospector extends JacksonAnnotationIntrospector
 	{
 		@Override
 		public Object findFilterId(AnnotatedClass ac)
@@ -69,7 +69,7 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	/**
 	 * A simple tuple for request and session.
 	 */
-	private final class RequestSessionTuple implements Serializable
+	private static final class RequestSessionTuple implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 

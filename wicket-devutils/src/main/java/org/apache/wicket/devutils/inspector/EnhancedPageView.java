@@ -361,7 +361,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 	 * Tree node representing either a <code>Page</code>, a <code>Component</code> or a
 	 * <code>Behavior</code>
 	 */
-	private class TreeNode
+	private static class TreeNode
 	{
 		public IClusterable node;
 		public TreeNode parent;
