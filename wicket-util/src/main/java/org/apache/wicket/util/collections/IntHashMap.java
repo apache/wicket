@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This is an integer hashmap that has the exact same features and interface as a normal Map except
@@ -88,7 +89,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * structure (e.g., rehash). This field is used to make iterators on Collection-views of the
 	 * HashMap fail-fast. (See ConcurrentModificationException).
 	 */
-	transient volatile int modCount;
+	transient AtomicInteger modCount = new AtomicInteger(0);
 
 	/**
 	 * Constructs an empty <tt>HashMap</tt> with the specified initial capacity and load factor.
@@ -299,7 +300,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			}
 		}
 
-		modCount++;
+		modCount.incrementAndGet();
 		addEntry(key, value, i);
 		return null;
 	}
@@ -478,7 +479,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			Entry<V> next = e.next;
 			if (key == e.key)
 			{
-				modCount++;
+				modCount.incrementAndGet();
 				size--;
 				if (prev == e)
 				{
@@ -522,7 +523,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			Entry<V> next = e.next;
 			if ((e.key == key) && e.equals(entry))
 			{
-				modCount++;
+				modCount.incrementAndGet();
 				size--;
 				if (prev == e)
 				{
@@ -546,7 +547,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 */
 	public void clear()
 	{
-		modCount++;
+		modCount.incrementAndGet();
 		Entry<V> tab[] = table;
 		for (int i = 0; i < tab.length; i++)
 		{
@@ -619,7 +620,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			result = (IntHashMap<V>)super.clone();
 			result.table = new Entry[table.length];
 			result.entrySet = null;
-			result.modCount = 0;
+			result.modCount.set(0);
 			result.size = 0;
 			result.init();
 			result.putAllForCreate(this);
@@ -773,7 +774,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 
 		HashIterator()
 		{
-			expectedModCount = modCount;
+			expectedModCount = modCount.get();
 			Entry<V>[] t = table;
 			int i = t.length;
 			Entry<V> n = null;
@@ -799,7 +800,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 
 		Entry<V> nextEntry()
 		{
-			if (modCount != expectedModCount)
+			if (!modCount.compareAndSet(expectedModCount, expectedModCount))
 			{
 				throw new ConcurrentModificationException();
 			}
@@ -831,14 +832,14 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			{
 				throw new IllegalStateException();
 			}
-			if (modCount != expectedModCount)
+			if (!modCount.compareAndSet(expectedModCount, expectedModCount))
 			{
 				throw new ConcurrentModificationException();
 			}
 			int k = current.key;
 			current = null;
 			removeEntryForKey(k);
-			expectedModCount = modCount;
+			expectedModCount = modCount.get();
 		}
 
 	}
