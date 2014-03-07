@@ -20,10 +20,12 @@ import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
+import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.request.resource.IResource;
 
@@ -60,20 +62,69 @@ public abstract class WebSocketResource implements IResource
 			ClosedMessage message = connectedPayload.getMessage();
 			onClose(message);
 		}
+		else if (payload instanceof WebSocketPushPayload)
+		{
+			WebSocketPushPayload pushPayload = (WebSocketPushPayload) payload;
+			IWebSocketPushMessage message = pushPayload.getMessage();
+			onPush(webSocketHandler, message);
+		}
 	}
 
+	/**
+	 * A callback method called when there is a message pushed/broadcasted by the
+	 * server, e.g. pushed by a backend service
+	 *
+	 * @param handler
+	 *          The request handler that can be used to send messages to the client
+	 * @param message
+	 *          The message pushed/broadcasted by the server
+	 */
+	protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message)
+	{
+	}
+
+	/**
+	 * A callback method called when a WebSocket client has connected to the endpoint
+	 * handled by this WebSocketBehavior
+	 *
+	 * @param message
+	 *          the connect message with the info about the client
+	 */
 	protected void onConnect(ConnectedMessage message)
 	{
 	}
 
+	/**
+	 * A callback method called when a WebSocket client has closed the connection
+	 * to the endpoint handled by this WebSocketBehavior
+	 *
+	 * @param message
+	 *          the close message with the info about the client
+	 */
 	protected void onClose(ClosedMessage message)
 	{
 	}
 
+	/**
+	 * A callback method called when there is a text message sent by the client
+	 *
+	 * @param handler
+	 *          The request handler that can be used to send messages back to the client
+	 * @param message
+	 *          The text message sent by the client
+	 */
 	protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 	{
 	}
 
+	/**
+	 * A callback method called when there is a binary message sent by the client
+	 *
+	 * @param handler
+	 *          The request handler that can be used to send messages back to the client
+	 * @param binaryMessage
+	 *          The binary message sent by the client
+	 */
 	protected void onMessage(WebSocketRequestHandler handler, BinaryMessage binaryMessage)
 	{
 	}

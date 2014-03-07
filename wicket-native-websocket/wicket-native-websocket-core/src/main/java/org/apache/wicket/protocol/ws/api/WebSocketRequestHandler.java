@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -55,6 +56,12 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	private final IWebSocketConnection connection;
 
 	private final AbstractAjaxResponse ajaxResponse;
+
+	/**
+	 * A flag indicating that there is data to be written to construct an &lt;ajax-response&gt;
+	 * There is no need to push empty Ajax response if only #push() is used
+	 */
+	private final AtomicBoolean hasData = new AtomicBoolean(false);
 
 	private PageLogData logData;
 
@@ -119,6 +126,7 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	@Override
 	public void add(Component component, String markupId)
 	{
+		hasData.set(true);
 		ajaxResponse.add(component, markupId);
 	}
 
@@ -164,12 +172,14 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	@Override
 	public void appendJavaScript(CharSequence javascript)
 	{
+		hasData.set(true);
 		ajaxResponse.appendJavaScript(javascript);
 	}
 
 	@Override
 	public void prependJavaScript(CharSequence javascript)
 	{
+		hasData.set(true);
 		ajaxResponse.prependJavaScript(javascript);
 	}
 
@@ -200,6 +210,7 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	@Override
 	public IHeaderResponse getHeaderResponse()
 	{
+		hasData.set(true);
 		return ajaxResponse.getHeaderResponse();
 	}
 
@@ -256,7 +267,10 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		ajaxResponse.writeTo(requestCycle.getResponse(), "UTF-8");
+		if (hasData.get())
+		{
+			ajaxResponse.writeTo(requestCycle.getResponse(), "UTF-8");
+		}
 	}
 
 	@Override
@@ -268,5 +282,6 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 		}
 
 		ajaxResponse.detach(requestCycle);
+		hasData.set(false);
 	}
 }
