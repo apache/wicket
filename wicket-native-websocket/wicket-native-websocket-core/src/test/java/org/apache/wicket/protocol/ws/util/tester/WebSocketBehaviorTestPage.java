@@ -22,10 +22,12 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 
 /**
@@ -71,6 +73,24 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 				byte[] pushedMessage = Strings.capitalize(msg).getBytes();
 
 				handler.push(pushedMessage, offset + 1, length - 1);
+			}
+		});
+	}
+
+	WebSocketBehaviorTestPage(final WebSocketTesterBehaviorTest.BroadcastMessage expectedMessage)
+	{
+		add(new WebSocketBehavior()
+		{
+			@Override
+			protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message)
+			{
+				Assert.assertThat(message, CoreMatchers.instanceOf(WebSocketTesterBehaviorTest.BroadcastMessage.class));
+				WebSocketTesterBehaviorTest.BroadcastMessage broadcastMessage = (WebSocketTesterBehaviorTest.BroadcastMessage) message;
+				Assert.assertSame(expectedMessage, broadcastMessage);
+
+				String pushedMessage = broadcastMessage.getText().toUpperCase();
+
+				handler.push(pushedMessage);
 			}
 		});
 	}

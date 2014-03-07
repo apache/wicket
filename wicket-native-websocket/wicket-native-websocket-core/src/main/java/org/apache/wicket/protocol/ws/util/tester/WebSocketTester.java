@@ -16,9 +16,15 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.ws.IWebSocketSettings;
 import org.apache.wicket.protocol.ws.api.IWebSocketProcessor;
+import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -124,9 +130,44 @@ public class WebSocketTester
 		socketProcessor.onMessage(message, offset, length);
 	}
 
+	/**
+	 * Broadcasts/pushes a message to specific web socket connection
+	 *
+	 * @param application
+	 *          The application where the web socket connection is registered
+	 * @param sessionId
+	 *          The id of the http session with which the web socket connection is registered
+	 * @param key
+	 *          The key with which the web socket connection is registered
+	 * @param message
+	 *          The message to broadcast/push
+	 */
+	public void broadcast(Application application, String sessionId, IKey key, IWebSocketPushMessage message)
+	{
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
+		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
+		ConnectedMessage wsMessage = new ConnectedMessage(application, sessionId, key);
+		broadcaster.broadcast(wsMessage, message);
+	}
+
+	/**
+	 * Broadcasts/pushes a message to all active web socket connections
+	 *
+	 * @param application
+	 *          The application where the web socket connection is registered
+	 * @param message
+	 *          The message to broadcast/push
+	 */
+	public void broadcastAll(Application application, IWebSocketPushMessage message)
+	{
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
+		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
+		broadcaster.broadcastAll(application, message);
+	}
+	
 	public void destroy()
 	{
-		socketProcessor.onClose(0, "Closed by WicketTester");
+		socketProcessor.onClose(0, "Closed by WebSocketTester");
 	}
 
 	/**

@@ -1025,10 +1025,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 						" is greater then 0");
 				}
 				component = children;
-				if (children != component)
-				{
-					children = component;
-				}
 			}
 			else
 			{

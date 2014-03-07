@@ -19,11 +19,6 @@ package org.apache.wicket.protocol.ws.util.tester;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.wicket.event.IEvent;
-import org.apache.wicket.protocol.ws.IWebSocketSettings;
-import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
-import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
-import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.apache.wicket.util.string.Strings;
@@ -95,7 +90,8 @@ public class WebSocketTesterBehaviorTest extends Assert
 		WebSocketBehaviorTestPage page = new WebSocketBehaviorTestPage(expectedMessage, offset, length);
 		tester.startPage(page);
 
-		WebSocketTester webSocketTester = new WebSocketTester(tester, page) {
+		WebSocketTester webSocketTester = new WebSocketTester(tester, page)
+		{
 			@Override
 			protected void onOutMessage(byte[] message, int off, int len)
 			{
@@ -122,46 +118,33 @@ public class WebSocketTesterBehaviorTest extends Assert
 	@Test
 	public void serverSideBroadcast()
 	{
-		final String message = "Broadcasted Message";
-
+		final String expectedMessage = "Broadcasted Message";
+		final BroadcastMessage broadcastMessage = new BroadcastMessage(expectedMessage);
 		final AtomicBoolean messageReceived = new AtomicBoolean(false);
 
-		WebSocketBehaviorTestPage page = new WebSocketBehaviorTestPage()
+		WebSocketBehaviorTestPage page = new WebSocketBehaviorTestPage(broadcastMessage);
+		tester.startPage(page);
+
+		WebSocketTester webSocketTester = new WebSocketTester(tester, page)
 		{
 			@Override
-			public void onEvent(IEvent<?> event)
+			protected void onOutMessage(String message)
 			{
-				super.onEvent(event);
-
-				if (event.getPayload() instanceof WebSocketPushPayload)
-				{
-					WebSocketPushPayload payload = (WebSocketPushPayload) event.getPayload();
-
-					if (payload.getMessage() instanceof BroadcastMessage)
-					{
-						BroadcastMessage broadcastMessage = (BroadcastMessage) payload.getMessage();
-						if (message.equals(broadcastMessage.getText()))
-						{
-							messageReceived.set(true);
-						}
-					}
-				}
+				assertEquals(expectedMessage.toUpperCase(), message);
+				messageReceived.set(true);
 			}
 		};
 		tester.startPage(page);
-		tester.getSession().bind();
 
-		new WebSocketTester(tester, page);
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(tester.getApplication());
-		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
-		ConnectedMessage wsMessage = new ConnectedMessage(tester.getApplication(),
-				tester.getHttpSession().getId(), new PageIdKey(page.getPageId()));
-		broadcaster.broadcast(wsMessage, new BroadcastMessage(message));
+		
+		webSocketTester.broadcast(tester.getApplication(), tester.getHttpSession().getId(),
+				new PageIdKey(page.getPageId()), broadcastMessage);
 
 		assertEquals(true, messageReceived.get());
+		webSocketTester.destroy();
 	}
 
-	private static class BroadcastMessage implements IWebSocketPushMessage
+	static class BroadcastMessage implements IWebSocketPushMessage
 	{
 		private final String message;
 
