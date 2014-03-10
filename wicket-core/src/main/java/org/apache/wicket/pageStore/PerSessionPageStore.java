@@ -28,12 +28,21 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 
 /**
+ * A page store that uses a SecondLevelPageCache with the last N used page instances
+ * per session.
  *
+ * <strong>Note</strong>: the size of the cache depends on the {@code cacheSize} constructor
+ * parameter multiplied by the number of the active http sessions.
+ *
+ * It depends on the application use cases but usually a reasonable value of
+ * {@code cacheSize} would be just a few pages (2-3). If the application don't expect many
+ * active http sessions and the work flow involves usage of the browser/application history
+ * then the {@code cacheSize} value may be increased to a bigger value.
  */
 public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePage>
 {
 	/**
-	 * Construct.
+	 * Constructor.
 	 *
 	 * @param pageSerializer
 	 *            the {@link org.apache.wicket.serialize.ISerializer} that will be used to convert pages from/to byte arrays

@@ -17,8 +17,6 @@
 package org.apache.wicket.page;
 
 import org.apache.wicket.util.lang.Args;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Convenience class for {@link IPageManager} implementations. Subclass should extend
@@ -29,8 +27,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractPageManager implements IPageManager
 {
-	private static final Logger log = LoggerFactory.getLogger(AbstractPageManager.class);
-
 	private final IPageManagerContext context;
 
 	/**
