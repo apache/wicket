@@ -84,7 +84,7 @@ public interface IPageStore
 	 * @param page
 	 * @return The Page itself or a SerializedContainer for that page
 	 */
-	Serializable prepareForSerialization(String sessionId, Object page);
+	Serializable prepareForSerialization(String sessionId, Serializable page);
 
 	/**
 	 * This method should restore the serialized page to intermediate object that can be converted

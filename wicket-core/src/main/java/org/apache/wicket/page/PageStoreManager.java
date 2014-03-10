@@ -269,7 +269,7 @@ public class PageStoreManager extends AbstractPageManager
 		{
 			s.defaultReadObject();
 
-			afterReadObject = new ArrayList<Object>();
+			afterReadObject = new ArrayList<>();
 
 			List<Serializable> l = (List<Serializable>)s.readObject();
 
