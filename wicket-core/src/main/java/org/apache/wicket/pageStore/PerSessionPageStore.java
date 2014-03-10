@@ -25,16 +25,13 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Time;
 
 /**
  *
  */
-public class PerSessionPageStore extends AbstractPageStore
+public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePage>
 {
-	private final SecondLevelPageCache<String, Integer, IManageablePage> pagesCache;
-
 	/**
 	 * Construct.
 	 *
@@ -49,50 +46,7 @@ public class PerSessionPageStore extends AbstractPageStore
 	public PerSessionPageStore(final ISerializer pageSerializer, final IDataStore dataStore,
 	                           final int cacheSize)
 	{
-		super(pageSerializer, dataStore);
-		this.pagesCache = new PagesCache(cacheSize);
-	}
-
-	@Override
-	public IManageablePage getPage(final String sessionId, final int id)
-	{
-		IManageablePage fromCache = pagesCache.getPage(sessionId, id);
-		if (fromCache != null)
-		{
-			return fromCache;
-		}
-
-		byte[] data = getPageData(sessionId, id);
-		if (data != null)
-		{
-			return deserializePage(data);
-		}
-		return null;
-	}
-
-	@Override
-	public void removePage(final String sessionId, final int id)
-	{
-		pagesCache.removePage(sessionId, id);
-		removePageData(sessionId, id);
-	}
-
-	@Override
-	public void storePage(final String sessionId, final IManageablePage page)
-	{
-		byte[] data = serializePage(page);
-		if (data != null)
-		{
-			pagesCache.storePage(sessionId, page.getPageId(), page);
-			storePageData(sessionId, page.getPageId(), data);
-		}
-	}
-
-	@Override
-	public void unbind(final String sessionId)
-	{
-		removePageData(sessionId);
-		pagesCache.removePages(sessionId);
+		super(pageSerializer, dataStore, new PagesCache(cacheSize));
 	}
 
 	@Override
@@ -166,7 +120,7 @@ public class PerSessionPageStore extends AbstractPageStore
 			@Override
 			public int compare(PageValue p1, PageValue p2)
 			{
-				return Objects.compareWithConversion(p1.accessTime, p2.accessTime);
+				return p1.accessTime.compareTo(p2.accessTime);
 			}
 		}
 
@@ -332,6 +286,12 @@ public class PerSessionPageStore extends AbstractPageStore
 					pages.put(pv, page);
 				}
 			}
+		}
+
+		@Override
+		public void destroy()
+		{
+			cache.clear();
 		}
 	}
 }

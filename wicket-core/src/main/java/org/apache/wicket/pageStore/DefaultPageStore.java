@@ -34,11 +34,9 @@ import org.slf4j.LoggerFactory;
  * direction when loading {@link SerializedPage} from the data store.
  * 
  */
-public class DefaultPageStore extends AbstractPageStore
+public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.SerializedPage>
 {
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultPageStore.class);
-
-	private final SerializedPagesCache serializedPagesCache;
 
 	/**
 	 * Construct.
@@ -54,50 +52,19 @@ public class DefaultPageStore extends AbstractPageStore
 	public DefaultPageStore(final ISerializer pageSerializer, final IDataStore dataStore,
 		final int cacheSize)
 	{
-		super(pageSerializer, dataStore);
-		serializedPagesCache = new SerializedPagesCache(cacheSize);
-	}
-
-	@Override
-	public IManageablePage getPage(final String sessionId, final int id)
-	{
-		SerializedPage fromCache = serializedPagesCache.getPage(sessionId, id);
-		if (fromCache != null && fromCache.data != null)
-		{
-			return deserializePage(fromCache.data);
-		}
-
-		byte[] data = getPageData(sessionId, id);
-		if (data != null)
-		{
-			return deserializePage(data);
-		}
-		return null;
-	}
-
-	@Override
-	public void removePage(final String sessionId, final int id)
-	{
-		serializedPagesCache.removePage(sessionId, id);
-		removePageData(sessionId, id);
+		super(pageSerializer, dataStore, new SerializedPagesCache(cacheSize));
 	}
 
 	@Override
 	public void storePage(final String sessionId, final IManageablePage page)
 	{
-		SerializedPage serialized = serializePage(sessionId, page);
+		SerializedPage serialized = createSerializedPage(sessionId, page);
 		if (serialized != null)
 		{
-			serializedPagesCache.storePage(sessionId, page.getPageId(), serialized);
-			storePageData(sessionId, serialized.getPageId(), serialized.getData());
+			int pageId = page.getPageId();
+			pagesCache.storePage(sessionId, pageId, serialized);
+			storePageData(sessionId, pageId, serialized.getData());
 		}
-	}
-
-	@Override
-	public void unbind(final String sessionId)
-	{
-		removePageData(sessionId);
-		serializedPagesCache.removePages(sessionId);
 	}
 
 	@Override
@@ -140,7 +107,7 @@ public class DefaultPageStore extends AbstractPageStore
 	 */
 	private SerializedPage restoreStrippedSerializedPage(final SerializedPage serializedPage)
 	{
-		SerializedPage result = serializedPagesCache.getPage(serializedPage.getSessionId(),
+		SerializedPage result = pagesCache.getPage(serializedPage.getSessionId(),
 			serializedPage.getPageId());
 		if (result != null)
 		{
@@ -164,13 +131,13 @@ public class DefaultPageStore extends AbstractPageStore
 		if (page instanceof IManageablePage)
 		{
 			IManageablePage _page = (IManageablePage)page;
-			result = serializedPagesCache.getPage(sessionId, _page.getPageId());
+			result = pagesCache.getPage(sessionId, _page.getPageId());
 			if (result == null)
 			{
-				result = serializePage(sessionId, _page);
+				result = createSerializedPage(sessionId, _page);
 				if (result != null)
 				{
-					serializedPagesCache.storePage(sessionId, _page.getPageId(), result);
+					pagesCache.storePage(sessionId, _page.getPageId(), result);
 				}
 			}
 		}
@@ -304,7 +271,7 @@ public class DefaultPageStore extends AbstractPageStore
 	 * @param page
 	 * @return the serialized page information
 	 */
-	protected SerializedPage serializePage(final String sessionId, final IManageablePage page)
+	protected SerializedPage createSerializedPage(final String sessionId, final IManageablePage page)
 	{
 		Args.notNull(sessionId, "sessionId");
 		Args.notNull(page, "page");
@@ -477,6 +444,12 @@ public class DefaultPageStore extends AbstractPageStore
 					cache.remove(0);
 				}
 			}
+		}
+
+		@Override
+		public void destroy()
+		{
+			cache.clear();
 		}
 	}
 }

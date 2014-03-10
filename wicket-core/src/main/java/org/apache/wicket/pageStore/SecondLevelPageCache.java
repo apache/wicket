@@ -37,4 +37,6 @@ public interface SecondLevelPageCache<S, PI, P>
 	P getPage(S session, PI pageId);
 
 	void storePage(S session, PI pageId, P page);
+
+	void destroy();
 }

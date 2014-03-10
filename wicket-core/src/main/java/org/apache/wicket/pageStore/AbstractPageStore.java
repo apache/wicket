@@ -41,7 +41,7 @@ public abstract class AbstractPageStore implements IPageStore
 	protected AbstractPageStore(final ISerializer pageSerializer, final IDataStore dataStore)
 	{
 		Args.notNull(pageSerializer, "pageSerializer");
-		Args.notNull(dataStore, "DataStore");
+		Args.notNull(dataStore, "dataStore");
 
 		this.pageSerializer = pageSerializer;
 		this.dataStore = dataStore;
@@ -149,6 +149,6 @@ public abstract class AbstractPageStore implements IPageStore
 	{
 		Args.notNull(data, "data");
 
-		return (IManageablePage)pageSerializer.deserialize(data);
+		return (IManageablePage) pageSerializer.deserialize(data);
 	}
 }
