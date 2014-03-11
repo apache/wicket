@@ -48,8 +48,8 @@ import org.apache.wicket.response.StringResponse;
  * &lt;head&gt; regions may contain additional wicket components, which can be added by means of
  * add(Component) as usual.
  * <p>
- * &lt;wicket:head&gt; tags are handled by simple WebMarkupContainers also created by a
- * HtmlHeaderResolver.
+ * &lt;wicket:head&gt; tags are handled by simple {@link TransparentWebMarkupContainer}s also created by
+ * {@link org.apache.wicket.markup.resolver.HtmlHeaderResolver}.
  * <p>
  * <ul>
  * <li>&lt;head&gt; will be inserted in output automatically if required</li>
@@ -63,7 +63,7 @@ import org.apache.wicket.response.StringResponse;
  * <li>components within &lt;wicket:head&gt; must be added by means of add(), like always with
  * Wicket. No difference.</li>
  * <li>&lt;wicket:head&gt; and it's content is copied to the output. Components contained in
- * &lt;org.apache.wicket.head&gt; are rendered as usual</li>
+ * &lt;wicket:head&gt; are rendered as usual</li>
  * </ul>
  * 
  * @author Juergen Donnerstag
@@ -379,17 +379,19 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 				if (tag instanceof WicketTag)
 				{
 					WicketTag wtag = (WicketTag)tag;
-					if (wtag.isHeadTag())
+					if (wtag.isHeadTag() || wtag.isHeaderItemsTag())
 					{
 						if (tag.getMarkupClass() == null)
 						{
 							headerMarkup = stream.getMarkupFragment();
+							break;
 						}
 					}
 				}
-				else if (tag.getName().equalsIgnoreCase("head"))
+				else if (tag.getName().equalsIgnoreCase("head") && tag.isAutoComponentTag())
 				{
 					headerMarkup = stream.getMarkupFragment();
+					break;
 				}
 			}
 

@@ -421,7 +421,7 @@ public class MergedMarkup extends Markup
 				}
 			}
 
-			if (copy == true)
+			if (copy)
 			{
 				addMarkupElement(elem);
 			}

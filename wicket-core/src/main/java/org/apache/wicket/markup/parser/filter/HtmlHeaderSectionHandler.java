@@ -25,11 +25,12 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
+import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 
 
 /**
- * This is a markup inline filter. It assumes that WicketTagIdentifier has been called first and
- * search for a &lt;head&gt; tag (note: not wicket:head). Provided the markup contains a
+ * This is a markup inline filter. It assumes that {@link org.apache.wicket.markup.parser.filter.WicketTagIdentifier}
+ * has been called first and search for a &lt;head&gt; tag (note: not wicket:head). Provided the markup contains a
  * &lt;body&gt; tag it will automatically prepend a &lt;head&gt; tag if missing.
  * <p>
  * Note: This handler is only relevant for Pages (see MarkupParser.newFilterChain())
@@ -45,11 +46,13 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
 	public static final String HEADER_ID = "_header_";
 
-	/** True if <head> has been found already */
+	/** True if &lt;head&gt; has been found already */
 	private boolean foundHead = false;
 
-	/** True if </head> has been found already */
+	/** True if &lt;/head&gt; has been found already */
 	private boolean foundClosingHead = false;
+
+	private boolean foundHeaderItemsTag = false;
 
 	/** True if all the rest of the markup file can be ignored */
 	private boolean ignoreTheRest = false;
@@ -97,6 +100,16 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 				}
 				else if (tag.isClose())
 				{
+					if (foundHeaderItemsTag)
+					{
+						// revert the settings from above
+						ComponentTag headOpenTag = tag.getOpenTag();
+						headOpenTag.setId(HEADER_ID + "-Ignored");
+						headOpenTag.setAutoComponentTag(false);
+						headOpenTag.setModified(false);
+						headOpenTag.setFlag(ComponentTag.RENDER_RAW, true);
+					}
+
 					foundClosingHead = true;
 				}
 
@@ -108,6 +121,16 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 				foundHead = true;
 				foundClosingHead = true;
 			}
+		}
+		else if (HtmlHeaderResolver.HEADER_ITEMS.equalsIgnoreCase(tag.getName()) &&
+				tag.getNamespace().equalsIgnoreCase(getWicketNamespace()))
+		{
+			foundHeaderItemsTag = true;
+			tag.setId(HEADER_ID);
+			tag.setAutoComponentTag(true);
+			tag.setModified(true);
+
+			return tag;
 		}
 		else if (BODY.equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
 		{
@@ -130,6 +153,23 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		}
 
 		return tag;
+	}
+
+	// temporary storage. Introduce into flow on next request
+	private ComponentTag next = null;
+
+	@Override
+	public MarkupElement nextElement() throws ParseException
+	{
+		// Did we hold back an elem? Than return that first
+		if (next != null)
+		{
+			MarkupElement rtn = next;
+			next = null;
+			return rtn;
+		}
+
+		return super.nextElement();
 	}
 
 	/**
