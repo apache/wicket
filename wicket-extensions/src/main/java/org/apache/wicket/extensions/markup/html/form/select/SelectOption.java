@@ -53,7 +53,7 @@ public class SelectOption<T> extends WebMarkupContainer
 	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public SelectOption(final String id, final IModel<T> model)
+	public SelectOption(final String id, final IModel<? extends T> model)
 	{
 		super(id, model);
 	}

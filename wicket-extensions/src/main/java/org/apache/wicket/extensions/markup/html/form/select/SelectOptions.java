@@ -129,7 +129,7 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param model
 	 * @return a {@link SelectOption}
 	 */
-	protected SelectOption<T> newOption(final String text, final IModel<T> model)
+	protected SelectOption<T> newOption(final String text, final IModel<? extends T> model)
 	{
 		return new SimpleSelectOption<T>("option", model, text);
 	}
@@ -149,7 +149,7 @@ public class SelectOptions<T> extends RepeatingView
 		 * @param model
 		 * @param text
 		 */
-		public SimpleSelectOption(final String id, final IModel<V> model, final String text)
+		public SimpleSelectOption(final String id, final IModel<? extends V> model, final String text)
 		{
 			super(id, model);
 			this.text = text;
