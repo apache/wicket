@@ -28,7 +28,7 @@ public abstract class AbstractPageStoreTest extends Assert
 {
 	protected final String sessionId = "1234567890";
 	protected final int pageId = 123;
-	protected final ISerializer serializer = new JavaSerializer(DefaultPageStore.class.getName());
+	protected final ISerializer serializer = new JavaSerializer(getClass().getName());
 	protected final IDataStore dataStore = new NoopDataStore();
 	protected int maxEntries = 1;
 	protected IPageStore pageStore = null;
