@@ -104,7 +104,15 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 			private PageValue(int pageId)
 			{
 				this.pageId = pageId;
-				this.accessTime = System.nanoTime();
+				touch();
+			}
+
+			/**
+			 * Updates the access time with the current time
+			 */
+			private void touch()
+			{
+				accessTime = System.nanoTime();
 			}
 
 			@Override
@@ -239,15 +247,12 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 					if (pages != null)
 					{
 						PageValue sample = new PageValue(pageId);
-						Iterator<Map.Entry<PageValue,IManageablePage>> iterator = pages.entrySet().iterator();
-						while (iterator.hasNext())
+						for (Map.Entry<PageValue, IManageablePage> entry : pages.entrySet())
 						{
-							Map.Entry<PageValue, IManageablePage> entry = iterator.next();
-
 							if (sample.equals(entry.getKey()))
 							{
 								// touch the entry
-								entry.getKey().accessTime = System.nanoTime();
+								entry.getKey().touch();
 								result = entry.getValue();
 								break;
 							}
