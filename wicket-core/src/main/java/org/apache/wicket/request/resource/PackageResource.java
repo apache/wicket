@@ -30,8 +30,11 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.mock.MockWebRequest;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Packages;
@@ -493,7 +496,16 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			}
 
 			RequestCycle cycle = RequestCycle.get();
-			Attributes attributes = new Attributes(cycle.getRequest(), cycle.getResponse());
+			Attributes attributes;
+			if (cycle != null)
+			{
+				attributes = new Attributes(cycle.getRequest(), cycle.getResponse());
+			}
+			else
+			{
+				// use empty request and response in case of non-http thread. WICKET-5532
+				attributes = new Attributes(new MockWebRequest(Url.parse("")), new StringResponse());
+			}
 			byte[] processedBytes = processResponse(attributes, bytes);
 			return new ByteArrayInputStream(processedBytes);
 		}
