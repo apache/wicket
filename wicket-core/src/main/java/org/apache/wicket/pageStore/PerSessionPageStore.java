@@ -18,6 +18,7 @@ package org.apache.wicket.pageStore;
 
 import java.lang.ref.SoftReference;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -25,7 +26,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Time;
 
 /**
  * A page store that uses a SecondLevelPageCache with the last N used page instances
@@ -75,6 +75,8 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 	}
 
 	/**
+	 * An implementation of SecondLevelPageCache that stores the last used N live page instances
+	 * per http session.
 	 */
 	protected static class PagesCache implements SecondLevelPageCache<String, Integer, IManageablePage>
 	{
@@ -92,7 +94,7 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 			/**
 			 * The last time this page has been used/accessed.
 			 */
-			private Time accessTime;
+			private long accessTime;
 
 			private PageValue(IManageablePage page)
 			{
@@ -102,7 +104,7 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 			private PageValue(int pageId)
 			{
 				this.pageId = pageId;
-				this.accessTime = Time.now();
+				this.accessTime = System.nanoTime();
 			}
 
 			@Override
@@ -114,7 +116,6 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 				PageValue pageValue = (PageValue) o;
 
 				return pageId == pageValue.pageId;
-
 			}
 
 			@Override
@@ -129,7 +130,7 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 			@Override
 			public int compare(PageValue p1, PageValue p2)
 			{
-				return p1.accessTime.compareTo(p2.accessTime);
+				return Long.valueOf(p1.accessTime).compareTo(p2.accessTime);
 			}
 		}
 
@@ -173,11 +174,17 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 					ConcurrentMap<PageValue, IManageablePage> pages = pagesPerSession.get();
 					if (pages != null)
 					{
-						PageValue pv = new PageValue(pageId);
-						IManageablePage page = pages.remove(pv);
-						if (page != null)
+						PageValue sample = new PageValue(pageId);
+						Iterator<Map.Entry<PageValue, IManageablePage>> iterator = pages.entrySet().iterator();
+						while (iterator.hasNext())
 						{
-							result = page;
+							Map.Entry<PageValue, IManageablePage> entry = iterator.next();
+							if (sample.equals(entry.getKey()))
+							{
+								result = entry.getValue();
+								iterator.remove();
+								break;
+							}
 						}
 					}
 				}
@@ -231,14 +238,19 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 					ConcurrentSkipListMap<PageValue, IManageablePage> pages = pagesPerSession.get();
 					if (pages != null)
 					{
-						PageValue pv = new PageValue(pageId);
-						Map.Entry<PageValue, IManageablePage> entry = pages.ceilingEntry(pv);
-
-						if (entry != null)
+						PageValue sample = new PageValue(pageId);
+						Iterator<Map.Entry<PageValue,IManageablePage>> iterator = pages.entrySet().iterator();
+						while (iterator.hasNext())
 						{
-							// touch the entry
-							entry.getKey().accessTime = Time.now();
-							result = entry.getValue();
+							Map.Entry<PageValue, IManageablePage> entry = iterator.next();
+
+							if (sample.equals(entry.getKey()))
+							{
+								// touch the entry
+								entry.getKey().accessTime = System.nanoTime();
+								result = entry.getValue();
+								break;
+							}
 						}
 					}
 				}
@@ -286,13 +298,15 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 
 				if (pages != null)
 				{
+					removePage(sessionId, pageId);
+
+					PageValue pv = new PageValue(page);
+					pages.put(pv, page);
+
 					while (pages.size() > maxEntriesPerSession)
 					{
 						pages.pollFirstEntry();
 					}
-
-					PageValue pv = new PageValue(page);
-					pages.put(pv, page);
 				}
 			}
 		}

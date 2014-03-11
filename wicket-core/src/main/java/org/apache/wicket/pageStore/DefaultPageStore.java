@@ -303,18 +303,19 @@ public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.
 	 */
 	static class SerializedPagesCache implements SecondLevelPageCache<String, Integer, SerializedPage>
 	{
-		private final int size;
+		private final int maxSize;
 
 		private final ConcurrentLinkedDeque<SoftReference<SerializedPage>> cache;
 
 		/**
-		 * Construct.
+		 * Constructor.
 		 * 
-		 * @param size
+		 * @param maxSize
+		 *          The maximum number of entries to cache
 		 */
-		public SerializedPagesCache(final int size)
+		public SerializedPagesCache(final int maxSize)
 		{
-			this.size = size;
+			this.maxSize = maxSize;
 			cache = new ConcurrentLinkedDeque<>();
 		}
 
@@ -327,17 +328,18 @@ public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.
 		@Override
 		public SerializedPage removePage(final String sessionId, final Integer pageId)
 		{
-			if (size > 0)
+			if (maxSize > 0)
 			{
 				Args.notNull(sessionId, "sessionId");
 				Args.notNull(pageId, "pageId");
+
+				SerializedPage sample = new SerializedPage(sessionId, pageId, null);
 
 				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
 				{
 					SoftReference<SerializedPage> ref = i.next();
 					SerializedPage entry = ref.get();
-					if (entry != null && entry.getPageId() == pageId &&
-						entry.getSessionId().equals(sessionId))
+					if (sample.equals(entry))
 					{
 						i.remove();
 						return entry;
@@ -356,7 +358,7 @@ public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.
 		@Override
 		public void removePages(String sessionId)
 		{
-			if (size > 0)
+			if (maxSize > 0)
 			{
 				Args.notNull(sessionId, "sessionId");
 
@@ -385,17 +387,18 @@ public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.
 		public SerializedPage getPage(String sessionId, Integer pageId)
 		{
 			SerializedPage result = null;
-			if (size > 0)
+			if (maxSize > 0)
 			{
 				Args.notNull(sessionId, "sessionId");
 				Args.notNull(pageId, "pageId");
+
+				SerializedPage sample = new SerializedPage(sessionId, pageId, null);
 
 				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
 				{
 					SoftReference<SerializedPage> ref = i.next();
 					SerializedPage entry = ref.get();
-					if (entry != null && entry.getPageId() == pageId &&
-						entry.getSessionId().equals(sessionId))
+					if (sample.equals(entry))
 					{
 						i.remove();
 						result = entry;
@@ -406,7 +409,7 @@ public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.
 				if (result != null)
 				{
 					// move to top
-					storePage(sessionId, pageId, result);
+					internalStore(result);
 				}
 			}
 			return result;
@@ -421,7 +424,7 @@ public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.
 		@Override
 		public void storePage(String sessionId, Integer pageId, SerializedPage page)
 		{
-			if (size > 0)
+			if (maxSize > 0)
 			{
 				Args.notNull(sessionId, "sessionId");
 				Args.notNull(pageId, "pageId");
@@ -438,11 +441,16 @@ public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.
 					}
 				}
 
-				cache.add(new SoftReference<>(page));
-				while (cache.size() > size)
-				{
-					cache.remove(0);
-				}
+				internalStore(page);
+			}
+		}
+
+		private void internalStore(SerializedPage page)
+		{
+			cache.push(new SoftReference<>(page));
+			while (cache.size() > maxSize)
+			{
+				cache.pollLast();
 			}
 		}
 
