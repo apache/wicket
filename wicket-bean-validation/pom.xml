@@ -32,4 +32,15 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>clirr-maven-plugin</artifactId>
+				<configuration>
+					<comparisonVersion>6.14.0</comparisonVersion>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
