@@ -2549,11 +2549,8 @@ public abstract class Component
 				// Render the body. The default strategy will simply call the component's
 				// onComponentTagBody() implementation.
 				getMarkupSourcingStrategy().onComponentTagBody(this, markupStream, tag);
-			}
 
-			// Render close tag
-			if (tag.isOpen())
-			{
+				// Render close tag
 				if (openTag.isOpen())
 				{
 					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());

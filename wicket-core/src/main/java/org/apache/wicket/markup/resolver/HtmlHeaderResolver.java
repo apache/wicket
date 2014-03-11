@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.internal.HtmlHeaderItemsContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -40,7 +41,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  * (auto) added to the component hierarchy and immediately rendered. Please see the javadoc for
  * {@link HtmlHeaderContainer} on how it treats the tag.
  * <p>
- * In case of &lt;wicket:head&gt; a simple {@link WebMarkupContainer} handles the tag.
+ * In case of &lt;wicket:head&gt; a simple {@link TransparentWebMarkupContainer} handles the tag.
  * 
  * @author Juergen Donnerstag
  */
@@ -50,30 +51,33 @@ public class HtmlHeaderResolver implements IComponentResolver
 
 	/** */
 	public static final String HEAD = "head";
+	public static final String HEADER_ITEMS = "header-items";
 
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
+		final Page page = container.getPage();
+
 		// Only <head> component tags have the id == "_header"
 		if (tag.getId().equals(HtmlHeaderSectionHandler.HEADER_ID))
 		{
 			// Create a special header component which will gather additional
 			// input the <head> from 'contributors'.
 			return newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
-				container.getPage().getAutoIndex());
+				page.getAutoIndex(), tag);
 		}
 		else if ((tag instanceof WicketTag) && ((WicketTag)tag).isHeadTag())
 		{
 			// If we found <wicket:head> without surrounding <head> on a Page,
-			// than we have to add wicket:head into a automatically generated
+			// then we have to add wicket:head into a automatically generated
 			// head first.
 			if (container instanceof WebPage)
 			{
 				// Create a special header component which will gather
 				// additional input the <head> from 'contributors'.
 				MarkupContainer header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
-					container.getPage().getAutoIndex());
+					page.getAutoIndex(), tag);
 
 				// It is <wicket:head>. Because they do not provide any
 				// additional functionality they are merely a means of surrounding relevant
@@ -99,13 +103,14 @@ public class HtmlHeaderResolver implements IComponentResolver
 
 				return header;
 			}
-			final Page page = container.getPage();
+
 			final String pageClassName = (page != null) ? page.getClass().getName() : "unknown";
 			final IResourceStream stream = markupStream.getResource();
 			final String streamName = (stream != null) ? stream.toString() : "unknown";
 
 			throw new MarkupException(
-				"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>. Error occured while rendering page: " +
+				"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, " +
+						"and <wicket:extend>. Error occurred while rendering page: " +
 					pageClassName + " using markup stream: " + streamName);
 		}
 
@@ -115,12 +120,34 @@ public class HtmlHeaderResolver implements IComponentResolver
 
 	/**
 	 * Return a new HtmlHeaderContainer
-	 * 
+	 *
 	 * @param id
 	 * @return HtmlHeaderContainer
+	 * @deprecated Use #newHtmlHeaderContainer(String, ComponentTag) instead
 	 */
+	@Deprecated
 	protected HtmlHeaderContainer newHtmlHeaderContainer(String id)
 	{
 		return new HtmlHeaderContainer(id);
+	}
+
+	/**
+	 * Return a new HtmlHeaderContainer
+	 *
+	 * @param id
+	 * @return HtmlHeaderContainer
+	 */
+	protected HtmlHeaderContainer newHtmlHeaderContainer(String id, ComponentTag tag)
+	{
+		HtmlHeaderContainer htmlHeaderContainer;
+		if (HtmlHeaderResolver.HEADER_ITEMS.equalsIgnoreCase(tag.getName()))
+		{
+			htmlHeaderContainer = new HtmlHeaderItemsContainer(id);
+		}
+		else
+		{
+			htmlHeaderContainer = newHtmlHeaderContainer(id);
+		}
+		return htmlHeaderContainer;
 	}
 }

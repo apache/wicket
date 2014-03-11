@@ -1521,7 +1521,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			render = !openTag.hasNoCloseTag();
 		}
 
-		if (render == true)
+		if (render)
 		{
 			renderAll(markupStream, openTag);
 		}

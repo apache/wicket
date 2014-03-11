@@ -106,7 +106,7 @@ public class TagUtils
 	}
 
 	/**
-	 * 
+	 *
 	 * @param elem
 	 * @return True if the current markup element is a &lt;wicket:head&gt; tag
 	 */
@@ -116,6 +116,24 @@ public class TagUtils
 		{
 			WicketTag wtag = (WicketTag)elem;
 			if (wtag.isHeadTag())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 *
+	 * @param elem
+	 * @return True if the current markup element is a &lt;wicket:head&gt; tag
+	 */
+	public static final boolean isWicketHeaderItemsTag(final MarkupElement elem)
+	{
+		if (elem instanceof WicketTag)
+		{
+			WicketTag wtag = (WicketTag)elem;
+			if (wtag.isHeaderItemsTag())
 			{
 				return true;
 			}

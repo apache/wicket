@@ -64,6 +64,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		WELL_KNOWN_TAG_NAMES.add(WicketRemoveTagHandler.REMOVE);
 		WELL_KNOWN_TAG_NAMES.add(FragmentResolver.FRAGMENT);
 		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEAD);
+		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEADER_ITEMS);
 		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.CHILD);
 		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.EXTEND);
 		WELL_KNOWN_TAG_NAMES.add(WicketContainerResolver.CONTAINER);
@@ -85,12 +86,12 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 * Get the next tag from the next MarkupFilter in the chain and search for Wicket specific tags.
 	 * <p>
 	 * Note: The xml parser - the next MarkupFilter in the chain - returns XmlTags which are a
-	 * subclass of MarkupElement. The implementation of this filter will return either ComponentTags
-	 * or ComponentWicketTags. Both are subclasses of MarkupElement as well and both maintain a
+	 * subclass of MarkupElement. The implementation of this filter will return either ComponentTag
+	 * or WicketTag. Both are subclasses of MarkupElement and both maintain a
 	 * reference to the XmlTag. But no XmlTag is returned.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextElement()
-	 * @return The next tag from markup to be processed. If null, no more tags are available
+	 * @return The next tag from markup to be processed. If {@code null} then no more tags are available
 	 */
 	@Override
 	protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException

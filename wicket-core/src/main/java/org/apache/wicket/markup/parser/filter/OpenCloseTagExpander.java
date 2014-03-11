@@ -24,6 +24,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
+import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 
 /**
  * MarkupFilter that expands certain open-close tag as separate open and close tags. Firefox, unless
@@ -60,7 +61,7 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 		// @TODO by now an exclude list is probably shorter
 		"article", "aside", "details", "summary", "figure", "figcaption", "footer",
 		"header", "hgroup", "mark", "meter", "nav", "progress", "ruby", "rt", "rp", "section",
-		"audio", "video", "canvas", "datalist", "output");
+		"audio", "video", "canvas", "datalist", "output", HtmlHeaderResolver.HEADER_ITEMS);
 
 	// temporary storage. Introduce into flow on next request
 	private ComponentTag next = null;
@@ -88,10 +89,10 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 		if (tag.isOpenClose())
 		{
 			String name = tag.getName();
-			if (tag.getNamespace() != null)
-			{
-				name = tag.getNamespace() + ":" + tag.getName();
-			}
+//			if (tag.getNamespace() != null)
+//			{
+//				name = tag.getNamespace() + ":" + tag.getName();
+//			}
 
 			if (contains(name))
 			{

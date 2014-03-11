@@ -133,6 +133,14 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
+	 * @return True, if tag name equals 'wicket:header-items'
+	 */
+	public final boolean isHeaderItemsTag()
+	{
+		return HtmlHeaderResolver.HEADER_ITEMS.equalsIgnoreCase(getName());
+	}
+
+	/**
 	 * @return True, if tag name equals 'wicket:message'
 	 */
 	public final boolean isMessageTag()
