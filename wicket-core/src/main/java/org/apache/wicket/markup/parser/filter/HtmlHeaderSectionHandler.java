@@ -29,13 +29,22 @@ import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 
 
 /**
- * This is a markup inline filter. It assumes that {@link org.apache.wicket.markup.parser.filter.WicketTagIdentifier}
+ * This is a markup inline filter.
+ * <p>
+ * It assumes that {@link org.apache.wicket.markup.parser.filter.WicketTagIdentifier}
  * has been called first and search for a &lt;head&gt; tag (note: not wicket:head). Provided the markup contains a
  * &lt;body&gt; tag it will automatically prepend a &lt;head&gt; tag if missing.
+ * </p>
+ * <p>
+ * Additionally this filter handles &lt;wicket:header-items/&gt;. If there is such tag then it is marked
+ * as the one that should be used as {@link org.apache.wicket.markup.html.internal.HtmlHeaderContainer}, by
+ * setting its id to {@value #HEADER_ID}.
+ * </p>
  * <p>
  * Note: This handler is only relevant for Pages (see MarkupParser.newFilterChain())
  * 
  * @see org.apache.wicket.markup.MarkupParser
+ * @see org.apache.wicket.markup.resolver.HtmlHeaderResolver
  * @author Juergen Donnerstag
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
