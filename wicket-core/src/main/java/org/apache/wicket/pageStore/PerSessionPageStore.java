@@ -20,6 +20,7 @@ import java.lang.ref.SoftReference;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -144,7 +145,7 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 
 		private final int maxEntriesPerSession;
 
-		private final ConcurrentSkipListMap<String, SoftReference<ConcurrentSkipListMap<PageValue, IManageablePage>>> cache;
+		private final ConcurrentMap<String, SoftReference<ConcurrentSkipListMap<PageValue, IManageablePage>>> cache;
 
 		/**
 		 * Constructor.
@@ -155,7 +156,7 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 		public PagesCache(final int maxEntriesPerSession)
 		{
 			this.maxEntriesPerSession = maxEntriesPerSession;
-			cache = new ConcurrentSkipListMap<>();
+			cache = new ConcurrentHashMap<>();
 		}
 
 		/**
