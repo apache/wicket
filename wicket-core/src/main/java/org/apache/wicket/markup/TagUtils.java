@@ -126,7 +126,7 @@ public class TagUtils
 	/**
 	 *
 	 * @param elem
-	 * @return True if the current markup element is a &lt;wicket:head&gt; tag
+	 * @return True if the current markup element is a &lt;wicket:header-items&gt; tag
 	 */
 	public static final boolean isWicketHeaderItemsTag(final MarkupElement elem)
 	{
