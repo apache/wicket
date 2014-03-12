@@ -80,19 +80,12 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 		return super.nextElement();
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	protected MarkupElement onComponentTag(final ComponentTag tag) throws ParseException
 	{
 		if (tag.isOpenClose())
 		{
 			String name = tag.getName();
-//			if (tag.getNamespace() != null)
-//			{
-//				name = tag.getNamespace() + ":" + tag.getName();
-//			}
 
 			if (contains(name))
 			{
