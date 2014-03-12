@@ -14,30 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.internal;
+package org.apache.wicket.markup.html.internal.headeritems;
 
-/**
- * A specialization of HtmlHeaderContainer that doesn't render
- * &lt;head&gt; and &l;/head&gt; around the header contributions
- */
-public class HtmlHeaderItemsContainer extends HtmlHeaderContainer
-{
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+public class PageWithHeaderItems extends BasePage {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor
-	 *
-	 * @param id
-	 *          The component id
-	 */
-	public HtmlHeaderItemsContainer(String id)
-	{
-		super(id);
-	}
-
-	@Override
-	protected boolean renderOpenAndCloseTags()
-	{
-		return false;
-	}
+	public PageWithHeaderItems(final PageParameters parameters) {
+		super(parameters);
+    }
 }

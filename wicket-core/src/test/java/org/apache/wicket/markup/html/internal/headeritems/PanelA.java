@@ -14,30 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.internal;
+package org.apache.wicket.markup.html.internal.headeritems;
+
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.resource.CoreLibrariesContributor;
 
 /**
- * A specialization of HtmlHeaderContainer that doesn't render
- * &lt;head&gt; and &l;/head&gt; around the header contributions
+ * A panel that contributes all Ajax header items
+ * and uses <wicket:head> to contribute a <meta> element
  */
-public class HtmlHeaderItemsContainer extends HtmlHeaderContainer
+public class PanelA extends Panel
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Constructor
-	 *
-	 * @param id
-	 *          The component id
-	 */
-	public HtmlHeaderItemsContainer(String id)
+	public PanelA(String id)
 	{
 		super(id);
 	}
 
 	@Override
-	protected boolean renderOpenAndCloseTags()
+	public void renderHead(IHeaderResponse response)
 	{
-		return false;
+		super.renderHead(response);
+
+		CoreLibrariesContributor.contributeAjax(getApplication(), response);
 	}
 }
