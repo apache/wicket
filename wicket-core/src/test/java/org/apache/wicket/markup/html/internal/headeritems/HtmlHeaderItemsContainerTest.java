@@ -14,15 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.internal;
+package org.apache.wicket.markup.html.internal.headeritems;
 
 import static org.hamcrest.number.OrderingComparison.lessThan;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.internal.headeritems.PageWithHeaderItems;
-import org.apache.wicket.markup.html.internal.headeritems.PageWithoutHeaderItems;
-import org.apache.wicket.markup.html.internal.headeritems.SubPageWithHeaderItemsAndWicketHead;
-import org.apache.wicket.markup.html.internal.headeritems.SubPageWithoutHeaderItemsAndWicketHead;
+import org.apache.wicket.markup.MarkupException;
 import org.junit.Test;
 
 /**
@@ -136,5 +133,25 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 
 		assertThat("<meta name='fromBasePage'> should be rendered before the <title> element",
 				idxMetaFromBasePage, lessThan(idxTitleElement));
+	}
+
+	/**
+	 * Only one <wicket:header-items/> is allowed only in <head>
+	 * @see org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler
+	 */
+	@Test(expected = MarkupException.class)
+	public void pageWithTwoHeaderItems()
+	{
+		tester.startPage(PageWithTwoHeaderItems.class);
+	}
+
+	/**
+	 * <wicket:header-items/> is allowed only in <head>
+	 * @see org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler
+	 */
+	@Test(expected = MarkupException.class)
+	public void pageWithHeaderItemsOutOfHead()
+	{
+		tester.startPage(PageWithHeaderItemsOutOfHead.class);
 	}
 }
