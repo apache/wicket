@@ -14,30 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.internal;
+package org.apache.wicket.markup.html.internal.headeritems;
+
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.StringHeaderItem;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * A specialization of HtmlHeaderContainer that doesn't render
- * &lt;head&gt; and &l;/head&gt; around the header contributions
+ * A base page that contributes a StringHeaderItem
+ * and adds a Panel with its own contributions
  */
-public class HtmlHeaderItemsContainer extends HtmlHeaderContainer
-{
+public class BasePage extends WebPage {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor
-	 *
-	 * @param id
-	 *          The component id
-	 */
-	public HtmlHeaderItemsContainer(String id)
-	{
-		super(id);
-	}
+	public BasePage(final PageParameters parameters) {
+		super(parameters);
+
+		add(new PanelA("panel"));
+    }
 
 	@Override
-	protected boolean renderOpenAndCloseTags()
+	public void renderHead(IHeaderResponse response)
 	{
-		return false;
+		super.renderHead(response);
+
+		response.render(StringHeaderItem.forString("<meta name='fromBasePage' content='1'/>"));
 	}
 }
