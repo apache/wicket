@@ -18,7 +18,10 @@ package org.apache.wicket.markup.html.internal;
 
 /**
  * A specialization of HtmlHeaderContainer that doesn't render
- * &lt;head&gt; and &l;/head&gt; around the header contributions
+ * &lt;head&gt; and &l;/head&gt; around the header contributions.
+ *
+ * This container is used when there is a usage of &lt;wicket:header-items/&gt;
+ * in the page's &lt;head&gt; element.
  */
 public class HtmlHeaderItemsContainer extends HtmlHeaderContainer
 {
