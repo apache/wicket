@@ -104,6 +104,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 					{
 						// revert the settings from above
 						ComponentTag headOpenTag = tag.getOpenTag();
+						// change the id because it is special. See HtmlHeaderResolver
 						headOpenTag.setId(HEADER_ID + "-Ignored");
 						headOpenTag.setAutoComponentTag(false);
 						headOpenTag.setModified(false);
@@ -164,23 +165,6 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		}
 
 		return tag;
-	}
-
-	// temporary storage. Introduce into flow on next request
-	private ComponentTag next = null;
-
-	@Override
-	public MarkupElement nextElement() throws ParseException
-	{
-		// Did we hold back an elem? Than return that first
-		if (next != null)
-		{
-			MarkupElement rtn = next;
-			next = null;
-			return rtn;
-		}
-
-		return super.nextElement();
 	}
 
 	/**
