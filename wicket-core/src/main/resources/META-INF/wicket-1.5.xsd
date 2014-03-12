@@ -146,13 +146,13 @@
 		<complexType />
 	</element>
 
-    <element name="header-items">
-        <annotation>
-            <documentation><![CDATA[A special element that is used as a placeholder inside the HTML <head>
-            element. Wicket will replace it with all header contributions.]]></documentation>
-        </annotation>
-        <complexType />
-    </element>
+	<element name="header-items">
+		<annotation>
+			<documentation><![CDATA[A special element that is used as a placeholder inside the HTML <head>
+			element. Wicket will replace it with all header contributions.]]></documentation>
+		</annotation>
+		<complexType />
+	</element>
 
 	<element name="container">
 		<annotation>
