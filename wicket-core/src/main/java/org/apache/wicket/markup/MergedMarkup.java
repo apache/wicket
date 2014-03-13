@@ -162,7 +162,7 @@ public class MergedMarkup extends Markup
 			{
 				WicketTag wtag = (WicketTag)element;
 
-				// Found org.apache.wicket.child in base markup. In case of 3+
+				// Found wicket:child in the base markup. In case of 3+
 				// level inheritance make sure the child tag is not from one of
 				// the deeper levels
 				if (wtag.isChildTag() && tag.getMarkupClass() == markupClass)
@@ -204,8 +204,7 @@ public class MergedMarkup extends Markup
 						// Add the <wicket:head> body from the derived markup.
 						copyWicketHead(markup, extendIndex);
 
-						// Do not add the current tag. It has already been
-						// added.
+						// Do not add the current tag. It has already been added.
 						continue;
 					}
 
@@ -231,6 +230,7 @@ public class MergedMarkup extends Markup
 
 				// if <head> in base markup
 				if ((tag.isClose() && TagUtils.isHeadTag(tag)) ||
+				    (tag.isClose() && TagUtils.isWicketHeaderItemsTag(tag)) ||
 					(tag.isOpen() && TagUtils.isBodyTag(tag)))
 				{
 					wicketHeadProcessed = true;
@@ -397,6 +397,7 @@ public class MergedMarkup extends Markup
 	 * Append the wicket:head regions from the extended markup to the current markup
 	 * 
 	 * @param markup
+	 *              The markup of the child/inherited container
 	 * @param extendIndex
 	 */
 	private void copyWicketHead(final IMarkupFragment markup, int extendIndex)

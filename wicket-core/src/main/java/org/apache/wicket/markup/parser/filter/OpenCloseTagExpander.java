@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
@@ -92,6 +93,10 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 				if (onFound(tag))
 				{
 					next = new ComponentTag(tag.getName(), TagType.CLOSE);
+					if (getWicketNamespace().equals(tag.getNamespace()))
+					{
+						next = new WicketTag(next);
+					}
 					next.setNamespace(tag.getNamespace());
 					next.setOpenTag(tag);
 					next.setModified(true);

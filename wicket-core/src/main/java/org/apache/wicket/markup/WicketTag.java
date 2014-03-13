@@ -70,7 +70,9 @@ public class WicketTag extends ComponentTag
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
 	 * 
 	 * @return The tag's name attribute
+	 * @deprecated This method is obsolete since a long time
 	 */
+	@Deprecated
 	public final String getNameAttribute()
 	{
 		return getAttributes().getString("name");
