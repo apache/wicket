@@ -27,6 +27,8 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 /**
@@ -57,7 +59,6 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 
 		for (String htmlVoidElement : htmlVoidElements)
 		{
-
 			OpenCloseTagExpander expander = new OpenCloseTagExpander()
 			{
 				@Override
@@ -133,6 +134,37 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 			assertEquals(htmlNonVoidElement, markupElement.getName());
 			assertTrue(markupElement.closes(tag));
 		}
+	}
+
+	/**
+	 * Verifies that the namespace of the created closing tag is the same
+	 * as of the opening one
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void expandWicketTagWithSameNamespace() throws ParseException
+	{
+		final String namespace = "customNS";
+
+		OpenCloseTagExpander expander = new OpenCloseTagExpander()
+		{
+			@Override
+			protected String getWicketNamespace()
+			{
+				return namespace;
+			}
+		};
+
+		ComponentTag tag = new ComponentTag(HtmlHeaderResolver.HEADER_ITEMS, XmlTag.TagType.OPEN_CLOSE);
+		tag.setNamespace(namespace);
+		expander.onComponentTag(tag);
+
+		MarkupElement markupElement = expander.nextElement();
+
+		assertThat(markupElement, CoreMatchers.instanceOf(WicketTag.class));
+		assertTrue(markupElement.closes(tag));
+		assertEquals(namespace, ((ComponentTag) markupElement).getNamespace());
 	}
 
 	private static class TestMarkupElement extends WicketTag
