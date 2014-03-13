@@ -154,4 +154,47 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(PageWithHeaderItemsOutOfHead.class);
 	}
+
+	/**
+	 * Verifies that all header contributions from <wicket:head> containers
+	 * and IHeaderResponse are rendered exactly once
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-5531
+	 */
+	@Test
+	public void withHeaderItemsWithWicketHeadNoDuplicates()
+	{
+		tester.startPage(SubPageWithHeaderItemsAndWicketHead.class);
+		String responseAsString = tester.getLastResponseAsString();
+
+		{
+			int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
+			int lastIdxMetaPanelWicketHead = responseAsString.lastIndexOf("meta name=\"panel-wicket-head\"");
+			assertEquals(idxMetaPanelWicketHead, lastIdxMetaPanelWicketHead);
+		}
+
+		{
+			int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
+			int lastIdxWicketAjaxJs = responseAsString.lastIndexOf("wicket-ajax-jquery.js");
+			assertEquals(idxWicketAjaxJs, lastIdxWicketAjaxJs);
+		}
+
+		{
+			int idxTitleElement = responseAsString.indexOf("<title>Apache Wicket Quickstart</title>");
+			int lastIdxTitleElement = responseAsString.lastIndexOf("<title>Apache Wicket Quickstart</title>");
+			assertEquals(idxTitleElement, lastIdxTitleElement);
+		}
+
+		{
+			int idxMetaFromBasePage = responseAsString.indexOf("<meta name='fromBasePage' content='1'");
+			int lastIdxMetaFromBasePage = responseAsString.lastIndexOf("<meta name='fromBasePage' content='1'");
+			assertEquals(idxMetaFromBasePage, lastIdxMetaFromBasePage);
+		}
+
+		{
+			int idxMetaFromSubPage = responseAsString.indexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
+			int lastIdxMetaFromSubPage = responseAsString.lastIndexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
+			assertEquals(idxMetaFromSubPage, lastIdxMetaFromSubPage);
+		}
+	}
 }
