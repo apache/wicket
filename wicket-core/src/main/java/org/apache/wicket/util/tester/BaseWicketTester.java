@@ -2122,7 +2122,7 @@ public class BaseWicketTester
 		{
 			if (obj.path.matches(".*" + filter + ".*"))
 			{
-				log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
+				log.info("[{}{}] path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]", obj.isEnabled?"E":"-", obj.isVisible?"V":"-");
 			}
 		}
 	}
