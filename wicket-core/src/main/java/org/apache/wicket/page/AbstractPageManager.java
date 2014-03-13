@@ -17,8 +17,6 @@
 package org.apache.wicket.page;
 
 import org.apache.wicket.util.lang.Args;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Convenience class for {@link IPageManager} implementations. Subclass should extend
@@ -29,8 +27,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractPageManager implements IPageManager
 {
-	private static final Logger log = LoggerFactory.getLogger(AbstractPageManager.class);
-
 	private final IPageManagerContext context;
 
 	/**
@@ -50,17 +46,9 @@ public abstract class AbstractPageManager implements IPageManager
 	 */
 	protected abstract RequestAdapter newRequestAdapter(IPageManagerContext context);
 
-	/**
-	 * 
-	 * @see org.apache.wicket.page.IPageManager#supportsVersioning()
-	 */
 	@Override
 	public abstract boolean supportsVersioning();
 
-	/**
-	 * 
-	 * @see org.apache.wicket.page.IPageManager#sessionExpired(java.lang.String)
-	 */
 	@Override
 	public abstract void sessionExpired(String sessionId);
 
@@ -75,7 +63,6 @@ public abstract class AbstractPageManager implements IPageManager
 
 	/**
 	 * @see #newRequestAdapter(IPageManagerContext)
-	 * 
 	 * @return the request adapter
 	 */
 	protected RequestAdapter getRequestAdapter()
@@ -89,41 +76,29 @@ public abstract class AbstractPageManager implements IPageManager
 		return adapter;
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IPageManager#commitRequest()
-	 */
 	@Override
 	public void commitRequest()
 	{
 		getRequestAdapter().commitRequest();
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IPageManager#getPage(int)
-	 */
 	@Override
 	public IManageablePage getPage(int id)
 	{
 		IManageablePage page = getRequestAdapter().getPage(id);
 		if (page != null)
 		{
-			getRequestAdapter().touch(page);
+			touchPage(page);
 		}
 		return page;
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IPageManager#newSessionCreated()
-	 */
 	@Override
 	public void newSessionCreated()
 	{
 		getRequestAdapter().newSessionCreated();
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IPageManager#touchPage(org.apache.wicket.page.IManageablePage)
-	 */
 	@Override
 	public void touchPage(IManageablePage page)
 	{

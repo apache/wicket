@@ -66,7 +66,6 @@ import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
-import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IContextProvider;

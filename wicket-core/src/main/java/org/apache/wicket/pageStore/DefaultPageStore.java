@@ -18,9 +18,8 @@ package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
@@ -35,18 +34,9 @@ import org.slf4j.LoggerFactory;
  * direction when loading {@link SerializedPage} from the data store.
  * 
  */
-public class DefaultPageStore implements IPageStore
+public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.SerializedPage>
 {
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultPageStore.class);
-
-	private final SerializedPagesCache serializedPagesCache;
-
-	private final IDataStore pageDataStore;
-
-	/**
-	 * The {@link ISerializer} that will be used to convert pages from/to byte arrays
-	 */
-	private final ISerializer pageSerializer;
 
 	/**
 	 * Construct.
@@ -62,104 +52,19 @@ public class DefaultPageStore implements IPageStore
 	public DefaultPageStore(final ISerializer pageSerializer, final IDataStore dataStore,
 		final int cacheSize)
 	{
-		Args.notNull(pageSerializer, "pageSerializer");
-		Args.notNull(dataStore, "DataStore");
-
-		this.pageSerializer = pageSerializer;
-		pageDataStore = dataStore;
-		serializedPagesCache = new SerializedPagesCache(cacheSize);
-	}
-
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#destroy()
-	 */
-	@Override
-	public void destroy()
-	{
-		pageDataStore.destroy();
-	}
-
-	/**
-	 * @param sessionId
-	 * @param pageId
-	 * @return page data
-	 * @see IDataStore#getData(String, int)
-	 */
-	protected byte[] getPageData(final String sessionId, final int pageId)
-	{
-		return pageDataStore.getData(sessionId, pageId);
-	}
-
-	/**
-	 * @param sessionId
-	 * @param pageId
-	 * @see IDataStore#removeData(String, int)
-	 */
-	protected void removePageData(final String sessionId, final int pageId)
-	{
-		pageDataStore.removeData(sessionId, pageId);
-	}
-
-	/**
-	 * @param sessionId
-	 * @see IDataStore#removeData(String)
-	 */
-	protected void removePageData(final String sessionId)
-	{
-		pageDataStore.removeData(sessionId);
-	}
-
-	/**
-	 * @param sessionId
-	 * @param pageId
-	 * @param data
-	 * @see IDataStore#storeData(String, int, byte[])
-	 */
-	protected void storePageData(final String sessionId, final int pageId, final byte[] data)
-	{
-		pageDataStore.storeData(sessionId, pageId, data);
-	}
-
-	@Override
-	public IManageablePage getPage(final String sessionId, final int id)
-	{
-		SerializedPage fromCache = serializedPagesCache.getPage(sessionId, id);
-		if (fromCache != null && fromCache.data != null)
-		{
-			return deserializePage(fromCache.data);
-		}
-
-		byte[] data = getPageData(sessionId, id);
-		if (data != null)
-		{
-			return deserializePage(data);
-		}
-		return null;
-	}
-
-	@Override
-	public void removePage(final String sessionId, final int id)
-	{
-		serializedPagesCache.removePage(sessionId, id);
-		removePageData(sessionId, id);
+		super(pageSerializer, dataStore, new SerializedPagesCache(cacheSize));
 	}
 
 	@Override
 	public void storePage(final String sessionId, final IManageablePage page)
 	{
-		SerializedPage serialized = serializePage(sessionId, page);
+		SerializedPage serialized = createSerializedPage(sessionId, page);
 		if (serialized != null)
 		{
-			serializedPagesCache.storePage(serialized);
-			storePageData(sessionId, serialized.getPageId(), serialized.getData());
+			int pageId = page.getPageId();
+			pagesCache.storePage(sessionId, pageId, serialized);
+			storePageData(sessionId, pageId, serialized.getData());
 		}
-	}
-
-	@Override
-	public void unbind(final String sessionId)
-	{
-		removePageData(sessionId);
-		serializedPagesCache.removePages(sessionId);
 	}
 
 	@Override
@@ -202,7 +107,7 @@ public class DefaultPageStore implements IPageStore
 	 */
 	private SerializedPage restoreStrippedSerializedPage(final SerializedPage serializedPage)
 	{
-		SerializedPage result = serializedPagesCache.getPage(serializedPage.getSessionId(),
+		SerializedPage result = pagesCache.getPage(serializedPage.getSessionId(),
 			serializedPage.getPageId());
 		if (result != null)
 		{
@@ -214,38 +119,38 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	@Override
-	public Serializable prepareForSerialization(final String sessionId, final Object object)
+	public Serializable prepareForSerialization(final String sessionId, final Serializable page)
 	{
-		if (pageDataStore.isReplicated())
+		if (dataStore.isReplicated())
 		{
 			return null;
 		}
 
 		SerializedPage result = null;
 
-		if (object instanceof IManageablePage)
+		if (page instanceof IManageablePage)
 		{
-			IManageablePage page = (IManageablePage)object;
-			result = serializedPagesCache.getPage(sessionId, page.getPageId());
+			IManageablePage _page = (IManageablePage)page;
+			result = pagesCache.getPage(sessionId, _page.getPageId());
 			if (result == null)
 			{
-				result = serializePage(sessionId, page);
+				result = createSerializedPage(sessionId, _page);
 				if (result != null)
 				{
-					serializedPagesCache.storePage(result);
+					pagesCache.storePage(sessionId, _page.getPageId(), result);
 				}
 			}
 		}
-		else if (object instanceof SerializedPage)
+		else if (page instanceof SerializedPage)
 		{
-			SerializedPage page = (SerializedPage)object;
-			if (page.getData() == null)
+			SerializedPage _page = (SerializedPage)page;
+			if (_page.getData() == null)
 			{
-				result = restoreStrippedSerializedPage(page);
+				result = restoreStrippedSerializedPage(_page);
 			}
 			else
 			{
-				result = page;
+				result = _page;
 			}
 		}
 
@@ -253,7 +158,7 @@ public class DefaultPageStore implements IPageStore
 		{
 			return result;
 		}
-		return (Serializable)object;
+		return page;
 	}
 
 	/**
@@ -366,14 +271,14 @@ public class DefaultPageStore implements IPageStore
 	 * @param page
 	 * @return the serialized page information
 	 */
-	protected SerializedPage serializePage(final String sessionId, final IManageablePage page)
+	protected SerializedPage createSerializedPage(final String sessionId, final IManageablePage page)
 	{
 		Args.notNull(sessionId, "sessionId");
 		Args.notNull(page, "page");
 
 		SerializedPage serializedPage = null;
 
-		byte[] data = pageSerializer.serialize(page);
+		byte[] data = serializePage(page);
 
 		if (data != null)
 		{
@@ -387,17 +292,6 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	/**
-	 * 
-	 * @param data
-	 * @return page data deserialized
-	 */
-	protected IManageablePage deserializePage(final byte[] data)
-	{
-		IManageablePage page = (IManageablePage)pageSerializer.deserialize(data);
-		return page;
-	}
-
-	/**
 	 * Cache that stores serialized pages. This is important to make sure that a single page is not
 	 * serialized twice or more when not necessary.
 	 * <p>
@@ -407,47 +301,48 @@ public class DefaultPageStore implements IPageStore
 	 * 
 	 * @author Matej Knopp
 	 */
-	static class SerializedPagesCache
+	static class SerializedPagesCache implements SecondLevelPageCache<String, Integer, SerializedPage>
 	{
-		private final int size;
+		private final int maxSize;
 
-		private final List<SoftReference<SerializedPage>> cache;
+		private final ConcurrentLinkedDeque<SoftReference<SerializedPage>> cache;
 
 		/**
-		 * Construct.
+		 * Constructor.
 		 * 
-		 * @param size
+		 * @param maxSize
+		 *          The maximum number of entries to cache
 		 */
-		public SerializedPagesCache(final int size)
+		public SerializedPagesCache(final int maxSize)
 		{
-			this.size = size;
-			cache = new ArrayList<>(size);
+			this.maxSize = maxSize;
+			cache = new ConcurrentLinkedDeque<>();
 		}
 
 		/**
 		 * 
 		 * @param sessionId
-		 * @param id
+		 * @param pageId
 		 * @return the removed {@link SerializedPage} or <code>null</code> - otherwise
 		 */
-		public SerializedPage removePage(final String sessionId, final int id)
+		@Override
+		public SerializedPage removePage(final String sessionId, final Integer pageId)
 		{
-			Args.notNull(sessionId, "sessionId");
-
-			if (size > 0)
+			if (maxSize > 0)
 			{
-				synchronized (cache)
+				Args.notNull(sessionId, "sessionId");
+				Args.notNull(pageId, "pageId");
+
+				SerializedPage sample = new SerializedPage(sessionId, pageId, null);
+
+				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
 				{
-					for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
+					SoftReference<SerializedPage> ref = i.next();
+					SerializedPage entry = ref.get();
+					if (sample.equals(entry))
 					{
-						SoftReference<SerializedPage> ref = i.next();
-						SerializedPage entry = ref.get();
-						if (entry != null && entry.getPageId() == id &&
-							entry.getSessionId().equals(sessionId))
-						{
-							i.remove();
-							return entry;
-						}
+						i.remove();
+						return entry;
 					}
 				}
 			}
@@ -460,22 +355,20 @@ public class DefaultPageStore implements IPageStore
 		 * 
 		 * @param sessionId
 		 */
+		@Override
 		public void removePages(String sessionId)
 		{
-			Args.notNull(sessionId, "sessionId");
-
-			if (size > 0)
+			if (maxSize > 0)
 			{
-				synchronized (cache)
+				Args.notNull(sessionId, "sessionId");
+
+				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
 				{
-					for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
+					SoftReference<SerializedPage> ref = i.next();
+					SerializedPage entry = ref.get();
+					if (entry != null && entry.getSessionId().equals(sessionId))
 					{
-						SoftReference<SerializedPage> ref = i.next();
-						SerializedPage entry = ref.get();
-						if (entry != null && entry.getSessionId().equals(sessionId))
-						{
-							i.remove();
-						}
+						i.remove();
 					}
 				}
 			}
@@ -490,33 +383,33 @@ public class DefaultPageStore implements IPageStore
 		 * @param pageId
 		 * @return the found serialized page or <code>null</code> when not found
 		 */
-		public SerializedPage getPage(String sessionId, int pageId)
+		@Override
+		public SerializedPage getPage(String sessionId, Integer pageId)
 		{
-			Args.notNull(sessionId, "sessionId");
-
 			SerializedPage result = null;
-			if (size > 0)
+			if (maxSize > 0)
 			{
-				synchronized (cache)
-				{
-					for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
-					{
-						SoftReference<SerializedPage> ref = i.next();
-						SerializedPage entry = ref.get();
-						if (entry != null && entry.getPageId() == pageId &&
-							entry.getSessionId().equals(sessionId))
-						{
-							i.remove();
-							result = entry;
-							break;
-						}
-					}
+				Args.notNull(sessionId, "sessionId");
+				Args.notNull(pageId, "pageId");
 
-					if (result != null)
+				SerializedPage sample = new SerializedPage(sessionId, pageId, null);
+
+				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
+				{
+					SoftReference<SerializedPage> ref = i.next();
+					SerializedPage entry = ref.get();
+					if (sample.equals(entry))
 					{
-						// move to top
-						storePage(result);
+						i.remove();
+						result = entry;
+						break;
 					}
+				}
+
+				if (result != null)
+				{
+					// move to top
+					internalStore(result);
 				}
 			}
 			return result;
@@ -528,32 +421,43 @@ public class DefaultPageStore implements IPageStore
 		 * @param page
 		 *      the data to serialize (page id, session id, bytes)
 		 */
-		void storePage(SerializedPage page)
+		@Override
+		public void storePage(String sessionId, Integer pageId, SerializedPage page)
 		{
-			SoftReference<SerializedPage> ref = new SoftReference<SerializedPage>(page);
-
-			if (size > 0)
+			if (maxSize > 0)
 			{
-				synchronized (cache)
-				{
-					for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
-					{
-						SoftReference<SerializedPage> r = i.next();
-						SerializedPage entry = r.get();
-						if (entry != null && entry.equals(page))
-						{
-							i.remove();
-							break;
-						}
-					}
+				Args.notNull(sessionId, "sessionId");
+				Args.notNull(pageId, "pageId");
+				Args.notNull(page, "page");
 
-					cache.add(ref);
-					if (cache.size() > size)
+				for (Iterator<SoftReference<SerializedPage>> i = cache.iterator(); i.hasNext();)
+				{
+					SoftReference<SerializedPage> r = i.next();
+					SerializedPage entry = r.get();
+					if (entry != null && entry.equals(page))
 					{
-						cache.remove(0);
+						i.remove();
+						break;
 					}
 				}
+
+				internalStore(page);
 			}
+		}
+
+		private void internalStore(SerializedPage page)
+		{
+			cache.push(new SoftReference<>(page));
+			while (cache.size() > maxSize)
+			{
+				cache.pollLast();
+			}
+		}
+
+		@Override
+		public void destroy()
+		{
+			cache.clear();
 		}
 	}
 }
