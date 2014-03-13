@@ -31,6 +31,8 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderItemsContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * This is a tag resolver which handles &lt;head&gt; and &lt;wicket:head&gt;tags. It must be
@@ -59,7 +61,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 	{
 		final Page page = container.getPage();
 
-		// Only <head> component tags have the id == "_header"
+		// <head> or <wicket:header-items/> component tags have the id == "_header_"
 		if (tag.getId().equals(HtmlHeaderSectionHandler.HEADER_ID))
 		{
 			// Create a special header component which will gather additional
@@ -74,22 +76,39 @@ public class HtmlHeaderResolver implements IComponentResolver
 			// head first.
 			if (container instanceof WebPage)
 			{
-				// Create a special header component which will gather
-				// additional input the <head> from 'contributors'.
-				MarkupContainer header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
-					page.getAutoIndex(), tag);
+				HtmlHeaderContainer header = container.visitChildren(new IVisitor<Component, HtmlHeaderContainer>()
+				{
+					@Override
+					public void component(final Component component, final IVisit<HtmlHeaderContainer> visit)
+					{
+						if (component instanceof HtmlHeaderContainer)
+						{
+							visit.stop((HtmlHeaderContainer) component);
+						} else if (component instanceof TransparentWebMarkupContainer == false)
+						{
+							visit.dontGoDeeper();
+						}
+					}
+				});
 
 				// It is <wicket:head>. Because they do not provide any
 				// additional functionality they are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
-				WebMarkupContainer header2 = new TransparentWebMarkupContainer(
-					HtmlHeaderSectionHandler.HEADER_ID);
+				WebMarkupContainer wicketHeadContainer = new WicketHeadContainer();
 
-				header2.setRenderBodyOnly(true);
-				header.add(header2);
+				if (header == null)
+				{
+					// Create a special header component which will gather
+					// additional input the <head> from 'contributors'.
+					header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
+						page.getAutoIndex(), tag);
+					header.add(wicketHeadContainer);
+					return header;
+				}
 
-				return header;
+				header.add(wicketHeadContainer);
+				return wicketHeadContainer;
 			}
 			else if (container instanceof HtmlHeaderContainer)
 			{
@@ -97,9 +116,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// additional functionality there are merely a means of surrounding
 				// relevant markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
-				WebMarkupContainer header = new TransparentWebMarkupContainer(
-					HtmlHeaderSectionHandler.HEADER_ID);
-				header.setRenderBodyOnly(true);
+				WebMarkupContainer header = new WicketHeadContainer();
 
 				return header;
 			}
@@ -149,5 +166,21 @@ public class HtmlHeaderResolver implements IComponentResolver
 			htmlHeaderContainer = newHtmlHeaderContainer(id);
 		}
 		return htmlHeaderContainer;
+	}
+
+	/**
+	 * A component for &lt;wicket:head&gt; elements
+	 */
+	private static class WicketHeadContainer extends TransparentWebMarkupContainer
+	{
+		/**
+		 * Constructor.
+		 */
+		public WicketHeadContainer()
+		{
+			super(HtmlHeaderSectionHandler.HEADER_ID);
+
+			setRenderBodyOnly(true);
+		}
 	}
 }
