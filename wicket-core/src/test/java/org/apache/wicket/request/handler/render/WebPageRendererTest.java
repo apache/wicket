@@ -45,7 +45,7 @@ import org.junit.Test;
 /**
  * Tests for the calculation whether or not to redirect or directly render a page
  */
-public class WebPageRendererTest
+public class WebPageRendererTest extends Assert
 {
 
 	private RenderPageRequestHandler handler;
@@ -102,6 +102,47 @@ public class WebPageRendererTest
 
 		verify(response).write(any(byte[].class));
 		verify(response, never()).sendRedirect(anyString());
+	}
+
+	/**
+	 * Tests that when {@link org.apache.wicket.settings.RequestCycleSettings.RenderStrategy#ONE_PASS_RENDER}
+	 * is configured there will be a redirect issued if the protocols of the current and target urls
+	 * are different
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-5522
+	 */
+	@Test
+	public void testOnePassRenderDifferentProtocols()
+	{
+		final AtomicBoolean responseBuffered = new AtomicBoolean(false);
+
+		PageRenderer renderer = new TestPageRenderer(handler)
+		{
+			@Override
+			protected boolean isOnePassRender()
+			{
+				return true;
+			}
+
+			@Override
+			protected void storeBufferedResponse(Url url, BufferedWebResponse response)
+			{
+				responseBuffered.set(true);
+			}
+		};
+
+		// uses HTTPS
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("https://host/base"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("http://host/base/a"));
+
+		when(request.shouldPreserveClientUrl()).thenReturn(false);
+
+		renderer.respond(requestCycle);
+
+		verify(response, never()).write(any(byte[].class));
+		verify(response).sendRedirect(anyString());
+		assertTrue(responseBuffered.get());
 	}
 
 	/**

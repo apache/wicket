@@ -33,6 +33,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -338,11 +339,12 @@ public class WebPageRenderer extends PageRenderer
 			return false;
 		}
 
-		return neverRedirect(getRedirectPolicy())
+		return (compatibleProtocols(currentUrl.getProtocol(), targetUrl.getProtocol())) &&
+				(neverRedirect(getRedirectPolicy())
 			|| ((isOnePassRender() && notForcedRedirect(getRedirectPolicy())) || (targetUrl
 				.equals(currentUrl) && notNewAndNotStatelessPage(isNewPageInstance(),
 				isPageStateless()))) || (targetUrl.equals(currentUrl) && isRedirectToRender())
-			|| (shouldPreserveClientUrl(cycle) && notForcedRedirect(getRedirectPolicy()));
+			|| (shouldPreserveClientUrl(cycle) && notForcedRedirect(getRedirectPolicy())));
 	}
 
 	private static boolean notNewAndNotStatelessPage(boolean newPageInstance, boolean pageStateless)
@@ -365,4 +367,23 @@ public class WebPageRenderer extends PageRenderer
 		return !alwaysRedirect(redirectPolicy);
 	}
 
+	/**
+	 * Compares the protocols of two {@link Url}s
+	 *
+	 * @param p1
+	 *      the first protocol
+	 * @param p2
+	 *      the second protocol
+	 * @return {@code false} if the protocols are both non-null and not equal,
+	 *          {@code true} - otherwise
+	 */
+	protected boolean compatibleProtocols(String p1, String p2)
+	{
+		if (p1 != null && p2 != null)
+		{
+			return Objects.equal(p1, p2);
+		}
+
+		return true;
+	}
 }
