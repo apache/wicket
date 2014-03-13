@@ -839,7 +839,7 @@
 				<plugin>
 					<groupId>net.alchim31.maven</groupId>
 					<artifactId>yuicompressor-maven-plugin</artifactId>
-					<version>1.3.0</version>
+					<version>1.4.0</version>
 					<configuration>
 						<statistics>true</statistics>
 						<jswarn>false</jswarn>
