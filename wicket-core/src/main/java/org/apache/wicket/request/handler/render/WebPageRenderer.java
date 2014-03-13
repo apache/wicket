@@ -33,6 +33,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -200,7 +201,8 @@ public class WebPageRenderer extends PageRenderer
 			// if there is saved response for this URL render it
 			bufferedResponse.writeTo((WebResponse)requestCycle.getResponse());
 		}
-		else if (isAjax == false && (//
+		else if ((isAjax == false)
+					&& (compatibleProtocols(currentUrl.getProtocol(), targetUrl.getProtocol())) && (//
 							getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT //
 						|| (isOnePassRender() && getRedirectPolicy() != RedirectPolicy.ALWAYS_REDIRECT) //
 						|| ((targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage()
@@ -317,5 +319,25 @@ public class WebPageRenderer extends PageRenderer
 				redirectTo(afterRenderUrl, requestCycle);
 			}
 		}
+	}
+
+	/**
+	 * Compares the protocols of two {@link Url}s
+	 *
+	 * @param p1
+	 *      the first protocol
+	 * @param p2
+	 *      the second protocol
+	 * @return {@code false} if the protocols are both non-null and not equal,
+	 *          {@code true} - otherwise
+	 */
+	protected boolean compatibleProtocols(String p1, String p2)
+	{
+		if (p1 != null && p2 != null)
+		{
+			return Objects.equal(p1, p2);
+		}
+
+		return true;
 	}
 }
