@@ -53,7 +53,7 @@
 			},
 
 			isIE: function () {
-				return !Wicket.Browser.isSafari() && typeof(document.all) !== "undefined" && typeof(window.opera) === "undefined";
+				return !Wicket.Browser.isSafari() && (typeof(document.all) !== "undefined" || window.navigator.userAgent.indexOf("Trident/")>-1) && typeof(window.opera) === "undefined";
 			},
 
 			isIEQuirks: function () {
@@ -77,6 +77,10 @@
 				var index = window.navigator.userAgent.indexOf("MSIE");
 				var version = parseFloat(window.navigator.userAgent.substring(index + 5));
 				return Wicket.Browser.isIE() && version < 9;
+			},
+			
+			isIELessThan11: function () {
+				return !Wicket.Browser.isSafari() && typeof(document.all) !== "undefined" && typeof(window.opera) === "undefined";
 			},
 
 			isIE11: function () {

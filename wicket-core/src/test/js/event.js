@@ -325,7 +325,7 @@ jQuery(document).ready(function() {
 
 	test('inputchange', function() {
 		stop();
-		if (Wicket.Browser.isIE()) {
+		if (Wicket.Browser.isIELessThan11()) {
 			expect(3);
 		} else {
 			expect(1);
@@ -336,7 +336,7 @@ jQuery(document).ready(function() {
 			ok(true, "inputchange event is triggered!");
 		});
 
-		if (Wicket.Browser.isIE()) {
+		if (Wicket.Browser.isIELessThan11()) {
 			$input.trigger("paste");
 			$input.trigger("keyup");
 			$input.trigger("cut");
