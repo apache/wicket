@@ -151,15 +151,6 @@ public abstract class RequestAdapter
 				touchedPages.size());
 			for (IManageablePage page : touchedPages)
 			{
-				try
-				{
-					page.detach();
-				}
-				catch (Exception e)
-				{
-					log.error("Error detaching page", e);
-				}
-
 				boolean isPageStateless;
 				try
 				{
