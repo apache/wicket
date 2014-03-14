@@ -315,10 +315,10 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	public void performLogging()
 	{
 		RequestData requestdata = RequestCycle.get().getMetaData(REQUEST_DATA);
-		SessionData sessiondata = RequestCycle.get().getMetaData(SESSION_DATA);
 		if (requestdata != null)
 		{
 			// log the request- and sessiondata (the latter can be null)
+			SessionData sessiondata = RequestCycle.get().getMetaData(SESSION_DATA);
 			log(requestdata, sessiondata);
 		}
 	}
