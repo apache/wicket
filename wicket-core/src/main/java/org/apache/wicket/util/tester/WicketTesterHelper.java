@@ -58,6 +58,12 @@ public class WicketTesterHelper
 
 		/** Component value. */
 		public String value;
+
+		/** Component visibility */
+		public boolean isVisible;
+
+		/** Whether Component is Enabled */
+		public boolean isEnabled;
 	}
 
 	/**
@@ -93,6 +99,8 @@ public class WicketTesterHelper
 
 					object.path = component.getPageRelativePath();
 					object.type = name;
+					object.isVisible = component.isVisible();
+					object.isEnabled = component.isEnabled();
 					try
 					{
 						object.value = component.getDefaultModelObjectAsString();
