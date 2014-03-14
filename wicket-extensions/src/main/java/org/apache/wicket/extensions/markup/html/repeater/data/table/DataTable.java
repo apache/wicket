@@ -441,6 +441,13 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		return String.valueOf(toolbarIdCounter).intern();
 	}
 
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		checkComponentTag(tag, "table");
+		super.onComponentTag(tag);
+	}
+
 	/**
 	 * This class acts as a repeater that will contain the toolbar. It makes sure that the table row
 	 * group (e.g. thead) tags are only visible when they contain rows in accordance with the HTML
