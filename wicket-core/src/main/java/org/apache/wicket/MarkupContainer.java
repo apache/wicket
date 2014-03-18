@@ -1107,7 +1107,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			return null;
 		}
 		Component component = null;
-		if ((children instanceof Object[] == false) && (children instanceof List == false))
+		if (children instanceof Component)
 		{
 			if (getId(children).equals(id))
 			{
@@ -1117,7 +1117,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		else
 		{
 			Object[] children;
-			int size = 0;
+			int size;
 			if (this.children instanceof ChildList)
 			{
 				children = ((ChildList)this.children).childs;
@@ -1151,7 +1151,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			return -1;
 		}
-		if (children instanceof Object[] == false && children instanceof ChildList == false)
+		if (children instanceof Component)
 		{
 			if (getId(children).equals(child.getId()))
 			{
@@ -1160,7 +1160,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		else
 		{
-			int size = 0;
+			int size;
 			Object[] children;
 			if (this.children instanceof Object[])
 			{
