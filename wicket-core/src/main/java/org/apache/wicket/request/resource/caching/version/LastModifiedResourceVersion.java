@@ -57,7 +57,7 @@ public class LastModifiedResourceVersion implements IResourceVersion
 			return null;
 		}
 		// version string = last modified timestamp converted to milliseconds
-		return String.valueOf(lastModified.getMilliseconds());
+		return String.valueOf(lastModified.getMilliseconds()).intern();
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class NavigationToolbar extends AbstractToolbar
 			@Override
 			public String getObject()
 			{
-				return String.valueOf(table.getColumns().size());
+				return String.valueOf(table.getColumns().size()).intern();
 			}
 		}));
 

@@ -287,7 +287,7 @@ public class PagingNavigation extends Loop
 		}
 		else
 		{
-			label = String.valueOf(pageIndex + 1);
+			label = String.valueOf(pageIndex + 1).intern();
 		}
 		link.add(new Label("pageNumber", label));
 	}
@@ -422,8 +422,8 @@ public class PagingNavigation extends Loop
 		@Override
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
-			Map<String, String> vars = new MicroMap<String, String>("page",
-				String.valueOf(page + 1));
+			String pageIndex = String.valueOf(page + 1).intern();
+			Map<String, String> vars = new MicroMap<String, String>("page", pageIndex);
 			tag.put("title", PagingNavigation.this.getString(RES, Model.ofMap(vars)));
 		}
 	}

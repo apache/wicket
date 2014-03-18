@@ -170,7 +170,7 @@ public class ExportToolbar extends AbstractToolbar
 			@Override
 			public String getObject()
 			{
-				return String.valueOf(getTable().getColumns().size());
+				return String.valueOf(getTable().getColumns().size()).intern();
 			}
 		}));
 

@@ -72,7 +72,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 			@Override
 			public String getObject()
 			{
-				return String.valueOf(table.getColumns().size());
+				return String.valueOf(table.getColumns().size()).intern();
 			}
 		}));
 		td.add(new Label("msg", messageModel));

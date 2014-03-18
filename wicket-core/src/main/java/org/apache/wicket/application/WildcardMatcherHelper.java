@@ -181,7 +181,8 @@ public class WildcardMatcherHelper
 		 */
 		private void add(final String aStr)
 		{
-			map.put(String.valueOf(idx++), aStr);
+			String key = String.valueOf(idx++).intern();
+			map.put(key, aStr);
 		}
 
 		/**
