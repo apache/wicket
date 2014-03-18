@@ -1665,7 +1665,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// We need to keep InlineEnclosures for Ajax request handling.
 				// TODO this is really ugly. Feature request for 1.5: change auto-component that
 				// they don't need to be removed anymore.
-				if (component.isAuto() && !(component instanceof InlineEnclosure))
+				if (!(component instanceof InlineEnclosure) && component.isAuto())
 				{
 					children_remove(i);
 				}
