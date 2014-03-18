@@ -31,7 +31,12 @@ import org.apache.wicket.util.lang.Args;
  * @author Juergen Donnerstag
  * @param <I>
  *            The type which next() should return (the iterator type)
+ * @deprecated Hierarchy iterators are deprecated because they have problems with pages with
+ *      deep component tree. Use {@link org.apache.wicket.util.visit.IVisitor} instead.
+ * @see org.apache.wicket.MarkupContainer#visitChildren(org.apache.wicket.util.visit.IVisitor)
+ * @see org.apache.wicket.MarkupContainer#visitChildren(Class, org.apache.wicket.util.visit.IVisitor)
  */
+@Deprecated
 public class GenericComponentHierarchyIterator<I extends Component> extends
 	AbstractHierarchyIteratorWithFilter<Component, I>
 {

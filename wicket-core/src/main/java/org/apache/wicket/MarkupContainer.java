@@ -877,7 +877,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * @return A iterator which iterators over all children and grand-children the Component
+	 * @deprecated ComponentHierarchyIterator is deprecated.
+	 *      Use {@link #visitChildren(org.apache.wicket.util.visit.IVisitor)} instead
 	 */
+	@Deprecated
 	public final ComponentHierarchyIterator visitChildren()
 	{
 		return new ComponentHierarchyIterator(this);
@@ -888,7 +891,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            Filter condition
 	 * @return A iterator which iterators over all children and grand-children the Component,
 	 *         returning only components which implement (instanceof) the provided clazz.
+	 * @deprecated ComponentHierarchyIterator is deprecated.
+	 *      Use {@link #visitChildren(Class, org.apache.wicket.util.visit.IVisitor)} instead.
 	 */
+	@Deprecated
 	public final ComponentHierarchyIterator visitChildren(final Class<?> clazz)
 	{
 		return new ComponentHierarchyIterator(this).filterByClass(clazz);
