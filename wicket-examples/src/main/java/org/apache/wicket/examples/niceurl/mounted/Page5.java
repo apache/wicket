@@ -69,7 +69,7 @@ public class Page5 extends WicketExamplePage
 	}
 
 	/**
-	 * @param parameters
+	 * @param values
 	 * @return
 	 */
 	private String join(List<org.apache.wicket.util.string.StringValue> values)
