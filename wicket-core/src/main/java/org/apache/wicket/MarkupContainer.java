@@ -1092,14 +1092,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private String getId(Object object)
 	{
-		if (object instanceof Component)
-		{
-			return ((Component)object).getId();
-		}
-		else
-		{
-			throw new IllegalArgumentException("Unknown type of object " + object);
-		}
+		return ((Component)object).getId();
 	}
 
 	/**
