@@ -272,7 +272,7 @@ public abstract class Session implements IClusterable, IEventSink
 			{
 				for (Map.Entry<String, Serializable> entry : temporarySessionAttributes.entrySet())
 				{
-					store.setAttribute(request, String.valueOf(entry.getKey()), entry.getValue());
+					store.setAttribute(request, entry.getKey(), entry.getValue());
 				}
 				temporarySessionAttributes = null;
 			}
