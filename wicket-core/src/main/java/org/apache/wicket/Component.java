@@ -3591,7 +3591,7 @@ public abstract class Component
 	protected void checkHierarchyChange(final Component component)
 	{
 		// Throw exception if modification is attempted during rendering
-		if (!component.isAuto() && getFlag(FLAG_RENDERING))
+		if (getFlag(FLAG_RENDERING) && !component.isAuto())
 		{
 			throw new WicketRuntimeException(
 				"Cannot modify component hierarchy after render phase has started (page version cant change then anymore)");
