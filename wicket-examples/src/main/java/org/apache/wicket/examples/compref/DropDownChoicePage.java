@@ -89,7 +89,7 @@ public class DropDownChoicePage extends WicketExamplePage
 			/**
 			 * Gets the display value that is visible to the end user.
 			 * 
-			 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
+			 * @see org.apache.wicket.markup.html.form.ChoiceRenderer#getDisplayValue(java.lang.Object)
 			 */
 			@Override
 			public Object getDisplayValue(Integer value)
@@ -114,7 +114,7 @@ public class DropDownChoicePage extends WicketExamplePage
 			 * Gets the value that is invisible to the end user, and that is used as the selection
 			 * id.
 			 * 
-			 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object,
+			 * @see org.apache.wicket.markup.html.form.ChoiceRenderer#getIdValue(java.lang.Object,
 			 *      int)
 			 */
 			@Override

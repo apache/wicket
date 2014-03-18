@@ -43,7 +43,7 @@ public class LessResourceReferenceTest extends WicketTestCase
 	private static final AtomicBoolean PROCESS_RESPONSE_CALLED = new AtomicBoolean(false);
 
 	/**
-	 * An {@link org.apache.wicket.request.resource.ResourceReferenceRegistry.IResourceReferenceFactory} that creates
+	 * An {@link org.apache.wicket.request.resource.IResourceReferenceFactory} that creates
 	 * LessResourceReference for resources with extension '.less'
 	 */
 	private static class LessResourceReferenceFactory extends ResourceReferenceRegistry.DefaultResourceReferenceFactory
