@@ -30,7 +30,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mvn.build.java.version>1.7</mvn.build.java.version>
-		<jacoco.version>0.6.4.201312101107</jacoco.version>
+		<jacoco.version>0.7.0.201403182114</jacoco.version>
 		<jetty.version>8.1.14.v20131031</jetty.version>
 		<jetty9.version>9.0.7.v20131107</jetty9.version>
 		<spring.version>4.0.2.RELEASE</spring.version>
