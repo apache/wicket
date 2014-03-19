@@ -226,14 +226,14 @@ public class AutoLabelResolver implements IComponentResolver
 
 			if (isRequired() != required)
 			{
-				target.appendJavaScript(String.format("Wicket.DOM.toggleClass('#%s', '%s', %s);",
+				target.appendJavaScript(String.format("Wicket.DOM.toggleClass('%s', '%s', %s);",
 					getLabelIdFor(component), component.getString(CSS_REQUIRED_KEY, null, CSS_REQUIRED_DEFAULT),
 					required));
 			}
 
 			if (isEnabled() != enabled)
 			{
-				target.appendJavaScript(String.format("Wicket.DOM.toggleClass('#%s', '%s', %s);",
+				target.appendJavaScript(String.format("Wicket.DOM.toggleClass('%s', '%s', %s);",
 					getLabelIdFor(component), component.getString(CSS_DISABLED_KEY, null, CSS_DISABLED_DEFAULT),
 					!enabled));
 			}
