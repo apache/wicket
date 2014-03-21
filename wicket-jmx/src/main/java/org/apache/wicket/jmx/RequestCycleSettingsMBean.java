@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.jmx;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 
 /**
@@ -83,8 +85,11 @@ public interface RequestCycleSettingsMBean
 	 * 
 	 * @param responseRequestEncoding
 	 *            The request and response encoding to be used.
+	 * @throws UnsupportedEncodingException
+	 *             is encoding is not supported
 	 */
-	void setResponseRequestEncoding(final String responseRequestEncoding);
+	void setResponseRequestEncoding(final String responseRequestEncoding)
+		throws UnsupportedEncodingException;
 
 	/**
 	 * Sets the time that a request will by default be waiting for the previous request to be

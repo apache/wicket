@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.jmx.wrapper;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.jmx.RequestCycleSettingsMBean;
 import org.apache.wicket.util.time.Duration;
@@ -96,11 +98,18 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	}
 
 	/**
+	 * @throws UnsupportedEncodingException
+	 *             if encoding is not supported
+	 * 
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setResponseRequestEncoding(java.lang.String)
 	 */
 	@Override
 	public void setResponseRequestEncoding(final String responseRequestEncoding)
+		throws UnsupportedEncodingException
 	{
+		// test encoding is available
+		"".getBytes(responseRequestEncoding);
+
 		application.getRequestCycleSettings().setResponseRequestEncoding(responseRequestEncoding);
 	}
 

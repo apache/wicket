@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.jmx.wrapper;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.jmx.MarkupSettingsMBean;
 
@@ -103,11 +105,15 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
+	 * @throws UnsupportedEncodingException
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultMarkupEncoding(java.lang.String)
 	 */
 	@Override
-	public void setDefaultMarkupEncoding(final String encoding)
+	public void setDefaultMarkupEncoding(final String encoding) throws UnsupportedEncodingException
 	{
+		// test encoding is available
+		"".getBytes(encoding);
+
 		application.getMarkupSettings().setDefaultMarkupEncoding(encoding);
 	}
 

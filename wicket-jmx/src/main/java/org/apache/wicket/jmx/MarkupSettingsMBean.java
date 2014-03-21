@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.jmx;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.wicket.jmx.wrapper.MarkupSettings;
 
 /**
@@ -94,8 +96,10 @@ public interface MarkupSettingsMBean
 	 * will be used.
 	 * 
 	 * @param encoding
+	 * @throws UnsupportedEncodingException
+	 *             if encoding is not supported
 	 */
-	void setDefaultMarkupEncoding(final String encoding);
+	void setDefaultMarkupEncoding(final String encoding) throws UnsupportedEncodingException;
 
 	/**
 	 * Enables stripping of markup comments denoted in markup by HTML comment tagging.
