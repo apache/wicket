@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.jmx;
+package org.apache.wicket.jmx.wrapper;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.jmx.RequestCycleSettingsMBean;
 import org.apache.wicket.util.time.Duration;
 
 
@@ -26,14 +28,14 @@ import org.apache.wicket.util.time.Duration;
  */
 public class RequestCycleSettings implements RequestCycleSettingsMBean
 {
-	private final org.apache.wicket.Application application;
+	private final Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public RequestCycleSettings(final org.apache.wicket.Application application)
+	public RequestCycleSettings(final Application application)
 	{
 		this.application = application;
 	}

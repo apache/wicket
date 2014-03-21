@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.jmx;
+package org.apache.wicket.jmx.wrapper;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.jmx.ApplicationSettingsMBean;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Classes;
 
@@ -26,14 +28,14 @@ import org.apache.wicket.util.lang.Classes;
  */
 public class ApplicationSettings implements ApplicationSettingsMBean
 {
-	private final org.apache.wicket.Application application;
+	private final Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public ApplicationSettings(final org.apache.wicket.Application application)
+	public ApplicationSettings(final Application application)
 	{
 		this.application = application;
 	}

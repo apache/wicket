@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.jmx;
+package org.apache.wicket.jmx.wrapper;
 
 import java.io.IOException;
 
-import org.apache.wicket.ThreadContext;
+import org.apache.wicket.jmx.ApplicationMBean;
 
 /**
  * Exposes Application related functionality for JMX.
@@ -81,16 +81,7 @@ public class Application implements ApplicationMBean
 	@Override
 	public int getMarkupCacheSize() throws IOException
 	{
-		ThreadContext.setApplication(application);
-		
-		try
-		{
-			return application.getMarkupSettings().getMarkupFactory().getMarkupCache().size();
-		}
-		finally
-		{
-			ThreadContext.detach();
-		}
+		return application.getMarkupSettings().getMarkupFactory().getMarkupCache().size();
 	}
 
 	/**

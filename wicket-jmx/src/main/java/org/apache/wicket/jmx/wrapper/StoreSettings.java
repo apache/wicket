@@ -14,43 +14,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.jmx;
+package org.apache.wicket.jmx.wrapper;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.jmx.StoreSettingsMBean;
 
 /**
- * Exposes Application related functionality for JMX.
- * 
- * @author eelcohillenius
+ * Exposes Application's StoreSettings for JMX.
  */
-public class PageSettings implements PageSettingsMBean
+public class StoreSettings implements StoreSettingsMBean
 {
-	private final org.apache.wicket.Application application;
+	private final Application application;
 
 	/**
-	 * Create.
+	 * Construct.
 	 * 
 	 * @param application
 	 */
-	public PageSettings(final org.apache.wicket.Application application)
+	public StoreSettings(final Application application)
 	{
 		this.application = application;
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.PageSettingsMBean#getVersionPagesByDefault()
-	 */
 	@Override
-	public boolean getVersionPagesByDefault()
+	public int getInmemoryCacheSize()
 	{
-		return application.getPageSettings().getVersionPagesByDefault();
+		return application.getStoreSettings().getInmemoryCacheSize();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.PageSettingsMBean#setVersionPagesByDefault(boolean)
-	 */
 	@Override
-	public void setVersionPagesByDefault(final boolean pagesVersionedByDefault)
+	public long getMaxSizePerSession()
 	{
-		application.getPageSettings().setVersionPagesByDefault(pagesVersionedByDefault);
+		return application.getStoreSettings().getMaxSizePerSession().bytes();
 	}
+
+	@Override
+	public String getFileStoreFolder()
+	{
+		return application.getStoreSettings().getFileStoreFolder().getAbsolutePath();
+	}
+
+	@Override
+	public int getAsynchronousQueueCapacity()
+	{
+		return application.getStoreSettings().getAsynchronousQueueCapacity();
+	}
+
+	@Override
+	public boolean isAsynchronous()
+	{
+		return application.getStoreSettings().isAsynchronous();
+	}
+
 }

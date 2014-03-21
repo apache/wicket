@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.jmx;
 
+import org.apache.wicket.jmx.wrapper.MarkupSettings;
+
 /**
  * Markup settings.
  * 

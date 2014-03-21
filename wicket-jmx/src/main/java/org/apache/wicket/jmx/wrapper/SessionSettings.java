@@ -14,52 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.jmx;
+package org.apache.wicket.jmx.wrapper;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.jmx.SessionSettingsMBean;
 
 /**
  * Exposes Application related functionality for JMX.
  * 
  * @author eelcohillenius
  */
-public class SecuritySettings implements SecuritySettingsMBean
+public class SessionSettings implements SessionSettingsMBean
 {
-	private final org.apache.wicket.Application application;
+	private final Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public SecuritySettings(final org.apache.wicket.Application application)
+	public SessionSettings(final Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getAuthorizationStrategy()
+	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getPageFactory()
 	 */
 	@Override
-	public String getAuthorizationStrategy()
+	public String getPageFactory()
 	{
-		return Stringz.className(application.getSecuritySettings().getAuthorizationStrategy());
+		return Stringz.className(application.getPageFactory());
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getCryptFactory()
+	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getSessionStore()
 	 */
 	@Override
-	public String getCryptFactory()
+	public String getSessionStore()
 	{
-		return Stringz.className(application.getSecuritySettings().getCryptFactory());
-	}
-
-	/**
-	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getUnauthorizedComponentInstantiationListener()
-	 */
-	@Override
-	public String getUnauthorizedComponentInstantiationListener()
-	{
-		return Stringz.className(application.getSecuritySettings()
-			.getUnauthorizedComponentInstantiationListener());
+		return Stringz.className(application.getSessionStore());
 	}
 }

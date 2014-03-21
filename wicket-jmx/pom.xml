@@ -32,6 +32,14 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+		</dependency>
+<!-- 	<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-util</artifactId>
+		</dependency> -->
 	</dependencies>
 	<build>
 		<pluginManagement>

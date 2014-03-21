@@ -14,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.jmx;
+package org.apache.wicket.jmx.wrapper;
 
 import java.io.IOException;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.jmx.RequestLoggerMBean;
 import org.apache.wicket.protocol.http.WebApplication;
 
 
@@ -28,7 +30,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  */
 public class RequestLogger implements RequestLoggerMBean
 {
-	private final org.apache.wicket.Application application;
+	private final Application application;
 
 	private final WebApplication webApplication;
 
@@ -38,7 +40,7 @@ public class RequestLogger implements RequestLoggerMBean
 	 * @param application
 	 *            The application
 	 */
-	public RequestLogger(final org.apache.wicket.Application application)
+	public RequestLogger(final Application application)
 	{
 		this.application = application;
 

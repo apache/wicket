@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.jmx;
+package org.apache.wicket.jmx.wrapper;
 
 import java.util.List;
 
-import org.apache.wicket.ThreadContext;
+import org.apache.wicket.Application;
+import org.apache.wicket.jmx.ResourceSettingsMBean;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.lang.Generics;
@@ -32,14 +33,14 @@ import org.apache.wicket.util.time.Duration;
  */
 public class ResourceSettings implements ResourceSettingsMBean
 {
-	private final org.apache.wicket.Application application;
+	private final Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public ResourceSettings(final org.apache.wicket.Application application)
+	public ResourceSettings(final Application application)
 	{
 		this.application = application;
 	}
@@ -68,16 +69,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	@Override
 	public String getPropertiesFactory()
 	{
-		ThreadContext.setApplication(application);
-
-		try
-		{
-			return Stringz.className(application.getResourceSettings().getPropertiesFactory());
-		}
-		finally
-		{
-			ThreadContext.detach();
-		}
+		return Stringz.className(application.getResourceSettings().getPropertiesFactory());
 	}
 
 	/**

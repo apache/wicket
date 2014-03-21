@@ -17,6 +17,7 @@
 package org.apache.wicket.jmx;
 
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,24 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
+import net.sf.cglib.core.DefaultNamingPolicy;
+import net.sf.cglib.core.Predicate;
+import net.sf.cglib.proxy.Enhancer;
+
 import org.apache.wicket.IInitializer;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.jmx.wrapper.Application;
+import org.apache.wicket.jmx.wrapper.ApplicationSettings;
+import org.apache.wicket.jmx.wrapper.DebugSettings;
+import org.apache.wicket.jmx.wrapper.MarkupSettings;
+import org.apache.wicket.jmx.wrapper.PageSettings;
+import org.apache.wicket.jmx.wrapper.RequestCycleSettings;
+import org.apache.wicket.jmx.wrapper.RequestLogger;
+import org.apache.wicket.jmx.wrapper.ResourceSettings;
+import org.apache.wicket.jmx.wrapper.SecuritySettings;
+import org.apache.wicket.jmx.wrapper.SessionSettings;
+import org.apache.wicket.jmx.wrapper.StoreSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,30 +189,30 @@ public class Initializer implements IInitializer
 			domain = tempDomain;
 
 			Application appBean = new Application(application);
-			register(appBean, appBeanName);
+			register(application, appBean, appBeanName);
 
-			register(new ApplicationSettings(application), new ObjectName(domain +
-				":type=Application,name=ApplicationSettings"));
-			register(new DebugSettings(application), new ObjectName(domain +
-				":type=Application,name=DebugSettings"));
-			register(new MarkupSettings(application), new ObjectName(domain +
-				":type=Application,name=MarkupSettings"));
-			register(new ResourceSettings(application), new ObjectName(domain +
-				":type=Application,name=ResourceSettings"));
-			register(new PageSettings(application), new ObjectName(domain +
-				":type=Application,name=PageSettings"));
-			register(new RequestCycleSettings(application), new ObjectName(domain +
-				":type=Application,name=RequestCycleSettings"));
-			register(new SecuritySettings(application), new ObjectName(domain +
-				":type=Application,name=SecuritySettings"));
-			register(new SessionSettings(application), new ObjectName(domain +
-				":type=Application,name=SessionSettings"));
-			register(new StoreSettings(application), new ObjectName(domain +
-				":type=Application,name=StoreSettings"));
+			register(application, new ApplicationSettings(application), new ObjectName(domain
+				+ ":type=Application,name=ApplicationSettings"));
+			register(application, new DebugSettings(application), new ObjectName(domain
+				+ ":type=Application,name=DebugSettings"));
+			register(application, new MarkupSettings(application), new ObjectName(domain
+				+ ":type=Application,name=MarkupSettings"));
+			register(application, new ResourceSettings(application), new ObjectName(domain
+				+ ":type=Application,name=ResourceSettings"));
+			register(application, new PageSettings(application), new ObjectName(domain
+				+ ":type=Application,name=PageSettings"));
+			register(application, new RequestCycleSettings(application), new ObjectName(domain
+				+ ":type=Application,name=RequestCycleSettings"));
+			register(application, new SecuritySettings(application), new ObjectName(domain
+				+ ":type=Application,name=SecuritySettings"));
+			register(application, new SessionSettings(application), new ObjectName(domain
+				+ ":type=Application,name=SessionSettings"));
+			register(application, new StoreSettings(application), new ObjectName(domain
+				+ ":type=Application,name=StoreSettings"));
 
 			RequestLogger sessionsBean = new RequestLogger(application);
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");
-			register(sessionsBean, sessionsBeanName);
+			register(application, sessionsBean, sessionsBeanName);
 		}
 		catch (MalformedObjectNameException e)
 		{
@@ -236,11 +253,55 @@ public class Initializer implements IInitializer
 	 * @throws MBeanRegistrationException
 	 * @throws InstanceAlreadyExistsException
 	 */
-	private void register(final Object o, final ObjectName objectName)
-		throws InstanceAlreadyExistsException, MBeanRegistrationException,
-		NotCompliantMBeanException
+	private void register(final org.apache.wicket.Application application, final Object o,
+		final ObjectName objectName) throws InstanceAlreadyExistsException,
+		MBeanRegistrationException, NotCompliantMBeanException
 	{
-		mbeanServer.registerMBean(o, objectName);
+		Object proxy = createProxy(application, o);
+		mbeanServer.registerMBean(proxy, objectName);
 		registered.add(objectName);
+	}
+
+	private Object createProxy(final org.apache.wicket.Application application, final Object o)
+	{
+		Enhancer e = new Enhancer();
+		e.setInterfaces(o.getClass().getInterfaces());
+		e.setSuperclass(Object.class);
+		e.setCallback(new net.sf.cglib.proxy.InvocationHandler()
+		{
+			@Override
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+			{
+				boolean existed = ThreadContext.exists();
+
+				if (existed == false)
+				{
+					ThreadContext.setApplication(application);
+				}
+
+				try
+				{
+					return method.invoke(o, args);
+				}
+				finally
+				{
+					if (existed == false)
+					{
+						ThreadContext.detach();
+					}
+				}
+			}
+		});
+		e.setNamingPolicy(new DefaultNamingPolicy()
+		{
+			@Override
+			public String getClassName(final String prefix, final String source, final Object key,
+				final Predicate names)
+			{
+				return o.getClass().getName().replace(".wrapper", "");
+			}
+		});
+
+		return e.create();
 	}
 }
