@@ -381,11 +381,8 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 					WicketTag wtag = (WicketTag)tag;
 					if (wtag.isHeadTag() || wtag.isHeaderItemsTag())
 					{
-						if (tag.getMarkupClass() == null)
-						{
-							headerMarkup = stream.getMarkupFragment();
-							break;
-						}
+						headerMarkup = stream.getMarkupFragment();
+						break;
 					}
 				}
 				else if (tag.getName().equalsIgnoreCase("head") && tag.isAutoComponentTag())
