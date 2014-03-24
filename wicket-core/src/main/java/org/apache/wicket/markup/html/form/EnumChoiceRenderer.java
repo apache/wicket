@@ -21,7 +21,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Classes;
 
 /**
- * {@link ChoiceRenderer} implementation that makes it easy to work with java 5 enums. This
+ * {@link IChoiceRenderer} implementation that makes it easy to work with java 5 enums. This
  * renderer will attempt to lookup strings used for the display value using a localizer of a given
  * component. If the component is not specified, the global instance of localizer will be used for
  * lookups.

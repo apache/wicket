@@ -108,10 +108,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            The collection of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see AbstractChoice#AbstractChoice(String,
-	 *      java.util.List,org.apache.wicket.markup.html.form.ChoiceRenderer)
+	 *      java.util.List,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(final String id, final List<? extends T> choices,
-		final ChoiceRenderer<? super T> renderer)
+		final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -147,10 +147,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
 	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
-	 *      java.util.List,org.apache.wicket.markup.html.form.ChoiceRenderer)
+	 *      java.util.List,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(final String id, IModel<? extends Collection<T>> model,
-		final List<? extends T> choices, final ChoiceRenderer<? super T> renderer)
+		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -199,11 +199,11 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @param renderer
 	 *            The rendering engine
 	 * @see AbstractChoice#AbstractChoice(String,
-	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.ChoiceRenderer)
+	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel<? extends List<? extends T>> choices,
-		ChoiceRenderer<? super T> renderer)
+		IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -221,10 +221,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
 	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
-	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.ChoiceRenderer)
+	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel<? extends Collection<T>> model,
-		IModel<? extends List<? extends T>> choices, ChoiceRenderer<? super T> renderer)
+		IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}

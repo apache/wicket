@@ -79,7 +79,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *            The collection of choices in the dropdown
 	 */
 	public AbstractSingleSelectChoice(final String id, final List<? extends T> choices,
-		final ChoiceRenderer<? super T> renderer)
+		final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -113,7 +113,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *            The rendering engine
 	 */
 	public AbstractSingleSelectChoice(final String id, IModel<T> model,
-		final List<? extends T> choices, final ChoiceRenderer<? super T> renderer)
+		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -158,7 +158,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *            The rendering engine
 	 */
 	public AbstractSingleSelectChoice(String id, IModel<? extends List<? extends T>> choices,
-		ChoiceRenderer<? super T> renderer)
+		IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -176,7 +176,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *            The rendering engine
 	 */
 	public AbstractSingleSelectChoice(String id, IModel<T> model,
-		IModel<? extends List<? extends T>> choices, ChoiceRenderer<? super T> renderer)
+		IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -270,7 +270,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	protected T convertChoiceIdToChoice(String id)
 	{
 		final IModel<? extends List<? extends T>> choices = getChoicesModel();
-		final ChoiceRenderer<? super T> renderer = getChoiceRenderer();
+		final IChoiceRenderer<? super T> renderer = getChoiceRenderer();
 		T object = (T) renderer.getObject(id, choices);
 		return object;
 	}

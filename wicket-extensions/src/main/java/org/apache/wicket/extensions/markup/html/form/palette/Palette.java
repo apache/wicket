@@ -32,9 +32,9 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -88,7 +88,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	/**
 	 * choice render used to render the choices in both available and selected collections
 	 */
-	private final ChoiceRenderer<T> choiceRenderer;
+	private final IChoiceRenderer<T> choiceRenderer;
 
 	/** number of rows to show in the select boxes */
 	private final int rows;
@@ -138,7 +138,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 *            Allow user to move selections up and down
 	 */
 	public Palette(final String id, final IModel<? extends Collection<T>> choicesModel,
-		final ChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
+		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
 	}
@@ -161,7 +161,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	@SuppressWarnings("unchecked")
 	public Palette(final String id, final IModel<? extends Collection<T>> model,
 		final IModel<? extends Collection<? extends T>> choicesModel,
-		final ChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
+		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
 		this(id, model, choicesModel, choiceRenderer, rows, allowOrder, false);
 	}
@@ -185,7 +185,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 */
 	public Palette(final String id, final IModel<? extends Collection<T>> model,
 	               final IModel<? extends Collection<? extends T>> choicesModel,
-	               final ChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder,
+	               final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder,
 	               boolean allowMoveAll)
 	{
 		super(id, (IModel<Collection<T>>)model);
@@ -554,7 +554,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	/**
 	 * @return choice renderer
 	 */
-	public ChoiceRenderer<T> getChoiceRenderer()
+	public IChoiceRenderer<T> getChoiceRenderer()
 	{
 		return choiceRenderer;
 	}

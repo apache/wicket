@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.ListChoice;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
@@ -94,12 +95,12 @@ public class ChoicePage extends WebPage
 	 */
 	public ChoicePage(List<Book> candidateChoices)
 	{
-		ChoiceRenderer<Book> bookChoiceRenderer = new ChoiceRenderer<Book>("name", "id");
+		IChoiceRenderer<Book> bookChoiceRenderer = new ChoiceRenderer<>("name", "id");
 
 		Form<ChoicePage> form = new Form<ChoicePage>("choiceForm");
 		add(form);
 
-		form.setDefaultModel(new CompoundPropertyModel<ChoicePage>(this));
+		form.setDefaultModel(new CompoundPropertyModel<>(this));
 
 		// setting initial values
 		dropDownChoice = candidateChoices.get(1);

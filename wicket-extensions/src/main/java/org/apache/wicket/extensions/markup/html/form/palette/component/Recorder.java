@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.HiddenField;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
 
@@ -87,7 +87,7 @@ public class Recorder<T> extends HiddenField<String>
 	private void initIds()
 	{
 		// construct the model string based on selection collection
-		ChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 		StringBuilder modelStringBuffer = new StringBuilder();
 		Collection<T> modelCollection = getPalette().getModelCollection();
 		if (modelCollection == null)
@@ -123,7 +123,7 @@ public class Recorder<T> extends HiddenField<String>
 	 */
 	public List<T> getSelectedList()
 	{
-		final ChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 		final Collection<? extends T> choices = getPalette().getChoices();
 		final List<T> selected = new ArrayList<>(choices.size());
 
@@ -160,7 +160,7 @@ public class Recorder<T> extends HiddenField<String>
 	 */
 	public List<T> getUnselectedList()
 	{
-		final ChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 		final Collection<? extends T> choices = getPalette().getChoices();
 		final List<T> unselected = new ArrayList<>(choices.size());
 		final String ids = getValue();

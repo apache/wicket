@@ -109,10 +109,10 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      List,ChoiceRenderer)
+	 *      List,IChoiceRenderer)
 	 */
 	public RadioChoice(final String id, final List<? extends T> choices,
-		final ChoiceRenderer<? super T> renderer)
+		final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -147,10 +147,10 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
-	 *      List,ChoiceRenderer)
+	 *      List,IChoiceRenderer)
 	 */
 	public RadioChoice(final String id, IModel<T> model, final List<? extends T> choices,
-		final ChoiceRenderer<? super T> renderer)
+		final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -197,11 +197,11 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param renderer
 	 *            The rendering engine
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel,ChoiceRenderer)
+	 *      IModel,IChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public RadioChoice(String id, IModel<? extends List<? extends T>> choices,
-		ChoiceRenderer<? super T> renderer)
+		IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -220,10 +220,10 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
-	 *      IModel,ChoiceRenderer)
+	 *      IModel,IChoiceRenderer)
 	 */
 	public RadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
-		ChoiceRenderer<? super T> renderer)
+		IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}

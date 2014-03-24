@@ -25,9 +25,9 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -51,7 +51,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	private IModel<? extends List<? extends T>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
-	private ChoiceRenderer<T> renderer;
+	private IChoiceRenderer<T> renderer;
 
 	/**
 	 * Construct.
@@ -120,7 +120,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
-		final IModel<? extends List<? extends T>> choices, final ChoiceRenderer<T> renderer)
+		final IModel<? extends List<? extends T>> choices, final IChoiceRenderer<T> renderer)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -156,7 +156,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
-		final List<? extends T> choices, final ChoiceRenderer<T> renderer)
+		final List<? extends T> choices, final IChoiceRenderer<T> renderer)
 	{
 		this(id, model, Model.ofList(choices), renderer);
 	}

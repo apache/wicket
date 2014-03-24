@@ -29,9 +29,9 @@ import org.apache.wicket.markup.html.form.AbstractSingleSelectChoice;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
@@ -201,7 +201,7 @@ public class FormTester
 				Method getChoiceRendererMethod = formComponent.getClass().getMethod(
 					"getChoiceRenderer", (Class<?>[])null);
 				getChoiceRendererMethod.setAccessible(true);
-				ChoiceRenderer<Object> choiceRenderer = (ChoiceRenderer<Object>)getChoiceRendererMethod.invoke(
+				IChoiceRenderer<Object> choiceRenderer = (IChoiceRenderer<Object>)getChoiceRendererMethod.invoke(
 					formComponent, (Object[])null);
 
 				return choiceRenderer.getIdValue(choices.get(index), index);

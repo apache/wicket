@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -93,7 +93,7 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 		ChoiceFilter<Y> filter = new ChoiceFilter<>(componentId, getFilterModel(form), form,
 			filterChoices, enableAutoSubmit());
 
-		ChoiceRenderer<Y> renderer = getChoiceRenderer();
+		IChoiceRenderer<Y> renderer = getChoiceRenderer();
 		if (renderer != null)
 		{
 			filter.getChoice().setChoiceRenderer(renderer);
@@ -130,7 +130,7 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 	 * 
 	 * @return choice renderer that will be used to create the choice filter
 	 */
-	protected ChoiceRenderer<Y> getChoiceRenderer()
+	protected IChoiceRenderer<Y> getChoiceRenderer()
 	{
 		return null;
 	}

@@ -23,6 +23,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.model.util.ListModel;
@@ -43,7 +44,7 @@ public class PalettePage extends WicketExamplePage
 	public PalettePage()
 	{
 		List<Person> persons = ComponentReferenceApplication.getPersons();
-		ChoiceRenderer<Person> renderer = new ChoiceRenderer<>("fullName", "fullName");
+		IChoiceRenderer<Person> renderer = new ChoiceRenderer<>("fullName", "fullName");
 
 		final Palette<Person> palette = new Palette<Person>("palette", new ListModel<>(
 
