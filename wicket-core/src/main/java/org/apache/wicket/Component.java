@@ -2966,11 +2966,6 @@ public abstract class Component
 	public Component setDefaultModel(final IModel<?> model)
 	{
 		IModel<?> prevModel = getModelImpl();
-		// Detach current model
-		if (prevModel != null)
-		{
-			prevModel.detach();
-		}
 
 		IModel<?> wrappedModel = prevModel;
 		if (prevModel instanceof IWrapModel)
@@ -2981,6 +2976,12 @@ public abstract class Component
 		// Change model
 		if (wrappedModel != model)
 		{
+			// Detach the old/current model
+			if (prevModel != null)
+			{
+				prevModel.detach();
+			}
+
 			modelChanging();
 			setModelImpl(wrap(model));
 			modelChanged();
