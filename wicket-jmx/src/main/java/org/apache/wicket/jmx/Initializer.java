@@ -214,19 +214,8 @@ public class Initializer implements IInitializer
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");
 			register(application, sessionsBean, sessionsBeanName);
 		}
-		catch (MalformedObjectNameException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-		catch (InstanceAlreadyExistsException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-		catch (MBeanRegistrationException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-		catch (NotCompliantMBeanException e)
+		catch (MalformedObjectNameException | InstanceAlreadyExistsException |
+				MBeanRegistrationException | NotCompliantMBeanException e)
 		{
 			throw new WicketRuntimeException(e);
 		}
