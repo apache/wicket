@@ -26,6 +26,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the
@@ -35,13 +37,15 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class AtmosphereRequestHandler implements IRequestHandler
 {
-	private PageKey pageKey;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AtmosphereRequestHandler.class);
 
-	private AtmosphereEvent event;
+	private final PageKey pageKey;
 
-	private Collection<EventSubscription> subscriptions;
+	private final AtmosphereEvent event;
 
-	private EventSubscriptionInvoker eventSubscriptionInvoker;
+	private final Collection<EventSubscription> subscriptions;
+
+	private final EventSubscriptionInvoker eventSubscriptionInvoker;
 
 	private boolean ajaxRequestScheduled = false;
 
@@ -76,12 +80,25 @@ public class AtmosphereRequestHandler implements IRequestHandler
 		{
 			if (curSubscription.getContextAwareFilter().apply(event))
 			{
-				Component component = page.get(curSubscription.getComponentPath());
-				if (curSubscription.getBehaviorIndex() == null)
-					invokeMethod(target, curSubscription, component);
+				String componentPath = curSubscription.getComponentPath();
+				Component component = page.get(componentPath);
+				if (component != null)
+				{
+					if (curSubscription.getBehaviorIndex() == null)
+					{
+						invokeMethod(target, curSubscription, component);
+					}
+					else
+					{
+						invokeMethod(target, curSubscription,
+								component.getBehaviorById(curSubscription.getBehaviorIndex()));
+					}
+				}
 				else
-					invokeMethod(target, curSubscription,
-						component.getBehaviorById(curSubscription.getBehaviorIndex()));
+				{
+					LOGGER.debug("Cannot find component with path '{}' in page '{}'. Maybe it has been removed already.",
+							componentPath, page);
+				}
 			}
 		}
 	}
