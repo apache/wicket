@@ -1577,14 +1577,21 @@
 
 			/**
 			 * Shows an element
-			 * @param {HTMLElement} e   The HTML element to show
-			 * @param {String} display  The value of CSS display property to use, e
-			 *                          .g. 'block', 'inline'. Optional
+			 * @param {HTMLElement | String} e   The HTML element (or its id) to show
+			 * @param {String} display  The value of CSS display property to use,
+			 *      e.g. 'block', 'inline'. Optional
 			 */
 			show: function (e, display) {
 				e = Wicket.$(e);
 				if (e !== null) {
-					e.style.display = display || "";
+					if (isUndef(display)) {
+						// no explicit 'display' value is requested so
+						// use jQuery. It has special logic to decide which is the
+						// best value for an HTMLElement
+						jQuery(e).show();
+					} else {
+						e.style.display = display;
+					}
 				}
 			},
 
@@ -1592,7 +1599,7 @@
 			hide: function (e) {
 				e = Wicket.$(e);
 				if (e !== null) {
-					e.style.display = "none";
+					jQuery(e).hide();
 				}
 			},
 
@@ -1620,7 +1627,7 @@
 				var count = e.getAttribute("showIncrementallyCount");
 				count = parseInt(isUndef(count) ? 0 : count, 10);
 				if (count >= 0) {
-					Wicket.DOM.show(e, 'block');
+					Wicket.DOM.show(e);
 				}
 				e.setAttribute("showIncrementallyCount", count + 1);
 			},
