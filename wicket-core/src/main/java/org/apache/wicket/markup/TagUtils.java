@@ -53,7 +53,7 @@ public class TagUtils
 	 * 
 	 * @param tag
 	 */
-	public static final boolean isBodyTag(final ComponentTag tag)
+	public static boolean isBodyTag(final ComponentTag tag)
 	{
 		return ("body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null));
 	}
@@ -63,7 +63,7 @@ public class TagUtils
 	 * @param elem
 	 * @return True, if tag name equals '&lt;head ...&gt;'
 	 */
-	public static final boolean isHeadTag(final MarkupElement elem)
+	public static boolean isHeadTag(final MarkupElement elem)
 	{
 		if (elem instanceof ComponentTag)
 		{
@@ -82,7 +82,7 @@ public class TagUtils
 	 * @param i
 	 * @return True if the markup element at index 'i' is a WicketTag
 	 */
-	public static final boolean isWicketTag(final IMarkupFragment markup, final int i)
+	public static boolean isWicketTag(final IMarkupFragment markup, final int i)
 	{
 		MarkupElement elem = markup.get(i);
 		return elem instanceof WicketTag;
@@ -94,7 +94,7 @@ public class TagUtils
 	 * @param i
 	 * @return True if the markup element at index 'i' is a &lt;wicket:extend&gt; tag
 	 */
-	public static final boolean isExtendTag(final IMarkupFragment markup, final int i)
+	public static boolean isExtendTag(final IMarkupFragment markup, final int i)
 	{
 		MarkupElement elem = markup.get(i);
 		if (elem instanceof WicketTag)
@@ -110,7 +110,7 @@ public class TagUtils
 	 * @param elem
 	 * @return True if the current markup element is a &lt;wicket:head&gt; tag
 	 */
-	public static final boolean isWicketHeadTag(final MarkupElement elem)
+	public static boolean isWicketHeadTag(final MarkupElement elem)
 	{
 		if (elem instanceof WicketTag)
 		{
@@ -128,7 +128,7 @@ public class TagUtils
 	 * @param elem
 	 * @return True if the current markup element is a &lt;wicket:header-items&gt; tag
 	 */
-	public static final boolean isWicketHeaderItemsTag(final MarkupElement elem)
+	public static boolean isWicketHeaderItemsTag(final MarkupElement elem)
 	{
 		if (elem instanceof WicketTag)
 		{
@@ -146,7 +146,7 @@ public class TagUtils
 	 * @param elem
 	 * @return True if the current markup element is a &lt;wicket:body&gt; tag
 	 */
-	public static final boolean isWicketBodyTag(final MarkupElement elem)
+	public static boolean isWicketBodyTag(final MarkupElement elem)
 	{
 		if (elem instanceof WicketTag)
 		{
@@ -164,7 +164,7 @@ public class TagUtils
 	 * @param elem
 	 * @return True if the current markup element is a &lt;wicket:border&gt; tag
 	 */
-	public static final boolean isWicketBorderTag(final MarkupElement elem)
+	public static boolean isWicketBorderTag(final MarkupElement elem)
 	{
 		if (elem instanceof WicketTag)
 		{

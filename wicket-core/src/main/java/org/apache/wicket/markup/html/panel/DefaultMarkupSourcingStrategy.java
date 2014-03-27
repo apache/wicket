@@ -41,7 +41,7 @@ public final class DefaultMarkupSourcingStrategy extends AbstractMarkupSourcingS
 	 * 
 	 * @return A singleton of the strategy
 	 */
-	public final static DefaultMarkupSourcingStrategy get()
+	public static DefaultMarkupSourcingStrategy get()
 	{
 		return instance;
 	}

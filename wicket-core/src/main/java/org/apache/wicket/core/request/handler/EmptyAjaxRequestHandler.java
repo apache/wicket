@@ -48,7 +48,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 	 *
 	 * @return the singleton instance
 	 */
-	public static final EmptyAjaxRequestHandler getInstance()
+	public static EmptyAjaxRequestHandler getInstance()
 	{
 		return instance;
 	}

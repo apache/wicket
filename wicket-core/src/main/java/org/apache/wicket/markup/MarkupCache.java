@@ -80,7 +80,7 @@ public class MarkupCache implements IMarkupCache
 	 * 
 	 * @return The markup cache registered with the {@link Application}
 	 */
-	public final static IMarkupCache get()
+	public static IMarkupCache get()
 	{
 		return Application.get().getMarkupSettings().getMarkupFactory().getMarkupCache();
 	}

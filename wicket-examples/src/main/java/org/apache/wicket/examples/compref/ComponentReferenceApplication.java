@@ -43,7 +43,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	/**
 	 * @return persons db
 	 */
-	public static final List<Person> getPersons()
+	public static List<Person> getPersons()
 	{
 		return personsDB;
 	}

@@ -377,7 +377,7 @@ public class ModalWindow extends Panel
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public static final void closeCurrent(final AjaxRequestTarget target)
+	public static void closeCurrent(final AjaxRequestTarget target)
 	{
 		target.appendJavaScript(getCloseJavacriptInternal());
 	}

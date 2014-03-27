@@ -59,7 +59,7 @@ public class CharSetUtil
 	 * @param application
 	 *            Wicket application object
 	 */
-	private synchronized static final void initialize(final WebApplication application)
+	private synchronized static void initialize(final WebApplication application)
 	{
 		if (charSetMap == null)
 		{
@@ -97,7 +97,7 @@ public class CharSetUtil
 	 * @param cycle
 	 * @return Char set to use for response.
 	 */
-	public final static String getEncoding(final RequestCycle cycle)
+	public static String getEncoding(final RequestCycle cycle)
 	{
 		if (charSetMap == null)
 		{

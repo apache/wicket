@@ -38,7 +38,7 @@ public class MarkupUtil
 	 * @return True if the Page and all it's Panels, Borders etc. have HTML5 compliant markup. HTML5
 	 *         markup is identified by &lt;DOCTYPE html&gt;
 	 */
-	public final static boolean isMarkupHtml5Compliant(final MarkupContainer container)
+	public static boolean isMarkupHtml5Compliant(final MarkupContainer container)
 	{
 		Args.notNull(container, "container");
 

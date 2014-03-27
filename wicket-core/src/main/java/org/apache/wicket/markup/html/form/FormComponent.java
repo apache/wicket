@@ -382,7 +382,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 *            The visitor to call
 	 * @return the visitor's result
 	 */
-	public static final <R> R visitFormComponentsPostOrder(Component component,
+	public static <R> R visitFormComponentsPostOrder(Component component,
 		final IVisitor<? extends FormComponent<?>, R> visitor)
 	{
 		return Visits.visitPostOrder(component, visitor, new IVisitFilter()
@@ -421,7 +421,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 *            The visitor to call
 	 * @return the visitor's result
 	 */
-	public static final <R> R visitComponentsPostOrder(Component component,
+	public static <R> R visitComponentsPostOrder(Component component,
 		final org.apache.wicket.util.visit.IVisitor<Component, R> visitor)
 	{
 		Args.notNull(visitor, "visitor");

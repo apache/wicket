@@ -88,7 +88,7 @@ public class Item<T> extends ListItem<T>
 		/**
 		 * @return static instance of the comparator
 		 */
-		public static final Comparator<Item<?>> getInstance()
+		public static Comparator<Item<?>> getInstance()
 		{
 			return instance;
 		}

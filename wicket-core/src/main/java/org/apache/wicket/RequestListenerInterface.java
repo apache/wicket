@@ -54,7 +54,7 @@ public class RequestListenerInterface
 	 * @return The RequestListenerInterface object, or null if none is found
 	 * 
 	 */
-	public static final RequestListenerInterface forName(final String interfaceName)
+	public static RequestListenerInterface forName(final String interfaceName)
 	{
 		return interfaces.get(interfaceName);
 	}

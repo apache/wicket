@@ -182,7 +182,7 @@ public class AutoLabelResolver implements IComponentResolver
 		return null;
 	}
 
-	public static final String getLabelIdFor(Component component)
+	public static String getLabelIdFor(Component component)
 	{
 		return component.getMarkupId() + "-w-lbl";
 	}

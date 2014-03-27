@@ -152,7 +152,7 @@ public class Files
 	 *            the folder to delete
 	 * @return {@code true} if the folder is deleted successfully.
 	 */
-	public static final boolean removeFolder(final File folder)
+	public static boolean removeFolder(final File folder)
 	{
 		if (folder == null)
 		{
@@ -192,7 +192,7 @@ public class Files
 	 * @return {@code false} if the {@code file} is <em>null</em> or a folder, {@code true} -
 	 *         otherwise (i.e. if it is scheduled)
 	 */
-	public static final boolean removeAsync(final File file, final IFileCleaner fileCleaner)
+	public static boolean removeAsync(final File file, final IFileCleaner fileCleaner)
 	{
 		if (file == null || file.isDirectory())
 		{
@@ -217,7 +217,7 @@ public class Files
 	 * @return {@code false} if the {@code folder} is <em>null</em> or a normal file, {@code true} -
 	 *         otherwise (i.e. if it is scheduled)
 	 */
-	public static final boolean removeFolderAsync(final File folder, final IFileCleaner fileCleaner)
+	public static boolean removeFolderAsync(final File folder, final IFileCleaner fileCleaner)
 	{
 		if (folder == null || folder.isFile())
 		{
@@ -241,7 +241,7 @@ public class Files
 	 * @return Number of bytes written
 	 * @throws IOException
 	 */
-	public static final int writeTo(final java.io.File file, final InputStream input)
+	public static int writeTo(final java.io.File file, final InputStream input)
 		throws IOException
 	{
 		return writeTo(file, input, 4096);
@@ -282,7 +282,7 @@ public class Files
 	 * @return Number of bytes written
 	 * @throws IOException
 	 */
-	public static final int writeTo(final java.io.File file, final InputStream input,
+	public static int writeTo(final java.io.File file, final InputStream input,
 		final int bufSize) throws IOException
 	{
 		final FileOutputStream out = new FileOutputStream(file);
@@ -305,7 +305,7 @@ public class Files
 	 *            to be cleaned
 	 * @return cleaned filename
 	 */
-	public static final String cleanupFilename(final String filename)
+	public static String cleanupFilename(final String filename)
 	{
 		String name = filename;
 		for (int i = 0; i < FILENAME_FORBIDDEN_CHARACTERS.length(); i++)

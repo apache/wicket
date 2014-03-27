@@ -97,7 +97,7 @@ public abstract class AbstractRequestWrapperFactory
 	 * @param commaDelimitedPatterns
 	 * @return array of patterns (not <code>null</code>)
 	 */
-	public static final Pattern[] commaDelimitedListToPatternArray(
+	public static Pattern[] commaDelimitedListToPatternArray(
 		final String commaDelimitedPatterns)
 	{
 		String[] patterns = commaDelimitedListToStringArray(commaDelimitedPatterns);
@@ -122,7 +122,7 @@ public abstract class AbstractRequestWrapperFactory
 	 * @param commaDelimitedStrings
 	 * @return array of patterns (non <code>null</code>)
 	 */
-	public static final String[] commaDelimitedListToStringArray(final String commaDelimitedStrings)
+	public static String[] commaDelimitedListToStringArray(final String commaDelimitedStrings)
 	{
 		if (Strings.isEmpty(commaDelimitedStrings))
 		{
@@ -140,7 +140,7 @@ public abstract class AbstractRequestWrapperFactory
 	 * @param stringList
 	 * @return xxx
 	 */
-	public static final String listToCommaDelimitedString(final List<String> stringList)
+	public static String listToCommaDelimitedString(final List<String> stringList)
 	{
 		return Strings.join(", ", stringList);
 	}
@@ -152,7 +152,7 @@ public abstract class AbstractRequestWrapperFactory
 	 * @return Return <code>true</code> if the given <code>str</code> matches at least one of the
 	 *         given <code>patterns</code>.
 	 */
-	public static final boolean matchesOne(final String str, final Pattern... patterns)
+	public static boolean matchesOne(final String str, final Pattern... patterns)
 	{
 		for (Pattern pattern : patterns)
 		{

@@ -608,7 +608,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		actions.add(new FlushAction());
 	}
 
-	private static final void writeStream(final Response response, ByteArrayOutputStream stream)
+	private static void writeStream(final Response response, ByteArrayOutputStream stream)
 	{
 		final boolean copied[] = { false };
 		try

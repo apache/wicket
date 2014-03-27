@@ -65,7 +65,7 @@ public class Visits
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static final <S, R> R visit(final Iterable<? super S> container,
+	public static <S, R> R visit(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor)
 	{
 		return (R)visitChildren(new SingletonIterable(container), visitor, IVisitFilter.ANY);
@@ -91,7 +91,7 @@ public class Visits
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static final <S, R> R visit(final Iterable<? super S> container,
+	public static <S, R> R visit(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
 		return (R)visitChildren(new SingletonIterable(container), visitor, filter);
@@ -116,7 +116,7 @@ public class Visits
 	 *            filter used to limit the types of objects that will be visited
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitChildren(final Iterable<? super S> container,
+	public static <S, R> R visitChildren(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
 		Visit<R> visit = new Visit<>();
@@ -125,7 +125,7 @@ public class Visits
 	}
 
 	@SuppressWarnings("unchecked")
-	private static final <S, R> void visitChildren(final Iterable<? super S> container,
+	private static <S, R> void visitChildren(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor, final IVisitFilter filter, final Visit<R> visit)
 	{
 		Args.notNull(visitor, "visitor");
@@ -186,7 +186,7 @@ public class Visits
 	 *            the visitor
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitChildren(final Iterable<? super S> container,
+	public static <S, R> R visitChildren(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor)
 	{
 		return visitChildren(container, visitor, IVisitFilter.ANY);
@@ -210,7 +210,7 @@ public class Visits
 	 *            the visitor
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitPostOrder(final S root,
+	public static <S, R> R visitPostOrder(final S root,
 		final org.apache.wicket.util.visit.IVisitor<S, R> visitor)
 	{
 		return visitPostOrder(root, visitor, IVisitFilter.ANY);
@@ -236,7 +236,7 @@ public class Visits
 	 *            filter used to limit the types of objects that will be visited
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitPostOrder(final Object root,
+	public static <S, R> R visitPostOrder(final Object root,
 		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
 		Args.notNull(visitor, "visitor");
@@ -247,7 +247,7 @@ public class Visits
 	}
 
 	@SuppressWarnings("unchecked")
-	private static final <S, R> void visitPostOrderHelper(final Object component,
+	private static <S, R> void visitPostOrderHelper(final Object component,
 		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, final IVisitFilter filter,
 		final Visit<R> visit)
 	{
