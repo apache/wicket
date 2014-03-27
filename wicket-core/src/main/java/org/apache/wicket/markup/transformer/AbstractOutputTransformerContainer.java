@@ -141,7 +141,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * 
 	 * @param code
 	 */
-	private final void execute(final Runnable code)
+	private void execute(final Runnable code)
 	{
 		// Temporarily replace the web response with a String response
 		final Response webResponse = getResponse();

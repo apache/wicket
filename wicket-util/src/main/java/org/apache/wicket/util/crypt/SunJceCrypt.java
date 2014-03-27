@@ -106,7 +106,7 @@ public class SunJceCrypt extends AbstractCrypt
 	 * @throws InvalidKeySpecException
 	 *             invalid encryption key
 	 */
-	private final SecretKey generateSecretKey() throws NoSuchAlgorithmException,
+	private SecretKey generateSecretKey() throws NoSuchAlgorithmException,
 		InvalidKeySpecException
 	{
 		final PBEKeySpec spec = new PBEKeySpec(getKey().toCharArray());

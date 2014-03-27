@@ -909,7 +909,7 @@ public abstract class Component
 	/**
 	 * 
 	 */
-	private final void internalBeforeRender()
+	private void internalBeforeRender()
 	{
 		configure();
 
@@ -1399,7 +1399,7 @@ public abstract class Component
 	 * 
 	 * @return first component tag
 	 */
-	private final ComponentTag getMarkupTag()
+	private ComponentTag getMarkupTag()
 	{
 		IMarkupFragment markup = getMarkup();
 		if (markup != null)
@@ -2353,7 +2353,7 @@ public abstract class Component
 	/**
 	 * Performs a render of this component as part of a Page level render process.
 	 */
-	private final void internalRender()
+	private void internalRender()
 	{
 		// Make sure there is a markup available for the Component
 		IMarkupFragment markup = getMarkup();

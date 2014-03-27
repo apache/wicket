@@ -110,7 +110,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * 
 	 * @throws ParseException
 	 */
-	private final void skipUntil() throws ParseException
+	private void skipUntil() throws ParseException
 	{
 		// this is a tag with non-XHTML text as body - skip this until the
 		// skipUntilText is found.

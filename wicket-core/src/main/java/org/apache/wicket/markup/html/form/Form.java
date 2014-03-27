@@ -1772,7 +1772,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * 
 	 * @see #updateFormComponentModels()
 	 */
-	private final void updateNestedFormComponentModels()
+	private void updateNestedFormComponentModels()
 	{
 		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
 		{

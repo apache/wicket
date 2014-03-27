@@ -142,7 +142,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 *            byte array to decrypt
 	 * @return the decrypted text
 	 */
-	private final byte[] decryptByteArray(final byte[] encrypted)
+	private byte[] decryptByteArray(final byte[] encrypted)
 	{
 		try
 		{
@@ -163,7 +163,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 * @return the string encrypted
 	 * @throws GeneralSecurityException
 	 */
-	private final byte[] encryptStringToByteArray(final String plainText)
+	private byte[] encryptStringToByteArray(final String plainText)
 		throws GeneralSecurityException
 	{
 		try

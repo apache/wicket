@@ -195,7 +195,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 	 * @param ref
 	 * @return true if ref is not null and does not contain namespace
 	 */
-	private final boolean checkRef(String ref)
+	private boolean checkRef(String ref)
 	{
 		return (ref != null) && (!ref.contains(":"));
 	}

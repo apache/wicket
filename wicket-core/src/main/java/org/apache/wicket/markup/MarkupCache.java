@@ -432,7 +432,7 @@ public class MarkupCache implements IMarkupCache
 	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup. Markup.NO_MARKUP, if not found.
 	 */
-	private final Markup loadMarkup(final MarkupContainer container,
+	private Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		String cacheKey = markupResourceStream.getCacheKey();
@@ -486,7 +486,7 @@ public class MarkupCache implements IMarkupCache
 	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup in the stream
 	 */
-	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
+	private Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		// @TODO the following code sequence looks very much like in loadMarkup. Can it be

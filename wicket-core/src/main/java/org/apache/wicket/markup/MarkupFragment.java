@@ -191,7 +191,7 @@ public class MarkupFragment implements IMarkupFragment
 	/**
 	 * @return The parent markup. Null if that is a a markup file.
 	 */
-	private final IMarkupFragment getParentMarkup()
+	private IMarkupFragment getParentMarkup()
 	{
 		return markup;
 	}

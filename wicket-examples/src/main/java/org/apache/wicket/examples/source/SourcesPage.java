@@ -148,7 +148,7 @@ public class SourcesPage extends WebPage
 			return get(getPageTargetClass());
 		}
 
-		private final void addResources(final AppendingStringBuffer relativePath, final File dir,
+		private void addResources(final AppendingStringBuffer relativePath, final File dir,
 			List<String> resources)
 		{
 			File[] files = dir.listFiles();

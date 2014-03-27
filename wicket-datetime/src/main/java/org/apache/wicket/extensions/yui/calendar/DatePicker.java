@@ -331,7 +331,7 @@ public class DatePicker extends Behavior
 	 * @throws UnableToDetermineFormatException
 	 *             if this date picker is unable to determine a format.
 	 */
-	private final void checkComponentProvidesDateFormat(final Component component)
+	private void checkComponentProvidesDateFormat(final Component component)
 	{
 		if (getDatePattern() == null)
 		{

@@ -142,7 +142,7 @@ public class WizardStep extends Panel implements IWizardStep
 		/**
 		 * @return whether the step this wrapper is part of is the current step
 		 */
-		private final boolean isActiveStep()
+		private boolean isActiveStep()
 		{
 			return (wizardModel.getActiveStep().equals(WizardStep.this));
 		}

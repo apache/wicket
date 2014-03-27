@@ -101,7 +101,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	 * @param tag
 	 * @return true, if id is needed
 	 */
-	private final boolean needId(final ComponentTag tag)
+	private boolean needId(final ComponentTag tag)
 	{
 		final String name = tag.getName().toLowerCase();
 		if (name.equals("script") && tag.getAttributes().containsKey("src") == false)
@@ -120,7 +120,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	 * 
 	 * @return The next value
 	 */
-	private final int nextValue()
+	private int nextValue()
 	{
 		return counter++;
 	}

@@ -490,7 +490,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		 * @param name
 		 * @return null, if not found
 		 */
-		private final IMarkupFragment findByName(final IMarkupFragment markup, final String name)
+		private IMarkupFragment findByName(final IMarkupFragment markup, final String name)
 		{
 			Args.notEmpty(name, "name");
 

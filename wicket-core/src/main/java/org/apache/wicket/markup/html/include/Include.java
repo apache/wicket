@@ -225,7 +225,7 @@ public class Include extends WebComponent
 	 *            the url
 	 * @return the imported contents
 	 */
-	private final String importUrl(URL url)
+	private String importUrl(URL url)
 	{
 		return ResourceUtil.readString(new UrlResourceStream(url), getCharset());
 	}

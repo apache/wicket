@@ -372,7 +372,7 @@ public class WildcardMatcherHelper
 		/**
 		 * Scan a possible common suffix
 		 */
-		private final void scanLiteralPrefix()
+		private void scanLiteralPrefix()
 		{
 			// scan a common literal suffix
 			while (ipat < lpat &&
@@ -401,7 +401,7 @@ public class WildcardMatcherHelper
 		 * 
 		 * @return Whether the all the mentioned characters match each other
 		 */
-		private final boolean strncmp(final char[] a1, final int o1, final char[] a2, final int o2,
+		private boolean strncmp(final char[] a1, final int o1, final char[] a2, final int o2,
 			final int l)
 		{
 			int i = 0;
@@ -414,7 +414,7 @@ public class WildcardMatcherHelper
 			return i == l;
 		}
 
-		private final boolean checkEnds(final int sipat, final boolean isSingleStart)
+		private boolean checkEnds(final int sipat, final boolean isSingleStart)
 		{
 			// if the remaining length of the string isn't the same as that found in the pattern
 			// we do not match

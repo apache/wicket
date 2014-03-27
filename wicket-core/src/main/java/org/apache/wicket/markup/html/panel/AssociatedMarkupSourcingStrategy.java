@@ -134,7 +134,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 * @param markup
 	 * @return null, if not found
 	 */
-	private final IMarkupFragment findStartTag(final IMarkupFragment markup)
+	private IMarkupFragment findStartTag(final IMarkupFragment markup)
 	{
 		MarkupStream stream = new MarkupStream(markup);
 
@@ -310,7 +310,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 * @param markup
 	 * @return the header part for this panel/border or null if it doesn't have a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(final WebMarkupContainer container,
+	private HeaderPartContainer getHeaderPart(final WebMarkupContainer container,
 		final String id, final IMarkupFragment markup)
 	{
 		// Create a HtmlHeaderContainer for the header tag found
@@ -335,7 +335,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 * @param associatedMarkupStream
 	 * @return index or -1 when done
 	 */
-	private final int nextHeaderMarkup(final MarkupStream associatedMarkupStream)
+	private int nextHeaderMarkup(final MarkupStream associatedMarkupStream)
 	{
 		// No associated markup => no header section
 		if (associatedMarkupStream == null)

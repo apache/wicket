@@ -875,7 +875,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 *            the component tag
 	 * @return A BookmarkablePageLink<?> to handle the href
 	 */
-	private final Component resolveAutomaticLink(final PathInfo pathInfo, final String id,
+	private Component resolveAutomaticLink(final PathInfo pathInfo, final String id,
 		final ComponentTag tag)
 	{
 		final MarkupContainer container = pathInfo.getContainer();
