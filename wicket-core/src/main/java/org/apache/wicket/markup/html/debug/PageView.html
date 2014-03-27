@@ -16,6 +16,7 @@
    limitations under the License.
 -->
 <html xmlns:wicket="http://wicket.apache.org">
+<head>
 <style type="text/css">
 body {margin-left : 2em;font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans', sans-serif; font-size: 9pt; line-height: 1.8em;}
 h1,h2,h3,h4,h5,h6 {color: #E9601A;font-size : -1;}
@@ -26,10 +27,10 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 .resource { color : blue; }
 .tablestyle { margin-left : 2em; border : 1px solid #bbb; }
 </style>
+</head>
 <body>
   <wicket:panel>
   	<h2>Page</h2>
-  	<ul>
     <p><span wicket:id="info">Page</span> | render time: | <span wicket:id="pageRenderDuration">n/a</span>:</p>
     <table class="tablestyle">
       <thead>
@@ -53,7 +54,6 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 		</tr>
       </tbody>
 	</table>
-	</ul>
   </wicket:panel>
 </body>
 </html>
