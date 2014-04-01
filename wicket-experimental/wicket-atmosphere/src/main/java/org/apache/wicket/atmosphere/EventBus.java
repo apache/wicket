@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -57,14 +58,14 @@ import com.google.common.collect.Multimap;
  * {@linkplain EventBus#post(Object) Posted} events are broadcasted to all components on active
  * pages if they have a method annotated with {@link Subscribe}. To create and register an
  * {@code EventBus}, put the following code in your application's init method:
- * 
+ *
  * <pre>
  * this.eventBus = new EventBus(this);
  * </pre>
- * 
+ *
  * The {@code EventBus} will register itself in the application once instantiated. It might be
  * practical to keep a reference in the application, but you can always get it using {@link #get()}.
- * 
+ *
  * @author papegaaij
  */
 public class EventBus implements UnboundListener
@@ -115,7 +116,7 @@ public class EventBus implements UnboundListener
 	/**
 	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
 	 * returned by the {@code BroadcasterFactory} is used.
-	 * 
+	 *
 	 * @param application
 	 */
 	public EventBus(WebApplication application)
@@ -144,7 +145,7 @@ public class EventBus implements UnboundListener
 
 	/**
 	 * Creates and registers an {@code EventBus} for the given application and broadcaster
-	 * 
+	 *
 	 * @param application
 	 * @param broadcaster
 	 */
@@ -160,7 +161,7 @@ public class EventBus implements UnboundListener
 	}
 
 	/**
-	 * 
+	 *
 	 * @return event subscription invoker
 	 */
 	protected EventSubscriptionInvoker createEventSubscriptionInvoker()
@@ -169,7 +170,7 @@ public class EventBus implements UnboundListener
 	}
 
 	/**
-	 * 
+	 *
 	 * @return event subscription collector
 	 */
 	protected IComponentOnBeforeRenderListener createEventSubscriptionCollector()
@@ -188,7 +189,7 @@ public class EventBus implements UnboundListener
 	/**
 	 * Returns the {@linkplain AtmosphereParameters parameters} that will be passed to the
 	 * Atmosphere JQuery plugin. You can change these parameters, for example to disable WebSockets.
-	 * 
+	 *
 	 * @return The parameters.
 	 */
 	public AtmosphereParameters getParameters()
@@ -198,7 +199,7 @@ public class EventBus implements UnboundListener
 
 	/**
 	 * Registers a page for the given tracking-id in the {@code EventBus}.
-	 * 
+	 *
 	 * @param trackingId
 	 * @param page
 	 */
@@ -216,14 +217,14 @@ public class EventBus implements UnboundListener
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("registered page {} for session {}",
-				pageKey.getPageId(), pageKey.getSessionId());
+			log.debug("registered page {} for session {}", pageKey.getPageId(),
+				pageKey.getSessionId());
 		}
 	}
 
 	/**
 	 * Registers an {@link EventSubscription} for the given page.
-	 * 
+	 *
 	 * @param page
 	 * @param subscription
 	 */
@@ -232,14 +233,14 @@ public class EventBus implements UnboundListener
 		if (log.isDebugEnabled())
 		{
 			log.debug(
-					"registering {} for page {} for session {}: {}{}",
-					new Object[]{
-							subscription.getBehaviorIndex() == null ? "component" : "behavior",
-							page.getPageId(),
-							Session.get().getId(),
-							subscription.getComponentPath(),
-							subscription.getBehaviorIndex() == null ? "" : ":" +
-									subscription.getBehaviorIndex()});
+				"registering {} for page {} for session {}: {}{}",
+				new Object[] {
+						subscription.getBehaviorIndex() == null ? "component" : "behavior",
+						page.getPageId(),
+						Session.get().getId(),
+						subscription.getComponentPath(),
+						subscription.getBehaviorIndex() == null ? "" : ":" +
+							subscription.getBehaviorIndex() });
 		}
 		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
 		if (!subscriptions.containsEntry(pageKey, subscription))
@@ -249,8 +250,52 @@ public class EventBus implements UnboundListener
 	}
 
 	/**
+	 * Unregisters an {@link EventSubscription} for the given page.
+	 *
+	 * @param page
+	 * @param subscription
+	 */
+	public synchronized void unregister(Page page, EventSubscription subscription)
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug(
+				"unregistering {} for page {} for session {}: {}{}",
+				new Object[] {
+						subscription.getBehaviorIndex() == null ? "component" : "behavior",
+						page.getPageId(),
+						Session.get().getId(),
+						subscription.getComponentPath(),
+						subscription.getBehaviorIndex() == null ? "" : ":" +
+							subscription.getBehaviorIndex() });
+		}
+		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
+		subscriptions.remove(pageKey, subscription);
+	}
+
+	/**
+	 * Unregisters all {@link EventSubscription}s for the given component, including the
+	 * subscriptions for its behaviors.
+	 *
+	 * @param page
+	 * @param subscription
+	 */
+	public synchronized void unregister(Component component)
+	{
+		String componentPath = component.getPageRelativePath();
+		PageKey pageKey = new PageKey(component.getPage().getPageId(), Session.get().getId());
+		Collection<EventSubscription> subscriptionsForPage = subscriptions.get(pageKey);
+		Iterator<EventSubscription> it = subscriptionsForPage.iterator();
+		while (it.hasNext())
+		{
+			if (it.next().getComponentPath().equals(componentPath))
+				it.remove();
+		}
+	}
+
+	/**
 	 * Unregisters all subscriptions for the given tracking id.
-	 * 
+	 *
 	 * @param trackingId
 	 */
 	public synchronized void unregisterConnection(String trackingId)
@@ -261,8 +306,8 @@ public class EventBus implements UnboundListener
 			fireUnregistration(trackingId);
 			if (log.isDebugEnabled())
 			{
-				log.debug("unregistering page {} for session {}",
-						pageKey.getPageId(), pageKey.getSessionId());
+				log.debug("unregistering page {} for session {}", pageKey.getPageId(),
+					pageKey.getSessionId());
 			}
 		}
 	}
@@ -272,7 +317,7 @@ public class EventBus implements UnboundListener
 	 * the page with the suspended connection. The resulting AJAX update (if any) is pushed to the
 	 * client. You can find the UUID via {@link AtmosphereBehavior#getUUID(Page)}. If no resource
 	 * exists with the given UUID, no post is performed.
-	 * 
+	 *
 	 * @param event
 	 * @param resourceUuid
 	 */
@@ -289,7 +334,7 @@ public class EventBus implements UnboundListener
 	 * Post an event to a single resource. This will invoke the event handlers on all components on
 	 * the page with the suspended connection. The resulting AJAX update (if any) is pushed to the
 	 * client.
-	 * 
+	 *
 	 * @param event
 	 * @param resource
 	 */
@@ -310,7 +355,7 @@ public class EventBus implements UnboundListener
 	 * Post an event to all pages that have a suspended connection. This will invoke the event
 	 * handlers on components, annotated with {@link Subscribe}. The resulting AJAX updates are
 	 * pushed to the clients.
-	 * 
+	 *
 	 * @param event
 	 */
 	public void post(Object event)
@@ -396,7 +441,7 @@ public class EventBus implements UnboundListener
 	/**
 	 * Add a new {@link ResourceRegistrationListener} to the {@code EventBus}. This listener will be
 	 * notified on all Atmosphere resource registrations and unregistrations.
-	 * 
+	 *
 	 * @param listener
 	 */
 	public void addRegistrationListener(ResourceRegistrationListener listener)
@@ -406,7 +451,7 @@ public class EventBus implements UnboundListener
 
 	/**
 	 * Removes a previously added {@link ResourceRegistrationListener}.
-	 * 
+	 *
 	 * @param listener
 	 */
 	public void removeRegistrationListener(ResourceRegistrationListener listener)
