@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the
  * subscribed methods are invoked.
- * 
+ *
  * @author papegaaij
  */
 public class AtmosphereRequestHandler implements IRequestHandler
@@ -51,7 +51,7 @@ public class AtmosphereRequestHandler implements IRequestHandler
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param pageKey
 	 * @param subscriptions
 	 * @param event
@@ -96,8 +96,9 @@ public class AtmosphereRequestHandler implements IRequestHandler
 				}
 				else
 				{
-					LOGGER.debug("Cannot find component with path '{}' in page '{}'. Maybe it has been removed already.",
+					LOGGER.debug("Cannot find component with path '{}' in page '{}'. Maybe it has been removed.",
 							componentPath, page);
+					EventBus.get().unregister(page, curSubscription);
 				}
 			}
 		}
