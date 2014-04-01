@@ -325,7 +325,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		final RequestCycle rc = (RequestCycle)requestCycle;
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
 
-		if (responseObject.containsPage())
+		if (shouldRedirectToPage(requestCycle))
 		{
 			// the page itself has been added to the request target, we simply issue a redirect
 			// back to the page
@@ -359,6 +359,24 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		responseObject.writeTo(bodyResponse, encoding);
 		CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
 		response.write(filteredResponse);
+	}
+
+	private boolean shouldRedirectToPage(IRequestCycle requestCycle)
+	{
+		if (responseObject.containsPage())
+		{
+			return true;
+		}
+
+		if (((WebRequest)requestCycle.getRequest()).isAjax() == false)
+		{
+			// the request was not sent by wicket-ajax.js - this can happen when an Ajax request was
+			// intercepted with #redirectToInterceptPage() and then the original request is re-sent
+			// by the browser on a subsequent #continueToOriginalDestination()
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
