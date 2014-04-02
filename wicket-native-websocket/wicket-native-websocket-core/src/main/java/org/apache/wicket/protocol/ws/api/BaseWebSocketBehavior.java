@@ -28,12 +28,36 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.template.PackageTextTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A behavior that contributes {@link WicketWebSocketJQueryResourceReference}
  */
 public class BaseWebSocketBehavior extends Behavior
 {
+	private static final Logger LOG = LoggerFactory.getLogger(BaseWebSocketBehavior.class);
+
+	/**
+	 * A flag indicating whether JavaxWebSocketFilter is in use.
+	 * When using JSR356 based implementations the ws:// url should not
+	 * use the WicketFilter's filterPath because JSR356 Upgrade connections
+	 * are never passed to the Servlet Filters.
+	 */
+	private static boolean USING_JAVAX_WEB_SOCKET = false;
+	static
+	{
+		try
+		{
+			Class.forName("org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter");
+			USING_JAVAX_WEB_SOCKET = true;
+			LOG.debug("Using JSR356 Native WebSocket implementation!");
+		} catch (ClassNotFoundException e)
+		{
+			LOG.debug("Using non-JSR356 Native WebSocket implementation!");
+		}
+	}
+
 	private final String resourceName;
 
 	/**
@@ -103,6 +127,15 @@ public class BaseWebSocketBehavior extends Behavior
 
 		// preserve the application name for JSR356 based impl
 		variables.put("applicationName", component.getApplication().getName());
+
+		if (USING_JAVAX_WEB_SOCKET)
+		{
+			variables.put("filterPrefix", "");
+		}
+		else
+		{
+			variables.put("filterPrefix", component.getRequest().getFilterPath());
+		}
 
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
 

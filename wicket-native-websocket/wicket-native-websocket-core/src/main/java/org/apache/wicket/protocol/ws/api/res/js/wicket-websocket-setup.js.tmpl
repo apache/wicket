@@ -1,9 +1,10 @@
 ;(function(undefined) {
 	'use strict';
 
-	if (!Wicket.WebSocket.key) {
+	if (typeof(Wicket.WebSocket.appName) === "undefined") {
 		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId}, resourceName: '${resourceName}',
-			baseUrl: '${baseUrl}', contextPath: '${contextPath}', appName: '${applicationName}' });
+			baseUrl: '${baseUrl}', contextPath: '${contextPath}', appName: '${applicationName}',
+			filterPrefix: '${filterPrefix}' });
 		Wicket.WebSocket.createDefaultConnection();
 	}
 })();
