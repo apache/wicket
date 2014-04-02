@@ -38,22 +38,23 @@
 
 				var self = this,
 					url,
-					protocol;
+					protocol,
+					WWS = Wicket.WebSocket;
 
 				protocol = document.location.protocol
 					.replace('https:', 'wss:')
 					.replace('http:', 'ws:');
 
-				url = protocol + '//' + document.location.host + Wicket.WebSocket.contextPath + '/wicket/websocket';
+				url = protocol + '//' + document.location.host + WWS.contextPath + WWS.filterPrefix + '/wicket/websocket';
 
-				if (Wicket.WebSocket.pageId !== false) {
-					url += '?pageId=' + encodeURIComponent(Wicket.WebSocket.pageId);
-				} else if (Wicket.WebSocket.resourceName) {
-					url += '?resourceName=' + encodeURIComponent(Wicket.WebSocket.resourceName);
+				if (WWS.pageId !== false) {
+					url += '?pageId=' + encodeURIComponent(WWS.pageId);
+				} else if (WWS.resourceName) {
+					url += '?resourceName=' + encodeURIComponent(WWS.resourceName);
 				}
 
-				url += '&wicket-ajax-baseurl=' + encodeURIComponent(Wicket.WebSocket.baseUrl);
-				url += '&wicket-app-name=' + encodeURIComponent(Wicket.WebSocket.appName);
+				url += '&wicket-ajax-baseurl=' + encodeURIComponent(WWS.baseUrl);
+				url += '&wicket-app-name=' + encodeURIComponent(WWS.appName);
 				self.ws = new WebSocket(url);
 
 				self.ws.onopen = function (evt) {
