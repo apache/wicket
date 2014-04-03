@@ -175,7 +175,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			pageParameters = parameters;
 		}
-		init();
 	}
 
 	/**
@@ -710,7 +709,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * Initializes Page by adding it to the Session and initializing it.
 	 */
-	private void init()
+	@Override
+	void init()
 	{
 		if (isBookmarkable() == false)
 		{
