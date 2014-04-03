@@ -177,7 +177,6 @@ public abstract class Page extends MarkupContainer
 		{
 			pageParameters = parameters;
 		}
-		init();
 	}
 
 	/**
@@ -703,7 +702,8 @@ public abstract class Page extends MarkupContainer
 	/**
 	 * Initializes Page by adding it to the Session and initializing it.
 	 */
-	private void init()
+	@Override
+	void init()
 	{
 		if (isBookmarkable() == false)
 		{

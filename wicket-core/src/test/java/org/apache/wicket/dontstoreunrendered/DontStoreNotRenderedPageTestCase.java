@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.dontstoreunrendered;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
@@ -35,6 +38,18 @@ public abstract class DontStoreNotRenderedPageTestCase extends WicketTestCase
 	@Override
 	protected WicketTester newWicketTester(WebApplication app)
 	{
+		app.getComponentInstantiationListeners().add(new IComponentInstantiationListener()
+		{
+			@Override
+			public void onInstantiation(Component component)
+			{
+				// WICKET-5546 behavior added before Page#init()
+				component.add(new Behavior()
+				{
+				});
+			}
+		});
+
 		return new WicketTester(app)
 		{
 			@Override
