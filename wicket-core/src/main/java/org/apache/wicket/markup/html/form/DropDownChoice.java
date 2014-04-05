@@ -19,10 +19,10 @@ package org.apache.wicket.markup.html.form;
 import java.util.List;
 
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
@@ -263,6 +263,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @param newSelection
 	 *            The newly selected object of the backing model NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
+	 * @see #wantOnSelectionChangedNotifications()
 	 */
 	protected void onSelectionChanged(final T newSelection)
 	{

@@ -222,6 +222,8 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 * @param newSelection
 	 *            The new selection of the {@link CheckGroup}. NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
+	 * 
+	 * @see #wantOnSelectionChangedNotifications()
 	 */
 	protected void onSelectionChanged(final Collection<? extends T> newSelection)
 	{

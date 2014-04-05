@@ -95,6 +95,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * @param newSelection
 	 *            The newly selected object of the backing model NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
+	 * @see #wantOnSelectionChangedNotifications()
 	 */
 	protected void onSelectionChanged(Boolean newSelection)
 	{

@@ -176,7 +176,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged(getDefaultModelObject());
+		onSelectionChanged(getModelObject());
 	}
 
 	/**
@@ -189,8 +189,10 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	 * @param newSelection
 	 *            The newly selected object of the backing model NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
+	 * 
+	 * @see #wantOnSelectionChangedNotifications()
 	 */
-	protected void onSelectionChanged(final Object newSelection)
+	protected void onSelectionChanged(final T newSelection)
 	{
 	}
 }

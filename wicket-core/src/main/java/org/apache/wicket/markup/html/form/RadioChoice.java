@@ -248,7 +248,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged(getDefaultModelObject());
+		onSelectionChanged(getModelObject());
 	}
 
 	/**
@@ -261,8 +261,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param newSelection
 	 *            The newly selected object of the backing model NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
+	 * @see #wantOnSelectionChangedNotifications()
 	 */
-	protected void onSelectionChanged(Object newSelection)
+	protected void onSelectionChanged(T newSelection)
 	{
 	}
 
