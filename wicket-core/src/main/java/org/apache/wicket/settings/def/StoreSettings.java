@@ -31,7 +31,13 @@ import org.apache.wicket.util.lang.Bytes;
  */
 public class StoreSettings implements IStoreSettings
 {
-	private static final int DEFAULT_CACHE_SIZE = 40;
+	/**
+	 * By default the second level cache is disabled.
+	 *
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-5554">WICKET-5554</a>
+	 * @see <a href="https://cwiki.apache.org/confluence/x/qIaoAQ">Wicket Page storages</a>
+	 */
+	private static final int DEFAULT_CACHE_SIZE = 0;
 
 	private static final Bytes DEFAULT_MAX_SIZE_PER_SESSION = Bytes.megabytes(10);
 
