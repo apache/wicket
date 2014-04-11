@@ -2,6 +2,64 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.15.0
+
+** Sub-task
+
+    * [WICKET-5510] - Avoid using jQuery.text() when possible. It is very slow in IE
+    * [WICKET-5554] - Disable second level pages store because it is efficient only when manually configured
+
+** Bug
+
+    * [WICKET-5243] - JS: High stack size in Function Executor causes "too much recursion"
+    * [WICKET-5284] - Too deep recursion in AbstractHierarchyIterator
+    * [WICKET-5504] - AjaxRequestTarget.append/prependJavaScript cannot handle scripts with new-lines anymore
+    * [WICKET-5505] - DefaultPropertyResolver does not respect JavaBean conventions
+    * [WICKET-5506] - DefaultPropertyResolver should resolve the Property according to the getter first
+    * [WICKET-5509] - Wicket examples' MailTemplate from Page is broken
+    * [WICKET-5517] - IE11 returns false for Wicket.Browser.isIE()
+    * [WICKET-5518] - FormComponent.updateCollectionModel  does not handle unmodifiableList
+    * [WICKET-5521] - Stateless forms does not work when RecreateMountedPagesAfterExpiry turned off
+    * [WICKET-5522] - Failing HTTPS redirect to RequireHttps annotated pages with ONE_PASS_RENDER strategy
+    * [WICKET-5523] - Ajax indicator not working when display is set to none in css
+    * [WICKET-5532] - NPE calling PackageResource.getResourceStream() if there is no RequestCycle defined
+    * [WICKET-5534] - DataTable component must throw an exception when attached to non-<table> element
+    * [WICKET-5536] - Error message without parmeters filled.
+    * [WICKET-5537] - Wicket.DOM.toggleClass is called with additional "#" inside AutoLabelResolver
+    * [WICKET-5541] - NullPointerException in SubscribeAnnotationEventSubscriptionInvoker on remove of component from page
+    * [WICKET-5545] - Cannot use redirect in ModalWindow's page#onInitialize()
+    * [WICKET-5546] - Adding behavior in component instantiation listener causes Page.onInitialize() being called even if constructor throws an exception
+    * [WICKET-5547] - Javadoc for ReuseIfModelsEqualStrategy should mention that models must implement hashCode() method
+    * [WICKET-5548] - Websocket initialization URL is not valid when filter is not mapped to root.
+
+** Improvement
+
+    * [WICKET-5508] - Memory model improvements for Session fields
+    * [WICKET-5512] - Allow using child selector for JS event bindings
+    * [WICKET-5520] - improve reusability of DataTable and AbstractPageableView
+    * [WICKET-5528] - Allow models of subtypes of Select type parameter in SelectOption constructor
+    * [WICKET-5529] - Add WebSocketBehavior/Resource#onPush() callback method
+    * [WICKET-5531] - Create new placeholder tag to indicate where header contributions should appear
+    * [WICKET-5538] - When using Component.setDefaultModel, only detach the previous model if the new one is different
+    * [WICKET-5549] - continueToOriginalDestination() fails after redirectToInterceptPage() on AjaxRequest 
+
+** New Feature
+
+    * [WICKET-831] - Return response status 404 when a mapper cannot decode a request url
+    * [WICKET-2542] - Provide ajax buttons for wizard
+
+** Task
+
+    * [WICKET-5514] - Update Wicket fragment example
+
+** Wish
+
+    * [WICKET-5516] - RadioChoice / add a getAdditionalAttributes() also for <label>-tag
+    * [WICKET-5542] - Remove final from TextArea.onComponentTagBody()
+
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.14.0
 
 ** Bug
