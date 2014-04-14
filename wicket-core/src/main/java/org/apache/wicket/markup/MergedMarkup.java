@@ -331,7 +331,9 @@ public class MergedMarkup extends Markup
 			if (element instanceof ComponentTag && resource != null)
 			{
 				ComponentTag tag = (ComponentTag)element;
-				tag.setMarkupClass(markupClass);
+				if (tag.getMarkupClass() == null){
+					tag.setMarkupClass(markupClass);
+				}
 			}
 		}
 
