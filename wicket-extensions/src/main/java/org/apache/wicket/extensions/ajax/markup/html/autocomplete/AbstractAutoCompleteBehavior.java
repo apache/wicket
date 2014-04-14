@@ -17,6 +17,9 @@
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 
+import java.util.Arrays;
+
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -78,6 +81,14 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 			if (item instanceof OnDomReadyHeaderItem)
 				return new WrappedHeaderItem((OnDomReadyHeaderItem)item);
 			return item;
+		}
+
+		@Override
+		public Iterable<? extends HeaderItem> getDependencies()
+		{
+			ResourceReference wicketAjaxReference = Application.get().
+					getJavaScriptLibrarySettings().getWicketAjaxReference();
+			return Arrays.asList(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		}
 	}
 
