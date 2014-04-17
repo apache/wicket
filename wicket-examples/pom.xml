@@ -40,7 +40,7 @@
 			<artifactId>wicket-extensions</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
+			<groupId>org.apache.wicket.experimental.wicket-6.x</groupId>
 			<artifactId>wicket-atmosphere</artifactId>
 		</dependency>
 		<dependency>
