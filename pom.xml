@@ -323,28 +323,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-bootstrap</artifactId>
-				<version>0.17-SNAPSHOT</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.17-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.17-SNAPSHOT</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-war</artifactId>
-				<version>0.17-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi-1.1</artifactId>
 				<version>6.15.0-SNAPSHOT</version>
 			</dependency>
