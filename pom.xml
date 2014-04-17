@@ -371,28 +371,6 @@
 				<type>jar</type>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-bootstrap</artifactId>
-				<version>0.9-SNAPSHOT</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.9-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-jar</artifactId>
-				<version>0.9-SNAPSHOT</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-examples-war</artifactId>
-				<version>0.9-SNAPSHOT</version>
-			</dependency>
-			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.11</version>
