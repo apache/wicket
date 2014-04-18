@@ -7,8 +7,8 @@ pom = parse("pom.xml")
 
 groupId = "org.apache.wicket"
 
-relVersions = []
-devVersions = []
+relVersions = ["project.rel.org.apache.wicket\\:wicket-parent=" + sys.argv[1]]
+devVersions = ["project.dev.org.apache.wicket\\:wicket-parent=7.0.0-SNAPSHOT"]
 
 for moduleTag in pom.getElementsByTagName('module'):
     module = moduleTag.childNodes[0].nodeValue.replace("testing/", "").replace("archetypes/quickstart", "wicket-archetype-quickstart")
