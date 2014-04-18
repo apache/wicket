@@ -8,3 +8,5 @@ velocity.log
 *.iml
 *~
 node_modules/
+release.properties
+
