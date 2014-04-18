@@ -365,7 +365,7 @@
 				<type>jar</type>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.wicket.experimental.wicket-7.x</groupId>
+				<groupId>org.apache.wicket.experimental.wicket7</groupId>
 				<artifactId>wicket-atmosphere</artifactId>
 				<version>0.10-SNAPSHOT</version>
 				<type>jar</type>
