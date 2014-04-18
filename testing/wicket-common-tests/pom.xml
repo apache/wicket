@@ -104,7 +104,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket-7.x</groupId>
+			<groupId>org.apache.wicket.experimental.wicket7</groupId>
 			<artifactId>wicket-atmosphere</artifactId>
 			<scope>test</scope>
 		</dependency>

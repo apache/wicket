@@ -44,7 +44,7 @@
 			<artifactId>wicket-extensions</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket-7.x</groupId>
+			<groupId>org.apache.wicket.experimental.wicket7</groupId>
 			<artifactId>wicket-atmosphere</artifactId>
 		</dependency>
 		<dependency>
