@@ -110,11 +110,11 @@ log=/tmp/wicketrelease-$version.out
 branch="build/wicket-$version"
 tag="wicket-$version"
 
-echo ""
-echo "This script will release version: Apache Wicket $version"
-echo ""
-echo "Press enter to continue or CTRL-C to abort \c"
-read 
+read -p "
+This script will release version: Apache Wicket $version and continue 
+development with 7.0.0-SNAPSHOT
+
+Press enter to continue or CTRL-C to abort"
 
 # setup_gpg
 
@@ -139,7 +139,7 @@ echo ""
 echo "# Release configuration for Wicket-$version" > release.properties
 echo "scm.tag=${tag}" >> release.properties
 echo >> release.properties
-./release-milestone.py $version >> release.properties
+./release-milestone.py $version 7.0.0-SNAPSHOT >> release.properties
 
 cat ./release.properties
 

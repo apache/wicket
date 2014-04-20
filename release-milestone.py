@@ -1,38 +1,51 @@
 #!/usr/bin/python
+#
+# prints a release.properties file for instructing the Maven Release Plugin
+# to generate the proper release artefacts without having to manually version
+# everything.
+#
+# Usage:
+#
+#     release-milestone.py <release-version> <dev-version>
+#
+# This will generate a release.properties file that will release the 
+# release-version, and will continue development on dev-version.
+#
+# Example:
+#
+#    release-milestone.py 7.0.0-M1 7.0.0-SNAPSHOT
+#
 
 import sys
 from xml.dom.minidom import parse
 
-pom = parse("pom.xml")
-
 groupId = "org.apache.wicket"
 
-relVersions = ["project.rel.org.apache.wicket\\:wicket-parent=" + sys.argv[1]]
-devVersions = ["project.dev.org.apache.wicket\\:wicket-parent=7.0.0-SNAPSHOT"]
+if len(sys.argv) != 3:
+    print "Usage: %s <release-version> <dev-version>" % sys.argv[0]
+    sys.exit(1)
 
-for moduleTag in pom.getElementsByTagName('module'):
-    module = moduleTag.childNodes[0].nodeValue.replace("testing/", "").replace("archetypes/quickstart", "wicket-archetype-quickstart")
-    relVersions.append("project.rel." + groupId + "\\:" + module + "=" + sys.argv[1])
-    devVersions.append("project.dev." + groupId + "\\:" + module + "=7.0.0-SNAPSHOT")
+relVersion = sys.argv[1]
+devVersion = sys.argv[2]
 
-# experimentalPom = parse("wicket-experimental/pom.xml")
-# 
-# for moduleTag in experimentalPom.getElementsByTagName('module'):
-#     experimentalModuleName = moduleTag.childNodes[0].nodeValue    
-# 
-#     print "Parsing " + experimentalModuleName
-# 
-#     experimentalModulePom = parse("wicket-experimental/" + experimentalModuleName + "/pom.xml")
-#     experimentalModuleProject = experimentalModulePom.getElementsByTagName('project')[0]
-#     experimentalModuleParent = experimentalModulePom.getElementsByTagName('parent')[0]
-#     experimentalModuleGroupId = experimentalModuleParent.getElementsByTagName('groupId')[0].childNodes[0].nodeValue
-# 
-#     experimentalModuleArtifactId = experimentalModuleProject.getElementsByTagName('artifactId')[1].childNodes[0].nodeValue
-#     experimentalModuleVersion = experimentalModuleProject.getElementsByTagName('version')[0].childNodes[0].nodeValue
-# 
-#     newVersion = experimentalModuleVersion.replace("-SNAPSHOT", "")
-#     
-#     print experimentalModuleGroupId + ":" + experimentalModuleArtifactId + ":" + experimentalModuleVersion
+relVersions = []
+devVersions = []
+
+def addVersions(module):
+    relVersions.append("project.rel." + groupId + "\\:" + module + "=" + relVersion)
+    devVersions.append("project.dev." + groupId + "\\:" + module + "=" + devVersion)
+    
+def getModulesFromParent(parentPomFile):
+    pom = parse(parentPomFile)
+
+    for moduleTag in pom.getElementsByTagName('module'):
+        module = moduleTag.childNodes[0].nodeValue.replace("testing/", "").replace("archetypes/quickstart", "wicket-archetype-quickstart")
+        addVersions(module)
+
+addVersions("wicket-parent")
+
+getModulesFromParent("pom.xml")
+getModulesFromParent("wicket-native-websocket/pom.xml")
 
 for version in relVersions:
     print version
@@ -41,4 +54,3 @@ print
 
 for version in devVersions:
     print version
-
