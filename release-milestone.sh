@@ -77,23 +77,24 @@ EOF
 
 # set -e
 
-echo "Apache Wicket Release script"
-echo "----------------------------"
-echo "Building a release for Apache Wicket."
-echo ""
-echo "This script assumes you are running on OS X, it hasn't been tested on any other"
-echo "operating systems, and you can bet it won't work on Windows..."
-echo ""
-echo "REQUIREMENTS:"
-echo ""
-echo " - a pure JDK 7 environment, JDK 8 or newer won't cut it"
-echo " - Maven 3.0.4 (older releases are b0rked, just don't bother)"
-echo " - gpg, gpg-agent and pinentry for signing"
-echo ""
+echo "
+Apache Wicket Release script
+----------------------------
+Building a release for Apache Wicket.
+
+This script assumes you are running on OS X, it hasn't been tested on any other
+operating systems, and you can bet it won't work on Windows...
+
+REQUIREMENTS:
+
+ - a pure JDK 7 environment, JDK 8 or newer won't cut it
+ - Maven 3.0.4 (older releases are b0rked, just don't bother)
+ - gpg, gpg-agent and pinentry for signing"
 
 export JAVA_HOME=`/usr/libexec/java_home -v1.7`
-echo "Current Java version is: $(java -version 2>&1 | tail -n 2 | head -n 1)"
-echo ""
+echo "
+Current Java version is: $(java -version 2>&1 | tail -n 2 | head -n 1)
+"
 
 agentcount=`ps aux|grep gpg-agent|wc -l`
 
@@ -101,7 +102,8 @@ current_version=$(getVersion)
 major_version=$(expr $current_version : '\(.*\)\..*\..*\-SNAPSHOT')
 minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-SNAPSHOT')
 bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-SNAPSHOT')
-read -p "What is the new version? " version
+
+read -p "What is the version to be released? " version
 
 previous_version="$major_version.$(expr $minor_version - 1).0"
 

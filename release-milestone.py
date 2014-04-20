@@ -31,7 +31,7 @@ devVersion = sys.argv[2]
 relVersions = []
 devVersions = []
 
-def addVersions(module):
+def addVersions(groupId, module):
     relVersions.append("project.rel." + groupId + "\\:" + module + "=" + relVersion)
     devVersions.append("project.dev." + groupId + "\\:" + module + "=" + devVersion)
     
@@ -40,9 +40,10 @@ def getModulesFromParent(parentPomFile):
 
     for moduleTag in pom.getElementsByTagName('module'):
         module = moduleTag.childNodes[0].nodeValue.replace("testing/", "").replace("archetypes/quickstart", "wicket-archetype-quickstart")
-        addVersions(module)
+        addVersions(groupId, module)
 
-addVersions("wicket-parent")
+addVersions(groupId, "wicket-parent")
+addVersions("org.apache.wicket.experimental.wicket7", "wicket-experimental")
 
 getModulesFromParent("pom.xml")
 getModulesFromParent("wicket-native-websocket/pom.xml")
