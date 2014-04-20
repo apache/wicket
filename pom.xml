@@ -50,7 +50,7 @@
 		<module>wicket-auth-roles</module>
 		<module>wicket-guice</module>
 		<module>wicket-jmx</module>
-		<module>wicket-objectssizeof-agent</module>
+		<module>wicket-objectsizeof-agent</module>
 		<module>wicket-examples</module>
 		<module>wicket-experimental</module>
 		<module>archetypes/quickstart</module>
