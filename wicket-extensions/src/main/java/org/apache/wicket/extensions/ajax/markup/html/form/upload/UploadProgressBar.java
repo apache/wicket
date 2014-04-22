@@ -19,7 +19,6 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 import java.util.Formatter;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
