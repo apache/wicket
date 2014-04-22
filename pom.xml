@@ -29,7 +29,7 @@
 	<description>Wicket is a Java-based open source component web application framework.</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jetty.version>7.6.3.v20120416</jetty.version>
+		<jetty.version>7.6.15.v20140411</jetty.version>
 		<jetty9.version>9.0.6.v20130930</jetty9.version>
 		<spring.version>3.0.7.RELEASE</spring.version>
 		<maven.javadoc.version>2.9.1</maven.javadoc.version>
