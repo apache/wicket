@@ -84,6 +84,36 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 	}
 
 	/**
+	 * @return the url of the request when the interception happened or {@code null}
+	 * or {@code null} if there was no interception yet
+	 */
+	public static Url getOriginalUrl()
+	{
+		Url originalUrl = null;
+		InterceptData data = InterceptData.get();
+		if (data != null)
+		{
+			originalUrl = data.getOriginalUrl();
+		}
+		return originalUrl;
+	}
+
+	/**
+	 * @return the post parameters of thе request when the interception happened
+	 * or {@code null} if there was no interception yet
+	 */
+	public static Map<String, List<StringValue>> getOriginalPostParameters()
+	{
+		Map<String, List<StringValue>> postParameters = null;
+		InterceptData data = InterceptData.get();
+		if (data != null)
+		{
+			postParameters = data.getPostParameters();
+		}
+		return postParameters;
+	}
+
+	/**
 	 * INTERNAL CLASS, DO NOT USE
 	 * 
 	 * @author igor.vaynberg
