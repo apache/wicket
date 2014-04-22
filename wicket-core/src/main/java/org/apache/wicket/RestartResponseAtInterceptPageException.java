@@ -94,7 +94,6 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 
 		private Url originalUrl;
 		private Map<String, List<StringValue>> postParameters;
-		private boolean continueOk;
 
 		public Url getOriginalUrl()
 		{
@@ -137,7 +136,6 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 				data.postParameters.put(s, new ArrayList<StringValue>(request.getPostParameters()
 					.getParameterValues(s)));
 			}
-			data.continueOk = false;
 			session.setMetaData(key, data);
 		}
 
@@ -169,7 +167,6 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		InterceptData data = InterceptData.get();
 		if (data != null)
 		{
-			data.continueOk = true;
 			String url = RequestCycle.get().getUrlRenderer().renderUrl(data.originalUrl);
 			RequestCycle.get().replaceAllRequestHandlers(new RedirectRequestHandler(url));
 		}
