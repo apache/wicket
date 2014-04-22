@@ -59,7 +59,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * <p>
  * This is where the {@link FencedFeedbackPanel} comes in. All we have to do is to make
  * FeedbackPanel2 a {@link FencedFeedbackPanel} with the fencing component defined as Form2 and
- * Feedback1 a {@link FencedFeedbackPanel} with the fencing component defiend as Form1.
+ * Feedback1 a {@link FencedFeedbackPanel} with the fencing component defined as Form1.
  * {@link FencedFeedbackPanel} will only show messages that original from inside its fencing
  * component and not from inside any descendant component that acts as a fence for another
  * {@link FencedFeedbackPanel}.
@@ -68,7 +68,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * When created with a {@code null} fencing component or using a constructor that does not take one
  * the panel will only display messages that do not come from inside a fence. It will also display
  * messages that come from {@link Session}. This acts as a catch-all panels showing messages that
- * would not be shown using any other instance of the {@link FencedFeedbackPanel} created witha
+ * would not be shown using any other instance of the {@link FencedFeedbackPanel} created with a
  * fencing component. There is usually one instance of such a panel at the top of the page to
  * display notifications of success.
  * </p>
@@ -110,7 +110,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 	}
 
 	/**
-	 * Creates a catch-all instance witha filter.
+	 * Creates a catch-all instance with a filter.
 	 * 
 	 * @see #FencedFeedbackPanel(String)
 	 * 
