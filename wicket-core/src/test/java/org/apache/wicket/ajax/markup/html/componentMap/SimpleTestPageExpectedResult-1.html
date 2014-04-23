@@ -12,9 +12,4 @@ Wicket.Ajax.DebugWindow.enabled=true;
 Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.markup.html.componentMap.SimpleTestPage?0-1.IBehaviorListener.0-testPanel-baseSpan-linja1";
 /*]^]^>*/
 </script>
-<script type="text/javascript" id="AbstractAjaxTimerBehavior-timers">
-/*<![CDATA[*/
-if (typeof(Wicket.TimerHandles) === 'undefined') {Wicket.TimerHandles = {}}
-/*]^]^>*/
-</script>
-</head>]]></header-contribution><evaluate encoding="wicket1"><![CDATA[(function(){Wicket.TimerHandles['linja11']^ = setTimeout('Wicket.Ajax.ajax({\"u\":\"./org.apache.wicket.ajax.markup.html.componentMap.SimpleTestPage?0-1.IBehaviorListener.0-testPanel-baseSpan-linja1\",\"c\":\"linja11\"});', 2000)})();]]></evaluate></ajax-response>
+</head>]]></header-contribution><evaluate><![CDATA[(function(){Wicket.Timer.set('linja11', function(){Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.markup.html.componentMap.SimpleTestPage?0-1.IBehaviorListener.0-testPanel-baseSpan-linja1","c":"linja11"});}, 2000);})();]]></evaluate></ajax-response>

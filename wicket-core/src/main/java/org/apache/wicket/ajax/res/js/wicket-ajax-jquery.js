@@ -2683,6 +2683,37 @@
 				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("button"));
 				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("a"));
 			}
+		},
+
+		/**
+		 * Manages the functionality needed by AbstractAjaxTimerBehavior and its subclasses
+		 */
+		Timer: {
+			/**
+			 * Schedules a timer
+			 * @param {string} timerId - the identifier for the timer
+			 * @param {function|string} js - the JavaScript to execute after the timeout
+			 * @param {number} delay - the timeout
+			 */
+			'set': function(timerId, js, delay) {
+				if (typeof(Wicket.TimerHandles) === 'undefined') {
+					Wicket.TimerHandles = {};
+				}
+
+				Wicket.Timer.clear(timerId);
+				Wicket.TimerHandles[timerId] = setTimeout(js, delay);
+			},
+
+			/**
+			 * Un-schedules a timer by its id
+			 * @param {string} timerId - the identifier of the timer
+			 */
+			clear: function(timerId) {
+				if (Wicket.TimerHandles && Wicket.TimerHandles[timerId]) {
+					clearTimeout(Wicket.TimerHandles[timerId]);
+					delete Wicket.TimerHandles[timerId];
+				}
+			}
 		}
 	});
 

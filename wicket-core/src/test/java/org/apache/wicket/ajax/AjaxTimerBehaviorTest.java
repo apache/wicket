@@ -75,11 +75,11 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
 		// first render sets timeout
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 
 		tester.executeBehavior(timer);
 
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 	}
 
 
@@ -109,15 +109,15 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		tester.startPage(page);
 
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 
 		tester.executeBehavior(timer);
 
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 	}
 
 	/**
@@ -146,16 +146,16 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		tester.startPage(page);
 
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
 		// ajax update does not set timeout
-		assertMatches("setTimeout", 0);
+		assertMatches("Wicket.Timer.set", 0);
 
 		tester.executeBehavior(timer);
 
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 	}
 
 
@@ -184,18 +184,18 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		tester.startPage(page);
 
-		assertMatches("setTimeout", 0);
+		assertMatches("Wicket.Timer.set", 0);
 
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		assertMatches("setTimeout", 0);
+		assertMatches("Wicket.Timer.set", 0);
 
 		label.setVisible(true);
 
 		tester.startPage(page);
 
 		// no visible, so timeout is set
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 	}
 
 	/**
@@ -236,12 +236,12 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		tester.startPage(page);
 
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 
 		tester.executeBehavior(timer);
 
-		assertMatches("clearTimeout", 1);
-		assertMatches("setTimeout", 0);
+		assertMatches("Wicket.Timer.clear", 1);
+		assertMatches("Wicket.Timer.set", 0);
 	}
 
 	/**
@@ -322,7 +322,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		// restart the timer
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		assertMatches("setTimeout", 1);
+		assertMatches("Wicket.Timer.set", 1);
 		// label is updated automatically (this will no longer be the case in
 		// Wicket 7.x)
 		assertMatches("wicket:id=\"component\"", 1);
@@ -335,11 +335,11 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	}
 
 	/**
-	 * Validates the reponse, then makes sure the timer injects itself again
+	 * Validates the response, then makes sure the timer injects itself again
 	 * when called.
 	 * 
-	 * @param timer
-	 * @param wasAjax
+	 * @param string
+	 * @param count
 	 */
 	private void assertMatches(String string, int count)
 	{
