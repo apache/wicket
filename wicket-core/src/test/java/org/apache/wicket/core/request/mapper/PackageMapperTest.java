@@ -29,6 +29,7 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.mapper.PackageMapperTest.OuterPage.InnerPage;
 import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
@@ -642,5 +643,24 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5565
+	 */
+	@Test
+	public void testGetCompatibilityScore()
+	{
+	    Url url = Url.parse(MOUNT_PATH + '/' + "MyPage");
+	    MockWebRequest request = new MockWebRequest(url);
+	    int score = encoder.getCompatibilityScore(request);
+	    
+	    assertEquals(2, score);
+	    
+	    url = Url.parse(MOUNT_PATH + "/foo/bar/" + "MyPage");
+	    request = new MockWebRequest(url);
+	    score = namedParametersEncoder.getCompatibilityScore(request);
+	    
+	    assertEquals(4, score);
 	}
 }

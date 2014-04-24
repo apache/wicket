@@ -225,7 +225,13 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	@Override
 	public int getCompatibilityScore(Request request)
 	{
-		// always return 0 here so that the mounts have higher priority
-		return 0;
+		if (urlStartsWith(request.getUrl(), mountSegments))
+		{
+		    return mountSegments.length;
+		}
+		else
+		{
+		    return 0;
+		}
 	}
 }
