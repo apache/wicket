@@ -20,7 +20,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Encodes listener inteface and component path in form of
+ * Encodes listener interface and component path in form of
  * &lt;listenerInterface&gt-&lt;componentPath&gt;,
  * &lt;listenerInterface&gt.&lt;behaviorIndex&gt;-&lt;componentPath&gt; or
  * &lt;render-count&gt;.&lt;listenerInterface&gt.&lt;behaviorIndex&gt;-&lt;componentPath&gt;
