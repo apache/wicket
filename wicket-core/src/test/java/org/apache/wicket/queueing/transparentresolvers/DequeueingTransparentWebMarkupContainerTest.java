@@ -17,7 +17,6 @@
 package org.apache.wicket.queueing.transparentresolvers;
 
 import org.apache.wicket.WicketTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -25,7 +24,6 @@ import org.junit.Test;
  */
 public class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 {
-	@Ignore
 	@Test
 	public void startSubPageWithTWMCinTheParentPage() {
 		tester.startPage(SubPage.class);
