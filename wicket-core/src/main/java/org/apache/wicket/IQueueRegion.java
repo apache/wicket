@@ -45,8 +45,7 @@ public interface IQueueRegion
 	 * Starts component dequeueing on this {@link IQueueRegion}. This is the entry point into the
 	 * dequeuing process, it creates the {@link DequeueContext} and delegates the operation to the
 	 * {@link org.apache.wicket.MarkupContainer#dequeue(DequeueContext)} method which performs the
-	 * actual dequeueing. The context's markup is retrieved using the {@link #getDequeueMarkup()}
-	 * method which allows subclasses to provide dequeueing-specific markup.
+	 * actual dequeueing. The context's markup is retrieved using the {@link MarkupContainer#getAssociatedMarkup()}.
 	 */
 	public void dequeue();
 }
