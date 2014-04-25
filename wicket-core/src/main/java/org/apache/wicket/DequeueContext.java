@@ -244,7 +244,8 @@ public final class DequeueContext
 	 */
 	public boolean isAtOpenOrOpenCloseTag()
 	{
-		return peekTag() != null && (peekTag().isOpen() || peekTag().isOpenClose());
+		ComponentTag tag = peekTag();
+		return tag != null && (tag.isOpen() || tag.isOpenClose());
 	}
 
 	/**
