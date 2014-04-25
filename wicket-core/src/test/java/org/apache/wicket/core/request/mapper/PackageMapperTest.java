@@ -655,12 +655,12 @@ public class PackageMapperTest extends AbstractMapperTest
 	    MockWebRequest request = new MockWebRequest(url);
 	    int score = encoder.getCompatibilityScore(request);
 	    
-	    assertEquals(2, score);
+	    assertEquals(4, score);
 	    
 	    url = Url.parse(MOUNT_PATH + "/foo/bar/" + "MyPage");
 	    request = new MockWebRequest(url);
 	    score = namedParametersEncoder.getCompatibilityScore(request);
 	    
-	    assertEquals(4, score);
+	    assertEquals(6, score);
 	}
 }
