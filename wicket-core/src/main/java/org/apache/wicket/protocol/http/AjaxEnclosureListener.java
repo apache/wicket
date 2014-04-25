@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
@@ -67,31 +70,32 @@ public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 	@Override
 	public void onBeforeRespond(final Map<String, Component> map, final AjaxRequestTarget target)
 	{
-		String key = target.getPage().visitChildren(InlineEnclosure.class, new IVisitor<InlineEnclosure, String>()
+		final List<String> keysToRemove = new ArrayList<String>();
+
+		target.getPage().visitChildren(InlineEnclosure.class, new IVisitor<InlineEnclosure, Void>()
 		{
 			@Override
-			public void component(final InlineEnclosure enclosure, final IVisit<String> visit)
+			public void component(final InlineEnclosure enclosure, final IVisit<Void> visit)
 			{
-				for (Map.Entry<String, Component> entry : map.entrySet())
+				Iterator<Map.Entry<String, Component>> entriesItor = map.entrySet().iterator();
+				while (entriesItor.hasNext())
 				{
-					String key = entry.getKey();
+					Map.Entry<String, Component> entry = entriesItor.next();
+					String componentId = entry.getKey();
 					Component component = entry.getValue();
-
 					if (isControllerOfEnclosure(component, enclosure))
 					{
-						// update the visibility of the enclosure
 						enclosure.updateVisibility();
-
-						// add enclosure to Ajax target
 						target.add(enclosure);
-						visit.stop(key);
+						visit.dontGoDeeper();
+						keysToRemove.add(componentId);
 						break;
 					}
 				}
 			}
 		});
 
-		if (key != null)
+		for (String key : keysToRemove)
 		{
 			map.remove(key);
 		}
