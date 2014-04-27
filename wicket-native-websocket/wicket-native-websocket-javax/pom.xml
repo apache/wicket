@@ -31,7 +31,7 @@
 	<description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
 
     <properties>
-        <jetty.version>9.1.2.v20140210</jetty.version>
+        <jetty.version>9.1.4.v20140401</jetty.version>
     </properties>
 
 	<dependencies>
