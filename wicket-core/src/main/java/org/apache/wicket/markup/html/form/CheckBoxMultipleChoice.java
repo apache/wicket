@@ -24,6 +24,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -428,12 +429,19 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				}
 			}
 
-			if (getApplication().getDebugSettings().isOutputComponentPath())
+			DebugSettings debugSettings = getApplication().getDebugSettings();
+			String componentPathAttributeName = debugSettings.getComponentPathAttributeName();
+			if (Strings.isEmpty(componentPathAttributeName) && debugSettings.isOutputComponentPath())
+			{
+				// fallback to the old 'wicketpath'
+				componentPathAttributeName = "wicketpath";
+			}
+			if (Strings.isEmpty(componentPathAttributeName) == false)
 			{
 				CharSequence path = getPageRelativePath();
 				path = Strings.replaceAll(path, "_", "__");
 				path = Strings.replaceAll(path, ":", "_");
-				buffer.append(" wicketpath=\"")
+				buffer.append(' ').append(componentPathAttributeName).append("=\"")
 					.append(path)
 					.append("_input_")
 					.append(index)

@@ -3928,19 +3928,17 @@ public abstract class Component
 
 		DebugSettings debugSettings = getApplication().getDebugSettings();
 		String componentPathAttributeName = debugSettings.getComponentPathAttributeName();
+		if (Strings.isEmpty(componentPathAttributeName) && debugSettings.isOutputComponentPath())
+		{
+			// fallback to the old 'wicketpath'
+			componentPathAttributeName = "wicketpath";
+		}
 		if (Strings.isEmpty(componentPathAttributeName) == false)
 		{
 			String path = getPageRelativePath();
 			path = path.replace("_", "__");
 			path = path.replace(':', '_');
 			tag.put(componentPathAttributeName, path);
-		}
-		else if (debugSettings.isOutputComponentPath())
-		{
-			String path = getPageRelativePath();
-			path = path.replace("_", "__");
-			path = path.replace(':', '_');
-			tag.put("wicketpath", path);
 		}
 
 		// The markup sourcing strategy may also want to work on the tag
