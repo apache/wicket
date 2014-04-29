@@ -28,7 +28,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
@@ -39,7 +38,7 @@ public class ComponentRenderer
 {
 	/**
 	 * The id to use when rendering a component
-	 * @deprecated Unused since WICKET-5232
+	 * @deprecated Not used since WICKET-5232 (6.9.0)
 	 */
 	@Deprecated
 	public static final String COMP_ID = "compId";
@@ -59,9 +58,7 @@ public class ComponentRenderer
 
 		BufferedWebResponse tempResponse = new BufferedWebResponse(null);
 
-		RequestCycleContext requestCycleContext = new RequestCycleContext(originalRequestCycle.getRequest(),
-				tempResponse, application.getRootRequestMapper(), application.getExceptionMapperProvider().get());
-		RequestCycle tempRequestCycle = new RequestCycle(requestCycleContext);
+		RequestCycle tempRequestCycle = application.createRequestCycle(originalRequestCycle.getRequest(), tempResponse);
 
 		try
 		{
