@@ -45,7 +45,7 @@ import org.apache.wicket.util.value.IValueMap;
  * HTML:
  * 
  * <pre>
- *    &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *    &lt;span style=&quot;vertical=align: top;&quot; wicket:id=&quot;site&quot;&gt;
  *   	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
  *   	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
  *    &lt;/span&gt;
