@@ -133,7 +133,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	protected UrlInfo parseRequest(Request request)
 	{
 		Url url = request.getUrl();
-		if (url.getSegments().size() > mountSegments.length)
+		if (urlStartsWithMountedSegments(url))
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);

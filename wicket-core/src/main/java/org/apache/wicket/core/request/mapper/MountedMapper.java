@@ -133,7 +133,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			return new UrlInfo(null, getContext().getHomePageClass(), newPageParameters());
 		}
 		// check if the URL starts with the proper segments
-		else if (urlStartsWith(url, mountSegments))
+		else if (urlStartsWithMountedSegments(url))
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
@@ -145,19 +145,6 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		else
 		{
 			return null;
-		}
-	}
-
-	@Override
-	protected boolean urlStartsWith(Url url, String... segments)
-	{
-		if (url == null)
-		{
-			return false;
-		}
-		else
-		{
-			return getMatchedSegmentSizes(url) != null;
 		}
 	}
 

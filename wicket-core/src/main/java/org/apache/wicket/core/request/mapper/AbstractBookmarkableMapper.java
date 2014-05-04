@@ -784,4 +784,16 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 		return mandatoryParametersSet;
 	}
+	
+	protected boolean urlStartsWithMountedSegments(Url url)
+	{
+		if (url == null)
+		{
+			return false;
+		}
+		else
+		{
+			return getMatchedSegmentSizes(url) != null;
+		}
+	}
 }
