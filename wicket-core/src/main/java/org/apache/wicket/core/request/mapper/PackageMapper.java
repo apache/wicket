@@ -221,4 +221,11 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	{
 		return false;
 	}
+	
+	@Override
+	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
+	{
+		PackageName pageClassPackageName = PackageName.forClass(pageClass);
+		return packageName.equals(pageClassPackageName);
+	}
 }
