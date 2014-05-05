@@ -34,6 +34,7 @@ public class MountMapper extends AbstractMapper
 {
 	private final String[] mountSegments;
 	private final IMountedRequestMapper mapper;
+	private IRequestMapper innerRequestMapper;
 
 	/**
 	 * Construct.
@@ -61,6 +62,7 @@ public class MountMapper extends AbstractMapper
 		Args.notEmpty(mountPath, "mountPath");
 		Args.notNull(mapper, "mapper");
 
+		innerRequestMapper = mapper;
 		mountSegments = getMountSegments(mountPath);
 		this.mapper = new UnmountedMapperAdapter(mapper);
 	}
@@ -169,4 +171,15 @@ public class MountMapper extends AbstractMapper
 
 		return mount.getUrl();
 	}
+
+	public IRequestMapper getInnerRequestMapper()
+	{
+	    return innerRequestMapper;
+	}
+
+	public void setInnerRequestMapper(IRequestMapper innerRequestMapper)
+	{
+	    this.innerRequestMapper = innerRequestMapper;
+	}
+
 }

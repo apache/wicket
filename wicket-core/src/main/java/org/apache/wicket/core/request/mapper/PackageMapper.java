@@ -229,4 +229,11 @@ public class PackageMapper extends AbstractBookmarkableMapper
 		// always return 0 here so that the mounts have higher priority
 		return 0;
 	}
+	
+	@Override
+	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
+	{
+		PackageName pageClassPackageName = PackageName.forClass(pageClass);
+		return packageName.equals(pageClassPackageName);
+	}
 }

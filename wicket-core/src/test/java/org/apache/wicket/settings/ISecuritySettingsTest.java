@@ -20,10 +20,12 @@ import junit.framework.Assert;
 
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.request.mapper.CryptoMapper;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.junit.Test;
 
@@ -70,6 +72,17 @@ public class ISecuritySettingsTest extends WicketTestCase
 		tester.assertRenderedPage(MockPageWithLink.class);
 		tester.clickLink(MockPageWithLink.LINK_ID);
 		Assert.assertNull(tester.getLastRenderedPage());
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5560
+	 */
+	@Test
+	public void enforceMountsWithCryptoMapper()
+	{
+	    WebApplication app = tester.getApplication();
+	    app.setRootRequestMapper(new CryptoMapper(app.getRootRequestMapper(), app));
+	    enforceMounts();
 	}
 
 	/**
