@@ -177,9 +177,4 @@ public class MountMapper extends AbstractMapper
 	    return innerRequestMapper;
 	}
 
-	public void setInnerRequestMapper(IRequestMapper innerRequestMapper)
-	{
-	    this.innerRequestMapper = innerRequestMapper;
-	}
-
 }
