@@ -27,7 +27,10 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.UrlRenderer;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -57,6 +60,12 @@ public class ServletWebResponseTest extends Assert
 		baseUrl.setHost("someHost");
 		baseUrl.setPort(80);
 		when(webRequest.getClientUrl()).thenReturn(baseUrl);
+
+		UrlRenderer renderer = new UrlRenderer(webRequest);
+
+		RequestCycle requestCycle = mock(RequestCycle.class);
+		ThreadContext.setRequestCycle(requestCycle);
+		when(requestCycle.getUrlRenderer()).thenReturn(renderer);
 
 		HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
 		when(webRequest.getContainerRequest()).thenReturn(httpServletRequest);
@@ -104,6 +113,12 @@ public class ServletWebResponseTest extends Assert
 		baseUrl.setPort(80);
 		when(webRequest.getClientUrl()).thenReturn(baseUrl);
 
+		UrlRenderer renderer = new UrlRenderer(webRequest);
+
+		RequestCycle requestCycle = mock(RequestCycle.class);
+		ThreadContext.setRequestCycle(requestCycle);
+		when(requestCycle.getUrlRenderer()).thenReturn(renderer);
+
 		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
 		when(httpServletResponse.encodeRedirectURL(Matchers.anyString())).thenReturn(url);
 
@@ -112,5 +127,63 @@ public class ServletWebResponseTest extends Assert
 
 		verify(httpServletResponse).sendRedirect("relative/path");
 		assertTrue(webResponse.isRedirect());
+	}
+
+	/**
+	 * WICKET-5582 absolute URLs stay absolute after encoding
+	 */
+	@Test
+	public void encodeAbsoluteUrl()
+	{
+		final String url = "http://localhost:8080/path";
+
+		ServletWebRequest webRequest = mock(ServletWebRequest.class);
+		when(webRequest.isAjax()).thenReturn(Boolean.FALSE);
+		Url baseUrl = Url.parse("./baseUrl");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("someHost");
+		baseUrl.setPort(80);
+		when(webRequest.getClientUrl()).thenReturn(baseUrl);
+
+		UrlRenderer renderer = new UrlRenderer(webRequest);
+
+		RequestCycle requestCycle = mock(RequestCycle.class);
+		ThreadContext.setRequestCycle(requestCycle);
+		when(requestCycle.getUrlRenderer()).thenReturn(renderer);
+
+		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
+		when(httpServletResponse.encodeURL(Matchers.eq(url))).thenReturn(url + ";foo");
+
+		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
+		assertEquals(url + ";foo", webResponse.encodeURL(url));
+	}
+
+	/**
+	 * WICKET-5582 absolute URLs stay absolute after encoding
+	 */
+	@Test
+	public void encodeRedirectAbsoluteUrl()
+	{
+		final String url = "http://localhost:8080/path";
+
+		ServletWebRequest webRequest = mock(ServletWebRequest.class);
+		when(webRequest.isAjax()).thenReturn(Boolean.FALSE);
+		Url baseUrl = Url.parse("./baseUrl");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("someHost");
+		baseUrl.setPort(80);
+		when(webRequest.getClientUrl()).thenReturn(baseUrl);
+
+		UrlRenderer renderer = new UrlRenderer(webRequest);
+
+		RequestCycle requestCycle = mock(RequestCycle.class);
+		ThreadContext.setRequestCycle(requestCycle);
+		when(requestCycle.getUrlRenderer()).thenReturn(renderer);
+
+		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
+		when(httpServletResponse.encodeRedirectURL(Matchers.eq(url))).thenReturn(url + ";foo");
+
+		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
+		assertEquals(url + ";foo", webResponse.encodeRedirectURL(url));
 	}
 }
