@@ -1532,9 +1532,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			for (ComponentTag tag = context.takeTag(); tag != null; tag = context.takeTag())
 			{
-				if (tag.getAutoComponentFactory() != null)
+				ComponentTag.IAutoComponentFactory autoComponentFactory = tag.getAutoComponentFactory();
+				if (autoComponentFactory != null)
 				{
-					queue(tag.getAutoComponentFactory().newComponent(tag));
+					queue(autoComponentFactory.newComponent(tag));
 				}
 			}
 		}
@@ -2169,8 +2170,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				return DequeueTagAction.DEQUEUE;
 			}
-			else
-			if (wicketTag.getAutoComponentFactory() != null)
+			else if (wicketTag.getAutoComponentFactory() != null)
 			{
 				return DequeueTagAction.DEQUEUE;
 			}
