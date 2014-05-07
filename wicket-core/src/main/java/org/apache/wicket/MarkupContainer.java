@@ -2180,7 +2180,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 			else if (wicketTag.isChildTag())
 			{
-				return DequeueTagAction.DEQUEUE;
+				return DequeueTagAction.SKIP;
 			}
 			else
 			{
