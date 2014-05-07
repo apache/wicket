@@ -172,7 +172,7 @@ public class ServletWebResponse extends WebResponse
 	{
 		Args.notNull(url, "url");
 
-		UrlRenderer urlRenderer = RequestCycle.get().getUrlRenderer();
+		UrlRenderer urlRenderer = getUrlRenderer();
 
 		Url originalUrl = Url.parse(url);
 
@@ -212,7 +212,7 @@ public class ServletWebResponse extends WebResponse
 	{
 		Args.notNull(url, "url");
 
-		UrlRenderer urlRenderer = RequestCycle.get().getUrlRenderer();
+		UrlRenderer urlRenderer = getUrlRenderer();
 
 		Url originalUrl = Url.parse(url);
 
@@ -244,6 +244,16 @@ public class ServletWebResponse extends WebResponse
 			}
 		}
 		return encodedUrl;
+	}
+
+	private UrlRenderer getUrlRenderer()
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle == null)
+		{
+			return new UrlRenderer(webRequest);
+		}
+		return requestCycle.getUrlRenderer();
 	}
 
 	@Override
