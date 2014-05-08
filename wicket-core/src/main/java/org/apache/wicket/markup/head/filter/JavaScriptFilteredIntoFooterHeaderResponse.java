@@ -60,12 +60,12 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 		return Arrays.asList(header, footer);
 	}
 
-	private IHeaderResponseFilter createFooterFilter(String footerBucketName)
+	protected IHeaderResponseFilter createFooterFilter(String footerBucketName)
 	{
 		return new JavaScriptAcceptingHeaderResponseFilter(footerBucketName);
 	}
 
-	private IHeaderResponseFilter createHeaderFilter(String headerFilterName, IHeaderResponseFilter footerFilter)
+	protected IHeaderResponseFilter createHeaderFilter(String headerFilterName, IHeaderResponseFilter footerFilter)
 	{
 		return new OppositeHeaderResponseFilter(headerFilterName, footerFilter);
 	}
