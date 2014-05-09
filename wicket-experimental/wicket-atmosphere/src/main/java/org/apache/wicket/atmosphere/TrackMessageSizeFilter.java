@@ -20,13 +20,12 @@ import static org.atmosphere.cpr.HeaderConfig.X_ATMOSPHERE_TRACKMESSAGESIZE;
 
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
-import org.atmosphere.cpr.PerRequestBroadcastFilter;
 
 /**
  * A broadcast filter, based on {@link org.atmosphere.client.TrackMessageSizeFilter}, but with a
  * different delimiter {@code &lt;|msg|&gt;} to prevent conflicts with pipes in the messages.
  */
-public class TrackMessageSizeFilter implements PerRequestBroadcastFilter
+public class TrackMessageSizeFilter extends org.atmosphere.client.TrackMessageSizeFilter
 {
 
 	@Override
