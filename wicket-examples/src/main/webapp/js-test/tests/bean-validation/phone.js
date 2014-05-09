@@ -24,7 +24,7 @@ $q(document).ready(function() {
 	var selectors = {
 
 		phoneInput: "input[name=phone]",
-		phoneInvalidErrorFeedback: "li.feedbackPanelERROR > span:contains(\"'Phone' must match \"[0-9]{3}-[0-9]{4}\"\")"
+		phoneInvalidErrorFeedback: "li.feedbackPanelERROR > span:contains(Phone)"
 	};
 
 	var submit = function($) {
@@ -34,7 +34,7 @@ $q(document).ready(function() {
 	module('Bean validation');
 
 	asyncTest('phone', function () {
-		expect(3);
+		expect(4);
 
 		gym.load('/bean-validation')
 			.then(function($) {
@@ -48,7 +48,9 @@ $q(document).ready(function() {
 				return submit($);
 			}).then(function($) {
 
-				equal($(selectors.phoneInvalidErrorFeedback).length, 1, 'The feedback message for invalid phone is there');
+				var $phoneErrorSpan = $(selectors.phoneInvalidErrorFeedback);
+				equal($phoneErrorSpan.length, 1, 'The feedback message for invalid phone is there');
+				equal($phoneErrorSpan.text(), "'Phone' must match \"[0-9]{3}-[0-9]{4}\"", 'The feedback error message for invalid phone is correct');
 
 				// enter valid phone
 				var $input = $(selectors.phoneInput);

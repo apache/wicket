@@ -50,7 +50,7 @@ public class DynamicJQueryResourceReference extends JQueryResourceReference
 	/**
 	 * jQuery ver. 2.x - works only on modern browsers
 	 */
-	public static final String VERSION_2 = "jquery/jquery-2.1.0.js";
+	public static final String VERSION_2 = "jquery/jquery-2.1.1.js";
 
 	public DynamicJQueryResourceReference()
 	{
