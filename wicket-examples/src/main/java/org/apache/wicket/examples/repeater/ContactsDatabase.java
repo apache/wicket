@@ -92,7 +92,7 @@ public class ContactsDatabase
 		return getIndex(sort).subList((int)first, (int)(first + count));
 	}
 
-	protected List<Contact> getIndex(SortParam sort)
+	public List<Contact> getIndex(SortParam sort)
 	{
 		if (sort == null)
 		{

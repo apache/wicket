@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.repeater;
 
+import java.util.Date;
+
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -35,7 +37,9 @@ public class Contact implements IClusterable
 	private String homePhone;
 
 	private String cellPhone;
-
+	
+	private Date bornDate;
+	
 	/**
 	 * Constructor
 	 */
@@ -174,6 +178,24 @@ public class Contact implements IClusterable
 	public void setLastName(String lastName)
 	{
 		this.lastName = lastName;
+	}
+
+	/**
+	 * 
+	 * @return bornDate
+	 */
+	public Date getBornDate()
+	{
+	    return bornDate;
+	}
+
+	/**
+	 * 
+	 * @param bornDate
+	 */
+	public void setBornDate(Date bornDate)
+	{
+	    this.bornDate = bornDate;
 	}
 
 }

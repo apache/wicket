@@ -17,19 +17,19 @@
 package org.apache.wicket.examples.repeater;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.export.ExportToolbar;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 
 /**
@@ -39,24 +39,14 @@ import org.apache.wicket.model.Model;
  * @author igor
  * 
  */
-public class DataTablePage extends BasePage
+public class DataTableFilterToolbarPage extends ExamplePage
 {
 	/**
 	 * constructor
 	 */
-	public DataTablePage()
+	public DataTableFilterToolbarPage()
 	{
 		List<IColumn<Contact, String>> columns = new ArrayList<IColumn<Contact, String>>();
-
-		columns.add(new AbstractColumn<Contact, String>(new Model<String>("Actions"))
-		{
-			@Override
-			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
-				IModel<Contact> model)
-			{
-				cellItem.add(new ActionPanel(componentId, model));
-			}
-		});
 
 		columns.add(new PropertyColumn<Contact, String>(new Model<String>("ID"), "id")
 		{
@@ -79,16 +69,27 @@ public class DataTablePage extends BasePage
 		});
 
 		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Cell Phone"), "cellPhone"));
-
-		DataTable dataTable = new DefaultDataTable<Contact, String>("table", columns,
-				new SortableContactDataProvider(), 8);
-		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter()));
-
-		add(dataTable);
-
-		DataTable tableWithColGroup = new DataTable("tableWithColGroup", columns,
-				new SortableContactDataProvider(), 8);
-		add(tableWithColGroup);
+		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Cell Phone"), "cellPhone"));		
+		columns.add(new PropertyColumn<Contact, String>(new Model<String>("Born Date"), "bornDate"));
+		
+		SortableContactDataProvider dataProvider = new SortableContactDataProvider();
+		DataTable<Contact, String> tableWithFilterForm = new DataTable<Contact, String>("tableWithFilterForm", columns,
+			dataProvider, 8);
+		
+		tableWithFilterForm.setOutputMarkupId(true);
+				
+		FilterForm<ContactFilter> filterForm = new FilterForm<ContactFilter>("filterForm", dataProvider);
+		
+		filterForm.add(new TextField<Date>("dateFrom", PropertyModel.<Date>of(dataProvider, "filterState.dateFrom")));
+		filterForm.add(new TextField<Date>("dateTo", PropertyModel.<Date>of(dataProvider, "filterState.dateTo")));
+		
+		add(filterForm);
+		
+		FilterToolbar filterToolbar = new FilterToolbar(tableWithFilterForm, filterForm, dataProvider);
+		
+		tableWithFilterForm.addTopToolbar(filterToolbar);
+		tableWithFilterForm.addTopToolbar(new NavigationToolbar(tableWithFilterForm));
+		tableWithFilterForm.addTopToolbar(new HeadersToolbar(tableWithFilterForm, dataProvider));
+		filterForm.add(tableWithFilterForm);
 	}
 }

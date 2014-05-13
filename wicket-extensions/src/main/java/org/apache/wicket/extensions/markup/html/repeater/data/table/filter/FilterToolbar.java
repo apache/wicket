@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -57,19 +58,11 @@ public class FilterToolbar extends AbstractToolbar
 	 *            type of filter state object
 	 * 
 	 */
-	public <T, S> FilterToolbar(final DataTable<T, S> table, final FilterForm<T> form,
-		final IFilterStateLocator<T> stateLocator)
+	public <T, S, F> FilterToolbar(final DataTable<T, S> table, final FilterForm<F> form, final IFilterStateLocator<F> stateLocator)
 	{
 		super(table);
 
-		if (table == null)
-		{
-			throw new IllegalArgumentException("argument [table] cannot be null");
-		}
-		if (stateLocator == null)
-		{
-			throw new IllegalArgumentException("argument [stateLocator] cannot be null");
-		}
+		Args.notNull(table, "table");
 		
 		IModel<List<IColumn<T, S>>> model = new AbstractReadOnlyModel<List<IColumn<T,S>>>() {
 			private static final long serialVersionUID = 1L;
