@@ -111,6 +111,12 @@ a:hover {
 	text-decoration: underline;
 }
 
+a[disabled="disabled"], a[disabled="disabled"]:hover{
+	color: inherit;
+	font-weight:normal;	
+	text-decoration: none;
+}
+
 img {
 	border: none;
 }

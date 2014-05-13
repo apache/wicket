@@ -55,6 +55,8 @@ public class PagingNavigationLink<T> extends Link<T>
 		setAutoEnable(true);
 		this.pageNumber = pageNumber;
 		this.pageable = pageable;
+		
+		add(new DisabledLinkPagingBehavior());
 	}
 
 	/**
