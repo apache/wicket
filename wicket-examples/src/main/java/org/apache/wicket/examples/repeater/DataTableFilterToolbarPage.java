@@ -19,20 +19,16 @@ package org.apache.wicket.examples.repeater;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.ColGroup;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.export.ExportToolbar;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 
 /**
@@ -42,24 +38,14 @@ import org.apache.wicket.model.Model;
  * @author igor
  * 
  */
-public class DataTablePage extends BasePage
+public class DataTableFilterToolbarPage extends ExamplePage
 {
 	/**
 	 * constructor
 	 */
-	public DataTablePage()
+	public DataTableFilterToolbarPage()
 	{
 		List<IColumn<Contact, String>> columns = new ArrayList<>();
-
-		columns.add(new AbstractColumn<Contact, String>(new Model<>("Actions"))
-		{
-			@Override
-			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
-				IModel<Contact> model)
-			{
-				cellItem.add(new ActionPanel(componentId, model));
-			}
-		});
 
 		columns.add(new PropertyColumn<Contact, String>(new Model<>("ID"), "id")
 		{
@@ -84,28 +70,28 @@ public class DataTablePage extends BasePage
 		columns.add(new PropertyColumn<Contact, String>(new Model<>("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn<Contact, String>(new Model<>("Cell Phone"), "cellPhone"));
 
+		
 		SortableContactDataProvider dataProvider = new SortableContactDataProvider();
-		DataTable<Contact, String> dataTable = new DefaultDataTable<>("table", columns,
-				dataProvider, 8);
+		columns = new ArrayList<>(columns);
+		columns.add(new PropertyColumn<Contact, String>(new Model<>("Born Date"), "bornDate"));
 		
-		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter()));
-
-		add(dataTable);
-
-		DataTable<Contact, String> tableWithColGroup = new DataTable<>("tableWithColGroup", columns,
-				dataProvider, 8);
-		tableWithColGroup.addTopToolbar(new HeadersToolbar<>(tableWithColGroup, dataProvider));
-		add(tableWithColGroup);
+		DataTable<Contact, String> tableWithFilterForm = new DataTable<>("tableWithFilterForm", columns,
+			dataProvider, 8);
 		
-		//This is a table that uses ColGroup to style the columns: 
-		ColGroup colgroup = tableWithColGroup.getColGroup();
-		colgroup.add(AttributeModifier.append("style", "border: solid 1px green;"));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: lightblue;")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: lightgreen")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: pink")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: yellow")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("span", "2"),
-				AttributeModifier.append("style", "background-color: #CC6633")));
+		tableWithFilterForm.setOutputMarkupId(true);
+				
+		FilterForm<ContactFilter> filterForm = new FilterForm<>("filterForm", dataProvider);
 		
+		filterForm.add(new TextField<>("dateFrom", PropertyModel.of(dataProvider, "filterState.dateFrom")));
+		filterForm.add(new TextField<>("dateTo", PropertyModel.of(dataProvider, "filterState.dateTo")));
+		
+		add(filterForm);
+		
+		FilterToolbar filterToolbar = new FilterToolbar(tableWithFilterForm, filterForm);
+		
+		tableWithFilterForm.addTopToolbar(filterToolbar);
+		tableWithFilterForm.addTopToolbar(new NavigationToolbar(tableWithFilterForm));
+		tableWithFilterForm.addTopToolbar(new HeadersToolbar<>(tableWithFilterForm, dataProvider));
+		filterForm.add(tableWithFilterForm);
 	}
 }

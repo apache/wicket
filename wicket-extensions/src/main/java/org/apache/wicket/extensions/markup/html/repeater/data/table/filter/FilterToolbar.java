@@ -52,19 +52,15 @@ public class FilterToolbar extends AbstractToolbar
 	 *            data table this toolbar will be added to
 	 * @param form
 	 *            the filter form
-	 * @param stateLocator
-	 *            locator responsible for finding object used to store filter's state
 	 * @param <T>
 	 *            type of filter state object
 	 * 
 	 */
-	public <T, S> FilterToolbar(final DataTable<T, S> table, final FilterForm<T> form,
-		final IFilterStateLocator<T> stateLocator)
+	public <T, S, F> FilterToolbar(final DataTable<T, S> table, final FilterForm<F> form)
 	{
 		super(table);
 
 		Args.notNull(table, "table");
-		Args.notNull(stateLocator, "stateLocator");
 		
 		IModel<List<IColumn<T, S>>> model = new AbstractReadOnlyModel<List<IColumn<T,S>>>() {
 			private static final long serialVersionUID = 1L;
