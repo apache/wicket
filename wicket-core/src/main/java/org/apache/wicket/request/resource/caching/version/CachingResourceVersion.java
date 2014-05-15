@@ -157,4 +157,8 @@ public class CachingResourceVersion implements IResourceVersion
 			cache.remove(key);
 		}
 	}
+
+  public void invalidateAll() {
+    cache.clear();
+  }
 }
