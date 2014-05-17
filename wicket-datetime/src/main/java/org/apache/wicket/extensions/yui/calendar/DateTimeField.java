@@ -165,7 +165,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 		// Create and add the "hours" TextField
 		add(hoursField = new TextField<Integer>(HOURS, new PropertyModel<Integer>(this, HOURS),
 			Integer.class));
-		hoursField.add(new HoursValidator());
+		hoursField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator
+			.range(1, 12));
 		hoursField.setLabel(new Model<>(HOURS));
 
 		// Create and add the "minutes" TextField
