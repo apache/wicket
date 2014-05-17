@@ -145,7 +145,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 		// Create and add the "hours" TextField
 		add(hoursField = new TextField<Integer>(HOURS, new PropertyModel<Integer>(this, HOURS),
 			Integer.class));
-		hoursField.add(new HoursValidator());
+		hoursField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator
+			.range(1, 12));
 		hoursField.setLabel(new Model<String>(HOURS));
 
 		// Create and add the "minutes" TextField
@@ -521,34 +522,6 @@ public class DateTimeField extends FormComponentPanel<Date>
 	private int getMaximumHours(boolean use12HourFormat)
 	{
 		return use12HourFormat ? 12 : 24;
-	}
-
-	/**
-	 * Validator for the {@link DateTimeField}'s hours field. Behaves like
-	 * <code>RangeValidator</code>, setting appropriate range according to
-	 * {@link DateTimeField#getMaximumHours()}
-	 * 
-	 * @see DateTimeField#getMaximumHours()
-	 * @author Gerolf Seitz
-	 */
-	private class HoursValidator extends RangeValidator<Integer>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Constructor
-		 */
-		public HoursValidator()
-		{
-			if (getMaximumHours() == 24)
-			{
-				setRange(0, 23);
-			}
-			else
-			{
-				setRange(1, 12);
-			}
-		}
 	}
 
 	/**
