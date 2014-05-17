@@ -545,34 +545,6 @@ public class DateTimeField extends FormComponentPanel<Date>
 	}
 
 	/**
-	 * Validator for the {@link DateTimeField}'s hours field. Behaves like
-	 * <code>RangeValidator</code>, setting appropriate range according to
-	 * {@link DateTimeField#getMaximumHours()}
-	 * 
-	 * @see DateTimeField#getMaximumHours()
-	 * @author Gerolf Seitz
-	 */
-	private class HoursValidator extends RangeValidator<Integer>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Constructor
-		 */
-		public HoursValidator()
-		{
-			if (getMaximumHours() == 24)
-			{
-				setRange(0, 23);
-			}
-			else
-			{
-				setRange(1, 12);
-			}
-		}
-	}
-
-	/**
 	 * The DatePicker that gets added to the DateTimeField component. Users may override this method
 	 * with a DatePicker of their choice.
 	 * 
