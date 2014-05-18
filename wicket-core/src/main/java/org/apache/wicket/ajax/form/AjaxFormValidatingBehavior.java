@@ -142,7 +142,14 @@ public class AjaxFormValidatingBehavior extends Behavior
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				target.add(component);
+			    	if (component.isVisibleInHierarchy())
+			    	{
+			    	    	target.add(component);
+			    	}
+			    	else 
+			    	{
+			    	    	visit.dontGoDeeper();
+				}
 			}
 		});
 	}
