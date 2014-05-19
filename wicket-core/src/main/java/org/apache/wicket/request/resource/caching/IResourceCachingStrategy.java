@@ -71,4 +71,10 @@ public interface IResourceCachingStrategy
 	 * @param response
 	 */
 	void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource);
+
+	/**
+	 * Clears any stateful information
+	 */
+	void clearCache();
+
 }

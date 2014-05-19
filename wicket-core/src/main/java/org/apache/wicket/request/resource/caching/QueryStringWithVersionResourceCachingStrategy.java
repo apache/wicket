@@ -20,6 +20,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.AbstractResource;
+import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
@@ -133,6 +134,15 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 		{
 			response.setCacheDurationToMaximum();
 			response.setCacheScope(WebResponse.CacheScope.PUBLIC);
+		}
+	}
+
+	@Override
+	public void clearCache()
+	{
+		if (resourceVersion instanceof CachingResourceVersion)
+		{
+			((CachingResourceVersion) resourceVersion).invalidateAll();
 		}
 	}
 }
