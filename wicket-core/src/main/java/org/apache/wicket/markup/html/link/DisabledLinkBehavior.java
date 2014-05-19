@@ -22,7 +22,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 
 /**
- * A behavior to change the representation fo disabled links.
+ * A behavior to change the representation for disabled links.
  * <p>
  * Markup tags {@code <a>}, {@code <link>} and {@code <area>} are replaced with a {@code <span>}.
  */

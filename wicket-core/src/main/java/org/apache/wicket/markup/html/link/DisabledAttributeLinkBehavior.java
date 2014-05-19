@@ -15,18 +15,20 @@
  * limitations under the License.
  */
 
-package org.apache.wicket.markup.html.navigation.paging;
+package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 
-public class DisabledLinkPagingBehavior extends Behavior
+/**
+ * 
+ * A behavior to add attribute "disabled" to a Link component when it is disabled.
+ *
+ */
+public class DisabledAttributeLinkBehavior extends Behavior
 {
 
-    	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
 	@Override
@@ -35,8 +37,10 @@ public class DisabledLinkPagingBehavior extends Behavior
 		if (!component.isEnabledInHierarchy())
 		{
 			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-				tag.getName().equalsIgnoreCase("area"))
+			String tagName = tag.getName();
+			
+			if (tagName.equalsIgnoreCase("a") || tagName.equalsIgnoreCase("link") ||
+				tagName.equalsIgnoreCase("area"))
 			{
 			    tag.put("disabled", "disabled");
 			}

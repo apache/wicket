@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.navigation.paging;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.html.link.DisabledAttributeLinkBehavior;
 import org.apache.wicket.markup.html.link.Link;
 
 /**
@@ -66,7 +67,7 @@ public class PagingNavigationIncrementLink<T> extends Link<T>
 		this.increment = increment;
 		this.pageable = pageable;
 		
-		add(new DisabledLinkPagingBehavior());
+		add(new DisabledAttributeLinkBehavior());
 	}
 
 	/**
