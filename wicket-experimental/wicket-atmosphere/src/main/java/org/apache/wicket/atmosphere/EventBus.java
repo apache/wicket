@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
@@ -363,7 +364,7 @@ public class EventBus implements UnboundListener
 		ThreadContext oldContext = ThreadContext.get(false);
 		try
 		{
-			for (AtmosphereResource resource : broadcaster.getAtmosphereResources())
+			for (AtmosphereResource resource : ImmutableList.copyOf(broadcaster.getAtmosphereResources()))
 			{
 				postToSingleResource(event, resource);
 			}
