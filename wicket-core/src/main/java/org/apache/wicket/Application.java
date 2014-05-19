@@ -1596,6 +1596,16 @@ public abstract class Application implements UnboundListener, IEventSink
 		this.requestCycleProvider = requestCycleProvider;
 	}
 
+	/**
+	 * @deprecated In Wicket 7.x this method is part of {@link org.apache.wicket.settings.def.MarkupSettings}
+	 * @return The generator of markup ids for components
+	 */
+	@Deprecated
+	public IMarkupIdGenerator getMarkupIdGenerator()
+	{
+		return new DefaultMarkupIdGenerator();
+	}
+
 	private static class DefaultExceptionMapperProvider implements IProvider<IExceptionMapper>
 	{
 		@Override

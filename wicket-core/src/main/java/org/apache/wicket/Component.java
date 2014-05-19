@@ -1485,57 +1485,8 @@ public abstract class Component
 	 */
 	public String getMarkupId(boolean createIfDoesNotExist)
 	{
-		Object storedMarkupId = getMarkupIdImpl();
-		if (storedMarkupId instanceof String)
-		{
-			return (String)storedMarkupId;
-		}
-
-		if (storedMarkupId == null && createIfDoesNotExist == false)
-		{
-			return null;
-		}
-
-		int generatedMarkupId = storedMarkupId instanceof Integer ? (Integer)storedMarkupId
-			: getSession().nextSequenceValue();
-
-		if (generatedMarkupId == 0xAD)
-		{
-			// WICKET-4559 skip suffix 'ad' because some ad-blocking solutions may hide the
-// component
-			generatedMarkupId = getSession().nextSequenceValue();
-		}
-
-		if (storedMarkupId == null)
-		{
-			setMarkupIdImpl(generatedMarkupId);
-		}
-
-		String markupIdPrefix = "id";
-		if (getApplication().usesDevelopmentConfig())
-		{
-			// in non-deployment mode we make the markup id include component id
-			// so it is easier to debug
-			markupIdPrefix = getId();
-		}
-
-		String markupIdPostfix = Integer.toHexString(generatedMarkupId).toLowerCase();
-
-		String markupId = markupIdPrefix + markupIdPostfix;
-
-		// make sure id is compliant with w3c requirements (starts with a letter)
-		char c = markupId.charAt(0);
-		if (!Character.isLetter(c))
-		{
-			markupId = "id" + markupId;
-		}
-
-		// escape some noncompliant characters
-		markupId = Strings.replaceAll(markupId, "_", "__").toString();
-		markupId = markupId.replace('.', '_');
-		markupId = markupId.replace('-', '_');
-		markupId = markupId.replace(' ', '_');
-
+		IMarkupIdGenerator markupIdGenerator = getApplication().getMarkupIdGenerator();
+		String markupId = markupIdGenerator.generateMarkupId(this);
 		return markupId;
 	}
 
