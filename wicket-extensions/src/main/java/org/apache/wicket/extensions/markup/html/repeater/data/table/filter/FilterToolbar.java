@@ -53,7 +53,11 @@ public class FilterToolbar extends AbstractToolbar
 	 * @param form
 	 *            the filter form
 	 * @param <T>
-	 *            type of filter state object
+	 *            the type of the DataTable's model object
+	 * @param <S>
+	 *            the type of the DataTable's sorting parameter
+	 * @param <F>
+	 *            the type of filter state object
 	 * 
 	 */
 	public <T, S, F> FilterToolbar(final DataTable<T, S> table, final FilterForm<F> form)
@@ -149,7 +153,7 @@ public class FilterToolbar extends AbstractToolbar
 	{
 		if (findParent(FilterForm.class) == null)
 		{
-			throw new IllegalStateException("FilterToolbar must be contained within a Form");
+			throw new IllegalStateException("FilterToolbar must be contained within a FilterForm");
 		}
 		super.onBeforeRender();
 	}
