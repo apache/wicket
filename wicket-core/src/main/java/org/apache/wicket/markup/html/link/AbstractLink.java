@@ -165,7 +165,9 @@ public abstract class AbstractLink extends WebMarkupContainer
 	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Draw anything before the body?
-		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
+		boolean linkEnabled = isLinkEnabled();
+		
+		if (!linkEnabled && getBeforeDisabledLink() != null)
 		{
 			getResponse().write(getBeforeDisabledLink());
 		}
@@ -184,7 +186,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 			super.onComponentTagBody(markupStream, openTag);
 		}
 		// Draw anything after the body?
-		if (!isLinkEnabled() && getAfterDisabledLink() != null)
+		if (!linkEnabled && getAfterDisabledLink() != null)
 		{
 			getResponse().write(getAfterDisabledLink());
 		}
@@ -201,8 +203,10 @@ public abstract class AbstractLink extends WebMarkupContainer
 	protected void disableLink(final ComponentTag tag)
 	{
 		// if the tag is an anchor proper
-		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-			tag.getName().equalsIgnoreCase("area"))
+		String tagName = tag.getName();
+		
+		if (tagName.equalsIgnoreCase("a") || tagName.equalsIgnoreCase("link") ||
+			tagName.equalsIgnoreCase("area"))
 		{
 			// Change anchor link to span tag
 			tag.setName("span");
@@ -213,8 +217,8 @@ public abstract class AbstractLink extends WebMarkupContainer
 			tag.remove("onclick");
 		}
 		// if the tag is a button or input
-		else if ("button".equalsIgnoreCase(tag.getName()) ||
-			"input".equalsIgnoreCase(tag.getName()))
+		else if ("button".equalsIgnoreCase(tagName) ||
+			"input".equalsIgnoreCase(tagName))
 		{
 			tag.put("disabled", "disabled");
 		}
