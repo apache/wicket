@@ -21,8 +21,6 @@ import java.util.List;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
@@ -233,9 +231,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 		{
 			// we do not want relative URL here, because it will be used by
 			// Form#dispatchEvent
-			CharSequence url = urlFor(new ListenerInterfaceRequestHandler(
-				new PageAndComponentProvider(getPage(), this, new PageParameters()),
-				IOnChangeListener.INTERFACE));
+			CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
 
 			Form<?> form = findParent(Form.class);
 			if (form != null)
