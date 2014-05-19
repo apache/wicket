@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.settings;
 
+import org.apache.wicket.DefaultMarkupIdGenerator;
+import org.apache.wicket.IMarkupIdGenerator;
 import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.util.lang.Args;
 
@@ -62,6 +64,12 @@ public class MarkupSettings
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be removed from output
 	 */
 	private boolean stripWicketTags = false;
+
+	/**
+	 * Generates the markup ids for the components with
+	 * {@link org.apache.wicket.Component#setOutputMarkupId(boolean) #setOutputMarkupId(true)}
+	 */
+	private IMarkupIdGenerator markupIdGenerator = new DefaultMarkupIdGenerator();
 
 	/**
 	 * Construct
@@ -242,6 +250,27 @@ public class MarkupSettings
 	public MarkupSettings setThrowExceptionOnMissingXmlDeclaration(boolean throwException)
 	{
 		throwExceptionOnMissingXmlDeclaration = throwException;
+		return this;
+	}
+
+	/**
+	 * @return The configured generator for component markup ids
+	 */
+	public IMarkupIdGenerator getMarkupIdGenerator()
+	{
+		return markupIdGenerator;
+	}
+
+	/**
+	 * Sets a new IMarkupIdGenerator
+	 *
+	 * @param markupIdGenerator
+	 *          The generator of markup ids for the components
+	 * @return {@code this} object for chaining
+	 */
+	public MarkupSettings setMarkupIdGenerator(IMarkupIdGenerator markupIdGenerator)
+	{
+		this.markupIdGenerator = Args.notNull(markupIdGenerator, "markupIdGenerator");
 		return this;
 	}
 }
