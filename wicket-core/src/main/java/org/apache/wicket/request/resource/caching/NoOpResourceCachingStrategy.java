@@ -48,4 +48,10 @@ public class NoOpResourceCachingStrategy implements IResourceCachingStrategy
 	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
 	{
 	}
+
+	@Override
+	public void clearCache()
+	{
+	}
+
 }
