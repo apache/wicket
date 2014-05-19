@@ -85,7 +85,7 @@ public class DataTableFilterToolbarPage extends ExamplePage
 		
 		add(filterForm);
 		
-		FilterToolbar filterToolbar = new FilterToolbar(tableWithFilterForm, filterForm, dataProvider);
+		FilterToolbar filterToolbar = new FilterToolbar(tableWithFilterForm, filterForm, null);
 		
 		tableWithFilterForm.addTopToolbar(filterToolbar);
 		tableWithFilterForm.addTopToolbar(new NavigationToolbar(tableWithFilterForm));

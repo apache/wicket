@@ -53,9 +53,13 @@ public class FilterToolbar extends AbstractToolbar
 	 * @param form
 	 *            the filter form
 	 * @param stateLocator
-	 *            locator responsible for finding object used to store filter's state
+	 *            locator responsible for finding object used to store filter's state. Deprecated! Not used.
 	 * @param <T>
-	 *            type of filter state object
+	 *            the type of the DataTable's model object
+	 * @param <S>
+	 *            the type of the DataTable's sorting parameter
+	 * @param <F>
+	 *            the type of the type of filter state object
 	 * 
 	 */
 	public <T, S, F> FilterToolbar(final DataTable<T, S> table, final FilterForm<F> form, final IFilterStateLocator<F> stateLocator)
@@ -151,7 +155,7 @@ public class FilterToolbar extends AbstractToolbar
 	{
 		if (findParent(FilterForm.class) == null)
 		{
-			throw new IllegalStateException("FilterToolbar must be contained within a Form");
+			throw new IllegalStateException("FilterToolbar must be contained within a FilterForm");
 		}
 		super.onBeforeRender();
 	}
