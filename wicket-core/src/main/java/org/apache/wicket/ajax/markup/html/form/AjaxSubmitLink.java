@@ -22,6 +22,8 @@ import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A link that submits a form via ajax. Since this link takes the form as a constructor argument it
@@ -35,6 +37,8 @@ import org.apache.wicket.markup.html.form.Form;
 public abstract class AjaxSubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger logger = LoggerFactory.getLogger(AjaxSubmitLink.class);
 
 	private final Form<?> form;
 
@@ -171,6 +175,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	@Override
 	public final void onError()
 	{
+		logger.warn("unexpected invocation of #onError() on {}", this);
 	}
 
 
@@ -191,6 +196,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	@Override
 	public final void onSubmit()
 	{
+		logger.warn("unexpected invocation of #onSubmit() on {}", this);
 	}
 
 	/**
@@ -199,5 +205,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	@Override
 	public final void onAfterSubmit()
 	{
+		logger.warn("unexpected invocation of #onAfterSubmit() on {}", this);
 	}
 }
