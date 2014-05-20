@@ -111,13 +111,23 @@ public abstract class AjaxFallbackButton extends Button
 	}
 
 	/**
-	 * Listener method invoked on form submit with errors
+	 * Listener method invoked on form submit with errors. If ajax failed and this event was
+	 * generated via a normal submission, the target argument will be null.
 	 * 
 	 * @param target
 	 * @param form
 	 */
 	protected void onError(AjaxRequestTarget target, Form<?> form)
 	{
+	}
+
+	@Override
+	public final void onError()
+	{
+		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		{
+			onError(null, getForm());
+		}
 	}
 
 	/**
