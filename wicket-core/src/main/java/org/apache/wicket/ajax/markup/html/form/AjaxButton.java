@@ -19,9 +19,12 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A button that submits the form via ajax.
@@ -33,6 +36,8 @@ import org.apache.wicket.model.IModel;
 public abstract class AjaxButton extends Button
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger logger = LoggerFactory.getLogger(AjaxButton.class);
 
 	private final Form<?> form;
 
@@ -158,6 +163,37 @@ public abstract class AjaxButton extends Button
 		{
 			return super.getForm();
 		}
+	}
+
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		// WICKET-5594 prevent non-Ajax submit
+		tag.put("type", "button");
+
+		super.onComponentTag(tag);
+	}
+
+	/**
+	 * This method is never called.
+	 * 
+	 * @see #onSubmit(AjaxRequestTarget, Form)
+	 */
+	@Override
+	public final void onSubmit()
+	{
+		logger.warn("unexpected invocation of #onSubmit()");
+	}
+
+	/**
+	 * This method is never called.
+	 * 
+	 * @see #onError(AjaxRequestTarget, Form)
+	 */
+	@Override
+	public final void onError()
+	{
+		logger.warn("unexpected invocation of #onError()");
 	}
 
 	/**
