@@ -185,6 +185,12 @@ public abstract class AjaxButton extends Button
 		logger.warn("unexpected invocation of #onSubmit() on {}", this);
 	}
 
+	@Override
+	public final void onAfterSubmit()
+	{
+		logger.warn("unexpected invocation of #onAfterSubmit() on {}", this);
+	}
+
 	/**
 	 * This method is never called.
 	 * 
