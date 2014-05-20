@@ -18,6 +18,7 @@ package org.apache.wicket.util.tester;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,6 +44,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
@@ -1200,18 +1202,39 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void formSubmitSendsFormInputInRequest()
 	{
-		MockFormSubmitsPage page = new MockFormSubmitsPage();
+		final AtomicBoolean ajaxButtonSubmitted = new AtomicBoolean(false);
+		final AtomicBoolean ajaxSubmitLinkSubmitted = new AtomicBoolean(false);
+
+		MockFormSubmitsPage page = new MockFormSubmitsPage()
+		{
+			@Override
+			protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				ajaxSubmitLinkSubmitted.set(true);
+			}
+
+			@Override
+			protected void onAjaxButtonSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				ajaxButtonSubmitted.set(true);
+			}
+		};
 
 		tester.startPage(page);
 
 		tester.newFormTester("form").submit();
 		assertEquals("a text value", page.text);
 
-		tester.executeAjaxEvent(page.get("form:ajaxButton"), "click");
+		assertFalse(ajaxButtonSubmitted.get());
+		tester.newFormTester("form").submit("ajaxButton");
 		assertEquals("a text value", page.text);
+		assertTrue(ajaxButtonSubmitted.get());
 
-		tester.clickLink("form:ajaxlink");
+		assertFalse(ajaxSubmitLinkSubmitted.get());
+		Component submitter = page.form.get("ajaxlink");
+		tester.newFormTester("form").submit(submitter);
 		assertEquals("a text value", page.text);
+		assertTrue(ajaxSubmitLinkSubmitted.get());
 
 		tester.clickLink("form:link");
 		assertEquals("a text value", page.text);

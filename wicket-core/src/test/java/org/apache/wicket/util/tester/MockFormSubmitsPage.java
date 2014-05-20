@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebPage;
@@ -49,14 +50,30 @@ public class MockFormSubmitsPage extends WebPage
 
 		form.add(new AjaxButton("ajaxButton")
 		{
-
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				MockFormSubmitsPage.this.onAjaxButtonSubmit(target, form);
+			}
 		});
 
 		form.add(new SubmitLink("link"));
 
 		form.add(new AjaxSubmitLink("ajaxlink")
 		{
-
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				MockFormSubmitsPage.this.onAjaxSubmitLinkSubmit(target, form);
+			}
 		});
+	}
+
+	protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target, Form<?> form)
+	{
+	}
+
+	protected void onAjaxButtonSubmit(AjaxRequestTarget target, Form<?> form)
+	{
 	}
 }
