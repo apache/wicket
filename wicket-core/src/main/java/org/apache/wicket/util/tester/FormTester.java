@@ -27,6 +27,8 @@ import junit.framework.Assert;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.AbstractSingleSelectChoice;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
@@ -741,8 +743,13 @@ public class FormTester
 	 */
 	public FormTester submit(final String buttonComponentId)
 	{
-		setValue(buttonComponentId, "marked");
-		return submit();
+		Component submitter = getForm().get(buttonComponentId);
+		if (submitter == null)
+		{
+			fail("Cannot submit the form because there is no submitting component with id: " + buttonComponentId);
+		}
+
+		return submit(submitter);
 	}
 
 	/**
@@ -765,7 +772,21 @@ public class FormTester
 		Args.notNull(buttonComponent, "buttonComponent");
 
 		setValue(buttonComponent, "marked");
-		return submit();
+
+		if (buttonComponent instanceof AjaxButton || buttonComponent instanceof AjaxSubmitLink)
+		{
+			if (clearFeedbackMessagesBeforeSubmit)
+			{
+				tester.clearFeedbackMessages();
+			}
+			tester.getRequest().setUseMultiPartContentType(workingForm.isMultiPart());
+			tester.executeAjaxEvent(buttonComponent, "click");
+			return this;
+		}
+		else
+		{
+			return submit();
+		}
 	}
 
 	/**
