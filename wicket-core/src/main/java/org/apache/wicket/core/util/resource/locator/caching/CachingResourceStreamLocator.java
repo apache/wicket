@@ -43,7 +43,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  */
 public class CachingResourceStreamLocator implements IResourceStreamLocator
 {
-	private final ConcurrentMap<Key, IResourceStreamReference> cache;
+	private final ConcurrentMap<CacheKey, IResourceStreamReference> cache;
 
 	private final IResourceStreamLocator delegate;
 
@@ -59,7 +59,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 
 		delegate = resourceStreamLocator;
 
-		cache = new ConcurrentHashMap<Key, IResourceStreamReference>();
+		cache = new ConcurrentHashMap<CacheKey, IResourceStreamReference>();
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	@Override
 	public IResourceStream locate(Class<?> clazz, String path)
 	{
-		Key key = new Key(clazz.getName(), path, null, null, null);
+		CacheKey key = new CacheKey(clazz.getName(), path, null, null, null, null);
 		IResourceStreamReference resourceStreamReference = cache.get(key);
 
 		final IResourceStream result;
@@ -91,7 +91,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		return result;
 	}
 
-	private void updateCache(Key key, IResourceStream stream)
+	private void updateCache(CacheKey key, IResourceStream stream)
 	{
 		if (null == stream)
 		{
@@ -113,7 +113,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	public IResourceStream locate(Class<?> scope, String path, String style, String variation,
 		Locale locale, String extension, boolean strict)
 	{
-		Key key = new Key(scope.getName(), path, locale, style, variation);
+		CacheKey key = new CacheKey(scope.getName(), path, extension, locale, style, variation);
 		IResourceStreamReference resourceStreamReference = cache.get(key);
 
 		final IResourceStream result;
@@ -141,5 +141,45 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	public void clearCache()
 	{
 		cache.clear();
+	}
+
+	/**
+	 * A specialization of {@link org.apache.wicket.request.resource.ResourceReference.Key} that
+	 * additionally takes the file extension into account
+	 */
+	private static class CacheKey extends Key
+	{
+		/**
+		 * The file extension
+		 */
+		private final String extension;
+
+		private CacheKey(String scope, String name, String extension, Locale locale, String style, String variation)
+		{
+			super(scope, name, locale, style, variation);
+
+			this.extension = extension;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			if (!super.equals(o)) return false;
+
+			CacheKey cacheKey = (CacheKey) o;
+
+			return !(extension != null ? !extension.equals(cacheKey.extension) : cacheKey.extension != null);
+
+		}
+
+		@Override
+		public int hashCode()
+		{
+			int result = super.hashCode();
+			result = 31 * result + (extension != null ? extension.hashCode() : 0);
+			return result;
+		}
 	}
 }
