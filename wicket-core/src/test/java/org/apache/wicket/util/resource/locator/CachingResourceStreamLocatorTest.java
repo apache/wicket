@@ -32,9 +32,9 @@ import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStrea
 import org.junit.Test;
 
 /**
+ * Tests for CachingResourceStreamLocator
+ *
  * <a href="https://issues.apache.org/jira/browse/WICKET-3511">WICKET-3511</a>
- * 
- * @author mgrigorov
  */
 public class CachingResourceStreamLocatorTest
 {
@@ -70,18 +70,44 @@ public class CachingResourceStreamLocatorTest
 		FileResourceStream frs = new FileResourceStream(new File("."));
 
 		when(
-			resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
-				"extension", true)).thenReturn(frs);
+				resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
+						"extension", true)).thenReturn(frs);
 
 		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
-			resourceStreamLocator);
+				resourceStreamLocator);
 
 		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
 		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
 
 		// there is a file resource with that Key so expect just one call to the delegate
 		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
-			null, "extension", true);
+				null, "extension", true);
+	}
+
+	/**
+	 * Tests two FileResourceStreamReferences with different extensions
+	 */
+	@Test
+	public void fileResourceDifferentExtensions()
+	{
+		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
+
+		FileResourceStream frs = new FileResourceStream(new File("."));
+
+		when(resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
+						"extension", true)).thenReturn(frs);
+
+		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(resourceStreamLocator);
+
+		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
+		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
+		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension2", true);
+
+		// there is a file resource with that Key so expect just one call to the delegate
+		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
+				null, "extension", true);
+		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
+				null, "extension2", true);
 	}
 
 	/**
