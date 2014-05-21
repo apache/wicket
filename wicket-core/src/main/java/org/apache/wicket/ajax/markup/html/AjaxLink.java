@@ -104,11 +104,16 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 
 		if (isEnabledInHierarchy())
 		{
-			// disable any href attr in markup
 			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
 				tag.getName().equalsIgnoreCase("area"))
 			{
+				// disable any href attr in markup
 				tag.put("href", "javascript:;");
+			}
+			else if (tag.getName().equalsIgnoreCase("button"))
+			{
+				// WICKET-5597 prevent submit
+				tag.put("type", "button");
 			}
 		}
 		else

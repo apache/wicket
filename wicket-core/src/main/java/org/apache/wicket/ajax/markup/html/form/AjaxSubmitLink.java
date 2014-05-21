@@ -155,9 +155,16 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 		if (isEnabledInHierarchy())
 		{
-			if (tag.getName().toLowerCase().equals("a"))
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+				|| tag.getName().equalsIgnoreCase("area"))
 			{
+				// disable any href attr in markup
 				tag.put("href", "javascript:;");
+			}
+			else if (tag.getName().equalsIgnoreCase("button"))
+			{
+				// WICKET-5597 prevent default submit
+				tag.put("type", "button");
 			}
 		}
 		else
