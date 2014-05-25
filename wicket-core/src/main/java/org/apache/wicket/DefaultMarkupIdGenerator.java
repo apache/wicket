@@ -27,12 +27,17 @@ import org.apache.wicket.util.string.Strings;
 public class DefaultMarkupIdGenerator implements IMarkupIdGenerator
 {
 	@Override
-	public String generateMarkupId(Component component)
+	public String generateMarkupId(Component component, boolean createIfDoesNotExist)
 	{
 		Object storedMarkupId = component.getMarkupIdImpl();
 		if (storedMarkupId instanceof String)
 		{
 			return (String)storedMarkupId;
+		}
+
+		if (storedMarkupId == null && createIfDoesNotExist == false)
+		{
+			return null;
 		}
 
 		Session session = component.getSession();
