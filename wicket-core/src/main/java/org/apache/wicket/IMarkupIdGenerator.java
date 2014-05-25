@@ -25,8 +25,11 @@ public interface IMarkupIdGenerator
 	 * Generates markup id for the given component
 	 *
 	 * @param component
-	 *              The component for which to generate a markup id
+	 *            The component for which to generate a markup id
+	 * @param createIfDoesNotExist
+	 *            When there is no existing markup id, determines whether it should be generated or
+	 *            whether <code>null</code> should be returned.
 	 * @return The generated markup id
 	 */
-	String generateMarkupId(Component component);
+	String generateMarkupId(Component component, boolean createIfDoesNotExist);
 }

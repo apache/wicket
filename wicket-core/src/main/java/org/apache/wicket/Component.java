@@ -1499,7 +1499,7 @@ public abstract class Component
 	public String getMarkupId(boolean createIfDoesNotExist)
 	{
 		IMarkupIdGenerator markupIdGenerator = getApplication().getMarkupSettings().getMarkupIdGenerator();
-		String markupId = markupIdGenerator.generateMarkupId(this);
+		String markupId = markupIdGenerator.generateMarkupId(this, createIfDoesNotExist);
 		return markupId;
 	}
 

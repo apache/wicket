@@ -51,7 +51,7 @@ public class MarkupIdGeneratorTest extends WicketTestCase
 		IMarkupIdGenerator generator = new IMarkupIdGenerator()
 		{
 			@Override
-			public String generateMarkupId(Component component)
+			public String generateMarkupId(Component component, boolean create)
 			{
 				return customMarkupId;
 			}
