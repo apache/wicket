@@ -42,7 +42,7 @@ public abstract class AbstractMarkupFragment implements IMarkupFragment
 		Args.notEmpty(id, "id");
 		Args.withinRange(0, size() - 1, streamOffset, "streamOffset");
 
-		Deque<Boolean> openTagUsability = new LinkedList<Boolean>();
+		Deque<Boolean> openTagUsability = new LinkedList<>();
 		boolean canFind = true;
 
 		MarkupStream stream = new MarkupStream(this);
@@ -73,7 +73,7 @@ public abstract class AbstractMarkupFragment implements IMarkupFragment
 							{
 								canFind = true;
 							}
-							else if (wtag.isFragementTag())
+							else if (wtag.isFragmentTag())
 							{
 								canFind = false;
 							}

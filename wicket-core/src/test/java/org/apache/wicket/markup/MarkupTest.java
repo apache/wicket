@@ -76,7 +76,7 @@ public class MarkupTest extends WicketTestCase
 		assertNotNull(childMarkup);
 		assertTrue(childMarkup.get(0) instanceof WicketTag);
 		assertEquals("a6", ((ComponentTag)childMarkup.get(0)).getId());
-		assertTrue(((WicketTag)childMarkup.get(0)).isFragementTag());
+		assertTrue(((WicketTag)childMarkup.get(0)).isFragmentTag());
 
 		/*
 		 * Ensure we cannot find inside fragment
@@ -98,7 +98,7 @@ public class MarkupTest extends WicketTestCase
 		assertNotNull(childMarkup);
 		assertTrue(childMarkup.get(0) instanceof WicketTag);
 		assertEquals("b2", ((ComponentTag)childMarkup.get(0)).getId());
-		assertTrue(((WicketTag)childMarkup.get(0)).isFragementTag());
+		assertTrue(((WicketTag)childMarkup.get(0)).isFragmentTag());
 
 		/*
 		 * Ensure we cannot find inside fragment in subclass
@@ -138,7 +138,7 @@ public class MarkupTest extends WicketTestCase
 		assertNotNull(childMarkup);
 		assertTrue(childMarkup.get(0) instanceof WicketTag);
 		assertEquals("c2", ((ComponentTag)childMarkup.get(0)).getId());
-		assertTrue(((WicketTag)childMarkup.get(0)).isFragementTag());
+		assertTrue(((WicketTag)childMarkup.get(0)).isFragmentTag());
 
 		/*
 		 * Ensure we cannot find inside fragment in subclass
