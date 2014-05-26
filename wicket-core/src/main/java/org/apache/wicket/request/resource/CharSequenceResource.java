@@ -19,75 +19,63 @@ package org.apache.wicket.request.resource;
 import org.apache.wicket.request.Response;
 
 /**
- * An {@link IResource} for byte arrays. The byte array can be static - passed to the constructor,
- * or dynamic - by overriding
- * {@link #getData(org.apache.wicket.request.resource.IResource.Attributes)}
- * 
- * @author Matej Knopp
+ * An {@link org.apache.wicket.request.resource.IResource} for CharSequences.
+ * The char sequence can be static - passed to the constructor,
+ * or dynamic - by overriding {@link #getData(org.apache.wicket.request.resource.IResource.Attributes)}
  */
-public class ByteArrayResource extends BaseDataResource<byte[]>
+public class CharSequenceResource extends BaseDataResource<CharSequence>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Creates a {@link ByteArrayResource} which will provide its data dynamically with
+	 * Creates a {@link org.apache.wicket.request.resource.CharSequenceResource} which will provide its data dynamically with
 	 * {@link #getData(org.apache.wicket.request.resource.IResource.Attributes)}
-	 * 
+	 *
 	 * @param contentType
 	 *            The Content type of the array.
 	 */
-	public ByteArrayResource(final String contentType)
+	public CharSequenceResource(final String contentType)
 	{
 		super(contentType);
 	}
 
 	/**
-	 * Creates a Resource from the given byte array with its content type
-	 * 
+	 * Creates a Resource from the given char sequence with its content type
+	 *
 	 * @param contentType
 	 *            The Content type of the array.
-	 * @param array
-	 *            The binary content
+	 * @param data
+	 *            The data
 	 */
-	public ByteArrayResource(final String contentType, final byte[] array)
+	public CharSequenceResource(final String contentType, final CharSequence data)
 	{
-		super(contentType, array);
+		super(contentType, data);
 	}
 
 	/**
-	 * Creates a Resource from the given byte array with its content type
-	 * 
+	 * Creates a Resource from the given char sequence with its content type
+	 *
 	 * @param contentType
 	 *            The Content type of the array.
-	 * @param array
-	 *            The binary content
+	 * @param data
+	 *            The data
 	 * @param filename
 	 *            The filename that will be set as the Content-Disposition header.
 	 */
-	public ByteArrayResource(final String contentType, final byte[] array, final String filename)
+	public CharSequenceResource(final String contentType, final CharSequence data, final String filename)
 	{
-		super(contentType, array, filename);
-	}
-
-	/*
-		@since Wicket 6.16.0
-		override for backward compatibility
-	 */
-	@Override
-	protected byte[] getData(Attributes attributes)
-	{
-		return super.getData(attributes);
+		super(contentType, data, filename);
 	}
 
 	@Override
-	protected void writeData(Response response, byte[] data)
+	protected void writeData(Response response, CharSequence data)
 	{
 		response.write(data);
 	}
 
 	@Override
-	protected Long getLength(byte[] data)
+	protected Long getLength(CharSequence data)
 	{
-		return (long) data.length;
+		return (long) data.length();
 	}
 }
