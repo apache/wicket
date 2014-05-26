@@ -36,7 +36,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @author Juergen Donnerstag
  */
-public class MarkupFragment implements IMarkupFragment
+public class MarkupFragment extends AbstractMarkupFragment
 {
 	/** The parent markup. Must not be null. */
 	private final IMarkupFragment markup;
@@ -147,33 +147,7 @@ public class MarkupFragment implements IMarkupFragment
 	@Override
 	public final IMarkupFragment find(final String id)
 	{
-		Args.notEmpty(id, "id");
-
-		MarkupStream stream = new MarkupStream(this);
-		stream.setCurrentIndex(1);
-		while (stream.hasMore())
-		{
-			MarkupElement elem = stream.get();
-			if (elem instanceof ComponentTag)
-			{
-				ComponentTag tag = stream.getTag();
-				if (tag.isOpen() || tag.isOpenClose())
-				{
-					if (tag.getId().equals(id))
-					{
-						return stream.getMarkupFragment();
-					}
-					if (tag.isOpen() && !tag.hasNoCloseTag() && !tag.isAutoComponentTag())
-					{
-						stream.skipToMatchingCloseTag(tag);
-					}
-				}
-			}
-
-			stream.next();
-		}
-
-		return null;
+		return find(id, 1);
 	}
 
 	@Override
@@ -207,12 +181,6 @@ public class MarkupFragment implements IMarkupFragment
 			markup = ((MarkupFragment)markup).getParentMarkup();
 		}
 		return (Markup)markup;
-	}
-
-	@Override
-	public String toString()
-	{
-		return toString(false);
 	}
 
 	@Override
