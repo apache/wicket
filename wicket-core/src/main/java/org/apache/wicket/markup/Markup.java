@@ -39,10 +39,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Juergen Donnerstag
  */
-public class Markup implements IMarkupFragment
+public class Markup extends AbstractMarkupFragment
 {
-	private static final Logger log = LoggerFactory.getLogger(Markup.class);
-
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup();
 
@@ -211,34 +209,7 @@ public class Markup implements IMarkupFragment
 	@Override
 	public final IMarkupFragment find(final String id)
 	{
-		Args.notEmpty(id, "id");
-
-		MarkupStream stream = new MarkupStream(this);
-		stream.setCurrentIndex(0);
-		while (stream.hasMore())
-		{
-			MarkupElement elem = stream.get();
-			if (elem instanceof ComponentTag)
-			{
-				ComponentTag tag = stream.getTag();
-				if (tag.isOpen() || tag.isOpenClose())
-				{
-					if (tag.getId().equals(id))
-					{
-						return stream.getMarkupFragment();
-					}
-					if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag) &&
-						!"head".equals(tag.getName()) && !tag.isAutoComponentTag())
-					{
-						stream.skipToMatchingCloseTag(tag);
-					}
-				}
-			}
-
-			stream.next();
-		}
-
-		return null;
+		return find(id, 0);
 	}
 
 	@Override
