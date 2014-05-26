@@ -69,16 +69,6 @@ public class ByteArrayResource extends BaseDataResource<byte[]>
 		super(contentType, array, filename);
 	}
 
-	/*
-		@since Wicket 6.16.0
-		override for backward compatibility
-	 */
-	@Override
-	protected byte[] getData(Attributes attributes)
-	{
-		return super.getData(attributes);
-	}
-
 	@Override
 	protected void writeData(Response response, byte[] data)
 	{
