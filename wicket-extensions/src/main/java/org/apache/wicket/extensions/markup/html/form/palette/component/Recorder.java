@@ -126,7 +126,7 @@ public class Recorder<T> extends HiddenField<Object>
 			modelStringBuffer.append(renderer.getIdValue(selection.next(), i++));
 			if (selection.hasNext())
 			{
-				modelStringBuffer.append(",");
+				modelStringBuffer.append(',');
 			}
 		}
 
