@@ -92,24 +92,19 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	@Override
 	protected String getModelValue()
 	{
-		final StringBuilder builder = new StringBuilder();
-
-		final T t = getModelObject();
-
-		visitChildren(Radio.class, new IVisitor<Radio<T>, Void>()
+		String radioValue = visitChildren(Radio.class, new IVisitor<Radio<T>, String>()
 		{
 			@Override
-			public void component(Radio<T> radio, IVisit<Void> visit)
+			public void component(Radio<T> radio, IVisit<String> visit)
 			{
 				if (getModelComparator().compare(RadioGroup.this, radio.getDefaultModelObject()))
 				{
-					builder.append(radio.getValue());
-					visit.stop();
+					visit.stop(radio.getValue());
 				}
 			}
 		});
 
-		return builder.toString();
+		return radioValue;
 	}
 
 	/**
