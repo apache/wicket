@@ -22,8 +22,6 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +37,6 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LoggerFactory.getLogger(AbstractSingleSelectChoice.class);
 
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
@@ -399,8 +396,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * Gets whether the given value represents the current selection.
 	 * 
 	 * 
-	 * aram object The object to check
-	 * 
+	 * @param object
+	 *            The object to check
 	 * @param index
 	 *            The index of the object in the collection
 	 * @param selected
