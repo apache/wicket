@@ -388,8 +388,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * Gets whether the given value represents the current selection.
 	 * 
 	 * 
-	 * aram object The object to check
-	 * 
+	 * @param object
+	 *            The object to check
 	 * @param index
 	 *            The index of the object in the collection
 	 * @param selected
