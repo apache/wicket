@@ -275,7 +275,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		{
 			// Get next choice
 			final T choice = choices.get(index);
-			if (renderer.getIdValue(choice, index).equals(id))
+			String idValue = renderer.getIdValue(choice, index);
+			if (idValue != null && idValue.equals(id))
 			{
 				return choice;
 			}
