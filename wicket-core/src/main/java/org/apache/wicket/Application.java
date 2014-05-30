@@ -211,6 +211,11 @@ public abstract class Application implements UnboundListener, IEventSink
 	private IHeaderResponseDecorator headerResponseDecorator;
 
 	/**
+	 * The generator of markup ids for components
+	 */
+	private IMarkupIdGenerator markupIdGenerator = new DefaultMarkupIdGenerator();
+
+	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
 	 * 
 	 * @return true if {@link Application#get()} can return the instance of application, false
@@ -1603,7 +1608,18 @@ public abstract class Application implements UnboundListener, IEventSink
 	@Deprecated
 	public IMarkupIdGenerator getMarkupIdGenerator()
 	{
-		return new DefaultMarkupIdGenerator();
+		return markupIdGenerator;
+	}
+
+	/**
+	 * Sets a custom generator for the components' markup ids
+	 *
+	 * @deprecated In Wicket 7.x this method is part of {@link org.apache.wicket.settings.def.MarkupSettings}
+	 */
+	@Deprecated
+	public void setMarkupIdGenerator(IMarkupIdGenerator markupIdGenerator)
+	{
+		this.markupIdGenerator = Args.notNull(markupIdGenerator, "markupIdGenerator");
 	}
 
 	private static class DefaultExceptionMapperProvider implements IProvider<IExceptionMapper>
