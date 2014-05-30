@@ -883,7 +883,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * @param submittingComponent
 	 *            component responsible for submitting the form, or <code>null</code> if none (eg
 	 *            the form has been submitted via the enter key or javascript calling
-	 *            form.onsubmit())
+	 *            form.submit())
 	 * 
 	 * @see #delegateSubmit(IFormSubmitter) for an easy way to process submitting component in the
 	 *      default manner
