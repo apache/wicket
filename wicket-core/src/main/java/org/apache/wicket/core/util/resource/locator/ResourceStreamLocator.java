@@ -38,18 +38,20 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Locate Wicket resource.
+ * Locates Wicket resources.
+ *
  * <p>
- * Contains the logic to locate a resource based on a path, a style (see
+ * Contains the logic to locate a resource based on a path, a variation, a style (see
  * {@link org.apache.wicket.Session}), a locale and an extension string. The full filename will be
- * built like: &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * built like: &lt;path&gt;_&lt;variation&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
  * <ol>
- * <li>1. &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>2. &lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>3. &lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
- * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;variation&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;.&lt;extension&gt;</li>
  * </ol>
  * <p>
  * Locales may contain a language, a country and a region or variant. Combinations of these
