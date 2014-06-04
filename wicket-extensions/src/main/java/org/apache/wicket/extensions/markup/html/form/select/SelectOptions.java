@@ -78,10 +78,16 @@ public class SelectOptions<T> extends RepeatingView
 	}
 
 	/**
-	 * Controls whether or not SelectChoice objects are recreated every request
+	 * Controls whether {@link SelectOption}s are recreated on every request
+	 * <p>
+	 * Note: When refreshing on each render, {@link #newOption(String, IModel)} should return
+	 * {@link SelectOption}s with stable values, otherwise the current selection will be lost on
+	 * form errors.
 	 * 
 	 * @param refresh
 	 * @return this for chaining
+	 * 
+	 * @see SelectOption#getValue()
 	 */
 	public SelectOptions<T> setRecreateChoices(final boolean refresh)
 	{
