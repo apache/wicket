@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.form.select;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -30,7 +31,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg
  */
-public class SelectOption<T> extends WebMarkupContainer
+public class SelectOption<T> extends WebMarkupContainer implements IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,6 +57,32 @@ public class SelectOption<T> extends WebMarkupContainer
 	public SelectOption(final String id, final IModel<? extends T> model)
 	{
 		super(id, model);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public final IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	@Override
+	public final void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public final T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	@Override
+	public void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
 	}
 
 	/**
