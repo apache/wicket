@@ -2,6 +2,44 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.16.0
+
+** Bug
+
+    * [WICKET-4545] - MarkupNotFoundException for Fragment and TransparentWebMarkupContainer
+    * [WICKET-5553] - When using an Ajax request to display initially hidden components inside inline enclosures, only the first one appears.
+    * [WICKET-5560] - A 404 error occurs when using a CryptoMapper
+    * [WICKET-5569] - Unable to find markup for children of deeply nested IComponentResolvers during Ajax response
+    * [WICKET-5570] - Rescheduling the same ajax timer behavior causes memory leak in the browser
+    * [WICKET-5573] - FilterToolbar generics broken
+    * [WICKET-5581] - CachingResourceStreamLocator is not extension-aware
+    * [WICKET-5582] - ServletWebResponse#encodeUrl() makes absolute Urls relative
+    * [WICKET-5589] - Upgrade wicket-atmosphere to the latest version of atmosphere
+    * [WICKET-5591] - Missing translation for HoursValidator.range (in DateTimeField)
+    * [WICKET-5592] - Add a method to clear the cache of CachingResourceStreamLocator
+    * [WICKET-5593] - AjaxFormValidatingBehavior attempts to update non-visible feedback panels
+    * [WICKET-5595] - Atmosphere: updates infinitly with long polling transport
+    * [WICKET-5596] - DropDownChoice#wantsOnSelectionChangedNotifications(T) not being called on unmounted page
+    * [WICKET-5601] - AbstractSingleSelectChoice fails with NullPointerException when its choice renderer returns null from #getIdValue() 
+
+** Improvement
+
+    * [WICKET-5563] - RestartResponseAtInterceptPageException - add public function to retrieve originalUrl
+    * [WICKET-5574] - ComponentRenderer should use Application#createRequestCycle
+    * [WICKET-5575] - Add support in FormTester#submit(String|Component) for Ajax submitters
+    * [WICKET-5577] - Generation of wicket ids with prefix / suffix
+    * [WICKET-5580] - Allow markup to find child fragments when wicket:child is inside a component tag
+    * [WICKET-5585] - Wicket Extension Automplete does not work well with JavaScriptFilteredIntoFooterHeaderResponse
+    * [WICKET-5586] - NextButton isEnabled() should bo logical conjunction of getWizardModel().isNextAvailable() and super.isEnabled()
+    * [WICKET-5600] - Introduce CharSequenceResource similar to ByteArrayResource
+    * [WICKET-5606] - SelectOptions with #setRecreateChoices(true) loses selection on form errors
+
+** Task
+
+    * [WICKET-5587] - Upgrade JQuery to latest releases - 1.11.1 & 2.1.1
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.15.0
 
 ** Sub-task
