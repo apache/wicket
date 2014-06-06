@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>org.apache.wicket.experimental.wicket6</groupId>
 		<artifactId>wicket-experimental</artifactId>
-		<version>6.16.0-SNAPSHOT</version>
+		<version>6.16.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-atmosphere</artifactId>
-	<version>0.19-SNAPSHOT</version>
+	<version>0.19</version>
 	<packaging>jar</packaging>
 	<properties>
 		<atmosphere.version>2.1.4</atmosphere.version>
