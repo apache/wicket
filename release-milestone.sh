@@ -149,20 +149,21 @@ cat ./release.properties
 echo "Creating notice file."
 
 NOTICE=NOTICE
-> $NOTICE 
-echo "Apache Wicket" >> $NOTICE
-echo "Copyright 2006-$(date +%Y) The Apache Software Foundation" >> $NOTICE
-echo "" >> $NOTICE
-echo "This product includes software developed at" >> $NOTICE
-echo "The Apache Software Foundation (http://www.apache.org/)." >> $NOTICE
-echo "" >> $NOTICE
-echo "This is an aggregated NOTICE file for the Apache Wicket projects included" >> $NOTICE
-echo "in this distribution." >> $NOTICE
-echo "" >> $NOTICE
-echo "NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE" >> $NOTICE
-echo "    NOTICE FILE OF THE CORRESPONDING PROJECT. THE RELEASE PROCEDURE WILL" >> $NOTICE
-echo "    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE." >> $NOTICE
-echo "" >> $NOTICE
+
+echo "Apache Wicket
+Copyright 2006-$(date +%Y) The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+This is an aggregated NOTICE file for the Apache Wicket projects included
+in this distribution.
+
+NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
+    NOTICE FILE OF THE CORRESPONDING PROJECT. THE RELEASE PROCEDURE WILL
+    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
+
+" > $NOTICE
 
 # next concatenate all NOTICE files from sub projects to the root file
 for i in `find . -name "NOTICE" -not -regex ".*/target/.*" -not -regex "./NOTICE"`
@@ -251,54 +252,52 @@ svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
-echo ""
-echo "The release has been created. It is up to you to check if the release is up"
-echo "to par, and perform the following commands yourself when you start the vote"
-echo "to enable future development during the vote and after."
-echo ""
-echo "You can find the distribution in target/dist"
-echo ""
-echo "    cd target/dist"
-echo ""
-echo "To verify all signatures:"
-echo ""
-echo "    find . -name \"*.asc\" -exec gpg --verify {} \; "
-echo ""
-echo "To push the release branch to ASF git servers"
-echo ""
-echo "    git push origin $branch:refs/heads/$branch"
-echo ""
 
-echo "To move the release from staging to the mirrors:"
-echo ""
-echo "    svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\""
-echo ""
-
-echo "Remove previous version $previous_version from the mirrors"
-echo ""
-echo "    svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\""
-echo ""
-
-echo "To sign the release tag issue the following three commands: "
-echo ""
-echo "    git checkout $tag"
-echo "    git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log"
-echo "    git checkout $branch"
-echo ""
-
-mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
-next_dev_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
-
-echo "To renumber the next development iteration $next_dev_version:"
-echo ""
-echo "    git checkout wicket-6.x"
-echo "    mvn release:update-versions --batch-mode"
-echo "    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;"
 # do the same for the original snapshot version, as our maven release
 # plugin friend doesn't do that for us in the dependency management section
-mvn_version_to_replace="$major_version.$minor_version.0-SNAPSHOT"
-echo "    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;"
-echo "    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`"
-echo "    git commit -m \"Start next development version\""
-echo "    git push"
-echo ""
+
+mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
+mvn_version_to_replace2="$major_version.$minor_version.0-SNAPSHOT"
+next_dev_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
+
+echo "The release has been created. It is up to you to check if the release is up
+to par, and perform the following commands yourself when you start the vote
+to enable future development during the vote and after.
+
+You can find the distribution in target/dist
+
+    cd target/dist
+
+To verify all signatures:
+
+    find . -name \"*.asc\" -exec gpg --verify {} \; 
+
+To push the release branch to ASF git servers
+
+    git push origin $branch:refs/heads/$branch
+
+To move the release from staging to the mirrors:
+
+    svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\"
+
+Remove previous version $previous_version from the mirrors
+
+    svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\"
+
+To sign the release tag issue the following three commands: 
+
+    git checkout $tag
+    git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log
+    git checkout $branch
+
+To renumber the next development iteration $next_dev_version:
+
+    git checkout wicket-6.x
+    mvn release:update-versions --batch-mode
+    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;
+    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace2/$next_dev_version/g\" {} \\;
+    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
+    git commit -m \"Start next development version\"
+    git push
+
+"
