@@ -33,7 +33,9 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 	public void rendering() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
-
+		
+		//ensure that TextField and DropDownChoice have 
+		//the appropriate event handlers
 		executeTest(OnChangeAjaxBehaviorTestPage.class,
 			"OnChangeAjaxBehaviorTestPage_expected.html");
 	}
