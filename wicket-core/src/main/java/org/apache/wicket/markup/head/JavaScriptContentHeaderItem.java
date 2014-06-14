@@ -31,7 +31,6 @@ import org.apache.wicket.util.string.Strings;
 public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 {
 	private final CharSequence javaScript;
-	private final String id;
 
 	/**
 	 * Creates a new {@code JavaScriptContentHeaderItem}.
@@ -48,7 +47,7 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	{
 		super(condition);
 		this.javaScript = javaScript;
-		this.id = id;
+		setId(id);
 	}
 
 	/**
@@ -57,14 +56,6 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	public CharSequence getJavaScript()
 	{
 		return javaScript;
-	}
-
-	/**
-	 * @return unique id for the javascript element.
-	 */
-	public String getId()
-	{
-		return id;
 	}
 
 	@Override

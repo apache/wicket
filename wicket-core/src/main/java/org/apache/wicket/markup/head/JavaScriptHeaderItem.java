@@ -39,9 +39,35 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 */
 	private final String condition;
 
+	/**
+	 * An optional markup id to set on the rendered &lt;script&gt; HTML element for
+	 * this header item
+	 */
+	private String markupId;
+
 	protected JavaScriptHeaderItem(String condition)
 	{
 		this.condition = condition;
+	}
+
+	/**
+	 * @return unique id for the javascript element.
+	 */
+	public String getId()
+	{
+		return markupId;
+	}
+
+	/**
+	 * Sets the markup id for this header item
+	 * @param markupId
+	 *            the markup id
+	 * @return {@code this} object, for method chaining
+	 */
+	public JavaScriptHeaderItem setId(String markupId)
+	{
+		this.markupId = markupId;
+		return this;
 	}
 
 	/**

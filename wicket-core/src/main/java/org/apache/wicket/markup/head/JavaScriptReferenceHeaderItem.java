@@ -40,7 +40,6 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 		IReferenceHeaderItem
 {
 	private final ResourceReference reference;
-	private final String id;
 	private final PageParameters pageParameters;
 	private final boolean defer;
 	private final String charset;
@@ -69,9 +68,9 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 		super(condition);
 		this.reference = Args.notNull(reference, "reference");
 		this.pageParameters = pageParameters;
-		this.id = id;
 		this.defer = defer;
 		this.charset = charset;
+		setId(id);
 	}
 
 	/**
@@ -81,14 +80,6 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	public ResourceReference getReference()
 	{
 		return reference;
-	}
-
-	/**
-	 * @return the id that will be used to filter duplicate reference
-	 */
-	public String getId()
-	{
-		return id;
 	}
 
 	/**

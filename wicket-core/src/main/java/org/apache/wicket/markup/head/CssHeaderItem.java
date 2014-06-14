@@ -55,10 +55,32 @@ public abstract class CssHeaderItem extends HeaderItem
 	 * </pre></code>
 	 */
 	private final String condition;
+
+	private String markupId;
 	
 	protected CssHeaderItem(String condition)
 	{
 		this.condition = condition;
+	}
+
+	/**
+	 * @return an optional markup id for the &lt;link&gt; HTML element that will be rendered
+	 * for this header item
+	 */
+	public String getId()
+	{
+		return markupId;
+	}
+
+	/**
+	 * @param markupId
+	 *          an optional markup id for this header item
+	 * @return {@code this} object, for method chaining
+	 */
+	public CssHeaderItem setId(String markupId)
+	{
+		this.markupId = markupId;
+		return this;
 	}
 
 	/**
@@ -266,7 +288,7 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		CssUtils.writeLinkUrl(response, url, media);
+		CssUtils.writeLinkUrl(response, url, media, getId());
 
 		if (hasCondition)
 		{

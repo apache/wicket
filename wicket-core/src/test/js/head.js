@@ -84,13 +84,13 @@ jQuery(document).ready(function() {
 
 	test('Wicket.Head.containsElement - unknown attribute', function() {
 		var scriptElement = Wicket.Head.createElement('script');
-		equal(false, Wicket.Head.containsElement(scriptElement, 'unknown'), 'There shouldn\'t be an element with such attribute name');
+		equal(false, Wicket.Head.containsElement(scriptElement, 'unknown').contains, 'There shouldn\'t be an element with such attribute name');
 	});
 
 	test('Wicket.Head.containsElement - check existence of wicket-ajax-debug.js with "src"', function() {
 		var scriptElement = Wicket.Head.createElement('script');
 		scriptElement.src = "../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
-		ok(Wicket.Head.containsElement(scriptElement, 'src'), 'There should be an element for wicket-ajax-debug.js');
+		ok(Wicket.Head.containsElement(scriptElement, 'src').contains, 'There should be an element for wicket-ajax-debug.js');
 	});
 
 	test('Wicket.Head.containsElement - check existence of data/test.js with "src_"', function() {
@@ -104,7 +104,7 @@ jQuery(document).ready(function() {
 
 		script.src = script.src_;
 		// check for existence by 'src' attribute
-		ok(Wicket.Head.containsElement(script, 'src'), 'There should be an element for wicket-ajax-debug.js');
+		ok(Wicket.Head.containsElement(script, 'src').contains, 'There should be an element for wicket-ajax-debug.js');
 	});
 
 	test('Wicket.Head.containsElement - check existence of data/test.js with jsessionid in the url', function() {
@@ -121,10 +121,78 @@ jQuery(document).ready(function() {
 		// add just jsessionid=1
 		Wicket.Head.addElement(script1);
 
-		equal(true, Wicket.Head.containsElement(script1, 'src'), 'The jsessionid part of the URL must be ignored.');
-		equal(false, Wicket.Head.containsElement(script2, 'src'), 'The jsessionid part of the URL must be ignored.');
+		ok(Wicket.Head.containsElement(script1, 'src').contains, 'The jsessionid part of the URL must be ignored.');
+		equal(false, Wicket.Head.containsElement(script2, 'src').contains, 'The jsessionid part of the URL must be ignored.');
 	});
 
+	test('Wicket.Head.containsElement - check replacement of SCRIPT elements with same id', function() {
+		var
+			script1 = jQuery('<script>', {
+				type: 'text/javascript',
+				src: 'data/one.js',
+				id: 'testId'
+			})[0],
+			script2 = jQuery('<script>', {
+				type: 'text/javascript',
+				src: 'data/two.js',
+				id: 'testId'
+			})[0],
+			context = {
+				steps: []
+			};
+
+		Wicket.Head.addElement(script1);
+		ok(Wicket.Head.containsElement(script1, 'src').contains, 'script1 should be in the DOM.');
+
+		Wicket.Head.Contributor.processScript(context, script2);
+		ok(Wicket.Head.containsElement(script1, 'src').contains, 'script1 should be in the DOM - 2.');
+
+		// poor man's FunctionExecuter
+		jQuery.each(context.steps, function(idx, step) {
+			step(function() {});
+		});
+
+		ok(Wicket.Head.containsElement(script2, 'src').contains, 'script2 should be in the DOM.');
+		equal(Wicket.Head.containsElement(script1, 'src').contains, false,
+				'script1 should have been removed from the DOM because a new element with the same id and' +
+				'different "src" has been added');
+	});
+
+	test('Wicket.Head.containsElement - check replacement of <link> elements with same id', function() {
+		var
+			css1 = jQuery('<link>', {
+				type: 'text/css',
+				href: 'data/one.css',
+				id: 'testId'
+			})[0],
+			css2 = jQuery('<link>', {
+				type: 'text/css',
+				href: 'data/two.css',
+				id: 'testId'
+			})[0],
+			context = {
+				steps: []
+			};
+
+			Wicket.Head.addElement(css1);
+			var containsCss1 = Wicket.Head.containsElement(css1, 'href');
+			ok(containsCss1.contains, 'css1 should be in the DOM.');
+
+			Wicket.Head.Contributor.processLink(context, css2);
+			var containsCss2 = Wicket.Head.containsElement(css1, 'href');
+			ok(containsCss2.contains, 'css1 should be still in the DOM');
+
+			// poor man's FunctionExecuter
+			jQuery.each(context.steps, function(idx, step) {
+				step(function() {});
+			});
+
+			ok(Wicket.Head.containsElement(css2, 'href').contains, 'css2 should be in the DOM.');
+			var containsCss3 = Wicket.Head.containsElement(css1, 'href');
+			equal(containsCss3.contains, false,
+					'css1 should have been removed from the DOM because a new element with the same id and' +
+					'different "href" has been added');
+		});
 	module('addJavascript');
 	
 	test('Wicket.Head.addJavascript - add script with text content', function() {
@@ -139,7 +207,7 @@ jQuery(document).ready(function() {
 			src: url
 		}),
 		script = $script[0];
-		ok(Wicket.Head.containsElement(script, 'src'));
+		ok(Wicket.Head.containsElement(script, 'src').contains);
 	});
 
 	module('addJavascripts');

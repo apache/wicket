@@ -33,7 +33,6 @@ import org.apache.wicket.util.string.Strings;
 public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 {
 	private final String url;
-	private final String id;
 	private final boolean defer;
 	private final String charset;
 
@@ -58,9 +57,9 @@ public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 	{
 		super(condition);
 		this.url = url;
-		this.id = id;
 		this.defer = defer;
 		this.charset = charset;
+		setId(id);
 	}
 
 	/**
@@ -69,14 +68,6 @@ public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 	public String getUrl()
 	{
 		return url;
-	}
-
-	/**
-	 * @return id that will be used to filter duplicate reference
-	 */
-	public String getId()
-	{
-		return id;
 	}
 
 	/**

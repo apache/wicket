@@ -2060,10 +2060,16 @@
 				// Process an external stylesheet element
 				processLink: function (context, node) {
 					context.steps.push(function (notify) {
-						// if the element is already in head, skip it
-						if (Wicket.Head.containsElement(node, "href")) {
+						var res = Wicket.Head.containsElement(node, "href");
+						var oldNode = res.oldNode;
+						if (res.contains) {
+							// an element with same href attribute is in document, skip it
 							return FunctionsExecuter.DONE;
+						} else if (oldNode) {
+							// remove another external element with the same id but different href
+							oldNode.parentNode.removeChild(oldNode);
 						}
+
 						// create link element
 						var css = Wicket.Head.createElement("link");
 
@@ -2150,11 +2156,20 @@
 				// Process a script element (both inline and external)
 				processScript: function (context, node) {
 					context.steps.push(function (notify) {
-						// if element with same id is already in document,
-						// or element with same src attribute is in document, skip it
-						if (Wicket.DOM.containsElement(node) ||
-							Wicket.Head.containsElement(node, "src")) {
+
+						if (!node.getAttribute("src") && Wicket.DOM.containsElement(node)) {
+							// if an inline element with same id is already in document, skip it
 							return FunctionsExecuter.DONE;
+						} else {
+							var res = Wicket.Head.containsElement(node, "src");
+							var oldNode = res.oldNode;
+							if (res.contains) {
+								// an element with same src attribute is in document, skip it
+								return FunctionsExecuter.DONE;
+							} else if (oldNode) {
+								// remove another external element with the same id but different src
+								oldNode.parentNode.removeChild(oldNode);
+							}
 						}
 
 						// determine whether it is external javascript (has src attribute set)
@@ -2259,16 +2274,20 @@
 			containsElement: function (element, mandatoryAttribute) {
 				var attr = element.getAttribute(mandatoryAttribute);
 				if (isUndef(attr) || attr === "") {
-					return false;
+					return {
+						contains: false
+					};
 				}
 
+				var elementTagName = element.tagName.toLowerCase();
+				var elementId = element.getAttribute("id");
 				var head = document.getElementsByTagName("head")[0];
 
-				if (element.tagName === "script") {
+				if (elementTagName === "script") {
 					head = document;
 				}
 
-				var nodes = head.getElementsByTagName(element.tagName);
+				var nodes = head.getElementsByTagName(elementTagName);
 
 				for (var i = 0; i < nodes.length; ++i) {
 					var node = nodes[i];
@@ -2276,16 +2295,25 @@
 					// check node names and mandatory attribute values
 					// we also have to check for attribute name that is suffixed by "_".
 					// this is necessary for filtering script references
-					if (node.tagName.toLowerCase() === element.tagName.toLowerCase()) {
+					if (node.tagName.toLowerCase() === elementTagName) {
 
 						var loadedUrl = node.getAttribute(mandatoryAttribute);
 						var loadedUrl_ = node.getAttribute(mandatoryAttribute+"_");
 						if (loadedUrl === attr || loadedUrl_ === attr) {
-							return true;
+							return {
+								contains: true
+							};
+						} else if (elementId && elementId === node.getAttribute("id")) {
+							return {
+								contains: false,
+								oldNode: node
+							};
 						}
 					}
 				}
-				return false;
+				return {
+					contains: false
+				};
 			},
 
 			// Adds a javascript element to page header.
