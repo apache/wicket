@@ -371,7 +371,7 @@
 
 			if (Wicket.Browser.isIELessThan11()) {
 				// IE stupid 3px bug - not fixed even in IE7 quirks!
-				if (Wicket.Browser.isIE7() === false || Wicket.Browser.isIEQuirks()) {
+				if (Wicket.Browser.isIEQuirks()) {
 					this.topLeft.style.marginRight = "-3px";
 					this.topRight.style.marginLeft = "-3px";
 					this.bottomLeft.style.marginRight = "-3px";
@@ -1193,14 +1193,9 @@
 									"<div class=\"w_content_3\">"+
 			                            "<div class=\"w_content\">";
 					if (isFrame) {
-						s+= "<iframe";
-						if (Wicket.Browser.isIELessThan7()) {
-							s+= " src=\"about:blank\"";
-						}
-						s+= " frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
+						s+= "<iframe frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
 					} else {
-						var styleIE7 = Wicket.Browser.isIE7() ? "style='z-index: 20001'" : "";
-						s+= "<div id='"+idContent+"' class='w_content_container' " + styleIE7 + "></div>";
+						s+= "<div id='"+idContent+"' class='w_content_container'></div>";
 					}
 						s+=
 										"</div>"+
@@ -1449,7 +1444,7 @@
 				return;
 			}
 
-			if (Wicket.Browser.isIELessThan11() && Wicket.Browser.isIE7() === false) {
+			if (Wicket.Browser.isIELessThan11()) {
 				this.boxes = [];
 				var selects = doc.getElementsByTagName("select");
 				for (var i = 0; i < selects.length; i++) {
