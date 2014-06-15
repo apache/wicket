@@ -36,62 +36,122 @@
 	jQuery.extend(true, Wicket, {
 
 		Browser: {
+			_isKHTML: null,
 			isKHTML: function () {
-				return (/Konqueror|KHTML/).test(window.navigator.userAgent) && !/Apple/.test(window.navigator.userAgent);
+				var wb = Wicket.Browser;
+				if (wb._isKHTML === null) {
+					wb._isKHTML = (/Konqueror|KHTML/).test(window.navigator.userAgent) && !/Apple/.test(window.navigator.userAgent);
+				}
+				return wb._isKHTML;
 			},
 
+			_isSafari: null,
 			isSafari: function () {
-				return !/Chrome/.test(window.navigator.userAgent) && /KHTML/.test(window.navigator.userAgent) && /Apple/.test(window.navigator.userAgent);
+				var wb = Wicket.Browser;
+				if (wb._isSafari === null) {
+					wb._isSafari = !/Chrome/.test(window.navigator.userAgent) && /KHTML/.test(window.navigator.userAgent) && /Apple/.test(window.navigator.userAgent);
+				}
+				return wb._isSafari;
 			},
 
+			_isChrome: null,
 			isChrome: function () {
-				return (/KHTML/).test(window.navigator.userAgent) && /Apple/.test(window.navigator.userAgent) && /Chrome/.test(window.navigator.userAgent);
+				var wb = Wicket.Browser;
+				if (wb._isChrome === null) {
+					wb._isChrome = (/KHTML/).test(window.navigator.userAgent) && /Apple/.test(window.navigator.userAgent) && /Chrome/.test(window.navigator.userAgent);
+				}
+				return wb._isChrome;
 			},
 
+			_isOpera: null,
 			isOpera: function () {
-				return !Wicket.Browser.isSafari() && typeof(window.opera) !== "undefined";
+				var wb = Wicket.Browser;
+				if (wb._isOpera === null) {
+					wb._isOpera = !Wicket.Browser.isSafari() && typeof(window.opera) !== "undefined";
+				}
+				return wb._isOpera;
 			},
 
+			_isIE: null,
 			isIE: function () {
-				return !Wicket.Browser.isSafari() && (typeof(document.all) !== "undefined" || window.navigator.userAgent.indexOf("Trident/")>-1) && typeof(window.opera) === "undefined";
+				var wb = Wicket.Browser;
+				if (wb._isIE === null) {
+					wb._isIE = !Wicket.Browser.isSafari() && (typeof(document.all) !== "undefined" || window.navigator.userAgent.indexOf("Trident/")>-1) && typeof(window.opera) === "undefined";
+				}
+				return wb._isIE;
 			},
 
+			_isIEQuirks: null,
 			isIEQuirks: function () {
-				// is the browser internet explorer in quirks mode (we could use document.compatMode too)
-				return Wicket.Browser.isIE() && window.document.documentElement.clientHeight === 0;
+				var wb = Wicket.Browser;
+				if (wb._isIEQuirks === null) {
+					// is the browser internet explorer in quirks mode (we could use document.compatMode too)
+					wb._isIEQuirks = Wicket.Browser.isIE() && window.document.documentElement.clientHeight === 0;
+				}
+				return wb._isIEQuirks;
 			},
 
+			_isIELessThan7: null,
 			isIELessThan7: function () {
-				var index = window.navigator.userAgent.indexOf("MSIE");
-				var version = parseFloat(window.navigator.userAgent.substring(index + 5));
-				return Wicket.Browser.isIE() && version < 7;
+				var wb = Wicket.Browser;
+				if (wb._isIELessThan7 === null) {
+					var index = window.navigator.userAgent.indexOf("MSIE");
+					var version = parseFloat(window.navigator.userAgent.substring(index + 5));
+					wb._isIELessThan7 = Wicket.Browser.isIE() && version < 7
+				}
+				return wb._isIELessThan7;
 			},
 
+			_isIE7: null,
 			isIE7: function () {
-				var index = window.navigator.userAgent.indexOf("MSIE");
-				var version = parseFloat(window.navigator.userAgent.substring(index + 5));
-				return Wicket.Browser.isIE() && version >= 7;
+				var wb = Wicket.Browser;
+				if (wb._isIE7 === null) {
+					var index = window.navigator.userAgent.indexOf("MSIE");
+					var version = parseFloat(window.navigator.userAgent.substring(index + 5));
+					wb._isIE7 = Wicket.Browser.isIE() && version >= 7
+				}
+				return wb._isIE7;
 			},
 
+			_isIELessThan9: null,
 			isIELessThan9: function () {
-				var index = window.navigator.userAgent.indexOf("MSIE");
-				var version = parseFloat(window.navigator.userAgent.substring(index + 5));
-				return Wicket.Browser.isIE() && version < 9;
+				var wb = Wicket.Browser;
+				if (wb._isIELessThan9 === null) {
+					var index = window.navigator.userAgent.indexOf("MSIE");
+					var version = parseFloat(window.navigator.userAgent.substring(index + 5));
+					wb._isIELessThan9 = Wicket.Browser.isIE() && version < 9;
+				}
+				return wb._isIELessThan9;
 			},
-			
+
+			_isIELessThan11: null,
 			isIELessThan11: function () {
-				return !Wicket.Browser.isSafari() && typeof(document.all) !== "undefined" && typeof(window.opera) === "undefined";
+				var wb = Wicket.Browser;
+				if (wb._isIELessThan11 === null) {
+					wb._isIELessThan11 = !Wicket.Browser.isSafari() && typeof(document.all) !== "undefined" && typeof(window.opera) === "undefined";
+				}
+				return wb._isIELessThan11;
 			},
 
+			_isIE11: null,
 			isIE11: function () {
-				var userAgent = window.navigator.userAgent;
-				var isTrident = userAgent.indexOf("Trident");
-				var is11 = userAgent.indexOf("rv:11");
-				return isTrident && is11;
+				var wb = Wicket.Browser;
+				if (wb._isIE11 === null) {
+					var userAgent = window.navigator.userAgent;
+					var isTrident = userAgent.indexOf("Trident");
+					var is11 = userAgent.indexOf("rv:11");
+					wb._isIE11 = isTrident && is11;
+				}
+				return wb._isIE11;
 			},
 
+			_isGecko: null,
 			isGecko: function () {
-				return (/Gecko/).test(window.navigator.userAgent) && !Wicket.Browser.isSafari();
+				var wb = Wicket.Browser;
+				if (wb._isGecko === null) {
+					wb._isGecko = (/Gecko/).test(window.navigator.userAgent) && !Wicket.Browser.isSafari();
+				}
+				return wb._isGecko;
 			}
 		},
 
