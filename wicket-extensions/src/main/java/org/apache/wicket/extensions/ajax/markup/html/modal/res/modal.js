@@ -119,7 +119,7 @@
 
 					var dx = 0;
 					var dy = 0;
-					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
+					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 						dx = Wicket.Window.getScrollX();
 						dy = Wicket.Window.getScrollY();
 					}
@@ -137,7 +137,7 @@
 
 					var dx = 0;
 					var dy = 0;
-					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
+					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 						dx = Wicket.Window.getScrollX();
 						dy = Wicket.Window.getScrollY();
 					}
@@ -483,7 +483,7 @@
 			var scTop = 0;
 			var scLeft = 0;
 
-			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko() || Wicket.Browser.isSafari()) {
+			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 				scLeft = Wicket.Window.getScrollX();
 				scTop = Wicket.Window.getScrollY();
 			}
@@ -1197,18 +1197,20 @@
 
 									"<div class=\"w_content_2\">"+
 									"<div class=\"w_content_3\">"+
-			                            "<div class=\"w_content\">";
-					if (isFrame) {
-						s+= "<iframe";
-						if (Wicket.Browser.isIELessThan7()) {
-							s+= " src=\"about:blank\"";
-						}
-						s+= " frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
-					} else {
-						var styleIE7 = Wicket.Browser.isIE7() ? "style='z-index: 20001'" : "";
-						s+= "<div id='"+idContent+"' class='w_content_container' " + styleIE7 + "></div>";
-					}
-						s+=
+									"<div class=\"w_content\">";
+
+									if (isFrame) {
+										s+= "<iframe";
+										if (Wicket.Browser.isIELessThan7()) {
+											s+= " src=\"about:blank\"";
+										}
+										s+= " frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
+									} else {
+										var styleIE7 = Wicket.Browser.isIE7() ? "style='z-index: 20001'" : "";
+										s+= "<div id='"+idContent+"' class='w_content_container' " + styleIE7 + "></div>";
+									}
+
+									s+=
 										"</div>"+
 									"</div>"+
 									"</div>"+

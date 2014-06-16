@@ -2806,6 +2806,21 @@
 	Wicket.Event.add(window, 'domready', Wicket.Focus.attachFocusEvent);
 
 	/**
+	 * Clear any scheduled Ajax timers when leaving the current page
+	 */
+	Wicket.Event.add(window, "beforeunload", function() {
+		var WTH = Wicket.TimerHandles;
+		if (WTH) {
+			for (var th in WTH) {
+				if (WTH.hasOwnProperty(th)) {
+					window.clearTimeout(WTH[th]);
+					delete WTH[th];
+				}
+			}
+		}
+	});
+
+	/**
 	 * Remove any scheduled timers on the removed element.
 	 * This wont remove the timer for elements which are children of the removed one.
 	 */

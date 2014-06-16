@@ -16,7 +16,11 @@
  */
 package org.apache.wicket.ajax.form;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 
 /**
  * A behavior that updates the hosting {@link FormComponent} via Ajax when value of the component is
@@ -42,14 +46,36 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	 * for text input form component depending on the browser.
 	 * 'change' is used as a fallback for all other form component types.
 	 */
+	@Deprecated
 	public static final String EVENT_NAME = "inputchange change";
+	
+	public static final String EVENT_INPUTCHANGE = "inputchange";
+	public static final String EVENT_CHANGE = "change";
 
 	/**
 	 * Constructor.
 	 */
 	public OnChangeAjaxBehavior()
 	{
-		super(EVENT_NAME);
+		super(EVENT_INPUTCHANGE + " " + EVENT_CHANGE);
 	}
 
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) 
+	{
+		super.updateAjaxAttributes(attributes);
+		
+		Component component = getComponent();
+		
+		//textfiels and textareas will trigger this behavior with event 'inputchange'
+		//while all the other components will use 'change'
+		if (component instanceof TextField || component instanceof TextArea) 
+		{
+			attributes.setEventNames(EVENT_INPUTCHANGE);
+		} 
+		else 
+		{
+			attributes.setEventNames(EVENT_CHANGE);
+		}
+	}
 }

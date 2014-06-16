@@ -47,8 +47,12 @@
 		},
 
 		start : function(){
-			var fileupload = Wicket.$(this.fileid);
-			if (fileupload && fileupload.value) {
+			var displayprogress = true;
+			if (this.fileid) {
+				var fileupload = Wicket.$(this.fileid);
+				displayprogress = fileupload && fileupload.value;
+			}
+			if (displayprogress) {
 				this.setPercent(0);
 				this.setStatus(this.initialStatus);
 				Wicket.DOM.show(this.statusid, 'block');
