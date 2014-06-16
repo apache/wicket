@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>6.16.0-SNAPSHOT</version>
+		<version>6.17.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<groupId>org.apache.wicket.experimental.wicket6</groupId>
