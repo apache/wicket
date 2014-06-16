@@ -97,7 +97,7 @@
 				if (wb._isIELessThan7 === null) {
 					var index = window.navigator.userAgent.indexOf("MSIE");
 					var version = parseFloat(window.navigator.userAgent.substring(index + 5));
-					wb._isIELessThan7 = Wicket.Browser.isIE() && version < 7
+					wb._isIELessThan7 = Wicket.Browser.isIE() && version < 7;
 				}
 				return wb._isIELessThan7;
 			},
@@ -108,7 +108,7 @@
 				if (wb._isIE7 === null) {
 					var index = window.navigator.userAgent.indexOf("MSIE");
 					var version = parseFloat(window.navigator.userAgent.substring(index + 5));
-					wb._isIE7 = Wicket.Browser.isIE() && version >= 7
+					wb._isIE7 = Wicket.Browser.isIE() && version >= 7;
 				}
 				return wb._isIE7;
 			},
