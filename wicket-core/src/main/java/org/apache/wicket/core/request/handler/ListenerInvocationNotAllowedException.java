@@ -32,7 +32,6 @@ public class ListenerInvocationNotAllowedException extends RuntimeException
 
 	private final Component component;
 	private final Behavior behavior;
-	private final RequestListenerInterface iface;
 
 	/**
 	 * Constructor
@@ -46,10 +45,8 @@ public class ListenerInvocationNotAllowedException extends RuntimeException
 		Component component, Behavior behavior, String message)
 	{
 		super(message + detail(iface, component, behavior));
-		this.iface = iface;
 		this.component = component;
 		this.behavior = behavior;
-
 	}
 
 	private static String detail(RequestListenerInterface iface, Component component,
