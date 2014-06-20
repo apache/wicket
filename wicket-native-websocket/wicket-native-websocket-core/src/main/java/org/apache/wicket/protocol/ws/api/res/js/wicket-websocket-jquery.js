@@ -26,6 +26,16 @@
 		throw "Wicket.WebSocket needs wicket-ajax.js as prerequisite.";
 	}
 
+	jQuery.extend(Wicket.Event.Topic, {
+		WebSocket: {
+			Opened:       "/websocket/open",
+			Message:      "/websocket/message",
+			Closed:       "/websocket/closed",
+			Error:        "/websocket/error",
+			NotSupported: "/websocket/notsupported"
+		}
+	});
+
 	Wicket.WebSocket = Wicket.Class.create();
 
 	Wicket.WebSocket.prototype = {
@@ -33,6 +43,7 @@
 		ws: null,
 
 		initialize: function () {
+			var topics = Wicket.Event.Topic.WebSocket;
 
 			if (('WebSocket' in window)) {
 
@@ -58,7 +69,7 @@
 				self.ws = new WebSocket(url);
 
 				self.ws.onopen = function (evt) {
-					Wicket.Event.publish('/websocket/open', evt);
+					Wicket.Event.publish(topics.Opened, evt);
 				};
 
 				self.ws.onmessage = function (event) {
@@ -69,7 +80,7 @@
 						call.process(message);
 					}
 					else {
-						Wicket.Event.publish('/websocket/message', message);
+						Wicket.Event.publish(topics.Message, message);
 					}
 				};
 
@@ -77,7 +88,7 @@
 					if (self.ws) {
 						self.ws.close();
 						self.ws = null;
-						Wicket.Event.publish('/websocket/closed', evt);
+						Wicket.Event.publish(topics.Closed, evt);
 					}
 				};
 
@@ -85,13 +96,13 @@
 					if (self.ws) {
 						self.ws.close();
 						self.ws = null;
-						Wicket.Event.publish('/websocket/error', evt);
+						Wicket.Event.publish(topics.Error, evt);
 					}
 				};
 			} else {
 				var errMessage = '[WebSocket.initialize] WebSocket is not supported in your browser!';
 				Wicket.Log.error(errMessage);
-				throw errMessage;
+				Wicket.Event.publish(topics.NotSupported, errMessage);
 			}
 		},
 
