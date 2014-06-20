@@ -20,6 +20,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -80,6 +81,8 @@ public final class PropertyResolver
 	private static final String GET = "get";
 	private static final String IS = "is";
 	private static final String SET = "set";
+	
+	private final static ConcurrentHashMap<Object, ICustomPropertyResolver> applicationToCustomPropertyResolver = Generics.newConcurrentHashMap(2);
 
 	/**
 	 * Looks up the value from the object with the given expression. If the expression, the object
@@ -739,7 +742,7 @@ public final class PropertyResolver
 		public Method getSetter();
 	}
 
-	private static abstract class AbstractGetAndSet implements IGetAndSet
+	public static abstract class AbstractGetAndSet implements IGetAndSet
 	{
 		/**
 		 * {@inheritDoc}
@@ -1468,6 +1471,29 @@ public final class PropertyResolver
 		}
 		return result;
 	}
+	
+	public static ICustomPropertyResolver getCustomPropertyResolver()
+	{
+		Object key;
+		if (Application.exists())
+		{
+			key = Application.get();
+		}
+		else
+		{
+			key = PropertyResolver.class;
+		}
+		ICustomPropertyResolver result = applicationToCustomPropertyResolver.get(key);
+		if (result == null)
+		{
+			ICustomPropertyResolver tmpResult = applicationToCustomPropertyResolver.putIfAbsent(key, result = new DefaultCustomPropertyResolver());
+			if (tmpResult != null)
+			{
+				result = tmpResult;
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Clean up cache for this app.
@@ -1549,5 +1575,28 @@ public final class PropertyResolver
 		{
 			map.put(clz, values);
 		}
+	}
+	
+	public static interface ICustomPropertyResolver
+	{
+		public void register(Class<?> clz, IGetAndSet getAndSet);
+		public IGetAndSet resolve(Class<?> clz);
+	}
+	
+	private static class DefaultCustomPropertyResolver implements ICustomPropertyResolver
+	{
+
+		@Override
+		public void register(Class<?> clz, IGetAndSet getAndSet) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public IGetAndSet resolve(Class<?> clz) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 }
