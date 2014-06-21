@@ -101,9 +101,19 @@ Here is a list of projects in this distribution and what they do.
 Getting started
 ---------------
 
-The Wicket project has several projects where you can learn from, and get
+The Wicket project has several resources and projects where you can learn from, and get
 started quickly:
 
+ - The Wicket user guide - http://wicket.apache.org/start/userguide.html: 
+
+    learn Wicket from scratch reading its userguide which gradually introduces you to
+    the various features of the framework with many real-world examples.
+
+ - The Wicket JavaDoc:
+    
+   the API Docs are available on the main site of the project:
+   http://wicket.apache.org
+    
  - wicket-examples:
 
     shows all components in short usage examples, also available live on:
