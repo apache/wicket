@@ -413,6 +413,7 @@ public final class PropertyResolver
 			}
 			if (method == null)
 			{
+				Class<? extends IGetAndSet> getAndSetClass;
 				if (List.class.isAssignableFrom(clz))
 				{
 					try
@@ -448,9 +449,20 @@ public final class PropertyResolver
 						}
 					}
 				}
+				/* Can be uncommented for better performance
 				else if (Map.class.isAssignableFrom(clz))
 				{
 					getAndSetter = new MapGetSet(exp);
+				}*/
+				else if ((getAndSetClass=getCustomPropertyResolver().resolve(clz))!=null)
+				{
+					try
+					{
+						getAndSetter = getAndSetClass.getConstructor(String.class).newInstance(exp);
+					} catch (Exception e)
+					{
+						throw new WicketRuntimeException("Can't use custom IGetAndSet '"+getAndSetClass.getName()+"'.", e);
+					}
 				}
 				else if (clz.isArray())
 				{
@@ -781,11 +793,11 @@ public final class PropertyResolver
 		}
 	}
 
-	private static final class MapGetSet extends AbstractGetAndSet
+	public static final class MapGetSet extends AbstractGetAndSet
 	{
 		private final String key;
 
-		MapGetSet(String key)
+		public MapGetSet(String key)
 		{
 			this.key = key;
 		}
@@ -822,7 +834,7 @@ public final class PropertyResolver
 		}
 	}
 
-	private static final class ListGetSet extends AbstractGetAndSet
+	public static final class ListGetSet extends AbstractGetAndSet
 	{
 		final private int index;
 
@@ -1494,7 +1506,12 @@ public final class PropertyResolver
 		}
 		return result;
 	}
-
+	
+	public static void registerCustomPropertyGetAndSet(Class<?> clz, Class<? extends IGetAndSet> getAndSetClass)
+	{
+		getCustomPropertyResolver().register(clz, getAndSetClass);
+	}
+	
 	/**
 	 * Clean up cache for this app.
 	 *
@@ -1503,6 +1520,7 @@ public final class PropertyResolver
 	public static void destroy(Application application)
 	{
 		applicationToClassesToGetAndSetters.remove(application);
+		applicationToCustomPropertyResolver.remove(application);
 	}
 
 	/**
@@ -1579,23 +1597,46 @@ public final class PropertyResolver
 	
 	public static interface ICustomPropertyResolver
 	{
-		public void register(Class<?> clz, IGetAndSet getAndSet);
-		public IGetAndSet resolve(Class<?> clz);
+		public void register(Class<?> clz, Class<? extends IGetAndSet> getAndSetClass);
+		public Class<? extends IGetAndSet> resolve(Class<?> clz);
 	}
 	
 	private static class DefaultCustomPropertyResolver implements ICustomPropertyResolver
 	{
-
+		private final ConcurrentHashMap<Class<?>, Class<? extends IGetAndSet>> map = Generics.newConcurrentHashMap(16);
+		private final ConcurrentHashMap<Class<?>, Class<? extends IGetAndSet>> localCacheMap = Generics.newConcurrentHashMap(16);
+		
+		public DefaultCustomPropertyResolver()
+		{
+			register(Map.class, MapGetSet.class);
+		}
+		
 		@Override
-		public void register(Class<?> clz, IGetAndSet getAndSet) {
-			// TODO Auto-generated method stub
-			
+		public void register(Class<?> clz, Class<? extends IGetAndSet> getAndSetClass) {
+			map.put(clz, getAndSetClass);
+			localCacheMap.clear();
 		}
 
 		@Override
-		public IGetAndSet resolve(Class<?> clz) {
-			// TODO Auto-generated method stub
-			return null;
+		public Class<? extends IGetAndSet> resolve(Class<?> clz) {
+			Class<? extends IGetAndSet> ret = map.get(clz);
+			if(ret==null)
+			{
+				ret = localCacheMap.get(clz);
+				if(ret==null)
+				{
+					for (Map.Entry<Class<?>, Class<? extends IGetAndSet>> entry : map.entrySet())
+					{
+						if(entry.getKey().isAssignableFrom(clz))
+						{
+							ret = entry.getValue();
+							localCacheMap.put(clz, ret);
+							break;
+						}
+					}
+				}
+			}
+			return ret;
 		}
 		
 	}

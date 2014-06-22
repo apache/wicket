@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.lang;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -50,6 +51,54 @@ public class PropertyResolverTest extends WicketTestCase
 		new ConverterLocator(), Locale.US);
 
 	private Person person;
+	
+	public static class CustomDocument implements Serializable
+	{
+		private Map<String, Object> map = new HashMap<String, Object>();
+		
+		public Object field(String field)
+		{
+			return map.get(field);
+		}
+		
+		public void field(String field, Object value)
+		{
+			map.put(field, value);
+		}
+	}
+	
+	public static class CustomGetAndSet extends PropertyResolver.AbstractGetAndSet
+	{
+		private final String field;
+		public CustomGetAndSet(String field)
+		{
+			this.field = field;
+		}
+
+		@Override
+		public Object getValue(Object object) {
+			return checkObject(object).field(field);
+		}
+
+		@Override
+		public Object newValue(Object object) {
+			return null;
+		}
+
+		@Override
+		public void setValue(Object object, Object value,
+				PropertyResolverConverter converter) {
+			checkObject(object).field(field, value);
+			
+		}
+		
+		private CustomDocument checkObject(Object object)
+		{
+			if(object instanceof CustomDocument) return (CustomDocument) object;
+			throw new WicketRuntimeException("This GetAndSet doesn't support "+object.getClass().getName());
+		}
+		
+	}
 
 	/**
 	 * @throws Exception
@@ -738,5 +787,15 @@ public class PropertyResolverTest extends WicketTestCase
 
 		Object actual = converter.convert(date, Long.class);
 		assertEquals(date.getTime(), actual);
+	}
+	
+	@Test
+	public void customGetAndSetSupport()
+	{
+		PropertyResolver.registerCustomPropertyGetAndSet(CustomDocument.class, CustomGetAndSet.class);
+		CustomDocument doc = new CustomDocument();
+		PropertyResolver.setValue("field1", doc, "field1Value", CONVERTER);
+		assertEquals("field1Value", doc.field("field1"));
+		assertEquals("field1Value", PropertyResolver.getValue("field1", doc));
 	}
 }
