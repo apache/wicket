@@ -241,16 +241,15 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	{
 		String scope = Classes.name(reference.getScope());
 		String name = reference.getName();
-		StringBuilder message = new StringBuilder(prefix);
-		message.append(scope).append('/').append(name);
+		String message = prefix + reference.toString();
 
 		if (getThrowExceptionOnMissingResource())
 		{
-			throw new MissingResourceException(message.toString(), scope, name);
+			throw new MissingResourceException(message, scope, name);
 		}
 		else if (log.isWarnEnabled())
 		{
-			log.warn(message.toString());
+			log.warn(message);
 		}
 	}
 
