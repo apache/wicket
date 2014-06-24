@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import org.apache.wicket.WicketInternalException;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.component.IRequestablePage;
 
@@ -25,7 +26,7 @@ import org.apache.wicket.request.component.IRequestablePage;
  *
  * @author Matej Knopp
  */
-public class StalePageException extends WicketRuntimeException
+public class StalePageException extends WicketRuntimeException implements WicketInternalException
 {
 	private static final long serialVersionUID = 1L;
 
