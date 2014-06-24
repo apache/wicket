@@ -41,7 +41,7 @@ public abstract class ClassAttributeModifier extends AttributeAppender
 	}
 
 	@Override
-	protected final String newValue(String currentValue, String appendValue)
+	protected String newValue(String currentValue, String appendValue)
 	{
 		String[] classes;
 		if (Strings.isEmpty(currentValue))
@@ -57,12 +57,13 @@ public abstract class ClassAttributeModifier extends AttributeAppender
 
 		Set<String> newClasses = update(oldClasses);
 
+		String separator = getSeparator();
 		StringBuilder result = new StringBuilder();
 		for (String cls : newClasses)
 		{
 			if (result.length() > 0)
 			{
-				result.append(getSeparator());
+				result.append(separator);
 			}
 			result.append(cls);
 		}

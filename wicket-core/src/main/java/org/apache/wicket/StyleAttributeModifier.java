@@ -41,7 +41,7 @@ public abstract class StyleAttributeModifier extends AttributeAppender
 	}
 
 	@Override
-	protected final String newValue(String currentValue, String appendValue)
+	protected String newValue(String currentValue, String appendValue)
 	{
 		String[] styles;
 		if (Strings.isEmpty(currentValue))
@@ -61,6 +61,7 @@ public abstract class StyleAttributeModifier extends AttributeAppender
 
 		Map<String, String> newStyles = update(oldStyles);
 
+		String separator = getSeparator();
 		StringBuilder result = new StringBuilder();
 		for (Map.Entry<String, String> entry : newStyles.entrySet())
 		{
@@ -68,7 +69,7 @@ public abstract class StyleAttributeModifier extends AttributeAppender
 				.append(entry.getKey())
 				.append(':')
 				.append(entry.getValue())
-				.append(getSeparator());
+				.append(separator);
 		}
 		return result.length() > 0 ? result.toString() : VALUELESS_ATTRIBUTE_REMOVE;
 	}
