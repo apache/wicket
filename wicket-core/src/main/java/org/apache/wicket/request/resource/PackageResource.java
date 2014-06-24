@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketInternalException;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
@@ -77,7 +78,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	/**
 	 * Exception thrown when the creation of a package resource is not allowed.
 	 */
-	public static final class PackageResourceBlockedException extends WicketRuntimeException
+	public static final class PackageResourceBlockedException extends WicketRuntimeException implements WicketInternalException
 	{
 		private static final long serialVersionUID = 1L;
 
