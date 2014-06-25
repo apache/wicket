@@ -20,6 +20,6 @@ package org.apache.wicket;
  * A marker interface for exceptions which are recommended to be handled
  * by the framework
  */
-public interface WicketInternalException
+public interface IWicketInternalException
 {
 }
