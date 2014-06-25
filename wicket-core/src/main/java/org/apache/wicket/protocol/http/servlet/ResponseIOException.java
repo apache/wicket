@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.http.servlet;
 
 import java.io.IOException;
 
-import org.apache.wicket.WicketInternalException;
+import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.WicketRuntimeException;
 
 /**
@@ -28,7 +28,7 @@ import org.apache.wicket.WicketRuntimeException;
  * 
  * @author Pedro Santos
  */
-public class ResponseIOException extends WicketRuntimeException implements WicketInternalException
+public class ResponseIOException extends WicketRuntimeException implements IWicketInternalException
 {
 	/** */
 	private static final long serialVersionUID = 1L;
