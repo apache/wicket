@@ -22,6 +22,8 @@ import java.util.Map;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
@@ -29,17 +31,15 @@ import org.apache.wicket.util.value.ValueMap;
  * canonical &lt;link&gt;
  * 
  * @author andrea del bene
- *
+ * @since 6.17.0
  */
 public class MetaDataHeaderItem extends HeaderItem
 {
-
-	private final Map<String, Object> tagAttributes = new ValueMap();
-	private final String tagName;
-
 	public static final String META_TAG = "meta";
 	public static final String LINK_TAG = "link";
-	public static final String CANONICAL_LINK = "canonical";
+
+	private final Map<String, Object> tagAttributes;
+	private final String tagName;
 
 	/**
 	 * Build a new {@link MetaDataHeaderItem} having {@code tagName} as tag.
@@ -49,7 +49,8 @@ public class MetaDataHeaderItem extends HeaderItem
 	 */
 	public MetaDataHeaderItem(String tagName)
 	{
-		this.tagName = tagName;
+		this.tagName = Args.notEmpty(tagName, "tagName");
+		this.tagAttributes = new ValueMap();
 	}
 
 	/**
@@ -65,6 +66,9 @@ public class MetaDataHeaderItem extends HeaderItem
 	 */
 	public MetaDataHeaderItem addTagAttribute(String attributeName, Object attributeValue)
 	{
+		Args.notEmpty(attributeName, "attributeName");
+		Args.notNull(attributeValue, "attributeValue");
+
 		tagAttributes.put(attributeName, attributeValue);
 		return this;
 	}
@@ -93,10 +97,10 @@ public class MetaDataHeaderItem extends HeaderItem
 			if (value != null)
 			{
 				buffer.append(' ')
-					.append(entry.getKey())
+					.append(Strings.escapeMarkup(entry.getKey()))
 					.append('=')
 					.append('"')
-					.append(value)
+					.append(Strings.escapeMarkup(value.toString()))
 					.append('"');
 			}
 		}
@@ -130,7 +134,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 */
 	public static MetaDataHeaderItem forMetaTag(String name, String content)
 	{
-		return forMetaTag(Model.<String> of(name), Model.<String> of(content));
+		return forMetaTag(Model.of(name), Model.of(content));
 	}
 
 	/**
@@ -165,7 +169,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 */
 	public static MetaDataHeaderItem forLinkTag(String rel, String href)
 	{
-		return forLinkTag(Model.<String> of(rel), Model.<String> of(href));
+		return forLinkTag(Model.of(rel), Model.of(href));
 	}
 	
 	/**
@@ -191,8 +195,6 @@ public class MetaDataHeaderItem extends HeaderItem
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof MetaDataHeaderItem)
-			return ((MetaDataHeaderItem)obj).generateString().equals(generateString());
-		return false;
+		return obj instanceof MetaDataHeaderItem && ((MetaDataHeaderItem) obj).generateString().equals(generateString());
 	}
 }
