@@ -18,40 +18,40 @@ module.exports = function(grunt) {
 
 	var
 		coreJs = [
-			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
-			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
-			'wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
-			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
-			"wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
-			"wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormChoiceComponentUpdatingBehavior.js",
-			"wicket-core/src/main/java/org/apache/wicket/markup/html/pages/wicket-browser-info.js"
+			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
+			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
+			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
+			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
+			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
+			"../../wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormChoiceComponentUpdatingBehavior.js",
+			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/pages/wicket-browser-info.js"
 		],
 		extensionsJs = [
-			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/progressbar.js",
-			"wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
-			"wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/tree/res/tree.js",
-			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
-			"wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
-			"wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js"
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/progressbar.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/tree/res/tree.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js"
 		],
 		datetimeJs = [
-			"wicket-datetime/src/main/java/org/apache/wicket/extensions/yui/calendar/wicket-date.js"
+			"../../wicket-datetime/src/main/java/org/apache/wicket/extensions/yui/calendar/wicket-date.js"
 		],
 		nativeWebSocketJs = [
-			"wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
+			"../../wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
 		],
 		atmosphereJs = [
-			"wicket-experimental/wicket-atmosphere/src/main/java/org/apache/wicket/atmosphere/jquery.wicketatmosphere.js"
+			"../../wicket-experimental/wicket-atmosphere/src/main/java/org/apache/wicket/atmosphere/jquery.wicketatmosphere.js"
 		],
 		testsJs = [
-			"./wicket-core/src/test/js/ajax.js",
-			"./wicket-core/src/test/js/head.js",
-			"./wicket-core/src/test/js/form.js",
-			"./wicket-core/src/test/js/dom.js",
-			"./wicket-core/src/test/js/channels.js",
-			"./wicket-core/src/test/js/event.js",
-			"./wicket-core/src/test/js/timer.js",
-			"./wicket-core/src/test/js/amd.js"
+			"../../wicket-core/src/test/js/ajax.js",
+			"../../wicket-core/src/test/js/head.js",
+			"../../wicket-core/src/test/js/form.js",
+			"../../wicket-core/src/test/js/dom.js",
+			"../../wicket-core/src/test/js/channels.js",
+			"../../wicket-core/src/test/js/event.js",
+			"../../wicket-core/src/test/js/timer.js",
+			"../../wicket-core/src/test/js/amd.js"
 		],
 		gruntJs = [
 			"Gruntfile.js"
@@ -115,14 +115,14 @@ module.exports = function(grunt) {
 			/*
 			 * Runs only local tests (w/o ajax ones).
 			 */
-			local: ['wicket-core/src/test/js/all.html']
+			local: ['../../wicket-core/src/test/js/all.html']
 		},
 
 		connect: {
 			server: {
 				options: {
 					port: 38888,
-					base: './wicket-core/src'
+					base: '../../wicket-core/src'
 				}
 			}
 		}
