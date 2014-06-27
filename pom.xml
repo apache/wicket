@@ -61,6 +61,7 @@
 		<module>wicket-experimental</module>
 		<module>archetypes/quickstart</module>
 		<module>testing/wicket-common-tests</module>
+		<module>testing/wicket-js-tests</module>
 		<module>wicket-native-websocket</module>
 		<module>wicket-bean-validation</module>
 		<module>wicket-cdi-1.1</module>
