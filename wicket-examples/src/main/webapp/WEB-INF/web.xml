@@ -789,7 +789,6 @@
 	<listener>
 		<!-- initialize Weld in servlet environment -->
 		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
-		<listener-class>org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener</listener-class>
 	</listener>
     <!-- END CDI EXAMPLE APPLICATION -->
 
