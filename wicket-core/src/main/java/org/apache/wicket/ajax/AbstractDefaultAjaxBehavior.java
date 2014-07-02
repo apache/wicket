@@ -319,7 +319,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			}
 
 			AjaxChannel channel = attributes.getChannel();
-			if (channel != null)
+			if (channel != null && channel.equals(AjaxChannel.DEFAULT) == false)
 			{
 				attributesJson.put(AjaxAttributeName.CHANNEL.jsonName(), channel);
 			}
