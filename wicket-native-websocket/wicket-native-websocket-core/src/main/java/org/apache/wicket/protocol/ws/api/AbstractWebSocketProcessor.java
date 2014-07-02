@@ -32,6 +32,7 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.ws.IWebSocketSettings;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
@@ -302,28 +303,44 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * @param page
 	 *          The page that owns the WebSocketBehavior, in case of behavior usage
 	 */
-	private void sendPayload(WebSocketPayload payload, Page page)
+	private void sendPayload(final WebSocketPayload payload, final Page page)
 	{
-		if (pageId != NO_PAGE_ID)
+		final Runnable action = new Runnable()
 		{
-			page.send(application, Broadcast.BREADTH, payload);
+			@Override
+			public void run()
+			{
+				if (pageId != NO_PAGE_ID)
+				{
+					page.send(application, Broadcast.BREADTH, payload);
+				} else
+				{
+					ResourceReference reference = new SharedResourceReference(resourceName);
+					IResource resource = reference.getResource();
+					if (resource instanceof WebSocketResource)
+					{
+						WebSocketResource wsResource = (WebSocketResource) resource;
+						wsResource.onPayload(payload);
+					} else
+					{
+						throw new IllegalStateException(
+								String.format("Shared resource with name '%s' is not a %s but %s",
+										resourceName, WebSocketResource.class.getSimpleName(),
+										Classes.name(resource.getClass())));
+					}
+				}
+			}
+		};
+
+		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
+		if (webSocketSettings instanceof WebSocketSettings)
+		{
+			WebSocketSettings wss = (WebSocketSettings) webSocketSettings;
+			wss.getSendPayloadExecutor().run(action);
 		}
 		else
 		{
-			ResourceReference reference = new SharedResourceReference(resourceName);
-			IResource resource = reference.getResource();
-			if (resource instanceof WebSocketResource)
-			{
-				WebSocketResource wsResource = (WebSocketResource) resource;
-				wsResource.onPayload(payload);
-			}
-			else
-			{
-				throw new IllegalStateException(
-						String.format("Shared resource with name '%s' is not a %s but %s",
-								resourceName, WebSocketResource.class.getSimpleName(),
-								Classes.name(resource.getClass())));
-			}
+			action.run();
 		}
 	}
 

@@ -34,6 +34,12 @@ public class WebSocketSettings implements IWebSocketSettings
 	private Executor webSocketPushMessageExecutor = new SameThreadExecutor();
 
 	/**
+	 * The executor that handles broadcast of the {@link org.apache.wicket.protocol.ws.api.event.WebSocketPayload}
+	 * via Wicket's event bus.
+	 */
+	private Executor sendPayloadExecutor = new SameThreadExecutor();
+
+	/**
 	 * Tracks all currently connected WebSocket clients
 	 */
 	private IWebSocketConnectionRegistry connectionRegistry = new SimpleWebSocketConnectionRegistry();
@@ -67,9 +73,40 @@ public class WebSocketSettings implements IWebSocketSettings
 	}
 
 	/**
+	 * The executor that broadcasts the {@link org.apache.wicket.protocol.ws.api.event.WebSocketPayload}
+	 * via Wicket's event bus.
+	 * Default executor does all the processing in the caller thread.
+	 *
+	 * @param sendPayloadExecutor
+	 *            The executor used for broadcasting the events with web socket payloads to
+	 *            {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}s and
+	 *            {@link org.apache.wicket.protocol.ws.api.WebSocketResource}s.
+	 */
+	public WebSocketSettings setSendPayloadExecutor(Executor sendPayloadExecutor)
+	{
+		Args.notNull(sendPayloadExecutor, "sendPayloadExecutor");
+		this.sendPayloadExecutor = sendPayloadExecutor;
+		return this;
+	}
+
+	/**
+	 * The executor that broadcasts the {@link org.apache.wicket.protocol.ws.api.event.WebSocketPayload}
+	 * via Wicket's event bus.
+	 *
+	 * @return
+	 *            The executor used for broadcasting the events with web socket payloads to
+	 *            {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}s and
+	 *            {@link org.apache.wicket.protocol.ws.api.WebSocketResource}s.
+	 */
+	public Executor getSendPayloadExecutor()
+	{
+		return sendPayloadExecutor;
+	}
+
+	/**
 	 * Simple executor that runs the tasks in the caller thread.
 	 */
-	static final class SameThreadExecutor implements Executor
+	public static class SameThreadExecutor implements Executor
 	{
 		@Override
 		public void run(Runnable command)
