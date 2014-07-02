@@ -139,16 +139,16 @@ module.exports = function(grunt) {
 					port: 38888,
 //					debug: true,
 					middleware: function(connect, options, middlewares) {
-			            middlewares.unshift(function(req, res, next) {
-			            	if (req.url.indexOf('submitNestedForm') > 0) {
-			            		// WICKET-5631
-            					req.method = 'GET';
-            				}
-            				return next();
-			            });
+						middlewares.unshift(function(req, res, next) {
+							if (req.url.indexOf('submitNestedForm') > 0) {
+								// WICKET-5631
+								req.method = 'GET';
+							}
+							return next();
+						});
 
-			            return middlewares;
-			          },
+						return middlewares;
+					  },
 					base: '../../wicket-core/src'
 				}
 			}
