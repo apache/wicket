@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -50,8 +53,8 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 			protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 			{
 				// assert the inbould message
-				Assert.assertEquals(expectedMessage, message.getText());
-				
+				Assert.assertThat(message.getText(), is(equalTo(expectedMessage)));
+
 				// now send an outbound message
 				handler.push(Strings.capitalize(expectedMessage));
 			}

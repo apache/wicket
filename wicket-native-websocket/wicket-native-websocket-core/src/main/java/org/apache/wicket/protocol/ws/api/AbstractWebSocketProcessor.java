@@ -270,29 +270,37 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * @param page
 	 *          The page that owns the WebSocketBehavior, in case of behavior usage
 	 */
-	private void sendPayload(WebSocketPayload payload, Page page)
+	private void sendPayload(final WebSocketPayload payload, final Page page)
 	{
-		if (pageId != NO_PAGE_ID)
+		final Runnable action = new Runnable()
 		{
-			page.send(application, Broadcast.BREADTH, payload);
-		}
-		else
-		{
-			ResourceReference reference = new SharedResourceReference(resourceName);
-			IResource resource = reference.getResource();
-			if (resource instanceof WebSocketResource)
+			@Override
+			public void run()
 			{
-				WebSocketResource wsResource = (WebSocketResource) resource;
-				wsResource.onPayload(payload);
+				if (pageId != NO_PAGE_ID)
+				{
+					page.send(application, Broadcast.BREADTH, payload);
+				} else
+				{
+					ResourceReference reference = new SharedResourceReference(resourceName);
+					IResource resource = reference.getResource();
+					if (resource instanceof WebSocketResource)
+					{
+						WebSocketResource wsResource = (WebSocketResource) resource;
+						wsResource.onPayload(payload);
+					} else
+					{
+						throw new IllegalStateException(
+								String.format("Shared resource with name '%s' is not a %s but %s",
+										resourceName, WebSocketResource.class.getSimpleName(),
+										Classes.name(resource.getClass())));
+					}
+				}
 			}
-			else
-			{
-				throw new IllegalStateException(
-						String.format("Shared resource with name '%s' is not a %s but %s",
-								resourceName, WebSocketResource.class.getSimpleName(),
-								Classes.name(resource.getClass())));
-			}
-		}
+		};
+
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
+		webSocketSettings.getSendPayloadExecutor().run(action);
 	}
 
 	/**
