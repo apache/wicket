@@ -873,8 +873,7 @@
 					form.action = form.action + '&' + dynamicExtraParameters;
 				}
 			}
-			// PhantomJS cannot submit with POST to iframe
-			form.method = /PhantomJS/.test(navigator.userAgent) ? 'get' : 'post';
+			form.method = 'post';
 			form.enctype = "multipart/form-data";
 			form.encoding = "multipart/form-data";
 
