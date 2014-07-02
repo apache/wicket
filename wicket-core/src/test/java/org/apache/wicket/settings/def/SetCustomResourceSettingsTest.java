@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.util.time.Duration;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,22 +34,22 @@ import org.junit.Test;
  */
 public class SetCustomResourceSettingsTest extends WicketTestCase
 {
-	final Duration expected = Duration.days(3);
-	IResourceSettings resSettings;
+	final String expected = "~!@";
+	ResourceSettings resSettings;
 
 	@Override
 	@Before
 	public void commonBefore() {
-		resSettings = mock(IResourceSettings.class);
-		when(resSettings.getDefaultCacheDuration()).thenReturn(expected);
+		resSettings = mock(ResourceSettings.class);
+		when(resSettings.getParentFolderPlaceholder()).thenReturn(expected);
 
 		super.commonBefore();
 	}
 
 	@Test
 	public void check() {
-		IResourceSettings settings = tester.getApplication().getResourceSettings();
-		assertThat(settings.getDefaultCacheDuration(), is(equalTo(expected)));
+		ResourceSettings settings = tester.getApplication().getResourceSettings();
+		assertThat(settings.getParentFolderPlaceholder(), is(equalTo(expected)));
 	}
 
 	@Override
