@@ -29,7 +29,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
  * 
  * @author Jeremy Thomerson
  */
-public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringHeaderResponse
+public class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringHeaderResponse
 {
 	/**
 	 * The name of the filter that renders the head section of the page
