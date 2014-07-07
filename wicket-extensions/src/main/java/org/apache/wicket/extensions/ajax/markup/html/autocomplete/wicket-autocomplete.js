@@ -51,8 +51,7 @@
 		var elementCount=0; // number of items on the auto complete list
 		var visible=0;		// is the list visible
 		
-		var ignoreFocus = false;		// ignore focus and gain because menu is showing
-		var	ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
+		var ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
 		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
 		var ignoreChange = false;		// ignore change event because TAB or ENTER event already triggered a change
 
@@ -84,8 +83,7 @@
 			var isShowing = false;
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again (using the new stateful 'ignoreFocus'
-			// variable which just gets created)
+			// the mouse event handler again 
 			var choiceDiv = document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				isShowing = choiceDiv.showingAutocomplete;
@@ -96,20 +94,10 @@
 			initialElement = obj;
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
-				if (ignoreFocus) {
-					ignoreOneFocusGain = true;
-					Wicket.$(elementId).focus();
-					return jqEvent.stopPropagation();
-				}
-
 				window.setTimeout(hideAutoComplete, 500);
 			});
 
 			Wicket.Event.add(obj, 'focus', function (jqEvent) {
-				if (ignoreFocus) {
-					ignoreOneFocusGain = false;
-					return jqEvent.stopPropagation();
-				}
 				var input = jqEvent.target;
 				if (!ignoreOneFocusGain && (cfg.showListOnFocusGain || (cfg.showListOnEmptyInput && (!input.value))) && visible === 0) {
 					getAutocompleteMenu().showingAutocomplete = true;
@@ -188,7 +176,7 @@
 			});
 
 			Wicket.Event.add(obj, 'change', function (jqEvent) {
-				if (ignoreFocus || ignoreChange) {
+				if (ignoreChange) {
 					// don't let any other change handler get this
 					jqEvent.stopImmediatePropagation();
 				}
@@ -238,8 +226,7 @@
 		{
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again (using the new stateful 'ignoreFocus'
-			// variable which just gets created)
+			// the mouse event handler again 
 			var choiceDiv=document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
@@ -322,10 +309,6 @@
 				choiceDiv.id=getMenuId();
 				choiceDiv.className="wicket-aa";
 
-
-				// WICKET-1350/WICKET-1351
-				container.onmouseout = function() {ignoreFocus = false;};
-				container.onmousemove = function() {ignoreFocus = true;};
 			}
 
 
@@ -451,7 +434,7 @@
 		function hideAutoComplete(){
 			visible = 0;
 			setSelected(-1);
-			ignoreFocus = false;
+			
 			//WICKET-5382
 			hideIndicator();
 			
@@ -631,7 +614,6 @@
 				elementCount=selectableElements.length;
 
 				var clickFunc = function(event) {
-					ignoreFocus = false;
 					ignoreChange = false;
 					
 					var value = getSelectedValue();
