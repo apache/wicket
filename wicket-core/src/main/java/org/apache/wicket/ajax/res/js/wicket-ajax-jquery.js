@@ -1052,7 +1052,7 @@
 				Wicket.Focus.attachFocusEvent();
 
 				// set the focus to the last component
-				window.setTimeout("Wicket.Focus.requestFocus();", 0);
+				Wicket.Focus.requestFocus();
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
 				return FunctionsExecuter.DONE;
