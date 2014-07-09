@@ -2541,9 +2541,11 @@
 
 				var target = event.target;
 				if (target) {
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
-					Wicket.Focus.lastFocusId = target.id;
-					Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId);
+					var WF = Wicket.Focus;
+					WF.refocusLastFocusedComponentAfterResponse = false;
+					var id = target.id;
+					WF.lastFocusId = id;
+					Wicket.Log.info("focus set on " + id);
 				}
 			},
 
@@ -2551,65 +2553,69 @@
 				event = Wicket.Event.fix(event);
 
 				var target = event.target;
-				if (target && Wicket.Focus.lastFocusId === target.id) {
-					if (Wicket.Focus.refocusLastFocusedComponentAfterResponse) {
+				var WF = Wicket.Focus;
+				if (target && WF.lastFocusId === target.id) {
+					var id = target.id;
+					if (WF.refocusLastFocusedComponentAfterResponse) {
 						// replaced components seem to blur when replaced only on Safari - so do not modify lastFocusId so it gets refocused
-						Wicket.Log.info("focus removed from " + target.id + " but ignored because of component replacement");
+						Wicket.Log.info("focus removed from " + id + " but ignored because of component replacement");
 					} else {
-						Wicket.Focus.lastFocusId=null;
-						Wicket.Log.info("focus removed from " + target.id);
+						WF.lastFocusId = null;
+						Wicket.Log.info("focus removed from " + id);
 					}
 				}
 			},
 
 			getFocusedElement: function () {
-				if (typeof(Wicket.Focus.lastFocusId) !== "undefined" && Wicket.Focus.lastFocusId !== "" && Wicket.Focus.lastFocusId !== null)
-				{
-					Wicket.Log.info("returned focused element: " + Wicket.$(Wicket.Focus.lastFocusId));
-					return Wicket.$(Wicket.Focus.lastFocusId);
+				var lastFocusId = Wicket.Focus.lastFocusId;
+				if (lastFocusId) {
+					var focusedElement = Wicket.$(lastFocusId);
+					Wicket.Log.info("returned focused element: " + focusedElement);
+					return  focusedElement;
 				}
 			},
 
 			setFocusOnId: function (id) {
-				if (typeof(id) !== "undefined" && id !== "" && id !== null) {
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = true;
-					Wicket.Focus.focusSetFromServer = true;
-					Wicket.Focus.lastFocusId = id;
-					Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId + " from serverside");
+				var WF = Wicket.Focus;
+				if (id) {
+					WF.refocusLastFocusedComponentAfterResponse = true;
+					WF.focusSetFromServer = true;
+					WF.lastFocusId = id;
+					Wicket.Log.info("focus set on " + id + " from server side");
 				} else {
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
-					Wicket.Log.info("refocus focused component after request stopped from serverside");
+					WF.refocusLastFocusedComponentAfterResponse = false;
+					Wicket.Log.info("refocus focused component after request stopped from server side");
 				}
 			},
 
 			// mark the focused component so that we know if it has been replaced or not by response
 			markFocusedComponent: function () {
-				var focusedElement = Wicket.Focus.getFocusedElement();
-				if (typeof(focusedElement) !== "undefined" && focusedElement !== null) {
+				var WF = Wicket.Focus;
+				var focusedElement = WF.getFocusedElement();
+				if (focusedElement) {
 					// create a property of the focused element that would not remain there if component is replaced
 					focusedElement.wasFocusedBeforeComponentReplacements = true;
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = true;
-					Wicket.Focus.focusSetFromServer = false;
+					WF.refocusLastFocusedComponentAfterResponse = true;
+					WF.focusSetFromServer = false;
 				} else {
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+					WF.refocusLastFocusedComponentAfterResponse = false;
 				}
 			},
 
 			// detect if the focused component was replaced
 			checkFocusedComponentReplaced: function () {
-				var focusedElement = Wicket.Focus.getFocusedElement();
-				if (Wicket.Focus.refocusLastFocusedComponentAfterResponse === true)
-				{
-					if (typeof(focusedElement) !== "undefined" && focusedElement !== null) {
-						if (typeof(focusedElement.wasFocusedBeforeComponentReplacements) !== "undefined")
-						{
+				var WF = Wicket.Focus;
+				if (WF.refocusLastFocusedComponentAfterResponse) {
+					var focusedElement = WF.getFocusedElement();
+					if (focusedElement) {
+						if (typeof(focusedElement.wasFocusedBeforeComponentReplacements) !== "undefined") {
 							// focus component was not replaced - no need to refocus it
-							Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+							WF.refocusLastFocusedComponentAfterResponse = false;
 						}
 					} else {
 						// focused component dissapeared completely - no use to try to refocus it
-						Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
-						Wicket.Focus.lastFocusId = "";
+						WF.refocusLastFocusedComponentAfterResponse = false;
+						WF.lastFocusId = "";
 					}
 				}
 			},
@@ -2619,17 +2625,14 @@
 				// (if focus was not changed from server) but if not, and the focus component should
 				// remain the same, do not re-focus - fixes problem on IE6 for combos that have
 				// the popup open (refocusing closes popup)
-				if (Wicket.Focus.refocusLastFocusedComponentAfterResponse &&
-					typeof(Wicket.Focus.lastFocusId) !== "undefined" &&
-					Wicket.Focus.lastFocusId !== "" &&
-					Wicket.Focus.lastFocusId !== null)
-				{
-					var toFocus = Wicket.$(Wicket.Focus.lastFocusId);
+				var WF = Wicket.Focus;
+				if (WF.refocusLastFocusedComponentAfterResponse && WF.lastFocusId) {
+					var toFocus = Wicket.$(WF.lastFocusId);
 
-					if (toFocus !== null && typeof(toFocus) !== "undefined") {
-						Wicket.Log.info("Calling focus on " + Wicket.Focus.lastFocusId);
+					if (toFocus) {
+						Wicket.Log.info("Calling focus on " + WF.lastFocusId);
 						try {
-							if (Wicket.Focus.focusSetFromServer) {
+							if (WF.focusSetFromServer) {
 								toFocus.focus();
 							} else {
 								// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
@@ -2642,45 +2645,46 @@
 						} catch (ignore) {
 						}
 					}
-					else
-					{
-						Wicket.Focus.lastFocusId = "";
-						Wicket.Log.info("Couldn't set focus on " + Wicket.Focus.lastFocusId + " not on the page anymore");
+					else {
+						WF.lastFocusId = "";
+						Wicket.Log.info("Couldn't set focus on element with id '" + WF.lastFocusId + "' because it is not in the page anymore");
 					}
 				}
-				else if (Wicket.Focus.refocusLastFocusedComponentAfterResponse)
-				{
+				else if (WF.refocusLastFocusedComponentAfterResponse) {
 					Wicket.Log.info("last focus id was not set");
 				}
-				else
-				{
+				else {
 					Wicket.Log.info("refocus last focused component not needed/allowed");
 				}
-				Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+				WF.refocusLastFocusedComponentAfterResponse = false;
 			},
 
 			setFocusOnElements: function (elements) {
 				// we need to cache array length because IE will try to recalculate
-				// the collection of elements every time length() is called which can be quiet expensive
+				// the collection of elements every time length() is called which can be quite expensive
 				// if the collection is a result of getElementsByTagName or a similar function.
 				var len = elements.length;
+				var WE = Wicket.Event;
+				var WF = Wicket.Focus;
 				for (var i = 0; i < len; i++)
 				{
-					if (elements[i].wicketFocusSet !== true)
+					var element = elements[i];
+					if (element.wicketFocusSet !== true)
 					{
-						 Wicket.Event.add(elements[i], 'focus', Wicket.Focus.setFocus);
-						 Wicket.Event.add(elements[i], 'blur', Wicket.Focus.blur);
-						 elements[i].wicketFocusSet = true;
+						WE.add(element, 'focus', WF.setFocus);
+						WE.add(element, 'blur', WF.blur);
+						element.wicketFocusSet = true;
 					}
 				}
 			},
 
 			attachFocusEvent: function () {
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("input"));
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("select"));
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("textarea"));
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("button"));
-				Wicket.Focus.setFocusOnElements(document.getElementsByTagName("a"));
+				var WF = Wicket.Focus;
+				WF.setFocusOnElements(document.getElementsByTagName("input"));
+				WF.setFocusOnElements(document.getElementsByTagName("select"));
+				WF.setFocusOnElements(document.getElementsByTagName("textarea"));
+				WF.setFocusOnElements(document.getElementsByTagName("button"));
+				WF.setFocusOnElements(document.getElementsByTagName("a"));
 			}
 		},
 
