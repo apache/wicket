@@ -4544,6 +4544,7 @@ public abstract class Component
 	@Override
 	public boolean canCallListenerInterfaceAfterExpiry()
 	{
-		return getApplication().getPageSettings().getCallListenerInterfaceAfterExpiry();
+        	return getApplication().getPageSettings()
+        		.getCallListenerInterfaceAfterExpiry() || isStateless();
 	}
 }
