@@ -600,7 +600,6 @@ public abstract class AbstractResource implements IResource
 			if (data.getStatusCode() != null)
 			{
 				webResponse.setStatus(data.getStatusCode());
-				return;
 			}
 
 			if (!data.dataNeedsToBeWritten(attributes))
