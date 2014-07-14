@@ -300,7 +300,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 			if (info == null)
 			{
-				// if there are is no page instance information (only page map name - optionally)
+				// if there are is no page instance information
 				// then this is a simple bookmarkable URL
 				return processBookmarkable(pageClass, pageParameters);
 			}
