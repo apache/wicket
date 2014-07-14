@@ -312,8 +312,6 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 	/** current full field description. */
 	private String fieldDescription;
 
-	private final Deque<Object> stack = new ArrayDeque<>();
-
 	/**
 	 * Constructor.
 	 *
@@ -337,34 +335,12 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 			return;
 		}
 
-		try
+		if (checked.containsKey(obj))
 		{
-			if (stack.contains(obj))
-			{
-				return;
-			}
-		}
-		catch (RuntimeException e)
-		{
-			log.warn(String.format("Wasn't possible to check the object '%s' possible due an problematic " +
-					"implementation of equals method", obj.getClass()), e);
-			/*
-			 * Can't check if this obj were in stack, giving up because we don't want to throw an
-			 * invaluable exception to user. The main goal of this checker is to find non
-			 * serializable data
-			 */
 			return;
 		}
 
-		stack.push(obj);
-		try
-		{
-			internalCheck(obj);
-		}
-		finally
-		{
-			stack.pop();
-		}
+		internalCheck(obj);
 	}
 
 	private void internalCheck(Object obj)
@@ -722,5 +698,4 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 		// just null-ify the declared members
 		reset();
 	}
-
 }

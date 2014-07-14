@@ -16,17 +16,21 @@
  */
 package org.apache.wicket.util.io;
 
+import static org.hamcrest.Matchers.is;
+
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
-import org.apache.wicket.util.Log4jEventHistory;
+import org.apache.wicket.core.util.objects.checker.AbstractObjectChecker;
+import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
+import org.apache.wicket.core.util.objects.checker.IObjectChecker;
 import org.apache.wicket.util.value.ValueMap;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -50,30 +54,49 @@ public class SerializableCheckerTest extends Assert
 	}
 
 	/**
-	 * Asserting an meaningful message get logged on console when serializable checker is testing
-	 * problematic {@link Object#equals(Object)} method implementations.
-	 * 
-	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3354">WICKET-3354</a>
+	 * Asserts that {@link org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream}
+	 * will check an instance just once, despite it occurs more than once in the object tree
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-5642
+	 *
 	 * @throws IOException
 	 */
 	@Test
-	public void runtimeExceptionTolerance() throws IOException
+	public void checkObjectsByIdentity() throws IOException
 	{
-		Logger logger = LogManager.getLogger(CheckingObjectOutputStream.class);
-		logger.setLevel(Level.WARN);
-		Log4jEventHistory logHistory = new Log4jEventHistory();
-		logger.addAppender(logHistory);
-		CheckingObjectOutputStream checker = new CheckingObjectOutputStream(new ByteArrayOutputStream(),
-				new ObjectSerializationChecker(new NotSerializableException()));
-		try
+		CountingChecker countingChecker = new CountingChecker();
+		CheckingObjectOutputStream outputStream = new CheckingObjectOutputStream(new ByteArrayOutputStream(), countingChecker);
+		final IdentityTestType type = new IdentityTestType();
+		type.member = new SerializableTypeWithMember(type);
+		outputStream.writeObject(type);
+
+		assertThat(countingChecker.getCount(), is(2));
+	}
+
+	private static class CountingChecker extends AbstractObjectChecker
+	{
+		private int count = 0;
+
+		@Override
+		public Result check(Object object)
 		{
-			checker.writeObject(new TestType1());
-			String expectedMessage = "Wasn't possible to check the object 'class org.apache.wicket.util.io.SerializableCheckerTest$ProblematicType' possible due an problematic implementation of equals method";
-			assertTrue(logHistory.contains(Level.WARN, expectedMessage));
+			count++;
+			return super.check(object);
 		}
-		catch (TestException notMeaningfulException)
+
+		private int getCount()
 		{
-			fail("Should have just logged on console, the checker is after another problem");
+			return count;
+		}
+	}
+
+	private static class SerializableTypeWithMember extends SerializableType
+	{
+		private final IdentityTestType member;
+
+		private SerializableTypeWithMember(IdentityTestType member)
+		{
+			this.member = member;
 		}
 	}
 
@@ -97,10 +120,17 @@ public class SerializableCheckerTest extends Assert
 		assertTrue(exceptionMessage.contains(NonSerializableType.class.getName()));
 	}
 
-	private static class TestType1 implements Serializable
+	private static class IdentityTestType implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
-		ProblematicType problematicType = new ProblematicType();
+
+		private SerializableType member;
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			return false;
+		}
 	}
 
 	private static class TestType2 implements Serializable
