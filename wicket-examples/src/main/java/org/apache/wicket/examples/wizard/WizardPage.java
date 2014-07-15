@@ -20,6 +20,9 @@ import java.lang.reflect.Constructor;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.wizard.Wizard;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 
 /**
@@ -53,5 +56,14 @@ public class WizardPage extends WicketExamplePage
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		response.render(CssHeaderItem.forReference(new CssResourceReference(WizardPage.class,
+			"Wizard.css")));
 	}
 }

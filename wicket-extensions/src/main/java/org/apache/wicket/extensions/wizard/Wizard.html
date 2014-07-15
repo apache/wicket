@@ -16,31 +16,23 @@
    limitations under the License.
 -->
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
-<div class="wicketExtensionsWizard">
-<form wicket:id="form" class="wicketExtensionsWizardForm">
- <table class="wicketExtensionsWizardOuterTable">
-  <tr>
-   <td valign="top">
-   	<span wicket:id="overview"></span>
-   </td>
-   <td valign="top">
-    <table class="wicketExtensionsWizardInnerTable">
-     <tr class="wicketExtensionsWizardHeaderRow">
-      <td valign="top" class="wicketExtensionsWizardHeader"><span wicket:id="header"></span></td>
-     </tr>
-     <tr class="wicketExtensionsWizardViewRow">
-      <td valign="top" class="wicketExtensionsWizardView"><div wicket:id="view" class="wicketExtensionsWizardViewInner"></div></td>
-     </tr>
-     <tr class="wicketExtensionsWizardFeedbackRow">
-      <td valign="top" class="wicketExtensionsWizardFeedback"><span wicket:id="feedback"></span></td>
-     </tr>
-     <tr class="wicketExtensionsWizardButtonBarRow">
-      <td valign="top" class="wicketExtensionsWizardButtonBar"><span wicket:id="buttons"></span></td>
-     </tr>
-    </table>
-   </td>
-  </tr>
- </table>
-</form>
+<div class="wizard-form">
+	<form wicket:id="form">
+		<div class="wizard-overview">
+			<div wicket:id="overview"></div> 
+		</div>
+		<div class="wizard-header">
+			<div wicket:id="header"></div>
+		</div>
+		<div class="wizard-view">
+			<div wicket:id="view"></div>
+		</div>	
+		<div class="wizard-feedback">
+			<div wicket:id="feedback"></div>
+		</div>
+		<div class="wizard-buttons">
+			<div wicket:id="buttons"></div>
+		</div>
+	</form>
 </div>
 </wicket:panel>

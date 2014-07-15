@@ -14,36 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.wicketExtensionsWizardInnerTable {
+.wizard-form {
 	width: 600px;
+}
+.wizard-form > form {
+	border: thin solid black;
+	padding: 1px;
+}
+
+.wizard-header {
+	margin-bottom: 1px;
+}
+.wizard-header > div {
 	border: thin solid black;
 }
-.wicketExtensionsWizardHeaderRow {
-	height: 20px;
-}
-.wicketExtensionsWizardHeader {
+
+.wizard-view {
+	height: 140px;
 	border: thin solid black;
 }
-.wicketExtensionsWizardView {
-	border: thin solid black;
-}
-.wicketExtensionsWizardViewInner {
+.wizard-view > div {
 	margin: 10 10 10 10;
 }
-.wicketExtensionsWizardViewRow {
-	height: 140px;
-}
-.wicketExtensionsWizardButtonBar {
+
+.wizard-buttons {
 	text-align: right;
+	margin: 5px;
 }
-.wicketExtensionsWizardButtonBar input {
-	width: 80px;
+.wizard-buttons input {
+	min-width: 80px;
 }
-.wicketExtensionsWizardHeaderTitle {
+
+.wizard-step-title {
 	margin: 10 5 10 15;
 	font-weight: bold;
 }
-.wicketExtensionsWizardHeaderSummary {
+
+.wizard-step-summary {
 	margin: 10 5 5 5;
 	font-style: italic;
 }
