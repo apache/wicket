@@ -21,6 +21,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.markup.ComponentTag;
 
 /**
  * A bar of buttons for wizards utilizing {@link AjaxFormSubmitBehavior}.
@@ -101,6 +102,13 @@ public class AjaxWizardButtonBar extends WizardButtonBar
 				target.add(findParent(Wizard.class));
 
 				button.onError();
+			}
+			
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				// WICKET-5644 prevent non-Ajax submit (similar to AjaxButton WICKET-5594)
+				tag.put("type", "button");
 			}
 		});
 	}
