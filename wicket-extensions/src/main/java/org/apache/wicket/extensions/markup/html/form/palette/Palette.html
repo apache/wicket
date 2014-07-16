@@ -20,29 +20,31 @@
 <wicket:panel>
 
 <input type="hidden" wicket:id="recorder"/>
-<table cellspacing="0" cellpadding="2" class="palette">
-<tr>
-	<td class="header headerAvailable"><span wicket:id="availableHeader">[available header]</span></td>
-	<td>&#160;</td>
-	<td class="header headerSelected"><span wicket:id="selectedHeader">[selected header]</span></td>
-</tr>
-<tr>
-	<td class="pane choices">
-		<select wicket:id="choices" class="choicesSelect">[choices]</select>	
-	</td>
-	<td class="buttons">
-		<button type="button" wicket:id="addButton" class="button add"><div></div></button><br/>
-		<button type="button" wicket:id="removeButton" class="button remove"><div></div></button><br/>
-		<button type="button" wicket:id="moveUpButton" class="button up"><div></div></button><br/>
-		<button type="button" wicket:id="moveDownButton" class="button down"><div></div></button><br/>
-		<button type="button" wicket:id="addAllButton" class="button addAll"><div></div></button><br/>
-		<button type="button" wicket:id="removeAllButton" class="button removeAll"><div></div></button><br/>
-	</td>
-	<td class="pane selection">
-		<select class="selectionSelect" wicket:id="selection">[selection]</select>	
-	</td>
-</tr>
-</table>
+
+<div class="palette-choices">
+	<span wicket:id="availableHeader" class="palette-header">[available header]</span>
+	<select wicket:id="choices">[choices]</select>	
+</div>
+
+<div class="palette-buttons">
+	<div>
+		<button type="button" wicket:id="addButton" class="palette-add"><div></div></button>
+		<button type="button" wicket:id="removeButton" class="palette-remove"><div></div></button>
+		<button type="button" wicket:id="moveUpButton" class="palette-up"><div></div></button>
+		<button type="button" wicket:id="moveDownButton" class="palette-down"><div></div></button>
+		<button type="button" wicket:id="addAllButton" class="palette-addAll"><div></div></button>
+		<button type="button" wicket:id="removeAllButton" class="palette-removeAll"><div></div></button>
+	</div>
+</div>
+
+<div class="palette-selected">
+	<span wicket:id="selectedHeader" class="palette-header">[selected header]</span>
+	<select wicket:id="selection">[selection]</select>	
+</div>
+
+<div class="palette-clearer">
+</div>
+
 </wicket:panel>
 </body>
 </html>

@@ -15,11 +15,24 @@
  * limitations under the License.
  */
  
-table.palette {
-	border: 0;
+.palette-theme-default .palette-choices {
+ 	float: left;
+ 	width: 40%;
+}
+.palette-theme-default .palette-choices select {
+ 	width: 100%;
 }
 
-table.palette td.header {
+.palette-theme-default .palette-selected {
+ 	float: left;
+ 	width: 40%;
+}
+.palette-theme-default .palette-selected select {
+ 	width: 100%;
+}
+ 
+.palette-theme-default .palette-header {
+	display: block;
 	text-align: center;
 	font-weight: bold;
 	font-size: 9pt;
@@ -29,71 +42,40 @@ table.palette td.header {
 	border-bottom: 1px solid #729ac2;
 }
 
-table.palette td.pane {
-	width: 100px;
-	text-align: center;
-}
-
-table.palette td.pane select {
-	width: 200px;
-}
-
-table.palette td.buttons { 
+.palette-theme-default .palette-buttons { 
+ 	float: left;
 	text-align: center;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 
-table.palette td.buttons button {
-	width: 40px;
-	height: 40px;
+.palette-theme-default .palette-buttons button {
+	display: block;
+	padding: 5px;
 }
-
-button.button.add div {
+.palette-theme-default .palette-buttons button div {
 	height: 15px;
 	width: 15px;
 }
-button.button.add div:after {
+.palette-theme-default .palette-buttons button.palette-add div:after {
 	content: '\21D2';
 }
-
-button.button.remove div {
-	height: 15px;
-	width: 15px;
-}
-button.button.remove div:after {
+.palette-theme-default .palette-buttons button.palette-remove div:after {
 	content: '\21D0';
 }
-
-button.button.up div {
-	height: 15px;
-	width: 15px;
-}
-button.button.up div:after {
+.palette-theme-default .palette-buttons button.palette-up div:after {
 	content: '\21D1';
 }
-
-button.button.down div {
-	height: 15px;
-	width: 15px;
-}
-button.button.down div:after {
+.palette-theme-default .palette-buttons button.palette-down div:after {
 	content: '\21D3';
 }
-
-button.button.addAll div {
-	height: 15px;
-	width: 15px;
-}
-
-button.button.addAll div:after {
+.palette-theme-default .palette-buttons button.palette-addAll div:after {
 	content: '\21DB';
 }
-
-button.button.removeAll div {
-	height: 15px;
-	width: 15px;
-}
-button.button.removeAll div:after {
+.palette-theme-default .palette-buttons button.palette-removeAll div:after {
 	content: '\21DA';
+}
+
+.palette-theme-default .palette-clearer {
+	clear: both;
 }

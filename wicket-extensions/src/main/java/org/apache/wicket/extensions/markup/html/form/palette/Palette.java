@@ -26,8 +26,8 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
+import org.apache.wicket.extensions.markup.html.form.palette.theme.DefaultTheme;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -38,7 +38,6 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
 
@@ -68,6 +67,8 @@ import org.apache.wicket.resource.JQueryPluginResourceReference;
  *    }
  *  }
  * </pre>
+ * 
+ * You can add a {@link DefaultTheme} to style this component in a left to right fashion.
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * @param <T>
@@ -120,10 +121,6 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	private static final ResourceReference JAVASCRIPT = new JQueryPluginResourceReference(
 		Palette.class, "palette.js");
 
-	/** reference to the palette's css resource */
-	private static final ResourceReference CSS = new CssResourceReference(Palette.class,
-		"palette.css");
-
 	/**
 	 * @param id
 	 *            Component id
@@ -168,7 +165,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param id
 	 *            Component id
 	 * @param choicesModel
@@ -184,9 +181,9 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 *            Allow user to add or remove all items at once
 	 */
 	public Palette(final String id, final IModel<? extends Collection<T>> model,
-	               final IModel<? extends Collection<? extends T>> choicesModel,
-	               final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder,
-	               boolean allowMoveAll)
+		final IModel<? extends Collection<? extends T>> choicesModel,
+		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder,
+		boolean allowMoveAll)
 	{
 		super(id, (IModel<Collection<T>>)model);
 
@@ -233,17 +230,6 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 
 		add(newAvailableHeader(AVAILABLE_HEADER_ID));
 		add(newSelectedHeader(SELECTED_HEADER_ID));
-	}
-
-	/**
-	 * Returns the resource reference of the default stylesheet. You may return null to avoid using
-	 * any stylesheet.
-	 * 
-	 * @return A resource reference
-	 */
-	protected ResourceReference getCSS()
-	{
-		return CSS;
 	}
 
 	/**
@@ -419,7 +405,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 
 	/**
 	 * factory method for the addAll component
-	 *
+	 * 
 	 * @return addAll component
 	 */
 	protected Component newAddAllComponent()
@@ -439,7 +425,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 
 	/**
 	 * factory method for the removeAll component
-	 *
+	 * 
 	 * @return removeAll component
 	 */
 	protected Component newRemoveAllComponent()
@@ -722,13 +708,6 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
-		ResourceReference css = getCSS();
-		if (css != null)
-		{
-			response.render(CssHeaderItem.forReference(css));
-		}
 		response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT));
 	}
-
-
 }

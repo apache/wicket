@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
+import org.apache.wicket.extensions.markup.html.form.palette.theme.DefaultTheme;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -49,6 +50,8 @@ public class PalettePage extends WicketExamplePage
 		final Palette<Person> palette = new Palette<Person>("palette", new ListModel<>(
 
 			new ArrayList<Person>()), new CollectionModel<>(persons), renderer, 10, true, true);
+
+		palette.add(new DefaultTheme());
 
 		Form<Void> form = new Form<Void>("form")
 		{
