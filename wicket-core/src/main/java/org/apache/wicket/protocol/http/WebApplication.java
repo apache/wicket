@@ -885,6 +885,8 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
+	 * Store the buffered response at application level to use it at a later time.
+	 * NOTE: the method requires a not-null session id, otherwise it just returns.
 	 * 
 	 * @param sessionId
 	 * @param url
@@ -892,6 +894,11 @@ public abstract class WebApplication extends Application
 	 */
 	public void storeBufferedResponse(String sessionId, Url url, BufferedWebResponse response)
 	{
+		if (sessionId == null) 
+		{
+			return;
+		}
+		
 		String key = sessionId + url.toString();
 		storedResponses.put(key, response);
 	}
