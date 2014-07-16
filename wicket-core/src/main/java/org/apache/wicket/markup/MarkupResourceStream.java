@@ -23,9 +23,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -168,6 +168,10 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 */
 	public Class<? extends Component> getMarkupClass()
 	{
+		if (markupClassName == null)
+		{
+			throw new MarkupException("no associated markup class");
+		}
 		return WicketObjects.resolveClass(markupClassName);
 	}
 
