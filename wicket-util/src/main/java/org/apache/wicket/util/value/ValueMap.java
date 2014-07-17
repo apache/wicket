@@ -790,7 +790,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass)
 	{
 		// explicitly pass T as type to be able to build with JDK 1.8. WICKET-5427
-		return this.<T>getEnumImpl(key, eClass, null);
+		return this.getEnumImpl(key, eClass, (T)null);
 	}
 
 	/**
