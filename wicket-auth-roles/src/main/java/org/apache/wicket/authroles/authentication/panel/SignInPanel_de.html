@@ -23,33 +23,20 @@
 <body>
   <wicket:panel>
     <span wicket:id="feedback"/>
-		<form wicket:id="signInForm">
-			<table>
-				<tr>
-					<td align="right">Benutzername:</td>
-					<td>
-						<input wicket:id="username" type="text" value="foo@goo.moo" size="30"/>
-					</td>
-				</tr>
-				<tr>
-					<td align="right">Passwort:</td>
-					<td>
-						<input wicket:id="password" type="password" value="password" size="30"/>
-					</td>
-				</tr>
-				<tr wicket:id="rememberMeRow">
-					<td></td>
-					<td> <input wicket:id="rememberMe" type="checkbox" /> erinnern </td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type="submit" name="submit" value="Anmelden"/>
-						<input type="reset" value="Reset"/>
-					</td>
-				</tr>
-			</table>
-		</form>
+    
+	<form wicket:id="signInForm">
+		<dl>
+			<dt>Benutzername:</dt>
+			<dd><input wicket:id="username" type="text" size="30"/></dd>
+			<dt>Passwort:</dt>
+			<dd><input wicket:id="password" type="password" size="30"/></dd>
+			<dd wicket:id="rememberMeContainer"><input wicket:id="rememberMe" type="checkbox" /> erinnern </dd>
+			<dd>
+				<input type="submit" name="submit" value="Anmelden"/>
+				<input type="reset" value="Reset"/>
+			</dd>
+		</dl>
+	</form>
   </wicket:panel>
 </body>
 </html>

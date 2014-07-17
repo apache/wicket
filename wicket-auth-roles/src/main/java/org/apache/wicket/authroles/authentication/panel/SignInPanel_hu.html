@@ -19,33 +19,20 @@
 <body>
   <wicket:panel>
     <span wicket:id="feedback"/>
-		<form wicket:id="signInForm">
-			<table>
-				<tr>
-					<td align="right">Felhasználónév:</td>
-					<td>
-						<input wicket:id="username" type="text" value="foo@goo.moo" size="30"/>
-					</td>
-				</tr>
-				<tr>
-					<td align="right">Jelszó:</td>
-					<td>
-						<input wicket:id="password" type="password" value="password" size="30"/>
-					</td>
-				</tr>
-				<tr wicket:id="rememberMeRow">
-					<td></td>
-					<td> <input wicket:id="rememberMe" type="checkbox" /> Emlékezzen rám </td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type="submit" name="submit" value="Bejelentkezés"/>
-						<input type="reset" value="Alaphelyzet"/>
-					</td>
-				</tr>
-			</table>
-		</form>
+    
+	<form wicket:id="signInForm">
+		<dl>
+			<dt>Felhasználónév:</dt>
+			<dd><input wicket:id="username" type="text" size="30"/></dd>
+			<dt>Jelszó:</dt>
+			<dd><input wicket:id="password" type="password" size="30"/></dd>
+			<dd wicket:id="rememberMeContainer"><input wicket:id="rememberMe" type="checkbox" /> Emlékezzen rám </dd>
+			<dd>
+				<input type="submit" name="submit" value="Bejelentkezés"/>
+				<input type="reset" value="Alaphelyzet"/>
+			</dd>
+		</dl>
+	</form>
   </wicket:panel>
 </body>
 </html>

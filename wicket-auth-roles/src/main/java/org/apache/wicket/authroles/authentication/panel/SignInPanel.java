@@ -49,9 +49,6 @@ public class SignInPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(SignInPanel.class);
-
 	private static final String SIGN_IN_FORM = "signInForm";
 
 	/** True if the panel should display a remember-me checkbox */
@@ -284,18 +281,18 @@ public class SignInPanel extends Panel
 			setModel(new CompoundPropertyModel<>(SignInPanel.this));
 
 			// Attach textfields for username and password
-			add(new TextField<>("username"));
+			add(new TextField<>("username").setRequired(true));
 			add(new PasswordTextField("password"));
 
-			// MarkupContainer row for remember me checkbox
-			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
-			add(rememberMeRow);
+			// container for remember me checkbox
+			WebMarkupContainer rememberMeContainer = new WebMarkupContainer("rememberMeContainer");
+			add(rememberMeContainer);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox("rememberMe"));
+			rememberMeContainer.add(new CheckBox("rememberMe"));
 
 			// Show remember me checkbox?
-			rememberMeRow.setVisible(includeRememberMe);
+			rememberMeContainer.setVisible(includeRememberMe);
 		}
 
 		/**

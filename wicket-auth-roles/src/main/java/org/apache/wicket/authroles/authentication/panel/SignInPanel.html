@@ -19,33 +19,20 @@
 <body>
   <wicket:panel>
     <span wicket:id="feedback"/>
-		<form wicket:id="signInForm">
-			<table>
-				<tr>
-					<td align="right">Username:</td>
-					<td>
-						<input wicket:id="username" type="text"/>
-					</td>
-				</tr>
-				<tr>
-					<td align="right">Password:</td>
-					<td>
-						<input wicket:id="password" type="password"/>
-					</td>
-				</tr>
-				<tr wicket:id="rememberMeRow">
-					<td></td>
-					<td> <input wicket:id="rememberMe" type="checkbox" /> Remember Me </td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type="submit" name="submit" value="Sign In"/>
-						<input type="reset" value="Reset"/>
-					</td>
-				</tr>
-			</table>
-		</form>
+    
+	<form wicket:id="signInForm">
+		<dl>
+			<dt>Username:</dt>
+			<dd><input wicket:id="username" type="text" size="30"/></dd>
+			<dt>Password:</dt>
+			<dd><input wicket:id="password" type="password" size="30"/></dd>
+			<dd wicket:id="rememberMeContainer"><input wicket:id="rememberMe" type="checkbox" /> Remember Me </dd>
+			<dd>
+				<input type="submit" name="submit" value="Sign In"/>
+				<input type="reset" value="Reset"/>
+			</dd>
+		</dl>
+	</form>
   </wicket:panel>
 </body>
 </html>
