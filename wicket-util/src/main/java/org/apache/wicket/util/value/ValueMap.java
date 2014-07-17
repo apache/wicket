@@ -789,7 +789,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	@Override
 	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass)
 	{
-		return getEnumImpl(key, eClass, (T)null);
+		return getEnumImpl(key, eClass, null);
 	}
 
 	/**
