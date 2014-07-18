@@ -22,10 +22,15 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 
 /**
- * A behavior to change the representation for disabled links.
+ * A behavior to change the representation of <em>disabled</em> links to that of Wicket 6.x:
  * <p>
- * Markup tags {@code <a>}, {@code <link>} and {@code <area>} are replaced with a {@code <span>}.
+ * Markup tags {@code <a>}, {@code <link>} and {@code <area>} are replaced with a {@code <span>}. By
+ * default tags are enclosed in an {@code <em>} tag.
+ * 
+ * @deprecated altering the markup tag of disabled links is no longer recommended, thus clients
+ *             should move to other solutions
  */
+@Deprecated
 public final class DisabledLinkBehavior extends Behavior
 {
 	private static final long serialVersionUID = 1L;
@@ -41,7 +46,7 @@ public final class DisabledLinkBehavior extends Behavior
 	private String afterDisabledLink;
 
 	/**
-	 * Enclose each disabled link in {@code <em></em>}.
+	 * Enclose each disabled link in {@code <em>}.
 	 */
 	public DisabledLinkBehavior()
 	{
@@ -154,9 +159,10 @@ public final class DisabledLinkBehavior extends Behavior
 	}
 
 	/**
-	 * A listener to instantiations of {@link AbstractLink} to restores the disabled representation
-	 * to that before Wicket 7.x.
+	 * A listener for instantiations of {@link AbstractLink} to restore the disabled representation
+	 * to that of Wicket 6.x.
 	 */
+	@Deprecated
 	public static class LinkInstantiationListener implements IComponentInstantiationListener
 	{
 		/**
