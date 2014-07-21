@@ -16,6 +16,13 @@
  */
 package org.apache.wicket.util.cookies;
 
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.emptyArray;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.is;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,8 +32,11 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
+import org.apache.wicket.util.string.Strings;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,11 +46,8 @@ import org.junit.Test;
  */
 public class CookieUtilsTest extends WicketTestCase
 {
-	/**
-	 * @throws Exception
-	 */
 	@Before
-	public void before() throws Exception
+	public void before()
 	{
 		tester.startPage(CookieValuePersisterTestPage.class);
 	}
@@ -54,7 +61,7 @@ public class CookieUtilsTest extends WicketTestCase
 	public void test1() throws Exception
 	{
 		// How does the test work: Make sure you have a page, form and form component properly set
-		// up (getRelativePath() etc.). See setUp().
+		// up (getRelativePath() etc.). See #before().
 		final Page page = tester.getLastRenderedPage();
 
 		// Get the form and form component created
@@ -124,6 +131,96 @@ public class CookieUtilsTest extends WicketTestCase
 		assertEquals(1, getResponseCookies().size());
 		assertEquals("form.input", (getResponseCookies().get(0)).getName());
 		assertEquals(0, (getResponseCookies().get(0)).getMaxAge());
+	}
+
+	@Test
+	public void splitValuesNullString()
+	{
+		CookieUtils utils = new CookieUtils();
+		String[] values = utils.splitValue(null);
+		assertArrayEquals(new String[0], values);
+	}
+
+	@Test
+	public void splitValuesEmptyString()
+	{
+		CookieUtils utils = new CookieUtils();
+		String[] values = utils.splitValue("");
+		assertThat(values, is(emptyArray()));
+	}
+
+	@Test
+	public void splitValuesSingleValue()
+	{
+		CookieUtils utils = new CookieUtils();
+		String value1 = "value one";
+		String[] values = utils.splitValue(value1);
+		assertThat(values, is(arrayContaining(value1)));
+	}
+
+	@Test
+	public void splitValuesManyValues()
+	{
+		CookieUtils utils = new CookieUtils();
+		String value1 = "value one";
+		String value2 = "value two";
+		String value = value1 + FormComponent.VALUE_SEPARATOR + value2;
+		String[] values = utils.splitValue(value);
+		assertThat(values, is(arrayContaining(value1, value2)));
+	}
+
+	@Test
+	public void joinValues()
+	{
+		CookieUtils utils = new CookieUtils();
+		String value1 = "value one";
+		String value2 = "value two";
+		String joined = utils.joinValues(value1, value2);
+		assertThat(joined, is(equalTo(value1 + FormComponent.VALUE_SEPARATOR + value2)));
+	}
+
+	@Test
+	public void saveLoadValue()
+	{
+		CookieUtils utils = new CookieUtils();
+		String value1 = "value one";
+		String key = "key";
+		utils.save(key, value1);
+		before(); // execute a request cycle, so the response cookie is send with the next request
+		String result = utils.load(key);
+		assertThat(result, is(equalTo(value1)));
+	}
+
+	@Test
+	public void saveLoadValues()
+	{
+		CookieUtils utils = new CookieUtils();
+		String value1 = "value one";
+		String value2 = "value two";
+		String value3 = "value three";
+		String key = "key";
+		utils.save(key, value1, value2, value3);
+		before(); // execute a request cycle, so the response cookie is send with the next request
+		String[] result = utils.loadValues(key);
+		assertThat(result, is(Matchers.arrayContaining(value1, value2, value3)));
+	}
+
+	@Test
+	public void defaults()
+	{
+		CookieDefaults defaults = new CookieDefaults();
+		defaults.setComment("A comment");
+		defaults.setDomain("A domain");
+		defaults.setMaxAge(123);
+		defaults.setSecure(true);
+		defaults.setVersion(456);
+		CookieUtils utils = new CookieUtils(defaults);
+		String value1 = "value one";
+		String key = "key";
+		utils.save(key, value1);
+		before(); // execute a request cycle, so the response cookie is send with the next request
+		Cookie result = utils.getCookie(key);
+		assertThat(result.getComment(), is(equalTo(defaults.getComment())));
 	}
 
 	private void copyCookieFromResponseToRequest()

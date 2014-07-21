@@ -53,6 +53,7 @@ public class CookieUtils
 	 * Construct.
 	 * 
 	 * @param settings
+	 *          the default settings for the saved cookies
 	 */
 	public CookieUtils(final CookieDefaults settings)
 	{
@@ -71,6 +72,7 @@ public class CookieUtils
 	 * Remove the cookie identified by the key
 	 * 
 	 * @param key
+	 *          The cookie name
 	 */
 	public final void remove(final String key)
 	{
@@ -105,8 +107,9 @@ public class CookieUtils
 
 	/**
 	 * Retrieve the cookie value by means of its key.
-	 * 
+	 *
 	 * @param key
+	 *          The cookie name
 	 * @return The cookie value associated with the key
 	 */
 	public final String load(final String key)
@@ -115,6 +118,25 @@ public class CookieUtils
 		if (cookie != null)
 		{
 			return cookie.getValue();
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieve an array of the cookie value split by {@link org.apache.wicket.markup.html.form.FormComponent#VALUE_SEPARATOR}.
+	 *
+	 * @param key
+	 *          The cookie name
+	 * @return The cookie value split by {@link org.apache.wicket.markup.html.form.FormComponent#VALUE_SEPARATOR}.
+	 */
+	public final String[] loadValues(final String key)
+	{
+		final Cookie cookie = getCookie(key);
+		if (cookie != null)
+		{
+			String value = cookie.getValue();
+			String[] values = splitValue(value);
+			return values;
 		}
 		return null;
 	}
@@ -145,14 +167,14 @@ public class CookieUtils
 	 */
 	protected String[] splitValue(final String value)
 	{
-		return value.split(FormComponent.VALUE_SEPARATOR);
+		return Strings.split(value, FormComponent.VALUE_SEPARATOR.charAt(0));
 	}
 
 	/**
 	 * Join all fragments into one Cookie value
 	 * 
 	 * @param values
-	 * @return The cookie's value splitted into its constituent parts
+	 * @return The cookie's value split into its constituent parts
 	 */
 	protected String joinValues(final String... values)
 	{
@@ -163,7 +185,9 @@ public class CookieUtils
 	 * Create a Cookie with key and value and save it in the browser with the next response
 	 * 
 	 * @param key
+	 *          The cookie name
 	 * @param values
+	 *          The cookie values
 	 */
 	public final void save(String key, final String... values)
 	{
@@ -178,9 +202,6 @@ public class CookieUtils
 		{
 			cookie.setValue(value);
 		}
-		cookie.setSecure(false);
-		cookie.setMaxAge(settings.getMaxAge());
-
 		save(cookie);
 	}
 
@@ -210,8 +231,8 @@ public class CookieUtils
 
 		// cookie names cannot contain ':',
 		// we replace ':' with '.' but first we have to encode '.' as '..'
-		key = key.replace(".", "..");
-		key = key.replace(":", ".");
+		key = Strings.replaceAll(key, ".", "..").toString();
+		key = key.replace(':', '.');
 		return key;
 	}
 
@@ -226,11 +247,11 @@ public class CookieUtils
 	{
 		if (cookie != null)
 		{
+			save(cookie);
+
 			// Delete the cookie by setting its maximum age to zero
 			cookie.setMaxAge(0);
 			cookie.setValue(null);
-
-			save(cookie);
 
 			if (log.isDebugEnabled())
 			{
@@ -247,7 +268,7 @@ public class CookieUtils
 	 * 
 	 * @return Any cookies for this request
 	 */
-	private Cookie getCookie(final String name)
+	public Cookie getCookie(final String name)
 	{
 		String key = getSaveKey(name);
 
@@ -332,6 +353,7 @@ public class CookieUtils
 		cookie.setPath(path);
 		cookie.setVersion(settings.getVersion());
 		cookie.setSecure(settings.getSecure());
+		cookie.setMaxAge(settings.getMaxAge());
 	}
 
 	/**
