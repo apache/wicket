@@ -50,6 +50,32 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * An enumeration of possible positions of the label for a choice
+	 */
+	public static enum LabelPosition
+	{
+		/**
+		 * will render the label before the choice
+		 */
+		BEFORE,
+
+		/**
+		 * will render the label after the choice
+		 */
+		AFTER,
+
+		/**
+		 * render the label around and the text will be before the the choice
+		 */
+		WRAP_BEFORE,
+
+		/**
+		 * render the label around and the text will be after the the choice
+		 */
+		WRAP_AFTER
+	}
+
 	/** The list of objects. */
 	private IModel<? extends List<? extends E>> choices;
 
@@ -270,6 +296,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * Set the choice renderer to be used.
 	 * 
 	 * @param renderer
+	 *              The IChoiceRenderer used for rendering the data objects
 	 * @return this for chaining
 	 */
 	public final AbstractChoice<T, E> setChoiceRenderer(IChoiceRenderer<? super E> renderer)
