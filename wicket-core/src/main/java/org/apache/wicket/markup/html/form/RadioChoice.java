@@ -24,6 +24,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
@@ -69,6 +70,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 	private String prefix = "";
 	private String suffix = "<br />\n";
+
+	private LabelPosition labelPosition = LabelPosition.AFTER;
 
 	/**
 	 * Constructor
@@ -362,6 +365,20 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	}
 
 	/**
+	 * Sets the preferred position of the &lt;label&gt; for each choice
+	 *
+	 * @param labelPosition
+	 *              The preferred position for the label
+	 * @return {@code this} instance, for chaining
+	 */
+	public RadioChoice<T> setLabelPosition(LabelPosition labelPosition)
+	{
+		Args.notNull(labelPosition, "labelPosition");
+		this.labelPosition = labelPosition;
+		return this;
+	}
+
+	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	@Override
@@ -437,6 +454,60 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			boolean enabled = isEnabledInHierarchy() && !isDisabled(choice, index, selected);
 
+			// Add label for radio button
+			String display = label;
+			if (localizeDisplayValues())
+			{
+				display = getLocalizer().getString(label, this, label);
+			}
+
+			CharSequence escaped = display;
+			if (getEscapeModelStrings())
+			{
+				escaped = Strings.escapeMarkup(display);
+			}
+
+			// Allows user to add attributes to the <label..> tag
+			IValueMap labelAttrs = getAdditionalAttributesForLabel(index, choice);
+			StringBuilder extraLabelAttributes = new StringBuilder();
+			if (labelAttrs != null)
+			{
+				for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
+				{
+					extraLabelAttributes.append(' ')
+							.append(attr.getKey())
+							.append("=\"")
+							.append(attr.getValue())
+							.append('"');
+				}
+			}
+
+			switch (labelPosition)
+			{
+				case BEFORE:
+
+					buffer.append("<label for=\"")
+							.append(idAttr)
+							.append('"')
+							.append(extraLabelAttributes)
+							.append('>')
+							.append(escaped)
+							.append("</label>");
+					break;
+				case WRAP_BEFORE:
+					buffer.append("<label")
+							.append(extraLabelAttributes)
+							.append('>')
+							.append(escaped)
+							.append(' ');
+					break;
+				case WRAP_AFTER:
+					buffer.append("<label")
+							.append(extraLabelAttributes)
+							.append('>');
+					break;
+			}
+
 			// Add radio tag
 			buffer.append("<input name=\"")
 				.append(getInputName())
@@ -506,43 +577,26 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			buffer.append("/>");
 
-			// Add label for radio button
-			String display = label;
-			if (localizeDisplayValues())
+			switch (labelPosition)
 			{
-				display = getLocalizer().getString(label, this, label);
+				case AFTER:
+					buffer.append("<label for=\"")
+							.append(idAttr)
+							.append('"')
+							.append(extraLabelAttributes)
+							.append('>')
+							.append(escaped)
+							.append("</label>");
+					break;
+				case WRAP_BEFORE:
+					buffer.append("</label>");
+					break;
+				case WRAP_AFTER:
+					buffer.append(' ')
+							.append(escaped)
+							.append("</label>");
+					break;
 			}
-
-			CharSequence escaped = display;
-			if (getEscapeModelStrings())
-			{
-				escaped = Strings.escapeMarkup(display);
-			}
-
-			buffer.append("<label for=\"")
-				.append(idAttr)
-				.append('"');
-
-			// Allows user to add attributes to the <label..> tag
-			{
-				IValueMap labelAttrs = getAdditionalAttributesForLabel(index, choice);
-				if (labelAttrs != null)
-				{
-					for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
-					{
-						buffer.append(' ')
-								.append(attr.getKey())
-								.append("=\"")
-								.append(attr.getValue())
-								.append('"');
-					}
-				}
-			}
-
-			buffer
-				.append('>')
-				.append(escaped)
-				.append("</label>");
 
 			// Append option suffix
 			buffer.append(getSuffix(index, choice));

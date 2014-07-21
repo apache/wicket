@@ -25,6 +25,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
@@ -68,6 +69,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 
 	private String prefix = "";
 	private String suffix = "<br/>\n";
+
+	private LabelPosition labelPosition = LabelPosition.AFTER;
 
 	/**
 	 * Constructor
@@ -308,6 +311,20 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	}
 
 	/**
+	 * Sets the preferred position of the &lt;label&gt; for each choice
+	 *
+	 * @param labelPosition
+	 *              The preferred position for the label
+	 * @return {@code this} instance, for chaining
+	 */
+	public CheckBoxMultipleChoice<T> setLabelPosition(LabelPosition labelPosition)
+	{
+		Args.notNull(labelPosition, "labelPosition");
+		this.labelPosition = labelPosition;
+		return this;
+	}
+
+	/**
 	 * @see org.apache.wicket.markup.html.form.ListMultipleChoice#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
@@ -393,6 +410,31 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			String id = getChoiceRenderer().getIdValue(choice, index);
 			final String idAttr = getCheckBoxMarkupId(id);
 
+			// Add label for checkbox
+			String display = label;
+			if (localizeDisplayValues())
+			{
+				display = getLocalizer().getString(label, this, label);
+			}
+
+			final CharSequence escaped = (getEscapeModelStrings() ? Strings.escapeMarkup(display)
+					: display);
+
+			switch (labelPosition)
+			{
+				case BEFORE:
+					buffer.append("<label for=\"");
+					buffer.append(idAttr);
+					buffer.append("\">").append(escaped).append("</label>");
+					break;
+				case WRAP_AFTER:
+					buffer.append("<label>");
+				case WRAP_BEFORE:
+					buffer.append("<label>");
+					buffer.append(escaped).append(' ');
+					break;
+			}
+
 			// Add checkbox element
 			buffer.append("<input name=\"");
 			buffer.append(getInputName());
@@ -442,19 +484,20 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 
 			buffer.append("/>");
 
-			// Add label for checkbox
-			String display = label;
-			if (localizeDisplayValues())
+			switch (labelPosition)
 			{
-				display = getLocalizer().getString(label, this, label);
+				case WRAP_BEFORE:
+					buffer.append("</label>");
+					break;
+				case WRAP_AFTER:
+					buffer.append(' ').append(escaped).append("</label>");
+					break;
+				case AFTER:
+					buffer.append("<label for=\"");
+					buffer.append(idAttr);
+					buffer.append("\">").append(escaped).append("</label>");
+					break;
 			}
-
-			final CharSequence escaped = (getEscapeModelStrings() ? Strings.escapeMarkup(display)
-				: display);
-
-			buffer.append("<label for=\"");
-			buffer.append(idAttr);
-			buffer.append("\">").append(escaped).append("</label>");
 
 			// Append option suffix
 			buffer.append(getSuffix(index, choice));
