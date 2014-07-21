@@ -32,7 +32,11 @@ import org.apache.wicket.util.visit.IVisitor;
  * can't depend on state within the page. The only state you can depend on is what was submitted
  * from the browser. So the model of the form or the formcomponents are updated with the submit
  * values.
- * 
+ *
+ * <strong>Note</strong>: Use {@link org.apache.wicket.markup.repeater.RepeatingView} in the case when
+ * {@link org.apache.wicket.markup.html.form.FormComponent}s need to be rendered inside a repeater. See
+ * the javadoc of {@link org.apache.wicket.markup.repeater.AbstractRepeater} for more information.
+ *
  * @author jcompagner
  * @param <T>
  *            The type of the {@link Form}'s model object

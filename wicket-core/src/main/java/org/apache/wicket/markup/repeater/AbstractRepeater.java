@@ -38,7 +38,14 @@ import org.slf4j.LoggerFactory;
  * the beginning of this component. Each child is rendered by a call to
  * {@link #renderChild(Component)}. A typical implementation simply does
  * <code>child.render();</code>.
- * 
+ *
+ * <strong>Note</strong>: the children are added during the render phase (in {@linkplain #beforeRender()} so
+ * most of the specializations of this class should not be used as parents of
+ * {@link org.apache.wicket.markup.html.form.FormComponent}s in stateless pages because the form components
+ * will not be available during the action phase (i.e. at
+ * {@link org.apache.wicket.markup.html.form.StatelessForm#onSubmit()}). Use
+ * {@link org.apache.wicket.markup.repeater.RepeatingView} in these cases.
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractRepeater extends WebMarkupContainer
