@@ -227,11 +227,12 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		// Have a value at all?
 		if (selected != null)
 		{
+			String idValue = getChoiceRenderer().getIdValue(choice, index);
 			// Loop through ids
 			for (final StringTokenizer tokenizer = new StringTokenizer(selected, VALUE_SEPARATOR); tokenizer.hasMoreTokens();)
 			{
 				final String id = tokenizer.nextToken();
-				if (id.equals(getChoiceRenderer().getIdValue(choice, index)))
+				if (id.equals(idValue))
 				{
 					return true;
 				}
@@ -267,7 +268,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		}
 		else
 		{
-			ArrayList<T> result = new ArrayList<T>();
+			ArrayList<T> result = new ArrayList<>();
 			addRetainedDisabled(result);
 			return result;
 		}
@@ -282,7 +283,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 */
 	protected List<T> convertChoiceIdsToChoices(String[] ids)
 	{
-		ArrayList<T> selectedValues = new ArrayList<T>();
+		ArrayList<T> selectedValues = new ArrayList<>();
 
 		// If one or more ids is selected
 		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
@@ -339,7 +340,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 				for (T t : unchangedModel)
 				{
 					builder.append(t);
-					builder.append(";");
+					builder.append(';');
 				}
 				selected = builder.toString();
 			}
