@@ -88,7 +88,7 @@ public class ResourceReferenceRegistry
 	 * The factory to use when a ResourceReference is not previously
 	 * registered and a new instance should be create
 	 */
-	private final IResourceReferenceFactory resourceReferenceFactory;
+	private IResourceReferenceFactory resourceReferenceFactory;
 
 	/**
 	 * Constructor.
@@ -395,7 +395,12 @@ public class ResourceReferenceRegistry
 	 */
 	protected ResourceReference createDefaultResourceReference(final Key key)
 	{
-		return resourceReferenceFactory.create(key);
+		IResourceReferenceFactory factory = getResourceReferenceFactory();
+		if (factory == null)
+		{
+			factory = new DefaultResourceReferenceFactory();
+		}
+		return factory.create(key);
 	}
 
 	/**
@@ -465,5 +470,27 @@ public class ResourceReferenceRegistry
 	public final int getSize()
 	{
 		return map.size();
+	}
+
+	/**
+	 * @return the factory that will create the resource reference by using the parsed
+	 *          {@link org.apache.wicket.request.resource.ResourceReference.Key}
+	 */
+	public IResourceReferenceFactory getResourceReferenceFactory()
+	{
+		return resourceReferenceFactory;
+	}
+
+	/**
+	 * Sets the factory to use when a ResourceReference is not previously
+	 * registered and a new instance should be created
+	 *
+	 * @param resourceReferenceFactory
+	 *          the factory that will create the resource reference by using the parsed
+	 *          {@link org.apache.wicket.request.resource.ResourceReference.Key}
+	 */
+	public void setResourceReferenceFactory(IResourceReferenceFactory resourceReferenceFactory)
+	{
+		this.resourceReferenceFactory = resourceReferenceFactory;
 	}
 }

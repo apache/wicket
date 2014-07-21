@@ -46,7 +46,7 @@ public class LessResourceReferenceTest extends WicketTestCase
 	 * An {@link IResourceReferenceFactory} that creates
 	 * LessResourceReference for resources with extension '.less'
 	 */
-	private static class LessResourceReferenceFactory extends ResourceReferenceRegistry.DefaultResourceReferenceFactory
+	static class LessResourceReferenceFactory extends ResourceReferenceRegistry.DefaultResourceReferenceFactory
 	{
 		@Override
 		public ResourceReference create(ResourceReference.Key key)
@@ -147,7 +147,7 @@ public class LessResourceReferenceTest extends WicketTestCase
 		}
 	}
 
-	private static class LessResourceReference extends CssResourceReference
+	static class LessResourceReference extends CssResourceReference
 	{
 		public LessResourceReference(Class<?> scope, String name)
 		{
@@ -166,7 +166,7 @@ public class LessResourceReferenceTest extends WicketTestCase
 		}
 	}
 
-	private static class LessPackageResource extends CssPackageResource
+	static class LessPackageResource extends CssPackageResource
 	{
 		public LessPackageResource(Class<?> scope, String name)
 		{
