@@ -19,12 +19,10 @@ package org.apache.wicket.util.cookies;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
- * This class provides default values that are used by the CookieValuePersister class when it
- * creates cookies.
+ * This class provides default values that are used by {@link org.apache.wicket.util.cookies.CookieUtils}
+ * class when it creates cookies.
  * 
  * @author Juergen Donnerstag
- * 
- * @TODO rename to CookieDefaultValues in 1.5
  */
 public class CookieDefaults implements IClusterable
 {
