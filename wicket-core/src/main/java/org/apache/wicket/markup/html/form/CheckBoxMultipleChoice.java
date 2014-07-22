@@ -430,6 +430,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 					break;
 				case WRAP_AFTER:
 					buffer.append("<label>");
+					break;
 				case WRAP_BEFORE:
 					buffer.append("<label>");
 					buffer.append(escaped).append(' ');
