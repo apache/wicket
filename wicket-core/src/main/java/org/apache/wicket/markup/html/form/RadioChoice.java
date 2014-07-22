@@ -70,7 +70,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	private static final long serialVersionUID = 1L;
 
 	private String prefix = "";
-	private String suffix = "<br />\n";
+	private String suffix = "";
 
 	private LabelPosition labelPosition = LabelPosition.AFTER;
 
