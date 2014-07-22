@@ -896,6 +896,12 @@ public abstract class WebApplication extends Application
 	 */
 	public void storeBufferedResponse(String sessionId, Url url, BufferedWebResponse response)
 	{
+		if (sessionId == null) 
+		{
+			log.warn("storeBufferedResponse needs a valid session id to store the response, but a null one was found. "
+					+ "Please report the problem to dev team and try to reproduce it in a quickstart project.");
+		}
+		
 		String key = sessionId + url.toString();
 		storedResponses.put(key, response);
 	}
