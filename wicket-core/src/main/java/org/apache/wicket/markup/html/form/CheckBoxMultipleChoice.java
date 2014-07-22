@@ -311,6 +311,13 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		return this;
 	}
 
+	/**
+	 * Sets the preferred position of the &lt;label&gt; for each choice
+	 *
+	 * @param labelPosition
+	 *              The preferred position for the label
+	 * @return {@code this} instance, for chaining
+	 */
 	public CheckBoxMultipleChoice<T> setLabelPosition(LabelPosition labelPosition)
 	{
 		Args.notNull(labelPosition, "labelPosition");
@@ -423,6 +430,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 					break;
 				case WRAP_AFTER:
 					buffer.append("<label>");
+					break;
 				case WRAP_BEFORE:
 					buffer.append("<label>");
 					buffer.append(escaped).append(' ');

@@ -145,4 +145,43 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		tester.startPage(new TestPage(false, false, false, true));
 		tester.assertContains("disabled=\"disabled\"");
 	}
+
+	@Test
+	public void defaultLabelPositionIsAfter() throws Exception
+	{
+		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("id", Arrays.asList(1));
+		tester.startComponentInPage(radioChoice);
+
+		tester.assertResultPage("<span wicket:id=\"id\"><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/><label for=\"id1-id_0\">1</label><br/>\n</span>");
+	}
+
+	@Test
+	public void labelPositionBefore() throws Exception
+	{
+		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("id", Arrays.asList(1));
+		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.BEFORE);
+		tester.startComponentInPage(radioChoice);
+
+		tester.assertResultPage("<span wicket:id=\"id\"><label for=\"id1-id_0\">1</label><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/><br/>\n</span>");
+	}
+
+	@Test
+	public void labelPositionWrapBefore() throws Exception
+	{
+		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("id", Arrays.asList(1));
+		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_BEFORE);
+		tester.startComponentInPage(radioChoice);
+
+		tester.assertResultPage("<span wicket:id=\"id\"><label>1 <input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/></label><br/>\n</span>");
+	}
+
+	@Test
+	public void labelPositionWrapAfter() throws Exception
+	{
+		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("id", Arrays.asList(1));
+		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);
+		tester.startComponentInPage(radioChoice);
+
+		tester.assertResultPage("<span wicket:id=\"id\"><label><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/> 1</label><br/>\n</span>");
+	}
 }
