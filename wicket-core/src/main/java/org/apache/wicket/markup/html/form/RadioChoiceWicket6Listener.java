@@ -11,7 +11,12 @@ import org.apache.wicket.application.IComponentInstantiationListener;
  *     <li>renders the label after the checkbox</li>
  * </ul>
  *
- * @deprecated
+ * <p>
+ *  Usage (in MyApplication#init()):
+ *      getComponentInstantionListeners().add(new RadioChoiceWicket6Listener());
+ * </p>
+ *
+ * @deprecated Will be removed for Wicket 8.0.0. Use CSS for styling
  */
 @Deprecated
 public class RadioChoiceWicket6Listener implements IComponentInstantiationListener
