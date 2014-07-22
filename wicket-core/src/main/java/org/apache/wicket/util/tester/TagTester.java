@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 
@@ -235,19 +236,16 @@ public class TagTester
 
 	/**
 	 * Checks if the tag has a child with the given <code>tagName</code>.
-	 * 
+	 *
 	 * @param tagName
 	 *            the tag name to search for
 	 * @return <code>true</code> if this tag has a child with the given <code>tagName</code>.
 	 */
 	public boolean hasChildTag(String tagName)
 	{
-		boolean hasChild = false;
+		Args.notEmpty(tagName, "tagName");
 
-		if (Strings.isEmpty(tagName))
-		{
-			throw new IllegalArgumentException("You need to provide a not empty/not null argument.");
-		}
+		boolean hasChild = false;
 
 		if (openTag.isOpen())
 		{
@@ -263,7 +261,7 @@ public class TagTester
 					XmlPullParser p = new XmlPullParser();
 					p.parse(markup);
 
-					XmlTag tag = null;
+					XmlTag tag;
 					while ((tag = p.nextTag()) != null)
 					{
 						if (tagName.equalsIgnoreCase(tag.getName()))
@@ -276,13 +274,37 @@ public class TagTester
 			}
 			catch (Exception e)
 			{
-				// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
 				throw new WicketRuntimeException(e);
 			}
-
 		}
 
 		return hasChild;
+	}
+
+	/**
+	 * Checks if the tag has a child with the given <code>tagName</code>.
+	 *
+	 * @param tagName
+	 *            the tag name to search for
+	 * @return <code>true</code> if this tag has a child with the given <code>tagName</code>.
+	 */
+	public TagTester getChild(String tagName)
+	{
+		Args.notNull(tagName, "tagName");
+
+		TagTester childTagTester = null;
+
+		if (openTag.isOpen())
+		{
+			// Get the content of the tag
+			int startPos = openTag.getPos() + openTag.getLength();
+			int endPos = closeTag.getPos();
+			String markup = parser.getInput(startPos, endPos).toString();
+
+			childTagTester = createTagByAttribute(markup, tagName);
+		}
+
+		return childTagTester;
 	}
 
 	/**
@@ -340,6 +362,92 @@ public class TagTester
 		int closePos = closeTag.getPos();
 
 		return parser.getInput(openPos, closePos).toString();
+	}
+
+	/**
+	 * Static factory method for creating a <code>TagTester</code> based on a tag name. Please note
+	 * that it will return the first tag which matches the criteria.
+	 *
+	 * @param markup
+	 *            the markup to look for the tag to create the <code>TagTester</code> from
+	 *            the value which the attribute must have
+	 * @return the <code>TagTester</code> which matches the tag by name in the markup
+	 */
+	public static TagTester createTagByAttribute(String markup, String tagName)
+	{
+		TagTester tester = null;
+
+		if (Strings.isEmpty(markup) == false && Strings.isEmpty(tagName) == false)
+		{
+			try
+			{
+				// remove the CDATA and
+				// the id attribute of the component because it is often the same as the element's id
+				markup = AJAX_COMPONENT_CDATA_OPEN.matcher(markup).replaceAll("<component>");
+				markup = AJAX_COMPONENT_CDATA_CLOSE.matcher(markup).replaceAll("</component>");
+
+				XmlPullParser parser = new XmlPullParser();
+				parser.parse(markup);
+
+				XmlTag elm;
+				XmlTag openTag = null;
+				XmlTag closeTag = null;
+				int level = 0;
+				while ((elm = parser.nextTag()) != null && closeTag == null)
+				{
+					XmlTag xmlTag = elm;
+
+					String xmlTagName = xmlTag.getName();
+					if (openTag == null && xmlTagName.equalsIgnoreCase(tagName))
+					{
+						if (xmlTag.isOpen())
+						{
+							openTag = xmlTag;
+						}
+						else if (xmlTag.isOpenClose())
+						{
+							openTag = xmlTag;
+							closeTag = xmlTag;
+						}
+					}
+					else if (openTag != null)
+					{
+						String openTagName = openTag.getName();
+						if (xmlTag.isOpen() && xmlTagName.equals(openTagName))
+						{
+							level++;
+						}
+
+						if (xmlTag.isClose())
+						{
+							if (xmlTagName.equals(openTagName))
+							{
+								if (level == 0)
+								{
+									closeTag = xmlTag;
+									closeTag.setOpenTag(openTag);
+								}
+								else
+								{
+									level--;
+								}
+							}
+						}
+					}
+				}
+
+				if (openTag != null && closeTag != null)
+				{
+					tester = new TagTester(parser, openTag, closeTag);
+				}
+			}
+			catch (Exception e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
+
+		return tester;
 	}
 
 	/**
@@ -435,7 +543,6 @@ public class TagTester
 			}
 			catch (Exception e)
 			{
-				// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
 				throw new WicketRuntimeException(e);
 			}
 		}

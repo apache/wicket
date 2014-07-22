@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -248,6 +253,25 @@ public class TagTesterTest extends Assert
 
 		assertFalse(tester.hasChildTag("span"));
 		assertFalse(tester.hasChildTag("p"));
+	}
+
+	@Test
+	public void getChildByTagName()
+	{
+		TagTester tester = TagTester.createTagByAttribute(
+			"<div id=\"id\">" +
+				"<div class=\"radio\">" +
+					"<label>" +
+						"<input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/> One" +
+					"</label>" +
+				"</div>" +
+			"</div>", "id", "id");
+		assertThat(tester.getChild("DIV"), is(notNullValue())); // case-insensitive
+		TagTester divClassRadioTagTester = tester.getChild("div");
+		assertThat(divClassRadioTagTester, is(notNullValue()));
+		TagTester labelTagTester = divClassRadioTagTester.getChild("label");
+		String labelMarkup = labelTagTester.getValue();
+		assertThat(labelMarkup, endsWith(" One"));
 	}
 
 	/**
