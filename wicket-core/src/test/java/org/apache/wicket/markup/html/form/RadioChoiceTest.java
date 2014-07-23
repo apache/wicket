@@ -29,7 +29,7 @@ public class RadioChoiceTest extends WicketTestCase
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("id", Arrays.asList(1));
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"id\"><input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/><label for=\"id1-0\">1</label><br />\n</span>");
+		tester.assertResultPage("<span wicket:id=\"id\"><input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/><label for=\"id1-0\">1</label></span>");
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class RadioChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"id\"><label for=\"id1-0\">1</label><input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/><br />\n</span>");
+		tester.assertResultPage("<span wicket:id=\"id\"><label for=\"id1-0\">1</label><input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/></span>");
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class RadioChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"id\"><label>1 <input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/></label><br />\n</span>");
+		tester.assertResultPage("<span wicket:id=\"id\"><label>1 <input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/></label></span>");
 	}
 
 	@Test
@@ -59,6 +59,6 @@ public class RadioChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"id\"><label><input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/> 1</label><br />\n</span>");
+		tester.assertResultPage("<span wicket:id=\"id\"><label><input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/> 1</label></span>");
 	}
 }

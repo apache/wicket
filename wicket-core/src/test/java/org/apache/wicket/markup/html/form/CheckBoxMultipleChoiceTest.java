@@ -152,7 +152,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("id", Arrays.asList(1));
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"id\"><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/><label for=\"id1-id_0\">1</label><br/>\n</span>");
+		tester.assertResultPage("<span wicket:id=\"id\"><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/><label for=\"id1-id_0\">1</label></span>");
 	}
 
 	@Test
@@ -162,7 +162,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"id\"><label for=\"id1-id_0\">1</label><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/><br/>\n</span>");
+		tester.assertResultPage("<span wicket:id=\"id\"><label for=\"id1-id_0\">1</label><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/></span>");
 	}
 
 	@Test
@@ -172,7 +172,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"id\"><label>1 <input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/></label><br/>\n</span>");
+		tester.assertResultPage("<span wicket:id=\"id\"><label>1 <input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/></label></span>");
 	}
 
 	@Test
@@ -182,6 +182,6 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"id\"><label><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/> 1</label><br/>\n</span>");
+		tester.assertResultPage("<span wicket:id=\"id\"><label><input name=\"id\" type=\"checkbox\" value=\"0\" id=\"id1-id_0\"/> 1</label></span>");
 	}
 }
