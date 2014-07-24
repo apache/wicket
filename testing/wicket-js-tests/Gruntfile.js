@@ -121,7 +121,7 @@ module.exports = function(grunt) {
 		connect: {
 			server: {
 				options: {
-					port: 38888,
+					port: 38889,
 //					debug: true,
 					middleware: function(connect, options, middlewares) {
 						middlewares.unshift(function(req, res, next) {
@@ -133,7 +133,7 @@ module.exports = function(grunt) {
 						});
 
 						return middlewares;
-					  },
+					},
 					base: '../../wicket-core/src'
 				}
 			}
