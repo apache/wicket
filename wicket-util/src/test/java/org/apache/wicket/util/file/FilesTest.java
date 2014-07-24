@@ -27,7 +27,6 @@ import org.junit.Test;
  */
 public class FilesTest extends Assert
 {
-
 	/**
 	 * Tests for {@link Files#remove(java.io.File)}
 	 * 
@@ -39,9 +38,10 @@ public class FilesTest extends Assert
 		assertFalse("'null' files are not deleted.", Files.remove(null));
 
 		assertFalse("Non existing files are not deleted.", Files.remove(new File(
-			"/somethingThatDoesntExistsOnMostMachines-111111111111111111111111111111")));
+				"/somethingThatDoesntExistsOnMostMachines-111111111111111111111111111111")));
 
-		java.io.File file = java.io.File.createTempFile("wicket-test--", ".tmp");
+		java.io.File file = getFile();
+		file.createNewFile();
 		assertTrue("The just created file should exist!", file.isFile());
 
 		boolean removed = Files.remove(file);
@@ -54,7 +54,7 @@ public class FilesTest extends Assert
 		assertFalse("Files.remove(file) should not remove the file", removed);
 
 		// try to remove a folder
-		java.io.File folder = new File(System.getProperty("java.io.tmpdir"), "wicket-test-folder");
+		java.io.File folder = getFolder();
 		Files.mkdirs(folder);
 		assertTrue(folder.isDirectory());
 		assertFalse("Should not be able to delete a folder, even empty one.", Files.remove(folder));
@@ -103,19 +103,25 @@ public class FilesTest extends Assert
 			Files.removeFolderAsync(nonExistingFile, fileCleaner));
 		assertFalse(nonExistingFile.exists());
 
-		java.io.File file = java.io.File.createTempFile("wicket-test--", ".tmp");
-		assertTrue("The just created file should exist!", file.exists());
+		java.io.File file = getFile();
 		file.createNewFile();
+		assertTrue("The just created file should exist!", file.exists());
 		assertTrue(file.isFile());
 
 		assertTrue("The file is scheduled for deletion.", Files.removeAsync(file, fileCleaner));
+
+		// remove the reference to the file to be deleted
+		// this way the FileCleaningTracker's ReferenceQueue will mark it as eligible for GC
+		file = null;
+
 		// give chance to the file cleaner to run and delete the folder
 		System.gc();
 		boolean exists = true;
 		for (int i = 0; i < 10; i++)
 		{
 			Thread.sleep(5);
-			if (!file.exists())
+			java.io.File newFileReference = getFile();
+			if (!newFileReference.exists())
 			{
 				exists = false;
 				break;
@@ -142,7 +148,7 @@ public class FilesTest extends Assert
 			Files.removeFolderAsync(nonExistingFolder, fileCleaner));
 		assertFalse(nonExistingFolder.exists());
 
-		java.io.File folder = new File(System.getProperty("java.io.tmpdir"), "wicket-test-folder");
+		java.io.File folder = getFolder();
 		Files.mkdirs(folder);
 		assertTrue(folder.isDirectory());
 		File file = new File(folder, "child");
@@ -151,10 +157,16 @@ public class FilesTest extends Assert
 
 		assertTrue("The folder is scheduled for deletion.",
 			Files.removeFolderAsync(folder, fileCleaner));
+
+		// remove the reference to the folder to be deleted
+		// this way the FileCleaningTracker's ReferenceQueue will mark it as eligible for GC
+		folder = null;
+
 		// give chance to the file cleaner to run and delete the folder
 		System.gc();
 		Thread.sleep(5);
-		assertFalse("", folder.exists());
+		java.io.File newFolderReference = getFolder();
+		assertFalse("The folder still exists", newFolderReference.exists());
 	}
 
 	/**
@@ -169,4 +181,23 @@ public class FilesTest extends Assert
 
 		assertEquals( java.io.File.separator + "file with whitespace", Files.getLocalFileFromUrl(url).getPath());
 	}
+
+	/**
+	 * @return a reference to a folder, without creating it !
+	 */
+	private java.io.File getFolder()
+	{
+		File folder = new File(System.getProperty("java.io.tmpdir"), "wicket-7.x-test-folder");
+		return folder;
+	}
+
+	/**
+	 * @return a reference to a file, without creating it !
+	 * @throws IOException
+	 */
+	private java.io.File getFile() throws IOException
+	{
+		return new java.io.File(System.getProperty("java.io.tmpdir"), "wicket-7.x-test-file");
+	}
+
 }
