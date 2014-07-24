@@ -187,7 +187,7 @@ public class FilesTest extends Assert
 	 */
 	private java.io.File getFolder()
 	{
-		File folder = new File(System.getProperty("java.io.tmpdir"), "wicket-7.x-test-folder");
+		File folder = new File(System.getProperty("java.io.tmpdir"), "wicket-6.x-test-folder");
 		return folder;
 	}
 
@@ -197,7 +197,7 @@ public class FilesTest extends Assert
 	 */
 	private java.io.File getFile() throws IOException
 	{
-		return new java.io.File(System.getProperty("java.io.tmpdir"), "wicket-7.x-test-file");
+		return new java.io.File(System.getProperty("java.io.tmpdir"), "wicket-6.x-test-file");
 	}
 
 }
