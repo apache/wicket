@@ -78,12 +78,12 @@ public class WebPageRenderer extends PageRenderer
 	 * @param response
 	 */
 	protected void storeBufferedResponse(Url url, BufferedWebResponse response)
-	{		
+	{
 		if (isSessionTemporary()) 
 		{
 			Session.get().bind();
 		}
-		
+
 		WebApplication.get().storeBufferedResponse(getSessionId(), url, response);
 	}
 
