@@ -71,12 +71,19 @@ public class WebPageRenderer extends PageRenderer
 	}
 
 	/**
-	 * 
+	 * Store the buffered response at application level. If current session is
+	 * temporary, a permanent one is created.
+	 *
 	 * @param url
 	 * @param response
 	 */
 	protected void storeBufferedResponse(Url url, BufferedWebResponse response)
 	{
+		if (isSessionTemporary())
+		{
+			Session.get().bind();
+		}
+
 		WebApplication.get().storeBufferedResponse(getSessionId(), url, response);
 	}
 
