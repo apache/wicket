@@ -17,6 +17,7 @@
 package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Session;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
@@ -67,12 +68,19 @@ public class WebPageRenderer extends PageRenderer
 	}
 
 	/**
+	 * Store the buffered response at application level. If current session is
+	 * temporary, a permanent one is created.
 	 *
 	 * @param url
 	 * @param response
 	 */
 	protected void storeBufferedResponse(Url url, BufferedWebResponse response)
 	{
+		if (isSessionTemporary())
+		{
+			Session.get().bind();
+		}
+
 		WebApplication.get().storeBufferedResponse(getSessionId(), url, response);
 	}
 
