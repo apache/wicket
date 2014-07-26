@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.model.util.CollectionModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.model.util.MapModel;
-import org.apache.wicket.model.util.WildcardCollectionModel;
-import org.apache.wicket.model.util.WildcardListModel;
-import org.apache.wicket.model.util.WildcardSetModel;
+import org.apache.wicket.model.util.SetModel;
 import org.apache.wicket.util.lang.Objects;
 
 
@@ -78,9 +78,9 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            The List, which may or may not be Serializable
 	 * @return A Model object wrapping the List
 	 */
-	public static <C> IModel<List<? extends C>> ofList(final List<? extends C> list)
+	public static <C> IModel<List<C>> ofList(final List<C> list)
 	{
-		return new WildcardListModel<>(list);
+		return new ListModel<>(list);
 	}
 
 	/**
@@ -110,9 +110,9 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            The Set, which may or may not be Serializable
 	 * @return A Model object wrapping the Set
 	 */
-	public static <C> IModel<Set<? extends C>> ofSet(final Set<? extends C> set)
+	public static <C> IModel<Set<C>> ofSet(final Set<C> set)
 	{
-		return new WildcardSetModel<>(set);
+		return new SetModel<>(set);
 	}
 
 	/**
@@ -125,9 +125,9 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            The Collection, which may or may not be Serializable
 	 * @return A Model object wrapping the Set
 	 */
-	public static <C> IModel<Collection<? extends C>> of(final Collection<? extends C> collection)
+	public static <C> IModel<Collection<C>> ofCollection(final Collection<C> collection)
 	{
-		return new WildcardCollectionModel<>(collection);
+		return new CollectionModel<>(collection);
 	}
 
 
