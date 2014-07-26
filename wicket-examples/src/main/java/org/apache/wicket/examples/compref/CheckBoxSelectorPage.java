@@ -85,7 +85,7 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 			}
 		});
 		final CheckBoxMultipleChoice<Integer> choice = new CheckBoxMultipleChoice<Integer>(
-			"choice", Model.ofList(new ArrayList()), Arrays.asList(1, 2, 3, 4));
+			"choice", Model.of(new ArrayList<Integer>()), Arrays.asList(1, 2, 3, 4));
 		form.add(choice);
 		form.add(new CheckboxMultipleChoiceSelector("choiceSelector", choice));
 		final CheckBox loose1 = new CheckBox("looseCheck1", Model.of(Boolean.FALSE));

@@ -150,10 +150,11 @@ public class DataTableTest extends WicketTestCase
 				}
 
 				@Override
-				public Iterator<? extends Number> iterator(long first, long count)
+				public Iterator<Integer> iterator(long first, long count)
 				{
 					StringValue emptyValue = getPageParameters().get("empty");
-					return emptyValue.toBoolean() ? Collections.<Integer> emptyList().iterator()
+					return emptyValue.toBoolean()
+						? Collections.<Integer> emptyList().iterator()
 						: items.iterator();
 				}
 

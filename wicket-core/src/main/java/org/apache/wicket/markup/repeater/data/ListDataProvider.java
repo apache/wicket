@@ -75,7 +75,7 @@ public class ListDataProvider<T extends Serializable> implements IDataProvider<T
 	}
 
 	@Override
-	public Iterator<? extends T> iterator(final long first, final long count)
+	public Iterator<T> iterator(final long first, final long count)
 	{
 		List<T> list = getData();
 

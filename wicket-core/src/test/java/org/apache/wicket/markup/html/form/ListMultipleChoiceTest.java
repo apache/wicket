@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class ListMultipleChoiceTest extends WicketTestCase
 {
 	public class TestPage extends WebPage
 	{
-		public IModel<List<String>> selectedValues = new Model(new ArrayList<String>());
+		public IModel<List<String>> selectedValues = new ListModel<String>(new ArrayList<String>());
 		public List<String> choices = Arrays.asList("a", "b", "c", "d", "e", "f");
 
 		public TestPage()

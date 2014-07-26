@@ -86,7 +86,7 @@ public class DatesPage1 extends WebPage
 		{
 			super(id);
 			// sort locales on strings of selected locale
-			setChoices(new AbstractReadOnlyModel<List<? extends Locale>>()
+			setChoices(new AbstractReadOnlyModel<List<Locale>>()
 			{
 				private static final long serialVersionUID = 1L;
 

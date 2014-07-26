@@ -51,7 +51,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	private IModel<? extends List<? extends T>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
-	private IChoiceRenderer<T> renderer;
+	private IChoiceRenderer<? super T> renderer;
 
 	/**
 	 * Construct.
@@ -120,7 +120,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
-		final IModel<? extends List<? extends T>> choices, final IChoiceRenderer<T> renderer)
+		final IModel<? extends List<? extends T>> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -156,7 +156,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
-		final List<? extends T> choices, final IChoiceRenderer<T> renderer)
+		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		this(id, model, Model.ofList(choices), renderer);
 	}

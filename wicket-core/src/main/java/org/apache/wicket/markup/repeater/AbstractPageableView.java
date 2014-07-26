@@ -73,7 +73,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractPageableView(String id, IModel<? extends Collection<? extends T>> model)
+	public AbstractPageableView(String id, IModel<? extends Collection<T>> model)
 	{
 		super(id, model);
 		clearCachedItemCount();

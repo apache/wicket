@@ -62,9 +62,10 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	 * @param model
 	 *            the model holding the uploaded {@link FileUpload}s
 	 */
-	public FileUploadField(final String id, IModel<List<FileUpload>> model)
+	@SuppressWarnings("unchecked")
+	public FileUploadField(final String id, IModel<? extends List<FileUpload>> model)
 	{
-		super(id, model);
+		super(id, (IModel<List<FileUpload>>)model);
 	}
 
 	/**

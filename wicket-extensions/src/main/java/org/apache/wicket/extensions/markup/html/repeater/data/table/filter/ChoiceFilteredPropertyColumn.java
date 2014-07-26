@@ -40,7 +40,7 @@ import org.apache.wicket.model.PropertyModel;
 public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColumn<T, S>
 {
 	private static final long serialVersionUID = 1L;
-	private final IModel<List<? extends Y>> filterChoices;
+	private final IModel<? extends List<? extends Y>> filterChoices;
 
 	/**
 	 * @param displayModel
@@ -51,7 +51,7 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 	 */
 	public ChoiceFilteredPropertyColumn(final IModel<String> displayModel,
 		final S sortProperty, final String propertyExpression,
-		final IModel<List<? extends Y>> filterChoices)
+		final IModel<? extends List<? extends Y>> filterChoices)
 	{
 		super(displayModel, sortProperty, propertyExpression);
 		this.filterChoices = filterChoices;
@@ -64,7 +64,7 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 	 *            collection of choices used in the choice filter
 	 */
 	public ChoiceFilteredPropertyColumn(final IModel<String> displayModel,
-		final String propertyExpression, final IModel<List<? extends Y>> filterChoices)
+		final String propertyExpression, final IModel<? extends List<? extends Y>> filterChoices)
 	{
 		super(displayModel, propertyExpression);
 		this.filterChoices = filterChoices;
@@ -138,7 +138,7 @@ public class ChoiceFilteredPropertyColumn<T, Y, S> extends FilteredPropertyColum
 	/**
 	 * @return filter choices model
 	 */
-	protected final IModel<List<? extends Y>> getFilterChoices()
+	protected final IModel<? extends List<? extends Y>> getFilterChoices()
 	{
 		return filterChoices;
 	}

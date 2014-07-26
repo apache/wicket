@@ -71,7 +71,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	{
 		StringBuilder buffer = new StringBuilder(128);
 		Iterator<T> options = getOptionsIterator();
-		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		IChoiceRenderer<? super T> renderer = getPalette().getChoiceRenderer();
 
 		boolean localizeDisplayValues = localizeDisplayValues();
 

@@ -54,7 +54,7 @@ public class SelectOption<T> extends WebMarkupContainer implements IGenericCompo
 	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public SelectOption(final String id, final IModel<? extends T> model)
+	public SelectOption(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}

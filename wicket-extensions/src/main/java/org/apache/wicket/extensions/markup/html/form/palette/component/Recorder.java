@@ -87,7 +87,7 @@ public class Recorder<T> extends HiddenField<String>
 	private void initIds()
 	{
 		// construct the model string based on selection collection
-		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		IChoiceRenderer<? super T> renderer = getPalette().getChoiceRenderer();
 		StringBuilder modelStringBuffer = new StringBuilder();
 		Collection<T> modelCollection = getPalette().getModelCollection();
 		if (modelCollection == null)
@@ -123,7 +123,7 @@ public class Recorder<T> extends HiddenField<String>
 	 */
 	public List<T> getSelectedList()
 	{
-		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		final IChoiceRenderer<? super T> renderer = getPalette().getChoiceRenderer();
 		final Collection<? extends T> choices = getPalette().getChoices();
 		final List<T> selected = new ArrayList<>(choices.size());
 
@@ -160,7 +160,7 @@ public class Recorder<T> extends HiddenField<String>
 	 */
 	public List<T> getUnselectedList()
 	{
-		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		final IChoiceRenderer<? super T> renderer = getPalette().getChoiceRenderer();
 		final Collection<? extends T> choices = getPalette().getChoices();
 		final List<T> unselected = new ArrayList<>(choices.size());
 		final String ids = getValue();

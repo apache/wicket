@@ -57,7 +57,7 @@ public abstract class PropertyListView<T> extends ListView<T>
 	 * @param model
 	 *            wrapping a List
 	 */
-	public PropertyListView(final String id, final IModel<? extends List<? extends T>> model)
+	public PropertyListView(final String id, final IModel<? extends List<T>> model)
 	{
 		super(id, model);
 	}
@@ -71,7 +71,7 @@ public abstract class PropertyListView<T> extends ListView<T>
 	 * @param list
 	 *            unmodeled List
 	 */
-	public PropertyListView(final String id, final List<? extends T> list)
+	public PropertyListView(final String id, final List<T> list)
 	{
 		super(id, list);
 	}

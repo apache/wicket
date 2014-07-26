@@ -69,7 +69,7 @@ public class ChoicePage extends BasePage
 		modelsMap.put("CADILLAC", Arrays.asList("CTS", "DTS", "ESCALADE", "SRX", "DEVILLE"));
 		modelsMap.put("FORD", Arrays.asList("CROWN", "ESCAPE", "EXPEDITION", "EXPLORER", "F-150"));
 
-		IModel<List<? extends String>> makeChoices = new AbstractReadOnlyModel<List<? extends String>>()
+		IModel<List<String>> makeChoices = new AbstractReadOnlyModel<List<String>>()
 		{
 			@Override
 			public List<String> getObject()
@@ -79,7 +79,7 @@ public class ChoicePage extends BasePage
 
 		};
 
-		IModel<List<? extends String>> modelChoices = new AbstractReadOnlyModel<List<? extends String>>()
+		IModel<List<String>> modelChoices = new AbstractReadOnlyModel<List<String>>()
 		{
 			@Override
 			public List<String> getObject()

@@ -134,7 +134,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final IModel<? extends List<? extends T>> model)
+	public ListView(final String id, final IModel<? extends List<T>> model)
 	{
 		super(id, model);
 
@@ -156,7 +156,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            List to cast to Serializable
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final List<? extends T> list)
+	public ListView(final String id, final List<T> list)
 	{
 		this(id, Model.ofList(list));
 	}
@@ -169,9 +169,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @return The list of items in this list view.
 	 */
 	@SuppressWarnings("unchecked")
-	public final List<? extends T> getList()
+	public final List<T> getList()
 	{
-		final List<? extends T> list = (List<? extends T>)getDefaultModelObject();
+		final List<T> list = (List<T>)getDefaultModelObject();
 		if (list == null)
 		{
 			return Collections.emptyList();
@@ -364,7 +364,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            The list for the new model. The list must implement {@link Serializable}.
 	 * @return This for chaining
 	 */
-	public ListView<T> setList(List<? extends T> list)
+	public ListView<T> setList(List<T> list)
 	{
 		setDefaultModel(Model.ofList(list));
 		return this;

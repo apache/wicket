@@ -89,7 +89,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	/**
 	 * choice render used to render the choices in both available and selected collections
 	 */
-	private final IChoiceRenderer<T> choiceRenderer;
+	private final IChoiceRenderer<? super T> choiceRenderer;
 
 	/** number of rows to show in the select boxes */
 	private final int rows;
@@ -135,7 +135,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 *            Allow user to move selections up and down
 	 */
 	public Palette(final String id, final IModel<? extends Collection<T>> choicesModel,
-		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
+		final IChoiceRenderer<? super T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
 	}
@@ -155,10 +155,9 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	@SuppressWarnings("unchecked")
 	public Palette(final String id, final IModel<? extends Collection<T>> model,
 		final IModel<? extends Collection<? extends T>> choicesModel,
-		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
+		final IChoiceRenderer<? super T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
 		this(id, model, choicesModel, choiceRenderer, rows, allowOrder, false);
 	}
@@ -182,7 +181,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 */
 	public Palette(final String id, final IModel<? extends Collection<T>> model,
 		final IModel<? extends Collection<? extends T>> choicesModel,
-		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder,
+		final IChoiceRenderer<? super T> choiceRenderer, final int rows, final boolean allowOrder,
 		boolean allowMoveAll)
 	{
 		super(id, (IModel<Collection<T>>)model);
@@ -540,7 +539,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	/**
 	 * @return choice renderer
 	 */
-	public IChoiceRenderer<T> getChoiceRenderer()
+	public IChoiceRenderer<? super T> getChoiceRenderer()
 	{
 		return choiceRenderer;
 	}

@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.util.WildcardCollectionModel;
+import org.apache.wicket.model.util.CollectionModel;
 
 
 /**
@@ -56,7 +56,7 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param model
 	 * @param renderer
 	 */
-	public SelectOptions(final String id, final IModel<? extends Collection<? extends T>> model,
+	public SelectOptions(final String id, final IModel<? extends Collection<T>> model,
 		final IOptionRenderer<T> renderer)
 	{
 		super(id, model);
@@ -71,10 +71,10 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param elements
 	 * @param renderer
 	 */
-	public SelectOptions(final String id, final Collection<? extends T> elements,
+	public SelectOptions(final String id, final Collection<T> elements,
 		final IOptionRenderer<T> renderer)
 	{
-		this(id, new WildcardCollectionModel<>(elements), renderer);
+		this(id, new CollectionModel<>(elements), renderer);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class SelectOptions<T> extends RepeatingView
 			// populate this repeating view with SelectOption components
 			removeAll();
 
-			Collection<? extends T> modelObject = (Collection<? extends T>)getDefaultModelObject();
+			Collection<T> modelObject = (Collection<T>)getDefaultModelObject();
 
 			if (modelObject != null)
 			{
@@ -135,7 +135,7 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param model
 	 * @return a {@link SelectOption}
 	 */
-	protected SelectOption<T> newOption(final String text, final IModel<? extends T> model)
+	protected SelectOption<T> newOption(final String text, final IModel<T> model)
 	{
 		return new SimpleSelectOption<>("option", model, text);
 	}
@@ -155,7 +155,7 @@ public class SelectOptions<T> extends RepeatingView
 		 * @param model
 		 * @param text
 		 */
-		public SimpleSelectOption(final String id, final IModel<? extends V> model, final String text)
+		public SimpleSelectOption(final String id, final IModel<V> model, final String text)
 		{
 			super(id, model);
 			this.text = text;

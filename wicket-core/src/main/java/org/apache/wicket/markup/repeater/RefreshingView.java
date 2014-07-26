@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.repeater;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
@@ -78,7 +79,7 @@ public abstract class RefreshingView<T> extends RepeatingView
 	 * @param model
 	 *            model
 	 */
-	public RefreshingView(String id, IModel<?> model)
+	public RefreshingView(String id, IModel<? extends Collection<T>> model)
 	{
 		super(id, model);
 	}

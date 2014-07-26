@@ -225,7 +225,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 * 
 	 * @see #wantOnSelectionChangedNotifications()
 	 */
-	protected void onSelectionChanged(final Collection<? extends T> newSelection)
+	protected void onSelectionChanged(final Collection<T> newSelection)
 	{
 	}
 

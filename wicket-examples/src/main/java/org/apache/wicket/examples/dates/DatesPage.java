@@ -83,7 +83,7 @@ public class DatesPage extends WicketExamplePage
 		{
 			super(id);
 			// sort locales on strings of selected locale
-			setChoices(new AbstractReadOnlyModel<List<? extends Locale>>()
+			setChoices(new AbstractReadOnlyModel<List<Locale>>()
 			{
 				@Override
 				public List<Locale> getObject()
