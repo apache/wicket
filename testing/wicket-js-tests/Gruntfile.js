@@ -99,7 +99,7 @@ module.exports = function(grunt) {
 			 */
 			all: {
 				options: {
-			        urls: ['http://localhost:38888/test/js/all.html']
+			        urls: ['http://localhost:38889/test/js/all.html']
 			    }
 			},
 
@@ -108,7 +108,7 @@ module.exports = function(grunt) {
 			 */
 			amd: {
 				options: {
-					urls: ['http://localhost:38888/test/js/amd.html']
+					urls: ['http://localhost:38889/test/js/amd.html']
 				}
 			},
 
