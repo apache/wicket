@@ -339,6 +339,11 @@
 			var attrs = {
 				u: callbackUrl,
 				pre: [ function (attributes) {
+					// since attrs.c is not set, we have to check existence by ourself
+					if (!Wicket.$$(elementId)) {
+						return false;
+					}
+					
 					var activeIsInitial = (document.activeElement === initialElement);
 					var elementVal =  Wicket.$(elementId).value;
 					var hasMinimumLength = elementVal.length >= minInputLength;
@@ -365,6 +370,11 @@
 			var attrs = {
 				u: callbackUrl,
 				pre: [ function (attributes) {
+					// since attrs.c is not set, we have to check existence by ourself
+					if (!Wicket.$$(elementId)) {
+						return false;
+					}
+
 					var activeIsInitial = (document.activeElement === initialElement);
 					var elementVal =  Wicket.$(elementId).value;
 					var hasMinimumLength = elementVal.length >= minInputLength;
