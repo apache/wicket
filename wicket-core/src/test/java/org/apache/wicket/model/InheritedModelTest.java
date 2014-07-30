@@ -104,4 +104,33 @@ public class InheritedModelTest extends WicketTestCase
 		tester.startPage(page);
 		assertEquals("bar", page.label.getDefaultModelObject());
 	}
+
+	/**
+	 * Tests if Component#FLAG_INHERITABLE_MODEL reset after model change (WICKET-5655).
+	 */
+	@Test
+	public void testResetInheritedModelFlag2()
+	{
+		ValueMap data1 = new ValueMap();
+		data1.put("label", "foo");
+
+		ValueMap data2 = new ValueMap();
+		data2.put("value", "bar");
+
+		InheritedTestPage page = new InheritedTestPage();
+
+		page.setDefaultModel(new CompoundPropertyModel<>(data1));
+		tester.startPage(page);
+		assertEquals("foo", page.label.getDefaultModelObject());
+
+		page.label.setDefaultModel(new CompoundPropertyModel<String>(new PropertyModel<String>(
+			data2, "value")));
+		tester.startPage(page);
+		assertEquals("bar", page.label.getDefaultModelObject());
+
+		page.detach();
+
+		tester.startPage(page);
+		assertEquals("bar", page.label.getDefaultModelObject());
+	}
 }
