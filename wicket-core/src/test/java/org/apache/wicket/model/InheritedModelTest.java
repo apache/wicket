@@ -20,6 +20,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.value.ValueMap;
+import org.junit.Test;
 
 /**
  * Tests the inheritance of models.
@@ -92,6 +93,36 @@ public class InheritedModelTest extends WicketTestCase
 		assertEquals("foo", page.label.getDefaultModelObject());
 
 		page.label.setDefaultModel(new PropertyModel<String>(data2, "value"));
+		tester.startPage(page);
+		assertEquals("bar", page.label.getDefaultModelObject());
+
+		page.detach();
+
+		tester.startPage(page);
+		assertEquals("bar", page.label.getDefaultModelObject());
+	}
+
+
+	/**
+	 * Tests if Component#FLAG_INHERITABLE_MODEL reset after model change (WICKET-5655).
+	 */
+	@Test
+	public void testResetInheritedModelFlag2()
+	{
+		ValueMap data1 = new ValueMap();
+		data1.put("label", "foo");
+
+		ValueMap data2 = new ValueMap();
+		data2.put("value", "bar");
+
+		InheritedTestPage page = new InheritedTestPage();
+
+		page.setDefaultModel(new CompoundPropertyModel<ValueMap>(data1));
+		tester.startPage(page);
+		assertEquals("foo", page.label.getDefaultModelObject());
+
+		page.label.setDefaultModel(new CompoundPropertyModel<String>(new PropertyModel<String>(
+			data2, "value")));
 		tester.startPage(page);
 		assertEquals("bar", page.label.getDefaultModelObject());
 
