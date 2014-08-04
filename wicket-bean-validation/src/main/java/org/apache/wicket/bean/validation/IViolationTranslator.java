@@ -8,7 +8,7 @@ import org.apache.wicket.validation.ValidationError;
  * Converts {@link ConstraintViolation}s into Wicket's {@link ValidationError}s
  * 
  * @author igor
- * 
+ * @see BeanValidationConfiguration#setViolationTranslator(org.apache.wicket.bean.validation.IViolationTranslator)
  */
 public interface IViolationTranslator
 {
