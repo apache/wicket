@@ -31,12 +31,12 @@ import org.apache.wicket.model.IModel;
  * class UsersProvider implements IDataProvider
  * {
  * 
- * 	public Iterator iterator(int first, int count)
+ * 	public Iterator iterator(long first, long count)
  * 	{
  * 		((MyApplication)Application.get()).getUserDao().iterator(first, count);
  * 	}
  * 
- * 	public int size()
+ * 	public long size()
  * 	{
  * 		((MyApplication)Application.get()).getUserDao().getCount();
  * 	}
