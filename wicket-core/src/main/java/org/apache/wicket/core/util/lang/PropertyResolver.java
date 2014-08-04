@@ -127,7 +127,7 @@ public final class PropertyResolver
 	public static void setValue(final String expression, final Object object,
 		final Object value, final PropertyResolverConverter converter)
 	{
-		if (expression == null || expression.equals(""))
+		if (Strings.isEmpty(expression))
 		{
 			throw new WicketRuntimeException("Empty expression setting value: " + value +
 				" on object: " + object);
