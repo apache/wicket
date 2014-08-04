@@ -30,6 +30,7 @@ public class InheritedModelTest extends WicketTestCase
 	/**
 	 * Tests the CPM inheritance by setting a different root model using a rendered scenario.
 	 */
+	@Test
 	public void testCompoundPropertyModelRendered()
 	{
 		ValueMap data1 = new ValueMap();
@@ -53,6 +54,7 @@ public class InheritedModelTest extends WicketTestCase
 	/**
 	 * Tests the CPM by setting a different root model using a direct scenario.
 	 */
+	@Test
 	public void testCompoundPropertyModelDirect()
 	{
 		ValueMap data1 = new ValueMap();
@@ -78,6 +80,7 @@ public class InheritedModelTest extends WicketTestCase
 	/**
 	 * Tests if Component#FLAG_INHERITABLE_MODEL reset after model change (WICKET-3413).
 	 */
+	@Test
 	public void testResetInheritedModelFlag()
 	{
 		ValueMap data1 = new ValueMap();
