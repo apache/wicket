@@ -297,7 +297,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		{
 			final IMultipartWebRequest request = (IMultipartWebRequest)getRequest();
 
-			uploads = new ArrayList<FileUpload>(filenames.length);
+			uploads = new ArrayList<>(filenames.length);
 
 			for (String filename : filenames)
 			{
@@ -374,9 +374,9 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 			}
 			else
 			{
-				HashMap<String, Object> vars = new HashMap<String, Object>(1);
+				HashMap<String, Object> vars = new HashMap<>(1);
 				vars.put("max", max);
-				return getString(RESOURCE_LIMITED, new Model<HashMap<String, Object>>(vars));
+				return getString(RESOURCE_LIMITED, new Model<>(vars));
 			}
 		}
 
