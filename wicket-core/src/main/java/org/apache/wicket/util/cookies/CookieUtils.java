@@ -135,7 +135,7 @@ public class CookieUtils
 		if (value != null)
 		{
 			// Assign the retrieved/persisted value to the component
-			formComponent.setModelValue(splitValue(value));
+			formComponent.setModelValue(new String[] {value});
 		}
 		return value;
 	}
@@ -145,7 +145,9 @@ public class CookieUtils
 	 * 
 	 * @param value
 	 * @return The cookie's value split into fragments
+	 * @deprecated Cookies with multiple values are no more supported (WICKET-5648). This method will be removed in Wicket 7.x
 	 */
+	@Deprecated
 	protected String[] splitValue(final String value)
 	{
 		return Strings.split(value, FormComponent.VALUE_SEPARATOR.charAt(0));
@@ -156,7 +158,9 @@ public class CookieUtils
 	 * 
 	 * @param values
 	 * @return The cookie's value split into its constituent parts
+	 * @deprecated Cookies with multiple values are no more supported (WICKET-5648). This method will be removed in Wicket 7.x
 	 */
+	@Deprecated
 	protected String joinValues(final String... values)
 	{
 		return Strings.join(FormComponent.VALUE_SEPARATOR, values);
@@ -255,18 +259,19 @@ public class CookieUtils
 
 		try
 		{
-			Cookie cookie = getWebRequest().getCookie(key);
+			WebRequest webRequest = getWebRequest();
+			Cookie cookie = webRequest.getCookie(key);
 			if (log.isDebugEnabled())
 			{
 				if (cookie != null)
 				{
 					log.debug("Found Cookie with name=" + key + " and request URI=" +
-						getWebRequest().getUrl().toString());
+							webRequest.getUrl().toString());
 				}
 				else
 				{
 					log.debug("Unable to find Cookie with name=" + key + " and request URI=" +
-						getWebRequest().getUrl().toString());
+							webRequest.getUrl().toString());
 				}
 			}
 
