@@ -123,25 +123,6 @@ public class CookieUtils
 	}
 
 	/**
-	 * Retrieve an array of the cookie value split by {@link org.apache.wicket.markup.html.form.FormComponent#VALUE_SEPARATOR}.
-	 *
-	 * @param key
-	 *          The cookie name
-	 * @return The cookie value split by {@link org.apache.wicket.markup.html.form.FormComponent#VALUE_SEPARATOR}.
-	 */
-	public final String[] loadValues(final String key)
-	{
-		final Cookie cookie = getCookie(key);
-		if (cookie != null)
-		{
-			String value = cookie.getValue();
-			String[] values = splitValue(value);
-			return values;
-		}
-		return null;
-	}
-
-	/**
 	 * Retrieve the cookie value associated with the formComponent and load the model object with
 	 * the cookie value.
 	 * 
