@@ -109,7 +109,6 @@ public class BeanValidationConfiguration implements BeanValidationContext
 		this.validatorProvider = validatorProvider;
 	}
 
-
 	/**
 	 * Binds this configuration to the application instance
 	 * 
@@ -125,6 +124,20 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	public IViolationTranslator getViolationTranslator()
 	{
 		return violationTranslator;
+	}
+
+	/**
+	 * Registers a violation translator
+	 *
+	 * @param violationTranslator
+	 *          A violation translator that will convert {@link javax.validation.ConstraintViolation}s
+	 *          into Wicket's {@link org.apache.wicket.validation.ValidationError}s
+	 */
+	public void setViolationTranslator(IViolationTranslator violationTranslator)
+	{
+		Args.notNull(violationTranslator, "violationTranslator");
+
+		this.violationTranslator = violationTranslator;
 	}
 
 	/**
