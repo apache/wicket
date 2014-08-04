@@ -17,10 +17,8 @@
 package org.apache.wicket.util.cookies;
 
 import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 
 import java.util.Arrays;
@@ -35,8 +33,6 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
-import org.apache.wicket.util.string.Strings;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -189,20 +185,6 @@ public class CookieUtilsTest extends WicketTestCase
 		before(); // execute a request cycle, so the response cookie is send with the next request
 		String result = utils.load(key);
 		assertThat(result, is(equalTo(value1)));
-	}
-
-	@Test
-	public void saveLoadValues()
-	{
-		CookieUtils utils = new CookieUtils();
-		String value1 = "value one";
-		String value2 = "value two";
-		String value3 = "value three";
-		String key = "key";
-		utils.save(key, value1, value2, value3);
-		before(); // execute a request cycle, so the response cookie is send with the next request
-		String[] result = utils.loadValues(key);
-		assertThat(result, is(Matchers.arrayContaining(value1, value2, value3)));
 	}
 
 	@Test
