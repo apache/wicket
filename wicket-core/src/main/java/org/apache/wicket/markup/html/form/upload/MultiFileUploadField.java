@@ -329,27 +329,42 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	@Override
 	protected void onDetach()
 	{
-		// cleanup any opened filestreams
-		Collection<FileUpload> uploads = getConvertedInput();
-		if (uploads != null)
+		if (forceCloseStreamsOnDetach())
 		{
-			for (FileUpload upload : uploads)
+			// cleanup any opened filestreams
+			Collection<FileUpload> uploads = getConvertedInput();
+			if (uploads != null)
 			{
-				upload.closeStreams();
+				for (FileUpload upload : uploads)
+				{
+					upload.closeStreams();
+				}
+			}
+
+			// cleanup any caches
+			inputArrayCache = null;
+
+			// clean up the model because we don't want FileUpload objects in session
+			Collection<FileUpload> modelObject = getModelObject();
+			if (modelObject != null)
+			{
+				modelObject.clear();
 			}
 		}
 
-		// cleanup any caches
-		inputArrayCache = null;
-
-		// clean up the model because we don't want FileUpload objects in session
-		Collection<FileUpload> modelObject = getModelObject();
-		if (modelObject != null)
-		{
-			modelObject.clear();
-		}
-
 		super.onDetach();
+	}
+
+	/**
+	 * The FileUploadField will close any input streams you have opened in its FileUpload by
+	 * default. If you wish to manage the stream yourself (e.g. you want to use it in another
+	 * thread) then you can override this method to prevent this behavior.
+	 *
+	 * @return <code>true</code> if stream should be closed at the end of request
+	 */
+	protected boolean forceCloseStreamsOnDetach()
+	{
+		return true;
 	}
 
 	/**
