@@ -174,8 +174,8 @@ public class ListenerInterfaceRequestHandler
 
 		if ((component == null && !freshPage) || (component != null && component.getPage() != page))
 		{
-			throw new WicketRuntimeException("Component '" + getComponentPath()
-				+ "' has been removed from page.");
+			throw new ComponentNotFoundException("Component '" + getComponentPath()
+					+ "' has been removed from page.");
 		}
 
 		if (page instanceof Page)
