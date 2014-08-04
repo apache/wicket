@@ -121,24 +121,6 @@ public class PropertyModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests setting a value on a {@link PropertyModel} when a final (constant!) property is
-	 * <code>null</code> and a concrete type. This should end in an exception because Wicket can't
-	 * assign to the property, since it is final.
-	 * 
-	 * This test has been disabled as it doesn't work on Mac OS X's 1.4 jdk (assignment doesn't
-	 * fail).
-	 */
-	@Test(expected = WicketRuntimeException.class)
-	@Ignore
-	public void setWithNullPathFinalJdk14()
-	{
-		Person person = new Person();
-		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");
-		model.setObject("foo");
-		fail("Expected exception");
-	}
-
-	/**
 	 * Tests setting a value on a null, final property using a {@link PropertyModel}. This test
 	 * should pass when run using JDK 1.5 or newer.
 	 */
