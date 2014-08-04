@@ -45,6 +45,7 @@ import org.apache.wicket.util.lang.Args;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @see #onEvent(AjaxRequestTarget)
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {

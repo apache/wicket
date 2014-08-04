@@ -32,6 +32,8 @@ import org.apache.wicket.util.time.Duration;
 /**
  * An behavior that collects the information to populate
  * WebClientInfo's ClientProperties by using Ajax
+ *
+ * @see #onClientInfo(AjaxRequestTarget, org.apache.wicket.protocol.http.request.WebClientInfo)
  */
 public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 {

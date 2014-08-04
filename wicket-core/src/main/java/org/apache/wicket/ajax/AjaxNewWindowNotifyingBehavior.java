@@ -34,6 +34,7 @@ import org.apache.wicket.util.string.StringValue;
  * Note: this behavior may be assigned only to an instance of a WebPage class.
  *
  * @since 6.0
+ * @see #onNewWindow(AjaxRequestTarget)
  */
 public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 {
