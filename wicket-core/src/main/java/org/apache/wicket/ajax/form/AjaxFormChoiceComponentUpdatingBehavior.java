@@ -37,7 +37,10 @@ import org.apache.wicket.request.resource.ResourceReference;
  * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component fields
  * 
  * @author jcompagner
- * 
+ * @author svenmeier
+ *
+ * @see org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior#onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior#onError(org.apache.wicket.ajax.AjaxRequestTarget, RuntimeException)
  * @see RadioChoice
  * @see CheckBoxMultipleChoice
  * @see RadioGroup

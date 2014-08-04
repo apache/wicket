@@ -35,7 +35,8 @@ import org.apache.wicket.markup.html.form.TextField;
  * @author Janne Hietam&auml;ki (janne)
  * 
  * @since 1.3
- * @see AjaxFormComponentUpdatingBehavior
+ * @see org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior#onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior#onError(org.apache.wicket.ajax.AjaxRequestTarget, RuntimeException)
  */
 public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBehavior
 {

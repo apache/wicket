@@ -28,7 +28,8 @@ import org.apache.wicket.util.time.Duration;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @see #onTimer(AjaxRequestTarget)
+ * @see #onRestart(AjaxRequestTarget)
  */
 public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehavior
 {

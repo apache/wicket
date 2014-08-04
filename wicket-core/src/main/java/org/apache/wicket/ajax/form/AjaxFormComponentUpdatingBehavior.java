@@ -43,6 +43,8 @@ import org.slf4j.LoggerFactory;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @see #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see #onError(org.apache.wicket.ajax.AjaxRequestTarget, RuntimeException)
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {

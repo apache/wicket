@@ -39,7 +39,9 @@ import org.apache.wicket.util.visit.IVisitor;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @see #onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see #onAfterSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see #onError(org.apache.wicket.ajax.AjaxRequestTarget)
  */
 public class AjaxFormValidatingBehavior extends Behavior
 {
