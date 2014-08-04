@@ -141,43 +141,16 @@ public class CookieUtils
 	}
 
 	/**
-	 * Split the loaded Cookie value
-	 * 
-	 * @param value
-	 * @return The cookie's value split into fragments
-	 * @deprecated Cookies with multiple values are no more supported (WICKET-5648). This method will be removed in Wicket 7.x
-	 */
-	@Deprecated
-	protected String[] splitValue(final String value)
-	{
-		return Strings.split(value, FormComponent.VALUE_SEPARATOR.charAt(0));
-	}
-
-	/**
-	 * Join all fragments into one Cookie value
-	 * 
-	 * @param values
-	 * @return The cookie's value split into its constituent parts
-	 * @deprecated Cookies with multiple values are no more supported (WICKET-5648). This method will be removed in Wicket 7.x
-	 */
-	@Deprecated
-	protected String joinValues(final String... values)
-	{
-		return Strings.join(FormComponent.VALUE_SEPARATOR, values);
-	}
-
-	/**
 	 * Create a Cookie with key and value and save it in the browser with the next response
 	 * 
 	 * @param key
 	 *          The cookie name
-	 * @param values
-	 *          The cookie values
+	 * @param value
+	 *          The cookie value
 	 */
-	public final void save(String key, final String... values)
+	public final void save(String key, final String value)
 	{
 		key = getSaveKey(key);
-		String value = joinValues(values);
 		Cookie cookie = getCookie(key);
 		if (cookie == null)
 		{

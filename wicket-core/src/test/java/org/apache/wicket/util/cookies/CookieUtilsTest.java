@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.util.cookies;
 
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
@@ -30,7 +28,6 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
 import org.junit.Before;
@@ -127,52 +124,6 @@ public class CookieUtilsTest extends WicketTestCase
 		assertEquals(1, getResponseCookies().size());
 		assertEquals("form.input", (getResponseCookies().get(0)).getName());
 		assertEquals(0, (getResponseCookies().get(0)).getMaxAge());
-	}
-
-	@Test
-	public void splitValuesNullString()
-	{
-		CookieUtils utils = new CookieUtils();
-		String[] values = utils.splitValue(null);
-		assertArrayEquals(new String[0], values);
-	}
-
-	@Test
-	public void splitValuesEmptyString()
-	{
-		CookieUtils utils = new CookieUtils();
-		String[] values = utils.splitValue("");
-		assertThat(values, is(emptyArray()));
-	}
-
-	@Test
-	public void splitValuesSingleValue()
-	{
-		CookieUtils utils = new CookieUtils();
-		String value1 = "value one";
-		String[] values = utils.splitValue(value1);
-		assertThat(values, is(arrayContaining(value1)));
-	}
-
-	@Test
-	public void splitValuesManyValues()
-	{
-		CookieUtils utils = new CookieUtils();
-		String value1 = "value one";
-		String value2 = "value two";
-		String value = value1 + FormComponent.VALUE_SEPARATOR + value2;
-		String[] values = utils.splitValue(value);
-		assertThat(values, is(arrayContaining(value1, value2)));
-	}
-
-	@Test
-	public void joinValues()
-	{
-		CookieUtils utils = new CookieUtils();
-		String value1 = "value one";
-		String value2 = "value two";
-		String joined = utils.joinValues(value1, value2);
-		assertThat(joined, is(equalTo(value1 + FormComponent.VALUE_SEPARATOR + value2)));
 	}
 
 	@Test
