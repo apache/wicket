@@ -23,6 +23,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.ComponentNotFoundException;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -94,7 +95,7 @@ public class AutoLabelResolver implements IComponentResolver
 		Component component = findRelatedComponent(container, id);
 		if (component == null)
 		{
-			throw new WicketRuntimeException("Could not find form component with id '" + id +
+			throw new ComponentNotFoundException("Could not find form component with id '" + id +
 				"' while trying to resolve wicket:for attribute");
 		}
 
