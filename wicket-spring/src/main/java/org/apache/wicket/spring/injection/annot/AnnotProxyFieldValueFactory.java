@@ -110,7 +110,23 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	{
 		if (supportsField(field))
 		{
-			String beanName = getBeanName(field);
+			SpringBean annot = field.getAnnotation(SpringBean.class);
+
+			String name;
+			boolean required;
+			if (annot != null)
+			{
+				name = annot.name();
+				required = annot.required();
+			}
+			else
+			{
+				Named named = field.getAnnotation(Named.class);
+				name = named != null ? named.value() : "";
+				required = false;
+			}
+
+			String beanName = getBeanName(field, name, required);
 
 			if (beanName == null)
 			{
@@ -128,13 +144,26 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			}
 
 			Object target;
+			try
+			{
+				// check whether there is a bean with the provided properties
+				target = locator.locateProxyTarget();
+			}
+			catch (IllegalStateException isx)
+			{
+				if (required)
+				{
+					throw isx;
+				}
+				else
+				{
+					return null;
+				}
+			}
+
 			if (wrapInProxies)
 			{
 				target = LazyInitProxyFactory.createProxy(field.getType(), locator);
-			}
-			else
-			{
-				target = locator.locateProxyTarget();
 			}
 
 			// only put the proxy into the cache if the bean is a singleton
@@ -156,31 +185,20 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 * @param field
 	 * @return bean name
 	 */
-	private String getBeanName(final Field field)
+	private String getBeanName(final Field field, String name, boolean required)
 	{
-		SpringBean annot = field.getAnnotation(SpringBean.class);
-		
-		String name;
-		boolean required;
-		if (annot != null) {
-			name = annot.name();
-			required = annot.required();
-		} else {
-			Named named = field.getAnnotation(Named.class);
-			name = named != null ? named.value() : "";
-			required = false;
-		}
 
 		if (Strings.isEmpty(name))
 		{
-			name = beanNameCache.get(field.getType());
+			Class<?> fieldType = field.getType();
+			name = beanNameCache.get(fieldType);
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), field.getType(), required);
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, required);
 
 				if (name != null)
 				{
-					String tmpName = beanNameCache.putIfAbsent(field.getType(), name);
+					String tmpName = beanNameCache.putIfAbsent(fieldType, name);
 					if (tmpName != null)
 					{
 						name = tmpName;
@@ -188,6 +206,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				}
 			}
 		}
+
 		return name;
 	}
 
