@@ -19,16 +19,16 @@ package org.apache.wicket.extensions.requestlogger;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.wicket.protocol.http.AbstractRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig.Feature;
-import org.codehaus.jackson.map.introspect.AnnotatedClass;
-import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
-import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
-import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,7 +101,7 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	public JsonRequestLogger()
 	{
 		mapper = new ObjectMapper();
-		mapper.configure(Feature.FAIL_ON_EMPTY_BEANS, false);
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		SimpleFilterProvider filters = new SimpleFilterProvider();
 		filters.addFilter("default",
 			SimpleBeanPropertyFilter.serializeAllExcept("eventTarget", "responseTarget"));

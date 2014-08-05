@@ -30,9 +30,9 @@
 	<name>Wicket Native WebSocket Javax</name>
 	<description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
 
-    <properties>
-        <jetty.version>9.1.4.v20140401</jetty.version>
-    </properties>
+	<properties>
+		<jetty.version>9.2.2.v20140723</jetty.version>
+	</properties>
 
 	<dependencies>
 		<dependency>

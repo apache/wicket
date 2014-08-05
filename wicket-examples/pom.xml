@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>4.3.0.Final</version>
+			<version>5.1.2.Final</version>
 		</dependency>
 		<!-- / bean validation -->
 		<dependency>
@@ -134,7 +134,7 @@
 		<dependency>
 			<groupId>org.jboss.weld.servlet</groupId>
 			<artifactId>weld-servlet</artifactId>
-			<version>2.1.2.Final</version>
+			<version>2.2.4.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -143,14 +143,14 @@
 		<dependency>
 			<groupId>javax.el</groupId>
 			<artifactId>javax.el-api</artifactId>
-			<version>2.2.4</version>
+			<version>3.0.1-b04</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>javax.servlet.jsp-api</artifactId>
 			<scope>provided</scope>
-			<version>2.2.1</version>
+			<version>2.3.2-b01</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.axet</groupId>
@@ -230,8 +230,8 @@
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
 				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
+					<groupId>io.tesla.maven.plugins</groupId>
+					<artifactId>tesla-lifecycle-mapping</artifactId>
 					<version>1.0.0</version>
 					<configuration>
 						<lifecycleMappingMetadata>
