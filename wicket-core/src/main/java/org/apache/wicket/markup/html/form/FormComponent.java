@@ -632,7 +632,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 				return true;
 			}
 
-			// peform validation by looking whether the value is null or empty
+			// perform validation by looking whether the value is null or empty
 			return !Strings.isEmpty(input);
 		}
 		return true;
