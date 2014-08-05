@@ -19,6 +19,7 @@ package org.apache.wicket.spring;
 import java.lang.ref.WeakReference;
 
 import org.apache.wicket.proxy.IProxyTargetLocator;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -73,14 +74,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	public SpringBeanLocator(final String beanName, final Class<?> beanType,
 		final ISpringContextLocator locator)
 	{
-		if (locator == null)
-		{
-			throw new IllegalArgumentException("[locator] argument cannot be null");
-		}
-		if (beanType == null)
-		{
-			throw new IllegalArgumentException("[beanType] argument cannot be null");
-		}
+		Args.notNull(locator, "locator");
+		Args.notNull(beanType, "beanType");
 
 		beanTypeCache = new WeakReference<Class<?>>(beanType);
 		beanTypeName = beanType.getName();
@@ -122,9 +117,6 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		return clazz;
 	}
 
-	/**
-	 * @see org.apache.wicket.proxy.IProxyTargetLocator#locateProxyTarget()
-	 */
 	@Override
 	public Object locateProxyTarget()
 	{
@@ -174,11 +166,10 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 *            bean name
 	 * @param clazz
 	 *            bean class
-	 * @throws IllegalStateException
+	 * @throws java.lang.IllegalStateException
 	 * @return found bean
 	 */
-	private static Object lookupSpringBean(final ApplicationContext ctx, final String name,
-		final Class<?> clazz)
+	private Object lookupSpringBean(ApplicationContext ctx, String name, Class<?> clazz)
 	{
 		try
 		{
@@ -194,7 +185,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		catch (NoSuchBeanDefinitionException e)
 		{
 			throw new IllegalStateException("bean with name [" + name + "] and class [" +
-				clazz.getName() + "] not found");
+				clazz.getName() + "] not found", e);
 		}
 	}
 
