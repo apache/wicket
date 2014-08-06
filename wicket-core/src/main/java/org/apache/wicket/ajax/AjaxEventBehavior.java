@@ -79,7 +79,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		super.renderHead(component, response);
 
-		if (component.isEnabledInHierarchy())
+		if (canCallListenerInterface(component, null))
 		{
 			CharSequence js = getCallbackScript(component);
 
