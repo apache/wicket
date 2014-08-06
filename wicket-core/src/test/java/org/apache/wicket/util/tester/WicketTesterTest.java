@@ -1240,4 +1240,34 @@ public class WicketTesterTest extends WicketTestCase
 		tester.submitForm(page.form);
 		assertEquals(null, page.text);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5665
+	 */
+	@Test
+	public void assertInvisibleComponentInAjaxResponse()
+	{
+		MockPageWithLinkAndLabel page = new MockPageWithLinkAndLabel();
+		final Label label = new Label(MockPageWithLinkAndLabel.LABEL_ID, "Some text");
+		label.setOutputMarkupPlaceholderTag(true);
+		AjaxLink link = new AjaxLink(MockPageWithLinkAndLabel.LINK_ID)
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				label.setVisible(false);
+				target.add(label);
+			}
+		};
+		link.add(label);
+		page.add(link);
+
+		tester.startPage(page);
+
+		tester.assertRenderedPage(MockPageWithLinkAndLabel.class);
+
+		tester.clickLink("link", true);
+
+		tester.assertComponentOnAjaxResponse(label.getPageRelativePath());
+	}
 }

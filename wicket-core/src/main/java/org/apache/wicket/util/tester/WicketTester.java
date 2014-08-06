@@ -290,7 +290,7 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertComponentOnAjaxResponse(String componentPath)
 	{
-		assertComponentOnAjaxResponse(getComponentFromLastRenderedPage(componentPath));
+		assertComponentOnAjaxResponse(getComponentFromLastRenderedPage(componentPath, false));
 	}
 
 	/**
