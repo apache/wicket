@@ -144,9 +144,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			formComponent.validate();
 			if (formComponent.isValid())
 			{
-				formComponent.valid();
 				if (getUpdateModel())
 				{
+					formComponent.valid();
 					formComponent.updateModel();
 				}
 
@@ -167,6 +167,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	}
 
 	/**
+	 * Gives the control to the application to decide whether the form component model should
+	 * be updated automatically or not. Make sure to call {@link org.apache.wicket.markup.html.form.FormComponent#valid()}
+	 * additionally in case the application want to update the model manually.
+	 *
 	 * @return true if the model of form component should be updated, false otherwise
 	 */
 	protected boolean getUpdateModel()
