@@ -21,6 +21,8 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -49,6 +51,8 @@ import org.apache.wicket.util.lang.Args;
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AjaxEventBehavior.class);
+
 	private static final long serialVersionUID = 1L;
 
 	private final String event;
@@ -68,7 +72,13 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		event = event.toLowerCase();
 		if (event.startsWith("on"))
 		{
-			event = event.substring(2);
+			String shortName = event.substring(2);
+			// TODO Wicket 8 Change this to throw an error in the milestone/RC versions and remove it for the final version
+			LOGGER.warn("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+					"'on' in the event name '{}'. Please use just '{}'. Wicket 8.x won't manipulate the provided event " +
+					"names so the leading 'on' may break your application."
+					, event, shortName);
+			event = shortName;
 		}
 
 		this.event = event;

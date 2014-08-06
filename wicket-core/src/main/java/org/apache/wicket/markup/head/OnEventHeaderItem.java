@@ -27,6 +27,8 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link HeaderItem} for event triggered scripts.
@@ -35,6 +37,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class OnEventHeaderItem extends HeaderItem
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(OnEventHeaderItem.class);
+
 	/**
 	 * Creates a {@link OnEventHeaderItem} for the given parameters.
 	 * 
@@ -84,7 +88,13 @@ public class OnEventHeaderItem extends HeaderItem
 		event = event.toLowerCase(Locale.ENGLISH);
 		if (event.startsWith("on"))
 		{
-			event = event.substring(2);
+			String shortName = event.substring(2);
+			// TODO Wicket 8 Change this to throw an error in the milestone/RC versions and remove it for the final version
+			LOGGER.warn("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+					"'on' in the event name '{}'. Please use just '{}'. Wicket 8.x won't manipulate the provided event " +
+					"names so the leading 'on' may break your application."
+					, event, shortName);
+			event = shortName;
 		}
 		this.event = event;
 

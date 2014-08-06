@@ -31,6 +31,8 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A <code>WicketTester</code>-specific helper class.
@@ -40,6 +42,8 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public class WicketTesterHelper
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(WicketTesterHelper.class);
+
 	/**
 	 * <code>ComponentData</code> class.
 	 * 
@@ -208,7 +212,13 @@ public class WicketTesterHelper
 		{
 			if (eventName.startsWith("on"))
 			{
-				eventName = eventName.substring(2);
+				String shortName = eventName.substring(2);
+				// TODO Wicket 8 Change this to throw an error in the milestone/RC versions and remove it for the final version
+				LOGGER.warn("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+						"'on' in the event name '{}'. Please use just '{}'. Wicket 8.x won't manipulate the provided event " +
+						"names so the leading 'on' may break your application."
+						, eventName, shortName);
+				eventName = shortName;
 			}
 
 			for (Behavior behavior : component.getBehaviors())
