@@ -232,7 +232,6 @@
 				<plugin>
 					<groupId>io.tesla.maven.plugins</groupId>
 					<artifactId>tesla-lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
