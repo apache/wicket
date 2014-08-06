@@ -378,7 +378,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 			appendOptionHtml(buffer, choice, index, selectedValue);
 		}
 
-		buffer.append("\n");
+		buffer.append('\n');
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
@@ -415,7 +415,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 
 		buffer.append("\n<option ");
 		setOptionAttributes(buffer, choice, index, selected);
-		buffer.append(">");
+		buffer.append('>');
 
 		String display = displayValue;
 		if (localizeDisplayValues())
