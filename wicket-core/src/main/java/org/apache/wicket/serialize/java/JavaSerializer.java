@@ -263,11 +263,24 @@ public class JavaSerializer implements ISerializer
 			{
 				if (CheckingObjectOutputStream.isAvailable())
 				{
-					// trigger serialization again, but this time gather
-					// some more info
-					new SerializableChecker(outputStream, nsx).writeObject(obj);
-					// if we get here, we didn't fail, while we
-					// should;
+					try
+					{
+						// trigger serialization again, but this time gather some more info
+						new SerializableChecker(outputStream, nsx).writeObject(obj);
+					} catch (Exception x)
+					{
+						if (x instanceof CheckingObjectOutputStream.ObjectCheckException)
+						{
+							throw (CheckingObjectOutputStream.ObjectCheckException) x;
+						}
+						else
+						{
+							x.initCause(nsx);
+							throw new WicketRuntimeException("A problem occurred while trying to collect debug information about not serializable object", x);
+						}
+					}
+
+					// if we get here, we didn't fail, while we should
 					throw nsx;
 				}
 				throw nsx;
