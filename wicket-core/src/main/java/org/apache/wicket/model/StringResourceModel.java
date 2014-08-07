@@ -405,15 +405,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 
 		final Localizer localizer = getLocalizer();
-		final Locale locale;
-		if (component != null)
-		{
-			locale = component.getLocale();
-		}
-		else
-		{
-			locale = Session.exists() ? Session.get().getLocale() : Locale.getDefault();
-		}
 
 		String value;
 
@@ -475,7 +466,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 				}
 
 				// Apply the parameters
-				final MessageFormat format = new MessageFormat(value, locale);
+				final MessageFormat format = new MessageFormat(value, getLocale());
 				value = format.format(realParams);
 
 				if (model != null)
@@ -490,6 +481,23 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 
 		// Return the string resource
 		return value;
+	}
+
+	/**
+	 * @return The locale to use when formatting the resource value
+	 */
+	protected Locale getLocale()
+	{
+		final Locale locale;
+		if (component != null)
+		{
+			locale = component.getLocale();
+		}
+		else
+		{
+			locale = Session.exists() ? Session.get().getLocale() : Locale.getDefault();
+		}
+		return locale;
 	}
 
 	/**
