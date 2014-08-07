@@ -35,6 +35,11 @@ import org.apache.wicket.util.io.ByteArrayOutputStream;
  * to the not-serializable object. The exception is thrown for the first non-serializable instance
  * it encounters, so multiple problems will not be shown.
  *
+ * <p>
+ * Note: There is a system property <em>-Dsun.io.serialization.extendedDebugInfo=true</em> that could give
+ * even more debug information.
+ * </p>
+ *
  * @author eelcohillenius
  * @author Al Maw
  */
