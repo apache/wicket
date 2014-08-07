@@ -17,7 +17,6 @@
 package org.apache.wicket.model;
 
 import org.apache.wicket.WicketTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -26,13 +25,6 @@ import org.junit.Test;
 public class CompoundPropertyModelTest extends WicketTestCase
 {
 	@Test
-	public void dummy()
-	{
-		// dummy test to keep maven-surefire-plugin happy that there are some non-ignored tests in this class
-	}
-
-	@Test
-	@Ignore
 	public void twoLevelsDeepHierarchy()
 	{
 		tester.startPage(CompoundPropertyModelTwoLevelsDeepPage.class);
