@@ -144,8 +144,8 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder("Model:classname=[");
-		sb.append(getClass().getName()).append("]");
-		sb.append(":nestedModel=[").append(target).append("]");
+		sb.append(getClass().getName()).append(']');
+		sb.append(":nestedModel=[").append(target).append(']');
 		return sb.toString();
 	}
 }

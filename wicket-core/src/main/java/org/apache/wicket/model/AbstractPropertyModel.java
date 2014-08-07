@@ -141,14 +141,14 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 	public Class<T> getObjectClass()
 	{
 		final String expression = propertyExpression();
+		final Object target = getInnermostModelOrObject();
+
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			Object target = getInnermostModelOrObject();
 			return (Class<T>)(target != null ? target.getClass() : null);
 		}
 
-		final Object target = getInnermostModelOrObject();
 		if (target != null)
 		{
 			try
@@ -179,9 +179,6 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertyField()
-	 */
 	@Override
 	public Field getPropertyField()
 	{
@@ -260,7 +257,6 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 	/**
 	 * @return The innermost model or the object if the target is not a model
 	 */
-	// legacy method ...
 	public final Object getInnermostModelOrObject()
 	{
 		Object object = getTarget();

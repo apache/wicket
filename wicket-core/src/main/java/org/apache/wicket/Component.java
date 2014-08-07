@@ -3708,7 +3708,7 @@ public abstract class Component
 	 * {@link IComponentInheritedModel#wrapOnInheritance(Component)}.
 	 * <p>
 	 * For example a {@link FormComponent} has the opportunity to instantiate a model on the fly
-	 * usings its {@code id} and the containing {@link Form}'s model, if the form holds a
+	 * using its {@code id} and the containing {@link Form}'s model, if the form holds a
 	 * {@link CompoundPropertyModel}.
 	 * 
 	 * @return The model
@@ -3716,13 +3716,13 @@ public abstract class Component
 	protected IModel<?> initModel()
 	{
 		IModel<?> foundModel = null;
-		// Search parents for CompoundPropertyModel
+		// Search parents for IComponentInheritedModel (i.e. CompoundPropertyModel)
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			// Don't call the getModel() that could initialize many inbetween
+			// Don't call the getModel() that could initialize many in between
 			// completely useless models.
-			// IModel model = current.getModel();
+			// IModel model = current.getDefaultModel();
 			IModel<?> model = current.getModelImpl();
 
 			if (model instanceof IWrapModel && !(model instanceof IComponentInheritedModel))
