@@ -16,10 +16,18 @@
  */
 package org.apache.wicket.serialize.java;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.IObjectChecker;
@@ -27,6 +35,7 @@ import org.apache.wicket.core.util.objects.checker.NotDetachedModelChecker;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.util.io.IOUtils;
 import org.junit.Test;
 
 /**
@@ -112,5 +121,82 @@ public class JavaSerializerTest extends WicketTestCase
 		};
 		byte[] bytes = serializer.serialize("Something to serialize");
 		assertEquals(57, bytes.length);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5667
+	 */
+	@Test
+	public void preserveTheOriginalException()
+	{
+		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest-aa")
+		{
+			// Override serialize to re-throw the exception instead of just logging it
+			// The exception is used later to make the assertions
+			@Override
+			public byte[] serialize(Object object)
+			{
+				try
+				{
+					final ByteArrayOutputStream out = new ByteArrayOutputStream();
+					ObjectOutputStream oos = null;
+					try
+					{
+						oos = newObjectOutputStream(out);
+						oos.writeObject("applicationKey");
+						oos.writeObject(object);
+					}
+					finally
+					{
+						try
+						{
+							IOUtils.close(oos);
+						}
+						finally
+						{
+							out.close();
+						}
+					}
+					return out.toByteArray();
+				}
+				catch (Exception x)
+				{
+					throw new RuntimeException(x);
+				}
+			}
+		};
+		try
+		{
+			serializer.serialize(new ObjectThatBlowsOnSerialization());
+			fail("The serialization should have failed!");
+		}
+		catch (Exception x)
+		{
+			Throwable cause0 = x.getCause();
+			assertThat(cause0, is(instanceOf(WicketRuntimeException.class)));
+			WicketRuntimeException wrx = (WicketRuntimeException) cause0;
+
+			Throwable cause1 = wrx.getCause();
+			assertThat(cause1, is(instanceOf(IllegalStateException.class)));
+			assertThat(cause1.getMessage(), is(equalTo("Cannot serialize me twice!")));
+
+			Throwable cause2 = cause1.getCause();
+			assertThat(cause2, is(instanceOf(NotSerializableException.class)));
+		}
+	}
+
+	private static class ObjectThatBlowsOnSerialization implements Serializable
+	{
+		private int counter = 0;
+
+		private void writeObject(ObjectOutputStream oos) throws IOException
+		{
+			counter++;
+			if (counter == 1)
+			{
+				throw new NotSerializableException();
+			}
+			throw new IllegalStateException("Cannot serialize me twice!");
+		}
 	}
 }
