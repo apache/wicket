@@ -38,7 +38,7 @@ public class CompoundPropertyModelTwoLevelsDeepPage extends WebPage
 		WebMarkupContainer addressContainer = new WebMarkupContainer("address");
 		personContainer.add(addressContainer);
 
-		addressContainer.add(new Label("street1"));
+		addressContainer.add(new Label("address.street1"));
 	}
 
 	public static class Person implements Serializable
