@@ -148,31 +148,30 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		return null;
 	}
 
-	private boolean isPageMounted(Class<? extends IRequestablePage> pageClass,
-		Application application)
+	private boolean isPageMounted(Class<? extends IRequestablePage> pageClass, Application application)
 	{
-	    ICompoundRequestMapper applicationMappers = application.getRootRequestMapperAsCompound();
-	    
-	    for (IRequestMapper requestMapper : applicationMappers)
-	    {
-		if(requestMapper instanceof MountMapper)
+		ICompoundRequestMapper applicationMappers = application.getRootRequestMapperAsCompound();
+
+		for (IRequestMapper requestMapper : applicationMappers)
 		{
-		    MountMapper mountMapper = (MountMapper) requestMapper;
-		    requestMapper = mountMapper.getInnerRequestMapper();
+			if (requestMapper instanceof MountMapper)
+			{
+				MountMapper mountMapper = (MountMapper) requestMapper;
+				requestMapper = mountMapper.getInnerRequestMapper();
+			}
+
+			if (requestMapper instanceof AbstractBookmarkableMapper  && requestMapper != this)
+			{
+				AbstractBookmarkableMapper mapper = (AbstractBookmarkableMapper) requestMapper;
+
+				if (mapper.checkPageClass(pageClass))
+				{
+					return true;
+				}
+			}
 		}
-		
-		if(requestMapper instanceof AbstractBookmarkableMapper  && requestMapper != this)
-		{
-		    AbstractBookmarkableMapper mapper = (AbstractBookmarkableMapper) requestMapper;  
-		    
-		    if(mapper.checkPageClass(pageClass))
-		    {
-			return true;
-		    }
-		}
-	    }
-	    
-	    return false;
+
+		return false;
 	}
 	
 	/**
