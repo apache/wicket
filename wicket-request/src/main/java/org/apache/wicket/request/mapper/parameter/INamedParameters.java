@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
 
@@ -36,7 +37,7 @@ public interface INamedParameters
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static class NamedPair
+	public static class NamedPair implements IClusterable
 	{
 		private final String key;
 		private final String value;
@@ -49,7 +50,7 @@ public interface INamedParameters
 		 */
 		public NamedPair(final String key, final String value)
 		{
-			this.key = Args.notNull(key, "key");;
+			this.key = Args.notEmpty(key, "key");
 			this.value = Args.notNull(value, "value");
 		}
 
@@ -91,7 +92,6 @@ public interface INamedParameters
 			return result;
 		}
 	}
-
 
 	/**
 	 * Return set of all named parameter names.

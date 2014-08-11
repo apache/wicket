@@ -48,56 +48,11 @@ import org.apache.wicket.util.string.Strings;
  */
 public class PageParameters implements IClusterable, IIndexedParameters, INamedParameters
 {
-	private static class Entry implements IClusterable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private String key;
-		private String value;
-
-		@Override
-		public int hashCode()
-		{
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((key == null) ? 0 : key.hashCode());
-			result = prime * result + ((value == null) ? 0 : value.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Entry other = (Entry)obj;
-			if (key == null)
-			{
-				if (other.key != null)
-					return false;
-			}
-			else if (!key.equals(other.key))
-				return false;
-			if (value == null)
-			{
-				if (other.value != null)
-					return false;
-			}
-			else if (!value.equals(other.value))
-				return false;
-			return true;
-		}
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	private List<String> indexedParameters;
 
-	private List<Entry> namedParameters;
+	private List<NamedPair> namedParameters;
 
 	/**
 	 * Construct.
@@ -198,9 +153,9 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			return Collections.emptySet();
 		}
 		Set<String> set = new TreeSet<>();
-		for (Entry entry : namedParameters)
+		for (NamedPair entry : namedParameters)
 		{
-			set.add(entry.key);
+			set.add(entry.getKey());
 		}
 		return Collections.unmodifiableSet(set);
 	}
@@ -215,11 +170,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		if (namedParameters != null)
 		{
-			for (Entry entry : namedParameters)
+			for (NamedPair entry : namedParameters)
 			{
-				if (entry.key.equals(name))
+				if (entry.getKey().equals(name))
 				{
-					return StringValue.valueOf(entry.value);
+					return StringValue.valueOf(entry.getValue());
 				}
 			}
 		}
@@ -237,11 +192,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		if (namedParameters != null)
 		{
 			List<StringValue> result = new ArrayList<>();
-			for (Entry entry : namedParameters)
+			for (NamedPair entry : namedParameters)
 			{
-				if (entry.key.equals(name))
+				if (entry.getKey().equals(name))
 				{
-					result.add(StringValue.valueOf(entry.value));
+					result.add(StringValue.valueOf(entry.getValue()));
 				}
 			}
 			return Collections.unmodifiableList(result);
@@ -258,15 +213,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	@Override
 	public List<NamedPair> getAllNamed()
 	{
-		List<NamedPair> res = new ArrayList<>();
-		if (namedParameters != null)
-		{
-			for (Entry e : namedParameters)
-			{
-				res.add(new NamedPair(e.key, e.value));
-			}
-		}
-		return Collections.unmodifiableList(res);
+		return namedParameters != null ? Collections.unmodifiableList(namedParameters) : Collections.<NamedPair>emptyList();
 	}
 
 	/**
@@ -280,8 +227,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			for (int i = 0; i < namedParameters.size(); i++)
 			{
-				Entry entry = namedParameters.get(i);
-				if (entry.key.equals(name))
+				NamedPair entry = namedParameters.get(i);
+				if (entry.getKey().equals(name))
 				{
 					index = i;
 					break;
@@ -302,16 +249,16 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		if (namedParameters != null)
 		{
-			for (Iterator<Entry> i = namedParameters.iterator(); i.hasNext();)
+			for (Iterator<NamedPair> i = namedParameters.iterator(); i.hasNext();)
 			{
-				Entry e = i.next();
-				if (e.key.equals(name))
+				NamedPair e = i.next();
+				if (e.getKey().equals(name))
 				{
 					if (values != null && values.length > 0)
 					{
 						for (String value : values)
 						{
-							if (e.value.equals(value))
+							if (e.getValue().equals(value))
 							{
 								i.remove();
 								break;
@@ -366,9 +313,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		for (String val : values)
 		{
-			Entry entry = new Entry();
-			entry.key = name;
-			entry.value = val;
+			NamedPair entry = new NamedPair(name, val);
 
 			if (index < 0 || index > namedParameters.size())
 			{
@@ -573,16 +518,16 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			for (int i = 0; i < namedParameters.size(); i++)
 			{
-				Entry entry = namedParameters.get(i);
+				NamedPair entry = namedParameters.get(i);
 
 				if (i > 0)
 				{
 					str.append(", ");
 				}
 
-				str.append(entry.key);
+				str.append(entry.getKey());
 				str.append('=');
-				str.append('[').append(entry.value).append(']');
+				str.append('[').append(entry.getValue()).append(']');
 			}
 		}
 		return str.toString();
