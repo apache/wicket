@@ -55,7 +55,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	private List<NamedPair> namedParameters;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 */
 	public PageParameters()
 	{
@@ -65,6 +65,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 * Copy constructor.
 	 * 
 	 * @param copy
+	 *          The parameters to copy from
 	 */
 	public PageParameters(final PageParameters copy)
 	{
@@ -110,9 +111,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return this;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.IIndexedParameters#get(int)
-	 */
 	@Override
 	public StringValue get(final int index)
 	{
@@ -126,9 +124,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return StringValue.valueOf((String)null);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.IIndexedParameters#remove(int)
-	 */
 	@Override
 	public PageParameters remove(final int index)
 	{
@@ -142,9 +137,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return this;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getNamedKeys()
-	 */
 	@Override
 	public Set<String> getNamedKeys()
 	{
@@ -160,9 +152,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return Collections.unmodifiableSet(set);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#get(java.lang.String)
-	 */
 	@Override
 	public StringValue get(final String name)
 	{
@@ -181,9 +170,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return StringValue.valueOf((String)null);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getValues(java.lang.String)
-	 */
 	@Override
 	public List<StringValue> getValues(final String name)
 	{
@@ -207,18 +193,35 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getAllNamed()
-	 */
 	@Override
 	public List<NamedPair> getAllNamed()
 	{
 		return namedParameters != null ? Collections.unmodifiableList(namedParameters) : Collections.<NamedPair>emptyList();
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getPosition(String)
-	 */
+
+	@Override
+	public List<NamedPair> getAllNamedByType(Type type)
+	{
+		List<NamedPair> allNamed = getAllNamed();
+		if (type == null || allNamed.isEmpty())
+		{
+			return allNamed;
+		}
+
+		List<NamedPair> parametersByType = new ArrayList<>();
+		Iterator<NamedPair> iterator = allNamed.iterator();
+		while (iterator.hasNext())
+		{
+			NamedPair pair = iterator.next();
+			if (type == pair.getType())
+			{
+				parametersByType.add(pair);
+			}
+		}
+		return Collections.unmodifiableList(parametersByType);
+	}
+
 	@Override
 	public int getPosition(final String name)
 	{
@@ -238,10 +241,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return index;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#remove(java.lang.String,
-	 *      java.lang.String...)
-	 */
 	@Override
 	public PageParameters remove(final String name, final String... values)
 	{
@@ -441,7 +440,9 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 * Compares two {@link PageParameters} objects.
 	 * 
 	 * @param p1
+	 *          The first parameters
 	 * @param p2
+	 *          The second parameters
 	 * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
 	 */
 	public static boolean equals(final PageParameters p1, final PageParameters p2)

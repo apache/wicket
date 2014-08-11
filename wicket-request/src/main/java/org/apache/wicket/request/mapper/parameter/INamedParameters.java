@@ -31,12 +31,24 @@ import org.apache.wicket.util.string.StringValue;
  */
 public interface INamedParameters
 {
+	/**
+	 * A hint where the parameter is read from.
+	 */
 	enum Type
 	{
+		/**
+		 * The named parameter is set manually in the application code
+		 */
 		MANUAL,
 
+		/**
+		 * The named parameter is read/parsed from the query string
+		 */
 		QUERY_STRING,
 
+		/**
+		 * The named parameter is read/parsed from the url path
+		 */
 		PATH
 	}
 
@@ -143,6 +155,13 @@ public interface INamedParameters
 	 * @return All named parameters in exact order.
 	 */
 	List<NamedPair> getAllNamed();
+
+	/**
+	 * @param type
+	 *          The type to filter
+	 * @return All named parameters with the given type. If the type is {@code null} then returns all named parameters.
+	 */
+	List<NamedPair> getAllNamedByType(Type type);
 
 	/**
 	 * Returns the position of a named parameter.
