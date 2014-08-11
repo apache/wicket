@@ -24,6 +24,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
 import org.apache.wicket.protocol.http.servlet.UploadInfo;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.time.Duration;
@@ -117,6 +118,6 @@ class UploadStatusResource extends AbstractResource
 	 */
 	public static PageParameters newParameter(String upload)
 	{
-		return new PageParameters().add(UPLOAD_PARAMETER, upload);
+		return new PageParameters().add(UPLOAD_PARAMETER, upload, INamedParameters.Type.MANUAL);
 	}
 }

@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
@@ -79,7 +80,7 @@ public class MockFormFileUploadPage extends WebPage
 	@SuppressWarnings("deprecation")
 	public MockFormFileUploadPage()
 	{
-		this(new PageParameters().set("required", "true"));
+		this(new PageParameters().set("required", "true", INamedParameters.Type.MANUAL));
 	}
 
 	/**

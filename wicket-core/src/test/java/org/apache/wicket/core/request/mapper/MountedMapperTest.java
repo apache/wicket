@@ -35,6 +35,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
@@ -370,8 +371,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
 		parameters.set(1, "i2");
-		parameters.set("a", "b");
-		parameters.set("b", "c");
+		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
+		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
@@ -388,8 +389,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
 		parameters.set(1, "i2");
-		parameters.set("a", "b");
-		parameters.set("b", "c");
+		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
+		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
 
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
@@ -408,8 +409,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 		page.setCreatedBookmarkable(true);
 
 		IPageProvider provider = new PageProvider(page);
@@ -428,8 +429,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
 		page.setCreatedBookmarkable(false);
 
@@ -454,8 +455,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 		page.setRenderCount(4);
 
 		// shouldn't make any difference for
@@ -486,17 +487,17 @@ public class MountedMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
 		// WICKET-4038
-		page.getPageParameters().add(WebRequest.PARAM_AJAX, "true");
-		page.getPageParameters().add(WebRequest.PARAM_AJAX_BASE_URL, "some/base/url");
+		page.getPageParameters().add(WebRequest.PARAM_AJAX, "true", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().add(WebRequest.PARAM_AJAX_BASE_URL, "some/base/url", INamedParameters.Type.QUERY_STRING);
 
 		page.setRenderCount(4);
 
 		// shouldn't make any difference for ListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");
@@ -519,8 +520,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 		page.setRenderCount(5);
 
 		// shouldn't make any difference for
@@ -551,8 +552,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 		page.setRenderCount(5);
 
 		// shouldn't make any difference for ListenerInterfaceRequestHandler,
@@ -676,10 +677,10 @@ public class MountedMapperTest extends AbstractMapperTest
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
 		parameters.set(1, "i2");
-		parameters.set("a", "b");
-		parameters.set("b", "c");
-		parameters.set("param1", "p1");
-		parameters.set("param2", "p2");
+		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
+		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
+		parameters.set("param1", "p1", INamedParameters.Type.PATH);
+		parameters.set("param2", "p2", INamedParameters.Type.PATH);
 
 
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
@@ -699,10 +700,10 @@ public class MountedMapperTest extends AbstractMapperTest
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
 		parameters.set(1, "i2");
-		parameters.set("a", "b");
-		parameters.set("b", "c");
-		parameters.set("param1", "p1");
-		parameters.set("param2", "p2");
+		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
+		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
+		parameters.set("param1", "p1", INamedParameters.Type.PATH);
+		parameters.set("param2", "p2", INamedParameters.Type.PATH);
 
 		PageProvider provider = new PageProvider(MockPage.class, parameters)
 		{
@@ -836,10 +837,10 @@ public class MountedMapperTest extends AbstractMapperTest
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
 		parameters.set(1, "i2");
-		parameters.set("a", "b");
-		parameters.set("b", "c");
-		parameters.set("param1", "p1");
-		parameters.set("param2", "p2");
+		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
+		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
+		parameters.set("param1", "p1", INamedParameters.Type.PATH);
+		parameters.set("param2", "p2", INamedParameters.Type.PATH);
 
 
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
@@ -856,10 +857,10 @@ public class MountedMapperTest extends AbstractMapperTest
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
 		parameters.set(1, "i2");
-		parameters.set("a", "b");
-		parameters.set("b", "c");
-		parameters.set("param2", "p2");
-		parameters.set("param3", "p3");
+		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
+		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
+		parameters.set("param2", "p2", INamedParameters.Type.PATH);
+		parameters.set("param3", "p3", INamedParameters.Type.PATH);
 
 
 		PageProvider provider = new PageProvider(MockPage.class, parameters);

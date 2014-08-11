@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.string.Strings;
@@ -77,11 +78,11 @@ public final class RequestUtils
 			if (bits.length == 2)
 			{
 				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset),
-					UrlDecoder.QUERY_INSTANCE.decode(bits[1], currentCharset));
+					UrlDecoder.QUERY_INSTANCE.decode(bits[1], currentCharset), INamedParameters.Type.QUERY_STRING);
 			}
 			else
 			{
-				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset), "");
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset), "", INamedParameters.Type.QUERY_STRING);
 			}
 		}
 	}
@@ -209,7 +210,7 @@ public final class RequestUtils
 	 * @return the request's charset or a default it request is {@code null} or has an unsupported
 	 *         character encoding
 	 * 
-	 * @see IRequestCycleSettings#getResponseRequestEncoding()
+	 * @see org.apache.wicket.settings.RequestCycleSettings#getResponseRequestEncoding()
 	 */
 	public static Charset getCharset(HttpServletRequest request)
 	{

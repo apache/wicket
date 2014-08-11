@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.template.PackageTextTemplate;
@@ -86,7 +87,7 @@ public class MailTemplate extends WicketExamplePage
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				PageParameters parameters = new PageParameters();
-				parameters.set("name", name);
+				parameters.set("name", name, INamedParameters.Type.MANUAL);
 				PageProvider pageProvider = new PageProvider(TemplateBasedOnPage. class, parameters);
 				CharSequence pageHtml = ComponentRenderer.renderPage(pageProvider);
 

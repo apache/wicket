@@ -101,7 +101,7 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 
 		if (version != null)
 		{
-			url.getParameters().set(versionParameter, version);
+			url.getParameters().set(versionParameter, version, INamedParameters.Type.MANUAL);
 		}
 	}
 

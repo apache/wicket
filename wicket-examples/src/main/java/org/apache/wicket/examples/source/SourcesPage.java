@@ -49,6 +49,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
@@ -450,10 +451,10 @@ public class SourcesPage extends WebPage
 	public static PageParameters generatePageParameters(Class<? extends Page> clazz, String fileName)
 	{
 		PageParameters p = new PageParameters();
-		p.set(PAGE_CLASS, clazz.getName());
+		p.set(PAGE_CLASS, clazz.getName(), INamedParameters.Type.MANUAL);
 		if (fileName != null)
 		{
-			p.set(SOURCE, fileName);
+			p.set(SOURCE, fileName, INamedParameters.Type.MANUAL);
 		}
 		return p;
 	}

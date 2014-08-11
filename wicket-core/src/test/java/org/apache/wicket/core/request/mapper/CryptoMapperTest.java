@@ -32,6 +32,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.StringMode;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
@@ -178,8 +179,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 		String expectedEncrypted = "ywKWg-Qpk7YQBiYCmj9MaAJSIV1gtssNinjiALijtet62VMQc2-sMK_RchttkidUpYM_cplXKeZSfGxBkvWzH_E_zWv4Ii7MNSm5nXKno7o/ywK6c/MK_c0/nji3c/Qpk1b/XKnba/c2-cd";
 
 		PageParameters expectedParameters = new PageParameters();
-		expectedParameters.add("namedKey1", "namedValue1");
-		expectedParameters.add("namedKey2", "namedValue2");
+		expectedParameters.add("namedKey1", "namedValue1", INamedParameters.Type.MANUAL);
+		expectedParameters.add("namedKey2", "namedValue2", INamedParameters.Type.MANUAL);
 		expectedParameters.set(0, "indexedValue1");
 		expectedParameters.set(1, "indexedValue2");
 		RenderPageRequestHandler renderPageRequestHandler = new RenderPageRequestHandler(
@@ -209,7 +210,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	{
 		String expectedEncrypted = "?namedKey1=namedValue1";
 		PageParameters expectedParameters = new PageParameters();
-		expectedParameters.add("namedKey1", "namedValue1");
+		expectedParameters.add("namedKey1", "namedValue1", INamedParameters.Type.MANUAL);
 
 		RenderPageRequestHandler renderPageRequestHandler = new RenderPageRequestHandler(
 			new PageProvider(tester.getApplication().getHomePage(), expectedParameters));

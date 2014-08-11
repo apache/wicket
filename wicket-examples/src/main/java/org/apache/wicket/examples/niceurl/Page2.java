@@ -21,6 +21,7 @@ import java.util.Random;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
@@ -49,8 +50,8 @@ public class Page2 extends WicketExamplePage
 		String newP2 = String.valueOf(random.nextInt());
 
 		PageParameters params = new PageParameters();
-		params.set("param1", newP1 + " " + newP2);
-		params.set("param2", newP2 + " " + newP1);
+		params.set("param1", newP1 + " " + newP2, INamedParameters.Type.MANUAL);
+		params.set("param2", newP2 + " " + newP1, INamedParameters.Type.MANUAL);
 
 		BookmarkablePageLink<?> link = new BookmarkablePageLink<>("refreshLink", getClass(), params);
 		add(link);

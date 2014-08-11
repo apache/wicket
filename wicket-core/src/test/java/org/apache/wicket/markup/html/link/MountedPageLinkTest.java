@@ -22,6 +22,7 @@ import java.util.Collection;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.request.mapper.PageInstanceMapper;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +70,7 @@ public class MountedPageLinkTest extends WicketTestCase
 	public void testPageParametersInLink()
 	{
 		PageWithLink page = tester.startPage(PageWithLink.class,
-			new PageParameters().add("param", "value"));
+			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
 		if (mount)
@@ -89,7 +90,7 @@ public class MountedPageLinkTest extends WicketTestCase
 	public void testLinkOnExpiredPage()
 	{
 		PageWithLink page = tester.startPage(PageWithLink.class,
-			new PageParameters().add("param", "value"));
+			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		assertEquals("value", page.getPageParameters().get("param").toString());
 		tester.assertContains("param=value");
 		Link<?> link = (Link<?>)page.get("link");
@@ -111,7 +112,7 @@ public class MountedPageLinkTest extends WicketTestCase
 	{
 		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
 		PageWithLink page = tester.startPage(PageWithLink.class,
-			new PageParameters().add("param", "value"));
+			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
 		assertEquals("./wicket/page?0-1.ILinkListener-link", url);
@@ -126,7 +127,7 @@ public class MountedPageLinkTest extends WicketTestCase
 	{
 		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
 		PageWithLink page = tester.startPage(PageWithLink.class,
-			new PageParameters().add("param", "value"));
+			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
 		assertEquals("./wicket/page?0-1.ILinkListener-link", url);

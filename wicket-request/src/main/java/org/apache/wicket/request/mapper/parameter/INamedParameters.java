@@ -31,6 +31,15 @@ import org.apache.wicket.util.string.StringValue;
  */
 public interface INamedParameters
 {
+	enum Type
+	{
+		MANUAL,
+
+		QUERY_STRING,
+
+		PATH
+	}
+
 	/**
 	 * Represents a named parameter entry. There can be multiple {@link NamedPair}s in
 	 * {@link PageParameters} that have same key.
@@ -41,6 +50,7 @@ public interface INamedParameters
 	{
 		private final String key;
 		private final String value;
+		private final Type type;
 
 		/**
 		 * Constructor
@@ -50,8 +60,14 @@ public interface INamedParameters
 		 */
 		public NamedPair(final String key, final String value)
 		{
+			this(key, value, Type.MANUAL);
+		}
+
+		public NamedPair(final String key, final String value, Type type)
+		{
 			this.key = Args.notEmpty(key, "key");
 			this.value = Args.notNull(value, "value");
+			this.type = Args.notNull(type, "type");
 		}
 
 		/**
@@ -70,6 +86,11 @@ public interface INamedParameters
 			return value;
 		}
 
+		public Type getType()
+		{
+			return type;
+		}
+
 		@Override
 		public boolean equals(Object o)
 		{
@@ -80,6 +101,7 @@ public interface INamedParameters
 
 			if (key != null ? !key.equals(namedPair.key) : namedPair.key != null) return false;
 			if (value != null ? !value.equals(namedPair.value) : namedPair.value != null) return false;
+			if (type != null ? !type.equals(namedPair.type) : namedPair.type != null) return false;
 
 			return true;
 		}
@@ -89,6 +111,7 @@ public interface INamedParameters
 		{
 			int result = key != null ? key.hashCode() : 0;
 			result = 31 * result + (value != null ? value.hashCode() : 0);
+			result = result + type.hashCode();
 			return result;
 		}
 	}
@@ -147,9 +170,10 @@ public interface INamedParameters
 	 * 
 	 * @param name
 	 * @param value
+	 * @param type
 	 * @return this
 	 */
-	INamedParameters add(final String name, final Object value);
+	INamedParameters add(final String name, final Object value, Type type);
 
 	/**
 	 * Adds named parameter to a specified position. The {@link IRequestMapper}s may or may not take
@@ -158,9 +182,10 @@ public interface INamedParameters
 	 * @param name
 	 * @param value
 	 * @param index
+	 * @param type
 	 * @return this
 	 */
-	INamedParameters add(final String name, final Object value, final int index);
+	INamedParameters add(final String name, final Object value, final int index, Type type);
 
 	/**
 	 * Sets the named parameter on specified position. The {@link IRequestMapper}s may or may not
@@ -169,18 +194,20 @@ public interface INamedParameters
 	 * @param name
 	 * @param value
 	 * @param index
+	 * @param type
 	 * @return this
 	 */
-	INamedParameters set(final String name, final Object value, final int index);
+	INamedParameters set(final String name, final Object value, final int index, Type type);
 
 	/**
 	 * Sets the value for named parameter with given name.
 	 * 
 	 * @param name
 	 * @param value
+	 * @param type
 	 * @return this
 	 */
-	INamedParameters set(final String name, final Object value);
+	INamedParameters set(final String name, final Object value, Type type);
 
 	/**
 	 * Removes all named parameters.

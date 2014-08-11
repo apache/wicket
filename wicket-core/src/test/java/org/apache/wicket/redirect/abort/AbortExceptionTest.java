@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.redirect.abort;
 
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.junit.Assert;
 
 import org.apache.wicket.WicketTestCase;
@@ -39,7 +40,7 @@ public class AbortExceptionTest extends WicketTestCase
 	@Test
 	public void testNoAbort()
 	{
-		tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", false));
+		tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", false, INamedParameters.Type.MANUAL));
 		Assert.assertEquals(1234, tester.getLastResponse().getStatus());
 	}
 
@@ -51,7 +52,7 @@ public class AbortExceptionTest extends WicketTestCase
 	{
 		try
 		{
-			tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", true));
+			tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", true, INamedParameters.Type.MANUAL));
 			Assert.assertEquals(1234, tester.getLastResponse().getStatus()); // this will
 			// fail
 		}

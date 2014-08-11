@@ -20,6 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
@@ -99,8 +100,8 @@ public class StatelessFormTest extends WicketTestCase
 	public void pageWithParameters() throws Exception
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.add("first", "foo");
-		parameters.add("second", "bar");
+		parameters.add("first", "foo", INamedParameters.Type.MANUAL);
+		parameters.add("second", "bar", INamedParameters.Type.MANUAL);
 		executeTest(StatelessPageWithForm.class, parameters, "StatelessPageWithForm_expected.html");
 	}
 

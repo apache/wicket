@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -50,13 +51,13 @@ public class SharedResourceUrlTest extends WicketTestCase
 	{
 		ResourceReference rr = new SharedResourceReference("test");
 		CharSequence url = tester.getRequestCycle()
-			.mapUrlFor(rr, new PageParameters().set("param", "value"))
+			.mapUrlFor(rr, new PageParameters().set("param", "value", INamedParameters.Type.MANUAL))
 			.toString();
 		assertEquals("wicket/resource/org.apache.wicket.Application/test?param=value", url);
 
 		rr = new PackageResourceReference(SharedResourceUrlTest.class, "test");
 		url = tester.getRequestCycle()
-			.mapUrlFor(rr, new PageParameters().set("param", "value"))
+			.mapUrlFor(rr, new PageParameters().set("param", "value", INamedParameters.Type.MANUAL))
 			.toString();
 		assertEquals("wicket/resource/org.apache.wicket.SharedResourceUrlTest/test?param=value",
 			url);

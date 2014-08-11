@@ -49,7 +49,7 @@ import org.junit.Test;
  */
 public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
 {
-	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<IResourceCachingStrategy>(
+	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<>(
 		NoOpResourceCachingStrategy.INSTANCE);
 
 	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(
@@ -345,8 +345,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "X");
-		parameters.add("p1", "v1");
-		parameters.add("p2", "v2");
+		parameters.add("p1", "v1", INamedParameters.Type.QUERY_STRING);
+		parameters.add("p2", "v2", INamedParameters.Type.QUERY_STRING);
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference1,
 			parameters);
 
@@ -374,8 +374,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "X");
-		parameters.add("p1", "v1");
-		parameters.add("p2", "v2");
+		parameters.add("p1", "v1", INamedParameters.Type.QUERY_STRING);
+		parameters.add("p2", "v2", INamedParameters.Type.QUERY_STRING);
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference2,
 			parameters);
 
@@ -404,8 +404,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "X");
-		parameters.add("p1", "v1");
-		parameters.add("p2", "v2");
+		parameters.add("p1", "v1", INamedParameters.Type.QUERY_STRING);
+		parameters.add("p2", "v2", INamedParameters.Type.QUERY_STRING);
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference3,
 			parameters);
 
@@ -434,8 +434,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "X");
-		parameters.add("p1", "v1");
-		parameters.add("p2", "v2");
+		parameters.add("p1", "v1", INamedParameters.Type.QUERY_STRING);
+		parameters.add("p2", "v2", INamedParameters.Type.QUERY_STRING);
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference4,
 			parameters);
 
@@ -488,18 +488,6 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			public boolean isCachingEnabled()
 			{
 				return true;
-			}
-		};
-
-		final ResourceReference reference = new ResourceReference(getClass(), "versioned",
-			Locale.ENGLISH, "style", null)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public IResource getResource()
-			{
-				return resource;
 			}
 		};
 

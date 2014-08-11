@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -197,7 +198,7 @@ public class FormTesterTest extends WicketTestCase
 	@Test
 	public void submitMultipartForm()
 	{
-		tester.startPage(MockFormFileUploadPage.class, new PageParameters().set("required", false));
+		tester.startPage(MockFormFileUploadPage.class, new PageParameters().set("required", false, INamedParameters.Type.MANUAL));
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 		MockDomainObjectFileUpload domainObject = page.getDomainObject();
 

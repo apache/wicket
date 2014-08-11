@@ -39,6 +39,7 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
@@ -629,12 +630,12 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				if (placeholder != null)
 				{
 					pageParameters.add(placeholder,
-							url.getSegments().get(curSegmentIndex - skippedParameters));
+							url.getSegments().get(curSegmentIndex - skippedParameters), INamedParameters.Type.PATH);
 				}
 				else if (optionalPlaceholder != null && optionalParameterMatch > 0)
 				{
 					pageParameters.add(optionalPlaceholder,
-							url.getSegments().get(curSegmentIndex - skippedParameters));
+							url.getSegments().get(curSegmentIndex - skippedParameters), INamedParameters.Type.PATH);
 					optionalParameterMatch--;
 				}
 			}

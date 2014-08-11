@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
@@ -78,7 +79,7 @@ public class StatelessPage3 extends WicketExamplePage
 				info("Submitted text: " + field.getDefaultModelObject());
 
 				// store the value in page parameters
-				getPage().getPageParameters().set(PARAMETER_NAME, number);
+				getPage().getPageParameters().set(PARAMETER_NAME, number, INamedParameters.Type.MANUAL);
 			}
 
 		};

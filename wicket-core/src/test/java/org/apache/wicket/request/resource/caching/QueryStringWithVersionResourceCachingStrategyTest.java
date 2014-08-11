@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
@@ -56,7 +57,7 @@ public class QueryStringWithVersionResourceCachingStrategyTest extends Assert
 	public void testUndecorateUrl() throws Exception
 	{
 		PageParameters urlParameters = new PageParameters();
-		urlParameters.add(versionParameter, TEST_RESOURCE_VERSION);
+		urlParameters.add(versionParameter, TEST_RESOURCE_VERSION, INamedParameters.Type.QUERY_STRING);
 		ResourceUrl resourceUrl = new ResourceUrl("some-resource.txt", urlParameters);
 		strategy.undecorateUrl(resourceUrl);
 
@@ -109,7 +110,7 @@ public class QueryStringWithVersionResourceCachingStrategyTest extends Assert
 		try
 		{
 			PageParameters urlParameters = new PageParameters();
-			urlParameters.add(versionParameter, "9A0364B9E99BB480DD25E1F0284C8555");
+			urlParameters.add(versionParameter, "9A0364B9E99BB480DD25E1F0284C8555", INamedParameters.Type.QUERY_STRING);
 			ResourceUrl resourceUrl = new ResourceUrl("some-resource.txt", urlParameters);
 			strategy.undecorateUrl(resourceUrl);
 

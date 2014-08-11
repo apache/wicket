@@ -23,6 +23,7 @@ import org.apache.wicket.examples.library.Book.WritingStyle;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -117,7 +118,7 @@ public final class BookDetails extends AuthenticatedWebPage
 
 		if (book != null)
 		{
-			link.getPageParameters().add("id", book.getId());
+			link.getPageParameters().add("id", book.getId(), INamedParameters.Type.MANUAL);
 			link.add(new Label("title", new Model<>(book)));
 		}
 		else

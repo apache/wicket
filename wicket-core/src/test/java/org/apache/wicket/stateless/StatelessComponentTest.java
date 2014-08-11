@@ -18,6 +18,7 @@ package org.apache.wicket.stateless;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
@@ -79,8 +80,8 @@ public class StatelessComponentTest extends WicketTestCase
 	public void statelessComponentPageWithParams() throws Exception
 	{
 		PageParameters params = new PageParameters();
-		params.set("testParam1", "testValue1");
-		params.set("testParam2", "testValue2");
+		params.set("testParam1", "testValue1", INamedParameters.Type.QUERY_STRING);
+		params.set("testParam2", "testValue2", INamedParameters.Type.QUERY_STRING);
 
 		executeTest(StatelessComponentPageWithParams.class, params,
 			"StatelessComponentPageWithParams_result.html");
@@ -107,8 +108,8 @@ public class StatelessComponentTest extends WicketTestCase
 	public void statelessComponentPageWithParamsWithMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
-		params.set("testParam1", "testValue1");
-		params.set("testParam2", "testValue2");
+		params.set("testParam1", "testValue1", INamedParameters.Type.QUERY_STRING);
+		params.set("testParam2", "testValue2", INamedParameters.Type.QUERY_STRING);
 		tester.getApplication().mountPage("/stateless", StatelessComponentPageWithParams.class);
 		// test is always the home page. it doesn't work then
 		executeTest(StatelessComponentPageWithParams.class, params,

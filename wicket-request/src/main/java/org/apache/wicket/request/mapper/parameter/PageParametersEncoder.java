@@ -47,7 +47,7 @@ public class PageParametersEncoder implements IPageParametersEncoder
 
 		for (QueryParameter p : url.getQueryParameters())
 		{
-			parameters.add(p.getName(), p.getValue());
+			parameters.add(p.getName(), p.getValue(), INamedParameters.Type.QUERY_STRING);
 		}
 
 		return parameters.isEmpty() ? null : parameters;

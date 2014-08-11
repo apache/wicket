@@ -14,37 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.basic;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+package org.apache.wicket.request.mapper.parameter;
 
 /**
- * @author jcompagner
- * 
+ *
  */
-public class SimpleResponsePageClass extends WebPage
+public enum NamedParameterType
 {
-	private static final long serialVersionUID = 1L;
+	MANUAL,
 
-	/**
-	 * simple test page with a class response page
-	 */
-	public SimpleResponsePageClass()
-	{
-		Form<Void> form = new Form<Void>("form")
-		{
-			private static final long serialVersionUID = 1L;
+	QUERY_STRING,
 
-			@Override
-			protected void onSubmit()
-			{
-				// use Page "class"
-				setResponsePage(SimplePage.class, new PageParameters().set("test", "test", INamedParameters.Type.MANUAL));
-			}
-		};
-		add(form);
-	}
+	PATH
 }

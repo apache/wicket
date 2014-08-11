@@ -28,6 +28,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.AbstractMapper;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
@@ -148,7 +149,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 				{
 					parameters = new PageParameters();
 				}
-				parameters.add(placeholder, url.getSegments().get(index));
+				parameters.add(placeholder, url.getSegments().get(index), INamedParameters.Type.PATH);
 			}
 		}
 		return new ResourceReferenceRequestHandler(resourceReference, parameters);

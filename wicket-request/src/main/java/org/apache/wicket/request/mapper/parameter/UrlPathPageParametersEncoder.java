@@ -83,7 +83,7 @@ public class UrlPathPageParametersEncoder implements IPageParametersEncoder
 			{
 				String value = segment.next();
 
-				params.add(key, value);
+				params.add(key, value, INamedParameters.Type.PATH);
 			}
 		}
 

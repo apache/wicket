@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.hangman;
 
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
@@ -143,7 +144,7 @@ public class HangManTest extends Assert
 		WicketTester tester = new WicketTester(new HangmanApplication());
 		try
 		{
-			tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
+			tester.startPage(Home.class, new PageParameters().set("word", "hangman", INamedParameters.Type.MANUAL));
 			tester.assertComponent("start", Link.class);
 			tester.assertContains("Wicket Examples - hangman");
 			tester.clickLink("start");
@@ -173,7 +174,7 @@ public class HangManTest extends Assert
 		WicketTester tester = new WicketTester(new HangmanApplication());
 		try
 		{
-			tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
+			tester.startPage(Home.class, new PageParameters().set("word", "hangman", INamedParameters.Type.MANUAL));
 			tester.assertComponent("start", Link.class);
 			tester.assertContains("Wicket Examples - hangman");
 			tester.clickLink("start");

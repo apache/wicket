@@ -41,6 +41,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.util.file.Files;
@@ -99,7 +100,7 @@ public class Home extends WicketExamplePage
 		// Link to Page3 is an external link which takes a parameter
 		BookmarkablePageLink<Void> page3Link = new BookmarkablePageLink<>("page3Link", Page3.class);
 		page3Link.getPageParameters()
-				.add("bookmarkparameter", "3++2 & 5 � >< space + �");
+				.add("bookmarkparameter", "3++2 & 5 � >< space + �", INamedParameters.Type.MANUAL);
 		add(page3Link);
 
 		// Link to BookDetails page

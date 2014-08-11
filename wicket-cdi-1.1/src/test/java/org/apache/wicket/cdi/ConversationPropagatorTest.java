@@ -18,6 +18,7 @@ package org.apache.wicket.cdi;
 
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 		configure(new CdiConfiguration());
 
 		tester.startPage(TestConversationalPage.class,
-				new PageParameters().add("pageType", "bookmarkable"));
+				new PageParameters().add("pageType", "bookmarkable", INamedParameters.Type.MANUAL));
 
 		int i;
 		for (i = 0; i < 3; i++)
@@ -94,7 +95,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
 
 		tester.startPage(TestConversationPage.class,
-				new PageParameters().add("pageType", "bookmarkable"));
+				new PageParameters().add("pageType", "bookmarkable", INamedParameters.Type.MANUAL));
 		int i;
 		for (i = 0; i < 3; i++)
 		{
@@ -115,7 +116,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 		configure(new CdiConfiguration());
 
 		tester.startPage(TestConversationPage.class,
-				new PageParameters().add("pageType", "bookmarkable"));
+				new PageParameters().add("pageType", "bookmarkable", INamedParameters.Type.MANUAL));
 		int i;
 		for (i = 0; i < 3; i++)
 		{

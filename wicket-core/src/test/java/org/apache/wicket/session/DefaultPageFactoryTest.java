@@ -22,6 +22,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Rule;
 import org.junit.Test;
@@ -187,7 +188,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		expectedException.expectMessage("Can't instantiate page using constructor 'private org.apache.wicket.session.DefaultPageFactoryTest$PrivateConstructorWithParametersPage(org.apache.wicket.request.mapper.parameter.PageParameters)' and argument 'key=[value]'. This constructor is private!");
 
 		PageParameters parameters = new PageParameters();
-		parameters.add("key", "value");
+		parameters.add("key", "value", INamedParameters.Type.MANUAL);
 		pageFactory.newPage(PrivateConstructorWithParametersPage.class, parameters);
 	}
 

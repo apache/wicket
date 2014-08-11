@@ -38,7 +38,7 @@ public class PageParametersTest extends Assert
 		PageParameters parameters = new PageParameters();
 
 		String[] input = new String[] { "v1", "v2" };
-		parameters.add("key", input);
+		parameters.add("key", input, INamedParameters.Type.MANUAL);
 
 		List<StringValue> stringValue = parameters.getValues("key");
 
@@ -69,17 +69,17 @@ public class PageParametersTest extends Assert
 	public void getPosition()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.set("named1", "value1", 3);
+		parameters.set("named1", "value1", 3, INamedParameters.Type.MANUAL);
 		assertEquals(
 			"Adding a parameter at position out of the size of the list will just append it", 0,
 			parameters.getPosition("named1"));
 
-		parameters.set("named2", "value2", 0);
+		parameters.set("named2", "value2", 0, INamedParameters.Type.MANUAL);
 		assertEquals(0, parameters.getPosition("named2"));
 		assertEquals("'named1' should be moved back", 1, parameters.getPosition("named1"));
 
 
-		parameters.set("named3", "value3", -100);
+		parameters.set("named3", "value3", -100, INamedParameters.Type.MANUAL);
 		assertEquals(0, parameters.getPosition("named2"));
 		assertEquals(1, parameters.getPosition("named1"));
 		assertEquals("Adding a parameter with negative position will just append it.", 2,
@@ -93,14 +93,16 @@ public class PageParametersTest extends Assert
 	public void set()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.add("named1", "value1").add("named2", "value2");
+		parameters
+				.add("named1", "value1", INamedParameters.Type.MANUAL)
+				.add("named2", "value2", INamedParameters.Type.MANUAL);
 
 		assertEquals(0, parameters.getPosition("named1"));
 		assertEquals(1, parameters.getPosition("named2"));
 
 		// overwrite it
-		parameters.set("named1", "newValue");
-		parameters.set("named3", "value3");
+		parameters.set("named1", "newValue", INamedParameters.Type.MANUAL);
+		parameters.set("named3", "value3", INamedParameters.Type.MANUAL);
 		assertEquals(0, parameters.getPosition("named1"));
 		assertEquals("newValue", parameters.get("named1").toString());
 		assertEquals(1, parameters.getPosition("named2"));
@@ -115,8 +117,9 @@ public class PageParametersTest extends Assert
 	@Test
 	public void removeParameters()
 	{
-		PageParameters parameters = new PageParameters().add("named1", "value1").add("named2",
-			"value2");
+		PageParameters parameters = new PageParameters()
+				.add("named1", "value1", INamedParameters.Type.MANUAL)
+				.add("named2", "value2", INamedParameters.Type.MANUAL);
 
 		assertEquals("value1", parameters.get("named1").toString());
 		assertEquals("value2", parameters.get("named2").toString());
@@ -134,8 +137,9 @@ public class PageParametersTest extends Assert
 	@Test
 	public void removeParametersByValue()
 	{
-		PageParameters parameters = new PageParameters().add("named1", "value1").add("named1",
-			"value2");
+		PageParameters parameters = new PageParameters()
+				.add("named1", "value1", INamedParameters.Type.MANUAL)
+				.add("named1", "value2", INamedParameters.Type.MANUAL);
 
 		assertEquals(2, parameters.getAllNamed().size());
 
@@ -151,14 +155,16 @@ public class PageParametersTest extends Assert
 	@Test
 	public void mergeParameters()
 	{
-		PageParameters left = new PageParameters().add("left", "left")
-			.add("both", "both1")
-			.add("both", "both2")
+		PageParameters left = new PageParameters()
+			.add("left", "left", INamedParameters.Type.MANUAL)
+			.add("both", "both1", INamedParameters.Type.MANUAL)
+			.add("both", "both2", INamedParameters.Type.MANUAL)
 			.set(0, "val0")
 			.set(1, "val1");
-		PageParameters right = new PageParameters().add("right", "right")
-			.add("both", "both1-r")
-			.add("both", "both2-r")
+		PageParameters right = new PageParameters()
+			.add("right", "right", INamedParameters.Type.MANUAL)
+			.add("both", "both1-r", INamedParameters.Type.MANUAL)
+			.add("both", "both2-r", INamedParameters.Type.MANUAL)
 			.set(1, "val1-r")
 			.set(2, "val2");
 		left.mergeWith(right);

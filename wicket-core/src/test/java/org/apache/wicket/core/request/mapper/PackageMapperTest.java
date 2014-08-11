@@ -34,6 +34,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.PackageName;
 import org.junit.Test;
@@ -392,8 +393,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
 		parameters.set(1, "i2");
-		parameters.set("a", "b");
-		parameters.set("b", "c");
+		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
+		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
@@ -410,8 +411,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
 		parameters.set(1, "i2");
-		parameters.set("a", "b");
-		parameters.set("b", "c");
+		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
+		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
 
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
@@ -430,8 +431,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 		page.setCreatedBookmarkable(true);
 
 		IPageProvider provider = new PageProvider(page);
@@ -450,8 +451,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
 		page.setCreatedBookmarkable(false);
 
@@ -471,8 +472,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
 		// shouldn't make any difference for
 		// BookmarkableListenerInterfaceRequestHandler,
@@ -499,8 +500,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
 		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
 		// shouldn't make any difference for
 		// BookmarkableListenerInterfaceRequestHandler,
@@ -550,8 +551,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.setPageStateless(true);
 
 		IPageProvider provider = new PageProvider(page);
-		page.getPageParameters().set("foo", "fooValue");
-		page.getPageParameters().set("bar", "barValue");
+		page.getPageParameters().set("foo", "fooValue", INamedParameters.Type.PATH);
+		page.getPageParameters().set("bar", "barValue", INamedParameters.Type.PATH);
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 
 		Url url = namedParametersEncoder.mapHandler(handler);

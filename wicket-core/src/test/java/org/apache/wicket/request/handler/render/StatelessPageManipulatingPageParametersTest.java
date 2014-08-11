@@ -22,6 +22,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -61,7 +62,7 @@ public class StatelessPageManipulatingPageParametersTest extends WicketTestCase 
 				protected void onSubmit()
 				{
 					PageParameters parameters = new PageParameters();
-					parameters.add("login", "");
+					parameters.add("login", "", INamedParameters.Type.MANUAL);
 					setResponsePage(SecondPage.class, parameters);
 				}
 			};

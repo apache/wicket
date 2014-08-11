@@ -24,6 +24,7 @@ import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree;
 import org.apache.wicket.extensions.markup.html.repeater.tree.content.Folder;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -67,7 +68,7 @@ public class BookmarkableFolderContent extends Content
 				else
 				{
 					PageParameters parameters = new PageParameters();
-					parameters.add("foo", foo.getId());
+					parameters.add("foo", foo.getId(), INamedParameters.Type.MANUAL);
 
 					return new BookmarkablePageLink<>(id, tree.getPage().getClass(), parameters);
 				}

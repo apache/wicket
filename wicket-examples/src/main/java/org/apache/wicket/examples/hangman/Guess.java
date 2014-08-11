@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -95,10 +96,10 @@ public class Guess extends HangmanPage
 				};
 
 				PageParameters parameters = new PageParameters();
-				parameters.set(Letter.PARAMETER_LETTER, letter.asString());
+				parameters.set(Letter.PARAMETER_LETTER, letter.asString(), INamedParameters.Type.MANUAL);
 				if (letter.isGuessed())
 				{
-					parameters.set(Letter.PARAMETER_GUESSED, true);
+					parameters.set(Letter.PARAMETER_GUESSED, true, INamedParameters.Type.MANUAL);
 				}
 				link.add(new Image("image", Letter.LETTER_RESOURCE_REFERENCE, parameters));
 				listItem.add(link);

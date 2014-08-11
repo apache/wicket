@@ -57,6 +57,7 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.flow.RedirectToUrlException;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.IResource;
@@ -749,7 +750,7 @@ public class WicketTesterTest extends WicketTestCase
 	public void setQueryParameterWhenRequestHasAnQueryUrl()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.set("q_1", "q_1_value");
+		parameters.set("q_1", "q_1_value", INamedParameters.Type.MANUAL);
 		IPageProvider testPageProvider = new PageProvider(MockPageParametersAware.class, parameters);
 		IRequestHandler pageRequestHandler = new BookmarkablePageRequestHandler(testPageProvider);
 		Url url = tester.getApplication().getRootRequestMapper().mapHandler(pageRequestHandler);
@@ -770,8 +771,8 @@ public class WicketTesterTest extends WicketTestCase
 	public void setMultiValueQueryParameter()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.add("q_1", "q_1_value_1");
-		parameters.add("q_1", "q_1_value_2");
+		parameters.add("q_1", "q_1_value_1", INamedParameters.Type.MANUAL);
+		parameters.add("q_1", "q_1_value_2", INamedParameters.Type.MANUAL);
 		IPageProvider testPageProvider = new PageProvider(MockPageParametersAware.class, parameters);
 		IRequestHandler pageRequestHandler = new BookmarkablePageRequestHandler(testPageProvider);
 		Url url = tester.getApplication().getRootRequestMapper().mapHandler(pageRequestHandler);

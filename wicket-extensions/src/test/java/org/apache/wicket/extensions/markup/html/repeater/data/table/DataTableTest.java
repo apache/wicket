@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -84,13 +85,13 @@ public class DataTableTest extends WicketTestCase
 	public void testWicket3603()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.add("empty", Boolean.TRUE);
+		parameters.add("empty", Boolean.TRUE, INamedParameters.Type.MANUAL);
 		tester.startPage(Wicket3603Page.class, parameters);
 // System.err.println(tester.getLastResponseAsString());
 		Assert.assertTrue(tester.getLastResponseAsString().contains("thead"));
 		Assert.assertTrue(tester.getLastResponseAsString().contains("tfoot"));
 
-		parameters.set("empty", Boolean.FALSE);
+		parameters.set("empty", Boolean.FALSE, INamedParameters.Type.MANUAL);
 		tester.startPage(Wicket3603Page.class);
 // System.err.println(tester.getLastResponseAsString());
 		Assert.assertFalse(tester.getLastResponseAsString().contains("thead"));

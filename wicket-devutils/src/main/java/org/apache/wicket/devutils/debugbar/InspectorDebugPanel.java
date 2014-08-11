@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.devutils.inspector.InspectorPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -79,7 +80,7 @@ public class InspectorDebugPanel extends StandardDebugPanel
 	protected PageParameters getLinkPageParameters()
 	{
 		PageParameters params = new PageParameters();
-		params.add("pageId", getPage().getId());
+		params.add("pageId", getPage().getId(), INamedParameters.Type.MANUAL);
 		return params;
 	}
 }
