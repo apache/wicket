@@ -199,7 +199,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return namedParameters != null ? Collections.unmodifiableList(namedParameters) : Collections.<NamedPair>emptyList();
 	}
 
-
 	@Override
 	public List<NamedPair> getAllNamedByType(Type type)
 	{
@@ -274,11 +273,15 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return this;
 	}
 
+	public PageParameters add(final String name, final Object value)
+	{
+		return add(name, value, Type.MANUAL);
+	}
+
 	@Override
 	public PageParameters add(final String name, final Object value, Type type)
 	{
-		add(name, value, -1, Type.MANUAL);
-		return this;
+		return add(name, value, -1, type);
 	}
 
 	@Override
@@ -318,6 +321,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return this;
 	}
 
+	public PageParameters set(final String name, final Object value, final int index)
+	{
+		return set(name, value, index, Type.MANUAL);
+	}
+
 	@Override
 	public PageParameters set(final String name, final Object value, final int index, Type type)
 	{
@@ -328,6 +336,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			add(name, value, index, type);
 		}
 		return this;
+	}
+
+	public PageParameters set(final String name, final Object value)
+	{
+		return set(name, value, Type.MANUAL);
 	}
 
 	@Override

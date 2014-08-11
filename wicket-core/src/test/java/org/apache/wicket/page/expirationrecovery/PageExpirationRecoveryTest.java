@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.page.expirationrecovery;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
@@ -130,7 +133,7 @@ public class PageExpirationRecoveryTest extends WicketTestCase
 		pageSettings.setRecreateMountedPagesAfterExpiry(true);
 
 		ExpirationRecoveryPage page = tester.startPage(ExpirationRecoveryPage.class, parameters);
-		assertEquals(parameters, page.getPageParameters());
+		assertThat(parameters, is(equalTo(page.getPageParameters())));
 
 
 		tester.getSession().invalidateNow();

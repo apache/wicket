@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+
 import java.util.List;
 
 import org.apache.wicket.util.string.StringValue;
@@ -177,5 +180,136 @@ public class PageParametersTest extends Assert
 		assertEquals(2, left.getValues("both").size());
 		assertEquals("both1-r", left.getValues("both").get(0).toString());
 		assertEquals("both2-r", left.getValues("both").get(1).toString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5669
+	 */
+	@Test
+	public void parameterTypes()
+	{
+		PageParameters p = new PageParameters()
+				.add("pathName1", "pathValue1", INamedParameters.Type.PATH)
+				.add("pathName1", "pathValue1.1", INamedParameters.Type.PATH)
+				.add("pathName2", "pathValue2", INamedParameters.Type.PATH)
+				.add("queryName1", "queryValue1", INamedParameters.Type.QUERY_STRING)
+				.add("queryName1", "queryValue1.1", INamedParameters.Type.QUERY_STRING)
+				.add("queryName2", "queryValue2", INamedParameters.Type.QUERY_STRING)
+				.add("manualName1", "manualValue1", INamedParameters.Type.MANUAL)
+				.add("manualName1", "manualValue1.1", INamedParameters.Type.MANUAL)
+				.add("manualName2", "manualValue2", INamedParameters.Type.MANUAL);
+
+		{
+			// PATH
+			assertThat(p.getAllNamedByType(INamedParameters.Type.PATH).size(), is(3));
+
+			List<StringValue> pathName1Values = p.getValues("pathName1");
+			assertThat(pathName1Values.size(), is(2));
+			assertThat(pathName1Values.get(0).toString(), is("pathValue1"));
+			assertThat(pathName1Values.get(1).toString(), is("pathValue1.1"));
+
+			List<StringValue> pathName2Values = p.getValues("pathName2");
+			assertThat(pathName2Values.size(), is(1));
+			assertThat(pathName2Values.get(0).toString(), is("pathValue2"));
+		}
+
+		{
+			// QUERY STRING
+			assertThat(p.getAllNamedByType(INamedParameters.Type.QUERY_STRING).size(), is(3));
+
+			List<StringValue> queryName1Values = p.getValues("queryName1");
+			assertThat(queryName1Values.size(), is(2));
+			assertThat(queryName1Values.get(0).toString(), is("queryValue1"));
+			assertThat(queryName1Values.get(1).toString(), is("queryValue1.1"));
+
+			List<StringValue> queryName2Values = p.getValues("queryName2");
+			assertThat(queryName2Values.size(), is(1));
+			assertThat(queryName2Values.get(0).toString(), is("queryValue2"));
+		}
+
+		{
+			// MANUAL
+			assertThat(p.getAllNamedByType(INamedParameters.Type.MANUAL).size(), is(3));
+
+			List<StringValue> manualName1Values = p.getValues("manualName1");
+			assertThat(manualName1Values.size(), is(2));
+			assertThat(manualName1Values.get(0).toString(), is("manualValue1"));
+			assertThat(manualName1Values.get(1).toString(), is("manualValue1.1"));
+
+			List<StringValue> manualName2Values = p.getValues("manualName2");
+			assertThat(manualName2Values.size(), is(1));
+			assertThat(manualName2Values.get(0).toString(), is("manualValue2"));
+		}
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5669
+	 */
+	@Test
+	public void addWithoutTypeIsManual()
+	{
+		PageParameters p = new PageParameters();
+		p.add("name", "value");
+		assertThat(p.getAllNamed().get(0).getType(), is(INamedParameters.Type.MANUAL));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5669
+	 */
+	@Test
+	public void setWithoutTypeIsManual()
+	{
+		PageParameters p = new PageParameters();
+		p.set("name", "value");
+		assertThat(p.getAllNamed().get(0).getType(), is(INamedParameters.Type.MANUAL));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5669
+	 */
+	@Test
+	public void setWithIndexWithoutTypeIsManual()
+	{
+		PageParameters p = new PageParameters();
+		p.set("name", "value", 3);
+		assertThat(p.getAllNamed().get(0).getType(), is(INamedParameters.Type.MANUAL));
+	}
+
+	/**
+	 * NamedPairs equality should not depend on the type
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-5669
+	 */
+	@Test
+	public void equality()
+	{
+		PageParameters p1 = new PageParameters()
+				.add("a", "b", INamedParameters.Type.MANUAL)
+				.set("c", "d", INamedParameters.Type.MANUAL);
+
+		PageParameters p2 = new PageParameters()
+				.set("a", "b", INamedParameters.Type.QUERY_STRING)
+				.add("c", "d", INamedParameters.Type.PATH);
+
+		assertThat(p1, is(equalTo(p2)));
+	}
+
+	/**
+	 * NamedPairs hashCode should not depend on the type
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-5669
+	 */
+	@Test
+	public void hashcode()
+	{
+		PageParameters p1 = new PageParameters()
+				.add("a", "b", INamedParameters.Type.MANUAL)
+				.set("c", "d", INamedParameters.Type.MANUAL);
+
+		PageParameters p2 = new PageParameters()
+				.set("a", "b", INamedParameters.Type.QUERY_STRING)
+				.add("c", "d", INamedParameters.Type.PATH);
+
+		assertThat(p1.hashCode(), is(equalTo(p2.hashCode())));
 	}
 }

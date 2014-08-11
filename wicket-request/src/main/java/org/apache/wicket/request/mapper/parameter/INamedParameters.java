@@ -32,7 +32,7 @@ import org.apache.wicket.util.string.StringValue;
 public interface INamedParameters
 {
 	/**
-	 * A hint where the parameter is read from.
+	 * A hint where the parameter is read/parsed from.
 	 */
 	enum Type
 	{
@@ -113,7 +113,6 @@ public interface INamedParameters
 
 			if (key != null ? !key.equals(namedPair.key) : namedPair.key != null) return false;
 			if (value != null ? !value.equals(namedPair.value) : namedPair.value != null) return false;
-			if (type != null ? !type.equals(namedPair.type) : namedPair.type != null) return false;
 
 			return true;
 		}
@@ -123,7 +122,6 @@ public interface INamedParameters
 		{
 			int result = key != null ? key.hashCode() : 0;
 			result = 31 * result + (value != null ? value.hashCode() : 0);
-			result = result + type.hashCode();
 			return result;
 		}
 	}
