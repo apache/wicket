@@ -64,7 +64,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		add(newAjaxEventBehavior("onclick"));
+		add(newAjaxEventBehavior("click"));
 	}
 
 	/**
