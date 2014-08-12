@@ -24,7 +24,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
-import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -49,9 +49,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author papegaaij
  */
-public class AtmosphereBehavior extends Behavior
+public class AtmosphereBehavior extends AbstractAjaxBehavior
 	implements
-		IResourceListener,
 		AtmosphereResourceEventListener
 {
 	private static final Logger log = LoggerFactory.getLogger(AtmosphereBehavior.class);
@@ -68,8 +67,6 @@ public class AtmosphereBehavior extends Behavior
 
 	private String applicationKey;
 
-	private Component component;
-
 
 	/**
 	 * Construct.
@@ -82,12 +79,6 @@ public class AtmosphereBehavior extends Behavior
 	private EventBus findEventBus()
 	{
 		return EventBus.get(Application.get(applicationKey));
-	}
-
-	@Override
-	public void bind(Component component)
-	{
-		this.component = component;
 	}
 
 	@Override
@@ -106,8 +97,9 @@ public class AtmosphereBehavior extends Behavior
 	{
 	}
 
+
 	@Override
-	public void onResourceRequested()
+	public void onRequest()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
@@ -119,7 +111,7 @@ public class AtmosphereBehavior extends Behavior
 		meteor.suspend(-1);
 
 		String uuid = meteor.getAtmosphereResource().uuid();
-		Page page = component.getPage();
+		Page page = getComponent().getPage();
 		page.setMetaData(ATMOSPHERE_UUID, uuid);
 		findEventBus().registerPage(uuid, page);
 	}
