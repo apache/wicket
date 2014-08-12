@@ -19,7 +19,6 @@ package org.apache.wicket.util.tester;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -39,7 +38,7 @@ public class MockPageParameterPage extends WebPage
 	public MockPageParameterPage(PageParameters pageParameters)
 	{
 		add(new BookmarkablePageLink<Void>("link", MockPageParameterPage.class,
-			new PageParameters().set("id", 1, INamedParameters.Type.MANUAL)));
+			new PageParameters().set("id", 1)));
 		add(new Label("label", pageParameters.get("id").toString()));
 	}
 

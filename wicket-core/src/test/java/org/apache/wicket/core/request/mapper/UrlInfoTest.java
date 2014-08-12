@@ -17,9 +17,8 @@
 package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.MockPage;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.core.request.mapper.AbstractBookmarkableMapper.UrlInfo;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,9 +36,9 @@ public class UrlInfoTest extends Assert
 	public void wicket4038()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.add(WebRequest.PARAM_AJAX, "true", INamedParameters.Type.MANUAL);
-		parameters.add(WebRequest.PARAM_AJAX_BASE_URL, "base/url", INamedParameters.Type.MANUAL);
-		parameters.add(WebRequest.PARAM_AJAX_REQUEST_ANTI_CACHE, "12345.6879", INamedParameters.Type.MANUAL);
+		parameters.add(WebRequest.PARAM_AJAX, "true");
+		parameters.add(WebRequest.PARAM_AJAX_BASE_URL, "base/url");
+		parameters.add(WebRequest.PARAM_AJAX_REQUEST_ANTI_CACHE, "12345.6879");
 
 		AbstractBookmarkableMapper.UrlInfo info = new UrlInfo(null, MockPage.class, parameters);
 		assertNull(info.getPageParameters());

@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Assert;
 import org.junit.Test;
@@ -59,7 +58,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	public void bookmarkableRequestWithInterceptWithParams() throws Exception
 	{
 		PageParameters pp = new PageParameters();
-		pp.set("test", "test", INamedParameters.Type.MANUAL);
+		pp.set("test", "test");
 
 		tester.startPage(BookmarkableThrowsInterceptPage.class, pp);
 
@@ -77,7 +76,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	{
 		BookmarkablePageLink<MockPageWithLink> link = new BookmarkablePageLink<MockPageWithLink>(
 			"link", MockPageWithLink.class);
-		link.getPageParameters().set("urlEscapeNeeded", "someone's ^b%a&d pa\"rameter", INamedParameters.Type.MANUAL);
+		link.getPageParameters().set("urlEscapeNeeded", "someone's ^b%a&d pa\"rameter");
 
 		tester.startComponentInPage(link, null);
 		String response = tester.getLastResponse().getDocument();

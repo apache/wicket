@@ -37,7 +37,6 @@ import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
@@ -282,7 +281,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			PageParameters parameters = getPageParameters(handler);
 			if (parameters != null)
 			{
-				parameters.set(CID, conversation.getId(), INamedParameters.Type.MANUAL);
+				parameters.set(CID, conversation.getId());
 			}
 		}
 	}

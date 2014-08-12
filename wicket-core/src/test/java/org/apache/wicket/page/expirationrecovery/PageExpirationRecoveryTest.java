@@ -21,7 +21,6 @@ import static org.hamcrest.Matchers.is;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.PageSettings;
 import org.apache.wicket.util.tester.FormTester;
@@ -38,8 +37,8 @@ public class PageExpirationRecoveryTest extends WicketTestCase
 {
 
 	private final PageParameters parameters = new PageParameters()
-			.set("a", "b", INamedParameters.Type.MANUAL)
-			.set("c", "d", INamedParameters.Type.MANUAL);
+			.set("a", "b")
+			.set("c", "d");
 
 	@Before
 	public void before()

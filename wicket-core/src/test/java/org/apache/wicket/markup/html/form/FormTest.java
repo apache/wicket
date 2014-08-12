@@ -21,7 +21,6 @@ import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -174,8 +173,8 @@ public class FormTest extends WicketTestCase
 	public void pageWithParameters() throws Exception
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.add("first", "foo", INamedParameters.Type.MANUAL);
-		parameters.add("second", "bar", INamedParameters.Type.MANUAL);
+		parameters.add("first", "foo");
+		parameters.add("second", "bar");
 		executeTest(FormMethodTestPage.class, parameters, "pageWithParameters_expected.html");
 	}
 }

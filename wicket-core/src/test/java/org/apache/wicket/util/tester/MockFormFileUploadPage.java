@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.util.ListModel;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
@@ -77,10 +76,9 @@ public class MockFormFileUploadPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	@SuppressWarnings("deprecation")
 	public MockFormFileUploadPage()
 	{
-		this(new PageParameters().set("required", "true", INamedParameters.Type.MANUAL));
+		this(new PageParameters().set("required", "true"));
 	}
 
 	/**
@@ -92,7 +90,7 @@ public class MockFormFileUploadPage extends WebPage
 	{
 		domainObject = new MockDomainObjectFileUpload();
 		Form<MockDomainObjectFileUpload> form = new Form<MockDomainObjectFileUpload>("form",
-			new CompoundPropertyModel<MockDomainObjectFileUpload>(domainObject))
+			new CompoundPropertyModel<>(domainObject))
 		{
 			private static final long serialVersionUID = 1L;
 

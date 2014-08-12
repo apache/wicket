@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -42,7 +41,7 @@ public class SimpleResponsePageClass extends WebPage
 			protected void onSubmit()
 			{
 				// use Page "class"
-				setResponsePage(SimplePage.class, new PageParameters().set("test", "test", INamedParameters.Type.MANUAL));
+				setResponsePage(SimplePage.class, new PageParameters().set("test", "test"));
 			}
 		};
 		add(form);

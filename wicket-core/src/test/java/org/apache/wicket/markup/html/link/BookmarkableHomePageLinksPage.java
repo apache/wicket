@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -38,7 +37,7 @@ public class BookmarkableHomePageLinksPage extends WebPage
 		Class<? extends Page> homePage = Application.get().getHomePage();
 		add(new BookmarkablePageLink<Void>("defaulthompage", homePage));
 		add(new BookmarkablePageLink<Void>("defaulthompagewithparams", homePage,
-			new PageParameters().set("param1",1, INamedParameters.Type.MANUAL).set("param2", "test", INamedParameters.Type.MANUAL)));
+			new PageParameters().set("param1", 1).set("param2", "test")));
 		add(new BookmarkablePageLink<Void>("defaulthompagewithpagemap", homePage));
 	}
 

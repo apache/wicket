@@ -23,7 +23,6 @@ import org.apache.wicket.examples.library.Book.WritingStyle;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -86,7 +85,7 @@ public final class BookDetails extends AuthenticatedWebPage
 
 		Label writingStylesLabel = new Label("writingStyles", writingStyles);
 
-		final AttributeModifier italic = new AttributeModifier("class", new Model<String>("italic"))
+		final AttributeModifier italic = new AttributeModifier("class", new Model<>("italic"))
 		{
 			@Override
 			public boolean isEnabled(Component component)
@@ -113,12 +112,12 @@ public final class BookDetails extends AuthenticatedWebPage
 	public static BookmarkablePageLink<Void> link(final String name, final Book book,
 		final String noBookTitle)
 	{
-		final BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>(name,
+		final BookmarkablePageLink<Void> link = new BookmarkablePageLink<>(name,
 			BookDetails.class);
 
 		if (book != null)
 		{
-			link.getPageParameters().add("id", book.getId(), INamedParameters.Type.MANUAL);
+			link.getPageParameters().add("id", book.getId());
 			link.add(new Label("title", new Model<>(book)));
 		}
 		else

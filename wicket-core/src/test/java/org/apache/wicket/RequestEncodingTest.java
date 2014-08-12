@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
@@ -65,7 +64,7 @@ public class RequestEncodingTest extends Assert
 	public void defaultTest()
 	{
 		tester.startPage(RedirectA.class,
-			new PageParameters().set("file", "umlaut-\u00E4-\u00F6-\u00FC", INamedParameters.Type.MANUAL));
+			new PageParameters().set("file", "umlaut-\u00E4-\u00F6-\u00FC"));
 		tester.assertRenderedPage(RedirectB.class);
 
 		String url2 = ((RedirectB)tester.getLastRenderedPage()).getInterceptContinuationURL();

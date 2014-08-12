@@ -70,15 +70,13 @@ public class MountedPageLinkTest extends WicketTestCase
 	public void testPageParametersInLink()
 	{
 		PageWithLink page = tester.startPage(PageWithLink.class,
-			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
+			new PageParameters().add("param", "value"));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
 		if (mount)
-			assertTrue("URL for link should contain 'mount/value/part2': " + url, url.toString()
-				.contains("mount/value/part2"));
+			assertTrue("URL for link should contain 'mount/value/part2': " + url, url.contains("mount/value/part2"));
 		else
-			assertTrue("URL for link should contain 'param=value': " + url, url.toString()
-				.contains("param=value"));
+			assertTrue("URL for link should contain 'param=value': " + url, url.contains("param=value"));
 		tester.executeUrl(url);
 	}
 
@@ -90,7 +88,7 @@ public class MountedPageLinkTest extends WicketTestCase
 	public void testLinkOnExpiredPage()
 	{
 		PageWithLink page = tester.startPage(PageWithLink.class,
-			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
+			new PageParameters().add("param", "value"));
 		assertEquals("value", page.getPageParameters().get("param").toString());
 		tester.assertContains("param=value");
 		Link<?> link = (Link<?>)page.get("link");

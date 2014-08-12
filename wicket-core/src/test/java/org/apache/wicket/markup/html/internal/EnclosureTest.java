@@ -30,7 +30,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -79,7 +78,7 @@ public class EnclosureTest extends WicketTestCase
 	@Test
 	public void testRenderHomePage4() throws Exception
 	{
-		executeTest(EnclosurePage_4.class, new PageParameters().set("visible", false, INamedParameters.Type.MANUAL),
+		executeTest(EnclosurePage_4.class, new PageParameters().set("visible", false),
 			"EnclosurePageExpectedResult_4.html");
 	}
 
@@ -89,7 +88,7 @@ public class EnclosureTest extends WicketTestCase
 	@Test
 	public void testRenderHomePage4_1() throws Exception
 	{
-		executeTest(EnclosurePage_4.class, new PageParameters().set("visible", true, INamedParameters.Type.MANUAL),
+		executeTest(EnclosurePage_4.class, new PageParameters().set("visible", true),
 			"EnclosurePageExpectedResult_4-1.html");
 	}
 
@@ -99,7 +98,7 @@ public class EnclosureTest extends WicketTestCase
 	@Test
 	public void testRenderHomePage5() throws Exception
 	{
-		executeTest(EnclosurePage_5.class, new PageParameters().set("visible", false, INamedParameters.Type.MANUAL),
+		executeTest(EnclosurePage_5.class, new PageParameters().set("visible", false),
 			"EnclosurePageExpectedResult_5.html");
 	}
 
@@ -109,7 +108,7 @@ public class EnclosureTest extends WicketTestCase
 	@Test
 	public void testRenderHomePage5_1() throws Exception
 	{
-		executeTest(EnclosurePage_5.class, new PageParameters().set("visible", true, INamedParameters.Type.MANUAL),
+		executeTest(EnclosurePage_5.class, new PageParameters().set("visible", true),
 			"EnclosurePageExpectedResult_5-1.html");
 	}
 
