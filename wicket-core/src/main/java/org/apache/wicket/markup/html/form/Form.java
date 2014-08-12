@@ -442,18 +442,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 						if ((!parameters.getParameterValue(name).isNull())
 							|| !parameters.getParameterValue(name + ".x").isNull())
 						{
-							if (!component.isVisibleInHierarchy())
-							{
-								throw new WicketRuntimeException("Submit Button "
-									+ submittingComponent.getInputName() + " (path="
-									+ component.getPageRelativePath() + ") is not visible");
-							}
-							if (!component.isEnabledInHierarchy())
-							{
-								throw new WicketRuntimeException("Submit Button "
-									+ submittingComponent.getInputName() + " (path="
-									+ component.getPageRelativePath() + ") is not enabled");
-							}
 							visit.stop(submittingComponent);
 						}
 					}
@@ -745,6 +733,26 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 				if (submitter == null)
 				{
 					submitter = findSubmittingButton();
+
+					if (submitter instanceof IFormSubmittingComponent)
+					{
+						IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent) submitter;
+						Component component = (Component) submitter;
+
+						if (!component.isVisibleInHierarchy())
+						{
+							throw new WicketRuntimeException("Submit Button " +
+								submittingComponent.getInputName() + " (path=" +
+								component.getPageRelativePath() + ") is not visible");
+						}
+
+						if (!component.isEnabledInHierarchy())
+						{
+							throw new WicketRuntimeException("Submit Button " +
+								submittingComponent.getInputName() + " (path=" +
+								component.getPageRelativePath() + ") is not enabled");
+						}
+					}
 				}
 
 				// When processing was triggered by a Wicket IFormSubmittingComponent and that
