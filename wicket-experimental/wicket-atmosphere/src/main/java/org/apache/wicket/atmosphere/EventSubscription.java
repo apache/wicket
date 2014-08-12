@@ -34,15 +34,15 @@ import com.google.common.base.Predicates;
  */
 public class EventSubscription
 {
-	private String componentPath;
+	private final String componentPath;
 
-	private Integer behaviorIndex;
+	private final Integer behaviorIndex;
 
-	private String methodName;
+	private final String methodName;
 
-	private Predicate<AtmosphereEvent> filter;
+	private final Predicate<AtmosphereEvent> filter;
 
-	private Predicate<AtmosphereEvent> contextAwareFilter;
+	private final Predicate<AtmosphereEvent> contextAwareFilter;
 
 	/**
 	 * Construct.

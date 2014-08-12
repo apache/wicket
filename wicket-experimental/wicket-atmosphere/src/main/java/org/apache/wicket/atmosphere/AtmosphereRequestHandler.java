@@ -18,14 +18,15 @@ package org.apache.wicket.atmosphere;
 
 import java.util.Collection;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,7 @@ public class AtmosphereRequestHandler implements IRequestHandler
 		this.pageKey = pageKey;
 		this.subscriptions = subscriptions;
 		this.event = event;
-		this.eventSubscriptionInvoker = eventSubscriptionInvoker;
+		this.eventSubscriptionInvoker = Args.notNull(eventSubscriptionInvoker, "eventSubscriptionInvoker");
 	}
 
 	@Override
