@@ -102,17 +102,17 @@ public class EventBus implements UnboundListener
 		return eventBus;
 	}
 
-	private WebApplication application;
+	private final WebApplication application;
 
-	private Broadcaster broadcaster;
+	private final Broadcaster broadcaster;
 
-	private Multimap<PageKey, EventSubscription> subscriptions = HashMultimap.create();
+	private final Multimap<PageKey, EventSubscription> subscriptions = HashMultimap.create();
 
-	private Map<String, PageKey> trackedPages = Maps.newHashMap();
+	private final Map<String, PageKey> trackedPages = Maps.newHashMap();
 
-	private List<ResourceRegistrationListener> registrationListeners = new CopyOnWriteArrayList<>();
+	private final List<ResourceRegistrationListener> registrationListeners = new CopyOnWriteArrayList<>();
 
-	private AtmosphereParameters parameters = new AtmosphereParameters();
+	private final AtmosphereParameters parameters = new AtmosphereParameters();
 
 	/**
 	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
@@ -278,8 +278,7 @@ public class EventBus implements UnboundListener
 	 * Unregisters all {@link EventSubscription}s for the given component, including the
 	 * subscriptions for its behaviors.
 	 *
-	 * @param page
-	 * @param subscription
+	 * @param component
 	 */
 	public synchronized void unregister(Component component)
 	{

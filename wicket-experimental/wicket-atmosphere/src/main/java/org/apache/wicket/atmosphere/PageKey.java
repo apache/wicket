@@ -17,6 +17,7 @@
 package org.apache.wicket.atmosphere;
 
 import com.google.common.base.Objects;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Identifies a page by its id and the session it belongs to.
@@ -25,9 +26,9 @@ import com.google.common.base.Objects;
  */
 public class PageKey
 {
-	private Integer pageId;
+	private final Integer pageId;
 
-	private String sessionId;
+	private final String sessionId;
 
 	/**
 	 * Construct.
@@ -37,7 +38,7 @@ public class PageKey
 	 */
 	public PageKey(Integer pageId, String sessionId)
 	{
-		this.pageId = pageId;
+		this.pageId = Args.notNull(pageId, "pageId");
 		this.sessionId = sessionId;
 	}
 

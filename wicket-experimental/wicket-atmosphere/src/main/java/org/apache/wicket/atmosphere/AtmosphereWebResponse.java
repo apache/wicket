@@ -30,7 +30,7 @@ import org.atmosphere.cpr.AtmosphereResponse;
  */
 class AtmosphereWebResponse extends WebResponse
 {
-	private AtmosphereResponse response;
+	private final AtmosphereResponse response;
 	private final AppendingStringBuffer out;
 	private boolean redirect;
 

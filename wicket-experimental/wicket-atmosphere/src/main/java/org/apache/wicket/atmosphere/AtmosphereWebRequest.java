@@ -43,13 +43,13 @@ import org.apache.wicket.util.time.Time;
  */
 class AtmosphereWebRequest extends ServletWebRequest
 {
-	private ServletWebRequest wrappedRequest;
+	private final ServletWebRequest wrappedRequest;
 
-	private PageKey pageKey;
+	private final PageKey pageKey;
 
-	private Collection<EventSubscription> subscriptions;
+	private final Collection<EventSubscription> subscriptions;
 
-	private AtmosphereEvent event;
+	private final AtmosphereEvent event;
 
 	AtmosphereWebRequest(ServletWebRequest wrappedRequest, PageKey pageKey,
 		Collection<EventSubscription> subscriptions, AtmosphereEvent event)
