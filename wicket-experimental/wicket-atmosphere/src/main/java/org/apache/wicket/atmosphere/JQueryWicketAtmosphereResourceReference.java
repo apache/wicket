@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
 
 /**
@@ -28,7 +27,7 @@ import org.apache.wicket.resource.JQueryPluginResourceReference;
  * 
  * @author papegaaij
  */
-public class JQueryWicketAtmosphereResourceReference extends JavaScriptResourceReference
+public class JQueryWicketAtmosphereResourceReference extends JQueryPluginResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
