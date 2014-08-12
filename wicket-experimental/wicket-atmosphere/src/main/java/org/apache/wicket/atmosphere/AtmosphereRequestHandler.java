@@ -70,8 +70,9 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		Page page = (Page)Application.get().getMapperContext().getPageInstance(pageKey.getPageId());
-		AjaxRequestTarget target = WebApplication.get().newAjaxRequestTarget(page);
+		WebApplication application = WebApplication.get();
+		Page page = (Page)application.getMapperContext().getPageInstance(pageKey.getPageId());
+		AjaxRequestTarget target = application.newAjaxRequestTarget(page);
 		executeHandlers(target, page);
 	}
 
@@ -85,14 +86,15 @@ public class AtmosphereRequestHandler implements IRequestHandler
 				Component component = page.get(componentPath);
 				if (component != null)
 				{
-					if (curSubscription.getBehaviorIndex() == null)
+					Integer behaviorIndex = curSubscription.getBehaviorIndex();
+					if (behaviorIndex == null)
 					{
 						invokeMethod(target, curSubscription, component);
 					}
 					else
 					{
-						invokeMethod(target, curSubscription,
-								component.getBehaviorById(curSubscription.getBehaviorIndex()));
+						Behavior behavior = component.getBehaviorById(behaviorIndex);
+						invokeMethod(target, curSubscription, behavior);
 					}
 				}
 				else
