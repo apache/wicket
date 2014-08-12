@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.atmosphere;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
@@ -34,6 +32,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListener;
@@ -120,8 +119,9 @@ public class AtmosphereBehavior extends Behavior
 		meteor.suspend(-1);
 
 		String uuid = meteor.getAtmosphereResource().uuid();
-		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
-		findEventBus().registerPage(uuid, component.getPage());
+		Page page = component.getPage();
+		page.setMetaData(ATMOSPHERE_UUID, uuid);
+		findEventBus().registerPage(uuid, page);
 	}
 
 	@Override
@@ -150,12 +150,11 @@ public class AtmosphereBehavior extends Behavior
 	{
 		if (log.isDebugEnabled())
 		{
-			String transport = event.getResource()
-				.getRequest()
+			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
+			String transport = atmosphereRequest
 				.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
-			HttpServletRequest req = event.getResource().getRequest();
 			log.debug(String.format("Suspending the %s response from ip %s:%s", transport == null
-				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
 	}
 
@@ -164,10 +163,10 @@ public class AtmosphereBehavior extends Behavior
 	{
 		if (log.isDebugEnabled())
 		{
-			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
-			HttpServletRequest req = event.getResource().getRequest();
+			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
+			String transport = atmosphereRequest.getHeader("X-Atmosphere-Transport");
 			log.debug(String.format("Resuming the %s response from ip %s:%s", transport == null
-				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
 	}
 
@@ -176,10 +175,10 @@ public class AtmosphereBehavior extends Behavior
 	{
 		if (log.isDebugEnabled())
 		{
-			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
-			HttpServletRequest req = event.getResource().getRequest();
+			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
+			String transport = atmosphereRequest.getHeader("X-Atmosphere-Transport");
 			log.debug(String.format("%s connection dropped from ip %s:%s", transport == null
-				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
 		// It is possible that the application has already been destroyed, in which case
 		// unregistration is no longer needed
@@ -192,7 +191,8 @@ public class AtmosphereBehavior extends Behavior
 	@Override
 	public void onThrowable(AtmosphereResourceEvent event)
 	{
-		log.error(event.throwable().getMessage(), event.throwable());
+		Throwable throwable = event.throwable();
+		log.error(throwable.getMessage(), throwable);
 	}
 
 	@Override
