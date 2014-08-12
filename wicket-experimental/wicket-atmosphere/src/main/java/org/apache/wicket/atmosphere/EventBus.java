@@ -363,7 +363,7 @@ public class EventBus implements UnboundListener
 		ThreadContext oldContext = ThreadContext.get(false);
 		try
 		{
-			for (AtmosphereResource resource : ImmutableList.copyOf(broadcaster.getAtmosphereResources()))
+			for (AtmosphereResource resource : ImmutableList.copyOf(getBroadcaster().getAtmosphereResources()))
 			{
 				postToSingleResource(event, resource);
 			}
