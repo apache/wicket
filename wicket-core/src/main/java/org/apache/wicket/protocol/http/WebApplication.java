@@ -313,7 +313,7 @@ public abstract class WebApplication extends Application
 	 * @param mapper
 	 *            the encoder that will be used for this mount
 	 */
-	public final void mount(final IRequestMapper mapper)
+	public void mount(final IRequestMapper mapper)
 	{
 		Args.notNull(mapper, "mapper");
 		getRootRequestMapperAsCompound().add(mapper);
@@ -330,7 +330,7 @@ public abstract class WebApplication extends Application
 	 * @param pageClass
 	 *            the page class to be mounted
 	 */
-	public final <T extends Page> MountedMapper mountPage(final String path, final Class<T> pageClass)
+	public <T extends Page> MountedMapper mountPage(final String path, final Class<T> pageClass)
 	{
 		MountedMapper mapper = new MountedMapper(path, pageClass);
 		mount(mapper);
@@ -345,7 +345,7 @@ public abstract class WebApplication extends Application
 	 * @param reference
 	 *            resource reference to be mounted
 	 */
-	public final ResourceMapper mountResource(final String path, final ResourceReference reference)
+	public ResourceMapper mountResource(final String path, final ResourceReference reference)
 	{
 		if (reference.canBeRegistered())
 		{
@@ -367,7 +367,7 @@ public abstract class WebApplication extends Application
 	 * @param pageClass
 	 *            the page class to be mounted
 	 */
-	public final <P extends Page> PackageMapper mountPackage(final String path, final Class<P> pageClass)
+	public <P extends Page> PackageMapper mountPackage(final String path, final Class<P> pageClass)
 	{
 		PackageMapper packageMapper = new PackageMapper(path, PackageName.forClass(pageClass));
 		mount(packageMapper);
@@ -383,7 +383,7 @@ public abstract class WebApplication extends Application
 	 * @param path
 	 *            the path to unmount
 	 */
-	public final void unmount(String path)
+	public void unmount(String path)
 	{
 		Args.notNull(path, "path");
 

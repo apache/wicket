@@ -17,6 +17,7 @@
 package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -122,6 +123,6 @@ public final class CssUtils
 	 */
 	public static String key(Class<?> scope, String facet)
 	{
-		return scope.getSimpleName() + ".CSS." + facet;
+		return Classes.simpleName(scope) + ".CSS." + facet;
 	}
 }
