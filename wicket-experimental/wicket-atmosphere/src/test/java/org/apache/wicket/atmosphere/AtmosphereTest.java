@@ -42,6 +42,7 @@ public class AtmosphereTest extends Assert
 				super.updateTime(target, event);
 
 				System.err.println("updateTime");
+				target.appendJavaScript("updateTime is executed");
 			}
 
 			@Subscribe(contextAwareFilter = ReceiverFilter.class)
@@ -59,6 +60,8 @@ public class AtmosphereTest extends Assert
 
 		Date payload = new Date();
 		waTester.post(payload);
+
+		System.err.println(tester.getLastResponseAsString());
 
 		tester.destroy();
 	}

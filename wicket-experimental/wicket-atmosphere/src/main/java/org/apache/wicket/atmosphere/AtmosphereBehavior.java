@@ -211,6 +211,7 @@ public class AtmosphereBehavior extends AbstractAjaxBehavior
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
+		super.renderHead(component, response);
 		try
 		{
 			CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
