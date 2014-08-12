@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.util.List;
+
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -100,7 +102,8 @@ public abstract class AbstractMapper implements IRequestMapper
 		}
 		else
 		{
-			if (url.getSegments().size() < segments.length)
+			List<String> urlSegments = url.getSegments();
+			if (urlSegments.size() < segments.length)
 			{
 				return false;
 			}
@@ -108,7 +111,7 @@ public abstract class AbstractMapper implements IRequestMapper
 			{
 				for (int i = 0; i < segments.length; ++i)
 				{
-					if ((segments[i].equals(url.getSegments().get(i)) == false) &&
+					if ((segments[i].equals(urlSegments.get(i)) == false) &&
 						(getPlaceholder(segments[i]) == null))
 					{
 						return false;
