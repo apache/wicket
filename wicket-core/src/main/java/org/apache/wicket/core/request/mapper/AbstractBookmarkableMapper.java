@@ -250,11 +250,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 		if (listenerInterface != null)
 		{
-			if (pageInfo.getPageId() != null)
-			{
-				// WICKET-4594 - ignore the parsed parameters for stateful pages
-				pageParameters = null;
-			}
+			pageParameters = getPageParametersForListener(pageInfo, pageParameters);
 
 			PageAndComponentProvider provider = new PageAndComponentProvider(pageInfo.getPageId(),
 				pageClass, pageParameters, renderCount, componentInfo.getComponentPath());
@@ -281,6 +277,26 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			}
 			return null;
 		}
+	}
+
+	/**
+	 * Returns the PageParameters which should be used while processing a listener interface
+	 *
+	 * @param pageInfo
+	 *          The parsed page info
+	 * @param pageParameters
+	 *          The parsed request parameters
+	 * @return {@code null} for stateful page and the given pageParameters for stateless pages
+	 */
+	// WICKET-5539
+	protected PageParameters getPageParametersForListener(PageInfo pageInfo, PageParameters pageParameters)
+	{
+		if (pageInfo.getPageId() != null)
+		{
+			// WICKET-4594 - ignore the parsed parameters for stateful pages
+			return null;
+		}
+		return pageParameters;
 	}
 
 	/**
