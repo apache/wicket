@@ -151,8 +151,7 @@ public class AtmosphereBehavior extends Behavior
 		if (log.isDebugEnabled())
 		{
 			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
-			String transport = atmosphereRequest
-				.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
+			String transport = atmosphereRequest.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
 			log.debug(String.format("Suspending the %s response from ip %s:%s", transport == null
 				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
@@ -164,7 +163,7 @@ public class AtmosphereBehavior extends Behavior
 		if (log.isDebugEnabled())
 		{
 			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
-			String transport = atmosphereRequest.getHeader("X-Atmosphere-Transport");
+			String transport = atmosphereRequest.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
 			log.debug(String.format("Resuming the %s response from ip %s:%s", transport == null
 				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
@@ -176,7 +175,7 @@ public class AtmosphereBehavior extends Behavior
 		if (log.isDebugEnabled())
 		{
 			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
-			String transport = atmosphereRequest.getHeader("X-Atmosphere-Transport");
+			String transport = atmosphereRequest.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
 			log.debug(String.format("%s connection dropped from ip %s:%s", transport == null
 				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
