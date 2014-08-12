@@ -287,8 +287,10 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 * @param pageParameters
 	 *          The parsed request parameters
 	 * @return {@code null} for stateful page and the given pageParameters for stateless pages
+	 * @deprecated In Wicket 7.x use Component#canCallListenerInterfaceAfterExpiry()
 	 */
 	// WICKET-5539
+	@Deprecated
 	protected PageParameters getPageParametersForListener(PageInfo pageInfo, PageParameters pageParameters)
 	{
 		if (pageInfo.getPageId() != null)
