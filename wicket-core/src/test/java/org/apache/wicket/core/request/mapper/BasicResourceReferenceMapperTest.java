@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.hamcrest.Matchers.is;
+
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -317,6 +319,17 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(0, h.getPageParameters().getIndexedCount());
 		assertEquals("v1", h.getPageParameters().get("p1").toString());
 		assertEquals("v2", h.getPageParameters().get("p2").toString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5673
+	 */
+	@Test
+	public void decode11()
+	{
+		Url url = Url.parse("wicket/resource/com.example.Scope/");
+		int score = encoder.getCompatibilityScore(getRequest(url));
+		assertThat(score, is(-1));
 	}
 
 	/**

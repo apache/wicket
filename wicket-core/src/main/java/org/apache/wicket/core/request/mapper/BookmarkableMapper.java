@@ -30,6 +30,7 @@ import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Decodes and encodes the following URLs:
@@ -206,26 +207,66 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		String bookmarkableIdentifier = getContext().getBookmarkableIdentifier();
 		String pageIdentifier = getContext().getPageIdentifier();
 
-		if (url.getSegments().size() >= 3 && urlStartsWith(url, namespace, bookmarkableIdentifier))
+		List<String> segments = url.getSegments();
+		int segmentsSize = segments.size();
+
+		if (segmentsSize >= 3 && urlStartsWithAndHasPageClass(url, namespace, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 		// baseUrl = 'wicket/bookmarkable/com.example.SomePage[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
-		else if (baseUrl.getSegments().size() == 3 && urlStartsWith(baseUrl, namespace, bookmarkableIdentifier) && url.getSegments().size() >= 2 && urlStartsWith(url, bookmarkableIdentifier))
+		else if (baseUrl.getSegments().size() == 3 && urlStartsWith(baseUrl, namespace, bookmarkableIdentifier)
+				&& segmentsSize >= 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 		// baseUrl = 'bookmarkable/com.example.SomePage', requestUrl = 'bookmarkable/com.example.SomePage'
-		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, bookmarkableIdentifier) && url.getSegments().size() == 2 && urlStartsWith(url, bookmarkableIdentifier))
+		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, bookmarkableIdentifier)
+				&& segmentsSize == 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 		// baseUrl = 'wicket/page[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
-		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, namespace, pageIdentifier) && url.getSegments().size() >= 2 && urlStartsWith(url, bookmarkableIdentifier))
+		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, namespace, pageIdentifier)
+				&& segmentsSize >= 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 
 		return matches;
+	}
+
+	/**
+	 * Checks whether the url starts with the given segments and additionally
+	 * checks whether the following segment is non-empty
+	 *
+	 * @param url
+	 *          The url to be checked
+	 * @param segments
+	 *          The expected leading segments
+	 * @return {@code true} if the url starts with the given segments and there is non-empty segment after them
+	 */
+	protected boolean urlStartsWithAndHasPageClass(Url url, String... segments)
+	{
+		boolean result = urlStartsWith(url, segments);
+
+		if (result)
+		{
+			List<String> urlSegments = url.getSegments();
+			if (urlSegments.size() == segments.length)
+			{
+				result = false;
+			}
+			else
+			{
+				String pageClassSegment = urlSegments.get(segments.length);
+				if (Strings.isEmpty(pageClassSegment))
+				{
+					result = false;
+				}
+			}
+		}
+
+		return result;
 	}
 }

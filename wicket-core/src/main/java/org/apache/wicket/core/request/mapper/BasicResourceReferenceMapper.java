@@ -278,8 +278,11 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	 */
 	protected boolean canBeHandled(final Url url)
 	{
-		return (url.getSegments().size() >= 4 &&
-				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()));
+		List<String> segments = url.getSegments();
+		return (segments.size() >= 4 &&
+				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()) &&
+				Strings.isEmpty(segments.get(3)) == false
+		);
 
 	}
 }
