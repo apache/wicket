@@ -456,7 +456,7 @@ public class EventBus implements UnboundListener
 	 */
 	public void removeRegistrationListener(ResourceRegistrationListener listener)
 	{
-		registrationListeners.add(listener);
+		registrationListeners.remove(listener);
 	}
 
 	private void fireRegistration(String uuid, Page page)
