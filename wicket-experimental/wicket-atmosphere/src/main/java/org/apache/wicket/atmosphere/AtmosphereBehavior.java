@@ -24,13 +24,12 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
@@ -218,16 +217,26 @@ public class AtmosphereBehavior extends AbstractAjaxBehavior
 
 			response.render(JavaScriptHeaderItem.forReference(JQueryWicketAtmosphereResourceReference.get()));
 			JSONObject options = findEventBus().getParameters().toJSON();
-			options.put("url",
-				component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters())
-					.toString());
+			options.put("url", getCallbackUrl());
 			response.render(OnDomReadyHeaderItem.forScript("$('#" + component.getMarkupId() +
-				"').wicketAtmosphere(" + options.toString() + ")"));
+					"').wicketAtmosphere(" + options.toString() + ")"));
 		}
 		catch (JSONException e)
 		{
 			throw new WicketRuntimeException(e);
 		}
+	}
+
+	/**
+	 * Make it look like a normal Ajax call so the page id/renderCount are not incremented when Atmosphere makes
+	 * the "upgrade" request
+	 *
+	 * @return the url to this behavior's listener interface
+	 */
+	@Override
+	public CharSequence getCallbackUrl()
+	{
+		return super.getCallbackUrl() + "&" + WebRequest.PARAM_AJAX + "=true&" + WebRequest.PARAM_AJAX_BASE_URL + "=.";
 	}
 
 	/**
