@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import de.agilecoders.wicket.webjars.WicketWebjars;
 import org.apache.wicket.Application;
 import org.apache.wicket.atmosphere.EventBus;
 import org.apache.wicket.atmosphere.config.AtmosphereLogLevel;
@@ -55,6 +56,9 @@ public class AtmosphereApplication extends WebApplication
 	public void init()
 	{
 		super.init();
+
+		WicketWebjars.install(this);
+
 		eventBus = new EventBus(this);
 		eventBus.getParameters().setTransport(AtmosphereTransport.STREAMING);
 		eventBus.getParameters().setLogLevel(AtmosphereLogLevel.DEBUG);

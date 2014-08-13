@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.atmosphere.tester;
 
+import de.agilecoders.wicket.webjars.WicketWebjars;
 import org.apache.wicket.Page;
 import org.apache.wicket.atmosphere.AtmosphereBehavior;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -37,6 +38,7 @@ public class AtmosphereTester
 	public AtmosphereTester(final WicketTester wicketTester, Page page)
 	{
 		WebApplication application = wicketTester.getApplication();
+		WicketWebjars.install(application);
 		this.eventBus = new TesterEventBus(application);
 
 		AtmosphereBehavior atmosphereBehavior = new AtmosphereBehavior()
