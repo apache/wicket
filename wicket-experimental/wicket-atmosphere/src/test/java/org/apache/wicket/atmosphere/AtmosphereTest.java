@@ -59,7 +59,7 @@ public class AtmosphereTest extends Assert
 		Date payload = new Date();
 		waTester.post(payload);
 
-		System.err.println(tester.getLastResponseAsString());
+		System.err.println("Ajax response:\n" + tester.getLastResponseAsString());
 
 		tester.destroy();
 	}

@@ -24,6 +24,7 @@ import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceImpl;
 import org.atmosphere.cpr.AtmosphereResponse;
+import org.atmosphere.cpr.HeaderConfig;
 import org.atmosphere.handler.AtmosphereHandlerAdapter;
 import org.atmosphere.util.SimpleBroadcaster;
 
@@ -66,6 +67,7 @@ public class AtmosphereTester
 		page.add(atmosphereBehavior);
 
 		wicketTester.startPage(page);
+		wicketTester.getRequest().setHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT, AtmosphereResource.TRANSPORT.WEBSOCKET.name());
 		wicketTester.executeBehavior(atmosphereBehavior);
 	}
 
