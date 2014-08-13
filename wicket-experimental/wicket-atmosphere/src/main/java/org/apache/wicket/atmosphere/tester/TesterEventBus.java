@@ -16,14 +16,10 @@
  */
 package org.apache.wicket.atmosphere.tester;
 
-import java.util.concurrent.Executors;
-
 import org.apache.wicket.atmosphere.EventBus;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.atmosphere.cpr.AtmosphereConfig;
 import org.atmosphere.cpr.AtmosphereFramework;
-import org.atmosphere.cpr.BroadcasterConfig;
-import org.atmosphere.util.VoidExecutorService;
 
 /**
  *
@@ -46,16 +42,6 @@ class TesterEventBus extends EventBus
 		framework.setBroadcasterFactory(broadcasterFactory);
 
 		broadcaster.initialize("wicket-atmosphere-tester", config);
-
-		VoidExecutorService sameThreadExecutorService = new VoidExecutorService();
-		BroadcasterConfig broadcasterConfig = new BroadcasterConfig(
-				sameThreadExecutorService,
-				sameThreadExecutorService,
-				Executors.newSingleThreadScheduledExecutor(),
-				config, "tester-broadcaster-config");
-		broadcaster.setBroadcasterConfig(broadcasterConfig);
-		broadcasterConfig.setAsyncWriteService(sameThreadExecutorService);
-		broadcasterConfig.setExecutorService(sameThreadExecutorService);
 
 		return broadcaster;
 	}
