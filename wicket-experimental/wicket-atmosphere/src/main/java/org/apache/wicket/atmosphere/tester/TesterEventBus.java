@@ -32,7 +32,6 @@ public class TesterEventBus extends EventBus
 {
 	AtmosphereFramework framework = new AtmosphereFramework();
 	AtmosphereConfig config = new AtmosphereConfig(framework);
-	IComponentOnBeforeRenderListener eventSubscriptionCollector;
 
 	public TesterEventBus(WebApplication application)
 	{
@@ -40,14 +39,7 @@ public class TesterEventBus extends EventBus
 
 		framework.setBroadcasterFactory(new TesterBroadcasterFactory(config));
 
-		getBroadcaster().initialize("wicket-atmopshere-tester", config);
-	}
-
-	@Override
-	protected IComponentOnBeforeRenderListener createEventSubscriptionCollector()
-	{
-		eventSubscriptionCollector = super.createEventSubscriptionCollector();
-		return eventSubscriptionCollector;
+		getBroadcaster().initialize("wicket-atmosphere-tester", config);
 	}
 
 	@Override
@@ -61,6 +53,9 @@ public class TesterEventBus extends EventBus
 		protected TesterBroadcasterFactory(AtmosphereConfig c)
 		{
 			super(SimpleBroadcaster.class, BroadcasterLifeCyclePolicy.ATMOSPHERE_RESOURCE_POLICY.NEVER.name(), c);
+
+			// expose myself as BroadcasterFactory.getDefault();
+			factory = this;
 		}
 	}
 }

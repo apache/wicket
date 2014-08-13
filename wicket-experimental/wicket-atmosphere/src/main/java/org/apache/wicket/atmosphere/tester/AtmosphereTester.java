@@ -30,11 +30,11 @@ import org.atmosphere.util.SimpleBroadcaster;
 /**
  *
  */
-public class WicketAtmosphereTester
+public class AtmosphereTester
 {
 	private final TesterEventBus eventBus;
 
-	public WicketAtmosphereTester(final WicketTester wicketTester, Page page)
+	public AtmosphereTester(final WicketTester wicketTester, Page page)
 	{
 		WebApplication application = wicketTester.getApplication();
 		this.eventBus = new TesterEventBus(application);
@@ -58,17 +58,18 @@ public class WicketAtmosphereTester
 
 				String uuid = atmosphereResource.uuid();
 				Page page = getComponent().getPage();
-				eventBus.eventSubscriptionCollector.onBeforeRender(page);
+
 				page.setMetaData(ATMOSPHERE_UUID, uuid);
 				eventBus.registerPage(uuid, page);
 			}
 		};
 		page.add(atmosphereBehavior);
 
+		wicketTester.startPage(page);
 		wicketTester.executeBehavior(atmosphereBehavior);
 	}
 
-	public WicketAtmosphereTester post(Object payload)
+	public AtmosphereTester post(Object payload)
 	{
 		eventBus.post(payload);
 		return this;
