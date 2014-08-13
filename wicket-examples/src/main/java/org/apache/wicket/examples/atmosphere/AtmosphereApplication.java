@@ -57,8 +57,6 @@ public class AtmosphereApplication extends WebApplication
 	{
 		super.init();
 
-		WicketWebjars.install(this);
-
 		eventBus = new EventBus(this);
 		eventBus.getParameters().setTransport(AtmosphereTransport.STREAMING);
 		eventBus.getParameters().setLogLevel(AtmosphereLogLevel.DEBUG);
