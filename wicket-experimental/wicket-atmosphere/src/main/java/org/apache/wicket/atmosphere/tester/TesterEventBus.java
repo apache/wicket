@@ -16,46 +16,53 @@
  */
 package org.apache.wicket.atmosphere.tester;
 
-import org.apache.wicket.application.IComponentOnBeforeRenderListener;
+import java.util.concurrent.Executors;
+
 import org.apache.wicket.atmosphere.EventBus;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.atmosphere.cpr.AtmosphereConfig;
 import org.atmosphere.cpr.AtmosphereFramework;
-import org.atmosphere.cpr.BroadcasterLifeCyclePolicy;
-import org.atmosphere.cpr.DefaultBroadcasterFactory;
-import org.atmosphere.util.SimpleBroadcaster;
+import org.atmosphere.cpr.BroadcasterConfig;
+import org.atmosphere.util.VoidExecutorService;
 
 /**
  *
  */
-public class TesterEventBus extends EventBus
+class TesterEventBus extends EventBus
 {
-	AtmosphereFramework framework = new AtmosphereFramework();
-	AtmosphereConfig config = new AtmosphereConfig(framework);
-
 	public TesterEventBus(WebApplication application)
 	{
-		super(application, new SimpleBroadcaster());
+		super(application, createBroadcaster());
+	}
 
-		framework.setBroadcasterFactory(new TesterBroadcasterFactory(config));
+	private static TesterBroadcaster createBroadcaster()
+	{
+		TesterBroadcaster broadcaster = new TesterBroadcaster();
 
-		getBroadcaster().initialize("wicket-atmosphere-tester", config);
+		AtmosphereFramework framework = new AtmosphereFramework();
+		AtmosphereConfig config = new AtmosphereConfig(framework);
+
+		TesterBroadcasterFactory broadcasterFactory = new TesterBroadcasterFactory(config, broadcaster);
+		framework.setBroadcasterFactory(broadcasterFactory);
+
+		broadcaster.initialize("wicket-atmosphere-tester", config);
+
+		VoidExecutorService sameThreadExecutorService = new VoidExecutorService();
+		BroadcasterConfig broadcasterConfig = new BroadcasterConfig(
+				sameThreadExecutorService,
+				sameThreadExecutorService,
+				Executors.newSingleThreadScheduledExecutor(),
+				config, "tester-broadcaster-config");
+		broadcaster.setBroadcasterConfig(broadcasterConfig);
+		broadcasterConfig.setAsyncWriteService(sameThreadExecutorService);
+		broadcasterConfig.setExecutorService(sameThreadExecutorService);
+
+		return broadcaster;
 	}
 
 	@Override
-	public SimpleBroadcaster getBroadcaster()
+	public TesterBroadcaster getBroadcaster()
 	{
-		return (SimpleBroadcaster) super.getBroadcaster();
-	}
-
-	private static class TesterBroadcasterFactory extends DefaultBroadcasterFactory
-	{
-		protected TesterBroadcasterFactory(AtmosphereConfig c)
-		{
-			super(SimpleBroadcaster.class, BroadcasterLifeCyclePolicy.ATMOSPHERE_RESOURCE_POLICY.NEVER.name(), c);
-
-			// expose myself as BroadcasterFactory.getDefault();
-			factory = this;
-		}
+		return (TesterBroadcaster) super.getBroadcaster();
 	}
 }
