@@ -18,13 +18,13 @@ package org.apache.wicket.atmosphere;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -219,7 +219,7 @@ public class AtmosphereBehavior extends AbstractAjaxBehavior
 			response.render(JavaScriptHeaderItem.forReference(JQueryWicketAtmosphereResourceReference.get()));
 			JSONObject options = findEventBus().getParameters().toJSON();
 			options.put("url",
-				component.urlFor(this, IResourceListener.INTERFACE, new PageParameters())
+				component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters())
 					.toString());
 			response.render(OnDomReadyHeaderItem.forScript("$('#" + component.getMarkupId() +
 				"').wicketAtmosphere(" + options.toString() + ")"));
