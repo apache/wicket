@@ -33,6 +33,8 @@ public class AtmosphereTest extends Assert
 	@Test
 	public void atmospherePush()
 	{
+		final String updateTimeIsExecuted = "updateTime is executed!";
+
 		WicketTester tester = new WicketTester();
 		HomePage page = new HomePage(new PageParameters())
 		{
@@ -41,8 +43,7 @@ public class AtmosphereTest extends Assert
 			{
 				super.updateTime(target, event);
 
-				System.err.println("updateTime");
-				target.appendJavaScript("updateTime is executed");
+				target.appendJavaScript(updateTimeIsExecuted);
 			}
 
 			@Subscribe(contextAwareFilter = ReceiverFilter.class)
@@ -59,7 +60,8 @@ public class AtmosphereTest extends Assert
 		Date payload = new Date();
 		waTester.post(payload);
 
-		System.err.println("Ajax response:\n" + tester.getLastResponseAsString());
+//		System.err.println("Ajax response:\n" + tester.getLastResponseAsString());
+		tester.assertContains(updateTimeIsExecuted);
 
 		tester.destroy();
 	}

@@ -30,7 +30,7 @@ import org.atmosphere.cpr.AtmosphereResponse;
 /**
  *
  */
-public class TesterAsyncSupport<E extends AtmosphereResource> implements AsyncSupport<E>
+class TesterAsyncSupport<E extends AtmosphereResource> implements AsyncSupport<E>
 {
 	@Override
 	public String getContainerName()
@@ -41,7 +41,6 @@ public class TesterAsyncSupport<E extends AtmosphereResource> implements AsyncSu
 	@Override
 	public void init(ServletConfig sc) throws ServletException
 	{
-
 	}
 
 	@Override
@@ -53,7 +52,6 @@ public class TesterAsyncSupport<E extends AtmosphereResource> implements AsyncSu
 	@Override
 	public void action(E actionEvent)
 	{
-		System.err.println("TesterEventSupport#action(): " + actionEvent);
 	}
 
 	@Override

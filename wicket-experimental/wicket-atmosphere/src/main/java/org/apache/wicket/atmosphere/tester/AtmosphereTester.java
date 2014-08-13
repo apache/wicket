@@ -26,7 +26,6 @@ import org.atmosphere.cpr.AtmosphereResourceImpl;
 import org.atmosphere.cpr.AtmosphereResponse;
 import org.atmosphere.cpr.HeaderConfig;
 import org.atmosphere.handler.AtmosphereHandlerAdapter;
-import org.atmosphere.util.SimpleBroadcaster;
 
 /**
  *
@@ -45,13 +44,13 @@ public class AtmosphereTester
 			@Override
 			public void onRequest()
 			{
-				SimpleBroadcaster broadcaster = eventBus.getBroadcaster();
+				TesterBroadcaster broadcaster = eventBus.getBroadcaster();
 
 				AtmosphereResource atmosphereResource = new AtmosphereResourceImpl();
 				AtmosphereRequest atmosphereRequest = AtmosphereRequest.wrap(wicketTester.getRequest());
 				AtmosphereResponse atmosphereResponse = AtmosphereResponse.wrap(wicketTester.getResponse());
 				TesterAsyncSupport asyncSupport = new TesterAsyncSupport();
-				atmosphereResource.initialize(eventBus.config, broadcaster, atmosphereRequest, atmosphereResponse,
+				atmosphereResource.initialize(broadcaster.getApplicationConfig(), broadcaster, atmosphereRequest, atmosphereResponse,
 						asyncSupport, new AtmosphereHandlerAdapter());
 
 				atmosphereResource.setBroadcaster(broadcaster);
@@ -67,7 +66,7 @@ public class AtmosphereTester
 		page.add(atmosphereBehavior);
 
 		wicketTester.startPage(page);
-		wicketTester.getRequest().setHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT, AtmosphereResource.TRANSPORT.WEBSOCKET.name());
+		wicketTester.getRequest().setHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT, AtmosphereResource.TRANSPORT.LONG_POLLING.name());
 		wicketTester.executeBehavior(atmosphereBehavior);
 	}
 
