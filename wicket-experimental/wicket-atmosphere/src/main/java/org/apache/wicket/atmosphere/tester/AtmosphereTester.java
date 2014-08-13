@@ -66,7 +66,7 @@ public class AtmosphereTester
 		page.add(atmosphereBehavior);
 
 		wicketTester.startPage(page);
-		wicketTester.getRequest().setHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT, AtmosphereResource.TRANSPORT.LONG_POLLING.name());
+		wicketTester.getRequest().setHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT, AtmosphereResource.TRANSPORT.WEBSOCKET.name());
 		wicketTester.executeBehavior(atmosphereBehavior);
 	}
 
