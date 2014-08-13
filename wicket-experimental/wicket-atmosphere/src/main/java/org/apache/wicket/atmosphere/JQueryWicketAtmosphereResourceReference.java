@@ -22,6 +22,8 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
 
+import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
+
 /**
  * Resource reference for the jquery.atmosphere.js module and the wicket glue.
  * 
@@ -50,8 +52,8 @@ public class JQueryWicketAtmosphereResourceReference extends JQueryPluginResourc
 	public List<HeaderItem> getDependencies()
 	{
 		List<HeaderItem> dependencies = super.getDependencies();
-		dependencies.add(JavaScriptHeaderItem.forReference(new JQueryPluginResourceReference(
-				JQueryWicketAtmosphereResourceReference.class, "jquery.atmosphere.js")));
+		WebjarsJavaScriptResourceReference jqueryAtmosphereReference = new WebjarsJavaScriptResourceReference("jquery-atmosphere/current/jquery.atmosphere.js");
+		dependencies.add(JavaScriptHeaderItem.forReference(jqueryAtmosphereReference));
 		return dependencies;
 	}
 }
