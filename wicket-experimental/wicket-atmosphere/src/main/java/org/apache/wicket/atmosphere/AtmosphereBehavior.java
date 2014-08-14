@@ -143,6 +143,11 @@ public class AtmosphereBehavior extends Behavior
 			Meteor meteor = Meteor.lookup(event.getResource().getRequest());
 			meteor.resume();
 		}
+		EventBus eventBus = findEventBus();
+		if (eventBus.isWantAtmosphereNotifications())
+		{
+			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Broadcast, event));
+		}
 	}
 
 	@Override
@@ -167,6 +172,11 @@ public class AtmosphereBehavior extends Behavior
 			log.debug(String.format("Resuming the %s response from ip %s:%s", transport == null
 				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
+		EventBus eventBus = findEventBus();
+		if (eventBus.isWantAtmosphereNotifications())
+		{
+			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Resume, event));
+		}
 	}
 
 	@Override
@@ -181,9 +191,15 @@ public class AtmosphereBehavior extends Behavior
 		}
 		// It is possible that the application has already been destroyed, in which case
 		// unregistration is no longer needed
+		EventBus eventBus = findEventBus();
 		if (Application.get(applicationKey) != null)
 		{
-			findEventBus().unregisterConnection(event.getResource().uuid());
+			eventBus.unregisterConnection(event.getResource().uuid());
+		}
+
+		if (eventBus.isWantAtmosphereNotifications())
+		{
+			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Disconnect, event));
 		}
 	}
 
@@ -192,6 +208,12 @@ public class AtmosphereBehavior extends Behavior
 	{
 		Throwable throwable = event.throwable();
 		log.error(throwable.getMessage(), throwable);
+
+		EventBus eventBus = findEventBus();
+		if (eventBus.isWantAtmosphereNotifications())
+		{
+			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Throwable, event));
+		}
 	}
 
 	@Override
