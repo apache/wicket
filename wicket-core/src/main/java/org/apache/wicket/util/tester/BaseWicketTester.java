@@ -514,6 +514,14 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * @param response
+	 */
+	public void setLastResponse(final MockHttpServletResponse response)
+	{
+		this.lastResponse = response;
+	}
+
+	/**
 	 * @return session
 	 */
 	public Session getSession()
@@ -797,7 +805,7 @@ public class BaseWicketTester
 	private void recordRequestResponse()
 	{
 		lastRequest = request;
-		lastResponse = response;
+		setLastResponse(response);
 
 		previousRequests.add(request);
 		previousResponses.add(response);

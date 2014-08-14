@@ -101,9 +101,16 @@ public class EventBus implements UnboundListener
 		return eventBus;
 	}
 
-	private final WebApplication application;
+	/**
+	 * @param application
+	 * @return {@code true} if there is an installed EventBus to the given application
+	 */
+	public static boolean isInstalled(Application application)
+	{
+		return application.getMetaData(EVENT_BUS_KEY) != null;
+	}
 
-	private final Broadcaster broadcaster;
+	private final WebApplication application;
 
 	private final Multimap<PageKey, EventSubscription> subscriptions = HashMultimap.create();
 
@@ -112,6 +119,8 @@ public class EventBus implements UnboundListener
 	private final List<ResourceRegistrationListener> registrationListeners = new CopyOnWriteArrayList<>();
 
 	private final AtmosphereParameters parameters = new AtmosphereParameters();
+
+	private Broadcaster broadcaster;
 
 	/**
 	 * A flag indicating whether to be notified about Atmosphere internal events
@@ -131,7 +140,7 @@ public class EventBus implements UnboundListener
 	 */
 	public EventBus(WebApplication application)
 	{
-		this(application, lookupDefaultBroadcaster());
+		this(application, null);
 	}
 
 	private static Broadcaster lookupDefaultBroadcaster()
@@ -193,7 +202,13 @@ public class EventBus implements UnboundListener
 	 */
 	public Broadcaster getBroadcaster()
 	{
-		return broadcaster;
+		return broadcaster != null ? broadcaster : lookupDefaultBroadcaster();
+	}
+
+	public EventBus setBroadcaster(Broadcaster broadcaster)
+	{
+		this.broadcaster = broadcaster;
+		return this;
 	}
 
 	/**
@@ -413,7 +428,7 @@ public class EventBus implements UnboundListener
 			subscriptionsForPage = Iterables.filter(eventSubscriptions, new EventFilter(event));
 		}
 		if (key == null)
-			broadcaster.removeAtmosphereResource(resource);
+			getBroadcaster().removeAtmosphereResource(resource);
 		else
 		{
 			Iterator<EventSubscription> iterator = subscriptionsForPage.iterator();
@@ -444,7 +459,7 @@ public class EventBus implements UnboundListener
 			subscriptionsForPage, event);
 		Response response = new AtmosphereWebResponse(resource.getResponse());
 		if (application.createRequestCycle(request, response).processRequestAndDetach())
-			broadcaster.broadcast(response.toString(), resource);
+			getBroadcaster().broadcast(response.toString(), resource);
 	}
 
 	@Override
