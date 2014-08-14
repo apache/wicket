@@ -17,7 +17,7 @@
 package org.apache.wicket.atmosphere;
 
 import java.nio.charset.Charset;
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,12 +47,12 @@ class AtmosphereWebRequest extends ServletWebRequest
 
 	private final PageKey pageKey;
 
-	private final Collection<EventSubscription> subscriptions;
+	private final Iterator<EventSubscription> subscriptions;
 
 	private final AtmosphereEvent event;
 
 	AtmosphereWebRequest(ServletWebRequest wrappedRequest, PageKey pageKey,
-		Collection<EventSubscription> subscriptions, AtmosphereEvent event)
+		Iterator<EventSubscription> subscriptions, AtmosphereEvent event)
 	{
 		super(wrappedRequest.getContainerRequest(), wrappedRequest.getFilterPrefix());
 		this.wrappedRequest = wrappedRequest;
@@ -66,7 +66,7 @@ class AtmosphereWebRequest extends ServletWebRequest
 		return pageKey;
 	}
 
-	public Collection<EventSubscription> getSubscriptions()
+	public Iterator<EventSubscription> getSubscriptions()
 	{
 		return subscriptions;
 	}

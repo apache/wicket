@@ -17,7 +17,6 @@
 package org.apache.wicket.atmosphere;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +47,9 @@ import org.atmosphere.cpr.BroadcasterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
@@ -380,21 +379,25 @@ public class EventBus implements UnboundListener
 		ThreadContext.detach();
 		ThreadContext.setApplication(application);
 		PageKey key;
-		Collection<EventSubscription> subscriptionsForPage;
+		Iterable<EventSubscription> subscriptionsForPage;
 		synchronized (this)
 		{
 			key = trackedPages.get(resource.uuid());
-			subscriptionsForPage = Collections2.filter(
-				Collections.unmodifiableCollection(subscriptions.get(key)), new EventFilter(event));
+			Collection<EventSubscription> eventSubscriptions = subscriptions.get(key);
+			subscriptionsForPage = Iterables.filter(eventSubscriptions, new EventFilter(event));
 		}
 		if (key == null)
 			broadcaster.removeAtmosphereResource(resource);
-		else if (!subscriptionsForPage.isEmpty())
-			post(resource, key, subscriptionsForPage, event);
+		else
+		{
+			Iterator<EventSubscription> iterator = subscriptionsForPage.iterator();
+			if (iterator.hasNext())
+				post(resource, key, iterator, event);
+		}
 	}
 
 	private void post(AtmosphereResource resource, PageKey pageKey,
-		Collection<EventSubscription> subscriptionsForPage, AtmosphereEvent event)
+		Iterator<EventSubscription> subscriptionsForPage, AtmosphereEvent event)
 	{
 		String filterPath = WebApplication.get()
 			.getWicketFilter()
