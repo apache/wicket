@@ -274,6 +274,22 @@ public class EventBus implements UnboundListener
 	}
 
 	/**
+	 * Unregisters all {@link EventSubscription}s for the given pageKey.
+	 *
+	 * @param pageKey
+	 *          The key with the page id and session id
+	 */
+	public synchronized void unregister(PageKey pageKey)
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("unregistering all subscriptions for page {} for session {}",
+					pageKey.getPageId(), pageKey.getSessionId());
+		}
+		subscriptions.removeAll(pageKey);
+	}
+
+	/**
 	 * Unregisters all {@link EventSubscription}s for the given component, including the
 	 * subscriptions for its behaviors.
 	 *
