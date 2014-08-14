@@ -76,6 +76,7 @@ public class AtmosphereRequestHandler implements IRequestHandler
 		Page page = (Page) Session.get().getPageManager().getPage(pageId);
 		if (page != null)
 		{
+			page.dirty();
 			AjaxRequestTarget target = application.newAjaxRequestTarget(page);
 			executeHandlers(target, page);
 		}
