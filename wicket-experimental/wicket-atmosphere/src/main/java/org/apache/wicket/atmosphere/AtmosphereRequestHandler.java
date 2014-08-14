@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -44,7 +44,7 @@ public class AtmosphereRequestHandler implements IRequestHandler
 
 	private final AtmosphereEvent event;
 
-	private final Collection<EventSubscription> subscriptions;
+	private final Iterator<EventSubscription> subscriptions;
 
 	private final EventSubscriptionInvoker eventSubscriptionInvoker;
 
@@ -58,7 +58,7 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	 * @param event
 	 * @param eventSubscriptionInvoker
 	 */
-	public AtmosphereRequestHandler(PageKey pageKey, Collection<EventSubscription> subscriptions,
+	public AtmosphereRequestHandler(PageKey pageKey, Iterator<EventSubscription> subscriptions,
 		AtmosphereEvent event, EventSubscriptionInvoker eventSubscriptionInvoker)
 	{
 		this.pageKey = pageKey;
@@ -78,8 +78,9 @@ public class AtmosphereRequestHandler implements IRequestHandler
 
 	private void executeHandlers(AjaxRequestTarget target, Page page)
 	{
-		for (EventSubscription curSubscription : subscriptions)
+		while (subscriptions.hasNext())
 		{
+			EventSubscription curSubscription = subscriptions.next();
 			if (curSubscription.getContextAwareFilter().apply(event))
 			{
 				String componentPath = curSubscription.getComponentPath();
