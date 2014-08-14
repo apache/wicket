@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -71,9 +72,20 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	public void respond(IRequestCycle requestCycle)
 	{
 		WebApplication application = WebApplication.get();
-		Page page = (Page)application.getMapperContext().getPageInstance(pageKey.getPageId());
-		AjaxRequestTarget target = application.newAjaxRequestTarget(page);
-		executeHandlers(target, page);
+		Integer pageId = pageKey.getPageId();
+		Page page = (Page) Session.get().getPageManager().getPage(pageId);
+		if (page != null)
+		{
+			AjaxRequestTarget target = application.newAjaxRequestTarget(page);
+			executeHandlers(target, page);
+		}
+		else
+		{
+			LOGGER.warn("Could not find a page with id '{}' for session with id '{}' in the page stores. It will be unregistered",
+					pageId, pageKey.getSessionId());
+			EventBus.get(application).unregister(pageKey);
+
+		}
 	}
 
 	private void executeHandlers(AjaxRequestTarget target, Page page)
