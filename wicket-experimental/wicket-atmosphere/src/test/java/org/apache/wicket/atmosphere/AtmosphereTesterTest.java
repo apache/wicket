@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.atmosphere;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -92,8 +94,8 @@ public class AtmosphereTesterTest extends Assert
 //		System.out.println("RES:" + atmosphereResponse);
 
 		// assert
-		Assert.assertFalse("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response></ajax-response>"
-				.equals(atmosphereResponse));
+		assertThat(atmosphereResponse,
+				is(not(equalTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response></ajax-response>"))));
 
 		waTester.switchOnTestMode();
 		// now the assertions are against the Atmosphere's suspended response data
