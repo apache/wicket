@@ -181,7 +181,7 @@ public class AtmosphereTester
 	}
 
 	/**
-	 * Sets back the <em>lastResponse</em> with the saved on by {@link #switchOnTestMode()}.
+	 * Sets back the <em>lastResponse</em> with the saved one by {@link #switchOnTestMode()}.
 	 *
 	 * @return this instance, for chaining
 	 */
