@@ -16,11 +16,15 @@
  */
 package org.apache.wicket.atmosphere;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.atmosphere.tester.AtmosphereTester;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,8 +32,11 @@ import org.junit.Test;
 /**
  *
  */
-public class AtmosphereTest extends Assert
+public class AtmosphereTesterTest extends Assert
 {
+	final AtomicBoolean updateTimeCalled = new AtomicBoolean(false);
+	final AtomicBoolean receiveMessageCalled = new AtomicBoolean(false);
+
 	@Test
 	public void atmospherePush()
 	{
@@ -43,6 +50,8 @@ public class AtmosphereTest extends Assert
 			{
 				super.updateTime(target, event);
 
+				updateTimeCalled.set(true);
+
 				target.appendJavaScript(updateTimeIsExecuted);
 			}
 
@@ -50,18 +59,49 @@ public class AtmosphereTest extends Assert
 			public void receiveMessage(AjaxRequestTarget target, ChatMessage message)
 			{
 				super.receiveMessage(target, message);
-
-				System.err.println("receiveMessage");
+				receiveMessageCalled.set(true);
 			}
 		};
 
 		AtmosphereTester waTester = new AtmosphereTester(tester, page);
 
+		assertThat(updateTimeCalled.get(), is(false));
+		assertThat(receiveMessageCalled.get(), is(false));
+
 		Date payload = new Date();
 		waTester.post(payload);
 
-//		System.err.println("Ajax response:\n" + tester.getLastResponseAsString());
+		assertThat(updateTimeCalled.get(), is(true));
+		assertThat(receiveMessageCalled.get(), is(false));
+
 		tester.assertContains(updateTimeIsExecuted);
+
+		final FormTester form = tester.newFormTester("form");
+
+		form.setValue("input", "Atmosphere rocks!");
+
+		form.submit("send");
+
+		assertThat(updateTimeCalled.get(), is(true));
+		assertThat(receiveMessageCalled.get(), is(true));
+
+		// get the the collected so far content of the suspended response
+		// Note: it may contain several <ajax-response>s.
+		// use waTester.resetResponse() to remove the collected data
+		String atmosphereResponse = waTester.getPushedResponse();
+//		System.out.println("RES:" + atmosphereResponse);
+
+		// assert
+		Assert.assertFalse("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response></ajax-response>"
+				.equals(atmosphereResponse));
+
+		waTester.switchOnTestMode();
+		// now the assertions are against the Atmosphere's suspended response data
+		tester.assertComponentOnAjaxResponse("message");
+		waTester.switchOffTestMode();
+		// now the assertions will be the real last response
+
+		tester.assertLabel("message", "Atmosphere rocks!");
 
 		tester.destroy();
 	}
