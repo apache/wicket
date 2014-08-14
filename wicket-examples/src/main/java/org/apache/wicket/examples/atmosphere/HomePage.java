@@ -21,6 +21,7 @@ import java.util.Date;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.atmosphere.AtmosphereInternalEvent;
 import org.apache.wicket.atmosphere.EventBus;
 import org.apache.wicket.atmosphere.Subscribe;
 import org.apache.wicket.examples.WicketExamplePage;
@@ -82,5 +83,11 @@ public class HomePage extends WicketExamplePage
 	{
 		messageLabel.setDefaultModelObject(message.getMessage());
 		target.add(messageLabel);
+	}
+
+	@Subscribe
+	public void internalEvent(AjaxRequestTarget target, AtmosphereInternalEvent message)
+	{
+//		System.err.println(message);
 	}
 }
