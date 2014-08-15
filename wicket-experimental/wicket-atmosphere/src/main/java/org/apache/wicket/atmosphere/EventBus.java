@@ -17,7 +17,6 @@
 package org.apache.wicket.atmosphere;
 
 import java.util.Collection;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -122,6 +121,16 @@ public class EventBus implements UnboundListener
 	private final AtmosphereParameters parameters = new AtmosphereParameters();
 
 	private Broadcaster broadcaster;
+
+	/**
+	 * A flag indicating whether to be notified about Atmosphere internal events
+	 *
+	 * <strong>Caution:</strong>: enabling this may cause a lot of <em>onBroadcast</em> notifications
+	 *
+	 * @see org.apache.wicket.atmosphere.AtmosphereInternalEvent
+	 * @see org.atmosphere.cpr.AtmosphereResourceEventListener
+	 */
+	private boolean wantAtmosphereNotifications = false;
 
 	/**
 	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
@@ -508,5 +517,31 @@ public class EventBus implements UnboundListener
 		{
 			curListener.resourceUnregistered(uuid);
 		}
+	}
+
+	/**
+	 * @see org.apache.wicket.atmosphere.AtmosphereInternalEvent
+	 * @see org.atmosphere.cpr.AtmosphereResourceEventListener
+	 * @return whether to be notified about Atmosphere internal events or not
+	 */
+	public boolean isWantAtmosphereNotifications()
+	{
+		return wantAtmosphereNotifications;
+	}
+
+	/**
+	 * A flag indicating whether to be notified about Atmosphere internal events
+	 *
+	 * <strong>Caution:</strong>: enabling this may cause a lot of <em>onBroadcast</em> notifications
+	 *
+	 * @param wantAtmosphereNotifications
+	 *          {@code true} to be notified, {@code false} - otherwise
+	 * @see org.apache.wicket.atmosphere.AtmosphereInternalEvent
+	 * @see org.atmosphere.cpr.AtmosphereResourceEventListener
+	 */
+	public EventBus setWantAtmosphereNotifications(boolean wantAtmosphereNotifications)
+	{
+		this.wantAtmosphereNotifications = wantAtmosphereNotifications;
+		return this;
 	}
 }
