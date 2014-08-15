@@ -2131,8 +2131,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				if (!close.closes(tag))
 				{
 					// sanity check
-					// FIXME queueing message
-					throw new IllegalStateException();
+					throw new IllegalStateException(String.format("Tag '%s' should be the closing one for '%s'", close, tag));
 				}
 			}
 		}
