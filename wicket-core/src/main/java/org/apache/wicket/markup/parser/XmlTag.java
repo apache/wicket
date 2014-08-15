@@ -26,8 +26,6 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,9 +36,6 @@ import org.slf4j.LoggerFactory;
  */
 public class XmlTag
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(XmlTag.class);
-
 	/**
 	 * Enumerated type for different kinds of component tags.
 	 */
