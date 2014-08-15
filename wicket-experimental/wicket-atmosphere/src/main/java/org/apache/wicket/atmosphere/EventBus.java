@@ -17,7 +17,6 @@
 package org.apache.wicket.atmosphere;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +47,9 @@ import org.atmosphere.cpr.BroadcasterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
@@ -102,9 +101,16 @@ public class EventBus implements UnboundListener
 		return eventBus;
 	}
 
-	private final WebApplication application;
+	/**
+	 * @param application
+	 * @return {@code true} if there is an installed EventBus to the given application
+	 */
+	public static boolean isInstalled(Application application)
+	{
+		return application.getMetaData(EVENT_BUS_KEY) != null;
+	}
 
-	private final Broadcaster broadcaster;
+	private final WebApplication application;
 
 	private final Multimap<PageKey, EventSubscription> subscriptions = HashMultimap.create();
 
@@ -114,6 +120,18 @@ public class EventBus implements UnboundListener
 
 	private final AtmosphereParameters parameters = new AtmosphereParameters();
 
+	private Broadcaster broadcaster;
+
+	/**
+	 * A flag indicating whether to be notified about Atmosphere internal events
+	 *
+	 * <strong>Caution:</strong>: enabling this may cause a lot of <em>onBroadcast</em> notifications
+	 *
+	 * @see org.apache.wicket.atmosphere.AtmosphereInternalEvent
+	 * @see org.atmosphere.cpr.AtmosphereResourceEventListener
+	 */
+	private boolean wantAtmosphereNotifications = false;
+
 	/**
 	 * Creates and registers an {@code EventBus} for the given application. The first broadcaster
 	 * returned by the {@code BroadcasterFactory} is used.
@@ -122,7 +140,7 @@ public class EventBus implements UnboundListener
 	 */
 	public EventBus(WebApplication application)
 	{
-		this(application, lookupDefaultBroadcaster());
+		this(application, null);
 	}
 
 	private static Broadcaster lookupDefaultBroadcaster()
@@ -184,7 +202,13 @@ public class EventBus implements UnboundListener
 	 */
 	public Broadcaster getBroadcaster()
 	{
-		return broadcaster;
+		return broadcaster != null ? broadcaster : lookupDefaultBroadcaster();
+	}
+
+	public EventBus setBroadcaster(Broadcaster broadcaster)
+	{
+		this.broadcaster = broadcaster;
+		return this;
 	}
 
 	/**
@@ -219,7 +243,7 @@ public class EventBus implements UnboundListener
 		if (log.isDebugEnabled())
 		{
 			log.debug("registered page {} for session {}", pageKey.getPageId(),
-				pageKey.getSessionId());
+					pageKey.getSessionId());
 		}
 	}
 
@@ -272,6 +296,22 @@ public class EventBus implements UnboundListener
 		}
 		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
 		subscriptions.remove(pageKey, subscription);
+	}
+
+	/**
+	 * Unregisters all {@link EventSubscription}s for the given pageKey.
+	 *
+	 * @param pageKey
+	 *          The key with the page id and session id
+	 */
+	public synchronized void unregister(PageKey pageKey)
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("unregistering all subscriptions for page {} for session {}",
+					pageKey.getPageId(), pageKey.getSessionId());
+		}
+		subscriptions.removeAll(pageKey);
 	}
 
 	/**
@@ -380,21 +420,25 @@ public class EventBus implements UnboundListener
 		ThreadContext.detach();
 		ThreadContext.setApplication(application);
 		PageKey key;
-		Collection<EventSubscription> subscriptionsForPage;
+		Iterable<EventSubscription> subscriptionsForPage;
 		synchronized (this)
 		{
 			key = trackedPages.get(resource.uuid());
-			subscriptionsForPage = Collections2.filter(
-				Collections.unmodifiableCollection(subscriptions.get(key)), new EventFilter(event));
+			Collection<EventSubscription> eventSubscriptions = subscriptions.get(key);
+			subscriptionsForPage = Iterables.filter(eventSubscriptions, new EventFilter(event));
 		}
 		if (key == null)
-			broadcaster.removeAtmosphereResource(resource);
-		else if (!subscriptionsForPage.isEmpty())
-			post(resource, key, subscriptionsForPage, event);
+			getBroadcaster().removeAtmosphereResource(resource);
+		else
+		{
+			Iterator<EventSubscription> iterator = subscriptionsForPage.iterator();
+			if (iterator.hasNext())
+				post(resource, key, iterator, event);
+		}
 	}
 
 	private void post(AtmosphereResource resource, PageKey pageKey,
-		Collection<EventSubscription> subscriptionsForPage, AtmosphereEvent event)
+		Iterator<EventSubscription> subscriptionsForPage, AtmosphereEvent event)
 	{
 		String filterPath = WebApplication.get()
 			.getWicketFilter()
@@ -415,7 +459,7 @@ public class EventBus implements UnboundListener
 			subscriptionsForPage, event);
 		Response response = new AtmosphereWebResponse(resource.getResponse());
 		if (application.createRequestCycle(request, response).processRequestAndDetach())
-			broadcaster.broadcast(response.toString(), resource);
+			getBroadcaster().broadcast(response.toString(), resource);
 	}
 
 	@Override
@@ -473,5 +517,31 @@ public class EventBus implements UnboundListener
 		{
 			curListener.resourceUnregistered(uuid);
 		}
+	}
+
+	/**
+	 * @see org.apache.wicket.atmosphere.AtmosphereInternalEvent
+	 * @see org.atmosphere.cpr.AtmosphereResourceEventListener
+	 * @return whether to be notified about Atmosphere internal events or not
+	 */
+	public boolean isWantAtmosphereNotifications()
+	{
+		return wantAtmosphereNotifications;
+	}
+
+	/**
+	 * A flag indicating whether to be notified about Atmosphere internal events
+	 *
+	 * <strong>Caution:</strong>: enabling this may cause a lot of <em>onBroadcast</em> notifications
+	 *
+	 * @param wantAtmosphereNotifications
+	 *          {@code true} to be notified, {@code false} - otherwise
+	 * @see org.apache.wicket.atmosphere.AtmosphereInternalEvent
+	 * @see org.atmosphere.cpr.AtmosphereResourceEventListener
+	 */
+	public EventBus setWantAtmosphereNotifications(boolean wantAtmosphereNotifications)
+	{
+		this.wantAtmosphereNotifications = wantAtmosphereNotifications;
+		return this;
 	}
 }
