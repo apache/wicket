@@ -29,14 +29,8 @@ public class Initializer implements IInitializer
 	@Override
 	public void init(Application application)
 	{
-		try
+		if (WicketWebjars.isInstalled(application) == false)
 		{
-			WicketWebjars.settings();
-		}
-		catch (IllegalStateException x)
-		{
-			// try to install only if it is not already installed
-			// TODO simplify once wicket-webjars has WicketWebjars#isInstalled(application)
 			WicketWebjars.install((org.apache.wicket.protocol.http.WebApplication) application);
 		}
 	}
