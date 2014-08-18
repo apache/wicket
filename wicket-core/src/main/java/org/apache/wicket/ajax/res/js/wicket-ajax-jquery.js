@@ -261,7 +261,7 @@
 			var res = name.match(/^([^|]+)\|(d|s|a)$/);
 			if (isUndef(res)) {
 				this.name = '0'; // '0' is the default channel name
-				this.type = 's'; // default to stack
+				this.type = 's'; // default to stack/queue
 			}
 			else {
 				this.name = res[1];
@@ -282,14 +282,14 @@
 				}
 			} else {
 				var busyChannel = "Channel '"+ this.name+"' is busy";
-				if (this.type === 's') { // stack
+				if (this.type === 's') { // stack/queue
 					Wicket.Log.info(busyChannel + " - scheduling the callback to be executed when the previous request finish.");
 					this.callbacks.push(callback);
 				}
 				else if (this.type === 'd') { // drop
-					Wicket.Log.info(busyChannel + " - dropping all previous scheduled callbacks and scheduled a new one to be executed when the current request finish.");
+					Wicket.Log.info(busyChannel + " - dropping all previous scheduled callbacks and scheduling a new one to be executed when the current request finish.");
 					this.callbacks = [];
-					this.callbacks[0] = callback;
+					this.callbacks.push(callback);
 				} else if (this.type === 'a') { // active
 					Wicket.Log.info(busyChannel + " - ignoring the Ajax call because there is a running request.");
 				}
@@ -298,17 +298,17 @@
 		},
 
 		done: function () {
-			var c = null;
+			var callback = null;
 
 			if (this.callbacks.length > 0) {
-				c = this.callbacks.shift();
+				callback = this.callbacks.shift();
 			}
 
-			if (c !== null && typeof(c) !== "undefined") {
+			if (callback !== null && typeof(callback) !== "undefined") {
 				Wicket.Log.info("Calling postponed function...");
 				// we can't call the callback from this call-stack
 				// therefore we set it on timer event
-				window.setTimeout(c, 1);
+				window.setTimeout(callback, 1);
 			} else {
 				this.busy = false;
 			}
