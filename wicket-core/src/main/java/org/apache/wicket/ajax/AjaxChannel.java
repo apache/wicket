@@ -58,9 +58,19 @@ public class AjaxChannel implements IClusterable
 	}
 
 	/**
+	 * The name of the default channel
+	 */
+	public static final String DEFAULT_NAME = "0";
+
+	/**
+	 * The type of the default channel
+	 */
+	public static final Type DEFAULT_TYPE = Type.QUEUE;
+
+	/**
 	 * The default channel for all Ajax calls
 	 */
-	public static final AjaxChannel DEFAULT = new AjaxChannel("0", Type.QUEUE);
+	public static final AjaxChannel DEFAULT = new AjaxChannel(DEFAULT_NAME, DEFAULT_TYPE);
 
 	private final String name;
 

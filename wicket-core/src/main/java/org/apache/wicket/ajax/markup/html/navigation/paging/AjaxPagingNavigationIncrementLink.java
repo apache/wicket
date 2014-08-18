@@ -51,8 +51,6 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final String PAGING_CHANNEL_NAME = "ajax-paging";
-
 	/**
 	 * Constructor.
 	 * 
@@ -94,7 +92,7 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				attributes.setChannel(new AjaxChannel(PAGING_CHANNEL_NAME, AjaxChannel.Type.ACTIVE));
+				attributes.setChannel(new AjaxChannel(AjaxChannel.DEFAULT_NAME, AjaxChannel.Type.ACTIVE));
 				AjaxPagingNavigationIncrementLink.this.updateAjaxAttributes(attributes);
 			}
 		};
