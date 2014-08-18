@@ -40,7 +40,7 @@ import org.apache.wicket.util.string.Strings;
  * {@code mount(new MountedMapper("/myPage", MyPage.class, new UrlPathPageParametersEncoder()); }
  * 
  * @author Chris Colman
- * @author Luniv (on Stack Overflow)
+ * @author James Gilbertson
  * @author ivaynberg
  */
 public class UrlPathPageParametersEncoder implements IPageParametersEncoder
