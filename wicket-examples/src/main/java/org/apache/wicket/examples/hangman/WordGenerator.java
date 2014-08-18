@@ -52,7 +52,7 @@ public class WordGenerator implements IClusterable
 	{
 		try
 		{
-			final IResourceStream resource = new ResourceStreamLocator().locate(null,
+			final IResourceStream resource = new ResourceStreamLocator().locate(WordGenerator.class,
 				"org/apache/wicket/examples/hangman/WordList", null, null, Locale.getDefault(),
 				".txt", false);
 			final String wordlist = Streams.readString(resource.getInputStream());
