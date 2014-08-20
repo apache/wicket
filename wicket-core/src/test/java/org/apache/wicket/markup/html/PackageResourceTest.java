@@ -73,22 +73,15 @@ public class PackageResourceTest extends WicketTestCase
 		PackageResourceGuard guard = new PackageResourceGuard();
 		assertTrue(guard.acceptExtension("txt"));
 		assertFalse(guard.acceptExtension("java"));
-		assertTrue(guard.acceptAbsolutePath("foo/Bar.txt"));
-		assertFalse(guard.acceptAbsolutePath("foo/Bar.java"));
-		assertTrue(guard.accept(PackageResourceTest.class,
-			Packages.absolutePath(PackageResourceTest.class, "Bar.txt")));
-		assertTrue(guard.accept(PackageResourceTest.class,
-			Packages.absolutePath(PackageResourceTest.class, "Bar.txt.")));
-		assertTrue(guard.accept(PackageResourceTest.class,
-			Packages.absolutePath(PackageResourceTest.class, ".Bar.txt")));
-		assertTrue(guard.accept(PackageResourceTest.class,
-			Packages.absolutePath(PackageResourceTest.class, ".Bar.txt.")));
-		assertTrue(guard.accept(PackageResourceTest.class,
-			Packages.absolutePath(PackageResourceTest.class, ".Bar")));
-		assertTrue(guard.accept(PackageResourceTest.class,
-			Packages.absolutePath(PackageResourceTest.class, ".java")));
-		assertFalse(guard.accept(PackageResourceTest.class,
-			Packages.absolutePath(PackageResourceTest.class, "Bar.java")));
+		assertTrue(guard.accept("foo/Bar.txt"));
+		assertFalse(guard.accept("foo/Bar.java"));
+		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, "Bar.txt")));
+		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, "Bar.txt.")));
+		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, ".Bar.txt")));
+		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, ".Bar.txt.")));
+		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, ".Bar")));
+		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, ".java")));
+		assertFalse(guard.accept(Packages.absolutePath(PackageResourceTest.class, "Bar.java")));
 	}
 
 	/**

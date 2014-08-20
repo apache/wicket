@@ -26,17 +26,16 @@ import org.apache.wicket.request.resource.PackageResource;
  */
 public interface IPackageResourceGuard
 {
+
 	/**
 	 * Whether the package resource that can be reached using the provided parameters may be
 	 * accessed.
 	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading the package
-	 *            resource
-	 * @param absolutePath
-	 *            The absolute path to the resource
+	 * @param path
+	 *            The absolute path, starting from the class root (packages are separated with
+	 *            forward slashes instead of dots).
 	 * 
 	 * @return True if access is permitted, false otherwise
 	 */
-	boolean accept(final Class<?> scope, final String absolutePath);
+	boolean accept(final String absolutePath);
 }

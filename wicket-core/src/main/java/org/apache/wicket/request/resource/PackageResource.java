@@ -433,7 +433,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				.getResourceStreamLocator();
 		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath, style, variation, locale, null, false);
 
-		Class<?> realScope = getScope();
 		String realPath = absolutePath;
 		if (resourceStream instanceof IFixedLocationResourceStream)
 		{
@@ -445,11 +444,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				{
 					realPath = realPath.substring(index);
 				}
-				else
-				{
-					// just fall back on the full path without a scope..
-					realScope = null;
-				}
 			}
 			else
 			{
@@ -458,7 +452,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 		}
 
-		if (accept(realScope, realPath) == false)
+		if (accept(realPath) == false)
 		{
 			throw new PackageResourceBlockedException(
 					"Access denied to (static) package resource " + absolutePath +
@@ -524,13 +518,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 *            resource path
 	 * @return <code>true<code> if resource access is granted
 	 */
-	protected boolean accept(Class<?> scope, String path)
+	protected boolean accept(String path)
 	{
 		IPackageResourceGuard guard = Application.get()
 			.getResourceSettings()
 			.getPackageResourceGuard();
 
-		return guard.accept(scope, path);
+		return guard.accept(path);
 	}
 
 	/**

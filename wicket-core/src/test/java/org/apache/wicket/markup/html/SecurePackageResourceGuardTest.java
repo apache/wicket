@@ -35,28 +35,28 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.setAllowAccessToRootResources(false);
 		guard.addPattern("+*.gif");
-		assertTrue(guard.accept(Application.class,
+		assertTrue(guard.accept(
 			Packages.absolutePath(Application.class, "test.gif")));
-		assertTrue(guard.accept(Application.class,
+		assertTrue(guard.accept(
 			Packages.absolutePath(Application.class, "mydir/test.gif")));
-		assertTrue(guard.accept(Application.class, "/root/mydir/test.gif"));
-		assertTrue(guard.accept(Application.class,
+		assertTrue(guard.accept("/root/mydir/test.gif"));
+		assertTrue(guard.accept(
 			Packages.absolutePath(Application.class, "../test.gif")));
-		assertTrue(guard.accept(Application.class,
+		assertTrue(guard.accept(
 			Packages.absolutePath(Application.class, "../../test.gif")));
 
 		// web-inf (root package)
-		assertFalse(guard.accept(Application.class,
+		assertFalse(guard.accept(
 			Packages.absolutePath(Application.class, "../../../test.gif")));
 		guard.setAllowAccessToRootResources(true);
-		assertTrue(guard.accept(Application.class,
+		assertTrue(guard.accept(
 			Packages.absolutePath(Application.class, "../../../test.gif")));
 
 		boolean hit = false;
 		try
 		{
 			// you can not go below root
-			assertTrue(guard.accept(Application.class,
+			assertTrue(guard.accept(
 				Packages.absolutePath(Application.class, "../../../../test.gif")));
 		}
 		catch (IllegalArgumentException ex)
@@ -74,10 +74,10 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+*.gif");
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertFalse(guard.acceptAbsolutePath("/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("/root/mydir/test.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertFalse(guard.accept("/test.gif"));
+		assertTrue(guard.accept("mydir/test.gif"));
+		assertTrue(guard.accept("/root/mydir/test.gif"));
 	}
 
 	/**
@@ -93,16 +93,16 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.addPattern("+*.gi*");
 		guard.addPattern("+test*.gif");
 
-		assertTrue(guard.acceptAbsolutePath("test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("/root/mydir/test.gif"));
+		assertTrue(guard.accept("test.gif"));
+		assertTrue(guard.accept("mydir/test.gif"));
+		assertTrue(guard.accept("/root/mydir/test.gif"));
 
-		assertTrue(guard.acceptAbsolutePath("test.giX"));
-		assertTrue(guard.acceptAbsolutePath("mydir/test.gifABCD"));
-		assertTrue(guard.acceptAbsolutePath("mydir/testXXX.gif"));
+		assertTrue(guard.accept("test.giX"));
+		assertTrue(guard.accept("mydir/test.gifABCD"));
+		assertTrue(guard.accept("mydir/testXXX.gif"));
 
 		guard.addPattern("-**/testA.gif");
-		assertFalse(guard.acceptAbsolutePath("mydir/testA.gif"));
+		assertFalse(guard.accept("mydir/testA.gif"));
 	}
 
 	@Test
@@ -112,7 +112,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("::");
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+test*.gif");
-		assertTrue(guard.acceptAbsolutePath("../test.gif"));
+		assertTrue(guard.accept("../test.gif"));
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder(null);
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+test*.gif");
-		assertFalse(guard.acceptAbsolutePath("../test.gif"));
+		assertFalse(guard.accept("../test.gif"));
 	}
 
 	/**
@@ -135,11 +135,11 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+mydir/*/*.gif");
 
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("/mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/dir3/xxx.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertFalse(guard.accept("mydir/test.gif"));
+		assertFalse(guard.accept("/mydir/test.gif"));
+		assertTrue(guard.accept("mydir/dir2/xxx.gif"));
+		assertFalse(guard.accept("mydir/dir2/dir3/xxx.gif"));
 	}
 
 	/**
@@ -152,11 +152,11 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+mydir/**/*.gif");
 
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2/xxx.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2/dir3/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("/mydir/test.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertTrue(guard.accept("mydir/test.gif"));
+		assertTrue(guard.accept("mydir/dir2/xxx.gif"));
+		assertTrue(guard.accept("mydir/dir2/dir3/xxx.gif"));
+		assertFalse(guard.accept("/mydir/test.gif"));
 	}
 
 	/**
@@ -169,14 +169,14 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+*my*dir*/*/*.gif");
 
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2/xxx.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydirXX/dir2/xxx.gif"));
-		assertTrue(guard.acceptAbsolutePath("AAmydirXX/dir2/xxx.gif"));
-		assertTrue(guard.acceptAbsolutePath("myBBdirXX/dir2/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/dir3/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("/mydir/test.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertFalse(guard.accept("mydir/test.gif"));
+		assertTrue(guard.accept("mydir/dir2/xxx.gif"));
+		assertTrue(guard.accept("mydirXX/dir2/xxx.gif"));
+		assertTrue(guard.accept("AAmydirXX/dir2/xxx.gif"));
+		assertTrue(guard.accept("myBBdirXX/dir2/xxx.gif"));
+		assertFalse(guard.accept("mydir/dir2/dir3/xxx.gif"));
+		assertFalse(guard.accept("/mydir/test.gif"));
 	}
 
 	/**
@@ -189,14 +189,14 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+mydir**/*X/*.gif");
 
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/xxx.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydirAA/dir2X/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydirAA/dir2/xxx.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2X/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/dir3/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("/mydir/test.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertFalse(guard.accept("mydir/test.gif"));
+		assertFalse(guard.accept("mydir/dir2/xxx.gif"));
+		assertTrue(guard.accept("mydirAA/dir2X/xxx.gif"));
+		assertFalse(guard.accept("mydirAA/dir2/xxx.gif"));
+		assertTrue(guard.accept("mydir/dir2X/xxx.gif"));
+		assertFalse(guard.accept("mydir/dir2/dir3/xxx.gif"));
+		assertFalse(guard.accept("/mydir/test.gif"));
 	}
 
 	/**
@@ -209,22 +209,22 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+mydir/**/xxx/**/*.gif");
 
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/xxx/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2/xxx/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2/xxx/yyy/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir1/xxx/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir1/dir2/xxx/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir1/xxx/dir3/xxx.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertFalse(guard.accept("mydir/test.gif"));
+		assertTrue(guard.accept("mydir/xxx/test.gif"));
+		assertTrue(guard.accept("mydir/dir2/xxx/test.gif"));
+		assertTrue(guard.accept("mydir/dir2/xxx/yyy/test.gif"));
+		assertTrue(guard.accept("mydir/dir1/xxx/test.gif"));
+		assertTrue(guard.accept("mydir/dir1/dir2/xxx/test.gif"));
+		assertTrue(guard.accept("mydir/dir1/xxx/dir3/xxx.gif"));
 
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/aaa/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/aaa/yyy/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir1/aaa/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir1/dir2/aaa/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir1/aaa/dir3/test.gif"));
+		assertFalse(guard.accept("mydir/dir2/aaa/test.gif"));
+		assertFalse(guard.accept("mydir/dir2/aaa/yyy/test.gif"));
+		assertFalse(guard.accept("mydir/dir1/aaa/test.gif"));
+		assertFalse(guard.accept("mydir/dir1/dir2/aaa/test.gif"));
+		assertFalse(guard.accept("mydir/dir1/aaa/dir3/test.gif"));
 
-		assertFalse(guard.acceptAbsolutePath("/mydir/test.gif"));
+		assertFalse(guard.accept("/mydir/test.gif"));
 	}
 
 	/**
@@ -237,12 +237,12 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+/**/*.gif");
 
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/dir3/xxx.gif"));
-		assertTrue(guard.acceptAbsolutePath("/mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("/mydir/dir2/test.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertFalse(guard.accept("mydir/test.gif"));
+		assertFalse(guard.accept("mydir/dir2/xxx.gif"));
+		assertFalse(guard.accept("mydir/dir2/dir3/xxx.gif"));
+		assertTrue(guard.accept("/mydir/test.gif"));
+		assertTrue(guard.accept("/mydir/dir2/test.gif"));
 	}
 
 	/**
@@ -256,11 +256,11 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+**/*.gif");
 
-		assertTrue(guard.acceptAbsolutePath("test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2/xxx.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/dir2/dir3/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("/mydir/test.gif"));
+		assertTrue(guard.accept("test.gif"));
+		assertTrue(guard.accept("mydir/test.gif"));
+		assertTrue(guard.accept("mydir/dir2/xxx.gif"));
+		assertTrue(guard.accept("mydir/dir2/dir3/xxx.gif"));
+		assertFalse(guard.accept("/mydir/test.gif"));
 	}
 
 	/**
@@ -273,11 +273,11 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+*/*.gif");
 
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertTrue(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/dir2/dir3/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("/mydir/test.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertTrue(guard.accept("mydir/test.gif"));
+		assertFalse(guard.accept("mydir/dir2/xxx.gif"));
+		assertFalse(guard.accept("mydir/dir2/dir3/xxx.gif"));
+		assertFalse(guard.accept("/mydir/test.gif"));
 	}
 
 	/**
@@ -290,10 +290,10 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		guard.getPattern().clear();
 		guard.addPattern("+/*/*.gif");
 
-		assertFalse(guard.acceptAbsolutePath("test.gif"));
-		assertFalse(guard.acceptAbsolutePath("mydir/test.gif"));
-		assertTrue(guard.acceptAbsolutePath("/mydir/test.gif"));
-		assertFalse(guard.acceptAbsolutePath("/mydir/dir2/xxx.gif"));
-		assertFalse(guard.acceptAbsolutePath("/mydir/dir2/dir3/xxx.gif"));
+		assertFalse(guard.accept("test.gif"));
+		assertFalse(guard.accept("mydir/test.gif"));
+		assertTrue(guard.accept("/mydir/test.gif"));
+		assertFalse(guard.accept("/mydir/dir2/xxx.gif"));
+		assertFalse(guard.accept("/mydir/dir2/dir3/xxx.gif"));
 	}
 }

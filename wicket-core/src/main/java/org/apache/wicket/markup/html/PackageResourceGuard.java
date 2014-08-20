@@ -62,24 +62,9 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.Class,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.String)
 	 */
-	public boolean accept(Class<?> scope, String absolutePath)
-	{
-		// path is already absolute
-		return acceptAbsolutePath(absolutePath);
-	}
-
-	/**
-	 * Whether the provided absolute path is accepted.
-	 * 
-	 * @param path
-	 *            The absolute path, starting from the class root (packages are separated with
-	 *            forward slashes instead of dots).
-	 * @return True if accepted, false otherwise.
-	 */
-	protected boolean acceptAbsolutePath(String path)
+	public boolean accept(String path)
 	{
 		int ixExtension = path.lastIndexOf('.');
 		int len = path.length();

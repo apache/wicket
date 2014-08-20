@@ -148,7 +148,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	 * @return True if accepted, false otherwise.
 	 */
 	@Override
-	protected boolean acceptAbsolutePath(String path)
+	public boolean accept(String path)
 	{
 		// First check the cache
 		if (cache != null)
@@ -161,7 +161,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		}
 
 		// Check typical files such as log4j.xml etc.
-		if (super.acceptAbsolutePath(path) == false)
+		if (super.accept(path) == false)
 		{
 			return false;
 		}

@@ -35,10 +35,10 @@ public class PackageResourceGuardTest extends WicketTestCase
 		PackageResourceGuard guard = new PackageResourceGuard();
 
 		guard.setAllowAccessToRootResources(false);
-		assertFalse(guard.accept(Integer.TYPE, "test.gif"));
+		assertFalse(guard.accept("test.gif"));
 
 		guard.setAllowAccessToRootResources(true);
-		assertTrue(guard.accept(Integer.TYPE, "test.gif"));
+		assertTrue(guard.accept("test.gif"));
 
 
 	}
@@ -53,21 +53,21 @@ public class PackageResourceGuardTest extends WicketTestCase
 		PackageResourceGuard guard = new PackageResourceGuard();
 		guard.setAllowAccessToRootResources(false);
 
-		assertTrue(guard.acceptAbsolutePath("/test/test.js"));
-		assertFalse(guard.acceptAbsolutePath("/test.js"));
+		assertTrue(guard.accept("/test/test.js"));
+		assertFalse(guard.accept("/test.js"));
 
 		if ("\\".equals(File.pathSeparator))
 		{
-			assertTrue(guard.acceptAbsolutePath("c:\\test\\org\\apache\\test.js"));
-			assertTrue(guard.acceptAbsolutePath("\\test\\org\\apache\\test.js"));
-			assertFalse(guard.acceptAbsolutePath("c:\\test.js"));
-			assertFalse(guard.acceptAbsolutePath("\\test.js"));
+			assertTrue(guard.accept("c:\\test\\org\\apache\\test.js"));
+			assertTrue(guard.accept("\\test\\org\\apache\\test.js"));
+			assertFalse(guard.accept("c:\\test.js"));
+			assertFalse(guard.accept("\\test.js"));
 
 			// java also generates file paths with '/' on windows
-			assertTrue(guard.acceptAbsolutePath("c:/test/org/apache/test.js"));
-			assertTrue(guard.acceptAbsolutePath("/test/org/apache/test.js"));
-			assertFalse(guard.acceptAbsolutePath("c:/test.js"));
-			assertFalse(guard.acceptAbsolutePath("/test.js"));
+			assertTrue(guard.accept("c:/test/org/apache/test.js"));
+			assertTrue(guard.accept("/test/org/apache/test.js"));
+			assertFalse(guard.accept("c:/test.js"));
+			assertFalse(guard.accept("/test.js"));
 		}
 	}
 
@@ -84,13 +84,20 @@ public class PackageResourceGuardTest extends WicketTestCase
 		assertNotNull(getClass().getResource(
 			"/org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass.class"));
 
-		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass.html"));
-		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass_de.html"));
-		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass_SomeHTMLSnippetIWantServed.html"));
-		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName.html"));
-		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName_de.html"));
-		assertFalse(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName_en.html"));
-		assertTrue(guard.acceptAbsolutePath("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass.html"));
+		assertFalse(guard
+			.accept("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass.html"));
+		assertFalse(guard
+			.accept("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass_de.html"));
+		assertFalse(guard
+			.accept("org/apache/wicket/markup/html/PackageResourceGuardTest$MyClass_SomeHTMLSnippetIWantServed.html"));
+		assertFalse(guard
+			.accept("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName.html"));
+		assertFalse(guard
+			.accept("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName_de.html"));
+		assertFalse(guard
+			.accept("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass_WithCrazyName_en.html"));
+		assertTrue(guard
+			.accept("org/apache/wicket/markup/html/PackageResourceGuardTest$MyOtherClass.html"));
 	}
 
 	private class MyClass extends WebComponent
