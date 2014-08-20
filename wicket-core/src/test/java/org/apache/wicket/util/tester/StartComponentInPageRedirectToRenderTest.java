@@ -21,7 +21,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.settings.RequestCycleSettings;
 import org.junit.Test;
 
 /**
@@ -38,7 +38,7 @@ public class StartComponentInPageRedirectToRenderTest extends WicketTestCase
 			protected void init()
 			{
 				super.init();
-				getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER);
+				getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER);
 			}
 		};
 	}
