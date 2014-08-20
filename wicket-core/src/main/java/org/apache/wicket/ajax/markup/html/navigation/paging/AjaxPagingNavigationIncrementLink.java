@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ajax.markup.html.navigation.paging;
 
-import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
@@ -92,7 +91,6 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				attributes.setChannel(new AjaxChannel(AjaxChannel.DEFAULT_NAME, AjaxChannel.Type.ACTIVE));
 				AjaxPagingNavigationIncrementLink.this.updateAjaxAttributes(attributes);
 			}
 		};
