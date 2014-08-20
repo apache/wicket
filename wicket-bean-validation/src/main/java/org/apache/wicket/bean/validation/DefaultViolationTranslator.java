@@ -1,5 +1,8 @@
 package org.apache.wicket.bean.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.metadata.ConstraintDescriptor;
 
@@ -24,37 +27,69 @@ public class DefaultViolationTranslator implements IViolationTranslator
 		ValidationError error = new ValidationError();
 		error.setMessage(violation.getMessage());
 
-		String messageKey = getMessageKey(desc);
-		if (messageKey != null)
-		{
-			if (violation.getInvalidValue() != null)
-			{
-				error.addKey(messageKey + "." +
-					violation.getInvalidValue().getClass().getSimpleName());
-			}
-			error.addKey(messageKey);
-		}
+		List<String> messages = getViolationMessages(violation, desc);
+		addErrorKeys(error, violation.getInvalidValue(), messages);
 
 		for (String key : desc.getAttributes().keySet())
 		{
 			error.setVariable(key, desc.getAttributes().get(key));
 		}
+		
 		return error;
 	}
 
-	private String getMessageKey(ConstraintDescriptor<?> desc)
+	private List<String> getViolationMessages(ConstraintViolation<?> violation,
+		ConstraintDescriptor<?> desc)
 	{
-		final Object val = desc.getAttributes().get("message");
-		if (val != null)
+		String defaultMessage = (String)desc.getAttributes().get("message");
+		String violationMessage = violation.getMessage();
+		String violationMessageTemplate = violation.getMessageTemplate();		
+		List<String> messages = new ArrayList<String>();
+
+		//violation message is considered only if it is different from
+		//the interpolated message
+		if (!Strings.isEqual(violationMessage, violationMessageTemplate))
 		{
-			String str = val.toString();
-			if (!Strings.isEmpty(str) && str.startsWith("{") && str.endsWith("}"))
-			{
-				return str.substring(1, str.length() - 1);
-			}
+			messages.add(violationMessageTemplate);
 		}
-		return null;
+		
+		messages.add(violationMessage);
+		
+		//the default message is considered only if it is different from
+		//the violation message template
+		if (!Strings.isEqual(defaultMessage, violationMessageTemplate))
+		{
+			messages.add(defaultMessage);
+		}
+
+		return messages;
 	}
 
+	private void addErrorKeys(ValidationError error, Object invalidValue, List<String> messages)
+	{
+		for (String message : messages)
+		{
+			String messageKey = getMessageKey(message);
 
+			if (messageKey != null)
+			{
+				if (invalidValue != null)
+				{
+					error.addKey(messageKey + "." + invalidValue.getClass().getSimpleName());
+				}
+
+				error.addKey(messageKey);
+			}
+		}
+	}
+
+	private String getMessageKey(String message)
+	{
+		if (!Strings.isEmpty(message) && message.startsWith("{") && message.endsWith("}"))
+		{
+			return message.substring(1, message.length() - 1);
+		}
+	
+		return null;
+	}
 }

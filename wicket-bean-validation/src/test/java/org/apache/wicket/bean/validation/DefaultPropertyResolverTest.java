@@ -16,12 +16,28 @@
  */
 package org.apache.wicket.bean.validation;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation.CUSTOM_BUNDLE_KEY;
+import static org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation.DEFAULT_BUNDLE_KEY;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
+import org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.tester.WicketTesterScope;
+import org.apache.wicket.validation.ValidationError;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -45,8 +61,7 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean1>(new Bean1(),
-			"foo"));
+		TextField<?> component = new TextField<>("id", new PropertyModel<Bean1>(new Bean1(), "foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
 		assertThat(property.getName(), is("foo"));
@@ -61,8 +76,8 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<BooleanBean>(new BooleanBean(),
-				"foo"));
+		TextField<?> component = new TextField<>("id", new PropertyModel<BooleanBean>(
+			new BooleanBean(), "foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
 		assertThat(property.getName(), is("foo"));
@@ -74,8 +89,7 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean2>(new Bean2(),
-			"foo"));
+		TextField<?> component = new TextField<>("id", new PropertyModel<Bean2>(new Bean2(), "foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
 		assertThat(property.getName(), is("foo"));
@@ -92,8 +106,7 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean3>(new Bean3(),
-			"foo"));
+		TextField<?> component = new TextField<>("id", new PropertyModel<Bean3>(new Bean3(), "foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
 		assertThat(property.getName(), is("foo"));
@@ -108,14 +121,83 @@ public class DefaultPropertyResolverTest
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean4>(new Bean4(),
-				"foo"));
+		TextField<?> component = new TextField<>("id", new PropertyModel<Bean4>(new Bean4(), "foo"));
 		Property property = resolver.resolveProperty(component);
 		assertThat(property, not(nullValue()));
 		assertThat(property.getName(), is("foo"));
 		assertThat(property.getOwner().getName(), is(Bean4.class.getName()));
 	}
 
+	/**
+	 * Test custom bundle mechanism of jsr 303
+	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-5654
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testBundleKeysResolution() throws Exception
+	{
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		DefaultViolationTranslator translator = new DefaultViolationTranslator();
+
+		// test with a too short password
+		BeanWithPassword bean = new BeanWithPassword("short");
+
+		Set<ConstraintViolation<BeanWithPassword>> constraintViolations = validator.validate(bean);
+		assertEquals(1, constraintViolations.size());
+
+		@SuppressWarnings("unchecked")
+		ConstraintViolation<BeanWithPassword> shortViolation = (ConstraintViolation<BeanWithPassword>)constraintViolations
+			.toArray()[0];
+
+		ValidationError error = translator.convert(shortViolation);
+
+		checkErrorBundleKeys(error, DEFAULT_BUNDLE_KEY + ".String", DEFAULT_BUNDLE_KEY);
+
+		// test with a password containing non-word chars
+		bean.setPassword("notWord&%$£");
+
+		constraintViolations = validator.validate(bean);
+		assertEquals(1, constraintViolations.size());
+
+		@SuppressWarnings("unchecked")
+		ConstraintViolation<BeanWithPassword> nonWordviolation = (ConstraintViolation<BeanWithPassword>)constraintViolations.toArray()[0];
+
+		error = translator.convert(nonWordviolation);
+
+		checkErrorBundleKeys(error, CUSTOM_BUNDLE_KEY + ".String", CUSTOM_BUNDLE_KEY,
+			DEFAULT_BUNDLE_KEY + ".String", DEFAULT_BUNDLE_KEY);
+
+		// test with a valid password
+		bean.setPassword("aValidPassword1234");
+
+		constraintViolations = validator.validate(bean);
+		assertEquals(0, constraintViolations.size());
+	}
+
+	/**
+	 * Checks that validation error has the expected keys as bundle keys, in the order they are
+	 * specified in {@code expectedKeys}.
+	 * 
+	 * @param error
+	 * @param expectedKeys
+	 */
+	private void checkErrorBundleKeys(ValidationError error, String... expectedKeys)
+	{
+		List<String> keys = error.getKeys();
+
+		assertEquals("The expected number for bundle keys is '" + expectedKeys.length
+			+ "' but we have '" + keys.size() + "'", expectedKeys.length, keys.size());
+
+		for (int i = 0; i < expectedKeys.length; i++)
+		{
+			String expectedKey = expectedKeys[i];
+
+			assertTrue(keys.get(i).equals(expectedKey));
+		}
+	}
 
 	public static class Bean3
 	{
@@ -143,4 +225,25 @@ public class DefaultPropertyResolverTest
 			return "foo4";
 		}
 	}
+	
+	public static class BeanWithPassword
+	 {
+	     @PasswordConstraintAnnotation
+	     private String password;
+
+	 	public BeanWithPassword(String password)
+	 	{
+	 		this.password = password;
+	 	}
+
+	 	public String getPassword()
+	 	{
+	 		return password;
+	 	}
+
+	 	public void setPassword(String password)
+	 	{
+	 		this.password = password;
+	 	}
+	 }
 }
