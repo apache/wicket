@@ -348,10 +348,10 @@ public class AjaxEditableLabel<T> extends Panel
 				AjaxCallListener ajaxCallListener = new AjaxCallListener();
 				ajaxCallListener.onPrecondition(precondition);
 
-				CharSequence dynamicExtraParameters = "var result = [],"
+				CharSequence dynamicExtraParameters = "var result,"
 					+ "evtType=attrs.event.type;"
-					+ "if (evtType === 'keyup') { result.push( { name: 'save', value: false } ); }"
-					+ "else { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }"
+					+ "if (evtType === 'keyup') { result = { 'save': false }; }"
+					+ "else { result = { 'save': true }; }"
 					+ "return result;";
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
