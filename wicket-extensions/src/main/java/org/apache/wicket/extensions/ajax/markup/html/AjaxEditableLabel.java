@@ -474,6 +474,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		label.setVisible(true);
 		editor.setVisible(false);
+		editor.clearInput();
 		target.add(AjaxEditableLabel.this);
 	}
 
