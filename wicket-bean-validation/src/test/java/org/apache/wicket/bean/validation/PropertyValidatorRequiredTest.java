@@ -79,7 +79,8 @@ public class PropertyValidatorRequiredTest
 	public void testResolveComposedConstraints() throws Exception
 	{
 		Property property = new Property(DefaultPropertyResolverTest.BeanWithPassword.class, "password");		
-		PropertyValidator<DefaultPropertyResolverTest.BeanWithPassword> propertyValidator = new PropertyValidator<>(property);
+		PropertyValidator<DefaultPropertyResolverTest.BeanWithPassword> propertyValidator = 
+		                   new PropertyValidator<DefaultPropertyResolverTest.BeanWithPassword>(property);
 		
 		assertTrue(propertyValidator.isRequired()); 
 	}
