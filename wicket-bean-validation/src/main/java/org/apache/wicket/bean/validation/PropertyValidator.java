@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.Component;
@@ -100,11 +101,10 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 			if (property_ == null)
 			{
 				throw new IllegalStateException(
-					"Could not resolve Property from component: " +
-						component +
-						". Either specify the Property in the constructor or use a model that works in combination with a " +
-						IPropertyResolver.class.getSimpleName() +
-						" to resolve the Property automatically");
+					"Could not resolve Property from component: " + component
+						+ ". Either specify the Property in the constructor or use a model that works in combination with a "
+						+ IPropertyResolver.class.getSimpleName()
+						+ " to resolve the Property automatically");
 			}
 		}
 		return property_;
@@ -126,14 +126,15 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		if (this.component != null)
 		{
 			throw new IllegalStateException( //
-				"This validator has already been added to component: " + this.component +
-					". This validator does not support reusing instances, please create a new one");
+				"This validator has already been added to component: "
+					+ this.component
+					+ ". This validator does not support reusing instances, please create a new one");
 		}
 
 		if (!(component instanceof FormComponent))
 		{
-			throw new IllegalStateException(getClass().getSimpleName() +
-				" can only be added to FormComponents");
+			throw new IllegalStateException(getClass().getSimpleName()
+				+ " can only be added to FormComponents");
 		}
 
 		// TODO add a validation key that appends the type so we can have
@@ -208,7 +209,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 
 		for (NotNull constraint : constraints)
 		{
-			if (constraint.groups().length == 0 && validatorGroups.isEmpty())
+			if (canApplyToDefaultGroup(constraint) && validatorGroups.isEmpty())
 			{
 				return true;
 			}
@@ -223,6 +224,14 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		}
 
 		return false;
+	}
+
+	private boolean canApplyToDefaultGroup(NotNull constraint)
+	{
+		List<Class<?>> groups = Arrays.asList(constraint.groups());
+		//the constraint can be applied to default group either if its group array is empty
+		//or if it contains javax.validation.groups.Default
+		return groups.size() == 0 || groups.contains(Default.class);
 	}
 
 	@Override

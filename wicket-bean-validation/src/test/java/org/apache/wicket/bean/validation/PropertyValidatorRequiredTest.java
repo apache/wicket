@@ -1,6 +1,7 @@
 package org.apache.wicket.bean.validation;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import javax.validation.constraints.NotNull;
 
@@ -31,7 +32,7 @@ public class PropertyValidatorRequiredTest
 	};
 
 	@Test
-	public void test()
+	public void testNotNullFields()
 	{
 		TestPage page = scope.getTester().startPage(TestPage.class);
 
@@ -65,6 +66,22 @@ public class PropertyValidatorRequiredTest
 		assertFalse(page.input19.isRequired());
 		assertFalse(page.input20.isRequired());
 
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5656
+	 * 
+	 * Annotation NotNull must be effective even if is not directly applied.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testResolveComposedConstraints() throws Exception
+	{
+		Property property = new Property(DefaultPropertyResolverTest.BeanWithPassword.class, "password");		
+		PropertyValidator<DefaultPropertyResolverTest.BeanWithPassword> propertyValidator = new PropertyValidator<>(property);
+		
+		assertTrue(propertyValidator.isRequired()); 
 	}
 
 	public static class TestApplication extends MockApplication
