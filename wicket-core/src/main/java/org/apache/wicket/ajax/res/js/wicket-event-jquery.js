@@ -226,6 +226,10 @@
 			add: function (element, type, fn, data, selector) {
 				if (type === 'domready') {
 					jQuery(fn);
+				} else if (type === 'load' && element === window) {
+					jQuery(window).on('load', function() {
+						jQuery(fn);
+					});
 				} else {
 					// try to find the element once the DOM is ready
 					jQuery(function() {
