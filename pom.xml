@@ -602,7 +602,7 @@
 					<version>2.8.1</version>
 					<configuration>
 						<retryFailedDeploymentCount>10</retryFailedDeploymentCount>
-						<deployAtEnd>true</deployAtEnd>
+						<deployAtEnd>false</deployAtEnd>
 					</configuration>
 				</plugin>
 				<plugin>
