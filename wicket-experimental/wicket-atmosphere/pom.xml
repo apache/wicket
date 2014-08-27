@@ -82,6 +82,13 @@
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
             </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/jquery.wicketatmosphere.js</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>
