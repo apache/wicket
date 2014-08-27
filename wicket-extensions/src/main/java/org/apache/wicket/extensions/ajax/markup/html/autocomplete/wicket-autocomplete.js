@@ -53,7 +53,7 @@
 		
 		var ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
 		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
-		var ignoreChange = false;		// ignore change event because TAB or ENTER event already triggered a change
+		var ignoreChange = true;		// ignore change event because TAB or ENTER event already triggered a change
 
 		var initialElement;
 
@@ -89,6 +89,7 @@
 			initialElement = obj;
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
+				jqEvent.stopPropagation();
 				window.setTimeout(hideAutoComplete, 500);
 			});
 
@@ -621,6 +622,7 @@
 					if (value) {
 						input.value = value;
 						jQuery(input).triggerHandler('change');
+						ignoreChange = true;
 					}
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
