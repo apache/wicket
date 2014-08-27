@@ -197,4 +197,10 @@ public class MetaDataHeaderItem extends HeaderItem
 	{
 		return obj instanceof MetaDataHeaderItem && ((MetaDataHeaderItem) obj).generateString().equals(generateString());
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return generateString().hashCode();
+	}
 }
