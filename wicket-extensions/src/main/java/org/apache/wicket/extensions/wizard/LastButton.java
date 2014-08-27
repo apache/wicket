@@ -46,7 +46,7 @@ public class LastButton extends WizardButton
 	@Override
 	public boolean isEnabled()
 	{
-		return getWizardModel().isLastAvailable();
+		return getWizardModel().isLastAvailable() && super.isEnabled();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class LastButton extends WizardButton
 	@Override
 	public boolean isVisible()
 	{
-		return getWizardModel().isLastVisible();
+		return getWizardModel().isLastVisible() && super.isVisible();
 	}
 
 	/**
