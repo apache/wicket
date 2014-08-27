@@ -88,6 +88,16 @@ public class Contact implements IClusterable
 		}
 	}
 
+	@Override
+	public int hashCode()
+	{
+		int result = firstName.hashCode();
+		result = 31 * result + lastName.hashCode();
+		result = 31 * result + homePhone.hashCode();
+		result = 31 * result + cellPhone.hashCode();
+		return result;
+	}
+
 	/**
 	 * @param id
 	 */
