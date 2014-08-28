@@ -21,11 +21,11 @@ import javax.inject.Named;
 
 /**
  * Mock for an object with some SpringBean annotations
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
- * 
+ *
  */
-public class JavaxInjectable implements InjectableInterface
+public class JavaxInjectInjectable implements InjectableInterface
 {
 	private Bean nobean;
 
@@ -35,6 +35,9 @@ public class JavaxInjectable implements InjectableInterface
 	@Inject
 	@Named("somebean")
 	private Bean2 beanByName;
+
+	@Inject
+	private String nonExisting;
 
 	/**
 	 * @return test bean
