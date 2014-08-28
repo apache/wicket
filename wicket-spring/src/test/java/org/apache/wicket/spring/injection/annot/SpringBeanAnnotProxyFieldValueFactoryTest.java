@@ -14,51 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.injection.util;
+package org.apache.wicket.spring.injection.annot;
 
-import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.spring.injection.util.SpringBeanInjectable;
+
 
 /**
- * Mock for an object with some SpringBean annotations
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ * Tests for Spring injections with {@literal @SpringBean} annotation
  */
-public class Injectable implements InjectableInterface
+public class SpringBeanAnnotProxyFieldValueFactoryTest extends AnnotProxyFieldValueFactoryTest
 {
-	private Bean nobean;
-
-	@SpringBean
-	private Bean beanByClass;
-
-	@SpringBean(name = "somebean")
-	private Bean2 beanByName;
-
 	/**
-	 * @return test bean
+	 * Construct.
 	 */
-	@Override
-	public Bean getBeanByClass()
+	public SpringBeanAnnotProxyFieldValueFactoryTest()
 	{
-		return beanByClass;
+		super(new SpringBeanInjectable());
 	}
-
-	/**
-	 * @return test bean
-	 */
-	@Override
-	public Bean2 getBeanByName()
-	{
-		return beanByName;
-	}
-
-	/**
-	 * @return test bean
-	 */
-	@Override
-	public Bean getNobean()
-	{
-		return nobean;
-	}
-
 }
