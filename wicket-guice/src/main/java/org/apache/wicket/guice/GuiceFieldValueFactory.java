@@ -22,12 +22,12 @@ import java.lang.reflect.Modifier;
 
 import javax.inject.Qualifier;
 
-import com.google.inject.BindingAnnotation;
-import com.google.inject.Inject;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
+
+import com.google.inject.BindingAnnotation;
+import com.google.inject.Inject;
 
 /**
  * 
@@ -62,9 +62,9 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 			{
 				try
 				{
+					boolean optional = injectAnnotation != null && injectAnnotation.optional();
 					Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
-					final IProxyTargetLocator locator = new GuiceProxyTargetLocator(field,
-						bindingAnnotation, injectAnnotation != null ? injectAnnotation.optional() : false);
+					final IProxyTargetLocator locator = new GuiceProxyTargetLocator(field, bindingAnnotation, optional);
 
 					if (wrapInProxies)
 					{
@@ -79,13 +79,6 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 					{
 						field.setAccessible(true);
 					}
-
-					field.set(fieldOwner, target);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new WicketRuntimeException("Error Guice-injecting field " +
-						field.getName() + " in " + fieldOwner, e);
 				}
 				catch (MoreThanOneBindingException e)
 				{
