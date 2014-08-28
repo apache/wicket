@@ -75,9 +75,9 @@ public class PageManagerDecorator implements IPageManager
 	}
 
 	@Override
-	public void sessionExpired(String sessionId)
+	public void clear()
 	{
-		delegate.sessionExpired(sessionId);
+		delegate.clear();
 	}
 
 	@Override

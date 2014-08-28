@@ -64,7 +64,7 @@ public class MockPageManager implements IPageManager
 	}
 
 	@Override
-	public void sessionExpired(String sessionId)
+	public void clear()
 	{
 		pages.clear();
 	}

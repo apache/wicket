@@ -85,7 +85,7 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 
 		Url urlToAjaxLink = tester.urlFor(page.link);
 		Session session = tester.getSession();
-		session.getPageManager().sessionExpired(session.getId());
+		session.clear();
 
 		// fire a request to the ajax link on the expired page
 		executeAjaxUrlWithLastBaseUrl(urlToAjaxLink);
