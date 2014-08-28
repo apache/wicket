@@ -38,56 +38,48 @@ public class PageManagerDecorator implements IPageManager
 		this.delegate = delegate;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public IPageManagerContext getContext()
 	{
 		return delegate.getContext();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public IManageablePage getPage(int id)
 	{
 		return delegate.getPage(id);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void touchPage(IManageablePage page)
 	{
 		delegate.touchPage(page);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean supportsVersioning()
 	{
 		return delegate.supportsVersioning();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void commitRequest()
 	{
 		delegate.commitRequest();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void newSessionCreated()
 	{
 		delegate.newSessionCreated();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void sessionExpired(String sessionId)
 	{
 		delegate.sessionExpired(sessionId);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void destroy()
 	{

@@ -162,7 +162,7 @@ public class PageStoreManager extends AbstractPageManager
 		{
 			if (sessionCache == null)
 			{
-				sessionCache = new ArrayList<IManageablePage>();
+				sessionCache = new ArrayList<>();
 			}
 
 			for (Object o : afterReadObject)
@@ -208,7 +208,7 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		public synchronized void setSessionCache(final List<IManageablePage> pages)
 		{
-			sessionCache = new ArrayList<IManageablePage>(pages);
+			sessionCache = new ArrayList<>(pages);
 			afterReadObject = null;
 		}
 
@@ -340,9 +340,6 @@ public class PageStoreManager extends AbstractPageManager
 			super(context);
 		}
 
-		/**
-		 * @see org.apache.wicket.page.RequestAdapter#getPage(int)
-		 */
 		@Override
 		protected IManageablePage getPage(int id)
 		{
@@ -383,9 +380,6 @@ public class PageStoreManager extends AbstractPageManager
 			return entry;
 		}
 
-		/**
-		 * @see org.apache.wicket.page.RequestAdapter#newSessionCreated()
-		 */
 		@Override
 		protected void newSessionCreated()
 		{
@@ -396,9 +390,6 @@ public class PageStoreManager extends AbstractPageManager
 			}
 		}
 
-		/**
-		 * @see org.apache.wicket.page.RequestAdapter#storeTouchedPages(java.util.List)
-		 */
 		@Override
 		protected void storeTouchedPages(final List<IManageablePage> touchedPages)
 		{
@@ -415,36 +406,24 @@ public class PageStoreManager extends AbstractPageManager
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.page.AbstractPageManager#newRequestAdapter(org.apache.wicket.page.IPageManagerContext)
-	 */
 	@Override
 	protected RequestAdapter newRequestAdapter(IPageManagerContext context)
 	{
 		return new PersistentRequestAdapter(context);
 	}
 
-	/**
-	 * @see org.apache.wicket.page.AbstractPageManager#supportsVersioning()
-	 */
 	@Override
 	public boolean supportsVersioning()
 	{
 		return true;
 	}
 
-	/**
-	 * @see org.apache.wicket.page.AbstractPageManager#sessionExpired(java.lang.String)
-	 */
 	@Override
 	public void sessionExpired(String sessionId)
 	{
 		// nothing to do, the SessionEntry will listen for it to become unbound by itself
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IPageManager#destroy()
-	 */
 	@Override
 	public void destroy()
 	{
