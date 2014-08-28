@@ -16,13 +16,21 @@
  */
 package org.apache.wicket.guice;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.junit.Test;
+
+import com.google.inject.ConfigurationException;
+import com.google.inject.spi.Message;
 
 /**
  */
-public class JavaxInjectGuiceInjectorTest extends GuiceInjectorTest
+public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
 {
 	@Override
-	protected TestComponentInterface newTestComponent(String id)
+	protected JavaxInjectTestComponent newTestComponent(String id)
 	{
 		return new JavaxInjectTestComponent(id);
 	}
@@ -31,5 +39,33 @@ public class JavaxInjectGuiceInjectorTest extends GuiceInjectorTest
 	protected TestNoComponentInterface newTestNoComponent()
 	{
 		return new JavaxInjectTestNoComponent();
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5686
+	 *
+	 * Wicket-Guice creates a lazy proxy that fails only when trying to use it
+	 *
+	 * @see org.apache.wicket.guice.GuiceFieldValueFactory#GuiceFieldValueFactory(boolean)
+	 */
+	@Test
+	public void required()
+	{
+		JavaxInjectTestComponent component = newTestComponent("id");
+
+		// get the lazy proxy
+		IAjaxCallListener nonExisting = component.getNonExisting();
+
+		try
+		{
+			// call any method on the lazy proxy
+			nonExisting.getAfterHandler(null);
+			fail("Fields annotated with @javax.inject.Inject are required!");
+		}
+		catch (ConfigurationException cx)
+		{
+			Message message = cx.getErrorMessages().iterator().next();
+			assertThat(message.getMessage(), is(equalTo("No implementation for org.apache.wicket.ajax.attributes.IAjaxCallListener was bound.")));
+		}
 	}
 }
