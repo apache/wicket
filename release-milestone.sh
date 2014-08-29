@@ -220,7 +220,7 @@ if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:perform was not successful"
 fi
 
-stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https |grep -Eo "(orgapachewicket-\d+)";)
+stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https | grep -v "CLOSED" | grep -Eo "(orgapachewicket-\d+)";)
 
 echo "Closing staging repository with id $stagingrepoid"
 
