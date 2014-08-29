@@ -34,6 +34,11 @@ Release Notes - Wicket - Version 7.0.0-M3
     * [WICKET-5670] - org.apache.wicket.protocol.ws.api.registry.IKey should be Serializable (IClusterable)
     * [WICKET-5679] - RenderStrategy REDIRECT_TO_RENDER lets fail test with BaseWicketTester#startComponentInPage
     * [WICKET-5680] - AjaxEditableLabel keeps raw input after cancel following a validation failure 
+    * [WICKET-5682] - AbstractAjaxTimerBehavior fails to trigger
+    * [WICKET-5684] - Autocomplete example renders the search term
+    * [WICKET-5686] - @Inject should require the bean dependency instead of setting null
+    * [WICKET-5687] - content type in header is being lost when using a AbstractTransformerBehavior
+    * [WICKET-5688] - Restore the functionality an IPageManager to be able to clean all data/pages for the current session 
 
 ** Improvement
 
@@ -71,6 +76,7 @@ Release Notes - Wicket - Version 7.0.0-M3
     * [WICKET-5672] - Form#findSubmittingComponent() should not throw exceptions if the submitter is disabled/invisible
     * [WICKET-5673] - Improve BookmarkableMapper and BasicResourceReferenceMapper to not match when the last segment is empty
     * [WICKET-5674] - Use jquery.atmosphere.js as a Webjar
+    * [WICKET-5683] - PreviousButton isEnabled() should bo logical conjunction of getWizardModel().isPreviousAvailable() and super.isEnabled()
 
 ** Task
 
