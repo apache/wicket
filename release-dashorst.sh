@@ -355,4 +355,7 @@ To release the Maven artefacts:
 Or in case of a failed vote, to drop the staging repository:
 
 	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
-"
+" > release.txt
+
+cat release.txt
+
