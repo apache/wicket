@@ -35,6 +35,7 @@ Release Notes - Wicket - Version 6.17.0
     * [WICKET-5670] - org.apache.wicket.protocol.ws.api.registry.IKey should be Serializable (IClusterable)
     * [WICKET-5679] - RenderStrategy REDIRECT_TO_RENDER lets fail test with BaseWicketTester#startComponentInPage
     * [WICKET-5680] - AjaxEditableLabel keeps raw input after cancel following a validation failure 
+    * [WICKET-5682] - AbstractAjaxTimerBehavior fails to trigger
     * [WICKET-5684] - Autocomplete example renders the search term
     * [WICKET-5685] - jquery.wicketatmosphere.js is not packed in wicket-atmosphere.jar and thus leads to 404
     * [WICKET-5686] - @Inject should require the bean dependency instead of setting null
