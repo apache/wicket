@@ -41,6 +41,8 @@ public class PageStoreManager extends AbstractPageManager
 	 */
 	private static final ConcurrentMap<String, PageStoreManager> managers = new ConcurrentHashMap<String, PageStoreManager>();
 
+	private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
+
 	private final IPageStore pageStore;
 
 	private final String applicationName;
@@ -316,6 +318,11 @@ public class PageStoreManager extends AbstractPageManager
 		}
 	}
 
+	private String getAttributeName()
+	{
+		return ATTRIBUTE_NAME + " - " + applicationName;
+	}
+
 	/**
 	 * {@link RequestAdapter} for {@link PageStoreManager}
 	 * 
@@ -323,13 +330,6 @@ public class PageStoreManager extends AbstractPageManager
 	 */
 	protected class PersistentRequestAdapter extends RequestAdapter
 	{
-		private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
-
-		private String getAttributeName()
-		{
-			return ATTRIBUTE_NAME + " - " + applicationName;
-		}
-
 		/**
 		 * Construct.
 		 * 
@@ -439,7 +439,13 @@ public class PageStoreManager extends AbstractPageManager
 	@Override
 	public void sessionExpired(String sessionId)
 	{
-		// nothing to do, the SessionEntry will listen for it to become unbound by itself
+		RequestAdapter requestAdapter = getRequestAdapter();
+		String sessionEntryAttributeName = getAttributeName();
+		Serializable sessionEntry = requestAdapter.getSessionAttribute(sessionEntryAttributeName);
+		if (sessionEntry instanceof SessionEntry)
+		{
+			((SessionEntry)sessionEntry).valueUnbound(null);
+		}
 	}
 
 	/**
