@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.transformer;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
@@ -81,6 +82,11 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 		try
 		{
 			BufferedWebResponse tempResponse = (BufferedWebResponse)requestCycle.getResponse();
+
+			if (component instanceof Page && originalResponse instanceof WebResponse)
+			{
+				tempResponse.writeMetaData((WebResponse) originalResponse);
+			}
 
 			// Transform the data
 			CharSequence output = transform(component, tempResponse.getText());
