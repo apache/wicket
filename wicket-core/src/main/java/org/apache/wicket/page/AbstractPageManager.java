@@ -46,12 +46,6 @@ public abstract class AbstractPageManager implements IPageManager
 	 */
 	protected abstract RequestAdapter newRequestAdapter(IPageManagerContext context);
 
-	@Override
-	public abstract boolean supportsVersioning();
-
-	@Override
-	public abstract void sessionExpired(String sessionId);
-
 	/**
 	 * @return The page manager context
 	 */

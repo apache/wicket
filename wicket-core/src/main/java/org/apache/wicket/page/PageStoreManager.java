@@ -39,7 +39,9 @@ public class PageStoreManager extends AbstractPageManager
 	 * A cache that holds all registered page managers. <br/>
 	 * applicationName -> page manager
 	 */
-	private static final ConcurrentMap<String, PageStoreManager> managers = new ConcurrentHashMap<String, PageStoreManager>();
+	private static final ConcurrentMap<String, PageStoreManager> MANAGERS = new ConcurrentHashMap<>();
+
+	private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
 
 	private final IPageStore pageStore;
 
@@ -60,12 +62,12 @@ public class PageStoreManager extends AbstractPageManager
 		this.applicationName = applicationName;
 		this.pageStore = pageStore;
 
-		if (managers.containsKey(applicationName))
+		if (MANAGERS.containsKey(applicationName))
 		{
 			throw new IllegalStateException("Manager for application with key '" + applicationName
 				+ "' already exists.");
 		}
-		managers.put(applicationName, this);
+		MANAGERS.put(applicationName, this);
 	}
 
 	/**
@@ -109,7 +111,7 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		private IPageStore getPageStore()
 		{
-			PageStoreManager manager = managers.get(applicationName);
+			PageStoreManager manager = MANAGERS.get(applicationName);
 
 			if (manager == null)
 			{
@@ -162,7 +164,7 @@ public class PageStoreManager extends AbstractPageManager
 		{
 			if (sessionCache == null)
 			{
-				sessionCache = new ArrayList<IManageablePage>();
+				sessionCache = new ArrayList<>();
 			}
 
 			for (Object o : afterReadObject)
@@ -208,7 +210,7 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		public synchronized void setSessionCache(final List<IManageablePage> pages)
 		{
-			sessionCache = new ArrayList<IManageablePage>(pages);
+			sessionCache = new ArrayList<>(pages);
 			afterReadObject = null;
 		}
 
@@ -316,6 +318,11 @@ public class PageStoreManager extends AbstractPageManager
 		}
 	}
 
+	private String getAttributeName()
+	{
+		return ATTRIBUTE_NAME + " - " + applicationName;
+	}
+
 	/**
 	 * {@link RequestAdapter} for {@link PageStoreManager}
 	 * 
@@ -323,13 +330,6 @@ public class PageStoreManager extends AbstractPageManager
 	 */
 	protected class PersistentRequestAdapter extends RequestAdapter
 	{
-		private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
-
-		private String getAttributeName()
-		{
-			return ATTRIBUTE_NAME + " - " + applicationName;
-		}
-
 		/**
 		 * Construct.
 		 * 
@@ -340,9 +340,6 @@ public class PageStoreManager extends AbstractPageManager
 			super(context);
 		}
 
-		/**
-		 * @see org.apache.wicket.page.RequestAdapter#getPage(int)
-		 */
 		@Override
 		protected IManageablePage getPage(int id)
 		{
@@ -383,9 +380,6 @@ public class PageStoreManager extends AbstractPageManager
 			return entry;
 		}
 
-		/**
-		 * @see org.apache.wicket.page.RequestAdapter#newSessionCreated()
-		 */
 		@Override
 		protected void newSessionCreated()
 		{
@@ -396,9 +390,6 @@ public class PageStoreManager extends AbstractPageManager
 			}
 		}
 
-		/**
-		 * @see org.apache.wicket.page.RequestAdapter#storeTouchedPages(java.util.List)
-		 */
 		@Override
 		protected void storeTouchedPages(final List<IManageablePage> touchedPages)
 		{
@@ -415,40 +406,34 @@ public class PageStoreManager extends AbstractPageManager
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.page.AbstractPageManager#newRequestAdapter(org.apache.wicket.page.IPageManagerContext)
-	 */
 	@Override
 	protected RequestAdapter newRequestAdapter(IPageManagerContext context)
 	{
 		return new PersistentRequestAdapter(context);
 	}
 
-	/**
-	 * @see org.apache.wicket.page.AbstractPageManager#supportsVersioning()
-	 */
 	@Override
 	public boolean supportsVersioning()
 	{
 		return true;
 	}
 
-	/**
-	 * @see org.apache.wicket.page.AbstractPageManager#sessionExpired(java.lang.String)
-	 */
 	@Override
-	public void sessionExpired(String sessionId)
+	public void clear()
 	{
-		// nothing to do, the SessionEntry will listen for it to become unbound by itself
+		RequestAdapter requestAdapter = getRequestAdapter();
+		String sessionEntryAttributeName = getAttributeName();
+		Serializable sessionEntry = requestAdapter.getSessionAttribute(sessionEntryAttributeName);
+		if (sessionEntry instanceof SessionEntry)
+		{
+			((SessionEntry)sessionEntry).valueUnbound(null);
+		}
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IPageManager#destroy()
-	 */
 	@Override
 	public void destroy()
 	{
-		managers.remove(applicationName);
+		MANAGERS.remove(applicationName);
 		pageStore.destroy();
 	}
 }

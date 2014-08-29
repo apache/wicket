@@ -14,44 +14,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.injection.annot;
+package org.apache.wicket.spring.injection.util;
 
-import java.lang.reflect.Field;
-
-import org.apache.wicket.spring.injection.util.JavaxInjectInjectable;
-import org.junit.Test;
-
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
- * Tests for Spring injection with {@literal @javax.inject.Inject} annotation
+ * Mock for an object with some SpringBean annotations
+ *
+ * @author Igor Vaynberg (ivaynberg)
  */
-public class JavaxInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFieldValueFactoryTest
+public class SpringBeanInjectable implements InjectableInterface
 {
+	private Bean nobean;
+
+	@SpringBean
+	private Bean beanByClass;
+
+	@SpringBean(name = "somebean")
+	private Bean2 beanByName;
+
 	/**
-	 * Construct.
+	 * @return test bean
 	 */
-	public JavaxInjectAnnotProxyFieldValueFactoryTest()
+	@Override
+	public Bean getBeanByClass()
 	{
-		super(new JavaxInjectInjectable());
+		return beanByClass;
 	}
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5686
-	 * @throws Exception
+	 * @return test bean
 	 */
-	@Test
-	public void required() throws Exception
+	@Override
+	public Bean2 getBeanByName()
 	{
-		Field field = obj.getClass().getDeclaredField("nonExisting");
-		try
-		{
-			factory.getFieldValue(field, obj);
-			fail("Fields annotated with @Inject are required!");
-		}
-		catch (IllegalStateException isx)
-		{
-			// expected
-			assertTrue(true);
-		}
+		return beanByName;
 	}
+
+	/**
+	 * @return test bean
+	 */
+	@Override
+	public Bean getNobean()
+	{
+		return nobean;
+	}
+
 }

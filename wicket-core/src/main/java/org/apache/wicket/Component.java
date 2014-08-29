@@ -2398,7 +2398,7 @@ public abstract class Component
 				{
 					behavior.onException(this, ex);
 				}
-				catch (Throwable ex2)
+				catch (Exception ex2)
 				{
 					log.error("Error while cleaning up after exception", ex2);
 				}

@@ -73,12 +73,9 @@ public interface IPageManager
 	public void newSessionCreated();
 
 	/**
-	 * Invoked when the session has been expired.
-	 * 
-	 * @param sessionId
-	 *      the id of the expired session
+	 * Clears all data for the current session.
 	 */
-	public void sessionExpired(String sessionId);
+	public void clear();
 
 	/**
 	 * Destroy the page manager.

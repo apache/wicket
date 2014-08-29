@@ -16,26 +16,19 @@
  */
 package org.apache.wicket.guice;
 
-import java.util.Map;
-
-import com.google.inject.Provider;
-
-public interface TestComponentInterface
+/**
+ */
+public class GuiceInjectInjectorTest extends AbstractInjectorTest
 {
+	@Override
+	protected TestComponentInterface newTestComponent(String id)
+	{
+		return new TestComponent(id);
+	}
 
-	ITestService getInjectedField();
-
-	String getInjectedOptionalField();
-
-	String getNamed1();
-
-	String getNamed2();
-
-	ITestService getInjectedFieldRed();
-
-	ITestService getInjectedFieldBlue();
-
-	Provider<ITestService> getInjectedFieldProvider();
-
-	Map<String, String> getInjectedTypeLiteralField();
+	@Override
+	protected TestNoComponentInterface newTestNoComponent()
+	{
+		return new TestNoComponent();
+	}
 }

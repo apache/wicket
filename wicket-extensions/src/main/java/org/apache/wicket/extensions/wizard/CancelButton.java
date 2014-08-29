@@ -55,7 +55,7 @@ public class CancelButton extends WizardButton
 	@Override
 	public final boolean isVisible()
 	{
-		return getWizardModel().isCancelVisible();
+		return getWizardModel().isCancelVisible() && super.isVisible();
 	}
 
 	/**

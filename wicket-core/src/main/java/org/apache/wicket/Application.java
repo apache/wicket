@@ -466,8 +466,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	@Override
 	public void sessionUnbound(final String sessionId)
 	{
-		internalGetPageManager().sessionExpired(sessionId);
-
 		getSessionListeners().onUnbound(sessionId);
 	}
 

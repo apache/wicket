@@ -21,8 +21,10 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.google.inject.Provider;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+
+import com.google.inject.Provider;
 
 /**
  */
@@ -54,6 +56,13 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	@Inject
 	@Named("named2")
 	private String named2;
+
+	/**
+	 * A non-existing bean.
+	 * IResourceSettings is chosen randomly. Any non-primitive type would suffice
+	 */
+	@Inject
+	private IAjaxCallListener nonExisting;
 
 	private final JavaxInjectTestNoComponent noComponent;
 
@@ -135,6 +144,11 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	public Map<String, String> getInjectedTypeLiteralField()
 	{
 		return injectedTypeLiteralField;
+	}
+
+	public IAjaxCallListener getNonExisting()
+	{
+		return nonExisting;
 	}
 
 	@Override
