@@ -107,6 +107,18 @@ bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-SNAPSHOT')
 version="$major_version.$minor_version.0"
 previous_version="$major_version.$(expr $minor_version - 1).0"
 
+# Check if the changelog has the issues of 6.x
+
+grep -q "$version\$" CHANGELOG-6.x
+if [ $? -ne 0 ] ; then
+	fail "
+You have forgotten to add the closed tickets for Wicket $version to the CHANGELOG-6.x file
+
+Go to https://issues.apache.org/jira/secure/ConfigureReleaseNote.jspa?projectId=12310561
+and export the issues to the changelog.
+"
+fi
+
 echo "This script will release version: Apache Wicket $version"
 echo ""
 echo "Press enter to continue or CTRL-C to abort \c"
@@ -195,6 +207,13 @@ if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:perform was not successful"
 fi
 
+# Determine the staging repository and close it after deploying the release to the staging area
+stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https |grep -Eo "(orgapachewicket-\d+)";)
+
+echo "Closing staging repository with id $stagingrepoid"
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
+
+
 echo "Create and sign the source tarballs"
 
 mkdir -p target/dist/binaries
@@ -239,12 +258,6 @@ cp ../../CHANGELOG* .
 svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
-
-stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https |grep -Eo "(orgapachewicket-\d+)";)
-
-echo "Closing staging repository with id $stagingrepoid"
-
-mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
 
 echo "Generating Vote email"
 
