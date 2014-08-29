@@ -88,7 +88,7 @@ operating systems, and you can bet it won't work on Windows...
 REQUIREMENTS:
 
  - a pure JDK 7 environment, JDK 8 or newer won't cut it
- - Maven 3.0.4 (older releases are b0rked, just don't bother)
+ - Maven 3.2.3
  - gpg, gpg-agent and pinentry for signing"
 
 export JAVA_HOME=`/usr/libexec/java_home -v1.7`
@@ -105,12 +105,25 @@ bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-SNAPSHOT')
 
 read -p "What is the version to be released? " version
 
-previous_version="$major_version.$(expr $minor_version - 1).0"
+current_milestone_version=$(expr $version : '.*-M(\d+)')
+
+#previous_version="$major_version.$(expr $minor_version - 1).0"
+previous_version="7.0.0-M$(expr $current_milestone_version - 1)"
 
 log=/tmp/wicketrelease-$version.out
 
 branch="build/wicket-$version"
 tag="wicket-$version"
+
+grep -q "$version\$" CHANGELOG-7.x
+if [ $? -ne 0 ] ; then
+	fail "
+You have forgotten to add the closed tickets for Wicket $version to the CHANGELOG-7.x file
+
+Go to https://issues.apache.org/jira/secure/ConfigureReleaseNote.jspa?projectId=12310561
+and export the issues to the changelog.
+"
+fi
 
 read -p "
 This script will release version: Apache Wicket $version and continue 
@@ -137,10 +150,10 @@ oldbranch=`git branch |grep -e "$branch"|wc -l`
 
 git checkout -b $branch
 
-echo ""
-echo "# Release configuration for Wicket-$version" > release.properties
-echo "scm.tag=${tag}" >> release.properties
-echo >> release.properties
+echo "# Release configuration for Wicket-$version
+scm.tag=${tag}
+" > release.properties
+
 ./release-milestone.py $version 7.0.0-SNAPSHOT >> release.properties
 
 cat ./release.properties
@@ -207,6 +220,13 @@ if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:perform was not successful"
 fi
 
+stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https |grep -Eo "(orgapachewicket-\d+)";)
+
+echo "Closing staging repository with id $stagingrepoid"
+
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
+
+
 echo "Create and sign the source tarballs"
 
 mkdir -p target/dist/binaries
@@ -252,17 +272,71 @@ svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
+echo "Generating Vote email"
+
+echo "This is a vote to release Apache Wicket $version
+
+Please download the source distributions found in our staging area
+linked below.
+
+I have included the signatures for both the source archives. This vote
+lasts for 72 hours minimum.
+
+[ ] Yes, release Apache Wicket $version
+[ ] No, don't release Apache Wicket $version, because ...
+
+Distributions, changelog, keys and signatures can be found at:
+
+    https://dist.apache.org/repos/dist/dev/wicket/$version
+
+Staging repository:
+
+    https://repository.apache.org/content/repositories/$stagingrepoid/
+
+The binaries are available in the above link, as are a staging
+repository for Maven. Typically the vote is on the source, but should
+you find a problem with one of the binaries, please let me know, I can
+re-roll them some way or the other.
+
+========================================================================
+
+The signatures for the source release artefacts:
+
+" > release-vote.txt
+
+pushd target/dist > /dev/null
+for i in apache-wicket*{zip,tar.gz}
+do
+	echo "Signature for $i:
+
+$(cat $i.asc)
+" >> ../../release-vote.txt
+done
+popd > /dev/null
+
+echo "========================================================================
+
+CHANGELOG for $version:
+" >> release-vote.txt
+
+awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-7.x >> release-vote.txt
+
 
 # do the same for the original snapshot version, as our maven release
 # plugin friend doesn't do that for us in the dependency management section
 
 mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
 mvn_version_to_replace2="$major_version.$minor_version.0-SNAPSHOT"
-next_dev_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
+next_dev_version="7.0.0-SNAPSHOT"
 
-echo "The release has been created. It is up to you to check if the release is up
+echo "
+The release has been created. It is up to you to check if the release is up
 to par, and perform the following commands yourself when you start the vote
 to enable future development during the vote and after.
+
+A vote email has been generated in release-vote.txt, you can copy/paste it using:
+
+    cat release-vote.txt | pbcopy
 
 You can find the distribution in target/dist
 
@@ -290,14 +364,14 @@ To sign the release tag issue the following three commands:
     git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log
     git checkout $branch
 
-To renumber the next development iteration $next_dev_version:
+To release the Maven artefacts:
 
-    git checkout wicket-6.x
-    mvn release:update-versions --batch-mode
-    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;
-    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace2/$next_dev_version/g\" {} \\;
-    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
-    git commit -m \"Start next development version\"
-    git push
+	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has passed\"
 
-"
+Or in case of a failed vote, to drop the staging repository:
+
+	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
+" > release.txt
+
+cat release.txt
+
