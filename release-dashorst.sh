@@ -240,6 +240,12 @@ svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
+stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https |grep -Eo "(orgapachewicket-\d+)";)
+
+echo "Closing staging repository with id $stagingrepoid"
+
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
+
 echo "Generating Vote email"
 
 echo "This is a vote to release Apache Wicket $version
@@ -259,7 +265,7 @@ Distributions, changelog, keys and signatures can be found at:
 
 Staging repository:
 
-    https://repository.apache.org/content/repositories/orgapachewicket-1024/
+    https://repository.apache.org/content/repositories/$stagingrepoid/
 
 The binaries are available in the above link, as are a staging
 repository for Maven. Typically the vote is on the source, but should
@@ -341,4 +347,12 @@ To renumber the next development iteration $next_dev_version:
     git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
     git commit -m \"Start next development version\"
     git push
+
+To release the Maven artefacts:
+
+	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has passed\"
+
+Or in case of a failed vote, to drop the staging repository:
+
+	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
 "
