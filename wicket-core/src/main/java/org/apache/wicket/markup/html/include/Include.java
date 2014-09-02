@@ -83,23 +83,6 @@ public class Include extends WebComponent
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * <p>
-	 * Valid characters in a scheme.
-	 * </p>
-	 * <p>
-	 * RFC 1738 says the following:
-	 * </p>
-	 * <blockquote>Scheme names consist of a sequence of characters. The lower case letters
-	 * "a"--"z", digits, and the characters plus ("+"), period ("."), and hyphen ("-") are allowed.
-	 * For resiliency, programs interpreting URLs should treat upper case letters as equivalent to
-	 * lower case in scheme names (e.g., allow "HTTP" as well as "http"). </blockquote>
-	 * <p>
-	 * We treat as absolute any URL that begins with such a scheme name, followed by a colon.
-	 * </p>
-	 */
-	private static final String VALID_SCHEME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+.-";
-
-	/**
 	 * Construct.
 	 * 
 	 * @param id
@@ -133,7 +116,7 @@ public class Include extends WebComponent
 	 */
 	public Include(String id, String modelObject)
 	{
-		super(id, new Model<String>(modelObject));
+		super(id, new Model<>(modelObject));
 	}
 
 	/**
