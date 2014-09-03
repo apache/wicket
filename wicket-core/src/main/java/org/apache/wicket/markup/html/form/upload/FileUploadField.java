@@ -81,7 +81,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	}
 
 	/**
-	 * @return a list of all uploaded files. It will return more than one files if:
+	 * @return a list of all uploaded files. The list is empty if no files were selected. It will return more than one files if:
 	 *         <ul>
 	 *         <li>HTML5 &lt;input type="file" <strong>multiple</strong> /&gt; is used</li>
 	 *         <li>the browser supports <em>multiple</em> attribute</li>
@@ -94,6 +94,8 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		{
 			return fileUploads;
 		}
+
+		fileUploads = new ArrayList<FileUpload>();
 
 		// Get request
 		final Request request = getRequest();
@@ -112,15 +114,12 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 					// bytes)
 					if (item != null && item.getSize() > 0)
 					{
-						if (fileUploads == null)
-						{
-							fileUploads = new ArrayList<FileUpload>();
-						}
 						fileUploads.add(new FileUpload(item));
 					}
 				}
 			}
 		}
+		
 		return fileUploads;
 	}
 
