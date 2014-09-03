@@ -108,7 +108,7 @@ public class FileUploadFieldTest extends WicketTestCase
 			}
 		}
 	}
-
+	
 	/**
 	 * @throws IOException
 	 */
@@ -126,7 +126,24 @@ public class FileUploadFieldTest extends WicketTestCase
 		assertFalse(page.getForm().hasError());
 	}
 
-	/** */
+	/** 
+	 * https://issues.apache.org/jira/browse/WICKET-5691
+	 * 
+	 * */
+	@Test
+	public void testEmptyField() throws Exception
+	{
+		tester.startPage(TestValidationPage.class);
+		
+		FormTester formtester = tester.newFormTester("form");
+		formtester.submit();
+		
+		FileUploadField fileUploadField = (FileUploadField)tester.getComponentFromLastRenderedPage("form:upload");
+		
+		assertEquals(0, fileUploadField.getFileUploads().size());
+	}
+
+	
 	public static class TestValidationPage extends MockPageWithFormAndUploadField
 	{
 		/** */
@@ -147,11 +164,18 @@ public class FileUploadFieldTest extends WicketTestCase
 		@Override
 		public void validate(IValidatable<List<FileUpload>> validatable)
 		{
-			if (validatable.getValue() instanceof List == false)
+			List<FileUpload> fieldValue = validatable.getValue();
+			
+			if (fieldValue.size() == 0)
+			{
+				return;
+			}
+			
+			if (fieldValue instanceof List == false)
 			{
 				validatable.error(new ValidationError().addKey("validatable value type not expected"));
 			}
-			FileUpload upload = validatable.getValue().get(0);
+			FileUpload upload = fieldValue.get(0);
 			if (!upload.getClientFileName().contains(TEST_FILE_NAME))
 			{
 				validatable.error(new ValidationError().addKey("uploaded file name not expected"));
