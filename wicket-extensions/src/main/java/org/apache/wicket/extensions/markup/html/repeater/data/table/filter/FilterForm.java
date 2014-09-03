@@ -70,7 +70,7 @@ public class FilterForm<T> extends Form<T>
 		getResponse().write(
 			String.format(
 				"<div style='display:inline'><input type=\"hidden\" name=\"%s\" id=\"%s\" value=\"%s\"/></div>",
-				id, id, value));
+				id, id, Strings.escapeMarkup(value)));
 	}
 
 	/**
