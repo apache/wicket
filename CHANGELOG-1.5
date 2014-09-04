@@ -1,5 +1,60 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5.12
+
+** Bug
+    * [WICKET-5491] - Wicket.DateTime.getViewportHeight() returning undefined on IE8, positions calendar out of viewport
+    * [WICKET-5492] - WebApplication ignores a SecurityException when reading the configuration type
+    * [WICKET-5502] - Patch FileUploadBase to fix CVE-2014-0050
+    * [WICKET-5643] - WebPageRenderer should bind a Session if redirect is required and the session is temporary.
+
+** Improvement
+    * [WICKET-5668] - StringResourceModel with custom locale 
+
+
+Release Notes - Wicket - Version 1.5.11
+
+** Sub-task
+    * [WICKET-5162] - InlineEnclosure markup id could collide in the final page markup
+
+** Bug
+    * [WICKET-5049] - Wicket Session may be null in SessionBindingListener after deserialization
+    * [WICKET-5052] - @SpringBean fails to invoke methods on bean with non-public methods
+    * [WICKET-5054] - Possible bug in org.apache.wicket.util.lang.Packages when building path with repeating names
+    * [WICKET-5072] - Cookies#isEqual(Cookie, Cookie) may fail with NullPointerException
+    * [WICKET-5073] - UrlRenderer#removeCommonPrefixes() fails when contextPath+filterPrefix has more segments than the argument
+    * [WICKET-5076] - form#onSubmit() is called on just replaced nested forms
+    * [WICKET-5078] - RestartResponseException broken with page instance and bookmarkable page
+    * [WICKET-5085] - InlineEnclosure are piling up on each render
+    * [WICKET-5094] - ISecuritySettings#getEnforceMounts(true) prevents access to *all* non-mounted bookmarkable pages
+    * [WICKET-5112] - Parantheses problem with UrlValidator
+    * [WICKET-5114] - Url#toString(StringMode.FULL) throws exception if a segment contains two dots
+    * [WICKET-5119] - PopupSettings IE8 - dosen't work second time a link is clicked.
+    * [WICKET-5123] - Component.continueToOriginalDestination() can redirect to ./.
+    * [WICKET-5131] - Problems with cookies disabled when using 301/302 and also 303 (even with cookies)
+    * [WICKET-5140] - InterceptData never gets cleared from session after continueToOriginalDestination is called and another page is requested afterwards
+    * [WICKET-5146] - Application not destroyed if WicketFilter#init() fails
+    * [WICKET-5149] - PageRequestHandlerTracker doesn't track resolves of handlers caused by Exception 
+    * [WICKET-5157] - URL query parameter values containing equals sign get cut off
+    * [WICKET-5191] - Session is created unnecessarily
+    * [WICKET-5202] - Page redirects can fail when using url encoding
+    * [WICKET-5203] - Base url is incorrect for error dispatched pages
+    * [WICKET-5204] - The DateTimeField.onBeforeRender() method does not format the fields correctly.
+    * [WICKET-5218] - EnclosureContainer calls child#configure() way before rendering
+    * [WICKET-5230] - AjaxFormChoiceComponentUpdatingBehavior fails for choices containing other invalid FormComponents
+    * [WICKET-5234] - OnEventHeaderItem can't be applied via AJAX
+    * [WICKET-5247] - Broken Link in Tomcat because of Page Mount
+    * [WICKET-5256] - Allow configuring the resource used by ResourceStreamRequestHandler
+    * [WICKET-5259] - Url can't parse urls with username and password
+    * [WICKET-5351] - ResourceStreamResource should use #getResourceStream() instead of directly using the 'stream' field
+    * [WICKET-5416] - BOM in UTF markup file breaks encoding detection
+
+** Improvement
+    * [WICKET-5150] - Log additional info when FormComponent fails in updateCollectionModel
+    * [WICKET-5158] - Ignore missing Page in StatelessForm#process()
+    * [WICKET-5219] - ServletWebResponse should call #setHeader() to set Ajax-Location for redirect
+
+
 Release Notes - Wicket - Version 1.5.10
 
 ** Sub-task
