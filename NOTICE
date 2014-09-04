@@ -1,5 +1,5 @@
 Apache Wicket
-Copyright 2006-2012 The Apache Software Foundation
+Copyright 2006-2014 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -12,10 +12,45 @@ NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
     AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
 
 ---------------------------------------------------------------------------
+src/./wicket-core
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2006-2011 Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+   This product includes software from QOS.ch (http://slf4j.org) licensed under the X11 license
+   Copyright (c) 2004-2008 QOS.ch
+   
+   Contains Diff library from Mavens JRCS, released under
+   The Apache Software License, Version 1.1.
+   (c) 1999-2003
+
+   org.apache.wicket.markup.html.form.upload.MultiFileUploadField.js is taken from [1]
+   and has the following notice:
+      "Licence:
+       Use this however/wherever you like, just don't blame me if it breaks
+       anything.
+
+       Credit:
+       If you're nice, you'll leave this bit:
+
+       Class by Stickman -- http://www.the-stickman.com
+       with thanks to:
+       [for Safari fixes]
+          Luis Torrefranca -- http://www.law.pitt.edu
+          and
+          Shawn Parker & John Pennypacker -- http://www.fuzzycoconut.com
+       [for duplicate name bug]
+          'neal'"
+   [1]: http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
+
+---------------------------------------------------------------------------
 src/./wicket-guice
 ---------------------------------------------------------------------------
    Apache Wicket
-   Copyright 2006-2012 Apache Software Foundation
+   Copyright 2006-2011 Apache Software Foundation
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
@@ -26,7 +61,7 @@ src/./wicket-guice
 src/./wicket-examples
 ---------------------------------------------------------------------------
    Apache Wicket Examples
-   Copyright 2006-2012 Apache Software Foundation
+   Copyright 2006-2011 Apache Software Foundation
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
@@ -66,45 +101,10 @@ src/./wicket-examples
    which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
 
 ---------------------------------------------------------------------------
-src/./wicket-core
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2006-2012 Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
-   This product includes software from QOS.ch (http://slf4j.org) licensed under the X11 license
-   Copyright (c) 2004-2008 QOS.ch
-   
-   Contains Diff library from Mavens JRCS, released under
-   The Apache Software License, Version 1.1.
-   (c) 1999-2003
-
-   org.apache.wicket.markup.html.form.upload.MultiFileUploadField.js is taken from [1]
-   and has the following notice:
-      "Licence:
-       Use this however/wherever you like, just don't blame me if it breaks
-       anything.
-
-       Credit:
-       If you're nice, you'll leave this bit:
-
-       Class by Stickman -- http://www.the-stickman.com
-       with thanks to:
-       [for Safari fixes]
-          Luis Torrefranca -- http://www.law.pitt.edu
-          and
-          Shawn Parker & John Pennypacker -- http://www.fuzzycoconut.com
-       [for duplicate name bug]
-          'neal'"
-   [1]: http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
-
----------------------------------------------------------------------------
 src/./wicket-datetime
 ---------------------------------------------------------------------------
    Apache Wicket Date Time
-   Copyright 2006-2012 Apache Software Foundation
+   Copyright 2006-2011 Apache Software Foundation
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
