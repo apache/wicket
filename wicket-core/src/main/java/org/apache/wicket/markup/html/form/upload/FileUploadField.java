@@ -95,7 +95,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 			return fileUploads;
 		}
 
-		fileUploads = new ArrayList<>();
+		fileUploads = new ArrayList<FileUpload>();
 
 		// Get request
 		final Request request = getRequest();
@@ -144,7 +144,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		List<FileUpload> fileUploads = getFileUploads();
 		if (fileUploads.isEmpty() == false)
 		{
-			List<String> clientFileNames = new ArrayList<>();
+			List<String> clientFileNames = new ArrayList<String>();
 			for (FileUpload fu : fileUploads)
 			{
 				clientFileNames.add(fu.getClientFileName());
