@@ -123,9 +123,6 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		return fileUploads;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
-	 */
 	@Override
 	public void updateModel()
 	{
@@ -135,9 +132,6 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#getInputAsArray()
-	 */
 	@Override
 	public String[] getInputAsArray()
 	{
@@ -154,10 +148,6 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		return null;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(java.lang.String[])
-	 */
 	@Override
 	protected List<FileUpload> convertValue(String[] value) throws ConversionException
 	{
@@ -169,18 +159,12 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		return getFileUploads();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#isMultiPart()
-	 */
 	@Override
 	public boolean isMultiPart()
 	{
 		return true;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
