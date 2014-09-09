@@ -96,6 +96,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 		return bean;
 	}
 
+	@Override
+	public Object getBean(final String name, final Object... args) throws BeansException
+	{
+		return getBean(name);
+	}
+
 	/**
 	 * @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String, java.lang.Class)
 	 */
@@ -149,6 +155,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 				requiredType + " found");
 		}
 		return bean;
+	}
+
+	@Override
+	public <T> T getBean(Class<T> requiredType, Object... objects) throws BeansException
+	{
+		return getBean(requiredType);
 	}
 
 	@Override
