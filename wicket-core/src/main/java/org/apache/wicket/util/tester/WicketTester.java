@@ -26,10 +26,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -38,6 +40,7 @@ import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ValidationErrorFeedback;
@@ -321,6 +324,96 @@ public class WicketTester extends BaseWicketTester
 	public void assertContainsNot(String pattern)
 	{
 		assertResult(ifContainsNot(pattern));
+	}
+
+	/**
+	 * Asserts that a component's markup has loaded with the given variation
+	 *
+	 * @param component
+	 *              The component which markup to check
+	 * @param expectedVariation
+	 *              The expected variation of the component's markup
+	 */
+	public void assertMarkupVariation(Component component, String expectedVariation)
+	{
+		Result result = Result.PASS;
+		IMarkupFragment markup = getMarkupFragment(component);
+
+		String actualVariation = markup.getMarkupResourceStream().getVariation();
+		if (Objects.equal(expectedVariation, actualVariation) == false)
+		{
+			result = Result.fail(String.format("Wrong variation for component '%s'. Actual: '%s', expected: '%s'",
+					component.getPageRelativePath(), actualVariation, expectedVariation));
+		}
+
+		assertResult(result);
+	}
+
+	/**
+	 * Asserts that a component's markup has loaded with the given style
+	 *
+	 * @param component
+	 *              The component which markup to check
+	 * @param expectedStyle
+	 *              The expected style of the component's markup
+	 */
+	public void assertMarkupStyle(Component component, String expectedStyle)
+	{
+		Result result = Result.PASS;
+		IMarkupFragment markup = getMarkupFragment(component);
+
+		String actualStyle = markup.getMarkupResourceStream().getStyle();
+		if (Objects.equal(expectedStyle, actualStyle) == false)
+		{
+			result = Result.fail(String.format("Wrong style for component '%s'. Actual: '%s', expected: '%s'",
+					component.getPageRelativePath(), actualStyle, expectedStyle));
+		}
+
+		assertResult(result);
+	}
+
+	/**
+	 * Asserts that a component's markup has loaded with the given locale
+	 *
+	 * @param component
+	 *              The component which markup to check
+	 * @param expectedLocale
+	 *              The expected locale of the component's markup
+	 */
+	public void assertMarkupLocale(Component component, Locale expectedLocale)
+	{
+		Result result = Result.PASS;
+		IMarkupFragment markup = getMarkupFragment(component);
+
+		Locale actualLocale = markup.getMarkupResourceStream().getLocale();
+		if (Objects.equal(expectedLocale, actualLocale) == false)
+		{
+			result = Result.fail(String.format("Wrong locale for component '%s'. Actual: '%s', expected: '%s'",
+					component.getPageRelativePath(), actualLocale, expectedLocale));
+		}
+
+		assertResult(result);
+	}
+
+	private IMarkupFragment getMarkupFragment(Component component)
+	{
+		IMarkupFragment markup = null;
+		if (component instanceof MarkupContainer)
+		{
+			markup = ((MarkupContainer) component).getAssociatedMarkup();
+		}
+
+		if (markup == null)
+		{
+			markup = component.getMarkup();
+		}
+
+		if (markup == null)
+		{
+			throw new AssertionFailedError(String.format("Cannot find the markup of component: %s", component.getPageRelativePath()));
+		}
+
+		return markup;
 	}
 
 	/**
