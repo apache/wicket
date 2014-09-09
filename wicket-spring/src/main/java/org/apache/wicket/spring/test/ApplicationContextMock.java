@@ -237,19 +237,19 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public boolean containsBeanDefinition(final String beanName)
 	{
-		throw new UnsupportedOperationException();
+		return containsBean(beanName);
 	}
 
 	@Override
 	public int getBeanDefinitionCount()
 	{
-		throw new UnsupportedOperationException();
+		return beans.size();
 	}
 
 	@Override
 	public String[] getBeanDefinitionNames()
 	{
-		throw new UnsupportedOperationException();
+		return beans.keySet().toArray(new String[beans.size()]);
 	}
 
 	@Override
@@ -305,7 +305,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public Class<?> getType(final String name) throws NoSuchBeanDefinitionException
 	{
-		throw new UnsupportedOperationException();
+		Object bean = beans.get(name);
+		if (bean == null)
+		{
+			throw new NoSuchBeanDefinitionException("No bean with name '" + name + "'");
+		}
+		return bean.getClass();
 	}
 
 	@Override
@@ -389,7 +394,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public boolean isPrototype(final String name) throws NoSuchBeanDefinitionException
 	{
-		throw new UnsupportedOperationException();
+		return !isSingleton(name);
 	}
 
 	@Override
