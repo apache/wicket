@@ -25,8 +25,6 @@ import java.util.List;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

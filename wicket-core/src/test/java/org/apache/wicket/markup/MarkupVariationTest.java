@@ -42,13 +42,24 @@ public class MarkupVariationTest extends WicketTestCase
 	{
 		tester.startPage(new VariationPage());
 		tester.assertContainsNot("Two");
+		tester.assertMarkupVariation(getVariationPanel(), "one");
+		tester.assertMarkupVariation(tester.getLastRenderedPage(), null);
 		tester.clickLink("p:l");
 
 		tester.assertContainsNot("One");
+		tester.assertMarkupVariation(getVariationPanel(), "two");
+		tester.assertMarkupVariation(tester.getLastRenderedPage(), null);
 		tester.clickLink("p:l");
 
 		tester.assertContainsNot("Two");
+		tester.assertMarkupVariation(getVariationPanel(), "one");
+		tester.assertMarkupVariation(tester.getLastRenderedPage(), null);
 		tester.clickLink("p:l");
+	}
+
+	private MarkupContainer getVariationPanel()
+	{
+		return (MarkupContainer) tester.getComponentFromLastRenderedPage("p");
 	}
 
 	private static class VariationPage extends WebPage implements IMarkupResourceStreamProvider
