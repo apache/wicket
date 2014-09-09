@@ -87,6 +87,16 @@ public class WebPageRenderer extends PageRenderer
 		WebApplication.get().storeBufferedResponse(getSessionId(), url, response);
 	}
 
+	/**
+	 * Retrieves a stored buffered response for a given url.
+	 *
+	 * @param url
+	 *          The url used as a key
+	 * @return the stored buffered response. {@code null} if there is no stored response for the given url
+	 * @see org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy#REDIRECT_TO_BUFFER
+	 * @deprecated Will be removed in Wicket 7.0. Use {@link org.apache.wicket.protocol.http.WebApplication#getAndRemoveBufferedResponse(String, org.apache.wicket.request.Url)} instead
+	 */
+	@Deprecated
 	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
 	{
 		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
@@ -195,20 +205,11 @@ public class WebPageRenderer extends PageRenderer
 		// 3 rendering strategies and two kind of requests (ajax and normal)
 		//
 
-		// try to get an already rendered buffered response for current URL
-		BufferedWebResponse bufferedResponse = getAndRemoveBufferedResponse(currentUrl);
-
 		boolean isAjax = isAjax(requestCycle);
 
 		boolean shouldPreserveClientUrl = ((WebRequest)requestCycle.getRequest()).shouldPreserveClientUrl();
 
-		if (bufferedResponse != null)
-		{
-			logger.warn("The Buffered response should be handled by BufferedResponseRequestHandler");
-			// if there is saved response for this URL render it
-			bufferedResponse.writeTo((WebResponse)requestCycle.getResponse());
-		}
-		else if ((isAjax == false)
+		if ((isAjax == false)
 					&& (compatibleProtocols(currentUrl.getProtocol(), targetUrl.getProtocol())) && (//
 							getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT //
 						|| (isOnePassRender() && getRedirectPolicy() != RedirectPolicy.ALWAYS_REDIRECT) //

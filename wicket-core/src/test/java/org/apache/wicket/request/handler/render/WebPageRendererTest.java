@@ -335,40 +335,6 @@ public class WebPageRendererTest extends Assert
 	}
 
 	/**
-	 * Tests that when there is already saved buffered response then it will be used without
-	 * checking the rendering strategies or redirect policies
-	 */
-	@Test
-	public void testGetAndRemoveBufferedResponse()
-	{
-		final BufferedWebResponse bufferedResponse = mock(BufferedWebResponse.class);
-
-		PageRenderer renderer = new TestPageRenderer(handler)
-		{
-			@Override
-			protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
-			{
-				return bufferedResponse;
-			}
-
-		};
-
-		Url sameUrl = Url.parse("anything");
-
-		when(urlRenderer.getBaseUrl()).thenReturn(sameUrl);
-
-		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(sameUrl);
-
-		when(request.shouldPreserveClientUrl()).thenReturn(false);
-
-		renderer.respond(requestCycle);
-
-		verify(bufferedResponse).writeTo(response);
-		verify(response, never()).write(any(byte[].class));
-		verify(response, never()).sendRedirect(anyString());
-	}
-
-	/**
 	 * Tests that when {@link RenderPageRequestHandler#getRedirectPolicy()} is
 	 * {@link RedirectPolicy#ALWAYS_REDIRECT} there a redirect must be issued
 	 */
