@@ -37,20 +37,9 @@ class TestPageRenderer extends WebPageRenderer
 	public boolean redirectToBuffer;
 	public boolean sessionTemporary;
 
-	public TestPageRenderer()
-	{
-		this(null);
-	}
-
 	public TestPageRenderer(RenderPageRequestHandler handler)
 	{
 		super(handler);
-	}
-
-	@Override
-	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
-	{
-		return null;
 	}
 
 	@Override

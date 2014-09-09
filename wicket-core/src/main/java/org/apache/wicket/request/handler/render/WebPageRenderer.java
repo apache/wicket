@@ -86,12 +86,7 @@ public class WebPageRenderer extends PageRenderer
 
 		WebApplication.get().storeBufferedResponse(getSessionId(), url, response);
 	}
-
-	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
-	{
-		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
-	}
-
+	
 	/**
 	 * Renders page to a {@link BufferedWebResponse}. All URLs in page will be rendered relative to
 	 * <code>targetUrl</code>
@@ -195,17 +190,7 @@ public class WebPageRenderer extends PageRenderer
 		// 3 rendering strategies and two kind of requests (ajax and normal)
 		//
 
-		// try to get an already rendered buffered response for current URL
-		BufferedWebResponse bufferedResponse = getAndRemoveBufferedResponse(currentUrl);
-
-		if (bufferedResponse != null)
-		{
-			logger
-				.warn("The Buffered response should be handled by BufferedResponseRequestHandler");
-			// if there is saved response for this URL render it
-			bufferedResponse.writeTo((WebResponse)requestCycle.getResponse());
-		}
-		else if (shouldRenderPageAndWriteResponse(requestCycle, currentUrl, targetUrl))
+		if (shouldRenderPageAndWriteResponse(requestCycle, currentUrl, targetUrl))
 		{
 			BufferedWebResponse response = renderPage(currentUrl, requestCycle);
 			if (response != null)
