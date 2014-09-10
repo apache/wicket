@@ -2,7 +2,7 @@
 <archetype-descriptor name="quickstart">
 	<requiredProperties>
 		<requiredProperty key="log4j.properties">
-			<defaultValue>log4j.properties</defaultValue>
+			<defaultValue>log4j2.xml</defaultValue>
 		</requiredProperty>
 	</requiredProperties>
 	<fileSets>
