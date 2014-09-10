@@ -91,10 +91,6 @@
 			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>velocity</groupId>
 			<artifactId>velocity</artifactId>
 			<version>1.4</version>
