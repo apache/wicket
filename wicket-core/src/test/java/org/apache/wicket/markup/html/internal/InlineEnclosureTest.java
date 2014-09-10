@@ -16,10 +16,16 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.junit.Test;
 
 
@@ -43,17 +49,31 @@ public class InlineEnclosureTest extends WicketTestCase
 
 		tester.startPage(page);
 
-		assertEquals(2, page.visitChildren(InlineEnclosure.class).toList().size());
+		assertEquals(2, childrenByType(page, InlineEnclosure.class));
 
 		tester.startPage(page);
 
-		assertEquals(2, page.visitChildren(InlineEnclosure.class).toList().size());
+		assertEquals(2, childrenByType(page, InlineEnclosure.class));
 
 		tester.startPage(page);
 
-		assertEquals(2, page.visitChildren(InlineEnclosure.class).toList().size());
+		assertEquals(2, childrenByType(page, InlineEnclosure.class));
 	}
 
+	private <T> int childrenByType(MarkupContainer parent, Class<T> filter)
+	{
+		final AtomicInteger count = new AtomicInteger(0);
+		parent.visitChildren(filter, new IVisitor<Component, Void>()
+		{
+			@Override
+			public void component(Component object, IVisit<Void> visit)
+			{
+				count.incrementAndGet();
+			}
+		});
+
+		return count.get();
+	}
 
 	/**
 	 * @throws Exception
