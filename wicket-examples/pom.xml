@@ -113,6 +113,16 @@
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-all-server</artifactId>
+			<exclusions>
+				<exclusion>
+					<!-- exclude because the same jar comes from JBoss Weld and the following error occurs:
+					 class "javax.annotation.ManagedBean"'s signer information does not match signer
+					 information of other classes in the same package
+					 -->
+					<groupId>org.eclipse.jetty.orbit</groupId>
+					<artifactId>javax.annotation</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- EL impl for bean validation demo -->
 		<dependency>
