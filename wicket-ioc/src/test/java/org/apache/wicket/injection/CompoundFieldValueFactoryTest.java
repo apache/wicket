@@ -16,12 +16,16 @@
  */
 package org.apache.wicket.injection;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,8 +42,6 @@ public class CompoundFieldValueFactoryTest extends Assert
 
 	private Field field;
 
-	private final IMocksControl[] ctrl = new IMocksControl[4];
-
 	private final IFieldValueFactory[] fact = new IFieldValueFactory[4];
 
 	/**
@@ -53,8 +55,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 
 		for (int i = 0; i < 4; i++)
 		{
-			ctrl[i] = EasyMock.createControl();
-			fact[i] = ctrl[i].createMock(IFieldValueFactory.class);
+			fact[i] = mock(IFieldValueFactory.class);
 		}
 	}
 
@@ -62,16 +63,23 @@ public class CompoundFieldValueFactoryTest extends Assert
 	{
 		for (int i = 0; i < cnt; i++)
 		{
-			EasyMock.expect(fact[i].getFieldValue(field, this)).andReturn(null);
-			ctrl[i].replay();
+			when(fact[i].getFieldValue(field, this)).thenReturn(null);
 		}
 	}
 
-	protected void verify(final int cnt)
+	protected void verifyCalled(int... indices)
 	{
-		for (int i = 0; i < cnt; i++)
+		for (int i : indices)
 		{
-			ctrl[i].verify();
+			verify(fact[i], times(1)).getFieldValue(field, this);
+		}
+	}
+
+	private void verifyNotCalled(int... indices)
+	{
+		for (int i : indices)
+		{
+			verify(fact[i], never()).getFieldValue(field, this);
 		}
 	}
 
@@ -85,7 +93,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 		CompoundFieldValueFactory f = new CompoundFieldValueFactory(new IFieldValueFactory[] {
 				fact[0], fact[1] });
 		f.getFieldValue(field, this);
-		verify(2);
+		verifyCalled(0, 1);
 
 		try
 		{
@@ -108,7 +116,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 		List<IFieldValueFactory> list = Arrays.asList(fact[0], fact[1], fact[2], fact[3]);
 		CompoundFieldValueFactory f = new CompoundFieldValueFactory(list);
 		f.getFieldValue(field, this);
-		verify(4);
+		verifyCalled(0, 1, 2, 3);
 
 		try
 		{
@@ -131,7 +139,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 		prepare(2);
 		CompoundFieldValueFactory f = new CompoundFieldValueFactory(fact[0], fact[1]);
 		f.getFieldValue(field, this);
-		verify(2);
+		verifyCalled(0, 1);
 
 		try
 		{
@@ -161,15 +169,14 @@ public class CompoundFieldValueFactoryTest extends Assert
 	public void testBreakOnNonNullReturn()
 	{
 		prepare(2);
-		EasyMock.expect(fact[2].getFieldValue(field, this)).andReturn(new Object());
-		ctrl[2].replay();
-		ctrl[3].replay();
+		when(fact[2].getFieldValue(field, this)).thenReturn(new Object());
 		List<IFieldValueFactory> list = Arrays.asList(fact[0], fact[1], fact[2], fact[3]);
 		CompoundFieldValueFactory f = new CompoundFieldValueFactory(list);
 
 		f.getFieldValue(field, this);
 
-		verify(4);
+		verifyCalled(0, 1, 2);
+		verifyNotCalled(3);
 	}
 
 	/**
@@ -183,7 +190,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 				fact[0], fact[1] });
 		f.addFactory(fact[2]);
 		f.getFieldValue(field, this);
-		verify(3);
+		verifyCalled(0, 1, 2);
 
 		try
 		{
