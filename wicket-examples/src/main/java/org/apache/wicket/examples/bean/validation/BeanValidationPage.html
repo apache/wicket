@@ -35,6 +35,12 @@
 				<td><pre class="note">m/d/yyyy field with @Past</pre></td>
 			</tr>
 			<tr>
+                <td><label wicket:for="password"><wicket:label>Password</wicket:label></label></td>
+                <td><input wicket:id="password" type="text" size="10"/></td>
+                <td><pre class="note">Custom constraint @ValidPassword with custom message bundles.<br/>A valid password must contain only alphanumeric chars and at least two digits.</pre>
+                </td>
+            </tr>
+			<tr>
 				<td></td>
 				<td>
 					<input type="submit" value="Submit"/>
