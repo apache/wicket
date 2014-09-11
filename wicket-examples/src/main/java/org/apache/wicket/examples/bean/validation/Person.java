@@ -24,6 +24,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.apache.wicket.examples.bean.validation.constraint.ValidPassword;
 import org.hibernate.validator.constraints.Email;
 
 public class Person implements Serializable
@@ -41,6 +42,9 @@ public class Person implements Serializable
 
 	@Past
 	private Date birthdate;
+	
+	@ValidPassword
+	private String password;
 
 	public String getName()
 	{
@@ -82,5 +86,13 @@ public class Person implements Serializable
 		this.birthdate = birthdate;
 	}
 
+	public String getPassword()
+	{
+		return password;
+	}
 
+	public void setPassword(String password)
+	{
+		this.password = password;
+	}
 }

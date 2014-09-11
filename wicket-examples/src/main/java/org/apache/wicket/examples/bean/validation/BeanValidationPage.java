@@ -44,6 +44,7 @@ public class BeanValidationPage extends WicketExamplePage
 		form.add(new TextField<String>("email", new PropertyModel<String>(this, "person.email")).add(new PropertyValidator<String>()));
 		form.add(new DateTextField("birthdate", new PropertyModel<Date>(this, "person.birthdate"),
 			new StyleDateConverter("S-", true)).add(new PropertyValidator<String>()));
+		form.add(new TextField<String>("password", new PropertyModel<String>(this, "person.password")).add(new PropertyValidator<String>()));
 
 	}
 }
