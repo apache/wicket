@@ -23,9 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +39,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import javax.servlet.ServletRegistration.Dynamic;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.SessionCookieConfig;
@@ -44,8 +47,10 @@ import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +77,8 @@ public class MockServletContext implements ServletContext
 	private final ValueMap attributes = new ValueMap();
 
 	private final ValueMap initParameters = new ValueMap();
+	
+	private final Map<String, ServletRegistration.Dynamic> servletRegistration = new HashMap<>();
 
 	/** Map of mime types */
 	private final ValueMap mimeTypes = new ValueMap();
@@ -535,37 +542,63 @@ public class MockServletContext implements ServletContext
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, String className)
 	{
-		return null;
+		try
+		{
+			return addServlet(servletName, Class.forName(className).asSubclass(Servlet.class));
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet)
 	{
-		return null;
+		Dynamic mockRegistration = Mockito.mock(ServletRegistration.Dynamic.class);
+		Mockito.when(mockRegistration.getMappings()).thenReturn(Arrays.asList(servletName));
+		
+		servletRegistration.put(servletName, mockRegistration);
+		
+		return mockRegistration;
 	}
 
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass)
 	{
-		return null;
+		try
+		{
+			return addServlet(servletName, servletClass.newInstance());
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	@Override
 	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException
 	{
-		return null;
+		try
+		{
+			return clazz.newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	@Override
 	public ServletRegistration getServletRegistration(String servletName)
 	{
-		return null;
+		return servletRegistration.get(servletName);
 	}
 
 	@Override
 	public Map<String, ? extends ServletRegistration> getServletRegistrations()
 	{
-		return null;
+		return servletRegistration;
 	}
 
 	@Override
@@ -761,7 +794,33 @@ public class MockServletContext implements ServletContext
 	{
 		return "";
 	}
-
+	
+	/**
+	 * Utility method to create a mock Servlet.
+	 * 
+	 * @param clazz
+	 * 		the Servlet class we want to mock.
+	 * @return
+	 * 		the mock for the given Servlet class.
+	 */
+	public <T extends Servlet> T createMockServlet(Class<T> clazz)
+	{
+		return Mockito.mock(clazz);
+	}
+	
+	/**
+	 * Utility method to add a mock Servlet.
+	 * 
+	 * @param servletName
+	 * 		the name of the servlet.
+	 * @param clazz
+	 * 		the Servlet class we want to mock.
+	 */
+	public void  addMockServlet(String servletName, Class<? extends Servlet> clazz)
+	{
+		addServlet(servletName, createMockServlet(clazz));
+	}
+	
 	// @formatter:off
 	/* TODO JAVA6,SERVLET3.0
 	 * servlet 3.0 stuff
@@ -779,36 +838,6 @@ public class MockServletContext implements ServletContext
 	public boolean setInitParameter(String name, String value)
 	{
 		return false;
-	}
-
-	public Dynamic addServlet(String servletName, String className)
-	{
-		return null;
-	}
-
-	public Dynamic addServlet(String servletName, Servlet servlet)
-	{
-		return null;
-	}
-
-	public Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass)
-	{
-		return null;
-	}
-
-	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException
-	{
-		return null;
-	}
-
-	public ServletRegistration getServletRegistration(String servletName)
-	{
-		return null;
-	}
-
-	public Map<String, ? extends ServletRegistration> getServletRegistrations()
-	{
-		return null;
 	}
 
 	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className)
