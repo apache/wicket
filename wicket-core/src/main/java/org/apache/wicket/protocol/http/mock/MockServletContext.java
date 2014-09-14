@@ -21,9 +21,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
@@ -50,7 +54,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -555,8 +558,8 @@ public class MockServletContext implements ServletContext
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet)
 	{
-		Dynamic mockRegistration = Mockito.mock(ServletRegistration.Dynamic.class);
-		Mockito.when(mockRegistration.getMappings()).thenReturn(Arrays.asList(servletName));
+		Dynamic mockRegistration = (Dynamic)Proxy.newProxyInstance(Dynamic.class.getClassLoader(),
+			new Class<?>[]{Dynamic.class}, new MockedServletRegistationHandler(servletName));
 		
 		servletRegistration.put(servletName, mockRegistration);
 		
@@ -795,32 +798,37 @@ public class MockServletContext implements ServletContext
 		return "";
 	}
 	
-	/**
-	 * Utility method to create a mock Servlet.
-	 * 
-	 * @param clazz
-	 * 		the Servlet class we want to mock.
-	 * @return
-	 * 		the mock for the given Servlet class.
-	 */
-	public <T extends Servlet> T createMockServlet(Class<T> clazz)
-	{
-		return Mockito.mock(clazz);
-	}
 	
 	/**
-	 * Utility method to add a mock Servlet.
+	 * Invocation handler for proxy interface of {@link javax.servlet.ServletRegistration.Dynamic}.
+	 * This class intercepts invocation for method {@link javax.servlet.ServletRegistration.Dynamic#getMappings} 
+	 * and returns the servlet name.
 	 * 
-	 * @param servletName
-	 * 		the name of the servlet.
-	 * @param clazz
-	 * 		the Servlet class we want to mock.
+	 * @author andrea del bene
+	 *
 	 */
-	public void  addMockServlet(String servletName, Class<? extends Servlet> clazz)
+	class MockedServletRegistationHandler implements InvocationHandler
 	{
-		addServlet(servletName, createMockServlet(clazz));
+		
+		private final Collection<String> servletName;
+		
+		public MockedServletRegistationHandler(String servletName)
+		{
+			this.servletName = Arrays.asList(servletName);
+		}
+		
+		@Override
+		public Object invoke(Object object, Method method, Object[] args) throws Throwable
+		{
+			if (method.getName().equals("getMappings"))
+			{
+				return servletName;
+			}
+			
+			return null;
+		}
 	}
-	
+
 	// @formatter:off
 	/* TODO JAVA6,SERVLET3.0
 	 * servlet 3.0 stuff
