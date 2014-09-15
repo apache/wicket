@@ -28,13 +28,11 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -114,8 +112,6 @@ public class DebugBar extends DevUtilsPanel
 			}
 		}));
 
-		add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));
-		
 		add(contentSection("content", initiallyExpanded));
 	}
 
@@ -151,15 +147,16 @@ public class DebugBar extends DevUtilsPanel
 			}
 		});
 
-		section.add(new Image("removeImg", new PackageResourceReference(DebugBar.class, "remove.png")));
-
 		return section;
 	}
 
 	@Override
-	public boolean isVisible()
+	protected void onConfigure()
 	{
-		return getApplication().getDebugSettings().isDevelopmentUtilitiesEnabled();
+		super.onConfigure();
+
+		boolean developmentUtilitiesEnabled = getApplication().getDebugSettings().isDevelopmentUtilitiesEnabled();
+		setVisible(developmentUtilitiesEnabled);
 	}
 
 	@Override

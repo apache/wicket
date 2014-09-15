@@ -20,28 +20,11 @@
 	position: absolute;
 	right: 0;
 	top: 0;
-	padding: 0px 10px 0px 5px;
+	padding: 0 10px 0 5px;
 }
-#wicketDebugBar img {
-	margin: 4px 10px -3px 0px;
-	height: 16px;
-	width: 16px;
-	border: none;
-}
-#wicketDebugBarRemove img {
-	margin-left: 10px;
-	margin-right: 0px;
-}
-#wicketDebugBar .contributor a {
-	margin-right: 10px;
-	font-family: Verdana;
+#wicketDebugBar a {
 	font-size: 9pt;
 	color: black;
-}
-.wicketversioncontrib {
-	padding: 0em 0.5em;
-	background-color: #AAA;
-	opacity: 0.8;
 }
 /* 
 	the color is put on the class rather than the ID
@@ -55,4 +38,8 @@
 .wicketDebugBar {
 	background-color: #DDDDDD;
 	opacity: 0.8;
+}
+#wicketDebugBarCollapse i {
+	margin-top: -7px;
+	font-size: large;
 }

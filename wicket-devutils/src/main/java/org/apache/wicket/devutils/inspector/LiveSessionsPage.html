@@ -22,21 +22,21 @@
 </wicket:head>
 </head>
 <body>
-  <wicket:extend>
-  <h1><img border="0" wicket:id="bug" src="bug.png"/> Wicket Sessions Inspector</h1>
-	<a href="javascript:history.go(-1)">Go Back</a>
+    <wicket:extend>
+        <h1><i class="glyphicon glyphicon-info-sign"></i> Wicket Sessions Inspector</h1>
+	    <a class="btn btn-info" href="javascript:history.go(-1)">Go Back</a>
 
-    <span wicket:id="application">Application view here</span>
+        <div wicket:id="application">Application view here</div>
   
-  	<h2>Session Information  <a wicket:id="togglelink" href="#"><span wicket:id="toggletext"></span></a></h2>
-	<table>
+  	<h2>Session Information  <a class="btn btn-link" wicket:id="togglelink" href="javascript:;"><span wicket:id="toggletext"></span></a></h2>
+	<table class="table table-striped">
 		<tr><td>Total created sessions</td><td><span wicket:id="totalSessions"></span></td></tr>
 		<tr><td>Live session count</td><td><span wicket:id="liveSessions"></span></td></tr>
 		<tr><td>Peak session count</td><td><span wicket:id="peakSessions"></span></td></tr>
 	</table>	
 	
 	<p>Live Sessions</p>
-	<table border="1">
+	<table class="table table-bordered table-striped">
 		<tr>
 			<th>Session Id</th>
 			<th>Last Request Time</th>
@@ -52,7 +52,7 @@
 			<td wicket:id="sessionSize" align="right"></td>
 		</tr>
 	</table>
-	<span wicket:id="navigator"></span>
+	<div wicket:id="navigator"></div>
   </wicket:extend>
 </body>
 </html>

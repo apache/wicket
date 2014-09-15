@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.devutils.debugbar;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import org.apache.wicket.Page;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -52,15 +54,10 @@ public abstract class StandardDebugPanel extends DevUtilsPanel
 		super.onInitialize();
 		BookmarkablePageLink<Void> link = createLink("link");
 		add(link);
-		ResourceReference img = getImageResourceReference();
-		if (img == null)
-		{
-			link.add(new WebMarkupContainer("img").setVisibilityAllowed(false));
-		}
-		else
-		{
-			link.add(new Image("img", img));
-		}
+
+		String iconClass = getIcon();
+		link.add(new WebMarkupContainer("icon").add(CssClassNameAppender.append("class", iconClass)));
+
 		link.add(new Label("data", getDataModel()));
 	}
 
@@ -71,7 +68,7 @@ public abstract class StandardDebugPanel extends DevUtilsPanel
 
 	protected abstract IModel<String> getDataModel();
 
-	protected abstract ResourceReference getImageResourceReference();
+	protected abstract String getIcon();
 
 	protected abstract Class<? extends Page> getLinkPageClass();
 

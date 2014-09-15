@@ -76,10 +76,9 @@ public class PageSizeDebugPanel extends StandardDebugPanel
 	}
 
 	@Override
-	protected ResourceReference getImageResourceReference()
+	protected String getIcon()
 	{
-		// TODO: need better image for this:
-		return new PackageResourceReference(SessionSizeDebugPanel.class, "harddrive.png");
+		return "glyphicon glyphicon-floppy-disk";
 	}
 
 	@Override

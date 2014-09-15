@@ -67,10 +67,9 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 	}
 
 	@Override
-	protected ResourceReference getImageResourceReference()
+	protected String getIcon()
 	{
-		// TODO: need better image for this:
-		return new PackageResourceReference(SessionSizeDebugPanel.class, "harddrive.png");
+		return "glyphicon glyphicon-tasks";
 	}
 
 	@Override

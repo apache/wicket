@@ -16,65 +16,100 @@
    limitations under the License.
 -->
 <html xmlns:wicket="http://wicket.apache.org">
-<head>
 <wicket:head>
-	<style>
-.enhancedViewPage table {
-	border: 1px solid #DDDDDD;
-}
+    <style>
+        .enhancedViewPage table {
+            border: 1px solid #DDDDDD;
+        }
 
-.enhancedViewPage th {
-	background: #C3C3C3;
-	color: white;
-	font-weight: bold;
-	padding: 0.2em;
-}
+        .enhancedViewPage th {
+             background: #C3C3C3;
+             color: white;
+             font-weight: bold;
+             padding: 0.2em;
+        }
 
-.enhancedViewPage tr.even {
-	background-color: #FFFFFF;
-}
+        .enhancedViewPage tr.even {
+             background-color: #FFFFFF;
+        }
 
-.enhancedViewPage tr.odd {
-	background-color: #EEEEEE;
-}
+        .enhancedViewPage tr.odd {
+             background-color: #EEEEEE;
+        }
 
-.enhancedViewPage td {
-	padding: 0 0.2em;
-}
+        .enhancedViewPage td {
+             padding: 0 0.2em;
+        }
 
-.enhancedViewPage .col_size {
-	text-align: left;
-	white-space: nowrap;
-}
+        .enhancedViewPage .col_size {
+             text-align: left;
+             white-space: nowrap;
+        }
 
-.enhancedViewPage .col_renderTime {
-	text-align: center;
-	white-space: nowrap;
-}
+        .enhancedViewPage .col_renderTime {
+             text-align: center;
+             white-space: nowrap;
+        }
 
-.enhancedViewPage .col_path {
-	text-align: left;
-	min-width: 15em;
-}
+        .enhancedViewPage .col_path {
+             border: 1px solid #DDDDDD;
+        }
 
-.enhancedViewPage .col_stateless {
-	text-align: center;
-}
-</style>
+        .enhancedViewPage th {
+             background: #C3C3C3;
+             color: white;
+             font-weight: bold;
+             padding: 0.2em;
+        }
+
+        .enhancedViewPage tr.even {
+             background-color: #FFFFFF;
+        }
+
+        .enhancedViewPage tr.odd {
+             background-color: #EEEEEE;
+        }
+
+        .enhancedViewPage td {
+             padding: 0 0.2em;
+        }
+
+        .enhancedViewPage .col_size {
+             text-align: left;
+             white-space: nowrap;
+        }
+
+        .enhancedViewPage .col_renderTime {
+             text-align: center;
+             white-space: nowrap;
+        }
+
+        .enhancedViewPage .col_path {
+             text-align: left;
+             min-width: 15em;
+        }
+
+        .enhancedViewPage .col_stateless {
+             text-align: center;
+        }
+
+    </style>
 </wicket:head>
-</head>
 <body>
 	<wicket:panel>
 		<h2>Page</h2>
 		<p>
 			<span wicket:id="info">Page</span> | render time: <span wicket:id="pageRenderDuration">n/a</span>
 		</p>
-		<form wicket:id="form">
+		<form wicket:id="form" role="form" class="form-inline">
 			<fieldset>
 				<legend>Filtering</legend>
-				<div>
+				<div class="checkbox">
 					<label wicket:for="showBehaviors">Show behaviors</label><input type="checkbox"
-						wicket:id="showBehaviors" /><label wicket:for="showStateless">Show only stateful
+						wicket:id="showBehaviors" />
+				</div>
+				<div class="checkbox">
+					<label wicket:for="showStateless">Show only stateful
 						Components and Behaviors + their parents</label><input type="checkbox" wicket:id="showStateless" />
 				</div>
 			</fieldset>
@@ -82,10 +117,10 @@
 				<legend>Visible columns</legend>
 				<div wicket:id="visibleColumns"></div>
 			</fieldset>
-			<button type="submit" wicket:id="submit">Apply filters</button>
+			<button class="btn btn-success" type="submit" wicket:id="submit">Apply filters</button>
 		</form>
 		<p>
-			<a wicket:id="collapseAll">collapse all</a> <a wicket:id="expandAll">expand all</a>
+			<a class="btn btn-link" wicket:id="collapseAll">collapse all</a> | <a class="btn btn-link" wicket:id="expandAll">expand all</a>
 		</p>
 		<div class="enhancedViewPage" wicket:id="tree">[tree]</div>
 	</wicket:panel>

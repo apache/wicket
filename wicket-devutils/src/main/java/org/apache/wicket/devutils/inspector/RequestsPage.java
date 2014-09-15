@@ -25,7 +25,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
@@ -54,7 +53,6 @@ public class RequestsPage extends DevUtilsPage
 	 */
 	public RequestsPage(final SessionData sessionData)
 	{
-		add(new NonCachingImage("bug"));
 		if (sessionData == null)
 		{
 			add(new Label("id").setVisible(false));
@@ -69,10 +67,10 @@ public class RequestsPage extends DevUtilsPage
 		else
 		{
 			add(new Label("id", new Model<>(sessionData.getSessionId())));
-			add(new Label("sessionInfo", new Model<Serializable>(
+			add(new Label("sessionInfo", new Model<>(
 				(Serializable)sessionData.getSessionInfo())));
 			add(new Label("startDate", new Model<>(sdf.format(sessionData.getStartDate()))));
-			add(new Label("lastRequestTime", new Model<String>(
+			add(new Label("lastRequestTime", new Model<>(
 				sdf.format(sessionData.getLastActive()))));
 			add(new Label("numberOfRequests", new Model<>(sessionData.getNumberOfRequests())));
 			add(new Label("totalTimeTaken", new Model<>(sessionData.getTotalTimeTaken())));

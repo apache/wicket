@@ -65,9 +65,9 @@ public class InspectorDebugPanel extends StandardDebugPanel
 	}
 
 	@Override
-	protected ResourceReference getImageResourceReference()
+	protected String getIcon()
 	{
-		return new PackageResourceReference(InspectorPage.class, "bug.png");
+		return "glyphicon glyphicon-info-sign";
 	}
 
 	@Override

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.devutils;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.BootstrapBaseBehavior;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
@@ -65,6 +66,8 @@ public class DevUtilsPage extends WebPage
 	private void init()
 	{
 		add(new DebugBar("debug"));
+
+		BootstrapBaseBehavior.addTo(this);
 	}
 
 	@Override

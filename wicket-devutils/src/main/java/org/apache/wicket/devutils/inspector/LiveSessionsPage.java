@@ -24,7 +24,6 @@ import java.util.List;
 import org.apache.wicket.Application;
 import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
@@ -50,8 +49,6 @@ public class LiveSessionsPage extends DevUtilsPage
 	 */
 	public LiveSessionsPage()
 	{
-		add(new NonCachingImage("bug"));
-
 		add(new ApplicationView("application", Application.get()));
 
 		Link<Void> link = new Link<Void>("togglelink")

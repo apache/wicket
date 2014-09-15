@@ -16,15 +16,13 @@
    limitations under the License.
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
-<head>
-</head>
 <body>
  
 	<wicket:panel>
-		<a id="wicketDebugBarCollapse" onclick="wicketDebugBarCollapse();"><img wicket:id="logo" src="wicket.png" alt="Wicket" /></a>
+		<a class="btn btn-link" id="wicketDebugBarCollapse" onclick="wicketDebugBarCollapse();"><i class="glyphicon glyphicon-collapse-up"></i></a>
 		<span id="wicketDebugBarContents" wicket:id="content">
 			<span wicket:id="contributors"><span wicket:id="contrib" class="contributor"></span></span>
-			<a id="wicketDebugBarRemove" onclick="wicketDebugBarRemove();"><img wicket:id="removeImg" src="remove.png" alt="Remove" /></a>
+			<button type="button" class="close" onclick="wicketDebugBarRemove();"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 		</span>
 	</wicket:panel>
 

@@ -16,8 +16,13 @@
  */
 package org.apache.wicket.devutils.debugbar;
 
+import de.agilecoders.wicket.core.Bootstrap;
+import de.agilecoders.wicket.core.settings.BootstrapSettings;
+import de.agilecoders.wicket.core.settings.IBootstrapSettings;
+import de.agilecoders.wicket.webjars.WicketWebjars;
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
+import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * Debug bar module initializer
@@ -39,6 +44,13 @@ public class DebugBarInitializer implements IInitializer
 			DebugBar.registerContributor(InspectorDebugPanel.DEBUG_BAR_CONTRIB, application);
 			DebugBar.registerContributor(SessionSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
 			DebugBar.registerContributor(PageSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
+
+			if (WicketWebjars.isInstalled(application) == false)
+			{
+				WicketWebjars.install((WebApplication) application);
+			}
+			IBootstrapSettings bootstrapSettings = new BootstrapSettings();
+			Bootstrap.install(application, bootstrapSettings);
 		}
 	}
 

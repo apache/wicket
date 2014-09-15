@@ -20,12 +20,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.devutils.DevUtilsPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValueConversionException;
 
 
@@ -55,18 +52,12 @@ public final class InspectorPage extends DevUtilsPage
 			final int pageId = parameters.get("pageId").toInt();
 			page = Session.get().getPageManager().getPage(pageId);
 		}
-		catch (StringValueConversionException e)
-		{
-			// Ignore
-		}
-		catch (NullPointerException e)
+		catch (StringValueConversionException | NullPointerException e)
 		{
 			// Ignore
 		}
 		add(new EnhancedPageView("page", (Page)page));
-		add(new Image("bug", new PackageResourceReference(InspectorPage.class, "bug.png")));
 		add(new BookmarkablePageLink<>("allsessions", LiveSessionsPage.class));
-		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
 	}
 
 	/**

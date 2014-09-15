@@ -15,16 +15,11 @@
  * limitations under the License.
  */
 function wicketDebugBarCollapse() {
-	wicketDebugBarToggleVisibility('wicketDebugBarContents');
+	jQuery('#wicketDebugBarContents').toggle();
+	jQuery('#wicketDebugBarCollapse > i').toggleClass('glyphicon-collapse-up').toggleClass('glyphicon-collapse-down');
 }
 
 function wicketDebugBarRemove() {
-	wicketDebugBarToggleVisibility('wicketDebugBar');
-}
-
-function wicketDebugBarToggleVisibility(elemID) {
-	var elem = document.getElementById(elemID);
-	var vis  = elem.style.display != 'none';
-	elem.style.display = (vis ? 'none' : '');
+	jQuery('#wicketDebugBar').hide();
 }
 

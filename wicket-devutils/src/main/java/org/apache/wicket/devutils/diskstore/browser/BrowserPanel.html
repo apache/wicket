@@ -19,10 +19,10 @@
 <wicket:panel>
 
     <h3>Active sessions</h3>
-    <select wicket:id="sessions"></select> <a wicket:id="currentSessionLink" title="Selects the current session">Current session</a>
+    <select class="form-control" wicket:id="sessions"></select> <a class="btn btn-link" wicket:id="currentSessionLink" title="Selects the current session">Current session</a>
 
-    <h3>Stored pages</h3> <a wicket:id="refresh" title="Refreshes the content of the table below">refresh</a>
-	<table wicket:id="table" border="1" cellpadding="3" cellspacing="1"></table>
+    <h3>Stored pages</h3> <a class="btn btn-link" wicket:id="refresh" title="Refreshes the content of the table below">refresh</a>
+	<table class="table table-striped" wicket:id="table"></table>
 
 </wicket:panel>
 </html>

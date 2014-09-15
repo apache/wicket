@@ -31,7 +31,12 @@
 		are typically used during development only, but may be 
 		turned on for additional production debugging.
 	</description>
-	<dependencies>
+
+	<properties>
+		<wicket-bootstrap.version>0.10.0-SNAPSHOT</wicket-bootstrap.version>
+	</properties>
+
+    <dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
@@ -39,6 +44,16 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.agilecoders.wicket</groupId>
+			<artifactId>wicket-bootstrap-core</artifactId>
+			<version>${wicket-bootstrap.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.agilecoders.wicket</groupId>
+			<artifactId>wicket-bootstrap-themes</artifactId>
+			<version>${wicket-bootstrap.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

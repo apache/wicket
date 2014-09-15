@@ -18,13 +18,13 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 <wicket:head>
-<title>Requests Page</title>
+    <title>Requests Page</title>
 </wicket:head>
 </head>
 <body>
   <wicket:extend>
-  <h1><img border="0" wicket:id="bug" src="bug.png"/> Wicket Sessions Inspector</h1>
-	<a href="javascript:history.go(-1)">Go Back</a>
+  <h1><i class="glyphicon glyphicon-info-sign"></i> Wicket Sessions Inspector</h1>
+	<a class="btn btn-info" href="javascript:history.go(-1)">Go Back</a>
 
   	<h2>Session</h2>
   	<ul>
@@ -38,7 +38,7 @@
 	</ul>
     
   	<h2>Request Information</h2>
-	<table border="1">
+	<table class="table table-striped table-bordered">
 		<tr>
 			<th wicket:id="sessionid">Id</th>
 			<th>Start Date</th>

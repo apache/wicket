@@ -18,17 +18,16 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 <wicket:head>
-<title>Inspector Bug</title>
+    <title>Inspector Bug</title>
 </wicket:head>
 </head>
 <body>
   <wicket:extend>
-  <h1><img border="0" wicket:id="bug" src="bug.png"/> Wicket Inspector (Wicket Version: <span wicket:id="wicketVersion">1.2</span>)</h1>
-	<a href="javascript:history.go(-1)">Go Back</a><br/>
-	<a wicket:id="allsessions" href="#">All Sessions</a>
-  <span wicket:id="application">Application view here</span>
-  <span wicket:id="session">Session view here</span>
-  <span wicket:id="page">Page view here</span>
+      <h1><i class="glyphicon glyphicon-info-sign"></i> Wicket Inspector</h1>
+      <a class="btn btn-info" href="javascript:history.go(-1)">Go Back</a> <a class="btn btn-info" wicket:id="allsessions" href="#">All Sessions</a>
+      <div wicket:id="application">Application view here</div>
+      <div wicket:id="session">Session view here</div>
+      <div wicket:id="page">Page view here</div>
   </wicket:extend>
 </body>
 </html>
