@@ -23,7 +23,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.page.IPageManager;
@@ -46,17 +45,15 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.apache.wicket.protocol.ws.api.registry.ResourceNameKey;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
@@ -76,7 +73,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	/**
 	 * A pageId indicating that the endpoint is WebSocketResource
 	 */
-	private static final int NO_PAGE_ID = -1;
+	static final int NO_PAGE_ID = -1;
 
 	private final WebRequest webRequest;
 	private final int pageId;
@@ -187,20 +184,9 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			WebSocketResponse webResponse = new WebSocketResponse(connection);
 			try
 			{
-				RequestCycle requestCycle;
-				if (oldRequestCycle == null || message instanceof IWebSocketPushMessage)
-				{
-					RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
-							application.getRootRequestMapper(), application.getExceptionMapperProvider().get());
-
-					requestCycle = application.getRequestCycleProvider().get(context);
-					requestCycle.getUrlRenderer().setBaseUrl(baseUrl);
-					ThreadContext.setRequestCycle(requestCycle);
-				}
-				else
-				{
-					requestCycle = oldRequestCycle;
-				}
+				WebSocketRequestMapper requestMapper = new WebSocketRequestMapper(application.getRootRequestMapper());
+				RequestCycle requestCycle = createRequestCycle(requestMapper, webResponse);
+				ThreadContext.setRequestCycle(requestCycle);
 
 				ThreadContext.setApplication(application);
 
@@ -217,25 +203,20 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				}
 
 				IPageManager pageManager = session.getPageManager();
-				try
+				Page page = getPage(pageManager);
+
+				WebSocketRequestHandler requestHandler = new WebSocketRequestHandler(page, connection);
+
+				WebSocketPayload payload = createEventPayload(message, requestHandler);
+
+				if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage))
 				{
-					Page page = getPage(pageManager);
-
-					WebSocketRequestHandler requestHandler = new WebSocketRequestHandler(page, connection);
-
-					WebSocketPayload payload = createEventPayload(message, requestHandler);
-
-					sendPayload(payload, page);
-
-					if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage))
-					{
-						requestHandler.respond(requestCycle);
-					}
+					requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
 				}
-				finally
-				{
-					pageManager.commitRequest();
-				}
+
+				IRequestHandler broadcastingHandler = new WebSocketMessageBroadcastHandler(pageId, resourceName, payload);
+				requestMapper.setHandler(broadcastingHandler);
+				requestCycle.processRequestAndDetach();
 			}
 			catch (Exception x)
 			{
@@ -261,46 +242,26 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 	}
 
-	/**
-	 * Sends the payload either to the page (and its WebSocketBehavior)
-	 * or to the WebSocketResource with name {@linkplain #resourceName}
-	 *
-	 * @param payload
-	 *          The payload with the web socket message
-	 * @param page
-	 *          The page that owns the WebSocketBehavior, in case of behavior usage
-	 */
-	private void sendPayload(final WebSocketPayload payload, final Page page)
+	private RequestCycle createRequestCycle(WebSocketRequestMapper requestMapper, WebSocketResponse webResponse)
 	{
-		final Runnable action = new Runnable()
+		RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
+				requestMapper, application.getExceptionMapperProvider().get());
+
+		RequestCycle requestCycle = application.getRequestCycleProvider().get(context);
+		requestCycle.getListeners().add(application.getRequestCycleListeners());
+		requestCycle.getListeners().add(new AbstractRequestCycleListener()
 		{
 			@Override
-			public void run()
+			public void onDetach(final RequestCycle requestCycle)
 			{
-				if (pageId != NO_PAGE_ID)
+				if (Session.exists())
 				{
-					page.send(application, Broadcast.BREADTH, payload);
-				} else
-				{
-					ResourceReference reference = new SharedResourceReference(resourceName);
-					IResource resource = reference.getResource();
-					if (resource instanceof WebSocketResource)
-					{
-						WebSocketResource wsResource = (WebSocketResource) resource;
-						wsResource.onPayload(payload);
-					} else
-					{
-						throw new IllegalStateException(
-								String.format("Shared resource with name '%s' is not a %s but %s",
-										resourceName, WebSocketResource.class.getSimpleName(),
-										Classes.name(resource.getClass())));
-					}
+					Session.get().getPageManager().commitRequest();
 				}
 			}
-		};
-
-		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
-		webSocketSettings.getSendPayloadExecutor().run(action);
+		});
+		requestCycle.getUrlRenderer().setBaseUrl(baseUrl);
+		return requestCycle;
 	}
 
 	/**
