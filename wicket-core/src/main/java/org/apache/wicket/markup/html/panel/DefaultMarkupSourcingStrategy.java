@@ -21,7 +21,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.list.AbstractItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,47 +97,7 @@ public final class DefaultMarkupSourcingStrategy extends AbstractMarkupSourcingS
 		}
 
 		markup = searchMarkupInTransparentResolvers(container, child);
-		if (markup != null)
-		{
-			return markup;
-		}
-
-		// This is to make migration for Items from 1.4 to 1.5 more easy
-		if (Character.isDigit(child.getId().charAt(0)))
-		{
-			String id = child.getId();
-			boolean miss = false;
-			for (int i = 1; i < id.length(); i++)
-			{
-				if (Character.isDigit(id.charAt(i)) == false)
-				{
-					miss = true;
-					break;
-				}
-			}
-
-			if (miss == false)
-			{
-				// The LoopItems markup is equal to the Loops markup
-				markup = container.getMarkup();
-
-				if (!(child instanceof AbstractItem) && log.isWarnEnabled())
-				{
-					log.warn("1.4 to 1.5 migration issue: the childs wicket-id contains decimals only. " +
-						"By convention that " +
-						"is only the case for children (Items) of Loop, ListView, " +
-						"Tree etc.. To avoid the warning, the childs container should implement:\n" +
-						"@Override public IMarkupFragment getMarkup(Component child) {\n" +
-						"// The childs markup is always equal to the parents markup.\n" +
-						"return getMarkup(); }\n" +
-						"Child: " +
-						child.toString() +
-						"\nContainer: " +
-						container.toString());
-				}
-			}
-		}
-
+		
 		return markup;
 	}
 }
