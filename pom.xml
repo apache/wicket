@@ -39,7 +39,7 @@
 		<jetty9.version>9.0.7.v20131107</jetty9.version>
 		<spring.version>4.1.0.RELEASE</spring.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
-		<maven.javadoc.version>2.9.1</maven.javadoc.version>
+		<maven.javadoc.version>2.10</maven.javadoc.version>
 		<maven.surefire.version>2.17</maven.surefire.version>
 		<mockito.version>1.9.5</mockito.version>
 		<slf4j.version>1.7.7</slf4j.version>
@@ -180,7 +180,21 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
+		<profile>
+			<id>Java 8</id>
+			<activation>
+				<jdk>1.8</jdk>
+			</activation>
+			<properties>
+				<!-- Disable javadoc linter when building with Java 8
+				 http://mail-archives.apache.org/mod_mbox/maven-users/201403.mbox/%3CCANWgJS5xHWiGE+Lecey+mZVbj9Via4JUWsaBeZtQr2aQNebupA@mail.gmail.com%3E
+				 http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+				 -->
+				<additionalparam>-Xdoclint:none</additionalparam>
+			</properties>
+		</profile>
+
 	</profiles>
 	<url>http://wicket.apache.org/${project.artifactId}</url>
 	<inceptionYear>2006</inceptionYear>
