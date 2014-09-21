@@ -30,41 +30,75 @@
 		Examples displaying a component reference and several components in
 		action.
 	</description>
+    
+	<dependencyManagement>
+    	<dependencies>
+    		<dependency>
+    			<groupId>com.github.axet</groupId>
+    			<artifactId>kaptcha</artifactId>
+    			<version>0.0.9</version>
+    		</dependency>
+    		<dependency>
+    			<groupId>com.github.cage</groupId>
+    			<artifactId>cage</artifactId>
+    			<version>1.0</version>
+    		</dependency>
+    		<dependency>
+    			<groupId>com.uwyn</groupId>
+    			<artifactId>jhighlight</artifactId>
+    			<version>1.0</version>
+    			<exclusions>
+    				<exclusion>
+    					<groupId>javax.servlet</groupId>
+    					<artifactId>servlet-api</artifactId>
+    				</exclusion>
+    			</exclusions>
+    		</dependency>
+    		<dependency>
+    			<groupId>org.eclipse.jetty.aggregate</groupId>
+    			<artifactId>jetty-all-server</artifactId>
+                <version>${jetty.version}</version>
+    			<exclusions>
+    				<exclusion>
+    					<!-- exclude because the same jar comes from JBoss Weld and the following error occurs:
+    					 class "javax.annotation.ManagedBean"'s signer information does not match signer
+    					 information of other classes in the same package
+    					 -->
+    					<groupId>org.eclipse.jetty.orbit</groupId>
+    					<artifactId>javax.annotation</artifactId>
+    				</exclusion>
+    			</exclusions>
+    		</dependency>
+        </dependencies>
+    </dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
+			<groupId>com.github.axet</groupId>
+			<artifactId>kaptcha</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket7</groupId>
-			<artifactId>wicket-atmosphere</artifactId>
+			<groupId>com.github.cage</groupId>
+			<artifactId>cage</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-guice</artifactId>
-		</dependency>
-		<!-- bean validation -->
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-bean-validation</artifactId>
+			<groupId>com.uwyn</groupId>
+			<artifactId>jhighlight</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>5.1.2.Final</version>
-		</dependency>
-		<!-- / bean validation -->
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-jmx</artifactId>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -72,11 +106,35 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-bean-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-cdi-1.1</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-datetime</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-velocity</artifactId>
+			<artifactId>wicket-devutils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-guice</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-jmx</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -84,52 +142,24 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-devutils</artifactId>
+			<artifactId>wicket-velocity</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.uwyn</groupId>
-			<artifactId>jhighlight</artifactId>
-			<version>1.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.httpunit</groupId>
-			<artifactId>httpunit</artifactId>
+			<groupId>org.apache.wicket.experimental.wicket7</groupId>
+			<artifactId>wicket-atmosphere</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-all-server</artifactId>
-			<exclusions>
-				<exclusion>
-					<!-- exclude because the same jar comes from JBoss Weld and the following error occurs:
-					 class "javax.annotation.ManagedBean"'s signer information does not match signer
-					 information of other classes in the same package
-					 -->
-					<groupId>org.eclipse.jetty.orbit</groupId>
-					<artifactId>javax.annotation</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
-		<!-- EL impl for bean validation demo -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>compile</scope>
+        </dependency>
 		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.el</artifactId>
-			<version>3.0.1-b05</version>
-			<scope>test</scope>
+			<groupId>org.jboss.weld.servlet</groupId>
+			<artifactId>weld-servlet</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -140,39 +170,16 @@
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.weld.servlet</groupId>
-			<artifactId>weld-servlet</artifactId>
-			<version>2.2.4.Final</version>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.el</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-cdi-1.1</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>javax.el-api</artifactId>
-			<version>3.0.1-b04</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>javax.servlet.jsp-api</artifactId>
-			<scope>provided</scope>
-			<version>2.3.2-b01</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.axet</groupId>
-			<artifactId>kaptcha</artifactId>
-			<version>0.0.9</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.cage</groupId>
-			<artifactId>cage</artifactId>
-			<version>1.0</version>
+			<groupId>org.httpunit</groupId>
+			<artifactId>httpunit</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
@@ -216,22 +223,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<!--  include the manifest entries so that we can emit the version of the examples. -->
-					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-					</archive>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
@@ -240,6 +235,26 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+    			<plugin>
+    				<groupId>org.apache.maven.plugins</groupId>
+    				<artifactId>maven-javadoc-plugin</artifactId>
+    				<configuration>
+    					<skip>true</skip>
+    				</configuration>
+    			</plugin>
+    			<plugin>
+    				<groupId>org.apache.maven.plugins</groupId>
+    				<artifactId>maven-war-plugin</artifactId>
+    				<configuration>
+    					<!--  include the manifest entries so that we can emit the version of the examples. -->
+    					<archive>
+    						<manifest>
+    							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+    							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+    						</manifest>
+    					</archive>
+    				</configuration>
+    			</plugin>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -270,6 +285,18 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+    			<plugin>
+    				<groupId>org.mortbay.jetty</groupId>
+    				<artifactId>jetty-maven-plugin</artifactId>
+                    <version>${jetty.version}</version>
+                    <dependencies>
+                		<dependency>
+                			<groupId>javax.validation</groupId>
+                			<artifactId>validation-api</artifactId>
+                			<version>1.1.0.Final</version>
+                		</dependency>
+                    </dependencies>
+    			</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

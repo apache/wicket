@@ -32,25 +32,33 @@
 		Also enables propagation of conversations between wicket artifacts such as pages
 		and resources.
 	</description>
+	<dependencyManagement>
+    	<dependencies>
+            <!-- local management because we can only define one GAV in the parent -->
+        	<dependency>
+        		<groupId>javax.enterprise</groupId>
+        		<artifactId>cdi-api</artifactId>
+        		<version>1.0-SP4</version>
+        		<scope>provided</scope>
+        	</dependency>
+        </dependencies>   
+    </dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<version>1.0-SP4</version>
-		</dependency>
-		<dependency>
 			<groupId>org.jboss.seam.conversation</groupId>
 			<artifactId>seam-conversation-spi</artifactId>
-			<version>3.0.0.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>

@@ -26,54 +26,75 @@
 	<artifactId>wicket-atmosphere</artifactId>
 	<version>0.10-SNAPSHOT</version>
 	<packaging>jar</packaging>
+	<name>Wicket-Atmosphere</name>
+	<description>Wicket-Atmosphere provides integration of the Atmosphere Framework in Wicket.</description>
+    <repositories>
+        <repository>
+            <id>Sonatype OSS snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 	<properties>
 		<atmosphere.version>2.1.8</atmosphere.version>
 		<jquery.atmosphere.version>2.1.6</jquery.atmosphere.version>
 	</properties>
-	<name>Wicket-Atmosphere</name>
-	<description>Wicket-Atmosphere provides integration of the Atmosphere Framework in Wicket.</description>
+    <dependencyManagement>
+        <dependencies>
+    		<dependency>
+    			<groupId>org.atmosphere</groupId>
+    			<artifactId>atmosphere-runtime</artifactId>
+    			<version>${atmosphere.version}</version>
+    			<exclusions>
+    				<exclusion>
+    					<groupId>org.atmosphere</groupId>
+    					<artifactId>atmosphere-compat-jetty</artifactId>
+    				</exclusion>
+    			</exclusions>
+    		</dependency>
+    		<dependency>
+    			<groupId>org.webjars</groupId>
+    			<artifactId>jquery-atmosphere</artifactId>
+    			<version>${jquery.atmosphere.version}</version>
+    			<exclusions>
+    				<exclusion>
+    					<groupId>org.webjars</groupId>
+    					<artifactId>jquery</artifactId>
+    				</exclusion>
+    			</exclusions>
+    		</dependency>
+        </dependencies>
+    </dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.agilecoders.wicket.webjars</groupId>
+			<artifactId>wicket-webjars</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>17.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.atmosphere</groupId>
 			<artifactId>atmosphere-runtime</artifactId>
-			<version>${atmosphere.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.atmosphere</groupId>
-					<artifactId>atmosphere-compat-jetty</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery-atmosphere</artifactId>
-			<version>${jquery.atmosphere.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.webjars</groupId>
-					<artifactId>jquery</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>de.agilecoders.wicket.webjars</groupId>
-			<artifactId>wicket-webjars</artifactId>
-			<version>0.5.0-M2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>3.0.0</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
     <build>
@@ -150,16 +171,4 @@
         	</plugins>
         </pluginManagement>
     </build>
-    <repositories>
-        <repository>
-            <id>Sonatype OSS snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>

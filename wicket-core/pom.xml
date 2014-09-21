@@ -37,18 +37,20 @@
 	</description>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-request</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>provided</scope>
 			<!-- provided because of the -test jar we build? -->
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -57,39 +59,36 @@
 			<!-- provided because of the -test jar we build? -->
 		</dependency>
 		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-library</artifactId>
-			<scope>provided</scope>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-request</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-core</artifactId>
-			<scope>provided</scope>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-util</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clover-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<cloverOutputDirectory>${project.build.directory}/clover</cloverOutputDirectory>
-					<licenseLocation>${basedir}/../../../common/lib/clover.license</licenseLocation>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/jquery*.js</exclude>
-					</excludes>
-				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clover-plugin</artifactId>
 			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+    			<plugin>
+    				<groupId>net.alchim31.maven</groupId>
+    				<artifactId>yuicompressor-maven-plugin</artifactId>
+    				<configuration>
+    					<excludes>
+    						<exclude>**/jquery*.js</exclude>
+    					</excludes>
+    				</configuration>
+    			</plugin>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>

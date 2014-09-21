@@ -27,6 +27,26 @@
 	<packaging>jar</packaging>
 	<name>Wicket JavaScript Tests</name>
 	<description>JavaScript tests for all Wicket modules</description>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+			</plugin>
+		</plugins>
+        <pluginManagement>
+    		<plugins>
+    			<plugin>
+    				<groupId>org.apache.maven.plugins</groupId>
+    				<artifactId>maven-deploy-plugin</artifactId>
+    				<configuration>
+    					<!-- Just tests. No need to deploy -->
+    					<skip>true</skip>
+    				</configuration>
+    			</plugin>
+    		</plugins>
+        </pluginManagement>
+	</build>
 	<profiles>
 		<profile>
 			<id>js-test</id>
@@ -72,16 +92,4 @@
 			</build>
 		</profile>
 	</profiles>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration>
-					<!-- Just tests. No need to deploy -->
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

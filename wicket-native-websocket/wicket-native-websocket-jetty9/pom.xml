@@ -27,19 +27,25 @@
 	<packaging>jar</packaging>
 	<name>Wicket Native WebSocket Jetty 9</name>
 	<description>Provides the code specific to integrate with Jetty 9 web container</description>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+    			<groupId>org.eclipse.jetty.websocket</groupId>
+    			<artifactId>websocket-server</artifactId>
+    			<version>${jetty9.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-server</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-native-websocket-core</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-server</artifactId>
-			<version>${jetty9.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
 	</dependencies>
 	<build>
 		<pluginManagement>
