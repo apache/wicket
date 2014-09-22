@@ -67,8 +67,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 	private final IModel<Class<?>[]> groups_;
 
 	/**
-	 * A flag that indicates whether {@linkplain #setComponentRequiredFlag()} has been called for
-	 * this behavior.
+	 * A flag indicating whether the component has been configured at least once.
 	 */
 	private boolean requiredFlagSet;
 
