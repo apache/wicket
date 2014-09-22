@@ -3,6 +3,10 @@ package org.apache.wicket.bean.validation;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.apache.wicket.MarkupContainer;
@@ -66,6 +70,8 @@ public class PropertyValidatorRequiredTest
 		assertFalse(page.input19.isRequired());
 		assertFalse(page.input20.isRequired());
 
+		assertTrue(page.input21.isRequired());
+
 	}
 	
 	/**
@@ -101,7 +107,7 @@ public class PropertyValidatorRequiredTest
 		private TestBean bean = new TestBean();
 		private FormComponent<String> input1, input2, input3, input4, input5, input6, input7,
 			input8, input9, input10, input11, input12, input13, input14, input15, input16, input17,
-			input18, input19, input20;
+			input18, input19, input20, input21;
 
 		public TestPage()
 		{
@@ -156,9 +162,12 @@ public class PropertyValidatorRequiredTest
 			input20 = new TextField<String>("input20", new PropertyModel<String>(this,
 				"bean.propertyOneTwo")).add(new PropertyValidator<String>(GroupThree.class));
 
+			input21 = new TextField<String>("input21", new PropertyModel<String>(this,
+				"bean.subBeanList[0].property")).add(new PropertyValidator<>());
+
 			form.add(input1, input2, input3, input4, input5, input6, input7, input8, input9,
 				input10, input11, input12, input13, input14, input15, input16, input17, input18,
-				input19, input20);
+				input19, input20, input21);
 
 		}
 
@@ -167,7 +176,7 @@ public class PropertyValidatorRequiredTest
 			Class<?> containerClass)
 		{
 			return new StringResourceStream(
-				"<form wicket:id='form'><input wicket:id='input1'/><input wicket:id='input2'/><input wicket:id='input3'/><input wicket:id='input4'/><input wicket:id='input5'/><input wicket:id='input6'/><input wicket:id='input7'/><input wicket:id='input8'/><input wicket:id='input9'/><input wicket:id='input10'/><input wicket:id='input11'/><input wicket:id='input12'/><input wicket:id='input13'/><input wicket:id='input14'/><input wicket:id='input15'/><input wicket:id='input16'/><input wicket:id='input17'/><input wicket:id='input18'/><input wicket:id='input19'/><input wicket:id='input20'/></form>");
+				"<form wicket:id='form'><input wicket:id='input1'/><input wicket:id='input2'/><input wicket:id='input3'/><input wicket:id='input4'/><input wicket:id='input5'/><input wicket:id='input6'/><input wicket:id='input7'/><input wicket:id='input8'/><input wicket:id='input9'/><input wicket:id='input10'/><input wicket:id='input11'/><input wicket:id='input12'/><input wicket:id='input13'/><input wicket:id='input14'/><input wicket:id='input15'/><input wicket:id='input16'/><input wicket:id='input17'/><input wicket:id='input18'/><input wicket:id='input19'/><input wicket:id='input20'/><input wicket:id='input21'/></form>");
 		}
 
 	}
@@ -184,8 +193,17 @@ public class PropertyValidatorRequiredTest
 	{
 	}
 
+	public static class TestContainedBean {
+		@NotNull
+		String property;
+	}
+
 	public static class TestBean
 	{
+		@Valid
+		@NotNull
+		List<TestContainedBean> subBeanList = Arrays.asList(new TestContainedBean());
+
 		@NotNull
 		String property;
 

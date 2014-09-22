@@ -18,6 +18,8 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IPropertyReflectionAwareModel;
+import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
@@ -93,18 +95,48 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		this.groups_ = groups;
 	}
 
+	/**
+	 * To support debugging, trying to provide useful information where possible
+	 * @return
+	 */
+	private String createUnresolvablePropertyMessage(FormComponent<T> component) {
+		String baseMessage = "Could not resolve Bean Property from component: " + component
+				+ ". (Hints:) Possible causes are a typo in the PropertyExpression, a null reference or a model that does not work in combination with a "
+				+ IPropertyResolver.class.getSimpleName() + ".";
+
+		IModel<?> model = component.getModel();
+		// Code sadly copied over from DefaultPropertyResolver
+		while (true)
+		{
+			if (model == null)
+			{
+				break;
+			}
+			if (model instanceof IPropertyReflectionAwareModel)
+			{
+				break;
+			}
+			if (model instanceof IWrapModel<?>)
+			{
+				model = ((IWrapModel<?>)model).getWrappedModel();
+				continue;
+			}
+		}
+		if (model != null) {
+			baseMessage += " Model : " + model;
+		}
+		return baseMessage;
+	}
+
 	private Property getProperty()
 	{
 		if (property_ == null)
 		{
-			property_ = BeanValidationConfiguration.get().resolveProperty(component);
+			BeanValidationContext config = BeanValidationConfiguration.get();
+			property_ = config.resolveProperty(component);
 			if (property_ == null)
 			{
-				throw new IllegalStateException(
-					"Could not resolve Property from component: " + component
-						+ ". Either specify the Property in the constructor or use a model that works in combination with a "
-						+ IPropertyResolver.class.getSimpleName()
-						+ " to resolve the Property automatically");
+				throw new IllegalStateException(createUnresolvablePropertyMessage(component));
 			}
 		}
 		return property_;
