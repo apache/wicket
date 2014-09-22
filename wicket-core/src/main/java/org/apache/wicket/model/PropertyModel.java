@@ -103,20 +103,12 @@ public class PropertyModel<T> extends AbstractPropertyModel<T>
 		this.expression = expression;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(super.toString());
-		sb.append(":expression=[").append(expression).append("]");
-		return sb.toString();
+		return super.toString() + ":expression=[" + expression + ']';
 	}
 
-	/**
-	 * @see AbstractPropertyModel#propertyExpression()
-	 */
 	@Override
 	protected String propertyExpression()
 	{
@@ -127,6 +119,7 @@ public class PropertyModel<T> extends AbstractPropertyModel<T>
 	 * Type-infering factory method
 	 * 
 	 * @param <Z>
+	 *            the of the resolved object from the property
 	 * @param parent
 	 *            object that contains the property
 	 * @param property
@@ -135,6 +128,6 @@ public class PropertyModel<T> extends AbstractPropertyModel<T>
 	 */
 	public static <Z> PropertyModel<Z> of(Object parent, String property)
 	{
-		return new PropertyModel<Z>(parent, property);
+		return new PropertyModel<>(parent, property);
 	}
 }
