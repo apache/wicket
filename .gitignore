@@ -9,4 +9,4 @@ velocity.log
 *~
 node_modules/
 release.properties
-
+testing/wicket-js-tests/node/
