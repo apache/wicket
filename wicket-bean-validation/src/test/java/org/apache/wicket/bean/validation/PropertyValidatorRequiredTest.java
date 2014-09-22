@@ -201,7 +201,7 @@ public class PropertyValidatorRequiredTest
 	{
 		@Valid
 		@NotNull
-		List<TestContainedBean> subBeanList = Arrays.asList();
+		List<TestContainedBean> subBeanList = Arrays.asList(new TestContainedBean());
 
 		@NotNull
 		String property;
