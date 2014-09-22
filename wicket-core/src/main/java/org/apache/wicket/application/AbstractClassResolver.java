@@ -33,7 +33,7 @@ import org.apache.wicket.util.collections.UrlExternalFormComparator;
  * An abstract implementation of a {@link IClassResolver} which uses a {@link ClassLoader} for
  * resolving classes.
  * 
- * @see org.apache.wicket.settings.IApplicationSettings#getClassResolver()
+ * @see org.apache.wicket.settings.ApplicationSettings#getClassResolver()
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke

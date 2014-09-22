@@ -19,7 +19,7 @@ package org.apache.wicket.application;
 /**
  * Resolves a class by using the classloader that loaded this class.
  * 
- * @see org.apache.wicket.settings.IApplicationSettings#getClassResolver()
+ * @see org.apache.wicket.settings.ApplicationSettings#getClassResolver()
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
