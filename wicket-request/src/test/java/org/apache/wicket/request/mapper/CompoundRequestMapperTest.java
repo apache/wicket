@@ -35,9 +35,6 @@ public class CompoundRequestMapperTest extends Assert
 	private static final String MOUNT_PATH_2 = "mount/path/2";
 	private static final String MOUNT_PATH_1 = "mount/path/1";
 
-	/**
-	 * 
-	 */
 	@Test
 	public void unmount()
 	{
@@ -60,6 +57,38 @@ public class CompoundRequestMapperTest extends Assert
 		assertTrue(
 			"Mount path 3 should match",
 			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_3))) instanceof EmptyRequestHandler);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5698
+	 */
+	@Test
+	public void unmountNested()
+	{
+		CompoundRequestMapper compound = new CompoundRequestMapper();
+
+		CompoundRequestMapper nestedCompound = new CompoundRequestMapper();
+		compound.add(nestedCompound);
+
+		nestedCompound.add(new MountMapper(MOUNT_PATH_1, new EmptyRequestHandler()));
+		nestedCompound.add(new MountMapper(MOUNT_PATH_2, new EmptyRequestHandler()));
+		nestedCompound.add(new MountMapper(MOUNT_PATH_3, new EmptyRequestHandler()));
+
+		assertEquals(1, compound.size());
+		assertEquals(3, nestedCompound.size());
+
+		compound.unmount(MOUNT_PATH_2);
+		assertEquals(1, compound.size());
+		assertEquals(2, nestedCompound.size());
+
+		assertTrue(
+				"Mount path 1 should match",
+				compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_1))) instanceof EmptyRequestHandler);
+		assertNull("Mount path 2 should not match",
+				compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_2))));
+		assertTrue(
+				"Mount path 3 should match",
+				compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_3))) instanceof EmptyRequestHandler);
 	}
 
 	private static class MountMapper implements IRequestMapper
