@@ -51,7 +51,7 @@ public abstract class AbstractClassResolver implements IClassResolver
 	 * 
 	 * This problem has gone since we synchronize the access.
 	 */
-	private final ConcurrentMap<String, WeakReference<Class<?>>> classes = new ConcurrentHashMap<String, WeakReference<Class<?>>>();
+	private final ConcurrentMap<String, WeakReference<Class<?>>> classes = new ConcurrentHashMap<>();
 
 	@Override
 	public final Class<?> resolveClass(final String className) throws ClassNotFoundException
@@ -120,7 +120,7 @@ public abstract class AbstractClassResolver implements IClassResolver
 	@Override
 	public Iterator<URL> getResources(final String name)
 	{
-		Set<URL> resultSet = new TreeSet<URL>(new UrlExternalFormComparator());
+		Set<URL> resultSet = new TreeSet<>(new UrlExternalFormComparator());
 
 		try
 		{
