@@ -85,8 +85,8 @@
 		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
 		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
 		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
-        <tag>HEAD</tag>
-    </scm>
+		<tag>HEAD</tag>
+	</scm>
 	<modules>
 		<module>wicket</module>
 		<module>wicket-core</module>
@@ -111,59 +111,59 @@
 		<module>wicket-native-websocket</module>
 		<module>wicket-bean-validation</module>
 		<module>wicket-cdi-1.1</module>
-    </modules>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mvn.build.java.version>1.7</mvn.build.java.version>
-        <jacoco.version>0.7.1.201405082137</jacoco.version>
-        <jetty.version>8.1.16.v20140903</jetty.version>
-        <jetty9.version>9.0.7.v20131107</jetty9.version>
-        <spring.version>4.1.0.RELEASE</spring.version>
-        <servlet-api.version>3.0.1</servlet-api.version>
-        <maven.javadoc.version>2.9.1</maven.javadoc.version>
-        <maven.surefire.version>2.17</maven.surefire.version>
-        <mockito.version>1.9.5</mockito.version>
-        <slf4j.version>1.7.7</slf4j.version>
-        <hamcrest.version>1.3</hamcrest.version>
-    </properties>
+	</modules>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mvn.build.java.version>1.7</mvn.build.java.version>
+		<jacoco.version>0.7.1.201405082137</jacoco.version>
+		<jetty.version>8.1.16.v20140903</jetty.version>
+		<jetty9.version>9.0.7.v20131107</jetty9.version>
+		<spring.version>4.1.0.RELEASE</spring.version>
+		<servlet-api.version>3.0.1</servlet-api.version>
+		<maven.javadoc.version>2.9.1</maven.javadoc.version>
+		<maven.surefire.version>2.17</maven.surefire.version>
+		<mockito.version>1.9.5</mockito.version>
+		<slf4j.version>1.7.7</slf4j.version>
+		<hamcrest.version>1.3</hamcrest.version>
+	</properties>
 	<dependencyManagement>
 		<dependencies>
-    		<dependency>
-    			<groupId>com.google.code.findbugs</groupId>
-    			<artifactId>jsr305</artifactId>
-    			<version>3.0.0</version>
-    			<scope>provided</scope>
-    		</dependency>
-    		<dependency>
-    			<groupId>javax.el</groupId>
-    			<artifactId>javax.el-api</artifactId>
-    			<version>3.0.1-b04</version>
-    			<scope>provided</scope>
-    		</dependency>
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>3.0.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.el</groupId>
+				<artifactId>javax.el-api</artifactId>
+				<version>3.0.1-b04</version>
+				<scope>provided</scope>
+			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${servlet-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
-    		<dependency>
-    			<groupId>javax.servlet.jsp</groupId>
-    			<artifactId>javax.servlet.jsp-api</artifactId>
-    			<scope>provided</scope>
-    			<version>2.3.2-b01</version>
-    		</dependency>
-    		<dependency>
-    			<groupId>javax.validation</groupId>
-    			<artifactId>validation-api</artifactId>
-    			<version>1.1.0.Final</version>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>javax.servlet.jsp-api</artifactId>
 				<scope>provided</scope>
-    		</dependency>
-    		<dependency>
-    			<groupId>javax.websocket</groupId>
-    			<artifactId>javax.websocket-api</artifactId>
-    			<version>1.0</version>
-                <scope>provided</scope>
-    		</dependency>
+				<version>2.3.2-b01</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>1.1.0.Final</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.websocket</groupId>
+				<artifactId>javax.websocket-api</artifactId>
+				<version>1.0</version>
+				<scope>provided</scope>
+			</dependency>
 			<dependency>
 				<groupId>mx4j</groupId>
 				<artifactId>mx4j</artifactId>
@@ -182,44 +182,44 @@
 				<artifactId>cglib</artifactId>
 				<version>3.1</version>
 				<exclusions>
-                    <!-- excluded due to conflict with asm 5 in wicket-ioc -->
+					<!-- excluded due to conflict with asm 5 in wicket-ioc -->
 					<exclusion>
-        				<groupId>org.ow2.asm</groupId>
-        				<artifactId>asm</artifactId>
+						<groupId>org.ow2.asm</groupId>
+						<artifactId>asm</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
-    		<dependency>
-    			<groupId>com.fasterxml.jackson.core</groupId>
-    			<artifactId>jackson-databind</artifactId>
-    			<version>2.4.1.3</version>
-    			<optional>true</optional>
-    		</dependency>
-    		<dependency>
-    			<groupId>com.google.guava</groupId>
-    			<artifactId>guava</artifactId>
-    			<version>17.0</version>
-    		</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.4.1.3</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>17.0</version>
+			</dependency>
 			<dependency>
 				<groupId>com.google.inject</groupId>
 				<artifactId>guice</artifactId>
 				<version>3.0</version>
 			</dependency>
-    		<dependency>
-    			<groupId>commons-fileupload</groupId>
-    			<artifactId>commons-fileupload</artifactId>
-                <version>1.3.1</version>
-    		</dependency>
-    		<dependency>
-    			<groupId>commons-io</groupId>
-    			<artifactId>commons-io</artifactId>
-                <version>2.4</version>
-    		</dependency>
-    		<dependency>
-    			<groupId>de.agilecoders.wicket.webjars</groupId>
-    			<artifactId>wicket-webjars</artifactId>
-    			<version>0.5.0-M2</version>
-    		</dependency>
+			<dependency>
+				<groupId>commons-fileupload</groupId>
+				<artifactId>commons-fileupload</artifactId>
+				<version>1.3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.4</version>
+			</dependency>
+			<dependency>
+				<groupId>de.agilecoders.wicket.webjars</groupId>
+				<artifactId>wicket-webjars</artifactId>
+				<version>0.5.0-M2</version>
+			</dependency>
 			<dependency>
 				<groupId>javax.inject</groupId>
 				<artifactId>javax.inject</artifactId>
@@ -236,11 +236,11 @@
 				<version>1.2.17</version>
 				<optional>true</optional>
 			</dependency>
-    		<dependency>
-    			<groupId>org.apache.velocity</groupId>
-    			<artifactId>velocity</artifactId>
-    			<version>1.7</version>
-    		</dependency>
+			<dependency>
+				<groupId>org.apache.velocity</groupId>
+				<artifactId>velocity</artifactId>
+				<version>1.7</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
@@ -376,16 +376,16 @@
 				<version>0.10-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
-    		<dependency>
-    			<groupId>org.jboss.seam.conversation</groupId>
-    			<artifactId>seam-conversation-spi</artifactId>
-    			<version>3.0.0.Final</version>
-    		</dependency>
-    		<dependency>
-    			<groupId>org.jboss.weld.servlet</groupId>
-    			<artifactId>weld-servlet</artifactId>
-    			<version>2.2.4.Final</version>
-    		</dependency>
+			<dependency>
+				<groupId>org.jboss.seam.conversation</groupId>
+				<artifactId>seam-conversation-spi</artifactId>
+				<version>3.0.0.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.weld.servlet</groupId>
+				<artifactId>weld-servlet</artifactId>
+				<version>2.2.4.Final</version>
+			</dependency>
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm-util</artifactId>
@@ -439,18 +439,18 @@
 				<version>4.11</version>
 				<scope>test</scope>
 			</dependency>
-    		<dependency>
-    			<groupId>org.glassfish</groupId>
-    			<artifactId>javax.el</artifactId>
-    			<version>3.0.1-b05</version>
-    			<scope>test</scope>
-    		</dependency>
-    		<dependency>
-    		  	<groupId>org.glassfish.web</groupId>
-    		  	<artifactId>el-impl</artifactId>
-    		  	<version>2.2</version>
-    		  	<scope>test</scope>
-    		</dependency>
+			<dependency>
+				<groupId>org.glassfish</groupId>
+				<artifactId>javax.el</artifactId>
+				<version>3.0.1-b05</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.web</groupId>
+				<artifactId>el-impl</artifactId>
+				<version>2.2</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest-core</artifactId>
@@ -463,24 +463,24 @@
 				<version>${hamcrest.version}</version>
 				<scope>test</scope>
 			</dependency>
-    		<dependency>
-    			<groupId>org.hibernate</groupId>
-    			<artifactId>hibernate-validator</artifactId>
-    			<version>5.1.2.Final</version>
-    			<scope>test</scope>
-    		</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>5.1.2.Final</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.httpunit</groupId>
 				<artifactId>httpunit</artifactId>
 				<version>1.7.2</version>
 				<scope>test</scope>
 			</dependency>
-    		<dependency>
-    			<groupId>org.jglue.cdi-unit</groupId>
-    			<artifactId>cdi-unit</artifactId>
-    			<version>2.2.1</version>
-    			<scope>test</scope>
-    		</dependency>
+			<dependency>
+				<groupId>org.jglue.cdi-unit</groupId>
+				<artifactId>cdi-unit</artifactId>
+				<version>2.2.1</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
@@ -692,12 +692,12 @@
 						<downloadSources>true</downloadSources>
 					</configuration>
 				</plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.3.1</version>
-                    <configuration>
-                        <rules>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>1.3.1</version>
+					<configuration>
+						<rules>
 							<dependencyConvergence />
 							<compound implementation="com.github.ferstl.maven.pomenforcers.CompoundPedanticEnforcer">
 								<!-- Enforcers -->
@@ -706,17 +706,17 @@
 								<dependencyManagementScopePriorities>provided,compile,runtime,test,import</dependencyManagementScopePriorities>
 								<dependenciesScopePriorities>import,provided,compile,runtime,test</dependenciesScopePriorities>
 							</compound>
-                        </rules>
-                        <fail>true</fail>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.github.ferstl</groupId>
-                            <artifactId>pedantic-pom-enforcers</artifactId>
-                            <version>1.1.2</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
+						</rules>
+						<fail>true</fail>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.github.ferstl</groupId>
+							<artifactId>pedantic-pom-enforcers</artifactId>
+							<version>1.1.2</version>
+						</dependency>
+					</dependencies>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-gpg-plugin</artifactId>
@@ -757,13 +757,13 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${maven.javadoc.version}</version>
 					<configuration>
-    					<additionalDependencies>
-    						<additionalDependency>
-    							<groupId>org.hamcrest</groupId>
-    							<artifactId>hamcrest-core</artifactId>
-    							<version>${hamcrest.version}</version>
-    						</additionalDependency>
-    					</additionalDependencies>
+						<additionalDependencies>
+							<additionalDependency>
+								<groupId>org.hamcrest</groupId>
+								<artifactId>hamcrest-core</artifactId>
+								<version>${hamcrest.version}</version>
+							</additionalDependency>
+						</additionalDependencies>
 						<minmemory>128m</minmemory>
 						<maxmemory>256m</maxmemory>
 						<quiet>true</quiet>
@@ -962,20 +962,20 @@
 										<ignore />
 									</action>
 								</pluginExecution>
-		                        <pluginExecution>
-		                            <pluginExecutionFilter>
-		                                <groupId>org.apache.maven.plugins</groupId>
-		                                <artifactId>maven-remote-resources-plugin</artifactId>
-		                                <versionRange>[1.0,)</versionRange>
-		                                <goals>
-		                                    <goal>process</goal>
-		                                </goals>
-		                            </pluginExecutionFilter>
-		                            <action>
-		                                <ignore>
-		                                </ignore>
-		                            </action>
-		                        </pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-remote-resources-plugin</artifactId>
+										<versionRange>[1.0,)</versionRange>
+										<goals>
+											<goal>process</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore>
+										</ignore>
+									</action>
+								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
