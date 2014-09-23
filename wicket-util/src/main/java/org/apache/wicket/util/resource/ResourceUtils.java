@@ -17,12 +17,12 @@
 package org.apache.wicket.util.resource;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.wicket.util.collections.ConcurrentHashSet;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -33,10 +33,10 @@ public class ResourceUtils
 {
 	private static final Pattern LOCALE_PATTERN = Pattern.compile("_([a-z]{2})(_([A-Z]{2})(_([^_]+))?)?$");
 
-	private final static Set<String> isoCountries = new ConcurrentHashSet<>(
+	private final static Set<String> isoCountries = new HashSet<>(
 		Arrays.asList(Locale.getISOCountries()));
 
-	private final static Set<String> isoLanguages = new ConcurrentHashSet<>(
+	private final static Set<String> isoLanguages = new HashSet<>(
 		Arrays.asList(Locale.getISOLanguages()));
 
 	/**
