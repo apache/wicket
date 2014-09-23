@@ -56,7 +56,7 @@ public class ResourceUtils
 	public static PathLocale getLocaleFromFilename(String path)
 	{
 		String extension = "";
-		int pos = path.indexOf('.');
+		int pos = path.lastIndexOf('.');
 		if (pos != -1)
 		{
 			extension = path.substring(pos);
@@ -104,7 +104,7 @@ public class ResourceUtils
 			}
 		} // else skip the whole thing... probably user specific underscores used
 
-		return new PathLocale(path, null);
+		return new PathLocale(path + extension, null);
 	}
 
 	/**
