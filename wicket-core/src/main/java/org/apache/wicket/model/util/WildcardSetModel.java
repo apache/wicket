@@ -26,7 +26,9 @@ import java.util.Set;
  * @author Timo Rantalaiho
  * @param <T>
  *            type of object inside set
+ * @deprecated Will be removed in Wicket 8
  */
+@Deprecated
 public class WildcardSetModel<T> extends GenericBaseModel<Set<? extends T>>
 {
 	private static final long serialVersionUID = 1L;

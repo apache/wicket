@@ -26,7 +26,9 @@ import java.util.List;
  * @author Timo Rantalaiho
  * @param <T>
  *            type of object inside list
+ * @deprecated Will be removed in Wicket 8
  */
+@Deprecated
 public class WildcardListModel<T> extends GenericBaseModel<List<? extends T>>
 {
 	private static final long serialVersionUID = 1L;

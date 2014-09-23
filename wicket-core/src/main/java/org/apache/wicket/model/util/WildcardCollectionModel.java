@@ -26,7 +26,9 @@ import java.util.Collection;
  * @author Timo Rantalaiho
  * @param <T>
  *            type of object inside collection
+ * @deprecated Will be removed in Wicket 8
  */
+@Deprecated
 public class WildcardCollectionModel<T> extends GenericBaseModel<Collection<? extends T>>
 {
 	private static final long serialVersionUID = 1L;
@@ -52,6 +54,6 @@ public class WildcardCollectionModel<T> extends GenericBaseModel<Collection<? ex
 	@Override
 	protected Collection<? extends T> createSerializableVersionOf(Collection<? extends T> object)
 	{
-		return new ArrayList<T>(object);
+		return new ArrayList<>(object);
 	}
 }
