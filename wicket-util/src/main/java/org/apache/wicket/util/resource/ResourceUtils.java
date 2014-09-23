@@ -33,10 +33,10 @@ public class ResourceUtils
 {
 	private static final Pattern LOCALE_PATTERN = Pattern.compile("_([a-z]{2})(_([A-Z]{2})(_([^_]+))?)?$");
 
-	private final static Set<String> isoCountries = new ConcurrentHashSet<String>(
+	private final static Set<String> isoCountries = new ConcurrentHashSet<>(
 		Arrays.asList(Locale.getISOCountries()));
 
-	private final static Set<String> isoLanguages = new ConcurrentHashSet<String>(
+	private final static Set<String> isoLanguages = new ConcurrentHashSet<>(
 		Arrays.asList(Locale.getISOLanguages()));
 
 	/**
@@ -56,7 +56,7 @@ public class ResourceUtils
 	public static PathLocale getLocaleFromFilename(String path)
 	{
 		String extension = "";
-		int pos = path.indexOf('.');
+		int pos = path.lastIndexOf('.');
 		if (pos != -1)
 		{
 			extension = path.substring(pos);
@@ -104,7 +104,7 @@ public class ResourceUtils
 			}
 		} // else skip the whole thing... probably user specific underscores used
 
-		return new PathLocale(path, null);
+		return new PathLocale(path + extension, null);
 	}
 
 	/**
