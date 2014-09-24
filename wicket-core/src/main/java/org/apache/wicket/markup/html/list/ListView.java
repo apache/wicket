@@ -100,7 +100,7 @@ import org.apache.wicket.util.collections.ReadOnlyIterator;
  * @author Eelco Hillenius
  * 
  * @param <T>
- *            Model object type
+ *            type of elements contained in the model's list
  */
 public abstract class ListView<T> extends AbstractRepeater
 {
@@ -130,11 +130,11 @@ public abstract class ListView<T> extends AbstractRepeater
 	}
 
 	/**
-	 * @param id
-	 * @param model
+	 * @param id component id
+	 * @param model model containing a list of
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final IModel<? extends List<T>> model)
+	public ListView(final String id, final IModel<? extends List<? extends T>> model)
 	{
 		super(id, model);
 
@@ -156,7 +156,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            List to cast to Serializable
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final List<T> list)
+	public ListView(final String id, final List<? extends T> list)
 	{
 		this(id, Model.ofList(list));
 	}
@@ -169,9 +169,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @return The list of items in this list view.
 	 */
 	@SuppressWarnings("unchecked")
-	public final List<T> getList()
+	public final List<? extends T> getList()
 	{
-		final List<T> list = (List<T>)getDefaultModelObject();
+		final List<? extends T> list = (List<? extends T>)getDefaultModelObject();
 		if (list == null)
 		{
 			return Collections.emptyList();
@@ -364,7 +364,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            The list for the new model. The list must implement {@link Serializable}.
 	 * @return This for chaining
 	 */
-	public ListView<T> setList(List<T> list)
+	public ListView<T> setList(List<? extends T> list)
 	{
 		setDefaultModel(Model.ofList(list));
 		return this;
@@ -638,9 +638,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @return model object
 	 */
 	@SuppressWarnings("unchecked")
-	public final List<T> getModelObject()
+	public final List<? extends T> getModelObject()
 	{
-		return (List<T>)getDefaultModelObject();
+		return (List<? extends T>)getDefaultModelObject();
 	}
 
 	/**

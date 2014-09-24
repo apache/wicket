@@ -41,7 +41,7 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  * @param <T>
- *            Model object type
+ *            type of elements contained in the model's list
  */
 public abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPageableItems
 {
@@ -73,7 +73,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractPageableView(String id, IModel<? extends Collection<T>> model)
+	public AbstractPageableView(String id, IModel<? extends Collection<? extends T>> model)
 	{
 		super(id, model);
 		clearCachedItemCount();

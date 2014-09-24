@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
  * @author Nathan Hamblen
  * 
  * @param <T>
- *            Model object type
+ *            type of elements contained in the model's list
  */
 public abstract class PropertyListView<T> extends ListView<T>
 {
@@ -57,7 +57,7 @@ public abstract class PropertyListView<T> extends ListView<T>
 	 * @param model
 	 *            wrapping a List
 	 */
-	public PropertyListView(final String id, final IModel<? extends List<T>> model)
+	public PropertyListView(final String id, final IModel<? extends List<? extends T>> model)
 	{
 		super(id, model);
 	}
@@ -71,7 +71,7 @@ public abstract class PropertyListView<T> extends ListView<T>
 	 * @param list
 	 *            unmodeled List
 	 */
-	public PropertyListView(final String id, final List<T> list)
+	public PropertyListView(final String id, final List<? extends T> list)
 	{
 		super(id, list);
 	}

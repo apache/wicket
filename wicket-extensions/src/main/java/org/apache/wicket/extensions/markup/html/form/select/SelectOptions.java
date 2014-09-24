@@ -39,6 +39,7 @@ import org.apache.wicket.model.util.CollectionModel;
  * </pre>
  * 
  * @param <T>
+ *            type of elements contained in the model's collection
  * @author Igor Vaynberg (ivaynberg)
  */
 public class SelectOptions<T> extends RepeatingView
@@ -56,7 +57,7 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param model
 	 * @param renderer
 	 */
-	public SelectOptions(final String id, final IModel<? extends Collection<T>> model,
+	public SelectOptions(final String id, final IModel<? extends Collection<? extends T>> model,
 		final IOptionRenderer<T> renderer)
 	{
 		super(id, model);
@@ -71,7 +72,7 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param elements
 	 * @param renderer
 	 */
-	public SelectOptions(final String id, final Collection<T> elements,
+	public SelectOptions(final String id, final Collection<? extends T> elements,
 		final IOptionRenderer<T> renderer)
 	{
 		this(id, new CollectionModel<>(elements), renderer);
@@ -107,7 +108,7 @@ public class SelectOptions<T> extends RepeatingView
 			// populate this repeating view with SelectOption components
 			removeAll();
 
-			Collection<T> modelObject = (Collection<T>)getDefaultModelObject();
+			Collection<? extends T> modelObject = (Collection<? extends T>)getDefaultModelObject();
 
 			if (modelObject != null)
 			{

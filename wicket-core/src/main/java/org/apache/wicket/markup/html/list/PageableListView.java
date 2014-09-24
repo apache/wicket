@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Jonathan Locke
  * @param <T>
- *            Model object type
+ *            type of elements contained in the model's list
  */
 public abstract class PageableListView<T> extends ListView<T> implements IPageableItems
 {
@@ -51,7 +51,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * @param itemsPerPage
 	 *            Number of rows to show on a page
 	 */
-	public PageableListView(final String id, final IModel<? extends List<T>> model,
+	public PageableListView(final String id, final IModel<? extends List<? extends T>> model,
 		int itemsPerPage)
 	{
 		super(id, model);
@@ -70,7 +70,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 *            Number of rows to show on a page
 	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(final String id, final List<T> list, final int itemsPerPage)
+	public PageableListView(final String id, final List<? extends T> list, final int itemsPerPage)
 	{
 		super(id, list);
 		this.itemsPerPage = itemsPerPage;

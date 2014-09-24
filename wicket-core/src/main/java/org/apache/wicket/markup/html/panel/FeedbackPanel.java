@@ -327,7 +327,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected final List<FeedbackMessage> getCurrentMessages()
 	{
-		final List<FeedbackMessage> messages = messageListView.getModelObject();
+		final List<? extends FeedbackMessage> messages = messageListView.getModelObject();
 		return Collections.unmodifiableList(messages);
 	}
 

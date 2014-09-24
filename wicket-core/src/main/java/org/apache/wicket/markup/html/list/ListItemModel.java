@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 
 /**
  * Model for list items.
@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
  *            Model object type
  * 
  */
-public class ListItemModel<T> implements IModel<T>
+public class ListItemModel<T> extends AbstractReadOnlyModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,15 +57,6 @@ public class ListItemModel<T> implements IModel<T>
 	public T getObject()
 	{
 		return listView.getModelObject().get(index);
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
-	@Override
-	public void setObject(T object)
-	{
-		listView.getModelObject().set(index, object);
 	}
 
 	/**

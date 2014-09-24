@@ -46,7 +46,7 @@ import org.apache.wicket.util.lang.Generics;
  * @author Igor Vaynberg (ivaynberg)
  * 
  * @param <T>
- *            Model object type
+ *            type of elements contained in the model's list
  */
 public abstract class RefreshingView<T> extends RepeatingView
 {
@@ -79,7 +79,7 @@ public abstract class RefreshingView<T> extends RepeatingView
 	 * @param model
 	 *            model
 	 */
-	public RefreshingView(String id, IModel<? extends Collection<T>> model)
+	public RefreshingView(String id, IModel<? extends Collection<? extends T>> model)
 	{
 		super(id, model);
 	}
