@@ -74,7 +74,7 @@ public class DiskDataStore implements IDataStore
 		this.applicationName = applicationName;
 		this.fileStoreFolder = fileStoreFolder;
 		maxSizePerPageSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
-		sessionEntryMap = new ConcurrentHashMap<String, SessionEntry>();
+		sessionEntryMap = new ConcurrentHashMap<>();
 
 		try
 		{
