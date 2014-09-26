@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import java.util.List;
+
+import org.apache.wicket.model.IModel;
 
 /**
  * Model for list items.
@@ -26,7 +28,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  *            Model object type
  * 
  */
-public class ListItemModel<T> extends AbstractReadOnlyModel<T>
+public class ListItemModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,6 +59,20 @@ public class ListItemModel<T> extends AbstractReadOnlyModel<T>
 	public T getObject()
 	{
 		return listView.getModelObject().get(index);
+	}
+
+	/**
+	 * @deprecated this method inserts a {@code T} into a {@code List<? extends T>}, which might
+	 *             fail in cases where {@code ?} is not {@code T}
+	 * 
+	 * @see ListView#ListView(String, IModel)
+	 */
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setObject(T object)
+	{
+		((List<T>)listView.getModelObject()).set(index, object);
 	}
 
 	/**
