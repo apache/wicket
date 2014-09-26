@@ -113,7 +113,7 @@ public class Initializer implements IInitializer
 				{
 					try
 					{
-						IOUtils.close(is);
+						IOUtils.close(stream);
 					}
 					catch (IOException e)
 					{

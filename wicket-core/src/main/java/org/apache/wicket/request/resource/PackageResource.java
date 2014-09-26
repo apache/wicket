@@ -488,6 +488,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			} catch (IOException iox)
 			{
 				throw new WicketRuntimeException(iox);
+			} finally
+			{
+				IOUtils.closeQuietly(this);
 			}
 
 			RequestCycle cycle = RequestCycle.get();
