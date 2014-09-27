@@ -970,8 +970,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				child.internalInitialize();
 			}
-		}
 
+		}
 		// if the PREPARED_FOR_RENDER flag is set, we have already called
 		// beforeRender on this component's children. So we need to initialize the newly added one
 		if (isPreparedForRender())
@@ -979,6 +979,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			child.beforeRender();
 		}
 	}
+
+
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
