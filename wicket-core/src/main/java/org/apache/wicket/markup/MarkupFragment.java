@@ -147,6 +147,10 @@ public class MarkupFragment extends AbstractMarkupFragment
 	@Override
 	public final IMarkupFragment find(final String id)
 	{
+		if (size < 2)
+		{
+			return null;
+		}
 		return find(id, 1);
 	}
 
