@@ -29,13 +29,13 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * the nesting of these panels to work correctly without displaying the same feedback message twice.
  * A constructor that does not takes a fencing component creates a catch-all panel that shows
  * messages that do not come from inside any fence or from the {@link Session}.
- * 
+ * <p/>
  * <h2>IN DEPTH EXPLANATION</h2>
  * <p>
  * It is often very useful to have feedback panels that show feedback that comes from inside a
  * certain container only. For example given a page with the following structure:
  * </p>
- * 
+ * <p/>
  * <pre>
  * Page
  *   Form1
@@ -72,7 +72,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * fencing component. There is usually one instance of such a panel at the top of the page to
  * display notifications of success.
  * </p>
- * 
+ *
  * @author igor
  */
 public class FencedFeedbackPanel extends FeedbackPanel
@@ -89,7 +89,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 	/**
 	 * Creates a catch-all feedback panel that will show messages not coming from any fence,
 	 * including messages coming from {@link Session}
-	 * 
+	 *
 	 * @param id
 	 */
 	public FencedFeedbackPanel(String id)
@@ -100,7 +100,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 	/**
 	 * Creates a feedback panel that will only show messages if they original from, or inside of,
 	 * the {@code fence} component and not from any inner fence.
-	 * 
+	 *
 	 * @param id
 	 * @param fence
 	 */
@@ -111,11 +111,10 @@ public class FencedFeedbackPanel extends FeedbackPanel
 
 	/**
 	 * Creates a catch-all instance with a filter.
-	 * 
-	 * @see #FencedFeedbackPanel(String)
-	 * 
+	 *
 	 * @param id
 	 * @param filter
+	 * @see #FencedFeedbackPanel(String)
 	 */
 	public FencedFeedbackPanel(String id, IFeedbackMessageFilter filter)
 	{
@@ -124,12 +123,11 @@ public class FencedFeedbackPanel extends FeedbackPanel
 
 	/**
 	 * Creates a fenced feedback panel with a filter.
-	 * 
-	 * @see #FencedFeedbackPanel(String, Component)
-	 * 
+	 *
 	 * @param id
 	 * @param fence
 	 * @param filter
+	 * @see #FencedFeedbackPanel(String, Component)
 	 */
 	public FencedFeedbackPanel(String id, Component fence, IFeedbackMessageFilter filter)
 	{
@@ -137,10 +135,15 @@ public class FencedFeedbackPanel extends FeedbackPanel
 		this.fence = fence;
 		if (fence != null)
 		{
-			Integer count = fence.getMetaData(FENCE_KEY);
-			count = count == null ? 1 : count + 1;
-			fence.setMetaData(FENCE_KEY, count);
+			incrementFenceCount();
 		}
+	}
+
+	private void incrementFenceCount()
+	{
+		Integer count = fence.getMetaData(FENCE_KEY);
+		count = count == null ? 1 : count + 1;
+		fence.setMetaData(FENCE_KEY, count);
 	}
 
 	@Override
@@ -151,10 +154,15 @@ public class FencedFeedbackPanel extends FeedbackPanel
 		{
 			// decrement the fence count
 
-			Integer count = fence.getMetaData(FENCE_KEY);
-			count = (count == null || count == 1) ? null : count - 1;
-			fence.setMetaData(FENCE_KEY, count);
+			decrementFenceCount();
 		}
+	}
+
+	private void decrementFenceCount()
+	{
+		Integer count = fence.getMetaData(FENCE_KEY);
+		count = (count == null || count == 1) ? null : count - 1;
+		fence.setMetaData(FENCE_KEY, count);
 	}
 
 	@Override
@@ -166,7 +174,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 
 			@Override
 			protected List<FeedbackMessage> collectMessages(Component panel,
-				IFeedbackMessageFilter filter)
+					IFeedbackMessageFilter filter)
 			{
 				if (fence == null)
 				{
@@ -177,7 +185,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 						@Override
 						protected boolean shouldRecurseInto(Component component)
 						{
-							return component.getMetaData(FENCE_KEY) == null;
+							return !componentIsMarkedAsFence(component);
 						}
 					}.collect(filter);
 				}
@@ -191,12 +199,29 @@ public class FencedFeedbackPanel extends FeedbackPanel
 						protected boolean shouldRecurseInto(Component component)
 						{
 							// only recurse into components that are not fences
-
-							return component.getMetaData(FENCE_KEY) == null;
+							return !componentIsMarkedAsFence(component);
 						}
 					}.setIncludeSession(false).collect(filter);
 				}
 			}
 		};
+	}
+
+	private boolean componentIsMarkedAsFence(Component component)
+	{
+		return component.getMetaData(FENCE_KEY) != null;
+	}
+
+	@Override
+	protected void onReAdd()
+	{
+		if (this.fence != null)
+		{
+			// The fence mark is removed when the feedback panel is removed from the hierarchy.
+			// see onRemove().
+			// when the panel is re-added, we recreate the fence mark.
+			incrementFenceCount();
+		}
+		super.onReAdd();
 	}
 }
