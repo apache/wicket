@@ -105,10 +105,26 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 	public void onComponentTag(Component component, ComponentTag tag)
 	{
 		super.onComponentTag(component, tag);
-		if (getMaximum() != null && "input".equalsIgnoreCase(tag.getName().toLowerCase(Locale.ENGLISH)))
+
+		String tagName = tag.getName().toLowerCase(Locale.ENGLISH);
+		boolean hasLengthAttribute = hasLengthAttribute(tagName);
+
+		Integer maximum = getMaximum();
+		if (maximum != null && hasLengthAttribute)
 		{
-			tag.put("maxlength", getMaximum());
+			tag.put("maxlength", maximum);
 		}
+
+		Integer minimum = getMinimum();
+		if (minimum != null && hasLengthAttribute)
+		{
+			tag.put("minlength", minimum);
+		}
+	}
+
+	private boolean hasLengthAttribute(String tagName)
+	{
+		return "input".equalsIgnoreCase(tagName) || "textarea".equalsIgnoreCase(tagName);
 	}
 
 	/**
