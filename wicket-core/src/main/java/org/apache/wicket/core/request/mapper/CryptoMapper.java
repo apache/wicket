@@ -145,17 +145,6 @@ public class CryptoMapper implements IRequestMapperDelegate
 
 	/**
 	 * @return the wrapped root request mapper
-	 *
-	 * @deprecated Since 7.0.0, 6.18.0, to be removed in 8.0.0. Use {@link #getDelegateMapper()} instead.
-	 */
-	@Deprecated
-	protected final IRequestMapper getWrappedMapper()
-	{
-		return getDelegateMapper();
-	}
-
-	/**
-	 * @return the wrapped root request mapper
 	 */
 	@Override
 	public final IRequestMapper getDelegateMapper()
