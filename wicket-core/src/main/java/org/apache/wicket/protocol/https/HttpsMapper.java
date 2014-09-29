@@ -29,6 +29,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.util.collections.ClassMetaCache;
 import org.apache.wicket.util.lang.Args;
 
@@ -61,7 +62,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author igor
  */
-public class HttpsMapper implements IRequestMapper
+public class HttpsMapper implements IRequestMapperDelegate
 {
 	private final HttpsConfig config;
 	private final IRequestMapper delegate;
@@ -77,6 +78,15 @@ public class HttpsMapper implements IRequestMapper
 	{
 		this.delegate = Args.notNull(delegate, "delegate");
 		this.config = config;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IRequestMapper getDelegateMapper()
+	{
+		return delegate;
 	}
 
 	@Override

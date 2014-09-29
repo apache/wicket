@@ -17,6 +17,10 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +66,8 @@ import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.render.WebPageRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.ICompoundRequestMapper;
+import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -391,7 +397,98 @@ public abstract class WebApplication extends Application
 		{
 			path = path.substring(1);
 		}
-		getRootRequestMapperAsCompound().unmount(path);
+
+		IRequestMapper mapper = getRootRequestMapper();
+
+		while (mapper instanceof IRequestMapperDelegate)
+		{
+			mapper = ((IRequestMapperDelegate) mapper).getDelegateMapper();
+		}
+
+		/*
+		 * Only attempt to unmount if root request mapper is either a compound, or wraps a compound to avoid leaving the
+		 * application with no mappers installed.
+		 */
+		if (mapper instanceof ICompoundRequestMapper)
+		{
+			final Url url = Url.parse(path);
+
+			Request request = new Request()
+			{
+				@Override
+				public Url getUrl()
+				{
+					return url;
+				}
+
+				@Override
+				public Url getClientUrl()
+				{
+					return url;
+				}
+
+				@Override
+				public Locale getLocale()
+				{
+					return null;
+				}
+
+				@Override
+				public Charset getCharset()
+				{
+					return null;
+				}
+
+				@Override
+				public Object getContainerRequest()
+				{
+					return null;
+				}
+			};
+
+			unmountFromCompound((ICompoundRequestMapper) mapper, request);
+		}
+	}
+
+	/**
+	 * Descends the tree of {@link ICompoundRequestMapper}s and {@link IRequestMapperDelegate}s to find the correct descendant
+	 * to remove.
+	 *
+	 * @param parent
+	 *		The {@link ICompoundRequestMapper} from which to unmount the matching mapper.
+	 * @param request
+	 *		The request used to find the mapper to remove.
+	 */
+	private void unmountFromCompound(ICompoundRequestMapper parent, Request request)
+	{
+		Collection<IRequestMapper> toRemove = new LinkedList<>();
+
+		for (IRequestMapper mapper : parent)
+		{
+			if (mapper.mapRequest(request) != null)
+			{
+				IRequestMapper actualMapper = mapper;
+
+				while (actualMapper instanceof IRequestMapperDelegate)
+				{
+					actualMapper = ((IRequestMapperDelegate) actualMapper).getDelegateMapper();
+				}
+
+				if (actualMapper instanceof ICompoundRequestMapper)
+				{
+					unmountFromCompound((ICompoundRequestMapper) actualMapper, request);
+				}
+				else
+				{
+					toRemove.add(mapper);
+				}
+			}
+		}
+
+		for (IRequestMapper mapper : toRemove)
+		{
+			parent.remove(mapper);
+		}
 	}
 
 	/**

@@ -24,6 +24,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
@@ -48,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * @author Jesse Long
  * @author svenmeier
  */
-public class CryptoMapper implements IRequestMapper
+public class CryptoMapper implements IRequestMapperDelegate
 {
 	private static final Logger log = LoggerFactory.getLogger(CryptoMapper.class);
 
@@ -144,8 +145,20 @@ public class CryptoMapper implements IRequestMapper
 
 	/**
 	 * @return the wrapped root request mapper
+	 *
+	 * @deprecated Since 7.0.0, 6.18.0, to be removed in 8.0.0. Use {@link #getDelegateMapper()} instead.
 	 */
+	@Deprecated
 	protected final IRequestMapper getWrappedMapper()
+	{
+		return getDelegateMapper();
+	}
+
+	/**
+	 * @return the wrapped root request mapper
+	 */
+	@Override
+	public final IRequestMapper getDelegateMapper()
 	{
 		return wrappedMapper;
 	}

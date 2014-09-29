@@ -16,11 +16,6 @@
  */
 package org.apache.wicket.request.mapper;
 
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestMapper;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.mapper.CompoundRequestMapper.MapperWithScore;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,101 +25,6 @@ import org.junit.Test;
  */
 public class CompoundRequestMapperTest extends Assert
 {
-
-	private static final String MOUNT_PATH_3 = "mount/path/3";
-	private static final String MOUNT_PATH_2 = "mount/path/2";
-	private static final String MOUNT_PATH_1 = "mount/path/1";
-
-	@Test
-	public void unmount()
-	{
-		CompoundRequestMapper compound = new CompoundRequestMapper();
-
-		compound.add(new MountMapper(MOUNT_PATH_1, new EmptyRequestHandler()));
-		compound.add(new MountMapper(MOUNT_PATH_2, new EmptyRequestHandler()));
-		compound.add(new MountMapper(MOUNT_PATH_3, new EmptyRequestHandler()));
-
-		assertEquals(3, compound.size());
-
-		compound.unmount(MOUNT_PATH_2);
-		assertEquals(2, compound.size());
-
-		assertTrue(
-			"Mount path 1 should match",
-			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_1))) instanceof EmptyRequestHandler);
-		assertNull("Mount path 2 should not match",
-			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_2))));
-		assertTrue(
-			"Mount path 3 should match",
-			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_3))) instanceof EmptyRequestHandler);
-	}
-
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5698
-	 */
-	@Test
-	public void unmountNested()
-	{
-		CompoundRequestMapper compound = new CompoundRequestMapper();
-
-		CompoundRequestMapper nestedCompound = new CompoundRequestMapper();
-		compound.add(nestedCompound);
-
-		nestedCompound.add(new MountMapper(MOUNT_PATH_1, new EmptyRequestHandler()));
-		nestedCompound.add(new MountMapper(MOUNT_PATH_2, new EmptyRequestHandler()));
-		nestedCompound.add(new MountMapper(MOUNT_PATH_3, new EmptyRequestHandler()));
-
-		assertEquals(1, compound.size());
-		assertEquals(3, nestedCompound.size());
-
-		compound.unmount(MOUNT_PATH_2);
-		assertEquals(1, compound.size());
-		assertEquals(2, nestedCompound.size());
-
-		assertTrue(
-				"Mount path 1 should match",
-				compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_1))) instanceof EmptyRequestHandler);
-		assertNull("Mount path 2 should not match",
-				compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_2))));
-		assertTrue(
-				"Mount path 3 should match",
-				compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_3))) instanceof EmptyRequestHandler);
-	}
-
-	private static class MountMapper implements IRequestMapper
-	{
-		private final String path;
-		private final IRequestHandler handler;
-
-		public MountMapper(String path, EmptyRequestHandler handler)
-		{
-			this.path = path;
-			this.handler = handler;
-		}
-
-		@Override
-		public IRequestHandler mapRequest(Request request)
-		{
-			if (request.getUrl().toString().equals(path))
-			{
-				return handler;
-			}
-			return null;
-		}
-
-		@Override
-		public int getCompatibilityScore(Request request)
-		{
-			return 0;
-		}
-
-		@Override
-		public Url mapHandler(IRequestHandler requestHandler)
-		{
-			return null;
-		}
-	}
-
 	/**
 	 * Test {@link MapperWithScore#compareTo(MapperWithScore)}.
 	 */

@@ -119,6 +119,7 @@ import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -2750,13 +2751,19 @@ public class BaseWicketTester
 	/**
 	 *
 	 */
-	private class TestRequestMapper implements IRequestMapper
+	private class TestRequestMapper implements IRequestMapperDelegate
 	{
 		private final IRequestMapper delegate;
 
 		public TestRequestMapper(IRequestMapper delegate)
 		{
 			this.delegate = delegate;
+		}
+
+		@Override
+		public IRequestMapper getDelegateMapper()
+		{
+			return delegate;
 		}
 
 		@Override
