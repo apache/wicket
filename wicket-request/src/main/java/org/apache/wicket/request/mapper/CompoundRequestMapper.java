@@ -243,64 +243,14 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 		return mappers.iterator();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @deprecated since 6.18.0. To be removed in Wicket 7.0.0. See {@code WebApplication.unmount()}.
+	 */
+	@Deprecated
 	@Override
 	public void unmount(String path)
 	{
-		final Url url = Url.parse(path);
-		final Request request = createRequest(url);
-
-		for (IRequestMapper mapper : this)
-		{
-			if (mapper instanceof ICompoundRequestMapper)
-			{
-				ICompoundRequestMapper inner = (ICompoundRequestMapper) mapper;
-				inner.unmount(path);
-			}
-			else if (mapper.mapRequest(request) != null)
-			{
-				remove(mapper);
-			}
-		}
-	}
-
-	int size()
-	{
-		return mappers.size();
-	}
-
-	Request createRequest(final Url url)
-	{
-		return new Request()
-		{
-			@Override
-			public Url getUrl()
-			{
-				return url;
-			}
-
-			@Override
-			public Locale getLocale()
-			{
-				return null;
-			}
-
-			@Override
-			public Object getContainerRequest()
-			{
-				return null;
-			}
-
-			@Override
-			public Url getClientUrl()
-			{
-				return url;
-			}
-
-			@Override
-			public Charset getCharset()
-			{
-				return null;
-			}
-		};
 	}
 }

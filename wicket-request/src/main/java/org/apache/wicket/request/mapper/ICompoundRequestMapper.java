@@ -47,6 +47,8 @@ public interface ICompoundRequestMapper extends IRequestMapper, Iterable<IReques
 	 * 
 	 * @param path
 	 *            the path to unmount
+	 * @deprecated since 6.18.0. To be removed in Wicket 7.0.0. See {@code WebApplication.unmount()}.
 	 */
+	@Deprecated
 	void unmount(String path);
 }

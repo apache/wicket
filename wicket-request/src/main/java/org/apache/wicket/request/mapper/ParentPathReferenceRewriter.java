@@ -29,7 +29,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author igor.vaynberg
  */
-public class ParentPathReferenceRewriter implements IRequestMapper
+public class ParentPathReferenceRewriter implements IRequestMapperDelegate
 {
 	private final IProvider<String> escapeSequence;
 	private final IRequestMapper chain;
@@ -107,5 +107,12 @@ public class ParentPathReferenceRewriter implements IRequestMapper
 	public int getCompatibilityScore(final Request request)
 	{
 		return chain.getCompatibilityScore(request);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IRequestMapper getDelegateMapper()
+	{
+		return chain;
 	}
 }
