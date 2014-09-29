@@ -886,20 +886,17 @@ public abstract class Component
 
 			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
-		else
+		else if (getFlag(FLAG_REMOVED))
 		{
-			if (getFlag(FLAG_REMOVED))
+			setFlag(FLAG_REMOVED, false);
+			setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, false);
+			onReAdd();
+			if (!getRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED))
 			{
-				setFlag(FLAG_REMOVED, false);
-				setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, false);
-				onReAdd();
-				if (!getRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED))
-				{
-					throw new IllegalStateException(Component.class.getName() +
-							" has not been properly added. Something in the hierarchy of " +
-							getClass().getName() +
-							" has not called super.onReAdd() in the override of onReAdd() method");
-				}
+				throw new IllegalStateException(Component.class.getName() +
+						" has not been properly added. Something in the hierarchy of " +
+						getClass().getName() +
+						" has not called super.onReAdd() in the override of onReAdd() method");
 			}
 		}
 	}
@@ -4568,8 +4565,7 @@ public abstract class Component
 	 * (see {@link org.apache.wicket.Component#isInitialized()}).
 	 *
 	 * This is similar to onInitialize, but only comes after the component has been removed and
-	 * then
-	 * added again:
+	 * then added again:
 	 *
 	 * <ul>
 	 * <li>onInitialize is only called the very first time a component is added</li>
@@ -4578,8 +4574,7 @@ public abstract class Component
 	 * </ul>
 	 *
 	 * You can think of it as the opposite of onRemove. A component that was once removed will
-	 * not be
-	 * re-initialized but only re-added.
+	 * not be re-initialized but only re-added.
 	 *
 	 * Subclasses that override this must call super.onReAdd().
 	 */
