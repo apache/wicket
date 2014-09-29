@@ -130,7 +130,7 @@ public class AjaxEditableTest extends WicketTestCase
 		tester.assertLabel("ajaxLabel:label", "ajaxTest");
 
 		// click on the label to go to edit mode
-		tester.executeAjaxEvent("ajaxLabel:label", "onclick");
+		tester.executeAjaxEvent("ajaxLabel:label", "click");
 
 		tester.assertVisible("ajaxLabel:editor");
 		tester.assertInvisible("ajaxLabel:label");

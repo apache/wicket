@@ -137,7 +137,7 @@ public class PageIdPoliticTest extends Assert
 		{
 			WebComponent component;
 			component = new WebComponent("component");
-			component.add(eventBehavior = new AjaxEventBehavior("onclick")
+			component.add(eventBehavior = new AjaxEventBehavior("click")
 			{
 				/** */
 				private static final long serialVersionUID = 1L;

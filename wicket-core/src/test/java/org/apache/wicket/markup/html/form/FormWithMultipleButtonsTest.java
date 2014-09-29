@@ -60,7 +60,7 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
-		tester.executeAjaxEvent(testPage.ajaxFallbackButton, "onclick");
+		tester.executeAjaxEvent(testPage.ajaxFallbackButton, "click");
 		assertEquals(0, testPage.submitSequence.indexOf(testPage.ajaxFallbackButton));
 		assertEquals(1, testPage.submitSequence.indexOf(testPage.form));
 	}

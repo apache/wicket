@@ -411,7 +411,7 @@ public class AjaxEditableLabel<T> extends Panel
 	}
 
 	/**
-	 * By default this returns "onclick" uses can overwrite this on which event the label behavior
+	 * By default this returns "click", users can overwrite this on which event the label behavior
 	 * should be triggered
 	 * 
 	 * @return The event name

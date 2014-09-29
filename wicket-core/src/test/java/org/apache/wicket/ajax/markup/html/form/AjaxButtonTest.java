@@ -47,6 +47,6 @@ public class AjaxButtonTest extends WicketTestCase
 		tester.getRequest()
 			.getPostParameters()
 			.setParameterValue(homePage.getForm().getSubmitButton().getInputName(), "x");
-		tester.executeAjaxEvent(testForm.getSubmitButton(), "onclick");
+		tester.executeAjaxEvent(testForm.getSubmitButton(), "click");
 	}
 }

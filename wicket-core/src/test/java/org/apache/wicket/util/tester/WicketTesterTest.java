@@ -266,7 +266,7 @@ public class WicketTesterTest extends WicketTestCase
 			false);
 		try
 		{
-			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "onclick");
+			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "click");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
 		catch (AssertionError _)
@@ -578,7 +578,7 @@ public class WicketTesterTest extends WicketTestCase
 		final MockPageWithOneComponent page = new MockPageWithOneComponent();
 
 		Label label = new Label("component", "Dblclick This To See Magick");
-		label.add(new AjaxEventBehavior("ondblclick")
+		label.add(new AjaxEventBehavior("dblclick")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -596,7 +596,7 @@ public class WicketTesterTest extends WicketTestCase
 // tester.setupRequestAndResponse();
 
 		// Execute the event
-		tester.executeAjaxEvent(label, "ondblclick");
+		tester.executeAjaxEvent(label, "dblclick");
 
 		assertTrue(eventExecuted);
 	}
@@ -673,8 +673,7 @@ public class WicketTesterTest extends WicketTestCase
 		tester.getRequest().getPostParameters().setParameterValue(name.getInputName(), "Mock name");
 
 		// Execute the ajax event
-		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
-			"onclick");
+		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT, "click");
 
 		assertTrue("AjaxFormSubmitBehavior.onSubmit() has not been executed in " +
 			MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
@@ -699,8 +698,7 @@ public class WicketTesterTest extends WicketTestCase
 		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
 		FormTester form = tester.newFormTester("form");
 		form.setValue("name", "New name");
-		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
-				"onclick");
+		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT, "click");
 
 		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester.getLastRenderedPage();
 		Pojo pojo = page.getPojo();

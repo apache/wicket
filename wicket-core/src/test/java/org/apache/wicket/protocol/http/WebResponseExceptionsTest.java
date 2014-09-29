@@ -91,7 +91,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		tester.setExposeExceptions(false);
 		AjaxLink<?> link = (AjaxLink<?>)tester.getComponentFromLastRenderedPage("link");
 
-		tester.executeAjaxEvent(link, "onclick");
+		tester.executeAjaxEvent(link, "click");
 		assertEquals(500, tester.getLastResponse().getStatus());
 	}
 }

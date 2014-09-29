@@ -51,7 +51,7 @@ public class DomReadyOrderTest extends WicketTestCase
 		tester.startPage(DomReadyOrderPage.class);
 		tester.assertResultPage(DomReadyOrderPage.class, "DomReadyOrderPage_expected.html");
 
-		tester.executeAjaxEvent("test", "onclick");
+		tester.executeAjaxEvent("test", "click");
 		tester.assertResultPage(DomReadyOrderPage.class, "DomReadyOrderPage_ajax_expected.html");
 	}
 
@@ -73,7 +73,7 @@ public class DomReadyOrderTest extends WicketTestCase
 		tester.assertLabel("form:listViewContainer:listView:0:label", "0");
 
 		// add a row, execute ajax
-		tester.executeAjaxEvent("form:addButton", "onclick");
+		tester.executeAjaxEvent("form:addButton", "click");
 
 		// assert rendered page class
 		tester.assertRenderedPage(HomePage.class);

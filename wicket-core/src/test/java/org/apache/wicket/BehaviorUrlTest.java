@@ -152,7 +152,7 @@ public class BehaviorUrlTest extends WicketTestCase
 //		System.err.println(response);
 		assertTrue(response.contains(EscapeTestPage.TEST_QUERY_STRING));
 
-		tester.executeAjaxEvent("form:textfield", "onchange");
+		tester.executeAjaxEvent("form:textfield", "change");
 
 		EscapeTestPage testPage = (EscapeTestPage)tester.getLastRenderedPage();
 		IRequestParameters lastParameters = testPage.getLastQueryParameters();
@@ -169,7 +169,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		/** */
 		public EscapeTestPage()
 		{
-			getTextField().add(new AjaxEventBehavior("onchange")
+			getTextField().add(new AjaxEventBehavior("change")
 			{
 				private static final long serialVersionUID = 1L;
 

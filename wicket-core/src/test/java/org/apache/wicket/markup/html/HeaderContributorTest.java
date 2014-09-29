@@ -72,7 +72,7 @@ public class HeaderContributorTest extends WicketTestCase
 		 */
 		public HeaderContributorTestPage()
 		{
-			add(new AjaxEventBehavior("ondummy")
+			add(new AjaxEventBehavior("dummy")
 			{
 				private static final long serialVersionUID = 1L;
 

@@ -37,6 +37,6 @@ public class TestHomePage extends WicketTestCase
 			"If you see this message wicket is properly configured and running");
 
 		// execute ajax
-		tester.executeAjaxEvent("form:ajaxButton", "onclick");
+		tester.executeAjaxEvent("form:ajaxButton", "click");
 	}
 }

@@ -34,7 +34,7 @@ public class AjaxHeaderContributionTest extends WicketTestCase
 		tester.assertResultPage(AjaxHeaderContributionPage.class,
 			"AjaxHeaderContributionPage_expected.html");
 
-		tester.executeAjaxEvent("link", "onclick");
+		tester.executeAjaxEvent("link", "click");
 		tester.assertResultPage(AjaxHeaderContributionPage.class,
 			"AjaxHeaderContributionPage_ajax_expected.html");
 
@@ -50,7 +50,7 @@ public class AjaxHeaderContributionTest extends WicketTestCase
 		tester.assertResultPage(AjaxHeaderContributionPage2.class,
 			"AjaxHeaderContributionPage2_expected.html");
 
-		tester.executeAjaxEvent("link", "onclick");
+		tester.executeAjaxEvent("link", "click");
 		tester.assertResultPage(AjaxHeaderContributionPage2.class,
 			"AjaxHeaderContributionPage2_ajax_expected.html");
 

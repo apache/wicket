@@ -106,7 +106,7 @@ public class TestDetachPage extends WebPage
 			}
 		};
 		label.setOutputMarkupId(true);
-		ajaxEventBehavior = new AjaxEventBehavior("onclick")
+		ajaxEventBehavior = new AjaxEventBehavior("click")
 		{
 			/** for serialization. */
 			private static final long serialVersionUID = 1L;

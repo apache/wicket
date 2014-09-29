@@ -111,7 +111,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	/**
-	 * By default this returns "onclick" uses can overwrite this on which event the label behavior
+	 * By default this returns "click", users can overwrite this on which event the label behavior
 	 * should be triggered
 	 * 
 	 * @return The event name

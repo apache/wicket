@@ -57,7 +57,7 @@ public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 		// The Event behavior
 		WebComponent eventComponent = new WebComponent(EVENT_COMPONENT);
 		add(eventComponent);
-		eventComponent.add(new AjaxFormSubmitBehavior(form, "onclick")
+		eventComponent.add(new AjaxFormSubmitBehavior(form, "click")
 		{
 			private static final long serialVersionUID = 1L;
 

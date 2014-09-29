@@ -1148,7 +1148,7 @@ public class BaseWicketTester
 	 */
 	public Url urlFor(final AjaxLink<?> link)
 	{
-		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "onclick");
+		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "click");
 		Url url = Url.parse(behavior.getCallbackUrl().toString(),
 			Charset.forName(request.getCharacterEncoding()));
 		return transform(url);
@@ -1849,7 +1849,7 @@ public class BaseWicketTester
 			request.getPostParameters().setParameterValue(pageRelativePath, "x");
 
 			submitAjaxFormSubmitBehavior(link,
-				(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "onclick"));
+				(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "click"));
 		}
 		/*
 		 * If the link is a submitlink then we pretend to have clicked it
