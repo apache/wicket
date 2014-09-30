@@ -26,6 +26,8 @@ import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.https.HttpsConfig;
+import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.junit.Test;
 
@@ -67,6 +69,16 @@ public class ISecuritySettingsTest extends WicketTestCase
 		tester.assertRenderedPage(UnknownPage.class);
 
 		tester.getApplication().mountPackage("unknown", UnknownPage.class);
+
+		tester.startPage(pageWithLink);
+		tester.assertRenderedPage(MockPageWithLink.class);
+		tester.clickLink(MockPageWithLink.LINK_ID);
+		Assert.assertNull(tester.getLastRenderedPage());
+
+		/*
+		 * Test that mounts are enforced when the root compound mapper does not directly contain the mounted mapper.
+		 */
+		tester.getApplication().setRootRequestMapper(new HttpsMapper(tester.getApplication().getRootRequestMapper(), new HttpsConfig()));
 
 		tester.startPage(pageWithLink);
 		tester.assertRenderedPage(MockPageWithLink.class);
