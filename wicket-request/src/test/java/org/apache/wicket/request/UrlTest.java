@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.request;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -60,10 +63,11 @@ public class UrlTest extends Assert
 	@Test
 	public void parse1()
 	{
-		String s = "foo/bar/baz?a=4&b=5";
+		String s = "foo/bar/baz?a=4&b=5#foo2";
 		Url url = Url.parse(s);
 		checkSegments(url, "foo", "bar", "baz");
 		checkQueryParams(url, "a", "4", "b", "5");
+		assertEquals("foo2", url.getFragment());
 	}
 
 	/**
@@ -299,6 +303,39 @@ public class UrlTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5717
+	 */
+	@Test
+	public void parse19()
+	{
+		String s = "http://me:secret@localhost:8080/segment/#fragment";
+		Url url = Url.parse(s);
+		assertEquals("fragment", url.getFragment());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5717
+	 */
+	@Test
+	public void parse20()
+	{
+		String s = "http://me:secret@localhost:8080/segment/#";
+		Url url = Url.parse(s);
+		assertThat(url.getFragment(), is(nullValue()));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5717
+	 */
+	@Test
+	public void parse21()
+	{
+		String s = "http://me:secret@localhost:8080/segment#";
+		Url url = Url.parse(s);
+		assertThat(url.getFragment(), is(nullValue()));
+	}
+
+	/**
 	 * 
 	 */
 	@Test
@@ -363,6 +400,17 @@ public class UrlTest extends Assert
 		assertEquals(url.toString(StringMode.LOCAL), url.toString());
 	}
 
+	@Test
+	public void render6()
+	{
+		Url url = Url.parse("https://www.domain.com/foo/bar?baz=ban#bat");
+
+		// local string mode
+		assertEquals("/foo/bar?baz=ban#bat", url.toString(StringMode.LOCAL));
+
+		// full string mode
+		assertEquals("https://www.domain.com/foo/bar?baz=ban#bat", url.toString(StringMode.FULL));
+	}
 
 	/**
 	 * 
