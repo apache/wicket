@@ -53,6 +53,7 @@ import org.apache.wicket.util.string.Strings;
  * Example URLs:
  * 
  * <ul>
+ *     <li>http://hostname:1234/foo/bar?a=b#baz - protocol: http, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;], fragment: baz </li>
  *     <li>http://hostname:1234/foo/bar?a=b - protocol: http, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;] </li>
  *     <li>//hostname:1234/foo/bar?a=b - protocol: null, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;] </li>
  *     <li>foo/bar/baz?a=1&amp;b=5    - segments: [&quot;foo&quot;,&quot;bar&quot;,&quot;baz&quot;], query parameters: [&quot;a&quot;=&quot;1&quot;, &quot;b&quot;=&quot;5&quot;]</li>
@@ -84,6 +85,7 @@ public class Url implements Serializable
 	private String protocol;
 	private Integer port;
 	private String host;
+	private String fragment;
 
 	/**
 	 * Modes with which urls can be stringized
@@ -228,6 +230,15 @@ public class Url implements Serializable
 		// extract query string part
 		final String queryString;
 		final String absoluteUrl;
+
+		final int fragmentAt = url.indexOf('#');
+
+		// matches url fragment, but doesn't match optional path parameter (e.g. .../#{optional}/...)
+		if (fragmentAt > -1 && url.length() > fragmentAt + 1 && url.charAt(fragmentAt + 1) != '{')
+		{
+			result.fragment = url.substring(fragmentAt + 1);
+			url = url.substring(0, fragmentAt);
+		}
 
 		final int queryAt = url.indexOf('?');
 
@@ -448,6 +459,24 @@ public class Url implements Serializable
 	}
 
 	/**
+	 * 
+	 * @return fragment
+	 */
+	public String getFragment()
+	{
+		return fragment;
+	}
+
+	/**
+	 * 
+	 * @param fragment
+	 */
+	public void setFragment(String fragment)
+	{
+		this.fragment = fragment;
+	}
+
+	/**
 	 * Returns whether the Url is absolute. Absolute Urls start with a '{@literal /}'.
 	 * 
 	 * @return <code>true</code> if Url is absolute, <code>false</code> otherwise.
@@ -610,7 +639,8 @@ public class Url implements Serializable
 		Url rhs = (Url)obj;
 
 		return getSegments().equals(rhs.getSegments()) &&
-			getQueryParameters().equals(rhs.getQueryParameters());
+			getQueryParameters().equals(rhs.getQueryParameters()) &&
+			Objects.isEqual(getFragment(), rhs.getFragment());
 	}
 
 	/**
@@ -619,7 +649,7 @@ public class Url implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(getSegments(), getQueryParameters());
+		return Objects.hashCode(getSegments(), getQueryParameters(), getFragment());
 	}
 
 	/**
@@ -731,6 +761,13 @@ public class Url implements Serializable
 
 		result.append(path);
 		result.append(getQueryString(charset));
+
+		String _fragment = getFragment();
+		if (Strings.isEmpty(_fragment) == false)
+		{
+			result.append('#').append(_fragment);
+		}
+
 		return result.toString();
 	}
 

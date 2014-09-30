@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
@@ -707,7 +710,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/p1/path/p2/p3");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertTrue(handler instanceof RenderPageRequestHandler);
+		assertThat(handler, is(instanceOf(RenderPageRequestHandler.class)));
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
