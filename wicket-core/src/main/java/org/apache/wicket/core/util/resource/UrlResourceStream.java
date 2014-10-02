@@ -98,7 +98,6 @@ public class UrlResourceStream extends AbstractResourceStream
 	 */
 	public UrlResourceStream(final URL url)
 	{
-		// save the url
 		this.url = Args.notNull(url, "url");
 	}
 
@@ -179,7 +178,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			StreamData data = getData(true);
 			InputStream is = data.connection.getInputStream();
 			if (data.inputStreams == null) {
-				data.inputStreams = new ArrayList<InputStream>();
+				data.inputStreams = new ArrayList<>();
 			}
 			data.inputStreams.add(is);
 			return is;
