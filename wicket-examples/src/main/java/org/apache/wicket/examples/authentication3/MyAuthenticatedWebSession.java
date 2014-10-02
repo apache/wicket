@@ -41,7 +41,7 @@ public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 	}
 
 	/**
-	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#authenticate(java.lang.String,
+	 * @see org.apache.wicket.authroles.authentication.AuthenticatedWebSession#authenticate(java.lang.String,
 	 *      java.lang.String)
 	 */
 	@Override
@@ -54,7 +54,7 @@ public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 	}
 
 	/**
-	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#getRoles()
+	 * @see org.apache.wicket.authroles.authentication.AuthenticatedWebSession#getRoles()
 	 */
 	@Override
 	public Roles getRoles()
