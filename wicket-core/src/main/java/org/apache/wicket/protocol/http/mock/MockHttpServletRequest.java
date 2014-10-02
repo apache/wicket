@@ -1581,7 +1581,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 					out.write("\"".getBytes());
 					out.write(crlf.getBytes());
 					out.write(crlf.getBytes());
-					out.write(post.getParameterValue(parameterName).toString().getBytes());
+					out.write(value.toString().getBytes());
 					out.write(crlf.getBytes());
 				}
 			}
