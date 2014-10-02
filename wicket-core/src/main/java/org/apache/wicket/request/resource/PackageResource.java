@@ -515,8 +515,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * By default IPackageResourceGuard is used to check the permissions but
 	 * the resource itself can also make the check.
 	 *
-	 * @param scope
-	 *            resource scope
 	 * @param path
 	 *            resource path
 	 * @return <code>true<code> if resource access is granted
