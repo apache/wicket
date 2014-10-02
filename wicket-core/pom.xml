@@ -72,24 +72,12 @@
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clover-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/jquery*.js</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-    			<plugin>
-    				<groupId>net.alchim31.maven</groupId>
-    				<artifactId>yuicompressor-maven-plugin</artifactId>
-    				<configuration>
-    					<excludes>
-    						<exclude>**/jquery*.js</exclude>
-    					</excludes>
-    				</configuration>
-    			</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 </project>
