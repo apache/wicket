@@ -30,12 +30,10 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author papegaaij
  */
-public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
+public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenceHeaderItem
 {
 	private final String url;
 	private final String id;
-	private final boolean defer;
-	private final String charset;
 
 	/**
 	 * Creates a new {@code JavaScriptUrlReferenceHeaderItem}.
@@ -56,11 +54,9 @@ public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 	public JavaScriptUrlReferenceHeaderItem(String url, String id, boolean defer, String charset,
 		String condition)
 	{
-		super(condition);
+		super(condition, defer, charset);
 		this.url = url;
 		this.id = id;
-		this.defer = defer;
-		this.charset = charset;
 	}
 
 	/**
@@ -79,30 +75,12 @@ public class JavaScriptUrlReferenceHeaderItem extends JavaScriptHeaderItem
 		return id;
 	}
 
-	/**
-	 * @return if the execution of a script should be deferred (delayed) until after the page has
-	 *         been loaded.
-	 */
-	public boolean isDefer()
-	{
-		return defer;
-	}
-
-	/**
-	 * @return a non null value specifies the charset attribute of the script tag
-	 */
-	public String getCharset()
-	{
-		return charset;
-	}
-
-
 	@Override
 	public void render(Response response)
 	{
 		internalRenderJavaScriptReference(response,
 			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getId(), isDefer(),
-			getCharset(), getCondition());
+			getCharset(), getCondition(), isAsync());
 	}
 
 	@Override

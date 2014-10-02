@@ -321,8 +321,22 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		return new JavaScriptUrlReferenceHeaderItem(url, id, defer, charset, condition);
 	}
 
+	/**
+	 * @deprecated This method is here just for backward compatibility. Use the one with support
+	 * for 'async'.
+	 */
+	@Deprecated
 	protected final void internalRenderJavaScriptReference(Response response, String url,
-		String id, boolean defer, String charset, String condition)
+	                                                       String id, boolean defer, String charset, String condition)
+	{
+		internalRenderJavaScriptReference(response, url, id, defer, charset, condition, false);
+	}
+
+	/**
+	 * @since 6.18.0
+	 */
+	protected final void internalRenderJavaScriptReference(Response response, String url,
+		String id, boolean defer, String charset, String condition, boolean async)
 	{
 		Args.notEmpty(url, "url");
 
@@ -338,7 +352,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
 		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
 
-		JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset);
+		JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset, async);
 
 		if (hasCondition)
 		{
