@@ -105,7 +105,6 @@ import org.apache.wicket.settings.StoreSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.file.Folder;
-import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
@@ -166,6 +165,8 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
+
+	private static final String PROPERTIES_FILE_EXTENSION = ".properties";
 
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
@@ -485,7 +486,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	private void collectWicketProperties() throws IOException, URISyntaxException
 	{
-		Iterator<URL> wicketResources = getApplicationSettings().getClassResolver().getResources("META-INF/wicket");
+		Iterator<URL> wicketResources = getApplicationSettings().getClassResolver().getResources("META-INF/wicket/");
 		while (wicketResources.hasNext())
 		{
 			URL metaInfWicket = wicketResources.next();
@@ -493,8 +494,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 			if ("jar".equals(protocol))
 			{
-				URLConnection urlConnection = metaInfWicket.openConnection();
-				JarURLConnection jarURLConnection = (JarURLConnection) urlConnection;
+				JarURLConnection jarURLConnection = (JarURLConnection) metaInfWicket.openConnection();;
 				JarFile jarFile = jarURLConnection.getJarFile();
 				Enumeration<JarEntry> jarEntries = jarFile.entries();
 				while (jarEntries.hasMoreElements())
@@ -503,9 +503,9 @@ public abstract class Application implements UnboundListener, IEventSink
 					String entryName = jarEntry.getName();
 					if (entryName.startsWith("META-INF/wicket/") && entryName.endsWith(".properties"))
 					{
-						Properties properties = new Properties();
 						try (InputStream jarEntryStream = jarFile.getInputStream(jarEntry))
 						{
+							Properties properties = new Properties();
 							properties.load(jarEntryStream);
 							load(properties);
 							break; // atm there is no need to have more than one .properties file
@@ -522,14 +522,14 @@ public abstract class Application implements UnboundListener, IEventSink
 					public boolean accept(File file)
 					{
 						String fileName = file.getAbsolutePath();
-						return fileName.contains("/META-INF/wicket/") && fileName.endsWith(".properties");
+						return fileName.contains("/META-INF/wicket/") && fileName.endsWith(PROPERTIES_FILE_EXTENSION);
 					}
 				});
 				for (File wicketPropertiesFile : files)
 				{
-					Properties properties = new Properties();
 					try (InputStream stream = wicketPropertiesFile.inputStream())
 					{
+						Properties properties = new Properties();
 						properties.load(stream);
 						load(properties);
 					}
@@ -537,7 +537,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			}
 			else
 			{
-				throw new WicketRuntimeException("Unknown protocol: " + protocol);
+				log.error("Cannot load '{}'. The protocol '{}' is not supported!", metaInfWicket, protocol);
 			}
 		}
 	}
