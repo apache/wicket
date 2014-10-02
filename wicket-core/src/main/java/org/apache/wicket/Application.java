@@ -18,20 +18,25 @@ package org.apache.wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.JarURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
 import org.apache.wicket.application.ComponentOnBeforeRenderListenerCollection;
+import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
 import org.apache.wicket.application.HeaderContributorListenerCollection;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
@@ -98,6 +103,8 @@ import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.settings.StoreSettings;
 import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
@@ -469,39 +476,105 @@ public abstract class Application implements UnboundListener, IEventSink
 		getSessionListeners().onUnbound(sessionId);
 	}
 
+	/**
+	 * Finds all /META-INF/wicket/**.properties files and registers any {@link org.apache.wicket.IInitializer}s
+	 * found in them.
+	 *
+	 * @throws IOException When there is a problem reading the content of the properties file
+	 * @throws URISyntaxException When the url to the properties file cannot be translated to a file system path
+	 */
+	private void collectWicketProperties() throws IOException, URISyntaxException
+	{
+		Iterator<URL> wicketResources = getApplicationSettings().getClassResolver().getResources("META-INF/wicket");
+		while (wicketResources.hasNext())
+		{
+			URL metaInfWicket = wicketResources.next();
+			String protocol = metaInfWicket.getProtocol();
+
+			if ("jar".equals(protocol))
+			{
+				URLConnection urlConnection = metaInfWicket.openConnection();
+				JarURLConnection jarURLConnection = (JarURLConnection) urlConnection;
+				JarFile jarFile = jarURLConnection.getJarFile();
+				Enumeration<JarEntry> jarEntries = jarFile.entries();
+				while (jarEntries.hasMoreElements())
+				{
+					JarEntry jarEntry = jarEntries.nextElement();
+					String entryName = jarEntry.getName();
+					if (entryName.startsWith("META-INF/wicket/") && entryName.endsWith(".properties"))
+					{
+						Properties properties = new Properties();
+						try (InputStream jarEntryStream = jarFile.getInputStream(jarEntry))
+						{
+							properties.load(jarEntryStream);
+							load(properties);
+						}
+					}
+				}
+			}
+			else if ("file".equals(protocol))
+			{
+				Folder metaInfWicketFolder = new Folder(metaInfWicket.toURI());
+				File[] files = metaInfWicketFolder.getFiles(new Folder.FileFilter()
+				{
+					@Override
+					public boolean accept(File file)
+					{
+						String fileName = file.getAbsolutePath();
+						return fileName.contains("/META-INF/wicket/") && fileName.endsWith(".properties");
+					}
+				});
+				for (File wicketPropertiesFile : files)
+				{
+					Properties properties = new Properties();
+					try (InputStream stream = wicketPropertiesFile.inputStream())
+					{
+						properties.load(stream);
+						load(properties);
+					}
+				}
+			}
+			else
+			{
+				throw new WicketRuntimeException("Unknown protocol: " + protocol);
+			}
+		}
+	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * Initializes wicket components.
+	 * @deprecated This method will become 'private' in Wicket 8.x. And the support for /wicket.properties
+	 * will be dropped
 	 */
+	@Deprecated
 	public final void initializeComponents()
 	{
 		// Load any wicket properties files we can find
 		try
 		{
+			collectWicketProperties();
+
 			// Load properties files used by all libraries
 
 			final Iterator<URL> resources = getApplicationSettings().getClassResolver()
 				.getResources("wicket.properties");
 			while (resources.hasNext())
 			{
-				InputStream in = null;
-				try
+				final URL url = resources.next();
+				log.warn("Found '{}'. /wicket.properties location is deprecated. Please move the file to" +
+						" /META-INF/wicket/ folder and give it a name that matches your packages' name," +
+						" e.g. com.example.myapp.properties", url);
+				final Properties properties = new Properties();
+				try (InputStream in = Streams.readNonCaching(url))
 				{
-					final URL url = resources.next();
-					final Properties properties = new Properties();
-					in = Streams.readNonCaching(url);
 					properties.load(in);
 					load(properties);
 				}
-				finally
-				{
-					IOUtils.close(in);
-				}
 			}
 		}
-		catch (IOException e)
+		catch (IOException | URISyntaxException e)
 		{
 			throw new WicketRuntimeException("Unable to load initializers file", e);
 		}
@@ -585,7 +658,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		for (IInitializer initializer : initializers)
 		{
-			log.info("[" + getName() + "] destroy: " + initializer);
+			log.info("[{}] destroy: {}", getName(), initializer);
 			initializer.destroy(this);
 		}
 	}

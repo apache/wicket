@@ -153,7 +153,7 @@ public class OsgiClashingPackagesTest extends Assert
 				entryName.startsWith("META-INF/") ||
 
 				// ignore Wicket's IInitializer conf files
-				(entryName.startsWith("wicket") && entryName.endsWith(".properties"))
+				(entryName.startsWith("META-INF/wicket") && entryName.endsWith(".properties"))
 			)
 			{
 				return false;
