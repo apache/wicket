@@ -42,7 +42,7 @@ public class PackageResourceStream extends AbstractResourceStream
 	/** */
 	private static final long serialVersionUID = 1L;
 
-	private IResourceStream resourceStream;
+	private final IResourceStream resourceStream;
 
 	/**
 	 * Obtains an {@link IResourceStream} from the application's
