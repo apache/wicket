@@ -508,6 +508,7 @@ public abstract class Application implements UnboundListener, IEventSink
 						{
 							properties.load(jarEntryStream);
 							load(properties);
+							break; // atm there is no need to have more than one .properties file
 						}
 					}
 				}
