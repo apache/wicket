@@ -45,8 +45,8 @@
 	</organization>
 	<inceptionYear>2006</inceptionYear>
 	<ciManagement>
-		<system>hudson</system>
-		<url>https://hudson.apache.org/hudson/job/Apache%20Wicket%201.5.x/</url>
+		<system>BuildBot</system>
+		<url>http://ci.apache.org/builders/wicket-master</url>
 	</ciManagement>
 	<mailingLists>
 		<mailingList>
