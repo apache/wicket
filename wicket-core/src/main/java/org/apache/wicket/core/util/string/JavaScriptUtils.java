@@ -109,7 +109,28 @@ public class JavaScriptUtils
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id)
 	{
-		writeJavaScriptUrl(response, url, id, false, null);
+		writeJavaScriptUrl(response, url, id, false, null, false);
+	}
+
+	/**
+	 * Write a reference to a javascript file to the response object
+	 *
+	 * @param response
+	 *            The HTTP response
+	 * @param url
+	 *            The javascript file URL
+	 * @param id
+	 *            Unique identifier of element
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 * @param charset
+	 *            a non null value specifies the charset attribute of the script tag
+	 */
+	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
+	                                      final String id, boolean defer, String charset)
+	{
+		writeJavaScriptUrl(response, url, id, defer, charset, false);
 	}
 
 	/**
@@ -126,9 +147,11 @@ public class JavaScriptUtils
 	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
+	 * @param async
+	 *            specifies that the script can be loaded asynchronously by the browser
 	 */
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
-		final String id, boolean defer, String charset)
+		final String id, boolean defer, String charset, boolean async)
 	{
 		response.write("<script type=\"text/javascript\" ");
 		if (id != null)
@@ -139,6 +162,12 @@ public class JavaScriptUtils
 		{
 			response.write("defer=\"defer\" ");
 		}
+
+		if (async)
+		{
+			response.write("async=\"async\" ");
+		}
+
 		if (charset != null)
 		{
 			response.write("charset=\"" + Strings.escapeMarkup(charset) + "\" ");
@@ -225,7 +254,6 @@ public class JavaScriptUtils
 	{
 		response.write(SCRIPT_CONTENT_SUFFIX);
 		response.write("</script>\n");
-
 	}
 
 	/**

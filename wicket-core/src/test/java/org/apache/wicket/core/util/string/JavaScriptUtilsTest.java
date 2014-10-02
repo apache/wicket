@@ -46,6 +46,25 @@ public class JavaScriptUtilsTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5715
+	 */
+	@Test
+	public void writeJavaScriptUrlAsync()
+	{
+		StringResponse response = new StringResponse();
+		String url = "some/url;jsessionid=1234?p1=v1&p2=v2";
+		String id = "some&bad%id";
+		boolean defer = true;
+		boolean async = true;
+		String charset = "some&bad%%charset";
+		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset, async);
+
+		assertEquals(
+				"<script type=\"text/javascript\" id=\"some&amp;bad%id\" defer=\"defer\" async=\"async\" charset=\"some&amp;bad%%charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
+				response.toString());
+	}
+
+	/**
 	 */
 	@Test
 	public void writeJavaScript()
