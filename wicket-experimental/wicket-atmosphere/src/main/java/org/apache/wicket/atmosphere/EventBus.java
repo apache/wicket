@@ -40,10 +40,13 @@ import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
+import org.atmosphere.cpr.AtmosphereConfig;
+import org.atmosphere.cpr.AtmosphereFramework;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceFactory;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
+import org.atmosphere.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -177,6 +180,22 @@ public class EventBus implements UnboundListener
 		application.getComponentPostOnBeforeRenderListeners().add(
 			createEventSubscriptionCollector());
 		application.getSessionStore().registerUnboundListener(this);
+		checkEnabledAnalytics(getBroadcaster().getBroadcasterConfig().getAtmosphereConfig());
+	}
+
+	private void checkEnabledAnalytics(AtmosphereConfig config)
+	{
+		int major = Version.getMajorVersion();
+		int minor = Version.getMinorVersion();
+		boolean analyticsAlwaysEnabled = major == 2 && minor < 3;
+		boolean analyticsOption =
+				config.getInitParameter(AtmosphereFramework.class.getName() + ".analytics", true);
+		if (analyticsAlwaysEnabled || analyticsOption)
+		{
+			log.warn("Atmosphere's Google Analytics callback is enabled. Atmosphere will contact "
+					+ "Google Analytics on startup of your application. To disable this, upgrade "
+					+ "to Atmosphere 2.3 and disable ApplicationConfig.ANALYTICS in your web.xml");
+		}
 	}
 
 	/**
