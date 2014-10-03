@@ -206,6 +206,11 @@ public class AtmosphereBehavior extends AbstractAjaxBehavior
 			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Throwable, event));
 		}
 	}
+	
+	@Override
+	public void onHeartbeat(AtmosphereResourceEvent event)
+	{
+	}
 
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)

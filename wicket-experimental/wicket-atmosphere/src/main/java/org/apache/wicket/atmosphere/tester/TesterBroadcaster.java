@@ -17,11 +17,8 @@
 package org.apache.wicket.atmosphere.tester;
 
 import org.atmosphere.cpr.AtmosphereConfig;
-import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResponse;
-import org.atmosphere.cpr.BroadcasterConfig;
-import org.atmosphere.cpr.DefaultBroadcaster;
-import org.atmosphere.cpr.Entry;
+import org.atmosphere.cpr.Deliver;
 import org.atmosphere.util.SimpleBroadcaster;
 
 /**
@@ -35,10 +32,10 @@ class TesterBroadcaster extends SimpleBroadcaster
 	}
 
 	@Override
-	protected void push(Entry entry)
+	protected void push(Deliver entry)
 	{
-		AtmosphereResponse response = entry.resource.getResponse();
-		String message = entry.message.toString();
+		AtmosphereResponse response = entry.getResource().getResponse();
+		String message = entry.getMessage().toString();
 		response.write(message);
 	}
 }
