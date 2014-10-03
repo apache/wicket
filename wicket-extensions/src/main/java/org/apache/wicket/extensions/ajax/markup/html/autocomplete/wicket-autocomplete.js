@@ -53,7 +53,7 @@
 		
 		var ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
 		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
-		var ignoreChange = true;		// ignore change event because TAB or ENTER event already triggered a change
+		var triggerChangeOnHide = false;		// should a change be triggered on hiding of the popup
 
 		var initialElement;
 
@@ -89,7 +89,6 @@
 			initialElement = obj;
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
-				jqEvent.stopPropagation();
 				window.setTimeout(hideAutoComplete, 500);
 			});
 
@@ -132,7 +131,7 @@
 							// select the first element
 							setSelected(0);
 						}
-						if (visible===0) {
+						if (visible === 0) {
 							updateChoices();
 						} else {
 							render(true, false);
@@ -150,20 +149,18 @@
 						break;
 					case KEY_TAB:
 					case KEY_ENTER:
-						ignoreChange = false;
 						ignoreKeyEnter = false;
 						
 						if (selected > -1) {
 							var value = getSelectedValue();
 							value = handleSelection(value);
 							
-							hideAutoComplete();
-							
 							if (value) {
 								obj.value = value;
-								jQuery(obj).triggerHandler('change');
-								ignoreChange = true;
+								triggerChangeOnHide = true;
 							}
+							
+							hideAutoComplete();
 							
 							ignoreKeyEnter = true;
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
@@ -179,9 +176,11 @@
 			});
 
 			Wicket.Event.add(obj, 'change', function (jqEvent) {
-				if (ignoreChange) {
+				if (visible === 1) {
 					// don't let any other change handler get this
 					jqEvent.stopImmediatePropagation();
+					
+					triggerChangeOnHide = true;
 				}
 			});
 
@@ -402,7 +401,7 @@
 			Wicket.DOM.hide(indicatorId);
 		}
 
-		function showAutoComplete(){
+		function showAutoComplete() {
 			var input = Wicket.$(elementId);
 			var container = getAutocompleteContainer();
 			var index=getOffsetParentZIndex(elementId);
@@ -422,6 +421,7 @@
 			calculateAndSetPopupBounds(input, container);
 
 			visible = 1;
+			triggerChangeOnHide = false;			
 		}
 
 		function initializeUsefulDimensions(input, container) {
@@ -455,6 +455,12 @@
 				if (!cfg.adjustInputWidth && container.style.width !== "auto") {
 					container.style.width = "auto"; // let browser auto-set width again next time it is shown
 				}
+			}
+			
+			if (triggerChangeOnHide) {
+				var input = Wicket.$(elementId);
+				jQuery(input).triggerHandler('change');
+				triggerChangeOnHide = false;
 			}
 		}
 
@@ -612,18 +618,17 @@
 				elementCount=selectableElements.length;
 
 				var clickFunc = function(event) {
-					ignoreChange = false;
-					
 					var value = getSelectedValue();
 					value = handleSelection(value);
-					hideAutoComplete();
 					
 					var input = Wicket.$(elementId);
 					if (value) {
 						input.value = value;
-						jQuery(input).triggerHandler('change');
-						ignoreChange = true;
+						triggerChangeOnHide = true;
 					}
+
+					hideAutoComplete();
+					
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
 						input.focus();
