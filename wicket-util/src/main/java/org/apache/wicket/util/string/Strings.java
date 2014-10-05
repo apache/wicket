@@ -677,7 +677,7 @@ public final class Strings
 				{
 					boolean lhsClosed = fragments[i - 1].endsWith(separator);
 					boolean rhsClosed = fragment.startsWith(separator);
-					if (lhsClosed && rhsClosed)
+					if (!Strings.isEmpty(separator) && lhsClosed && rhsClosed)
 					{
 						buff.append(fragment.substring(1));
 					}
