@@ -49,8 +49,8 @@
 	
 		/**
 		 * Called in the onclick handlers of the associated checkboxes if the auto
-		 * update feature is active. Checks the state of all checkboxes - if all are
-		 * checked, the selector is checked too. Otherwise the selector is
+		 * update feature is active. Checks the state of all enabled checkboxes - if
+		 * all are checked, the selector is checked too. Otherwise the selector is
 		 * unchecked.
 		 *
 		 * @param selectorId
@@ -64,7 +64,7 @@
 				allChecked = true;
 	
 			for (var i = 0; i < checkboxes.length; i++) {
-				if (!(checkboxes[i].checked)) {
+				if ((checkboxes[i].disabled === false) && (checkboxes[i].checked === false)) {
 					allChecked = false;
 					break;
 				}
