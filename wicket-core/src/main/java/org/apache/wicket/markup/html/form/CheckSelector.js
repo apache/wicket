@@ -64,7 +64,7 @@
 				allChecked = true;
 	
 			for (var i = 0; i < checkboxes.length; i++) {
-				if (!(checkboxes[i].checked)) {
+				if ((checkboxes[i].disabled === false) && (checkboxes[i].checked === false)) {
 					allChecked = false;
 					break;
 				}
