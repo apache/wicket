@@ -53,6 +53,7 @@ import org.apache.wicket.util.string.Strings;
  * Example URLs:
  * 
  * <ul>
+ *     <li>http://hostname:1234/foo/bar?a=b#baz - protocol: http, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;], fragment: baz </li>
  *     <li>http://hostname:1234/foo/bar?a=b - protocol: http, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;] </li>
  *     <li>//hostname:1234/foo/bar?a=b - protocol: null, host: hostname, port: 1234, segments: [&quot;foo&quot;,&quot;bar&quot;] </li>
  *     <li>foo/bar/baz?a=1&amp;b=5    - segments: [&quot;foo&quot;,&quot;bar&quot;,&quot;baz&quot;], query parameters: [&quot;a&quot;=&quot;1&quot;, &quot;b&quot;=&quot;5&quot;]</li>
@@ -73,6 +74,8 @@ public class Url implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private static final String DEFAULT_CHARSET_NAME = "UTF-8";
+
+	private String fragment;
 
 	private final List<String> segments;
 
@@ -226,21 +229,35 @@ public class Url implements Serializable
 
 		String url = _url.toString();
 		// extract query string part
+		final String fragment;
 		final String queryString;
 		final String absoluteUrl;
+
+		final int fragmentAt = url.indexOf('#');
+
+		if (fragmentAt == -1)
+		{
+			fragment = "";
+		}
+		else
+		{
+			fragment = url.substring(fragmentAt + 1);
+			url = url.substring(0, fragmentAt);
+		}
 
 		final int queryAt = url.indexOf('?');
 
 		if (queryAt == -1)
 		{
 			queryString = "";
-			absoluteUrl = url;
 		}
 		else
 		{
-			absoluteUrl = url.substring(0, queryAt);
 			queryString = url.substring(queryAt + 1);
+			url = url.substring(0, queryAt);
 		}
+
+		absoluteUrl = url;
 
 		// get absolute / relative part of url
 		String relativeUrl;
@@ -340,6 +357,11 @@ public class Url implements Serializable
 					result.parameters.add(parseQueryParameter(s, charset));
 				}
 			}
+		}
+
+		if (!Strings.isEmpty(fragment))
+		{
+			result.fragment = fragment;
 		}
 
 		return result;
@@ -445,6 +467,24 @@ public class Url implements Serializable
 	public List<QueryParameter> getQueryParameters()
 	{
 		return parameters;
+	}
+
+	/**
+	 * 
+	 * @return fragment
+	 */
+	public String getFragment()
+	{
+		return fragment;
+	}
+
+	/**
+	 * 
+	 * @param fragment
+	 */
+	public void setFragment(String fragment)
+	{
+		this.fragment = fragment;
 	}
 
 	/**
@@ -610,7 +650,8 @@ public class Url implements Serializable
 		Url rhs = (Url)obj;
 
 		return getSegments().equals(rhs.getSegments()) &&
-			getQueryParameters().equals(rhs.getQueryParameters());
+			getQueryParameters().equals(rhs.getQueryParameters()) &&
+			Objects.isEqual(getFragment(), rhs.getFragment());
 	}
 
 	/**
@@ -619,7 +660,7 @@ public class Url implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(getSegments(), getQueryParameters());
+		return Objects.hashCode(getSegments(), getQueryParameters(), getFragment());
 	}
 
 	/**
@@ -731,6 +772,12 @@ public class Url implements Serializable
 
 		result.append(path);
 		result.append(getQueryString(charset));
+
+		if (!Strings.isEmpty(fragment))
+		{
+			result.append('#').append(fragment);
+		}
+
 		return result.toString();
 	}
 
