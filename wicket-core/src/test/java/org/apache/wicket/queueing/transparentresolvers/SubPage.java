@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.queueing.transparentresolvers;
 
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -26,5 +27,7 @@ public class SubPage extends BasePage
 	public SubPage(PageParameters parameters)
 	{
 		super(parameters);
+
+		queue(new Label("version", getApplication().getFrameworkSettings().getVersion()));
 	}
 }

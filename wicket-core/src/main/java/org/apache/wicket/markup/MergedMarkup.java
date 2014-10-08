@@ -318,6 +318,7 @@ public class MergedMarkup extends Markup
 			WicketTag childCloseTag = (WicketTag)childTag.mutable();
 			childCloseTag.getXmlTag().setType(TagType.CLOSE);
 			childCloseTag.setMarkupClass(markupClass);
+			childCloseTag.setOpenTag(childTag);
 			addMarkupElement(childCloseTag);
 		}
 

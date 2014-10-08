@@ -20,7 +20,9 @@ import org.apache.wicket.WicketTestCase;
 import org.junit.Test;
 
 /**
- * Test case for https://issues.apache.org/jira/browse/WICKET-5572
+ * Test case for:
+ *  - https://issues.apache.org/jira/browse/WICKET-5572
+ *  - https://issues.apache.org/jira/browse/WICKET-5722
  */
 public class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 {

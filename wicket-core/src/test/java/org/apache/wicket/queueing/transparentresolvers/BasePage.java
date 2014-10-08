@@ -26,6 +26,5 @@ public class BasePage extends WebPage {
 		super(parameters);
 
 		add(new HtmlTag("html"));
-
-    }
+	}
 }
