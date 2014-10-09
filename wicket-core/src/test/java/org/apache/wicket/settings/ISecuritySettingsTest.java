@@ -20,6 +20,8 @@ import junit.framework.Assert;
 
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.mapper.CryptoMapper;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
@@ -28,6 +30,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.junit.Test;
 
@@ -92,9 +95,46 @@ public class ISecuritySettingsTest extends WicketTestCase
 	@Test
 	public void enforceMountsWithCryptoMapper()
 	{
-	    WebApplication app = tester.getApplication();
-	    app.setRootRequestMapper(new CryptoMapper(app.getRootRequestMapper(), app));
-	    enforceMounts();
+		WebApplication app = tester.getApplication();
+
+		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(UnknownPage.class));
+
+		String plainTextNonMountedUrl = tester.urlFor(handler).toString();
+
+		assertTrue("Plain text non mounted url should start with wicket/bookmarkable/: " + plainTextNonMountedUrl, plainTextNonMountedUrl.startsWith("wicket/bookmarkable/"));
+
+		tester.executeUrl(plainTextNonMountedUrl);
+		tester.assertRenderedPage(UnknownPage.class);
+
+		app.setRootRequestMapper(new CryptoMapper(app.getRootRequestMapper(), app));
+
+		/*
+		 * Execute dummy request to get WicketTester to re-initialise with CryptoMapper in place.
+		 */
+		tester.executeUrl("");
+
+		String encryptedNonMountedUrl = tester.urlFor(handler).toString();
+
+		assertFalse("Encrypted URL should not start with wicket/bookmarkable/" + encryptedNonMountedUrl, encryptedNonMountedUrl.startsWith("wicket/bookmarkable/"));
+
+		tester.executeUrl(plainTextNonMountedUrl);
+		assertNull(tester.getLastRenderedPage());
+		tester.executeUrl(encryptedNonMountedUrl);
+		tester.assertRenderedPage(UnknownPage.class);
+
+		app.mountPackage("unknown", UnknownPage.class);
+
+		tester.executeUrl(plainTextNonMountedUrl);
+		assertNull(tester.getLastRenderedPage());
+		tester.executeUrl(encryptedNonMountedUrl);
+		tester.assertRenderedPage(UnknownPage.class);
+
+		app.getSecuritySettings().setEnforceMounts(true);
+
+		tester.executeUrl(plainTextNonMountedUrl);
+		assertNull(tester.getLastRenderedPage());
+		tester.executeUrl(encryptedNonMountedUrl);
+		assertNull(tester.getLastRenderedPage());
 	}
 
 	/**
