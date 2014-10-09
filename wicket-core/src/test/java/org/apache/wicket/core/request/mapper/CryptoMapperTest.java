@@ -29,6 +29,7 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
@@ -596,6 +597,33 @@ public class CryptoMapperTest extends AbstractMapperTest
 			.getUrl()
 			.getQueryParameterValue("q")
 			.toString());
+	}
+
+	@Test
+	public void markedEncryptedUrlDecrypt()
+	{
+		mapper.setMarkEncryptedUrls(true);
+		Request request = getRequest(Url.parse("crypt." + ENCRYPTED_BOOKMARKABLE_URL));
+		IRequestHandler requestHandler = mapper.mapRequest(request);
+
+		assertNotNull(requestHandler);
+		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
+
+		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+
+		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		assertEquals(Page2.class, handler.getPageClass());
+	}
+
+	@Test(expected = PageExpiredException.class)
+	public void expiredMarkedEncryptedUrlThrowsPageExpiredException()
+	{
+		mapper.setMarkEncryptedUrls(true);
+		Url encryptedUrl = mapper.mapHandler(new RenderPageRequestHandler(new PageProvider(Page2.class)));
+		assertTrue(encryptedUrl.getSegments().get(0).startsWith("crypt."));
+		encryptedUrl.getSegments().remove(0);
+		encryptedUrl.getSegments().add(0, "crypt.no decryptable");
+		mapper.mapRequest(getRequest(encryptedUrl));
 	}
 
 	private static IRequestHandler unwrapRequestHandlerDelegate(IRequestHandler handler)

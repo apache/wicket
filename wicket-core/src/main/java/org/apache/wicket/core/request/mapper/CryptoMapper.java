@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.core.request.handler.RequestSettingRequestHandler;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -69,6 +70,12 @@ import org.slf4j.LoggerFactory;
  * When encrypting mounted URLs, we look for the {@link PageComponentInfo} parameter, and encrypt only that parameter.
  * </p>
  * 
+ * <p>
+ * {@link CryptoMapper} can be configured to mark encrypted URLs as encrypted, and throw a {@link PageExpiredException}
+ * exception if a encrypted URL cannot be decrypted. This can occur when using {@code KeyInSessionSubJceCryptFactory}, and
+ * the session has expired.
+ * </p>
+ * 
  * @author igor.vaynberg
  * @author Jesse Long
  * @author svenmeier
@@ -82,8 +89,15 @@ public class CryptoMapper implements IRequestMapperDelegate
 	 */
 	private static final String ENCRYPTED_PAGE_COMPONENT_INFO_PARAMETER = "wicket";
 
+	private static final String ENCRYPTED_URL_MARKER_PREFIX = "crypt.";
+
 	private final IRequestMapper wrappedMapper;
 	private final IProvider<ICrypt> cryptProvider;
+
+	/**
+	 * Whether or not to mark encrypted URLs as encrypted.
+	 */
+	private boolean markEncryptedUrls = false;
 
 	/**
 	 * Encrypt with {@link org.apache.wicket.settings.SecuritySettings#getCryptFactory()}.
@@ -114,6 +128,32 @@ public class CryptoMapper implements IRequestMapperDelegate
 	{
 		this.wrappedMapper = Args.notNull(wrappedMapper, "wrappedMapper");
 		this.cryptProvider = Args.notNull(cryptProvider, "cryptProvider");
+	}
+
+	/**
+	 * Whether or not to mark encrypted URLs as encrypted. If set, a {@link PageExpiredException} is thrown when
+	 * a encrypted URL can no longer be decrypted.
+	 * 
+	 * @return whether or not to mark encrypted URLs as encrypted.
+	 */
+	public boolean getMarkEncryptedUrls()
+	{
+		return markEncryptedUrls;
+	}
+
+	/**
+	 * Sets whether or not to mark encrypted URLs as encrypted. If set, a {@link PageExpiredException} is thrown when
+	 * a encrypted URL can no longer be decrypted.
+	 * 
+	 * @param markEncryptedUrls
+	 *		whether or not to mark encrypted URLs as encrypted.
+	 * 
+	 * @return {@code this}, for chaining.
+	 */
+	public CryptoMapper setMarkEncryptedUrls(boolean markEncryptedUrls)
+	{
+		this.markEncryptedUrls = markEncryptedUrls;
+		return this;
 	}
 
 	/**
@@ -241,7 +281,15 @@ public class CryptoMapper implements IRequestMapperDelegate
 		String encryptedUrlString = getCrypt().encryptUrlSafe(url.toString());
 
 		Url encryptedUrl = new Url(url.getCharset());
-		encryptedUrl.getSegments().add(encryptedUrlString);
+
+		if (getMarkEncryptedUrls())
+		{
+			encryptedUrl.getSegments().add(ENCRYPTED_URL_MARKER_PREFIX + encryptedUrlString);
+		}
+		else
+		{
+			encryptedUrl.getSegments().add(encryptedUrlString);
+		}
 
 		int numberOfSegments = url.getSegments().size() - 1;
 		HashedSegmentGenerator generator = new HashedSegmentGenerator(encryptedUrlString);
@@ -361,6 +409,18 @@ public class CryptoMapper implements IRequestMapperDelegate
 			return null;
 		}
 
+		if (getMarkEncryptedUrls())
+		{
+			if (encryptedUrlString.startsWith(ENCRYPTED_URL_MARKER_PREFIX))
+			{
+				encryptedUrlString = encryptedUrlString.substring(ENCRYPTED_URL_MARKER_PREFIX.length());
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		String decryptedUrl;
 		try
 		{
@@ -374,7 +434,14 @@ public class CryptoMapper implements IRequestMapperDelegate
 
 		if (decryptedUrl == null)
 		{
-			return null;
+			if (getMarkEncryptedUrls())
+			{
+				throw new PageExpiredException("Encrypted URL is no longer decryptable");
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		Url originalUrl = Url.parse(decryptedUrl, request.getCharset());
