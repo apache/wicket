@@ -61,20 +61,35 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 *            The component id
 	 */
 	public NumberTextField(String id)
 	{
-		this(id, null);
+		this(id, null, null);
 	}
+
+
+	/**
+	 * Construct.
+	 *
+	 * @param id
+	 *            The component id
+	 * @param type
+	 *            The type to use when updating the model for this text field
+	 */
+	public NumberTextField(String id, Class<N> type)
+	{
+		this(id, null, type);
+	}
+
 
 	/**
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 *            The component id
 	 * @param model
-	 *            the input value
+	 *            The input value
 	 */
 	public NumberTextField(String id, IModel<N> model)
 	{
@@ -85,9 +100,9 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 *            The component id
 	 * @param model
-	 *            the input value
+	 *            The input value
 	 * @param type
 	 *            The type to use when updating the model for this text field
 	 */
