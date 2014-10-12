@@ -1164,7 +1164,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * @see IConverter#convertToObject(String, Locale)
 	 * @see #newValidationError(ConversionException)
 	 */
-	protected void convertInput()
+	public void convertInput()
 	{
 		if (typeName == null)
 		{

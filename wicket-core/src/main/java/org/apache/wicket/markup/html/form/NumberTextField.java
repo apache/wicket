@@ -254,7 +254,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 * Always use {@link Locale#ENGLISH} to parse the input.
 	 */
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		IConverter<N> converter = getConverter(getNumberType());
 

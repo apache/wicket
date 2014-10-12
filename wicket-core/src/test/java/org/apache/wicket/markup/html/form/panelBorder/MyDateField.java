@@ -94,7 +94,7 @@ public class MyDateField extends FormComponentPanel<String>
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
 	 */
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		setConvertedInput(dateField.getConvertedInput() + "-converted");
 	}

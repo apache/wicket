@@ -554,7 +554,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	}
 
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		List<T> selectedList = getRecorderComponent().getSelectedList();
 		if (selectedList.isEmpty())

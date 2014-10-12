@@ -352,7 +352,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * have to override that anymore).
 	 */
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		try
 		{

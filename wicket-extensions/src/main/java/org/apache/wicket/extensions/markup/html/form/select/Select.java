@@ -127,7 +127,7 @@ public class Select<T> extends FormComponent<T>
 	}
 
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		boolean supportsMultiple = getModelObject() instanceof Collection;
 

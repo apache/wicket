@@ -114,7 +114,7 @@ public class Multiply extends FormComponentPanel<Integer>
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
 	 */
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		// note that earlier versions did override updateModel, which looked
 		// somewhat better, but wasn't useful for when you want to do

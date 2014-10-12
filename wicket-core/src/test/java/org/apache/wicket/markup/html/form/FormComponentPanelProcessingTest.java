@@ -67,7 +67,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected void convertInput()
+				public void convertInput()
 				{
 					super.convertInput();
 					childValidated = true;
@@ -92,7 +92,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 		}
 
 		@Override
-		protected void convertInput()
+		public void convertInput()
 		{
 			if (childValidated == false)
 			{

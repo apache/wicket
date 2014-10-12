@@ -53,7 +53,7 @@ public class MyTextField extends TextField<String>
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
 	 */
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		super.setConvertedInput(getInput() + "-converted");
 	}
