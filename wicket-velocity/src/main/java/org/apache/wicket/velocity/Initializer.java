@@ -93,7 +93,7 @@ public class Initializer implements IInitializer
 				WebApplicationPath webPath = new WebApplicationPath(servletContext,
 					propertiesFolder);
 				IResourceStream stream = webPath.find(Initializer.class, velocityPropertiesFile);
-				InputStream is = null;
+				InputStream is;
 				try
 				{
 					is = stream.getInputStream();
@@ -101,15 +101,10 @@ public class Initializer implements IInitializer
 					props.load(is);
 					return props;
 				}
-				catch (IOException e)
+				catch (IOException | ResourceStreamNotFoundException e)
 				{
 					throw new WicketRuntimeException(e);
-				}
-				catch (ResourceStreamNotFoundException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-				finally
+				} finally
 				{
 					try
 					{
