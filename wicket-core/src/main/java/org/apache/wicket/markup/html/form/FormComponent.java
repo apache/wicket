@@ -1094,8 +1094,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * setModelObject(getConvertedInput());
 	 * </pre>
 	 * 
-	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING. USUALLY UPDATING
-	 * YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
+	 * <strong>DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING. USUALLY UPDATING
+	 * YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.</strong>
 	 */
 	@Override
 	public void updateModel()
@@ -1158,7 +1158,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * registering it with the application by overriding {@link Application#getConverterLocator()},
 	 * or at the component level by overriding {@link #getConverter(Class)} .
 	 * </p>
-	 * 
+	 *
+	 * <strong>DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING. USUALLY UPDATING
+	 * YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.</strong>
+	 *
 	 * @see IConverterLocator
 	 * @see Application#newConverterLocator()
 	 * @see IConverter#convertToObject(String, Locale)
