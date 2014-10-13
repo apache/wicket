@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
@@ -65,7 +66,7 @@ public class ComponentTag extends MarkupElement
 		/**
 		 * Creates a new instance of auto component to be queued
 		 */
-		Component newComponent(ComponentTag tag);
+		Component newComponent(MarkupContainer container, ComponentTag tag);
 	}
 
 

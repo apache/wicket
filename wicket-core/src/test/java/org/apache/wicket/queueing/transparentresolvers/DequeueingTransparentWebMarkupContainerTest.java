@@ -16,20 +16,56 @@
  */
 package org.apache.wicket.queueing.transparentresolvers;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.junit.Test;
 
-/**
- * Test case for:
- *  - https://issues.apache.org/jira/browse/WICKET-5572
- *  - https://issues.apache.org/jira/browse/WICKET-5722
- */
 public class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 {
+	/**
+	 * Test case for:
+	 *  - https://issues.apache.org/jira/browse/WICKET-5572
+	 *  - https://issues.apache.org/jira/browse/WICKET-5722
+	 */
 	@Test
-	public void startSubPageWithTWMCinTheParentPage() {
+	public void startSubPageWithTWMCinTheParentPage() 
+	{
 		tester.startPage(SubPage.class);
 		tester.assertRenderedPage(SubPage.class);
 		tester.assertComponent("html", HtmlTag.class);
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5724
+	 * 
+	 * Transparent component inside page body must allow 
+	 * queued children components.
+	 */
+	@Test
+	public void queuedComponentsInsideTransparentContainer()
+	{
+		tester.startPage(TransparentContainerQueuePage.class);
+		tester.assertRenderedPage(TransparentContainerQueuePage.class);
+		
+		Page lastRenderedPage = tester.getLastRenderedPage();
+		
+		//test if page contains the queued label
+		boolean containsQueuedLabel = lastRenderedPage.visitChildren(new IVisitor<Component, Boolean>()
+		{
+			@Override
+			public void component(Component component, IVisit<Boolean> visit)
+			{
+				if(component instanceof Label)
+				{
+					visit.stop(true);
+				}
+			}
+		});
+		
+		assertTrue(containsQueuedLabel);
 	}
 }

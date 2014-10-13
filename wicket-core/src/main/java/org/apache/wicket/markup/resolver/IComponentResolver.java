@@ -28,6 +28,8 @@ import org.apache.wicket.util.io.IClusterable;
  * are first looked up in a component's hierarchy before falling back to a list of
  * IComponentResolvers maintained in {@link PageSettings}.
  * 
+ * NOTE: implementations for this interface must be thread-safe!
+ * 
  * @see ComponentResolvers
  * 
  * @author Juergen Donnerstag

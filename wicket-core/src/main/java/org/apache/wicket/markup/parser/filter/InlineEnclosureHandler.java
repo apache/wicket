@@ -127,7 +127,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 					tag.setAutoComponentFactory(new ComponentTag.IAutoComponentFactory()
 					{
 						@Override
-						public Component newComponent(ComponentTag tag)
+						public Component newComponent(MarkupContainer container, ComponentTag tag)
 						{
 							String attributeName = getInlineEnclosureAttributeName(null);
 							String childId = tag.getAttribute(attributeName);

@@ -56,7 +56,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	private static final IAutoComponentFactory FACTORY = new IAutoComponentFactory()
 	{
 		@Override
-		public Component newComponent(ComponentTag tag)
+		public Component newComponent(MarkupContainer container, ComponentTag tag)
 		{
 			return new Enclosure(tag.getId(), tag
 				.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));

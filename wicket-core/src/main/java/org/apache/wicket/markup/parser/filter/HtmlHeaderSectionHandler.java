@@ -49,8 +49,8 @@ import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 {
-	private static final String BODY = "body";
-	private static final String HEAD = "head";
+	public static final String BODY = "body";
+	public static final String HEAD = "head";
 
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
 	public static final String HEADER_ID = "_header_";

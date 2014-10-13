@@ -86,8 +86,8 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				String attrValue = tag.getAttributes().getString(attrName);
 
-				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
-					(!attrValue.contains(":")) && !(attrValue.startsWith("#")))
+				if ((attrValue != null) && (attrValue.startsWith("/") == false)
+					&& (!attrValue.contains(":")) && !(attrValue.startsWith("#")))
 				{
 					tag.getAttributes().put(attrName,
 						UrlUtils.rewriteToContextRelative(attrValue, RequestCycle.get()));
@@ -95,6 +95,14 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			}
 		}
 	};
+	
+	/** 
+	 * https://issues.apache.org/jira/browse/WICKET-5724
+	 * 
+	 * Says if we are inside an head tag or wicket:head tag. 
+	 * 
+	 * */
+	private boolean insideHead;
 
 	/**
 	 * Constructor for the IComponentResolver role.
@@ -106,8 +114,9 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 	/**
 	 * Constructor for the IMarkupFilter role
+	 * 
 	 * @param markup
-	 *      The markup created by reading the markup file
+	 *            The markup created by reading the markup file
 	 */
 	public RelativePathPrefixHandler(final MarkupResourceStream markup)
 	{
@@ -119,30 +128,62 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	{
 		if (tag.isClose())
 		{
+			if (isHeadTag(tag))	
+			{
+				//outside head tag
+				insideHead = false;
+			}
+			
 			return tag;
+		}
+
+		if (isHeadTag(tag))	
+		{
+			//inside head tag
+			insideHead = true;
 		}
 
 		String wicketIdAttr = getWicketNamespace() + ":" + "id";
 
 		// Don't touch any wicket:id component and any auto-components
-		if ((tag instanceof WicketTag) || (tag.isAutolinkEnabled() == true) ||
-			(tag.getAttributes().get(wicketIdAttr) != null))
+		if ((tag instanceof WicketTag) || (tag.isAutolinkEnabled() == true)
+			|| (tag.getAttributes().get(wicketIdAttr) != null))
 		{
 			return tag;
 		}
-
+		
 		// Work out whether we have any attributes that require us to add a
 		// behavior that prepends the relative path.
 		for (String attrName : attributeNames)
 		{
 			String attrValue = tag.getAttributes().getString(attrName);
-			if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
-				(!attrValue.contains(":")) && !(attrValue.startsWith("#")))
+			if ((attrValue != null) && (attrValue.startsWith("/") == false)
+				&& (!attrValue.contains(":")) && !(attrValue.startsWith("#")))
 			{
 				if (tag.getId() == null)
 				{
 					tag.setId(getWicketRelativePathPrefix(null));
 					tag.setAutoComponentTag(true);
+					
+					/**
+					 * https://issues.apache.org/jira/browse/WICKET-5724
+					 * Transparent component inside page body must allow 
+					 * queued children components.
+					 */
+					if(!insideHead)
+					{
+						tag.setAutoComponentFactory(new ComponentTag.IAutoComponentFactory()
+						{
+							@Override
+							public Component newComponent(MarkupContainer container, ComponentTag tag)
+							{
+								String id = tag.getId() + container.getPage().getAutoIndex();
+								tag.setId(id);
+	
+								return new TransparentWebMarkupContainer(id);
+							}
+						});	
+					}
 				}
 				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
 				tag.setModified(true);
@@ -152,7 +193,17 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 		return tag;
 	}
-
+	
+	private boolean isHeadTag(ComponentTag tag)
+	{
+		if (HtmlHeaderSectionHandler.HEAD.equalsIgnoreCase(tag.getName()))
+		{
+			return true;
+		}	
+		
+		return false;
+	}
+	
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
