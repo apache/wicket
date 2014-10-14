@@ -83,21 +83,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 */
 	protected PageComponentInfo getPageComponentInfo(final Url url)
 	{
-		Args.notNull(url, "url");
-
-		for (QueryParameter queryParameter : url.getQueryParameters())
-		{
-			if (Strings.isEmpty(queryParameter.getValue()))
-			{
-				PageComponentInfo pageComponentInfo = PageComponentInfo.parse(queryParameter.getName());
-				if (pageComponentInfo != null)
-				{
-					return pageComponentInfo;
-				}
-			}
-		}
-
-		return null;
+		return MapperUtils.getPageComponentInfo(url);
 	}
 
 	/**
@@ -163,8 +149,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	@Override
 	protected void removeMetaParameter(final Url urlCopy)
 	{
-		String pageComponentInfoCandidate = urlCopy.getQueryParameters().get(0).getName();
-		if (PageComponentInfo.parse(pageComponentInfoCandidate) != null)
+		if (MapperUtils.parsePageComponentInfoParameter(urlCopy.getQueryParameters().get(0)) != null)
 		{
 			urlCopy.getQueryParameters().remove(0);
 		}
