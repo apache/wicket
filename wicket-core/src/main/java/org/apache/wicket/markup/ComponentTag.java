@@ -56,15 +56,17 @@ public class ComponentTag extends MarkupElement
 	 * components get queued, which allows other components to be dequeued under these auto
 	 * components.
 	 * 
-	 * TODO queueing javadoc improvements describing the process in more detail
-	 * 
 	 * @author igor
-	 * 
 	 */
 	public interface IAutoComponentFactory
 	{
 		/**
 		 * Creates a new instance of auto component to be queued
+		 *
+		 * @param container
+		 *                The component that will become a parent of the newly created auto component
+		 * @param tag
+		 *                The markup element for the newly created auto component
 		 */
 		Component newComponent(MarkupContainer container, ComponentTag tag);
 	}
