@@ -69,6 +69,8 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 			{
 				if (resolvingContainer instanceof IComponentResolver)
 				{
+					visit.dontGoDeeper();
+
 					IMarkupFragment childMarkup = resolvingContainer.getMarkup(child);
 
 					if (childMarkup != null && childMarkup.size() > 0)
