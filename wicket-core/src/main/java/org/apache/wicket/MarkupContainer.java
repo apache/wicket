@@ -273,9 +273,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Try to queue a child markup container if the current 
 	 * component queue still contain items.
+	 * This can be necessary if a component is added after we have
+	 * invoked method {@link #queue(Component...)}.
 	 * 
 	 * @param component
-	 * 	The children markup container
+	 *             The children markup container
 	 */
 	private void queueChildContainer(final Component component)
 	{
@@ -1974,7 +1976,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private transient ComponentQueue queue;
 
 	/**
-	 * Queues a component to be dequeued later. The advantage of this method over the
+	 * Queues one or more components to be dequeued later. The advantage of this method over the
 	 * {@link #add(Component...)} method is that the component does not have to be added to its
 	 * direct parent, only to a parent upstream; it will be dequeued into the correct parent using
 	 * the hierarchy defined in the markup. This allows the component hierarchy to be maintained only
@@ -1982,7 +1984,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * freedom when moving components in markup.
 	 * 
 	 * @param components
-	 * @return
+	 * @return {@code this} for method chaining             
 	 */
 	public MarkupContainer queue(Component... components)
 	{
@@ -1997,10 +1999,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	
 	/**
 	 * Queues components over the current container and using the given component queue.
-	 * 
+	 *  
 	 * @param queue
-	 *			the component queue to use. 
-	 * @return
+	 *            the component queue to use. 
+	 * @return {@code this} for method chaining
 	 */
 	protected MarkupContainer queue(ComponentQueue queue)
 	{
@@ -2016,7 +2018,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Runs the actual queuing process. 
 	 * 
-	 * @return
+	 * @return {@code this} for method chaining
 	 */
 	private MarkupContainer internalQueue()
 	{
