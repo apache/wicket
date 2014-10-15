@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -99,10 +100,9 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	/** 
 	 * https://issues.apache.org/jira/browse/WICKET-5724
 	 * 
-	 * Says if we are inside an head tag or wicket:head tag. 
-	 * 
+	 * Unique index to generate new tag ids.
 	 * */
-	private boolean insideHead;
+	private final AtomicInteger componentIndex = new AtomicInteger();
 
 	/**
 	 * Constructor for the IComponentResolver role.
@@ -128,19 +128,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	{
 		if (tag.isClose())
 		{
-			if (isHeadTag(tag))	
-			{
-				//outside head tag
-				insideHead = false;
-			}
-			
 			return tag;
-		}
-
-		if (isHeadTag(tag))	
-		{
-			//inside head tag
-			insideHead = true;
 		}
 
 		String wicketIdAttr = getWicketNamespace() + ":" + "id";
@@ -162,60 +150,31 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				if (tag.getId() == null)
 				{
-					tag.setId(getWicketRelativePathPrefix(null));
+					tag.setId(getWicketRelativePathPrefix(null) 
+						+ componentIndex.getAndIncrement());
 					tag.setAutoComponentTag(true);
-					
-					/**
-					 * https://issues.apache.org/jira/browse/WICKET-5724
-					 * Transparent component inside page body must allow 
-					 * queued children components.
-					 */
-					if(!insideHead)
-					{
-						tag.setAutoComponentFactory(new ComponentTag.IAutoComponentFactory()
-						{
-							@Override
-							public Component newComponent(MarkupContainer container, ComponentTag tag)
-							{
-								String id = tag.getId() + container.getPage().getAutoIndex();
-								tag.setId(id);
-	
-								return new TransparentWebMarkupContainer(id);
-							}
-						});	
-					}
 				}
+
 				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
 				tag.setModified(true);
+				
 				break;
 			}
 		}
 
 		return tag;
 	}
-	
-	private boolean isHeadTag(ComponentTag tag)
-	{
-		if (HtmlHeaderSectionHandler.HEAD.equalsIgnoreCase(tag.getName()))
-		{
-			return true;
-		}	
 		
-		return false;
-	}
-	
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		if ((tag != null) && (tag.getId().equals(getWicketRelativePathPrefix(markupStream))))
+		if ((tag != null) && (tag.getId().startsWith(getWicketRelativePathPrefix(markupStream))))
 		{
-			String id = tag.getId() + container.getPage().getAutoIndex();
-
 			// we do not want to mess with the hierarchy, so the container has to be
 			// transparent as it may have wicket components inside. for example a raw anchor tag
 			// that contains a label.
-			return new TransparentWebMarkupContainer(id);
+			return new TransparentWebMarkupContainer(tag.getId());
 		}
 		return null;
 	}

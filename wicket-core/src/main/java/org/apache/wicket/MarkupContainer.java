@@ -35,7 +35,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.markup.html.internal.InlineEnclosure;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -262,8 +261,30 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			children_remove(index);
 		}
 		add(component);
-
+		
+		/**
+		 * https://issues.apache.org/jira/browse/WICKET-5724
+		 */
+		queueChildContainer(component);
+		
 		return true;
+	}
+	
+	/**
+	 * Try to queue a child markup container if the current 
+	 * component queue still contain items.
+	 * 
+	 * @param component
+	 * 	The children markup container
+	 */
+	private void queueChildContainer(final Component component)
+	{
+		if (queue != null && !queue.isEmpty() && 
+			component instanceof MarkupContainer)
+		{
+			MarkupContainer childContainer = (MarkupContainer)component;
+			childContainer.queue(queue);
+		}
 	}
 
 	/**
@@ -1661,23 +1682,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				Component component = (Component)child;
 				component.detach();
-
-				// We need to keep InlineEnclosures for Ajax request handling.
-				// TODO this is really ugly. Feature request for 1.5: change auto-component that
-				// they don't need to be removed anymore.
-				if (!(component instanceof InlineEnclosure) && component.isAuto())
-				{
-					children_remove(i);
-				}
 			}
-		}
-
-		if (children instanceof ChildList)
-		{
-			ChildList lst = (ChildList)children;
-			Object[] tmp = new Object[lst.size];
-			System.arraycopy(lst.childs, 0, tmp, 0, lst.size);
-			children = tmp;
 		}
 	}
 
@@ -1986,7 +1991,35 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			queue = new ComponentQueue();
 		}
 		queue.add(components);
-
+		
+		return innerQueue();
+	}
+	
+	/**
+	 * Queues components over the current container and using the given component queue.
+	 * 
+	 * @param queue
+	 *			the component queue to use. 
+	 * @return
+	 */
+	protected MarkupContainer queue(ComponentQueue queue)
+	{
+		ComponentQueue currentQueue = this.queue;
+		this.queue = queue;
+		 
+		MarkupContainer markupContainer = innerQueue();
+		this.queue = currentQueue;
+		
+		return markupContainer;
+	}
+	
+	/**
+	 * Runs the actual queuing process. 
+	 * 
+	 * @return
+	 */
+	protected MarkupContainer innerQueue()
+	{
 		MarkupContainer region = null;
 		Page page = null;
 
