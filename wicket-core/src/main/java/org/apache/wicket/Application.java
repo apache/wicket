@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
@@ -31,6 +32,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
@@ -494,7 +496,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 			if ("jar".equals(protocol))
 			{
-				JarURLConnection jarURLConnection = (JarURLConnection) metaInfWicket.openConnection();;
+				JarURLConnection jarURLConnection = (JarURLConnection) metaInfWicket.openConnection();
 				JarFile jarFile = jarURLConnection.getJarFile();
 				Enumeration<JarEntry> jarEntries = jarFile.entries();
 				while (jarEntries.hasMoreElements())
@@ -511,6 +513,35 @@ public abstract class Application implements UnboundListener, IEventSink
 							break; // atm there is no need to have more than one .properties file
 						}
 					}
+				}
+			}
+			else if ("vfs".equals(protocol))
+			{ // support for JBoss 6+
+				URLConnection connection = metaInfWicket.openConnection();
+				JarInputStream inputStream = (JarInputStream) connection.getInputStream();
+
+				int offset = 0;
+				JarEntry jarEntry;
+				while ((jarEntry = inputStream.getNextJarEntry()) != null) {
+					String jarEntryName = jarEntry.getName();
+					int size = (int) jarEntry.getSize();
+					if (jarEntryName.endsWith(PROPERTIES_FILE_EXTENSION))
+					{
+						byte[] buf = new byte[size];
+						int read = inputStream.read(buf, offset, size);
+						if (read == size)
+						{
+							Properties properties = new Properties();
+							properties.load(new ByteArrayInputStream(buf));
+							load(properties);
+						}
+						else
+						{
+							log.warn("Expected to read '{}' bytes from '{}' but actually read '{}'",
+									size, jarEntryName, read);
+						}
+					}
+					offset += size;
 				}
 			}
 			else if ("file".equals(protocol))
