@@ -1992,7 +1992,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		queue.add(components);
 		
-		return innerQueue();
+		return internalQueue();
 	}
 	
 	/**
@@ -2007,7 +2007,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		ComponentQueue currentQueue = this.queue;
 		this.queue = queue;
 		 
-		MarkupContainer markupContainer = innerQueue();
+		MarkupContainer markupContainer = internalQueue();
 		this.queue = currentQueue;
 		
 		return markupContainer;
@@ -2018,7 +2018,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @return
 	 */
-	protected MarkupContainer innerQueue()
+	private MarkupContainer internalQueue()
 	{
 		MarkupContainer region = null;
 		Page page = null;
