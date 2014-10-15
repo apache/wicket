@@ -265,30 +265,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		/**
 		 * https://issues.apache.org/jira/browse/WICKET-5724
 		 */
-		queueChildContainer(component);
 		
 		return true;
 	}
 	
-	/**
-	 * Try to queue a child markup container if the current 
-	 * component queue still contain items.
-	 * This can be necessary if a component is added after we have
-	 * invoked method {@link #queue(Component...)}.
-	 * 
-	 * @param component
-	 *             The children markup container
-	 */
-	private void queueChildContainer(final Component component)
-	{
-		if (queue != null && !queue.isEmpty() && 
-			component instanceof MarkupContainer)
-		{
-			MarkupContainer childContainer = (MarkupContainer)component;
-			childContainer.queue(queue);
-		}
-	}
-
 	/**
 	 * @param component
 	 *            The component to check
@@ -974,12 +954,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// if we are already dequeueing there is no need to dequeue again
 			if (!queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
-				// do not dequeue auto components since they are added
-				// during render phase
-				if (!child.isAuto())
-				{
-					queueRegion.dequeue();
-				}
+			    /**
+			     * Also auto component are queued. 
+			     * 
+		         * https://issues.apache.org/jira/browse/WICKET-5724
+		         */
+				queueRegion.dequeue();
+
 			}
 		}
 
@@ -1995,24 +1976,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		queue.add(components);
 		
 		return internalQueue();
-	}
-	
-	/**
-	 * Queues components over the current container and using the given component queue.
-	 *  
-	 * @param queue
-	 *            the component queue to use. 
-	 * @return {@code this} for method chaining
-	 */
-	protected MarkupContainer queue(ComponentQueue queue)
-	{
-		ComponentQueue currentQueue = this.queue;
-		this.queue = queue;
-		 
-		MarkupContainer markupContainer = internalQueue();
-		this.queue = currentQueue;
-		
-		return markupContainer;
 	}
 	
 	/**
