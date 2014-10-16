@@ -30,6 +30,7 @@ public class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 	 * Test case for:
 	 *  - https://issues.apache.org/jira/browse/WICKET-5572
 	 *  - https://issues.apache.org/jira/browse/WICKET-5722
+	 *  - https://issues.apache.org/jira/browse/WICKET-5728
 	 */
 	@Test
 	public void startSubPageWithTWMCinTheParentPage() 

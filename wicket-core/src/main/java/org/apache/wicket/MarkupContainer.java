@@ -1369,7 +1369,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			page.componentRemoved(component);
 		}
-
+		
 		component.detach();
 
 		component.internalOnRemove();
@@ -2096,7 +2096,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				// could not dequeue, or does not contain children
 	
-				if (tag.isOpen())
+				if (tag.isOpen() && !tag.hasNoCloseTag())
 				{
 					dequeue.skipToCloseTag();
 				}

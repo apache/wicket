@@ -6,6 +6,12 @@
 </head>
 <body>
     <wicket:extend>
+        <!--
+            Tag with no closing tag required.
+            https://issues.apache.org/jira/browse/WICKET-5728 
+        -->
+        <img alt="foo" src="bar">
+        
         Sub page
         <span wicket:id="version">1.5-SNAPSHOT</span>
     </wicket:extend>
