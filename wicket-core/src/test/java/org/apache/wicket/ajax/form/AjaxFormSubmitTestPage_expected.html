@@ -16,7 +16,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.AjaxFormSub
 <script type="text/javascript" >
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.AjaxFormSubmitTestPage?0-1.IBehaviorListener.0-form-submit","m":"POST","c":"submit2","f":"form1","sc":":submit","e":"click","pd":true});;
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.AjaxFormSubmitTestPage?0-1.IBehaviorListener.0-form-submit","m":"POST","c":"submit2","f":"form1","sc":"p::submit","e":"click","pd":true});;
 ;});
 /*]]>*/
 </script>
@@ -24,7 +24,7 @@ Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.AjaxFormSubmitTestPage?0-1.
 		<form wicket:id="form" id="form1" method="post" action="./org.apache.wicket.ajax.form.AjaxFormSubmitTestPage?0-1.IFormSubmitListener-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form1_hf_0" id="form1_hf_0" /></div>
 			<input type="text" wicket:id="txt1" value="foo" name="txt1"/>
 			<input type="text" wicket:id="txt2" value="bar" name="txt2"/>
-			<input type="submit" value="Submit" wicket:id="submit" name=":submit" id="submit2"/>
+			<input type="submit" value="Submit" wicket:id="submit" name="p::submit" id="submit2"/>
 		</form>	
 	</body>
 </html>

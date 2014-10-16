@@ -2107,13 +2107,18 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		}
 
 		/*
-		 * having input name "submit" causes problems with JavaScript, so we create a unique string
-		 * to replace it by prepending a path separator, as this identification can be assigned to
-		 * an submit form component name
+		 * Certain input names causes problems with JavaScript. If the input name would cause a
+		 * problem, we create a replacement unique name by prefixing the name with a path that
+		 * would otherwise never be used (blank id in path).
+		 *
+		 * Input names must start with [A-Za-z] according to HTML 4.01 spec. HTML 5 allows almost
+		 * anything.
 		 */
-		if ("submit".equals(inputName.toString()))
+		if (JavaScriptReservedNames.isNameReserved(inputName.toString()))
 		{
 			inputName.prepend(Component.PATH_SEPARATOR);
+			inputName.prepend(Component.PATH_SEPARATOR);
+			inputName.prepend("p");
 		}
 		return inputName.toString();
 	}
