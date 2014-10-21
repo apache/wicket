@@ -216,13 +216,6 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 
 	@Override
-	public Border queue(Component... components)
-	{
-		getBodyContainer().queue(components);
-		return this;
-	}
-
-	@Override
 	public Border remove(final Component component)
 	{
 		if (component == body)

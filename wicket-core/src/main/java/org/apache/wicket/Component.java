@@ -397,9 +397,9 @@ public abstract class Component
 	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
 	 * invoked (right before invoking beforeRender on children)
 	 */
-	private static final int FLAG_RENDERING = 0x2000000;
-	private static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
-	private static final int FLAG_AFTER_RENDERING = 0x8000000;
+	protected static final int FLAG_RENDERING = 0x2000000;
+	protected static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
+	protected static final int FLAG_AFTER_RENDERING = 0x8000000;
 
 	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a

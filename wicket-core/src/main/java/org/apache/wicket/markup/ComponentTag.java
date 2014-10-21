@@ -92,6 +92,12 @@ public class ComponentTag extends MarkupElement
 
 	/** Render the tag as RawMarkup even if no Component can be found */
 	public final static int RENDER_RAW = 0x0020;
+	
+	/** 
+	 * If true, the component is the parent (or the ancestor) of Wicket component explicitly added.
+	 * (i.e. it contains child tag with a "wicket:id" attribute)
+	 *  */
+    public final static int CONTAINS_WICKET_ID = 0x0040;
 
 	/** If close tag, than reference to the corresponding open tag */
 	private ComponentTag openTag;
@@ -827,7 +833,22 @@ public class ComponentTag extends MarkupElement
 	{
 		setFlag(NO_CLOSE_TAG, hasNoCloseTag);
 	}
+	
+	/**
+     * True if the HTML tag (e.g. br) has no close tag
+     * 
+     * @param hasNoCloseTag
+     */
+    public void setContainsWicketId(boolean containsWicketId)
+    {
+        setFlag(CONTAINS_WICKET_ID, containsWicketId);
+    }
 
+    public boolean containsWicketId()
+    {
+        return getFlag(CONTAINS_WICKET_ID);
+    }
+    
 	/**
 	 * In case of inherited markup, the base and the extended markups are merged and the information
 	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this

@@ -33,6 +33,7 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -155,7 +156,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 			ComponentTag lastEnclosure = stack.getLast();
 
 			// If the enclosure tag has NO child attribute, then ...
-			if (lastEnclosure.getAttribute(CHILD_ATTRIBUTE) == null)
+			if (Strings.isEmpty(lastEnclosure.getAttribute(CHILD_ATTRIBUTE)))
 			{
 				String id = tag.getAttribute(getWicketNamespace() + ":id");
 				if (id != null)
@@ -186,8 +187,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
 		{
 			// Yes, we handled the tag
-			return new Enclosure(tag.getId() + container.getPage().getAutoIndex(),
-				tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
+			return new Enclosure(tag.getId(), tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
 		}
 
 		// We were not able to handle the tag
