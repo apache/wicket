@@ -497,7 +497,7 @@ public abstract class AbstractAjaxResponse
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final transient AbstractAjaxResponse ajaxResponse;
+		private transient AbstractAjaxResponse ajaxResponse;
 
 		/**
 		 * Constructor.
@@ -518,7 +518,19 @@ public abstract class AbstractAjaxResponse
 		@Override
 		protected IHeaderResponse newHeaderResponse()
 		{
-			return ajaxResponse.getHeaderResponse();
+		    if (ajaxResponse != null)
+            {
+		        return ajaxResponse.getHeaderResponse();
+            }
+		    
+		    return super.newHeaderResponse();
+		}
+		
+		@Override
+		protected void onDetach()
+		{
+		    super.onDetach();
+		    ajaxResponse = null;
 		}
 	}
 
