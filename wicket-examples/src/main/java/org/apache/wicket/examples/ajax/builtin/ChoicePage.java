@@ -25,8 +25,10 @@ import java.util.Map;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -106,6 +108,21 @@ public class ChoicePage extends BasePage
 
 		form.add(makes);
 		form.add(models);
+
+		final FeedbackPanel feedback = new FeedbackPanel("feedback");
+		feedback.setOutputMarkupId(true);
+		add(feedback);
+
+		form.add(new AjaxButton("go")
+		{
+			@Override
+			protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				super.onAfterSubmit(target, form);
+				info("You have selected: " + makes.getModelObject() + " " + models.getModelObject());
+				target.add(feedback);
+			}
+		});
 
 		makes.add(new AjaxFormComponentUpdatingBehavior("change")
 		{
