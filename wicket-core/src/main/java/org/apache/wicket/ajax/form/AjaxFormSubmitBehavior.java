@@ -148,6 +148,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			String submittingComponentName = ((IFormSubmittingComponent)getComponent()).getInputName();
 			attributes.setSubmittingComponentName(submittingComponentName);
 		}
+		
+		attributes.setPreventDefault(true);
 	}
 
 	/**
