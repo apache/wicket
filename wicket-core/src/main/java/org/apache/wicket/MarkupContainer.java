@@ -954,13 +954,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// if we are already dequeueing there is no need to dequeue again
 			if (!queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
-			    /**
-			     * Also auto component are queued. 
-			     * 
-		         * https://issues.apache.org/jira/browse/WICKET-5724
-		         */
+				/*
+				 * dequeue both normal and auto components
+				 *
+				 * https://issues.apache.org/jira/browse/WICKET-5724
+				 */
 				queueRegion.dequeue();
-
 			}
 		}
 
