@@ -101,13 +101,13 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	};
 	
 	private static final IAutoComponentFactory FACTORY = new IAutoComponentFactory()
-    {
-        @Override
-        public Component newComponent(MarkupContainer container, ComponentTag tag)
-        {
-            return new TransparentWebMarkupContainer(tag.getId());
-        }
-    };
+	{
+		@Override
+		public Component newComponent(MarkupContainer container, ComponentTag tag)
+		{
+			return new TransparentWebMarkupContainer(tag.getId());
+		}
+	};
 
 	
 	/** 
@@ -163,9 +163,9 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				if (tag.getId() == null)
 				{
-					tag.setId(getWicketRelativePathPrefix(null) 
+					tag.setId(getWicketRelativePathPrefix(null)
 						+ componentIndex.getAndIncrement());
-					tag.setAutoComponentTag(true);					
+					tag.setAutoComponentTag(true);
 				}
 
 				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
@@ -195,32 +195,31 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	@Override
 	public void postProcess(Markup markup)
 	{
-	    /**
-         * https://issues.apache.org/jira/browse/WICKET-5724
-         * 
-         * Transparent component inside page body must allow 
-         * queued children components.
-         */
-	    Iterator<MarkupElement> markupIterator = markup.iterator();
-	    while (markupIterator.hasNext())
-        {
-            MarkupElement next = markupIterator.next();
-            
-            if(next instanceof ComponentTag)
-            {
-                ComponentTag componentTag = (ComponentTag)next;
-                
-                /**
-                 * if component tag is for a transparent component
-                 * and contains "wicket:id", must be queueable.
-                 */
-                if (componentTag.containsWicketId() && 
-                    componentTag.getId().startsWith(getWicketRelativePathPrefix(null)))
-                {                        
-                    componentTag.setAutoComponentFactory(FACTORY);
-                }
-            }            
-        }
+		/**
+		 * https://issues.apache.org/jira/browse/WICKET-5724
+		 * 
+		 * Transparent component inside page body must allow queued children components.
+		 */
+		Iterator<MarkupElement> markupIterator = markup.iterator();
+		while (markupIterator.hasNext())
+		{
+			MarkupElement next = markupIterator.next();
+
+			if (next instanceof ComponentTag)
+			{
+				ComponentTag componentTag = (ComponentTag)next;
+
+				/**
+				 * if component tag is for a transparent component and contains "wicket:id", must be
+				 * queueable.
+				 */
+				if (componentTag.containsWicketId()
+					&& componentTag.getId().startsWith(getWicketRelativePathPrefix(null)))
+				{
+					componentTag.setAutoComponentFactory(FACTORY);
+				}
+			}
+		}
 	}
 	
 	private String getWicketRelativePathPrefix(final MarkupStream markupStream)

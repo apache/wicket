@@ -93,11 +93,8 @@ public class ComponentTag extends MarkupElement
 	/** Render the tag as RawMarkup even if no Component can be found */
 	public final static int RENDER_RAW = 0x0020;
 	
-	/** 
-	 * If true, the component is the parent (or the ancestor) of Wicket component explicitly added.
-	 * (i.e. it contains child tag with a "wicket:id" attribute)
-	 *  */
-    public final static int CONTAINS_WICKET_ID = 0x0040;
+	/** If true, the current tag contains a child or a descendant with the "wicket:id" attribute */
+	public final static int CONTAINS_WICKET_ID = 0x0040;
 
 	/** If close tag, than reference to the corresponding open tag */
 	private ComponentTag openTag;
@@ -835,14 +832,14 @@ public class ComponentTag extends MarkupElement
 	}
 	
 	/**
-     * True if the HTML tag (e.g. br) has no close tag
-     * 
-     * @param hasNoCloseTag
-     */
-    public void setContainsWicketId(boolean containsWicketId)
-    {
-        setFlag(CONTAINS_WICKET_ID, containsWicketId);
-    }
+	 * True if the HTML tag (e.g. br) has no close tag
+	 *
+	 * @param containsWicketId
+	 */
+	public void setContainsWicketId(boolean containsWicketId)
+	{
+		setFlag(CONTAINS_WICKET_ID, containsWicketId);
+	}
 
     public boolean containsWicketId()
     {

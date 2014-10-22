@@ -177,19 +177,19 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	 * @param tag
 	 */
 	private void setContainsWicketIdFlag(ComponentTag tag)
-    {
-	  //check if it is a wicket:id component
-      String wicketIdAttr = getWicketNamespace() + ":" + "id";
-      boolean hasWicketId = tag.getAttributes().get(wicketIdAttr) != null;
-      
-      if (hasWicketId)
-      {
-          for (ComponentTag componentTag : stack)
-          {
-              componentTag.setContainsWicketId(hasWicketId);
-          }
-      }
-    }
+	{
+		// check if it is a wicket:id component
+		String wicketIdAttr = getWicketNamespace() + ":" + "id";
+		boolean hasWicketId = tag.getAttributes().get(wicketIdAttr) != null;
+
+		if (hasWicketId)
+		{
+			for (ComponentTag componentTag : stack)
+			{
+				componentTag.setContainsWicketId(hasWicketId);
+			}
+		}
+	}
 
     /**
 	 * Gets whether this tag does not require a closing tag.

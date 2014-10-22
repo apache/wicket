@@ -279,7 +279,7 @@ public final class DequeueContext
     }
 
     /**
-     * Searches the container stack for a component that can be dequeued
+	 * Searches the container stack for a component that can be dequeude
      * 
      * @param tag
      * @return
