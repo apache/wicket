@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.markup.IMarkupFragment;
+
 
 /**
  * Demarcates components that act as a root can dequeue children. These are usually components with
@@ -31,6 +33,12 @@ package org.apache.wicket;
  */
 public interface IQueueRegion
 {
+	/** 
+	 * TODO: this interface might be a perfect candidate for Java 8 interface default methods.
+	 *  Now methods implementation is in MarkupContainer while it should simply be in those
+	 *  class which implement this interface.
+	 * */
+	
 	/**
 	 * Creates a new {@link DequeueContext} that will be used to dequeue children of this region.
 	 * 
@@ -48,4 +56,12 @@ public interface IQueueRegion
 	 * actual dequeueing. The context's markup is retrieved using the {@link MarkupContainer#getAssociatedMarkup()}.
 	 */
 	public void dequeue();
+	
+	/**
+	 * Returns the markup to use for queuing. Normally, this is the markup of the component 
+	 * implementing this interface.
+	 * 
+	 * @return the markup to use for queuing
+	 */
+	public IMarkupFragment getRegionMarkup();
 }

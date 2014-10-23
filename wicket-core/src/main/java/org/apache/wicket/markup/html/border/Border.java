@@ -29,6 +29,7 @@ import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.MarkupUtil;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.BorderMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -607,5 +608,26 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		// components queued in border get dequeued into the border not into the body container
 		addToBorder(component);
+	}
+	
+	/**
+	 * Returns the markup inside &lt;wicket:border&gt; tag.
+	 * If such tag is not found, all the markup is returned.
+	 * 
+	 * @see IQueueRegion#getRegionMarkup() 
+	 */
+	@Override
+	public IMarkupFragment getRegionMarkup()
+	{
+		IMarkupFragment markup = super.getRegionMarkup();
+		
+		if (markup == null)
+		{
+			return markup;
+		}
+		
+		IMarkupFragment panelMarkup = MarkupUtil.findStartTag(markup, BORDER);
+		
+		return panelMarkup != null ? panelMarkup : markup;
 	}
 }

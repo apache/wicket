@@ -19,8 +19,11 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupResourceStream;
+import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -70,5 +73,39 @@ public class MarkupUtil
 		});
 
 		return rtn[0];
+	}
+	
+	/**
+	 * Searches for {@code tagName} in the given {@code markup}.
+	 * 
+	 * @param markup
+	 * @param tagName
+	 * @return The {@link IMarkupFragment} corresponding to {@code tagName}. Null, if such {@code tagName} is not found
+	 */
+	public static IMarkupFragment findStartTag(final IMarkupFragment markup, final String tagName)
+	{
+		MarkupStream stream = new MarkupStream(markup);
+
+		while (stream.skipUntil(ComponentTag.class))
+		{
+			ComponentTag tag = stream.getTag();
+			if (tag.isOpen() || tag.isOpenClose())
+			{
+				if (tag instanceof WicketTag)
+				{
+					WicketTag wtag = (WicketTag)tag;
+					if (tagName.equalsIgnoreCase(wtag.getName()))
+					{
+						return stream.getMarkupFragment();
+					}
+				}
+
+				stream.skipToMatchingCloseTag(tag);
+			}
+
+			stream.next();
+		}
+
+		return null;
 	}
 }

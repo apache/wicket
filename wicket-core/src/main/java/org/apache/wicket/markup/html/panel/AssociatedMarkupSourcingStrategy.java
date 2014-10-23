@@ -28,6 +28,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.HeaderPartContainer;
+import org.apache.wicket.markup.html.MarkupUtil;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.lang.Args;
@@ -99,7 +100,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		}
 
 		// Find <wicket:panel>
-		IMarkupFragment markup = findStartTag(associatedMarkup);
+		IMarkupFragment markup = MarkupUtil.findStartTag(associatedMarkup, tagName);
 		if (markup == null)
 		{
 			throw new MarkupNotFoundException("Expected to find <wicket:" + tagName +
@@ -126,39 +127,6 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		}
 
 		return findMarkupInAssociatedFileHeader(parent, child);
-	}
-
-	/**
-	 * Search for &lt;wicket:panel ...&gt; on the same level.
-	 * 
-	 * @param markup
-	 * @return null, if not found
-	 */
-	private IMarkupFragment findStartTag(final IMarkupFragment markup)
-	{
-		MarkupStream stream = new MarkupStream(markup);
-
-		while (stream.skipUntil(ComponentTag.class))
-		{
-			ComponentTag tag = stream.getTag();
-			if (tag.isOpen() || tag.isOpenClose())
-			{
-				if (tag instanceof WicketTag)
-				{
-					WicketTag wtag = (WicketTag)tag;
-					if (tagName.equalsIgnoreCase(wtag.getName()))
-					{
-						return stream.getMarkupFragment();
-					}
-				}
-
-				stream.skipToMatchingCloseTag(tag);
-			}
-
-			stream.next();
-		}
-
-		return null;
 	}
 
 	/**

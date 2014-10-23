@@ -2112,7 +2112,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
     /** @see IQueueRegion#newDequeueContext() */
 	public DequeueContext newDequeueContext()
 	{
-		IMarkupFragment markup = getAssociatedMarkup();
+		IMarkupFragment markup = getRegionMarkup();
 
 		if (markup == null)
 		{
@@ -2120,6 +2120,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 		return new DequeueContext(markup, this, false);
+	}
+
+	/** @see IQueueRegion#getRegionMarkup() */
+	public IMarkupFragment getRegionMarkup()
+	{
+		return getAssociatedMarkup();
 	}
 
 	/**
