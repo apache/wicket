@@ -34,9 +34,10 @@ import org.apache.wicket.markup.IMarkupFragment;
 public interface IQueueRegion
 {
 	/** 
-	 * TODO: this interface might be a perfect candidate for Java 8 interface default methods.
-	 *  Now methods implementation is in MarkupContainer while it should simply be in those
-	 *  class which implement this interface.
+	 * TODO Wicket 8: this interface might be a perfect candidate for Java 8 interface default methods.
+	 * Now methods implementation is in MarkupContainer while it should simply be in those
+	 * classes which implement this interface.
+	 * 
 	 * */
 	
 	/**

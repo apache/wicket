@@ -86,18 +86,15 @@ public class MarkupUtil
 	{
 		MarkupStream stream = new MarkupStream(markup);
 
-		while (stream.skipUntil(ComponentTag.class))
+		while (stream.skipUntil(WicketTag.class))
 		{
 			ComponentTag tag = stream.getTag();
 			if (tag.isOpen() || tag.isOpenClose())
 			{
-				if (tag instanceof WicketTag)
+				WicketTag wtag = (WicketTag)tag;
+				if (tagName.equalsIgnoreCase(wtag.getName()))
 				{
-					WicketTag wtag = (WicketTag)tag;
-					if (tagName.equalsIgnoreCase(wtag.getName()))
-					{
-						return stream.getMarkupFragment();
-					}
+					return stream.getMarkupFragment();
 				}
 
 				stream.skipToMatchingCloseTag(tag);

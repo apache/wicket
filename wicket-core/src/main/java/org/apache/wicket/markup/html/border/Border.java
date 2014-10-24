@@ -626,8 +626,8 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			return markup;
 		}
 		
-		IMarkupFragment panelMarkup = MarkupUtil.findStartTag(markup, BORDER);
+		IMarkupFragment borderMarkup = MarkupUtil.findStartTag(markup, BORDER);
 		
-		return panelMarkup != null ? panelMarkup : markup;
+		return borderMarkup != null ? borderMarkup : markup;
 	}
 }
