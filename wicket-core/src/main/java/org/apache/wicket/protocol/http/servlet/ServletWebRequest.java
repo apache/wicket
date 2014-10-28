@@ -410,7 +410,8 @@ public class ServletWebRequest extends WebRequest
 	/**
 	 * Creates multipart web request from this request.
 	 * 
-	 * @param maxSize
+	 * @param maxSize max allowed size of request
+	 * @param fileMaxSize max allowed size of each file in request
 	 * @param upload
 	 *            upload identifier for {@link UploadInfo}
 	 * @return multipart request
@@ -425,8 +426,9 @@ public class ServletWebRequest extends WebRequest
 
 	/**
 	 * Creates multipart web request from this request.
-	 * 
-	 * @param maxSize
+	 *
+	 * @param maxSize max allowed size of request
+	 * @param fileMaxSize max allowed size of each file in request
 	 * @param upload
 	 *            upload identifier for {@link UploadInfo}
 	 * @param factory

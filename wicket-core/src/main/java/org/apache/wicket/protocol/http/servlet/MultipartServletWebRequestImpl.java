@@ -87,6 +87,30 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
+		Bytes maxSize, String upload) throws FileUploadException
+	{
+		this(request, filterPrefix, maxSize, null, upload);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * This constructor will use {@link DiskFileItemFactory} to store uploads.
+	 *
+	 * @param request
+	 *            the servlet request
+	 * @param filterPrefix
+	 *            prefix to wicket filter mapping
+	 * @param maxSize
+	 *            the maximum size allowed for this request
+	 * @param fileMaxSize
+	 *            the maximum size allowed for each uploaded file for this request
+	 * @param upload
+	 *            upload identifier for {@link UploadInfo}
+	 * @throws FileUploadException
+	 *             Thrown if something goes wrong with upload
+	 */
+	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
 		Bytes maxSize, Bytes fileMaxSize, String upload) throws FileUploadException
 	{
 		this(request, filterPrefix, maxSize, fileMaxSize, upload, new DiskFileItemFactory()
@@ -111,6 +135,31 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *            prefix to wicket filter mapping
 	 * @param maxSize
 	 *            the maximum size allowed for this request
+	 * @param upload
+	 *            upload identifier for {@link UploadInfo}
+	 * @param factory
+	 *            {@link DiskFileItemFactory} to use when creating file items used to represent
+	 *            uploaded files
+	 * @throws FileUploadException
+	 *             Thrown if something goes wrong with upload
+	 */
+	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
+		Bytes maxSize, String upload, FileItemFactory factory) throws FileUploadException
+	{
+		this(request, filterPrefix, maxSize, null, upload, factory);
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param request
+	 *            the servlet request
+	 * @param filterPrefix
+	 *            prefix to wicket filter mapping
+	 * @param maxSize
+	 *            the maximum size allowed for this request
+	 * @param fileMaxSize
+	 *            the maximum size allowed for each uploaded file for this request
 	 * @param upload
 	 *            upload identifier for {@link UploadInfo}
 	 * @param factory
