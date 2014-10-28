@@ -16,21 +16,6 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.protocol.http.RequestUtils;
@@ -48,6 +33,12 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * {@link WebRequest} subclass that wraps a {@link HttpServletRequest} object.
@@ -425,11 +416,11 @@ public class ServletWebRequest extends WebRequest
 	 * @return multipart request
 	 * @throws FileUploadException
 	 */
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, Bytes fileMaxSize, String upload)
 		throws FileUploadException
 	{
 		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize,
-			upload);
+			fileMaxSize, upload);
 	}
 
 	/**
@@ -442,11 +433,11 @@ public class ServletWebRequest extends WebRequest
 	 * @return multipart request
 	 * @throws FileUploadException
 	 */
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload,
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, Bytes fileMaxSize, String upload,
 		FileItemFactory factory) throws FileUploadException
 	{
 		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize,
-			upload, factory);
+			fileMaxSize, upload, factory);
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ServletWebRequest.class);

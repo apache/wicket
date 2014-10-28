@@ -16,16 +16,6 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -42,6 +32,15 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.value.ValueMap;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -88,9 +87,9 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-		Bytes maxSize, String upload) throws FileUploadException
+		Bytes maxSize, Bytes fileMaxSize, String upload) throws FileUploadException
 	{
-		this(request, filterPrefix, maxSize, upload, new DiskFileItemFactory()
+		this(request, filterPrefix, maxSize, fileMaxSize, upload, new DiskFileItemFactory()
 		{
 			@Override
 			public FileCleaningTracker getFileCleaningTracker()
@@ -121,7 +120,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-		Bytes maxSize, String upload, FileItemFactory factory) throws FileUploadException
+		Bytes maxSize, Bytes fileMaxSize, String upload, FileItemFactory factory) throws FileUploadException
 	{
 		super(request, filterPrefix);
 
@@ -139,31 +138,23 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 				"ServletRequest does not contain multipart content. One possible solution is to explicitly call Form.setMultipart(true), Wicket tries its best to auto-detect multipart forms but there are certain situation where it cannot.");
 		}
 
-		// Configure the factory here, if desired.
-		ServletFileUpload fileUpload = new ServletFileUpload(factory);
+        // The encoding that will be used to decode the string parameters
+        // It should NOT be null at this point, but it may be
+        // especially if the older Servlet API 2.2 is used
+        String encoding = request.getCharacterEncoding();
 
-		// The encoding that will be used to decode the string parameters
-		// It should NOT be null at this point, but it may be
-		// especially if the older Servlet API 2.2 is used
-		String encoding = request.getCharacterEncoding();
+        // The encoding can also be null when using multipart/form-data encoded forms.
+        // In that case we use the [application-encoding] which we always demand using
+        // the attribute 'accept-encoding' in wicket forms.
+        if (encoding == null)
+        {
+            encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
+        }
 
-		// The encoding can also be null when using multipart/form-data encoded forms.
-		// In that case we use the [application-encoding] which we always demand using
-		// the attribute 'accept-encoding' in wicket forms.
-		if (encoding == null)
-		{
-			encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
-		}
+        FileUploadBase fileUpload = newFileUpload(maxSize, fileMaxSize, factory, encoding);
 
-		// set encoding specifically when we found it
-		if (encoding != null)
-		{
-			fileUpload.setHeaderEncoding(encoding);
-		}
 
-		fileUpload.setSizeMax(maxSize.bytes());
-
-		final List<FileItem> items;
+        final List<FileItem> items;
 
 		if (wantUploadProgressUpdates())
 		{
@@ -233,7 +224,24 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		}
 	}
 
-	/**
+    protected FileUploadBase newFileUpload(Bytes maxSize, Bytes fileMaxSize, FileItemFactory factory, String encoding) {
+        // Configure the factory here, if desired.
+        ServletFileUpload fileUpload = new ServletFileUpload(factory);
+
+        // set encoding specifically when we found it
+        if (encoding != null)
+        {
+            fileUpload.setHeaderEncoding(encoding);
+        }
+
+        fileUpload.setSizeMax(maxSize.bytes());
+        if (fileMaxSize != null) {
+            fileUpload.setFileSizeMax(fileMaxSize.bytes());
+        }
+        return fileUpload;
+    }
+
+    /**
 	 * Adds a parameter to the parameters value map
 	 * 
 	 * @param name
@@ -415,7 +423,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	}
 
 	@Override
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, Bytes maxFileSize, String upload)
 		throws FileUploadException
 	{
 		for (Map.Entry<String, List<FileItem>> entry : files.entrySet())
@@ -423,12 +431,12 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			List<FileItem> fileItems = entry.getValue();
 			for (FileItem fileItem : fileItems)
 			{
-				if (fileItem.getSize() > maxSize.bytes())
+				if (fileItem.getSize() > maxFileSize.bytes())
 				{
 					String fieldName = entry.getKey();
 					FileUploadException fslex = new FileUploadBase.FileSizeLimitExceededException("The field " +
 							fieldName + " exceeds its maximum permitted " + " size of " +
-							maxSize + " characters.", fileItem.getSize(), maxSize.bytes());
+							maxSize + " characters.", fileItem.getSize(), maxFileSize.bytes());
 					throw fslex;
 				}
 			}
@@ -437,7 +445,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	}
 
 	@Override
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload,
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, Bytes fileMaxSize, String upload,
 		FileItemFactory factory) throws FileUploadException
 	{
 		return this;

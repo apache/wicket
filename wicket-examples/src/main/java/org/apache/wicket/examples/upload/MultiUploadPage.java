@@ -125,6 +125,7 @@ public class MultiUploadPage extends WicketExamplePage
 
 			// Set maximum size to 100K for demo purposes
 			setMaxSize(Bytes.kilobytes(100));
+            setFileMaxSize(Bytes.kilobytes(30));
 		}
 
 		/**

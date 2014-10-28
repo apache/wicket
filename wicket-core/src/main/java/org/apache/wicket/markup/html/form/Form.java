@@ -16,16 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
@@ -45,13 +35,7 @@ import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestMapper;
-import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.UrlRenderer;
+import org.apache.wicket.request.*;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.encoding.UrlDecoder;
@@ -69,6 +53,9 @@ import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 
 /**
@@ -254,6 +241,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
 
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
+	private static final String UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY = "uploadSingleFileTooLarge";
 
 	/**
 	 * Any default IFormSubmittingComponent. If set, a hidden submit component will be rendered
@@ -273,6 +261,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * {@link org.apache.wicket.settings.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 */
 	private Bytes maxSize = null;
+
+    /**
+     * Maximum size of file of upload in bytes (if there are more than one) in request.
+     */
+    private Bytes fileMaxSize;
 
 	/** True if the form has enctype of multipart/form-data */
 	private short multiPart = 0;
@@ -574,7 +567,15 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		return maxSize[0];
 	}
 
-	/**
+    /**
+     * Gets maximum size for each file of an upload.
+     * @return
+     */
+    public Bytes getFileMaxSize() {
+        return fileMaxSize;
+    }
+
+    /**
 	 * Returns the root form or this, if this is the root form.
 	 * 
 	 * @return root form or this form
@@ -1041,7 +1042,15 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		this.maxSize = maxSize;
 	}
 
-	/**
+    /**
+     * Sets maximum size of each file in upload request.
+     * @param fileMaxSize
+     */
+    public void setFileMaxSize(Bytes fileMaxSize) {
+        this.fileMaxSize = fileMaxSize;
+    }
+
+    /**
 	 * Set to true to use enctype='multipart/form-data', and to process file uploads by default
 	 * multiPart = false
 	 * 
@@ -1380,7 +1389,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			{
 				ServletWebRequest request = (ServletWebRequest)getRequest();
 				final WebRequest multipartWebRequest = request.newMultipartWebRequest(getMaxSize(),
-					getPage().getId());
+					fileMaxSize, getPage().getId());
 				// TODO: Can't this be detected from header?
 				getRequestCycle().setRequest(multipartWebRequest);
 			}
@@ -1418,10 +1427,15 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 		}
-		else
-		{
-			String msg = getString(UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model));
-			error(msg);
+        else if (e instanceof FileUploadBase.FileSizeLimitExceededException)
+        {
+            String msg = getString(UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
+            error(msg);
+        }
+        else
+        {
+            String msg = getString(UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model));
+            error(msg);
 
 			log.warn(msg, e);
 		}
