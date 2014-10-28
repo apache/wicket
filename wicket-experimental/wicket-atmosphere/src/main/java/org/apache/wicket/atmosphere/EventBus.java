@@ -444,7 +444,8 @@ public class EventBus implements UnboundListener
 		{
 			key = trackedPages.get(resource.uuid());
 			Collection<EventSubscription> eventSubscriptions = subscriptions.get(key);
-			subscriptionsForPage = Iterables.filter(eventSubscriptions, new EventFilter(event));
+			subscriptionsForPage = Iterables.filter(ImmutableList.copyOf(eventSubscriptions),
+					new EventFilter(event));
 		}
 		if (key == null)
 			getBroadcaster().removeAtmosphereResource(resource);
