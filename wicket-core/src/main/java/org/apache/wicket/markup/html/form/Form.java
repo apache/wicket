@@ -44,6 +44,7 @@ import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
@@ -52,7 +53,6 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
@@ -254,6 +254,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
 
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
+	private static final String UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY = "uploadSingleFileTooLarge";
 
 	/**
 	 * Any default IFormSubmittingComponent. If set, a hidden submit component will be rendered
@@ -273,6 +274,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * {@link org.apache.wicket.settings.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 */
 	private Bytes maxSize = null;
+
+	/**
+	 * Maximum size of file of upload in bytes (if there are more than one) in request.
+	 */
+	private Bytes fileMaxSize;
 
 	/** True if the form has enctype of multipart/form-data */
 	private short multiPart = 0;
@@ -572,6 +578,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			return getApplication().getApplicationSettings().getDefaultMaximumUploadSize();
 		}
 		return maxSize[0];
+	}
+
+	/**
+	 * Gets maximum size for each file of an upload.
+	 * @return
+	 */
+	public Bytes getFileMaxSize() {
+		return fileMaxSize;
 	}
 
 	/**
@@ -1036,9 +1050,17 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * @param maxSize
 	 *            The maximum size
 	 */
-	public final void setMaxSize(final Bytes maxSize)
+	public void setMaxSize(final Bytes maxSize)
 	{
 		this.maxSize = maxSize;
+	}
+
+	/**
+	 * Sets maximum size of each file in upload request.
+	 * @param fileMaxSize
+	 */
+	public void setFileMaxSize(Bytes fileMaxSize) {
+		this.fileMaxSize = fileMaxSize;
 	}
 
 	/**
@@ -1379,8 +1401,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			try
 			{
 				ServletWebRequest request = (ServletWebRequest)getRequest();
-				final WebRequest multipartWebRequest = request.newMultipartWebRequest(getMaxSize(),
-					getPage().getId());
+				final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(getMaxSize(), getPage().getId());
+				multipartWebRequest.setFileMaxSize(getFileMaxSize());
+				multipartWebRequest.parseFileParts();
+
 				// TODO: Can't this be detected from header?
 				getRequestCycle().setRequest(multipartWebRequest);
 			}
@@ -1390,6 +1414,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 				final Map<String, Object> model = new HashMap<>();
 				model.put("exception", fux);
 				model.put("maxSize", getMaxSize());
+				model.put("fileMaxSize", getFileMaxSize());
 
 				onFileUploadException(fux, model);
 
@@ -1416,6 +1441,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		if (e instanceof FileUploadBase.SizeLimitExceededException)
 		{
 			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
+			error(msg);
+		}
+		else if (e instanceof FileUploadBase.FileSizeLimitExceededException)
+		{
+			String msg = getString(UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 		}
 		else

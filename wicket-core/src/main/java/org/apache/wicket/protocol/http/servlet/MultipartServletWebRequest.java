@@ -22,9 +22,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Servlet specific WebRequest subclass for multipart content uploads.
@@ -35,6 +38,15 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 	implements
 		IMultipartWebRequest
 {
+	/**
+	 *  Maximum size of all uploaded files in bytes in a request.
+	 */
+	private Bytes maxSize;
+
+	/**
+	 *  Maximum size of file of upload in bytes (if there are more than one) in a request.
+	 */
+	private Bytes fileMaxSize;
 
 	/**
 	 * Construct.
@@ -60,11 +72,25 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 		super(httpServletRequest, filterPrefix, url);
 	}
 
+	/**
+	 * Parses the multipart body of the request.
+	 *
+	 * @throws FileUploadException
+	 * @since 6.18.0
+	 */
+	public abstract void parseFileParts() throws FileUploadException;
+
 	@Override
 	public ServletWebRequest cloneWithUrl(Url url)
 	{
 		return new MultipartServletWebRequest(getContainerRequest(), getFilterPrefix(), url)
 		{
+			@Override
+			public void parseFileParts() throws FileUploadException
+			{
+				MultipartServletWebRequest.this.parseFileParts();
+			}
+
 			@Override
 			public List<FileItem> getFile(String fieldName)
 			{
@@ -83,5 +109,26 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 				return MultipartServletWebRequest.this.getPostParameters();
 			}
 		};
+	}
+
+	public Bytes getMaxSize()
+	{
+		return maxSize;
+	}
+
+	public void setMaxSize(Bytes maxSize)
+	{
+		Args.notNull(maxSize, "maxSize");
+		this.maxSize = maxSize;
+	}
+
+	public Bytes getFileMaxSize()
+	{
+		return fileMaxSize;
+	}
+
+	public void setFileMaxSize(Bytes fileMaxSize)
+	{
+		this.fileMaxSize = fileMaxSize;
 	}
 }
