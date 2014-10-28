@@ -31,6 +31,7 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.ws.IWebSocketSettings;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
@@ -53,6 +54,7 @@ import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
@@ -98,6 +100,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	private final Url baseUrl;
 	private final WebApplication application;
 	private final String sessionId;
+	private final IWebSocketSettings webSocketSettings;
 	private final IWebSocketConnectionRegistry connectionRegistry;
 
 	/**
@@ -135,7 +138,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request), getFilterPath(wicketFilter));
 
 		this.application = Args.notNull(application, "application");
-		IWebSocketSettings webSocketSettings = IWebSocketSettings.Holder.get(application);
+		this.webSocketSettings = IWebSocketSettings.Holder.get(application);
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 	}
 
@@ -213,7 +216,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			Session oldSession = ThreadContext.getSession();
 			RequestCycle oldRequestCycle = ThreadContext.getRequestCycle();
 
-			WebSocketResponse webResponse = new WebSocketResponse(connection);
+			WebResponse webResponse = createWebSocketResponse(connection);
+
 			try
 			{
 				WebSocketRequestMapper requestMapper = new WebSocketRequestMapper(application.getRootRequestMapper());
@@ -274,7 +278,21 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 	}
 
-	private RequestCycle createRequestCycle(WebSocketRequestMapper requestMapper, WebSocketResponse webResponse)
+	private WebResponse createWebSocketResponse(IWebSocketConnection connection)
+	{
+		WebResponse webResponse;
+		if (webSocketSettings instanceof WebSocketSettings)
+		{
+			webResponse = ((WebSocketSettings)webSocketSettings).newWebSocketResponse(connection);
+		}
+		else
+		{
+			webResponse = new WebSocketResponse(connection);
+		}
+		return webResponse;
+	}
+
+	private RequestCycle createRequestCycle(WebSocketRequestMapper requestMapper, WebResponse webResponse)
 	{
 		RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
 				requestMapper, application.getExceptionMapperProvider().get());
