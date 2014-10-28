@@ -190,7 +190,11 @@ public class WebSocketResponse extends WebResponse
 	@Override
 	public void sendError(int sc, String msg)
 	{
-		throw new UnsupportedOperationException();
+		LOG.warn("An HTTP error response in WebSocket communication would not be processed by the browser! " +
+				"If you need to send the error code and message to the client then configure custom WebSocketResponse " +
+				"via WebSocketSettings#newWebSocketResponse() factory method and override #sendError() method to write " +
+				"them in an appropriate format for your application. " +
+				"The ignored error code is '{}' and the message: '{}'.", sc, msg);
 	}
 
 	@Override

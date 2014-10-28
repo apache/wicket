@@ -20,9 +20,12 @@ import java.util.concurrent.Callable;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.SimpleWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -148,6 +151,19 @@ public class WebSocketSettings
 	public Executor getSendPayloadExecutor()
 	{
 		return sendPayloadExecutor;
+	}
+
+	/**
+	 * A factory method for the {@link org.apache.wicket.request.http.WebResponse}
+	 * that should be used to write the response back to the client/browser
+	 *
+	 * @param connection
+	 *              The active web socket connection
+	 * @return the response object that should be used to write the response back to the client
+	 */
+	public WebResponse newWebSocketResponse(IWebSocketConnection connection)
+	{
+		return new WebSocketResponse(connection);
 	}
 
 	/**
