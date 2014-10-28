@@ -427,6 +427,7 @@ public class ServletWebRequest extends WebRequest
 	 * Creates multipart web request from this request.
 	 * 
 	 * @param maxSize
+	 *            max allowed size of request
 	 * @param upload
 	 *            upload identifier for {@link UploadInfo}
 	 * @return multipart request
@@ -435,14 +436,14 @@ public class ServletWebRequest extends WebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
 		throws FileUploadException
 	{
-		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize,
-			upload);
+		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize, upload);
 	}
 
 	/**
 	 * Creates multipart web request from this request.
-	 * 
+	 *
 	 * @param maxSize
+	 *            max allowed size of request
 	 * @param upload
 	 *            upload identifier for {@link UploadInfo}
 	 * @param factory
@@ -452,11 +453,8 @@ public class ServletWebRequest extends WebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload,
 		FileItemFactory factory) throws FileUploadException
 	{
-		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize,
-			upload, factory);
+		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize, upload, factory);
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ServletWebRequest.class);
 
 	@Override
 	public String getPrefixToContextPath()
