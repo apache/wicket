@@ -36,6 +36,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -204,10 +205,17 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	{
 		if (handler != null)
 		{
+			String handlerClassName = Classes.name(handler.getClass());
+
 			if (handler instanceof BufferedResponseRequestHandler)
 			{
-				// we do not care about pages that are being rendered from a
-				// buffer
+				// we do not care about pages that are being rendered from a buffer
+				return false;
+			} else if ("org.apache.wicket.protocol.ws.api.WebSocketRequestHandler".equals(handlerClassName)) {
+				// injection is not supported in web sockets communication
+				return false;
+			} else if ("org.apache.wicket.atmosphere.AtmosphereRequestHandler".equals(handlerClassName)) {
+				// injection is not supported in web sockets communication
 				return false;
 			}
 		}
