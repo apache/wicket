@@ -209,7 +209,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				IPageManager pageManager = session.getPageManager();
 				Page page = getPage(pageManager);
 
-				WebSocketRequestHandler requestHandler = new WebSocketRequestHandler(page, connection);
+				WebSocketRequestHandler requestHandler = webSocketSettings.newWebSocketRequestHandler(page, connection);
 
 				WebSocketPayload payload = createEventPayload(message, requestHandler);
 

@@ -20,7 +20,9 @@ import java.util.concurrent.Callable;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.SimpleWebSocketConnectionRegistry;
@@ -164,6 +166,22 @@ public class WebSocketSettings
 	public WebResponse newWebSocketResponse(IWebSocketConnection connection)
 	{
 		return new WebSocketResponse(connection);
+	}
+
+	/**
+	 * A factory method for creating instances of {@link org.apache.wicket.protocol.ws.api.WebSocketRequestHandler}
+	 * for processing a web socket request
+	 *
+	 * @param page
+	 *          The page with the web socket client. A dummy page in case of usage of
+	 *          {@link org.apache.wicket.protocol.ws.api.WebSocketResource}
+	 * @param connection
+	 *          The active web socket connection
+	 * @return a new instance of WebSocketRequestHandler for processing a web socket request
+	 */
+	public WebSocketRequestHandler newWebSocketRequestHandler(Page page, IWebSocketConnection connection)
+	{
+		return new WebSocketRequestHandler(page, connection);
 	}
 
 	/**
