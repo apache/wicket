@@ -74,6 +74,16 @@ public class PageAccessSynchronizer implements Serializable
 	}
 
 	/**
+	 * @param pageId
+	 *            the id of the page to be locked
+	 * @return the duration for acquiring a page lock
+	 */
+	public Duration getTimeout(int pageId)
+	{
+		return timeout;
+	}
+
+	/**
 	 * Acquire a lock to a page
 	 * 
 	 * @param pageId
@@ -92,6 +102,8 @@ public class PageAccessSynchronizer implements Serializable
 		final boolean isDebugEnabled = logger.isDebugEnabled();
 
 		PageLock previous = null;
+
+		Duration timeout = getTimeout(pageId);
 
 		while (!locked && start.elapsedSince().lessThan(timeout))
 		{
