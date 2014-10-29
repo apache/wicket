@@ -211,6 +211,9 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			{
 				// we do not care about pages that are being rendered from a buffer
 				return false;
+			} else if ("org.apache.wicket.protocol.ws.api.WebSocketMessageBroadcastHandler".equals(handlerClassName))
+			{
+				return false;
 			} else if ("org.apache.wicket.protocol.ws.api.WebSocketRequestHandler".equals(handlerClassName)) {
 				// injection is not supported in web sockets communication
 				return false;
