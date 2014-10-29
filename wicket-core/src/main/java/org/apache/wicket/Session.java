@@ -916,8 +916,19 @@ public abstract class Session implements IClusterable, IEventSink
 	{
 	}
 
-	private static final class PageAccessSynchronizerProvider extends
-		LazyInitializer<PageAccessSynchronizer>
+	/**
+	 * Factory method for PageAccessSynchronizer instances
+	 *
+	 * @param timeout
+	 *              The configured timeout. See {@link org.apache.wicket.settings.RequestCycleSettings#getTimeout()}
+	 * @return A new instance of PageAccessSynchronizer
+	 */
+	protected PageAccessSynchronizer newPageAccessSynchronizer(Duration timeout)
+	{
+		return new PageAccessSynchronizer(timeout);
+	}
+
+	private final class PageAccessSynchronizerProvider extends LazyInitializer<PageAccessSynchronizer>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -936,7 +947,7 @@ public abstract class Session implements IClusterable, IEventSink
 					"PageAccessSynchronizer created outside of application thread, using default timeout: {}",
 					timeout);
 			}
-			return new PageAccessSynchronizer(timeout);
+			return newPageAccessSynchronizer(timeout);
 		}
 	}
 
