@@ -179,9 +179,7 @@ public class AjaxFormValidatingBehavior extends Behavior
 							throttleDelay);
 						attributes.setThrottlingSettings(throttlingSettings);
 					}
-					//validation should allow default behavior
-					attributes.setPreventDefault(false);
-					
+
 					AjaxFormValidatingBehavior.this.updateAjaxAttributes(attributes);
 				}
 

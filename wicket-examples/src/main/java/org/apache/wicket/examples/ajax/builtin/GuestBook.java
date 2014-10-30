@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.examples.guestbook.Comment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -80,17 +81,9 @@ public class GuestBook extends BasePage
 			}
 		});
 
-		// we need to cancel the standard submit of the form in the onsubmit
-		// handler,
-		// otherwise we'll get double submits. To do so, we return false after
-		// the
-		// ajax submit has occurred.
-
 		// The AjaxFormSubmitBehavior already calls the onSubmit of the form,
-		// all
-		// we need to do in the onSubmit(AjaxRequestTarget) handler is do our
-		// Ajax
-		// specific stuff, like rendering our components.
+		// all we need to do in the onSubmit(AjaxRequestTarget) handler is do our
+		// Ajax specific stuff, like rendering our components.
 		commentForm.add(new AjaxFormSubmitBehavior(commentForm, "submit")
 		{
 			@Override
@@ -108,6 +101,19 @@ public class GuestBook extends BasePage
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
+			}
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+
+				// we need to cancel the standard submit of the form in the onsubmit
+				// handler,
+				// otherwise we'll get double submits. To do so, we return false after
+				// the
+				// ajax submit has occurred.
+				attributes.setPreventDefault(true);
 			}
 		});
 	}
