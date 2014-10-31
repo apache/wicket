@@ -259,6 +259,31 @@ svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
+
+echo "========================================================================
+
+The signatures for the source release artefacts:
+
+" > /tmp/release-$version-sigs.txt
+
+pushd target/dist > /dev/null
+for i in apache-wicket*{zip,tar.gz}
+do
+	echo "Signature for $i:
+
+$(cat $i.asc)
+" >> /tmp/release-$version-sigs.txt
+done
+popd > /dev/null
+
+echo "========================================================================
+
+CHANGELOG for $version:
+" >> /tmp/release-$version-sigs.txt
+
+awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-6.x >> /tmp/release-$version-sigs.txt
+
+
 echo "Generating Vote email"
 
 echo "This is a vote to release Apache Wicket $version
@@ -285,29 +310,56 @@ repository for Maven. Typically the vote is on the source, but should
 you find a problem with one of the binaries, please let me know, I can
 re-roll them some way or the other.
 
-========================================================================
-
-The signatures for the source release artefacts:
-
 " > release-vote.txt
 
-pushd target/dist > /dev/null
-for i in apache-wicket*{zip,tar.gz}
-do
-	echo "Signature for $i:
+cat /tmp/release-$version-sigs.txt >> release-vote.txt
 
-$(cat $i.asc)
-" >> ../../release-vote.txt
-done
-popd > /dev/null
+echo "The Apache Wicket PMC is proud to announce Apache Wicket $version!
 
-echo "========================================================================
+This release marks another minor release of Wicket 6. Starting
+with Wicket 6 we use semantic versioning for the future development
+of Wicket, and as such no API breaks are present in this release
+compared to 6.0.0.
 
-CHANGELOG for $version:
-" >> release-vote.txt
+New and noteworthy
+------------------
 
-awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-6.x >> release-vote.txt
+<OPTIONAL>
 
+Using this release
+------------------
+
+With Apache Maven update your dependency to (and don't forget to
+update any other dependencies on Wicket projects to the same version):
+
+<dependency>
+    <groupId>org.apache.wicket</groupId>
+    <artifactId>wicket-core</artifactId>
+    <version>$version</version>
+</dependency>
+
+Or download and build the distribution yourself, or use our
+convenience binary package
+
+ * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
+ * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
+
+Upgrading from earlier versions
+-------------------------------
+
+If you upgrade from 6.y.z this release is a drop in replacement. If
+you come from a version prior to 6.0.0, please read our Wicket 6
+migration guide found at
+
+ * https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+6.0
+
+Have fun!
+
+— The Wicket team
+
+" > release-announce.txt
+
+cat /tmp/release-$version-sigs.txt >> release-announce.txt
 
 # Done with the tasks, now print out the next things the release manager
 # needs to do
