@@ -219,8 +219,8 @@ mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=t
 if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:perform was not successful"
 fi
-
 stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https | grep -v "CLOSED" | grep -Eo "(orgapachewicket-\d+)";)
+
 
 echo "Closing staging repository with id $stagingrepoid"
 
@@ -272,6 +272,30 @@ svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
+echo "========================================================================
+
+The signatures for the source release artefacts:
+
+" > /tmp/release-$version-sigs.txt
+
+pushd target/dist > /dev/null
+for i in apache-wicket*{zip,tar.gz}
+do
+	echo "Signature for $i:
+
+$(cat $i.asc)
+" >> /tmp/release-$version-sigs.txt
+done
+popd > /dev/null
+
+echo "========================================================================
+
+CHANGELOG for $version:
+" >> /tmp/release-$version-sigs.txt
+
+awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-6.x >> /tmp/release-$version-sigs.txt
+
+
 echo "Generating Vote email"
 
 echo "This is a vote to release Apache Wicket $version
@@ -298,36 +322,84 @@ repository for Maven. Typically the vote is on the source, but should
 you find a problem with one of the binaries, please let me know, I can
 re-roll them some way or the other.
 
-========================================================================
-
-The signatures for the source release artefacts:
-
 " > release-vote.txt
 
-pushd target/dist > /dev/null
-for i in apache-wicket*{zip,tar.gz}
-do
-	echo "Signature for $i:
+cat /tmp/release-$version-sigs.txt >> release-vote.txt
 
-$(cat $i.asc)
-" >> ../../release-vote.txt
-done
-popd > /dev/null
+echo "The Apache Wicket PMC is proud to announce Apache Wicket $version!
 
-echo "========================================================================
+We have released another milestone release for Apache Wicket 7. We aim
+to finalise Wicket 7 over the coming months and request your help in
+testing the new major version.
 
-CHANGELOG for $version:
-" >> release-vote.txt
+Caveats
+-------
 
-awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-7.x >> release-vote.txt
+It is still a development version so expect API breaks to happen over
+the course of the coming milestone releases.
 
+New and noteworthy
+------------------
 
-# do the same for the original snapshot version, as our maven release
-# plugin friend doesn't do that for us in the dependency management section
+<OPTIONAL>
 
-mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
-mvn_version_to_replace2="$major_version.$minor_version.0-SNAPSHOT"
-next_dev_version="7.0.0-SNAPSHOT"
+Semantic versioning
+-------------------
+
+As we adopted semver Wicket 7 will be the first release since 6.0 where
+we are able to refactor the API. We will continue to use semver when we
+have made Wicket 7 final and maintain api compatibility between minor
+versions of Wicket 7.
+
+Requirements
+------------
+
+Wicket 7 requires the following:
+
+ - Java 7
+ - Servlet 3 compatible container
+
+You can't mix wicket libraries from prior Wicket versions with Wicket 7.
+
+Migration guide
+---------------
+
+As usual we have a migration guide available online for people
+migrating their applications to Wicket 7. We will continue to update
+the guide as development progresses. If you find something that is not
+in the guide, please update the guide, or let us know so we can update
+the guide.
+
+You can find the guide here:  http://s.apache.org/wicket7migrate
+
+Using this release
+------------------
+
+With Apache Maven update your dependency to (and don't forget to
+update any other dependencies on Wicket projects to the same version):
+
+<dependency>
+    <groupId>org.apache.wicket</groupId>
+    <artifactId>wicket-core</artifactId>
+    <version>$version</version>
+</dependency>
+
+Or download and build the distribution yourself, or use our
+convenience binary package
+
+ * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
+ * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
+
+" > release-announce.txt
+
+cat /tmp/release-$version-sigs.txt >> release-announce.txt
+
+echo "
+Have fun!
+
+— The Wicket team
+
+" >> release-announce.txt
 
 echo "
 The release has been created. It is up to you to check if the release is up
@@ -337,6 +409,10 @@ to enable future development during the vote and after.
 A vote email has been generated in release-vote.txt, you can copy/paste it using:
 
     cat release-vote.txt | pbcopy
+
+An announce email has been generated in release-announce.txt, you can copy/paste it using:
+
+    cat release-announce.txt | pbcopy
 
 You can find the distribution in target/dist
 
