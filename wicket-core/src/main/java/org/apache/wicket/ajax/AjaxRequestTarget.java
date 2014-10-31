@@ -23,7 +23,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.ILoggableRequestHandler;
@@ -76,7 +75,7 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 		 * @param attributes
 		 *            The attributes for the Ajax behavior
 		 */
-		void updateAjaxAttributes(Behavior behavior, AjaxRequestAttributes attributes);
+		void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes);
 	}
 
 	/**
@@ -86,7 +85,7 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 	class AbstractListener implements IListener
 	{
 		@Override
-		public void updateAjaxAttributes(Behavior behavior, AjaxRequestAttributes attributes)
+		public void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes)
 		{
 		}
 

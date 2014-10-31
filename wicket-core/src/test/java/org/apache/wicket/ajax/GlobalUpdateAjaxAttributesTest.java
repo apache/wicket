@@ -40,7 +40,7 @@ public class GlobalUpdateAjaxAttributesTest extends WicketTestCase
 		application.getAjaxRequestTargetListeners().add(new AjaxRequestTarget.AbstractListener()
 		{
 			@Override
-			public void updateAjaxAttributes(Behavior behavior, AjaxRequestAttributes attributes)
+			public void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(behavior, attributes);
 				attributes
