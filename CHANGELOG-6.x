@@ -2,6 +2,48 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.18.0
+
+** Bug
+
+    * [WICKET-5265] - FencedFeedbackPanel is broken with RefreshingView(and it's implementations)
+    * [WICKET-5326] - Wicket doesn't encrypt links and Ajax URLs for mounted pages when CryptoMapper is used
+    * [WICKET-5689] - Nested Redirects and REDIRECT_TO_BUFFER
+    * [WICKET-5698] - WebApplication#unmount() unmounts the whole compound mapper if some of its inner ones matches
+    * [WICKET-5699] - wicket-atmosphere 0.20 should use wicket-webjars 0.4.3
+    * [WICKET-5701] - WebSocketRequestHandler is not set as a scheduled and thus RequestCycle#find(AjaxRequestTarget.class) doesn't work 
+    * [WICKET-5704] - IllegalArgument exception with wicket:child in ajaxrequest
+    * [WICKET-5706] - ResourceUtils.getLocaleFromFilename cannot handle filenames with classifiers
+    * [WICKET-5711] - OnChangeAjaxBehavior should listen for both 'inputchange' and 'change' events for TextField and TextArea
+    * [WICKET-5712] - SecuritySettings.setEnforceMounts() does not work when the mounted mapper is not in the root compound mapper
+    * [WICKET-5714] - MockHttpServletRequest.buildRequest() should work for parameters with multiple values with multipart content type
+    * [WICKET-5716] - wicket-autocomplete prevents "change"-listener when leaving input via mouse click
+    * [WICKET-5717] - Url.parse/toString should support fragment
+    * [WICKET-5719] - Wicket-atmosphere should warn about phone home
+    * [WICKET-5720] - Method Strings.join doesn't work correctly if separator is empty.
+    * [WICKET-5723] - CheckGroupSelector with disabled checks
+    * [WICKET-5731] - Using "Submit" button in Ajax DropDownChoice example leads to broken HTML page
+    * [WICKET-5736] - Atmosphere Eventbus throws Concurrent Modification Exception
+
+** Improvement
+
+    * [WICKET-5691] - Wicket FileUploadField.getFileUploads() should never return null.
+    * [WICKET-5692] - Misleading message in PropertyValidator
+    * [WICKET-5694] - Add WicketTester assertion methods for component's markup style, variation and locale 
+    * [WICKET-5710] - StringValidator should set 'minlength' attribute to input and textarea
+    * [WICKET-5715] - Allow setting 'async' attribute on reference <script> elements
+    * [WICKET-5718] - Upgrade Atmosphere to 2.2.2
+    * [WICKET-5725] - Add NumberTextField(String,Class<T>) constructor
+    * [WICKET-5729] - Avoid using input names that conflict with JavaScript DOM API method and attribute names
+    * [WICKET-5735] - Propagate fileSizeMax attribute to org.apache.commons.fileupload.FileUploadBase
+    * [WICKET-5740] - Provide a way to adapt the lock timeout based on the page class/id
+
+** New Feature
+
+    * [WICKET-5677] - Components should have onAdd to complement onRemove
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.17.0
 
 ** Sub-task
