@@ -27,7 +27,7 @@
 	</parent>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>7.0.0-M4</version>
+	<version>7.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
@@ -85,7 +85,7 @@
 		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
 		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
 		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
-		<tag>wicket-7.0.0-M4</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<modules>
 		<module>wicket</module>
@@ -244,7 +244,7 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<!-- It seems there is a bug in Maven (2.2.1 & 3.0.1) and
 				type 'pom' is not properly inherited. I.e. the
 				dependency management doesn't work -->
@@ -253,127 +253,127 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-auth-roles</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bean-validation</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi-1.1</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-datetime</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-extensions</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-ioc</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-jmx</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-core</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-javax</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-jetty</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-jetty9</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-tomcat</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-request</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-util</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-velocity</artifactId>
-				<version>7.0.0-M4</version>
+				<version>7.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket7</groupId>
 				<artifactId>wicket-atmosphere</artifactId>
-				<version>0.10</version>
+				<version>0.11-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
