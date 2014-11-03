@@ -9,6 +9,7 @@
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
 alert('Hello World!');;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>

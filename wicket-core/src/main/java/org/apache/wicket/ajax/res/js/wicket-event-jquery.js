@@ -324,7 +324,8 @@
 				AJAX_CALL_SUCCESS      : '/ajax/call/success',
 				AJAX_CALL_COMPLETE     : '/ajax/call/complete',
 				AJAX_CALL_AFTER        : '/ajax/call/after',
-				AJAX_CALL_FAILURE      : '/ajax/call/failure'
+				AJAX_CALL_FAILURE      : '/ajax/call/failure',
+				AJAX_HANDLERS_BOUND    : '/ajax/handlers/bound'
 			}
 		}
 	});

@@ -19,6 +19,7 @@ Wicket.Event.add(window, "domready", function(event) {
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.DomReadyOrderPage?0-1.IBehaviorListener.0-test","e":"click","c":"test1"});;
 test1();;
 test2();;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>
