@@ -17,6 +17,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.panel.Inl
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.panel.InlinePanelPage_8?0-1.IBehaviorListener.0-add","c":"add1","e":"click"});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>

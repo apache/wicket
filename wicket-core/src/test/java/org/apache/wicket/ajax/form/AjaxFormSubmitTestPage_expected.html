@@ -17,6 +17,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.AjaxFormSub
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.AjaxFormSubmitTestPage?0-1.IBehaviorListener.0-form-submit","m":"POST","c":"submit2","f":"form1","sc":"p::submit","e":"click","pd":true});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>

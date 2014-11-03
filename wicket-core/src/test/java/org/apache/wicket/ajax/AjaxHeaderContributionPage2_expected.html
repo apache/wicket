@@ -25,6 +25,7 @@ Wicket.Event.add(window, "domready", function(event) {
 domReady();;
 domReadyB();;
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.AjaxHeaderContributionPage2?0-1.IBehaviorListener.0-link","c":"link1","e":"click","pd":true});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>
