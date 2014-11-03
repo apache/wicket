@@ -29,7 +29,7 @@ $q(document).ready(function() {
 		gym.load('/ajax/form').then(function($) {
 
 			// enter just the name field
-			var $nameInput = $('input[name=name]');
+			var $nameInput = $('input[name="p::name"]');
 			var name = 'Ajax form name';
 			$nameInput.val(name);
 

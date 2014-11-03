@@ -27,7 +27,7 @@ $q(document).ready(function() {
 
 	var generate = function($, linkIndex) {
 
-		var $nameInput = $('input[name=name]');
+		var $nameInput = $('input[name="p::name"]');
 
 		$nameInput.val(text);
 

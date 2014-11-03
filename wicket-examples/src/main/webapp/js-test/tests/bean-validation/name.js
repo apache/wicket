@@ -22,7 +22,7 @@ $q(document).ready(function() {
 	"use strict";
 
 	var selectors = {
-		nameInput: "input[name=name]",
+		nameInput: "input[name='p::name']",
 		nameNullErrorFeedback: "li.feedbackPanelERROR > span:contains(\"'Name' is required\")",
 		nameRangeErrorFeedback: "li.feedbackPanelERROR > span:contains(\"'Name' length must be between 2 and 30\")"
 
