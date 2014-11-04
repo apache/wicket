@@ -61,7 +61,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * Sets the JavaScript code that will be returned by {@link #getBeforeSendHandler(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
 	 * 
-	 * @param before
+	 * @param beforeSend
 	 * 			the JavaScript code for the corresponding handler
 	 * @return This
 	 */
@@ -82,7 +82,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * Sets the JavaScript code that will be returned by {@link #getAfterHandler(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
 	 * 
-	 * @param before
+	 * @param after
 	 * 			the JavaScript code for the corresponding handler
 	 * @return This
 	 */
@@ -103,7 +103,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * Sets the JavaScript code that will be returned by {@link #getSuccessHandler(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
 	 * 
-	 * @param before
+	 * @param success
 	 * 			the JavaScript code for the corresponding handler
 	 * @return This
 	 */
@@ -124,7 +124,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * Sets the JavaScript code that will be returned by {@link #getFailureHandler(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
 	 * 
-	 * @param before
+	 * @param failure
 	 * 			the JavaScript code for the corresponding handler
 	 * @return This
 	 */
@@ -145,7 +145,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * Sets the JavaScript code that will be returned by {@link #getCompleteHandler(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
 	 * 
-	 * @param before
+	 * @param complete
 	 * 			the JavaScript code for the corresponding handler
 	 * @return This
 	 */
@@ -166,7 +166,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * Sets the JavaScript code that will be returned by {@link #getPrecondition(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
 	 * 
-	 * @param before
+	 * @param precondition
 	 * 			the JavaScript code for the precondition
 	 * @return This
 	 */
