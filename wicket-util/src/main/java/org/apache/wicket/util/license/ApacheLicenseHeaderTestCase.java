@@ -58,11 +58,6 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 		private final List<String> suffixes;
 		private final List<String> ignoreFiles;
 
-		private SuffixAndIgnoreFileFilter(final List<String> suffixes)
-		{
-			this(suffixes, null);
-		}
-
 		private SuffixAndIgnoreFileFilter(final List<String> suffixes,
 			final List<String> ignoreFiles)
 		{

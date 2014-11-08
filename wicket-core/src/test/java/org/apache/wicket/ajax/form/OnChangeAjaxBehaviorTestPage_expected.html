@@ -18,6 +18,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.OnChangeAja
 Wicket.Event.add(window, "domready", function(event) { 
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.OnChangeAjaxBehaviorTestPage?0-1.IBehaviorListener.0-form-field","e":"inputchange change","c":"field1","ad":true,"m":"POST"});;
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.OnChangeAjaxBehaviorTestPage?0-1.IBehaviorListener.0-form-dropDown","e":"change","c":"dropDown2","ad":true,"m":"POST"});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>

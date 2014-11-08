@@ -21,6 +21,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.basic.Sim
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.basic.SimplePage_13?0-1.IBehaviorListener.0-html","e":"click","c":"html1"});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>

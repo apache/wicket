@@ -325,6 +325,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 		if (combinedScript.length() > 0)
 		{
+			combinedScript.append("\nWicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);");
 			getRealResponse().render(
 				OnDomReadyHeaderItem.forScript(combinedScript.append('\n').toString()));
 		}

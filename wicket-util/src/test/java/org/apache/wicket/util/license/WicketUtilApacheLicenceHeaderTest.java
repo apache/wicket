@@ -18,16 +18,16 @@ package org.apache.wicket.util.license;
 
 /**
  * Test that the license headers are in place in this project. The tests are run from
- * {@link org.apache.wicket.util.license.ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
+ * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+public class WicketUtilApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
 	 * Construct.
 	 */
-	public ApacheLicenceHeaderTest()
+	public WicketUtilApacheLicenceHeaderTest()
 	{
 		// addHeaders = true;
 

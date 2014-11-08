@@ -36,6 +36,14 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	private StringBuilder complete;
 	private StringBuilder precondition;
 
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getBeforeHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 * 
+	 * @param before
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 */
 	public AjaxCallListener onBefore(final CharSequence before)
 	{
 		if (Strings.isEmpty(before) == false)
@@ -49,6 +57,14 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		return this;
 	}
 
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getBeforeSendHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 * 
+	 * @param beforeSend
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 */
 	public AjaxCallListener onBeforeSend(final CharSequence beforeSend)
 	{
 		if (Strings.isEmpty(beforeSend) == false)
@@ -61,7 +77,15 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		}
 		return this;
 	}
-
+	
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getAfterHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 * 
+	 * @param after
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 */
 	public AjaxCallListener onAfter(final CharSequence after)
 	{
 		if (Strings.isEmpty(after) == false)
@@ -74,7 +98,15 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		}
 		return this;
 	}
-
+	
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getSuccessHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 * 
+	 * @param success
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 */
 	public AjaxCallListener onSuccess(final CharSequence success)
 	{
 		if (Strings.isEmpty(success) == false)
@@ -88,7 +120,14 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		return this;
 	}
 
-
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getFailureHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 * 
+	 * @param failure
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 */
 	public AjaxCallListener onFailure(final CharSequence failure)
 	{
 		if (Strings.isEmpty(failure) == false)
@@ -102,6 +141,14 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		return this;
 	}
 
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getCompleteHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 * 
+	 * @param complete
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 */
 	public AjaxCallListener onComplete(final CharSequence complete)
 	{
 		if (Strings.isEmpty(complete) == false)
@@ -114,7 +161,15 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		}
 		return this;
 	}
-
+	
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getPrecondition(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 * 
+	 * @param precondition
+	 * 			the JavaScript code for the precondition
+	 * @return This
+	 */
 	public AjaxCallListener onPrecondition(final CharSequence precondition)
 	{
 		if (Strings.isEmpty(precondition) == false)
