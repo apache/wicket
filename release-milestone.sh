@@ -293,7 +293,7 @@ echo "========================================================================
 CHANGELOG for $version:
 " >> /tmp/release-$version-sigs.txt
 
-awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-6.x >> /tmp/release-$version-sigs.txt
+awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-7.x >> /tmp/release-$version-sigs.txt
 
 
 echo "Generating Vote email"
