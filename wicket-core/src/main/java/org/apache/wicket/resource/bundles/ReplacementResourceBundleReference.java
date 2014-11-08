@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.resource.bundles;
 
+import java.util.List;
+
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -38,5 +41,16 @@ public class ReplacementResourceBundleReference extends ResourceBundleReference
 	public ReplacementResourceBundleReference(ResourceReference bundleRef)
 	{
 		super(bundleRef);
+	}
+	
+	/**
+	 * Returns the dependencies of the replacing resource reference.
+	 * 
+	 * @return the dependencies of the replacing resource reference
+	 */
+	@Override
+	public List<HeaderItem> getDependencies() 
+	{
+		return getBundleReference().getDependencies();
 	}
 }
