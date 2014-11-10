@@ -64,9 +64,9 @@ import org.apache.wicket.core.util.lang.PropertyResolver;
  * 
  * </p>
  * <p>
- * Note that the property resolver by default provides access to private members and methods. If
+ * <strong>Note that the property resolver by default provides access to private members and methods. If
  * guaranteeing encapsulation of the target objects is a big concern, you should consider using an
- * alternative implementation.
+ * alternative implementation.</strong>
  * </p>
  * 
  * @see PropertyResolver
