@@ -38,7 +38,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 
 	private final String resourceKey;
 
-	private final String defaultValue;
+	private final IModel<String> defaultValue;
 
 	/**
 	 * Constructor
@@ -48,7 +48,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	 */
 	public ResourceModel(String resourceKey)
 	{
-		this(resourceKey, null);
+		this(resourceKey, (IModel<String>)null);
 	}
 
 	/**
@@ -61,6 +61,11 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	 * 
 	 */
 	public ResourceModel(String resourceKey, String defaultValue)
+	{
+		this(resourceKey, Model.of(defaultValue));
+	}
+
+	public ResourceModel(String resourceKey, IModel<String> defaultValue)
 	{
 		this.resourceKey = resourceKey;
 		this.defaultValue = defaultValue;
@@ -76,7 +81,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		return Application.get()
 			.getResourceSettings()
 			.getLocalizer()
-			.getString(resourceKey, null, defaultValue);
+			.getString(resourceKey, null, null, null, null, defaultValue);
 	}
 
 	/**
@@ -124,7 +129,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 			return Application.get()
 				.getResourceSettings()
 				.getLocalizer()
-				.getString(resourceKey, component, defaultValue);
+				.getString(resourceKey, component, null, null, null, defaultValue);
 		}
 
 		@Override
