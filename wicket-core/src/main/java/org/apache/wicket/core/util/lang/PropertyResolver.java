@@ -40,12 +40,12 @@ import org.slf4j.LoggerFactory;
  * This class parses expressions to lookup or set a value on the object that is given. <br/>
  * The supported expressions are:
  * <p>
- * "property": This can can then be a bean property with get and set method. Or if a map is given as
+ * "property": This could be a bean property with get and set method. Or if a map is given as
  * an object it will be lookup with the property as a key when there is not get method for that
  * property.
  * <p/>
  * <p>
- * "property1.property2": Both properties are lookup as written above. If property1 evaluates to
+ * "property1.property2": Both properties are looked up as described above. If property1 evaluates to
  * null then if there is a setMethod (or if it is a map) and the Class of the property has a default
  * constructor then the object will be constructed and set on the object.
  * <p/>
@@ -53,11 +53,18 @@ import org.slf4j.LoggerFactory;
  * "property.index": If the property is a List or Array then the second property can be a index on
  * that list like: 'mylist.0' this expression will also map on a getProperty(index) or
  * setProperty(index,value) methods. If the object is a List then the list will grow automatically
- * if the index is greater then the size
+ * if the index is greater than the size
  * <p/>
  * <p>
  * Index or map properties can also be written as: "property[index]" or "property[key]"
  * <p/>
+ * <p>
+ * <strong>Note that the property resolver by default provides access to private members and methods. If
+ * guaranteeing encapsulation of the target objects is a big concern, you should consider using an
+ * alternative implementation.</strong>
+ * </p>
+ * <p><strong>Note: If a property evaluates to an instance of {@link org.apache.wicket.model.IModel} then
+ * the expression should use '.object' to work with its value.</strong></p>
  *
  * @author jcompagner
  */
