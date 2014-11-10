@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.wicket.core.util.string.interpolator.ConvertingPropertyVariableInterpolator;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Generics;
@@ -108,7 +109,7 @@ public class Localizer
 	public String getString(final String key, final Component component)
 		throws MissingResourceException
 	{
-		return getString(key, component, null, null, null, null);
+		return getString(key, component, null, null, null, (String)null);
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel<?> model)
 		throws MissingResourceException
 	{
-		return getString(key, component, model, null, null, null);
+		return getString(key, component, model, null, null, (String)null);
 	}
 
 	/**
@@ -196,28 +197,58 @@ public class Localizer
 		final Locale locale, final String style, final String defaultValue)
 		throws MissingResourceException
 	{
+		IModel<String> defaultValueModel = defaultValue != null ? Model.of(defaultValue) : null;
+		return getString(key, component, model, locale, style, defaultValueModel);
+	}
+
+	/**
+	 * Get the localized string using all of the supplied parameters. This method is left public to
+	 * allow developers full control over string resource loading. However, it is recommended that
+	 * one of the other convenience methods in the class are used as they handle all of the work
+	 * related to obtaining the current user locale and style information.
+	 *
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for (optional)
+	 * @param model
+	 *            The model to use for substitutions in the strings (optional)
+	 * @param locale
+	 *            If != null, it'll supersede the component's locale
+	 * @param style
+	 *            If != null, it'll supersede the component's style
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that exception should be thrown
+	 */
+	public String getString(final String key, final Component component, final IModel<?> model,
+	                        final Locale locale, final String style, final IModel<String> defaultValue)
+			throws MissingResourceException
+	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
 
 		String value = getStringIgnoreSettings(key, component, model, locale, style, null);
-		if ((value == null) && (defaultValue != null))
-		{
-			// Resource not found, so handle missing resources based on
-			// application configuration and try the default value
-			if (resourceSettings.getUseDefaultOnMissingResource())
-			{
-				value = defaultValue;
-
-				// If a property value has been found, or a default value was given,
-				// than replace the placeholder and we are done
-				return substitutePropertyExpressions(component, value, model);
-			}
-		}
 
 		// If a property value has been found, or a default value was given,
 		// than replace the placeholder and we are done
 		if (value != null)
 		{
 			return value;
+		}
+		else if (defaultValue != null && resourceSettings.getUseDefaultOnMissingResource())
+		{
+			// Resource not found, so handle missing resources based on
+			// application configuration and try the default value
+			value = defaultValue.getObject();
+
+			if (value != null)
+			{
+				// If a property value has been found, or a default value was given,
+				// then replace the placeholder and we are done
+				return substitutePropertyExpressions(component, value, model);
+			}
 		}
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())

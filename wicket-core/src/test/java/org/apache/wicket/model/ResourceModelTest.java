@@ -40,7 +40,14 @@ public class ResourceModelTest extends WicketTestCase
 		{
 			add(new Label("testlabel", new ResourceModel("testlabel")));
 
-			// another label with a model explicitely assigned to the page
+
+			Label testlabelWithDefault = new Label("testlabelWithDefault");
+			IModel<String> defaultModel = new ResourceModel("testlabel").wrapOnAssignment(testlabelWithDefault);
+			ResourceModel labelWithDefaultModel = new ResourceModel("missingKey", defaultModel);
+			testlabelWithDefault.setDefaultModel(labelWithDefaultModel);
+			add(testlabelWithDefault);
+
+			// another label with a model explicitly assigned to the page
 			add(new Label("otherlabel", new ResourceModel("testlabel").wrapOnAssignment(this)));
 		}
 	}
