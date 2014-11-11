@@ -57,30 +57,27 @@ public class ClassCryptFactory implements ICryptFactory
 		this.encryptionKey = encryptionKey;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.crypt.ICryptFactory#newCrypt()
-	 */
 	@Override
 	public ICrypt newCrypt()
 	{
 		try
 		{
 			ICrypt crypt = (ICrypt)(cryptClass.get()).newInstance();
-			log.info("using encryption/decryption object " + crypt);
+			log.info("using encryption/decryption object {}", crypt);
 			crypt.setKey(encryptionKey);
 			return crypt;
 		}
 		catch (Exception e)
 		{
 			log.warn("************************** WARNING **************************");
-			log.warn("As the instantion of encryption/decryption class:");
+			log.warn("As the instantiation of encryption/decryption class:");
 			log.warn("\t" + cryptClass);
 			log.warn("failed, Wicket will fallback on a dummy implementation");
 			log.warn("\t(" + NoCrypt.class.getName() + ")");
-			log.warn("This is not recommended for production systems.");
+			log.warn("This is NOT recommended for production systems.");
 			log.warn("Please override method org.apache.wicket.Application.newCrypt()");
-			log.warn("to provide a custom encryption/decryption implementation");
-			log.warn("The cause of the instantion failure: ");
+			log.warn("to provide a custom encryption/decryption implementation.");
+			log.warn("The cause of the instantiation failure: ");
 			log.warn("\t" + e.getMessage());
 			if (log.isDebugEnabled())
 			{
@@ -88,7 +85,7 @@ public class ClassCryptFactory implements ICryptFactory
 			}
 			else
 			{
-				log.warn("set log level to DEBUG to display the stack trace.");
+				log.warn("Set log level to DEBUG to display the stack trace.");
 			}
 			log.warn("*************************************************************");
 

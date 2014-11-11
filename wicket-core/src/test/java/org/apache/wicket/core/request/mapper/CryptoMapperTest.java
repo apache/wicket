@@ -40,6 +40,10 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
+import org.apache.wicket.settings.ISecuritySettings;
+import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
@@ -74,7 +78,14 @@ public class CryptoMapperTest extends AbstractMapperTest
 		tester = new WicketTester();
 		WebApplication webApplication = tester.getApplication();
 		webApplication.mountPage(MOUNTED_URL, Page1.class);
-		mapper = new CryptoMapper(webApplication.getRootRequestMapper(), webApplication);
+		mapper = new CryptoMapper(webApplication.getRootRequestMapper(), new IProvider<ICrypt>()
+		{
+			@Override
+			public ICrypt get()
+			{
+				return new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY).newCrypt();
+			}
+		});
 	}
 
 	/**

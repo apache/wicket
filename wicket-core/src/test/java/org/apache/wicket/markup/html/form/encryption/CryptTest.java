@@ -28,21 +28,18 @@ import org.junit.Test;
  */
 public class CryptTest extends WicketTestCase
 {
-	/**
-	 * 
-	 * 
-	 */
 	@Test
 	public void crypt()
 	{
 		final ICrypt crypt = new SunJceCrypt();
+		crypt.setKey("someStableKey");
 
 		try
 		{
 			if (crypt.encryptUrlSafe("test") != null)
 			{
 				final String text = "abcdefghijkABC: A test which creates a '/' and/or a '+'";
-				final String expectedUrlSafeEncrypted = "g-N_AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd-go0P-0kuIe6UvAYP7dlzx-9mfmPaMQ5lCk";
+				final String expectedUrlSafeEncrypted = "xXMS3UMELV--qVINGVFaYaiqUPOtryc_E4x0MyMFgYl-TgTGKxczTzPvwJrE-4YEVMpl-F3eDAg";
 
 				final String encrypted = crypt.encryptUrlSafe(text);
 				assertEquals(expectedUrlSafeEncrypted, encrypted);

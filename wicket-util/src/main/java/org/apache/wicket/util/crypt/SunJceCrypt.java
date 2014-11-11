@@ -20,13 +20,17 @@ import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.Security;
+import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -44,19 +48,37 @@ public class SunJceCrypt extends AbstractCrypt
 	 */
 	private final static int COUNT = 17;
 
-	/** Name of encryption method */
-	private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
+	/** Name of the default encryption method */
+	public static final String DEFAULT_CRYPT_METHOD = "PBEWithMD5AndDES";
 
 	/** Salt */
-	private final static byte[] salt = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
+	public final static byte[] SALT = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
 			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc };
+
+	/** The name of encryption method (cipher) */
+	private final String cryptMethod;
 
 	/**
 	 * Constructor
 	 */
 	public SunJceCrypt()
 	{
-		if (Security.getProviders("Cipher." + CRYPT_METHOD).length > 0)
+		this(DEFAULT_CRYPT_METHOD);
+	}
+
+	/**
+	 * Constructor that uses a custom encryption method (cipher).
+	 * You may need to override {@link #createKeySpec()} and/or
+	 * {@link #createParameterSpec()} for the custom cipher.
+	 *
+	 * @param cryptMethod
+	 *              the name of encryption method (the cipher)
+	 */
+	public SunJceCrypt(String cryptMethod)
+	{
+		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
+
+		if (Security.getProviders("Cipher." + cryptMethod).length > 0)
 		{
 			return; // we are good to go!
 		}
@@ -77,21 +99,39 @@ public class SunJceCrypt extends AbstractCrypt
 	 * Crypts the given byte array
 	 * 
 	 * @param input
-	 *            byte array to be crypted
+	 *            byte array to be encrypted
 	 * @param mode
 	 *            crypt mode
 	 * @return the input crypted. Null in case of an error
 	 * @throws GeneralSecurityException
 	 */
 	@Override
-	protected final byte[] crypt(final byte[] input, final int mode)
+	protected byte[] crypt(final byte[] input, final int mode)
 		throws GeneralSecurityException
 	{
 		SecretKey key = generateSecretKey();
-		PBEParameterSpec spec = new PBEParameterSpec(salt, COUNT);
-		Cipher ciph = Cipher.getInstance(CRYPT_METHOD);
-		ciph.init(mode, key, spec);
+		AlgorithmParameterSpec spec = createParameterSpec();
+		Cipher ciph = createCipher(key, spec, mode);
 		return ciph.doFinal(input);
+	}
+
+	/**
+	 * Creates the {@link javax.crypto.Cipher} that will do the de-/encryption.
+	 *
+	 * @param key
+	 *              the secret key to use
+	 * @param spec
+	 *              the parameters spec to use
+	 * @param mode
+	 *              the mode ({@link javax.crypto.Cipher#ENCRYPT_MODE} or {@link javax.crypto.Cipher#DECRYPT_MODE})
+	 * @return the cipher that will do the de-/encryption
+	 * @throws GeneralSecurityException
+	 */
+	protected Cipher createCipher(SecretKey key, AlgorithmParameterSpec spec, int mode) throws GeneralSecurityException
+	{
+		Cipher cipher = Cipher.getInstance(cryptMethod);
+		cipher.init(mode, key, spec);
+		return cipher;
 	}
 
 	/**
@@ -99,17 +139,34 @@ public class SunJceCrypt extends AbstractCrypt
 	 * <p>
 	 * Note: if you don't provide your own encryption key, the implementation will use a default. Be
 	 * aware that this is potential security risk. Thus make sure you always provide your own one.
-	 * 
+	 *
 	 * @return secretKey the security key generated
 	 * @throws NoSuchAlgorithmException
 	 *             unable to find encryption algorithm specified
 	 * @throws InvalidKeySpecException
 	 *             invalid encryption key
 	 */
-	private final SecretKey generateSecretKey() throws NoSuchAlgorithmException,
+	protected SecretKey generateSecretKey() throws NoSuchAlgorithmException,
 		InvalidKeySpecException
 	{
-		final PBEKeySpec spec = new PBEKeySpec(getKey().toCharArray());
-		return SecretKeyFactory.getInstance(CRYPT_METHOD).generateSecret(spec);
+		SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(cryptMethod);
+		KeySpec spec = createKeySpec();
+		return keyFactory.generateSecret(spec);
+	}
+
+	/**
+	 * @return the parameter spec to be used for the configured crypt method
+	 */
+	protected AlgorithmParameterSpec createParameterSpec()
+	{
+		return new PBEParameterSpec(SALT, COUNT);
+	}
+
+	/**
+	 * @return the key spec to be used for the configured crypt method
+	 */
+	protected KeySpec createKeySpec()
+	{
+		return new PBEKeySpec(getKey().toCharArray());
 	}
 }

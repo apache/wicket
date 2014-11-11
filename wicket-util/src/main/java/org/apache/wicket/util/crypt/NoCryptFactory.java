@@ -26,14 +26,6 @@ public class NoCryptFactory implements ICryptFactory
 {
 	private static final ICrypt crypt = new NoCrypt();
 
-	/**
-	 * Construct.
-	 */
-	public NoCryptFactory()
-	{
-
-	}
-
 	@Override
 	public ICrypt newCrypt()
 	{
