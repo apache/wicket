@@ -48,11 +48,11 @@ import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Tests for {@link CryptoMapper}
