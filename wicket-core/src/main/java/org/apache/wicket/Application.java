@@ -494,7 +494,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			URL metaInfWicket = wicketResources.next();
 			String protocol = metaInfWicket.getProtocol();
 
-			if ("jar".equals(protocol))
+			if ("jar".equals(protocol) || "wsjar".equals(protocol))
 			{
 				JarURLConnection jarURLConnection = (JarURLConnection) metaInfWicket.openConnection();
 				JarFile jarFile = jarURLConnection.getJarFile();
