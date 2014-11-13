@@ -1047,7 +1047,12 @@
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_SUCCESS, attrs, null, null, 'success');
 
 				// set the focus to the last component
-				Wicket.Focus.requestFocus();
+				if (Wicket.Browser.isIELessThan9()) {
+					// WICKET-5755
+					window.setTimeout("Wicket.Focus.requestFocus();", 0);
+				} else {
+					Wicket.Focus.requestFocus();
+				}
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
 				return FunctionsExecuter.DONE;
