@@ -32,6 +32,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.PageHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
@@ -48,7 +49,7 @@ import org.apache.wicket.response.StringResponse;
  * &lt;head&gt; regions may contain additional wicket components, which can be added by means of
  * add(Component) as usual.
  * <p>
- * &lt;wicket:head&gt; tags are handled by simple {@link TransparentWebMarkupContainer}s also created by
+ * &lt;wicket:head&gt; tags are handled by simple {@link WebMarkupContainer}s also created by
  * {@link org.apache.wicket.markup.resolver.HtmlHeaderResolver}.
  * <p>
  * <ul>
@@ -371,7 +372,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 		// Find the markup fragment
 		MarkupStream stream = new MarkupStream(markup);
 		IMarkupFragment headerMarkup = null;
-		while (stream.skipUntil(ComponentTag.class) && (headerMarkup == null))
+		while (stream.skipUntil(ComponentTag.class))
 		{
 			ComponentTag tag = stream.getTag();
 			if (tag.isOpen() || tag.isOpenClose())

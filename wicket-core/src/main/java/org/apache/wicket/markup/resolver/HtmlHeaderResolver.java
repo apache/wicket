@@ -171,7 +171,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 	/**
 	 * A component for &lt;wicket:head&gt; elements
 	 */
-	private static class WicketHeadContainer extends TransparentWebMarkupContainer
+	private static class WicketHeadContainer extends WebMarkupContainer
 	{
 		/**
 		 * Constructor.
