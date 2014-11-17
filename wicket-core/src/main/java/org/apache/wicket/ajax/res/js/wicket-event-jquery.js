@@ -209,21 +209,18 @@
 						jQuery(fn);
 					});
 				} else {
-					// try to find the element once the DOM is ready
-					jQuery(function() {
-						type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
-						var el = element;
-						if (typeof(element) === 'string') {
-							el = document.getElementById(element);
-						}
+					type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
+					var el = element;
+					if (typeof(element) === 'string') {
+						el = document.getElementById(element);
+					}
 
-						if (!el && Wicket.Log) {
-							Wicket.Log.error('Cannot bind a listener for event "' + type +
-								'" on element "' + element + '" because the element is not in the DOM');
-						}
+					if (!el && Wicket.Log) {
+						Wicket.Log.error('Cannot bind a listener for event "' + type +
+							'" on element "' + element + '" because the element is not in the DOM');
+					}
 
-						jQuery(el).on(type, selector, data, fn);
-					});
+					jQuery(el).on(type, selector, data, fn);
 				}
 				return element;
 			},
