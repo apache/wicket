@@ -172,7 +172,12 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	}
 
 	private final Map<HeaderItem, RecordedHeaderItem> itemsToBeRendered;
-	private final List<OnDomReadyHeaderItem> domReadyItemsToBeRendered;
+
+	/**
+	 * Header items which should be executed once the DOM is ready.
+	 * Collects OnDomReadyHeaderItems and OnEventHeaderItems
+	 */
+	private final List<HeaderItem> domReadyItemsToBeRendered;
 	private final List<OnLoadHeaderItem> loadItemsToBeRendered;
 
 	private Object renderBase;
@@ -189,7 +194,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		super(real);
 
 		itemsToBeRendered = new LinkedHashMap<HeaderItem, RecordedHeaderItem>();
-		domReadyItemsToBeRendered = new ArrayList<OnDomReadyHeaderItem>();
+		domReadyItemsToBeRendered = new ArrayList<HeaderItem>();
 		loadItemsToBeRendered = new ArrayList<OnLoadHeaderItem>();
 	}
 
@@ -251,10 +256,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	public void render(HeaderItem item)
 	{
 		item = getItemToBeRendered(item);
-		if (item instanceof OnDomReadyHeaderItem)
+		if (item instanceof OnDomReadyHeaderItem || item instanceof OnEventHeaderItem)
 		{
 			renderDependencies(item, new LinkedHashSet<HeaderItem>());
-			domReadyItemsToBeRendered.add((OnDomReadyHeaderItem)item);
+			domReadyItemsToBeRendered.add(item);
 		}
 		else if (item instanceof OnLoadHeaderItem)
 		{
@@ -314,12 +319,18 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	private void renderCombinedEventScripts()
 	{
 		StringBuilder combinedScript = new StringBuilder();
-		for (OnDomReadyHeaderItem curItem : domReadyItemsToBeRendered)
+		for (HeaderItem curItem : domReadyItemsToBeRendered)
 		{
 			if (markItemRendered(curItem))
 			{
 				combinedScript.append('\n');
-				combinedScript.append(curItem.getJavaScript());
+				if (curItem instanceof OnDomReadyHeaderItem)
+				{
+					combinedScript.append(((OnDomReadyHeaderItem)curItem).getJavaScript());
+				} else if (curItem instanceof OnEventHeaderItem)
+				{
+					combinedScript.append(((OnEventHeaderItem)curItem).getCompleteJavaScript());
+				}
 				combinedScript.append(';');
 			}
 		}
@@ -352,7 +363,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private void renderSeperateEventScripts()
 	{
-		for (OnDomReadyHeaderItem curItem : domReadyItemsToBeRendered)
+		for (HeaderItem curItem : domReadyItemsToBeRendered)
 		{
 			if (markItemRendered(curItem))
 			{

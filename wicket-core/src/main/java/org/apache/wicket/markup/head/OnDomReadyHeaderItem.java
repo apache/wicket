@@ -22,7 +22,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IJavaScriptLibrarySettings;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 
