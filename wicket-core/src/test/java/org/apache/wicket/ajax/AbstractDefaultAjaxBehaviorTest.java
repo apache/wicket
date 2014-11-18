@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.Locale;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxAttributeName;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
@@ -38,6 +40,8 @@ public class AbstractDefaultAjaxBehaviorTest extends Assert
 	public void renderAjaxAttributes()
 	{
 		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
+		attributes.getExtraParameters().put("param1", 123);
+		attributes.getExtraParameters().put("param2", Locale.CANADA_FRENCH);
 
 		AjaxCallListener listener = new AjaxCallListener();
 		listener.onPrecondition("return somePrecondition();");
@@ -73,6 +77,8 @@ public class AbstractDefaultAjaxBehaviorTest extends Assert
 			"\":[function(attrs){return somePrecondition();}],\"" +
 			AjaxAttributeName.FAILURE_HANDLER +
 			"\":[function(attrs, jqXHR, errorMessage, textStatus){alert('Failure!');}],\"" +
+			AjaxAttributeName.EXTRA_PARAMETERS +
+			"\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"fr_CA\"}],\"" +
 			AjaxAttributeName.BEFORE_HANDLER +
 			"\":[function(attrs){alert('Before!');}],\"" +
 			AjaxAttributeName.SUCCESS_HANDLER +
