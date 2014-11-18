@@ -1145,6 +1145,8 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	private void readObject(final java.io.ObjectInputStream s) throws IOException,
 		ClassNotFoundException
 	{
+		modCount = new AtomicInteger(0);
+
 		// Read in the threshold, loadfactor, and any hidden stuff
 		s.defaultReadObject();
 
