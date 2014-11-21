@@ -18,6 +18,7 @@ package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.junit.Test;
 
 /**
@@ -100,4 +101,27 @@ public class WicketMessageResolverTest extends WicketTestCase
 	{
 		executeTest(SimplePage_6.class, "SimplePageExpectedResult_6.html");
 	}
+
+	@Test
+	public void shouldEscapeMessageWhenEscapeAttributeIsSetToTrue() throws Exception
+	{
+		executeTest(WicketMessageResolverEscapePage.class, "WicketMessageResolverEscapePageExpectedResult.html");
+	}
+
+	@Test
+	public void shouldFailWithEscapeSetToUnsupportedValue()
+	{
+
+		try 
+		{
+			tester.startPage(WicketMessageResolverEscapePageWrongEscapeValue.class);
+			fail("Expected to fail: wrong escape value");
+		}
+		catch (StringValueConversionException ex)
+		{
+			String text = "Boolean value \"yesPlease\" not recognized";
+			assertEquals(text, ex.getMessage());
+		}
+	}
+
 }

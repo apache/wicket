@@ -120,8 +120,10 @@ public class WicketMessageResolver implements IComponentResolver
 						"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 				}
 
+				boolean escape = wtag.getAttributes().getBoolean("escape");
+
 				final String id = "_message_" + container.getPage().getAutoIndex();
-				MessageContainer label = new MessageContainer(id, messageKey);
+				MessageContainer label = new MessageContainer(id, messageKey, escape);
 				label.setRenderBodyOnly(container.getApplication()
 					.getMarkupSettings()
 					.getStripWicketTags());
@@ -157,16 +159,20 @@ public class WicketMessageResolver implements IComponentResolver
 
 		private static final String NOT_FOUND = "[Warning: Property for '%s' not found]";
 
+		private final boolean escapeValue;
+
 		/**
 		 * Construct.
 		 * 
 		 * @param id
 		 * @param messageKey
+		 * @param escapeValue
 		 */
-		public MessageContainer(final String id, final String messageKey)
+		public MessageContainer(final String id, final String messageKey, boolean escapeValue)
 		{
 			// The message key becomes the model
 			super(id, new Model<String>(messageKey));
+			this.escapeValue = escapeValue;
 
 			setEscapeModelStrings(false);
 		}
@@ -240,7 +246,7 @@ public class WicketMessageResolver implements IComponentResolver
 			final Map<String, Object> variablesReplaced = new HashMap<String, Object>();
 
 			// Replace all ${var} within the property value with real values
-			String text = new MapVariableInterpolator(value, childTags)
+			CharSequence text = new MapVariableInterpolator(value, childTags)
 			{
 				@Override
 				protected String getValue(final String variableName)
@@ -290,6 +296,11 @@ public class WicketMessageResolver implements IComponentResolver
 					return value;
 				}
 			}.toString();
+
+			if (escapeValue) 
+			{
+				text = Strings.escapeMarkup(text);
+			}
 
 			getResponse().write(text);
 
