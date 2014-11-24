@@ -542,7 +542,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		sb.append("var params = ").append(jsonArray).append(";\n");
 		sb.append("attrs.").append(AjaxAttributeName.EXTRA_PARAMETERS)
 				.append(" = params.concat(attrs.")
-				.append(AjaxAttributeName.EXTRA_PARAMETERS).append(");\n");
+				.append(AjaxAttributeName.EXTRA_PARAMETERS).append(" || []);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
 	}

@@ -1231,5 +1231,31 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 		});
+
+		/**
+		 * 'null' values passed to _asParamArray() should be spliced
+		 * See http://markmail.org/message/khuc2v37aakzyfth
+		 * WICKET-5759
+		 */
+		asyncTest('_asParamArray() should drop nulls.', function () {
+
+			expect(1);
+
+			var attrs = {
+				e: 'event1',
+				ep: [null, {name: "name", value: "value"}, null, null],
+				bsh: [function(attributes) {
+					var ep = attributes.ep;
+					equal(1, ep.length, 'The null values in the extra parameters should be dropped');
+					start();
+				}]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+		});
+
 	}
 });

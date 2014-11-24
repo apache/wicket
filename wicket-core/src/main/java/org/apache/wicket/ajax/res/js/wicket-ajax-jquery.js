@@ -484,8 +484,17 @@
 			}
 			else if (jQuery.isPlainObject(parameters)) {
 				for (name in parameters) {
-					value = parameters[name];
-					result.push({name: name, value: value});
+					if (name && parameters.hasOwnProperty(name)) {
+						value = parameters[name];
+						result.push({name: name, value: value});
+					}
+				}
+			}
+
+			for (var i = 0; i < result.length; i++) {
+				if (result[i] === null) {
+					result.splice(i, 1);
+					i--;
 				}
 			}
 
