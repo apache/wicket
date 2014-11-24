@@ -583,4 +583,40 @@ public class UrlRendererTest extends Assert
 		String rendered = renderer.renderRelativeUrl(Url.parse("/filter;jsessionid=1234"));
 		assertEquals("../", rendered);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5774
+	 */
+	@Test
+	public void renderFullUrlWithNoOpLeadingSegments()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("any/thing")));
+
+		String fullUrl = renderer.renderFullUrl(Url.parse("http://www.example.com:8888/./../one/two/three"));
+		assertEquals("http://www.example.com:8888/one/two/three", fullUrl);
+
+		fullUrl = renderer.renderFullUrl(Url.parse("http://www.example.com:8888/.././one/two/three"));
+		assertEquals("http://www.example.com:8888/one/two/three", fullUrl);
+
+		fullUrl = renderer.renderFullUrl(Url.parse("http://www.example.com:8888/one/.././two/three"));
+		assertEquals("http://www.example.com:8888/two/three", fullUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5774
+	 */
+	@Test
+	public void renderContextAbsoluteUrlWithNoOpLeadingSegments()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("any/thing")));
+
+		String fullUrl = renderer.renderFullUrl(Url.parse("/./../one/two/three"));
+		assertEquals("/one/two/three", fullUrl);
+
+		fullUrl = renderer.renderFullUrl(Url.parse("/.././one/two/three"));
+		assertEquals("/one/two/three", fullUrl);
+
+		fullUrl = renderer.renderFullUrl(Url.parse("/one/.././two/three"));
+		assertEquals("/two/three", fullUrl);
+	}
 }

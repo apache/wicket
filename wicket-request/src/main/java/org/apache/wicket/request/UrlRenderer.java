@@ -141,7 +141,7 @@ public class UrlRenderer
 		final String path;
 		if (url.isFull() || url.isContextAbsolute())
 		{
-			path = url.toString();
+			path = url.canonical().toString();
 		}
 		else
 		{
