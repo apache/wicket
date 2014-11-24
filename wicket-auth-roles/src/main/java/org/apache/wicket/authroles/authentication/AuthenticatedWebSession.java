@@ -65,7 +65,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 		signedIn = authenticate(username, password);
 		if (signedIn)
 		{
-			bind();
+			replaceSession();
 		}
 		return signedIn;
 	}
