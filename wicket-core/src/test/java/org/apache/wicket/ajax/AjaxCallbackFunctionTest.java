@@ -35,7 +35,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 			"function () {\n" //
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = [];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior1().getCallbackFunction().toString());
@@ -45,7 +45,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.1-\"," //
 				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
 				+ "var params = [];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior2().getCallbackFunction().toString());
@@ -59,7 +59,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 			"function (context) {\n" //
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = [];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior1().getCallbackFunction(context("context")).toString());
@@ -69,7 +69,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.1-\"," //
 				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
 				+ "var params = [];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior2().getCallbackFunction(context("context")).toString());
@@ -83,7 +83,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 			"function (explicit) {\n" //
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = [{\"name\":\"explicit\",\"value\":explicit}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior1().getCallbackFunction(explicit("explicit")).toString());
@@ -92,7 +92,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 			"function (explicit) {\n" //
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.1-\",\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
 				+ "var params = [{\"name\":\"explicit\",\"value\":explicit}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior2().getCallbackFunction(explicit("explicit")).toString());
@@ -106,7 +106,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 			"function () {\n" //
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = [{\"name\":\"resolved\",\"value\":window.location.href}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior1()
@@ -118,7 +118,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.1-\"," //
 				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
 				+ "var params = [{\"name\":\"resolved\",\"value\":window.location.href}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior2()
@@ -135,7 +135,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 			"function (converted) {\n" //
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
 				+ "var params = [{\"name\":\"converted\",\"value\":converted.substring(0, 3)}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior1()
@@ -148,7 +148,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.1-\"," //
 				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
 				+ "var params = [{\"name\":\"converted\",\"value\":converted.substring(0, 3)}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior2()
@@ -167,7 +167,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 				+ "var params = [{\"name\":\"explicit\",\"value\":explicit},"
 				+ "{\"name\":\"resolved\",\"value\":window.location.href},"
 				+ "{\"name\":\"converted\",\"value\":converted.substring(0, 3)}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior1()
@@ -184,7 +184,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 				+ "var params = [{\"name\":\"explicit\",\"value\":explicit},"
 				+ "{\"name\":\"resolved\",\"value\":window.location.href},"
 				+ "{\"name\":\"converted\",\"value\":converted.substring(0, 3)}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior2()
@@ -205,7 +205,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 				+ "var params = [{\"name\":\"sortIndex\",\"value\":$(this).find(':data(sortable-item)').index(ui.item)}," //
 				+ "{\"name\":\"sortItemId\",\"value\":$(ui.item).attr('id')}," //
 				+ "{\"name\":\"sortSenderId\",\"value\":$(ui.sender).attr('id')}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior1()
@@ -223,7 +223,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 				+ "var params = [{\"name\":\"sortIndex\",\"value\":$(this).find(':data(sortable-item)').index(ui.item)}," //
 				+ "{\"name\":\"sortItemId\",\"value\":$(ui.item).attr('id')}," //
 				+ "{\"name\":\"sortSenderId\",\"value\":$(ui.sender).attr('id')}];\n" //
-				+ "attrs.ep = params.concat(attrs.ep);\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
 			page.getBehavior2()
