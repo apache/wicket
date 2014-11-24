@@ -34,7 +34,7 @@ public interface IPropertiesFactoryContext
 	 *
 	 * to modify the way Wicket resolves keys to localized messages you can 
 	 * add custom resource loaders to the list returned by 
-	 * {@link org.apache.wicket.settings.IResourceSettings#getStringResourceLoaders()}.
+	 * {@link org.apache.wicket.settings.ResourceSettings#getStringResourceLoaders()}.
 	 *
 	 * @return The application wide localizer instance
 	 */

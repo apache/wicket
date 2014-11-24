@@ -20,15 +20,15 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * A response filter can be added to the
- * {@link org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(IResponseFilter)}
+ * {@link org.apache.wicket.settings.RequestCycleSettings#addResponseFilter(IResponseFilter)}
  * object. This will be called from the Buffered Response objects right before they would send it to
  * the real responses. You have to use the
- * {@link org.apache.wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)}(to true which
+ * {@link org.apache.wicket.settings.RequestCycleSettings#setBufferResponse(boolean)}(to true which
  * is the default) for this filtering to work.
  * 
  * @author jcompagner
  * 
- * @see org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(IResponseFilter)
+ * @see org.apache.wicket.settings.RequestCycleSettings#addResponseFilter(IResponseFilter)
  */
 public interface IResponseFilter
 {

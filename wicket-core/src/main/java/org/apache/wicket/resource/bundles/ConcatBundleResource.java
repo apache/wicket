@@ -230,7 +230,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 
 	/**
 	 * If a bundle resource is missing then throws a {@link MissingResourceException} if
-	 * {@link org.apache.wicket.settings.IResourceSettings#getThrowExceptionOnMissingResource()}
+	 * {@link org.apache.wicket.settings.ResourceSettings#getThrowExceptionOnMissingResource()}
 	 * says so, or logs a warning message if the logging level allows
 	 * @param reference
 	 *              The resource reference to the missing resource
@@ -329,7 +329,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	}
 
 	/**
-	 * @return the result of {@link org.apache.wicket.settings.IResourceSettings#getThrowExceptionOnMissingResource()}
+	 * @return the result of {@link org.apache.wicket.settings.ResourceSettings#getThrowExceptionOnMissingResource()}
 	 */
 	protected boolean getThrowExceptionOnMissingResource()
 	{

@@ -978,7 +978,7 @@ public abstract class WebApplication extends Application
 	 * @param url
 	 *          The url used as a key
 	 * @return the stored buffered response. {@code null} if there is no stored response for the given url
-	 * @see org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy#REDIRECT_TO_BUFFER
+	 * @see org.apache.wicket.settings.RequestCycleSettings.RenderStrategy#REDIRECT_TO_BUFFER
 	 */
 	public BufferedWebResponse getAndRemoveBufferedResponse(String sessionId, Url url)
 	{
