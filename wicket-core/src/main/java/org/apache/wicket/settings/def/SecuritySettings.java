@@ -23,8 +23,8 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.settings.ISecuritySettings;
-import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICryptFactory;
+import org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory;
 
 /**
  * @author Jonathan Locke
@@ -85,7 +85,7 @@ public class SecuritySettings implements ISecuritySettings
 	{
 		if (cryptFactory == null)
 		{
-			cryptFactory = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY);
+			cryptFactory = new KeyInSessionSunJceCryptFactory();
 		}
 		return cryptFactory;
 	}
