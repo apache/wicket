@@ -117,6 +117,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	{
 		if (!attached)
 		{
+			attached = true;
 			transientModelObject = load();
 
 			if (log.isDebugEnabled())
@@ -125,7 +126,6 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 					", requestCycle " + RequestCycle.get());
 			}
 
-			attached = true;
 			onAttach();
 		}
 		return transientModelObject;
