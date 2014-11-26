@@ -110,6 +110,9 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	}
 
 	/**
+	 * Note: If {@link #load()} fails with an exception then {@code null} is kept as the attached
+	 * value. Wicket 7.x improves this by staying detached instead, see WICKET-5772.
+	 * 
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
 	@Override
