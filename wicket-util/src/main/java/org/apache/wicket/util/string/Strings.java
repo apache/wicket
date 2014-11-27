@@ -1404,17 +1404,17 @@ public final class Strings
 	 * </p>
 	 * 
 	 * <pre>
-	 * StringUtils.getLevenshteinDistance(null, *)             = IllegalArgumentException
-	 * StringUtils.getLevenshteinDistance(*, null)             = IllegalArgumentException
-	 * StringUtils.getLevenshteinDistance("","")               = 0
-	 * StringUtils.getLevenshteinDistance("","a")              = 1
-	 * StringUtils.getLevenshteinDistance("aaapppp", "")       = 7
-	 * StringUtils.getLevenshteinDistance("frog", "fog")       = 1
-	 * StringUtils.getLevenshteinDistance("fly", "ant")        = 3
-	 * StringUtils.getLevenshteinDistance("elephant", "hippo") = 7
-	 * StringUtils.getLevenshteinDistance("hippo", "elephant") = 7
-	 * StringUtils.getLevenshteinDistance("hippo", "zzzzzzzz") = 8
-	 * StringUtils.getLevenshteinDistance("hello", "hallo")    = 1
+	 * Strings.getLevenshteinDistance(null, *)             = IllegalArgumentException
+	 * Strings.getLevenshteinDistance(*, null)             = IllegalArgumentException
+	 * Strings.getLevenshteinDistance("","")               = 0
+	 * Strings.getLevenshteinDistance("","a")              = 1
+	 * Strings.getLevenshteinDistance("aaapppp", "")       = 7
+	 * Strings.getLevenshteinDistance("frog", "fog")       = 1
+	 * Strings.getLevenshteinDistance("fly", "ant")        = 3
+	 * Strings.getLevenshteinDistance("elephant", "hippo") = 7
+	 * Strings.getLevenshteinDistance("hippo", "elephant") = 7
+	 * Strings.getLevenshteinDistance("hippo", "zzzzzzzz") = 8
+	 * Strings.getLevenshteinDistance("hello", "hallo")    = 1
 	 * </pre>
 	 * 
 	 * Copied from Apache commons-lang StringUtils 3.0
