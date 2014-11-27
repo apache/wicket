@@ -159,7 +159,7 @@ public class ModificationWatcher implements IModificationWatcher
 					modifiableLastModified.after(entry.lastModifiedTime))
 			{
 				// Notify all listeners that the modifiable was modified
-				entry.listeners.notifyListeners();
+				entry.listeners.notifyListeners(entry.modifiable);
 
 				// Update timestamp
 				entry.lastModifiedTime = modifiableLastModified;

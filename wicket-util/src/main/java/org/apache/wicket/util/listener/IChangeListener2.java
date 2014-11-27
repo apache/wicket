@@ -19,45 +19,16 @@ package org.apache.wicket.util.listener;
 import org.apache.wicket.util.watch.IModifiable;
 
 /**
- * Holds a set of IChangeListeners.
- * 
- * Note that these classes are not meant to be serializable or for you to hold them in session (see
- * WICKET-2697)
- * 
- * @author Jonathan Locke
+ * Generic "something changed" listener interface that also provides the
+ * changed object as an argument.
  */
-public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
+// TODO Wicket 8: Rename to IChangeListener and remove the old one
+public interface IChangeListener2<T extends IModifiable> extends IChangeListener
 {
-	private static final long serialVersionUID = 1L;
-
-	public void notifyListeners()
-	{
-		notify(new INotifier<IChangeListener>()
-		{
-			@Override
-			public void notify(final IChangeListener object)
-			{
-				object.onChange();
-			}
-		});
-	}
-
-	public void notifyListeners(final IModifiable modifiable)
-	{
-		notify(new INotifier<IChangeListener>()
-		{
-			@Override
-			public void notify(final IChangeListener listener)
-			{
-				if (listener instanceof IChangeListener2)
-				{
-					((IChangeListener2) listener).onChange(modifiable);
-				}
-				else
-				{
-					listener.onChange();
-				}
-			}
-		});
-	}
+	/**
+	 * Client method that is called to indicate that something changed.
+	 *
+	 * @param modifiable The object that has changed
+	 */
+	void onChange(T modifiable);
 }
