@@ -28,10 +28,6 @@ public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
 {
 	private static final long serialVersionUID = 1L;
 
-	protected void notifyListener(final IChangeListener listener)
-	{
-	}
-
 	/**
 	 * 
 	 */
