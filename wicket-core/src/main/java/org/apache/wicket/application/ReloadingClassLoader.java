@@ -46,13 +46,11 @@ public class ReloadingClassLoader extends URLClassLoader
 {
 	private static final Logger log = LoggerFactory.getLogger(ReloadingClassLoader.class);
 
-	private static final Set<URL> urls = new TreeSet<URL>(new UrlExternalFormComparator());
+	private static final Set<URL> urls = new TreeSet<>(new UrlExternalFormComparator());
 
-	private static final List<String> patterns = new ArrayList<String>();
+	private static final List<String> patterns = new ArrayList<>();
 
 	private IChangeListener listener;
-
-	private final Duration pollFrequency = Duration.seconds(3);
 
 	private final IModificationWatcher watcher;
 
@@ -204,6 +202,7 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			addURL(url);
 		}
+		Duration pollFrequency = Duration.seconds(3);
 		watcher = new ModificationWatcher(pollFrequency);
 	}
 
