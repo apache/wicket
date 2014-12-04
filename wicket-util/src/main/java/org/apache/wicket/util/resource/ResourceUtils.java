@@ -31,6 +31,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ResourceUtils
 {
+	public static final String MIN_POSTFIX_DEFAULT = "min";
+
 	private static final Pattern LOCALE_PATTERN = Pattern.compile("_([a-z]{2})(_([A-Z]{2})(_([^_]+))?)?$");
 
 	private final static Set<String> isoCountries = new HashSet<>(
@@ -38,14 +40,41 @@ public class ResourceUtils
 
 	private final static Set<String> isoLanguages = new HashSet<>(
 		Arrays.asList(Locale.getISOLanguages()));
-
+	
 	/**
-	 * Construct.
+	 * Return the minified version for a given resource name.
+	 * For example '/css/coolTheme.css' becomes '/css/coolTheme.min.css'
+	 * 
+	 * @param name
+	 * 			The original resource name
+	 * @param minPostfix
+	 * 			The postfix to use for minified name
+	 * @return The minified resource name
 	 */
-	private ResourceUtils()
+	public static String getMinifiedName(String name, String minPostfix)
 	{
+		String minifiedName;
+		int idxOfExtension = name.lastIndexOf('.');
+		final String dottedPostfix = "." + minPostfix;
+		
+		if (idxOfExtension > -1)
+		{
+			String extension = name.substring(idxOfExtension);
+			final String baseName = name.substring(0, name.length() - extension.length() + 1);
+			if (!dottedPostfix.equals(extension) && !baseName.endsWith(dottedPostfix + "."))
+			{
+				minifiedName = baseName + minPostfix + extension;
+			} else
+			{
+				minifiedName = name;
+			}
+		} else
+		{
+			minifiedName = name + dottedPostfix;
+		}
+		return minifiedName;
 	}
-
+	
 	/**
 	 * Extract the locale from the filename
 	 * 
