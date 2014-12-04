@@ -204,8 +204,8 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 			"'": '&#39;'
 		};
 
-		function replaceChar(char) {
-			return toEscape[char] || char;
+		function replaceChar(ch) {
+			return toEscape[ch] || ch;
 		}
 
 		function htmlEscape(fileName) {
