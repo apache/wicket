@@ -53,8 +53,7 @@ import org.apache.wicket.util.string.Strings;
  * be processed within the request they were uploaded.
  * 
  * Uses javascript implementation from
- * http://the-stickman.com/web-development/javascript/upload-multiple
- * -files-with-a-single-file-element/
+ * http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
  * 
  * For customizing caption text see {@link #RESOURCE_LIMITED} and {@link #RESOURCE_UNLIMITED}
  * 

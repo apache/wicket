@@ -196,10 +196,28 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 
 	this.getOnlyFileName = function(stringValue)
 	{
+		var toEscape = {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			'"': '&quot;',
+			"'": '&#39;'
+		};
+
+		function replaceChar(char) {
+			return toEscape[char] || char;
+		}
+
+		function htmlEscape(fileName) {
+			return fileName.replace(/[&<>'"]/g, replaceChar);
+		}
+
 		var separatorIndex1 = stringValue.lastIndexOf('\\');
 		var separatorIndex2 = stringValue.lastIndexOf('/');
 		separatorIndex1 = Math.max(separatorIndex1, separatorIndex2);
-		return separatorIndex1 >= 0 ? stringValue.slice(separatorIndex1 + 1, stringValue.length) : stringValue;
+		var fileName = separatorIndex1 >= 0 ? stringValue.slice(separatorIndex1 + 1, stringValue.length) : stringValue;
+		fileName = htmlEscape(fileName);
+		return fileName;
 	};
 
 }
