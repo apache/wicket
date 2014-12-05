@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.hamcrest.Matchers.is;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MarkupContainer;
@@ -60,6 +62,72 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 		// execute the second event (with the leading 'on')
 		tester.executeAjaxEvent("comp", "oneventTwo");
 		assertEquals(4, counter.get());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void nullName()
+	{
+		new EventNamesBehavior(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void emptyName()
+	{
+		new EventNamesBehavior("");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void spacesName()
+	{
+		new EventNamesBehavior("  ");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void tabName()
+	{
+		new EventNamesBehavior("\t");
+	}
+
+	@Test
+	public void cutLeadingOnPrefix() {
+		AjaxEventBehavior behavior = new EventNamesBehavior("onevent");
+		assertThat(behavior.getEvent(), is("event"));
+
+		behavior = new EventNamesBehavior("event");
+		assertThat(behavior.getEvent(), is("event"));
+
+		behavior = new EventNamesBehavior("onevent onevent2");
+		assertThat(behavior.getEvent(), is("event event2"));
+
+		behavior = new EventNamesBehavior("event onevent2");
+		assertThat(behavior.getEvent(), is("event event2"));
+
+		behavior = new EventNamesBehavior("event event2");
+		assertThat(behavior.getEvent(), is("event event2"));
+
+		behavior = new EventNamesBehavior("event  onevent2on");
+		assertThat(behavior.getEvent(), is("event event2on"));
+
+		behavior = new EventNamesBehavior("  event   onevent2on    \t  onevent3on  onon ");
+		assertThat(behavior.getEvent(), is("event event2on event3on on"));
+	}
+
+	private static class EventNamesBehavior extends AjaxEventBehavior
+	{
+		/**
+		 * Construct.
+		 *
+		 * @param event the event this behavior will be attached to
+		 */
+		public EventNamesBehavior(String event)
+		{
+			super(event);
+		}
+
+		@Override
+		protected void onEvent(AjaxRequestTarget target)
+		{
+		}
 	}
 
 	/**

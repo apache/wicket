@@ -16,11 +16,16 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +48,14 @@ import org.slf4j.LoggerFactory;
  * This behavior will be linked to the <em>click</em> javascript event of the div WebMarkupContainer
  * represents, and so anytime a user clicks this div the {@link #onEvent(AjaxRequestTarget)} of the
  * behavior is invoked.
- * 
+ *
+ * <p>
+ * <strong>Note</strong>: {@link #getEvent()} method cuts any <em>on</em> prefix from the given event name(s).
+ * This is being done for easier migration of applications coming from Wicket 1.5.x where Wicket used
+ * inline attributes like 'onclick=...'. If the application needs to use custom events with names starting with
+ * <em>on</em> then {@link #getEvent()} should be overridden.
+ * </p>
+ *
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -69,18 +81,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 		onCheckEvent(event);
 
-		event = event.toLowerCase();
-		if (event.startsWith("on"))
-		{
-			String shortName = event.substring(2);
-			// TODO Wicket 8 Change this to throw an error in the milestone/RC versions and remove it for the final version
-			LOGGER.warn("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
-					"'on' in the event name '{}'. Please use just '{}'. Wicket 8.x won't manipulate the provided event " +
-					"names so the leading 'on' may break your application."
-					, event, shortName);
-			event = shortName;
-		}
-
 		this.event = event;
 	}
 
@@ -102,7 +102,9 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		super.updateAjaxAttributes(attributes);
 
-		attributes.setEventNames(event);
+		String evt = getEvent();
+		Checks.notEmpty(evt, "getEvent() should return non-empty event name(s)");
+		attributes.setEventNames(evt);
 	}
 
 	/**
@@ -115,13 +117,33 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	}
 
 	/**
-	 * 
 	 * @return event
 	 *      the event this behavior is attached to
 	 */
-	public final String getEvent()
+	public String getEvent()
 	{
-		return event;
+		String events = event.toLowerCase();
+		String[] splitEvents = events.split("\\s+");
+		List<String> cleanedEvents = new ArrayList<>(splitEvents.length);
+		for (String evt : splitEvents)
+		{
+			if (Strings.isEmpty(evt) == false)
+			{
+				if (evt.startsWith("on"))
+				{
+					String shortName = evt.substring(2);
+					// TODO Wicket 8 Change this to throw an error in the milestone/RC versions and remove it for the final version
+					LOGGER.warn("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+							"'on' in the event name '{}'. Please use just '{}'. Wicket 8.x won't manipulate the provided event " +
+							"names so the leading 'on' may break your application."
+							, evt, shortName);
+					evt = shortName;
+				}
+				cleanedEvents.add(evt);
+			}
+		}
+
+		return Strings.join(" ", cleanedEvents);
 	}
 
 	/**
