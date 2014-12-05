@@ -40,9 +40,6 @@ public class ContextRelativeResourceReference extends ResourceReference
 	/** The minfied postfix. */
 	private final String minPostfix;	
 	
-	/** The context relative resource. */
-	private final ContextRelativeResource contextRelativeResource;
-	
 	/**
 	 * Instantiates a new context relative resource reference for the given name. The resource
 	 * will be minified in DEPLOYMENT mode and "min" will be used as postfix.
@@ -103,7 +100,6 @@ public class ContextRelativeResourceReference extends ResourceReference
 		
 		this.minPostfix = minPostfix;
 		this.minifyIt = minifyIt;
-		this.contextRelativeResource = buildContextRelativeResource(name, minPostfix);
 	}
 	
 	/**
@@ -141,13 +137,10 @@ public class ContextRelativeResourceReference extends ResourceReference
             && Application.get().getResourceSettings().getUseMinifiedResources();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.request.resource.ResourceReference#getResource()
-	 */
 	@Override
 	public final ContextRelativeResource getResource()
 	{
-		return contextRelativeResource;
+		return buildContextRelativeResource(getName(), minPostfix);
 	}
 	
 	/**
@@ -155,7 +148,7 @@ public class ContextRelativeResourceReference extends ResourceReference
 	 *
 	 * @return true, if resource can be minified
 	 */
-	public final boolean isMinifyIt()
+	public boolean isMinifyIt()
 	{
 		return minifyIt;
 	}
@@ -166,7 +159,7 @@ public class ContextRelativeResourceReference extends ResourceReference
 	 *
 	 * @return the minified postfix
 	 */
-	public final String getMinPostfix()
+	public String getMinPostfix()
 	{
 		return minPostfix;
 	}
