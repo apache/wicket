@@ -31,13 +31,14 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ResourceUtils
 {
+	/** The default postfix for minified names (ex: /css/mystyle.min.css) **/
 	public static final String MIN_POSTFIX_DEFAULT = "min";
-
+	/** Regular expression patter to extract the locale from the filename (ex: de_DE) **/
 	private static final Pattern LOCALE_PATTERN = Pattern.compile("_([a-z]{2})(_([A-Z]{2})(_([^_]+))?)?$");
-
+	/** Stores standard ISO country codes from {@code java.util.Locale} **/
 	private final static Set<String> isoCountries = new HashSet<>(
 		Arrays.asList(Locale.getISOCountries()));
-
+	/** Stores standard ISO language codes from {@code java.util.Locale} **/
 	private final static Set<String> isoLanguages = new HashSet<>(
 		Arrays.asList(Locale.getISOLanguages()));
 	

@@ -16,38 +16,19 @@
  */
 package org.apache.wicket.request.resource;
 
-import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class ContextRelativeResourceReferenceTest
+public class ContextRelativeResourceReferenceTest extends WicketTestCase
 {
-	private static WicketTester tester;
-	
 	static final String RESOURCE_NAME = "/foo/baar/myLibrary";
 	static final String ALREADY_MINIFIED = RESOURCE_NAME + ".min.js";
 	static final String TO_BE_MINIFIED = RESOURCE_NAME + ".js";
 	static final String CUSTOM_SUFFIX = "compress";
-	
-	@BeforeClass
-	static public void setUp()
-	{
-		MockApplication application = new MockApplication()
-		{
-			@Override
-			protected void init()
-			{
-				super.init();
-				getResourceSettings().setUseMinifiedResources(true);
-			}
-		};		
-		
-		tester = new WicketTester(application);
-	}
-	
 	
 	@Test
 	public void testMinifyResource() throws Exception
@@ -73,7 +54,16 @@ public class ContextRelativeResourceReferenceTest
 		ContextRelativeResourceReference resourceReference = new ContextRelativeResourceReference(TO_BE_MINIFIED, CUSTOM_SUFFIX);
 		Assert.assertTrue(testResourceKey(resourceReference, RESOURCE_NAME + "." + CUSTOM_SUFFIX + ".js"));
 	}
-
+	
+	@Override
+	protected WicketTester newWicketTester(WebApplication app)
+	{
+		WicketTester tester = super.newWicketTester(app);
+		app.getResourceSettings().setUseMinifiedResources(true);
+	
+		return tester;
+	}
+	
 	private boolean testResourceKey(ContextRelativeResourceReference resourceReference, String expectedName)
 	{
 		ContextRelativeResource resource = resourceReference.getResource();
