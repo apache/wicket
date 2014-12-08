@@ -94,20 +94,29 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// It is <wicket:head>. Because they do not provide any
 				// additional functionality they are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
-				// the tag.
-				WebMarkupContainer wicketHeadContainer = new WicketHeadContainer();
-
+				// the tag (class WicketHeadContainer).
+				
 				if (header == null)
 				{
 					// Create a special header component which will gather
 					// additional input the <head> from 'contributors'.
 					header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
 						page.getAutoIndex(), tag);
-					header.add(wicketHeadContainer);
+					header.add(new WicketHeadContainer());
 					return header;
 				}
 
-				header.add(wicketHeadContainer);
+				WicketHeadContainer wicketHeadContainer = 
+					header.visitChildren(new FindWicketHeadContainer());
+				
+				//We just need one WicketHeadContainer, no matter how 
+				//many <wicket:head> we have.
+				if (wicketHeadContainer == null)
+				{
+					wicketHeadContainer = new WicketHeadContainer();
+					header.add(wicketHeadContainer);
+				}
+				
 				return wicketHeadContainer;
 			}
 			else if (container instanceof HtmlHeaderContainer)
@@ -182,5 +191,23 @@ public class HtmlHeaderResolver implements IComponentResolver
 
 			setRenderBodyOnly(true);
 		}
+	}
+	
+	/**
+	 * Visitor to find children of type {@link WicketHeadContainer}}
+	 */
+	private static class FindWicketHeadContainer implements 
+			IVisitor<Component, WicketHeadContainer>
+	{
+		@Override
+		public void component(Component component, IVisit<WicketHeadContainer> visit)
+		{
+			if(component instanceof WicketHeadContainer)
+			{
+				WicketHeadContainer reult = (WicketHeadContainer)component;
+				visit.stop(reult);
+			}
+		}
+		
 	}
 }
