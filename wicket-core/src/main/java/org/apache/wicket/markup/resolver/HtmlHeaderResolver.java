@@ -202,12 +202,11 @@ public class HtmlHeaderResolver implements IComponentResolver
 		@Override
 		public void component(Component component, IVisit<WicketHeadContainer> visit)
 		{
-			if(component instanceof WicketHeadContainer)
+			if (component instanceof WicketHeadContainer)
 			{
-				WicketHeadContainer reult = (WicketHeadContainer)component;
-				visit.stop(reult);
+				WicketHeadContainer result = (WicketHeadContainer) component;
+				visit.stop(result);
 			}
-		}
-		
+		}	
 	}
 }
