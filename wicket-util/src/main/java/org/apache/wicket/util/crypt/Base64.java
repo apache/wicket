@@ -34,6 +34,8 @@ import java.math.BigInteger;
  * Josefsson.
  * </p>
  * 
+ * TODO Wicket 8: consider to deprecate this class in Wicket 7 and replace it with standard Java 8 {@code java.util.Base64}
+ * 
  * @author Apache Software Foundation
  * @author Juergen Donnerstag
  * 

@@ -629,6 +629,9 @@ public final class Strings
 	/**
 	 * Joins string fragments using the specified separator
 	 * 
+	 * TODO Wicket 8: consider to deprecate this method in Wicket 7 and replace it with standard 
+	 * Java 8 {@code String#join(CharSequence delimiter, Iterable<? extends CharSequence> elements)} 
+	 * 
 	 * @param separator
 	 * @param fragments
 	 * @return combined fragments
@@ -645,6 +648,9 @@ public final class Strings
 
 	/**
 	 * Joins string fragments using the specified separator
+	 * 
+	 * TODO Wicket 8: consider to deprecate this method in Wicket 7 and replace it with standard 
+	 * Java 8 {@code String#join(CharSequence delimiter, CharSequence... elements)}
 	 * 
 	 * @param separator
 	 * @param fragments
