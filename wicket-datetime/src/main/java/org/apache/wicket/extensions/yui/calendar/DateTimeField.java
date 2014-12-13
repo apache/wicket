@@ -163,11 +163,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 		dateField.add(newDatePicker());
 
 		// Create and add the "hours" TextField
-		add(hoursField = new TextField<Integer>(HOURS, new PropertyModel<Integer>(this, HOURS),
+		add(hoursField = newHoursTextField(HOURS, new PropertyModel<Integer>(this, HOURS),
 			Integer.class));
-		hoursField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator
-			.range(1, 12));
-		hoursField.setLabel(new Model<>(HOURS));
 
 		// Create and add the "minutes" TextField
 		add(minutesField = new TextField<Integer>(MINUTES,
@@ -206,6 +203,25 @@ public class DateTimeField extends FormComponentPanel<Date>
 				return minutesField.determineVisibility();
 			}
 		});
+	}
+
+	/**
+	 * create a new {@link TextField} instance for hours to be added to this panel.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            model that should be used by the {@link TextField}
+	 * @param type
+	 *            the type of the text field
+	 * @return a new text field instance
+	 */
+	protected TextField<Integer> newHoursTextField(final String id, IModel<Integer> model, Class<Integer> type) {
+		TextField<Integer> hoursTextField = new TextField<Integer>(id, model, type);
+		hoursTextField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator
+			.range(1, 12));
+		hoursTextField.setLabel(new Model<>(HOURS));
+		return hoursTextField;
 	}
 
 	/**
