@@ -217,7 +217,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * @return a new text field instance
 	 */
 	protected TextField<Integer> newHoursTextField(final String id, IModel<Integer> model, Class<Integer> type) {
-		TextField<Integer> hoursTextField = new TextField<Integer>(id, model, type);
+		TextField<Integer> hoursTextField = new TextField<>(id, model, type);
 		hoursTextField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator
 			.range(1, 12));
 		hoursTextField.setLabel(new Model<>(HOURS));
