@@ -51,6 +51,13 @@ import org.apache.wicket.util.lang.Args;
  */
 public final class Strings
 {
+	/** 
+	 * TODO Wicket 8: consider to deprecate methods {@code join} in Wicket 7 and replace it with standard 
+	 * Java 8 methods {@code String#join(CharSequence delimiter, CharSequence... elements)} 
+	 * and {@code String#join(CharSequence delimiter, Iterable<? extends CharSequence> elements)}
+	 *
+	 * */
+	
 	/**
 	 * The line separator for the current platform.
 	 */
@@ -629,13 +636,10 @@ public final class Strings
 	/**
 	 * Joins string fragments using the specified separator
 	 * 
-	 * TODO Wicket 8: consider to deprecate this method in Wicket 7 and replace it with standard 
-	 * Java 8 {@code String#join(CharSequence delimiter, Iterable<? extends CharSequence> elements)} 
-	 * 
 	 * @param separator
 	 * @param fragments
 	 * @return combined fragments
-	 */
+     */
 	public static String join(final String separator, final List<String> fragments)
 	{
 		if (fragments == null)
@@ -648,9 +652,6 @@ public final class Strings
 
 	/**
 	 * Joins string fragments using the specified separator
-	 * 
-	 * TODO Wicket 8: consider to deprecate this method in Wicket 7 and replace it with standard 
-	 * Java 8 {@code String#join(CharSequence delimiter, CharSequence... elements)}
 	 * 
 	 * @param separator
 	 * @param fragments

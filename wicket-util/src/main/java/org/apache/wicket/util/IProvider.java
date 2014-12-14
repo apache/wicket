@@ -19,9 +19,6 @@ package org.apache.wicket.util;
 /**
  * An object that can provide instances of type {@code T}
  * 
- * TODO Wicket 8: consider to deprecate this interface in Wicket 7 and replace it with standard 
- * Java 8 {@code java.util.function.Supplier<T>} which is virtually identical.
- * 
  * @author igor.vaynberg
  * @param <T>
  */
@@ -33,4 +30,9 @@ public interface IProvider<T>
 	 * @return instance of type {@code T}
 	 */
 	T get();
+	
+	/** 
+	 * TODO Wicket 8: consider to deprecate this interface in Wicket 7 and replace it with standard 
+     * Java 8 {@code java.util.function.Supplier<T>} which is virtually identical.
+	 * */
 }

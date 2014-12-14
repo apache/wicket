@@ -34,8 +34,6 @@ import java.math.BigInteger;
  * Josefsson.
  * </p>
  * 
- * TODO Wicket 8: consider to deprecate this class in Wicket 7 and replace it with standard Java 8 {@code java.util.Base64}
- * 
  * @author Apache Software Foundation
  * @author Juergen Donnerstag
  * 
@@ -43,10 +41,12 @@ import java.math.BigInteger;
  */
 public class Base64
 {
+    //* TODO Wicket 8: consider to deprecate this class in Wicket 7 and replace it with standard Java 8 {@code java.util.Base64}
+	
 	private static final int DEFAULT_BUFFER_RESIZE_FACTOR = 2;
 
 	private static final int DEFAULT_BUFFER_SIZE = 8192;
-
+	
 	/**
 	 * Chunk size per RFC 2045 section 6.8.
 	 * 
