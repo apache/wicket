@@ -2210,7 +2210,7 @@ public abstract class Component
 		{
 			// only process feedback panel when we are about to be rendered.
 			// setRenderingFlag is false in case prepareForRender is called only to build component
-			// hierarchy (i.e. in BookmarkableListenerInterfaceRequestTarget).
+			// hierarchy (i.e. in BookmarkableListenerInterfaceRequestHandler).
 			// prepareForRender(true) is always called before the actual rendering is done so
 			// that's where feedback panels gather the messages
 
