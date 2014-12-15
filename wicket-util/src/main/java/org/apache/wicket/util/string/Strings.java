@@ -51,13 +51,6 @@ import org.apache.wicket.util.lang.Args;
  */
 public final class Strings
 {
-	/** 
-	 * TODO Wicket 8: consider to deprecate methods {@code join} in Wicket 7 and replace it with standard 
-	 * Java 8 methods {@code String#join(CharSequence delimiter, CharSequence... elements)} 
-	 * and {@code String#join(CharSequence delimiter, Iterable<? extends CharSequence> elements)}
-	 *
-	 * */
-	
 	/**
 	 * The line separator for the current platform.
 	 */
@@ -640,6 +633,9 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
      */
+	// TODO Wicket 8: consider to deprecate methods {@code join} in Wicket 7 and replace it with standard
+	// Java 8 methods {@code String#join(CharSequence delimiter, CharSequence... elements)}
+	// and {@code String#join(CharSequence delimiter, Iterable<? extends CharSequence> elements)}
 	public static String join(final String separator, final List<String> fragments)
 	{
 		if (fragments == null)
@@ -649,7 +645,6 @@ public final class Strings
 		return join(separator, fragments.toArray(new String[fragments.size()]));
 	}
 
-
 	/**
 	 * Joins string fragments using the specified separator
 	 * 
@@ -657,6 +652,9 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
 	 */
+	// TODO Wicket 8: consider to deprecate methods {@code join} in Wicket 7 and replace it with standard
+	// Java 8 methods {@code String#join(CharSequence delimiter, CharSequence... elements)}
+	// and {@code String#join(CharSequence delimiter, Iterable<? extends CharSequence> elements)}
 	public static String join(final String separator, final String... fragments)
 	{
 		if ((fragments == null) || (fragments.length < 1))
