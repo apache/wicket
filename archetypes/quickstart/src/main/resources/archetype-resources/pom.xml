@@ -43,9 +43,9 @@
 	</licenses>
 	<properties>
 		<wicket.version>7.0.0-SNAPSHOT</wicket.version>
-		<jetty9.version>9.2.3.v20140905</jetty9.version>
-		<log4j.version>2.0.2</log4j.version>
-		<junit.version>4.11</junit.version>
+		<jetty9.version>9.2.6.v20141205</jetty9.version>
+		<log4j.version>2.1</log4j.version>
+		<junit.version>4.12</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
 		<wtp.version>none</wtp.version>
