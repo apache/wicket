@@ -401,9 +401,8 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		return getString(component);
 	}
 
-	private String getString(final Component component)
+	protected String getString(final Component component)
 	{
-
 		final Localizer localizer = getLocalizer();
 
 		String value;
