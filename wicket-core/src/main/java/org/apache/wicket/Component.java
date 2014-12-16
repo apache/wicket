@@ -1156,23 +1156,30 @@ public abstract class Component
 	@Override
 	public final void detach()
 	{
-		setFlag(FLAG_DETACHING, true);
-		onDetach();
-		if (getFlag(FLAG_DETACHING))
+		try
 		{
-			throw new IllegalStateException(Component.class.getName() +
-				" has not been properly detached. Something in the hierarchy of " +
-				getClass().getName() +
-				" has not called super.onDetach() in the override of onDetach() method");
+			setFlag(FLAG_DETACHING, true);
+			onDetach();
+			if (getFlag(FLAG_DETACHING))
+			{
+				throw new IllegalStateException(Component.class.getName() +
+						" has not been properly detached. Something in the hierarchy of " +
+						getClass().getName() +
+						" has not called super.onDetach() in the override of onDetach() method");
+			}
+
+			// always detach models because they can be attached without the
+			// component. eg component has a compoundpropertymodel and one of its
+			// children component's getmodelobject is called
+			detachModels();
+
+			// detach any behaviors
+			new Behaviors(this).detach();
 		}
-
-		// always detach models because they can be attached without the
-		// component. eg component has a compoundpropertymodel and one of its
-		// children component's getmodelobject is called
-		detachModels();
-
-		// detach any behaviors
-		new Behaviors(this).detach();
+		catch (Exception x)
+		{
+			throw new WicketRuntimeException("An error occurred while detaching component: " + toString(true), x);
+		}
 
 		// always detach children because components can be attached
 		// independently of their parents
