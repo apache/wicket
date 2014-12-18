@@ -405,7 +405,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to a boolean.
+	 * Convert this text to a Boolean.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -414,6 +414,34 @@ public class StringValue implements IClusterable
 	{
 		return Strings.toBoolean(text);
 	}
+
+    /**
+   	 * Convert to Boolean, returning default value if text is inconvertible.
+   	 *
+   	 * @param defaultValue
+   	 *            the default value
+   	 * @return the converted text as a Boolean or the default value if text is empty or inconvertible
+   	 * @see Strings#isTrue(String)
+   	 */
+   	public final Boolean toBooleanObject(final Boolean defaultValue)
+   	{
+   		if (text != null)
+   		{
+   			try
+   			{
+   				return toBooleanObject();
+   			}
+   			catch (StringValueConversionException x)
+   			{
+   				if (LOG.isDebugEnabled())
+   				{
+   					LOG.debug(String.format(
+   						"An error occurred while converting '%s' to a Boolean: %s", text, x.getMessage()), x);
+   				}
+   			}
+   		}
+   		return defaultValue;
+   	}
 
 	/**
 	 * Convert this text to a char.
@@ -427,7 +455,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to character, returning default value if text is inconvertible.
+	 * Convert to char, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
 	 *            the default value
@@ -446,7 +474,7 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a character: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to a char: %s", text, x.getMessage()), x);
 				}
 			}
 		}
@@ -463,6 +491,33 @@ public class StringValue implements IClusterable
 	{
 		return toChar();
 	}
+
+    /**
+   	 * Convert to Character, returning default value if text is inconvertible.
+   	 *
+   	 * @param defaultValue
+   	 *            the default value
+   	 * @return the converted text as a Character or the default value if text is empty or inconvertible
+   	 */
+   	public final Character toCharacter(final Character defaultValue)
+   	{
+   		if (text != null)
+   		{
+   			try
+   			{
+   				return toCharacter();
+   			}
+   			catch (StringValueConversionException x)
+   			{
+   				if (LOG.isDebugEnabled())
+   				{
+   					LOG.debug(String.format(
+   						"An error occurred while converting '%s' to a Character: %s", text, x.getMessage()), x);
+   				}
+   			}
+   		}
+   		return defaultValue;
+   	}
 
 	/**
 	 * Convert this text to a double.
@@ -520,6 +575,33 @@ public class StringValue implements IClusterable
 	{
 		return toDouble();
 	}
+
+    /**
+   	 * Convert to Double, returning default value if text is inconvertible.
+   	 *
+   	 * @param defaultValue
+   	 *            the default value
+   	 * @return the converted text as a Double or the default value if text is empty or inconvertible
+   	 */
+   	public final Double toDoubleObject(final Double defaultValue)
+   	{
+   		if (text != null)
+   		{
+   			try
+   			{
+   				return toDoubleObject();
+   			}
+   			catch (Exception x)
+   			{
+   				if (LOG.isDebugEnabled())
+   				{
+   					LOG.debug(String.format(
+   						"An error occurred while converting '%s' to a Double: %s", text, x.getMessage()), x);
+   				}
+   			}
+   		}
+   		return defaultValue;
+   	}
 
 	/**
 	 * Convert this text to a Duration instance.
@@ -581,11 +663,11 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to integer, returning default value if text is inconvertible.
+	 * Convert to int, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
 	 *            the default value
-	 * @return the converted text as an integer or the default value if text is not an integer
+	 * @return the converted text as an int or the default value if text is empty or inconvertible
 	 */
 	public final int toInt(final int defaultValue)
 	{
@@ -600,7 +682,7 @@ public class StringValue implements IClusterable
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(String.format(
-						"An error occurred while converting '%s' to an integer: %s", text, x.getMessage()), x);
+						"An error occurred while converting '%s' to an int: %s", text, x.getMessage()), x);
 				}
 			}
 		}
@@ -626,6 +708,33 @@ public class StringValue implements IClusterable
 		}
 	}
 
+    /**
+   	 * Convert to Integer, returning default value if text is inconvertible.
+   	 *
+   	 * @param defaultValue
+   	 *            the default value
+   	 * @return the converted text as an Integer or the default value if text is empty or inconvertible
+   	 */
+   	public final Integer toInteger(final Integer defaultValue)
+   	{
+   		if (text != null)
+   		{
+   			try
+   			{
+   				return toInteger();
+   			}
+   			catch (StringValueConversionException x)
+   			{
+   				if (LOG.isDebugEnabled())
+   				{
+   					LOG.debug(String.format(
+   						"An error occurred while converting '%s' to an Integer: %s", text, x.getMessage()), x);
+   				}
+   			}
+   		}
+   		return defaultValue;
+   	}
+
 	/**
 	 * Convert this text to a long.
 	 * 
@@ -646,11 +755,11 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert to long integer, returning default value if text is inconvertible.
+	 * Convert to long, returning default value if text is inconvertible.
 	 * 
 	 * @param defaultValue
 	 *            the default value
-	 * @return the converted text as a long integer or the default value if text is empty or inconvertible
+	 * @return the converted text as a long or the default value if text is empty or inconvertible
 	 */
 	public final long toLong(final long defaultValue)
 	{
@@ -690,6 +799,33 @@ public class StringValue implements IClusterable
 				"' to a Long value", e);
 		}
 	}
+
+    /**
+   	 * Convert to Long, returning default value if text is inconvertible.
+   	 *
+   	 * @param defaultValue
+   	 *            the default value
+   	 * @return the converted text as a Long or the default value if text is empty or inconvertible
+   	 */
+   	public final Long toLongObject(final Long defaultValue)
+   	{
+   		if (text != null)
+   		{
+   			try
+   			{
+   				return toLongObject();
+   			}
+   			catch (StringValueConversionException x)
+   			{
+   				if (LOG.isDebugEnabled())
+   				{
+   					LOG.debug(String.format(
+   						"An error occurred while converting '%s' to a Long: %s", text, x.getMessage()), x);
+   				}
+   			}
+   		}
+   		return defaultValue;
+   	}
 
 	/**
 	 * Convert to object types, returning null if text is null or empty.
