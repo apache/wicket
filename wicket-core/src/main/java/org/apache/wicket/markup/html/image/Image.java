@@ -166,7 +166,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public Image(final String id, final String string)
 	{
-		this(id, new Model<String>(string));
+		this(id, new Model<>(string));
 	}
 
 	/**
