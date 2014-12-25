@@ -17,6 +17,9 @@
 package org.apache.wicket.markup.html.image;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
@@ -32,21 +35,36 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
- * An Image component displays a localizable image resource.
+ * An Image component displays localizable image resources.
  * <p>
  * For details of how Images load, generate and manage images, see {@link LocalizedImageResource}.
+ * 
+ * The first ResourceReference / ImageResource is used for the src attribute within the img tag, all
+ * following are applied to the srcset. If setXValues(String... values) is used the values are set
+ * behind the srcset elements in the order they are given to the setXValues(String... valus) method.
+ * The separated values in the sizes attribute are set with setSizes(String... sizes)
  * 
  * @see NonCachingImage
  * 
  * @author Jonathan Locke
+ * @author Tobias Soloschenko
  * 
  */
 public class Image extends WebComponent implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The image resource this image component references */
+	/** The image resource this image component references (src attribute) */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
+
+	/** The image resources this image component references (srcset attribute) */
+	private final List<LocalizedImageResource> localizedImageResources = new ArrayList<LocalizedImageResource>();
+
+	/** The x values to be used within the srcset */
+	private final List<String> xValues = new ArrayList<String>();
+
+	/** The sizes of the responsive images */
+	private final List<String> sizes = new ArrayList<String>();
 
 	/**
 	 * This constructor can be used if you override {@link #getImageResourceReference()} or
@@ -72,11 +90,14 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param id
 	 *            See Component
 	 * @param resourceReference
-	 *            The shared image resource
+	 *            The shared image resource used in the src attribute
+	 * @param resourceReferences
+	 *            The shared image resources used in the srcset attribute
 	 */
-	public Image(final String id, final ResourceReference resourceReference)
+	public Image(final String id, final ResourceReference resourceReference,
+		final ResourceReference... resourceReferences)
 	{
-		this(id, resourceReference, null);
+		this(id, resourceReference, null, resourceReferences);
 	}
 
 	/**
@@ -92,15 +113,18 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param id
 	 *            See Component
 	 * @param resourceReference
-	 *            The shared image resource
+	 *            The shared image resource used in the src attribute
 	 * @param resourceParameters
 	 *            The resource parameters
+	 * @param resourceReferences
+	 *            The shared image resources used in the srcset attribute
 	 */
 	public Image(final String id, final ResourceReference resourceReference,
-		PageParameters resourceParameters)
+		PageParameters resourceParameters, final ResourceReference... resourceReferences)
 	{
 		super(id);
-		setImageResourceReference(resourceReference, resourceParameters);
+		this.setImageResourceReference(resourceParameters, resourceReference);
+		this.setImageResourceReferences(resourceParameters, resourceReferences);
 	}
 
 	/**
@@ -114,12 +138,15 @@ public class Image extends WebComponent implements IResourceListener
 	 *            See Component
 	 * 
 	 * @param imageResource
-	 *            The image resource
+	 *            The image resource used in the src attribute
+	 * @param imageResources
+	 *            The image resource used in the srcset attribute
 	 */
-	public Image(final String id, final IResource imageResource)
+	public Image(final String id, final IResource imageResource, final IResource... imageResources)
 	{
 		super(id);
-		setImageResource(imageResource);
+		this.setImageResource(imageResource);
+		this.setImageResources(imageResources);
 	}
 
 	/**
@@ -139,7 +166,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public Image(final String id, final String string)
 	{
-		this(id, new Model<>(string));
+		this(id, new Model<String>(string));
 	}
 
 	/**
@@ -149,6 +176,10 @@ public class Image extends WebComponent implements IResourceListener
 	public void onResourceRequested()
 	{
 		localizedImageResource.onResourceRequested(null);
+		for (LocalizedImageResource localizedImageResource : this.localizedImageResources)
+		{
+			localizedImageResource.onResourceRequested(null);
+		}
 	}
 
 	/**
@@ -157,28 +188,91 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public void setImageResource(final IResource imageResource)
 	{
-		localizedImageResource.setResource(imageResource);
+		if (imageResource != null)
+		{
+			this.localizedImageResource.setResource(imageResource);
+		}
 	}
 
 	/**
-	 * @param resourceReference
-	 *            The shared ImageResource to set.
+	 * 
+	 * @param imageResources
+	 *            the new ImageResource to set.
 	 */
-	public void setImageResourceReference(final ResourceReference resourceReference)
+	public void setImageResources(final IResource... imageResources)
 	{
-		localizedImageResource.setResourceReference(resourceReference);
+		this.localizedImageResources.clear();
+		for (IResource imageResource : imageResources)
+		{
+			LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
+			localizedImageResource.setResource(imageResource);
+			this.localizedImageResources.add(localizedImageResource);
+		}
 	}
 
 	/**
 	 * @param resourceReference
-	 *            The shared ImageResource to set.
+	 *            The resource reference to set.
+	 */
+	public void setImageResourceReference(final PageParameters parameters,
+		final ResourceReference resourceReference)
+	{
+		if (localizedImageResource != null)
+		{
+			if (parameters != null)
+			{
+				this.localizedImageResource.setResourceReference(resourceReference, parameters);
+			}
+			else
+			{
+				this.localizedImageResource.setResourceReference(resourceReference);
+			}
+		}
+	}
+
+	/**
 	 * @param parameters
 	 *            Set the resource parameters for the resource.
+	 * @param resourceReferences
+	 *            The resource references to set.
 	 */
-	public void setImageResourceReference(final ResourceReference resourceReference,
-		final PageParameters parameters)
+	public void setImageResourceReferences(final PageParameters parameters,
+		final ResourceReference... resourceReferences)
 	{
-		localizedImageResource.setResourceReference(resourceReference, parameters);
+		this.localizedImageResources.clear();
+		for (ResourceReference resourceReference : resourceReferences)
+		{
+			LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
+			if (parameters != null)
+			{
+				localizedImageResource.setResourceReference(resourceReference, parameters);
+			}
+			else
+			{
+				localizedImageResource.setResourceReference(resourceReference);
+			}
+			this.localizedImageResources.add(localizedImageResource);
+		}
+	}
+
+	/**
+	 * @param values
+	 *            the x values to be used in the srcset
+	 */
+	public void setXValues(String... values)
+	{
+		this.xValues.clear();
+		this.xValues.addAll(Arrays.asList(values));
+	}
+
+	/**
+	 * @param sizes
+	 *            the sizes to be used in the size
+	 */
+	public void setSizes(String... sizes)
+	{
+		this.sizes.clear();
+		this.sizes.addAll(Arrays.asList(sizes));
 	}
 
 	/**
@@ -189,6 +283,11 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		// Null out the image resource, so we reload it (otherwise we'll be
 		// stuck with the old model.
+		for (LocalizedImageResource localizedImageResource : this.localizedImageResources)
+		{
+			localizedImageResource.setResourceReference(null);
+			localizedImageResource.setResource(null);
+		}
 		localizedImageResource.setResourceReference(null);
 		localizedImageResource.setResource(null);
 		return super.setDefaultModel(model);
@@ -228,29 +327,105 @@ public class Image extends WebComponent implements IResourceListener
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		checkComponentTag(tag, "img");
 		super.onComponentTag(tag);
-		final IResource resource = getImageResource();
-		if (resource != null)
+		if (tag.getName().equals("source"))
 		{
-			localizedImageResource.setResource(resource);
+			this.buildSrcSetAttribute(tag);
+			tag.remove("src");
 		}
-		final ResourceReference resourceReference = getImageResourceReference();
-		if (resourceReference != null)
+		else
 		{
-			localizedImageResource.setResourceReference(resourceReference);
+			this.checkComponentTag(tag, "img");
+			String srcAttribute = this.buildSrcAttribute(tag);
+			this.buildSrcSetAttribute(tag);
+			tag.put("src", srcAttribute);
 		}
-		localizedImageResource.setSrcAttribute(tag);
+		this.buildSizesAttribute(tag);
+	}
 
-		if (shouldAddAntiCacheParameter())
+	/**
+	 * Builds the srcset attribute if multiple localizedImageResources are found as varargs
+	 * 
+	 * @param tag
+	 *            the component tag
+	 */
+	protected void buildSrcSetAttribute(final ComponentTag tag)
+	{
+		int srcSetPosition = 0;
+		for (LocalizedImageResource localizedImageResource : this.localizedImageResources)
 		{
-			addAntiCacheParameter(tag);
+			localizedImageResource.setSrcAttribute(tag);
+
+			if (this.shouldAddAntiCacheParameter())
+			{
+				this.addAntiCacheParameter(tag);
+			}
+
+			String srcset = tag.getAttribute("srcset");
+			String xValue = this.xValues.size() > srcSetPosition &&
+				this.xValues.get(srcSetPosition) != null ? " " + this.xValues.get(srcSetPosition)
+				: "";
+			tag.put("srcset", (srcset != null ? srcset + ", " : "") + tag.getAttribute("src") +
+				xValue);
+			srcSetPosition++;
 		}
 	}
 
 	/**
-	 * Adding an image to {@link org.apache.wicket.ajax.AjaxRequestTarget} most of the times mean that the image has
-	 * changes and must be re-rendered.
+	 * Builds the src attribute
+	 * 
+	 * @param tag
+	 *            the component tag
+	 * @return the value of the src attribute
+	 */
+	protected String buildSrcAttribute(final ComponentTag tag)
+	{
+		final IResource resource = this.getImageResource();
+		if (resource != null)
+		{
+			this.localizedImageResource.setResource(resource);
+		}
+		final ResourceReference resourceReference = this.getImageResourceReference();
+		if (resourceReference != null)
+		{
+			this.localizedImageResource.setResourceReference(resourceReference);
+		}
+		this.localizedImageResource.setSrcAttribute(tag);
+
+		if (this.shouldAddAntiCacheParameter())
+		{
+			this.addAntiCacheParameter(tag);
+		}
+		return tag.getAttribute("src");
+	}
+
+	/**
+	 * builds the sizes attribute of the img tag
+	 * 
+	 * @param tag
+	 *            the component tag
+	 */
+	protected void buildSizesAttribute(final ComponentTag tag)
+	{
+		String sizes = "";
+		for (String size : this.sizes)
+		{
+			sizes += size + ",";
+		}
+		int lastIndexOf = sizes.lastIndexOf(",");
+		if (lastIndexOf != -1)
+		{
+			sizes = sizes.substring(0, lastIndexOf);
+		}
+		if (!"".equals(sizes))
+		{
+			tag.put("sizes", sizes);
+		}
+	}
+
+	/**
+	 * Adding an image to {@link org.apache.wicket.ajax.AjaxRequestTarget} most of the times mean
+	 * that the image has changes and must be re-rendered.
 	 * <p>
 	 * With this method the user may change this default behavior for some of her images.
 	 * </p>
@@ -259,7 +434,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	protected boolean shouldAddAntiCacheParameter()
 	{
-		return getRequestCycle().find(AjaxRequestTarget.class) != null;
+		return this.getRequestCycle().find(AjaxRequestTarget.class) != null;
 	}
 
 	/**
@@ -282,8 +457,17 @@ public class Image extends WebComponent implements IResourceListener
 	@Override
 	protected boolean getStatelessHint()
 	{
-		return (getImageResource() == null || getImageResource() == localizedImageResource.getResource()) &&
+		boolean stateless = (getImageResource() == null || getImageResource() == localizedImageResource.getResource()) &&
 			localizedImageResource.isStateless();
+		boolean statelessList = false;
+		for (LocalizedImageResource localizedImageResource : this.localizedImageResources)
+		{
+			if (localizedImageResource.isStateless())
+			{
+				statelessList = true;
+			}
+		}
+		return stateless || statelessList;
 	}
 
 	/**
@@ -297,10 +481,12 @@ public class Image extends WebComponent implements IResourceListener
 	@Override
 	public boolean canCallListenerInterface(Method method)
 	{
-		boolean isResource = method != null && IResourceListener.class.isAssignableFrom(method.getDeclaringClass());
-		if (isResource && isVisibleInHierarchy())
+		boolean isResource = method != null &&
+			IResourceListener.class.isAssignableFrom(method.getDeclaringClass());
+		if (isResource && this.isVisibleInHierarchy())
 		{
-			// when the image data is requested we do not care if this component is enabled in
+			// when the image data is requested we do not care if this component
+			// is enabled in
 			// hierarchy or not, only that it is visible
 			return true;
 		}
