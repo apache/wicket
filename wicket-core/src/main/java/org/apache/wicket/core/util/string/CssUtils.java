@@ -92,9 +92,15 @@ public final class CssUtils
 	 *      the CSS media
 	 */
 	public static void writeLinkUrl(final Response response, final CharSequence url, final CharSequence media,
-	                                final String markupId)
+	                                final String markupId,boolean resourceImport)
 	{
-		response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+		response.write("<link ");
+		if(resourceImport){
+			response.write("rel=\"import\"");
+		}else{
+			response.write("rel=\"stylesheet\" type=\"text/css\"");
+		}
+		response.write(" href=\"");
 		response.write(Strings.escapeMarkup(url));
 		response.write("\"");
 		if (Strings.isEmpty(media) == false)

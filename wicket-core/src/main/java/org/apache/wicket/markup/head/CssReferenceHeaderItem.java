@@ -103,7 +103,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public void render(Response response)
 	{
-		internalRenderCSSReference(response, getUrl(), media, getCondition());
+		internalRenderCSSReference(response, getUrl(), media, getCondition(),false);
 	}
 
 	@Override

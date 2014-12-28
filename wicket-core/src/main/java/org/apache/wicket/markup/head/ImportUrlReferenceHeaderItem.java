@@ -16,54 +16,33 @@
  */
 package org.apache.wicket.markup.head;
 
-import java.util.Arrays;
-
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * {@link HeaderItem} for style tags that are rendered using a fixed URL, for example resources from
- * an external site or context relative urls.
+ * The import url reference header item is used to import html files with the link tag
  * 
- * @author papegaaij
+ * @see org.apache.wicket.markup.head.CssUrlReferenceHeaderItem
+ * @author Tobias Soloschenko
+ *
  */
-public class CssUrlReferenceHeaderItem extends CssHeaderItem
+public class ImportUrlReferenceHeaderItem extends CssUrlReferenceHeaderItem
 {
-	private final String url;
-	private final String media;
 
 	/**
-	 * Creates a new {@code CSSUrlReferenceHeaderItem}.
+	 * Creates a new {@code ImportUrlReferenceHeaderItem}.
 	 * 
 	 * @param url
-	 *            context-relative url of the CSS resource
+	 *            context-relative url of the resource to import
 	 * @param media
-	 *            the media type for this CSS ("print", "screen", etc.)
+	 *            the media type for this import ("print", "screen", etc.)
 	 * @param condition
 	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	public CssUrlReferenceHeaderItem(String url, String media, String condition)
+	public ImportUrlReferenceHeaderItem(String url, String media, String condition)
 	{
-		super(condition);
-		this.url = url;
-		this.media = media;
-	}
-
-	/**
-	 * @return context-relative url of the CSS resource
-	 */
-	public String getUrl()
-	{
-		return url;
-	}
-
-	/**
-	 * @return the media type for this CSS ("print", "screen", etc.)
-	 */
-	public String getMedia()
-	{
-		return media;
+		super(url, media, condition);
 	}
 
 	@Override
@@ -71,33 +50,13 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	{
 		internalRenderCSSReference(response,
 			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getMedia(),
-			getCondition(),false);
-	}
-
-	@Override
-	public Iterable<?> getRenderTokens()
-	{
-		return Arrays.asList("css-" +
-			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()) + "-" + media);
+			getCondition(), true);
 	}
 
 	@Override
 	public String toString()
 	{
-		return "CSSUrlReferenceHeaderItem(" + getUrl() + ")";
+		return "ImportUrlReferenceHeaderItem(" + getUrl() + ")";
 	}
 
-	@Override
-	public int hashCode()
-	{
-		return getUrl().hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof CssUrlReferenceHeaderItem)
-			return ((CssUrlReferenceHeaderItem)obj).getUrl().equals(getUrl());
-		return false;
-	}
 }
