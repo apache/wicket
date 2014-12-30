@@ -195,7 +195,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	 * 			the page provider for the target page
 	 * @return the request handler for the target page
 	 */
-	protected final RenderPageRequestHandler createPageRequestHandler(PageProvider pageProvider)
+	protected RenderPageRequestHandler createPageRequestHandler(PageProvider pageProvider)
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 
@@ -219,7 +219,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	 * 
 	 * @return true if current request is an AJAX request, false otherwise.
 	 */
-	protected final boolean isProcessingAjaxRequest()
+	protected boolean isProcessingAjaxRequest()
 	{
 		RequestCycle rc = RequestCycle.get();
 		Request request = rc.getRequest();
@@ -234,7 +234,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	 * @return the page being rendered when the exception was thrown, or {@code null} if it cannot
 	 *         be extracted
 	 */
-	protected final Page extractCurrentPage()
+	protected Page extractCurrentPage()
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
 
