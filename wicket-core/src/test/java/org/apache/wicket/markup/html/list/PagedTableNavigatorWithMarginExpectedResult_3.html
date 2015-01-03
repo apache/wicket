@@ -19,7 +19,7 @@
 <body><ul><li wicket:id="table"><span wicket:id="txt">one</span></li><li wicket:id="table"><span wicket:id="txt">two</span></li></ul>
 <span wicket:id="navigator"><wicket:panel>
 	<span wicket:id="first" class="first" title="Go to first page"><em>&lt;&lt;</em></span>
-	<span wicket:id="prev" class="prev" title="Go to previous page"><em>&lt;</em></span>
+	<span wicket:id="prev" rel="prev" class="prev" title="Go to previous page"><em>&lt;</em></span>
 	<span wicket:id="navigation" class="goto">
 		<span wicket:id="pageLink" title="Go to page 1"><em><span wicket:id="pageNumber">1</span></em></span>
 	</span>, <span wicket:id="navigation" class="goto">
@@ -31,7 +31,7 @@
 	</span>, <span wicket:id="navigation" class="goto">
 		<a wicket:id="pageLink" href="./org.apache.wicket.markup.html.list.PagedTableNavigatorWithMarginPage?0-3.ILinkListener-navigator-navigation-4-pageLink" title="Go to page 5"><span wicket:id="pageNumber">5</span></a>
 	</span>
-	<a wicket:id="next" class="next" href="./org.apache.wicket.markup.html.list.PagedTableNavigatorWithMarginPage?0-3.ILinkListener-navigator-next" title="Go to next page">&gt;</a>
+	<a wicket:id="next" rel="next" class="next" href="./org.apache.wicket.markup.html.list.PagedTableNavigatorWithMarginPage?0-3.ILinkListener-navigator-next" title="Go to next page">&gt;</a>
 	<a wicket:id="last" class="last" href="./org.apache.wicket.markup.html.list.PagedTableNavigatorWithMarginPage?0-3.ILinkListener-navigator-last" title="Go to last page">&gt;&gt;</a>
 </wicket:panel></span>
 </body>
