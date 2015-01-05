@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
@@ -108,7 +109,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            The model object type
  */
-public abstract class FormComponentPanel<T> extends FormComponent<T>
+public abstract class FormComponentPanel<T> extends FormComponent<T> implements IQueueRegion
 {
 	private static final long serialVersionUID = 1L;
 
