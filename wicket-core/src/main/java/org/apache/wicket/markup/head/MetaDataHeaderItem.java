@@ -33,6 +33,7 @@ import org.apache.wicket.util.value.ValueMap;
  * {@link HeaderItem} for meta informations such as &lt;meta&gt; tags or canonical &lt;link&gt;
  * 
  * @author andrea del bene
+ * @author Tobias Soloschenko
  * @since 6.17.0
  */
 public class MetaDataHeaderItem extends HeaderItem
