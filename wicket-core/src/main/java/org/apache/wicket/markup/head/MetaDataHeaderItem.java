@@ -19,16 +19,18 @@ package org.apache.wicket.markup.head;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
- * {@link HeaderItem} for meta informations such as &lt;meta&gt; tags or 
- * canonical &lt;link&gt;
+ * {@link HeaderItem} for meta informations such as &lt;meta&gt; tags or canonical &lt;link&gt;
  * 
  * @author andrea del bene
  * @since 6.17.0
@@ -45,7 +47,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 * Build a new {@link MetaDataHeaderItem} having {@code tagName} as tag.
 	 * 
 	 * @param tagName
-	 * 		the name of the tag
+	 *            the name of the tag
 	 */
 	public MetaDataHeaderItem(String tagName)
 	{
@@ -54,15 +56,14 @@ public class MetaDataHeaderItem extends HeaderItem
 	}
 
 	/**
-	 * Add a tag attribute to the item. If the attribute value is a {@link IModel}, 
-	 * the object wrapped inside the model is used as actual value.
+	 * Add a tag attribute to the item. If the attribute value is a {@link IModel}, the object
+	 * wrapped inside the model is used as actual value.
 	 * 
 	 * @param attributeName
-	 * 		the attribute name
+	 *            the attribute name
 	 * @param attributeValue
-	 * 		the attribute value
-	 * @return
-	 * 		The current item.
+	 *            the attribute value
+	 * @return The current item.
 	 */
 	public MetaDataHeaderItem addTagAttribute(String attributeName, Object attributeValue)
 	{
@@ -76,8 +77,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	/**
 	 * Generate the string representation for the current item.
 	 * 
-	 * @return
-	 * 		The string representation for the current item.
+	 * @return The string representation for the current item.
 	 */
 	public String generateString()
 	{
@@ -126,11 +126,10 @@ public class MetaDataHeaderItem extends HeaderItem
 	 * Factory method to create &lt;meta&gt; tag.
 	 * 
 	 * @param name
-	 * 		the 'name' attribute of the tag
+	 *            the 'name' attribute of the tag
 	 * @param content
-	 * 		the 'content' attribute of the tag
-	 * @return
-	 * 		A new {@link MetaDataHeaderItem}
+	 *            the 'content' attribute of the tag
+	 * @return A new {@link MetaDataHeaderItem}
 	 */
 	public static MetaDataHeaderItem forMetaTag(String name, String content)
 	{
@@ -141,11 +140,10 @@ public class MetaDataHeaderItem extends HeaderItem
 	 * Factory method to create &lt;meta&gt; tag.
 	 * 
 	 * @param name
-	 * 		the 'name' attribute of the tag as String model
+	 *            the 'name' attribute of the tag as String model
 	 * @param content
-	 * 		the 'content' attribute of the tag as String model
-	 * @return
-	 * 		A new {@link MetaDataHeaderItem}
+	 *            the 'content' attribute of the tag as String model
+	 * @return A new {@link MetaDataHeaderItem}
 	 */
 	public static MetaDataHeaderItem forMetaTag(IModel<String> name, IModel<String> content)
 	{
@@ -159,28 +157,26 @@ public class MetaDataHeaderItem extends HeaderItem
 
 	/**
 	 * Factory method to create &lt;link&gt; tag.
-	 *  
+	 * 
 	 * @param rel
-	 * 		the 'rel' attribute of the tag
+	 *            the 'rel' attribute of the tag
 	 * @param href
-	 * 		the 'href' attribute of the tag
-	 * @return
-	 * 		A new {@link MetaDataHeaderItem}
+	 *            the 'href' attribute of the tag
+	 * @return A new {@link MetaDataHeaderItem}
 	 */
 	public static MetaDataHeaderItem forLinkTag(String rel, String href)
 	{
 		return forLinkTag(Model.of(rel), Model.of(href));
 	}
-	
+
 	/**
 	 * Factory method to create &lt;link&gt; tag.
-	 *  
+	 * 
 	 * @param rel
-	 * 		the 'rel' attribute of the tag as String model
+	 *            the 'rel' attribute of the tag as String model
 	 * @param href
-	 * 		the 'href' attribute of the tag as String model
-	 * @return
-	 * 		A new {@link MetaDataHeaderItem}
+	 *            the 'href' attribute of the tag as String model
+	 * @return A new {@link MetaDataHeaderItem}
 	 */
 	public static MetaDataHeaderItem forLinkTag(IModel<String> rel, IModel<String> href)
 	{
@@ -191,11 +187,112 @@ public class MetaDataHeaderItem extends HeaderItem
 
 		return headerItem;
 	}
-	
+
+	/**
+	 * Factory method to create &lt;link&gt; tag.
+	 * 
+	 * @param rel
+	 *            the 'rel' attribute of the tag
+	 * @param href
+	 *            the 'href' attribute of the tag
+	 * @param media
+	 *            the 'media' attribute of the tag
+	 * @return A new {@link MetaDataHeaderItem}
+	 */
+	public static MetaDataHeaderItem forLinkTag(String rel, String href, String media)
+	{
+		return forLinkTag(Model.of(rel), Model.of(href), Model.of(media));
+	}
+
+	/**
+	 * Factory method to create &lt;link&gt; tag.
+	 * 
+	 * @param rel
+	 *            the 'rel' attribute of the tag as String model
+	 * @param href
+	 *            the 'href' attribute of the tag as String model
+	 * @param media
+	 *            the 'media' attribute of the tag as String model
+	 * @return A new {@link MetaDataHeaderItem}
+	 */
+	public static MetaDataHeaderItem forLinkTag(IModel<String> rel, IModel<String> href,
+		IModel<String> media)
+	{
+		MetaDataHeaderItem headerItem = forLinkTag(rel, href);
+		headerItem.addTagAttribute("media", media);
+		return headerItem;
+	}
+
+	/**
+	 * Factory method to create lt;link&gt; tag for html import.
+	 * 
+	 * @param pageClass
+	 *            the page class to generate the import for
+	 * @return A new {@link MetaDataHeaderItem}
+	 */
+	public static MetaDataHeaderItem forImportUrl(Class<? extends Page> pageClass)
+	{
+		return forLinkTag(Model.of("import"),
+			Model.of(RequestCycle.get().urlFor(pageClass, null).toString()));
+	}
+
+	/**
+	 * Factory method to create lt;link&gt; tag for html import.
+	 * 
+	 * @param pageClass
+	 *            the page class to generate the import for
+	 * @param pageParameters
+	 *            the page parameters to apply to the import
+	 * @return A new {@link MetaDataHeaderItem}
+	 */
+	public static MetaDataHeaderItem forImportUrl(Class<? extends Page> pageClass,
+		PageParameters pageParameters)
+	{
+		return forLinkTag(Model.of("import"),
+			Model.of(RequestCycle.get().urlFor(pageClass, pageParameters).toString()));
+	}
+
+	/**
+	 * Factory method to create lt;link&gt; tag for html import.
+	 * 
+	 * @param pageClass
+	 *            the page class to generate the import for
+	 * @param pageParameters
+	 *            the page parameters to apply to the import
+	 * @param media
+	 *            the 'media' attribute of the tag
+	 * @return A new {@link MetaDataHeaderItem}
+	 */
+	public static MetaDataHeaderItem forImportUrl(Class<? extends Page> pageClass,
+		PageParameters pageParameters, String media)
+	{
+		return forImportUrl(pageClass, pageParameters, Model.of(media));
+	}
+
+	/**
+	 * Factory method to create lt;link&gt; tag for html import.
+	 * 
+	 * @param pageClass
+	 *            the page class to generate the import for
+	 * @param pageParameters
+	 *            the page parameters to apply to the import
+	 * @param media
+	 *            the 'media' attribute of the tag as String model
+	 * @return A new {@link MetaDataHeaderItem}
+	 */
+	public static MetaDataHeaderItem forImportUrl(Class<? extends Page> pageClass,
+		PageParameters pageParameters, IModel<String> media)
+	{
+		return forLinkTag(Model.of("import"),
+			Model.of(RequestCycle.get().urlFor(pageClass, pageParameters).toString()), media);
+	}
+
+
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof MetaDataHeaderItem && ((MetaDataHeaderItem) obj).generateString().equals(generateString());
+		return obj instanceof MetaDataHeaderItem &&
+			((MetaDataHeaderItem)obj).generateString().equals(generateString());
 	}
 
 	@Override
