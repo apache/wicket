@@ -230,7 +230,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 *            the page class to generate the import for
 	 * @return A new {@link MetaDataHeaderItem}
 	 */
-	public static MetaDataHeaderItem forImportUrl(Class<? extends Page> pageClass)
+	public static MetaDataHeaderItem forImportLinkTag(Class<? extends Page> pageClass)
 	{
 		return forLinkTag(Model.of("import"),
 			Model.of(RequestCycle.get().urlFor(pageClass, null).toString()));
@@ -245,7 +245,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 *            the page parameters to apply to the import
 	 * @return A new {@link MetaDataHeaderItem}
 	 */
-	public static MetaDataHeaderItem forImportUrl(Class<? extends Page> pageClass,
+	public static MetaDataHeaderItem forImportLinkTag(Class<? extends Page> pageClass,
 		PageParameters pageParameters)
 	{
 		return forLinkTag(Model.of("import"),
@@ -263,10 +263,10 @@ public class MetaDataHeaderItem extends HeaderItem
 	 *            the 'media' attribute of the tag
 	 * @return A new {@link MetaDataHeaderItem}
 	 */
-	public static MetaDataHeaderItem forImportUrl(Class<? extends Page> pageClass,
+	public static MetaDataHeaderItem forImportLinkTag(Class<? extends Page> pageClass,
 		PageParameters pageParameters, String media)
 	{
-		return forImportUrl(pageClass, pageParameters, Model.of(media));
+		return forImportLinkTag(pageClass, pageParameters, Model.of(media));
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 *            the 'media' attribute of the tag as String model
 	 * @return A new {@link MetaDataHeaderItem}
 	 */
-	public static MetaDataHeaderItem forImportUrl(Class<? extends Page> pageClass,
+	public static MetaDataHeaderItem forImportLinkTag(Class<? extends Page> pageClass,
 		PageParameters pageParameters, IModel<String> media)
 	{
 		return forLinkTag(Model.of("import"),
