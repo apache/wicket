@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -611,50 +612,15 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		
 		PackageResource other = (PackageResource)obj;
-		if (absolutePath == null)
-		{
-			if (other.absolutePath != null)
-				return false;
-		}
-		else if (!absolutePath.equals(other.absolutePath))
-			return false;
-		if (locale == null)
-		{
-			if (other.locale != null)
-				return false;
-		}
-		else if (!locale.equals(other.locale))
-			return false;
-		if (path == null)
-		{
-			if (other.path != null)
-				return false;
-		}
-		else if (!path.equals(other.path))
-			return false;
-		if (scopeName == null)
-		{
-			if (other.scopeName != null)
-				return false;
-		}
-		else if (!scopeName.equals(other.scopeName))
-			return false;
-		if (style == null)
-		{
-			if (other.style != null)
-				return false;
-		}
-		else if (!style.equals(other.style))
-			return false;
-		if (variation == null)
-		{
-			if (other.variation != null)
-				return false;
-		}
-		else if (!variation.equals(other.variation))
-			return false;
-		return true;
+		
+		return Objects.equals(absolutePath, other.absolutePath)
+			&& Objects.equals(locale, other.locale)
+			&& Objects.equals(path, other.path)
+			&& Objects.equals(scopeName, other.scopeName)
+			&& Objects.equals(style, other.style)
+			&& Objects.equals(variation, other.variation);
 	}
 
 	String getParentFolderPlaceholder()
@@ -699,20 +665,12 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				return false;
 
 			CacheKey cacheKey = (CacheKey)o;
-
-			if (locale != null ? !locale.equals(cacheKey.locale) : cacheKey.locale != null)
-				return false;
-			if (!path.equals(cacheKey.path))
-				return false;
-			if (!scopeName.equals(cacheKey.scopeName))
-				return false;
-			if (style != null ? !style.equals(cacheKey.style) : cacheKey.style != null)
-				return false;
-			if (variation != null ? !variation.equals(cacheKey.variation)
-				: cacheKey.variation != null)
-				return false;
-
-			return true;
+			
+			return Objects.equals(locale, cacheKey.locale)
+				&& Objects.equals(path, cacheKey.path)
+				&& Objects.equals(scopeName, cacheKey.scopeName)
+				&& Objects.equals(style, cacheKey.style)
+				&& Objects.equals(variation, cacheKey.variation);
 		}
 
 		@Override

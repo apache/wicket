@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http.mock;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.servlet.http.Cookie;
 
@@ -123,28 +124,10 @@ public final class Cookies
 			if (getClass() != obj.getClass())
 				return false;
 			Key other = (Key)obj;
-			if (domain == null)
-			{
-				if (other.domain != null)
-					return false;
-			}
-			else if (!domain.equals(other.domain))
-				return false;
-			if (name == null)
-			{
-				if (other.name != null)
-					return false;
-			}
-			else if (!name.equals(other.name))
-				return false;
-			if (path == null)
-			{
-				if (other.path != null)
-					return false;
-			}
-			else if (!path.equals(other.path))
-				return false;
-			return true;
+			
+			return Objects.equals(domain, other.domain)
+				&& Objects.equals(name, other.name)
+				&& Objects.equals(path, other.path);			
 		}
 
 		@Override
