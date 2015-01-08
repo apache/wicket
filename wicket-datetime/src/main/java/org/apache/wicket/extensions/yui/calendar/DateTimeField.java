@@ -167,27 +167,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 			Integer.class));
 
 		// Create and add the "minutes" TextField
-		add(minutesField = new TextField<Integer>(MINUTES,
-			new PropertyModel<Integer>(this, MINUTES), Integer.class)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public <C> IConverter<C> getConverter(Class<C> type)
-			{
-				if (Integer.class.isAssignableFrom(type))
-				{
-					return (IConverter<C>)MINUTES_CONVERTER;
-				}
-				else
-				{
-					return super.getConverter(type);
-				}
-			}
-		});
-		minutesField.add(new RangeValidator<>(0, 59));
-		minutesField.setLabel(new Model<>(MINUTES));
+		add(minutesField = newMinutesTextField(MINUTES, new PropertyModel<Integer>(this, MINUTES),
+			Integer.class));
 
 		// Create and add the "AM/PM" Listbox
 		add(amOrPmChoice = new DropDownChoice<AM_PM>(AM_OR_PM_CHOICE, new PropertyModel<AM_PM>(
@@ -222,6 +203,43 @@ public class DateTimeField extends FormComponentPanel<Date>
 			.range(1, 12));
 		hoursTextField.setLabel(new Model<>(HOURS));
 		return hoursTextField;
+	}
+
+	/**
+	 * create a new {@link TextField} instance for minutes to be added to this panel.
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            model that should be used by the {@link TextField}
+	 * @param type
+	 *            the type of the text field
+	 * @return a new text field instance
+	 */
+	protected TextField<Integer> newMinutesTextField(final String id, IModel<Integer> model,
+		Class<Integer> type)
+	{
+		TextField<Integer> minutesField = new TextField<Integer>(id, model, type)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public <C> IConverter<C> getConverter(Class<C> type)
+			{
+				if (Integer.class.isAssignableFrom(type))
+				{
+					return (IConverter<C>)MINUTES_CONVERTER;
+				}
+				else
+				{
+					return super.getConverter(type);
+				}
+			}
+		};
+		minutesField.add(new RangeValidator<>(0, 59));
+		minutesField.setLabel(new Model<>(MINUTES));
+		return minutesField;
 	}
 
 	/**
