@@ -230,6 +230,8 @@
 		error: function (msg) {
 			if (Wicket.Log.enabled()) {
 				Wicket.Ajax.DebugWindow.logError(msg);
+			} else if (typeof(console) !== "undefined" && typeof(console.error) === 'function') {
+				console.error('Wicket.Ajax: ', msg);
 			}
 		},
 

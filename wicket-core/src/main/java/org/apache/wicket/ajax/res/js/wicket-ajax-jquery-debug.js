@@ -127,7 +127,7 @@
 			}
 
 			if (typeof(console) !== "undefined" && typeof(console.error) === 'function') {
-				console.error('Wicket.Ajax: ' + msg);
+				console.error('Wicket.Ajax: ', msg);
 			}
 		},
 
