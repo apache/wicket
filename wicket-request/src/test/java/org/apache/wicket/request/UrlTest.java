@@ -1057,5 +1057,29 @@ public class UrlTest extends Assert
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b=c", "d", "e=f");
 	}
+	
+	/**
+	 * Parse IP6 addresses (https://www.ietf.org/rfc/rfc2732.txt)
+	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-5809
+	 */
+	@Test
+	public void parseIp6Address()
+	{
+		String s = "https://[::1]/myapp";
+		Url url = Url.parse(s);
+		
+		assertTrue(url.isFull());
+		checkUrl(url, "https", "[::1]", 443, "", "myapp");
+		
+		//now with port in URL
+		s = "http://[::1]:1234/myapp";
+		
+		url = Url.parse(s);
+		
+		assertTrue(url.isFull());
+		checkUrl(url, "http", "[::1]", 1234, "", "myapp");
+		
+	}
 
 }
