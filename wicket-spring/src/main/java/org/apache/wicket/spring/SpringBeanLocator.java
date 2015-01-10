@@ -17,13 +17,25 @@
 package org.apache.wicket.spring;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.core.util.lang.WicketObjects;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.core.ResolvableType;
 
 /**
  * Implementation of {@link IProxyTargetLocator} that can locate beans within a spring application
@@ -32,6 +44,7 @@ import org.springframework.context.ApplicationContext;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Istvan Devai
+ * @author Tobias Soloschenko
  */
 public class SpringBeanLocator implements IProxyTargetLocator
 {
@@ -48,6 +61,10 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 	private Boolean singletonCache = null;
 
+	private Class<?> generic;
+
+	private Field beanField;
+
 	/**
 	 * Constructor
 	 * 
@@ -58,8 +75,29 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public SpringBeanLocator(final Class<?> beanType, final ISpringContextLocator locator)
 	{
-		this(null, beanType, locator);
+		this(null, beanType, null, locator);
 	}
+
+	public SpringBeanLocator(final String beanName, final Class<?> beanType,
+		final ISpringContextLocator locator)
+	{
+		this(beanName, beanType, null, locator);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param beanType
+	 *            bean class
+	 * @param locator
+	 *            spring context locator
+	 */
+	public SpringBeanLocator(final Class<?> beanType, Field beanField,
+		final ISpringContextLocator locator)
+	{
+		this(null, beanType, beanField, locator);
+	}
+
 
 	/**
 	 * Constructor
@@ -71,7 +109,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(final String beanName, final Class<?> beanType,
+	public SpringBeanLocator(final String beanName, final Class<?> beanType, Field beanField,
 		final ISpringContextLocator locator)
 	{
 		Args.notNull(locator, "locator");
@@ -80,6 +118,10 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		beanTypeCache = new WeakReference<Class<?>>(beanType);
 		beanTypeName = beanType.getName();
 		springContextLocator = locator;
+		if(beanField != null){			
+			this.generic = ResolvableType.forField(beanField).resolveGeneric(0);
+			this.beanField = beanField;
+		}
 		this.beanName = beanName;
 		springContextLocator = locator;
 	}
@@ -173,14 +215,77 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		try
 		{
-			if (name == null)
-			{
-				return ctx.getBean(clazz);
-			}
-			else
+			// If the name is set the lookup is clear
+			if (name != null && clazz != List.class)
 			{
 				return ctx.getBean(name, clazz);
 			}
+
+			// If the generic is null the clazz is going to be used
+			if (generic == null)
+			{
+				return ctx.getBean(clazz);
+			}
+			
+			Class<?> lookupClass= null;
+			// If the given class is a list try to get the generic of the list
+			if(clazz == List.class){
+				ResolvableType forField = ResolvableType.forField(beanField);
+				 generic = forField.getGeneric(0).getGeneric(0).resolve();
+				 lookupClass=forField.getGeneric(0).resolve();
+			}else{
+				lookupClass = clazz;
+			}
+
+			// Else the lookup is done via Generic
+			List<String> names = new ArrayList<String>(
+				Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, lookupClass)));
+			ArrayList beansAsList = new ArrayList();
+			for (String beanName : names)
+			{
+				BeanDefinition beanDef = getBeanDefinition(
+					((AbstractApplicationContext)ctx).getBeanFactory(), beanName);
+				try
+				{
+					Class<?> forName = Class.forName(beanDef.getBeanClassName());
+					ArrayList<Type> types = new ArrayList<Type>();
+					types.addAll(Arrays.asList(forName.getGenericInterfaces()));
+					types.add(forName.getGenericSuperclass());
+					for (Type clazzI : types)
+					{
+						if (clazzI instanceof ParameterizedType)
+						{
+							Type[] actualTypeArguments = ((ParameterizedType)clazzI).getActualTypeArguments();
+							if (actualTypeArguments.length > 0)
+							{
+								if (generic == actualTypeArguments[0])
+								{
+									if(clazz != List.class){										
+										this.beanName = beanName;
+										return ctx.getBean(forName);
+									}else{
+										beansAsList.add(ctx.getBean(forName));
+									}
+								}
+							}
+						}
+					}
+				}
+				catch (ClassNotFoundException e)
+				{
+					throw new IllegalStateException("class of the bean with the name " + beanName +
+						"couldn't be found");
+				}
+			}
+			if(!beansAsList.isEmpty()){
+				this.beanName = "list_"+lookupClass.getSimpleName()+"_"+generic.getSimpleName();
+				Object initializeBean = ctx.getAutowireCapableBeanFactory().initializeBean(beansAsList, beanName);
+				ctx.getAutowireCapableBeanFactory().autowireBean(initializeBean);
+				return initializeBean;
+			}
+			throw new IllegalStateException(
+				"Concrete bean could not be received from the application context " +
+					clazz.getName() + ".");
 		}
 		catch (NoSuchBeanDefinitionException e)
 		{
@@ -216,5 +321,26 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			hashcode = hashcode + (127 * beanName.hashCode());
 		}
 		return hashcode;
+	}
+
+	public BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory beanFactory,
+		final String name)
+	{
+		if (beanFactory.containsBeanDefinition(name))
+		{
+			return beanFactory.getBeanDefinition(name);
+		}
+		else
+		{
+			BeanFactory parent = beanFactory.getParentBeanFactory();
+			if ((parent != null) && (parent instanceof ConfigurableListableBeanFactory))
+			{
+				return getBeanDefinition((ConfigurableListableBeanFactory)parent, name);
+			}
+			else
+			{
+				return null;
+			}
+		}
 	}
 }
