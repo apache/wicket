@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/*global DOMParser: true, ActiveXObject: true */
+/*global DOMParser: true, ActiveXObject: true, console: true */
 
 /*
  * Wicket Ajax Support
