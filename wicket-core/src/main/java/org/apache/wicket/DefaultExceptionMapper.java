@@ -34,9 +34,8 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
-import org.apache.wicket.settings.IExceptionSettings;
-import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import org.apache.wicket.request.resource.PackageResource;
+import org.apache.wicket.settings.IExceptionSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,8 +188,8 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	/**
 	 * Creates a {@link RenderPageRequestHandler} for the target page provided by {@code pageProvider}.
 	 * 
-	 * Uses {@link RenderPageRequestHandler.RedirectPolicy.NEVER_REDIRECT} policy to preserve the original page's URL 
-	 * for non-Ajax requests and {@link RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT} for AJAX requests.
+	 * Uses {@link RenderPageRequestHandler.RedirectPolicy#NEVER_REDIRECT} policy to preserve the original page's URL
+	 * for non-Ajax requests and {@link RenderPageRequestHandler.RedirectPolicy#AUTO_REDIRECT} for AJAX requests.
 	 * 
 	 * @param pageProvider
 	 * 			the page provider for the target page
@@ -217,7 +216,6 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	}
 	
 	/**
-	 * 
 	 * @return true if current request is an AJAX request, false otherwise.
 	 */
 	protected boolean isProcessingAjaxRequest()
