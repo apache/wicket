@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.markup.head;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
@@ -39,6 +42,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	public static final String LINK_TAG = "link";
 
 	private final Map<String, Object> tagAttributes;
+	private final List<String> tagMinimizedAttributes;
 	private final String tagName;
 
 	/**
@@ -51,6 +55,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	{
 		this.tagName = Args.notEmpty(tagName, "tagName");
 		this.tagAttributes = new ValueMap();
+		this.tagMinimizedAttributes = new ArrayList<String>();
 	}
 
 	/**
@@ -70,6 +75,23 @@ public class MetaDataHeaderItem extends HeaderItem
 		Args.notNull(attributeValue, "attributeValue");
 
 		tagAttributes.put(attributeName, attributeValue);
+		return this;
+	}
+	
+	/**
+	 * Add a minimized tag attribute to the item. The attribute has no value and 
+	 * only its name is rendered (for example 'async')
+	 * 
+	 * @param attributeName
+	 * 		the attribute name
+	 * @return
+	 * 		The current item.
+	 */
+	public MetaDataHeaderItem addTagAttribute(String attributeName)
+	{
+		Args.notEmpty(attributeName, "attributeName");
+		
+		tagMinimizedAttributes.add(attributeName);
 		return this;
 	}
 
@@ -94,15 +116,22 @@ public class MetaDataHeaderItem extends HeaderItem
 				value = ((IModel<?>)value).getObject();
 			}
 
+			buffer.append(' ')
+				.append(Strings.escapeMarkup(entry.getKey()));
+
 			if (value != null)
 			{
-				buffer.append(' ')
-					.append(Strings.escapeMarkup(entry.getKey()))
-					.append('=')
+				buffer.append('=')
 					.append('"')
-					.append(Strings.escapeMarkup(value.toString()))
+					.append(JavaScriptUtils.escapeQuotes(value.toString()))
 					.append('"');
 			}
+		}
+		
+		for (String attrName : tagMinimizedAttributes)
+		{
+			buffer.append(' ')
+				.append(Strings.escapeMarkup(attrName));
 		}
 
 		buffer.append(" />\n");
