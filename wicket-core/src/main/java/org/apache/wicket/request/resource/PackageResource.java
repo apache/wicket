@@ -185,12 +185,22 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	private Locale getCurrentLocale()
 	{
-		return locale != null ? locale : Session.get().getLocale();
+		if (locale == null && Session.exists())
+		{
+			return Session.get().getLocale();
+		}
+		
+		return locale;
 	}
 
 	private String getCurrentStyle()
 	{
-		return style != null ? style : Session.get().getStyle();
+		if (style == null && Session.exists())
+		{
+			return Session.get().getStyle();
+		}
+		
+		return style;
 	}
 
 	@Override
