@@ -92,16 +92,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			}
 
 			@Override
-			protected void onComponentTag(ComponentTag tag)
-			{
-				// write the onclick handler only if link is enabled
-				if (isEnabledInHierarchy())
-				{
-					super.onComponentTag(tag);
-				}
-			}
-
-			@Override
 			public boolean getDefaultProcessing()
 			{
 				return AjaxSubmitLink.this.getDefaultFormProcessing();

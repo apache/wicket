@@ -90,20 +90,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 				onClick(target);
 			}
 
-			/**
-			 * 
-			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
-			 */
-			@Override
-			protected void onComponentTag(ComponentTag tag)
-			{
-				// only render handler if link is enabled
-				if (isEnabledInHierarchy())
-				{
-					super.onComponentTag(tag);
-				}
-			}
-
 			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
