@@ -17,13 +17,24 @@
 package org.apache.wicket.spring;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.core.util.lang.WicketObjects;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.AbstractBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.core.GenericCollectionTypeResolver;
+import org.springframework.core.ResolvableType;
 
 /**
  * Implementation of {@link IProxyTargetLocator} that can locate beans within a spring application
@@ -32,6 +43,7 @@ import org.springframework.context.ApplicationContext;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Istvan Devai
+ * @author Tobias Soloschenko
  */
 public class SpringBeanLocator implements IProxyTargetLocator
 {
@@ -47,7 +59,17 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	private ISpringContextLocator springContextLocator;
 
 	private Boolean singletonCache = null;
-
+	
+	/** Resolvable type for field to inject */
+	private ResolvableType fieldResolvableType;
+	
+	/** If the field to inject is a list this is the resolvable 
+	 *  type of its elements
+	 * */
+	private ResolvableType fieldCollectionResolvableType;
+	
+	private String fieldName;
+	
 	/**
 	 * Constructor
 	 * 
@@ -58,7 +80,27 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public SpringBeanLocator(final Class<?> beanType, final ISpringContextLocator locator)
 	{
-		this(null, beanType, locator);
+		this(null, beanType, null, locator);
+	}
+
+	public SpringBeanLocator(final String beanName, final Class<?> beanType,
+		final ISpringContextLocator locator)
+	{
+		this(beanName, beanType, null, locator);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param beanType
+	 *            bean class
+	 * @param locator
+	 *            spring context locator
+	 */
+	public SpringBeanLocator(final Class<?> beanType, Field beanField,
+		final ISpringContextLocator locator)
+	{
+		this(null, beanType, beanField, locator);
 	}
 
 	/**
@@ -71,17 +113,26 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(final String beanName, final Class<?> beanType,
+	public SpringBeanLocator(final String beanName, final Class<?> beanType, Field beanField,
 		final ISpringContextLocator locator)
 	{
 		Args.notNull(locator, "locator");
 		Args.notNull(beanType, "beanType");
 
+		this.beanName = beanName;
 		beanTypeCache = new WeakReference<Class<?>>(beanType);
 		beanTypeName = beanType.getName();
 		springContextLocator = locator;
-		this.beanName = beanName;
-		springContextLocator = locator;
+		
+		if (beanField != null)
+		{
+			fieldName = beanField.getName();
+			fieldResolvableType = ResolvableType.forField(beanField);
+			Class<?> collectionFieldType = GenericCollectionTypeResolver.getCollectionFieldType(beanField);
+			
+			fieldCollectionResolvableType = collectionFieldType != null ? 
+				ResolvableType.forClass(collectionFieldType) : null;
+		}
 	}
 
 	/**
@@ -173,20 +224,133 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		try
 		{
-			if (name == null)
-			{
-				return ctx.getBean(clazz);
-			}
-			else
+			// If the name is set the lookup is clear
+			if (name != null)
 			{
 				return ctx.getBean(name, clazz);
 			}
+
+			// If the beanField information is null the clazz is going to be used
+			if (fieldResolvableType == null)
+			{
+				return ctx.getBean(clazz);
+			}
+			
+			// If the given class is a list try to get the generic of the list
+			Class<?> lookupClass = clazz == List.class ? 
+				fieldResolvableType.getGeneric(0).resolve() : clazz;
+			
+			// Else the lookup is done via Generic
+			List<String> names = loadBeanNames(ctx, lookupClass);
+			
+			ArrayList<Object> beansAsList = getBeansByName(ctx, names);
+			
+			if(beansAsList.size() == 1)
+			{
+				return beansAsList.get(0);				
+			}
+			
+			if(!beansAsList.isEmpty())
+			{
+				return beansAsList;
+			}
+			throw new IllegalStateException(
+				"Concrete bean could not be received from the application context " +
+					clazz.getName() + ".");
 		}
 		catch (NoSuchBeanDefinitionException e)
 		{
 			throw new IllegalStateException("bean with name [" + name + "] and class [" +
 				clazz.getName() + "] not found", e);
 		}
+	}
+
+	/**
+	 * Returns a list of candidate names for the given class.
+	 * 
+	 * @param ctx
+	 * 			spring application context
+	 * @param lookupClass
+	 * 			the class to lookup
+	 * @return a list of candidate names
+	 */
+	private List<String> loadBeanNames(ApplicationContext ctx, Class<?> lookupClass)
+	{		
+		List<String> beanNames = new ArrayList<>();
+		String[] beanNamesArr = BeanFactoryUtils
+			.beanNamesForTypeIncludingAncestors(ctx, lookupClass);
+		
+		//add field name if defined
+		if (ctx.containsBean(fieldName))
+		{
+			beanNames.add(fieldName);
+		}
+		
+		beanNames.addAll(Arrays.asList(beanNamesArr));
+		
+		return beanNames;
+	}
+
+	/**
+	 * Retrieves a list of beans for the given list of names and assignable to the
+	 * current field to inject.
+	 * 
+	 * @param ctx
+	 * 				spring application context.
+	 * @param names
+	 * 				the list of candidate names
+	 * @return a list of matching beans.
+	 */
+	private ArrayList<Object> getBeansByName(ApplicationContext ctx, List<String> names)
+	{
+		ArrayList<Object> beansAsList = new ArrayList<>();
+		
+		for (String beanName : names)
+		{
+			RootBeanDefinition beanDef = getBeanDefinition(ctx, beanName);
+			
+			if (beanDef == null)
+			{
+				continue;
+			}
+			
+			ResolvableType candidateRt = null;
+			
+			//check if we have the class of the bean or the factory method.
+			//Usually if use XML as config file we have the class while we 
+			//have the factory method if we use Java-based configuration.
+			if(beanDef.hasBeanClass())
+			{
+				candidateRt = ResolvableType.forClass(
+					beanDef.getBeanClass());
+			}
+			else if (beanDef.getResolvedFactoryMethod() != null)
+			{
+				candidateRt = ResolvableType.forMethodReturnType(
+					beanDef.getResolvedFactoryMethod());
+			}
+			
+			if (candidateRt == null)
+			{				
+				continue;
+			}
+			
+			boolean exactMatch = fieldResolvableType.isAssignableFrom(candidateRt);
+			boolean elementMatch = fieldCollectionResolvableType != null ? 
+				fieldCollectionResolvableType.isAssignableFrom(candidateRt) : false;
+			
+			if (exactMatch || elementMatch)
+			{				
+				beansAsList.add(ctx.getBean(beanName));
+			}
+			
+			if(exactMatch)
+			{
+				this.beanName = beanName;
+				return beansAsList;
+			} 			
+		}
+		return beansAsList;
 	}
 
 	/**
@@ -216,5 +380,29 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			hashcode = hashcode + (127 * beanName.hashCode());
 		}
 		return hashcode;
+	}
+
+	/**
+	 * Gets the root bean definition for the given name.
+	 * 
+	 * @param ctx
+	 * 				spring application context.
+	 * @param name
+	 * 				bean name
+	 * @return bean definition for the current name, null if such a definition is not found.
+	 */
+	public RootBeanDefinition getBeanDefinition(final ApplicationContext ctx,
+		final String name)		
+	{
+		AbstractBeanFactory beanFactory = (AbstractBeanFactory)(
+			(AbstractApplicationContext)ctx).getBeanFactory();
+		
+		BeanDefinition beanDef = beanFactory.getMergedBeanDefinition(name);
+		
+		if (beanDef instanceof RootBeanDefinition) {
+			return (RootBeanDefinition)beanDef;
+		}
+		
+		return null;
 	}
 }

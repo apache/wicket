@@ -17,6 +17,8 @@
 package org.apache.wicket.spring.injection.annot;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -40,6 +42,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.core.ResolvableType;
 
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create proxies for Spring
@@ -72,6 +75,7 @@ import org.springframework.context.support.AbstractApplicationContext;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Istvan Devai
+ * @author Tobias Soloschenko
  */
 public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 {
@@ -127,14 +131,10 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				required = true;
 			}
 
-			String beanName = getBeanName(field, name, required);
+			Class<?> generic = ResolvableType.forField(field).resolveGeneric(0);
+			String beanName = getBeanName(field, name, required,generic);
 
-			if (beanName == null)
-			{
-				return null;
-			}
-
-			SpringBeanLocator locator = new SpringBeanLocator(beanName, field.getType(),
+			SpringBeanLocator locator = new SpringBeanLocator(beanName, field.getType(),field,
 				contextLocator);
 
 			// only check the cache if the bean is a singleton
@@ -168,7 +168,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			}
 
 			// only put the proxy into the cache if the bean is a singleton
-			if (locator.isSingletonBean())
+			if (field.getType() == List.class || locator.isSingletonBean())
 			{
 				Object tmpTarget = cache.putIfAbsent(locator, target);
 				if (tmpTarget != null)
@@ -186,16 +186,18 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 * @param field
 	 * @return bean name
 	 */
-	private String getBeanName(final Field field, String name, boolean required)
+	private String getBeanName(final Field field, String name, boolean required,Class<?> generic)
 	{
 
 		if (Strings.isEmpty(name))
 		{
 			Class<?> fieldType = field.getType();
+			
 			name = beanNameCache.get(fieldType);
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, required);
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, generic,
+					required);
 
 				if (name != null)
 				{
@@ -225,8 +227,12 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 * @return spring name of the bean
 	 */
 	private String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
-		final boolean required)
+		final Class<?> generic, final boolean required)
 	{
+		// If the clazz is instance of List return null
+		if(clazz == List.class){
+			return null;
+		}
 		// get the list of all possible matching beans
 		List<String> names = new ArrayList<String>(
 			Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz)));
@@ -279,6 +285,10 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 					return primaries.get(0);
 				}
 			}
+			if (generic != null)
+			{
+				return null;
+			}
 			StringBuilder msg = new StringBuilder();
 			msg.append("More than one bean of type [");
 			msg.append(clazz.getName());
@@ -294,7 +304,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		}
 	}
 
-	private BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory beanFactory,
+	public BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory beanFactory,
 		final String name)
 	{
 		if (beanFactory.containsBeanDefinition(name))
@@ -321,6 +331,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	@Override
 	public boolean supportsField(final Field field)
 	{
-		return field.isAnnotationPresent(SpringBean.class) || field.isAnnotationPresent(Inject.class);
+		return field.isAnnotationPresent(SpringBean.class) ||
+			field.isAnnotationPresent(Inject.class);
 	}
 }
