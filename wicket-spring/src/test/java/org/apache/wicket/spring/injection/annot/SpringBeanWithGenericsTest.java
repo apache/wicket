@@ -41,32 +41,32 @@ public class SpringBeanWithGenericsTest extends Assert
 	public void before() throws Exception
 	{
 		tester = new WicketTester();
-		
+
 		ctx = new AnnotationConfigApplicationContext();
 		ctx.register(ConfigContextWithGenerics.class);
 		ctx.refresh();
-		
+
 		SpringComponentInjector springInjector = new SpringComponentInjector(
 			tester.getApplication(), ctx);
 
 		tester.getApplication().getComponentInstantiationListeners().add(springInjector);
 	}
-	
+
 	@Test
 	public void genericAsQualifier() throws Exception
 	{
 		AnnotatedBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedBeanGenericQualifier());
-		
+
 		assertNotNull(page.getBean());
 	}
-	
+
 	@Test
 	public void listOfGenerics() throws Exception
 	{
 		AnnotatedListOfBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedListOfBeanGenericQualifier());
-		
+
 		assertNotNull(page.getBeans());
 		assertEquals(2, page.getBeans().size());
 	}
@@ -76,7 +76,7 @@ public class SpringBeanWithGenericsTest extends Assert
 	{
 		AnnotatedListField page = 
 			tester.startPage(new AnnotatedListField());
-		
+
 		assertNotNull(page.getStrings());
 		assertEquals(3, page.getStrings().size());
 	}
@@ -91,7 +91,7 @@ public class SpringBeanWithGenericsTest extends Assert
 			return bean;
 		}
 	}
-	
+
 	class AnnotatedListOfBeanGenericQualifier extends DummyHomePage
 	{
 		@SpringBean
@@ -102,7 +102,7 @@ public class SpringBeanWithGenericsTest extends Assert
 			return beans;
 		}
 	}
-	
+
 	class AnnotatedListField extends DummyHomePage
 	{
 		@SpringBean
@@ -120,15 +120,15 @@ public class SpringBeanWithGenericsTest extends Assert
 		@Bean
 		public BeanWithGeneric<String> stringBean()
 		{
-			return new BeanWithGeneric<String>();
+			return new BeanWithGeneric<>();
 		}
-		
+
 		@Bean
 		public BeanWithGeneric<Integer> nestedBean()
 		{
-			return new BeanWithGeneric<Integer>();
+			return new BeanWithGeneric<>();
 		}
-		
+
 		@Bean
 		public List<String> strings()
 		{

@@ -17,8 +17,6 @@
 package org.apache.wicket.spring.injection.annot;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -132,10 +130,9 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			}
 
 			Class<?> generic = ResolvableType.forField(field).resolveGeneric(0);
-			String beanName = getBeanName(field, name, required,generic);
+			String beanName = getBeanName(field, name, required, generic);
 
-			SpringBeanLocator locator = new SpringBeanLocator(beanName, field.getType(),field,
-				contextLocator);
+			SpringBeanLocator locator = new SpringBeanLocator(beanName, field.getType(), field, contextLocator);
 
 			// only check the cache if the bean is a singleton
 			Object cachedValue = cache.get(locator);
@@ -186,13 +183,12 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 * @param field
 	 * @return bean name
 	 */
-	private String getBeanName(final Field field, String name, boolean required,Class<?> generic)
+	private String getBeanName(final Field field, String name, boolean required, Class<?> generic)
 	{
-
 		if (Strings.isEmpty(name))
 		{
 			Class<?> fieldType = field.getType();
-			
+
 			name = beanNameCache.get(fieldType);
 			if (name == null)
 			{
@@ -230,11 +226,11 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		final Class<?> generic, final boolean required)
 	{
 		// If the clazz is instance of List return null
-		if(clazz == List.class){
+		if (clazz == List.class){
 			return null;
 		}
 		// get the list of all possible matching beans
-		List<String> names = new ArrayList<String>(
+		List<String> names = new ArrayList<>(
 			Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz)));
 
 		// filter out beans that are not candidates for autowiring
@@ -325,13 +321,9 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
-	 */
 	@Override
 	public boolean supportsField(final Field field)
 	{
-		return field.isAnnotationPresent(SpringBean.class) ||
-			field.isAnnotationPresent(Inject.class);
+		return field.isAnnotationPresent(SpringBean.class) || field.isAnnotationPresent(Inject.class);
 	}
 }
