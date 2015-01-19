@@ -3163,7 +3163,7 @@ public abstract class Component
 	 */
 	public final <C extends IRequestablePage> void setResponsePage(final Class<C> cls)
 	{
-		getRequestCycle().setResponsePage(cls, null);
+		getRequestCycle().setResponsePage(cls, (PageParameters)null);
 	}
 
 	/**

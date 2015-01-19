@@ -668,32 +668,60 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}
 
-
 	/**
 	 * Convenience method for setting next page to be rendered.
 	 * 
 	 * @param pageClass
+	 *              The class of the page to render
 	 */
 	public void setResponsePage(Class<? extends IRequestablePage> pageClass)
 	{
-		IPageProvider provider = new PageProvider(pageClass, null);
-		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
-			RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT));
+		setResponsePage(pageClass, null, RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT);
 	}
 
+	/**
+	 * Convenience method for setting next page to be rendered.
+	 *
+	 * @param pageClass
+	 *              The class of the page to render
+	 * @param redirectPolicy
+	 *              The policy to use when deciding whether to redirect or not
+	 */
+	public void setResponsePage(Class<? extends IRequestablePage> pageClass, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
+	{
+		setResponsePage(pageClass, null, redirectPolicy);
+	}
 
 	/**
 	 * Convenience method for setting next page to be rendered.
 	 * 
 	 * @param pageClass
+	 *              The class of the page to render
 	 * @param parameters
+	 *              The query parameters for the page to be rendered
 	 */
 	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
 		PageParameters parameters)
 	{
+		setResponsePage(pageClass, parameters, RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT);
+	}
+
+	/**
+	 * Convenience method for setting next page to be rendered.
+	 *
+	 * @param pageClass
+	 *              The class of the page to render
+	 * @param parameters
+	 *              The query parameters for the page to be rendered
+	 * @param redirectPolicy
+	 *              The policy to use when deciding whether to redirect or not
+	 */
+	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
+	                            PageParameters parameters, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
+	{
 		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
-			RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT));
+				redirectPolicy));
 	}
 
 	/**
