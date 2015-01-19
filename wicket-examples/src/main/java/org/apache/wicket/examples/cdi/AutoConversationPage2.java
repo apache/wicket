@@ -19,7 +19,6 @@ package org.apache.wicket.examples.cdi;
 import javax.inject.Inject;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
 

@@ -29,8 +29,7 @@ public class ApplicationCounter extends Counter
 {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationCounter.class);
 
-	private void onDetach(@Observes
-	DetachEvent detach)
+	private void onDetach(@Observes DetachEvent detach)
 	{
 		logger.info("Detaching application counter");
 	}
