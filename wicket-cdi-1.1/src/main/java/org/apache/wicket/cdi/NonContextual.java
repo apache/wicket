@@ -44,9 +44,7 @@ public class NonContextual<T>
 	final InjectionTarget<T> it;
 
 	/**
-	 * Undeploys specified bean manager from cache
-	 * 
-	 * @param beanManager
+	 * Undeploys the looked up bean manager from cache
 	 */
 	public static void undeploy()
 	{
@@ -64,11 +62,10 @@ public class NonContextual<T>
 	}
 
 	/**
-	 * Factory method for creating noncontextual instances
+	 * Factory method for creating non-contextual instances
 	 * 
 	 * @param <T>
 	 * @param clazz
-	 * @param manager
 	 * @return
 	 */
 	public static <T> NonContextual<T> of(Class<? extends T> clazz)
