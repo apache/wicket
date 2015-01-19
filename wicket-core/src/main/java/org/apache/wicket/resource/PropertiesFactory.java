@@ -204,9 +204,9 @@ public class PropertiesFactory implements IPropertiesFactory
 	protected ValueMap loadFromLoader(final IPropertiesLoader loader,
 		final IResourceStream resourceStream)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
-			log.info("Loading properties files from " + resourceStream + " with loader " + loader);
+			log.debug("Loading properties files from '{}' with loader '{}'", resourceStream, loader);
 		}
 
 		BufferedInputStream in = null;
@@ -233,11 +233,7 @@ public class PropertiesFactory implements IPropertiesFactory
 			}
 			return data;
 		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			log.warn("Unable to find resource " + resourceStream, e);
-		}
-		catch (IOException e)
+		catch (ResourceStreamNotFoundException | IOException e)
 		{
 			log.warn("Unable to find resource " + resourceStream, e);
 		}
