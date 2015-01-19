@@ -28,9 +28,11 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.apache.wicket.util.string.Strings;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
@@ -241,7 +243,14 @@ public class AtmosphereBehavior extends AbstractAjaxBehavior
 	@Override
 	public CharSequence getCallbackUrl()
 	{
-		return super.getCallbackUrl() + "&" + WebRequest.PARAM_AJAX + "=true&" + WebRequest.PARAM_AJAX_BASE_URL + "=.";
+		RequestCycle requestCycle = getComponent().getRequestCycle();
+		Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
+		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
+
+		return new StringBuilder(256)
+				.append(super.getCallbackUrl())
+				.append('&').append(WebRequest.PARAM_AJAX).append("=true&")
+				.append(WebRequest.PARAM_AJAX_BASE_URL).append('=').append(ajaxBaseUrl);
 	}
 
 	/**
