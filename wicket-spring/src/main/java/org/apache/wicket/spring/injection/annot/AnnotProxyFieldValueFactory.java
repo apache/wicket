@@ -225,10 +225,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	private String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
 		final Class<?> generic, final boolean required)
 	{
-		// If the clazz is instance of List return null
-		if (clazz == List.class){
-			return null;
-		}
 		// get the list of all possible matching beans
 		List<String> names = new ArrayList<>(
 			Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz)));
@@ -281,10 +277,12 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 					return primaries.get(0);
 				}
 			}
+			
 			if (generic != null)
 			{
 				return null;
 			}
+			
 			StringBuilder msg = new StringBuilder();
 			msg.append("More than one bean of type [");
 			msg.append(clazz.getName());

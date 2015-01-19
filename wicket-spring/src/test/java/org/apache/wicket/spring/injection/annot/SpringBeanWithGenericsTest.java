@@ -77,8 +77,18 @@ public class SpringBeanWithGenericsTest extends Assert
 		AnnotatedListField page = 
 			tester.startPage(new AnnotatedListField());
 
-		assertNotNull(page.getStrings());
-		assertEquals(3, page.getStrings().size());
+		assertNotNull(page.getStringsList());
+		assertEquals(3, page.getStringsList().size());
+	}
+	
+	@Test
+	public void listOfTypedGenerics() throws Exception
+	{
+		AnnotatedListOfBeanTypeQualifier page = 
+			tester.startPage(new AnnotatedListOfBeanTypeQualifier());
+
+		assertNotNull(page.getBeans());
+		assertEquals(1, page.getBeans().size());
 	}
 
 	class AnnotatedBeanGenericQualifier extends DummyHomePage
@@ -102,15 +112,26 @@ public class SpringBeanWithGenericsTest extends Assert
 			return beans;
 		}
 	}
+	
+	class AnnotatedListOfBeanTypeQualifier extends DummyHomePage
+	{
+		@SpringBean
+		private List<BeanWithGeneric<Integer>> beans;
+
+		public List<BeanWithGeneric<Integer>> getBeans()
+		{
+			return beans;
+		}
+	}
 
 	class AnnotatedListField extends DummyHomePage
 	{
 		@SpringBean
-		private List<String> strings;
+		private List<String> stringsList;
 
-		public List<String> getStrings()
+		public List<String> getStringsList()
 		{
-			return strings;
+			return stringsList;
 		}
 	}
 

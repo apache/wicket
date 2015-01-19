@@ -20,20 +20,19 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.core.GenericCollectionTypeResolver;
 import org.springframework.core.ResolvableType;
 
 /**
@@ -130,10 +129,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		{
 			fieldName = beanField.getName();
 			fieldResolvableType = ResolvableType.forField(beanField);
-
-			Class<?> collectionFieldType = GenericCollectionTypeResolver.getCollectionFieldType(beanField);
-			fieldCollectionResolvableType = collectionFieldType != null ? 
-				ResolvableType.forClass(collectionFieldType) : null;
+			fieldCollectionResolvableType = fieldResolvableType.getGeneric();
 		}
 	}
 
@@ -239,22 +235,18 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			}
 
 			// If the given class is a list try to get the generic of the list
-			Class<?> lookupClass = clazz == List.class ? 
+			final boolean isList = clazz == List.class;
+			Class<?> lookupClass = isList ? 
 				fieldResolvableType.getGeneric(0).resolve() : clazz;
 
 			// Else the lookup is done via Generic
 			List<String> names = loadBeanNames(ctx, lookupClass);
 
-			List<Object> beansAsList = getBeansByName(ctx, names);
+			Object foundBeans = getBeansByName(ctx, names);
 
-			if(beansAsList.size() == 1)
+			if(foundBeans != null)
 			{
-				return beansAsList.get(0);
-			}
-
-			if (!beansAsList.isEmpty())
-			{
-				return beansAsList;
+				return foundBeans;
 			}
 
 			throw new IllegalStateException(
@@ -280,31 +272,44 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	private List<String> loadBeanNames(ApplicationContext ctx, Class<?> lookupClass)
 	{		
 		List<String> beanNames = new ArrayList<>();
-		String[] beanNamesArr = BeanFactoryUtils
-			.beanNamesForTypeIncludingAncestors(ctx, lookupClass);
-
-		//add field name if defined
-		if (ctx.containsBean(fieldName))
-		{
-			beanNames.add(fieldName);
-		}
-
+		Class<?> fieldType = getBeanType();
+		String[] beanNamesArr = ctx.getBeanNamesForType(fieldType);
+		
+		//add names for field class 
 		beanNames.addAll(Arrays.asList(beanNamesArr));
-
+		
+		//add names for lookup class 
+		if (lookupClass != fieldType)
+		{
+			beanNamesArr = ctx.getBeanNamesForType(lookupClass);
+			beanNames.addAll(Arrays.asList(beanNamesArr));			
+		}
+		
+		Iterator<String> nameIterator = beanNames.iterator();
+		
+		//filter those beans who don't have a definition (used internally by Spring)
+		while (nameIterator.hasNext())
+		{
+			if (!ctx.containsBeanDefinition(nameIterator.next()))
+			{
+				nameIterator.remove();
+			}			
+		}
+		
 		return beanNames;
 	}
 
 	/**
-	 * Retrieves a list of beans for the given list of names and assignable to the
+	 * Retrieves a list of beans or a single bean for the given list of names and assignable to the
 	 * current field to inject.
 	 * 
 	 * @param ctx
 	 * 				spring application context.
 	 * @param names
 	 * 				the list of candidate names
-	 * @return a list of matching beans.
+	 * @return a list of matching beans or a single one.
 	 */
-	private List<Object> getBeansByName(ApplicationContext ctx, List<String> names)
+	private Object getBeansByName(ApplicationContext ctx, List<String> names)
 	{
 		List<Object> beansAsList = new ArrayList<>();
 
@@ -349,10 +354,11 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			if (exactMatch)
 			{
 				this.beanName = beanName;
-				return beansAsList;
+				return ctx.getBean(beanName);
 			}
 		}
-		return beansAsList;
+		
+		return beansAsList.size() > 0 ? beansAsList : null;
 	}
 
 	@Override
@@ -391,9 +397,11 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		ConfigurableListableBeanFactory beanFactory = ((AbstractApplicationContext)ctx).getBeanFactory();
 
-		BeanDefinition beanDef = beanFactory.getMergedBeanDefinition(name);
+		BeanDefinition beanDef = beanFactory.containsBean(name) ?
+			beanFactory.getMergedBeanDefinition(name) : null;
 
-		if (beanDef instanceof RootBeanDefinition) {
+		if (beanDef instanceof RootBeanDefinition) 
+		{
 			return (RootBeanDefinition)beanDef;
 		}
 
