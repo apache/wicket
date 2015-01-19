@@ -102,25 +102,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		String baseMessage = "Could not resolve Bean Property from component: " + component
 				+ ". (Hints:) Possible causes are a typo in the PropertyExpression, a null reference or a model that does not work in combination with a "
 				+ IPropertyResolver.class.getSimpleName() + ".";
-
-		IModel<?> model = component.getModel();
-		// Code sadly copied over from DefaultPropertyResolver
-		while (true)
-		{
-			if (model == null)
-			{
-				break;
-			}
-			if (model instanceof IPropertyReflectionAwareModel)
-			{
-				break;
-			}
-			if (model instanceof IWrapModel<?>)
-			{
-				model = ((IWrapModel<?>)model).getWrappedModel();
-				continue;
-			}
-		}
+        IModel<?> model = ValidationModelResolver.resolvePropertyModelFrom(component);
 		if (model != null) {
 			baseMessage += " Model : " + model;
 		}
