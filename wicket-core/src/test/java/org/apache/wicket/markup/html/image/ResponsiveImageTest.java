@@ -40,6 +40,7 @@ public class ResponsiveImageTest
 		String lastResponseAsString = wicketTester.getLastResponse().getDocument();
 		TagTester createTagByAttribute = TagTester.createTagByAttribute(lastResponseAsString, "img");
 		Assert.assertFalse(createTagByAttribute.hasAttribute("srcset"));
+		Assert.assertEquals("anonymous", createTagByAttribute.getAttribute("crossorigin"));
 	}
 
 	@Test
