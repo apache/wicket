@@ -120,4 +120,20 @@ public class Source extends Image
 	{
 		return media;
 	}
+	
+	/**
+	 * Unsupported for source tag
+	 */
+	@Override
+	public void setCrossorigin(Cors crossorigin) {
+		throw new UnsupportedOperationException("It is not allowed to set the crossorigin attribute for source tag");
+	}
+	
+	/**
+	 * Unsupported for source tag
+	 */
+	@Override
+	public Cors getCrossorigin() {
+		throw new UnsupportedOperationException("It is not allowed to get the crossorigin attribute for source tag");
+	}
 }
