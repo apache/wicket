@@ -67,6 +67,11 @@ public class Image extends WebComponent implements IResourceListener
 	private List<String> sizes = null;
 
 	/**
+	 * Cross origin settings
+	 */
+	private Cors crossorigin = null;
+
+	/**
 	 * This constructor can be used if you override {@link #getImageResourceReference()} or
 	 * {@link #getImageResource()}
 	 * 
@@ -347,8 +352,13 @@ public class Image extends WebComponent implements IResourceListener
 			String srcAttribute = this.buildSrcAttribute(tag);
 			this.buildSrcSetAttribute(tag);
 			tag.put("src", srcAttribute);
+
 		}
 		this.buildSizesAttribute(tag);
+
+		if (this.crossorigin != null) {
+			tag.put("crossorigin", this.crossorigin.getRealName());
+		}
 	}
 
 	/**
@@ -512,6 +522,56 @@ public class Image extends WebComponent implements IResourceListener
 		else
 		{
 			return super.canCallListenerInterface(method);
+		}
+	}
+
+	/**
+	 * Gets the cross origin settings
+	 *
+	 * @see {@link #setCrossorigin(Cors)}
+	 *
+	 * @return the cross origins settings
+	 */
+	public Cors getCrossorigin() {
+		return this.crossorigin;
+	}
+
+	/**
+	 * Sets the cross origin settings<br>
+	 * <br>
+	 *
+	 * <b>anonymous</b>: Cross-origin CORS requests for the element will not have the credentials flag set.<br>
+	 * <br>
+	 * <b>use_credentials</b>: Cross-origin CORS requests for the element will have the credentials flag set.<br>
+	 * <br>
+	 * <b>no_cores</b>: The empty string is also a valid keyword, and maps to the Anonymous state. The attribute's invalid value default is the
+	 * Anonymous state. The missing value default, used when the attribute is omitted, is the No CORS state
+	 *
+	 * @param crossorigin
+	 *            the cross origins settings to set
+	 */
+	public void setCrossorigin(Cors crossorigin) {
+		this.crossorigin = crossorigin;
+	}
+
+	/**
+	 * To be used for the crossorigin attribute
+	 *
+	 * @see {@link #setCrossorigin(Cors)}
+	 */
+	public enum Cors {
+		anonymous("anonymous"),
+		use_credentials("user-credentials"),
+		no_cors("");
+
+		private String realName;
+
+		private Cors(String realName) {
+			this.realName = realName;
+		}
+
+		public String getRealName() {
+			return this.realName;
 		}
 	}
 }
