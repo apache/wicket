@@ -313,6 +313,7 @@ public class CookieUtils
 		cookie.setVersion(settings.getVersion());
 		cookie.setSecure(settings.getSecure());
 		cookie.setMaxAge(settings.getMaxAge());
+		cookie.setHttpOnly(settings.isHttpOnly());
 	}
 
 	/**

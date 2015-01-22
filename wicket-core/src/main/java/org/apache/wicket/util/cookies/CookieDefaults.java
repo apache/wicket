@@ -43,6 +43,8 @@ public class CookieDefaults implements IClusterable
 	/** Cookie version. */
 	private int version;
 
+	private boolean httpOnly;
+
 	/**
 	 * Gets the max age. After
 	 * 
@@ -156,5 +158,29 @@ public class CookieDefaults implements IClusterable
 	public void setVersion(int version)
 	{
 		this.version = version;
+	}
+
+	/**
+	 * Checks whether this Cookie has been marked as <i>HttpOnly</i>.
+	 *
+	 * @return true if this Cookie has been marked as <i>HttpOnly</i>, false otherwise
+	 */
+	public boolean isHttpOnly()
+	{
+		return httpOnly;
+	}
+
+	/**
+	 * Marks or unmarks this Cookie as <i>HttpOnly</i>.
+	 *
+	 * <p><i>HttpOnly</i> cookies are not supposed to be exposed to
+	 * client-side scripting code, and may therefore help mitigate certain
+	 * kinds of cross-site scripting attacks.
+	 *
+	 * @param httpOnly true if this cookie is to be marked as <i>HttpOnly</i>, false otherwise
+	 */
+	public void setHttpOnly(boolean httpOnly)
+	{
+		this.httpOnly = httpOnly;
 	}
 }
