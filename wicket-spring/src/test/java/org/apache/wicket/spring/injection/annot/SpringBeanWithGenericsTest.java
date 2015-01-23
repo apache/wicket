@@ -18,6 +18,7 @@ package org.apache.wicket.spring.injection.annot;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.spring.BeanWithGeneric;
 import org.apache.wicket.util.tester.DummyHomePage;
@@ -67,8 +68,29 @@ public class SpringBeanWithGenericsTest extends Assert
 		AnnotatedListOfBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedListOfBeanGenericQualifier());
 
-		assertNotNull(page.getBeans());
-		assertEquals(2, page.getBeans().size());
+		List<BeanWithGeneric<?>> beans = page.getBeans();
+		
+		assertNotNull(beans);
+		assertEquals(2, beans.size());
+		
+		assertTrue(beans.contains(ctx.getBean("stringBean")));
+		assertTrue(beans.contains(ctx.getBean("integerBean")));
+	}
+	
+	@Test
+	public void mapOfGenerics() throws Exception
+	{
+		AnnotatedMapOfBeanGenericQualifier page = 
+			tester.startPage(new AnnotatedMapOfBeanGenericQualifier());
+
+		Map<String, BeanWithGeneric<?>> beans = page.getBeans();
+		
+		assertNotNull(beans);
+		assertEquals(2, beans.size());
+		
+		assertTrue(beans.containsKey("stringBean"));
+		assertTrue(beans.containsKey("integerBean"));
+		
 	}
 	
 	@Test
@@ -113,6 +135,17 @@ public class SpringBeanWithGenericsTest extends Assert
 		}
 	}
 	
+	class AnnotatedMapOfBeanGenericQualifier extends DummyHomePage
+	{
+		@SpringBean
+		private Map<String, BeanWithGeneric<?>> beans;
+
+		public Map<String, BeanWithGeneric<?>> getBeans()
+		{
+			return beans;
+		}
+	}
+	
 	class AnnotatedListOfBeanTypeQualifier extends DummyHomePage
 	{
 		@SpringBean
@@ -145,7 +178,7 @@ public class SpringBeanWithGenericsTest extends Assert
 		}
 
 		@Bean
-		public BeanWithGeneric<Integer> nestedBean()
+		public BeanWithGeneric<Integer> integerBean()
 		{
 			return new BeanWithGeneric<>();
 		}

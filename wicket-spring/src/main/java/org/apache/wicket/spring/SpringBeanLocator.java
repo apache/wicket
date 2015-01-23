@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.proxy.IProxyTargetLocator;
@@ -129,8 +131,32 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		{
 			fieldName = beanField.getName();
 			fieldResolvableType = ResolvableType.forField(beanField);
-			fieldElementsResolvableType = fieldResolvableType.getGeneric();
+			fieldElementsResolvableType = extractElementGeneric(fieldResolvableType);
 		}
+	}
+	
+	/**
+	 * If the field type is a collection (Map, Set or List) extracts type 
+	 * informations about its elements.
+	 * 
+	 * @param fieldResolvableType
+	 * 				the resolvable type of the field
+	 * @return the resolvable type of elements of the field, if any.
+	 */
+	private ResolvableType extractElementGeneric(ResolvableType fieldResolvableType)
+	{
+		Class<?> clazz = fieldResolvableType.resolve();
+		
+		if (clazz == Set.class || clazz == List.class)
+		{
+			return fieldResolvableType.getGeneric();
+		} 
+		else if (clazz == Map.class) 
+		{
+			return fieldResolvableType.getGeneric(1);			
+		}
+		
+		return null;
 	}
 
 	/**
