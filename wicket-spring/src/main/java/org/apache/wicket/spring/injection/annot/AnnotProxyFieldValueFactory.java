@@ -165,7 +165,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			}
 
 			// only put the proxy into the cache if the bean is a singleton
-			if (field.getType() == List.class || locator.isSingletonBean())
+			if (locator.isSingletonBean())
 			{
 				Object tmpTarget = cache.putIfAbsent(locator, target);
 				if (tmpTarget != null)

@@ -67,7 +67,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * If the field to inject is a list this is the resolvable type of its elements
 	 */
-	private ResolvableType fieldCollectionResolvableType;
+	private ResolvableType fieldElementsResolvableType;
 	
 	private String fieldName;
 	
@@ -129,7 +129,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		{
 			fieldName = beanField.getName();
 			fieldResolvableType = ResolvableType.forField(beanField);
-			fieldCollectionResolvableType = fieldResolvableType.getGeneric();
+			fieldElementsResolvableType = fieldResolvableType.getGeneric();
 		}
 	}
 
@@ -141,7 +141,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		if (singletonCache == null)
 		{
-			singletonCache = getSpringContext().isSingleton(getBeanName());
+			singletonCache = getBeanName() != null && 
+				getSpringContext().isSingleton(getBeanName());
 		}
 		return singletonCache;
 	}
@@ -235,9 +236,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			}
 
 			// If the given class is a list try to get the generic of the list
-			final boolean isList = clazz == List.class;
-			Class<?> lookupClass = isList ? 
-				fieldResolvableType.getGeneric(0).resolve() : clazz;
+			Class<?> lookupClass = fieldElementsResolvableType != null ? 
+				fieldElementsResolvableType.resolve() : clazz;
 
 			// Else the lookup is done via Generic
 			List<String> names = loadBeanNames(ctx, lookupClass);
@@ -311,8 +311,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	private Object getBeansByName(ApplicationContext ctx, List<String> names)
 	{
-		List<Object> beansAsList = new ArrayList<>();
-
+		FieldBeansCollector beansCollector = new FieldBeansCollector(fieldResolvableType);
+		
 		for (String beanName : names)
 		{
 			RootBeanDefinition beanDef = getBeanDefinition(ctx, beanName);
@@ -343,22 +343,23 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			}
 
 			boolean exactMatch = fieldResolvableType.isAssignableFrom(candidateResolvableType);
-			boolean elementMatch = fieldCollectionResolvableType != null ? 
-				fieldCollectionResolvableType.isAssignableFrom(candidateResolvableType) : false;
-
-			if (exactMatch || elementMatch)
-			{
-				beansAsList.add(ctx.getBean(beanName));
-			}
+			boolean elementMatch = fieldElementsResolvableType != null ? 
+				fieldElementsResolvableType.isAssignableFrom(candidateResolvableType) : false;
 
 			if (exactMatch)
 			{
 				this.beanName = beanName;
 				return ctx.getBean(beanName);
 			}
+			
+			if (elementMatch)
+			{
+				beansCollector.addBean(beanName, ctx.getBean(beanName));
+			}
+
 		}
 		
-		return beansAsList.size() > 0 ? beansAsList : null;
+		return beansCollector.getBeansToInject();
 	}
 
 	@Override
