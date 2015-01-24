@@ -247,15 +247,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			}
 		}
 
-		if (names.isEmpty())
-		{
-			if (required)
-			{
-				throw new IllegalStateException("bean of type [" + clazz.getName() + "] not found");
-			}
-			return null;
-		}
-		else if (names.size() > 1)
+		if (names.size() > 1)
 		{
 			if (ctx instanceof AbstractApplicationContext)
 			{
@@ -292,10 +284,12 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			msg.append(Strings.join(",", names.toArray(new String[names.size()])));
 			throw new IllegalStateException(msg.toString());
 		}
-		else
+		else if(!names.isEmpty())
 		{
 			return names.get(0);
 		}
+		
+		return null;
 	}
 
 	public BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory beanFactory,

@@ -26,6 +26,13 @@ import java.util.Set;
 
 import org.springframework.core.ResolvableType;
 
+/**
+ * Convenience class to extract information about the type and generics of a field to inject.
+ * The field is a List, a Map or a Set and the generic type of its elements is extracted as well
+ * 
+ * @author Tobias Soloschenko
+ * @author Andrea Del Bene
+ */
 public class FieldBeansCollector
 {
 	private final FieldType fieldType;
@@ -72,6 +79,12 @@ public class FieldBeansCollector
 		}
 	}
 	
+	/**
+	 * Returns an instance containing all the beans collected for the field and
+	 * compatible with the type of the field.
+	 * 
+	 * @return the instance to inject into the field.
+	 */
 	public Object getBeansToInject()
 	{
 		if (beansToInjectMap != null && beansToInjectMap.size() > 0)
@@ -87,6 +100,15 @@ public class FieldBeansCollector
 		return null;
 	}
 	
+	/**
+	 * Adds compatible bean to the field. This means that the field type is Map, a List or a Set
+	 * and that the given bean is compatible with its elements type.
+	 * 
+	 * @param beanName
+	 * 				the name of the bean to inject
+	 * @param bean
+	 * 				the bean to inject
+	 */
 	public void addBean(String beanName, Object bean)
 	{
 		switch (fieldType)

@@ -19,6 +19,7 @@ package org.apache.wicket.spring.injection.annot;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.wicket.spring.BeanWithGeneric;
 import org.apache.wicket.util.tester.DummyHomePage;
@@ -30,6 +31,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author Andrea Del Bene
+ *
+ */
 public class SpringBeanWithGenericsTest extends Assert
 {
 	private WicketTester tester;
@@ -94,6 +99,21 @@ public class SpringBeanWithGenericsTest extends Assert
 	}
 	
 	@Test
+	public void setOfGenerics() throws Exception
+	{
+		AnnotatedSetOfBeanGenericQualifier page = 
+			tester.startPage(new AnnotatedSetOfBeanGenericQualifier());
+
+		Set<BeanWithGeneric<?>> beans = page.getBeans();
+		
+		assertNotNull(beans);
+		assertEquals(2, beans.size());
+		
+		assertTrue(beans.contains(ctx.getBean("stringBean")));
+		assertTrue(beans.contains(ctx.getBean("integerBean")));
+	}
+	
+	@Test
 	public void listField() throws Exception
 	{
 		AnnotatedListField page = 
@@ -141,6 +161,17 @@ public class SpringBeanWithGenericsTest extends Assert
 		private Map<String, BeanWithGeneric<?>> beans;
 
 		public Map<String, BeanWithGeneric<?>> getBeans()
+		{
+			return beans;
+		}
+	}
+
+	class AnnotatedSetOfBeanGenericQualifier extends DummyHomePage
+	{
+		@SpringBean
+		private Set<BeanWithGeneric<?>> beans;
+
+		public Set<BeanWithGeneric<?>> getBeans()
 		{
 			return beans;
 		}
