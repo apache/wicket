@@ -4407,7 +4407,7 @@ public abstract class Component
 	 * 
 	 * @return <code>true</code> if this component is enabled</code>
 	 */
-	public final boolean isEnabledInHierarchy()
+	public boolean isEnabledInHierarchy()
 	{
 		if (getRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_SET))
 		{
