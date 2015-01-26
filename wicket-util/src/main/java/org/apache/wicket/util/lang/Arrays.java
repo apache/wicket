@@ -23,7 +23,9 @@ import java.lang.reflect.Array;
  * Apache Harmony JDK, licensed under the Apache Software License 2.0.
  * 
  * @since 1.2
+ * @deprecated Use {@link java.util.Arrays} instead
  */
+@Deprecated
 public class Arrays
 {
 	/**
@@ -43,7 +45,9 @@ public class Arrays
 	 * @throws NullPointerException
 	 *             if the original array is null
 	 * @since 1.6
+	 * @deprecated Use {@link java.util.Arrays#copyOf(Object[], int)}
 	 */
+	@Deprecated
 	public static <T> T[] copyOf(final T[] original, final int newLength)
 	{
 		if (null == original)
@@ -80,7 +84,9 @@ public class Arrays
 	 * @throws NullPointerException
 	 *             if original is null
 	 * @since 1.6
+	 * @deprecated Use {@link Arrays#copyOfRange(Object[], int, int)}
 	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public static <T> T[] copyOfRange(final T[] original, final int start, final int end)
 	{
