@@ -2,6 +2,52 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =============================================================================
 
+Release Notes - Wicket - Version 6.19.0
+
+** Bug
+
+    * [WICKET-5747] - Wicket Ajax Click handling gets requeued in OnDomReady so fire out of order
+    * [WICKET-5752] - ReplacementResourceBundleReference should return the dependencies for the replacing resource ref
+    * [WICKET-5755] - Restoring focus after Ajax replace no longer works in IE8
+    * [WICKET-5759] - AjaxRequestAttributes extra parameters aren't properly handled in getCallbackFunction()
+    * [WICKET-5770] - PageParametersEncoder should not decode parameters with no name
+    * [WICKET-5782] - Missing escaping in MultiFileUploadField.js - sort of XSS
+    * [WICKET-5783] - Multiple events in AjaxEventBehavior with prefix 'on'
+    * [WICKET-5784] - arraycopy with bad length in AbstractRequestLogger:172
+    * [WICKET-5793] - Request for static resource creating a session in 6.13.0+
+    * [WICKET-5809] - URL IPv6 parsing
+    * [WICKET-5811] - Infinite loop issue in PropertyValidator#createUnresolvablePropertyMessage(FormComponent<>) 
+    * [WICKET-5812] - AtmosphereBehavior wrongly sets Ajax base url to '.'
+
+** Improvement
+
+    * [WICKET-4703] - StringResourceModel should provide an overridable getString(Component) method
+    * [WICKET-5746] - Fire an event once all JS event listeners are registered
+    * [WICKET-5753] - It is impossible to determine the form submitting component's inputName when AjaxFormSubmitBehavior is used
+    * [WICKET-5754] - (String)ResourceModel's defaultValue could be an IModel<String>
+    * [WICKET-5756] - Allow to use custom ciphers when using SunJceCrypt class
+    * [WICKET-5758] - Portuguese translation
+    * [WICKET-5760] - Add constructor (String, Serializable, String) to AttributeAppender
+    * [WICKET-5775] - Replace the session upon successful signin for better support for Session Fixation
+    * [WICKET-5776] - Add information about the component when it fail in detach phase
+    * [WICKET-5778] - Pass the IModifiable to the IChangeListener in ModificationWatcher
+    * [WICKET-5780] - Add a resource reference for ContextRelativeResource
+    * [WICKET-5794] - Make DefaultExceptionMapper extensible
+    * [WICKET-5797] - Convenience method to call setResponsePage with forward option
+    * [WICKET-5799] - Add rel=prev/next in PagingNavigator.html
+    * [WICKET-5802] - HTML Import
+    * [WICKET-5806] - Wicket.Log should log (at least errors) in the browser console even when Wicket Ajax Debug window is disabled
+
+** New Feature
+
+    * [WICKET-5771] - Ability to escape resource bundle messages added with wicket:message
+
+** Task
+
+    * [WICKET-5791] - Update JQuery to 1.11.2 and 2.1.3
+
+=============================================================================
+
 Release Notes - Wicket - Version 6.18.0
 
 ** Bug
