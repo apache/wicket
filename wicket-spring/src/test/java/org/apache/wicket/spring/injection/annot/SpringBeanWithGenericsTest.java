@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -89,13 +94,12 @@ public class SpringBeanWithGenericsTest extends Assert
 			tester.startPage(new AnnotatedMapOfBeanGenericQualifier());
 
 		Map<String, BeanWithGeneric<?>> beans = page.getBeans();
-		
+
 		assertNotNull(beans);
 		assertEquals(2, beans.size());
-		
+
 		assertTrue(beans.containsKey("stringBean"));
 		assertTrue(beans.containsKey("integerBean"));
-		
 	}
 	
 	@Test
@@ -121,6 +125,13 @@ public class SpringBeanWithGenericsTest extends Assert
 
 		assertNotNull(page.getStringsList());
 		assertEquals(3, page.getStringsList().size());
+
+		ArrayList<String> arrayListStrings = page.getArrayListStrings();
+		assertThat(arrayListStrings, is(notNullValue()));
+		assertThat(arrayListStrings.size(), is(3));
+		assertThat(arrayListStrings.get(0), is(equalTo("one")));
+		assertThat(arrayListStrings.get(1), is(equalTo("two")));
+		assertThat(arrayListStrings.get(2), is(equalTo("three")));
 	}
 	
 	@Test
@@ -197,6 +208,14 @@ public class SpringBeanWithGenericsTest extends Assert
 		{
 			return stringsList;
 		}
+
+		@SpringBean
+		private ArrayList<String> arrayListStrings;
+
+		public ArrayList<String> getArrayListStrings()
+		{
+			return arrayListStrings;
+		}
 	}
 
 	@Configuration
@@ -218,6 +237,16 @@ public class SpringBeanWithGenericsTest extends Assert
 		public List<String> strings()
 		{
 			return Arrays.asList("foo", "bar", "baz");
+		}
+
+		@Bean
+		public ArrayList<String> arrayListStrings()
+		{
+			ArrayList<String> arrayList = new ArrayList();
+			arrayList.add("one");
+			arrayList.add("two");
+			arrayList.add("three");
+			return arrayList;
 		}
 	}
 }

@@ -137,7 +137,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	
 	/**
 	 * If the field type is a collection (Map, Set or List) extracts type 
-	 * informations about its elements.
+	 * information about its elements.
 	 * 
 	 * @param fieldResolvableType
 	 * 				the resolvable type of the field
@@ -147,13 +147,13 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		Class<?> clazz = fieldResolvableType.resolve();
 		
-		if (clazz == Set.class || clazz == List.class)
+		if (Set.class.isAssignableFrom(clazz) || List.class.isAssignableFrom(clazz))
 		{
 			return fieldResolvableType.getGeneric();
 		} 
-		else if (clazz == Map.class) 
+		else if (Map.class.isAssignableFrom(clazz))
 		{
-			return fieldResolvableType.getGeneric(1);			
+			return fieldResolvableType.getGeneric(1);
 		}
 		
 		return null;

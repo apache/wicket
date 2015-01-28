@@ -29,28 +29,28 @@ import org.springframework.core.ResolvableType;
 public class FieldBeansCollectorTest
 {
 	public List<List<String>> listOfStringList;
-	
+
 	public List genericList;
-	
+
 	@Test
 	public void resolveGenericList() throws Exception
 	{
 		Field field = getClass().getField("listOfStringList");
 		ResolvableType resolvableType = ResolvableType.forField(field);
-		
+
 		FieldBeansCollector fieldBeansCollector = new FieldBeansCollector(resolvableType);
-		
-		assertTrue(fieldBeansCollector.getFieldType() == FieldType.LIST);		
+
+		assertTrue(fieldBeansCollector.getFieldType() == FieldType.LIST);
 	}
-	
+
 	@Test
 	public void resolveRowList() throws Exception
 	{
 		Field field = getClass().getField("genericList");
-		
+
 		ResolvableType resolvableType = ResolvableType.forField(field);
 		FieldBeansCollector fieldBeansCollector = new FieldBeansCollector(resolvableType);
-		
+
 		assertTrue(fieldBeansCollector.getFieldType() == FieldType.LIST);
 	}
 }
