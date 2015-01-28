@@ -16,38 +16,35 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.TagTester;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-public class ResponsiveImageTest
+public class ResponsiveImageTest extends WicketTestCase
 {
-
-	private WicketTester wicketTester;
-
-	@Before
-	public void setup()
+	@Override
+	protected WebApplication newApplication()
 	{
-		wicketTester = new WicketTester(new PubApplication());
+		return new PubApplication();
 	}
 
 	@Test
 	public void testSrcSetIsNotAvailableOnDefaultUsage()
 	{
-		wicketTester.startPage(ImageResourceReferenceTestPage.class);
-		String lastResponseAsString = wicketTester.getLastResponse().getDocument();
+		tester.startPage(ImageResourceReferenceTestPage.class);
+		String lastResponseAsString = tester.getLastResponse().getDocument();
 		TagTester createTagByAttribute = TagTester.createTagByAttribute(lastResponseAsString, "img");
 		Assert.assertFalse(createTagByAttribute.hasAttribute("srcset"));
-		Assert.assertEquals("anonymous", createTagByAttribute.getAttribute("crossorigin"));
+		Assert.assertEquals(Image.Cors.ANONYMOUS.getRealName(), createTagByAttribute.getAttribute("crossorigin"));
 	}
 
 	@Test
 	public void testPictureTagIsRenderedRight()
 	{
-		wicketTester.startPage(ImagePictureTestPage.class);
-		String lastResponseAsString = wicketTester.getLastResponse().getDocument();
+		tester.startPage(ImagePictureTestPage.class);
+		String lastResponseAsString = tester.getLastResponse().getDocument();
 		TagTester pictureTagTester = TagTester.createTagByAttribute(lastResponseAsString, "picture");
 		Assert.assertTrue(pictureTagTester.hasChildTag("img"));
 		Assert.assertTrue(pictureTagTester.hasChildTag("source"));
@@ -60,8 +57,8 @@ public class ResponsiveImageTest
 	@Test
 	public void testImageTagIsRenderedWithXValuesAndSrcSet()
 	{
-		wicketTester.startPage(ImageSrcSetTestPage.class);
-		String lastResponseAsString = wicketTester.getLastResponse().getDocument();
+		tester.startPage(ImageSrcSetTestPage.class);
+		String lastResponseAsString = tester.getLastResponse().getDocument();
 		TagTester imgTagTester = TagTester.createTagByAttribute(lastResponseAsString, "img");
 		Assert.assertTrue(imgTagTester.hasAttribute("src"));
 		Assert.assertTrue(imgTagTester.hasAttribute("srcset"));

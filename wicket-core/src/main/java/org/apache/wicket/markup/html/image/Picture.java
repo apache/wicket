@@ -28,7 +28,6 @@ import org.apache.wicket.model.IModel;
  */
 public class Picture extends WebMarkupContainer
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**

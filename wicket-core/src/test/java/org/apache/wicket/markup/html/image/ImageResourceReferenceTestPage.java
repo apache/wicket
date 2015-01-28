@@ -39,7 +39,7 @@ public class ImageResourceReferenceTestPage extends WebPage
 				return new PackageResourceReference(this.getClass(), "small.jpg");
 			}
 		};
-		image1.setCrossorigin(Cors.anonymous);
+		image1.setCrossOrigin(Cors.ANONYMOUS);
 		this.add(image1);
 	}
 }

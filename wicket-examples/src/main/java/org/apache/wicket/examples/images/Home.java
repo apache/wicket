@@ -119,11 +119,11 @@ public final class Home extends WicketExamplePage
 		picture.add(large);
 		large.setOutputMarkupId(true);
 		Source medium = new Source("sourcemedium", new PackageResourceReference(this.getClass(),
-			"image2_medium.gif"));
+			"Image2_medium.gif"));
 		medium.setMedia("(min-width: 465px)");
 		picture.add(medium);
 		Image image3 = new Image("image7", new PackageResourceReference(this.getClass(),
-			"image2_small.gif"));
+			"Image2_small.gif"));
 		picture.add(image3);
 		this.add(picture);
 	}

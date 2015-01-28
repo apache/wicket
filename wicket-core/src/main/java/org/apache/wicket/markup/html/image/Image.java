@@ -48,17 +48,37 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Jonathan Locke
  * @author Tobias Soloschenko
- * 
  */
 public class Image extends WebComponent implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * To be used for the crossOrigin attribute
+	 *
+	 * @see {@link #setCrossOrigin(Cors)}
+	 */
+	public enum Cors {
+		ANONYMOUS("anonymous"),
+		USE_CREDENTIALS("user-credentials"),
+		NO_CORS("");
+
+		private final String realName;
+
+		private Cors(String realName) {
+			this.realName = realName;
+		}
+
+		public String getRealName() {
+			return realName;
+		}
+	}
+
 	/** The image resource this image component references (src attribute) */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/** The image resources this image component references (srcset attribute) */
-	private final List<LocalizedImageResource> localizedImageResources = new ArrayList<LocalizedImageResource>();
+	private final List<LocalizedImageResource> localizedImageResources = new ArrayList<>();
 
 	/** The x values to be used within the srcset */
 	private List<String> xValues = null;
@@ -69,7 +89,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * Cross origin settings
 	 */
-	private Cors crossorigin = null;
+	private Cors crossOrigin = null;
 
 	/**
 	 * This constructor can be used if you override {@link #getImageResourceReference()} or
@@ -128,8 +148,8 @@ public class Image extends WebComponent implements IResourceListener
 		PageParameters resourceParameters, final ResourceReference... resourceReferences)
 	{
 		super(id);
-		this.setImageResourceReference(resourceParameters, resourceReference);
-		this.setImageResourceReferences(resourceParameters, resourceReferences);
+		setImageResourceReference(resourceParameters, resourceReference);
+		setImageResourceReferences(resourceParameters, resourceReferences);
 	}
 
 	/**
@@ -150,8 +170,8 @@ public class Image extends WebComponent implements IResourceListener
 	public Image(final String id, final IResource imageResource, final IResource... imageResources)
 	{
 		super(id);
-		this.setImageResource(imageResource);
-		this.setImageResources(imageResources);
+		setImageResource(imageResource);
+		setImageResources(imageResources);
 	}
 
 	/**
@@ -171,7 +191,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public Image(final String id, final String string)
 	{
-		this(id, new Model<String>(string));
+		this(id, new Model<>(string));
 	}
 
 	/**
@@ -181,7 +201,7 @@ public class Image extends WebComponent implements IResourceListener
 	public void onResourceRequested()
 	{
 		localizedImageResource.onResourceRequested(null);
-		for (LocalizedImageResource localizedImageResource : this.localizedImageResources)
+		for (LocalizedImageResource localizedImageResource : localizedImageResources)
 		{
 			localizedImageResource.onResourceRequested(null);
 		}
@@ -195,7 +215,7 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		if (imageResource != null)
 		{
-			this.localizedImageResource.setResource(imageResource);
+			localizedImageResource.setResource(imageResource);
 		}
 	}
 
@@ -206,12 +226,12 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public void setImageResources(final IResource... imageResources)
 	{
-		this.localizedImageResources.clear();
+		localizedImageResources.clear();
 		for (IResource imageResource : imageResources)
 		{
 			LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 			localizedImageResource.setResource(imageResource);
-			this.localizedImageResources.add(localizedImageResource);
+			localizedImageResources.add(localizedImageResource);
 		}
 	}
 
@@ -226,11 +246,11 @@ public class Image extends WebComponent implements IResourceListener
 		{
 			if (parameters != null)
 			{
-				this.localizedImageResource.setResourceReference(resourceReference, parameters);
+				localizedImageResource.setResourceReference(resourceReference, parameters);
 			}
 			else
 			{
-				this.localizedImageResource.setResourceReference(resourceReference);
+				localizedImageResource.setResourceReference(resourceReference);
 			}
 		}
 	}
@@ -244,7 +264,7 @@ public class Image extends WebComponent implements IResourceListener
 	public void setImageResourceReferences(final PageParameters parameters,
 		final ResourceReference... resourceReferences)
 	{
-		this.localizedImageResources.clear();
+		localizedImageResources.clear();
 		for (ResourceReference resourceReference : resourceReferences)
 		{
 			LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
@@ -256,7 +276,7 @@ public class Image extends WebComponent implements IResourceListener
 			{
 				localizedImageResource.setResourceReference(resourceReference);
 			}
-			this.localizedImageResources.add(localizedImageResource);
+			localizedImageResources.add(localizedImageResource);
 		}
 	}
 
@@ -266,12 +286,12 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public void setXValues(String... values)
 	{
-		if (this.xValues == null)
+		if (xValues == null)
 		{
-			xValues = new ArrayList<String>();
+			xValues = new ArrayList<>();
 		}
-		this.xValues.clear();
-		this.xValues.addAll(Arrays.asList(values));
+		xValues.clear();
+		xValues.addAll(Arrays.asList(values));
 	}
 
 	/**
@@ -282,7 +302,7 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		if (this.sizes == null)
 		{
-			this.sizes = new ArrayList<String>();
+			this.sizes = new ArrayList<>();
 		}
 		this.sizes.clear();
 		this.sizes.addAll(Arrays.asList(sizes));
@@ -296,7 +316,7 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		// Null out the image resource, so we reload it (otherwise we'll be
 		// stuck with the old model.
-		for (LocalizedImageResource localizedImageResource : this.localizedImageResources)
+		for (LocalizedImageResource localizedImageResource : localizedImageResources)
 		{
 			localizedImageResource.setResourceReference(null);
 			localizedImageResource.setResource(null);
@@ -341,23 +361,24 @@ public class Image extends WebComponent implements IResourceListener
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		if (tag.getName().equals("source"))
+
+		if ("source".equals(tag.getName()))
 		{
-			this.buildSrcSetAttribute(tag);
+			buildSrcSetAttribute(tag);
 			tag.remove("src");
 		}
 		else
 		{
-			this.checkComponentTag(tag, "img");
-			String srcAttribute = this.buildSrcAttribute(tag);
-			this.buildSrcSetAttribute(tag);
+			checkComponentTag(tag, "img");
+			String srcAttribute = buildSrcAttribute(tag);
+			buildSrcSetAttribute(tag);
 			tag.put("src", srcAttribute);
-
 		}
-		this.buildSizesAttribute(tag);
+		buildSizesAttribute(tag);
 
-		if (this.crossorigin != null) {
-			tag.put("crossorigin", this.crossorigin.getRealName());
+		Cors crossOrigin = getCrossOrigin();
+		if (crossOrigin != null && Cors.NO_CORS != crossOrigin) {
+			tag.put("crossOrigin", crossOrigin.getRealName());
 		}
 	}
 
@@ -370,24 +391,24 @@ public class Image extends WebComponent implements IResourceListener
 	protected void buildSrcSetAttribute(final ComponentTag tag)
 	{
 		int srcSetPosition = 0;
-		for (LocalizedImageResource localizedImageResource : this.localizedImageResources)
+		for (LocalizedImageResource localizedImageResource : localizedImageResources)
 		{
 			localizedImageResource.setSrcAttribute(tag);
 
-			if (this.shouldAddAntiCacheParameter())
+			if (shouldAddAntiCacheParameter())
 			{
-				this.addAntiCacheParameter(tag);
+				addAntiCacheParameter(tag);
 			}
 
 			String srcset = tag.getAttribute("srcset");
 			String xValue = "";
 
 			// If there are xValues set process them in the applied order to the srcset attribute.
-			if (this.xValues != null)
+			if (xValues != null)
 			{
-				xValue = this.xValues.size() > srcSetPosition &&
-					this.xValues.get(srcSetPosition) != null ? " " +
-					this.xValues.get(srcSetPosition) : "";
+				xValue = xValues.size() > srcSetPosition &&
+					xValues.get(srcSetPosition) != null ? " " +
+					xValues.get(srcSetPosition) : "";
 			}
 			tag.put("srcset", (srcset != null ? srcset + ", " : "") + tag.getAttribute("src") +
 				xValue);
@@ -404,21 +425,21 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	protected String buildSrcAttribute(final ComponentTag tag)
 	{
-		final IResource resource = this.getImageResource();
+		final IResource resource = getImageResource();
 		if (resource != null)
 		{
-			this.localizedImageResource.setResource(resource);
+			localizedImageResource.setResource(resource);
 		}
-		final ResourceReference resourceReference = this.getImageResourceReference();
+		final ResourceReference resourceReference = getImageResourceReference();
 		if (resourceReference != null)
 		{
-			this.localizedImageResource.setResourceReference(resourceReference);
+			localizedImageResource.setResourceReference(resourceReference);
 		}
-		this.localizedImageResource.setSrcAttribute(tag);
+		localizedImageResource.setSrcAttribute(tag);
 
-		if (this.shouldAddAntiCacheParameter())
+		if (shouldAddAntiCacheParameter())
 		{
-			this.addAntiCacheParameter(tag);
+			addAntiCacheParameter(tag);
 		}
 		return tag.getAttribute("src");
 	}
@@ -432,7 +453,7 @@ public class Image extends WebComponent implements IResourceListener
 	protected void buildSizesAttribute(final ComponentTag tag)
 	{
 		// if no sizes have been set then don't build the attribute
-		if (this.sizes == null)
+		if (sizes == null)
 		{
 			return;
 		}
@@ -463,7 +484,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	protected boolean shouldAddAntiCacheParameter()
 	{
-		return this.getRequestCycle().find(AjaxRequestTarget.class) != null;
+		return getRequestCycle().find(AjaxRequestTarget.class) != null;
 	}
 
 	/**
@@ -489,7 +510,7 @@ public class Image extends WebComponent implements IResourceListener
 		boolean stateless = (getImageResource() == null || getImageResource() == localizedImageResource.getResource()) &&
 			localizedImageResource.isStateless();
 		boolean statelessList = false;
-		for (LocalizedImageResource localizedImageResource : this.localizedImageResources)
+		for (LocalizedImageResource localizedImageResource : localizedImageResources)
 		{
 			if (localizedImageResource.isStateless())
 			{
@@ -512,7 +533,7 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		boolean isResource = method != null &&
 			IResourceListener.class.isAssignableFrom(method.getDeclaringClass());
-		if (isResource && this.isVisibleInHierarchy())
+		if (isResource && isVisibleInHierarchy())
 		{
 			// when the image data is requested we do not care if this component
 			// is enabled in
@@ -528,50 +549,30 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * Gets the cross origin settings
 	 *
-	 * @see {@link #setCrossorigin(Cors)}
+	 * @see {@link #setCrossOrigin(Cors)}
 	 *
 	 * @return the cross origins settings
 	 */
-	public Cors getCrossorigin() {
-		return this.crossorigin;
+	public Cors getCrossOrigin() {
+		return crossOrigin;
 	}
 
 	/**
 	 * Sets the cross origin settings<br>
 	 * <br>
 	 *
-	 * <b>anonymous</b>: Cross-origin CORS requests for the element will not have the credentials flag set.<br>
+	 * <b>ANONYMOUS</b>: Cross-origin CORS requests for the element will not have the credentials flag set.<br>
 	 * <br>
-	 * <b>use_credentials</b>: Cross-origin CORS requests for the element will have the credentials flag set.<br>
+	 * <b>USE_CREDENTIALS</b>: Cross-origin CORS requests for the element will have the credentials flag set.<br>
 	 * <br>
 	 * <b>no_cores</b>: The empty string is also a valid keyword, and maps to the Anonymous state. The attribute's invalid value default is the
 	 * Anonymous state. The missing value default, used when the attribute is omitted, is the No CORS state
 	 *
-	 * @param crossorigin
+	 * @param crossOrigin
 	 *            the cross origins settings to set
 	 */
-	public void setCrossorigin(Cors crossorigin) {
-		this.crossorigin = crossorigin;
+	public void setCrossOrigin(Cors crossOrigin) {
+		this.crossOrigin = crossOrigin;
 	}
 
-	/**
-	 * To be used for the crossorigin attribute
-	 *
-	 * @see {@link #setCrossorigin(Cors)}
-	 */
-	public enum Cors {
-		anonymous("anonymous"),
-		use_credentials("user-credentials"),
-		no_cors("");
-
-		private String realName;
-
-		private Cors(String realName) {
-			this.realName = realName;
-		}
-
-		public String getRealName() {
-			return this.realName;
-		}
-	}
 }

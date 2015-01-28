@@ -35,7 +35,6 @@ import org.apache.wicket.request.resource.ResourceReference;
  */
 public class Source extends Image
 {
-
 	private static final long serialVersionUID = 1L;
 
 	private String media = null;
@@ -94,7 +93,7 @@ public class Source extends Image
 	{
 		checkComponentTag(tag, "source");
 		super.onComponentTag(tag);
-		if (this.media != null)
+		if (getMedia() != null)
 		{
 			tag.put("media", getMedia());
 		}
@@ -125,7 +124,7 @@ public class Source extends Image
 	 * Unsupported for source tag
 	 */
 	@Override
-	public void setCrossorigin(Cors crossorigin) {
+	public void setCrossOrigin(Cors crossorigin) {
 		throw new UnsupportedOperationException("It is not allowed to set the crossorigin attribute for source tag");
 	}
 
@@ -133,7 +132,7 @@ public class Source extends Image
 	 * Unsupported for source tag
 	 */
 	@Override
-	public Cors getCrossorigin() {
-		throw new UnsupportedOperationException("It is not allowed to get the crossorigin attribute for source tag");
+	public final Cors getCrossOrigin() {
+		return null;
 	}
 }
