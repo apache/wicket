@@ -17,6 +17,7 @@
 package org.apache.wicket.spring.injection.annot;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
@@ -86,6 +87,21 @@ public class SpringBeanWithGenericsTest extends Assert
 		assertTrue(beans.contains(ctx.getBean("stringBean")));
 		assertTrue(beans.contains(ctx.getBean("integerBean")));
 	}
+
+	@Test
+	public void listOfStringGenerics() throws Exception
+	{
+		AnnotatedListOfBeanStringGenericQualifier page =
+				tester.startPage(new AnnotatedListOfBeanStringGenericQualifier());
+
+		List<BeanWithGeneric<String>> beans = page.getBeans();
+
+		assertThat(beans, is(notNullValue()));
+		assertThat(beans.size(), is(1));
+
+		BeanWithGeneric<String> stringBean = (BeanWithGeneric<String>) ctx.getBean("stringBean");
+		assertThat(beans, hasItem(stringBean));
+	}
 	
 	@Test
 	public void mapOfGenerics() throws Exception
@@ -132,8 +148,20 @@ public class SpringBeanWithGenericsTest extends Assert
 		assertThat(arrayListStrings.get(0), is(equalTo("one")));
 		assertThat(arrayListStrings.get(1), is(equalTo("two")));
 		assertThat(arrayListStrings.get(2), is(equalTo("three")));
+
+		ArrayList<Integer> arrayListIntegers = page.getArrayListIntegers();
+		assertThat(arrayListIntegers, is(notNullValue()));
+		assertThat(arrayListIntegers.size(), is(3));
+		assertThat(arrayListIntegers.get(0), is(1));
+		assertThat(arrayListIntegers.get(1), is(2));
+		assertThat(arrayListIntegers.get(2), is(3));
+
+		MyList<String> myList = page.getMyList();
+		assertThat(myList, is(notNullValue()));
+		assertThat(myList.size(), is(1));
+		assertThat(myList.get(0), is("one"));
 	}
-	
+
 	@Test
 	public void listOfTypedGenerics() throws Exception
 	{
@@ -152,6 +180,17 @@ public class SpringBeanWithGenericsTest extends Assert
 		public BeanWithGeneric<String> getBean()
 		{
 			return bean;
+		}
+	}
+
+	class AnnotatedListOfBeanStringGenericQualifier extends DummyHomePage
+	{
+		@SpringBean
+		private List<BeanWithGeneric<String>> beans;
+
+		public List<BeanWithGeneric<String>> getBeans()
+		{
+			return beans;
 		}
 	}
 
@@ -216,6 +255,22 @@ public class SpringBeanWithGenericsTest extends Assert
 		{
 			return arrayListStrings;
 		}
+
+		@SpringBean
+		private ArrayList<Integer> arrayListIntegers;
+
+		public ArrayList<Integer> getArrayListIntegers()
+		{
+			return arrayListIntegers;
+		}
+
+		@SpringBean
+		private MyList<String> myList;
+
+		public MyList<String> getMyList()
+		{
+			return myList;
+		}
 	}
 
 	@Configuration
@@ -248,5 +303,24 @@ public class SpringBeanWithGenericsTest extends Assert
 			arrayList.add("three");
 			return arrayList;
 		}
+
+		@Bean
+		public ArrayList<Integer> arrayListIntegers()
+		{
+			ArrayList<Integer> arrayList = new ArrayList();
+			arrayList.add(1);
+			arrayList.add(2);
+			arrayList.add(3);
+			return arrayList;
+		}
+
+		@Bean
+		public MyList<String> myList() {
+			MyList<String> myList = new MyList<>();
+			myList.add("one");
+			return myList;
+		}
 	}
+
+	public static class MyList<T> extends ArrayList<T> {}
 }
