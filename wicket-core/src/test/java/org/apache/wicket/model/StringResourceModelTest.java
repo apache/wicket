@@ -98,6 +98,9 @@ public class StringResourceModelTest extends WicketTestCase
 		ws.setCurrentStatus("raining");
 		assertEquals("Text should be as expected", "It's raining, take an umbrella",
 			model.getString());
+		ws.setCurrentStatus(null);
+		assertEquals("Text should be as expected", "It's ... i don't know",
+			model.getString());
 	}
 
 	/** */

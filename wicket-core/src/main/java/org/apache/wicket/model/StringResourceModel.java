@@ -566,7 +566,14 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 		if (model != null)
 		{
-			return new PropertyVariableInterpolator(resourceKey, model.getObject()).toString();
+			return new PropertyVariableInterpolator(resourceKey, model.getObject()) {
+				protected String getValue(String variableName) {
+					String result = super.getValue(variableName);
+					
+					// WICKET-5820 interpolate null with 'null'
+					return result == null ? "null" : result;
+				};
+			}.toString();
 		}
 		else
 		{
