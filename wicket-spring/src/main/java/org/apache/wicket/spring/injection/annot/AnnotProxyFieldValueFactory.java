@@ -192,8 +192,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			name = beanNameCache.get(fieldType);
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, generic,
-					required);
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, generic);
 
 				if (name != null)
 				{
@@ -217,13 +216,11 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 *            spring application context
 	 * @param clazz
 	 *            bean class
-	 * @param required
-	 *            true if the value is required
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
 	private String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
-		final Class<?> generic, final boolean required)
+		final Class<?> generic)
 	{
 		// get the list of all possible matching beans
 		List<String> names = new ArrayList<>(
