@@ -2827,7 +2827,7 @@
 	/**
 	 * Clear any scheduled Ajax timers when leaving the current page
 	 */
-	Wicket.Event.add(window, "beforeunload", function() {
+	Wicket.Event.add(window, "unload", function() {
 		var WTH = Wicket.TimerHandles;
 		if (WTH) {
 			for (var th in WTH) {
