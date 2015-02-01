@@ -77,7 +77,7 @@ public class Image extends WebComponent implements IResourceListener
 	/** The image resource this image component references (src attribute) */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
-	/** The image resources this image component references (srcset attribute) */
+	/** The extra image resources this image component references (srcset attribute) */
 	private final List<LocalizedImageResource> localizedImageResources = new ArrayList<>();
 
 	/** The x values to be used within the srcset */
@@ -148,7 +148,7 @@ public class Image extends WebComponent implements IResourceListener
 		PageParameters resourceParameters, final ResourceReference... resourceReferences)
 	{
 		super(id);
-		setImageResourceReference(resourceParameters, resourceReference);
+		setImageResourceReference(resourceReference, resourceParameters);
 		setImageResourceReferences(resourceParameters, resourceReferences);
 	}
 
@@ -237,10 +237,18 @@ public class Image extends WebComponent implements IResourceListener
 
 	/**
 	 * @param resourceReference
+	 *            The shared ImageResource to set.
+	 */
+	public void setImageResourceReference(final ResourceReference resourceReference)
+	{
+		setImageResourceReference(resourceReference, null);
+	}
+
+	/**
+	 * @param resourceReference
 	 *            The resource reference to set.
 	 */
-	public void setImageResourceReference(final PageParameters parameters,
-		final ResourceReference resourceReference)
+	public void setImageResourceReference(final ResourceReference resourceReference, final PageParameters parameters)
 	{
 		if (localizedImageResource != null)
 		{
