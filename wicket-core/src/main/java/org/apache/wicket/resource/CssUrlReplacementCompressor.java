@@ -90,7 +90,7 @@ public class CssUrlReplacementCompressor implements ICssCompressor
 		// Search for urls
 		while (matcher.find())
 		{
-			Collection<String> pageNames = this.pageNames.values();
+			Collection<String> pageNames = this.pageNames.keySet();
 			for (String pageName : pageNames)
 			{
 				try
