@@ -17,6 +17,7 @@
 package org.apache.wicket.resource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.javascript.IJavaScriptCompressor;
@@ -34,6 +35,8 @@ import org.apache.wicket.javascript.IJavaScriptCompressor;
  * 
  * this.getResourceSettings().setJavaScriptCompressor(compositeJavaScriptCompressor);
  * </pre>
+ * The compressors can also be given as constructor arguments.
+ * 
  * @since 6.20.0
  * @author Tobias Soloschenko
  *
@@ -42,38 +45,50 @@ public class CompositeJavaScriptCompressor implements IJavaScriptCompressor
 {
 
 	/* Compressors to compress javascript content */
-	private List<IJavaScriptCompressor> compressors;
+	private List<IJavaScriptCompressor> compressors = new ArrayList<IJavaScriptCompressor>();
 
-	@Override
-	public String compress(String original)
+	/**
+	 * Initializes an empty composite javascript compressor
+	 */
+	public CompositeJavaScriptCompressor()
 	{
-		if (compressors != null)
-		{
-			String compressed = original;
-			for (IJavaScriptCompressor compressor : compressors)
-			{
-				compressed = compressor.compress(compressed);
-			}
-			return compressed;
-		}
-		else
-		{
-			return original;
-		}
 	}
 
 	/**
-	 * Gets a list of {@link IJavaScriptCompressor} to be used for javascript compression. They are applied in the
-	 * order of the List.
+	 * Initializes the composite javascript compressor with the given {@link IJavaScriptCompressor}
+	 * 
+	 * @param compressors
+	 *            several {@link IJavaScriptCompressor} the composite javascript compressor is
+	 *            initialized with
+	 */
+	public CompositeJavaScriptCompressor(IJavaScriptCompressor... compressors)
+	{
+		this.compressors = Arrays.asList(compressors);
+	}
+
+	/**
+	 * Compresses the given original content in the order of compressors. If no compressor has been
+	 * given the original content is going to be returned.
+	 */
+	@Override
+	public String compress(String original)
+	{
+		String compressed = original;
+		for (IJavaScriptCompressor compressor : compressors)
+		{
+			compressed = compressor.compress(compressed);
+		}
+		return compressed;
+	}
+
+	/**
+	 * Gets a list of {@link IJavaScriptCompressor} to be used for javascript compression. They are
+	 * applied in the order of the List.
 	 * 
 	 * @return A list of {@link IJavaScriptCompressor} to be used for javascript compression.
 	 */
 	public List<IJavaScriptCompressor> getCompressors()
 	{
-		if (compressors == null)
-		{
-			compressors = new ArrayList<IJavaScriptCompressor>();
-		}
 		return compressors;
 	}
 }

@@ -17,12 +17,13 @@
 package org.apache.wicket.resource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.css.ICssCompressor;
 
 /**
- * Used to apply several {@link ICssCompressor} to the css compression.<br>
+ * Used to apply several {@link ICssCompressor} to the CSS compression.<br>
  * <br>
  * Usage:
  * 
@@ -34,6 +35,8 @@ import org.apache.wicket.css.ICssCompressor;
  * 
  * this.getResourceSettings().setCssCompressor(compositeCssCompressor);
  * </pre>
+ * The compressors can also be given as constructor arguments.
+ * 
  * @since 6.20.0
  * @author Tobias Soloschenko
  * 
@@ -42,27 +45,39 @@ public class CompositeCssCompressor implements ICssCompressor
 {
 
 	/* Compressors to compress the CSS content */
-	private List<ICssCompressor> compressors;
+	private List<ICssCompressor> compressors = new ArrayList<ICssCompressor>();
 
 	/**
-	 * Compresses the given original content in the order of compressors.
+	 * Initializes an empty composite CSS compressor
+	 */
+	public CompositeCssCompressor()
+	{
+	}
+
+	/**
+	 * Initializes the composite CSS compressor with the given {@link ICssCompressor}
+	 * 
+	 * @param compressors
+	 *            several {@link ICssCompressor} the composite CSS compressor is initialized with
+	 */
+	public CompositeCssCompressor(ICssCompressor... compressors)
+	{
+		this.compressors = Arrays.asList(compressors);
+	}
+
+	/**
+	 * Compresses the given original content in the order of compressors. If no compressor has been
+	 * given the original content is going to be returned.
 	 */
 	@Override
 	public String compress(String original)
 	{
-		if (compressors != null)
+		String compressed = original;
+		for (ICssCompressor compressor : compressors)
 		{
-			String compressed = original;
-			for (ICssCompressor compressor : compressors)
-			{
-				compressed = compressor.compress(compressed);
-			}
-			return compressed;
+			compressed = compressor.compress(compressed);
 		}
-		else
-		{
-			return original;
-		}
+		return compressed;
 	}
 
 	/**
@@ -73,10 +88,6 @@ public class CompositeCssCompressor implements ICssCompressor
 	 */
 	public List<ICssCompressor> getCompressors()
 	{
-		if (compressors == null)
-		{
-			compressors = new ArrayList<ICssCompressor>();
-		}
 		return compressors;
 	}
 }
