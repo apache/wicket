@@ -52,10 +52,10 @@ public class CssUrlReplacer implements ICssCompressor
 {
 
 	// Holds the names of pages
-	private Map<String, String> pageNames = Collections.synchronizedMap(new LinkedHashMap<String, String>());
+	private final Map<String, String> pageNames = Collections.synchronizedMap(new LinkedHashMap<String, String>());
 
 	// The pattern to find URLs in CSS resources
-	private Pattern urlPattern = Pattern.compile("url\\(['|\"](.*)['|\"]\\)");
+	private static final Pattern urlPattern = Pattern.compile("url\\(['|\"](.*)['|\"]\\)");
 
 	public CssUrlReplacer(Application application)
 	{
@@ -84,7 +84,7 @@ public class CssUrlReplacer implements ICssCompressor
 	@Override
 	public String compress(String original)
 	{
-		Matcher matcher = this.urlPattern.matcher(original);
+		Matcher matcher = CssUrlReplacer.urlPattern.matcher(original);
 		// Search for urls
 		while (matcher.find())
 		{
