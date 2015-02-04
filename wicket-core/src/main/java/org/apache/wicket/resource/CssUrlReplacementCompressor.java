@@ -19,8 +19,10 @@ package org.apache.wicket.resource;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,8 +37,8 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * This compressor is used to replace url within css files with resources that belongs to their
- * corresponding page classes. The compress method is not compressing any content, but replacing the URLs
- * with Wicket representatives.<br>
+ * corresponding page classes. The compress method is not compressing any content, but replacing the
+ * URLs with Wicket representatives.<br>
  * <br>
  * Usage:
  * 
@@ -52,7 +54,7 @@ public class CssUrlReplacementCompressor implements ICssCompressor
 {
 
 	// Holds the names of pages
-	private List<String> pageNames = new ArrayList<String>();
+	private Map<String, String> pageNames = Collections.synchronizedMap(new LinkedHashMap<String, String>());
 
 	// The pattern to find URLs in CSS resources
 	private Pattern urlPattern = Pattern.compile("url\\(['|\"](.*)['|\"]\\)");
@@ -70,7 +72,8 @@ public class CssUrlReplacementCompressor implements ICssCompressor
 				{
 					if (Page.class.isAssignableFrom(component.getClass()))
 					{
-						CssUrlReplacementCompressor.this.pageNames.add(component.getClass().getName());
+						CssUrlReplacementCompressor.this.pageNames.put(component.getClass()
+							.getName(), component.getClass().getSimpleName());
 					}
 				}
 			});
@@ -87,7 +90,8 @@ public class CssUrlReplacementCompressor implements ICssCompressor
 		// Search for urls
 		while (matcher.find())
 		{
-			for (String pageName : this.pageNames)
+			Collection<String> pageNames = this.pageNames.values();
+			for (String pageName : pageNames)
 			{
 				try
 				{
