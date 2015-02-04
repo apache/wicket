@@ -31,6 +31,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentInitializationListener;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -43,23 +44,23 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  * Usage:
  * 
  * <pre>
- * this.getResourceSettings().setCssCompressor(new CssUrlReplacementCompressor(this));
+ * this.getResourceSettings().setCssCompressor(new CssUrlReplacer(this));
  * </pre>
  * 
  * @since 6.20.0
  * @author Tobias Soloschenko
  * 
  */
-public class CssUrlReplacementCompressor implements ICssCompressor
+public class CssUrlReplacer implements ICssCompressor
 {
 
 	// Holds the names of pages
-	private Map<String, String> pageNames = Collections.synchronizedMap(new LinkedHashMap<String, String>());
+	private final Map<String, String> pageNames = Collections.synchronizedMap(new LinkedHashMap<String, String>());
 
 	// The pattern to find URLs in CSS resources
-	private Pattern urlPattern = Pattern.compile("url\\(['|\"](.*)['|\"]\\)");
+	private static final Pattern urlPattern = Pattern.compile("url\\(['|\"]*(.*)['|\"]*\\)");
 
-	public CssUrlReplacementCompressor(Application application)
+	public CssUrlReplacer(Application application)
 	{
 
 		// Create an instantiation listener which filters only pages.
@@ -72,7 +73,7 @@ public class CssUrlReplacementCompressor implements ICssCompressor
 				{
 					if (Page.class.isAssignableFrom(component.getClass()))
 					{
-						CssUrlReplacementCompressor.this.pageNames.put(component.getClass()
+						CssUrlReplacer.this.pageNames.put(component.getClass()
 							.getName(), component.getClass().getSimpleName());
 					}
 				}
@@ -82,11 +83,10 @@ public class CssUrlReplacementCompressor implements ICssCompressor
 	/**
 	 * Replaces the URLs of CSS resources with Wicket representatives.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public String compress(String original)
 	{
-		Matcher matcher = this.urlPattern.matcher(original);
+		Matcher matcher = CssUrlReplacer.urlPattern.matcher(original);
 		// Search for urls
 		while (matcher.find())
 		{
@@ -95,7 +95,7 @@ public class CssUrlReplacementCompressor implements ICssCompressor
 			{
 				try
 				{
-					Class<Page> pageClass = (Class<Page>)Class.forName(pageName);
+					Class<Page> pageClass = WicketObjects.resolveClass(pageName);
 					String url = matcher.group(1);
 					if (!url.contains("/"))
 					{

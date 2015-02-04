@@ -45,14 +45,7 @@ public class CompositeJavaScriptCompressor implements IJavaScriptCompressor
 {
 
 	/* Compressors to compress javascript content */
-	private List<IJavaScriptCompressor> compressors = new ArrayList<IJavaScriptCompressor>();
-
-	/**
-	 * Initializes an empty composite javascript compressor
-	 */
-	public CompositeJavaScriptCompressor()
-	{
-	}
+	private final List<IJavaScriptCompressor> compressors = new ArrayList<IJavaScriptCompressor>();
 
 	/**
 	 * Initializes the composite javascript compressor with the given {@link IJavaScriptCompressor}
@@ -63,7 +56,7 @@ public class CompositeJavaScriptCompressor implements IJavaScriptCompressor
 	 */
 	public CompositeJavaScriptCompressor(IJavaScriptCompressor... compressors)
 	{
-		this.compressors = Arrays.asList(compressors);
+		this.compressors.addAll(Arrays.asList(compressors));
 	}
 
 	/**
