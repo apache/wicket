@@ -55,7 +55,7 @@ public class CssUrlReplacer implements ICssCompressor
 	private final Map<String, String> componentNames = Collections.synchronizedMap(new LinkedHashMap<String, String>());
 
 	// The pattern to find URLs in CSS resources
-	private static final Pattern urlPattern = Pattern.compile("url\\(['|\"](.*)['|\"]\\)");
+	private static final Pattern urlPattern = Pattern.compile("url\\(['|\"]*(.*)['|\"]*\\)");
 
 	public CssUrlReplacer(Application application)
 	{
