@@ -45,14 +45,7 @@ public class CompositeCssCompressor implements ICssCompressor
 {
 
 	/* Compressors to compress the CSS content */
-	private List<ICssCompressor> compressors = new ArrayList<>();
-
-	/**
-	 * Initializes an empty composite CSS compressor
-	 */
-	public CompositeCssCompressor()
-	{
-	}
+	private final List<ICssCompressor> compressors = new ArrayList<>();
 
 	/**
 	 * Initializes the composite CSS compressor with the given {@link ICssCompressor}
@@ -62,7 +55,7 @@ public class CompositeCssCompressor implements ICssCompressor
 	 */
 	public CompositeCssCompressor(ICssCompressor... compressors)
 	{
-		this.compressors = Arrays.asList(compressors);
+		this.compressors.addAll(Arrays.asList(compressors));
 	}
 
 	/**
