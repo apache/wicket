@@ -41,7 +41,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  * Usage:
  * 
  * <pre>
- * this.getResourceSettings().setCssCompressor(new CssUrlReplacementCompressor(this));
+ * this.getResourceSettings().setCssCompressor(new CssUrlReplacer(this));
  * </pre>
  * 
  * @since 6.20.0
