@@ -29,6 +29,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentInitializationListener;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -80,7 +81,6 @@ public class CssUrlReplacer implements ICssCompressor
 	/**
 	 * Replaces the URLs of CSS resources with Wicket representatives.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public String compress(String original)
 	{
@@ -93,7 +93,7 @@ public class CssUrlReplacer implements ICssCompressor
 			{
 				try
 				{
-					Class<Page> pageClass = (Class<Page>)Class.forName(pageName);
+					Class<Page> pageClass = WicketObjects.resolveClass(pageName);
 					String url = matcher.group(1);
 					if (!url.contains("/"))
 					{
