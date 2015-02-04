@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.resource;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -73,8 +71,8 @@ public class CssUrlReplacer implements ICssCompressor
 				{
 					if (Page.class.isAssignableFrom(component.getClass()))
 					{
-						CssUrlReplacer.this.pageNames.put(component.getClass()
-							.getName(), component.getClass().getSimpleName());
+						CssUrlReplacer.this.pageNames.put(component.getClass().getName(),
+							component.getClass().getSimpleName());
 					}
 				}
 			});
@@ -118,27 +116,12 @@ public class CssUrlReplacer implements ICssCompressor
 				}
 				catch (Exception e)
 				{
-					StringWriter stringWriter = this.printStack(e);
-					throw new WicketRuntimeException(stringWriter.toString());
+					throw new WicketRuntimeException(
+						"A problem occurred during CSS url replacement.", e);
 				}
 			}
 
 		}
 		return original;
-	}
-
-	/**
-	 * Prints the stack trace to a print writer
-	 * 
-	 * @param exception
-	 *            the exception
-	 * @return the string writer containing the stack trace
-	 */
-	private StringWriter printStack(Exception exception)
-	{
-		StringWriter stringWriter = new StringWriter();
-		PrintWriter printWriter = new PrintWriter(stringWriter);
-		exception.printStackTrace(printWriter);
-		return stringWriter;
 	}
 }
