@@ -100,22 +100,22 @@ public class Video extends MediaComponent
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
-		this.checkComponentTag(tag, "video");
+		checkComponentTag(tag, "video");
 		super.onComponentTag(tag);
 
-		if (this.width != null)
+		if (width != null)
 		{
-			tag.put("width", this.width);
+			tag.put("width", width);
 		}
 
-		if (this.height != null)
+		if (height != null)
 		{
-			tag.put("height", this.height);
+			tag.put("height", height);
 		}
 
-		if (this.poster != null)
+		if (poster != null)
 		{
-			tag.put("poster", RequestCycle.get().urlFor(this.poster, this.posterPageParameters));
+			tag.put("poster", RequestCycle.get().urlFor(poster, posterPageParameters));
 		}
 	}
 
@@ -126,7 +126,7 @@ public class Video extends MediaComponent
 	 */
 	public ResourceReference getPoster()
 	{
-		return this.poster;
+		return poster;
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class Video extends MediaComponent
 	 */
 	public PageParameters getPosterPageParameters()
 	{
-		return this.posterPageParameters;
+		return posterPageParameters;
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class Video extends MediaComponent
 	 */
 	public Integer getWidth()
 	{
-		return this.width;
+		return width;
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class Video extends MediaComponent
 	 */
 	public Integer getHeight()
 	{
-		return this.height;
+		return height;
 	}
 
 	/**

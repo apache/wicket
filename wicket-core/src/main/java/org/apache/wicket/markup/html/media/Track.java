@@ -117,30 +117,30 @@ public class Track extends WebMarkupContainer
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
-		this.checkComponentTag(tag, "track");
+		checkComponentTag(tag, "track");
 		super.onComponentTag(tag);
 
-		if (this.resourceReference != null)
+		if (resourceReference != null)
 		{
-			tag.put("src", RequestCycle.get().urlFor(this.resourceReference, this.pageParameters));
+			tag.put("src", RequestCycle.get().urlFor(resourceReference, pageParameters));
 		}
 
-		if (this.url != null)
+		if (url != null)
 		{
-			tag.put("src", this.url);
+			tag.put("src", url);
 		}
 
-		if (this.kind != null)
+		if (kind != null)
 		{
-			tag.put("kind", this.kind.name());
+			tag.put("kind", kind.name());
 		}
 
-		if (this.label != null)
+		if (label != null)
 		{
-			tag.put("label", this.label);
+			tag.put("label", label);
 		}
 
-		if (this.defaultTrack != null && this.defaultTrack)
+		if (defaultTrack != null && defaultTrack)
 		{
 			tag.put("default", "default");
 		}
@@ -148,13 +148,13 @@ public class Track extends WebMarkupContainer
 		// if the srclang field is set use this, else if the
 		// resource reference provides a locale use the language
 		// of the resource reference
-		if (this.srclang != null)
+		if (srclang != null)
 		{
-			tag.put("srclang", this.srclang.getLanguage());
+			tag.put("srclang", srclang.getLanguage());
 		}
-		else if (this.resourceReference != null && this.resourceReference.getLocale() != null)
+		else if (resourceReference != null && resourceReference.getLocale() != null)
 		{
-			tag.put("srclang", this.resourceReference.getLocale().getLanguage());
+			tag.put("srclang", resourceReference.getLocale().getLanguage());
 		}
 	}
 
@@ -167,7 +167,7 @@ public class Track extends WebMarkupContainer
 	 */
 	public Kind getKind()
 	{
-		return this.kind;
+		return kind;
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class Track extends WebMarkupContainer
 	 */
 	public String getLabel()
 	{
-		return this.label;
+		return label;
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class Track extends WebMarkupContainer
 	 */
 	public Boolean getDefaultTrack()
 	{
-		return this.defaultTrack != null ? this.defaultTrack : false;
+		return defaultTrack != null ? defaultTrack : false;
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class Track extends WebMarkupContainer
 	 */
 	public Locale getSrclang()
 	{
-		return this.srclang;
+		return srclang;
 	}
 
 	/**

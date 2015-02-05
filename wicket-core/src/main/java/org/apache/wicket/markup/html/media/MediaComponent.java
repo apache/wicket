@@ -35,6 +35,50 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * To be used for the crossorigin attribute
+	 * 
+	 * @see {@link #setCrossOrigin(Cors)}
+	 */
+	public enum Cors
+	{
+		ANONYMOUS("anonymous"), USER_CREDENTIALS("user-credentials"), NO_CORS("");
+
+		private String realName;
+
+		private Cors(String realName)
+		{
+			this.realName = realName;
+		}
+
+		public String getRealName()
+		{
+			return realName;
+		}
+	}
+
+	/**
+	 * To be used for the preload attribute
+	 * 
+	 * @see {@link #setPreload(Preload)}
+	 */
+	public enum Preload
+	{
+		NONE("none"), METADATA("metadata"), AUTO("auto");
+
+		public String realName;
+
+		private Preload(String realname)
+		{
+			realName = realname;
+		}
+
+		public String getRealName()
+		{
+			return realName;
+		}
+	}
+
 	// use Boolean instead of elementary data types to get a lightweight component
 	private Boolean autoplay;
 
@@ -52,7 +96,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 	private String mediaGroup;
 
-	private Cors crossorigin;
+	private Cors crossOrigin;
 
 	private PageParameters pageParameters;
 
@@ -134,59 +178,58 @@ public abstract class MediaComponent extends WebMarkupContainer
 		// The time management is used to set the start / stop
 		// time in seconds of the movie to be played back
 		String timeManagement = "";
-		if (this.startTime != null)
+		if (startTime != null)
 		{
-			timeManagement = timeManagement += "#t=" + this.startTime +
-				(this.endTime != null ? "," + this.endTime : "");
+			timeManagement = timeManagement += "#t=" + startTime +
+				(endTime != null ? "," + endTime : "");
 		}
 
-		if (this.mediaStreamingResourceReference != null)
+		if (mediaStreamingResourceReference != null)
 		{
 			tag.put("src",
-				RequestCycle.get()
-					.urlFor(this.mediaStreamingResourceReference, this.pageParameters) +
+				RequestCycle.get().urlFor(mediaStreamingResourceReference, pageParameters) +
 					timeManagement);
 		}
 
-		if (this.url != null)
+		if (url != null)
 		{
-			tag.put("src", this.url + timeManagement);
+			tag.put("src", url + timeManagement);
 		}
 
-		if (this.mediaGroup != null)
+		if (mediaGroup != null)
 		{
-			tag.put("mediagroup", this.mediaGroup);
+			tag.put("mediagroup", mediaGroup);
 		}
 
-		if (this.autoplay != null && this.autoplay)
+		if (autoplay != null && autoplay)
 		{
 			tag.put("autoplay", "autoplay");
 		}
 
-		if (this.loop != null && this.loop)
+		if (loop != null && loop)
 		{
 			tag.put("loop", "loop");
 		}
 
-		if (this.muted != null && this.muted)
+		if (muted != null && muted)
 		{
 			tag.put("muted", "muted");
 		}
 
 		// Use getter here because controls should be visible by default
-		if (this.getControls())
+		if (getControls())
 		{
 			tag.put("controls", "controls");
 		}
 
-		if (this.preload != null)
+		if (preload != null)
 		{
-			tag.put("preload", this.preload.name());
+			tag.put("preload", preload.getRealName());
 		}
 
-		if (this.crossorigin != null)
+		if (crossOrigin != null)
 		{
-			tag.put("crossorigin", this.crossorigin.getRealName());
+			tag.put("crossorigin", crossOrigin.getRealName());
 		}
 	}
 
@@ -197,7 +240,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 */
 	public Boolean getAutoplay()
 	{
-		return this.autoplay != null ? this.autoplay : false;
+		return autoplay != null ? autoplay : false;
 	}
 
 	/**
@@ -218,7 +261,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 */
 	public Boolean getLoop()
 	{
-		return this.loop != null ? this.loop : false;
+		return loop != null ? loop : false;
 	}
 
 	/**
@@ -239,7 +282,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 */
 	public Boolean getMuted()
 	{
-		return this.muted != null ? this.muted : false;
+		return muted != null ? muted : false;
 	}
 
 	/**
@@ -260,7 +303,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 */
 	public Boolean getControls()
 	{
-		return this.controls != null ? this.controls : true;
+		return controls != null ? controls : true;
 	}
 
 	/**
@@ -283,7 +326,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 */
 	public Preload getPreload()
 	{
-		return this.preload;
+		return preload;
 	}
 
 	/**
@@ -317,7 +360,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 */
 	public String getStartTime()
 	{
-		return this.startTime;
+		return startTime;
 	}
 
 	/**
@@ -354,7 +397,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 */
 	public String getEndTime()
 	{
-		return this.endTime;
+		return endTime;
 	}
 
 	/**
@@ -389,7 +432,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 */
 	public String getMediaGroup()
 	{
-		return this.mediaGroup;
+		return mediaGroup;
 	}
 
 	/**
@@ -406,67 +449,34 @@ public abstract class MediaComponent extends WebMarkupContainer
 	/**
 	 * Gets the cross origin settings
 	 * 
-	 * @see {@link #setCrossorigin(Cors)}
+	 * @see {@link #setCrossOrigin(Cors)}
 	 * 
 	 * @return the cross origins settings
 	 */
-	public Cors getCrossorigin()
+	public Cors getCrossOrigin()
 	{
-		return this.crossorigin;
+		return crossOrigin;
 	}
 
 	/**
 	 * Sets the cross origin settings<br>
 	 * <br>
 	 * 
-	 * <b>anonymous</b>: Cross-origin CORS requests for the element will not have the credentials
+	 * <b>ANONYMOUS</b>: Cross-origin CORS requests for the element will not have the credentials
 	 * flag set.<br>
 	 * <br>
-	 * <b>use_credentials</b>: Cross-origin CORS requests for the element will have the credentials
+	 * <b>USER_CREDENTIALS</b>: Cross-origin CORS requests for the element will have the credentials
 	 * flag set.<br>
 	 * <br>
-	 * <b>no_cores</b>: The empty string is also a valid keyword, and maps to the Anonymous state.
+	 * <b>NO_CORS</b>: The empty string is also a valid keyword, and maps to the Anonymous state.
 	 * The attribute's invalid value default is the Anonymous state. The missing value default, used
 	 * when the attribute is omitted, is the No CORS state
 	 * 
-	 * @param crossorigin
+	 * @param crossOrigin
 	 *            the cross origins settings to set
 	 */
-	public void setCrossorigin(Cors crossorigin)
+	public void setCrossOrigin(Cors crossOrigin)
 	{
-		this.crossorigin = crossorigin;
+		this.crossOrigin = crossOrigin;
 	}
-
-	/**
-	 * To be used for the preload attribute
-	 * 
-	 * @see {@link #setPreload(Preload)}
-	 */
-	public enum Preload
-	{
-		none, metadata, auto
-	}
-
-	/**
-	 * To be used for the crossorigin attribute
-	 * 
-	 * @see {@link #setCrossorigin(Cors)}
-	 */
-	public enum Cors
-	{
-		anonymous("anonymous"), use_credentials("user-credentials"), no_cors("");
-
-		private String realName;
-
-		private Cors(String realName)
-		{
-			this.realName = realName;
-		}
-
-		public String getRealName()
-		{
-			return this.realName;
-		}
-	}
-
 }

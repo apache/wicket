@@ -19,8 +19,6 @@ package org.apache.wicket.markup.html.media;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
@@ -93,19 +91,19 @@ public class MediaStreamingResourceReference extends ResourceReference
 						WebRequest webRequest = (WebRequest)request;
 						WebResponse webResponse = (WebResponse)response;
 
-						this.packageResourceStream = new PackageResourceStream(
+						packageResourceStream = new PackageResourceStream(
 							MediaStreamingResourceReference.this.getScope(),
 							MediaStreamingResourceReference.this.getName(),
 							MediaStreamingResourceReference.this.getLocale(),
 							MediaStreamingResourceReference.this.getStyle(),
 							MediaStreamingResourceReference.this.getVariation());
-						long length = this.packageResourceStream.length().bytes();
+						long length = packageResourceStream.length().bytes();
 
 						ResourceResponse resourceResponse = new ResourceResponse();
-						resourceResponse.setContentType(this.packageResourceStream.getContentType());
+						resourceResponse.setContentType(packageResourceStream.getContentType());
 						resourceResponse.setFileName(MediaStreamingResourceReference.this.getName());
 						resourceResponse.setContentDisposition(ContentDisposition.ATTACHMENT);
-						resourceResponse.setLastModified(this.packageResourceStream.lastModifiedTime());
+						resourceResponse.setLastModified(packageResourceStream.lastModifiedTime());
 
 						// We accept ranges, so that the player can
 						// load and play content from a specific byte position
@@ -138,18 +136,18 @@ public class MediaStreamingResourceReference extends ResourceReference
 							}
 							else
 							{
-								this.startbyte = Long.parseLong(rangeParts[0]);
+								startbyte = Long.parseLong(rangeParts[0]);
 								if (rangeParts.length == 2)
 								{
-									this.endbyte = Long.parseLong(rangeParts[1]);
+									endbyte = Long.parseLong(rangeParts[1]);
 								}
 								else
 								{
-									this.endbyte = length - 1;
+									endbyte = length - 1;
 								}
-								webResponse.setHeader("Content-Range", "bytes " + this.startbyte +
-									"-" + this.endbyte + "/" + length);
-								resourceResponse.setContentLength((this.endbyte - this.startbyte) + 1);
+								webResponse.setHeader("Content-Range", "bytes " + startbyte + "-" +
+									endbyte + "/" + length);
+								resourceResponse.setContentLength((endbyte - startbyte) + 1);
 							}
 						}
 
@@ -209,8 +207,9 @@ public class MediaStreamingResourceReference extends ResourceReference
 								}
 								catch (Exception e)
 								{
-									StringWriter stringWriter = printStack(e);
-									throw new WicketRuntimeException(stringWriter.toString());
+									throw new WicketRuntimeException(
+										"A problem occurred while writing the buffer to the output stream.",
+										e);
 								}
 							}
 						});
@@ -225,39 +224,24 @@ public class MediaStreamingResourceReference extends ResourceReference
 				}
 				catch (Exception e)
 				{
-					StringWriter stringWriter = this.printStack(e);
-					throw new WicketRuntimeException(stringWriter.toString());
+					throw new WicketRuntimeException(
+						"A problem occurred while creating the video response.", e);
 				}
 				finally
 				{
-					if (this.packageResourceStream != null)
+					if (packageResourceStream != null)
 					{
 						try
 						{
-							this.packageResourceStream.close();
+							packageResourceStream.close();
 						}
 						catch (IOException e)
 						{
-							StringWriter stringWriter = this.printStack(e);
-							throw new WicketRuntimeException(stringWriter.toString());
+							throw new WicketRuntimeException(
+								"A problem occurred while closing the video response stream.", e);
 						}
 					}
 				}
-			}
-
-			/**
-			 * Prints the stack trace to a print writer
-			 * 
-			 * @param exception
-			 *            the exception
-			 * @return the string writer containing the stack trace
-			 */
-			private StringWriter printStack(Exception exception)
-			{
-				StringWriter stringWriter = new StringWriter();
-				PrintWriter printWriter = new PrintWriter(stringWriter);
-				exception.printStackTrace(printWriter);
-				return stringWriter;
 			}
 		};
 		return mediaStreamingResource;
@@ -271,7 +255,7 @@ public class MediaStreamingResourceReference extends ResourceReference
 	 */
 	public Integer getBuffer()
 	{
-		return this.buffer != null ? this.buffer : 4048;
+		return buffer != null ? buffer : 4048;
 	}
 
 	/**
