@@ -30,8 +30,8 @@ import org.apache.wicket.javascript.IJavaScriptCompressor;
  * <pre>
  * CompositeJavaScriptCompressor compositeJavaScriptCompressor = new CompositeJavaScriptCompressor();
  * 
- * compositeJavaScriptCompressor.getCompressors().add(new MyJavaScriptCompressor());
- * compositeJavaScriptCompressor.getCompressors().add(new AnotherJavaScriptCompressor());
+ * compositeJavaScriptCompressor.add(new MyJavaScriptCompressor());
+ * compositeJavaScriptCompressor.add(new AnotherJavaScriptCompressor());
  * 
  * this.getResourceSettings().setJavaScriptCompressor(compositeJavaScriptCompressor);
  * </pre>
@@ -43,15 +43,14 @@ import org.apache.wicket.javascript.IJavaScriptCompressor;
  */
 public class CompositeJavaScriptCompressor implements IJavaScriptCompressor
 {
-
 	/* Compressors to compress javascript content */
 	private final List<IJavaScriptCompressor> compressors = new ArrayList<>();
 
 	/**
-	 * Initializes the composite javascript compressor with the given {@link IJavaScriptCompressor}
+	 * Initializes the composite javascript compressor with the given {@link IJavaScriptCompressor}(s)
 	 * 
 	 * @param compressors
-	 *            several {@link IJavaScriptCompressor} the composite javascript compressor is
+	 *            The {@link IJavaScriptCompressor}(s) this composite javascript compressor is
 	 *            initialized with
 	 */
 	public CompositeJavaScriptCompressor(IJavaScriptCompressor... compressors)
@@ -75,13 +74,13 @@ public class CompositeJavaScriptCompressor implements IJavaScriptCompressor
 	}
 
 	/**
-	 * Gets a list of {@link IJavaScriptCompressor} to be used for javascript compression. They are
-	 * applied in the order of the List.
+	 * Adds a IJavaScriptCompressor to the list of delegates.
 	 * 
-	 * @return A list of {@link IJavaScriptCompressor} to be used for javascript compression.
+	 * @return {@code this} instance, for chaining
 	 */
-	public List<IJavaScriptCompressor> getCompressors()
+	public CompositeJavaScriptCompressor add(IJavaScriptCompressor compressor)
 	{
-		return compressors;
+		compressors.add(compressor);
+		return this;
 	}
 }

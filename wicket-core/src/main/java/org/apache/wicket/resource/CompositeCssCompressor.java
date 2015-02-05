@@ -30,8 +30,8 @@ import org.apache.wicket.css.ICssCompressor;
  * <pre>
  * CompositeCssCompressor compositeCssCompressor = new CompositeCssCompressor();
  * 
- * compositeCssCompressor.getCompressors().add(new MyCssCompressor());
- * compositeCssCompressor.getCompressors().add(new AnotherCssCompressor());
+ * compositeCssCompressor.add(new MyCssCompressor());
+ * compositeCssCompressor.add(new AnotherCssCompressor());
  * 
  * this.getResourceSettings().setCssCompressor(compositeCssCompressor);
  * </pre>
@@ -43,15 +43,14 @@ import org.apache.wicket.css.ICssCompressor;
  */
 public class CompositeCssCompressor implements ICssCompressor
 {
-
 	/* Compressors to compress the CSS content */
 	private final List<ICssCompressor> compressors = new ArrayList<>();
 
 	/**
-	 * Initializes the composite CSS compressor with the given {@link ICssCompressor}
+	 * Initializes the composite CSS compressor with the given {@link ICssCompressor}(s)
 	 * 
 	 * @param compressors
-	 *            several {@link ICssCompressor} the composite CSS compressor is initialized with
+	 *            The {@link ICssCompressor}(s) this composite CSS compressor is initialized with
 	 */
 	public CompositeCssCompressor(ICssCompressor... compressors)
 	{
@@ -74,13 +73,13 @@ public class CompositeCssCompressor implements ICssCompressor
 	}
 
 	/**
-	 * Gets a list of {@link ICssCompressor} to be used for CSS compression. They are applied in the
-	 * order of the List.
-	 * 
-	 * @return A list of {@link ICssCompressor} to be used for CSS compression.
+	 * Adds a ICssCompressor to the list of delegates.
+	 *
+	 * @return {@code this} instance, for chaining
 	 */
-	public List<ICssCompressor> getCompressors()
+	public CompositeCssCompressor add(ICssCompressor compressor)
 	{
-		return compressors;
+		compressors.add(compressor);
+		return this;
 	}
 }
