@@ -115,36 +115,35 @@ public class Source extends WebMarkupContainer
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
-		this.checkComponentTag(tag, "source");
+		checkComponentTag(tag, "source");
 		super.onComponentTag(tag);
 
-		if (this.mediaStreamingResourceReference != null)
+		if (mediaStreamingResourceReference != null)
 		{
 			tag.put("src",
-				RequestCycle.get()
-					.urlFor(this.mediaStreamingResourceReference, this.pageParameters));
+				RequestCycle.get().urlFor(mediaStreamingResourceReference, pageParameters));
 		}
 
-		if (this.url != null)
+		if (url != null)
 		{
-			tag.put("src", this.url);
+			tag.put("src", url);
 		}
 
-		if (this.getDisplayType())
+		if (getDisplayType())
 		{
-			if (this.type != null)
+			if (type != null)
 			{
-				tag.put("type", this.type);
+				tag.put("type", type);
 			}
-			else if (this.mediaStreamingResourceReference != null)
+			else if (mediaStreamingResourceReference != null)
 			{
-				tag.put("type", this.mediaStreamingResourceReference.getType());
+				tag.put("type", mediaStreamingResourceReference.getType());
 			}
 		}
 
-		if (this.media != null)
+		if (media != null)
 		{
-			tag.put("media", this.media);
+			tag.put("media", media);
 		}
 
 	}
@@ -156,7 +155,7 @@ public class Source extends WebMarkupContainer
 	 */
 	public Boolean getDisplayType()
 	{
-		return this.displayType != null ? this.displayType : false;
+		return displayType != null ? displayType : false;
 	}
 
 	/**
@@ -179,7 +178,7 @@ public class Source extends WebMarkupContainer
 	 */
 	public String getType()
 	{
-		return this.type;
+		return type;
 	}
 
 	/**
@@ -238,7 +237,7 @@ public class Source extends WebMarkupContainer
 	 */
 	public String getMedia()
 	{
-		return this.media;
+		return media;
 	}
 
 	/**

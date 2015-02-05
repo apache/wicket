@@ -36,7 +36,7 @@ public class MediaTagsTestPage extends WebPage
 			MediaTagsTestPage.class, "dummyAudio.mp3"), pageParameters);
 		audio.setAutoplay(true);
 		audio.setControls(true);
-		audio.setCrossorigin(Cors.use_credentials);
+		audio.setCrossOrigin(Cors.USER_CREDENTIALS);
 		audio.setLoop(true);
 		audio.setMuted(true);
 		audio.setStartTime("5");

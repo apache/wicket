@@ -91,7 +91,7 @@ public class Audio extends MediaComponent
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
-		this.checkComponentTag(tag, "audio");
+		checkComponentTag(tag, "audio");
 		super.onComponentTag(tag);
 	}
 }
