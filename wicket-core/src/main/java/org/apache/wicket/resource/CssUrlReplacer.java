@@ -56,10 +56,24 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor
 
 		while (matcher.find())
 		{
-			Url imageRelativeUrl = Url.parse(matcher.group(1));
-			Url cssUrlCopy = new Url(cssUrl);
-			cssUrlCopy.resolveRelative(imageRelativeUrl);
-			matcher.appendReplacement(output, "url('" + cssUrlCopy.toString() + "')");
+			Url imageCandidateUrl = Url.parse(matcher.group(1));
+			String processedUrl;
+			if (imageCandidateUrl.isFull())
+			{
+				processedUrl = imageCandidateUrl.toString(Url.StringMode.FULL);
+			}
+			else if (imageCandidateUrl.isContextAbsolute())
+			{
+				processedUrl = imageCandidateUrl.toString();
+			}
+			else
+			{
+				// relativize against the url for the containing CSS file
+				Url cssUrlCopy = new Url(cssUrl);
+				cssUrlCopy.resolveRelative(imageCandidateUrl);
+				processedUrl = cssUrlCopy.toString();
+			}
+			matcher.appendReplacement(output, "url('" + processedUrl + "')");
 		}
 		matcher.appendTail(output);
 		return output.toString();
