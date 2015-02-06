@@ -48,7 +48,7 @@ public class WicketServerEndpointConfig implements ServerEndpointConfig
 
 	private Configurator configurator;
 
-	WicketServerEndpointConfig()
+	public WicketServerEndpointConfig()
 	{
 		this.delegate = ServerEndpointConfig.Builder.create(WicketEndpoint.class, WICKET_WEB_SOCKET_PATH).build();
 	}
