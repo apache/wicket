@@ -33,7 +33,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 		CssUrlReplacer replacer = new CssUrlReplacer();
 
 		String processed = replacer.process(input, scope, cssRelativePath);
-		assertThat(processed, is(".class {background-image: url('http://example.com/some.img');}"));
+		assertThat(processed, is(input));
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 		CssUrlReplacer replacer = new CssUrlReplacer();
 
 		String processed = replacer.process(input, scope, cssRelativePath);
-		assertThat(processed, is(".class {background-image: url('/some.img');}"));
+		assertThat(processed, is(input));
 	}
 
 	@Test
