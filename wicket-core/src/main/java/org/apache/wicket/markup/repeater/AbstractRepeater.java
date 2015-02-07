@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.repeater;
 
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.DequeueContext;
@@ -53,8 +53,6 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractRepeater.class);
-
-	private static Pattern SAFE_CHILD_ID_PATTERN = Pattern.compile("^\\d+$");
 
 	/**
 	 * Constructor
@@ -127,21 +125,28 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 
 		if (getApplication().usesDevelopmentConfig())
 		{
+            Map<String, Boolean> childrenIds = new HashMap<>(size());
 			Iterator<? extends Component> i = iterator();
 			while (i.hasNext())
 			{
-				Component c = i.next();
-				Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
-				if (!matcher.matches())
+				String componentId = i.next().getId();
+                Boolean warningRendered = childrenIds.get(componentId);
+				if (warningRendered != null)
 				{
-					log.warn("Child component of repeater " + getClass().getName() + ":" + getId() +
-						" has a non-safe child id of " + c.getId() +
-						". Safe child ids must be composed of digits only.");
-					// do not flood the log
-					break;
+                    if (!warningRendered)
+                    {
+                        // second occurrence of this particular componentId: flag and log
+                        childrenIds.put(componentId, Boolean.TRUE);
+                        log.warn("Repeater {}[id={}] contains multiple children with the same id: {}", getClass().getName(), getId(), componentId);
+                    }
 				}
-
+                else
+                {
+                    // first occurrence of this particular componentId
+                    childrenIds.put(componentId, Boolean.FALSE);
+                }
 			}
+            childrenIds.clear();
 		}
 		super.onBeforeRender();
 	}
