@@ -215,27 +215,21 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 				protected String getValue(String variableName)
 				{
 					Object value = vars.get(variableName);
-					if (value == null)
+					
+					if (value == null ||value instanceof String)
 					{
-						return null;
+						return String.valueOf(value);
 					}
-					else if (value instanceof String)
+					
+					IConverter converter = getConverter(value.getClass());
+					
+					if (converter == null)
 					{
-						// small optimization - no need to bother with conversion
-						// for String vars, e.g. {label}
-						return (String)value;
+						return Strings.toString(value);
 					}
 					else
 					{
-						IConverter converter = getConverter(value.getClass());
-						if (converter == null)
-						{
-							return Strings.toString(value);
-						}
-						else
-						{
-							return converter.convertToString(value, getLocale());
-						}
+						return converter.convertToString(value, getLocale());
 					}
 				}
 			}.toString();
