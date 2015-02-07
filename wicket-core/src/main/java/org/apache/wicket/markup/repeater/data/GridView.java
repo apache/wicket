@@ -58,6 +58,7 @@ import org.apache.wicket.util.lang.Generics;
 public abstract class GridView<T> extends DataViewBase<T>
 {
 	private static final long serialVersionUID = 1L;
+    private static final String COLUMNS_ID = "cols";
 
 	private int columns = 1;
 	private int rows = Integer.MAX_VALUE;
@@ -177,8 +178,9 @@ public abstract class GridView<T> extends DataViewBase<T>
 			{
 				// Build a row
 				Item<?> rowItem = newRowItem(newChildId(), row);
-				RepeatingView rowView = new RepeatingView("cols");
+				RepeatingView rowView = new RepeatingView(COLUMNS_ID);
 				rowItem.add(rowView);
+                populateRowItem(rowItem);
 				add(rowItem);
 
 				// Populate the row
@@ -231,6 +233,14 @@ public abstract class GridView<T> extends DataViewBase<T>
 	 *            Item object
 	 */
 	abstract protected void populateEmptyItem(Item<T> item);
+
+    /**
+     * Add component to a row Item, useful for creating row headers, e.g. independent of the main cell items
+     * 
+     * @param item row level item component
+     */
+    protected void populateRowItem(Item<?> item) {
+    }
 
 	/**
 	 * Create a Item which represents an empty cell (there is no model for it in the DataProvider)
@@ -323,7 +333,8 @@ public abstract class GridView<T> extends DataViewBase<T>
 					MarkupContainer row = rows.next();
 
 					final Iterator<? extends Component> rawCells;
-					rawCells = ((MarkupContainer)row.iterator().next()).iterator();
+
+					rawCells = ((MarkupContainer)row.get(COLUMNS_ID)).iterator();
 					cells = Generics.iterator(rawCells);
 					if (cells.hasNext())
 					{
