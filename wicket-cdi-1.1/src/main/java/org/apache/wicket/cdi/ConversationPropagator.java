@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
@@ -127,8 +128,15 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	{
 		// propagate current non-transient conversation to the newly scheduled
 		// page
-		if (conversation.isTransient())
+		try
 		{
+			if (conversation.isTransient())
+			{
+				return;
+			}
+		} catch (ContextNotActiveException cnax)
+		{
+			logger.debug("There is no active context for the requested scope!", cnax);
 			return;
 		}
 
