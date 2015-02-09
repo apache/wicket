@@ -39,6 +39,14 @@ public interface IWebSocketConnectionRegistry
 	 */
 	IWebSocketConnection getConnection(Application application, String sessionId, IKey key);
 
+	/**
+	 * @param application
+	 *            the web application to look in
+	 * @param sessionId
+	 * @return collection of web socket connection used by a client with the given session id
+	 */
+	Collection<IWebSocketConnection> getConnections(Application application, String sessionId);
+
 
 	/**
 	 * @param application
