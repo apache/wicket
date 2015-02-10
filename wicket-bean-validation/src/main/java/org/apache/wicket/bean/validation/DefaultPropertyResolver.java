@@ -22,7 +22,11 @@ public class DefaultPropertyResolver implements IPropertyResolver
 	public Property resolveProperty(FormComponent<?> component)
 	{
 		IPropertyReflectionAwareModel<?> delegate = ValidationModelResolver.resolvePropertyModelFrom(component);
-
+		if (delegate == null)
+		{
+			return null;
+		}
+		
 		String name;
 		Method getter = delegate.getPropertyGetter();
 		if (getter != null)
