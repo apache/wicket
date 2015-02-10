@@ -35,7 +35,7 @@
 		enterHidesWithNoSelection : false
 	};
 
-	Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
+	Wicket.AutoComplete=function(elementId, ajaxAttributes, cfg, indicatorId){
 		var KEY_TAB=9;
 		var KEY_ENTER=13;
 		var KEY_ESC=27;
@@ -333,64 +333,37 @@
 		}
 
 		function actualUpdateChoicesShowAll() {
-			showIndicator();
-
-			var paramName = cfg.parameterName;
-			var attrs = {
-				u: callbackUrl,
-				pre: [ function (attributes) {
-					// since attrs.c is not set, we have to check existence by ourself
-					if (!Wicket.$$(elementId)) {
-						return false;
-					}
-					
-					var activeIsInitial = (document.activeElement === initialElement);
-					var elementVal =  Wicket.$(elementId).value;
-					var hasMinimumLength = elementVal.length >= minInputLength;
-
-					var result = hasMinimumLength && activeIsInitial;
-					if (!result) {
-						hideAutoComplete();
-					}
-					return result;
-				}],
-				ep: {},
-				wr: false,
-				dt: 'html',
-				sh: [ doUpdateAllChoices ]
-			};
-			attrs.ep[paramName] = '';
-			Wicket.Ajax.ajax(attrs);
+			prepareAndExecuteAjaxUpdate(doUpdateAllChoices, '');
 		}
 
 		function actualUpdateChoices() {
+			prepareAndExecuteAjaxUpdate(doUpdateChoices, Wicket.$(elementId).value);
+		}
+		
+		function prepareAndExecuteAjaxUpdate(successHandler, currentInput){
 			showIndicator();
 
-			var paramName = cfg.parameterName;
-			var attrs = {
-				u: callbackUrl,
+			var settings = jQuery.extend(true, {
 				pre: [ function (attributes) {
-					// since attrs.c is not set, we have to check existence by ourself
-					if (!Wicket.$$(elementId)) {
-						return false;
-					}
-
 					var activeIsInitial = (document.activeElement === initialElement);
-					var elementVal =  Wicket.$(elementId).value;
+					var elementVal = Wicket.$(elementId).value;
 					var hasMinimumLength = elementVal.length >= minInputLength;
+				
 					var result = hasMinimumLength && activeIsInitial;
+					
 					if (!result) {
 						hideAutoComplete();
 					}
+					
 					return result;
 				}],
 				ep: {},
-				wr: false,
-				dt: 'html',
-				sh: [ doUpdateChoices ]
-			};
-			attrs.ep[paramName] = Wicket.$(elementId).value;
-			Wicket.Ajax.ajax(attrs);
+				sh: [ successHandler ]
+				}, ajaxAttributes);
+				
+				settings.ep[cfg.parameterName] = currentInput;
+				
+				Wicket.Ajax.ajax(settings);
 		}
 
 		function showIndicator() {
