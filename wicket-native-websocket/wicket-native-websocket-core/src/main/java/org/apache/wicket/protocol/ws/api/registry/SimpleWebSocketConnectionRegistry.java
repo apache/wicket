@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.ws.api.registry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
@@ -29,8 +30,6 @@ import org.apache.wicket.util.lang.Generics;
 /**
  * A registry that keeps all currently opened web socket connections in
  * maps in Application's meta data.
- *
- * TODO remove the synchronizations below and use ConcurrentMap#putIfAbsent()
  *
  * @since 6.0
  */
@@ -59,6 +58,25 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 			}
 		}
 		return connection;
+	}
+
+	@Override
+	public Collection<IWebSocketConnection> getConnections(Application application, String sessionId)
+	{
+		Args.notNull(application, "application");
+		Args.notNull(sessionId, "sessionId");
+
+		Collection<IWebSocketConnection> connections = Collections.emptyList();
+		ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
+		if (connectionsBySession != null)
+		{
+			ConcurrentMap<IKey, IWebSocketConnection> connectionsByPage = connectionsBySession.get(sessionId);
+			if (connectionsByPage != null)
+			{
+				connections = connectionsByPage.values();
+			}
+		}
+		return connections;
 	}
 
 	/**
