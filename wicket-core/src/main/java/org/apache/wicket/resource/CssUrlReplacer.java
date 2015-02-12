@@ -48,16 +48,15 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor
 	@Override
 	public String process(String input, Class<?> scope, String name)
 	{
-		PackageResourceReference cssReference = new PackageResourceReference(scope, name);
-		CharSequence urlToCss = RequestCycle.get().urlFor(cssReference, null);
-		Url cssUrl = Url.parse(urlToCss);
+		RequestCycle cycle = RequestCycle.get();
+		Url cssUrl = Url.parse(name);
 		Matcher matcher = URL_PATTERN.matcher(input);
 		StringBuffer output = new StringBuffer();
 
 		while (matcher.find())
 		{
 			Url imageCandidateUrl = Url.parse(matcher.group(1));
-			String processedUrl;
+			CharSequence processedUrl;
 			if (imageCandidateUrl.isFull())
 			{
 				processedUrl = imageCandidateUrl.toString(Url.StringMode.FULL);
@@ -71,7 +70,9 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor
 				// relativize against the url for the containing CSS file
 				Url cssUrlCopy = new Url(cssUrl);
 				cssUrlCopy.resolveRelative(imageCandidateUrl);
-				processedUrl = cssUrlCopy.toString();
+				PackageResourceReference imageReference = new PackageResourceReference(scope, cssUrlCopy.toString());
+				processedUrl = cycle.urlFor(imageReference, null);
+
 			}
 			matcher.appendReplacement(output, "url('" + processedUrl + "')");
 		}
