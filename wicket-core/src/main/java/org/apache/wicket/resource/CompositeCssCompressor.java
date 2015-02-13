@@ -30,28 +30,28 @@ import org.apache.wicket.css.ICssCompressor;
  * <pre>
  * CompositeCssCompressor compositeCssCompressor = new CompositeCssCompressor();
  * 
- * compositeCssCompressor.getCompressors().add(new MyCssCompressor());
- * compositeCssCompressor.getCompressors().add(new AnotherCssCompressor());
+ * compositeCssCompressor.add(new MyCssCompressor());
+ * compositeCssCompressor.add(new AnotherCssCompressor());
  * 
  * this.getResourceSettings().setCssCompressor(compositeCssCompressor);
  * </pre>
+ * 
  * The compressors can also be given as constructor arguments.
  * 
  * @since 6.20.0
  * @author Tobias Soloschenko
  * 
  */
-public class CompositeCssCompressor implements ICssCompressor
+public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor
 {
-
 	/* Compressors to compress the CSS content */
 	private final List<ICssCompressor> compressors = new ArrayList<ICssCompressor>();
 
 	/**
-	 * Initializes the composite CSS compressor with the given {@link ICssCompressor}
+	 * Initializes the composite CSS compressor with the given {@link ICssCompressor}(s)
 	 * 
 	 * @param compressors
-	 *            several {@link ICssCompressor} the composite CSS compressor is initialized with
+	 *            The {@link ICssCompressor}(s) this composite CSS compressor is initialized with
 	 */
 	public CompositeCssCompressor(ICssCompressor... compressors)
 	{
@@ -63,24 +63,39 @@ public class CompositeCssCompressor implements ICssCompressor
 	 * given the original content is going to be returned.
 	 */
 	@Override
-	public String compress(String original)
+	public String process(String input, Class<?> scope, String name)
 	{
-		String compressed = original;
+		String compressed = input;
 		for (ICssCompressor compressor : compressors)
 		{
-			compressed = compressor.compress(compressed);
+			if (compressor instanceof IScopeAwareTextResourceProcessor)
+			{
+				IScopeAwareTextResourceProcessor processor = (IScopeAwareTextResourceProcessor)compressor;
+				processor.process(compressed, scope, name);
+			}
+			else
+			{
+				compressed = compressor.compress(compressed);
+			}
 		}
 		return compressed;
 	}
 
-	/**
-	 * Gets a list of {@link ICssCompressor} to be used for CSS compression. They are applied in the
-	 * order of the List.
-	 * 
-	 * @return A list of {@link ICssCompressor} to be used for CSS compression.
-	 */
-	public List<ICssCompressor> getCompressors()
+	@Override
+	public String compress(String original)
 	{
-		return compressors;
+		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName() +
+			".process() should be used instead!");
+	}
+
+	/**
+	 * Adds a ICssCompressor to the list of delegates.
+	 *
+	 * @return {@code this} instance, for chaining
+	 */
+	public CompositeCssCompressor add(ICssCompressor compressor)
+	{
+		compressors.add(compressor);
+		return this;
 	}
 }
