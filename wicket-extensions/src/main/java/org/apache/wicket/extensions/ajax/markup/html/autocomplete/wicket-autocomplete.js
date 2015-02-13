@@ -343,27 +343,32 @@
 		function prepareAndExecuteAjaxUpdate(successHandler, currentInput){
 			showIndicator();
 
-			var settings = jQuery.extend(true, {
-				pre: [ function (attributes) {
-					var activeIsInitial = (document.activeElement === initialElement);
-					var elementVal = Wicket.$(elementId).value;
-					var hasMinimumLength = elementVal.length >= minInputLength;
-				
-					var result = hasMinimumLength && activeIsInitial;
+			var attrs = jQuery.extend({}, ajaxAttributes);
+
+			attrs.c = undefined;
+
+			attrs.pre = attrs.pre || [];
+			attrs.pre.push(function (attributes) {
+				var activeIsInitial = (document.activeElement === initialElement);
+				var elementVal = Wicket.$(elementId).value;
+				var hasMinimumLength = elementVal.length >= minInputLength;
+			
+				var result = hasMinimumLength && activeIsInitial;
 					
-					if (!result) {
-						hideAutoComplete();
-					}
-					
-					return result;
-				}],
-				ep: {},
-				sh: [ successHandler ]
-				}, ajaxAttributes);
+				if (!result) {
+					hideAutoComplete();
+				}
 				
-				settings.ep[cfg.parameterName] = currentInput;
+				return result;
+			});	
+
+			attrs.sh = attrs.sh || [];
+			attrs.sh.push(successHandler);
 				
-				Wicket.Ajax.ajax(settings);
+			attrs.ep = attrs.ep || {};
+			attrs.ep[cfg.parameterName] = currentInput;
+				
+			Wicket.Ajax.ajax(attrs);
 		}
 
 		function showIndicator() {
