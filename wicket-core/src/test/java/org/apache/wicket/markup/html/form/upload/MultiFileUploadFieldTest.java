@@ -48,7 +48,8 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 	public void submitMultiFileUploadFields()
 	{
 		final AtomicBoolean submitted = new AtomicBoolean(false);
-		final ListModel<FileUpload> filesModel = new ListModel<FileUpload>(new ArrayList<FileUpload>());
+		final ListModel<FileUpload> filesModel = new ListModel<FileUpload>(
+			new ArrayList<FileUpload>());
 
 		TestPage page = new TestPage(filesModel)
 		{
@@ -63,13 +64,16 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 				for (int i = 1; i < 2; i++)
 				{
 					FileUpload fileUpload = uploads.get(i);
-					assertEquals(MultiFileUploadFieldTest.class.getSimpleName()+i+".txt", fileUpload.getClientFileName());
+					assertEquals(MultiFileUploadFieldTest.class.getSimpleName() + (i - 1) + ".txt",
+						fileUpload.getClientFileName());
 					try
 					{
-						assertEquals("Test"+i, IOUtils.toString(fileUpload.getInputStream()));
-					} catch (IOException e)
+						assertEquals("Test" + (i - 1),
+							IOUtils.toString(fileUpload.getInputStream()));
+					}
+					catch (IOException e)
 					{
-						fail("Reading file upload '"+i+"' failed: " + e.getMessage());
+						fail("Reading file upload '" + i + "' failed: " + e.getMessage());
 					}
 				}
 				submitted.set(true);
@@ -79,8 +83,16 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 
 		FormTester ft = tester.newFormTester("f");
 
-		ft.setFile("muf", new File("target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest0.txt"), "plain/text");
-		ft.setFile("muf", new File("target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest1.txt"), "plain/text");
+		ft.setFile(
+			"muf",
+			new File(
+				"target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest0.txt"),
+			"plain/text");
+		ft.setFile(
+			"muf",
+			new File(
+				"target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest1.txt"),
+			"plain/text");
 		ft.submit();
 
 		assertEquals("The form is not submitted", true, submitted.get());
@@ -110,14 +122,13 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 		}
 
 		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body>\n" +
-					"\t\t<form wicket:id=\"f\">\n" +
-					"\t\t\t<input type=\"file\" wicket:id=\"muf\" />\n" +
-					"\t\t\t<input type=\"submit\" value=\"Submit!\" />\t\n" +
-					"\t\t</form>\n" +
-					"\t</body></html>");
+			return new StringResourceStream("<html><body>\n" + "\t\t<form wicket:id=\"f\">\n"
+				+ "\t\t\t<input type=\"file\" wicket:id=\"muf\" />\n"
+				+ "\t\t\t<input type=\"submit\" value=\"Submit!\" />\t\n" + "\t\t</form>\n"
+				+ "\t</body></html>");
 		}
 	}
 }
