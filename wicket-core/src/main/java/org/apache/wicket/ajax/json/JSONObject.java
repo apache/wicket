@@ -242,7 +242,7 @@ public class JSONObject {
      * @throws JSONException
      */
     public JSONObject(Map map) {
-        this.map = new HashMap();
+        this.map = new LinkedHashMap();
         if (map != null) {
             Iterator i = map.entrySet().iterator();
             while (i.hasNext()) {
