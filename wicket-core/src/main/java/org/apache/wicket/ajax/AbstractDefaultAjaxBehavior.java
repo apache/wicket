@@ -220,23 +220,30 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		try
 		{
-			attributesJson.put(AjaxAttributeName.URL.jsonName(), getCallbackUrl());
-			Method method = attributes.getMethod();
-			if (Method.POST == method)
+			String formId = attributes.getFormId();
+			if (Strings.isEmpty(formId) == false)
 			{
-				attributesJson.put(AjaxAttributeName.METHOD.jsonName(), method);
+				attributesJson.put(AjaxAttributeName.FORM_ID.jsonName(), formId);
+			}
+			attributesJson.put(AjaxAttributeName.URL.jsonName(), getCallbackUrl());
+
+			String[] eventNames = attributes.getEventNames();
+			if (eventNames.length == 1)
+			{
+				attributesJson.put(AjaxAttributeName.EVENT_NAME.jsonName(), eventNames[0]);
+			}
+			else
+			{
+				for (String eventName : eventNames)
+				{
+					attributesJson.append(AjaxAttributeName.EVENT_NAME.jsonName(), eventName);
+				}
 			}
 
 			if (component instanceof Page == false)
 			{
 				String componentId = component.getMarkupId();
 				attributesJson.put(AjaxAttributeName.MARKUP_ID.jsonName(), componentId);
-			}
-
-			String formId = attributes.getFormId();
-			if (Strings.isEmpty(formId) == false)
-			{
-				attributesJson.put(AjaxAttributeName.FORM_ID.jsonName(), formId);
 			}
 
 			if (attributes.isMultipart())
@@ -254,8 +261,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			CharSequence childSelector = attributes.getChildSelector();
 			if (Strings.isEmpty(childSelector) == false)
 			{
-				attributesJson.put(AjaxAttributeName.CHILD_SELECTOR.jsonName(),
-						childSelector);
+				attributesJson.put(AjaxAttributeName.CHILD_SELECTOR.jsonName(), childSelector);
 			}
 
 			String indicatorId = findIndicatorId();
@@ -328,19 +334,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				attributesJson.put(AjaxAttributeName.IS_ASYNC.jsonName(), false);
 			}
 
-			String[] eventNames = attributes.getEventNames();
-			if (eventNames.length == 1)
-			{
-				attributesJson.put(AjaxAttributeName.EVENT_NAME.jsonName(), eventNames[0]);
-			}
-			else
-			{
-				for (String eventName : eventNames)
-				{
-					attributesJson.append(AjaxAttributeName.EVENT_NAME.jsonName(), eventName);
-				}
-			}
-
 			AjaxChannel channel = attributes.getChannel();
 			if (channel != null && channel.equals(AjaxChannel.DEFAULT) == false)
 			{
@@ -350,6 +343,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			if (attributes.isAllowDefault())
 			{
 				attributesJson.put(AjaxAttributeName.IS_ALLOW_DEFAULT.jsonName(), true);
+			}
+
+			Method method = attributes.getMethod();
+			if (Method.POST == method)
+			{
+				attributesJson.put(AjaxAttributeName.METHOD.jsonName(), method);
 			}
 
 			if (AjaxRequestAttributes.EventPropagation.BUBBLE.equals(attributes.getEventPropagation()))
@@ -540,9 +539,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			}
 		}
 		sb.append("var params = ").append(jsonArray).append(";\n");
-		sb.append("attrs.").append(AjaxAttributeName.EXTRA_PARAMETERS)
-				.append(" = params.concat(attrs.")
-				.append(AjaxAttributeName.EXTRA_PARAMETERS).append(" || []);\n");
+		sb.append("attrs.")
+			.append(AjaxAttributeName.EXTRA_PARAMETERS)
+			.append(" = params.concat(attrs.")
+			.append(AjaxAttributeName.EXTRA_PARAMETERS)
+			.append(" || []);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
 	}
