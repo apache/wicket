@@ -1,4 +1,4 @@
-Apache Wicket 6.0
+Apache Wicket 7.0
 =================
 
 This is the readme file for the Apache Wicket project. 
@@ -20,7 +20,7 @@ Contents
  - Getting started
  - Dependencies
  - Building Wicket from source
- - Migrating from 1.5
+ - Migrating from 6.x
  - Getting help
  - Cryptographic Software Notice
 
@@ -34,10 +34,8 @@ of the project.
 Java/Application server requirements
 ------------------------------------
 
-Wicket requires at least Java 1.6. The application server for running your web
-application should adhere to the servlet specification version 2.5 or newer.
-Note that your Wicket application might run on containers based on servlet
-specification 2.4, but there are no guarantees.
+Wicket requires at least Java 1.7. The application server for running your web
+application should adhere to the servlet specification version 3.0 or newer.
 
 What is in this package
 -----------------------
@@ -59,14 +57,19 @@ You will find the source code here:
 	    |-- testing
 	    |-- wicket
 	    |-- wicket-auth-roles
+	    |-- wicket-bean-validation
+	    |-- wicket-cdi
+	    |-- wicket-cdi-1.1
 	    |-- wicket-core
 	    |-- wicket-datetime
 	    |-- wicket-devutils
 	    |-- wicket-examples
+	    |-- wicket-experimental
 	    |-- wicket-extensions
 	    |-- wicket-guice
 	    |-- wicket-ioc
 	    |-- wicket-jmx
+	    |-- wicket-native-websocket
 	    |-- wicket-objectssizeof-agent
 	    |-- wicket-request
 	    |-- wicket-spring
@@ -97,6 +100,20 @@ Here is a list of projects in this distribution and what they do.
    projects such as wicket-spring, wicket-velocity and wicket-auth-roles.
  - wicket-devutils: provides small utilities which can help in development
    phase
+ - wicket-bean-validation: validates beans with annotation based on 
+   javax.validation;
+ - wicket-cdi: the context and dependency injection of the jee standard for wicket;
+ - wicket-cdi-1.1: the context and dependency injection of the jee standard 1.1
+   for wicket;
+ - wicket-datetime: date time components based on joda time;
+ - wicket-devutils: some utils to help debugging wicket;
+ - wicket-experimental: experimental implementations for wicket;
+ - wicket-native-websocket: wicket's native web sockets integration 
+   for several servers;
+ - wicket-request: lightweight project which contains all classes dealing with request
+   handlers and so on;
+ - wicket-util: the util project for wicket
+ - wicket-velocity: components for velocity templating
 
 Getting started
 ---------------
@@ -162,7 +179,7 @@ the src/ folder.
 
  - wicket-datetime:
 
- 	Joda-Time 1.6 (http://joda-time.sourceforge.net/)
+ 	Joda-Time 2.4 (http://joda-time.sourceforge.net/)
 
  - wicket-velocity:
 
@@ -171,8 +188,8 @@ the src/ folder.
 
  - wicket-ioc:
 
-    cglib nodep 2.1.3 (http://cglib.sourceforge.net/) and 
-    asm 1.5.3 (http://asm.objectweb.org/)
+    cglib 3.1 (http://cglib.sourceforge.net/) and 
+    asm-util 5.0.3 (http://asm.objectweb.org/)
 
  - wicket-spring:
 
@@ -182,6 +199,12 @@ the src/ folder.
  - wicket-guice:
 
     Google Guice (http://code.google.com/p/google-guice/)
+
+ - wicket-cdi / wicket-cdi-1.1:
+	Component Dependency Injection 
+	(http://www.oracle.com/technetwork/articles/java/cdi-javaee-bien-225152.html 
+	and 
+	http://download.oracle.com/otndocs/jcp/cdi-1_1-pr-spec/index.html)
 
  - wicket-examples:
 
@@ -208,12 +231,12 @@ do:
     creates wicket-x.y.z.jar in target/ subdirectory and installs the file
     into your local Maven repository for use in other projects.
 
-Migrating from 1.5
+Migrating from 6.x
 ------------------
 
 This file is a copy of the migration guide from available on our Wiki:
 
-    https://cwiki.apache.org/WICKET/migration-to-wicket-60.html
+    https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+7.0
     
 Getting help
 ------------
