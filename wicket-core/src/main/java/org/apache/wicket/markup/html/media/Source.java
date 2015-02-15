@@ -27,89 +27,74 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * 
  * @author Tobias Soloschenko
  * @author Andrew Lombardi
- * 
  */
 public class Source extends WebMarkupContainer
 {
-
 	private static final long serialVersionUID = 1L;
 
-	private Boolean displayType;
+	private boolean displayType;
 
 	private String type;
 
 	private String media;
 
-	private MediaStreamingResourceReference mediaStreamingResourceReference;
+	private final MediaStreamingResourceReference mediaStreamingResourceReference;
 
-	private PageParameters pageParameters;
+	private final PageParameters pageParameters;
 
-	private String url;
+	private final String url;
 
 	public Source(String id)
 	{
-		super(id);
+		this(id, null, null, null, null);
 	}
 
 	public Source(String id, IModel<?> model)
 	{
-		super(id, model);
+		this(id, model, null, null, null);
 	}
 
 	public Source(String id, MediaStreamingResourceReference mediaStreamingResourceReference)
 	{
-		this(id);
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
+		this(id, null, null, null, mediaStreamingResourceReference);
 	}
 
 	public Source(String id, IModel<?> model,
 		MediaStreamingResourceReference mediaStreamingResourceReference)
 	{
-		this(id, model);
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
+		this(id, model, null, null, mediaStreamingResourceReference);
 	}
 
 	public Source(String id, MediaStreamingResourceReference mediaStreamingResourceReference,
 		PageParameters pageParameters)
 	{
-		this(id);
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
-		this.pageParameters = pageParameters;
+		this(id, null, null, pageParameters, mediaStreamingResourceReference);
 	}
 
 	public Source(String id, IModel<?> model,
 		MediaStreamingResourceReference mediaStreamingResourceReference,
 		PageParameters pageParameters)
 	{
-		this(id, model);
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
-		this.pageParameters = pageParameters;
+		this(id, model, null, pageParameters, mediaStreamingResourceReference);
 	}
 
 	public Source(String id, String url)
 	{
-		this(id);
-		this.url = url;
+		this(id, null, url, null, null);
 	}
 
 	public Source(String id, IModel<?> model, String url)
 	{
-		this(id, model);
-		this.url = url;
+		this(id, model, url, null, null);
 	}
 
-	public Source(String id, String url, PageParameters pageParameters)
+	private Source(String id, IModel<?> model, String url, PageParameters pageParameters,
+	               MediaStreamingResourceReference mediaStreamingResourceReference)
 	{
-		this(id);
+		super(id, model);
 		this.url = url;
 		this.pageParameters = pageParameters;
-	}
-
-	public Source(String id, IModel<?> model, String url, PageParameters pageParameters)
-	{
-		this(id, model);
-		this.url = url;
-		this.pageParameters = pageParameters;
+		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
 	}
 
 	@Override
@@ -120,11 +105,9 @@ public class Source extends WebMarkupContainer
 
 		if (mediaStreamingResourceReference != null)
 		{
-			tag.put("src",
-				RequestCycle.get().urlFor(mediaStreamingResourceReference, pageParameters));
-		}
-
-		if (url != null)
+			CharSequence url = RequestCycle.get().urlFor(mediaStreamingResourceReference, pageParameters);
+			tag.put("src", url);
+		} else if (url != null)
 		{
 			tag.put("src", url);
 		}
@@ -141,9 +124,10 @@ public class Source extends WebMarkupContainer
 			}
 		}
 
-		if (media != null)
+		String _media = getMedia();
+		if (_media != null)
 		{
-			tag.put("media", media);
+			tag.put("media", _media);
 		}
 
 	}
@@ -153,9 +137,9 @@ public class Source extends WebMarkupContainer
 	 * 
 	 * @return If the type is going to be displayed
 	 */
-	public Boolean getDisplayType()
+	public boolean getDisplayType()
 	{
-		return displayType != null ? displayType : false;
+		return displayType;
 	}
 
 	/**
@@ -164,7 +148,7 @@ public class Source extends WebMarkupContainer
 	 * @param displayType
 	 *            if the type is going to be displayed
 	 */
-	public void setDisplayType(Boolean displayType)
+	public void setDisplayType(boolean displayType)
 	{
 		this.displayType = displayType;
 	}

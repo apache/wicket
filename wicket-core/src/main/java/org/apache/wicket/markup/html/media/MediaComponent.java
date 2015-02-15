@@ -23,7 +23,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * The media component is used to provide basic functionality to the video and audo component. The
+ * The media component is used to provide basic functionality to the video and audio component. The
  * given media streaming resource reference supports Content-Ranges and other stuff to make the
  * audio and video playback smooth.
  * 
@@ -32,11 +32,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public abstract class MediaComponent extends WebMarkupContainer
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * To be used for the crossorigin attribute
+	 * To be used for the <em>crossorigin</em> attribute
 	 * 
 	 * @see {@link #setCrossOrigin(Cors)}
 	 */
@@ -44,7 +43,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	{
 		ANONYMOUS("anonymous"), USER_CREDENTIALS("user-credentials"), NO_CORS("");
 
-		private String realName;
+		private final String realName;
 
 		private Cors(String realName)
 		{
@@ -58,7 +57,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * To be used for the preload attribute
+	 * To be used for the <em>preload</em> attribute
 	 * 
 	 * @see {@link #setPreload(Preload)}
 	 */
@@ -66,7 +65,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	{
 		NONE("none"), METADATA("metadata"), AUTO("auto");
 
-		public String realName;
+		public final String realName;
 
 		private Preload(String realname)
 		{
@@ -79,14 +78,13 @@ public abstract class MediaComponent extends WebMarkupContainer
 		}
 	}
 
-	// use Boolean instead of elementary data types to get a lightweight component
-	private Boolean autoplay;
+	private boolean autoplay;
 
-	private Boolean loop;
+	private boolean loop;
 
-	private Boolean muted;
+	private boolean muted;
 
-	private Boolean controls;
+	private boolean controls = true;
 
 	private Preload preload;
 
@@ -98,138 +96,147 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 	private Cors crossOrigin;
 
-	private PageParameters pageParameters;
+	private final PageParameters pageParameters;
 
-	private MediaStreamingResourceReference mediaStreamingResourceReference;
+	private final MediaStreamingResourceReference mediaStreamingResourceReference;
 
-	private String url;
+	private final String url;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param id
+	 *          The component id
+	 */
 	public MediaComponent(String id)
 	{
-		super(id);
+		this(id, null, null, null, null);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param id
+	 *          The component id
+	 * @param model
+	 *          The component model
+	 */
 	public MediaComponent(String id, IModel<?> model)
 	{
-		super(id, model);
+		this(id, model, null, null, null);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param id
+	 *          The component id
+	 * @param mediaStreamingResourceReference
+	 */
 	public MediaComponent(String id, MediaStreamingResourceReference mediaStreamingResourceReference)
 	{
-		this(id);
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
+		this(id, null, null, null,mediaStreamingResourceReference);
 	}
 
 	public MediaComponent(String id, IModel<?> model,
 		MediaStreamingResourceReference mediaStreamingResourceReference)
 	{
-		this(id, model);
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
+		this(id, model, null, null, mediaStreamingResourceReference);
 	}
 
 	public MediaComponent(String id,
 		MediaStreamingResourceReference mediaStreamingResourceReference,
 		PageParameters pageParameters)
 	{
-		this(id);
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
-		this.pageParameters = pageParameters;
+		this(id, null, null, pageParameters, mediaStreamingResourceReference);
 	}
 
 	public MediaComponent(String id, IModel<?> model,
 		MediaStreamingResourceReference mediaStreamingResourceReference,
 		PageParameters pageParameters)
 	{
-		this(id, model);
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
-		this.pageParameters = pageParameters;
+		this(id, model, null, pageParameters, mediaStreamingResourceReference);
 	}
 
 	public MediaComponent(String id, String url)
 	{
-		this(id);
-		this.url = url;
+		this(id, null, url, null, null);
 	}
 
 	public MediaComponent(String id, IModel<?> model, String url)
 	{
-		this(id, model);
-		this.url = url;
+		this(id, model, url, null, null);
 	}
 
-	public MediaComponent(String id, String url, PageParameters pageParameters)
+	private MediaComponent(String id, IModel<?> model, String url, PageParameters pageParameters,
+	                       MediaStreamingResourceReference mediaStreamingResourceReference)
 	{
-		this(id);
+		super(id, model);
 		this.url = url;
 		this.pageParameters = pageParameters;
-	}
-
-	public MediaComponent(String id, IModel<?> model, String url, PageParameters pageParameters)
-	{
-		this(id, model);
-		this.url = url;
-		this.pageParameters = pageParameters;
+		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
 	}
 
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
+
 		// The time management is used to set the start / stop
 		// time in seconds of the movie to be played back
 		String timeManagement = "";
 		if (startTime != null)
 		{
-			timeManagement = timeManagement += "#t=" + startTime +
+			timeManagement += "#t=" + startTime +
 				(endTime != null ? "," + endTime : "");
 		}
 
 		if (mediaStreamingResourceReference != null)
 		{
-			tag.put("src",
-				RequestCycle.get().urlFor(mediaStreamingResourceReference, pageParameters) +
-					timeManagement);
+			CharSequence urlToMediaReference = RequestCycle.get().urlFor(mediaStreamingResourceReference, pageParameters);
+			tag.put("src", urlToMediaReference + timeManagement);
 		}
-
-		if (url != null)
+		else if (url != null)
 		{
 			tag.put("src", url + timeManagement);
 		}
 
-		if (mediaGroup != null)
+		String mg = getMediaGroup();
+		if (mg != null)
 		{
-			tag.put("mediagroup", mediaGroup);
+			tag.put("mediagroup", mg);
 		}
 
-		if (autoplay != null && autoplay)
+		if (isAutoplay())
 		{
 			tag.put("autoplay", "autoplay");
 		}
 
-		if (loop != null && loop)
+		if (isLooping())
 		{
 			tag.put("loop", "loop");
 		}
 
-		if (muted != null && muted)
+		if (isMuted())
 		{
 			tag.put("muted", "muted");
 		}
 
-		// Use getter here because controls should be visible by default
-		if (getControls())
+		if (hasControls())
 		{
 			tag.put("controls", "controls");
 		}
 
-		if (preload != null)
+		Preload _preload = getPreload();
+		if (_preload != null)
 		{
-			tag.put("preload", preload.getRealName());
+			tag.put("preload", _preload.getRealName());
 		}
 
-		if (crossOrigin != null)
+		Cors cors = getCrossOrigin();
+		if (cors != null)
 		{
-			tag.put("crossorigin", crossOrigin.getRealName());
+			tag.put("crossorigin", cors.getRealName());
 		}
 	}
 
@@ -238,9 +245,9 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * 
 	 * @return If the playback is autoplayed on load
 	 */
-	public Boolean getAutoplay()
+	public boolean isAutoplay()
 	{
-		return autoplay != null ? autoplay : false;
+		return autoplay;
 	}
 
 	/**
@@ -249,7 +256,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * @param autoplay
 	 *            If the playback is autoplayed on load
 	 */
-	public void setAutoplay(Boolean autoplay)
+	public void setAutoplay(boolean autoplay)
 	{
 		this.autoplay = autoplay;
 	}
@@ -259,9 +266,9 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * 
 	 * @return If the playback is looped
 	 */
-	public Boolean getLoop()
+	public boolean isLooping()
 	{
-		return loop != null ? loop : false;
+		return loop;
 	}
 
 	/**
@@ -270,7 +277,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * @param loop
 	 *            If the playback is looped
 	 */
-	public void setLoop(Boolean loop)
+	public void setLooping(boolean loop)
 	{
 		this.loop = loop;
 	}
@@ -280,9 +287,9 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * 
 	 * @return If the playback is muted initially
 	 */
-	public Boolean getMuted()
+	public boolean isMuted()
 	{
-		return muted != null ? muted : false;
+		return muted;
 	}
 
 	/**
@@ -291,7 +298,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * @param muted
 	 *            If the playback is muted initially
 	 */
-	public void setMuted(Boolean muted)
+	public void setMuted(boolean muted)
 	{
 		this.muted = muted;
 	}
@@ -301,9 +308,9 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * 
 	 * @return if the controls are going to displayed
 	 */
-	public Boolean getControls()
+	public boolean hasControls()
 	{
-		return controls != null ? controls : true;
+		return controls;
 	}
 
 	/**
@@ -330,21 +337,23 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Sets the type of preload <br>
-	 * <br>
-	 * <b>none</b>: Hints to the user agent that either the author does not expect the user to need
-	 * the media resource, or that the server wants to minimise unnecessary traffic.<br>
-	 * <br>
-	 * <b>metadata</b>: Hints to the user agent that the author does not expect the user to need the
+	 * Sets the type of preload.
+	 * <ul>
+	 * <li><b>none</b>: Hints to the user agent that either the author does not expect the user to need
+	 * the media resource, or that the server wants to minimise unnecessary traffic.</li>
+	 *
+	 * <li><b>metadata</b>: Hints to the user agent that the author does not expect the user to need the
 	 * media resource, but that fetching the resource metadata (dimensions, first frame, track list,
-	 * duration, etc) is reasonable.<br>
-	 * <br>
-	 * <b>auto</b>: Hints to the user agent that the user agent can put the user's needs first
+	 * duration, etc) is reasonable.</li>
+	 *
+	 * <li><b>auto</b>: Hints to the user agent that the user agent can put the user's needs first
 	 * without risk to the server, up to and including optimistically downloading the entire
-	 * resource.
+	 * resource.</li>
+	 * </ul>
+	 * </p>
 	 * 
 	 * @param preload
-	 *            the preload
+	 *            the type of the preload
 	 */
 	public void setPreload(Preload preload)
 	{

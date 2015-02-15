@@ -25,12 +25,10 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class MediaTagsExtendedTestPage extends WebPage
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public MediaTagsExtendedTestPage()
 	{
-
 		Video video = new Video("video", new MediaStreamingResourceReference(
 			MediaTagsTestPage.class, "dummyVideo.m4a"));
 		

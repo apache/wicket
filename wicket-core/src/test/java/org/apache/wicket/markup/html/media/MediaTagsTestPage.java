@@ -25,7 +25,6 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class MediaTagsTestPage extends WebPage
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public MediaTagsTestPage()
@@ -37,7 +36,7 @@ public class MediaTagsTestPage extends WebPage
 		audio.setAutoplay(true);
 		audio.setControls(true);
 		audio.setCrossOrigin(Cors.USER_CREDENTIALS);
-		audio.setLoop(true);
+		audio.setLooping(true);
 		audio.setMuted(true);
 		audio.setStartTime("5");
 		audio.setEndTime("10");

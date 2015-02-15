@@ -21,16 +21,15 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.core.util.resource.PackageResourceStream;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ContentDisposition;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.PackageResource;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * The media streaming resource reference is used to provided streamed data based on bytes requested
@@ -38,9 +37,8 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Tobias Soloschenko
  */
-public class MediaStreamingResourceReference extends ResourceReference
+public class MediaStreamingResourceReference extends PackageResourceReference
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public MediaStreamingResourceReference(Class<?> scope, String name, Locale locale,
@@ -51,7 +49,7 @@ public class MediaStreamingResourceReference extends ResourceReference
 
 	public MediaStreamingResourceReference(Class<?> scope, String name)
 	{
-		super(scope, name, RequestCycle.get().getRequest().getLocale(), null, null);
+		this(scope, name, null, null, null);
 	}
 
 	public MediaStreamingResourceReference(Key key)
@@ -65,16 +63,16 @@ public class MediaStreamingResourceReference extends ResourceReference
 	}
 
 	@Override
-	public IResource getResource()
+	public PackageResource getResource()
 	{
-		AbstractResource mediaStreamingResource = new AbstractResource()
+		return new PackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation())
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected ResourceResponse newResourceResponse(Attributes attributes)
 			{
-				PackageResourceStream packageResourceStream = null;
+				IResourceStream packageResourceStream = getResourceStream();
 				Long startbyte = null;
 				Long endbyte = null;
 				try
@@ -85,19 +83,11 @@ public class MediaStreamingResourceReference extends ResourceReference
 					if (!(request instanceof WebRequest) || !(response instanceof WebResponse))
 					{
 						throw new IllegalStateException(
-							"Either the request is no web request or the response is no web response");
+							"Web request/response are required! Request: " + request + ", response: " + response);
 					}
 
 					WebRequest webRequest = (WebRequest)request;
 					WebResponse webResponse = (WebResponse)response;
-
-					packageResourceStream = new PackageResourceStream(
-						MediaStreamingResourceReference.this.getScope(),
-						MediaStreamingResourceReference.this.getName(),
-						MediaStreamingResourceReference.this.getLocale(),
-						MediaStreamingResourceReference.this.getStyle(),
-						MediaStreamingResourceReference.this.getVariation());
-
 
 					long length = packageResourceStream.length().bytes();
 
@@ -107,13 +97,13 @@ public class MediaStreamingResourceReference extends ResourceReference
 					resourceResponse.setContentDisposition(ContentDisposition.ATTACHMENT);
 					resourceResponse.setLastModified(packageResourceStream.lastModifiedTime());
 
-					// We accept ranges, so that the player can
+					// accept ranges, so that the player can
 					// load and play content from a specific byte position
 					webResponse.setHeader("Accept-Range", "bytes");
 
 					// Calculating the response code and the byte range to be played
 					String rangeHeader = webRequest.getHeader("range");
-					if (rangeHeader == null || "".equals(rangeHeader))
+					if (Strings.isEmpty(rangeHeader))
 					{
 						resourceResponse.setStatusCode(200);
 						resourceResponse.setContentLength(length);
@@ -121,7 +111,6 @@ public class MediaStreamingResourceReference extends ResourceReference
 					else
 					{
 						rangeHeader = rangeHeader.replaceAll(" ", "");
-						// If the range header is filled 206 for
 						// partial content has to be returned
 						resourceResponse.setStatusCode(206);
 
@@ -131,11 +120,11 @@ public class MediaStreamingResourceReference extends ResourceReference
 						// http://stackoverflow.com/questions/8293687/sample-http-range-request-session
 						String range = rangeHeader.substring(rangeHeader.indexOf('=') + 1,
 							rangeHeader.length());
-						String[] rangeParts = range.split("-");
-						if (rangeParts[0].equals("0"))
+						String[] rangeParts = Strings.split(range, '-');
+						if ("0".equals(rangeParts[0]))
 						{
-							webResponse.setHeader("Content-Range", "bytes 0-" + (length - 1) + "/" +
-								length);
+							webResponse.setHeader("Content-Range",
+									"bytes 0-" + (length - 1) + "/" + length);
 							resourceResponse.setContentLength(length);
 						}
 						else
@@ -149,8 +138,8 @@ public class MediaStreamingResourceReference extends ResourceReference
 							{
 								endbyte = length - 1;
 							}
-							webResponse.setHeader("Content-Range", "bytes " + startbyte + "-" +
-								endbyte + "/" + length);
+							webResponse.setHeader("Content-Range",
+									"bytes " + startbyte + '-' + endbyte + '/' + length);
 							resourceResponse.setContentLength((endbyte - startbyte) + 1);
 						}
 					}
@@ -183,14 +172,13 @@ public class MediaStreamingResourceReference extends ResourceReference
 				}
 			}
 		};
-		return mediaStreamingResource;
 
 	}
 
 	/**
-	 * Gets the type of the media this resource reference belongs to
+	 * Returns the mime type of the media this resource reference belongs to
 	 * 
-	 * @return the type of this media
+	 * @return the mime type of this media
 	 */
 	public String getType()
 	{

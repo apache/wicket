@@ -21,10 +21,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.core.util.resource.PackageResourceStream;
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
 import org.apache.wicket.request.resource.IResource.Attributes;
+import org.apache.wicket.util.resource.IResourceStream;
 
 /**
  * Used to read a part of the package resource stream and write it to the output stream of the
@@ -35,24 +35,24 @@ import org.apache.wicket.request.resource.IResource.Attributes;
  */
 public class PartWriterCallback extends WriteCallback
 {
-	private PackageResourceStream packageResourceStream;
+	private final IResourceStream resourceStream;
 
-	private Long startbyte;
+	private final Long startbyte;
 
 	private Long endbyte;
 
-	private Integer buffer;
+	private int bufferSize;
 
 	/**
 	 * Creates a part writer callback.<br>
 	 * <br>
-	 * Reads a part of the given package resource stream. If the startbyte parameter is not null the
+	 * Reads a part of the given resource stream. If the startbyte parameter is not null the
 	 * number of bytes are skipped till the stream is read. If the endbyte is not null the stream is
 	 * read till endbyte, else to the end of the whole stream. If startbyte and endbyte is null the
 	 * whole stream is read.
 	 * 
-	 * @param packageResourceStream
-	 *            the package resource stream to be read
+	 * @param resourceStream
+	 *            the resource stream to read
 	 * @param startbyte
 	 *            the start position to read from (if not null the number of bytes are skipped till
 	 *            the stream is read)
@@ -60,10 +60,10 @@ public class PartWriterCallback extends WriteCallback
 	 *            the end position to read to (if not null the stream is going to be read till
 	 *            endbyte, else to the end of the whole stream)
 	 */
-	public PartWriterCallback(PackageResourceStream packageResourceStream, Long startbyte,
+	public PartWriterCallback(IResourceStream resourceStream, Long startbyte,
 		Long endbyte)
 	{
-		this.packageResourceStream = packageResourceStream;
+		this.resourceStream = resourceStream;
 		this.startbyte = startbyte;
 		this.endbyte = endbyte;
 	}
@@ -71,7 +71,7 @@ public class PartWriterCallback extends WriteCallback
 	/**
 	 * Writes the data
 	 * 
-	 * @param Attributes
+	 * @param attributes
 	 *            the attributes to get the output stream of the response
 	 */
 	@Override
@@ -79,9 +79,9 @@ public class PartWriterCallback extends WriteCallback
 	{
 		try
 		{
-			InputStream inputStream = packageResourceStream.getInputStream();
+			InputStream inputStream = resourceStream.getInputStream();
 			OutputStream outputStream = attributes.getResponse().getOutputStream();
-			byte[] buffer = new byte[getBuffer()];
+			byte[] buffer = new byte[getBufferSize()];
 
 			if (startbyte != null || endbyte != null)
 			{
@@ -95,11 +95,11 @@ public class PartWriterCallback extends WriteCallback
 				// If there are no end bytes given read the whole stream till the end
 				if (endbyte == null)
 				{
-					endbyte = packageResourceStream.length().bytes();
+					endbyte = resourceStream.length().bytes();
 				}
 
 				long totalBytes = 0;
-				int actualReadBytes = 0;
+				int actualReadBytes;
 
 				while ((actualReadBytes = inputStream.read(buffer)) != -1)
 				{
@@ -107,7 +107,7 @@ public class PartWriterCallback extends WriteCallback
 					long lowerBuffer = endbyte - totalBytes;
 					if (lowerBuffer <= 0)
 					{
-						buffer = (byte[])resizeArray(buffer, actualReadBytes);
+						buffer = resizeArray(buffer, actualReadBytes);
 						outputStream.write(buffer);
 						break;
 					}
@@ -151,15 +151,14 @@ public class PartWriterCallback extends WriteCallback
 	 * @return A new array with the same contents.
 	 */
 	@SuppressWarnings("rawtypes")
-	private static Object resizeArray(Object oldArray, int newSize)
+	private static byte[] resizeArray(byte[] oldArray, int newSize)
 	{
-		int oldSize = java.lang.reflect.Array.getLength(oldArray);
-		Class elementType = oldArray.getClass().getComponentType();
-		Object newArray = java.lang.reflect.Array.newInstance(elementType, newSize);
-		int preserveLength = Math.min(oldSize, newSize);
-		if (preserveLength > 0)
+		int oldSize = oldArray.length;
+		byte[] newArray = new byte[newSize];
+		int minLength = Math.min(oldSize, newSize);
+		if (minLength > 0)
 		{
-			System.arraycopy(oldArray, 0, newArray, 0, preserveLength);
+			System.arraycopy(oldArray, 0, newArray, 0, minLength);
 		}
 		return newArray;
 	}
@@ -167,22 +166,22 @@ public class PartWriterCallback extends WriteCallback
 	/**
 	 * Sets the buffer size used to send the data to the client
 	 * 
-	 * @return the buffer size used to send the data to the client (default is 4048)
+	 * @return the buffer size used to send the data to the client (default is 4096)
 	 */
-	public Integer getBuffer()
+	public int getBufferSize()
 	{
-		return buffer != null ? buffer : 4048;
+		return bufferSize > 0 ? bufferSize : 4096;
 	}
 
 	/**
 	 * Sets the buffer size used to send the data to the client
 	 * 
-	 * @param buffer
+	 * @param bufferSize
 	 *            the buffer size used to send the data to the client
 	 */
-	public void setBuffer(Integer buffer)
+	public void setBufferSize(int bufferSize)
 	{
-		this.buffer = buffer;
+		this.bufferSize = bufferSize;
 	}
 
 }
