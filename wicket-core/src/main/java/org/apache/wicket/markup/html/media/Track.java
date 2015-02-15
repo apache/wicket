@@ -30,88 +30,72 @@ import org.apache.wicket.request.resource.ResourceReference;
  * media component
  * 
  * @author Tobias Soloschenko
- * 
  */
 public class Track extends WebMarkupContainer
 {
-
 	private static final long serialVersionUID = 1L;
 
 	private Kind kind;
 
 	private String label;
 
-	private Boolean defaultTrack;
+	private boolean defaultTrack;
 
 	private Locale srclang;
 
-	private ResourceReference resourceReference;
+	private final ResourceReference resourceReference;
 
-	private String url;
+	private final String url;
 
-	private PageParameters pageParameters;
+	private final PageParameters pageParameters;
 
 	public Track(String id)
 	{
-		super(id);
+		this(id, null, null, null, null);
 	}
 
 	public Track(String id, IModel<?> model)
 	{
-		super(id, model);
+		this(id, model, null, null, null);
 	}
 
 	public Track(String id, ResourceReference resourceReference)
 	{
-		this(id);
-		this.resourceReference = resourceReference;
+		this(id, null, null, null, resourceReference);
 	}
 
 	public Track(String id, IModel<?> model, ResourceReference resourceReference)
 	{
-		this(id, model);
-		this.resourceReference = resourceReference;
+		this(id, model, null, null, resourceReference);
 	}
 
 	public Track(String id, ResourceReference resourceReference, PageParameters pageParameters)
 	{
-		this(id);
-		this.resourceReference = resourceReference;
-		this.pageParameters = pageParameters;
+		this(id, null, null, pageParameters, resourceReference);
 	}
 
 	public Track(String id, IModel<?> model, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		this(id, model);
-		this.resourceReference = resourceReference;
-		this.pageParameters = pageParameters;
+		this(id, model, null, pageParameters, resourceReference);
 	}
 
 	public Track(String id, String url)
 	{
-		this(id);
-		this.url = url;
+		this(id, null, url, null, null);
 	}
 
 	public Track(String id, IModel<?> model, String url)
 	{
-		this(id, model);
-		this.url = url;
+		this(id, model, url, null, null);
 	}
 
-	public Track(String id, String url, PageParameters pageParameters)
+	private Track(String id, IModel<?> model, String url, PageParameters pageParameters, ResourceReference resourceReference)
 	{
-		this(id);
+		super(id, model);
 		this.url = url;
 		this.pageParameters = pageParameters;
-	}
-
-	public Track(String id, IModel<?> model, String url, PageParameters pageParameters)
-	{
-		this(id, model);
-		this.url = url;
-		this.pageParameters = pageParameters;
+		this.resourceReference = resourceReference;
 	}
 
 	@Override
@@ -124,23 +108,24 @@ public class Track extends WebMarkupContainer
 		{
 			tag.put("src", RequestCycle.get().urlFor(resourceReference, pageParameters));
 		}
-
-		if (url != null)
+		else if (url != null)
 		{
 			tag.put("src", url);
 		}
 
-		if (kind != null)
+		Kind _kind = getKind();
+		if (_kind != null)
 		{
-			tag.put("kind", kind.name());
+			tag.put("kind", _kind.name());
 		}
 
-		if (label != null)
+		String _label = getLabel();
+		if (_label != null)
 		{
-			tag.put("label", label);
+			tag.put("label", _label);
 		}
 
-		if (defaultTrack != null && defaultTrack)
+		if (defaultTrack)
 		{
 			tag.put("default", "default");
 		}
@@ -148,9 +133,10 @@ public class Track extends WebMarkupContainer
 		// if the srclang field is set use this, else if the
 		// resource reference provides a locale use the language
 		// of the resource reference
-		if (srclang != null)
+		Locale _srclang = getSrclang();
+		if (_srclang != null)
 		{
-			tag.put("srclang", srclang.getLanguage());
+			tag.put("srclang", _srclang.getLanguage());
 		}
 		else if (resourceReference != null && resourceReference.getLocale() != null)
 		{
@@ -193,8 +179,8 @@ public class Track extends WebMarkupContainer
 	 * <b>metadata</b>: Tracks intended for use from script. Not displayed by the user agent.<br>
 	 * <br>
 	 * 
-	 * @param the
-	 *            kind
+	 * @param kind
+	 *          the kind
 	 */
 	public void setKind(Kind kind)
 	{
@@ -227,9 +213,9 @@ public class Track extends WebMarkupContainer
 	 * 
 	 * @return if the track is the default track
 	 */
-	public Boolean getDefaultTrack()
+	public boolean isDefaultTrack()
 	{
-		return defaultTrack != null ? defaultTrack : false;
+		return defaultTrack;
 	}
 
 	/**

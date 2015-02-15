@@ -32,7 +32,6 @@ import org.apache.wicket.request.resource.ResourceReference;
  */
 public class Video extends MediaComponent
 {
-
 	private static final long serialVersionUID = 1L;
 
 	private Integer width;
@@ -87,35 +86,28 @@ public class Video extends MediaComponent
 		super(id, model, url);
 	}
 
-	public Video(String id, String url, PageParameters pageParameters)
-	{
-		super(id, url, pageParameters);
-	}
-
-	public Video(String id, IModel<?> model, String url, PageParameters pageParameters)
-	{
-		super(id, model, url, pageParameters);
-	}
-
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		checkComponentTag(tag, "video");
 		super.onComponentTag(tag);
 
-		if (width != null)
+		Integer _width = getWidth();
+		if (_width != null)
 		{
-			tag.put("width", width);
+			tag.put("width", _width);
 		}
 
-		if (height != null)
+		Integer _height = getHeight();
+		if (_height != null)
 		{
-			tag.put("height", height);
+			tag.put("height", _height);
 		}
 
-		if (poster != null)
+		ResourceReference _poster = getPoster();
+		if (_poster != null)
 		{
-			tag.put("poster", RequestCycle.get().urlFor(poster, posterPageParameters));
+			tag.put("poster", RequestCycle.get().urlFor(_poster, getPosterPageParameters()));
 		}
 	}
 

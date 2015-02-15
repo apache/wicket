@@ -27,11 +27,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * 
  * @author Tobias Soloschenko
  * @author Andrew Lombardi
- * 
  */
 public class Audio extends MediaComponent
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public Audio(String id)
@@ -76,16 +74,6 @@ public class Audio extends MediaComponent
 	public Audio(String id, IModel<?> model, String url)
 	{
 		super(id, model, url);
-	}
-
-	public Audio(String id, String url, PageParameters pageParameters)
-	{
-		super(id, url, pageParameters);
-	}
-
-	public Audio(String id, IModel<?> model, String url, PageParameters pageParameters)
-	{
-		super(id, model, url, pageParameters);
 	}
 
 	@Override
