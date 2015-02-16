@@ -19,6 +19,7 @@ package org.apache.wicket.resource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -37,7 +38,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  * @since 6.20.0
  * @author Tobias Soloschenko
  */
-public class CssUrlReplacer implements IScopeAwareTextResourceProcessor
+public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCompressor
 {
 	// The pattern to find URLs in CSS resources
 	private static final Pattern URL_PATTERN = Pattern.compile("url\\(['|\"]*(.*?)['|\"]*\\)");
