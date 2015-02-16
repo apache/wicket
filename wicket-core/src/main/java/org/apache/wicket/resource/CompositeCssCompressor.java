@@ -39,7 +39,6 @@ import org.apache.wicket.css.ICssCompressor;
  * 
  * @since 6.20.0
  * @author Tobias Soloschenko
- * 
  */
 public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor, ICssCompressor
 {

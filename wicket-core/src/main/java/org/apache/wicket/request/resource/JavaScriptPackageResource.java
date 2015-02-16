@@ -20,11 +20,12 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
+import org.apache.wicket.resource.IScopeAwareTextResourceProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Package resource for javascript files. It strips comments and whitespace from javascript.
+ * Package resource for javascript files.
  */
 public class JavaScriptPackageResource extends PackageResource
 {
@@ -32,19 +33,17 @@ public class JavaScriptPackageResource extends PackageResource
 
 	private static final Logger log = LoggerFactory.getLogger(JavaScriptPackageResource.class);
 
+	private final String name;
+
 	/**
 	 * Construct.
-	 * 
-	 * @param scope
-	 * @param name
-	 * @param locale
-	 * @param style
-	 * @param variation
 	 */
 	public JavaScriptPackageResource(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
 		super(scope, name, locale, style, variation);
+
+		this.name = name;
 
 		// JS resources can be compressed if there is configured IJavaScriptCompressor
 		setCompress(true);
@@ -62,7 +61,17 @@ public class JavaScriptPackageResource extends PackageResource
 			try
 			{
 				String nonCompressed = new String(processedResponse, "UTF-8");
-				return compressor.compress(nonCompressed).getBytes("UTF-8");
+				String output;
+				if (compressor instanceof IScopeAwareTextResourceProcessor)
+				{
+					IScopeAwareTextResourceProcessor scopeAwareProcessor = (IScopeAwareTextResourceProcessor)compressor;
+					output = scopeAwareProcessor.process(nonCompressed, getScope(), name);
+				}
+				else
+				{
+					output = compressor.compress(nonCompressed);
+				}
+				return output.getBytes();
 			}
 			catch (Exception e)
 			{
