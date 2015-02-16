@@ -35,13 +35,14 @@ import org.apache.wicket.css.ICssCompressor;
  * 
  * this.getResourceSettings().setCssCompressor(compositeCssCompressor);
  * </pre>
+ * 
  * The compressors can also be given as constructor arguments.
  * 
  * @since 6.20.0
  * @author Tobias Soloschenko
  * 
  */
-public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor
+public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor, ICssCompressor
 {
 	/* Compressors to compress the CSS content */
 	private final List<ICssCompressor> compressors = new ArrayList<>();
@@ -69,8 +70,8 @@ public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor
 		{
 			if (compressor instanceof IScopeAwareTextResourceProcessor)
 			{
-				IScopeAwareTextResourceProcessor processor = (IScopeAwareTextResourceProcessor) compressor;
-				processor.process(compressed, scope, name);
+				IScopeAwareTextResourceProcessor processor = (IScopeAwareTextResourceProcessor)compressor;
+				compressed = processor.process(compressed, scope, name);
 			}
 			else
 			{
@@ -83,7 +84,8 @@ public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor
 	@Override
 	public String compress(String original)
 	{
-		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName() + ".process() should be used instead!");
+		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName() +
+			".process() should be used instead!");
 	}
 
 	/**

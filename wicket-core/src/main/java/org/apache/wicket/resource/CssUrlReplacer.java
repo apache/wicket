@@ -19,14 +19,15 @@ package org.apache.wicket.resource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * This compressor is used to replace url within css files with resources that belongs to their
- * corresponding component classes. The compress method is not compressing any content, but replacing the
- * URLs with Wicket representatives.<br>
+ * corresponding component classes. The compress method is not compressing any content, but
+ * replacing the URLs with Wicket representatives.<br>
  * <br>
  * Usage:
  * 
@@ -37,7 +38,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  * @since 6.20.0
  * @author Tobias Soloschenko
  */
-public class CssUrlReplacer implements IScopeAwareTextResourceProcessor
+public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCompressor
 {
 	// The pattern to find URLs in CSS resources
 	private static final Pattern URL_PATTERN = Pattern.compile("url\\(['|\"]*(.*?)['|\"]*\\)");
@@ -70,7 +71,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor
 				// relativize against the url for the containing CSS file
 				Url cssUrlCopy = new Url(cssUrl);
 				cssUrlCopy.resolveRelative(imageCandidateUrl);
-				PackageResourceReference imageReference = new PackageResourceReference(scope, cssUrlCopy.toString());
+				PackageResourceReference imageReference = new PackageResourceReference(scope,
+					cssUrlCopy.toString());
 				processedUrl = cycle.urlFor(imageReference, null);
 
 			}
@@ -83,6 +85,7 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor
 	@Override
 	public String compress(String original)
 	{
-		throw new UnsupportedOperationException(CssUrlReplacer.class.getSimpleName() + ".process() should be used instead!");
+		throw new UnsupportedOperationException(CssUrlReplacer.class.getSimpleName() +
+			".process() should be used instead!");
 	}
 }
