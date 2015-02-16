@@ -140,7 +140,18 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	{
 		return getChild().determineVisibility();
 	}
-
+	
+	@Override
+	protected void onConfigure()
+	{
+		super.onConfigure();
+		final Component child = getChild();
+		
+		child.configure();
+		boolean childVisible = child.determineVisibility();
+		
+		setVisible(childVisible);
+	}
 
 	@Override
 	protected void onDetach()
@@ -239,12 +250,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
-		// only resolved when auto, not when queued
-		// if (!isAuto())
-		// {
-		// return null;
-		// }
-
 		if (childId.equals(tag.getId()))
 		{
 			return childComponent;
