@@ -72,7 +72,11 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 			@Override
 			protected ResourceResponse newResourceResponse(Attributes attributes)
 			{
-				IResourceStream packageResourceStream = getResourceStream();
+				IResourceStream resourceStream = getResourceStream();
+				if (resourceStream == null)
+				{
+					throw new WicketRuntimeException("Cannot find resource: " + toString());
+				}
 				Long startbyte = null;
 				Long endbyte = null;
 				try
@@ -83,19 +87,20 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 					if (!(request instanceof WebRequest) || !(response instanceof WebResponse))
 					{
 						throw new IllegalStateException(
-							"Web request/response are required! Request: " + request + ", response: " + response);
+							"Web request/response are required! Request: " + request +
+								", response: " + response);
 					}
 
 					WebRequest webRequest = (WebRequest)request;
 					WebResponse webResponse = (WebResponse)response;
 
-					long length = packageResourceStream.length().bytes();
+					long length = resourceStream.length().bytes();
 
 					ResourceResponse resourceResponse = new ResourceResponse();
-					resourceResponse.setContentType(packageResourceStream.getContentType());
+					resourceResponse.setContentType(resourceStream.getContentType());
 					resourceResponse.setFileName(MediaStreamingResourceReference.this.getName());
 					resourceResponse.setContentDisposition(ContentDisposition.ATTACHMENT);
-					resourceResponse.setLastModified(packageResourceStream.lastModifiedTime());
+					resourceResponse.setLastModified(resourceStream.lastModifiedTime());
 
 					// accept ranges, so that the player can
 					// load and play content from a specific byte position
@@ -123,8 +128,8 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 						String[] rangeParts = Strings.split(range, '-');
 						if ("0".equals(rangeParts[0]))
 						{
-							webResponse.setHeader("Content-Range",
-									"bytes 0-" + (length - 1) + "/" + length);
+							webResponse.setHeader("Content-Range", "bytes 0-" + (length - 1) + "/" +
+								length);
 							resourceResponse.setContentLength(length);
 						}
 						else
@@ -132,21 +137,28 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 							startbyte = Long.parseLong(rangeParts[0]);
 							if (rangeParts.length == 2)
 							{
-								endbyte = Long.parseLong(rangeParts[1]);
+								if (!"".equals(rangeParts[1].trim()))
+								{
+									endbyte = Long.parseLong(rangeParts[1]);
+								}
+								else
+								{
+									endbyte = length - 1;
+								}
 							}
 							else
 							{
 								endbyte = length - 1;
 							}
-							webResponse.setHeader("Content-Range",
-									"bytes " + startbyte + '-' + endbyte + '/' + length);
+							webResponse.setHeader("Content-Range", "bytes " + startbyte + '-' +
+								endbyte + '/' + length);
 							resourceResponse.setContentLength((endbyte - startbyte) + 1);
 						}
 					}
 
 					// Apply the writer callback to send the requested part to the client
-					resourceResponse.setWriteCallback(new PartWriterCallback(
-						packageResourceStream, startbyte, endbyte));
+					resourceResponse.setWriteCallback(new PartWriterCallback(resourceStream,
+						startbyte, endbyte));
 
 					return resourceResponse;
 				}
@@ -157,11 +169,11 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 				}
 				finally
 				{
-					if (packageResourceStream != null)
+					if (resourceStream != null)
 					{
 						try
 						{
-							packageResourceStream.close();
+							resourceStream.close();
 						}
 						catch (IOException e)
 						{

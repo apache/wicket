@@ -76,6 +76,16 @@ public class Audio extends MediaComponent
 		super(id, model, url);
 	}
 
+	public Audio(String id, String url, PageParameters pageParameters)
+	{
+		super(id, null, url, pageParameters);
+	}
+
+	public Audio(String id, IModel<?> model, String url, PageParameters pageParameters)
+	{
+		super(id, model, url, pageParameters);
+	}
+
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{

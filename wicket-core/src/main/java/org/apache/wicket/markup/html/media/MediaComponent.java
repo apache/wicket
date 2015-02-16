@@ -19,8 +19,10 @@ package org.apache.wicket.markup.html.media;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 
 /**
  * The media component is used to provide basic functionality to the video and audio component. The
@@ -106,7 +108,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * Constructor.
 	 *
 	 * @param id
-	 *          The component id
+	 *            The component id
 	 */
 	public MediaComponent(String id)
 	{
@@ -117,9 +119,9 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * Constructor.
 	 *
 	 * @param id
-	 *          The component id
+	 *            The component id
 	 * @param model
-	 *          The component model
+	 *            The component model
 	 */
 	public MediaComponent(String id, IModel<?> model)
 	{
@@ -130,12 +132,12 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * Constructor.
 	 *
 	 * @param id
-	 *          The component id
+	 *            The component id
 	 * @param mediaStreamingResourceReference
 	 */
 	public MediaComponent(String id, MediaStreamingResourceReference mediaStreamingResourceReference)
 	{
-		this(id, null, null, null,mediaStreamingResourceReference);
+		this(id, null, null, null, mediaStreamingResourceReference);
 	}
 
 	public MediaComponent(String id, IModel<?> model,
@@ -168,8 +170,13 @@ public abstract class MediaComponent extends WebMarkupContainer
 		this(id, model, url, null, null);
 	}
 
+	public MediaComponent(String id, IModel<?> model, String url, PageParameters pageParameters)
+	{
+		this(id, model, url, pageParameters, null);
+	}
+
 	private MediaComponent(String id, IModel<?> model, String url, PageParameters pageParameters,
-	                       MediaStreamingResourceReference mediaStreamingResourceReference)
+		MediaStreamingResourceReference mediaStreamingResourceReference)
 	{
 		super(id, model);
 		this.url = url;
@@ -187,18 +194,20 @@ public abstract class MediaComponent extends WebMarkupContainer
 		String timeManagement = "";
 		if (startTime != null)
 		{
-			timeManagement += "#t=" + startTime +
-				(endTime != null ? "," + endTime : "");
+			timeManagement += "#t=" + startTime + (endTime != null ? "," + endTime : "");
 		}
 
 		if (mediaStreamingResourceReference != null)
 		{
-			CharSequence urlToMediaReference = RequestCycle.get().urlFor(mediaStreamingResourceReference, pageParameters);
+			CharSequence urlToMediaReference = RequestCycle.get().urlFor(
+				mediaStreamingResourceReference, pageParameters);
 			tag.put("src", urlToMediaReference + timeManagement);
 		}
 		else if (url != null)
 		{
-			tag.put("src", url + timeManagement);
+			Url encoded = new PageParametersEncoder().encodePageParameters(pageParameters);
+			String queryString = encoded.getQueryString();
+			tag.put("src", url + (queryString != null ? "?" + queryString : "") + timeManagement);
 		}
 
 		String mg = getMediaGroup();
@@ -339,12 +348,12 @@ public abstract class MediaComponent extends WebMarkupContainer
 	/**
 	 * Sets the type of preload.
 	 * <ul>
-	 * <li><b>none</b>: Hints to the user agent that either the author does not expect the user to need
-	 * the media resource, or that the server wants to minimise unnecessary traffic.</li>
+	 * <li><b>none</b>: Hints to the user agent that either the author does not expect the user to
+	 * need the media resource, or that the server wants to minimise unnecessary traffic.</li>
 	 *
-	 * <li><b>metadata</b>: Hints to the user agent that the author does not expect the user to need the
-	 * media resource, but that fetching the resource metadata (dimensions, first frame, track list,
-	 * duration, etc) is reasonable.</li>
+	 * <li><b>metadata</b>: Hints to the user agent that the author does not expect the user to need
+	 * the media resource, but that fetching the resource metadata (dimensions, first frame, track
+	 * list, duration, etc) is reasonable.</li>
 	 *
 	 * <li><b>auto</b>: Hints to the user agent that the user agent can put the user's needs first
 	 * without risk to the server, up to and including optimistically downloading the entire
