@@ -41,7 +41,7 @@ import org.apache.wicket.css.ICssCompressor;
  * @author Tobias Soloschenko
  * 
  */
-public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor
+public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor, ICssCompressor
 {
 	/* Compressors to compress the CSS content */
 	private final List<ICssCompressor> compressors = new ArrayList<>();
@@ -69,8 +69,8 @@ public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor
 		{
 			if (compressor instanceof IScopeAwareTextResourceProcessor)
 			{
-				IScopeAwareTextResourceProcessor processor = (IScopeAwareTextResourceProcessor) compressor;
-				processor.process(compressed, scope, name);
+				IScopeAwareTextResourceProcessor processor = (IScopeAwareTextResourceProcessor)compressor;
+				compressed = processor.process(compressed, scope, name);
 			}
 			else
 			{
