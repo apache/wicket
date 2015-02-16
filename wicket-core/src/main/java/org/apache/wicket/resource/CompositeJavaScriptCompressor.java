@@ -40,9 +40,8 @@ import org.apache.wicket.javascript.IJavaScriptCompressor;
  * 
  * @since 6.20.0
  * @author Tobias Soloschenko
- *
  */
-public class CompositeJavaScriptCompressor implements IJavaScriptCompressor
+public class CompositeJavaScriptCompressor implements IScopeAwareTextResourceProcessor, IJavaScriptCompressor
 {
 	/* Compressors to compress javascript content */
 	private final List<IJavaScriptCompressor> compressors = new ArrayList<IJavaScriptCompressor>();
@@ -65,14 +64,29 @@ public class CompositeJavaScriptCompressor implements IJavaScriptCompressor
 	 * given the original content is going to be returned.
 	 */
 	@Override
-	public String compress(String original)
+	public String process(String input, Class<?> scope, String name)
 	{
-		String compressed = original;
+		String compressed = input;
 		for (IJavaScriptCompressor compressor : compressors)
 		{
-			compressed = compressor.compress(compressed);
+			if (compressor instanceof IScopeAwareTextResourceProcessor)
+			{
+				IScopeAwareTextResourceProcessor processor = (IScopeAwareTextResourceProcessor)compressor;
+				compressed = processor.process(compressed, scope, name);
+			}
+			else
+			{
+				compressed = compressor.compress(compressed);
+			}
 		}
 		return compressed;
+	}
+
+	@Override
+	public String compress(String original)
+	{
+		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName() +
+				".process() should be used instead!");
 	}
 
 	/**
