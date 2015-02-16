@@ -86,6 +86,16 @@ public class Video extends MediaComponent
 		super(id, model, url);
 	}
 
+	public Video(String id, String url, PageParameters pageParameters)
+	{
+		super(id, null, url, pageParameters);
+	}
+
+	public Video(String id, IModel<?> model, String url, PageParameters pageParameters)
+	{
+		super(id, model, url, pageParameters);
+	}
+
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
