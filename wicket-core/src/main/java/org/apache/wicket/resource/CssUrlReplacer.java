@@ -26,8 +26,8 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * This compressor is used to replace url within css files with resources that belongs to their
- * corresponding component classes. The compress method is not compressing any content, but replacing the
- * URLs with Wicket representatives.<br>
+ * corresponding component classes. The compress method is not compressing any content, but
+ * replacing the URLs with Wicket representatives.<br>
  * <br>
  * Usage:
  * 
@@ -71,7 +71,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 				// relativize against the url for the containing CSS file
 				Url cssUrlCopy = new Url(cssUrl);
 				cssUrlCopy.resolveRelative(imageCandidateUrl);
-				PackageResourceReference imageReference = new PackageResourceReference(scope, cssUrlCopy.toString());
+				PackageResourceReference imageReference = new PackageResourceReference(scope,
+					cssUrlCopy.toString());
 				processedUrl = cycle.urlFor(imageReference, null);
 
 			}
@@ -84,6 +85,7 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	@Override
 	public String compress(String original)
 	{
-		throw new UnsupportedOperationException(CssUrlReplacer.class.getSimpleName() + ".process() should be used instead!");
+		throw new UnsupportedOperationException(CssUrlReplacer.class.getSimpleName() +
+			".process() should be used instead!");
 	}
 }

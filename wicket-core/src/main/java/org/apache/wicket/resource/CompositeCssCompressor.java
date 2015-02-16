@@ -35,6 +35,7 @@ import org.apache.wicket.css.ICssCompressor;
  * 
  * this.getResourceSettings().setCssCompressor(compositeCssCompressor);
  * </pre>
+ * 
  * The compressors can also be given as constructor arguments.
  * 
  * @since 6.20.0
@@ -82,7 +83,8 @@ public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor,
 	@Override
 	public String compress(String original)
 	{
-		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName() + ".process() should be used instead!");
+		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName() +
+			".process() should be used instead!");
 	}
 
 	/**
