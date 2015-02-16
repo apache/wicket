@@ -142,7 +142,18 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	{
 		return childComponent.determineVisibility() && super.isVisible();
 	}
-
+	
+	@Override
+	protected void onConfigure()
+	{
+		super.onConfigure();
+		final Component child = getChild();
+		
+		child.configure();
+		boolean childVisible = child.determineVisibility();
+		
+		setVisible(childVisible);
+	}
 	/**
 	 * Get the real parent container
 	 * 
