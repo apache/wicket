@@ -85,7 +85,6 @@ public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 					Component component = entry.getValue();
 					if (isControllerOfEnclosure(component, enclosure))
 					{
-						enclosure.updateVisibility();
 						target.add(enclosure);
 						visit.dontGoDeeper();
 						keysToRemove.add(componentId);

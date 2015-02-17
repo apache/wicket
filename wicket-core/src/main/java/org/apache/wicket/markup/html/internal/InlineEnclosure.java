@@ -59,16 +59,4 @@ public class InlineEnclosure extends Enclosure
 
 		super.onComponentTag(tag);
 	}
-
-	/**
-	 * Update the visibility of this In-line enclosure with that of the controlling child.
-	 * 
-	 * @return the new visibility setting.
-	 */
-	public boolean updateVisibility()
-	{
-		boolean visible = getChild().determineVisibility();
-		setVisible(visible);
-		return visible;
-	}
 }
