@@ -204,6 +204,7 @@
 					<include>**/*.txt</include>
 					<include>**/*.xml</include>
 					<include>**/*.properties</include>
+					<include>**/*.mp4</include>
 				</includes>
 			</resource>
 			<resource>
