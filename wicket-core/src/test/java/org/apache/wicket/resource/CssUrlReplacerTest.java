@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.image.ImageTest;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
@@ -139,6 +140,19 @@ public class CssUrlReplacerTest extends WicketTestCase
 			processed,
 			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/css/images/some.img" +
 				DECORATION_SUFFIX + "');}"));
+	}
+
+	@Test
+	public void base64EncodedImage()
+	{
+		String input = ".class {background-image: url('Beer.gif?embeddBase64');}";
+		Class<?> scope = ImageTest.class;
+		String cssRelativePath = "some.css";
+		CssUrlReplacer replacer = new CssUrlReplacer();
+		String processed = replacer.process(input, scope, cssRelativePath);
+		assertThat(
+			processed,
+			containsString(".class {background-image: url(data:image/gif;base64,R0lGODlh1wATAXAAACH5BAEAAP8ALAAAAADXA"));
 	}
 
 	@Test
