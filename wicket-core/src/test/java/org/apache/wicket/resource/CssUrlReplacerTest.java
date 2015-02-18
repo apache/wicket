@@ -145,7 +145,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 	@Test
 	public void base64EncodedImage()
 	{
-		String input = ".class {background-image: url('Beer.gif?embeddBase64');}";
+		String input = ".class {background-image: url('Beer.gif?embedBase64');}";
 		Class<?> scope = ImageTest.class;
 		String cssRelativePath = "some.css";
 		CssUrlReplacer replacer = new CssUrlReplacer();

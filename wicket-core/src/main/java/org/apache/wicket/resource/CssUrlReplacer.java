@@ -49,6 +49,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	// The pattern to find URLs in CSS resources
 	private static final Pattern URL_PATTERN = Pattern.compile("url\\(['|\"]*(.*?)['|\"]*\\)");
 
+	private static final String EMBED_BASE64 = "embedBase64";
+
 	/**
 	 * Replaces the URLs of CSS resources with Wicket representatives.
 	 */
@@ -83,11 +85,11 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 
 				// if the image should be processed as URL or base64 embedded
 				if (cssUrlCopy.getQueryString() != null &&
-					cssUrlCopy.getQueryString().contains("embeddBase64"))
+					cssUrlCopy.getQueryString().contains(EMBED_BASE64))
 				{
 					embedded = true;
 					PackageResourceReference imageReference = new PackageResourceReference(scope,
-						cssUrlCopy.toString().replace("?embeddBase64", ""));
+						cssUrlCopy.toString().replace("?" + EMBED_BASE64, ""));
 					try
 					{
 						processedUrl = createBase64EncodedImage(imageReference);
