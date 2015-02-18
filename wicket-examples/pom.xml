@@ -222,6 +222,7 @@
 					<include>**/*.properties</include>
 					<include>**/*.vm</include>
 					<include>**/*.tmpl</include>
+					<include>**/*.mp4</include>
 				</includes>
 			</resource>
 		</resources>
