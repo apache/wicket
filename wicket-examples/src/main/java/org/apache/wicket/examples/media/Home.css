@@ -1,0 +1,16 @@
+video{
+	float:left;
+	height:240px;
+	width:320px;
+	margin-bottom:10px;
+	margin-right:10px;
+}
+.videoDescription{
+	float:left;
+	height:240px;
+	width:300px;
+	margin-bottom:10px;
+}
+.clearer{
+	clear:both;
+}
