@@ -169,17 +169,14 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 				}
 				finally
 				{
-					if (resourceStream != null)
+					try
 					{
-						try
-						{
-							resourceStream.close();
-						}
-						catch (IOException e)
-						{
-							throw new WicketRuntimeException(
-								"A problem occurred while closing the video response stream.", e);
-						}
+						resourceStream.close();
+					}
+					catch (IOException e)
+					{
+						throw new WicketRuntimeException(
+							"A problem occurred while closing the video response stream.", e);
 					}
 				}
 			}
