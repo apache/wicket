@@ -36,10 +36,10 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	private static final Logger logger = LoggerFactory.getLogger(DefaultAuthenticationStrategy.class);
 
 	/** The cookie name to store the username and password */
-	private final String cookieKey;
+	protected final String cookieKey;
 
 	/** The separator used to concatenate the username and password */
-	private final String VALUE_SEPARATOR = "-sep-";
+	protected final String VALUE_SEPARATOR = "-sep-";
 
 	/** Cookie utils with default settings */
 	private CookieUtils cookieUtils;
@@ -106,25 +106,36 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 				getCookieUtils().remove(cookieKey);
 				value = null;
 			}
-			if (Strings.isEmpty(value) == false)
-			{
-				String username = null;
-				String password = null;
-
-				String[] values = value.split(VALUE_SEPARATOR);
-				if ((values.length > 0) && (Strings.isEmpty(values[0]) == false))
-				{
-					username = values[0];
-				}
-				if ((values.length > 1) && (Strings.isEmpty(values[1]) == false))
-				{
-					password = values[1];
-				}
-
-				return new String[] { username, password };
-			}
+			return decode(value);
 		}
 
+		return null;
+	}
+
+	/**
+	 * This method will decode decrypted cookie value based on application needs
+	 *
+	 * @param value decrypted cookie value
+	 * @return decomposed values array, or null in case cookie value was empty.
+	 */
+	protected String[] decode(String value) {
+		if (Strings.isEmpty(value) == false)
+		{
+			String username = null;
+			String password = null;
+
+			String[] values = value.split(VALUE_SEPARATOR);
+			if ((values.length > 0) && (Strings.isEmpty(values[0]) == false))
+			{
+				username = values[0];
+			}
+			if ((values.length > 1) && (Strings.isEmpty(values[1]) == false))
+			{
+				password = values[1];
+			}
+
+			return new String[] { username, password };
+		}
 		return null;
 	}
 
