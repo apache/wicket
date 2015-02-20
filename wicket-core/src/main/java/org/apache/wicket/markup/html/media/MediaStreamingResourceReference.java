@@ -77,8 +77,6 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 				{
 					throw new WicketRuntimeException("Cannot find resource: " + toString());
 				}
-				Long startbyte = null;
-				Long endbyte = null;
 				try
 				{
 					Request request = attributes.getRequest();
@@ -105,6 +103,9 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 					// accept ranges, so that the player can
 					// load and play content from a specific byte position
 					webResponse.setHeader("Accept-Range", "bytes");
+
+					Long startbyte = null;
+					Long endbyte = null;
 
 					// Calculating the response code and the byte range to be played
 					String rangeHeader = webRequest.getHeader("range");

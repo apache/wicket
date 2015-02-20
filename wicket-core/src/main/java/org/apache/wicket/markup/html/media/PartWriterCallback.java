@@ -24,6 +24,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
 import org.apache.wicket.request.resource.IResource.Attributes;
+import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.IResourceStream;
 
 /**
@@ -119,10 +120,7 @@ public class PartWriterCallback extends WriteCallback
 			}
 			else
 			{
-				while (inputStream.read(buffer) != -1)
-				{
-					outputStream.write(buffer);
-				}
+				Streams.copy(inputStream, outputStream);
 			}
 		}
 		catch (ResponseIOException e)
