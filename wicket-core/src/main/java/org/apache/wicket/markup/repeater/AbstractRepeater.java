@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.repeater;
 
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.DequeueContext;
@@ -53,8 +53,6 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractRepeater.class);
-
-	private static Pattern SAFE_CHILD_ID_PATTERN = Pattern.compile("^\\d+$");
 
 	/**
 	 * Constructor
@@ -127,20 +125,19 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 
 		if (getApplication().usesDevelopmentConfig())
 		{
+			Set<String> usedComponentIds = new HashSet<>();
 			Iterator<? extends Component> i = iterator();
 			while (i.hasNext())
 			{
 				Component c = i.next();
-				Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
-				if (!matcher.matches())
+				String componentId = c.getId();
+				if (usedComponentIds.add(componentId) == false)
 				{
-					log.warn("Child component of repeater " + getClass().getName() + ":" + getId() +
-						" has a non-safe child id of " + c.getId() +
-						". Safe child ids must be composed of digits only.");
+					log.warn("Repeater '{}' has multiple children with the same component id: '{}'",
+							getPageRelativePath(), componentId);
 					// do not flood the log
 					break;
 				}
-
 			}
 		}
 		super.onBeforeRender();
