@@ -283,7 +283,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 	boolean getRecreateMountedPagesAfterExpiry()
 	{
-		return WebApplication.get().getPageSettings().getRecreateMountedPagesAfterExpiry();
+		return WebApplication.get().getPageSettings().getRecreateBookmarkablePagesAfterExpiry();
 	}
 
 	/**

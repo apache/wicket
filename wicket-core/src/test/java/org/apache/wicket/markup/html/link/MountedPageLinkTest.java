@@ -102,13 +102,13 @@ public class MountedPageLinkTest extends WicketTestCase
 
 	/**
 	 * Tests if the {@link PageInstanceMapper} is used if
-	 * {@link org.apache.wicket.settings.PageSettings#getRecreateMountedPagesAfterExpiry()}
+	 * {@link org.apache.wicket.settings.PageSettings#getRecreateBookmarkablePagesAfterExpiry()}
 	 * is disabled
 	 */
 	@Test
 	public void testLinkOnPageWithRecreationDisabled()
 	{
-		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
+		tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
 		PageWithLink page = tester.startPage(PageWithLink.class,
 			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");
@@ -123,7 +123,7 @@ public class MountedPageLinkTest extends WicketTestCase
 	@Test(expected = PageExpiredException.class)
 	public void testExpiredPageWithRecreationDisabled()
 	{
-		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
+		tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
 		PageWithLink page = tester.startPage(PageWithLink.class,
 			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");

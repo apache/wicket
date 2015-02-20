@@ -74,7 +74,7 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 	@Test(expected = PageExpiredException.class)
 	public void itFailsToProcessAnExpiredPageIfShouldNotRecreateMountedPagesAfterExpiry()
 	{
-		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
+		tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
 		AbstractBookmarkableMapperStub mapper = new AbstractBookmarkableMapperStub();
 		mapper.processHybrid(new PageInfo(EXPIRED_ID), MockPage.class, null, NOT_RENDERED_COUNT);
 		Assert.fail("it shouldn't process expired pages if the app was flagged to not recreated mounted pages after expiry");
