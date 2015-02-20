@@ -57,7 +57,6 @@ public class Connections
 
 		// otherwise open the url and proceed
 		URLConnection connection = url.openConnection();
-		connection.setDoInput(false);
 
 		final long milliseconds;
 
