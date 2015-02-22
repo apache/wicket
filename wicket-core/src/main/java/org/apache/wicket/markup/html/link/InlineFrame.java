@@ -162,8 +162,8 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		/*
 		 * TODO optimization: the inlineframe component does not always have to be stateless.
 		 * 
-		 * unfortunately due to current implementation always using ipagelink and a ilinklistener
-		 * callback it has to always be stateful because it can be put inside a listview item which
+		 * unfortunately due to current implementation of using a ILinkListener
+		 * callback it has to always be stateful because it can be put inside a ListView item which
 		 * will not be built upon a stateless callback causing a "component at path
 		 * listview:0:iframe not found" error.
 		 * 
