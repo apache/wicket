@@ -120,7 +120,7 @@ public class PartWriterCallback extends WriteCallback
 			}
 			else
 			{
-				Streams.copy(inputStream, outputStream);
+				Streams.copy(inputStream, outputStream, getBufferSize());
 			}
 		}
 		catch (ResponseIOException e)
