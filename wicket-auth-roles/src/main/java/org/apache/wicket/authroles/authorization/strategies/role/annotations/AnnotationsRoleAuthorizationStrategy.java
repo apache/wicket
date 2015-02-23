@@ -22,6 +22,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.AbstractRoleAut
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
 
 
 /**
@@ -139,5 +141,23 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public boolean isResourceAuthorized(IResource resource, PageParameters pageParameters)
+	{
+		return checkResource(resource.getClass().getAnnotation(AuthorizeResource.class)) || checkResource(
+				resource.getClass().getPackage().getAnnotation(AuthorizeResource.class));
+	}
+
+	private boolean checkResource(AuthorizeResource annotation)
+	{
+		if (annotation != null)
+		{
+			return hasAny(new Roles(annotation.value()));
+		} else
+		{
+			return false;
+		}
 	}
 }
