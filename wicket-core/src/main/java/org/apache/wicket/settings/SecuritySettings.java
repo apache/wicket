@@ -23,7 +23,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
-import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.lang.Args;
 
@@ -107,15 +107,7 @@ public class SecuritySettings
 	{
 		if (cryptFactory == null)
 		{
-			System.err
-				.print("********************************************************************\n"
-					+ "*** WARNING: Wicket is using a DEFAULT_ENCRYPTION_KEY            ***\n"
-					+ "***                            ^^^^^^^^^^^^^^^^^^^^^^            ***\n"
-					+ "*** Do NOT deploy to your live server(s) without changing this.  ***\n"
-					+ "*** See SecuritySettings#setCryptFactory() for more information. ***\n"
-					+ "********************************************************************\n");
-
-			cryptFactory = new CachingSunJceCryptFactory(DEFAULT_ENCRYPTION_KEY);
+			cryptFactory = new KeyInSessionSunJceCryptFactory();
 		}
 		return cryptFactory;
 	}
