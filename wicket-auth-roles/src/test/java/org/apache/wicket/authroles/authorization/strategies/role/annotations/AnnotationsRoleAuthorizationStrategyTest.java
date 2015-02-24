@@ -32,7 +32,9 @@ import org.mockito.Mockito;
  */
 public class AnnotationsRoleAuthorizationStrategyTest
 {
-
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3974
+	 */
 	@Test
 	public void allowsRenderWithRequiredRoleAndNoDeniedRole()
 	{

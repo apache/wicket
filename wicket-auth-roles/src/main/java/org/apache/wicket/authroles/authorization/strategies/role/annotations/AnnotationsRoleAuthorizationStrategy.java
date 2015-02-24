@@ -146,8 +146,9 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	@Override
 	public boolean isResourceAuthorized(IResource resource, PageParameters pageParameters)
 	{
-		return checkResource(resource.getClass().getAnnotation(AuthorizeResource.class)) || checkResource(
-				resource.getClass().getPackage().getAnnotation(AuthorizeResource.class));
+		Class<? extends IResource> resourceClass = resource.getClass();
+		return checkResource(resourceClass.getAnnotation(AuthorizeResource.class)) || checkResource(
+				resourceClass.getPackage().getAnnotation(AuthorizeResource.class));
 	}
 
 	private boolean checkResource(AuthorizeResource annotation)
@@ -155,7 +156,8 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		if (annotation != null)
 		{
 			return hasAny(new Roles(annotation.value()));
-		} else
+		}
+		else
 		{
 			return false;
 		}

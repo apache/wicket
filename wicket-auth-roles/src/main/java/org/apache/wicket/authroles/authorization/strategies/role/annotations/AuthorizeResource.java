@@ -16,7 +16,12 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation for configuring what roles are allowed for requesting the annotated resource. It works analogously
