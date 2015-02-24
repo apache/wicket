@@ -127,34 +127,18 @@ public class MediaStreamingResourceReference extends PackageResourceReference
 						String range = rangeHeader.substring(rangeHeader.indexOf('=') + 1,
 							rangeHeader.length());
 						String[] rangeParts = Strings.split(range, '-');
-						if ("0".equals(rangeParts[0]))
-						{
-							webResponse.setHeader("Content-Range", "bytes 0-" + (length - 1) + "/" +
-								length);
-							resourceResponse.setContentLength(length);
-						}
-						else
-						{
-							startbyte = Long.parseLong(rangeParts[0]);
-							if (rangeParts.length == 2)
-							{
-								if (!"".equals(rangeParts[1].trim()))
-								{
-									endbyte = Long.parseLong(rangeParts[1]);
-								}
-								else
-								{
-									endbyte = length - 1;
-								}
-							}
-							else
-							{
-								endbyte = length - 1;
-							}
-							webResponse.setHeader("Content-Range", "bytes " + startbyte + '-' +
-								endbyte + '/' + length);
-							resourceResponse.setContentLength((endbyte - startbyte) + 1);
-						}
+
+						String startByteString = rangeParts[0];
+						String endByteString = rangeParts[1];
+
+						startbyte = startByteString != null && !startByteString.trim().equals("")
+							? Long.parseLong(startByteString) : 0;
+						endbyte = endByteString != null && !endByteString.trim().equals("")
+							? Long.parseLong(endByteString) : length - 1;
+
+						webResponse.setHeader("Content-Range", "bytes " + startbyte + '-' +
+							endbyte + '/' + length);
+						resourceResponse.setContentLength((endbyte - startbyte) + 1);
 					}
 
 					// Apply the writer callback to send the requested part to the client

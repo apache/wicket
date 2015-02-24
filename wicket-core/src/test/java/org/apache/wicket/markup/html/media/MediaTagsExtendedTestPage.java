@@ -41,7 +41,7 @@ public class MediaTagsExtendedTestPage extends WebPage
 		
 		// tack tag
 		Track track = new Track("track", new PackageResourceReference(MediaTagsTestPage.class,"dummySubtitles.vtt"));
-		track.setKind(Kind.subtitles);
+		track.setKind(Kind.SUBTITLES);
 		track.setLabel("Subtitles of video");
 		track.setSrclang(Locale.GERMANY);
 		track.setDefaultTrack(true);

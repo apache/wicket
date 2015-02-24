@@ -35,6 +35,27 @@ public class Track extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * To be used for the kind attribute
+	 */
+	public enum Kind
+	{
+		SUBTITLES("subtitles"), CAPTIONS("captions"), DESCRIPTIONS("descriptions"), CHAPTERS(
+			"chapters"), METADATA("metadata");
+
+		private String realName;
+
+		Kind(String realName)
+		{
+			this.realName = realName;
+		}
+
+		public String getRealName()
+		{
+			return realName;
+		}
+	}
+
 	private Kind kind;
 
 	private String label;
@@ -90,7 +111,8 @@ public class Track extends WebMarkupContainer
 		this(id, model, url, null, null);
 	}
 
-	private Track(String id, IModel<?> model, String url, PageParameters pageParameters, ResourceReference resourceReference)
+	private Track(String id, IModel<?> model, String url, PageParameters pageParameters,
+		ResourceReference resourceReference)
 	{
 		super(id, model);
 		this.url = url;
@@ -116,7 +138,7 @@ public class Track extends WebMarkupContainer
 		Kind _kind = getKind();
 		if (_kind != null)
 		{
-			tag.put("kind", _kind.name());
+			tag.put("kind", _kind.getRealName());
 		}
 
 		String _label = getLabel();
@@ -159,28 +181,28 @@ public class Track extends WebMarkupContainer
 	/**
 	 * Sets the kind of the track belongs to the media component<br>
 	 * <br>
-	 * <b>subtitles</b>: Transcription or translation of the dialogue, suitable for when the sound
+	 * <b>SUBTITLES</b>: Transcription or translation of the dialogue, suitable for when the sound
 	 * is available but not understood (e.g. because the user does not understand the language of
 	 * the media resource's soundtrack). Displayed over the video.<br>
 	 * <br>
-	 * <b>captions</b>: Transcription or translation of the dialogue, sound effects, relevant
+	 * <b>CAPTIONS</b>: Transcription or translation of the dialogue, sound effects, relevant
 	 * musical cues, and other relevant audio information, suitable for when the soundtrack is
 	 * unavailable (e.g. because it is muted or because the user is deaf). Displayed over the video;
 	 * labeled as appropriate for the hard-of-hearing.<br>
 	 * <br>
-	 * <b>descriptions</b>: Textual descriptions of the video component of the media resource,
+	 * <b>DESCRIPTIONS</b>: Textual descriptions of the video component of the media resource,
 	 * intended for audio synthesis when the visual component is unavailable (e.g. because the user
 	 * is interacting with the application without a screen while driving, or because the user is
 	 * blind). Synthesized as separate audio track.<br>
 	 * <br>
-	 * <b>chapters</b>: Chapter titles, intended to be used for navigating the media resource.
+	 * <b>CHAPTERS</b>: Chapter titles, intended to be used for navigating the media resource.
 	 * Displayed as an interactive list in the user agent's interface.<br>
 	 * <br>
-	 * <b>metadata</b>: Tracks intended for use from script. Not displayed by the user agent.<br>
+	 * <b>METADATA</b>: Tracks intended for use from script. Not displayed by the user agent.<br>
 	 * <br>
 	 * 
 	 * @param kind
-	 *          the kind
+	 *            the kind
 	 */
 	public void setKind(Kind kind)
 	{
@@ -248,13 +270,5 @@ public class Track extends WebMarkupContainer
 	public void setSrclang(Locale srclang)
 	{
 		this.srclang = srclang;
-	}
-
-	/**
-	 * To be used for the kind attribute
-	 */
-	public enum Kind
-	{
-		subtitles, captions, descriptions, chapters, metadata
 	}
 }
