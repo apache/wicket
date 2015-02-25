@@ -19,7 +19,7 @@ package org.apache.wicket.datetime.markup.html.basic;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.wicket.IGenericComponent
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.datetime.DateConverter;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.StyleDateConverter;
