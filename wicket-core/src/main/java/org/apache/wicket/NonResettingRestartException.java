@@ -129,6 +129,6 @@ public class NonResettingRestartException extends RequestHandlerStack.ReplaceHan
 
 	private static IRequestHandler createUrlRequestHandler(final String redirectUrl)
 	{
-			return new RedirectRequestHandler(redirectUrl, HttpServletResponse.SC_MOVED_TEMPORARILY);
+		return new RedirectRequestHandler(redirectUrl, HttpServletResponse.SC_MOVED_TEMPORARILY);
 	}
-} 
+}
