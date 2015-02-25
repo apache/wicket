@@ -96,8 +96,10 @@ public class InterceptTest extends WicketTestCase
 		assertEquals(((MyMockWebApplication)tester.getApplication()).getLoginPage(),
 			loginPage.getClass());
 
-		// bypass form completely to login but continue to intercept page
-		assertTrue(((MockLoginPage)tester.getLastRenderedPage()).login("admin"));
+		// bypass formTester completely to login but continue to intercept page
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("username", "admin");
+		formTester.submit();
 		tester.startPage(tester.getApplication().getHomePage());
 
 		assertEquals(tester.getApplication().getHomePage(), tester.getLastRenderedPage().getClass());
