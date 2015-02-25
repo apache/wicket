@@ -28,23 +28,28 @@ import org.apache.wicket.Application;
 public interface IAuthenticationStrategy
 {
 	/**
-	 * If "rememberMe" is enabled, than load login name and password from the persistence storage
+	 * If "rememberMe" is enabled, then load the saved credentials (e.g. username and password) from the persistence storage
 	 * (e.g. Cookie) for automatic sign in. This is useful for applications which users typically
 	 * have open the whole day but where the server invalidates the session after a timeout and you
 	 * want to force the user to sign in again and again during the day.
 	 * 
-	 * @return [0] = username, [1] = password, null if not found
+	 * @return The {@link #save(String, String...) saved} credentials
 	 */
 	String[] load();
 
 	/**
-	 * If "rememberMe" is enabled and login was successful, than store username and password in the
+	 * If "rememberMe" is enabled and login was successful, then store the given credentials in the
 	 * persistence store (e.g. Cookie).
-	 * 
-	 * @param username
-	 * @param password
+	 *
+	 * <p>The implementation of this method should be symmetrical with the implementation of
+	 * {@link #load()}.</p>
+	 *
+	 * @param credential
+	 *          The credential to store. For example: a security token or username.
+	 * @param extraCredentials
+	 *          Optional extra credentials. For example: a password
 	 */
-	void save(final String username, final String password);
+	void save(final String credential, final String... extraCredentials);
 
 	/**
 	 * When the user logs out (session invalidation), than remove username and password from the

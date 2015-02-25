@@ -141,16 +141,34 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 
 	/**
 	 * @see org.apache.wicket.authentication.IAuthenticationStrategy#save(java.lang.String,
-	 *      java.lang.String)
+	 *      java.lang.String...)
 	 */
 	@Override
-	public void save(final String username, final String password)
+	public void save(final String credential, final String... extraCredentials)
 	{
-		String value = username + VALUE_SEPARATOR + password;
-
-		String encryptedValue = getCrypt().encryptUrlSafe(value);
+		String encryptedValue = getCrypt().encryptUrlSafe(encode(credential, extraCredentials));
 
 		getCookieUtils().save(cookieKey, encryptedValue);
+	}
+
+	/**
+	 * This method can be overridden to provide different encoding mechanism
+	 *
+	 * @param credential
+	 * @param extraCredentials
+	 * @return String representation of the parameters given
+	 */
+	protected String encode(final String credential, final String... extraCredentials)
+	{
+		StringBuilder value = new StringBuilder(credential);
+		if (extraCredentials != null)
+		{
+			for (String extraCredential : extraCredentials)
+			{
+				value.append(VALUE_SEPARATOR).append(extraCredential);
+			}
+		}
+		return value.toString();
 	}
 
 	/**
