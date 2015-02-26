@@ -83,6 +83,7 @@ import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.ResourceLink;
@@ -1890,6 +1891,21 @@ public class BaseWicketTester
 
 			serializeFormToRequest(submitLink.getForm());
 			submitForm(submitLink.getForm().getPageRelativePath());
+		}
+		else if (linkComponent instanceof ExternalLink)
+		{
+			ExternalLink externalLink = (ExternalLink) linkComponent;
+			String href = externalLink.getDefaultModelObjectAsString();
+			try
+			{
+				getResponse().sendRedirect(href);
+				recordRequestResponse();
+				setupNextRequestCycle();
+			}
+			catch (IOException iox)
+			{
+				throw new WicketRuntimeException("An error occurred while redirecting to: " + href, iox);
+			}
 		}
 		// if the link is a normal link (or ResourceLink)
 		else if (linkComponent instanceof AbstractLink)
