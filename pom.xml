@@ -115,7 +115,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mvn.build.java.version>1.7</mvn.build.java.version>
-		<jacoco.version>0.7.3.201502191951</jacoco.version>
+		<jacoco.version>0.7.4.201502262128</jacoco.version>
 		<jetty.version>8.1.16.v20140903</jetty.version>
 		<jetty9.version>9.0.7.v20131107</jetty9.version>
 		<junit.version>4.12</junit.version>
