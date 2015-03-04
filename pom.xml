@@ -88,6 +88,7 @@
 		<tag>HEAD</tag>
 	</scm>
 	<modules>
+		<module>wicket-eclipse-settings</module>
 		<module>wicket</module>
 		<module>wicket-core</module>
 		<module>wicket-util</module>
@@ -113,7 +114,11 @@
 		<module>wicket-cdi-1.1</module>
 	</modules>
 	<properties>
+		<!-- Encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Project Versions -->
 		<mvn.build.java.version>1.7</mvn.build.java.version>
 		<jacoco.version>0.7.4.201502262128</jacoco.version>
 		<jetty.version>8.1.16.v20140903</jetty.version>
@@ -242,6 +247,11 @@
 				<artifactId>velocity</artifactId>
 				<version>1.7</version>
 			</dependency>
+			<dependency>
+	            <groupId>org.apache.wicket</groupId>
+	            <artifactId>wicket-eclipse-settings</artifactId>
+	            <version>7.0.0-SNAPSHOT</version>
+	        </dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
@@ -691,7 +701,20 @@
 					<version>2.9</version>
 					<configuration>
 						<downloadSources>true</downloadSources>
+						<additionalConfig>
+				            <file>
+				                <name>.settings/test</name>
+				                <location>/test</location>
+				            </file>
+				        </additionalConfig>
 					</configuration>
+				    <dependencies>
+				        <dependency>
+				            <groupId>org.apache.wicket</groupId>
+				            <artifactId>wicket-eclipse-settings</artifactId>
+				            <version>7.0.0-SNAPSHOT</version>
+				        </dependency>
+				    </dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
