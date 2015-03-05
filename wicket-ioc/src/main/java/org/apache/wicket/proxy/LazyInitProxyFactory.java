@@ -137,20 +137,7 @@ public class LazyInitProxyFactory
 
 			try
 			{
-				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-				if (Application.exists())
-				{
-					IClassResolver classResolver = Application.get()
-							.getApplicationSettings()
-							.getClassResolver();
-
-					if (classResolver != null)
-					{
-						classLoader = classResolver.getClassLoader();
-					}
-				}
-
-				return Proxy.newProxyInstance(classLoader,
+				return Proxy.newProxyInstance(resolveClassLoader(),
 					new Class[] { type, Serializable.class, ILazyInitProxy.class,
 							IWriteReplace.class }, handler);
 			}
@@ -173,25 +160,33 @@ public class LazyInitProxyFactory
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
 			Enhancer e = new Enhancer();
+            e.setClassLoader(resolveClassLoader());
 			e.setInterfaces(new Class[] { Serializable.class, ILazyInitProxy.class,
 					IWriteReplace.class });
 			e.setSuperclass(type);
 			e.setCallback(handler);
-			e.setNamingPolicy(new DefaultNamingPolicy()
-			{
-				@Override
-				public String getClassName(final String prefix, final String source,
-					final Object key, final Predicate names)
-				{
-					return super.getClassName("WICKET_" + prefix, source, key, names);
-				}
-			});
+			e.setNamingPolicy(WicketNamingPolicy.INSTANCE);
 
 			return e.create();
 		}
 	}
 
-	/**
+	private static ClassLoader resolveClassLoader()
+	{
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		if (Application.exists())
+		{
+			IClassResolver classResolver = Application.get().getApplicationSettings()
+					.getClassResolver();
+			if (classResolver != null)
+			{
+				classLoader = classResolver.getClassLoader();
+			}
+		}
+		return classLoader;
+	}
+
+    /**
 	 * This interface is used to make the proxy forward writeReplace() call to the handler instead
 	 * of invoking it on itself. This allows us to serialize the replacement object instead of the
 	 * proxy itself in case the proxy subclass is deserialized on a VM that does not have it
@@ -524,4 +519,23 @@ public class LazyInitProxyFactory
 		return (method.getReturnType() == Object.class) &&
 			(method.getParameterTypes().length == 0) && method.getName().equals("writeReplace");
 	}
+
+	private static final class WicketNamingPolicy extends DefaultNamingPolicy
+	{
+
+		private static final WicketNamingPolicy INSTANCE = new WicketNamingPolicy();
+
+		private WicketNamingPolicy()
+		{
+			super();
+		}
+
+		@Override
+		public String getClassName(final String prefix, final String source, final Object key,
+				final Predicate names)
+		{
+			return super.getClassName("WICKET_" + prefix, source, key, names);
+		}
+	}
+
 }
