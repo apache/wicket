@@ -248,10 +248,10 @@
 				<version>1.7</version>
 			</dependency>
 			<dependency>
-	            <groupId>org.apache.wicket</groupId>
-	            <artifactId>wicket-eclipse-settings</artifactId>
-	            <version>7.0.0-SNAPSHOT</version>
-	        </dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-eclipse-settings</artifactId>
+				<version>7.0.0-SNAPSHOT</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
@@ -701,12 +701,6 @@
 					<version>2.9</version>
 					<configuration>
 						<downloadSources>true</downloadSources>
-						<additionalConfig>
-				            <file>
-				                <name>.settings/test</name>
-				                <location>/test</location>
-				            </file>
-				        </additionalConfig>
 					</configuration>
 				    <dependencies>
 				        <dependency>
