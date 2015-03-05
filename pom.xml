@@ -701,6 +701,12 @@
 					<version>2.9</version>
 					<configuration>
 						<downloadSources>true</downloadSources>
+						<additionalConfig>
+							<file>
+								<name>.settings/org.eclipse.jdt.core.prefs</name>
+								<location>/org.eclipse.jdt.core.prefs</location>
+							</file>
+						</additionalConfig>
 					</configuration>
 				    <dependencies>
 				        <dependency>
