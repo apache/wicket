@@ -30,9 +30,9 @@ import net.sf.cglib.core.Predicate;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.io.IClusterable;
@@ -160,7 +160,7 @@ public class LazyInitProxyFactory
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
 			Enhancer e = new Enhancer();
-            e.setClassLoader(resolveClassLoader());
+			e.setClassLoader(resolveClassLoader());
 			e.setInterfaces(new Class[] { Serializable.class, ILazyInitProxy.class,
 					IWriteReplace.class });
 			e.setSuperclass(type);
@@ -173,16 +173,17 @@ public class LazyInitProxyFactory
 
 	private static ClassLoader resolveClassLoader()
 	{
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		ClassLoader classLoader = null;
 		if (Application.exists())
 		{
-			IClassResolver classResolver = Application.get().getApplicationSettings()
-					.getClassResolver();
-			if (classResolver != null)
-			{
-				classLoader = classResolver.getClassLoader();
-			}
+			classLoader = Application.get().getApplicationSettings()
+					.getClassResolver().getClassLoader();
 		}
+
+		if (classLoader == null) {
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+
 		return classLoader;
 	}
 
