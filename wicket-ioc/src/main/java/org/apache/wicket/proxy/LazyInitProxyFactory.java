@@ -160,7 +160,7 @@ public class LazyInitProxyFactory
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
 			Enhancer e = new Enhancer();
-            e.setClassLoader(resolveClassLoader());
+			e.setClassLoader(resolveClassLoader());
 			e.setInterfaces(new Class[] { Serializable.class, ILazyInitProxy.class,
 					IWriteReplace.class });
 			e.setSuperclass(type);
