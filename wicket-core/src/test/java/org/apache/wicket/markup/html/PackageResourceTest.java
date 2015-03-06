@@ -82,6 +82,7 @@ public class PackageResourceTest extends WicketTestCase
 		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, ".Bar")));
 		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, ".java")));
 		assertFalse(guard.accept(Packages.absolutePath(PackageResourceTest.class, "Bar.java")));
+		assertTrue(guard.accept(Packages.absolutePath(PackageResourceTest.class, "foo/.java")));
 	}
 
 	/**

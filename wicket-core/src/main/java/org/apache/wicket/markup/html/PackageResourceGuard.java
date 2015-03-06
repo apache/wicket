@@ -70,7 +70,8 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		int len = path.length();
 		final String ext;
 		if (ixExtension <= 0 || ixExtension == len ||
-			(path.lastIndexOf(File.separator) + 1) == ixExtension)
+			(path.lastIndexOf('/') + 1) == ixExtension ||
+			(path.lastIndexOf('\\') + 1) == ixExtension)
 		{
 			ext = null;
 		}
