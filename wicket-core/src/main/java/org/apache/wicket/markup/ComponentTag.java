@@ -832,7 +832,8 @@ public class ComponentTag extends MarkupElement
 	}
 	
 	/**
-	 * True if the HTML tag (e.g. br) has no close tag
+	 * Sets the flag to indicate if the current tag contains a child 
+	 * or a descendant with the "wicket:id" attribute. 
 	 *
 	 * @param containsWicketId
 	 */
@@ -841,6 +842,10 @@ public class ComponentTag extends MarkupElement
 		setFlag(CONTAINS_WICKET_ID, containsWicketId);
 	}
 
+	/**
+	 * Says if the current tag contains a child or a descendant with the "wicket:id" attribute.
+	 * @return true if the current tag contains a child or a descendant with the "wicket:id" attribute.
+	 */
     public boolean containsWicketId()
     {
         return getFlag(CONTAINS_WICKET_ID);
