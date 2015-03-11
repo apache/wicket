@@ -43,7 +43,7 @@ public class RequestLoggerSettings
 	}
 
 	/**
-	 * @return The window size of the recorded requests. (default 2000)
+	 * @return The window size of the recorded requests. (default 0)
 	 */
 	public int getRequestsWindowSize()
 	{
@@ -84,8 +84,8 @@ public class RequestLoggerSettings
 	}
 
 	/**
-	 * Set the window of all the requests that is kept in memory for viewing. Default is 2000, You
-	 * can set this to 0 then only Sessions data is recorded (number of request, total time, latest
+	 * Set the window of all the requests that is kept in memory for viewing. Default is 0, You
+	 * can let this to 0 then only Sessions data is recorded (number of request, total time, latest
 	 * size)
 	 *
 	 * @param size
