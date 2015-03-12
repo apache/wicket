@@ -1,0 +1,23 @@
+Wicket Eclipse Settings Project
+===============================
+
+This is a project to specify Eclipse settings for a uniform development
+environment between all Eclipse using Wicket Team members. Most notably
+the formatting rules.
+
+Before release
+--------------
+
+1. Increase the version number.
+2. mvn clean install -Papache-release
+3. check the target folder contents and the jar contents
+
+Releasing
+---------
+
+Use the following command to release a new version of the settings.
+
+mvn clean deploy -Papache-release
+
+Don't forget to sign the release with your PGP key
+
