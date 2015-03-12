@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.resource;
 
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +27,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.crypt.Base64;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
@@ -49,7 +50,11 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	// The pattern to find URLs in CSS resources
 	private static final Pattern URL_PATTERN = Pattern.compile("url\\(['|\"]*(.*?)['|\"]*\\)");
 
-	private static final String EMBED_BASE64 = "embedBase64";
+	/**
+	 * Used to be append to CSS URLs (background-image: url('Beer.gif?embedBase64');). The
+	 * CssUrlReplacer embeds the base64 content instead of using an URL.
+	 */
+	public static final String EMBED_BASE64 = "embedBase64";
 
 	/**
 	 * Replaces the URLs of CSS resources with Wicket representatives.
@@ -71,7 +76,6 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 			if (imageCandidateUrl.isFull())
 			{
 				processedUrl = imageCandidateUrl.toString(Url.StringMode.FULL);
-
 			}
 			else if (imageCandidateUrl.isContextAbsolute())
 			{
@@ -97,8 +101,7 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 					catch (Exception e)
 					{
 						throw new WicketRuntimeException(
-							"Error while embedding an image into the css: " +
-								imageReference.toString(), e);
+							"Error while embedding an image into the css: " + imageReference, e);
 					}
 				}
 				else
@@ -131,12 +134,18 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 		throws ResourceStreamNotFoundException, IOException
 	{
 		IResourceStream resourceStream = imageReference.getResource().getResourceStream();
-		byte[] bytes = new byte[(int)resourceStream.length().bytes()];
-		DataInputStream dataInputStream = new DataInputStream(resourceStream.getInputStream());
-		dataInputStream.readFully(bytes);
-		String base64EncodedImage = Base64.encodeBase64String(bytes);
-		return "data:" + resourceStream.getContentType() + ";base64," +
-			base64EncodedImage.replaceAll("\\s", "");
+		InputStream inputStream = resourceStream.getInputStream();
+		try
+		{
+			byte[] bytes = IOUtils.toByteArray(inputStream);
+			String base64EncodedImage = Base64.encodeBase64String(bytes);
+			return "data:" + resourceStream.getContentType() + ";base64," +
+				base64EncodedImage.replaceAll("\\s", "");
+		}
+		finally
+		{
+			IOUtils.closeQuietly(inputStream);
+		}
 	}
 
 	@Override
