@@ -16,9 +16,9 @@
    limitations under the License.
 -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-		 version="2.5">
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+      version="3.0"> 
 
 	<display-name>Wicket Examples</display-name>
 
@@ -158,6 +158,15 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.images.ImagesApplication</param-value>
+		</init-param>
+	</filter>
+	
+	<filter>
+		<filter-name>VideosApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.media.VideosApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -539,6 +548,13 @@
 	<filter-mapping>
 		<filter-name>ImagesApplication</filter-name>
 		<url-pattern>/images/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>VideosApplication</filter-name>
+		<url-pattern>/videos/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
