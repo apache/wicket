@@ -204,7 +204,6 @@
 					<include>**/*.txt</include>
 					<include>**/*.xml</include>
 					<include>**/*.properties</include>
-					<include>**/*.mp4</include>
 				</includes>
 			</resource>
 			<resource>
@@ -222,7 +221,6 @@
 					<include>**/*.properties</include>
 					<include>**/*.vm</include>
 					<include>**/*.tmpl</include>
-					<include>**/*.mp4</include>
 				</includes>
 			</resource>
 		</resources>
