@@ -32,14 +32,15 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * This compressor is used to replace url within css files with resources that belongs to their
- * corresponding component classes. The compress method is not compressing any content, but
- * replacing the URLs with Wicket representatives.<br>
+ * This compressor is used to replace URLs within CSS files with URLs created from
+ * PackageResourceReferences that belongs to their corresponding resources (e.g images).The scope of
+ * the CSS file is used to create the PackageResourceReferences. The compress method is not
+ * compressing any content, but replacing the URLs with Wicket representatives.<br>
  * <br>
  * Usage:
  * 
  * <pre>
- * this.getResourceSettings().setCssCompressor(new CssUrlReplacer(this));
+ * this.getResourceSettings().setCssCompressor(new CssUrlReplacer());
  * </pre>
  * 
  * @since 6.20.0
