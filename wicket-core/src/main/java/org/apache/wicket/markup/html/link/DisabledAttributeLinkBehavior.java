@@ -44,6 +44,10 @@ public class DisabledAttributeLinkBehavior extends Behavior
 			{
 			    tag.put("disabled", "disabled");
 			}
+			else 
+			{
+				tag.remove("rel");
+			}
 		}
 	}
 }
