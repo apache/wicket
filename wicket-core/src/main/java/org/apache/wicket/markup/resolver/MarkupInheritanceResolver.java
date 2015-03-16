@@ -56,6 +56,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			if (wicketTag.isExtendTag() || wicketTag.isChildTag())
 			{
 				String id = wicketTag.getId() + container.getPage().getAutoIndex();
+				wicketTag.setId(id);
 				return new TransparentWebMarkupContainer(id);
 			}
 		}
