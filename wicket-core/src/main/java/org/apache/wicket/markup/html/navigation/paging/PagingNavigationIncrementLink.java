@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.navigation.paging;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 
 /**
@@ -124,5 +125,23 @@ public class PagingNavigationIncrementLink<T> extends Link<T>
 	{
 		pageable.getCurrentPage();
 		return ((increment < 0) && isFirst()) || ((increment > 0) && isLast());
+	}
+	
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		
+		if (!isEnabledInHierarchy())
+		{
+			// if the tag is an anchor proper
+			String tagName = tag.getName();
+			
+			if (!(tagName.equalsIgnoreCase("a") || tagName.equalsIgnoreCase("link") ||
+				tagName.equalsIgnoreCase("area")))
+			{
+			    tag.remove("rel");
+			}
+		}
 	}
 }
