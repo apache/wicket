@@ -2673,14 +2673,15 @@
 						Wicket.Log.info("Calling focus on " + WF.lastFocusId);
 						try {
 							if (WF.focusSetFromServer) {
-								toFocus.focus();
+								// WICKET-5858
+								window.setTimeout(function () { toFocus.focus(); }, 0);
 							} else {
 								// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
 								var temp = toFocus.onfocus;
 								toFocus.onfocus = null;
-								toFocus.focus();
+								
 								// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
-								window.setTimeout(function () {toFocus.onfocus = temp; }, 0);
+								window.setTimeout(function () {toFocus.focus(); toFocus.onfocus = temp; }, 0);
 							}
 						} catch (ignore) {
 						}
