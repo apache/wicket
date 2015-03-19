@@ -29,12 +29,14 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.protocol.ws.api.event.WebSocketAbortedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
+import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -62,300 +64,270 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The base implementation of IWebSocketProcessor. Provides the common logic
- * for registering a web socket connection and broadcasting its events.
+ * The base implementation of IWebSocketProcessor. Provides the common logic for registering a web
+ * socket connection and broadcasting its events.
  *
  * @since 6.0
  */
-public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
-{
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractWebSocketProcessor.class);
+public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor {
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractWebSocketProcessor.class);
 
-	/**
-	 * A pageId indicating that the endpoint is WebSocketResource
-	 */
-	static final int NO_PAGE_ID = -1;
+    /**
+     * A pageId indicating that the endpoint is WebSocketResource
+     */
+    static final int NO_PAGE_ID = -1;
 
-	private final WebRequest webRequest;
-	private final int pageId;
-	private final String resourceName;
-	private final Url baseUrl;
-	private final WebApplication application;
-	private final String sessionId;
-	private final WebSocketSettings webSocketSettings;
-	private final IWebSocketConnectionRegistry connectionRegistry;
+    /**
+     * 1008 indicates that an endpoint is terminating the connection because it has received a
+     * message that violates its policy. This is a generic status code that can be returned when
+     * there is no other more suitable status code (e.g., 1003 or 1009) or if there is a need to
+     * hide specific details about the policy.
+     * <p>
+     * See <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455, Section 7.4.1
+     * Defined Status Codes</a>.
+     */
+    private static final int POLICY_VIOLATION = 1008;
+    private static final String ORIGIN_MISMATCH = "Origin mismatch";
 
-	/**
-	 * Constructor.
-	 *
-	 * @param request
-	 *      the http request that was used to create the TomcatWebSocketProcessor
-	 * @param application
-	 *      the current Wicket Application
-	 */
-	public AbstractWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
-	{
-		this.sessionId = request.getSession(true).getId();
+    private final WebRequest webRequest;
+    private final int pageId;
+    private final String resourceName;
+    private final Url baseUrl;
+    private final WebApplication application;
+    private final String sessionId;
+    private final WebSocketSettings webSocketSettings;
+    private final IWebSocketConnectionRegistry connectionRegistry;
+    private final IWebSocketConnectionFilter connectionFilter;
+    private final HttpServletRequest servletRequest;
 
-		String pageId = request.getParameter("pageId");
-		resourceName = request.getParameter("resourceName");
-		if (Strings.isEmpty(pageId) && Strings.isEmpty(resourceName))
-		{
-			throw new IllegalArgumentException("The request should have either 'pageId' or 'resourceName' parameter!");
-		}
-		if (Strings.isEmpty(pageId) == false)
-		{
-			this.pageId = Integer.parseInt(pageId, 10);
-		}
-		else
-		{
-			this.pageId = NO_PAGE_ID;
-		}
+    /**
+     * Constructor.
+     *
+     * @param request
+     *            the http request that was used to create the TomcatWebSocketProcessor
+     * @param application
+     *            the current Wicket Application
+     */
+    public AbstractWebSocketProcessor(final HttpServletRequest request, final WebApplication application) {
+        this.sessionId = request.getSession(true).getId();
 
-		String baseUrl = request.getParameter(WebRequest.PARAM_AJAX_BASE_URL);
-		Checks.notNull(baseUrl, String.format("Request parameter '%s' is required!", WebRequest.PARAM_AJAX_BASE_URL));
-		this.baseUrl = Url.parse(baseUrl);
+        String pageId = request.getParameter("pageId");
+        resourceName = request.getParameter("resourceName");
+        if (Strings.isEmpty(pageId) && Strings.isEmpty(resourceName)) {
+            throw new IllegalArgumentException("The request should have either 'pageId' or 'resourceName' parameter!");
+        }
+        if (Strings.isEmpty(pageId) == false) {
+            this.pageId = Integer.parseInt(pageId, 10);
+        } else {
+            this.pageId = NO_PAGE_ID;
+        }
 
-		WicketFilter wicketFilter = application.getWicketFilter();
-		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request), wicketFilter.getFilterPath());
+        String baseUrl = request.getParameter(WebRequest.PARAM_AJAX_BASE_URL);
+        Checks.notNull(baseUrl, String.format("Request parameter '%s' is required!", WebRequest.PARAM_AJAX_BASE_URL));
+        this.baseUrl = Url.parse(baseUrl);
 
-		this.application = Args.notNull(application, "application");
+        WicketFilter wicketFilter = application.getWicketFilter();
+        this.servletRequest = new ServletRequestCopy(request);
 
-		this.webSocketSettings = WebSocketSettings.Holder.get(application);
+        this.webRequest = new WebSocketRequest(servletRequest, wicketFilter.getFilterPath());
 
-		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
-	}
+        this.application = Args.notNull(application, "application");
 
-	@Override
-	public void onMessage(final String message)
-	{
-		broadcastMessage(new TextMessage(message));
-	}
+        this.webSocketSettings = WebSocketSettings.Holder.get(application);
 
-	@Override
-	public void onMessage(byte[] data, int offset, int length)
-	{
-		BinaryMessage binaryMessage = new BinaryMessage(data, offset, length);
-		broadcastMessage(binaryMessage);
-	}
+        this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 
-	/**
-	 * A helper that registers the opened connection in the application-level
-	 * registry.
-	 *
-	 * @param connection
-	 *      the web socket connection to use to communicate with the client
-	 * @see #onOpen(Object)
-	 */
-	protected final void onConnect(final IWebSocketConnection connection)
-	{
-		IKey key = getRegistryKey();
-		connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
-		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
-	}
+        this.connectionFilter = new WebSocketConnectionOriginFilter(webSocketSettings);
+    }
 
-	@Override
-	public void onClose(int closeCode, String message)
-	{
-		IKey key = getRegistryKey();
-		broadcastMessage(new ClosedMessage(getApplication(), getSessionId(), key));
-		connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
-	}
+    @Override
+    public void onMessage(final String message) {
+        broadcastMessage(new TextMessage(message));
+    }
 
-	/**
-	 * Exports the Wicket thread locals and broadcasts the received message from the client to all
-	 * interested components and behaviors in the page with id {@code #pageId}
-	 * <p>
-	 *     Note: ConnectedMessage and ClosedMessage messages are notification-only. I.e. whatever the
-	 *     components/behaviors write in the WebSocketRequestHandler will be ignored because the protocol
-	 *     doesn't expect response from the user.
-	 * </p>
-	 *
-	 * @param message
-	 *      the message to broadcast
-	 */
-	public final void broadcastMessage(final IWebSocketMessage message)
-	{
-		IKey key = getRegistryKey();
-		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
+    @Override
+    public void onMessage(byte[] data, int offset, int length) {
+        BinaryMessage binaryMessage = new BinaryMessage(data, offset, length);
+        broadcastMessage(binaryMessage);
+    }
 
-		if (connection != null && connection.isOpen())
-		{
-			Application oldApplication = ThreadContext.getApplication();
-			Session oldSession = ThreadContext.getSession();
-			RequestCycle oldRequestCycle = ThreadContext.getRequestCycle();
+    /**
+     * A helper that registers the opened connection in the application-level registry.
+     *
+     * @param connection
+     *            the web socket connection to use to communicate with the client
+     * @see #onOpen(Object)
+     */
+    protected final void onConnect(final IWebSocketConnection connection) {
+        IKey key = getRegistryKey();
+        try {
+            connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
+            connectionFilter.doFilter(servletRequest);
+            broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
+        } catch (ConnectionRejectedException e) {
+            broadcastMessage(new AbortedMessage(getApplication(), getSessionId(), key));
+            connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
+            connection.close(POLICY_VIOLATION, ORIGIN_MISMATCH);
+        }
+    }
 
-			WebResponse webResponse = webSocketSettings.newWebSocketResponse(connection);
-			try
-			{
-				WebSocketRequestMapper requestMapper = new WebSocketRequestMapper(application.getRootRequestMapper());
-				RequestCycle requestCycle = createRequestCycle(requestMapper, webResponse);
-				ThreadContext.setRequestCycle(requestCycle);
+    @Override
+    public void onClose(int closeCode, String message) {
+        IKey key = getRegistryKey();
+        broadcastMessage(new ClosedMessage(getApplication(), getSessionId(), key));
+        connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
+    }
 
-				ThreadContext.setApplication(application);
+    /**
+     * Exports the Wicket thread locals and broadcasts the received message from the client to all
+     * interested components and behaviors in the page with id {@code #pageId}
+     * <p>
+     * Note: ConnectedMessage and ClosedMessage messages are notification-only. I.e. whatever the
+     * components/behaviors write in the WebSocketRequestHandler will be ignored because the
+     * protocol doesn't expect response from the user.
+     * </p>
+     *
+     * @param message
+     *            the message to broadcast
+     */
+    public final void broadcastMessage(final IWebSocketMessage message) {
+        IKey key = getRegistryKey();
+        IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
 
-				Session session;
-				if (oldSession == null || message instanceof IWebSocketPushMessage)
-				{
-					ISessionStore sessionStore = application.getSessionStore();
-					session = sessionStore.lookup(webRequest);
-					ThreadContext.setSession(session);
-				}
-				else
-				{
-					session = oldSession;
-				}
+        if (connection != null && connection.isOpen()) {
+            Application oldApplication = ThreadContext.getApplication();
+            Session oldSession = ThreadContext.getSession();
+            RequestCycle oldRequestCycle = ThreadContext.getRequestCycle();
 
-				IPageManager pageManager = session.getPageManager();
-				Page page = getPage(pageManager);
+            WebResponse webResponse = webSocketSettings.newWebSocketResponse(connection);
+            try {
+                WebSocketRequestMapper requestMapper = new WebSocketRequestMapper(application.getRootRequestMapper());
+                RequestCycle requestCycle = createRequestCycle(requestMapper, webResponse);
+                ThreadContext.setRequestCycle(requestCycle);
 
-				WebSocketRequestHandler requestHandler = webSocketSettings.newWebSocketRequestHandler(page, connection);
+                ThreadContext.setApplication(application);
 
-				WebSocketPayload payload = createEventPayload(message, requestHandler);
+                Session session;
+                if (oldSession == null || message instanceof IWebSocketPushMessage) {
+                    ISessionStore sessionStore = application.getSessionStore();
+                    session = sessionStore.lookup(webRequest);
+                    ThreadContext.setSession(session);
+                } else {
+                    session = oldSession;
+                }
 
-				if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage))
-				{
-					requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
-				}
+                IPageManager pageManager = session.getPageManager();
+                Page page = getPage(pageManager);
 
-				IRequestHandler broadcastingHandler = new WebSocketMessageBroadcastHandler(pageId, resourceName, payload);
-				requestMapper.setHandler(broadcastingHandler);
-				requestCycle.processRequestAndDetach();
-			}
-			catch (Exception x)
-			{
-				LOG.error("An error occurred during processing of a WebSocket message", x);
-			}
-			finally
-			{
-				try
-				{
-					webResponse.close();
-				}
-				finally
-				{
-					ThreadContext.setApplication(oldApplication);
-					ThreadContext.setRequestCycle(oldRequestCycle);
-					ThreadContext.setSession(oldSession);
-				}
-			}
-		}
-		else
-		{
-			LOG.debug("Either there is no connection({}) or it is closed.", connection);
-		}
-	}
+                WebSocketRequestHandler requestHandler = webSocketSettings.newWebSocketRequestHandler(page, connection);
 
-	private RequestCycle createRequestCycle(WebSocketRequestMapper requestMapper, WebResponse webResponse)
-	{
-		RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
-				requestMapper, application.getExceptionMapperProvider().get());
+                WebSocketPayload payload = createEventPayload(message, requestHandler);
 
-		RequestCycle requestCycle = application.getRequestCycleProvider().get(context);
-		requestCycle.getListeners().add(application.getRequestCycleListeners());
-		requestCycle.getListeners().add(new AbstractRequestCycleListener()
-		{
-			@Override
-			public void onDetach(final RequestCycle requestCycle)
-			{
-				if (Session.exists())
-				{
-					Session.get().getPageManager().commitRequest();
-				}
-			}
-		});
-		requestCycle.getUrlRenderer().setBaseUrl(baseUrl);
-		return requestCycle;
-	}
+                if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage)) {
+                    requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
+                }
 
-	/**
-	 * @param pageManager
-	 *      the page manager to use when finding a page by id
-	 * @return the page to use when creating WebSocketRequestHandler
-	 */
-	private Page getPage(IPageManager pageManager)
-	{
-		Page page;
-		if (pageId != -1)
-		{
-			page = (Page) pageManager.getPage(pageId);
-		}
-		else
-		{
-			page = new WebSocketResourcePage();
-		}
-		return page;
-	}
+                IRequestHandler broadcastingHandler = new WebSocketMessageBroadcastHandler(pageId, resourceName, payload);
+                requestMapper.setHandler(broadcastingHandler);
+                requestCycle.processRequestAndDetach();
+            } catch (Exception x) {
+                LOG.error("An error occurred during processing of a WebSocket message", x);
+            } finally {
+                try {
+                    webResponse.close();
+                } finally {
+                    ThreadContext.setApplication(oldApplication);
+                    ThreadContext.setRequestCycle(oldRequestCycle);
+                    ThreadContext.setSession(oldSession);
+                }
+            }
+        } else {
+            LOG.debug("Either there is no connection({}) or it is closed.", connection);
+        }
+    }
 
-	protected final WebApplication getApplication()
-	{
-		return application;
-	}
+    private RequestCycle createRequestCycle(WebSocketRequestMapper requestMapper, WebResponse webResponse) {
+        RequestCycleContext context = new RequestCycleContext(webRequest, webResponse, requestMapper, application.getExceptionMapperProvider().get());
 
-	protected final String getSessionId()
-	{
-		return sessionId;
-	}
+        RequestCycle requestCycle = application.getRequestCycleProvider().get(context);
+        requestCycle.getListeners().add(application.getRequestCycleListeners());
+        requestCycle.getListeners().add(new AbstractRequestCycleListener() {
+            @Override
+            public void onDetach(final RequestCycle requestCycle) {
+                if (Session.exists()) {
+                    Session.get().getPageManager().commitRequest();
+                }
+            }
+        });
+        requestCycle.getUrlRenderer().setBaseUrl(baseUrl);
+        return requestCycle;
+    }
 
-	private WebSocketPayload createEventPayload(IWebSocketMessage message, WebSocketRequestHandler handler)
-	{
-		final WebSocketPayload payload;
-		if (message instanceof TextMessage)
-		{
-			payload = new WebSocketTextPayload((TextMessage) message, handler);
-		}
-		else if (message instanceof BinaryMessage)
-		{
-			payload = new WebSocketBinaryPayload((BinaryMessage) message, handler);
-		}
-		else if (message instanceof ConnectedMessage)
-		{
-			payload = new WebSocketConnectedPayload((ConnectedMessage) message, handler);
-		}
-		else if (message instanceof ClosedMessage)
-		{
-			payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
-		}
-		else if (message instanceof IWebSocketPushMessage)
-		{
-			payload = new WebSocketPushPayload((IWebSocketPushMessage) message, handler);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Unsupported message type: " + message.getClass().getName());
-		}
-		return payload;
-	}
+    /**
+     * @param pageManager
+     *            the page manager to use when finding a page by id
+     * @return the page to use when creating WebSocketRequestHandler
+     */
+    private Page getPage(IPageManager pageManager) {
+        Page page;
+        if (pageId != -1) {
+            page = (Page) pageManager.getPage(pageId);
+        } else {
+            page = new WebSocketResourcePage();
+        }
+        return page;
+    }
 
-	private IKey getRegistryKey()
-	{
-		IKey key;
-		if (Strings.isEmpty(resourceName))
-		{
-			key = new PageIdKey(pageId);
-		}
-		else
-		{
-			key = new ResourceNameKey(resourceName);
-		}
-		return key;
-	}
+    protected final WebApplication getApplication() {
+        return application;
+    }
 
-	/**
-	 * A dummy page that is used to create a new WebSocketRequestHandler for
-	 * web socket connections to WebSocketResource
-	 */
-	private static class WebSocketResourcePage extends WebPage implements IMarkupResourceStreamProvider
-	{
-		private WebSocketResourcePage()
-		{
-			setStatelessHint(true);
-		}
+    protected final String getSessionId() {
+        return sessionId;
+    }
 
-		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
-		{
-			return new StringResourceStream("");
-		}
-	}
+    private WebSocketPayload createEventPayload(IWebSocketMessage message, WebSocketRequestHandler handler) {
+        final WebSocketPayload payload;
+        if (message instanceof TextMessage) {
+            payload = new WebSocketTextPayload((TextMessage) message, handler);
+        } else if (message instanceof BinaryMessage) {
+            payload = new WebSocketBinaryPayload((BinaryMessage) message, handler);
+        } else if (message instanceof ConnectedMessage) {
+            payload = new WebSocketConnectedPayload((ConnectedMessage) message, handler);
+        } else if (message instanceof ClosedMessage) {
+            payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
+        } else if (message instanceof AbortedMessage) {
+            payload = new WebSocketAbortedPayload((AbortedMessage) message, handler);
+        } else if (message instanceof IWebSocketPushMessage) {
+            payload = new WebSocketPushPayload((IWebSocketPushMessage) message, handler);
+        } else {
+            throw new IllegalArgumentException("Unsupported message type: " + message.getClass().getName());
+        }
+        return payload;
+    }
+
+    private IKey getRegistryKey() {
+        IKey key;
+        if (Strings.isEmpty(resourceName)) {
+            key = new PageIdKey(pageId);
+        } else {
+            key = new ResourceNameKey(resourceName);
+        }
+        return key;
+    }
+
+    /**
+     * A dummy page that is used to create a new WebSocketRequestHandler for web socket connections
+     * to WebSocketResource
+     */
+    private static class WebSocketResourcePage extends WebPage implements IMarkupResourceStreamProvider {
+        private WebSocketResourcePage() {
+            setStatelessHint(true);
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("");
+        }
+    }
 }

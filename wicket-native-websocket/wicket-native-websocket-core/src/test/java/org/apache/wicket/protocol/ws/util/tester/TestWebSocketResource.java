@@ -18,87 +18,89 @@ package org.apache.wicket.protocol.ws.util.tester;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.wicket.util.string.Strings;
-import org.junit.Assert;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketResource;
+import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.util.string.Strings;
+import org.junit.Assert;
 
 /**
  *
  */
-public class TestWebSocketResource extends WebSocketResource
-{
-	static final String TEXT = "TestWebSocketResource-text";
-	static final String BINARY = "TestWebSocketResource-binary";
+public class TestWebSocketResource extends WebSocketResource {
+    static final String TEXT = "TestWebSocketResource-text";
+    static final String BINARY = "TestWebSocketResource-binary";
 
-	static final AtomicBoolean ON_CONNECT_CALLED = new AtomicBoolean(false);
-	static final AtomicBoolean ON_CLOSE_CALLED = new AtomicBoolean(false);
+    static final AtomicBoolean ON_CONNECT_CALLED = new AtomicBoolean(false);
+    static final AtomicBoolean ON_CLOSE_CALLED = new AtomicBoolean(false);
+    static final AtomicBoolean ON_ABORT_CALLED = new AtomicBoolean(false);
 
-	private final String expectedMessage;
+    private final String expectedMessage;
 
-	private final byte[] expectedBinaryMessage;
-	private final int expectedOffset;
-	private final int expectedLength;
+    private final byte[] expectedBinaryMessage;
+    private final int expectedOffset;
+    private final int expectedLength;
 
-	TestWebSocketResource(String expected)
-	{
-		this.expectedMessage = expected;
+    TestWebSocketResource(String expected) {
+        this.expectedMessage = expected;
 
-		this.expectedBinaryMessage = null;
-		this.expectedOffset = -1;
-		this.expectedLength = -1;
-	}
+        this.expectedBinaryMessage = null;
+        this.expectedOffset = -1;
+        this.expectedLength = -1;
+    }
 
-	TestWebSocketResource(byte[] message, int offset, int length)
-	{
-		this.expectedBinaryMessage = message;
-		this.expectedOffset = offset;
-		this.expectedLength = length;
+    TestWebSocketResource(byte[] message, int offset, int length) {
+        this.expectedBinaryMessage = message;
+        this.expectedOffset = offset;
+        this.expectedLength = length;
 
-		this.expectedMessage = null;
-	}
+        this.expectedMessage = null;
+    }
 
-	@Override
-	protected void onConnect(ConnectedMessage message)
-	{
-		super.onConnect(message);
-		ON_CONNECT_CALLED.set(true);
-	}
+    @Override
+    protected void onConnect(ConnectedMessage message) {
+        super.onConnect(message);
+        ON_CONNECT_CALLED.set(true);
+    }
 
-	@Override
-	protected void onClose(ClosedMessage message)
-	{
-		ON_CLOSE_CALLED.set(true);
-		super.onClose(message);
-	}
+    @Override
+    protected void onClose(ClosedMessage message) {
+        ON_CLOSE_CALLED.set(true);
+        super.onClose(message);
+    }
 
-	@Override
-	protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
-	{
-		super.onMessage(handler, message);
+    @Override
+    protected void onAbort(AbortedMessage message) {
+        ON_ABORT_CALLED.set(true);
+        super.onAbort(message);
+    }
 
-		String text = message.getText();
-		Assert.assertEquals(expectedMessage, text);
-		handler.push(Strings.capitalize(text));
-	}
+    @Override
+    protected void onMessage(WebSocketRequestHandler handler, TextMessage message) {
+        super.onMessage(handler, message);
 
-	@Override
-	protected void onMessage(WebSocketRequestHandler handler, BinaryMessage binaryMessage)
-	{
-		super.onMessage(handler, binaryMessage);
+        String text = message.getText();
+        Assert.assertEquals(expectedMessage, text);
+        handler.push(Strings.capitalize(text));
+    }
 
-		byte[] data = binaryMessage.getData();
-		int offset = binaryMessage.getOffset();
-		int length = binaryMessage.getLength();
+    @Override
+    protected void onMessage(WebSocketRequestHandler handler, BinaryMessage binaryMessage) {
+        super.onMessage(handler, binaryMessage);
 
-		Assert.assertEquals(expectedBinaryMessage, data);
-		Assert.assertEquals(expectedOffset, offset);
-		Assert.assertEquals(expectedLength, length);
+        byte[] data = binaryMessage.getData();
+        int offset = binaryMessage.getOffset();
+        int length = binaryMessage.getLength();
 
-		handler.push(data, offset, length);
-	}
+        Assert.assertEquals(expectedBinaryMessage, data);
+        Assert.assertEquals(expectedOffset, offset);
+        Assert.assertEquals(expectedLength, length);
+
+        handler.push(data, offset, length);
+    }
+
 }
