@@ -37,8 +37,6 @@ public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilt
         if (webSocketSettings.isHijackingProtectionEnabled()) {
             String oUrl = getOriginUrl(servletRequest);
             if (invalid(oUrl))
-                // Send 403 Forbidden
-                // Abort the WebSocket handshake
                 throw new ConnectionRejectedException();
         }
     }
@@ -57,7 +55,7 @@ public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilt
     }
 
     private String getOriginUrl(HttpServletRequest servletRequest) {
-        ArrayList<String> origins = Collections.list(servletRequest.getHeaders("origin"));
+        ArrayList<String> origins = Collections.list(servletRequest.getHeaders("Origin"));
         if (origins.size() != 1)
             return null;
         return origins.get(0);

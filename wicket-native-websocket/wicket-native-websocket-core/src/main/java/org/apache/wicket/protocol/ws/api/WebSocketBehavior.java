@@ -18,12 +18,14 @@ package org.apache.wicket.protocol.ws.api;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.protocol.ws.api.event.WebSocketAbortedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
+import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -71,6 +73,12 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 				ConnectedMessage message = connectedPayload.getMessage();
 				onConnect(message);
 			}
+            else if (wsPayload instanceof WebSocketAbortedPayload)
+            {
+                WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload) wsPayload;
+                AbortedMessage message = abortedPayload.getMessage();
+                onAbort(message);
+            }
 			else if (wsPayload instanceof WebSocketClosedPayload)
 			{
 				WebSocketClosedPayload closedPayload = (WebSocketClosedPayload) wsPayload;
@@ -86,7 +94,7 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 		}
 	}
 
-	/**
+    /**
 	 * A callback method called when there is a message pushed/broadcasted by the
 	 * server, e.g. pushed by a backend service
 	 *
@@ -109,6 +117,15 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 	protected void onConnect(ConnectedMessage message)
 	{
 	}
+
+    /**
+     * A callback method called when the server has aborted the connection
+     *
+     * @param message
+     *          the aborted message with the info about the server
+     */
+	protected void onAbort(AbortedMessage message) {
+    }
 
 	/**
 	 * A callback method called when a WebSocket client has closed the connection
