@@ -83,6 +83,8 @@ public class WebSocketSettings {
 
     private final List<String> allowedDomains = new ArrayList<String>();
 
+    private boolean protectionNeeded = false;
+
     /**
      * Set the executor for processing websocket push messages broadcasted to all sessions. Default
      * executor does all the processing in the caller thread. Using a proper thread pool is adviced
@@ -142,6 +144,26 @@ public class WebSocketSettings {
      */
     public Executor getSendPayloadExecutor() {
         return sendPayloadExecutor;
+    }
+
+    /**
+     * Flag that controls whether hijacking protection should be turned on or not
+     * 
+     * @param protectionNeeded
+     *            True if protection needed
+     */
+    public void setHijackingProtectionEnabled(boolean protectionNeeded) {
+        this.protectionNeeded = protectionNeeded;
+    }
+
+    /**
+     * Flag that shows whether hijacking protection is turned on or not
+     * 
+     * @param protectionNeeded
+     *            True if protection turned on
+     */
+    public boolean isHijackingProtectionEnabled() {
+        return this.protectionNeeded;
     }
 
     /**
