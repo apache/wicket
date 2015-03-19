@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.util.tester;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,6 +36,8 @@ import org.junit.Test;
 
 public class WebSocketTesterProcessorTest extends Assert {
 
+    final static AtomicBoolean messageReceived = new AtomicBoolean(false);
+
     private static class TestProcessor extends TestWebSocketProcessor {
         private TestProcessor(HttpServletRequest request, WebApplication application) {
             super(request, application);
@@ -42,10 +45,12 @@ public class WebSocketTesterProcessorTest extends Assert {
 
         @Override
         protected void onOutMessage(String message) {
+            messageReceived.set(true);
         }
 
         @Override
         protected void onOutMessage(byte[] message, int offset, int length) {
+            messageReceived.set(true);
         }
     }
 
@@ -71,7 +76,7 @@ public class WebSocketTesterProcessorTest extends Assert {
         tester.destroy();
     }
 
-    @Test(expected = ConnectionRejectedException.class)
+    @Test
     public void onConnectNoOrigin() throws Exception {
         // Given header 'Origin' is missing
         WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
@@ -86,6 +91,7 @@ public class WebSocketTesterProcessorTest extends Assert {
         processor.onOpen(new Object());
 
         // Then it fails
+        assertEquals(true, TestWebSocketResource.ON_ABORT_CALLED.get());
     }
 
     @Ignore
@@ -126,7 +132,7 @@ public class WebSocketTesterProcessorTest extends Assert {
         // Then it succeeds
     }
 
-    @Test(expected = ConnectionRejectedException.class)
+    @Test
     public void onConnectMismatchingOrigin() throws Exception {
         // Given header 'Origin' does not match the host origin
         WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
@@ -142,5 +148,6 @@ public class WebSocketTesterProcessorTest extends Assert {
         processor.onOpen(new Object());
 
         // Then it fails
+        assertEquals(true, TestWebSocketResource.ON_ABORT_CALLED.get());
     }
 }
