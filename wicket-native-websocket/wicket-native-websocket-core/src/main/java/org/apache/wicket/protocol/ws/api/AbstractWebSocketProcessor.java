@@ -29,12 +29,14 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.protocol.ws.api.event.WebSocketAbortedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
+import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -74,6 +76,18 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor 
      * A pageId indicating that the endpoint is WebSocketResource
      */
     static final int NO_PAGE_ID = -1;
+
+    /**
+     * 1008 indicates that an endpoint is terminating the connection because it has received a
+     * message that violates its policy. This is a generic status code that can be returned when
+     * there is no other more suitable status code (e.g., 1003 or 1009) or if there is a need to
+     * hide specific details about the policy.
+     * <p>
+     * See <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455, Section 7.4.1
+     * Defined Status Codes</a>.
+     */
+    private static final int POLICY_VIOLATION = 1008;
+    private static final String ORIGIN_MISMATCH = "Origin mismatch";
 
     private final WebRequest webRequest;
     private final int pageId;
@@ -145,10 +159,16 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor 
      * @see #onOpen(Object)
      */
     protected final void onConnect(final IWebSocketConnection connection) {
-        connectionFilter.doFilter(servletRequest);
         IKey key = getRegistryKey();
-        connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
-        broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
+        try {
+            connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
+            connectionFilter.doFilter(servletRequest);
+            broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
+        } catch (ConnectionRejectedException e) {
+            broadcastMessage(new AbortedMessage(getApplication(), getSessionId(), key));
+            connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
+            connection.close(POLICY_VIOLATION, ORIGIN_MISMATCH);
+        }
     }
 
     @Override
@@ -276,6 +296,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor 
             payload = new WebSocketConnectedPayload((ConnectedMessage) message, handler);
         } else if (message instanceof ClosedMessage) {
             payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
+        } else if (message instanceof AbortedMessage) {
+            payload = new WebSocketAbortedPayload((AbortedMessage) message, handler);
         } else if (message instanceof IWebSocketPushMessage) {
             payload = new WebSocketPushPayload((IWebSocketPushMessage) message, handler);
         } else {
