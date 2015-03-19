@@ -1,44 +1,48 @@
 package org.apache.wicket.protocol.ws.api;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.request.Url;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
 
 public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilter {
 
+    private final WebSocketSettings webSocketSettings;
+
+    public WebSocketConnectionOriginFilter(WebSocketSettings webSocketSettings) {
+        this.webSocketSettings = webSocketSettings;
+    }
+
     @Override
     public void doFilter(HttpServletRequest servletRequest) {
-        Url oUrl = getOriginUrl(servletRequest);
-        Url rUrl = getRequestUrl(servletRequest);
-        if (invalid(oUrl) || invalid(rUrl) || originMismatch(oUrl, rUrl))
+        String oUrl = getOriginUrl(servletRequest);
+        if (invalid(oUrl))
             // Send 403 Forbidden
             // Abort the WebSocket handshake
             throw new ConnectionRejectedException();
     }
 
-    private boolean invalid(Url url) {
-        if (url == null || url.getProtocol() == null || "".equals(url.getProtocol()) || url.getHost() == null || "".equals(url.getHost())
-                || url.getPort() == null)
+    private boolean invalid(String oUrl) {
+        if (originMismatch(oUrl))
+            return true;
+        if (oUrl == null || "".equals(oUrl))
             return true;
         return false;
     }
 
-    private boolean originMismatch(Url oUrl, Url rUrl) {
-        return !oUrl.getPort().equals(rUrl.getPort()) || !oUrl.getHost().equals(rUrl.getHost()) || !oUrl.getPort().equals(rUrl.getPort());
+    private boolean originMismatch(String oUrl) {
+        List<String> allowedDomains = webSocketSettings.getAllowedDomains();
+        return !allowedDomains.contains(oUrl);
     }
 
-    private Url getRequestUrl(HttpServletRequest servletRequest) {
-        Url url = new Url();
-        url.setProtocol("http");
-        url.setHost(servletRequest.getServerName());
-        url.setPort(servletRequest.getServerPort());
-        return url;
-    }
-
-    private Url getOriginUrl(HttpServletRequest servletRequest) {
-        String rOrigin = servletRequest.getHeader("origin");
-        Url oUrl = Url.parse(rOrigin);
-        return oUrl;
+    private String getOriginUrl(HttpServletRequest servletRequest) {
+        ArrayList<String> origins = Collections.list(servletRequest.getHeaders("origin"));
+        if (origins.size() != 1)
+            return null;
+        return origins.get(0);
     }
 
 }
