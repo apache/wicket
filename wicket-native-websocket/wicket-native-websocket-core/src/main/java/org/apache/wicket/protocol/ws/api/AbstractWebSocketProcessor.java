@@ -123,7 +123,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor 
 
         this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 
-        this.connectionFilter = new WebSocketConnectionOriginFilter();
+        this.connectionFilter = new WebSocketConnectionOriginFilter(webSocketSettings);
     }
 
     @Override
